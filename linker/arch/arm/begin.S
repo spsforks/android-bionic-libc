@@ -9,7 +9,7 @@ _start:
 	bl	__linker_init
 
 	/* linker init returns the _entry address in the main image */
-	mov	pc, r0
+	bx	r0
 
 	.section .ctors, "wa"
 	.globl __CTOR_LIST__

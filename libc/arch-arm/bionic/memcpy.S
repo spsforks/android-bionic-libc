@@ -52,9 +52,11 @@ memcpy:
 
         // preload the destination because we'll align it to a cache line
         // with small writes. Also start the source "pump".
+#ifndef __ARM_ARCH_4__
         pld         [r0, #0]
         pld         [r1, #0]
         pld         [r1, #32]
+#endif
 
 		/* it simplifies things to take care of len<4 early */
 		cmp			r2, #4
@@ -142,7 +144,9 @@ cached_aligned32:
         add         r12, r12, #64
 
 1:      ldmia		r1!, { r4-r11 }
+#ifndef __ARM_ARCH_4__
         pld         [r12, #64]
+#endif
         subs        r2, r2, #32
 
         // NOTE: if r12 is more than 64 ahead of r1, the following ldrhi
@@ -263,7 +267,9 @@ loop16:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
 		ldmia		r1!, {   r5,r6,r7,  r8,r9,r10,r11}
+#ifndef __ARM_ARCH_4__
         pld         [r1, #64]
+#endif
 		subs		r2, r2, #32
         ldrhs       r12, [r1], #4
 		orr			r3, r3, r4,		lsl #16
@@ -290,7 +296,9 @@ loop8:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
 		ldmia		r1!, {   r5,r6,r7,  r8,r9,r10,r11}
+#ifndef __ARM_ARCH_4__
         pld         [r1, #64]
+#endif
 		subs		r2, r2, #32
         ldrhs       r12, [r1], #4
 		orr			r3, r3, r4,		lsl #24
@@ -317,7 +325,9 @@ loop24:
         ldr         r12, [r1], #4
 1:      mov         r4, r12
 		ldmia		r1!, {   r5,r6,r7,  r8,r9,r10,r11}
+#ifndef __ARM_ARCH_4__
         pld         [r1, #64]
+#endif
 		subs		r2, r2, #32
         ldrhs       r12, [r1], #4
 		orr			r3, r3, r4,		lsl #8

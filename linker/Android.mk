@@ -29,6 +29,7 @@ else
 endif
 
 LOCAL_MODULE:= linker
+LOCAL_ARM_MODE:= arm
 
 LOCAL_STATIC_LIBRARIES := libcutils libc
 

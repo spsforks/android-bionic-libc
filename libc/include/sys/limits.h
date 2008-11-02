@@ -125,8 +125,13 @@
 
 /* Bionic: the following has been optimized out from our processed kernel headers */
 
-#define  CHILD_MAX   999
-#define  OPEN_MAX    256
+#ifndef CHILD_MAX
+#define CHILD_MAX	999
+#endif
+
+#ifndef OPEN_MAX
+#define OPEN_MAX	256
+#endif
 
 /* Bionic-specific definitions */
 

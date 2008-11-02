@@ -194,6 +194,10 @@
 #define	__used		/* delete */
 #endif
 
+#ifdef __section
+#undef __section
+#endif
+
 #if __GNUC_PREREQ__(2, 7)
 #define	__packed	__attribute__((__packed__))
 #define	__aligned(x)	__attribute__((__aligned__(x)))
@@ -320,6 +324,14 @@
 #else
 #define __noreturn
 #define __mallocfunc
+#endif
+
+/*
+ * There might be some kernel routines marked as "deprecated" in some
+ * include headers.
+ */
+#ifndef __deprecated
+# define __deprecated	/* DO-NOT-USE */
 #endif
 
 /*

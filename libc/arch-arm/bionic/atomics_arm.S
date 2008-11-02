@@ -46,9 +46,15 @@ __atomic_dec:
 1: @ atomic_dec
     ldr     r0, [r2]
     mov     r3, #kernel_atomic_base
-    add     lr, pc, #4
     sub     r1, r0, #1
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     add     pc, r3, #(kernel_cmpxchg - kernel_atomic_base)
+#else
+    add     ip, r3, #(kernel_cmpxchg - kernel_atomic_base)
+    mov     lr, pc
+    bx      ip
+#endif
     bcc     1b
     add     r0, r1, #1
     ldmia   sp!, {r4, lr}
@@ -60,9 +66,15 @@ __atomic_inc:
 1: @ atomic_inc
     ldr     r0, [r2]
     mov     r3, #kernel_atomic_base
-    add     lr, pc, #4
     add     r1, r0, #1
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     add     pc, r3, #(kernel_cmpxchg - kernel_atomic_base)
+#else
+    add     ip, r3, #(kernel_cmpxchg - kernel_atomic_base)
+    mov     lr, pc
+    bx      ip
+#endif
     bcc     1b
     sub     r0, r1, #1
     ldmia   sp!, {r4, lr}
@@ -74,9 +86,15 @@ __atomic_cmpxchg:
     mov     r4, r0          /* r4 = save oldvalue */
 1: @ atomic_cmpxchg
     mov     r3, #kernel_atomic_base
-    add     lr, pc, #4
     mov     r0, r4          /* r0 = oldvalue */
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     add     pc, r3, #(kernel_cmpxchg - kernel_atomic_base)
+#else
+    add     ip, r3, #(kernel_cmpxchg - kernel_atomic_base)
+    mov     lr, pc
+    bx      ip
+#endif
     bcs     2f              /* swap was made. we're good, return. */
     ldr     r3, [r2]        /* swap not made, see if it's because *ptr!=oldvalue */
     cmp     r3, r4
@@ -91,9 +109,15 @@ __atomic_cmpxchg:
 __atomic_cmpxchg:
     stmdb   sp!, {r4, lr}
     mov     r4, r0          /* r4 = save oldvalue */
-1:  add     lr, pc, #4
-    mov     r0, r4          /* r0 = oldvalue */
+1:  mov     r0, r4          /* r0 = oldvalue */
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     mov     pc, #KUSER_CMPXCHG
+#else
+    mov     ip, #KUSER_CMPXCHG
+    mov     lr, pc
+    bx      ip
+#endif
     bcs     2f              /* swap was made. we're good, return. */
     ldr     r3, [r2]        /* swap not made, see if it's because *ptr!=oldvalue */
     cmp     r3, r4
@@ -106,9 +130,15 @@ __atomic_dec:
     stmdb   sp!, {r4, lr}
     mov     r2, r0          /* address */
 1:  ldr     r0, [r2]        /* oldvalue */
-    add     lr, pc, #4
     sub     r1, r0, #1      /* newvalue = oldvalue - 1 */
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     mov     pc, #KUSER_CMPXCHG
+#else
+    mov     ip, #KUSER_CMPXCHG
+    mov     lr, pc
+    bx      ip
+#endif
     bcc     1b              /* no swap, try again until we get it right */
     mov     r0, ip          /* swapped, return the old value */
     ldmia   sp!, {r4, lr}
@@ -119,9 +149,15 @@ __atomic_inc:
     stmdb   sp!, {r4, lr}
     mov     r2, r0          /* address */
 1:  ldr     r0, [r2]        /* oldvalue */
-    add     lr, pc, #4
     add     r1, r0, #1      /* newvalue = oldvalue + 1 */
+#ifndef __ARM_ARCH_4__
+    mov     lr, pc
     mov     pc, #KUSER_CMPXCHG
+#else
+    mov     ip, #KUSER_CMPXCHG
+    mov     lr, pc
+    bx      ip
+#endif
     bcc     1b              /* no swap, try again until we get it right */
     mov     r0, ip          /* swapped, return the old value */
     ldmia   sp!, {r4, lr}

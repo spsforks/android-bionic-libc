@@ -122,6 +122,7 @@ libc_common_src_files := \
 	stdio/vsnprintf.c \
 	stdio/vsprintf.c \
 	stdio/vscanf.c \
+	stdio/vsscanf.c \
 	stdio/wbuf.c \
 	stdio/wsetup.c \
 	stdlib/_rand48.c \
@@ -200,12 +201,14 @@ libc_common_src_files := \
 	tzcode/localtime.c \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
+	arch-arm/bionic/__clzsi2.S \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
 	arch-arm/bionic/_exit_with_stack_teardown.S \
 	arch-arm/bionic/_setjmp.S \
 	arch-arm/bionic/atomics_arm.S \
 	arch-arm/bionic/clone.S \
+	arch-arm/bionic/ffs.S \
 	arch-arm/bionic/memcmp.S \
 	arch-arm/bionic/memcmp16.S \
 	arch-arm/bionic/memcpy.S \

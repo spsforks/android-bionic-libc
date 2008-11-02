@@ -41,8 +41,10 @@
  */
 
 __memcmp16:
+#ifndef __ARM_ARCH_4__
         pld         [r0, #0]
         pld         [r1, #0]
+#endif
 
         /* take of the case where length is nul or the buffers are the same */
         cmp         r0, r1
@@ -64,8 +66,10 @@ __memcmp16:
         bpl         0f
 
         /* small blocks (less then 12 words) */
+#ifndef __ARM_ARCH_4__
         pld         [r0, #32]
         pld         [r1, #32]
+#endif
 
 1:      ldrh        r0, [r3], #2
         ldrh        ip, [r1], #2
@@ -113,8 +117,10 @@ __memcmp16:
         bmi         1f
         
 0:
+#ifndef __ARM_ARCH_4__
         pld         [r3, #64]
         pld         [r1, #64]
+#endif
         ldr         r0, [r3], #4
         ldr         lr, [r1, #4]!
         eors        r0, r0, ip
@@ -195,8 +201,10 @@ __memcmp16:
         sub         r2, r2, #8
 
 6:
+#ifndef __ARM_ARCH_4__
         pld         [r3, #64]
         pld         [r1, #64]
+#endif
         mov         ip, lr, lsr #16
         ldr         lr, [r1], #4
         ldr         r0, [r3], #4

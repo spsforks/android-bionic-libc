@@ -70,7 +70,8 @@ extern int __set_tls(void *ptr);
 
 /* get the TLS */
 #ifdef __arm__
-#  define __get_tls() ( *((volatile void **) 0xffff0ff0) )
+typedef void* (__get_tls_t)(void);
+static const __get_tls_t* __get_tls = (const __get_tls_t *)0xffff0fe0;
 #else
 extern void*  __get_tls( void );
 #endif
