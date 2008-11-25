@@ -60,4 +60,6 @@
 #define IN6_ARE_ADDR_EQUAL(a, b)			\
     (memcmp(&(a)->s6_addr[0], &(b)->s6_addr[0], sizeof(struct in6_addr)) == 0)
 
+#define INET6_ADDRSTRLEN 46
+
 #endif /* _NETINET_IN6_H */
