@@ -274,6 +274,13 @@ libc_common_src_files := \
 	netbsd/nameser/ns_print.c \
 	netbsd/nameser/ns_samedomain.c
 
+
+ifeq ($(TARGET_ARCH_VERSION),armv4t)
+libc_common_src_files += \
+        arch-arm/bionic/__clzsi2.S \
+        arch-arm/bionic/ffs.S
+endif
+
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
 # up any thumb code.

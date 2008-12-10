@@ -1,3 +1,5 @@
+#include <machine/cpu-features.h>
+
 	.text
 	.align 4
 	.type _start,#function
@@ -9,7 +11,7 @@ _start:
 	bl	__linker_init
 
 	/* linker init returns the _entry address in the main image */
-	mov	pc, r0
+	bx	r0
 
 	.section .ctors, "wa"
 	.globl __CTOR_LIST__
