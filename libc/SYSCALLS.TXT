@@ -231,6 +231,18 @@ int   msgget(key_t  key, int  msgflg)                       303,-1
 int   msgrcv(int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg)  302,-1
 int   msgsnd(int  msqid, const void* msgp, size_t  msgsz, int  msgflg)               301,-1
 
+# Add x86 parts for ipc syscall
+int   semctl:ipc:3(int  semid, int  semnum, int  cmd, ...)          -1,117
+int   semget:ipc:2(key_t  key, int  nsems, int  semflg)             -1,117
+int   semop:ipc:1(int  semid, struct sembuf*  sops, size_t  nsops)  -1,117
+void* shmat:ipc:21(int  shmid, const void*  shmaddr, int  shmflg)  -1,117
+int   shmctl:ipc:24(int  shmid, int  cmd, struct shmid_ds*  buf)   -1,117
+int   shmdt:ipc:22(const void*  shmaddr)                           -1,117
+int   shmget:ipc:23(key_t  key, size_t  size, int  shmflg)         -1,117
+int   msgctl:ipc:14(int  msqid, int  cmd, struct msqid_ds *buf)    -1,117
+int   msgget:ipc:13(key_t  key, int  msgflg)                       -1,117
+int   msgrcv:ipc:12(int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg)  -1,117
+int   msgsnd:ipc:11(int  msqid, const void* msgp, size_t  msgsz, int  msgflg)               -1,117
 
 # other
 int     uname(struct utsname *)  122
