@@ -190,6 +190,7 @@ int              msgctl (int  msqid, int  cmd, struct msqid_ds *buf);
 int              msgget (key_t  key, int  msgflg);
 int              msgrcv (int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg);
 int              msgsnd (int  msqid, const void* msgp, size_t  msgsz, int  msgflg);
+int              ipc (unsigned int call, int first, int second, int third, void* ptr, long fifth);
 int              uname (struct utsname *);
 pid_t            __wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
 mode_t           umask (mode_t);

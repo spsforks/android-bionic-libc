@@ -153,6 +153,7 @@ syscall_src += arch-x86/syscalls/sched_getparam.S
 syscall_src += arch-x86/syscalls/sched_get_priority_max.S
 syscall_src += arch-x86/syscalls/sched_get_priority_min.S
 syscall_src += arch-x86/syscalls/sched_rr_get_interval.S
+syscall_src += arch-x86/syscalls/ipc.S
 syscall_src += arch-x86/syscalls/uname.S
 syscall_src += arch-x86/syscalls/__wait4.S
 syscall_src += arch-x86/syscalls/umask.S

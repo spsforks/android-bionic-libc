@@ -303,6 +303,7 @@ libc_common_src_files += \
 	arch-x86/bionic/__get_sp.S \
 	arch-x86/bionic/__get_tls.c \
 	arch-x86/bionic/__set_tls.c \
+	arch-x86/bionic/ipc_sysv.c \
 	arch-x86/bionic/atomics_x86.S \
 	arch-x86/bionic/clone.S \
 	arch-x86/bionic/_exit_with_stack_teardown.S \

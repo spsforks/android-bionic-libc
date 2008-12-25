@@ -221,6 +221,7 @@
 #define __NR_timer_delete                 (__NR_SYSCALL_BASE + 263)
 #define __NR_utimes                       (__NR_SYSCALL_BASE + 271)
 #define __NR_socketcall                   (__NR_SYSCALL_BASE + 102)
+#define __NR_ipc                          (__NR_SYSCALL_BASE + 117)
 #define __NR_epoll_create                 (__NR_SYSCALL_BASE + 254)
 #define __NR_epoll_ctl                    (__NR_SYSCALL_BASE + 255)
 #define __NR_epoll_wait                   (__NR_SYSCALL_BASE + 256)

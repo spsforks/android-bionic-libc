@@ -231,6 +231,8 @@ int   msgget(key_t  key, int  msgflg)                       303,-1
 int   msgrcv(int  msqid, void*  msgp, size_t  msgsz, long int  msgtyp, int  msgflg)  302,-1
 int   msgsnd(int  msqid, const void* msgp, size_t  msgsz, int  msgflg)               301,-1
 
+# Add x86 parts for ipc syscall
+int   ipc(unsigned int call, int first, int second, int third, void* ptr, long fifth)               -1,117
 
 # other
 int     uname(struct utsname *)  122
