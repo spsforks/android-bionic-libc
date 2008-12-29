@@ -14,8 +14,10 @@
 
 #include <linux/stddef.h>
 
+typedef unsigned long fd_mask;
+
 #undef __NFDBITS
-#define __NFDBITS (8 * sizeof(unsigned long))
+#define __NFDBITS (8 * sizeof(fd_mask))
 
 #undef __FD_SETSIZE
 #define __FD_SETSIZE 1024
@@ -30,7 +32,7 @@
 #define __FDMASK(d) (1UL << ((d) % __NFDBITS))
 
 typedef struct {
- unsigned long fds_bits [__FDSET_LONGS];
+ fd_mask fds_bits [__FDSET_LONGS];
 } __kernel_fd_set;
 
 typedef void (*__kernel_sighandler_t)(int);
