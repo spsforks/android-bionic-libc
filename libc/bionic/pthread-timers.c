@@ -487,13 +487,16 @@ timer_settime( timer_t                   id,
 
         /* compute next expiration time */
         expires = spec->it_value;
-        clock_gettime( timer->clock, &now );
-        if (!(flags & TIMER_ABSTIME)) {
-            timespec_add(&expires, &now);
-        } else {
-            if (timespec_cmp(&expires, &now) < 0)
-                expires = now;
-        }
+	/* if both fields of it_value equal zero, the timer shall be disarmed */
+	if (expires.tv_sec || expires.tv_nsec) {
+		clock_gettime( timer->clock, &now );
+	        if (!(flags & TIMER_ABSTIME)) {
+	            timespec_add(&expires, &now);
+	        } else {
+	            if (timespec_cmp(&expires, &now) < 0)
+	                expires = now;
+	        }
+	}
 
         timer->expires = expires;
         timer->period  = spec->it_interval;
