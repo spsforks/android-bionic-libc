@@ -187,6 +187,7 @@ LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES += $(libm_common_includes)
 
 LOCAL_MODULE:= libm
+LOCAL_CFLAGS += -fno-builtin
 
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
@@ -207,5 +208,6 @@ LOCAL_C_INCLUDES += $(libm_common_includes)
 LOCAL_MODULE:= libm
 
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+LOCAL_CFLAGS += -fno-builtin
 
 include $(BUILD_SHARED_LIBRARY)
