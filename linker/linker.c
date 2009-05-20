@@ -1169,7 +1169,8 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
             sym_name = (char *)(strtab + symtab[sym].st_name);
             s = _do_lookup(si, sym_name, &base);
             if(s == 0) {
-                DL_ERR("%5d cannot locate '%s'...", pid, sym_name);
+                DL_ERR("%5d cannot locate '%s'...\n",
+				pid, strtab + symtab[sym].st_name);
                 return -1;
             }
 #if 0
