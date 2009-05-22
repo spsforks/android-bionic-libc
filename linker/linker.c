@@ -1134,10 +1134,13 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                 return -1;
             }
 #endif
-            if ((s->st_shndx == SHN_UNDEF) && (s->st_value != 0)) {
-                ERROR("%5d In '%s', shndx=%d && value=0x%08x. We do not "
-                      "handle this yet\n", pid, si->name, s->st_shndx,
-                      s->st_value);
+
+	    if((ELF32_ST_BIND(s->st_info) != STB_WEAK) &&
+	       (s->st_shndx == SHN_UNDEF) && (s->st_value != 0)) {
+                ERROR("%5d In '%s', shndx=%d && value=0x%08x name=%s. We do"
+		      "not handle this yet\n",
+		      pid, si->name, s->st_shndx, s->st_value,
+		      strtab + symtab[sym].st_name);
                 return -1;
             }
             sym_addr = (unsigned)(s->st_value + base);
