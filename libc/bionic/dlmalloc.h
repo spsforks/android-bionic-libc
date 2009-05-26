@@ -547,6 +547,20 @@ void mspace_free(mspace msp, void* mem);
 void* mspace_realloc(mspace msp, void* mem, size_t newsize);
 
 /*
+  mspace_merge_objects will merge allocated memory a and b together,
+  provided b immediately follows a.  It is roughly as if b has been
+  freed and a has been realloced to a larger size.  On successfully
+  merging, a will be returned. If either argument is null or b does
+  not immediately follow a, null will be returned.
+
+  Both a and b should have been previously allocated using malloc or a
+  related routine such as realloc. If either a or b was not malloced
+  or was previously freed, the result is undefined, but like
+  mspace_free, the default is to abort the program.
+*/
+void* mspace_merge_objects(mspace msp, void* a, void* b);
+
+/*
   mspace_calloc behaves as calloc, but operates within
   the given space.
 */

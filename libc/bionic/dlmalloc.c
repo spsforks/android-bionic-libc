@@ -1154,6 +1154,22 @@ void mspace_free(mspace msp, void* mem);
 */
 void* mspace_realloc(mspace msp, void* mem, size_t newsize);
 
+#if ANDROID /* Added for Android, not part of dlmalloc as released */
+/*
+  mspace_merge_objects will merge allocated memory a and b together,
+  provided b immediately follows a.  It is roughly as if b has been
+  freed and a has been realloced to a larger size.  On successfully
+  merging, a will be returned. If either argument is null or b does
+  not immediately follow a, null will be returned.
+
+  Both a and b should have been previously allocated using malloc or a
+  related routine such as realloc. If either a or b was not malloced
+  or was previously freed, the result is undefined, but like
+  mspace_free, the default is to abort the program.
+*/
+void* mspace_merge_objects(mspace msp, void* a, void* b);
+#endif
+
 /*
   mspace_calloc behaves as calloc, but operates within
   the given space.
@@ -4871,6 +4887,40 @@ void* mspace_realloc(mspace msp, void* oldmem, size_t bytes) {
     return internal_realloc(ms, oldmem, bytes);
   }
 }
+
+#if ANDROID
+void* mspace_merge_objects(mspace msp, void* a, void* b)
+{
+  if (a == NULL || b == NULL) {
+    return NULL;
+  }
+  mchunkptr ma = mem2chunk(a);
+  mstate fm = (mstate)msp;
+#if FOOTERS
+  assert(fm == get_mstate_for(ma));
+  // b may not be in the same mspace.
+  if (!ok_magic(fm)) {
+    USAGE_ERROR_ACTION(fm, ma);
+    return NULL;
+  }
+#endif /* FOOTERS */
+  check_inuse_chunk(fm, ma);
+
+  mchunkptr mb = mem2chunk(b);
+  if (next_chunk(ma) != mb) {
+    return NULL;
+  }
+
+  // since b follows a, they share the mspace
+#if FOOTERS
+  assert(fm == get_mstate_for(mb));
+#endif /* FOOTERS */
+  check_inuse_chunk(fm, mb);
+  size_t sz = chunksize(mb);
+  ma->head += sz;
+  return a;
+}
+#endif /* ANDROID */
 
 void* mspace_memalign(mspace msp, size_t alignment, size_t bytes) {
   mstate ms = (mstate)msp;
