@@ -380,3 +380,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 
 
+libc for SuperH
+----------------
+libc for SuperH architecture is written by
+Shin-ichiro KAWASAKI <shinichiro.kawasaki.mg@hitachi.com>
+and Contributed to Android by Hitachi, Ltd. and Renesas Solutions Corp.
+
