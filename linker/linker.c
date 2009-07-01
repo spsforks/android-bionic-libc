@@ -317,7 +317,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
    *pcount = 0;
     return NULL;
 }
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_SH_LINKER)
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
@@ -1102,13 +1102,13 @@ unsigned unload_library(soinfo *si)
  * ideal. They should probably be either uint32_t, Elf32_Addr, or unsigned
  * long.
  */
-static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
+static int reloc_library(soinfo *si, LINKER_ELF32_REL *rel, unsigned count)
 {
     Elf32_Sym *symtab = si->symtab;
     const char *strtab = si->strtab;
     Elf32_Sym *s;
     unsigned base;
-    Elf32_Rel *start = rel;
+    LINKER_ELF32_REL *start = rel;
     unsigned idx;
 
     for (idx = 0; idx < count; ++idx) {
@@ -1188,12 +1188,36 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                        reloc, sym_addr, sym_name);
             *((unsigned*)reloc) = sym_addr;
             break;
+#elif defined(ANDROID_SH_LINKER)
+        case R_SH_JUMP_SLOT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO JUMP_SLOT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+        case R_SH_GLOB_DAT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+        case R_SH_DIR32:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rel->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO DIR32 %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
 #endif /* ANDROID_*_LINKER */
 
 #if defined(ANDROID_ARM_LINKER)
         case R_ARM_RELATIVE:
 #elif defined(ANDROID_X86_LINKER)
         case R_386_RELATIVE:
+#elif defined(ANDROID_SH_LINKER)
+        case R_SH_RELATIVE:
 #endif /* ANDROID_*_LINKER */
             COUNT_RELOC(RELOC_RELATIVE);
             MARK(rel->r_offset);
@@ -1490,24 +1514,31 @@ static int link_image(soinfo *si, unsigned wr_offset)
         case DT_SYMTAB:
             si->symtab = (Elf32_Sym *) (si->base + *d);
             break;
+#if !defined(ANDROID_SH_LINKER)
         case DT_PLTREL:
             if(*d != DT_REL) {
                 ERROR("DT_RELA not supported\n");
                 goto fail;
             }
             break;
+#endif
         case DT_JMPREL:
-            si->plt_rel = (Elf32_Rel*) (si->base + *d);
+            si->plt_rel = (LINKER_ELF32_REL *) (si->base + *d);
             break;
         case DT_PLTRELSZ:
-            si->plt_rel_count = *d / 8;
+            si->plt_rel_count = *d / sizeof(LINKER_ELF32_REL);
             break;
         case DT_REL:
-            si->rel = (Elf32_Rel*) (si->base + *d);
+            si->rel = (LINKER_ELF32_REL *) (si->base + *d);
             break;
         case DT_RELSZ:
-            si->rel_count = *d / 8;
+            si->rel_count = *d / sizeof(LINKER_ELF32_REL);
             break;
+#ifdef ANDROID_SH_LINKER
+        case DT_RELASZ:
+            si->rel_count = *d / sizeof(LINKER_ELF32_REL);
+            break;
+#endif
         case DT_PLTGOT:
             /* Save this in case we decide to do lazy binding. We don't yet. */
             si->plt_got = (unsigned *)(si->base + *d);
@@ -1516,9 +1547,15 @@ static int link_image(soinfo *si, unsigned wr_offset)
             // Set the DT_DEBUG entry to the addres of _r_debug for GDB
             *d = (int) &_r_debug;
             break;
+#ifdef ANDROID_SH_LINKER
+        case DT_RELA:
+            si->rel = (LINKER_ELF32_REL *) (si->base + *d);
+            break;
+#else
         case DT_RELA:
             ERROR("%5d DT_RELA not supported\n", pid);
             goto fail;
+#endif
         case DT_INIT:
             si->init_func = (void (*)(void))(si->base + *d);
             DEBUG("%5d %s constructors (init func) found at %p\n",

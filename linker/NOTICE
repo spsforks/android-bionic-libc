@@ -188,3 +188,9 @@
 
    END OF TERMS AND CONDITIONS
 
+
+linker for SuperH
+----------------
+linker for SuperH architecture is written by
+Shin-ichiro KAWASAKI <shinichiro.kawasaki.mg@hitachi.com>
+and Contributed to Android by Hitachi, Ltd. and Renesas Solutions Corp.

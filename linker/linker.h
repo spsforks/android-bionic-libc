@@ -41,6 +41,12 @@
 void debugger_init();
 const char *addr_to_name(unsigned addr);
 
+#if defined(ANDROID_ARM_LINKER) || defined(ANDROID_X86_LINKER)
+typedef Elf32_Rel LINKER_ELF32_REL;
+#elif defined(ANDROID_SH_LINKER)
+typedef Elf32_Rela LINKER_ELF32_REL;
+#endif /* ANDROID_*_LINKER */
+
 /* magic shared structures that GDB knows about */
 
 struct link_map
@@ -116,10 +122,10 @@ struct soinfo
 
     unsigned *plt_got;
 
-    Elf32_Rel *plt_rel;
+    LINKER_ELF32_REL *plt_rel;
     unsigned plt_rel_count;
 
-    Elf32_Rel *rel;
+    LINKER_ELF32_REL *rel;
     unsigned rel_count;
 
     unsigned *preinit_array;
@@ -147,10 +153,15 @@ struct soinfo
 extern soinfo libdl_info;
 
 /* these must all be powers of two */
+#ifdef ARCH_SH
+#define LIBBASE 0x60000000
+#define LIBLAST 0x70000000
+#define LIBINC  0x00100000
+#else
 #define LIBBASE 0x80000000
 #define LIBLAST 0x90000000
 #define LIBINC  0x00100000
-
+#endif
 
 #ifdef ANDROID_ARM_LINKER
 
@@ -166,6 +177,13 @@ extern soinfo libdl_info;
 #define R_386_GLOB_DAT   6
 #define R_386_JUMP_SLOT  7
 #define R_386_RELATIVE   8
+
+#elif defined(ANDROID_SH_LINKER)
+
+#define R_SH_DIR32      1
+#define R_SH_GLOB_DAT   163
+#define R_SH_JUMP_SLOT  164
+#define R_SH_RELATIVE   165
 
 #endif /* ANDROID_*_LINKER */
 
@@ -208,7 +226,7 @@ Elf32_Sym *lookup(const char *name, unsigned *base);
 #ifdef ANDROID_ARM_LINKER 
 typedef long unsigned int *_Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount);
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_SH_LINKER)
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info *, size_t, void *), void *);
 #endif
 
