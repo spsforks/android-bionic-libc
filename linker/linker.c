@@ -317,7 +317,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
    *pcount = 0;
     return NULL;
 }
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(ANDROID_X86_LINKER) || defined(ANDROID_SH_LINKER)
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
@@ -1194,7 +1194,6 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
         case R_ARM_RELATIVE:
 #elif defined(ANDROID_X86_LINKER)
         case R_386_RELATIVE:
-#endif /* ANDROID_*_LINKER */
             COUNT_RELOC(RELOC_RELATIVE);
             MARK(rel->r_offset);
             if(sym){
@@ -1205,6 +1204,7 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
                        reloc, si->base);
             *((unsigned*)reloc) += si->base;
             break;
+#endif /* ANDROID_*_LINKER */
 
 #if defined(ANDROID_X86_LINKER)
         case R_386_32:
@@ -1244,6 +1244,103 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
             return -1;
         }
         rel++;
+    }
+    return 0;
+}
+
+static int reloc_library_a(soinfo *si, Elf32_Rela *rela, unsigned count)
+{
+    Elf32_Sym *symtab = si->symtab;
+    const char *strtab = si->strtab;
+    Elf32_Sym *s;
+    unsigned base;
+    Elf32_Rela *start = rela;
+    unsigned idx;
+
+    for (idx = 0; idx < count; ++idx) {
+        unsigned type = ELF32_R_TYPE(rela->r_info);
+        unsigned sym = ELF32_R_SYM(rela->r_info);
+        unsigned reloc = (unsigned)(rela->r_offset + si->base);
+        unsigned sym_addr = 0;
+        char *sym_name = NULL;
+
+        DEBUG("%5d Processing '%s' relocation at index %d\n", pid,
+              si->name, idx);
+        if(sym != 0) {
+            s = _do_lookup(si, strtab + symtab[sym].st_name, &base);
+            if(s == 0) {
+                ERROR("%5d cannot locate '%s'...\n", pid, sym_name);
+                return -1;
+            }
+#if 0
+            if((base == 0) && (si->base != 0)){
+                    /* linking from libraries to main image is bad */
+                ERROR("%5d cannot locate '%s'...\n", 
+                       pid, strtab + symtab[sym].st_name);
+                return -1;
+            }
+#endif
+            if ((s->st_shndx == SHN_UNDEF) && (s->st_value != 0)) {
+                ERROR("%5d In '%s', shndx=%d && value=0x%08x. We do not "
+                      "handle this yet\n", pid, si->name, s->st_shndx,
+                      s->st_value);
+                return -1;
+            }
+            sym_addr = (unsigned)(s->st_value + base);
+            sym_name = (char *)(strtab + symtab[sym].st_name);
+            COUNT_RELOC(RELOC_SYMBOL);
+        } else {
+            s = 0;
+        }
+
+/* TODO: This is ugly. Split up the relocations by arch into
+ * different files.
+ */
+        switch(type){
+#if defined(ANDROID_SH_LINKER)
+        case R_SH_JUMP_SLOT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rela->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO JUMP_SLOT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+        case R_SH_GLOB_DAT:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rela->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO GLOB_DAT %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+        case R_SH_DIR32:
+            COUNT_RELOC(RELOC_ABSOLUTE);
+            MARK(rela->r_offset);
+            TRACE_TYPE(RELO, "%5d RELO DIR32 %08x <- %08x %s\n", pid,
+                       reloc, sym_addr, sym_name);
+            *((unsigned*)reloc) = sym_addr;
+            break;
+#endif /* ANDROID_*_LINKER */
+
+#if defined(ANDROID_SH_LINKER)
+        case R_SH_RELATIVE:
+            COUNT_RELOC(RELOC_RELATIVE);
+            MARK(rela->r_offset);
+            if(sym){
+                ERROR("%5d odd RELATIVE form...\n", pid);
+                return -1;
+            }
+            TRACE_TYPE(RELO, "%5d RELO RELATIVE %08x <- +%08x\n", pid,
+                       reloc, si->base);
+            *((unsigned*)reloc) += si->base;
+            break;
+#endif /* ANDROID_*_LINKER */
+
+        default:
+            ERROR("%5d unknown reloc type %d @ %p (%d)\n",
+                  pid, type, rela, (int) (rela - start));
+            return -1;
+        }
+        rela++;
     }
     return 0;
 }
@@ -1490,24 +1587,40 @@ static int link_image(soinfo *si, unsigned wr_offset)
         case DT_SYMTAB:
             si->symtab = (Elf32_Sym *) (si->base + *d);
             break;
+#if !defined(ANDROID_SH_LINKER)
         case DT_PLTREL:
             if(*d != DT_REL) {
                 ERROR("DT_RELA not supported\n");
                 goto fail;
             }
             break;
+#endif
+#ifdef ANDROID_SH_LINKER
+        case DT_JMPREL:
+            si->plt_rela = (Elf32_Rela*) (si->base + *d);
+            break;
+        case DT_PLTRELSZ:
+            si->plt_rela_count = *d / sizeof(Elf32_Rela);
+            break;
+#else
         case DT_JMPREL:
             si->plt_rel = (Elf32_Rel*) (si->base + *d);
             break;
         case DT_PLTRELSZ:
-            si->plt_rel_count = *d / 8;
+            si->plt_rel_count = *d / sizeof(Elf32_Rel);
             break;
+#endif
         case DT_REL:
             si->rel = (Elf32_Rel*) (si->base + *d);
             break;
         case DT_RELSZ:
-            si->rel_count = *d / 8;
+            si->rel_count = *d / sizeof(Elf32_Rel);
             break;
+#ifdef ANDROID_SH_LINKER
+        case DT_RELASZ:
+            si->rela_count = *d / sizeof(Elf32_Rela);
+            break;
+#endif
         case DT_PLTGOT:
             /* Save this in case we decide to do lazy binding. We don't yet. */
             si->plt_got = (unsigned *)(si->base + *d);
@@ -1516,9 +1629,15 @@ static int link_image(soinfo *si, unsigned wr_offset)
             // Set the DT_DEBUG entry to the addres of _r_debug for GDB
             *d = (int) &_r_debug;
             break;
+#ifdef ANDROID_SH_LINKER
+        case DT_RELA:
+            si->rela = (Elf32_Rela *) (si->base + *d);
+            break;
+#else
         case DT_RELA:
             ERROR("%5d DT_RELA not supported\n", pid);
             goto fail;
+#endif
         case DT_INIT:
             si->init_func = (void (*)(void))(si->base + *d);
             DEBUG("%5d %s constructors (init func) found at %p\n",
@@ -1590,9 +1709,20 @@ static int link_image(soinfo *si, unsigned wr_offset)
         if(reloc_library(si, si->plt_rel, si->plt_rel_count))
             goto fail;
     }
+    if(si->plt_rela) {
+        DEBUG("[ %5d relocating %s plt ]\n", pid, si->name );
+        if(reloc_library_a(si, si->plt_rela, si->plt_rela_count))
+            goto fail;
+    }
+
     if(si->rel) {
         DEBUG("[ %5d relocating %s ]\n", pid, si->name );
         if(reloc_library(si, si->rel, si->rel_count))
+            goto fail;
+    }
+    if(si->rela) {
+        DEBUG("[ %5d relocating %s ]\n", pid, si->name );
+        if(reloc_library_a(si, si->rela, si->rela_count))
             goto fail;
     }
 
