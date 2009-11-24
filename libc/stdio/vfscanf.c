@@ -159,7 +159,8 @@ literal:
 			flags |= MAXINT;
 			goto again;
 		case 'L':
-			flags |= LONGDBL;
+			/* long double OR long long integer */
+			flags |= LONGDBL|LLONG;
 			goto again;
 		case 'h':
 			if (*fmt == 'h') {
