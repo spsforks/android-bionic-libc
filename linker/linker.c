@@ -572,6 +572,37 @@ Elf32_Sym *find_containing_symbol(void *addr, soinfo *si)
     return NULL;
 }
 
+/* This is used by dl_sym() */
+Elf32_Sym *lookup_next(const char *name, soinfo **found, soinfo *current)
+{
+    unsigned elf_hash = 0;
+    Elf32_Sym *s = NULL;
+    soinfo *si;
+
+    if(current == NULL) {
+        return NULL;
+    }
+
+    for(si = current->next; (s == NULL) && (si != NULL); si = si->next)
+    {
+        if(si->flags & FLAG_ERROR)
+            continue;
+        s = _do_lookup_in_so(si, name, &elf_hash);
+        if (s != NULL) {
+            *found = si;
+            break;
+        }
+    }
+
+    if(s != NULL) {
+        TRACE_TYPE(LOOKUP, "%5d %s s->st_value = 0x%08x, "
+                   "si->base = 0x%08x\n", pid, name, s->st_value, si->base);
+        return s;
+    }
+
+    return 0;
+}
+
 #if 0
 static void dump(soinfo *si)
 {

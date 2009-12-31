@@ -227,6 +227,7 @@ Elf32_Sym *lookup_in_library(soinfo *si, const char *name);
 Elf32_Sym *lookup(const char *name, soinfo **found);
 soinfo *find_containing_library(void *addr);
 Elf32_Sym *find_containing_symbol(void *addr, soinfo *si);
+Elf32_Sym *lookup_next(const char *name, soinfo **found, soinfo *si);
 const char *linker_get_error(void);
 
 #ifdef ANDROID_ARM_LINKER 

@@ -92,7 +92,10 @@ void *dlsym(void *handle, const char *symbol)
     if(handle == RTLD_DEFAULT) {
         sym = lookup(symbol, &found);
     } else if(handle == RTLD_NEXT) {
-        sym = lookup(symbol, &found);
+        unsigned ret_addr = (unsigned)__builtin_return_address(0);
+        soinfo *si = find_containing_library(ret_addr);
+
+        sym = lookup_next(symbol, &found, si);
     } else {
         found = (soinfo*)handle;
         sym = lookup_in_library(found, symbol);
