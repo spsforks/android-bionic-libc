@@ -538,6 +538,19 @@ Elf32_Sym *lookup(const char *name, soinfo **found)
     return 0;
 }
 
+soinfo *find_containing_library(void *addr)
+{
+    soinfo *si;
+
+    for(si = solist; si != NULL; si = si->next)
+    {
+        if((unsigned)addr >= si->base && (unsigned)addr - si->base < si->size) {
+            return si;
+        }
+    }
+
+    return NULL;
+}
 #if 0
 static void dump(soinfo *si)
 {

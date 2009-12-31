@@ -224,6 +224,7 @@ soinfo *find_library(const char *name);
 unsigned unload_library(soinfo *si);
 Elf32_Sym *lookup_in_library(soinfo *si, const char *name);
 Elf32_Sym *lookup(const char *name, soinfo **found);
+soinfo *find_containing_library(void *addr);
 const char *linker_get_error(void);
 
 #ifdef ANDROID_ARM_LINKER 
