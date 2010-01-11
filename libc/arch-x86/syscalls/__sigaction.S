@@ -2,11 +2,11 @@
 #include <sys/linux-syscalls.h>
 
     .text
-    .type sigaction, @function
-    .globl sigaction
+    .type __sigaction, @function
+    .globl __sigaction
     .align 4
 
-sigaction:
+__sigaction:
     pushl   %ebx
     pushl   %ecx
     pushl   %edx
