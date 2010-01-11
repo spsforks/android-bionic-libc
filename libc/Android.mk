@@ -299,6 +299,8 @@ libc_common_src_files += \
 	string/bcopy.c \
 	string/strcmp.c \
 	string/strncmp.c \
+	arch-arm/bionic/sigaction.c \
+	arch-arm/bionic/__sig_restorer.S \
 	unistd/socketcalls.c
 
 # These files need to be arm so that gdbserver
