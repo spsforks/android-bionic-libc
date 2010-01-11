@@ -279,6 +279,7 @@ libc_common_src_files += \
 	bionic/eabi.c \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
+	arch-arm/bionic/__sig_restorer.S \
 	arch-arm/bionic/_exit_with_stack_teardown.S \
 	arch-arm/bionic/_setjmp.S \
 	arch-arm/bionic/atomics_arm.S \
@@ -292,6 +293,7 @@ libc_common_src_files += \
 	arch-arm/bionic/memcpy.S \
 	arch-arm/bionic/memset.S \
 	arch-arm/bionic/setjmp.S \
+	arch-arm/bionic/sigaction.c \
 	arch-arm/bionic/sigsetjmp.S \
 	arch-arm/bionic/strlen.c.arm \
 	arch-arm/bionic/syscall.S \
@@ -327,6 +329,7 @@ libc_common_src_files += \
 	arch-x86/bionic/clone.S \
 	arch-x86/bionic/_exit_with_stack_teardown.S \
 	arch-x86/bionic/setjmp.S \
+	arch-x86/bionic/sigaction.c \
 	arch-x86/bionic/_setjmp.S \
 	arch-x86/bionic/vfork.S \
 	arch-x86/bionic/syscall.S \
@@ -364,6 +367,7 @@ libc_common_src_files += \
 	arch-sh/bionic/memset.S \
 	arch-sh/bionic/bzero.S \
 	arch-sh/bionic/setjmp.S \
+	arch-sh/bionic/sigaction.c \
 	arch-sh/bionic/sigsetjmp.S \
 	arch-sh/bionic/syscall.S \
 	arch-sh/bionic/memmove.S \
