@@ -299,6 +299,8 @@ libc_common_src_files += \
 	arch-arm/bionic/strlen.c.arm \
 	arch-arm/bionic/syscall.S \
 	string/memmove.c.arm \
+	arch-arm/bionic/sigaction.c \
+	arch-arm/bionic/__sig_restorer.S \
 	unistd/socketcalls.c
 
 # These files need to be arm so that gdbserver
@@ -328,6 +330,7 @@ libc_common_src_files += \
 	arch-x86/bionic/_exit_with_stack_teardown.S \
 	arch-x86/bionic/setjmp.S \
 	arch-x86/bionic/_setjmp.S \
+	arch-x86/bionic/sigaction.c \
 	arch-x86/bionic/vfork.S \
 	arch-x86/string/bzero.S \
 	arch-x86/string/memset.S \
@@ -360,6 +363,7 @@ libc_common_src_files += \
 	arch-sh/bionic/memset.S \
 	arch-sh/bionic/bzero.S \
 	arch-sh/bionic/setjmp.S \
+	arch-sh/bionic/sigaction.c \
 	arch-sh/bionic/sigsetjmp.S \
 	arch-sh/bionic/syscall.S \
 	arch-sh/bionic/memmove.S \
