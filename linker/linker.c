@@ -471,7 +471,7 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
             DEBUG("%5d %s: looking up %s in %s\n",
                   pid, si->name, name, lsi->name);
             s = _do_lookup_in_so(lsi, name, &elf_hash);
-            if(s != NULL)
+            if ((s != NULL) && (s->st_shndx != SHN_UNDEF))
                 goto done;
         }
     }
@@ -1990,7 +1990,7 @@ unsigned __linker_init(unsigned **elfdata)
 
         /* skip past the environment */
     while(vecs[0] != 0) {
-        if(!strncmp((char*) vecs[0], "DEBUG=", 6)) {
+        if(!strncmp((char*) vecs[0], "LINKERDEBUG=", 6)) {
             debug_verbosity = atoi(((char*) vecs[0]) + 6);
         } else if(!strncmp((char*) vecs[0], "LD_LIBRARY_PATH=", 16)) {
             ldpath_env = (char*) vecs[0] + 16;
