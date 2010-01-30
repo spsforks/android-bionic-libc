@@ -41,6 +41,6 @@
 void
 longjmperror(void)
 {
-#define	ERRMSG	"longjmp botch.\n"
+	#define	ERRMSG	"longjmp botch.\n"
 	(void)write(STDERR_FILENO, ERRMSG, sizeof(ERRMSG) - 1);
 }
