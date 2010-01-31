@@ -99,15 +99,15 @@ setvbuf(FILE *fp, char *buf, int mode, size_t size)
 				size = iosize;
 				buf = malloc(size);
 			}
-		}
-		if (buf == NULL) {
-			/* No luck; switch to unbuffered I/O. */
+			if (buf == NULL) {
+				/* No luck; switch to unbuffered I/O. */
 nbf:
-			fp->_flags = flags | __SNBF;
-			fp->_w = 0;
-			fp->_bf._base = fp->_p = fp->_nbuf;
-			fp->_bf._size = 1;
-			return (ret);
+				fp->_flags = flags | __SNBF;
+				fp->_w = 0;
+				fp->_bf._base = fp->_p = fp->_nbuf;
+				fp->_bf._size = 1;
+				return (ret);
+			}
 		}
 		flags |= __SMBF;
 	}
