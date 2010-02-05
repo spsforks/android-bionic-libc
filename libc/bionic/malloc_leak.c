@@ -761,11 +761,10 @@ void* leak_malloc(size_t bytes)
 void leak_free(void* mem)
 {
     if (mem != NULL) {
-        pthread_mutex_lock(&gAllocationsMutex);
-
         // check the guard to make sure it is valid
         AllocationEntry* header = (AllocationEntry*)mem - 1;
-        
+
+        pthread_mutex_lock(&gAllocationsMutex);
         if (header->guard != GUARD) {
             // could be a memaligned block
             if (((void**)mem)[-1] == MEMALIGN_GUARD) {
