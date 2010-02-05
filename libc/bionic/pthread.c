@@ -747,9 +747,8 @@ int pthread_mutexattr_init(pthread_mutexattr_t *attr)
     if (attr) {
         *attr = PTHREAD_MUTEX_DEFAULT;
         return 0;
-    } else {
-        return EINVAL;
     }
+    return EINVAL;
 }
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
@@ -757,9 +756,8 @@ int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
     if (attr) {
         *attr = -1;
         return 0;
-    } else {
-        return EINVAL;
     }
+    return EINVAL;
 }
 
 int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)
