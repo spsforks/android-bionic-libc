@@ -28,25 +28,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-# undef USE_GLIBC_CACHE_SIZE
-# ifdef USE_GLIBC_CACHE_SIZE
-    /*
-     * These are normally stored in a library symbol referenced off of the GOT.
-     * This minimal library does not define them, so we hard wire them.
-     */
-#    define X86_64_data_cache_size		(32 * 1024)		/* Values from glibc */
-#    define X86_64_data_cache_size_half		(X86_64_data_cache_size / 2)
-#    define X86_64_shared_cache_size		(1024 * 1024)
-#    define X86_64_shared_cache_size_half	(X86_64_shared_cache_size / 2)
-
-#    define SHARED_CACHE_SIZE		X86_64_shared_cache_size
-#    define DATA_CACHE_SIZE		X86_64_data_cache_size
-#    define SHARED_CACHE_SIZE_HALF	X86_64_shared_cache_size_half
-#    define DATA_CACHE_SIZE_HALF	X86_64_data_cache_size_half
-# else
-
-#    define SHARED_CACHE_SIZE		(512*1024)			/* Atom L2 Cache */
-#    define DATA_CACHE_SIZE		(24*1024)			/* Atom L1 Data Cache */
-#    define SHARED_CACHE_SIZE_HALF	(SHARED_CACHE_SIZE / 2)
-#    define DATA_CACHE_SIZE_HALF	(DATA_CACHE_SIZE / 2)
-# endif
+/* Values are optimized for Atom */
+#define SHARED_CACHE_SIZE	(512*1024)			/* Atom L2 Cache */
+#define DATA_CACHE_SIZE		(24*1024)			/* Atom L1 Data Cache */
+#define SHARED_CACHE_SIZE_HALF	(SHARED_CACHE_SIZE / 2)
+#define DATA_CACHE_SIZE_HALF	(DATA_CACHE_SIZE / 2)

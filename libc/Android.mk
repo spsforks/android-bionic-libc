@@ -369,6 +369,9 @@ libc_common_src_files += \
 	arch-sh/bionic/__set_tls.c \
 	arch-sh/bionic/__get_tls.c \
 	arch-sh/bionic/ffs.S \
+	string/bcopy.c \
+	string/strcmp.c \
+	string/strncmp.c \
 	string/memcmp.c \
 	string/strlen.c \
 	bionic/eabi.c \
@@ -416,8 +419,9 @@ ifeq ($(TARGET_ARCH),arm)
 else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags := -m32
-    
-    # Enable Atom friendly memory routines
+
+    # Enable recent IA friendly memory routines (such as for Atom)
+    # These will not work on the earlier x86 machines
     libc_common_cflags += -mtune=i686 -DUSE_SSSE3 -DUSE_SSE2
   endif # x86
 endif # !arm
