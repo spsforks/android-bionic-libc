@@ -262,6 +262,25 @@ extern void  __pthread_cleanup_pop(__pthread_cleanup_t*  c,
 } /* extern "C" */
 #endif
 
+/* IMPORTANT: Thread cancellation is *not* supported in Bionic
+ *            However, we declare pthread_cancel() et al that
+ *            simply return an ENOTSUP error because some
+ *            configure scripts probe for these functions to
+ *            determine the thread model.
+ *
+ *            E.g. the GNU toolchain configure script.
+ */
+#define PTHREAD_CANCEL_DISABLE        0
+#define PTHREAD_CANCEL_ENABLE         1
+
+#define  PTHREAD_CANCEL_DEFERRED      0
+#define  PTHREAD_CANCEL_ASYNCHRONOUS  1
+
+extern int  pthread_cancel(pthread_t  thread);
+extern int  pthread_setcancelstate(int state, int *oldstate);
+extern int  pthread_setcanceltype(int type, int *oldtype);
+extern void pthread_testcancel(void);
+
 /************ TO FIX ************/
 
 #define LONG_LONG_MAX __LONG_LONG_MAX__

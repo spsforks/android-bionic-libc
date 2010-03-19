@@ -306,6 +306,7 @@ libc_common_src_files += \
 # up any thumb code.
 libc_common_src_files += \
 	bionic/pthread.c.arm \
+	bionic/pthread-cancel.c.arm \
 	bionic/pthread-timers.c.arm \
 	bionic/ptrace.c.arm
 
@@ -337,6 +338,7 @@ libc_common_src_files += \
 	arch-x86/string/strlen.S \
 	string/memmove.c \
 	bionic/pthread.c \
+	bionic/pthread-cancel.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
 
@@ -371,6 +373,7 @@ libc_common_src_files += \
 	string/strlen.c \
 	bionic/eabi.c \
 	bionic/pthread.c \
+	bionic/pthread-cancel.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c \
 	unistd/socketcalls.c
