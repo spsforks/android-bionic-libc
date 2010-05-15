@@ -43,6 +43,9 @@
 #include <memory.h>
 #include <assert.h>
 #include <malloc.h>
+#include <sys/prctl.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void *arg);
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
@@ -1720,4 +1723,42 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
         _normal_unlock( &once_lock );
     }
     return 0;
+}
+
+/* This value is not exported by kernel headers, so hardcode it here */
+#define MAX_TASK_COMM_LEN	16
+#define TASK_COMM_FMT 		"/proc/self/task/%u/comm"
+
+int pthread_setname_np(pthread_t thid, const char *thname)
+{
+    pthread_internal_t *thread = (pthread_internal_t *)thid;
+    size_t thname_len;
+
+    thname_len = strlen(thname);
+    if (thname_len >= MAX_TASK_COMM_LEN)
+        return ERANGE;
+
+    if (thid == pthread_self())
+        return prctl(PR_SET_NAME, (unsigned long)thname, 0, 0, 0) ? errno : 0;
+    else
+    {
+        /* Have to change the thread name from another thread */
+        char comm_name[sizeof(TASK_COMM_FMT) + 8];
+        int fd, ret = 0;
+        ssize_t n;
+
+        snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, (unsigned int)thread->kernel_id);
+        fd = open(comm_name, O_RDWR);
+        if (fd == -1)
+            return errno;
+        n = write(fd, thname, thname_len);
+        close(fd);
+
+        if (n < 0)
+            ret = errno;
+        else if ((size_t)n != thname_len)
+            ret = EIO;
+
+        return ret;
+    }
 }
