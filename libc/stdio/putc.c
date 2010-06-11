@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
+#define __POSIX_VISIBLE 199506
 #include <stdio.h>
 #include <errno.h>
 #include "local.h"
