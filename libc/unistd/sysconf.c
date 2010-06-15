@@ -322,7 +322,7 @@ line_parser_getc( LineParser*  p )
 
         p->in_len = p->in_pos = 0;
         do {
-            ret = read(p->fd, p->input, sizeof(p->input));
+            ret = read(p->fd, p->input, sizeof(p->input[0]));
         } while (ret < 0 && errno == EINTR);
 
         if (ret <= 0)
