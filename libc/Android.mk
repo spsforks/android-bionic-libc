@@ -398,6 +398,7 @@ libc_common_cflags := \
 		-DSOFTFLOAT                     \
 		-DFLOATING_POINT		\
 		-DNEED_PSELECT=1		\
+		-D__POSIX_VISIBLE=199506	\
 		-DINET6 \
 		-I$(LOCAL_PATH)/private \
 		-DUSE_DL_PREFIX
