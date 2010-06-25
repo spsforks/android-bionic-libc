@@ -88,6 +88,8 @@ Differences between current and Android 2.1:
   between processes by default anymore, unless you use PTHREAD_PROCESS_SHARED
   with pthread_mutexattr_setpshared() and/or pthread_condattr_setpshared().
 
+- Added an implementation of pthread_atfork()
+
 -------------------------------------------------------------------------------
 Differences between Android 2.1 and 2.0.1:
 
