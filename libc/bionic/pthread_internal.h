@@ -46,7 +46,17 @@ typedef struct pthread_internal_t
     void**                      tls;         /* thread-local storage area */
 } pthread_internal_t;
 
+typedef struct pthread_atfork_t
+{
+    struct pthread_atfork_t    *next;
+    struct pthread_atfork_t    *prev;
+    void (*prepare)(void);
+    void (*child)(void);
+    void (*parent)(void);
+} pthread_atfork_t;
+
 extern void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+extern pthread_atfork_t pthread_atfork_handlers;
 
 /* needed by posix-timers.c */
 
