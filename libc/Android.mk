@@ -221,6 +221,7 @@ libc_common_src_files := \
 	bionic/__errno.c \
 	bionic/__set_errno.c \
 	bionic/_rand48.c \
+	bionic/__dso_handle.c \
 	bionic/cpuacct.c \
 	bionic/arc4random.c \
 	bionic/basename.c \
@@ -630,6 +631,7 @@ LOCAL_MODULE:= libc_malloc_debug_leak
 LOCAL_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 # Don't prelink
 LOCAL_PRELINK_MODULE := false
 # Don't install on release build
