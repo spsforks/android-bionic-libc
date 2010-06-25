@@ -68,6 +68,13 @@ static uint8_t * gStackBase = (uint8_t *)STACKBASE;
 
 static pthread_mutex_t mmap_lock = PTHREAD_MUTEX_INITIALIZER;
 
+pthread_atfork_t pthread_atfork_handlers = {
+    .prev = &pthread_atfork_handlers,
+    .next = &pthread_atfork_handlers,
+    .prepare = NULL,
+    .parent = NULL,
+    .child = NULL
+};
 
 static const pthread_attr_t gDefaultPthreadAttr = {
     .flags = 0,
@@ -1932,4 +1939,24 @@ int pthread_setname_np(pthread_t thid, const char *thname)
 exit:
     errno = saved_errno;
     return ret;
+}
+
+int pthread_atfork(void (*prepare)(void), void (*parent)(void), void(*child)(void))
+{
+    pthread_atfork_t *record = malloc(sizeof(pthread_atfork_t));
+
+    if (record == NULL) {
+        return ENOMEM;
+    }
+
+    record->prepare = prepare;
+    record->parent = parent;
+    record->child = child;
+
+    record->next = &pthread_atfork_handlers;
+    record->prev = pthread_atfork_handlers.prev;
+    pthread_atfork_handlers.prev->next = record;
+    pthread_atfork_handlers.prev = record;
+
+    return 0;
 }
