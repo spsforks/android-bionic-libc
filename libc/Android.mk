@@ -229,6 +229,7 @@ libc_common_src_files := \
 	bionic/dirname.c \
 	bionic/dirname_r.c \
 	bionic/drand48.c \
+	bionic/eabi.c \
 	bionic/erand48.c \
 	bionic/err.c \
 	bionic/fdprintf.c \
@@ -291,7 +292,6 @@ libc_common_src_files := \
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
-	bionic/eabi.c \
 	bionic/bionic_clone.c \
 	arch-arm/bionic/__get_pc.S \
 	arch-arm/bionic/__get_sp.S \
@@ -394,7 +394,6 @@ libc_common_src_files += \
 	string/strncmp.c \
 	string/memcmp.c \
 	string/strlen.c \
-	bionic/eabi.c \
 	bionic/pthread.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c \
