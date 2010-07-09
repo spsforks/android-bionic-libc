@@ -72,7 +72,7 @@ int __system_properties_init(void)
     }
     sz = atoi(env + 1);
     
-    pa = mmap(0, sz, PROT_READ, MAP_SHARED, fd, 0);
+    pa = mmap(0, sz, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
     
     if(pa == MAP_FAILED) {
         return -1;
