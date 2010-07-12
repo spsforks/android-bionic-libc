@@ -447,9 +447,11 @@ else # !arm
   ifeq ($(TARGET_ARCH),x86)
     libc_crt_target_cflags := -m32
 
+  ifeq ($(TARGET_ARCH_VARIANT),x86-atom)
     # Enable recent IA friendly memory routines (such as for Atom)
     # These will not work on the earlier x86 machines
     libc_common_cflags += -mtune=i686 -DUSE_SSSE3 -DUSE_SSE2
+  endif # atom
   endif # x86
 endif # !arm
 
