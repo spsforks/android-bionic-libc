@@ -446,15 +446,7 @@ ifeq ($(TARGET_ARCH),arm)
   ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
     libc_common_cflags += -DHAVE_ARM_TLS_REGISTER
   endif
-else # !arm
-  ifeq ($(TARGET_ARCH),x86)
-    libc_crt_target_cflags := -m32
-
-    # Enable recent IA friendly memory routines (such as for Atom)
-    # These will not work on the earlier x86 machines
-    libc_common_cflags += -mtune=i686 -DUSE_SSSE3 -DUSE_SSE2
-  endif # x86
-endif # !arm
+endif # arm
 
 # Define some common includes
 # ========================================================
