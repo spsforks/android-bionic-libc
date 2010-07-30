@@ -1223,6 +1223,110 @@ __timespec_to_relative_msec(struct timespec*  abstime, unsigned  msecs, clockid_
     }
 }
 
+int pthread_mutex_timedlock(pthread_mutex_t *mutex, const struct timespec *abstime)
+{
+    clockid_t clock = CLOCK_MONOTONIC;
+    struct timespec  ts;
+    int mtype, tid, oldv, new_lock_type, shared, wait_op;
+
+    if( __unlikely(mutex == NULL))
+       return EINVAL;
+
+    mtype  = (mutex->value & MUTEX_TYPE_MASK);
+    shared = (mutex->value & MUTEX_SHARED_MASK);
+
+    /* Handle common case first */
+
+    if ( __likely(mtype == MUTEX_TYPE_NORMAL) )
+    {
+        int wait_op = shared ? FUTEX_WAIT : FUTEX_WAKE_PRIVATE;
+
+        /* Common case is a unlocked mutex. Trying to change lock's
+         * state from 0 to 1
+         */
+        if (__atomic_cmpxchg(shared|0, shared|1, &mutex->value) == 0)
+           return 0;
+
+        /* Reject invalid timeouts */
+        if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+           return EINVAL;
+
+        /* Swap 2 in lock and loop until locked or timeout.*/ 
+        while (__atomic_swap(shared|2, &mutex->value) != (shared|0)) {
+            if (__timespec_to_absolute(&ts, abstime, clock) < 0)
+                return ETIMEDOUT;
+            __futex_syscall4(&mutex->value, wait_op, shared|2, &ts);
+        }
+      return 0;
+    }
+
+    /* Do we already own this recursive or error-check mutex ? */
+    tid = __get_thread()->kernel_id;
+    if ( tid == MUTEX_OWNER(mutex) )
+    {
+        int  oldv, counter;
+
+        if (mtype == MUTEX_TYPE_ERRORCHECK) {
+            /* already locked by ourselves */
+            return EDEADLK;
+        }
+
+        _recursive_lock();
+        oldv = mutex->value;
+        counter = (oldv + (1 << MUTEX_COUNTER_SHIFT)) & MUTEX_COUNTER_MASK;
+        mutex->value = (oldv & ~MUTEX_COUNTER_MASK) | counter;
+        _recursive_unlock();
+        return 0;
+    }
+
+    /* We don't own the mutex, so try to get it.
+     *
+     * First, we try to change its state from 0 to 1, if this
+     * doesn't work, try to change it to state 2.
+     */
+    new_lock_type = 1;
+
+    /* Compute wait op and restore sharing bit in mtype */
+    wait_op = shared ? FUTEX_WAIT : FUTEX_WAIT_PRIVATE;
+    mtype  |= shared;
+
+    for (;;) {
+        int  oldv;
+        struct timespec  ts;
+
+        _recursive_lock();
+        oldv = mutex->value;
+        if (oldv == mtype) { /* uncontended released lock => 1 or 2 */
+            mutex->value = ((tid << 16) | mtype | new_lock_type);
+        } else if ((oldv & 3) == 1) { /* locked state 1 => state 2 */
+            oldv ^= 3;
+            mutex->value = oldv;
+        }
+        _recursive_unlock();
+
+        if (oldv == mtype)
+            break;
+
+        /* Reject invalid timeouts */
+        if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+           return EINVAL;
+
+        /*
+         * The lock was held, possibly contended by others.  From
+         * now on, if we manage to acquire the lock, we have to
+         * assume that others are still contending for it so that
+         * we'll wake them when we unlock it.
+         */
+        new_lock_type = 2;
+
+        if (__timespec_to_absolute(&ts, abstime, clock) < 0)
+            return ETIMEDOUT;
+
+        __futex_syscall4(&mutex->value, wait_op, oldv, &ts);
+    }
+    return 0;
+}
+
 int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 {
     clockid_t        clock = CLOCK_MONOTONIC;
