@@ -697,6 +697,16 @@ is_prelinked(int fd, const char *name)
     return (unsigned long)info.mmap_addr;
 }
 
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define ELFMAG_U32 \
+        ((__uint32_t)(ELFMAG0 + 0x100 * (ELFMAG1 + (0x100 * (ELFMAG2 + 0x100 * ELFMAG3)))))
+#elif __BYTE_ORDER == __BIG_ENDIAN
+#define ELFMAG_U32 \
+        ((__uint32_t)((((ELFMAG0 * 0x100) + ELFMAG1) * 0x100 + ELFMAG2) * 0x100 + ELFMAG3))
+#else
+#error "Unknown target byte order!"
+#endif
+
 /* verify_elf_object
  *      Verifies if the object @ base is a valid ELF object
  *
@@ -711,10 +721,8 @@ verify_elf_object(void *base, const char *name)
 {
     Elf32_Ehdr *hdr = (Elf32_Ehdr *) base;
 
-    if (hdr->e_ident[EI_MAG0] != ELFMAG0) return -1;
-    if (hdr->e_ident[EI_MAG1] != ELFMAG1) return -1;
-    if (hdr->e_ident[EI_MAG2] != ELFMAG2) return -1;
-    if (hdr->e_ident[EI_MAG3] != ELFMAG3) return -1;
+    if (*((__uint32_t*) &hdr->e_ident) != ELFMAG_U32)
+        return -1;
 
     /* TODO: Should we verify anything else in the header? */
 
