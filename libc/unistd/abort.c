@@ -40,7 +40,7 @@
     __libc_android_log_print(ANDROID_LOG_DEBUG, "libc-abort", (format), ##__VA_ARGS__ )
 
 #ifdef __arm__
-void
+__attribute__ ((visibility("hidden"))) void
 __libc_android_abort(void)
 #else
 void
@@ -116,9 +116,6 @@ abort(void)
  * without first saving LR, so we use an asm statement.  This also has
  * the side-effect of replacing abort() with __libc_android_abort() in
  * the stack trace.
- *
- * Ideally __libc_android_abort would be static, but I haven't figured out
- * how to tell gcc to call a static function from an asm statement.
  */
 void
 abort(void)
