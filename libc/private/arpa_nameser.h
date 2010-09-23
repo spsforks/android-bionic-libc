@@ -58,6 +58,10 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
@@ -572,6 +576,10 @@ __END_DECLS
     __libc_android_log_print(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
 #else
 #define  XLOG(...)   do {} while (0)
+#endif
+
+#ifndef DEBUG
+#pragma GCC visibility pop
 #endif
 
 #endif /* !_ARPA_NAMESER_H_ */

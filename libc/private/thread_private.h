@@ -7,6 +7,10 @@
 
 #include <pthread.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 /*
  * This file defines the thread library interface to libc.  Thread
  * libraries must implement the functions described here for proper
@@ -158,5 +162,9 @@ void	_thread_atexit_unlock(void);
 					if (__isthreaded)		\
 						_thread_atexit_unlock();\
 				} while (0)
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* _THREAD_PRIVATE_H_ */

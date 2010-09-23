@@ -30,6 +30,10 @@
 
 #include <stdarg.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 enum  {
     ANDROID_LOG_UNKNOWN = 0,
     ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
@@ -46,5 +50,9 @@ enum  {
 
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...);
 int __libc_android_log_vprint(int prio, const char *tag, const char *fmt, va_list ap);
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* _ANDROID_BIONIC_LOGD_H */

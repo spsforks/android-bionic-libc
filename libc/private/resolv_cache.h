@@ -28,6 +28,10 @@
 #ifndef _RESOLV_CACHE_H_
 #define _RESOLV_CACHE_H_
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 struct resolv_cache;  /* forward */
 
 /* get cache instance, can be NULL if cache is disabled
@@ -62,5 +66,9 @@ _resolv_cache_add( struct resolv_cache*  cache,
                    int                   querylen,
                    const void*           answer,
                    int                   answerlen );
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* _RESOLV_CACHE_H_ */

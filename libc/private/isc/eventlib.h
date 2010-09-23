@@ -40,6 +40,10 @@
 # endif
 #endif
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 /* In the absence of branded types... */
 typedef struct { void *opaque; } evConnID;
 typedef struct { void *opaque; } evFileID;
@@ -196,6 +200,10 @@ int evWaitFor __P((evContext, const void *, evWaitFunc, void *, evWaitID *));
 int evDo __P((evContext, const void *));
 int evUnwait __P((evContext, evWaitID));
 int evDefer __P((evContext, evWaitFunc, void *));
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #ifdef __EVENTLIB_P_DEFINED
 # undef __P

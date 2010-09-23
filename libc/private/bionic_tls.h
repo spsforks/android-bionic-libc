@@ -30,6 +30,10 @@
 
 #include <sys/cdefs.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 __BEGIN_DECLS
 
 /** WARNING WARNING WARNING
@@ -109,5 +113,9 @@ extern void*  __get_tls( void );
 extern void*  __get_stack_base(int  *p_stack_size);
 
 __END_DECLS
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* _SYS_TLS_H */
