@@ -3,6 +3,10 @@
 
 #include <netdb.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 /* this structure contains all the variables that were declared
  * 'static' in the original NetBSD resolver code.
  *
@@ -28,5 +32,9 @@ typedef struct res_static {
 } *res_static;
 
 extern res_static __res_get_static(void);
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* _RESOLV_STATIC_H */

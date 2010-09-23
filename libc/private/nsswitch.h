@@ -42,6 +42,10 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 #define	NSS_MODULE_INTERFACE_VERSION	0
 
 #ifndef _PATH_NS_CONF
@@ -233,5 +237,9 @@ int		 _nsyylex(void);
 #endif /* _NS_PRIVATE */
 
 __END_DECLS
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* !_NSSWITCH_H */

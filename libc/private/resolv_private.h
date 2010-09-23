@@ -57,6 +57,10 @@
 #include <resolv.h>
 #include "resolv_static.h"
 
+#ifndef DEBUG
+#pragma GCC visibility push(hidden)
+#endif
+
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
@@ -495,5 +499,9 @@ int res_get_dns_changed();
 u_int  res_randomid(void);
 
 __END_DECLS
+
+#ifndef DEBUG
+#pragma GCC visibility pop
+#endif
 
 #endif /* !_RESOLV_PRIVATE_H_ */

@@ -19,6 +19,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#pragma GCC visibility push(hidden)
+
 void		__dorand48(unsigned short[3]);
 
 #define	RAND48_SEED_0	(0x330e)
@@ -28,5 +30,7 @@ void		__dorand48(unsigned short[3]);
 #define	RAND48_MULT_1	(0xdeec)
 #define	RAND48_MULT_2	(0x0005)
 #define	RAND48_ADD	(0x000b)
+
+#pragma GCC visibility pop
 
 #endif /* _RAND48_H_ */
