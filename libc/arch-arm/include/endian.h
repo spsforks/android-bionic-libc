@@ -33,14 +33,12 @@
 
 #ifdef __GNUC__
 
-/* NOTE: header <machine/cpu-features.h> could not be included directly
- * since it defines extra macros, such as PLD.
+/*
+ * REV and REV16 weren't available on ARM5 or ARM4.
  */
-#if defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) ||	\
-    defined(__ARM_ARCH_7__) ||					\
-    defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || 	\
-    defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) || 	\
-    defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__)
+#if !defined __ARM_ARCH_5__ && !defined __ARM_ARCH_5T__ && \
+    !defined __ARM_ARCH_5TE__ && !defined __ARM_ARCH_5TEJ__ && \
+    !defined __ARM_ARCH_4T__ && !defined __ARM_ARCH_4__
 
 /* According to RealView Assembler User's Guide, REV and REV16 are available
  * in Thumb code and 16-bit instructions when used in Thumb-2 code.
@@ -50,29 +48,25 @@
  *
  * REV16 Rd, Rm
  *   Rd and Rm must both be Lo registers.
+ *
+ * The +l constraint takes care of this without constraining us in ARM mode.
  */
-#ifdef __thumb__
-#define REV_LO_REG	asm("r4")
-#else
-#define REV_LO_REG
-#endif
-
-#define __swap16md(x) ({						\
-	register u_int16_t _x REV_LO_REG = (x);				\
-	__asm volatile ("rev16 %0, %0" : "+r" (_x));			\
-	_x;								\
+#define __swap16md(x) ({					\
+	register u_int16_t _x = (x);				\
+	__asm volatile ("rev16 %0, %0" : "+l" (_x));		\
+	_x;							\
 })
 
-#define __swap32md(x) ({						\
-	register u_int32_t _x REV_LO_REG = (x);				\
-	__asm volatile ("rev %0, %0" : "+r" (_x));			\
-	_x;								\
+#define __swap32md(x) ({					\
+	register u_int32_t _x = (x);				\
+	__asm volatile ("rev %0, %0" : "+l" (_x));		\
+	_x;							\
 })
 
 #define __swap64md(x) ({						\
-	u_int64_t _x = (x);						\
-	(u_int64_t) __swap32md(_x >> 32) |				\
-	(u_int64_t) __swap32md(_x & 0xffffffff) << 32;			\
+	u_int64_t _swap64md_x = (x);					\
+	(u_int64_t) __swap32md(_swap64md_x >> 32) |			\
+	    (u_int64_t) __swap32md(_swap64md_x & 0xffffffff) << 32;	\
 })
 
 /* Tell sys/endian.h we have MD variants of the swap macros.  */
