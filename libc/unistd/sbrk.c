@@ -32,7 +32,7 @@
 #define  SBRK_ALIGN  32
 
 /* shared with brk() implementation */
-char*   __bionic_brk;
+extern char*   __bionic_brk;
 
 void *sbrk(ptrdiff_t increment)
 {
