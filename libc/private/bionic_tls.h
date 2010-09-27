@@ -30,6 +30,8 @@
 
 #include <sys/cdefs.h>
 
+#include <sys/cdefs_hidden_push.h>
+
 __BEGIN_DECLS
 
 /** WARNING WARNING WARNING
@@ -109,5 +111,7 @@ extern void*  __get_tls( void );
 extern void*  __get_stack_base(int  *p_stack_size);
 
 __END_DECLS
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif /* _SYS_TLS_H */
