@@ -20,6 +20,8 @@
 #include <sys/types.h>
 #include <endian.h>
 
+#include <sys/cdefs_hidden_push.h>
+
 /*
  * The original fdlibm code used statements like:
  *	n0 = ((*(int*)&one)>>29)^1;		* index of high word *
@@ -269,5 +271,7 @@ float	__kernel_sindf(double);
 float	__kernel_cosdf(double);
 float	__kernel_tandf(double,int);
 int	__kernel_rem_pio2f(float*,float*,int,int,int,const int*);
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif /* !_MATH_PRIVATE_H_ */
