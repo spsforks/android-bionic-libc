@@ -28,6 +28,8 @@
 #ifndef _RESOLV_CACHE_H_
 #define _RESOLV_CACHE_H_
 
+#include <sys/cdefs_hidden_push.h>
+
 struct resolv_cache;  /* forward */
 
 /* get cache instance, can be NULL if cache is disabled
@@ -62,5 +64,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
                    int                   querylen,
                    const void*           answer,
                    int                   answerlen );
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif /* _RESOLV_CACHE_H_ */
