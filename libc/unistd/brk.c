@@ -30,6 +30,7 @@
 #include <sys/types.h>
 
 /* shared with sbrk.c */
+__LIBC_HIDDEN__
 char *__bionic_brk;
 
 int brk(void*  end_data)
