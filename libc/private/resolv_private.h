@@ -57,6 +57,8 @@
 #include <resolv.h>
 #include "resolv_static.h"
 
+#include <sys/cdefs_hidden_push.h>
+
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
@@ -495,5 +497,7 @@ int res_get_dns_changed();
 u_int  res_randomid(void);
 
 __END_DECLS
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif /* !_RESOLV_PRIVATE_H_ */

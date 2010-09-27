@@ -3,6 +3,8 @@
 #ifndef res_private_h
 #define res_private_h
 
+#include <sys/cdefs_hidden_push.h>
+
 struct __res_state_ext {
 	union res_sockaddr_union nsaddrs[MAXNS];
 	struct sort_list {
@@ -18,5 +20,7 @@ struct __res_state_ext {
 
 extern int
 res_ourserver_p(const res_state statp, const struct sockaddr *sa);
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif

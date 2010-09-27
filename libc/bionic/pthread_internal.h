@@ -30,6 +30,8 @@
 
 #include <pthread.h>
 
+#include <sys/cdefs_hidden_push.h>
+
 __BEGIN_DECLS
 
 typedef struct pthread_internal_t
@@ -114,5 +116,7 @@ extern void __bionic_atfork_run_child();
 extern void __bionic_atfork_run_parent();
 
 __END_DECLS
+
+#include <sys/cdefs_hidden_pop.h>
 
 #endif /* _PTHREAD_INTERNAL_H_ */
