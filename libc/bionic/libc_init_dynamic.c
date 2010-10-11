@@ -57,9 +57,9 @@
  * This ensures that the function is called by the dynamic linker
  * as soon as the shared library is loaded.
  */
-void __attribute__((constructor)) __libc_prenit(void);
+void __attribute__((constructor)) __libc_preinit(void);
 
-void __libc_prenit(void)
+void __libc_preinit(void)
 {
     /* Read the ELF data pointer from a special slot of the
      * TLS area, then call __libc_init_common with it.
@@ -83,14 +83,31 @@ void __libc_prenit(void)
     malloc_debug_init();
 }
 
+static void call_array(void(**list)())
+{
+    // First element is -1, list is null-terminated
+    while (*++list) {
+        (*list)();
+    }
+}
+
 __noreturn void __libc_init(uintptr_t *elfdata,
                        void (*onexit)(void),
                        int (*slingshot)(int, char**, char**),
                        structors_array_t const * const structors)
 {
-    /* When we reach this point, all initializers have been already
-     * run by the dynamic linker, so ignore 'structors'.
+    /* When we reach this point, none of initializers in executable have
+     * been run by the dynamic linker, run them now.
      */
+    /* pre-init array. */
+    call_array(structors->preinit_array);
+
+    /* .ctors section initializers, for non-arm-eabi ABIs */
+    call_array(structors->ctors_array);
+
+    // call static constructors
+    call_array(structors->init_array);
+
     int     argc = (int)*elfdata;
     char**  argv = (char**)(elfdata + 1);
     char**  envp = argv + argc + 1;
