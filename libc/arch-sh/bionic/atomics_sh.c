@@ -104,7 +104,7 @@ int __futex_syscall3(volatile void *ftx, int op, int val)
     return futex(ftx, op, val, NULL, NULL, 0);
 }
 
-int __futex_syscall4(volative void *ftx, int op, int val, const struct timespec *timeout)
+int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout)
 {
     return futex(ftx, op, val, (void *)timeout, NULL, 0);
 }
