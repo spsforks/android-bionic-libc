@@ -138,7 +138,7 @@ _pthread_internal_add( pthread_internal_t*  thread )
     pthread_mutex_unlock(&gThreadListLock);
 }
 
-pthread_internal_t*
+static pthread_internal_t*
 __get_thread(void)
 {
     void**  tls = (void**)__get_tls();
@@ -177,6 +177,7 @@ void  __init_tls(void**  tls, void*  thread)
 /*
  * This trampoline is called from the assembly clone() function
  */
+__LIBC_HIDDEN__
 void __thread_entry(int (*func)(void*), void *arg, void **tls)
 {
     int retValue;
@@ -1443,6 +1444,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     return pthread_cond_timedwait(cond, mutex, NULL);
 }
 
+__LIBC_HIDDEN__
 int __pthread_cond_timedwait_relative(pthread_cond_t *cond,
                                       pthread_mutex_t * mutex,
                                       const struct timespec *reltime)
@@ -1459,6 +1461,7 @@ int __pthread_cond_timedwait_relative(pthread_cond_t *cond,
     return 0;
 }
 
+__LIBC_HIDDEN__
 int __pthread_cond_timedwait(pthread_cond_t *cond,
                              pthread_mutex_t * mutex,
                              const struct timespec *abstime,
