@@ -5,6 +5,9 @@ _on_dlclose:
     call __cxa_finalize
     ret
 
+0:
+    .long __dso_handle
+
 /* we put the _init() function here in case the user files for the shared
  * libs want to drop things into .init section.
  * We then will call our ctors from crtend_so.o */
