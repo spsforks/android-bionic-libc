@@ -35,7 +35,6 @@ typedef struct
     void (**preinit_array)(void);
     void (**init_array)(void);
     void (**fini_array)(void);
-    void (**ctors_array)(void);
 } structors_array_t;
 
 extern void __libc_init_common(uintptr_t *elfdata);
