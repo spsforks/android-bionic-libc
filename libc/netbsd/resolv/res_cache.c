@@ -32,6 +32,9 @@
 #include <time.h>
 #include "pthread.h"
 
+#include <errno.h>
+#include "arpa_nameser.h"
+
 /* This code implements a small and *simple* DNS resolver cache.
  *
  * It is only used to cache DNS answers for a maximum of CONFIG_SECONDS seconds
@@ -141,6 +144,7 @@
 /* set to 1 to debug query data */
 #define  DEBUG_DATA  0
 
+#undef XLOG
 #if DEBUG
 #  include <logd.h>
 #  define  XLOG(...)   \
@@ -148,6 +152,9 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+
+#include <arpa/inet.h>
+#include "resolv_private.h"
 
 /** BOUNDED BUFFER FORMATTING
  **/
@@ -988,9 +995,38 @@ typedef struct Entry {
     const uint8_t*   answer;
     int              answerlen;
     time_t           when;   /* time_t when entry was added to table */
+    int              ttl;    /* time-to-live (seconds) */
     int              id;     /* for debugging purpose */
 } Entry;
 
+static int
+answer_getTTL(const void* answer, int answerlen)
+{
+    ns_msg handle;
+    int result, ancount;
+    ns_rr rr;
+
+    result = CONFIG_SECONDS;
+    if (ns_initparse(answer, answerlen, &handle) >= 0) {
+        // get number of answer records
+        ancount = ns_msg_count(handle, ns_s_an);
+        if (ancount > 0) {
+            if (ns_parserr(&handle, ns_s_an, 0, &rr) == 0) { // get TTL for first answer RR
+                result = ns_rr_ttl(rr);
+            } else {
+                XLOG("ns_parserr failed. %s\n", strerror(errno));
+            }
+        } else {
+            XLOG("found no answer records %s\n", strerror(errno));
+        }
+    } else {
+        XLOG("ns_parserr failed. %s\n", strerror(errno));
+    }
+
+    XLOG("TTL = %d\n", result);
+
+    return result;
+}
 
 static void
 entry_free( Entry*  e )
@@ -1183,12 +1219,47 @@ _cache_dump_mru( Cache*  cache )
 
     XLOG("%s", temp);
 }
+
+static void
+_dump_answer(const void* answer, int answerlen)
+{
+    res_state statep;
+    FILE* fp;
+    char* buf;
+    int fileLen;
+
+    fp = fopen("/data/reslog.txt", "w+");
+    if (fp != NULL) {
+        statep = __res_get_state();
+
+        res_pquery(statep, answer, answerlen, fp);
+
+        //Get file length
+        fseek(fp, 0, SEEK_END);
+        fileLen=ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+        buf = (char *)malloc(fileLen+1);
+        if (buf != NULL) {
+            //Read file contents into buffer
+            fread(buf, fileLen, 1, fp);
+            XLOG("%s\n", buf);
+            free(buf);
+        }
+        fclose(fp);
+        remove("/data/reslog.txt");
+    }
+    else {
+        XLOG("_dump_answer: can't open file\n");
+    }
+}
 #endif
 
 #if DEBUG
 #  define  XLOG_QUERY(q,len)   _dump_query((q), (len))
+#  define  XLOG_ANSWER(a, len) _dump_answer((a), (len))
 #else
 #  define  XLOG_QUERY(q,len)   ((void)0)
+#  define  XLOG_ANSWER(a,len)  ((void)0)
 #endif
 
 /* This function tries to find a key within the hash table
@@ -1322,7 +1393,7 @@ _resolv_cache_lookup( struct resolv_cache*  cache,
     now = _time_now();
 
     /* remove stale entries here */
-    if ( (unsigned)(now - e->when) >= CONFIG_SECONDS ) {
+    if ( (unsigned)(now - e->when) >= (unsigned)(e->ttl) ) {
         XLOG( " NOT IN CACHE (STALE ENTRY %p DISCARDED)", *lookup );
         _cache_remove_p(cache, lookup);
         goto Exit;
@@ -1363,6 +1434,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
     Entry    key[1];
     Entry*   e;
     Entry**  lookup;
+    int ttl;
 
     /* don't assume that the query has already been cached
      */
@@ -1375,6 +1447,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
 
     XLOG( "%s: query:", __FUNCTION__ );
     XLOG_QUERY(query,querylen);
+    XLOG_ANSWER(answer, answerlen);
 #if DEBUG_DATA
     XLOG( "answer:");
     XLOG_BYTES(answer,answerlen);
@@ -1401,9 +1474,13 @@ _resolv_cache_add( struct resolv_cache*  cache,
         }
     }
 
-    e = entry_alloc( key, answer, answerlen );
-    if (e != NULL) {
-        _cache_add_p(cache, lookup, e);
+    ttl = answer_getTTL(answer, answerlen);
+    if (ttl > 0) {
+        e = entry_alloc(key, answer, answerlen);
+        if (e != NULL) {
+            e->ttl = ttl;
+            _cache_add_p(cache, lookup, e);
+        }
     }
 #if DEBUG
     _cache_dump_mru(cache);
