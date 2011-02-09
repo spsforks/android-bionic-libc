@@ -1147,15 +1147,15 @@ entry_equals( const Entry*  e1, const Entry*  e2 )
  * for simplicity, the hash-table fields 'hash' and 'hlink' are
  * inlined in the Entry structure.
  */
-#define  MAX_HASH_ENTRIES   (2*CONFIG_MAX_ENTRIES)
 
 typedef struct resolv_cache {
+    int              max_entries;
     int              num_entries;
     Entry            mru_list;
     pthread_mutex_t  lock;
     unsigned         generation;
     int              last_id;
-    Entry*           entries[ MAX_HASH_ENTRIES ];
+    Entry*           entries;
 } Cache;
 
 
@@ -1167,9 +1167,9 @@ _cache_flush_locked( Cache*  cache )
     int     nn;
     time_t  now = _time_now();
 
-    for (nn = 0; nn < MAX_HASH_ENTRIES; nn++) 
+    for (nn = 0; nn < cache->max_entries; nn++)
     {
-        Entry**  pnode = &cache->entries[nn];
+        Entry**  pnode = (Entry**) &cache->entries[nn];
 
         while (*pnode != NULL) {
             Entry*  node = *pnode;
@@ -1187,6 +1187,27 @@ _cache_flush_locked( Cache*  cache )
          "*************************");
 }
 
+/* Return max number of entries in the case as
+ * defined by system variable ANDROID_DNS_CACHE_SIZE.
+ * If system variable not set default value returned, which
+ * is defined by CONFIG_MAX_ENTRIES */
+static int
+_res_cache_get_max_entries( void )
+{
+    const char* cache_size;
+    int result;
+
+    cache_size = getenv("ANDROID_DNS_CACHE_SIZE");
+    if (cache_size != NULL) {
+        result = atoi(cache_size);
+    } else {
+        result = CONFIG_MAX_ENTRIES;
+    }
+
+    XLOG("cache size: %d", result);
+    return result;
+}
+
 static struct resolv_cache*
 _resolv_cache_create( void )
 {
@@ -1194,10 +1215,17 @@ _resolv_cache_create( void )
 
     cache = calloc(sizeof(*cache), 1);
     if (cache) {
-        cache->generation = ~0U;
-        pthread_mutex_init( &cache->lock, NULL );
-        cache->mru_list.mru_prev = cache->mru_list.mru_next = &cache->mru_list;
-        XLOG("%s: cache created\n", __FUNCTION__);
+        cache->max_entries = _res_cache_get_max_entries();
+        cache->entries = calloc(sizeof(*cache->entries), cache->max_entries);
+        if (cache->entries) {
+            cache->generation = ~0U;
+            pthread_mutex_init( &cache->lock, NULL );
+            cache->mru_list.mru_prev = cache->mru_list.mru_next = &cache->mru_list;
+            XLOG("%s: cache created\n", __FUNCTION__);
+        } else {
+            free(cache);
+            cache = NULL;
+        }
     }
     return cache;
 }
@@ -1288,8 +1316,8 @@ static Entry**
 _cache_lookup_p( Cache*   cache,
                  Entry*   key )
 {
-    int      index = key->hash % MAX_HASH_ENTRIES;
-    Entry**  pnode = &cache->entries[ key->hash % MAX_HASH_ENTRIES ];
+    int      index = key->hash % cache->max_entries;
+    Entry**  pnode = (Entry**) &cache->entries[ index ];
 
     while (*pnode != NULL) {
         Entry*  node = *pnode;
@@ -1470,7 +1498,7 @@ _resolv_cache_add( struct resolv_cache*  cache,
         goto Exit;
     }
 
-    if (cache->num_entries >= CONFIG_MAX_ENTRIES) {
+    if (cache->num_entries >= cache->max_entries) {
         _cache_remove_oldest(cache);
         /* need to lookup again */
         lookup = _cache_lookup_p(cache, key);
