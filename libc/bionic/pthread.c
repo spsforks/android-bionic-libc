@@ -1459,21 +1459,6 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     return pthread_cond_timedwait(cond, mutex, NULL);
 }
 
-int __pthread_cond_timedwait_relative(pthread_cond_t *cond,
-                                      pthread_mutex_t * mutex,
-                                      const struct timespec *reltime)
-{
-    int  status;
-    int  oldvalue = cond->value;
-
-    pthread_mutex_unlock(mutex);
-    status = __futex_wait_ex(&cond->value, COND_IS_SHARED(cond), oldvalue, reltime);
-    pthread_mutex_lock(mutex);
-
-    if (status == (-ETIMEDOUT)) return ETIMEDOUT;
-    return 0;
-}
-
 int __pthread_cond_timedwait(pthread_cond_t *cond,
                              pthread_mutex_t * mutex,
                              const struct timespec *abstime,
@@ -1481,16 +1466,28 @@ int __pthread_cond_timedwait(pthread_cond_t *cond,
 {
     struct timespec ts;
     struct timespec * tsp;
+    int  status;
 
-    if (abstime != NULL) {
-        if (__timespec_to_absolute(&ts, abstime, clock) < 0)
-            return ETIMEDOUT;
-        tsp = &ts;
-    } else {
-        tsp = NULL;
+    pthread_mutex_unlock(mutex);
+    while (1) {
+        int  oldvalue;
+        if (abstime != NULL) {
+            if (__timespec_to_absolute(&ts, abstime, clock) < 0)
+                return ETIMEDOUT;
+            tsp = &ts;
+        } else {
+            tsp = NULL;
+        }
+
+        oldvalue = cond->value;
+        status = __futex_wait_ex(&cond->value, COND_IS_SHARED(cond), oldvalue, tsp);
+        if (status == -ETIMEDOUT || status == 0)
+            break;
+
     }
-
-    return __pthread_cond_timedwait_relative(cond, mutex, tsp);
+    pthread_mutex_lock(mutex);
+    if (status == (-ETIMEDOUT)) return ETIMEDOUT;
+    return 0;
 }
 
 int pthread_cond_timedwait(pthread_cond_t *cond,
@@ -1520,19 +1517,31 @@ int pthread_cond_timedwait_relative_np(pthread_cond_t *cond,
                                       pthread_mutex_t * mutex,
                                       const struct timespec *reltime)
 {
-    return __pthread_cond_timedwait_relative(cond, mutex, reltime);
+    clockid_t        clock = CLOCK_MONOTONIC;
+    struct timespec  abstime;
+
+    clock_gettime(clock, &abstime);
+    abstime.tv_sec  += reltime->tv_sec;
+    abstime.tv_nsec += reltime->tv_nsec;
+    if (abstime.tv_nsec >= 1000000000) {
+        abstime.tv_sec++;
+        abstime.tv_nsec -= 1000000000;
+    }
+
+    return __pthread_cond_timedwait(cond, mutex, &abstime, clock);
 }
 
 int pthread_cond_timeout_np(pthread_cond_t *cond,
                             pthread_mutex_t * mutex,
                             unsigned msecs)
 {
-    struct timespec ts;
+    clockid_t        clock = CLOCK_MONOTONIC;
+    struct timespec  abstime;
 
-    ts.tv_sec = msecs / 1000;
-    ts.tv_nsec = (msecs % 1000) * 1000000;
+    /* compute absolute expiration time */
+    __timespec_to_relative_msec(&abstime, msecs, clock);
 
-    return __pthread_cond_timedwait_relative(cond, mutex, &ts);
+    return __pthread_cond_timedwait(cond, mutex, &abstime, clock);
 }
 
 
