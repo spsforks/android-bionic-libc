@@ -1858,13 +1858,26 @@ int pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
      */
     int ret, old_errno = errno;
 
-    /* Use NSIG which corresponds to the number of signals in
-     * our 32-bit sigset_t implementation. As such, this function, or
-     * anything that deals with sigset_t cannot manage real-time signals
-     * (signo >= 32). We might want to introduce sigset_rt_t as an
-     * extension to do so in the future.
+    /* the kernel expect a 64 bit signal, but we have a 32-bit sigset_t
+     * implementation.
      */
-    ret = __rt_sigprocmask(how, set, oset, NSIG / 8);
+
+    /* use a union to get rid of aliasing warnings */
+    union {
+      unsigned long  kernel_sigset[2];
+      sigset_t       dummy_sigset;
+    } u, v;
+
+    if (set) {
+        u.kernel_sigset[0] = *set;
+        u.kernel_sigset[1] = 0;  /* no real-time signals supported ? */
+    }
+
+    ret = __rt_sigprocmask(how, set?&u.dummy_sigset:NULL, oset?&v.dummy_sigset:NULL, sizeof(u.kernel_sigset));
+
+    if (oset)
+        *oset = v.kernel_sigset[0];
+
     if (ret < 0)
         ret = errno;
 
