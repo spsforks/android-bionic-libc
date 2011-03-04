@@ -44,7 +44,7 @@ int __rt_sigtimedwait(const sigset_t *uthese, siginfo_t *uinfo, const struct tim
  * we thus need to create a fake kernel sigset !!
  */
 
-int sigwait(const sigset_t *set, int *sig)
+int sigwaitinfo(const sigset_t *set, siginfo_t *info)
 {
     int  ret;
     /* use a union to get rid of aliasing warnings */
@@ -60,15 +60,30 @@ int sigwait(const sigset_t *set, int *sig)
      /* __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
       * around them since sigwait is only allowed to return EINVAL
       */
-      ret = __rt_sigtimedwait ( &u.dummy_sigset, NULL, NULL, sizeof(u.kernel_sigset));
+      ret = __rt_sigtimedwait ( &u.dummy_sigset, info, NULL, sizeof(u.kernel_sigset));
       if (ret >= 0)
         break;
 
       if (errno != EAGAIN && errno != EINTR)
-        return errno;
+        return -1;
     }
 
-    *sig = ret;
-    return 0;
+    return ret;
+}
+
+int sigwait(const sigset_t *set, int *sig)
+{
+    int ret;
+
+    ret = sigwaitinfo(set, NULL);
+    if (ret >= 0)
+    {
+        *sig = ret;
+        ret = 0;
+    } else {
+        ret = errno;
+    }
+
+    return ret;
 }
 
