@@ -51,7 +51,15 @@
 #include "atexit.h"
 #include "libc_init_common.h"
 #include <bionic_tls.h>
-
+#ifdef __mips__
+static void call_array(void(**list)())
+{
+    // First element is -1, list is null-terminated
+    while (*++list) {
+        (*list)();
+    }
+}
+#endif
 /* We flag the __libc_preinit function as a constructor to ensure
  * that its address is listed in libc.so's .init_array section.
  * This ensures that the function is called by the dynamic linker
@@ -99,7 +107,10 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     int     argc = (int)*elfdata;
     char**  argv = (char**)(elfdata + 1);
     char**  envp = argv + argc + 1;
-
+#ifdef __mips__
+    /* .ctors section initializers, for non-arm-eabi ABIs */
+    call_array(structors->ctors_array);
+#endif
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
