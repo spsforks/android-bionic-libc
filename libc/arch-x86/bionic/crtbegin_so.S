@@ -100,3 +100,4 @@ __x86.get_pc_thunk.bx:
 	ret
 
 #include "__dso_handle.S"
+#include "__stack_chk_fail_local.S"
