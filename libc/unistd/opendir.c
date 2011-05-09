@@ -195,14 +195,28 @@ int closedir(DIR *dir)
 }
 
 
-void   rewinddir(DIR *dir)
+void rewinddir(DIR *dir)
 {
-    pthread_mutex_lock( &dir->_DIR_lock );
-    lseek( dir->_DIR_fd, 0, SEEK_SET );
-    dir->_DIR_avail = 0;
-    pthread_mutex_unlock( &dir->_DIR_lock );
+	seekdir(dir, 0);
 }
 
+long telldir(DIR *dir)
+{
+	long avail;
+
+	pthread_mutex_lock(&dir->_DIR_lock);
+	avail = dir->_DIR_avail;
+	pthread_mutex_unlock(&dir->_DIR_lock);
+	return avail;
+}
+
+void seekdir(DIR *dir, long off)
+{
+	pthread_mutex_lock(&dir->_DIR_lock);
+	lseek(dir->_DIR_fd, off, SEEK_SET);
+	dir->_DIR_avail = off;
+	pthread_mutex_unlock(&dir->_DIR_lock);
+}
 
 int alphasort(const void *a, const void *b)
 {
