@@ -1,0 +1,12 @@
+Code-Review+2: David Turner <digit@android.com>
+Verified+1: David Turner <digit@android.com>
+Code-Review+1: Jim Huang <jserv@0xlab.org>
+Code-Review+1: Thorsten Glaser <tg@mirbsd.org>
+Code-Review+1: Bruce Beare <bruce.j.beare@intel.com>
+Code-Review+1: Kan-Ru Chen <kanru@0xlab.org>
+Code-Review+1: Priya Vijayan  <priya.rvn@gmail.com>
+Submitted-by: David Turner <digit@android.com>
+Submitted-at: Tue, 05 Apr 2011 06:58:54 -0700
+Reviewed-on: https://review.source.android.com/22039
+Project: platform/bionic
+Branch: refs/heads/master

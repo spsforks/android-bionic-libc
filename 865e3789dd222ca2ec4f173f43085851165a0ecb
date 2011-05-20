@@ -1,0 +1,8 @@
+Change-Id: I865e3789dd222ca2ec4f173f43085851165a0ecb
+Code-Review+2: Brad Fitzpatrick <bradfitz@android.com>
+Verified+1: Brad Fitzpatrick <bradfitz@android.com>
+Submitted-by: Brad Fitzpatrick <bradfitz@android.com>
+Submitted-at: Mon, 14 Mar 2011 10:39:10 -0700
+Reviewed-on: https://review.source.android.com/21715
+Project: platform/bionic
+Branch: refs/heads/master

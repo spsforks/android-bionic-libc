@@ -1,0 +1,6 @@
+Change-Id: Ie0055e0f99732dbaea81fd1c7055efb7b506c221
+Code-Review+1: David Turner <digit@android.com>
+Code-Review+2: Brian Swetland <swetland@google.com>
+Reviewed-on: https://review.source.android.com/5269
+Project: platform/bionic
+Branch: refs/heads/master

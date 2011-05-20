@@ -1,0 +1,8 @@
+Change-Id: I0b251a1b9c1fdf009d06879c739dcf1217e42969
+Code-Review+2: Jean-Baptiste Queru <jbq@google.com>
+Verified+1: Jean-Baptiste Queru <jbq@google.com>
+Submitted-by: Jean-Baptiste Queru <jbq@google.com>
+Submitted-at: Wed, 18 Mar 2009 17:52:37 -0700
+Reviewed-on: https://review.source.android.com/9239
+Project: platform/bionic
+Branch: refs/heads/master

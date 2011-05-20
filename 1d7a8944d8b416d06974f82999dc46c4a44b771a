@@ -1,0 +1,8 @@
+Change-Id: I41483d09d6ffd175f254d56746c1dfa4adf435dc
+Code-Review+2: David Turner <digit@android.com>
+Verified+1: Jean-Baptiste Queru <jbq@google.com>
+Submitted-by: Jean-Baptiste Queru <jbq@google.com>
+Submitted-at: Thu, 29 Apr 2010 08:01:50 -0700
+Reviewed-on: https://review.source.android.com/10540
+Project: platform/bionic
+Branch: refs/heads/master

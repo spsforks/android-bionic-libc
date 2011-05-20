@@ -1,0 +1,9 @@
+Change-Id: I30a419afc3cdb641e350c7cfde753877675958e0
+Code-Review+2: David Turner <digit@android.com>
+Verified+1: David Turner <digit@android.com>
+Code-Review+1: Kenny Root <kenny@the-b.org>
+Submitted-by: David Turner <digit@android.com>
+Submitted-at: Tue, 16 Mar 2010 17:25:04 -0700
+Reviewed-on: https://review.source.android.com/13383
+Project: platform/bionic
+Branch: refs/heads/master

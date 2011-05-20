@@ -1,0 +1,10 @@
+Change-Id: Ie31c1d0b48b4654d3562fc6c9dd648d72356449e
+Code-Review+2: David Turner <digit@android.com>
+Verified+1: David Turner <digit@android.com>
+Code-Review+1: Tony SIM <chinyeow.sim.xt@renesas.com>
+Code-Review+1: Bruce Beare <bruce.j.beare@intel.com>
+Submitted-by: David Turner <digit@android.com>
+Submitted-at: Wed, 17 Mar 2010 14:00:20 -0700
+Reviewed-on: https://review.source.android.com/13523
+Project: platform/bionic
+Branch: refs/heads/master
