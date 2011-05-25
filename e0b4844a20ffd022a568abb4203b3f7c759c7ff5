@@ -1,0 +1,9 @@
+Code-Review+2: David Turner <digit@android.com>
+Verified+1: David Turner <digit@android.com>
+Code-Review+1: Bruce Beare <bruce.j.beare@intel.com>
+Code-Review+1: H.J. Lu <hjl.tools@gmail.com>
+Submitted-by: David Turner <digit@android.com>
+Submitted-at: Tue, 24 May 2011 17:43:27 -0700
+Reviewed-on: https://review.source.android.com/22697
+Project: platform/bionic
+Branch: refs/heads/master
