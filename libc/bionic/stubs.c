@@ -351,8 +351,48 @@ void endpwent(void)
 
 struct mntent* getmntent(FILE* f)
 {
-    fprintf(stderr, "FIX ME! implement getmntent() %s:%d\n", __FILE__, __LINE__);
-    return NULL;
+	static struct mntent mntent;
+	static char buf[1024];
+	int i;
+	char *ptrs[6] = { NULL };
+	char *p, *line, *saveptr = NULL;
+	const char *sep = " \t\n";
+
+	do {
+		line = fgets(buf, sizeof buf, f);
+		if (!line)
+			return NULL;
+		p = buf;
+		while (*p && isspace(*p))
+			++p;
+		if (!*p)
+			continue;
+		if (*p != '#')
+			break;
+	} while (1);
+
+	/* fill the ptrs array with up to six fields
+	 * from the file */
+	i = 0;
+	p = strtok_r(buf, sep, &saveptr);
+	while (p && i < 6) {
+		ptrs[i++] = p;
+		p = strtok_r(NULL, sep, &saveptr);
+	}
+
+	/* should at least have fsname, dir and type */
+	if (i < 3)
+		return NULL;
+
+	/* populate the mntent structure */
+	mntent.mnt_fsname = ptrs[0];
+	mntent.mnt_dir = ptrs[1];
+	mntent.mnt_type = ptrs[2];
+	mntent.mnt_opts = !ptrs[3] ? "" : ptrs[3];
+	mntent.mnt_freq = !ptrs[4] ? 0 : atoi(ptrs[4]);
+	mntent.mnt_passno = !ptrs[5] ? 0 : atoi(ptrs[5]);
+
+	return &mntent;
 }
 
 char* ttyname(int fd)
