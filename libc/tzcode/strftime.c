@@ -407,9 +407,9 @@ label:
                     tm = *t;
                     mkt = mktime64(&tm);
                     if (TYPE_SIGNED(time64_t))
-                        (void) sprintf(buf, "%lld",
+                        (void) snprintf(buf, "%lld", sizeof(buf),
                             (long long) mkt);
-                    else    (void) sprintf(buf, "%llu",
+                    else    (void) snprintf(buf, "%llu", sizeof(buf),
                             (unsigned long long) mkt);
                     pt = _add(buf, pt, ptlim, modifier);
                 }
