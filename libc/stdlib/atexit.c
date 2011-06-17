@@ -105,15 +105,6 @@ unlock:
 }
 
 /*
- * Register a function to be performed at exit.
- */
-int
-atexit(void (*func)(void))
-{
-	return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
-}
-
-/*
  * Call all handlers registered with __cxa_atexit() for the shared
  * object owning 'dso'.
  * Note: if 'dso' is NULL, then all remaining handlers are called.
