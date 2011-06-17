@@ -52,4 +52,5 @@ __FINI_ARRAY__:
         .long -1
         .long __on_dlclose
 
-#include "__dso_handle.S"
+#include "__dso_handle_so.S"
+#include "atexit.S"
