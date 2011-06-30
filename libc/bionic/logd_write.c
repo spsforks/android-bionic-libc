@@ -79,7 +79,7 @@ static log_channel_t log_channels[LOG_ID_MAX] = {
 
 static int __write_to_log_null(log_id_t log_id, struct iovec *vec)
 {
-    /* 
+    /*
      * ALTERED behaviour from previous version
      * always returns successful result
      */
@@ -111,9 +111,13 @@ static int __write_to_log_kernel(log_id_t log_id, struct iovec *vec)
 static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
 {
     if ((LOG_ID_NONE < log_id) && (log_id < LOG_ID_MAX)) {
+        int fd;
+
         pthread_mutex_lock(&log_init_lock);
 
-        int fd = open(log_channels[log_id].path, O_WRONLY);
+        do {
+            fd = open(log_channels[log_id].path, O_WRONLY);
+        } while ((fd < 0) && (errno == EINTR));
 
         log_channels[log_id].logger =
             (fd < 0) ? __write_to_log_null : __write_to_log_kernel;
@@ -130,7 +134,8 @@ static int __write_to_log_init(log_id_t log_id, struct iovec *vec)
     return -1;
 }
 
-static int __android_log_write(int prio, const char *tag, const char *msg)
+__LIBC_HIDDEN__
+int __libc_android_log_write(int prio, const char *tag, const char *msg)
 {
     struct iovec vec[3];
     log_id_t log_id = LOG_ID_MAIN;
@@ -151,7 +156,7 @@ static int __android_log_write(int prio, const char *tag, const char *msg)
     return log_channels[log_id].logger(log_id, vec);
 }
 
-
+__LIBC_HIDDEN__
 int __libc_android_log_vprint(int prio, const char *tag, const char *fmt,
                               va_list ap)
 {
@@ -159,9 +164,10 @@ int __libc_android_log_vprint(int prio, const char *tag, const char *fmt,
 
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
 
-    return __android_log_write(prio, tag, buf);
+    return __libc_android_log_write(prio, tag, buf);
 }
 
+__LIBC_HIDDEN__
 int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...)
 {
     va_list ap;
@@ -171,20 +177,21 @@ int __libc_android_log_print(int prio, const char *tag, const char *fmt, ...)
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
     va_end(ap);
 
-    return __android_log_write(prio, tag, buf);
+    return __libc_android_log_write(prio, tag, buf);
 }
 
+__LIBC_HIDDEN__
 int __libc_android_log_assert(const char *cond, const char *tag,
 			      const char *fmt, ...)
 {
     va_list ap;
-    char buf[LOG_BUF_SIZE];    
+    char buf[LOG_BUF_SIZE];
 
     va_start(ap, fmt);
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
     va_end(ap);
 
-    __android_log_write(ANDROID_LOG_FATAL, tag, buf);
+    __libc_android_log_write(ANDROID_LOG_FATAL, tag, buf);
 
     exit(1);
 
