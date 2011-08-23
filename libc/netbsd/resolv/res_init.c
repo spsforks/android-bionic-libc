@@ -100,6 +100,7 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 
 #ifdef ANDROID_CHANGES
 #include <sys/system_properties.h>
+#include "resolv_cache.h"
 #endif /* ANDROID_CHANGES */
 
 #ifndef MIN
@@ -900,3 +901,30 @@ int res_get_dns_changed()
 	}
 }
 #endif /* ANDROID_CHANGES */
+int res_initfromcache(res_state statp, const char* iface)
+{
+    if (!statp) {
+        goto error;
+    }
+
+    // set interface
+    if (iface && iface[0] != '\0') {
+        int len = sizeof(statp->iface);
+        strncpy(statp->iface, iface, len - 1);
+        statp->iface[len - 1] = '\0';
+    } else {
+        // get default interface
+        if (_resolv_get_default_iface(statp->iface, sizeof(statp->iface)) <= 0) {
+            goto error; // default interface not set
+        }
+    }
+
+    // get name servers from the cache associated with the interface
+    if (_resolv_set_nameservers_to_res_state(statp) <= 0) {
+        goto error; // no name servers set
+    }
+
+    return 0;
+error:
+    return -1;
+}

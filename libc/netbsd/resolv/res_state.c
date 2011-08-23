@@ -202,11 +202,18 @@ __get_h_errno(void)
 }
 
 res_state
-__res_get_state(void)
+__res_get_state(const char* iface)
 {
     _res_thread*  rt = _res_thread_get();
 
-    return rt ? rt->_nres : NULL;
+    res_state statp = rt ? rt->_nres : NULL;
+    if (statp != NULL) {
+        if (res_initfromcache(statp, iface) == -1) {
+            return NULL;
+        }
+    }
+
+    return statp;
 }
 
 void

@@ -385,7 +385,8 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-        cache = __get_res_cache();
+        // get the cache associated with the interface
+        cache = __get_res_cache(statp->iface);
         if (cache != NULL) {
             int  anslen = 0;
             cache_status = _resolv_cache_lookup(

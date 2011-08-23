@@ -150,15 +150,6 @@ android_gethostbyaddr_proxy(struct hostent* hp, const void *addr, socklen_t addr
 		return -1;
 	}
 
-	// Temporary cautious hack to disable the DNS proxy for processes
-	// requesting special treatment.  Ideally the DNS proxy should
-	// accomodate these apps, though.
-	char propname[PROP_NAME_MAX];
-	char propvalue[PROP_VALUE_MAX];
-	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
-	if (__system_property_get(propname, propvalue) > 0) {
-		return -1;
-	}
 	// create socket
 	sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0) {
@@ -187,7 +178,8 @@ android_gethostbyaddr_proxy(struct hostent* hp, const void *addr, socklen_t addr
 	if (addrStr == NULL) {
 		goto exit;
 	}
-	if (fprintf(proxy, "gethostbyaddr %s %d %d", addrStr, addrLen, addrFamily) < 0) {
+	if (fprintf(proxy, "gethostbyaddr %s %d %d %d",
+			addrStr, addrLen, addrFamily, getpid()) < 0) {
 		goto exit;
 	}
 
