@@ -56,6 +56,7 @@
 
 #include <resolv.h>
 #include "resolv_static.h"
+#include <net/if.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
@@ -139,6 +140,7 @@ struct res_sym {
 struct __res_state_ext;
 
 struct __res_state {
+	char	iface[IF_NAMESIZE+1];
 	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
 #ifdef sun
@@ -274,7 +276,7 @@ union res_sockaddr_union {
 
 /* Things involving an internal (static) resolver context. */
 __BEGIN_DECLS
-extern struct __res_state *__res_get_state(void);
+extern struct __res_state *__res_get_state(const char* iface);
 extern void __res_put_state(struct __res_state *);
 
 #ifndef ANDROID_CHANGES

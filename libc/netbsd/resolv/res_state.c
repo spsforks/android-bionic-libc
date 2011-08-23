@@ -202,11 +202,23 @@ __get_h_errno(void)
 }
 
 res_state
-__res_get_state(void)
+__res_get_state(const char* iface)
 {
     _res_thread*  rt = _res_thread_get();
 
-    return rt ? rt->_nres : NULL;
+    res_state statp = rt ? rt->_nres : NULL;
+    if (statp != NULL) {
+        // set interface
+        if (iface && iface[0] != '\0') {
+            int len = sizeof(statp->iface);
+            strncpy(statp->iface, iface, len - 1);
+            statp->iface[len - 1] = '\0';
+        } else {
+            statp->iface[0] = '\0';
+        }
+    }
+
+    return statp;
 }
 
 void
