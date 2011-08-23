@@ -641,6 +641,13 @@ struct hostent *
 gethostbyaddr(const void *addr,
     socklen_t len, int af)
 {
+	return gethostbyaddrforiface(addr, len, af, NULL);
+}
+
+struct hostent *
+gethostbyaddrforiface(const void *addr,
+    socklen_t len, int af, const char* iface)
+{
 	const u_char *uaddr = (const u_char *)addr;
 	socklen_t size;
 	struct hostent *hp;
@@ -687,7 +694,7 @@ gethostbyaddr(const void *addr,
 	hp = NULL;
 	h_errno = NETDB_INTERNAL;
 	if (nsdispatch(&hp, dtab, NSDB_HOSTS, "gethostbyaddr",
-	    default_dns_files, uaddr, len, af) != NS_SUCCESS)
+	    default_dns_files, uaddr, len, af, iface) != NS_SUCCESS)
 		return NULL;
 	h_errno = NETDB_SUCCESS;
 	return hp;
@@ -1124,6 +1131,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	const unsigned char *uaddr;
 	int len, af, advance;
 	res_state res;
+	const char* iface;
 	res_static rs = __res_get_static();
 
 	assert(rv != NULL);
@@ -1131,6 +1139,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	uaddr = va_arg(ap, unsigned char *);
 	len = va_arg(ap, int);
 	af = va_arg(ap, int);
+	iface = va_arg(ap, char *);
 
 	switch (af) {
 	case AF_INET:
@@ -1172,6 +1181,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		free(buf);
 		return NS_NOTFOUND;
 	}
+	res_setiface(res, iface);
 	n = res_nquery(res, qbuf, C_IN, T_PTR, buf->buf, sizeof(buf->buf));
 	if (n < 0) {
 		free(buf);

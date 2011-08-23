@@ -936,3 +936,17 @@ int res_get_dns_changed()
 	}
 }
 #endif /* ANDROID_CHANGES */
+
+void res_setiface(res_state statp, const char* iface)
+{
+	if (statp != NULL) {
+		// set interface
+		if (iface && iface[0] != '\0') {
+			int len = sizeof(statp->iface);
+			strncpy(statp->iface, iface, len - 1);
+			statp->iface[len - 1] = '\0';
+		} else {
+			statp->iface[0] = '\0';
+		}
+	}
+}
