@@ -1028,6 +1028,10 @@ typedef struct Entry {
  *
  * In case of parse error zero (0) is returned which
  * indicates that the answer shall not be cached.
+ *
+ * If the server has indicated that an error occurred by
+ * by setting the reply code not equal to zero the returned
+ * TTL will be CONFIG_SECONDS.
  */
 static u_long
 answer_getTTL(const void* answer, int answerlen)
@@ -1036,20 +1040,26 @@ answer_getTTL(const void* answer, int answerlen)
     int ancount, n;
     u_long result, ttl;
     ns_rr rr;
+    u_int rcode;
 
     result = 0;
     if (ns_initparse(answer, answerlen, &handle) >= 0) {
-        // get number of answer records
-        ancount = ns_msg_count(handle, ns_s_an);
-        for (n = 0; n < ancount; n++) {
-            if (ns_parserr(&handle, ns_s_an, n, &rr) == 0) {
-                ttl = ns_rr_ttl(rr);
-                if (n == 0 || ttl < result) {
-                    result = ttl;
+        rcode = ns_msg_getflag(handle, ns_f_rcode);
+        if (rcode == ns_r_noerror) {
+            // get number of answer records
+            ancount = ns_msg_count(handle, ns_s_an);
+            for (n = 0; n < ancount; n++) {
+                if (ns_parserr(&handle, ns_s_an, n, &rr) == 0) {
+                    ttl = ns_rr_ttl(rr);
+                    if (n == 0 || ttl < result) {
+                        result = ttl;
+                    }
+                } else {
+                    XLOG("ns_parserr failed ancount no = %d. errno = %s\n", n, strerror(errno));
                 }
-            } else {
-                XLOG("ns_parserr failed ancount no = %d. errno = %s\n", n, strerror(errno));
             }
+        } else { // return default TTL in case of error response
+            result = CONFIG_SECONDS;
         }
     } else {
         XLOG("ns_parserr failed. %s\n", strerror(errno));
