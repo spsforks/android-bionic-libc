@@ -49,6 +49,9 @@ extern int  unlinkat(int dirfd, const char *pathname, int flags);
 extern int  fcntl(int   fd, int   command, ...);
 extern int  creat(const char*  path, mode_t  mode);
 
+#define	open64		open
+#define	openat64	openat
+
 __END_DECLS
 
 #endif /* _FCNTL_H */
