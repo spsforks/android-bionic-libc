@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Intel Corporation
+Copyright (c) 2011, Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#if defined(USE_SSSE3)
-
-# include "cache_wrapper.S"
-# undef __i686
-# define MEMCPY	bcopy
-# define USE_AS_MEMMOVE
-# define USE_AS_BCOPY
-# include "ssse3-memcpy5.S"
-
-#else
-
-# include "bcopy.S"
-
-#endif
+#define MEMCMP  wmemcmp
+#define USE_AS_WMEMCMP 1
+#include "ssse3-memcmp-atom.S"
