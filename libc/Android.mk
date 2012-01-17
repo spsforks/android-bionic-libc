@@ -102,19 +102,11 @@ libc_common_src_files := \
 	stdlib/strtoumax.c \
 	stdlib/tolower_.c \
 	stdlib/toupper_.c \
-	string/index.c \
 	string/strcasecmp.c \
 	string/strcasestr.c \
-	string/strcat.c \
-	string/strchr.c \
 	string/strcspn.c \
 	string/strdup.c \
-	string/strlcat.c \
-	string/strlcpy.c \
-	string/strncat.c \
-	string/strncpy.c \
 	string/strpbrk.c \
-	string/strrchr.c \
 	string/strsep.c \
 	string/strspn.c \
 	string/strstr.c \
@@ -122,29 +114,22 @@ libc_common_src_files := \
 	wchar/wcpcpy.c \
 	wchar/wcpncpy.c \
 	wchar/wcscasecmp.c \
-	wchar/wcscat.c \
-	wchar/wcschr.c \
-	wchar/wcscmp.c \
-	wchar/wcscpy.c \
 	wchar/wcscspn.c \
 	wchar/wcsdup.c \
 	wchar/wcslcat.c \
 	wchar/wcslcpy.c \
-	wchar/wcslen.c \
 	wchar/wcsncasecmp.c \
 	wchar/wcsncat.c \
 	wchar/wcsncmp.c \
 	wchar/wcsncpy.c \
 	wchar/wcsnlen.c \
 	wchar/wcspbrk.c \
-	wchar/wcsrchr.c \
 	wchar/wcsspn.c \
 	wchar/wcsstr.c \
 	wchar/wcstok.c \
 	wchar/wcswidth.c \
 	wchar/wcsxfrm.c \
 	wchar/wmemchr.c \
-	wchar/wmemcmp.c \
 	wchar/wmemcpy.c \
 	wchar/wmemmove.c \
 	wchar/wmemset.c \
@@ -204,12 +189,10 @@ libc_common_src_files := \
 	bionic/lseek64.c \
 	bionic/md5.c \
 	bionic/memccpy.c \
-	bionic/memchr.c \
 	bionic/__memcpy_chk.c \
 	bionic/memmem.c \
 	bionic/__memmove_chk.c \
 	bionic/memmove_words.c \
-	bionic/memrchr.c \
 	bionic/__memset_chk.c \
 	bionic/memswap.c \
 	bionic/mmap.c \
@@ -266,7 +249,6 @@ libc_common_src_files := \
 	bionic/__strncat_chk.c \
 	bionic/__strncpy_chk.c \
 	bionic/strndup.c \
-	bionic/strnlen.c \
 	bionic/strntoimax.c \
 	bionic/strntoumax.c \
 	bionic/strsignal.cpp \
@@ -395,6 +377,25 @@ libc_common_src_files += \
 	bionic/socketcalls.c \
 	string/bcopy.c \
 	string/strncmp.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	string/strchr.c \
+	string/strrchr.c \
+	bionic/memchr.c \
+	bionic/memrchr.c \
+	string/index.c \
+	string/rindex.c \
+	string/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	wchar/wcschr.c \
+	wchar/wcsrchr.c \
+	wchar/wcscmp.c \
+	wchar/wcscpy.c \
+	wchar/wmemcmp.c \
+	wchar/wcslen.c \
+	wchar/wcscat.c
 
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
@@ -430,20 +431,80 @@ libc_common_src_files += \
 	arch-x86/bionic/sigsetjmp.S \
 	arch-x86/bionic/vfork.S \
 	arch-x86/bionic/syscall.S \
-	arch-x86/string/bcopy_wrapper.S \
-	arch-x86/string/memcpy_wrapper.S \
-	arch-x86/string/memmove_wrapper.S \
-	arch-x86/string/bzero_wrapper.S \
-	arch-x86/string/memcmp_wrapper.S \
-	arch-x86/string/memset_wrapper.S \
-	arch-x86/string/strcmp_wrapper.S \
-	arch-x86/string/strncmp_wrapper.S \
-	arch-x86/string/strlen_wrapper.S \
-	string/strcpy.c \
 	bionic/pthread-atfork.c \
 	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
 	bionic/ptrace.c
+
+ifeq ($(ARCH_X86_HAVE_SSSE3),true)
+libc_common_src_files += \
+	arch-x86/string/ssse3-memcpy-atom.S \
+	arch-x86/string/ssse3-memmove-atom.S \
+	arch-x86/string/ssse3-bcopy-atom.S \
+	arch-x86/string/ssse3-strncat-atom.S \
+	arch-x86/string/ssse3-strncpy-atom.S \
+	arch-x86/string/ssse3-strlcat-atom.S \
+	arch-x86/string/ssse3-strlcpy-atom.S \
+	arch-x86/string/ssse3-strcmp-atom.S \
+	arch-x86/string/ssse3-strncmp-atom.S \
+	arch-x86/string/ssse3-strcat-atom.S \
+	arch-x86/string/ssse3-strcpy-atom.S \
+	arch-x86/string/ssse3-memcmp-atom.S \
+	arch-x86/string/ssse3-wmemcmp-atom.S \
+	arch-x86/string/ssse3-wcscat-atom.S \
+	arch-x86/string/ssse3-wcscpy-atom.S
+else
+libc_common_src_files += \
+	arch-x86/string/memcpy.S \
+	arch-x86/string/memmove.S \
+	arch-x86/string/bcopy.S \
+	arch-x86/string/strcmp.S \
+	arch-x86/string/strncmp.S \
+	arch-x86/string/strcat.S \
+	arch-x86/string/strcpy.S \
+	arch-x86/string/memcmp.S \
+	string/strncat.c \
+	string/strncpy.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	wchar/wcscpy.c \
+	wchar/wcscat.c \
+	wchar/wmemcmp.c
+endif
+
+ifeq ($(ARCH_X86_HAVE_SSE2),true)
+libc_common_src_files += \
+	arch-x86/string/sse2-memset-atom.S \
+	arch-x86/string/sse2-bzero-atom.S \
+	arch-x86/string/sse2-memchr-atom.S \
+	arch-x86/string/sse2-memrchr-atom.S \
+	arch-x86/string/sse2-strchr-atom.S \
+	arch-x86/string/sse2-strrchr-atom.S \
+	arch-x86/string/sse2-index-atom.S \
+	arch-x86/string/sse2-rindex-atom.S \
+	arch-x86/string/sse2-strlen-atom.S \
+	arch-x86/string/sse2-strnlen-atom.S \
+	arch-x86/string/sse2-wcschr-atom.S \
+	arch-x86/string/sse2-wcsrchr-atom.S \
+	arch-x86/string/sse2-wcslen-atom.S \
+	arch-x86/string/sse2-wcscmp-atom.S
+else
+libc_common_src_files += \
+	arch-x86/string/memset.S \
+	arch-x86/string/bzero.S \
+	arch-x86/string/memchr.S \
+	arch-x86/string/strchr.S \
+	arch-x86/string/strrchr.S \
+	arch-x86/string/index.S \
+	arch-x86/string/rindex.S \
+	arch-x86/string/strlen.S \
+	bionic/memrchr.c \
+	string/strnlen.c \
+	wchar/wcschr.c \
+	wchar/wcsrchr.c \
+	wchar/wcslen.c \
+	wchar/wcscmp.c
+endif
 
 libc_static_common_src_files += \
         bionic/pthread.c \
@@ -483,7 +544,26 @@ libc_common_src_files += \
 	string/bcopy.c \
 	string/strcmp.c \
 	string/strcpy.c \
-	string/strncmp.c
+	string/strncmp.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	string/strchr.c \
+	string/strrchr.c \
+	bionic/memchr.c \
+	bionic/memrchr.c \
+	string/index.c \
+	string/rindex.c \
+	string/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	wchar/wcschr.c \
+	wchar/wcsrchr.c \
+	wchar/wcscmp.c \
+	wchar/wcscpy.c \
+	wchar/wmemcmp.c \
+	wchar/wcslen.c \
+	wchar/wcscat.c
 
 libc_common_src_files += \
 	bionic/pthread-atfork.c \

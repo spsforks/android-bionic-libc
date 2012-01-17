@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Intel Corporation
+Copyright (c) 2011, Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,5 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if defined(USE_SSE2)
-
-# define sse2_strlen_atom strlen
-# include "sse2-strlen-atom.S"
-
-#else
-
-# include "strlen.S"
-
-#endif
+#define strrchr rindex
+#include "strrchr.c"
