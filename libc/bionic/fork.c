@@ -56,6 +56,9 @@ int  fork(void)
          */
         cpuacct_add(getuid());
         __bionic_atfork_run_child();
+
+        /* Adjusting the kernel id after a fork */
+        ((pthread_internal_t *)__get_thread())->kernel_id = gettid();
     }
     return ret;
 }
