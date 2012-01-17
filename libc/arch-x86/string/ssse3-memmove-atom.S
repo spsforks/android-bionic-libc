@@ -28,13 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if defined(USE_SSSE3)
 
-# define MEMCMP memcmp
-# include "ssse3-memcmp3-new.S"
-
-#else
-
-# include "memcmp.S"
-
-#endif
+#define MEMCPY memmove
+#define USE_AS_MEMMOVE
+#include "ssse3-memcpy-atom.S"
