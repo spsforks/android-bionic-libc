@@ -181,29 +181,18 @@ libc_common_src_files := \
 	stdlib/tolower_.c \
 	stdlib/toupper_.c \
 	stdlib/wchar.c \
-	string/index.c \
 	string/memccpy.c \
-	string/memchr.c \
 	string/memmem.c \
-	string/memrchr.c \
 	string/memswap.c \
 	string/strcasecmp.c \
 	string/strcasestr.c \
-	string/strcat.c \
-	string/strchr.c \
 	string/strcoll.c \
 	string/strcspn.c \
 	string/strdup.c \
 	string/strerror.c \
 	string/strerror_r.c \
-	string/strlcat.c \
-	string/strlcpy.c \
-	string/strncat.c \
-	string/strncpy.c \
 	string/strndup.c \
-	string/strnlen.c \
 	string/strpbrk.c \
-	string/strrchr.c \
 	string/strsep.c \
 	string/strspn.c \
 	string/strstr.c \
@@ -223,30 +212,23 @@ libc_common_src_files := \
 	wchar/wcpcpy.c \
 	wchar/wcpncpy.c \
 	wchar/wcscasecmp.c \
-	wchar/wcscat.c \
-	wchar/wcschr.c \
-	wchar/wcscmp.c \
 	wchar/wcscoll.c \
-	wchar/wcscpy.c \
 	wchar/wcscspn.c \
 	wchar/wcsdup.c \
 	wchar/wcslcat.c \
 	wchar/wcslcpy.c \
-	wchar/wcslen.c \
 	wchar/wcsncasecmp.c \
 	wchar/wcsncat.c \
 	wchar/wcsncmp.c \
 	wchar/wcsncpy.c \
 	wchar/wcsnlen.c \
 	wchar/wcspbrk.c \
-	wchar/wcsrchr.c \
 	wchar/wcsspn.c \
 	wchar/wcsstr.c \
 	wchar/wcstok.c \
 	wchar/wcswidth.c \
 	wchar/wcsxfrm.c \
 	wchar/wmemchr.c \
-	wchar/wmemcmp.c \
 	wchar/wmemcpy.c \
 	wchar/wmemmove.c \
 	wchar/wmemset.c \
@@ -387,6 +369,28 @@ libc_common_src_files += \
 	string/memmove.c.arm \
 	string/bcopy.c \
 	string/strncmp.c \
+	string/bcopy.c \
+	string/strcmp.c \
+	string/strncmp.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	string/strchr.c \
+	string/strrchr.c \
+	string/memchr.c \
+	string/memrchr.c \
+	string/index.c \
+	string/rindex.c \
+	string/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	wchar/wcschr.c \
+	wchar/wcsrchr.c \
+	wchar/wcscmp.c \
+	wchar/wcscpy.c \
+	wchar/wmemcmp.c \
+	wchar/wcslen.c \
+	wchar/wcscat.c \
 	unistd/socketcalls.c
 
 # These files need to be arm so that gdbserver
@@ -432,7 +436,39 @@ libc_common_src_files += \
 	arch-x86/string/strcmp_wrapper.S \
 	arch-x86/string/strncmp_wrapper.S \
 	arch-x86/string/strlen_wrapper.S \
-	string/strcpy.c \
+	arch-x86/string/strcat_wrapper.S \
+	arch-x86/string/strncat_wrapper.S \
+	arch-x86/string/strncat_wrapper_c.c \
+	arch-x86/string/strcpy_wrapper.S \
+	arch-x86/string/strncpy_wrapper.S \
+	arch-x86/string/strncpy_wrapper_c.c \
+	arch-x86/string/memchr_wrapper.S \
+	arch-x86/string/memrchr_wrapper.S \
+	arch-x86/string/memrchr_wrapper_c.c \
+	arch-x86/string/strchr_wrapper.S \
+	arch-x86/string/strrchr_wrapper.S \
+	arch-x86/string/index_wrapper.S \
+	arch-x86/string/rindex_wrapper.S \
+	arch-x86/string/strnlen_wrapper_c.c \
+	arch-x86/string/strnlen_wrapper.S \
+	arch-x86/string/strlcpy_wrapper_c.c \
+	arch-x86/string/strlcpy_wrapper.S \
+	arch-x86/string/strlcat_wrapper_c.c \
+	arch-x86/string/strlcat_wrapper.S \
+	arch-x86/string/wcslen_wrapper_c.c \
+	arch-x86/string/wcslen_wrapper.S \
+	arch-x86/string/wcschr_wrapper_c.c \
+	arch-x86/string/wcschr_wrapper.S \
+	arch-x86/string/wcsrchr_wrapper_c.c \
+	arch-x86/string/wcsrchr_wrapper.S \
+	arch-x86/string/wcscpy_wrapper_c.c \
+	arch-x86/string/wcscpy_wrapper.S \
+	arch-x86/string/wcscat_wrapper_c.c \
+	arch-x86/string/wcscat_wrapper.S \
+	arch-x86/string/wcscmp_wrapper_c.c \
+	arch-x86/string/wcscmp_wrapper.S \
+	arch-x86/string/wmemcmp_wrapper_c.c \
+	arch-x86/string/wmemcmp_wrapper.S \
 	bionic/pthread-atfork.c \
 	bionic/pthread-rwlocks.c \
 	bionic/pthread-timers.c \
