@@ -138,8 +138,14 @@ struct ucred {
 #define AF_LLC 26  
 #define AF_TIPC 30  
 #define AF_BLUETOOTH 31  
-#define AF_CAIF 38  
-#define AF_MAX 39  
+#define AF_IUCV	32
+#define AF_RXRPC 33
+#define AF_ISDN	34
+#define AF_PHONET 35
+#define AF_IEEE802154 36
+#define AF_CAIF	37
+#define AF_ALG	38
+#define AF_MAX 39
 
 #define PF_UNSPEC AF_UNSPEC
 #define PF_UNIX AF_UNIX
@@ -171,8 +177,14 @@ struct ucred {
 #define PF_LLC AF_LLC
 #define PF_TIPC AF_TIPC
 #define PF_BLUETOOTH AF_BLUETOOTH
-#define PF_CAIF AF_CAIF
-#define PF_MAX AF_MAX
+#define PF_IUCV	AF_IUCV
+#define PF_RXRPC AF_RXRPC
+#define PF_ISDN	AF_ISDN
+#define PF_PHONET AF_PHONET
+#define PF_IEEE802154 AF_IEEE802154
+#define PF_CAIF	AF_CAIF
+#define PF_ALG	AF_ALG
+#define PF_MAX	AF_MAX
 
 #define SOMAXCONN 128
 
@@ -222,6 +234,14 @@ struct ucred {
 #define SOL_DCCP 269
 #define SOL_NETLINK 270
 #define SOL_TIPC 271
+#define SOL_RXRPC 272
+#define SOL_PPPOL2TP 273
+#define SOL_BLUETOOTH 274
+#define SOL_PNPIPE 275
+#define SOL_RDS	276
+#define SOL_IUCV 277
+#define SOL_CAIF 278
+#define SOL_ALG	279
 
 #define IPX_TYPE 1
 
