@@ -25,16 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+	.text
 
-extern int __sigsuspend(int, int, unsigned int);
+/* void *__get_sp(void) */
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.type	__get_sp, @function
+	.global	__get_sp
+	.align	4
+	.ent	__get_sp
+__get_sp:
+	move	$v0, $sp
+	j	$ra
+	.end	__get_sp

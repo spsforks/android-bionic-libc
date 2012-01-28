@@ -25,16 +25,50 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
 
-extern int __sigsuspend(int, int, unsigned int);
+#include <asm/unistd.h>
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.text
+
+/*
+ * int syscall(int sysnr, int a0, int a1, int a2, int a3,
+ *			  int a4, int a5, int a6, int a7)
+ */
+	.type	syscall,@function
+	.global	syscall
+	.align	4
+
+        .ent syscall
+syscall:
+	.set noreorder
+	.cpload  $t9
+
+#define FRAMESIZE	(8*32)	/* keep stack 64bit aligned */
+
+	move	$v0,$a0		/* syscall number in the first argument */
+	move	$a0,$a1		/* shift the arguments up */
+	move	$a1,$a2
+	move	$a2,$a3
+	lw	$a3,4*4($sp)
+	lw	$t0,4*5($sp)
+	lw	$t1,4*6($sp)
+	lw	$t2,4*7($sp)
+	addiu	$sp,$sp,-FRAMESIZE
+	sw	$t0,4*4($sp)
+	sw	$t1,4*5($sp)
+	sw	$t2,4*6($sp)
+
+	syscall
+
+	bnez	$a3,1f
+	 addiu	$sp,$sp,FRAMESIZE
+
+	j	$ra
+	 nop
+
+1:
+	la	$t9,__set_errno
+	j	$t9
+	 move	$a0,$v0
+	.set reorder
+	.end syscall

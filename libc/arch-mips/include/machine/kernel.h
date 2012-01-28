@@ -25,16 +25,18 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+#ifndef _ARCH_ARM_KERNEL_H
+#define _ARCH_ARM_KERNEL_H
 
-extern int __sigsuspend(int, int, unsigned int);
+/* this file contains kernel-specific definitions that were optimized out of
+   our processed kernel headers, but still useful nonetheless... */
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+typedef unsigned long   __kernel_blkcnt_t;
+typedef unsigned long   __kernel_blksize_t;
+
+/* these aren't really defined by the kernel headers though... */
+typedef unsigned long   __kernel_fsblkcnt_t;
+typedef unsigned long   __kernel_fsfilcnt_t;
+typedef unsigned int    __kernel_id_t;
+
+#endif /* _ARCH_ARM_KERNEL_H */

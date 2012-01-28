@@ -25,16 +25,32 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
 
-extern int __sigsuspend(int, int, unsigned int);
+#include <asm/unistd.h>
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.text
+
+/* int vfork() implemented using clone() */
+
+	.type	vfork, @function
+	.global	vfork
+	.align	4
+	.ent	vfork
+vfork:
+	.set	noreorder
+	.cpload	$t9
+
+	li	$a0, 0x4112        /* CLONE_VM | CLONE_VFORK | SIGCHLD */
+	move	$a1, $sp
+	li	$v0, __NR_clone
+	syscall
+	bnez	$a3,1f
+	 nop
+
+	j	$ra
+	 nop
+1:
+	la	$t9,__set_errno
+	j	$t9
+	 move	$a0,$v0
+	.end	vfork

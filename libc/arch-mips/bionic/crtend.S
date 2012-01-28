@@ -25,16 +25,29 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+	
+	.section .preinit_array, "aw"
+	.long 0
 
-extern int __sigsuspend(int, int, unsigned int);
+	.section .init_array, "aw"
+	.long 0
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.section .fini_array, "aw"
+	.long 0
+
+	.section .ctors, "aw"
+	.type __CTOR_END__, @object
+__CTOR_END__:
+	.long 0
+
+	.section .dtors, "aw"
+	.type __DTOR_END__, @object
+__DTOR_END__:
+	.long 0
+
+	.section	.eh_frame,"a",@progbits
+	.align 4
+	.type	__FRAME_END__, @object
+	.size	__FRAME_END__, 4
+__FRAME_END__:
+	.zero	4

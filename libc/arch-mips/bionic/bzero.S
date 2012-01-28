@@ -25,16 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+	.text
 
-extern int __sigsuspend(int, int, unsigned int);
+/*
+ * void bzero(void *s, size_t n);
+ */
+	.type	bzero, @function
+	.global	bzero
+	.align	4
+	.ent	bzero
+	.set	noreorder
+bzero:
+	.cpload	$t9
+	move	$a2,$a1
+	la	$t9,memset
+	j	$t9
+	 move	$a1,$zero
+	.end	bzero
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}

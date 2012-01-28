@@ -25,16 +25,27 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
 
-extern int __sigsuspend(int, int, unsigned int);
+#include <asm/unistd.h>
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.text
+
+/* void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode) */
+
+	.type	_exit_with_stack_teardown, @function
+	.global	_exit_with_stack_teardown
+	.align	4
+	.ent	_exit_with_stack_teardown
+_exit_with_stack_teardown:
+	move	$s0,$a2		/* preserve retCode for exit() call */
+
+	li	$v0,__NR_munmap
+	syscall			/* the stack is destroyed by this call */
+	move	$a0,$s0
+	li	$v0,__NR_exit
+	syscall
+
+	/* exit() should never return, cause a crash if it does */
+	move	$a0,$0
+	lw	$a0,($a0)
+	.end	_exit_with_stack_teardown

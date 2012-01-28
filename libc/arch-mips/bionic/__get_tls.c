@@ -25,16 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
-
-extern int __sigsuspend(int, int, unsigned int);
-
-int sigsuspend(const sigset_t *_mask)
+void*   __get_tls(void)
 {
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
+  register void  *tls asm("v1");
+  asm (".set push\n\t"
+       ".set mips32r2\n\t"
+       "rdhwr %0,$29\n\t"
+       ".set pop"
+       : "=r"(tls));
+  return tls;
 }

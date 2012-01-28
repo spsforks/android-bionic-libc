@@ -25,16 +25,25 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
 
-extern int __sigsuspend(int, int, unsigned int);
+#include <asm/unistd.h>
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	.text
+
+/* int pipe(int[]) */
+
+	.type	pipe,@function
+	.global	pipe
+	.align	4
+	.ent	pipe
+pipe:
+	.set	noreorder
+
+	li	$v0,__NR_pipe
+	syscall			/* syscall returns results in v0,v1 */
+
+	sw	$v0,0($a0)
+	sw	$v1,4($a0)
+	j	$ra
+	 move	$v0,$zero
+	.end	pipe

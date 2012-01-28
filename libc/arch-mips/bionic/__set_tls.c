@@ -25,16 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+#include <pthread.h>
 
-extern int __sigsuspend(int, int, unsigned int);
+extern int __set_thread_area(void *u_info);
 
-int sigsuspend(const sigset_t *_mask)
+int __set_tls(void *ptr)
 {
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
+    return __set_thread_area(ptr);
 }

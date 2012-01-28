@@ -25,16 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
+	.text
 
-extern int __sigsuspend(int, int, unsigned int);
+/*
+ * u4 __memcmp16(const u2* s0, const u2* s1, size_t count);
+ */
+	.type	__memcmp16, @function
+	.global	__memcmp16
+	.align	4
+	.ent __memcmp16
+__memcmp16:
+	li	$t0,0
+	li	$t1,0
+	beqz	$a2,done		/* 0 length string */ 
+	beq	$a0,$a1,done		/* strings are identical */
 
-int sigsuspend(const sigset_t *_mask)
-{
-	unsigned int    mask = (unsigned int)_mask;
-#ifdef __mips__
-	return __sigsuspend(mask, 0, 0);
-#else
-	return __sigsuspend(0, 0, mask);
-#endif
-}
+	/* Unoptimised... */
+1:	lhu	$t0,0($a0)
+	lhu	$t1,0($a1)
+	addu	$a1,2
+	bne	$t0,$t1,done
+	addu	$a0,2
+	subu	$a2,1
+	bnez	$a2,1b
+
+done:
+	subu	$v0,$t0,$t1
+	j	$ra
+        .end __memcmp16
