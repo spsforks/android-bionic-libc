@@ -52,12 +52,27 @@
 #include "libc_init_common.h"
 #include <bionic_tls.h>
 
+#ifdef __mips__
+# define HAVE_CTORS 1
+# define HAVE_DTORS 1
+#endif
+
 /* We flag the __libc_preinit function as a constructor to ensure
  * that its address is listed in libc.so's .init_array section.
  * This ensures that the function is called by the dynamic linker
  * as soon as the shared library is loaded.
  */
 void __attribute__((constructor)) __libc_preinit(void);
+
+#ifdef HAVE_CTORS
+static void call_array(void(**list)())
+{
+    // First element is -1, list is null-terminated
+    while (*++list) {
+        (*list)();
+    }
+}
+#endif
 
 void __libc_preinit(void)
 {
@@ -100,6 +115,11 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     char**  argv = (char**)(elfdata + 1);
     char**  envp = argv + argc + 1;
 
+#ifdef HAVE_CTORS
+    /* .ctors section initializers */
+    call_array(structors->ctors_array);
+#endif
+
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
@@ -110,6 +130,11 @@ __noreturn void __libc_init(uintptr_t *elfdata,
      */
     if (structors->fini_array)
         __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+
+#ifdef HAVE_DTORS
+    /* run .dtors section destructors */
+    __cxa_atexit(__libc_fini,structors->dtors_array,NULL);
+#endif
 
     exit(slingshot(argc, argv, envp));
 }
