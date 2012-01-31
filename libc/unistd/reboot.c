@@ -28,7 +28,16 @@
 #include <unistd.h>
 #include <sys/reboot.h>
 
+/* hidden system call - see SYSCALLS.TXT */
+extern int __sys_reboot(int, int, int, void*);
+
 int reboot (int  mode) 
 {
-    return __reboot( LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, NULL );
+    return __sys_reboot( LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, NULL );
+}
+
+__LIBC_ABI_PRIVATE__  /* see <sys/reboot.h>, used by platform */
+int __reboot(int magic1, int magic2, int command, void* arg)
+{
+    return __sys_reboot(magic1, magic2, command, arg);
 }

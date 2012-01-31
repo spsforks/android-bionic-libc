@@ -238,17 +238,17 @@ class SysCallsTxtParser:
 
         number = line[pos_rparen+1:].strip()
         if number == "stub":
-            syscall_id  = -1
-            syscall_id2 = -1
+            syscall_arm = -1
+            syscall_x86 = -1
         else:
             try:
                 if number[0] == '#':
                     number = number[1:].strip()
                 numbers = string.split(number,',')
-                syscall_id  = int(numbers[0])
-                syscall_id2 = syscall_id
+                syscall_arm = int(numbers[0])
+                syscall_x86 = syscall_arm
                 if len(numbers) > 1:
-                    syscall_id2 = int(numbers[1])
+                    syscall_x86 = int(numbers[1])
             except:
                 E("invalid syscall number in '%s'" % line)
                 return
@@ -256,15 +256,34 @@ class SysCallsTxtParser:
 		global verbose
         if verbose >= 2:
             if call_id < 0:
-                print "%s: %d,%d" % (syscall_name, syscall_id, syscall_id2)
+                print "%s: %d,%d" % (syscall_name, syscall_arm, syscall_x86)
             else:
-                print "%s(%d): %d,%d" % (syscall_name, call_id, syscall_id, syscall_id2)
+                print "%s(%d): %d,%d" % (syscall_name, call_id, syscall_arm, syscall_x86)
 
-        t = { "id"     : syscall_id,
-              "id2"    : syscall_id2,
-              "cid"    : call_id,
+        # We assume that if the function name begins with an underscore, it
+        # should have hidden visibility (i.e. not exported by the shared library).
+        #
+        # For simplicity reason, if you need to export a syscall that begins
+        # with an underscore, it's better to define its stub with a __sys_
+        # prefix, and provide an explicit function that calls.
+        #
+        # Example:
+        #     mmap2 syscall
+        #       -> use __sys_mmap2 function name  (will be hidden)
+        #       -> in the C library, provide __mmap2 function that tail-calls
+        #          __sys_mmap2 directly.
+        #
+        # Given that these cases are pretty rare, this avoids introducing
+        # complexity in the SYSCALLS.TXT syntax.
+        #
+        is_hidden = (syscall_func[0] == '_')
+
+        t = { "arm_id" : syscall_arm,
+              "x86_id" : syscall_x86,
+              "call_id": call_id,
               "name"   : syscall_name,
               "func"   : syscall_func,
+              "hidden" : is_hidden,
               "params" : syscall_params,
               "decl"   : "%-15s  %s (%s);" % (return_type, syscall_func, params) }
 

@@ -29,10 +29,9 @@
 #
 
 # process management
-void    _exit:exit_group (int)      248,252
+void    __exit_group:exit_group (int)      248,252
 void    _exit_thread:exit (int)     1
 pid_t   __fork:fork (void)           2
-pid_t   _waitpid:waitpid (pid_t, int*, int, struct rusage*)   -1,7
 int     __waitid:waitid(int, pid_t, struct siginfo_t*, int,void*)          280,284
 
 # NOTE: this system call is never called directly, but we list it there
@@ -98,7 +97,7 @@ off_t       lseek(int, off_t, int)           19
 int         __llseek:_llseek (int, unsigned long, unsigned long, loff_t*, int)  140
 pid_t       getpid ()    20
 void *      mmap(void *, size_t, int, int, int, long)  stub
-void *      __mmap2:mmap2(void*, size_t, int, int, int, long)   192
+void *      __sys_mmap2:mmap2(void*, size_t, int, int, int, long)   192
 int         munmap(void *, size_t)  91
 void *      mremap(void *, size_t, size_t, unsigned long)  163
 int         msync(const void *, size_t, int)    144
@@ -254,9 +253,9 @@ int ioprio_get(int which, int who) 315,290
 
 # other
 int     uname(struct utsname *)  122
-pid_t   __wait4:wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114
+pid_t   wait4(pid_t pid, int *status, int options, struct rusage *rusage)   114
 mode_t  umask(mode_t)  60
-int      __reboot:reboot(int, int, int, void *)  88
+int     __sys_reboot:reboot(int, int, int, void *)  88
 int     __syslog:syslog(int, char *, int)  103
 int     init_module(void *, unsigned long, const char *)  128
 int     delete_module(const char*, unsigned int)   129

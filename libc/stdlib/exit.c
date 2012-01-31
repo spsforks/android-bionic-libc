@@ -57,3 +57,13 @@ exit(int status)
 	__cxa_finalize(NULL);
 	_exit(status);
 }
+
+/* this is a hidden system call - see SYSCALLS.TXT */
+extern __noreturn void __exit_group(int);
+
+__LIBC_ABI_PUBLIC__  /* as declared by <stdlib.h> */
+void
+_exit(int code)
+{
+	__exit_group(code);
+}

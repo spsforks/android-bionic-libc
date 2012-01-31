@@ -28,26 +28,31 @@
 #include <sys/wait.h>
 #include <stddef.h>
 
-extern pid_t  __wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
-extern int    __waitid(idtype_t which, id_t id, siginfo_t *info, int options, struct rusage *ru);
+extern int __waitid(idtype_t which, id_t id, siginfo_t *info, int options, struct rusage *ru);
 
 pid_t  wait( int*  status )
 {
-    return __wait4( (pid_t)-1, status, 0, NULL );
+    return wait4( (pid_t)-1, status, 0, NULL );
 }
 
 pid_t  wait3(int*  status, int options, struct rusage*  rusage)
 {
-    return __wait4( (pid_t)-1, status, options, rusage );
+    return wait4( (pid_t)-1, status, options, rusage );
 }
 
 pid_t  waitpid(pid_t  pid, int*  status, int  options)
 {
-    return __wait4( pid, status, options, NULL );
+    return wait4( pid, status, options, NULL );
 }
 
 int  waitid(idtype_t which, id_t id, siginfo_t *info, int options)
 {
     /* the system call takes an option struct rusage that we don't need */
     return __waitid(which, id, info, options, NULL);
+}
+
+__LIBC_ABI_PRIVATE__  /* needed by strace, which should use wait4() instead! */
+int __wait4(idtype_t which, int* status, int options, struct rusage* rusage)
+{
+    return wait4(which, status, options, rusage);
 }

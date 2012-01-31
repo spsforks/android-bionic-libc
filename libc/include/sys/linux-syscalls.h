@@ -207,7 +207,6 @@
 
 #ifdef __i386__
 #define __NR_exit_group                   (__NR_SYSCALL_BASE + 252)
-#define __NR_waitpid                      (__NR_SYSCALL_BASE + 7)
 #define __NR_waitid                       (__NR_SYSCALL_BASE + 284)
 #define __NR_kill                         (__NR_SYSCALL_BASE + 37)
 #define __NR_tkill                        (__NR_SYSCALL_BASE + 238)

@@ -5,10 +5,9 @@
 extern "C" {
 #endif
 
-void             _exit (int);
+void             __exit_group (int);
 void             _exit_thread (int);
 pid_t            __fork (void);
-pid_t            _waitpid (pid_t, int*, int, struct rusage*);
 int              __waitid (int, pid_t, struct siginfo_t*, int,void*);
 pid_t            __sys_clone (int, void*, int*, void*, int*);
 int              execve (const char*, char* const*, char* const*);
@@ -63,7 +62,7 @@ off_t            lseek (int, off_t, int);
 int              __llseek (int, unsigned long, unsigned long, loff_t*, int);
 pid_t            getpid (void);
 void *           mmap (void *, size_t, int, int, int, long);
-void *           __mmap2 (void*, size_t, int, int, int, long);
+void *           __sys_mmap2 (void*, size_t, int, int, int, long);
 int              munmap (void *, size_t);
 void *           mremap (void *, size_t, size_t, unsigned long);
 int              msync (const void *, size_t, int);
@@ -203,9 +202,9 @@ int              __getcpu (unsigned *cpu, unsigned *node, void *unused);
 int              ioprio_set (int which, int who, int ioprio);
 int              ioprio_get (int which, int who);
 int              uname (struct utsname *);
-pid_t            __wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
+pid_t            wait4 (pid_t pid, int *status, int options, struct rusage *rusage);
 mode_t           umask (mode_t);
-int              __reboot (int, int, int, void *);
+int              __sys_reboot (int, int, int, void *);
 int              __syslog (int, char *, int);
 int              init_module (void *, unsigned long, const char *);
 int              delete_module (const char*, unsigned int);

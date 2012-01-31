@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-extern void*  __mmap2(void*, size_t, int, int, int, size_t);
+extern void*  __sys_mmap2(void*, size_t, int, int, int, size_t);
 
 #define  MMAP2_SHIFT  12
 void*   mmap( void*  addr,  size_t  size, int  prot, int  flags, int  fd,  long  offset )
@@ -39,5 +39,11 @@ void*   mmap( void*  addr,  size_t  size, int  prot, int  flags, int  fd,  long 
     return MAP_FAILED;
   }
 
-    return __mmap2(addr, size, prot, flags, fd, (size_t)offset >> MMAP2_SHIFT);
+    return __sys_mmap2(addr, size, prot, flags, fd, (size_t)offset >> MMAP2_SHIFT);
+}
+
+__LIBC_ABI_PRIVATE__  /* used by platform code by direct linking, should be removed later */
+void*  __mmap2(void* addr, size_t length, int prot, int flags, int fd, size_t pgoffset)
+{
+    return __sys_mmap2(addr, length, prot, flags, fd, pgoffset);
 }
