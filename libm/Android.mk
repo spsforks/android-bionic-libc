@@ -3,7 +3,6 @@ LOCAL_PATH:= $(call my-dir)
 libm_common_src_files:= \
 	isinf.c  \
 	fpclassify.c \
-	sincos.c \
 	bsdsrc/b_exp.c \
 	bsdsrc/b_log.c \
 	bsdsrc/b_tgamma.c \
@@ -135,6 +134,9 @@ libm_common_src_files:= \
 	src/s_significandf.c \
 	src/s_sin.c \
 	src/s_sinf.c \
+	src/s_sincos.c \
+	src/s_sincosf.c \
+	src/s_sincosl.c \
 	src/s_tan.c \
 	src/s_tanf.c \
 	src/s_tanh.c \
