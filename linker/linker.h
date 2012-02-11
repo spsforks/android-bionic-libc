@@ -29,6 +29,7 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <linux/elf.h>
@@ -140,10 +141,31 @@ struct soinfo
 
     unsigned refcount;
     struct link_map linkmap;
+
+#ifdef APROF_SUPPORT
+    uint32_t bin_size;
+    uint16_t *bins;
+
+    uint32_t fromssize;
+    uint16_t *froms;
+    uint32_t tolimit;
+    uint32_t tossize;
+    struct tostruct *tos;
+
+    int aprof_jni_mode;
+#endif
 };
 
 
 extern soinfo libdl_info;
+#ifdef APROF_SUPPORT
+extern soinfo libaprof_runtime_info;
+#endif
+extern soinfo *solist;
+extern soinfo *sonext;
+#if ALLOW_SYMBOLS_FROM_MAIN
+extern soinfo *somain; /* main process, always the one after libdl_info */
+#endif
 
 #ifdef ANDROID_ARM_LINKER
 
