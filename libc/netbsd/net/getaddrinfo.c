@@ -391,10 +391,16 @@ _have_ipv6() {
 
 static int
 _have_ipv4() {
+	char propvalue[PROP_VALUE_MAX];
 	static const struct sockaddr_in sin_test = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
 	};
+	if (__system_property_get("gsm.pdpprotocol.ipv6", propvalue) > 0) {
+		if(strcmp(propvalue,"1") == 0) {
+                       return 0; // we're connected to an ipv6 only pdp, v4 only via clat
+                }
+	}
         sockaddr_union addr = { .in = sin_test };
         return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
 }
