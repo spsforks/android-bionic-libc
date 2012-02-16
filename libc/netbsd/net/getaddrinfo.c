@@ -399,6 +399,17 @@ _have_ipv4() {
         return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
 }
 
+static int
+_have_ipv6_only_pdp() {
+	char propvalue[PROP_VALUE_MAX];
+	if (__system_property_get("gsm.pdpprotocol.ipv6", propvalue) > 0) {
+		if(strcmp(propvalue,"1") == 0) {
+			return 1;
+		}
+	}
+        return 0;
+}
+
 // Returns 0 on success, else returns non-zero on error (in which case
 // getaddrinfo should continue as normal)
 static int
@@ -1910,7 +1921,11 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
 			query_ipv6 = _have_ipv6();
-			query_ipv4 = _have_ipv4();
+			if(_have_ipv6_only_pdp()) {
+				query_ipv4 = 0; // we're connected to an ipv6 only pdp, _have_ipv4 can be confused by clat
+			} else {
+				query_ipv4 = _have_ipv4();
+			}
 			if (query_ipv6 == 0 && query_ipv4 == 0) {
 				// Both our IPv4 and IPv6 connectivity probes failed, which indicates
 				// that we have neither an IPv4 or an IPv6 default route (and thus no
