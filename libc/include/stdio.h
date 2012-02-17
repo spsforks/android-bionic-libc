@@ -57,7 +57,7 @@
 
 #ifndef	_SIZE_T_DEFINED_
 #define	_SIZE_T_DEFINED_
-typedef	unsigned long    size_t;
+typedef __SIZE_TYPE__ size_t;
 #endif
 
 #ifndef	_OFF_T_DEFINED_

@@ -41,9 +41,14 @@
 #define _SIZE_T
 #define _SSIZE_T
 #define _PTRDIFF_T
-typedef unsigned long  size_t;
-typedef long           ssize_t;
-typedef long           ptrdiff_t;
+
+typedef __SIZE_TYPE__ size_t;
+/* e-eeeevil kludge, but apparently works */
+#define unsigned signed
+typedef __SIZE_TYPE__ ssize_t;
+#undef unsigned
+
+typedef __PTRDIFF_TYPE__ ptrdiff_t;
 #endif
 
 /* 7.18.1.1 Exact-width integer types */

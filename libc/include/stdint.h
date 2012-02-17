@@ -265,7 +265,10 @@ typedef int32_t   intmax_t;
 /* size_t is defined by the GCC-specific <stddef.h> */
 #ifndef _SSIZE_T_DEFINED_
 #define _SSIZE_T_DEFINED_
-typedef long int  ssize_t;
+/* e-eeeevil kludge, but apparently works */
+#define unsigned signed
+typedef __SIZE_TYPE__ ssize_t;
+#undef unsigned
 #endif
 
 #define _BITSIZE 32
