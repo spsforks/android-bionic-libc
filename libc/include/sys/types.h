@@ -87,13 +87,16 @@ typedef  .... pthread_t;
 
 #ifndef _SIZE_T_DEFINED_
 #define _SIZE_T_DEFINED_
-typedef unsigned int  size_t;
+typedef __SIZE_TYPE__ size_t;
 #endif
 
 /* size_t is defined by the GCC-specific <stddef.h> */
 #ifndef _SSIZE_T_DEFINED_
 #define _SSIZE_T_DEFINED_
-typedef long int  ssize_t;
+/* e-eeeevil kludge, but apparently works */
+#define unsigned signed
+typedef __SIZE_TYPE__ ssize_t;
+#undef unsigned
 #endif
 
 typedef __kernel_suseconds_t  suseconds_t;
