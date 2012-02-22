@@ -46,7 +46,10 @@ typedef struct pthread_internal_t
     void**                      tls;         /* thread-local storage area */
 } pthread_internal_t;
 
-extern void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+#define PTHREAD_INTERN_ALLOCATED (1 << 0)
+#define PTHREAD_INTERN_ERROR     (1 << 1)
+
+extern int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
 
 /* needed by posix-timers.c */
 

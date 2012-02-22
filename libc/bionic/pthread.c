@@ -115,7 +115,7 @@ _pthread_internal_alloc(void)
 
     thread = calloc( sizeof(*thread), 1 );
     if (thread)
-        thread->intern = 1;
+        thread->intern = PTHREAD_INTERN_ALLOCATED;
 
     return thread;
 }
@@ -214,11 +214,17 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 
     __init_tls( tls, thrInfo );
 
+    // error occured in _init_thread
+    if (thrInfo->intern & PTHREAD_INTERN_ERROR)
+        pthread_exit( (void*)0 );
+
     pthread_exit( (void*)func(arg) );
 }
 
-void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
+int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
 {
+    int error = 0;
+
     if (attr == NULL) {
         thread->attr = gDefaultPthreadAttr;
     } else {
@@ -231,7 +237,8 @@ void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t *
     if (thread->attr.sched_policy != SCHED_NORMAL) {
         struct sched_param param;
         param.sched_priority = thread->attr.sched_priority;
-        sched_setscheduler(kernel_id, thread->attr.sched_policy, &param);
+        if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param))
+            error = errno;
     }
 
     pthread_cond_init(&thread->join_cond, NULL);
@@ -240,6 +247,7 @@ void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t *
     thread->cleanup_stack = NULL;
 
     _pthread_internal_add(thread);
+    return error;
 }
 
 
@@ -306,6 +314,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     pthread_internal_t * thread;
     int                  madestack = 0;
     int     old_errno = errno;
+    int     error;
 
     /* this will inform the rest of the C library that at least one thread
      * was created. this will enforce certain functions to acquire/release
@@ -369,10 +378,20 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         return result;
     }
 
-    _init_thread(thread, tid, (pthread_attr_t*)attr, stack);
+    error = _init_thread(thread, tid, (pthread_attr_t*)attr, stack);
 
     if (!madestack)
         thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
+
+    if (error) {
+        // Use 'intern' to signal the created thread that an error occurs
+        thread->intern |= PTHREAD_INTERN_ERROR;
+        // Put it in a detached thread
+        thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+        // Let the thread dy itself
+        pthread_mutex_unlock(start_mutex);
+        return error;
+    }
 
     // Notify any debuggers about the new thread
     pthread_mutex_lock(&gDebuggerNotificationLock);
