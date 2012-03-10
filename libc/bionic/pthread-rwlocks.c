@@ -242,11 +242,13 @@ int pthread_rwlock_timedrdlock(pthread_rwlock_t *rwlock, const struct timespec *
         rwlock->pendingReaders += 1;
         do {
             ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-        } while (ret == 0 && !read_precondition(rwlock, thread_id));
+        } while (ret != ETIMEDOUT && !read_precondition(rwlock, thread_id));
         rwlock->pendingReaders -= 1;
-        if (ret != 0)
+        if (ret == ETIMEDOUT)
             goto EXIT;
     }
+    /* reset ret to 0 because ret might be EINTR. */
+    ret = 0;
     rwlock->numLocks ++;
 EXIT:
     pthread_mutex_unlock(&rwlock->lock);
@@ -295,11 +297,13 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *
         rwlock->pendingWriters += 1;
         do {
             ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-        } while (ret == 0 && !write_precondition(rwlock, thread_id));
+        } while (ret != ETIMEDOUT && !write_precondition(rwlock, thread_id));
         rwlock->pendingWriters -= 1;
-        if (ret != 0)
+        if (ret == ETIMEDOUT)
             goto EXIT;
     }
+    /* reset ret to 0 because ret might be EINTR. */
+    ret = 0;
     rwlock->numLocks ++;
     rwlock->writerThreadId = thread_id;
 EXIT:
