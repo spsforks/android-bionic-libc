@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <string.h>
+#include <bionic_atomic_inline.h>
 
 /* a node in the hash table */
 typedef struct FileLock {
@@ -119,8 +120,9 @@ flockfile(FILE * fp)
 
     if (t != NULL) {
         FileLock**  lookup = lock_table_lookup(t, fp);
-        FileLock*   lock   = *lookup;
+        volatile FileLock*   lock   = *lookup;
 
+        ANDROID_MEMBAR_FULL();
         if (lock == NULL) {
             pthread_mutexattr_t  attr;
 
@@ -136,6 +138,8 @@ flockfile(FILE * fp)
             pthread_mutexattr_init(&attr);
             pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
             pthread_mutex_init( &lock->mutex, &attr );
+
+            ANDROID_MEMBAR_FULL();
 
             *lookup           = lock;
         }
