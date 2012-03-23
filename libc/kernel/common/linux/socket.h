@@ -15,6 +15,8 @@
 #define _K_SS_MAXSIZE 128  
 #define _K_SS_ALIGNSIZE (__alignof__ (struct sockaddr *))
 
+typedef unsigned short __kernel_sa_family_t;
+
 struct __kernel_sockaddr_storage {
  unsigned short ss_family;
 
@@ -136,10 +138,11 @@ struct ucred {
 #define AF_PPPOX 24  
 #define AF_WANPIPE 25  
 #define AF_LLC 26  
+#define AF_CAN 29
 #define AF_TIPC 30  
 #define AF_BLUETOOTH 31  
 #define AF_CAIF 38  
-#define AF_MAX 39  
+#define AF_MAX 40
 
 #define PF_UNSPEC AF_UNSPEC
 #define PF_UNIX AF_UNIX
@@ -169,6 +172,7 @@ struct ucred {
 #define PF_PPPOX AF_PPPOX
 #define PF_WANPIPE AF_WANPIPE
 #define PF_LLC AF_LLC
+#define PF_CAN AF_CAN
 #define PF_TIPC AF_TIPC
 #define PF_BLUETOOTH AF_BLUETOOTH
 #define PF_CAIF AF_CAIF
