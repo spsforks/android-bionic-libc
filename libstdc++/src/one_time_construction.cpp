@@ -13,21 +13,30 @@
 #include <bionic_futex.h>
 #include <bionic_atomic_inline.h>
 
+/* Even gcc defines the GUARD_BIT, it's actually mapped to byte */
+#define GUARD_BIT       0x00001
+#define GUARD_PENDING   0x00100
+#define GUARD_WAITING   0x10000
+
 extern "C" int __cxa_guard_acquire(int volatile * gv)
 {
-    // 0 -> 2, return 1
-    // 2 -> 6, wait and return 0
-    // 6 untouched, wait and return 0
-    // 1 untouched, return 0
+    // 0 -> pending, return 1
+    // pending -> waiting, wait and return 0
+    // waiting: untouched, wait and return 0
+    // ready: untouched, return 0
+    unsigned int ready = GUARD_BIT;
+    unsigned int pending = GUARD_PENDING;
+    unsigned int waiting = GUARD_WAITING;
+
 retry:
-    if (__atomic_cmpxchg(0, 0x2, gv) == 0) {
+    if (__atomic_cmpxchg(0, pending, gv) == 0) {
         ANDROID_MEMBAR_FULL();
         return 1;
     }
-    __atomic_cmpxchg(0x2, 0x6, gv); // Indicate there is a waiter
-    __futex_wait(gv, 0x6, NULL);
+    __atomic_cmpxchg(pending, waiting, gv); // Indicate there is a waiter
+    __futex_wait(gv, waiting, NULL);
 
-    if(*gv != 1) // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
+    if(*gv != ready) // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
         goto retry;
 
     ANDROID_MEMBAR_FULL();
@@ -36,14 +45,17 @@ retry:
 
 extern "C" void __cxa_guard_release(int volatile * gv)
 {
-    // 2 -> 1
-    // 6 -> 1, and wake
+    // pending -> ready
+    // waiting -> ready, and wake
+    unsigned int ready = GUARD_BIT;
+    unsigned int pending = GUARD_PENDING;
+
     ANDROID_MEMBAR_FULL();
-    if (__atomic_cmpxchg(0x2, 0x1, gv) == 0) {
+    if (__atomic_cmpxchg(pending, ready, gv) == 0) {
         return;
     }
 
-    *gv = 0x1;
+    *gv = ready;
     __futex_wake(gv, 0x7fffffff);
 }
 
