@@ -25,12 +25,27 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
-#include <signal.h>
+/* unlike our auto-generated syscall stubs, this code saves lr
+   on the stack, as well as a few other registers. this makes
+   our stack unwinder happy, when we generate debug stack
+   traces after the C library or other parts of the system
+   abort due to a fatal runtime error (e.g. detection
+   of a corrupted malloc heap).
+*/
 
-extern int __raise(int);
+#include <sys/linux-syscalls.h>
+#include <machine/asm.h>
 
-int raise(int signum)
-{
-    return __raise(signum);
-}
+#ifndef __NR_tgkill
+#define __NR_tgkill  268
+#endif
+
+ENTRY(tgkill)
+    stmfd   sp!, {r4-r7, ip, lr}
+    ldr     r7, =__NR_tgkill
+    swi     #0
+    ldmfd   sp!, {r4-r7, ip, lr}
+    movs    r0, r0
+    bxpl    lr
+    b       __set_syscall_errno
+END(tgkill)

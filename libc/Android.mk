@@ -285,6 +285,7 @@ libc_common_src_files := \
 	bionic/thread_atexit.c \
 	bionic/utime.c \
 	bionic/utmp.c \
+	bionic/__raise.c \
 	netbsd/gethnamaddr.c \
 	netbsd/isc/ev_timers.c \
 	netbsd/isc/ev_streams.c \
@@ -353,6 +354,7 @@ libc_common_src_files += \
 	arch-arm/bionic/kill.S \
 	arch-arm/bionic/libgcc_compat.c \
 	arch-arm/bionic/tkill.S \
+	arch-arm/bionic/tgkill.S \
 	arch-arm/bionic/memcmp.S \
 	arch-arm/bionic/memcmp16.S \
 	arch-arm/bionic/memcpy.S \

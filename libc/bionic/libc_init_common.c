@@ -66,10 +66,11 @@ void __libc_init_common(uintptr_t *elfdata)
     unsigned stacktop = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
     unsigned stacksize = 128 * 1024;
     unsigned stackbottom = stacktop - stacksize;
+    int tid = gettid();
 
     pthread_attr_init(&thread_attr);
     pthread_attr_setstack(&thread_attr, (void*)stackbottom, stacksize);
-    _init_thread(&thread, gettid(), &thread_attr, (void*)stackbottom);
+    _init_thread(&thread, tid, tid, &thread_attr, (void*)stackbottom);
     __init_tls(tls_area, &thread);
 
     /* clear errno - requires TLS area */

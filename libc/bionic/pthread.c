@@ -217,7 +217,7 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
     pthread_exit( (void*)func(arg) );
 }
 
-void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
+void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pid_t group_id, pthread_attr_t * attr, void * stack_base)
 {
     if (attr == NULL) {
         thread->attr = gDefaultPthreadAttr;
@@ -226,6 +226,7 @@ void _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t *
     }
     thread->attr.stack_base = stack_base;
     thread->kernel_id       = kernel_id;
+    thread->group_id        = group_id;
 
     // set the scheduling policy/priority of the thread
     if (thread->attr.sched_policy != SCHED_NORMAL) {
@@ -302,6 +303,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     char*   stack;
     void**  tls;
     int tid;
+    int gid;
     pthread_mutex_t * start_mutex;
     pthread_internal_t * thread;
     int                  madestack = 0;
@@ -354,6 +356,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
 
     tls[TLS_SLOT_THREAD_ID] = thread;
 
+    gid = __get_thread()->group_id;
     tid = __pthread_clone((int(*)(void*))start_routine, tls,
                 CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND
                 | CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED,
@@ -369,7 +372,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         return result;
     }
 
-    _init_thread(thread, tid, (pthread_attr_t*)attr, stack);
+    _init_thread(thread, tid, gid, (pthread_attr_t*)attr, stack);
 
     if (!madestack)
         thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
@@ -1844,7 +1847,7 @@ static void pthread_key_clean_all(void)
 }
 
 // man says this should be in <linux/unistd.h>, but it isn't
-extern int tkill(int tid, int sig);
+extern int tgkill(int tgid, int tid, int sig);
 
 int pthread_kill(pthread_t tid, int sig)
 {
@@ -1852,7 +1855,7 @@ int pthread_kill(pthread_t tid, int sig)
     int  old_errno = errno;
     pthread_internal_t * thread = (pthread_internal_t *)tid;
 
-    ret = tkill(thread->kernel_id, sig);
+    ret = tgkill(thread->group_id, thread->kernel_id, sig);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -2019,6 +2022,7 @@ int __pthread_settid(pthread_t thid, pid_t tid)
 
     pthread_internal_t* thread = (pthread_internal_t*)thid;
     thread->kernel_id = tid;
+    thread->group_id = tid;
 
     return 0;
 }
