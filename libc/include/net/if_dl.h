@@ -58,7 +58,6 @@
  * Structure of a Link-Level sockaddr:
  */
 struct sockaddr_dl {
-	u_char	    sdl_len;	/* Total length of sockaddr */
 	sa_family_t sdl_family;	/* AF_LINK */
 	u_int16_t   sdl_index;	/* if != 0, system given index for interface */
 	u_char	    sdl_type;	/* interface type */
