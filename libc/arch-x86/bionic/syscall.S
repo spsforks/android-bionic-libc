@@ -23,12 +23,14 @@ syscall:
     push    %ebx
     push    %esi
     push    %edi
-    mov     16(%esp),%eax
-    mov     20(%esp),%ebx
-    mov     24(%esp),%ecx
-    mov     28(%esp),%edx
-    mov     32(%esp),%esi
-    mov     36(%esp),%edi
+    push    %ebp
+    mov     20(%esp),%eax
+    mov     24(%esp),%ebx
+    mov     28(%esp),%ecx
+    mov     32(%esp),%edx
+    mov     36(%esp),%esi
+    mov     40(%esp),%edi
+    mov     44(%esp),%ebp
 
     int     $0x80
 
@@ -40,6 +42,7 @@ syscall:
     addl    $4, %esp
     orl     $-1, %eax
 1:
+    pop    %ebp
     pop    %edi
     pop    %esi
     pop    %ebx
