@@ -151,6 +151,11 @@ fts_open(char * const *argv, int options,
 	if ((sp->fts_cur = fts_alloc(sp, "", 0)) == NULL)
 		goto mem3;
 	sp->fts_cur->fts_link = root;
+	/*
+	 * Pairing write barrier with in fts_children(). To make sure
+	 * fts_link access is SMP safe.
+	 */
+	ANDROID_MEMBAR_FULL();
 	sp->fts_cur->fts_info = FTS_INIT;
 
 	/*
@@ -462,6 +467,7 @@ fts_children(FTS *sp, int instr)
 {
 	FTSENT *p;
 	int fd;
+	unsigned short fts_info;
 
 	if (instr && instr != FTS_NAMEONLY) {
 		errno = EINVAL;
@@ -481,8 +487,13 @@ fts_children(FTS *sp, int instr)
 	if (ISSET(FTS_STOP))
 		return (NULL);
 
+	/*
+	 * read barrier is necessary to make sure SMP safe.
+	 */
+	fts_info = p->fts_info;
+	ANDROID_MEMBAR_FULL();
 	/* Return logical hierarchy of user's arguments. */
-	if (p->fts_info == FTS_INIT)
+	if (fts_info == FTS_INIT)
 		return (p->fts_link);
 
 	/*
@@ -490,7 +501,7 @@ fts_children(FTS *sp, int instr)
 	 * allow FTS_DNR, assuming the user has fixed the problem, but the
 	 * same effect is available with FTS_AGAIN.
 	 */
-	if (p->fts_info != FTS_D /* && p->fts_info != FTS_DNR */)
+	if (fts_info != FTS_D /* && p->fts_info != FTS_DNR */)
 		return (NULL);
 
 	/* Free up any previous child list. */
