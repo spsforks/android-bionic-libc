@@ -1,0 +1,9 @@
+Change-Id: Ie328ce6c559f4d59c42690878c6381145c47d6d3
+Code-Review+2: Andrew Hsieh <andrewhsieh@google.com>
+Verified+1: Andrew Hsieh <andrewhsieh@google.com>
+Code-Review+1: Iceberg Fu <fu@mips.com>
+Submitted-by: Andrew Hsieh <andrewhsieh@google.com>
+Submitted-at: Tue, 24 Apr 2012 23:44:17 -0700
+Reviewed-on: https://android-review.googlesource.com/35770
+Project: platform/bionic
+Branch: refs/heads/master
