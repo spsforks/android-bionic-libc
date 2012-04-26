@@ -175,6 +175,7 @@ int dlclose(void *handle)
 #define ANDROID_LIBDL_STRTAB \
                       "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0dl_iterate_phdr\0"
 
+#else
 #error Unsupported architecture. Only ARM and x86 are presently supported.
 #endif
 
