@@ -592,6 +592,15 @@ void pthread_exit(void * retval)
         _pthread_internal_remove(thread);
         _pthread_internal_free(thread);
     } else {
+       /* make sure that the thread struct doesn't have stale pointers to a stack that
+        * will be unmapped after the exit call below.
+        */
+        if (!user_stack) {
+            thread->attr.stack_base = NULL;
+            thread->attr.stack_size = 0;
+            thread->tls = NULL;
+        }
+
        /* the join_count field is used to store the number of threads waiting for
         * the termination of this thread with pthread_join(),
         *
@@ -1728,7 +1737,9 @@ int pthread_key_delete(pthread_key_t key)
          * similarly, it is possible to have thr->tls == NULL for threads that
          * were just recently created through pthread_create() but whose
          * startup trampoline (__thread_entry) hasn't been run yet by the
-         * scheduler. so check for this too.
+         * scheduler. thr->tls will also be NULL after it's stack has been
+         * unmapped but before the ongoing pthread_join() is finished.
+         * so check for this too.
          */
         if (thr->join_count < 0 || !thr->tls)
             continue;
