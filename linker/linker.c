@@ -51,7 +51,6 @@
 #include "linker_environ.h"
 #include "linker_format.h"
 
-#define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 128
 
 /* Assume average path length of 64 and max 8 paths */
@@ -87,17 +86,25 @@ static int link_image(soinfo *si, unsigned wr_offset);
 static int socount = 0;
 static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
-static soinfo *solist = &libdl_info;
-static soinfo *sonext = &libdl_info;
+
+#ifdef APROF_SUPPORT
+soinfo *solist = &libaprof_runtime_info;
+#else
+soinfo *solist = &libdl_info;
+#endif
+soinfo *sonext = &libdl_info;
 #if ALLOW_SYMBOLS_FROM_MAIN
-static soinfo *somain; /* main process, always the one after libdl_info */
+soinfo *somain; /* main process, always the one after libdl_info */
 #endif
 
 
 static inline int validate_soinfo(soinfo *si)
 {
     return (si >= sopool && si < sopool + SO_MAX) ||
-        si == &libdl_info;
+#ifdef APROF_SUPPORT
+            si == &libaprof_runtime_info ||
+#endif
+            si == &libdl_info;
 }
 
 static char ldpaths_buf[LDPATH_BUFSIZE];

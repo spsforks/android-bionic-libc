@@ -8,7 +8,13 @@ LOCAL_SRC_FILES:= \
 	linker_format.c \
 	rt.c \
 	dlfcn.c \
-	debugger.c
+	debugger.c \
+	aprof.c
+
+LOCAL_C_INCLUDES:= \
+    $(LOCAL_PATH)/ \
+    bionic/libaprof
+
 
 ifeq ($(TARGET_ARCH),sh)
 # SH-4A series virtual address range from 0x00000000 to 0x7FFFFFFF.
@@ -32,9 +38,17 @@ LOCAL_CFLAGS += -DPRELINK
 LOCAL_CFLAGS += -DLINKER_TEXT_BASE=$(LINKER_TEXT_BASE)
 LOCAL_CFLAGS += -DLINKER_AREA_SIZE=$(LINKER_AREA_SIZE)
 
+LOCAL_CFLAGS += -DALLOW_SYMBOLS_FROM_MAIN=1
+
 # Set LINKER_DEBUG to either 1 or 0
 #
-LOCAL_CFLAGS += -DLINKER_DEBUG=0
+LOCAL_CFLAGS += -DLINKER_DEBUG=1
+
+# Enable aprof support
+# only support arm now
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_CFLAGS += -DAPROF_SUPPORT
+endif
 
 # we need to access the Bionic private header <bionic_tls.h>
 # in the linker; duplicate the HAVE_ARM_TLS_REGISTER definition
