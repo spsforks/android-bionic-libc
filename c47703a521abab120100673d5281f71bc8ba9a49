@@ -1,0 +1,10 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+1: Bruce Beare <bruce.j.beare@intel.com>
+Code-Review+1: Jack Ren <jack.ren@intel.com>
+Code-Review+1: Pavel Chupin <pavel.v.chupin@intel.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Thu, 10 May 2012 10:14:43 -0700
+Reviewed-on: https://android-review.googlesource.com/36430
+Project: platform/bionic
+Branch: refs/heads/master
