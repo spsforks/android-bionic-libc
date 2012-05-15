@@ -28,10 +28,15 @@ LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/private
 
 ifeq ($(TARGET_ARCH),arm)
 LOCAL_CFLAGS += -DANDROID_ARM_LINKER
-else
-  ifeq ($(TARGET_ARCH),x86)
+endif
+
+ifeq ($(TARGET_ARCH),x86)
     LOCAL_CFLAGS += -DANDROID_X86_LINKER
-  endif
+endif
+
+ifeq ($(TARGET_ARCH),mips)
+  LOCAL_LDFLAGS += -Wl,--section-start,.rel.dyn=0x7eff0000
+  LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
 
 LOCAL_MODULE:= linker
