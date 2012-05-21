@@ -136,6 +136,7 @@ static const char in6_loopback[] = {
 
 // This should be synchronized to ResponseCode.h
 static const int DnsProxyQueryResult = 222;
+static const int DnsProxyOperationFailed = 401;
 
 static const struct afd {
 	int a_af;
@@ -419,6 +420,7 @@ android_getaddrinfo_proxy(
 	struct sockaddr_un proxy_addr;
 	FILE* proxy = NULL;
 	int success = 0;
+	int rv = EAI_NODATA;
 
 	// Clear this at start, as we use its non-NULLness later (in the
 	// error path) to decide if we have to free up any memory we
@@ -479,7 +481,19 @@ android_getaddrinfo_proxy(
 	int result_code = (int)strtol(buf, NULL, 10);
 	// verify the code itself
 	if (result_code != DnsProxyQueryResult ) {
-		fread(buf, 1, sizeof(buf), proxy);
+		// getaddrinfo failed - return error code from proxy
+		if (result_code == DnsProxyOperationFailed) {
+			// we expect 4 byte lenght + 4 byte error code
+			uint32_t msg[2];
+			if (fread(&msg, sizeof(msg), 1, proxy) != 1) {
+				goto exit;
+			}
+			if (ntohl(msg[0]) == sizeof(msg[1]) && msg[1] != 0) {
+				rv = msg[1];
+			}
+		} else {
+			fread(buf, 1, sizeof(buf), proxy);
+		}
 		goto exit;
 	}
 
@@ -578,7 +592,7 @@ exit:
 		freeaddrinfo(*res);
 		*res = NULL;
 	}
-	return EAI_NODATA;
+	return rv;
 }
 
 int
