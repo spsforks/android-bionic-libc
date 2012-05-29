@@ -637,7 +637,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	$(libc_arch_static_src_files) \
 	$(libc_static_common_src_files) \
-	bionic/dlmalloc.c \
+	bionic/dlmalloc_profile.c \
 	bionic/malloc_debug_common.c \
 	bionic/libc_init_static.c
 
@@ -662,7 +662,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
 	$(libc_arch_dynamic_src_files) \
 	$(libc_static_common_src_files) \
-	bionic/dlmalloc.c \
+	bionic/dlmalloc_profile.c \
 	bionic/malloc_debug_common.c \
 	bionic/libc_init_dynamic.c
 
