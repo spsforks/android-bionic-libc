@@ -208,7 +208,6 @@ libc_common_src_files := \
 	bionic/__memcpy_chk.c \
 	bionic/memmem.c \
 	bionic/__memmove_chk.c \
-	bionic/memmove_words.c \
 	bionic/memrchr.c \
 	bionic/__memset_chk.c \
 	bionic/memswap.c \
@@ -391,10 +390,26 @@ libc_common_src_files += \
 	arch-arm/bionic/syscall.S \
 	arch-arm/bionic/tgkill.S \
 	arch-arm/bionic/tkill.S \
-	bionic/memmove.c.arm \
 	bionic/socketcalls.c \
-	string/bcopy.c \
 	string/strncmp.c \
+
+# Check if we want a neonized version of memmove instead of the
+# current ARM version
+ifeq ($(TARGET_USE_SCORPION_BIONIC_OPTIMIZATION),true)
+libc_common_src_files += \
+	arch-arm/bionic/memmove.S \
+	bionic/memmove_words.c
+else
+ ifeq ($(TARGET_USE_KRAIT_BIONIC_OPTIMIZATION),true)
+ libc_common_src_files += \
+	arch-arm/bionic/memmove.S
+ else # Other ARM
+ libc_common_src_files += \
+	string/bcopy.c \
+	string/memmove.c.arm \
+	bionic/memmove_words.c
+ endif # !TARGET_USE_KRAIT_BIONIC_OPTIMIZATION
+endif # !TARGET_USE_SCORPION_BIONIC_OPTIMIZATION
 
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
@@ -557,6 +572,26 @@ ifeq ($(TARGET_ARCH),arm)
   endif
   ifeq ($(ARCH_ARM_USE_NON_NEON_MEMCPY),true)
     libc_common_cflags += -DARCH_ARM_USE_NON_NEON_MEMCPY
+  endif
+  # Add in defines to activate SCORPION_NEON_OPTIMIZATION
+  ifeq ($(TARGET_USE_SCORPION_BIONIC_OPTIMIZATION),true)
+    libc_common_cflags += -DSCORPION_NEON_OPTIMIZATION
+    ifeq ($(TARGET_USE_SCORPION_PLD_SET),true)
+      libc_common_cflags += -DPLDOFFS=$(TARGET_SCORPION_BIONIC_PLDOFFS)
+      libc_common_cflags += -DPLDSIZE=$(TARGET_SCORPION_BIONIC_PLDSIZE)
+    endif
+  endif
+  # Add in defines to activate KRAIT_NEON_OPTIMIZATION
+  ifeq ($(TARGET_USE_KRAIT_BIONIC_OPTIMIZATION),true)
+    libc_common_cflags += -DKRAIT_NEON_OPTIMIZATION
+    ifeq ($(TARGET_USE_KRAIT_PLD_SET),true)
+      libc_common_cflags += -DPLDOFFS=$(TARGET_KRAIT_BIONIC_PLDOFFS)
+      libc_common_cflags += -DPLDTHRESH=$(TARGET_KRAIT_BIONIC_PLDTHRESH)
+      libc_common_cflags += -DPLDSIZE=$(TARGET_KRAIT_BIONIC_PLDSIZE)
+    endif
+  endif
+  ifeq ($(TARGET_CORTEX_CACHE_LINE_32),true)
+    libc_common_cflags += -DCORTEX_CACHE_LINE_32
   endif
 endif # !arm
 
