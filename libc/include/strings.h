@@ -46,7 +46,14 @@ __BEGIN_DECLS
 int	 bcmp(const void *, const void *, size_t);
 void	 bcopy(const void *, void *, size_t);
 void	 bzero(void *, size_t);
+#ifndef __has_builtin
+#  define __has_builtin(x) 0
+#endif
+#if __has_builtin(__builtin_ffs)
+#  define ffs __builtin_ffs
+#else
 int	 ffs(int);
+#endif // __has_builtin(__builtin_ffs)
 char	*index(const char *, int);
 char	*rindex(const char *, int);
 int	 strcasecmp(const char *, const char *);
