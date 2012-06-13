@@ -1411,6 +1411,10 @@ strtod
 #endif
 
 	if (*s == '0') {
+		if (s[1] == 'x' || s[1] == 'X') {
+			value(rv) = strtoll(s, (char**) &s, 16);
+			goto ret;
+		}
 		nz0 = 1;
 		while(*++s == '0') ;
 		if (!*s)
