@@ -1411,6 +1411,32 @@ strtod
 #endif
 
 	if (*s == '0') {
+		if (s[1] == 'x' || s[1] == 'X') {
+			value(rv) = strtoll(s, (char**) &s, 16);
+			if (*s == decimal_point) {
+				s++;
+				if ((*s >= '0' && *s <= '9') ||
+				    (*s >= 'A' && *s <= 'F') ||
+				    (*s >= 'a' && *s <= 'f')) {
+					const char *start = s;
+					double frac = strtoll(s, (char**) &s, 16);
+					int i;
+					for (i = 0; i < s - start; i++)
+						frac /= 16;
+					value(rv) += frac;
+				}
+			}
+			if (*s == 'p' || *s == 'P') {
+				int exp;
+				s++;
+				exp = strtol(s, (char**) &s, 10);
+				for (; exp > 0; exp--)
+					value(rv) *= 2;
+				for (; exp < 0; exp++)
+					value(rv) /= 2;
+			}
+			goto ret;
+		}
 		nz0 = 1;
 		while(*++s == '0') ;
 		if (!*s)
