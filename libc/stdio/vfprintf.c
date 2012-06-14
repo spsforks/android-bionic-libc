@@ -827,6 +827,7 @@ error:
 		munmap(argtable, argtablesiz);
 		argtable = NULL;
 	}
+        va_end(orgap);
 	return (__sferror(fp) ? EOF : ret);
 	/* NOTREACHED */
 }
@@ -1181,6 +1182,7 @@ done:
 			(void) va_arg(ap, intmax_t *);
 			break;
 		}
+                va_end((*argtable)[n]);
 	}
 
 	if (typetable != NULL && typetable != stattypetable) {
