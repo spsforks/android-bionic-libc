@@ -33,6 +33,7 @@
 #include <sched.h>
 #include <limits.h>
 #include <sys/types.h>
+#include <asm/page.h>
 
 /*
  * Types
