@@ -43,5 +43,5 @@ strxfrm(char *s1, const char *s2, size_t n)
 	if (len < n)
 		n = len;
 	memcpy(s1, s2, n);
-	return len;
+	return len - 1;
 }
