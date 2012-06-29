@@ -26,10 +26,28 @@
  * SUCH DAMAGE.
  */
 #include <sys/resource.h>
+#include <errno.h>
 
 int nice(int increment)
 {
-    int  priority = getpriority(PRIO_PROCESS, 0);
+    int old_errno;
+    int res;
 
-    return setpriority( PRIO_PROCESS, 0, priority+increment);
+    old_errno = errno;
+    errno = 0;
+
+    res = getpriority(PRIO_PROCESS, 0);
+    if (res == -1 && errno != 0) return -1;
+
+    res = setpriority(PRIO_PROCESS, 0, res + increment);
+
+    if (res == -1 && errno != 0) {
+        /* errno might be EACCES */
+        errno = EPERM;
+        return -1;
+    }
+
+    errno = old_errno;
+
+    return getpriority(PRIO_PROCESS, 0);
 }
