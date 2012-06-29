@@ -10,13 +10,26 @@ LOCAL_SRC_FILES:= \
 	dlfcn.c \
 	debugger.c
 
+LOCAL_C_INCLUDES:= \
+    $(LOCAL_PATH)/ \
+    bionic/libaprof
+
 LOCAL_LDFLAGS := -shared
 
 LOCAL_CFLAGS += -fno-stack-protector
 
+LOCAL_CFLAGS += -DALLOW_SYMBOLS_FROM_MAIN=1
+
 # Set LINKER_DEBUG to either 1 or 0
 #
 LOCAL_CFLAGS += -DLINKER_DEBUG=0
+
+# Enable aprof support
+# only support arm now
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_CFLAGS += -DAPROF_SUPPORT
+LOCAL_SRC_FILES += aprof.c
+endif
 
 # we need to access the Bionic private header <bionic_tls.h>
 # in the linker; duplicate the HAVE_ARM_TLS_REGISTER definition
