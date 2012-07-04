@@ -63,6 +63,7 @@ extern pthread_mutex_t gAllocationsMutex;
 extern HashTable gHashTable;
 extern const MallocDebug __libc_malloc_default_dispatch;
 extern const MallocDebug* __libc_malloc_dispatch;
+extern unsigned int gDebugMallocPatternDieSize;
 
 // =============================================================================
 // log functions
@@ -372,6 +373,11 @@ static int chk_mem_check(void*       mem,
 
 void* chk_malloc(size_t bytes)
 {
+    /* Inflating size by changing memory Allocation pattern in order to capture
+     * memory corruptions which are hard to reproduce.
+     */
+    bytes = bytes + gDebugMallocPatternDieSize;
+
     size_t size = bytes + CHK_OVERHEAD_SIZE;
     if (size < bytes) { // Overflow.
         return NULL;
