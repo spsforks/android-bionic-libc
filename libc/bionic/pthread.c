@@ -364,10 +364,11 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     _thread_created_hook(tid);
     pthread_mutex_unlock(&gDebuggerNotificationLock);
 
+    *thread_out = (pthread_t)thread;
+
     // Let the thread run.
     pthread_mutex_unlock(start_mutex);
 
-    *thread_out = (pthread_t) thread;
     return 0;
 }
 
