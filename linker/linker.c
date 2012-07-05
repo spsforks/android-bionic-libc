@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <dlfcn.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #include <pthread.h>
 
@@ -423,10 +424,10 @@ static unsigned elfhash(const char *_name)
 }
 
 static Elf32_Sym *
-_do_lookup(soinfo *si, const char *name, unsigned *base)
+_do_lookup(soinfo *si, const char *name, unsigned *base, char ignore_local)
 {
     unsigned elf_hash = elfhash(name);
-    Elf32_Sym *s;
+    Elf32_Sym *s = NULL;
     unsigned *d;
     soinfo *lsi = si;
     int i;
@@ -440,10 +441,16 @@ _do_lookup(soinfo *si, const char *name, unsigned *base)
      * dynamic linking.  Some systems return the first definition found
      * and some the first non-weak definition.   This is system dependent.
      * Here we return the first definition found for simplicity.  */
-
-    s = _elf_lookup(si, elf_hash, name);
-    if(s != NULL)
-        goto done;
+    if(ignore_local == FALSE) {
+        DEBUG("%5d %s: looking up %s in %s\n",
+              pid, si->name, name, si->name);
+         s = _elf_lookup(si, elf_hash, name);
+         if(s != NULL)
+            goto done;
+    } else {
+        DEBUG("%5d %s: ignoring local lookup of %s\n",
+              pid, si->name, name);
+    }
 
     /* Next, look for it in the preloads list */
     for(i = 0; preloads[i] != NULL; i++) {
@@ -1297,7 +1304,16 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
               si->name, idx);
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            s = _do_lookup(si, sym_name, &base);
+
+#if defined(ANDROID_ARM_LINKER)
+            /* the ARM elf specifications say that R_ARM_COPY must be looked up in shared libraries
+             * so we must skip the main binary.
+             */
+            if(type == R_ARM_COPY)
+                s = _do_lookup(si, sym_name, &base, TRUE);
+            else
+#endif
+                s = _do_lookup(si, sym_name, &base, FALSE);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1463,6 +1479,11 @@ static int reloc_library(soinfo *si, Elf32_Rel *rel, unsigned count)
             MARK(rel->r_offset);
             TRACE_TYPE(RELO, "%5d RELO %08x <- %d @ %08x %s\n", pid,
                        reloc, s->st_size, sym_addr, sym_name);
+
+            /* if these are ever equal, it probably means that do_lookup is returning
+             * symbols from inside the executable, not the library. This is incorrect.
+             */
+            assert(reloc != sym_addr);
             memcpy((void*)reloc, (void*)sym_addr, s->st_size);
             break;
         case R_ARM_NONE:
