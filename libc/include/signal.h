@@ -33,6 +33,47 @@
 #include <string.h>		/* For memset() */
 #include <sys/types.h>
 #include <asm/signal.h>
+#include <asm/sigcontext.h>
+
+/* Previous versions of <signal.h> didn't include <asm/sigcontext.h> and
+ * thus didn't define 'struct sigcontext'. This has led client code to
+ * redefine the structure, sometimes in a custom and incompatible way.
+ *
+ * The __BIONIC_HAVE_STRUCT_SIGCONTEXT macro is defined here to indicate
+ * that <signal.h> does indeed define the structure. For maximum source
+ * compatibility, client code should follow these guidelines:
+ *
+ *  - If client code is guaranteed to build against a recent NDK/platform
+ *    version, just include <signal.h> as usual, and use the
+ *    'struct sigcontext' with a kernel-compatible field layout.
+ *
+ *    NOTE: On ARM, registers are named arm_r0, arm_r1, etc...
+ *
+ *  - If client code wants to build against older NDK/platform versions,
+ *    and only uses 'struct sigcontext' without accessing any
+ *    of its fields, just always include <asm/sigcontext.h> on Android
+ *    to ensure maximum portability (i.e. to old platform/NDK releases).
+ *    As in:
+ *
+ *        #include <signal.h>
+ *        #ifdef __BIONIC__
+ *        #include <asm/sigcontext.h>
+ *        #endif
+ *
+ *  - Otherwise, if the client has a custom sigcontext definition and wants to
+ *    keep it to minimize source changes, use a macro trick like below to avoid
+ *    naming conflicts:
+ *
+ *        #include <signal.h>
+ *        #ifdef __BIONIC__
+ *        #  include <asm/sigcontext.h>
+ *        #  ifdef __BIONIC_HAVE_STRUCT_SIGCONTEXT
+ *        #    undef sigcontext
+ *        #    define sigcontext  my_custom_sigcontext
+ *        #  endif
+ *        #endif
+ */
+#define __BIONIC_HAVE_STRUCT_SIGCONTEXT 1
 
 #define __ARCH_SI_UID_T __kernel_uid32_t
 #include <asm/siginfo.h>
