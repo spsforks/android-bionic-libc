@@ -2615,6 +2615,24 @@ static size_t traverse_and_check(mstate m);
 
 /* ---------------------------- setting mparams -------------------------- */
 
+static void pre_fork() {
+#if USE_LOCKS
+    ACQUIRE_LOCK(&(gm)->mutex);
+#endif
+}
+
+static void post_fork_parent() {
+#if USE_LOCKS
+    RELEASE_LOCK(&(gm)->mutex);
+#endif
+}
+
+static void post_fork_child() {
+#if USE_LOCKS
+    INITIAL_LOCK(&(gm)->mutex);
+#endif
+}
+
 /* Initialize mparams */
 static int init_mparams(void) {
   if (mparams.page_size == 0) {
@@ -2687,6 +2705,9 @@ static int init_mparams(void) {
         ((mparams.granularity & (mparams.granularity-SIZE_T_ONE)) != 0) ||
         ((mparams.page_size   & (mparams.page_size-SIZE_T_ONE))   != 0))
       ABORT;
+#if USE_LOCKS
+    pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
+#endif
   }
   return 0;
 }
