@@ -220,6 +220,7 @@ libc_common_src_files := \
 	string/__strlen_chk.c \
 	string/__strncat_chk.c \
 	string/__strncpy_chk.c \
+	string/__strnlen_chk.c \
 	wchar/wcpcpy.c \
 	wchar/wcpncpy.c \
 	wchar/wcscasecmp.c \
