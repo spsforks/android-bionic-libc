@@ -224,6 +224,35 @@ size_t strlen(const char *s) {
     return __strlen_chk(s, bos);
 }
 
+__purefunc extern size_t __strnlen_real(const char *s, size_t maxlen)
+    __asm__(__USER_LABEL_PREFIX__ "strnlen");
+extern void __strnlen_error()
+    __attribute__((__error__("strnlen called with length bigger than buffer")));
+extern size_t __strnlen_chk(const char *, size_t, size_t);
+
+__BIONIC_FORTIFY_INLINE
+size_t strnlen(const char *s, size_t maxlen) {
+    size_t bos = __builtin_object_size(s, 0);
+
+    // Compiler doesn't know destination size. Don't call __strnlen_chk
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __strnlen_real(s, maxlen);
+    }
+
+    // Compiler can prove, at compile time, that maxlen <= bos.
+    // Don't call __strnlen_chk
+    if (__builtin_constant_p(maxlen) && (maxlen <= bos)) {
+        return __strnlen_real(s, maxlen);
+    }
+
+    // Compiler can prove, at compile time, that maxlen > bos.
+    // Generate a compile time error.
+    if (__builtin_constant_p(maxlen) && (maxlen > bos)) {
+        __strnlen_error();
+    }
+
+    return __strnlen_chk(s, maxlen, bos);
+}
 
 #endif /* defined(__BIONIC_FORTIFY_INLINE) */
 
