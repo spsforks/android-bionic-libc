@@ -203,7 +203,7 @@ void __thread_entry(int (*func)(void*), void *arg, void **tls)
 }
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base)
+int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pid_t group_id, pthread_attr_t * attr, void * stack_base)
 {
     int error = 0;
 
@@ -214,6 +214,7 @@ int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * 
     }
     thread->attr.stack_base = stack_base;
     thread->kernel_id       = kernel_id;
+    thread->group_id        = group_id;
 
     // Make a note of whether the user supplied this stack (so we know whether or not to free it).
     if (attr->stack_base == stack_base) {
@@ -336,6 +337,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND |
                 CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
     int tid = __pthread_clone((int(*)(void*))start_routine, tls, flags, arg);
+    int gid = __get_thread()->group_id;
 
     if (tid < 0) {
         int clone_errno = errno;
@@ -348,7 +350,7 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
         return clone_errno;
     }
 
-    int init_errno = _init_thread(thread, tid, (pthread_attr_t*) attr, stack);
+    int init_errno = _init_thread(thread, tid, gid, (pthread_attr_t*) attr, stack);
     if (init_errno != 0) {
         // Mark the thread detached and let its __thread_entry run to
         // completion. (It'll just exit immediately, cleaning up its resources.)
@@ -2078,7 +2080,7 @@ int pthread_kill(pthread_t tid, int sig)
     int  old_errno = errno;
     pthread_internal_t * thread = (pthread_internal_t *)tid;
 
-    ret = tgkill(getpid(), thread->kernel_id, sig);
+    ret = tgkill(thread->group_id, thread->kernel_id, sig);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -2297,6 +2299,7 @@ int __pthread_settid(pthread_t thid, pid_t tid)
 
     pthread_internal_t* thread = (pthread_internal_t*)thid;
     thread->kernel_id = tid;
+    thread->group_id = tid;
 
     return 0;
 }

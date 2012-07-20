@@ -37,7 +37,8 @@ typedef struct pthread_internal_t
     struct pthread_internal_t*  next;
     struct pthread_internal_t** pref;
     pthread_attr_t              attr;
-    pid_t                       kernel_id;
+    pid_t                       kernel_id; /* thread id, tid */
+    pid_t                       group_id;  /* thread group id, tgid */
     pthread_cond_t              join_cond;
     int                         join_count;
     void*                       return_value;
@@ -46,7 +47,7 @@ typedef struct pthread_internal_t
     void**                      tls;         /* thread-local storage area */
 } pthread_internal_t;
 
-extern int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pthread_attr_t * attr, void * stack_base);
+extern int _init_thread(pthread_internal_t * thread, pid_t kernel_id, pid_t group_id, pthread_attr_t * attr, void * stack_base);
 void _pthread_internal_add( pthread_internal_t*  thread );
 pthread_internal_t* __get_thread(void);
 

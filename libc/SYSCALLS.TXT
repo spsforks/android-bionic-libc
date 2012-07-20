@@ -73,7 +73,7 @@ int     __setresuid:setresuid(uid_t, uid_t, uid_t)     -1,-1,185
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   210,210,-1
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     -1,-1,190
 void*   __brk:brk(void*)           45
-# see comments in arch-arm/bionic/kill.S to understand why we don't generate an ARM stub for kill/tkill
+# see comments in arch-arm/bionic/kill.S to understand why we don't generate an ARM stub for kill/tkill/tgkill
 int     kill(pid_t, int)           -1,37,37
 int     tkill(pid_t tid, int sig)  -1,238,236
 int     tgkill(pid_t tgid, pid_t tid, int sig)  -1,270,266

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,10 +27,10 @@
  */
 #include <unistd.h>
 #include <signal.h>
+#include "pthread_internal.h"
 
-extern int __raise(int);
-
-int raise(int signum)
+int __raise(int signum)
 {
-    return __raise(signum);
+    pthread_internal_t * thread = __get_thread();
+    return tgkill(thread->group_id, thread->kernel_id, signum);
 }
