@@ -401,7 +401,7 @@ void* chk_malloc(size_t size)
     return NULL;
 }
 
-void* chk_memalign(size_t alignment, size_t bytes)
+void* chk_memalign(size_t alignment __attribute__((unused)), size_t bytes)
 {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     // XXX: it's better to use malloc, than being wrong
