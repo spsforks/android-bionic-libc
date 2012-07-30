@@ -34,7 +34,7 @@ T[] =  {
 };
 
 #ifdef INLINE_KERNEL_TANDF
-extern inline
+extern inline __attribute((__gnu_inline__))
 #endif
 float
 __kernel_tandf(double x, int iy)
