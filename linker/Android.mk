@@ -1,4 +1,5 @@
 LOCAL_PATH:= $(call my-dir)
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
@@ -44,7 +45,7 @@ ifeq ($(TARGET_ARCH),mips)
     LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
 
-LOCAL_MODULE:= linker
+LOCAL_MODULE := linker
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc
@@ -59,6 +60,10 @@ LOCAL_STATIC_LIBRARIES := libc_nomalloc
 # is probably specific the linker only, so there's no need to modify the build system for
 # the purpose.
 
+ifeq ($(USE_CLANG),1)
+  include $(BUILD_SYSTEM)/use_clang.mk
+endif
+
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_SUFFIX := $(TARGET_EXECUTABLE_SUFFIX)
 
@@ -72,6 +77,10 @@ $(linked_module): $(TARGET_CRTBEGIN_STATIC_O) $(all_objects) $(all_libraries) $(
 	$(transform-o-to-static-executable)
 	@echo "target PrefixSymbols: $(PRIVATE_MODULE) ($@)"
 	$(hide) $(TARGET_OBJCOPY) --prefix-symbols=__dl_ $@
+
+ifeq ($(USE_CLANG),1)
+  include $(BUILD_SYSTEM)/restore_compiler.mk
+endif
 
 #
 # end of BUILD_EXECUTABLE hack
