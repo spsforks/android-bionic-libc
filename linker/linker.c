@@ -26,25 +26,23 @@
  * SUCH DAMAGE.
  */
 
+#include <dlfcn.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <linux/auxvec.h>
-
+#include <pthread.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <dlfcn.h>
-#include <sys/stat.h>
-
-#include <pthread.h>
-
-#include <sys/mman.h>
-
 #include <sys/atomics.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-/* special private C library header - see Android.mk */
-#include <bionic_tls.h>
+// Private C library headers.
+#include <private/bionic_tls.h>
+#include <private/logd.h>
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -79,8 +77,8 @@
  * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
  *   headers provide versions that are negative...
  * - allocate space for soinfo structs dynamically instead of
- *   having a hard limit (64)
-*/
+ *   having a hard limit (SO_MAX)
+ */
 
 
 static int soinfo_link_image(soinfo *si, unsigned wr_offset);
@@ -126,24 +124,30 @@ struct _link_stats linker_stats;
 unsigned bitmask[4096];
 #endif
 
-#define HOODLUM(name, ret, ...)                                               \
-    ret name __VA_ARGS__                                                      \
+// You shouldn't try to call memory-allocating functions in the dynamic linker.
+// Guard against the most obvious ones.
+#define DISALLOW_ALLOCATION(return_type, name, ...)                           \
+    return_type name __VA_ARGS__                                              \
     {                                                                         \
-        char errstr[] = "ERROR: " #name " called from the dynamic linker!\n"; \
-        write(2, errstr, sizeof(errstr));                                     \
+        char* msg = "ERROR: " #name " called from the dynamic linker!\n";     \
+         __libc_android_log_write(ANDROID_LOG_FATAL, "linker", msg);          \
+        write(2, msg, sizeof(msg));                                           \
         abort();                                                              \
     }
-HOODLUM(malloc, void *, (size_t size));
-HOODLUM(free, void, (void *ptr));
-HOODLUM(realloc, void *, (void *ptr, size_t size));
-HOODLUM(calloc, void *, (size_t cnt, size_t size));
+#define UNUSED __attribute__((unused))
+DISALLOW_ALLOCATION(void*, malloc, (size_t u UNUSED));
+DISALLOW_ALLOCATION(void, free, (void* u UNUSED));
+DISALLOW_ALLOCATION(void*, realloc, (void* u1 UNUSED, size_t u2 UNUSED));
+DISALLOW_ALLOCATION(void*, calloc, (size_t u1 UNUSED, size_t u2 UNUSED));
 
 static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
+#define BASENAME(s) (strrchr(s, '/') != NULL ? strrchr(s, '/') + 1 : s)
 #define DL_ERR(fmt, x...)                                                     \
     do {                                                                      \
         format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf),       \
-                 "%s[%d]: " fmt, __func__, __LINE__, ##x);                    \
+            "(%s:%d, pid %d) %s: " fmt,                                       \
+            BASENAME(__FILE__), __LINE__, pid, __func__, ##x);                \
         ERROR(fmt "\n", ##x);                                                 \
     } while(0)
 
@@ -253,10 +257,8 @@ void notify_gdb_of_libraries()
 
 static soinfo *soinfo_alloc(const char *name)
 {
-    soinfo *si;
-
-    if(strlen(name) >= SOINFO_NAME_LEN) {
-        DL_ERR("%5d library name %s too long", pid, name);
+    if (strlen(name) >= SOINFO_NAME_LEN) {
+        DL_ERR("library name \"%s\" too long", name);
         return NULL;
     }
 
@@ -264,15 +266,15 @@ static soinfo *soinfo_alloc(const char *name)
        done only by dlclose(), which is not likely to be used.
     */
     if (!freelist) {
-        if(socount == SO_MAX) {
-            DL_ERR("%5d too many libraries when loading %s", pid, name);
+        if (socount == SO_MAX) {
+            DL_ERR("too many libraries when loading \"%s\"", name);
             return NULL;
         }
         freelist = sopool + socount++;
         freelist->next = NULL;
     }
 
-    si = freelist;
+    soinfo* si = freelist;
     freelist = freelist->next;
 
     /* Make sure we get a clean block of soinfo */
@@ -300,7 +302,7 @@ static void soinfo_free(soinfo *si)
     }
     if (trav == NULL) {
         /* si was not ni solist */
-        DL_ERR("%5d name %s is not in solist!", pid, si->name);
+        DL_ERR("name \"%s\" is not in solist!", si->name);
         return;
     }
 
@@ -315,16 +317,15 @@ static void soinfo_free(soinfo *si)
 
 const char *addr_to_name(unsigned addr)
 {
-    soinfo *si;
-
-    for(si = solist; si != 0; si = si->next){
-        if((addr >= si->base) && (addr < (si->base + si->size))) {
+    for (soinfo* si = solist; si != 0; si = si->next) {
+        if ((addr >= si->base) && (addr < (si->base + si->size))) {
             return si->name;
         }
     }
-
     return "";
 }
+
+#ifdef ANDROID_ARM_LINKER
 
 /* For a given PC, find the .so that it belongs to.
  * Returns the base address of the .ARM.exidx section
@@ -335,7 +336,6 @@ const char *addr_to_name(unsigned addr)
  *
  * This function is exposed via dlfcn.c and libdl.so.
  */
-#ifdef ANDROID_ARM_LINKER
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
 {
     soinfo *si;
@@ -350,7 +350,9 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
    *pcount = 0;
     return NULL;
 }
+
 #elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
+
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
@@ -372,6 +374,7 @@ dl_iterate_phdr(int (*cb)(struct dl_phdr_info *info, size_t size, void *data),
     }
     return rv;
 }
+
 #endif
 
 static Elf32_Sym *soinfo_elf_lookup(soinfo *si, unsigned hash, const char *name)
@@ -454,8 +457,7 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset)
         if(d[0] == DT_NEEDED){
             lsi = (soinfo *)d[1];
             if (!validate_soinfo(lsi)) {
-                DL_ERR("%5d bad DT_NEEDED pointer in %s",
-                       pid, lsi->name);
+                DL_ERR("bad DT_NEEDED pointer in \"%s\"", lsi->name);
                 return NULL;
             }
 
@@ -638,35 +640,33 @@ static int open_library(const char *name)
     return -1;
 }
 
-typedef struct {
-    long mmap_addr;
-    char tag[4]; /* 'P', 'R', 'E', ' ' */
-} prelink_info_t;
-
-/* Returns the requested base address if the library is prelinked,
- * and 0 otherwise.  */
-static unsigned long
-is_prelinked(int fd, const char *name)
+// Returns 'true' if the library is prelinked or on failure so we error out
+// either way. We no longer support prelinking.
+static bool is_prelinked(int fd, const char* name)
 {
-    off_t sz = lseek(fd, -sizeof(prelink_info_t), SEEK_END);
+    struct prelink_info_t {
+        long mmap_addr;
+        char tag[4]; // "PRE ".
+    };
+
+    off_t sz = lseek(fd, -sizeof(struct prelink_info_t), SEEK_END);
     if (sz < 0) {
-        DL_ERR("lseek() failed!");
-        return 0;
+        DL_ERR("lseek failed: %s", strerror(errno));
+        return true;
     }
 
-    prelink_info_t info;
+    struct prelink_info_t info;
     int rc = TEMP_FAILURE_RETRY(read(fd, &info, sizeof(info)));
     if (rc != sizeof(info)) {
-        WARN("Could not read prelink_info_t structure for `%s`\n", name);
-        return 0;
+        DL_ERR("could not read prelink_info_t structure for \"%s\":", name, strerror(errno));
+        return true;
     }
 
-    if (memcmp(info.tag, "PRE ", 4)) {
-        WARN("`%s` is not a prelinked library\n", name);
-        return 0;
+    if (memcmp(info.tag, "PRE ", 4) == 0) {
+        DL_ERR("prelinked libraries no longer supported: %s", name);
+        return true;
     }
-
-    return (unsigned long)info.mmap_addr;
+    return false;
 }
 
 /* verify_elf_header
@@ -698,99 +698,70 @@ verify_elf_header(const Elf32_Ehdr* hdr)
 }
 
 
-static soinfo *
-load_library(const char *name)
+static soinfo* load_library(const char* name)
 {
+    // These are cleaned up by the 'fail' goto target, so we need to define them early.
+    soinfo* si = NULL;
+    void* phdr_mmap = NULL;
+
     int fd = open_library(name);
-    int ret, cnt;
-    unsigned ext_sz;
-    unsigned req_base;
-    const char *bname;
-    struct stat sb;
-    soinfo *si = NULL;
-    Elf32_Ehdr  header[1];
-    int         phdr_count;
-    void*       phdr_mmap = NULL;
-    Elf32_Addr  phdr_size;
-    const Elf32_Phdr* phdr_table;
-
-    void*       load_start = NULL;
-    Elf32_Addr  load_size = 0;
-    Elf32_Addr  load_bias = 0;
-
     if (fd == -1) {
-        DL_ERR("Library '%s' not found", name);
-        return NULL;
+        DL_ERR("library \"%s\" not found", name);
+        goto fail;
     }
 
-    /* Read the ELF header first */
-    ret = TEMP_FAILURE_RETRY(read(fd, (void*)header, sizeof(header)));
+    // Read the ELF header first.
+    Elf32_Ehdr header[1];
+    int ret = TEMP_FAILURE_RETRY(read(fd, (void*)header, sizeof(header)));
     if (ret < 0) {
-        DL_ERR("%5d can't read file %s: %s", pid, name, strerror(errno));
+        DL_ERR("can't read file \"%s\": %s", name, strerror(errno));
         goto fail;
     }
     if (ret != (int)sizeof(header)) {
-        DL_ERR("%5d too small to be an ELF executable: %s", pid, name);
+        DL_ERR("too small to be an ELF executable: %s", name);
         goto fail;
     }
     if (verify_elf_header(header) < 0) {
-        DL_ERR("%5d not a valid ELF executable: %s", pid, name);
+        DL_ERR("not a valid ELF executable: %s", name);
         goto fail;
     }
 
-    /* Then read the program header table */
+    // Then read the program header table.
+    Elf32_Addr phdr_size;
+    const Elf32_Phdr* phdr_table;
     ret = phdr_table_load(fd, header->e_phoff, header->e_phnum,
                           &phdr_mmap, &phdr_size, &phdr_table);
     if (ret < 0) {
-        DL_ERR("%5d can't load program header table: %s: %s", pid,
-               name, strerror(errno));
+        DL_ERR("can't load program header table: %s: %s", name, strerror(errno));
         goto fail;
     }
-    phdr_count = header->e_phnum;
+    size_t phdr_count = header->e_phnum;
 
-    /* Get the load extents and the prelinked load address, if any */
-    ext_sz = phdr_table_get_load_size(phdr_table, phdr_count);
+    // Get the load extents.
+    Elf32_Addr ext_sz = phdr_table_get_load_size(phdr_table, phdr_count);
+    TRACE("[ %5d - '%s' wants sz=0x%08x ]\n", pid, name, ext_sz);
     if (ext_sz == 0) {
-        DL_ERR("%5d no loadable segments in file: %s", pid, name);
+        DL_ERR("no loadable segments in file: %s", name);
         goto fail;
     }
 
-    req_base = (unsigned) is_prelinked(fd, name);
-    if (req_base == (unsigned)-1) {
-        DL_ERR("%5d can't read end of library: %s: %s", pid, name,
-               strerror(errno));
+    // We no longer support pre-linked libraries.
+    if (is_prelinked(fd, name)) {
         goto fail;
     }
-    if (req_base != 0) {
-        TRACE("[ %5d - Prelinked library '%s' requesting base @ 0x%08x ]\n",
-              pid, name, req_base);
-    } else {
-        TRACE("[ %5d - Non-prelinked library '%s' found. ]\n", pid, name);
-    }
 
-    TRACE("[ %5d - '%s' (%s) wants base=0x%08x sz=0x%08x ]\n", pid, name,
-          (req_base ? "prelinked" : "not pre-linked"), req_base, ext_sz);
-
-    /* Now configure the soinfo struct where we'll store all of our data
-     * for the ELF object. If the loading fails, we waste the entry, but
-     * same thing would happen if we failed during linking. Configuring the
-     * soinfo struct here is a lot more convenient.
-     */
-    bname = strrchr(name, '/');
-    si = soinfo_alloc(bname ? bname + 1 : name);
-    if (si == NULL)
-        goto fail;
-
-    /* Reserve address space for all loadable segments */
+    // Reserve address space for all loadable segments.
+    void* load_start = NULL;
+    Elf32_Addr load_size = 0;
+    Elf32_Addr load_bias = 0;
     ret = phdr_table_reserve_memory(phdr_table,
                                     phdr_count,
-                                    req_base,
                                     &load_start,
                                     &load_size,
                                     &load_bias);
     if (ret < 0) {
-        DL_ERR("%5d Can't reserve %d bytes from 0x%08x in address space for %s: %s",
-               pid, ext_sz, req_base, name, strerror(errno));
+        DL_ERR("can't reserve %d bytes in address space for \"%s\": %s",
+               ext_sz, name, strerror(errno));
         goto fail;
     }
 
@@ -800,13 +771,11 @@ load_library(const char *name)
     /* Map all the segments in our address space with default protections */
     ret = phdr_table_load_segments(phdr_table,
                                    phdr_count,
-                                   load_start,
-                                   load_size,
                                    load_bias,
                                    fd);
     if (ret < 0) {
-        DL_ERR("%5d Can't map loadable segments for %s: %s",
-               pid, name, strerror(errno));
+        DL_ERR("can't map loadable segments for \"%s\": %s",
+               name, strerror(errno));
         goto fail;
     }
 
@@ -819,8 +788,14 @@ load_library(const char *name)
                                         phdr_count,
                                         load_bias);
     if (ret < 0) {
-        DL_ERR("%5d Can't unprotect loadable segments for %s: %s",
-               pid, name, strerror(errno));
+        DL_ERR("can't unprotect loadable segments for \"%s\": %s",
+               name, strerror(errno));
+        goto fail;
+    }
+
+    const char* bname = strrchr(name, '/');
+    si = soinfo_alloc(bname ? bname + 1 : name);
+    if (si == NULL) {
         goto fail;
     }
 
@@ -833,8 +808,7 @@ load_library(const char *name)
     si->phnum = phdr_count;
     si->phdr = phdr_table_get_loaded_phdr(phdr_table, phdr_count, load_bias);
     if (si->phdr == NULL) {
-        DL_ERR("%5d Can't find loaded PHDR for %s",
-               pid, name);
+        DL_ERR("can't find loaded PHDR for \"%s\"", name);
         goto fail;
     }
 
@@ -843,11 +817,15 @@ load_library(const char *name)
     return si;
 
 fail:
-    if (si) soinfo_free(si);
+    if (si != NULL) {
+        soinfo_free(si);
+    }
     if (phdr_mmap != NULL) {
         phdr_table_unload(phdr_mmap, phdr_size);
     }
-    close(fd);
+    if (fd != -1) {
+        close(fd);
+    }
     return NULL;
 }
 
@@ -891,11 +869,11 @@ soinfo *find_library(const char *name)
     for(si = solist; si != 0; si = si->next){
         if(!strcmp(bname, si->name)) {
             if(si->flags & FLAG_ERROR) {
-                DL_ERR("%5d '%s' failed to load previously", pid, bname);
+                DL_ERR("\"%s\" failed to load previously", bname);
                 return NULL;
             }
             if(si->flags & FLAG_LINKED) return si;
-            DL_ERR("OOPS: %5d recursive link to '%s'", pid, si->name);
+            DL_ERR("OOPS: recursive link to \"%s\"", si->name);
             return NULL;
         }
     }
@@ -908,8 +886,7 @@ soinfo *find_library(const char *name)
 }
 
 /* TODO:
- *   notify gdb of unload
- *   for non-prelinked libraries, find a way to decrement libbase
+ *   find a way to decrement libbase
  */
 static void call_destructors(soinfo *si);
 unsigned soinfo_unload(soinfo *si)
@@ -925,9 +902,9 @@ unsigned soinfo_unload(soinfo *si)
          */
         if (phdr_table_unprotect_gnu_relro(si->phdr, si->phnum,
                                            si->load_bias) < 0) {
-            DL_ERR("%5d %s: could not undo GNU_RELRO protections. "
+            DL_ERR("%s: could not undo GNU_RELRO protections. "
                     "Expect a crash soon. errno=%d (%s)",
-                    pid, si->name, errno, strerror(errno));
+                    si->name, errno, strerror(errno));
         }
 
         for(d = si->dynamic; *d; d += 2) {
@@ -945,8 +922,8 @@ unsigned soinfo_unload(soinfo *si)
                     soinfo_unload(lsi);
                 }
                 else
-                    DL_ERR("%5d %s: could not unload dependent library",
-                           pid, si->name);
+                    DL_ERR("\"%s\": could not unload dependent library",
+                           si->name);
             }
         }
 
@@ -972,12 +949,10 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
     Elf32_Sym *symtab = si->symtab;
     const char *strtab = si->strtab;
     Elf32_Sym *s;
-    unsigned base;
     Elf32_Addr offset;
     Elf32_Rel *start = rel;
-    unsigned idx;
 
-    for (idx = 0; idx < count; ++idx, ++rel) {
+    for (size_t idx = 0; idx < count; ++idx, ++rel) {
         unsigned type = ELF32_R_TYPE(rel->r_info);
         unsigned sym = ELF32_R_SYM(rel->r_info);
         unsigned reloc = (unsigned)(rel->r_offset + si->load_bias);
@@ -997,7 +972,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                    reference..   */
                 s = &symtab[sym];
                 if (ELF32_ST_BIND(s->st_info) != STB_WEAK) {
-                    DL_ERR("%5d cannot locate '%s'...\n", pid, sym_name);
+                    DL_ERR("cannot locate \"%s\"...", sym_name);
                     return -1;
                 }
 
@@ -1043,8 +1018,8 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
                        not found in run-time.  */
 #endif /* ANDROID_ARM_LINKER */
                 default:
-                    DL_ERR("%5d unknown weak reloc type %d @ %p (%d)\n",
-                                 pid, type, rel, (int) (rel - start));
+                    DL_ERR("unknown weak reloc type %d @ %p (%d)",
+                                 type, rel, (int) (rel - start));
                     return -1;
                 }
             } else {
@@ -1052,8 +1027,8 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 #if 0
                 if((base == 0) && (si->base != 0)){
                         /* linking from libraries to main image is bad */
-                    DL_ERR("%5d cannot locate '%s'...",
-                           pid, strtab + symtab[sym].st_name);
+                    DL_ERR("cannot locate \"%s\"...",
+                           strtab + symtab[sym].st_name);
                     return -1;
                 }
 #endif
@@ -1140,8 +1115,8 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 #endif /* ANDROID_*_LINKER */
             COUNT_RELOC(RELOC_RELATIVE);
             MARK(rel->r_offset);
-            if(sym){
-                DL_ERR("%5d odd RELATIVE form...", pid);
+            if (sym) {
+                DL_ERR("odd RELATIVE form...", pid);
                 return -1;
             }
             TRACE_TYPE(RELO, "%5d RELO RELATIVE %08x <- +%08x\n", pid,
@@ -1180,8 +1155,8 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count)
 #endif /* ANDROID_ARM_LINKER */
 
         default:
-            DL_ERR("%5d unknown reloc type %d @ %p (%d)",
-                  pid, type, rel, (int) (rel - start));
+            DL_ERR("unknown reloc type %d @ %p (%d)",
+                   type, rel, (int) (rel - start));
             return -1;
         }
     }
@@ -1240,7 +1215,7 @@ int mips_relocate_got(struct soinfo *si)
                reference..   */
             s = &symtab[g];
             if (ELF32_ST_BIND(s->st_info) != STB_WEAK) {
-                DL_ERR("%5d cannot locate '%s'...\n", pid, sym_name);
+                DL_ERR("cannot locate \"%s\"...", sym_name);
                 return -1;
             }
             *got = 0;
@@ -1320,9 +1295,8 @@ void soinfo_call_constructors(soinfo *si)
         TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
     } else {
         if (si->preinit_array) {
-            DL_ERR("%5d Shared library '%s' has a preinit_array table @ 0x%08x."
-                   " This is INVALID.", pid, si->name,
-                   (unsigned)si->preinit_array);
+            DL_ERR("shared library \"%s\" has a preinit_array table @ 0x%08x. "
+                   "This is INVALID.", si->name, (unsigned) si->preinit_array);
         }
     }
 
@@ -1332,8 +1306,7 @@ void soinfo_call_constructors(soinfo *si)
             if(d[0] == DT_NEEDED){
                 soinfo* lsi = (soinfo *)d[1];
                 if (!validate_soinfo(lsi)) {
-                    DL_ERR("%5d bad DT_NEEDED pointer in %s",
-                           pid, si->name);
+                    DL_ERR("bad DT_NEEDED pointer in \"%s\"", si->name);
                 } else {
                     soinfo_call_constructors(lsi);
                 }
@@ -1383,7 +1356,7 @@ static int nullify_closed_stdio (void)
 
     dev_null = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
     if (dev_null < 0) {
-        DL_ERR("Cannot open /dev/null.");
+        DL_ERR("cannot open /dev/null: %s", strerror(errno));
         return -1;
     }
     TRACE("[ %5d Opened /dev/null file-descriptor=%d]\n", pid, dev_null);
@@ -1392,24 +1365,22 @@ static int nullify_closed_stdio (void)
        with /dev/null, dup /dev/null to it.  */
     for (i = 0; i < 3; i++) {
         /* If it is /dev/null already, we are done. */
-        if (i == dev_null)
+        if (i == dev_null) {
             continue;
+        }
 
         TRACE("[ %5d Nullifying stdio file descriptor %d]\n", pid, i);
-        /* The man page of fcntl does not say that fcntl(..,F_GETFL)
-           can be interrupted but we do this just to be safe. */
-        do {
-          status = fcntl(i, F_GETFL);
-        } while (status < 0 && errno == EINTR);
+        status = TEMP_FAILURE_RETRY(fcntl(i, F_GETFL));
 
-        /* If file is openned, we are good. */
-        if (status >= 0)
-          continue;
+        /* If file is opened, we are good. */
+        if (status != -1) {
+            continue;
+        }
 
         /* The only error we allow is that the file descriptor does not
            exist, in which case we dup /dev/null to it. */
         if (errno != EBADF) {
-            DL_ERR("nullify_stdio: unhandled error %s", strerror(errno));
+            DL_ERR("fcntl failed: %s", strerror(errno));
             return_value = -1;
             continue;
         }
@@ -1417,12 +1388,9 @@ static int nullify_closed_stdio (void)
         /* Try dupping /dev/null to this stdio file descriptor and
            repeat if there is a signal.  Note that any errors in closing
            the stdio descriptor are lost.  */
-        do {
-            status = dup2(dev_null, i);
-        } while (status < 0 && errno == EINTR);
-
+        status = TEMP_FAILURE_RETRY(dup2(dev_null, i));
         if (status < 0) {
-            DL_ERR("nullify_stdio: dup2 error %s", strerror(errno));
+            DL_ERR("dup2 failed: %s", strerror(errno));
             return_value = -1;
             continue;
         }
@@ -1431,12 +1399,9 @@ static int nullify_closed_stdio (void)
     /* If /dev/null is not one of the stdio file descriptors, close it. */
     if (dev_null > 2) {
         TRACE("[ %5d Closing /dev/null file-descriptor=%d]\n", pid, dev_null);
-        do {
-            status = close(dev_null);
-        } while (status < 0 && errno == EINTR);
-
-        if (status < 0) {
-            DL_ERR("nullify_stdio: close error %s", strerror(errno));
+        status = TEMP_FAILURE_RETRY(close(dev_null));
+        if (status == -1) {
+            DL_ERR("close failed: %s", strerror(errno));
             return_value = -1;
         }
     }
@@ -1464,7 +1429,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     si->dynamic = phdr_table_get_dynamic_section(phdr, phnum, base);
     if (si->dynamic == NULL) {
         if (!relocating_linker) {
-            DL_ERR("%5d missing PT_DYNAMIC?!", pid);
+            DL_ERR("missing PT_DYNAMIC?!");
         }
         goto fail;
     } else {
@@ -1485,8 +1450,8 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             /* We can't call DL_ERR if the linker's relocations haven't
              * been performed yet */
             if (!relocating_linker) {
-                DL_ERR("%5d Can't unprotect segments for %s: %s",
-                       pid, si->name, strerror(errno));
+                DL_ERR("can't unprotect segments for \"%s\": %s",
+                       si->name, strerror(errno));
             }
             goto fail;
         }
@@ -1537,7 +1502,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
 #endif
             break;
          case DT_RELA:
-            DL_ERR("%5d DT_RELA not supported", pid);
+            DL_ERR("DT_RELA not supported");
             goto fail;
         case DT_INIT:
             si->init_func = (void (*)(void))(base + *d);
@@ -1633,7 +1598,7 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
            pid, si->base, si->strtab, si->symtab);
 
     if((si->strtab == 0) || (si->symtab == 0)) {
-        DL_ERR("%5d missing essential tables", pid);
+        DL_ERR("missing essential tables");
         goto fail;
     }
 
@@ -1645,8 +1610,8 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             soinfo *lsi = find_library(ldpreload_names[i]);
             if(lsi == 0) {
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
-                DL_ERR("%5d could not load needed library '%s' for '%s' (%s)",
-                       pid, ldpreload_names[i], si->name, tmp_err_buf);
+                DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
+                       ldpreload_names[i], si->name, tmp_err_buf);
                 goto fail;
             }
             lsi->refcount++;
@@ -1660,8 +1625,8 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
             soinfo *lsi = find_library(si->strtab + d[1]);
             if(lsi == 0) {
                 strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
-                DL_ERR("%5d could not load needed library '%s' for '%s' (%s)",
-                       pid, si->strtab + d[1], si->name, tmp_err_buf);
+                DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
+                       si->strtab + d[1], si->name, tmp_err_buf);
                 goto fail;
             }
             /* Save the soinfo of the loaded DT_NEEDED library in the payload
@@ -1699,15 +1664,15 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     /* All relocations are done, we can protect our segments back to
      * read-only. */
     if (phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias) < 0) {
-        DL_ERR("%5d Can't protect segments for %s: %s",
-               pid, si->name, strerror(errno));
+        DL_ERR("can't protect segments for \"%s\": %s",
+               si->name, strerror(errno));
         goto fail;
     }
 
     /* We can also turn on GNU RELRO protection */
     if (phdr_table_protect_gnu_relro(si->phdr, si->phnum, si->load_bias) < 0) {
-        DL_ERR("%5d Can't enable GNU RELRO protection for %s: %s",
-               pid, si->name, strerror(errno));
+        DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
+               si->name, strerror(errno));
         goto fail;
     }
 
@@ -1717,8 +1682,9 @@ static int soinfo_link_image(soinfo *si, unsigned wr_offset)
     ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
 
      */
-    if (program_is_setuid)
-        nullify_closed_stdio ();
+    if (program_is_setuid) {
+        nullify_closed_stdio();
+    }
     notify_gdb_of_load(si);
     return 0;
 
