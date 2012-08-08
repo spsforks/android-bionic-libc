@@ -414,6 +414,7 @@ endif # arm
 
 ifeq ($(TARGET_ARCH),x86)
 libc_common_src_files += \
+	bionic/bionic_clone.c \
 	arch-x86/bionic/__get_sp.S \
 	arch-x86/bionic/__get_tls.c \
 	arch-x86/bionic/__set_tls.c \
