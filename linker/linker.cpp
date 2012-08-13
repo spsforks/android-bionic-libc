@@ -1292,6 +1292,15 @@ static void call_array(unsigned *ctor, int count, int reverse)
     }
 }
 
+void soinfo_call_preinit_constructors(soinfo *si)
+{
+  TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
+      pid, (unsigned)si->preinit_array, si->preinit_array_count,
+      si->name);
+  call_array(si->preinit_array, si->preinit_array_count, 0);
+  TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
+}
+
 void soinfo_call_constructors(soinfo *si)
 {
     if (si->constructors_called)
@@ -1310,17 +1319,9 @@ void soinfo_call_constructors(soinfo *si)
     //    out above, the libc constructor will be called again (recursively!).
     si->constructors_called = 1;
 
-    if (si->flags & FLAG_EXE) {
-        TRACE("[ %5d Calling preinit_array @ 0x%08x [%d] for '%s' ]\n",
-              pid, (unsigned)si->preinit_array, si->preinit_array_count,
-              si->name);
-        call_array(si->preinit_array, si->preinit_array_count, 0);
-        TRACE("[ %5d Done calling preinit_array for '%s' ]\n", pid, si->name);
-    } else {
-        if (si->preinit_array) {
-            DL_ERR("shared library \"%s\" has a preinit_array table @ 0x%08x. "
-                   "This is INVALID.", si->name, (unsigned) si->preinit_array);
-        }
+    if (!(si->flags & FLAG_EXE) && si->preinit_array) {
+      DL_ERR("shared library \"%s\" has a preinit_array table @ 0x%08x. "
+          "This is INVALID.", si->name, (unsigned) si->preinit_array);
     }
 
     if (si->dynamic) {
@@ -1917,6 +1918,8 @@ sanitize:
         write(2, errmsg, sizeof(errmsg));
         exit(-1);
     }
+
+    soinfo_call_preinit_constructors(si);
 
     for(i = 0; preloads[i] != NULL; i++) {
         soinfo_call_constructors(preloads[i]);
