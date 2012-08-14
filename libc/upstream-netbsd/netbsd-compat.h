@@ -21,4 +21,7 @@
 #include <assert.h>
 #define _DIAGASSERT(e) ((e) ? (void) 0 : __assert2(__FILE__, __LINE__, __func__, #e))
 
+// TODO: update our <sys/cdefs.h> to support this properly.
+#define __type_fit(t, a) (0 == 0)
+
 #endif
