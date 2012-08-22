@@ -38,20 +38,22 @@
 /* the kernel defines size_t as unsigned int, but g++ wants it to be unsigned long */
 #ifndef _SIZE_T_DEFINED_
 #  define _SIZE_T_DEFINED_
-#  ifdef __ANDROID__
-     typedef unsigned int  size_t;
+#  if defined(__ANDROID__) || defined(__clang__)
+     typedef unsigned int   size_t;
 #  else
      typedef unsigned long  size_t;
 #  endif
 #endif
+
 #if !defined(_SSIZE_T) && !defined(_SSIZE_T_DEFINED_)
 #define _SSIZE_T
 #define _SSIZE_T_DEFINED_
 typedef long int       ssize_t;
 #endif
+
 #ifndef _PTRDIFF_T
 #define _PTRDIFF_T
-#  ifdef __ANDROID__
+#  if defined(__ANDROID__) || defined(__clang__)
      typedef int            ptrdiff_t;
 #  else
      typedef long           ptrdiff_t;
