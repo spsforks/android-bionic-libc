@@ -37,6 +37,7 @@ libc_common_src_files := \
 	unistd/popen.c \
 	unistd/pread.c \
 	unistd/pselect.c \
+	unistd/psignal.c \
 	unistd/ptsname.c \
 	unistd/ptsname_r.c \
 	unistd/pwrite.c \

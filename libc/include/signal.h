@@ -124,7 +124,7 @@ extern int raise(int);
 extern int kill(pid_t, int);
 extern int killpg(int pgrp, int sig);
 extern int sigaltstack(const stack_t *ss, stack_t *oss);
-
+extern void psignal(unsigned int sig, const char *s);
 
 __END_DECLS
 
