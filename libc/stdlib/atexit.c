@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <dlfcn.h>
 #include "atexit.h"
 #include "thread_private.h"
 
@@ -111,7 +112,31 @@ unlock:
 int
 atexit(void (*func)(void))
 {
-	return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
+	/*
+	 * This version of atexit() is only present to satisfy external
+	 * dependencies of (older) NDK built ARM shared libraries.
+	 *
+	 * We need to pass to __cxa_atexit() the __dso_handle defined by
+	 * the calling shared library, as this is the handle that is
+	 * passed when __cxa_finalize is called from its fini_array.
+	 * This will make sure its exit functions are called on dlclose(),
+	 * not on program exit, as by that time, it will likely cause a
+	 * segfault.
+	 *
+	 * By coincidence, due to the fact that the first entry of the
+	 * linker soinfo struct is a char array containing the name of the
+	 * shared library, we can use the library name pointer returned
+	 * by dladdr() as a handle to the dlsym() call.
+	 */
+	void *ret_addr = __builtin_return_address(0);
+	void *dsoh = NULL;
+	Dl_info dli;
+
+	if (dladdr(ret_addr, &dli)) {
+		dsoh = dlsym(dli.dli_fname, "__dso_handle");
+	}
+
+	return (__cxa_atexit((void (*)(void *))func, NULL, dsoh));
 }
 #endif
 
