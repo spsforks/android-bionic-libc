@@ -122,7 +122,7 @@ static const CodeString  _sys_signal_strings[] =
 #define  SIGDEF(x,y,z)  { y, z },
 #include <sys/_sigdefs.h>
 };
-
+#endif
 
 static int
 __num2string(int num, int sign, int setid, char *buf, size_t buflen,
@@ -160,4 +160,3 @@ __strsignal(int num, char *buf)
 	    USIGPREFIX);
 	return buf;
 }
-#endif
