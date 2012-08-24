@@ -34,6 +34,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#ifdef CRT_LEGACY_WORKAROUND
+#include <stdio.h>
+#endif
 #include "atexit.h"
 #include "thread_private.h"
 
@@ -111,6 +114,15 @@ unlock:
 int
 atexit(void (*func)(void))
 {
+    /*
+     * This version of atexit() is only present to satisfy external
+     * dependencies of (older) NDK built ARM shared libraries.
+     * Exit functions queued by these libraries will not be called
+     * on dlclose(), and when they are called (at program exit), the
+     * library may have been dlclose()'d, causing the program to crash.
+     */
+    fprintf(stderr, "WARNING: atexit() called from legacy shared library\n");
+
 	return (__cxa_atexit((void (*)(void *))func, NULL, NULL));
 }
 #endif
