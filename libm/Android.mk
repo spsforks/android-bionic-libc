@@ -72,7 +72,6 @@ libm_common_src_files:= \
 	src/s_ceill.c \
 	src/s_copysign.c \
 	src/s_copysignf.c \
-	src/s_cos.c \
 	src/s_cosf.c \
 	src/s_erf.c \
 	src/s_erff.c \
@@ -132,7 +131,6 @@ libm_common_src_files:= \
 	src/s_signgam.c \
 	src/s_significand.c \
 	src/s_significandf.c \
-	src/s_sin.c \
 	src/s_sinf.c \
 	src/s_tan.c \
 	src/s_tanf.c \
@@ -164,8 +162,14 @@ ifeq ($(TARGET_ARCH),arm)
 
   ifeq ($(TARGET_USE_KRAIT_BIONIC_OPTIMIZATION),true)
     libm_common_src_files += \
-	  arm/e_pow.S
+	  arm/e_pow.S \
+	  arm/s_cos.S \
+	  arm/s_sin.S
     libm_common_cflags += -DKRAIT_NEON_OPTIMIZATION -fno-if-conversion
+  else
+    libm_common_src_files += \
+      src/s_cos.c \
+      src/s_sin.c
   endif
 
   libm_common_includes = $(LOCAL_PATH)/arm
@@ -173,6 +177,8 @@ endif
 
 ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
   libm_common_src_files += \
+	src/s_cos.c \
+	src/s_sin.c \
 	i387/fenv.c \
 	i387/s_scalbnl.S \
 	i387/s_scalbn.S \
@@ -183,6 +189,8 @@ ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
 endif
 ifeq ($(TARGET_ARCH),mips)
   libm_common_src_files += \
+	src/s_cos.c \
+	src/s_sin.c \
 	mips/fenv.c \
 	src/e_ldexpf.c \
 	src/s_scalbln.c \
