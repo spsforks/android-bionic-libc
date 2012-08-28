@@ -31,6 +31,8 @@
 
 #include <sys/cdefs.h>
 
+__BEGIN_DECLS
+
 typedef struct mapinfo {
     struct mapinfo *next;
     unsigned start;
@@ -42,5 +44,7 @@ __LIBC_HIDDEN__ mapinfo *init_mapinfo(int pid);
 __LIBC_HIDDEN__ void deinit_mapinfo(mapinfo *mi);
 __LIBC_HIDDEN__ const char *map_to_name(mapinfo *mi, unsigned pc, const char* def);
 __LIBC_HIDDEN__ const mapinfo *pc_to_mapinfo(mapinfo *mi, unsigned pc, unsigned *rel_pc);
+
+__END_DECLS
 
 #endif/*MALLOC_DEBUG_CHECK_MAPINFO_H*/

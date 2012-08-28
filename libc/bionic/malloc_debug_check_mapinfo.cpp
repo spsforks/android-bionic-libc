@@ -39,7 +39,6 @@
 
 static mapinfo *parse_maps_line(char *line)
 {
-    mapinfo *mi;
     int len = strlen(line);
 
     if(len < 1) return 0;
@@ -48,7 +47,7 @@ static mapinfo *parse_maps_line(char *line)
     if(len < 50) return 0;
     if(line[20] != 'x') return 0;
 
-    mi = dlmalloc(sizeof(mapinfo) + (len - 47));
+    mapinfo* mi = reinterpret_cast<mapinfo*>(dlmalloc(sizeof(mapinfo) + (len - 47)));
     if(mi == 0) return 0;
 
     mi->start = strtoul(line, 0, 16);

@@ -208,8 +208,11 @@ static void remove_entry(HashEntry* entry)
 #define CHK_FILL_FREE           0xef
 #define CHK_SENTINEL_VALUE      (char)0xeb
 
-void* fill_malloc(size_t bytes)
-{
+extern "C" void* fill_calloc(size_t n_elements, size_t elem_size) {
+    return dlcalloc(n_elements, elem_size);
+}
+
+extern "C" void* fill_malloc(size_t bytes) {
     void* buffer = dlmalloc(bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
@@ -217,15 +220,13 @@ void* fill_malloc(size_t bytes)
     return buffer;
 }
 
-void  fill_free(void* mem)
-{
+extern "C" void fill_free(void* mem) {
     size_t bytes = dlmalloc_usable_size(mem);
     memset(mem, CHK_FILL_FREE, bytes);
     dlfree(mem);
 }
 
-void* fill_realloc(void* mem, size_t bytes)
-{
+extern "C" void* fill_realloc(void* mem, size_t bytes) {
     void* buffer = fill_malloc(bytes);
     if (mem == NULL) {
         return buffer;
@@ -239,8 +240,7 @@ void* fill_realloc(void* mem, size_t bytes)
     return buffer;
 }
 
-void* fill_memalign(size_t alignment, size_t bytes)
-{
+extern "C" void* fill_memalign(size_t alignment, size_t bytes) {
     void* buffer = dlmemalign(alignment, bytes);
     if (buffer) {
         memset(buffer, CHK_SENTINEL_VALUE, bytes);
@@ -254,11 +254,9 @@ void* fill_memalign(size_t alignment, size_t bytes)
 
 #define MEMALIGN_GUARD  ((void*)0xA1A41520)
 
-extern __LIBC_HIDDEN__
-int get_backtrace(intptr_t* addrs, size_t max_entries);
+extern __LIBC_HIDDEN__ int get_backtrace(intptr_t* addrs, size_t max_entries);
 
-void* leak_malloc(size_t bytes)
-{
+extern "C" void* leak_malloc(size_t bytes) {
     // allocate enough space infront of the allocation to store the pointer for
     // the alloc structure. This will making free'ing the structer really fast!
 
@@ -291,8 +289,7 @@ void* leak_malloc(size_t bytes)
     return base;
 }
 
-void leak_free(void* mem)
-{
+extern "C" void leak_free(void* mem) {
     if (mem != NULL) {
         pthread_mutex_lock(&gAllocationsMutex);
 
@@ -327,8 +324,7 @@ void leak_free(void* mem)
     }
 }
 
-void* leak_calloc(size_t n_elements, size_t elem_size)
-{
+extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
     size_t  size;
     void*   ptr;
 
@@ -345,8 +341,7 @@ void* leak_calloc(size_t n_elements, size_t elem_size)
     return ptr;
 }
 
-void* leak_realloc(void* oldMem, size_t bytes)
-{
+extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
     if (oldMem == NULL) {
         return leak_malloc(bytes);
     }
@@ -366,8 +361,7 @@ void* leak_realloc(void* oldMem, size_t bytes)
     return newMem;
 }
 
-void* leak_memalign(size_t alignment, size_t bytes)
-{
+extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
     // we can just use malloc
     if (alignment <= MALLOC_ALIGNMENT)
         return leak_malloc(bytes);

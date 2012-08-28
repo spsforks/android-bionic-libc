@@ -69,17 +69,17 @@ struct HashTable {
 
 /* Entry in malloc dispatch table. */
 typedef struct MallocDebug MallocDebug;
+typedef void* (*MallocDebugMalloc)(size_t);
+typedef void (*MallocDebugFree)(void*);
+typedef void* (*MallocDebugCalloc)(size_t, size_t);
+typedef void* (*MallocDebugRealloc)(void*, size_t);
+typedef void* (*MallocDebugMemalign)(size_t, size_t);
 struct MallocDebug {
-    /* Address of the actual malloc routine. */
-    void* (*malloc)(size_t bytes);
-    /* Address of the actual free routine. */
-    void  (*free)(void* mem);
-    /* Address of the actual calloc routine. */
-    void* (*calloc)(size_t n_elements, size_t elem_size);
-    /* Address of the actual realloc routine. */
-    void* (*realloc)(void* oldMem, size_t bytes);
-    /* Address of the actual memalign routine. */
-    void* (*memalign)(size_t alignment, size_t bytes);
+  MallocDebugMalloc malloc;
+  MallocDebugFree free;
+  MallocDebugCalloc calloc;
+  MallocDebugRealloc realloc;
+  MallocDebugMemalign memalign;
 };
 
 /* Malloc debugging initialization and finalization routines.

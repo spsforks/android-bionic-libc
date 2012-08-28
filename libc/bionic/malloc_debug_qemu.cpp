@@ -617,9 +617,7 @@ void* qemu_instrumented_memalign(size_t alignment, size_t bytes);
  * Return:
  *  0 on success, or -1 on failure.
 */
-int
-malloc_debug_initialize(void)
-{
+int malloc_debug_initialize() {
     /* We will be using emulator's magic page to report memory allocation
      * activities. In essence, what magic page does, it translates writes to
      * the memory mapped spaces into writes to an I/O port that emulator
@@ -787,14 +785,7 @@ qemu_instrumented_free(void* mem)
 /* This routine serves as entry point for 'calloc'.
  * This routine behaves similarly to qemu_instrumented_malloc.
  */
-void*
-qemu_instrumented_calloc(size_t n_elements, size_t elem_size)
-{
-    MallocDesc desc;
-    void* ret;
-    size_t total_size;
-    size_t total_elements;
-
+void* qemu_instrumented_calloc(size_t n_elements, size_t elem_size) {
     if (n_elements == 0 || elem_size == 0) {
         // Just let go zero bytes allocation.
         qemu_info_log("::: <libc_pid=%03u, pid=%03u>: Zero calloc redir to malloc",
@@ -807,6 +798,8 @@ qemu_instrumented_calloc(size_t n_elements, size_t elem_size)
     if (n_elements && MAX_SIZE_T / n_elements < elem_size) {
         return NULL;
     }
+
+    MallocDesc desc;
 
     /* Calculating prefix size. The trick here is to make sure that
      * first element (returned to the caller) is properly aligned. */
@@ -827,8 +820,8 @@ qemu_instrumented_calloc(size_t n_elements, size_t elem_size)
         desc.suffix_size = DEFAULT_SUFFIX_SIZE;
     }
     desc.requested_bytes = n_elements * elem_size;
-    total_size = desc.requested_bytes + desc.prefix_size + desc.suffix_size;
-    total_elements = total_size / elem_size;
+    size_t total_size = desc.requested_bytes + desc.prefix_size + desc.suffix_size;
+    size_t total_elements = total_size / elem_size;
     total_size %= elem_size;
     if (total_size != 0) {
         // Add extra to the suffix area.
