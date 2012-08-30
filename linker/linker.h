@@ -167,6 +167,7 @@ struct soinfo
      * value to get the corresponding address in the process' address space */
     Elf32_Addr load_bias;
     int has_text_relocations;
+    int symbolic_relocations;
 };
 
 
