@@ -51,7 +51,6 @@
 #include "linker_format.h"
 #include "linker_phdr.h"
 
-#define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 128
 
 /* Assume average path length of 64 and max 8 paths */
@@ -89,9 +88,7 @@ static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
-#if ALLOW_SYMBOLS_FROM_MAIN
 static soinfo *somain; /* main process, always the one after libdl_info */
-#endif
 
 
 static char ldpaths_buf[LDPATH_BUFSIZE];
@@ -428,14 +425,30 @@ static unsigned elfhash(const char *_name)
 
 static Elf32_Sym *
 soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
-                 soinfo *needed[], bool ignore_local)
+                 soinfo *needed[])
 {
     unsigned elf_hash = elfhash(name);
     Elf32_Sym *s = NULL;
-    soinfo *lsi = si;
+    soinfo *lsi;
     int i;
 
-    if (!ignore_local) {
+    if (si != NULL) {
+
+        /*
+         * If this object was built with symbolic relocations disabled, the
+         * first place to look to resolve external references is the main
+         * executable.
+         */
+
+        if (!si->symbolic_relocations) {
+            lsi = somain;
+            DEBUG("%5d %s: looking up %s in executable %s\n",
+                  pid, si->name, name, lsi->name);
+            s = soinfo_elf_lookup(lsi, elf_hash, name);
+            if (s != NULL)
+                goto done;
+        }
+
         /* Look for symbols in the local scope (the object who is
          * searching). This happens with C++ templates on i386 for some
          * reason.
@@ -446,8 +459,9 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
          * and some the first non-weak definition.   This is system dependent.
          * Here we return the first definition found for simplicity.  */
 
-        s = soinfo_elf_lookup(si, elf_hash, name);
-        if(s != NULL)
+        lsi = si;
+        s = soinfo_elf_lookup(lsi, elf_hash, name);
+        if (s != NULL)
             goto done;
     }
 
@@ -467,19 +481,6 @@ soinfo_do_lookup(soinfo *si, const char *name, Elf32_Addr *offset,
         if (s != NULL)
             goto done;
     }
-
-#if ALLOW_SYMBOLS_FROM_MAIN
-    /* If we are resolving relocations while dlopen()ing a library, it's OK for
-     * the library to resolve a symbol that's defined in the executable itself,
-     * although this is rare and is generally a bad idea.
-     */
-    if (somain) {
-        lsi = somain;
-        DEBUG("%5d %s: looking up %s in executable %s\n",
-              pid, si->name, name, lsi->name);
-        s = soinfo_elf_lookup(lsi, elf_hash, name);
-    }
-#endif
 
 done:
     if(s != NULL) {
@@ -869,13 +870,8 @@ soinfo *find_library(const char *name)
 {
     soinfo *si;
 
-#if ALLOW_SYMBOLS_FROM_MAIN
     if (name == NULL)
         return somain;
-#else
-    if (name == NULL)
-        return NULL;
-#endif
 
     si = find_loaded_library(name);
     if (si != NULL) {
@@ -956,11 +952,7 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
         }
         if(sym != 0) {
             sym_name = (char *)(strtab + symtab[sym].st_name);
-            bool ignore_local = false;
-#if defined(ANDROID_ARM_LINKER)
-            ignore_local = (type == R_ARM_COPY);
-#endif
-            s = soinfo_do_lookup(si, sym_name, &offset, needed, ignore_local);
+            s = soinfo_do_lookup(si, sym_name, &offset, needed);
             if(s == NULL) {
                 /* We only allow an undefined symbol if this is a weak
                    reference..   */
@@ -1160,10 +1152,22 @@ static int soinfo_relocate(soinfo *si, Elf32_Rel *rel, unsigned count,
             TRACE_TYPE(RELO, "%5d RELO %08x <- %d @ %08x %s\n", pid,
                        reloc, s->st_size, sym_addr, sym_name);
             if (reloc == sym_addr) {
-                DL_ERR("Internal linker error detected. reloc == symaddr");
+                Elf32_Sym *src = soinfo_do_lookup(NULL, sym_name, &offset, needed);
+
+                if (src == NULL) {
+                    DL_ERR("%s R_ARM_COPY relocation source cannot be resolved", si->name);
+                    return -1;
+                }
+                if (s->st_size < src->st_size) {
+                    DL_ERR("%s R_ARM_COPY relocation size mismatch (%d < %d)",
+                           si->name, s->st_size, src->st_size);
+                    return -1;
+                }
+                memcpy((void*)reloc, (void*)(src->st_value + offset), src->st_size);
+            } else {
+                DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", si->name);
                 return -1;
             }
-            memcpy((void*)reloc, (void*)sym_addr, s->st_size);
             break;
 #endif /* ANDROID_ARM_LINKER */
 
@@ -1221,7 +1225,7 @@ static int mips_relocate_got(soinfo* si, soinfo* needed[]) {
 
         /* This is an undefined reference... try to locate it */
         sym_name = si->strtab + sym->st_name;
-        s = soinfo_do_lookup(si, sym_name, &base, needed, false);
+        s = soinfo_do_lookup(si, sym_name, &base, needed);
         if (s == NULL) {
             /* We only allow an undefined symbol if this is a weak
                reference..   */
@@ -1544,6 +1548,17 @@ static int soinfo_link_image(soinfo *si)
         case DT_TEXTREL:
             si->has_text_relocations = true;
             break;
+        case DT_SYMBOLIC:
+            si->symbolic_relocations = true;
+            break;
+#if defined(DT_FLAGS)
+        case DT_FLAGS:
+            if (*d & DF_TEXTREL)
+                si->has_text_relocations = true;
+            if (*d & DF_SYMBOLIC)
+                si->symbolic_relocations = true;
+            break;
+#endif
 #if defined(ANDROID_MIPS_LINKER)
         case DT_NEEDED:
         case DT_STRSZ:
@@ -1897,6 +1912,8 @@ sanitize:
     parse_LD_LIBRARY_PATH(ldpath_env);
     parse_LD_PRELOAD(ldpreload_env);
 
+    somain = si;
+
     if(soinfo_link_image(si)) {
         char errmsg[] = "CANNOT LINK EXECUTABLE\n";
         write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
@@ -1917,14 +1934,6 @@ sanitize:
      */
     map->l_addr = si->base;
     soinfo_call_constructors(si);
-
-#if ALLOW_SYMBOLS_FROM_MAIN
-    /* Set somain after we've loaded all the libraries in order to prevent
-     * linking of symbols back to the main image, which is not set up at that
-     * point yet.
-     */
-    somain = si;
-#endif
 
 #if TIMING
     gettimeofday(&t1,NULL);
