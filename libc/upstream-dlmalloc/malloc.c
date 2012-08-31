@@ -3099,6 +3099,7 @@ static void post_fork_child(void)  { INITIAL_LOCK(&(gm)->mutex); }
 
 /* Initialize mparams */
 static int init_mparams(void) {
+  char first_run = 0;
 #ifdef NEED_GLOBAL_LOCK_INIT
   if (malloc_global_mutex_status <= 0)
     init_malloc_global_mutex();
@@ -3109,7 +3110,7 @@ static int init_mparams(void) {
     size_t magic;
     size_t psize;
     size_t gsize;
-
+    first_run = 1;
 #ifndef WIN32
     psize = malloc_getpagesize;
     gsize = ((DEFAULT_GRANULARITY != 0)? DEFAULT_GRANULARITY : psize);
@@ -3153,9 +3154,6 @@ static int init_mparams(void) {
     gm->mflags = mparams.default_mflags;
     (void)INITIAL_LOCK(&gm->mutex);
 #endif
-#if LOCK_AT_FORK
-    pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
-#endif
 
     {
 #if USE_DEV_RANDOM
@@ -3182,8 +3180,11 @@ static int init_mparams(void) {
       (*(volatile size_t *)(&(mparams.magic))) = magic;
     }
   }
-
   RELEASE_MALLOC_GLOBAL_LOCK();
+#if LOCK_AT_FORK
+  if (first_run)
+    pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
+#endif
   return 1;
 }
 
