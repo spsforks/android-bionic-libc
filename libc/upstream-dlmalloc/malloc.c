@@ -3099,6 +3099,9 @@ static void post_fork_child(void)  { INITIAL_LOCK(&(gm)->mutex); }
 
 /* Initialize mparams */
 static int init_mparams(void) {
+  /* BEGIN android-changed: added first_run */
+  int first_run = 0;
+  /* END android-change */
 #ifdef NEED_GLOBAL_LOCK_INIT
   if (malloc_global_mutex_status <= 0)
     init_malloc_global_mutex();
@@ -3109,6 +3112,9 @@ static int init_mparams(void) {
     size_t magic;
     size_t psize;
     size_t gsize;
+    /* BEGIN android-changed: added assignment */
+    first_run = 1;
+    /* END android-changed */
 
 #ifndef WIN32
     psize = malloc_getpagesize;
@@ -3153,9 +3159,11 @@ static int init_mparams(void) {
     gm->mflags = mparams.default_mflags;
     (void)INITIAL_LOCK(&gm->mutex);
 #endif
-#if LOCK_AT_FORK
+    /* BEGIN android-changed: disabled code as unsafe to call holding lock */
+#if 0 && LOCK_AT_FORK
     pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
 #endif
+    /* END android-changed */
 
     {
 #if USE_DEV_RANDOM
@@ -3184,6 +3192,13 @@ static int init_mparams(void) {
   }
 
   RELEASE_MALLOC_GLOBAL_LOCK();
+  /* BEGIN android-changed: call to pthread_atfork outside of lock */
+#if LOCK_AT_FORK
+  if (first_run != 0) {
+    pthread_atfork(&pre_fork, &post_fork_parent, &post_fork_child);
+  }
+#endif
+  /* END android-changed */
   return 1;
 }
 
