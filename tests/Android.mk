@@ -24,6 +24,7 @@ test_src_files = \
     regex_test.cpp \
     string_test.cpp \
     stubs_test.cpp \
+    getline_test.cpp \
 
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
