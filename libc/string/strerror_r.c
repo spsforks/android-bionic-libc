@@ -116,10 +116,9 @@ strerror_r(int errnum, char *strerrbuf, size_t buflen)
     return ret;
 }
 
-#if 0
 static const CodeString  _sys_signal_strings[] =
 {
-#define  SIGDEF(x,y,z)  { y, z },
+#define  __BIONIC_SIGDEF(x,y,z)  { y, z },
 #include <sys/_sigdefs.h>
 };
 
@@ -153,11 +152,10 @@ __num2string(int num, int sign, int setid, char *buf, size_t buflen,
 
 #define USIGPREFIX "Unknown signal: "
 
-char *
-__strsignal(int num, char *buf)
+const char *
+__strsignal(int num, char *buf, size_t buflen)
 {
-	__num2string(num, 0, 2, buf, NL_TEXTMAX, (char **)sys_siglist, NSIG,
+	__num2string(num, 0, 2, buf, buflen, (char **)sys_siglist, NSIG,
 	    USIGPREFIX);
 	return buf;
 }
-#endif
