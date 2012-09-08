@@ -332,6 +332,7 @@ libc_common_src_files := \
 libc_upstream_netbsd_src_files := \
 	upstream-netbsd/libc/compat-43/creat.c \
 	upstream-netbsd/libc/gen/nice.c \
+	upstream-netbsd/libc/gen/psignal.c \
 	upstream-netbsd/libc/regex/regcomp.c \
 	upstream-netbsd/libc/regex/regerror.c \
 	upstream-netbsd/libc/regex/regexec.c \
