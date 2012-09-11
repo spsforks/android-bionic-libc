@@ -462,7 +462,6 @@ libc_common_src_files += \
 	arch-mips/bionic/ffs.S \
 	arch-mips/bionic/memcmp16.S \
 	arch-mips/bionic/memmove.c \
-	arch-mips/bionic/pipe.S \
 	arch-mips/bionic/setjmp.S \
 	arch-mips/bionic/sigsetjmp.S \
 	arch-mips/bionic/vfork.S

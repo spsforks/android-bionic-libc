@@ -73,6 +73,7 @@ syscall_src += arch-mips/syscalls/__fcntl.S
 syscall_src += arch-mips/syscalls/flock.S
 syscall_src += arch-mips/syscalls/fchmod.S
 syscall_src += arch-mips/syscalls/dup.S
+syscall_src += arch-mips/syscalls/pipe.S
 syscall_src += arch-mips/syscalls/pipe2.S
 syscall_src += arch-mips/syscalls/dup2.S
 syscall_src += arch-mips/syscalls/select.S

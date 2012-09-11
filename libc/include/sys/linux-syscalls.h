@@ -339,6 +339,7 @@
 #define __NR_setuid                       (__NR_SYSCALL_BASE + 23)
 #define __NR_getuid                       (__NR_SYSCALL_BASE + 24)
 #define __NR_kill                         (__NR_SYSCALL_BASE + 37)
+#define __NR_pipe                         (__NR_SYSCALL_BASE + 42)
 #define __NR_setgid                       (__NR_SYSCALL_BASE + 46)
 #define __NR_getgid                       (__NR_SYSCALL_BASE + 47)
 #define __NR_geteuid                      (__NR_SYSCALL_BASE + 49)

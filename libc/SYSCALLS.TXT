@@ -133,7 +133,7 @@ int         __fcntl:fcntl(int, int, void*)  55
 int         flock(int, int)   143
 int         fchmod(int, mode_t)  94
 int         dup(int)  41
-int         pipe(int *)  42,42,-1
+int         pipe(int *)  42,42,42
 int         pipe2(int *, int) 359,331,328
 int         dup2(int, int)   63
 int         select:_newselect(int, struct fd_set *, struct fd_set *, struct fd_set *, struct timeval *)  142
