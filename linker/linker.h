@@ -165,6 +165,18 @@ struct soinfo {
     bool has_DT_SYMBOLIC;
 };
 
+#define SOINFO_MAGIC (0x998abac0) /* selected randomly */
+struct soinfopool;
+struct poolhead {
+    struct soinfopool *next;
+    unsigned magic;
+};
+#define SOINFO_PER_POOL ((PAGE_SIZE - sizeof(struct poolhead)) \
+                         / sizeof(soinfo))
+struct soinfopool {
+    struct poolhead head;
+    struct soinfo info[SOINFO_PER_POOL];
+};
 
 extern soinfo libdl_info;
 

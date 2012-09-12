@@ -51,8 +51,6 @@
 #include "linker_format.h"
 #include "linker_phdr.h"
 
-#define SO_MAX 128
-
 /* Assume average path length of 64 and max 8 paths */
 #define LDPATH_BUFSIZE 512
 #define LDPATH_MAX 8
@@ -76,15 +74,12 @@
  *   and NOEXEC
  * - linker hardcodes PAGE_SIZE and PAGE_MASK because the kernel
  *   headers provide versions that are negative...
- * - allocate space for soinfo structs dynamically instead of
- *   having a hard limit (SO_MAX)
  */
 
 
 static int soinfo_link_image(soinfo *si);
 
-static int socount = 0;
-static soinfo sopool[SO_MAX];
+static struct soinfopool *infopools = NULL;
 static soinfo *freelist = NULL;
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
@@ -268,12 +263,28 @@ static soinfo *soinfo_alloc(const char *name)
        done only by dlclose(), which is not likely to be used.
     */
     if (!freelist) {
-        if (socount == SO_MAX) {
-            DL_ERR("too many libraries when loading \"%s\"", name);
+        soinfo *next;
+        int i;
+
+        struct soinfopool *pool;
+
+        pool = (soinfopool*) mmap(0, sizeof(*pool), PROT_READ|PROT_WRITE,
+                    MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+        if (pool == MAP_FAILED) {
+            DL_ERR("%5d out of memory when loading %s", pid, name);
             return NULL;
         }
-        freelist = sopool + socount++;
-        freelist->next = NULL;
+        pool->head.next  = infopools;
+        pool->head.magic = SOINFO_MAGIC;
+        infopools = pool;
+
+        next = NULL;
+        for (i = SOINFO_PER_POOL - 1; i >= 0; --i) {
+            pool->info[i].next = next;
+            next = &pool->info[i];
+        }
+
+        freelist = pool->info;
     }
 
     soinfo* si = freelist;
