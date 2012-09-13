@@ -22,6 +22,7 @@ test_src_files = \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    stubs_test.cpp \
 
 # Build for the device (with bionic's .so). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
