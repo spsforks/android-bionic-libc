@@ -85,6 +85,7 @@ static const int kPthreadInitFailed = 1;
 
 #define PTHREAD_ATTR_FLAG_DETACHED      0x00000001
 #define PTHREAD_ATTR_FLAG_USER_STACK    0x00000002
+#define PTHREAD_ATTR_FLAG_IN_LOGMSG     0x00000004
 
 #define DEFAULT_STACKSIZE (1024 * 1024)
 
@@ -409,6 +410,29 @@ int pthread_attr_getdetachstate(pthread_attr_t const * attr, int * state)
            : PTHREAD_CREATE_JOINABLE;
     return 0;
 }
+
+int pthread_attr_setinlogmsg(int state)
+{
+    pthread_internal_t*  thread = __get_thread();
+    if (state == PTHREAD_IN_LOGMSG) {
+        thread->attr.flags |= PTHREAD_ATTR_FLAG_IN_LOGMSG;
+    } else if (state == PTHREAD_OUT_LOGMSG) {
+        thread->attr.flags &= ~PTHREAD_ATTR_FLAG_IN_LOGMSG;
+    } else {
+        return EINVAL;
+    }
+    return 0;
+}
+
+int pthread_attr_getinlogmsg(int * state)
+{
+    pthread_internal_t*  thread = __get_thread();
+    *state = (thread->attr.flags & PTHREAD_ATTR_FLAG_IN_LOGMSG)
+           ? PTHREAD_IN_LOGMSG
+           : PTHREAD_OUT_LOGMSG;
+    return 0;
+}
+
 
 int pthread_attr_setschedpolicy(pthread_attr_t * attr, int policy)
 {

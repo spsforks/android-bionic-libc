@@ -96,6 +96,9 @@ typedef volatile int  pthread_once_t;
 #define PTHREAD_CREATE_DETACHED  0x00000001
 #define PTHREAD_CREATE_JOINABLE  0x00000000
 
+#define PTHREAD_IN_LOGMSG   0x00000001
+#define PTHREAD_OUT_LOGMSG  0x00000000
+
 #define PTHREAD_ONCE_INIT    0
 
 #define PTHREAD_PROCESS_PRIVATE  0
@@ -137,6 +140,9 @@ int pthread_attr_getguardsize(pthread_attr_t const * attr, size_t * guard_size);
 
 int pthread_attr_setscope(pthread_attr_t *attr, int  scope);
 int pthread_attr_getscope(pthread_attr_t const *attr);
+
+int pthread_attr_setinlogmsg(int state);
+int pthread_attr_getinlogmsg(int * state);
 
 int pthread_getattr_np(pthread_t thid, pthread_attr_t * attr);
 
