@@ -110,7 +110,7 @@ void *dlsym(void *handle, const char *symbol)
         bind = ELF32_ST_BIND(sym->st_info);
 
         if(likely((bind == STB_GLOBAL) && (sym->st_shndx != 0))) {
-            unsigned ret = sym->st_value + found->base;
+            unsigned ret = sym->st_value + found->load_bias;
             pthread_mutex_unlock(&dl_lock);
             return (void*)ret;
         }
