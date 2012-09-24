@@ -34,29 +34,15 @@
 #include <ctype.h>
 #include "logd.h"
 
+#include "bionic_ssp.h"
+
 void *__stack_chk_guard = 0;
 
-/* Initialize the canary with a random value from /dev/urandom.
- * If that fails, use the "terminator canary". */
+/* Initialize the global stack canary. */
 static void __attribute__ ((constructor))
 __guard_setup(void)
 {
-    int fd;
-
-    fd = open("/dev/urandom", O_RDONLY);
-    if (fd != -1) {
-        ssize_t len = read(fd, &__stack_chk_guard,
-                           sizeof(__stack_chk_guard));
-        close(fd);
-        if (len == sizeof(__stack_chk_guard))
-            return;
-    }
-
-    /* If that failed, switch to 'terminator canary' */
-    ((unsigned char *)&__stack_chk_guard)[0] = 0;
-    ((unsigned char *)&__stack_chk_guard)[1] = 0;
-    ((unsigned char *)&__stack_chk_guard)[2] = '\n';
-    ((unsigned char *)&__stack_chk_guard)[3] = 255;
+    __stack_chk_guard = __generate_stack_chk_guard();
 }
 
 /* This is the crash handler.
