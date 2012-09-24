@@ -48,6 +48,7 @@
 #include "bionic_atomic_inline.h"
 #include "bionic_futex.h"
 #include "bionic_pthread.h"
+#include "bionic_ssp.h"
 #include "bionic_tls.h"
 #include "pthread_internal.h"
 #include "thread_private.h"
@@ -59,6 +60,10 @@ extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
 extern int  __set_errno(int);
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+extern uintptr_t __generate_stack_chk_guard(void);
+#endif
 
 int  __futex_wake_ex(volatile void *ftx, int pshared, int val)
 {
@@ -175,6 +180,13 @@ void  __init_tls(void**  tls, void*  thread)
     tls[TLS_SLOT_THREAD_ID] = thread;
     for (nn = TLS_SLOT_ERRNO; nn < BIONIC_TLS_SLOTS; nn++)
        tls[nn] = 0;
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+    /* Set initial stack canary. __init_tls may be called at time
+     * where libc is not mapped into memory yet. So it needs to be
+     * set statically. */
+    tls[TLS_SLOT_X86_STACK_GUARD] = 0xF5B01E0BUL ^ (uintptr_t)tls;
+#endif
 
     __set_tls( (void*)tls );
 }
@@ -342,6 +354,10 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     pthread_mutex_lock(start_mutex);
 
     tls[TLS_SLOT_THREAD_ID] = thread;
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+    tls[TLS_SLOT_X86_STACK_GUARD] = __generate_stack_chk_guard();
+#endif
 
     int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND |
                 CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
@@ -1836,8 +1852,14 @@ int pthread_cond_timeout_np(pthread_cond_t *cond,
 #define TLSMAP_MASK(k)    (1U << ((k)&(TLSMAP_BITS-1)))
 
 /* this macro is used to quickly check that a key belongs to a reasonable range */
+#ifdef THREAD_HAS_STACK_GUARD_X86
+#define TLSMAP_VALIDATE_KEY(key)  \
+    (((key) >= TLSMAP_START && (key) < TLSMAP_SIZE) \
+     && (key != TLS_SLOT_X86_STACK_GUARD))
+#else
 #define TLSMAP_VALIDATE_KEY(key)  \
     ((key) >= TLSMAP_START && (key) < TLSMAP_SIZE)
+#endif
 
 /* the type of tls key destructor functions */
 typedef void (*tls_dtor_t)(void*);
@@ -1903,7 +1925,11 @@ static int tlsmap_alloc(tlsmap_t*  m, tls_dtor_t  dtor)
     int  key;
 
     for ( key = TLSMAP_START; key < TLSMAP_SIZE; key++ ) {
-        if ( !tlsmap_test(m, key) ) {
+        if ( !tlsmap_test(m, key)
+#ifdef THREAD_HAS_STACK_GUARD_X86
+             && (key != TLS_SLOT_X86_STACK_GUARD)
+#endif
+           ) {
             tlsmap_set(m, key, dtor);
             return key;
         }
