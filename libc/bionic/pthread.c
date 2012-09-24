@@ -48,6 +48,7 @@
 #include "bionic_atomic_inline.h"
 #include "bionic_futex.h"
 #include "bionic_pthread.h"
+#include "bionic_ssp.h"
 #include "bionic_tls.h"
 #include "pthread_internal.h"
 #include "thread_private.h"
@@ -59,6 +60,10 @@ extern int  __pthread_clone(int (*fn)(void*), void *child_stack, int flags, void
 extern void _exit_with_stack_teardown(void * stackBase, int stackSize, int retCode);
 extern void _exit_thread(int  retCode);
 extern int  __set_errno(int);
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+extern void* __generate_stack_chk_guard(void);
+#endif
 
 int  __futex_wake_ex(volatile void *ftx, int pshared, int val)
 {
@@ -169,12 +174,31 @@ void  __init_tls(void**  tls, void*  thread)
 
     ((pthread_internal_t*)thread)->tls = tls;
 
+#ifdef THREAD_HAS_STACK_GUARD_X86
+    void* tmp = tls[TLS_SLOT_X86_STACK_GUARD];
+#endif
+
     // slot 0 must point to the tls area, this is required by the implementation
     // of the x86 Linux kernel thread-local-storage
     tls[TLS_SLOT_SELF]      = (void*)tls;
     tls[TLS_SLOT_THREAD_ID] = thread;
     for (nn = TLS_SLOT_ERRNO; nn < BIONIC_TLS_SLOTS; nn++)
        tls[nn] = 0;
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+    tls[TLS_SLOT_X86_STACK_GUARD] = tmp;
+
+    // __init_tls may be called at time where libc is not mapped into memory yet.
+    // The value cannot be generated from /dev/urandom. So it needs to be set
+    // statically.
+    if (!tls[TLS_SLOT_X86_STACK_GUARD]) {
+        struct timespec ts;
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+
+        tls[TLS_SLOT_X86_STACK_GUARD] = (void*)((uint32_t)ts.tv_sec ^
+                                                (uint32_t)ts.tv_nsec);
+    }
+#endif
 
     __set_tls( (void*)tls );
 }
@@ -342,6 +366,10 @@ int pthread_create(pthread_t *thread_out, pthread_attr_t const * attr,
     pthread_mutex_lock(start_mutex);
 
     tls[TLS_SLOT_THREAD_ID] = thread;
+
+#ifdef THREAD_HAS_STACK_GUARD_X86
+    tls[TLS_SLOT_X86_STACK_GUARD] = __generate_stack_chk_guard();
+#endif
 
     int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND |
                 CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
