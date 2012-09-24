@@ -60,6 +60,9 @@ __BEGIN_DECLS
 #define TLS_SLOT_OPENGL_API         3
 #define TLS_SLOT_OPENGL             4
 
+/* per thread stack canary for x86 */
+#define TLS_SLOT_X86_STACK_GUARD    5
+
 /* this slot is only used to pass information from the dynamic linker to
  * libc.so when the C library is loaded in to memory. The C runtime init
  * function will then clear it. Since its use is extremely temporary,
