@@ -1,4 +1,3 @@
-/*	$OpenBSD: tmpfile.c,v 1.10 2005/10/10 12:00:52 espie Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -31,51 +30,84 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <signal.h>
 #include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <paths.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-FILE *
-tmpfile(void)
-{
-	sigset_t set, oset;
-	FILE *fp;
-	int fd, sverrno;
-#define	TRAILER	"tmp.XXXXXXXXXX"
-	char buf[sizeof(_PATH_TMP) + sizeof(TRAILER)];
+class ScopedSignalBlocker {
+ public:
+  ScopedSignalBlocker() {
+    sigset_t set;
+    sigfillset(&set);
+    sigprocmask(SIG_BLOCK, &set, &old_set_);
+  }
 
-	(void)memcpy(buf, _PATH_TMP, sizeof(_PATH_TMP) - 1);
-	(void)memcpy(buf + sizeof(_PATH_TMP) - 1, TRAILER, sizeof(TRAILER));
+  ~ScopedSignalBlocker() {
+    sigprocmask(SIG_SETMASK, &old_set_, NULL);
+  }
 
-	sigfillset(&set);
-	(void)sigprocmask(SIG_BLOCK, &set, &oset);
+ private:
+  sigset_t old_set_;
+};
 
-	fd = mkstemp(buf);
-	if (fd != -1) {
-		mode_t u;
+static FILE* __tmpfile_dir(const char* tmp_dir) {
+  char buf[PATH_MAX];
+  snprintf(buf, sizeof(buf), "%s/tmp.XXXXXXXXXX", tmp_dir);
 
-		(void)unlink(buf);
-		u = umask(0);
-		(void)umask(u);
-		(void)fchmod(fd, 0666 & ~u);
-	}
+  int fd;
+  {
+    ScopedSignalBlocker ssb;
+    fd = mkstemp(buf);
+    if (fd == -1) {
+      return NULL;
+    }
 
-	(void)sigprocmask(SIG_SETMASK, &oset, NULL);
+    // Unlink the file now so that it's removed when closed.
+    unlink(buf);
 
-	if (fd == -1)
-		return (NULL);
+    // Can we still use the file now it's unlinked?
+    // File systems without hard link support won't have the usual Unix semantics.
+    struct stat sb;
+    int rc= fstat(fd, &sb);
+    if (rc == -1) {
+      int old_errno = errno;
+      close(fd);
+      errno = old_errno;
+      return NULL;
+    }
+  }
 
-	if ((fp = fdopen(fd, "w+")) == NULL) {
-		sverrno = errno;
-		(void)close(fd);
-		errno = sverrno;
-		return (NULL);
-	}
-	return (fp);
+  // Turn the file descriptor into a FILE*.
+  FILE* fp = fdopen(fd, "w+");
+  if (fp != NULL) {
+    return fp;
+  }
+
+  // Failure. Clean up. We already unlinked, so we just need to close.
+  int old_errno = errno;
+  close(fd);
+  errno = old_errno;
+  return NULL;
+}
+
+FILE* tmpfile() {
+  // TODO: get this app's temporary directory from the framework ("/data/data/app/cache").
+
+  const char* external_storage = getenv("EXTERNAL_STORAGE");
+  if (external_storage != NULL) {
+    FILE* fp = __tmpfile_dir(external_storage);
+    if (fp != NULL) {
+      return fp;
+    }
+  }
+
+  FILE* fp = __tmpfile_dir("/data/local/tmp");
+  if (fp == NULL) {
+    fp = __tmpfile_dir("/tmp");
+  }
+  return fp;
 }
