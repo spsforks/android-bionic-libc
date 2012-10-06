@@ -19,6 +19,18 @@ LOCAL_CFLAGS += -fno-stack-protector \
         -std=gnu99 \
         -Wall -Wextra
 
+LOCAL_CFLAGS += -DALLOW_SYMBOLS_FROM_MAIN=1
+
+LOCAL_C_INCLUDES:= bionic/libaprof
+
+# Enable aprof support
+# only support arm now
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_CFLAGS += -DAPROF_SUPPORT
+LOCAL_CFLAGS += -DAPROF_SUPPORT
+LOCAL_SRC_FILES += aprof.c
+endif
+
 # Set LINKER_DEBUG to either 1 or 0
 #
 LOCAL_CFLAGS += -DLINKER_DEBUG=0

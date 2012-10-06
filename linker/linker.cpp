@@ -50,7 +50,6 @@
 #include "linker_format.h"
 #include "linker_phdr.h"
 
-#define ALLOW_SYMBOLS_FROM_MAIN 1
 #define SO_MAX 128
 
 /* Assume average path length of 64 and max 8 paths */
@@ -86,10 +85,20 @@ static int soinfo_link_image(soinfo *si);
 static int socount = 0;
 static soinfo sopool[SO_MAX];
 static soinfo *freelist = NULL;
+#if ALLOW_SYMBOLS_FROM_MAIN
+/* main process, always the one after libdl_info */
+#ifdef APROF_SUPPORT
+/* Aprof need the soinfo for exectable! */
+soinfo *solist = &libaprof_runtime_info;
+soinfo *sonext = &libdl_info;
+soinfo *somain;
+soinfo linker_soinfo;
+#else
 static soinfo *solist = &libdl_info;
 static soinfo *sonext = &libdl_info;
-#if ALLOW_SYMBOLS_FROM_MAIN
-static soinfo *somain; /* main process, always the one after libdl_info */
+static soinfo *somain;
+static soinfo linker_soinfo;
+#endif
 #endif
 
 
@@ -1753,8 +1762,6 @@ static void parse_LD_PRELOAD(const char* path) {
  */
 static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linker_base)
 {
-    static soinfo linker_soinfo;
-
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
     unsigned *vecs = (unsigned*) (argv + argc + 1);
@@ -2059,6 +2066,10 @@ extern "C" unsigned __linker_init(unsigned **elfdata) {
         // is corrupt.
         exit(-1);
     }
+
+#ifdef APROF_SUPPORT
+    linker_soinfo.size = linker_so.size;
+#endif
 
     // We have successfully fixed our own relocations. It's safe to run
     // the main part of the linker now.

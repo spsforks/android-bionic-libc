@@ -29,6 +29,7 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <elf.h>
@@ -167,10 +168,33 @@ struct soinfo
      * value to get the corresponding address in the process' address space */
     Elf32_Addr load_bias;
     int has_text_relocations;
+
+#ifdef APROF_SUPPORT
+    uint32_t bin_size;
+    uint16_t *bins;
+
+    uint32_t fromssize;
+    uint16_t *froms;
+    uint32_t tolimit;
+    uint32_t tossize;
+    struct tostruct *tos;
+
+    int aprof_jni_mode;
+#endif
 };
 
 
 extern soinfo libdl_info;
+#ifdef APROF_SUPPORT
+extern soinfo libaprof_runtime_info;
+extern soinfo *solist;
+extern soinfo *sonext;
+extern soinfo *somain;
+extern soinfo linker_soinfo;
+#if !ALLOW_SYMBOLS_FROM_MAIN
+#error "Aprof need info from somain!"
+#endif
+#endif
 
 
 #include <asm/elf.h>
