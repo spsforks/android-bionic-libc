@@ -44,6 +44,13 @@ TEST(dlopen, dlsym_in_self) {
 }
 
 TEST(dlopen, dladdr) {
+  // Get the name of this executable.
+  char executable_path[PATH_MAX];
+  int rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
+  ASSERT_NE(rc, -1);
+  executable_path[rc] = '\0';
+  std::string executable_name(basename(executable_path));
+
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
 
@@ -54,15 +61,8 @@ TEST(dlopen, dladdr) {
   void* addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(sym) + 2);
 
   Dl_info info;
-  int rc = dladdr(addr, &info);
+  rc = dladdr(addr, &info);
   ASSERT_NE(rc, 0); // Zero on error, non-zero on success.
-
-  // Get the name of this executable.
-  char executable_path[PATH_MAX];
-  rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
-  ASSERT_NE(rc, -1);
-  executable_path[rc] = '\0';
-  std::string executable_name(basename(executable_path));
 
   // The filename should be that of this executable.
   // Note that we don't know whether or not we have the full path, so we want an "ends_with" test.
@@ -88,7 +88,7 @@ TEST(dlopen, dladdr) {
     uintptr_t start = strtoul(line, 0, 16);
     line[strlen(line) - 1] = '\0'; // Chomp the '\n'.
     char* path = strchr(line, '/');
-    if (strcmp(executable_path, path) == 0) {
+    if (path != NULL && strcmp(executable_path, path) == 0) {
       base_address = reinterpret_cast<void*>(start);
       break;
     }
