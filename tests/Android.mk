@@ -51,6 +51,16 @@ LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
+# Build stack-protector test.
+ifeq ($(TARGET_ARCH),x86)
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-unit-tests-stack-protector
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS := -fstack-protector -g
+LOCAL_SRC_FILES := stack_protector.cpp
+include $(BUILD_NATIVE_TEST)
+endif
+
 # Build for the host (with glibc).
 # Note that this will build against glibc, so it's not useful for testing
 # bionic's implementation, but it does let you use glibc as a reference
