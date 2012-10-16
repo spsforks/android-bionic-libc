@@ -60,12 +60,14 @@ __BEGIN_DECLS
 #define TLS_SLOT_OPENGL_API         3
 #define TLS_SLOT_OPENGL             4
 
+#define TLS_SLOT_DLERROR            5
+
 /* this slot is only used to pass information from the dynamic linker to
  * libc.so when the C library is loaded in to memory. The C runtime init
  * function will then clear it. Since its use is extremely temporary,
  * we reuse an existing location.
  */
-#define  TLS_SLOT_BIONIC_PREINIT    (TLS_SLOT_ERRNO+1)
+#define  TLS_SLOT_BIONIC_PREINIT    (TLS_SLOT_ERRNO+1) /* TODO: (TLS_SLOT_MAX_WELL_KNOWN + 1) ?*/
 
 /* small technical note: it is not possible to call pthread_setspecific
  * on keys that are <= TLS_SLOT_MAX_WELL_KNOWN, which is why it is set to
@@ -76,7 +78,7 @@ __BEGIN_DECLS
  * pthread_key_create() to initialize them. on the other hand, there is
  * no destructor associated to them (we might need to implement this later)
  */
-#define TLS_SLOT_MAX_WELL_KNOWN     TLS_SLOT_ERRNO
+#define TLS_SLOT_MAX_WELL_KNOWN     TLS_SLOT_DLERROR
 
 #define TLS_DEFAULT_ALLOC_MAP       0x0000001F
 

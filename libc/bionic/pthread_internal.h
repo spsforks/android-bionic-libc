@@ -45,6 +45,9 @@ typedef struct pthread_internal_t
     int                         internal_flags;
     __pthread_cleanup_t*        cleanup_stack;
     void**                      tls;         /* thread-local storage area */
+
+#define __BIONIC_DLERROR_BUFFER_SIZE 512
+    char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 } pthread_internal_t;
 
 int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* attr,
