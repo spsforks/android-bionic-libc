@@ -93,6 +93,9 @@ _nsmethod(const char *source, const char *database, const char *method,
 {
 	int	curdisp;
 
+	(void)database;
+	(void)method;
+
 	if (disp_tab != NULL) {
 		for (curdisp = 0; disp_tab[curdisp].src != NULL; curdisp++) {
 			if (strcasecmp(source, disp_tab[curdisp].src) == 0) {

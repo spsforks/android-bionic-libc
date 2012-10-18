@@ -5,7 +5,9 @@
 
 #ifndef lint
 #ifndef NOID
+#ifndef __ANDROID__
 static char elsieid[] = "@(#)localtime.c    8.3";
+#endif
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -400,6 +402,8 @@ const time_t    t0;
 #if SECSPERREPEAT_BITS <= 32  /* to avoid compiler warning (condition is always false) */
         return (t1 - t0) == SECSPERREPEAT;
 #else
+        (void)t0;
+        (void)t1;
         return 0;
 #endif
 }
@@ -1419,7 +1423,7 @@ const struct state * sp; // android-added: added sp.
     */
     result = timesub(&t, ttisp->tt_gmtoff, sp, tmp);
     tmp->tm_isdst = ttisp->tt_isdst;
-    tzname[tmp->tm_isdst] = &sp->chars[ttisp->tt_abbrind];
+    tzname[tmp->tm_isdst] = (char*) &sp->chars[ttisp->tt_abbrind];
 #ifdef TM_ZONE
     tmp->TM_ZONE = &sp->chars[ttisp->tt_abbrind];
 #endif /* defined TM_ZONE */

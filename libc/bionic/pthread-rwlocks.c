@@ -150,8 +150,6 @@ int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *at
 
 int pthread_rwlock_destroy(pthread_rwlock_t *rwlock)
 {
-    int  ret;
-
     if (rwlock == NULL)
         return EINVAL;
 

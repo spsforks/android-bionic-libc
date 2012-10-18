@@ -1,6 +1,8 @@
 #ifndef lint
 #ifndef NOID
+#ifndef __ANDROID__
 static char elsieid[] = "@(#)strftime.c 8.1";
+#endif
 /*
 ** Based on the UCB version with the ID appearing below.
 ** This is ANSIish only when "multibyte character == plain character".
@@ -29,7 +31,9 @@ static char elsieid[] = "@(#)strftime.c 8.1";
 
 #ifndef LIBC_SCCS
 #ifndef lint
+#ifndef __ANDROID__
 static const char   sccsid[] = "@(#)strftime.c  5.4 (Berkeley) 3/14/89";
+#endif
 #endif /* !defined lint */
 #endif /* !defined LIBC_SCCS */
 

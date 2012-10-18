@@ -93,6 +93,7 @@
 #include <errno.h>
 #include <netdb.h>
 #include "resolv_private.h"
+#include "sockaddr_union.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,12 +108,6 @@
 #ifdef ANDROID_CHANGES
 #include <sys/system_properties.h>
 #endif /* ANDROID_CHANGES */
-
-typedef union sockaddr_union {
-    struct sockaddr     generic;
-    struct sockaddr_in  in;
-    struct sockaddr_in6 in6;
-} sockaddr_union;
 
 #define SUCCESS 0
 #define ANY 0
@@ -389,7 +384,7 @@ _have_ipv6() {
 			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 		};
         sockaddr_union addr = { .in6 = sin6_test };
-	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6));
+	return _test_connect(PF_INET6, &addr.addr, sizeof(addr.in6));
 }
 
 static int
@@ -399,7 +394,7 @@ _have_ipv4() {
 		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
 	};
         sockaddr_union addr = { .in = sin_test };
-        return _test_connect(PF_INET, &addr.generic, sizeof(addr.in));
+        return _test_connect(PF_INET, &addr.addr, sizeof(addr.in));
 }
 
 // Returns 0 on success, else returns non-zero on error (in which case
@@ -411,7 +406,7 @@ android_getaddrinfo_proxy(
 {
 	int sock;
 	const int one = 1;
-	struct sockaddr_un proxy_addr;
+	sockaddr_union proxy_addr;
 	const char* cache_mode = getenv("ANDROID_DNS_MODE");
 	FILE* proxy = NULL;
 	int success = 0;
@@ -452,12 +447,11 @@ android_getaddrinfo_proxy(
 
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
 	memset(&proxy_addr, 0, sizeof(proxy_addr));
-	proxy_addr.sun_family = AF_UNIX;
-	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
-		sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock,
-				       (const struct sockaddr*) &proxy_addr,
-				       sizeof(proxy_addr))) != 0) {
+	proxy_addr.un.sun_family = AF_UNIX;
+	strlcpy(proxy_addr.un.sun_path, "/dev/socket/dnsproxyd",
+		sizeof(proxy_addr.un.sun_path));
+	if (TEMP_FAILURE_RETRY(connect(sock, &proxy_addr.addr,
+				       sizeof(proxy_addr.un))) != 0) {
 		close(sock);
 		return -1;
 	}
@@ -1547,7 +1541,7 @@ _get_scope(const struct sockaddr *addr)
 
 /* RFC 4380, section 2.6 */
 #define IN6_IS_ADDR_TEREDO(a)	 \
-	((*(const uint32_t *)(const void *)(&(a)->s6_addr[0]) == ntohl(0x20010000)))
+	((a)->s6_addr32[0] == ntohl(0x20010000))
 
 /* RFC 3056, section 2. */
 #define IN6_IS_ADDR_6TO4(a)	 \
@@ -1686,11 +1680,11 @@ _rfc3484_compare(const void *ptr1, const void* ptr2)
 	}
 
 	/* Rule 2: Prefer matching scope. */
-	scope_src1 = _get_scope(&a1->src_addr.generic);
+	scope_src1 = _get_scope(&a1->src_addr.addr);
 	scope_dst1 = _get_scope(a1->ai->ai_addr);
 	scope_match1 = (scope_src1 == scope_dst1);
 
-	scope_src2 = _get_scope(&a2->src_addr.generic);
+	scope_src2 = _get_scope(&a2->src_addr.addr);
 	scope_dst2 = _get_scope(a2->ai->ai_addr);
 	scope_match2 = (scope_src2 == scope_dst2);
 
@@ -1709,11 +1703,11 @@ _rfc3484_compare(const void *ptr1, const void* ptr2)
 	 */
 
 	/* Rule 5: Prefer matching label. */
-	label_src1 = _get_label(&a1->src_addr.generic);
+	label_src1 = _get_label(&a1->src_addr.addr);
 	label_dst1 = _get_label(a1->ai->ai_addr);
 	label_match1 = (label_src1 == label_dst1);
 
-	label_src2 = _get_label(&a2->src_addr.generic);
+	label_src2 = _get_label(&a2->src_addr.addr);
 	label_dst2 = _get_label(a2->ai->ai_addr);
 	label_match2 = (label_src2 == label_dst2);
 
@@ -1853,7 +1847,7 @@ _rfc3484_sort(struct addrinfo *list_sentinel)
 		elems[i].ai = cur;
 		elems[i].original_order = i;
 
-		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.generic);
+		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.addr);
 		if (has_src_addr == -1) {
 			goto error;
 		}
@@ -1888,7 +1882,7 @@ static int _using_alt_dns()
 
 /*ARGSUSED*/
 static int
-_dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
+_dns_getaddrinfo(void *rv, void *cb_data, va_list ap)
 {
 	struct addrinfo *ai;
 	querybuf *buf, *buf2;
@@ -1897,6 +1891,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct res_target q, q2;
 	res_state res;
+
+	(void)cb_data;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
@@ -2115,6 +2111,8 @@ _files_getaddrinfo(void *rv, void *cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct addrinfo *p;
 	FILE *hostf = NULL;
+
+	(void)cb_data;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, struct addrinfo *);

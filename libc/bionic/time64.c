@@ -247,7 +247,7 @@ Time64_T timegm64(const struct TM *date) {
     return(seconds);
 }
 
-
+#ifndef NDEBUG
 static int check_tm(struct TM *tm)
 {
     /* Don't forget leap seconds */
@@ -279,7 +279,7 @@ static int check_tm(struct TM *tm)
 
     return 1;
 }
-
+#endif  /* NDEBUG */
 
 /* The exceptional centuries without leap years cause the cycle to
    shift by 16

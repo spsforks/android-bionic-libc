@@ -73,6 +73,7 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
+    (void)onexit;
 
     /* pre-init array. */
     call_array(structors->preinit_array);

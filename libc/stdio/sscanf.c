@@ -40,7 +40,9 @@
 static int
 eofread(void *cookie, char *buf, int len)
 {
-
+	(void)cookie;
+	(void)buf;
+	(void)len;
 	return (0);
 }
 

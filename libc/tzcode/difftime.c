@@ -5,7 +5,9 @@
 
 #ifndef lint
 #ifndef NOID
+#ifndef __ANDROID__
 static char elsieid[] = "@(#)difftime.c 8.1";
+#endif
 #endif /* !defined NOID */
 #endif /* !defined lint */
 

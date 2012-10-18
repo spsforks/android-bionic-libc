@@ -77,18 +77,27 @@ int vwprintf(const wchar_t *format, va_list arg)
 
 int vfwprintf(FILE *stream, const wchar_t *format, va_list arg)
 {
+    (void)stream;
+    (void)format;
+    (void)arg;
     errno = ENOTSUP;
     return -1;
 }
 
 int vswprintf(wchar_t *s, size_t n, const wchar_t *format, va_list arg)
 {
+    (void)s;
+    (void)n;
+    (void)format;
+    (void)arg;
     errno = ENOTSUP;
     return -1;
 }
 
 int fwscanf(FILE *stream, const wchar_t *format, ... )
 {
+    (void)stream;
+    (void)format;
     errno = ENOTSUP;
     return -1;
 }
@@ -106,6 +115,8 @@ int wscanf(const wchar_t *format, ... )
 
 int swscanf(const wchar_t *s, const wchar_t *format, ... )
 {
+    (void)s;
+    (void)format;
     errno = ENOTSUP;
     return -1;
 }
@@ -179,17 +190,20 @@ wint_t  getwchar(void)
 
 int mbsinit(const mbstate_t *ps)
 {
-    ps=ps;
+    (void)ps;
     return 1;
 }
 
 size_t mbrlen(const char *s, size_t n, mbstate_t *ps)
 {
+    (void)s;
+    (void)ps;
     return (n != 0);
 }
 
 size_t mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
+    (void)ps;
     if (s == NULL) {
         s   = "";
         pwc = NULL;
@@ -209,6 +223,8 @@ size_t mbsrtowcs(wchar_t *dst, const char **src, size_t len, mbstate_t *ps)
 {
     const char*  s  = *src;
     const char*  s2 = memchr( s, 0, len );
+
+    (void)ps;
 
     if (s2 != NULL)
         len = (size_t)(s2 - s) + 1U;
@@ -252,6 +268,8 @@ wint_t  ungetwc(wint_t wc, FILE *stream)
 
 size_t wcrtomb(char *s, wchar_t wc, mbstate_t *ps)
 {
+    (void)ps;
+    (void)wc;
     if (s != NULL)
         *s = 1;
     return 1;
@@ -266,6 +284,8 @@ size_t wcsrtombs(char *dst, const wchar_t **src, size_t len, mbstate_t *ps)
 {
     const char*  s = (const char*)*src;
     const char*  s2 = memchr( s, 0, len );
+
+    (void)ps;
 
     if (s2 != NULL)
         len = (s2 - s)+1;

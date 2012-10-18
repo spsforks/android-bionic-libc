@@ -49,6 +49,8 @@ int __vsprintf_chk(
         const char *format,
         va_list va)
 {
+    (void)flags;
+
     int ret = vsnprintf(dest, dest_len_from_compiler, format, va);
 
     if ((size_t) ret >= dest_len_from_compiler) {

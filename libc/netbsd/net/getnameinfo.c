@@ -66,6 +66,7 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.43 2006/02/17 15:58:26 ginsbach Exp $");
 #include <netdb.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_private.h"
+#include "sockaddr_union.h"
 #include <sys/system_properties.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -109,8 +110,8 @@ static int ip6_sa2str __P((const struct sockaddr_in6 *, char *, size_t,
 #if defined(ANDROID_CHANGES) && defined(AF_LINK)
 static int getnameinfo_link __P((const struct sockaddr *, socklen_t, char *,
     socklen_t, char *, socklen_t, int));
-#endif
 static int hexname __P((const u_int8_t *, size_t, char *, socklen_t));
+#endif
 
 // This should be synchronized to ResponseCode.h
 static const int DnsProxyQueryResult = 222;
@@ -147,7 +148,7 @@ android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, 
 
 	int sock;
 	const int one = 1;
-	struct sockaddr_un proxy_addr;
+	sockaddr_union proxy_addr;
 	const char* cache_mode = getenv("ANDROID_DNS_MODE");
 	FILE* proxy = NULL;
 	int result = -1;
@@ -175,11 +176,11 @@ android_gethostbyaddr_proxy(char* nameBuf, size_t nameBufLen, const void *addr, 
 
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
 	memset(&proxy_addr, 0, sizeof(proxy_addr));
-	proxy_addr.sun_family = AF_UNIX;
-	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd",
-			sizeof(proxy_addr.sun_path));
-	if (TEMP_FAILURE_RETRY(connect(sock, (const struct sockaddr*) (void*) &proxy_addr,
-							sizeof(proxy_addr))) != 0) {
+	proxy_addr.un.sun_family = AF_UNIX;
+	strlcpy(proxy_addr.un.sun_path, "/dev/socket/dnsproxyd",
+			sizeof(proxy_addr.un.sun_path));
+	if (TEMP_FAILURE_RETRY(connect(sock, &proxy_addr.addr,
+					 sizeof(proxy_addr.un))) != 0) {
 		close(sock);
 		return -1;
 	}
@@ -529,6 +530,8 @@ ip6_sa2str(sa6, buf, bufsiz, flags)
 		else
 			return n;
 	}
+#else
+	(void)flags;
 #endif
 
 	/* if_indextoname() does not take buffer size.  not a good api... */
@@ -628,7 +631,6 @@ getnameinfo_link(const struct sockaddr *sa, socklen_t salen,
 		    (size_t)sdl->sdl_alen, host, hostlen);
 	}
 }
-#endif
 
 static int
 hexname(cp, len, host, hostlen)
@@ -654,3 +656,4 @@ hexname(cp, len, host, hostlen)
 	}
 	return 0;
 }
+#endif

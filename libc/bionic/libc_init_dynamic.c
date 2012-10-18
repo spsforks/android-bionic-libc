@@ -115,6 +115,7 @@ __noreturn void __libc_init(uintptr_t *elfdata,
     /* Several Linux ABIs don't pass the onexit pointer, and the ones that
      * do never use it.  Therefore, we ignore it.
      */
+    (void)onexit;
 
     /* The executable may have its own destructors listed in its .fini_array
      * so we need to ensure that these are called when the program exits

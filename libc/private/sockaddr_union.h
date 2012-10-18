@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,45 +25,32 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/types.h>
-#include <sys/ptrace.h>
+#ifndef _PRIVATE_SOCKADDR_UNION_H
+#define _PRIVATE_SOCKADDR_UNION_H
 
-extern long __ptrace(int request, pid_t pid, void *addr, void *data);
+#include <netinet/in.h>
+#include <netinet/in6.h>
+#include <sys/un.h> 
 
-long ptrace(int request, pid_t pid, void * addr, void * data)
-{
-    switch (request) {
-        case PTRACE_PEEKUSR:
-        case PTRACE_PEEKTEXT:
-        case PTRACE_PEEKDATA:
-        {
-            long word;
-            long ret;
-
-            ret = __ptrace(request, pid, addr, &word);
-            if (ret == 0) {
-                return word;
-            } else {
-                // __ptrace will set errno for us
-                return -1;
-            }
-        }
-
-        default:
-             return __ptrace(request, pid, addr, data);
-    }
-}
-
-/*
- * Hook for gdb to get notified when a thread is created
+/* A handy union type to safely cast pointers to various sockaddr.
+ * I.e. instead of using something like:
+ *
+ *     sockaddr_in  addr;   // IPv4 socket address
+ *     ... fill addr contents
+ *     connect(socket, (const sockaddr*)&addr, sizeof(addr));
+ *
+ * which will make the compiler complain about an unsafe cast, use:
+ *
+ *     sockaddr_union  addr;
+ *     ... fill addr.in contents
+ *     connect(socket, &addr.addr, sizeof(addr.in));
  */
-#ifdef __i386__
-#define ATTRIBUTES __attribute__((noinline)) __attribute__((fastcall))
-#else
-#define ATTRIBUTES __attribute__((noinline))
-#endif
 
-void ATTRIBUTES _thread_created_hook(pid_t thread_id)
-{
-    (void)thread_id;
-}
+typedef union {
+  struct sockaddr     addr;
+  struct sockaddr_in  in;
+  struct sockaddr_in6 in6;
+  struct sockaddr_un  un;
+} sockaddr_union;
+
+#endif  /* _PRIVATE_SOCKADDR_UNION_H */

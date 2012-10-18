@@ -35,7 +35,6 @@ basename_r(const char* path, char*  buffer, size_t  bufflen)
 {
     const char *endp, *startp;
     int         len, result;
-    char        temp[2];
 
     /* Empty or NULL string gets treated as "." */
     if (path == NULL || *path == '\0') {

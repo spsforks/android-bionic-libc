@@ -33,8 +33,7 @@
 struct servent *
 getservbyname(const char *name, const char *proto)
 {
-    res_static       rs = __res_get_static();
-    struct servent*  s;
+    res_static rs = __res_get_static();
 
     if (rs == NULL || proto == NULL || name == NULL) {
         errno = EINVAL;
@@ -43,7 +42,7 @@ getservbyname(const char *name, const char *proto)
 
     rs->servent_ptr = NULL;
     while (1) {
-        struct servent*  s = getservent_r(rs);
+        struct servent* s = getservent_r(rs);
         if (s == NULL)
             break;
         if ( !strcmp( s->s_name, name ) && !strcmp( s->s_proto, proto ) )

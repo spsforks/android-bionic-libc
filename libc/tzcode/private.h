@@ -21,7 +21,9 @@
 
 #ifndef lint
 #ifndef NOID
+#ifndef __ANDROID__
 static char privatehid[] = "@(#)private.h   8.2";
+#endif
 #endif /* !defined NOID */
 #endif /* !defined lint */
 

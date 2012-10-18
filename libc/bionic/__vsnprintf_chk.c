@@ -50,6 +50,8 @@ int __vsnprintf_chk(
         const char *format,
         va_list va)
 {
+    (void)flags;
+
     if (supplied_size > dest_len_from_compiler) {
         __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
             "*** vsnprintf buffer overflow detected ***\n");

@@ -310,6 +310,7 @@ res_opt(int a, u_char *b, int c, int d)
 
 const char *
 hostalias(const char *name) {
+	(void)name;
 	return NULL;
 }
 

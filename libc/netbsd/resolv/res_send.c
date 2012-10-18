@@ -120,6 +120,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #endif
 
 #include "logd.h"
+#include "sockaddr_union.h"
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
@@ -404,7 +405,7 @@ res_nsend(res_state statp,
 	 */
 	if (EXT(statp).nscount != 0) {
 		int needclose = 0;
-		struct sockaddr_storage peer;
+		sockaddr_union peer;
 		socklen_t peerlen;
 
 		if (EXT(statp).nscount != statp->nscount)
@@ -422,11 +423,11 @@ res_nsend(res_state statp,
 					continue;
 				peerlen = sizeof(peer);
 				if (getpeername(EXT(statp).nssocks[ns],
-				    (struct sockaddr *)(void *)&peer, &peerlen) < 0) {
+				    &peer.addr, &peerlen) < 0) {
 					needclose++;
 					break;
 				}
-				if (!sock_eq((struct sockaddr *)(void *)&peer,
+				if (!sock_eq(&peer.addr,
 				    get_nsaddr(statp, (size_t)ns))) {
 					needclose++;
 					break;
@@ -750,12 +751,11 @@ send_vc(res_state statp,
 
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
-		struct sockaddr_storage peer;
+		sockaddr_union peer;
 		socklen_t size = sizeof peer;
 
-		if (getpeername(statp->_vcsock,
-				(struct sockaddr *)(void *)&peer, &size) < 0 ||
-		    !sock_eq((struct sockaddr *)(void *)&peer, nsap)) {
+		if (getpeername(statp->_vcsock, &peer.addr, &size) < 0 ||
+		    !sock_eq(&peer.addr, nsap)) {
 			res_nclose(statp);
 			statp->_flags &= ~RES_F_VC;
 		}
@@ -1034,7 +1034,7 @@ send_dg(res_state statp,
 	int nsaplen;
 	struct timespec now, timeout, finish;
 	fd_set dsmask;
-	struct sockaddr_storage from;
+	sockaddr_union from;
 	socklen_t fromlen;
 	int resplen, seconds, n, s;
 
@@ -1128,7 +1128,7 @@ retry:
 	errno = 0;
 	fromlen = sizeof(from);
 	resplen = recvfrom(s, (char*)ans, (size_t)anssiz,0,
-			   (struct sockaddr *)(void *)&from, &fromlen);
+			   &from.addr, &fromlen);
 	if (resplen <= 0) {
 		Perror(statp, stderr, "recvfrom", errno);
 		res_nclose(statp);
@@ -1162,7 +1162,7 @@ retry:
 		goto retry;
 	}
 	if (!(statp->options & RES_INSECURE1) &&
-	    !res_ourserver_p(statp, (struct sockaddr *)(void *)&from)) {
+	    !res_ourserver_p(statp, &from.addr)) {
 		/*
 		 * response from wrong server? ignore it.
 		 * XXX - potential security hazard could

@@ -99,6 +99,8 @@ static int __write_to_log_null(log_id_t log_id, struct iovec *vec)
     int    i = 0;
     size_t res = 0;
 
+    (void)log_id;
+
     for ( ; i < 3; ++i) {
         res += vec[i].iov_len;
     }
@@ -198,6 +200,8 @@ int __libc_android_log_assert(const char *cond, const char *tag,
 {
     va_list ap;
     char buf[LOG_BUF_SIZE];
+
+    (void)cond;
 
     va_start(ap, fmt);
     vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);

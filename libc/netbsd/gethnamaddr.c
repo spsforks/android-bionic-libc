@@ -468,6 +468,9 @@ gethostbyname_r(const char *name, struct hostent *hp, char *buf, size_t buflen,
 {
         struct hostent *res;
 
+        (void)buf;
+        (void)buflen;
+
         res = gethostbyname(name);
         *errorp = h_errno;
         if (res == NULL) {
@@ -522,7 +525,6 @@ gethostbyname_internal(const char *name, int af, res_state res)
 	char *bp, *ep;
 	int size;
 	struct hostent *hp;
-        struct resolv_cache*  cache;
         res_static  rs = __res_get_static();
 
 	static const ns_dtab dtab[] = {
@@ -662,7 +664,6 @@ gethostbyaddr(const void *addr,
 	    (IN6_IS_ADDR_V4MAPPED((const struct in6_addr *)(const void *)uaddr) ||
 	     IN6_IS_ADDR_V4COMPAT((const struct in6_addr *)(const void *)uaddr))) {
 		/* Unmap. */
-		addr += IN6ADDRSZ - INADDRSZ;
 		uaddr += IN6ADDRSZ - INADDRSZ;
 		af = AF_INET;
 		len = INADDRSZ;
@@ -802,6 +803,7 @@ _gethtbyname(void *rv, void *cb_data, va_list ap)
 	int af;
 
 	assert(rv != NULL);
+	(void)cb_data;
 
 	name = va_arg(ap, char *);
 	/* NOSTRICT skip len */(void)va_arg(ap, int);
@@ -930,6 +932,7 @@ _gethtbyaddr(void *rv, void *cb_data, va_list ap)
 	res_static  rs = __res_get_static();
 
 	assert(rv != NULL);
+	(void)cb_data;
 
 	addr = va_arg(ap, unsigned char *);
 	len = va_arg(ap, int);
@@ -1065,6 +1068,7 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 	res_state res;
 
 	assert(rv != NULL);
+	(void)cb_data;
 
 	name = va_arg(ap, char *);
 	/* NOSTRICT skip len */(void)va_arg(ap, int);
@@ -1115,7 +1119,7 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 
 /*ARGSUSED*/
 static int
-_dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
+_dns_gethtbyaddr(void *rv, void *cb_data, va_list ap)
 {
 	char qbuf[MAXDNAME + 1], *qp, *ep;
 	int n;
@@ -1128,6 +1132,8 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 
 	assert(rv != NULL);
 
+	(void)cb_data;
+	
 	uaddr = va_arg(ap, unsigned char *);
 	len = va_arg(ap, int);
 	af = va_arg(ap, int);

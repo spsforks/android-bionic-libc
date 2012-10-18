@@ -133,7 +133,9 @@ static void res_setoptions __P((res_state, const char *, const char *));
 
 static const char sort_mask[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask, ch) != NULL)
+#ifndef ANDROID_CHANGES
 static u_int32_t net_mask __P((struct in_addr));
+#endif
 
 #if !defined(isascii)	/* XXX - could be a function */
 # define isascii(c) (!(c & 0200))
@@ -209,22 +211,22 @@ static int load_domain_search_list(res_state statp) {
 /* This function has to be reachable by res_data.c but not publicly. */
 int
 __res_vinit(res_state statp, int preinit) {
-	register FILE *fp;
 	register char *cp, **pp;
 	register int n;
 	char buf[BUFSIZ];
 	int nserv = 0;    /* number of nameserver records read from file */
-	int haveenv = 0;
 	int havesearch = 0;
-	int nsort = 0;
-	char *net;
 	int dots;
 	union res_sockaddr_union u[2];
 #ifdef ANDROID_CHANGES
         pid_t mypid = getpid();
         int use_proc_props = 0;
         int found_prop;
-	char dnsProperty[PROP_VALUE_MAX];
+#else
+	register FILE *fp;
+	int haveenv = 0;
+	int nsort = 0;
+	char *net;
 #endif
 
         if ((statp->options & RES_INIT) != 0U)
@@ -705,6 +707,7 @@ res_setoptions(res_state statp, const char *options, const char *source)
 }
 
 /* XXX - should really support CIDR which means explicit masks always. */
+#ifndef ANDROID_CHANGES
 static u_int32_t
 net_mask(in)		/* XXX - should really use system's version of this */
 	struct in_addr in;
@@ -717,6 +720,7 @@ net_mask(in)		/* XXX - should really use system's version of this */
 		return (htonl(IN_CLASSB_NET));
 	return (htonl(IN_CLASSC_NET));
 }
+#endif
 
 #ifdef ANDROID_CHANGES
 static int
@@ -729,7 +733,7 @@ real_randomid(u_int *random_value) {
 
 	/* read from the random device, returning -1 on failure (or too many retries)*/
 	u_int retry = 5;
-	for (retry; retry > 0; retry--) {
+	for (; retry > 0; retry--) {
 		int retval = read(random_device, random_value, sizeof(u_int));
 		if (retval == sizeof(u_int)) {
 			*random_value &= 0xffff;

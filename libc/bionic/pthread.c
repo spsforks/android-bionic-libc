@@ -457,6 +457,8 @@ int pthread_attr_setstackaddr(pthread_attr_t * attr, void * stack_addr)
 {
 #if 1
     // It's not clear if this is setting the top or bottom of the stack, so don't handle it for now.
+    (void)attr;
+    (void)stack_addr;
     return ENOSYS;
 #else
     if ((uint32_t)stack_addr & (PAGE_SIZE - 1)) {
@@ -518,6 +520,7 @@ int pthread_getattr_np(pthread_t thid, pthread_attr_t * attr)
 
 int pthread_attr_setscope(pthread_attr_t *attr, int  scope)
 {
+    (void)attr;
     if (scope == PTHREAD_SCOPE_SYSTEM)
         return 0;
     if (scope == PTHREAD_SCOPE_PROCESS)
@@ -528,6 +531,7 @@ int pthread_attr_setscope(pthread_attr_t *attr, int  scope)
 
 int pthread_attr_getscope(pthread_attr_t const *attr)
 {
+    (void)attr;
     return PTHREAD_SCOPE_SYSTEM;
 }
 
@@ -1179,7 +1183,7 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
 __LIBC_HIDDEN__
 int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
 {
-    int mvalue, mtype, tid, new_lock_type, shared;
+    int mvalue, mtype, tid, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
@@ -1273,7 +1277,7 @@ int pthread_mutex_lock(pthread_mutex_t *mutex)
 __LIBC_HIDDEN__
 int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
 {
-    int mvalue, mtype, tid, oldv, shared;
+    int mvalue, mtype, tid, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
@@ -1340,7 +1344,7 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
 __LIBC_HIDDEN__
 int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
 {
-    int mvalue, mtype, tid, oldv, shared;
+    int mvalue, mtype, tid, shared;
 
     if (__unlikely(mutex == NULL))
         return EINVAL;
@@ -1435,7 +1439,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     clockid_t        clock = CLOCK_MONOTONIC;
     struct timespec  abstime;
     struct timespec  ts;
-    int               mvalue, mtype, tid, oldv, new_lock_type, shared;
+    int               mvalue, mtype, tid, shared;
 
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
@@ -2168,9 +2172,7 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
  */
 int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 {
-    static pthread_mutex_t   once_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
     volatile pthread_once_t* ocptr = once_control;
-    pthread_once_t value;
 
     /* PTHREAD_ONCE_INIT is 0, we use the following bit flags
      *

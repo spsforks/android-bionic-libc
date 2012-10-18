@@ -21,7 +21,9 @@
 
 #ifndef lint
 #ifndef NOID
+#ifndef __ANDROID__
 static char tzfilehid[] = "@(#)tzfile.h 8.1";
+#endif
 #endif /* !defined NOID */
 #endif /* !defined lint */
 

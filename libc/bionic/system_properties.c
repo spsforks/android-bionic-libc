@@ -55,7 +55,7 @@ prop_area *__system_property_area__ = (void*) &dummy_props;
 int __system_properties_init(void)
 {
     prop_area *pa;
-    int s, fd;
+    int fd;
     unsigned sz;
     char *env;
 
@@ -154,11 +154,15 @@ int __system_property_get(const char *name, char *value)
     }
 }
 
+union sockaddr_union {
+  struct sockaddr    addr;
+  struct sockaddr_un un;
+};
 
 static int send_prop_msg(prop_msg *msg)
 {
     struct pollfd pollfds[1];
-    struct sockaddr_un addr;
+    union sockaddr_union addr;
     socklen_t alen;
     size_t namelen;
     int s;
@@ -170,13 +174,13 @@ static int send_prop_msg(prop_msg *msg)
         return result;
     }
 
-    memset(&addr, 0, sizeof(addr));
+    memset(&addr.un, 0, sizeof(addr.un));
     namelen = strlen(property_service_socket);
-    strlcpy(addr.sun_path, property_service_socket, sizeof addr.sun_path);
-    addr.sun_family = AF_LOCAL;
+    strlcpy(addr.un.sun_path, property_service_socket, sizeof addr.un.sun_path);
+    addr.un.sun_family = AF_LOCAL;
     alen = namelen + offsetof(struct sockaddr_un, sun_path) + 1;
 
-    if(TEMP_FAILURE_RETRY(connect(s, (struct sockaddr *) &addr, alen)) < 0) {
+    if(TEMP_FAILURE_RETRY(connect(s, &addr.addr, alen)) < 0) {
         close(s);
         return result;
     }
@@ -218,8 +222,6 @@ static int send_prop_msg(prop_msg *msg)
 int __system_property_set(const char *key, const char *value)
 {
     int err;
-    int tries = 0;
-    int update_seen = 0;
     prop_msg msg;
 
     if(key == 0) return -1;

@@ -372,6 +372,7 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
 }
 
 int getgrouplist(const char* user, gid_t group, gid_t* groups, int* ngroups) {
+    (void)user;
     if (*ngroups < 1) {
         *ngroups = 1;
         return -1;
@@ -421,6 +422,7 @@ static void unimplemented_stub(const char* function) {
 #define UNIMPLEMENTED unimplemented_stub(__PRETTY_FUNCTION__)
 
 netent* getnetbyname(const char* name) {
+  (void)name;
   UNIMPLEMENTED;
   return NULL;
 }
@@ -430,31 +432,40 @@ void endpwent() {
 }
 
 mntent* getmntent(FILE* f) {
+  (void)f;
   UNIMPLEMENTED;
   return NULL;
 }
 
 char* ttyname(int fd) { // NOLINT: implementing bad function.
+  (void)fd;
   UNIMPLEMENTED;
   return NULL;
 }
 
 int ttyname_r(int fd, char* buf, size_t buflen) {
+  (void)fd;
+  (void)buf;
+  (void)buflen;
   UNIMPLEMENTED;
   return -ERANGE;
 }
 
 netent* getnetbyaddr(uint32_t net, int type) {
+  (void)net;
+  (void)type;
   UNIMPLEMENTED;
   return NULL;
 }
 
 protoent* getprotobyname(const char* name) {
+  (void)name;
   UNIMPLEMENTED;
   return NULL;
 }
 
 protoent* getprotobynumber(int proto) {
+  (void)proto;
   UNIMPLEMENTED;
   return NULL;
 }
