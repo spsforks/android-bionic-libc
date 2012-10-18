@@ -784,7 +784,7 @@ LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk tzdata
 LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
