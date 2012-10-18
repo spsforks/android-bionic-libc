@@ -27,6 +27,10 @@
  */
 #define _GNU_SOURCE 1
 #include <sched.h>
+#include <string.h>
+
+/* System call declaration */
+extern int __sched_getaffinity(pid_t, size_t, void*);
 
 int  sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)
 {

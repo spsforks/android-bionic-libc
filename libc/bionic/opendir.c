@@ -136,9 +136,11 @@ _readdir_unlocked(DIR*  dir)
 
     return entry;
 
+#ifndef NDEBUG
   Bad:
     errno = EINVAL;
     return NULL;
+#endif
 }
 
 

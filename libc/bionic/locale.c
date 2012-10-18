@@ -30,5 +30,7 @@
 char* setlocale (int category, char const *locale)
 {
     /* INTENTIONAL: there is no locale support in Bionic */
+    (void)category;
+    (void)locale;
     return 0;
 }

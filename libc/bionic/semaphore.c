@@ -128,8 +128,8 @@ int sem_destroy(sem_t *sem)
 
 sem_t *sem_open(const char *name, int oflag, ...)
 {
-    name=name;
-    oflag=oflag;
+    (void)name;
+    (void)oflag;
 
     errno = ENOSYS;
     return SEM_FAILED;
@@ -149,6 +149,7 @@ int sem_close(sem_t *sem)
 
 int sem_unlink(const char * name)
 {
+    (void)name;
     errno = ENOSYS;
     return -1;
 }
@@ -266,7 +267,6 @@ int sem_wait(sem_t *sem)
 
 int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout)
 {
-    int  ret;
     unsigned int shared;
 
     if (sem == NULL) {

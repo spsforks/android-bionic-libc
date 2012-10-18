@@ -45,6 +45,7 @@
 #include <sys/_system_properties.h>
 
 #include <sys/atomics.h>
+#include "sockaddr_union.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
@@ -55,7 +56,7 @@ prop_area *__system_property_area__ = (void*) &dummy_props;
 int __system_properties_init(void)
 {
     prop_area *pa;
-    int s, fd;
+    int fd;
     unsigned sz;
     char *env;
 
@@ -73,9 +74,9 @@ int __system_properties_init(void)
         return -1;
     }
     sz = atoi(env + 1);
-    
+
     pa = mmap(0, sz, PROT_READ, MAP_SHARED, fd, 0);
-    
+
     if(pa == MAP_FAILED) {
         return -1;
     }
@@ -111,7 +112,7 @@ const prop_info *__system_property_find(const char *name)
     while(count--) {
         unsigned entry = *toc++;
         if(TOC_NAME_LEN(entry) != len) continue;
-        
+
         pi = TOC_TO_INFO(pa, entry);
         if(memcmp(name, pi->name, len)) continue;
 
@@ -124,7 +125,7 @@ const prop_info *__system_property_find(const char *name)
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
     unsigned serial, len;
-    
+
     for(;;) {
         serial = pi->serial;
         while(SERIAL_DIRTY(serial)) {
@@ -154,11 +155,10 @@ int __system_property_get(const char *name, char *value)
     }
 }
 
-
 static int send_prop_msg(prop_msg *msg)
 {
     struct pollfd pollfds[1];
-    struct sockaddr_un addr;
+    sockaddr_union addr;
     socklen_t alen;
     size_t namelen;
     int s;
@@ -170,13 +170,13 @@ static int send_prop_msg(prop_msg *msg)
         return result;
     }
 
-    memset(&addr, 0, sizeof(addr));
+    memset(&addr.un, 0, sizeof(addr.un));
     namelen = strlen(property_service_socket);
-    strlcpy(addr.sun_path, property_service_socket, sizeof addr.sun_path);
-    addr.sun_family = AF_LOCAL;
+    strlcpy(addr.un.sun_path, property_service_socket, sizeof addr.un.sun_path);
+    addr.un.sun_family = AF_LOCAL;
     alen = namelen + offsetof(struct sockaddr_un, sun_path) + 1;
 
-    if(TEMP_FAILURE_RETRY(connect(s, (struct sockaddr *) &addr, alen)) < 0) {
+    if(TEMP_FAILURE_RETRY(connect(s, &addr.addr, alen)) < 0) {
         close(s);
         return result;
     }
@@ -218,8 +218,6 @@ static int send_prop_msg(prop_msg *msg)
 int __system_property_set(const char *key, const char *value)
 {
     int err;
-    int tries = 0;
-    int update_seen = 0;
     prop_msg msg;
 
     if(key == 0) return -1;
