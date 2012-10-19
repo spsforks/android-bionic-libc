@@ -28,7 +28,7 @@ regions = ['africa', 'antarctica', 'asia', 'australasia', 'backward', 'etcetera'
 
 
 def current_tzdata_version():
-  return open('%s/zoneinfo.version' % bionic_libc_zoneinfo_dir).readline().rstrip('\n')
+  return open('%s/tzdata' % bionic_libc_zoneinfo_dir).read().split('\0', 1)[0]
 
 
 def md5_file(filename):
