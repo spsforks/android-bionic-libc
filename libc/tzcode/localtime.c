@@ -37,11 +37,6 @@ static char elsieid[] = "@(#)localtime.c    8.3";
 #define TZ_ABBR_ERR_CHAR    '_'
 #endif /* !defined TZ_ABBR_ERR_CHAR */
 
-#define TZDATA_PATH "/system/usr/share/zoneinfo/tzdata"
-#define NAMELEN 40
-#define INTLEN 4
-#define READLEN (NAMELEN + 3 * INTLEN)
-
 /*
 ** SunOS 4.1.1 headers lack O_BINARY.
 */
@@ -2243,10 +2238,10 @@ time_t  t;
 #include <stdint.h>
 #include <arpa/inet.h> // For ntohl(3).
 
-static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
-  int fd = TEMP_FAILURE_RETRY(open(TZDATA_PATH, OPEN_MODE));
+static int __bionic_open_tzdata_path(const char* path, const char* olson_id, int* data_size) {
+  int fd = TEMP_FAILURE_RETRY(open(path, OPEN_MODE));
   if (fd == -1) {
-    fprintf(stderr, "__bionic_open_tzdata: could not open \"%s\": %s\n", TZDATA_PATH, strerror(errno));
+    XLOG(("%s: could not open \"%s\": %s\n", __FUNCTION__, path, strerror(errno)));
     return -1;
   }
 
@@ -2263,18 +2258,18 @@ static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
     int32_t zonetab_offset;
   } header;
   if (TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header))) != sizeof(header)) {
-    fprintf(stderr, "__bionic_open_tzdata: could not read header: %s\n", strerror(errno));
+    fprintf(stderr, "%s: could not read header: %s\n", __FUNCTION__, strerror(errno));
     close(fd);
     return -1;
   }
 
   if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
-    fprintf(stderr, "__bionic_open_tzdata: bad magic: %s\n", header.tzdata_version);
+    fprintf(stderr, "%s: bad magic: %s\n", __FUNCTION__, header.tzdata_version);
     close(fd);
     return -1;
   }
   if (ntohl(header.file_format_version) != 1) {
-    fprintf(stderr, "__bionic_open_tzdata: bad file format version: %d\n", header.file_format_version);
+    fprintf(stderr, "%s: bad file format version: %d\n", __FUNCTION__, header.file_format_version);
     close(fd);
     return -1;
   }
@@ -2287,37 +2282,46 @@ static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
 #endif
 
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
-    fprintf(stderr, "__bionic_open_tzdata: couldn't seek to index: %s\n", strerror(errno));
+    fprintf(stderr, "%s: couldn't seek to index: %s\n", __FUNCTION__, strerror(errno));
     close(fd);
     return -1;
   }
 
   off_t specific_zone_offset = -1;
 
-  unsigned char buf[READLEN];
+  static const size_t NAME_LENGTH = 40;
+  unsigned char buf[NAME_LENGTH + 3 * sizeof(int32_t)];
   while (read(fd, buf, sizeof(buf)) == sizeof(buf)) {
-    char this_id[NAMELEN + 1];
-    memcpy(this_id, buf, NAMELEN);
-    this_id[NAMELEN] = '\0';
+    char this_id[NAME_LENGTH + 1];
+    memcpy(this_id, buf, NAME_LENGTH);
+    this_id[NAME_LENGTH] = '\0';
 
     if (strcmp(this_id, olson_id) == 0) {
-      specific_zone_offset = toint(buf + NAMELEN) + ntohl(header.data_offset);
-      *data_size = toint(buf + NAMELEN + INTLEN);
+      specific_zone_offset = toint(buf + NAME_LENGTH) + ntohl(header.data_offset);
+      *data_size = toint(buf + NAME_LENGTH + sizeof(int32_t));
       break;
     }
   }
 
   if (specific_zone_offset == -1) {
-    XLOG(("__bionic_open_tzdata: couldn't find zone \"%s\"\n", olson_id));
+    XLOG(("%s: couldn't find zone \"%s\"\n", __FUNCTION__, olson_id));
     close(fd);
     return -1;
   }
 
   if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
-    fprintf(stderr, "__bionic_open_tzdata: could not seek to %ld: %s\n", specific_zone_offset, strerror(errno));
+    fprintf(stderr, "%s: could not seek to %ld: %s\n", __FUNCTION__, specific_zone_offset, strerror(errno));
     close(fd);
     return -1;
   }
 
+  return fd;
+}
+
+static int __bionic_open_tzdata(const char* olson_id, int* data_size) {
+  int fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/tzdata", olson_id, data_size);
+  if (fd == -1) {
+    fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata", olson_id, data_size);
+  }
   return fd;
 }
