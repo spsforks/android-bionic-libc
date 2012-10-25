@@ -22,6 +22,7 @@ test_src_files = \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
+    stack_protector_test.cpp \
     stdio_test.cpp \
     stdlib_test.cpp \
     string_test.cpp \
@@ -36,6 +37,7 @@ test_dynamic_src_files = \
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += -fstack-protector -g
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SHARED_LIBRARIES += libdl
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
@@ -46,6 +48,7 @@ include $(BUILD_NATIVE_TEST)
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-static
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += -fstack-protector -g
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
