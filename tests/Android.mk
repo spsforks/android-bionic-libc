@@ -20,6 +20,7 @@ LOCAL_PATH := $(call my-dir)
 
 test_src_files = \
     getcwd_test.cpp \
+    lockf_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
     stdio_test.cpp \
