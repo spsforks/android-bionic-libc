@@ -150,6 +150,15 @@ extern int fdatasync(int);
 extern int ftruncate(int, off_t);
 extern int ftruncate64(int, off64_t);
 
+/* GLibc-compatible definitions */
+#define F_ULOCK   0
+#define F_LOCK    1
+#define F_TLOCK   2
+#define F_TEST    3
+
+extern int lockf(int fd, int cmd, off_t len);
+extern int lockf64(int fd, int cmd, off64_t len);
+
 extern int pause(void);
 extern unsigned int alarm(unsigned int);
 extern unsigned int sleep(unsigned int);
