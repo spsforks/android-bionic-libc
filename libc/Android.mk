@@ -11,6 +11,7 @@ libc_common_src_files := \
 	unistd/exec.c \
 	unistd/fnmatch.c \
 	unistd/getopt_long.c \
+	unistd/lockf.c \
 	unistd/popen.c \
 	unistd/syslog.c \
 	unistd/system.c \
