@@ -585,8 +585,9 @@ void pthread_exit(void * retval)
     pthread_key_clean_all();
 
     // if the thread is detached, destroy the pthread_internal_t
-    // otherwise, keep it in memory and signal any joiners
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
+    // otherwise, keep it in memory and signal any joiners.
+    // Also, we can't destroy thread if anyone waits it.
+    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) && (thread->join_count <= 0)) {
         _pthread_internal_remove(thread);
         _pthread_internal_free(thread);
     } else {
@@ -666,6 +667,24 @@ FoundIt:
         thread->join_count += 1;
         pthread_cond_wait( &thread->join_cond, &gThreadListLock );
         count = --thread->join_count;
+
+	/* detached flag may be changed while we are waiting
+	 * pthread_cond_wait return above
+	 * if thread is suddenly detached - return error
+	 */
+	if ( thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED ) {
+
+	    /* if we're last joiner or thread is zombie we must
+	     * remove thread descriptor and free memory
+	     */
+	    if (count <= 0) {
+	        _pthread_internal_remove_locked(thread);
+	        _pthread_internal_free(thread);
+	    }
+
+	    pthread_mutex_unlock(&gThreadListLock);
+	    return EINVAL;
+	}
     }
     if (ret_val)
         *ret_val = thread->return_value;
