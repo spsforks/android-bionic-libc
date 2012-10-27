@@ -225,7 +225,7 @@ int _init_thread(pthread_internal_t* thread, pid_t kernel_id, pthread_attr_t* at
     thread->kernel_id       = kernel_id;
 
     // Make a note of whether the user supplied this stack (so we know whether or not to free it).
-    if (attr->stack_base == stack_base) {
+    if (attr && attr->stack_base == stack_base) {
         thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_STACK;
     }
 
