@@ -145,6 +145,7 @@ libc_common_src_files := \
 	tzcode/localtime.c \
 	tzcode/strftime.c \
 	tzcode/strptime.c \
+	bionic/alphasort.c \
 	bionic/arc4random.c \
 	bionic/atoi.c \
 	bionic/atol.c \
@@ -309,7 +310,6 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
     upstream-netbsd/common/lib/libc/inet/inet_addr.c \
     upstream-netbsd/libc/compat-43/creat.c \
-    upstream-netbsd/libc/gen/alphasort.c \
     upstream-netbsd/libc/gen/ftw.c \
     upstream-netbsd/libc/gen/nftw.c \
     upstream-netbsd/libc/gen/nice.c \
