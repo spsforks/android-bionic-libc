@@ -26,6 +26,7 @@ test_c_flags = \
 
 test_src_files = \
     dirent_test.cpp \
+    fexecve_test.cpp \
     getcwd_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \

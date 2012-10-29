@@ -69,6 +69,8 @@ extern int execve(const char *, char * const *, char * const *);
 extern int execl(const char *, const char *, ...);
 extern int execlp(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
+extern int fexecve(int fd, char* const*, char* const*);
+
 extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
 extern int capset(cap_user_header_t hdrp, const cap_user_data_t datap);
 

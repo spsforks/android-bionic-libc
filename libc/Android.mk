@@ -9,6 +9,7 @@ libc_common_src_files := \
 	unistd/abort.c \
 	unistd/alarm.c \
 	unistd/exec.c \
+	unistd/fexecve.c \
 	unistd/fnmatch.c \
 	unistd/getopt_long.c \
 	unistd/popen.c \
