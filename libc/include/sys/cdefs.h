@@ -501,6 +501,9 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
+// Indicates to client code that <pthread.h> provides pthread_barrier_t.
+#define __BIONIC_HAVE_PTHREAD_BARRIER_T  1
+
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0 && !defined(__clang__)
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \

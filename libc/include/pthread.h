@@ -239,6 +239,16 @@ typedef struct {
 
 #define PTHREAD_RWLOCK_INITIALIZER  { PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER, 0, 0, 0, 0, { NULL, NULL, NULL, NULL } }
 
+typedef int pthread_barrierattr_t;
+
+typedef struct {
+    pthread_mutex_t  lock;
+    pthread_cond_t   cond;
+    int              count;
+} pthread_barrier_t;
+
+#define PTHREAD_BARRIER_SERIAL_THREAD  (-1)
+
 int pthread_rwlockattr_init(pthread_rwlockattr_t *attr);
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr);
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int  pshared);
@@ -257,6 +267,13 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *
 
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
 
+int pthread_barrierattr_init(pthread_barrierattr_t *attr);
+int pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared);
+int pthread_barrierattr_getpshared(pthread_barrierattr_t *attr, int *pshared);
+int pthread_barrierattr_destroy(pthread_barrierattr_t *attr);
+int pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, unsigned count);
+int pthread_barrier_wait(pthread_barrier_t *barrier);
+int pthread_barrier_destroy(pthread_barrier_t *barrier);
 
 int pthread_key_create(pthread_key_t *key, void (*destructor_function)(void *));
 int pthread_key_delete (pthread_key_t);

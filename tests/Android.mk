@@ -28,6 +28,7 @@ test_src_files = \
     dirent_test.cpp \
     getcwd_test.cpp \
     pthread_test.cpp \
+    pthread_barrier_test.cpp \
     regex_test.cpp \
     stack_protector_test.cpp \
     stdio_test.cpp \
