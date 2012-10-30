@@ -35,47 +35,48 @@ static char** _envp;
  *  - It is smaller than MAX_ENV_LEN (to detect non-zero terminated strings)
  *  - It contains at least one equal sign that is not the first character
  */
-static int
-_is_valid_definition(const char*  str)
-{
-    int   pos = 0;
-    int   first_equal_pos = -1;
+static int _is_valid_definition(const char* str) {
+    int pos = 0;
+    int first_equal_pos = -1;
 
-    /* According to its sources, the kernel uses 32*PAGE_SIZE by default
-     * as the maximum size for an env. variable definition.
-     */
+    // According to its sources, the kernel uses 32*PAGE_SIZE by default
+    // as the maximum size for an env. variable definition.
     const int MAX_ENV_LEN = 32*4096;
 
-    if (str == NULL)
+    if (str == NULL) {
         return 0;
+    }
 
-    /* Parse the string, looking for the first '=' there, and its size */
-    do {
-        if (str[pos] == '\0')
+    // Parse the string, looking for the first '=' there, and its size.
+    while (pos < MAX_ENV_LEN) {
+        if (str[pos] == '\0') {
             break;
-        if (str[pos] == '=' && first_equal_pos < 0)
+        }
+        if (str[pos] == '=' && first_equal_pos < 0) {
             first_equal_pos = pos;
+        }
         pos++;
-    } while (pos < MAX_ENV_LEN);
+    }
 
-    if (pos >= MAX_ENV_LEN)  /* Too large */
-        return 0;
+    if (pos >= MAX_ENV_LEN) {
+        return 0; // Too large.
+    }
 
-    if (first_equal_pos < 1)  /* No equal sign, or it is the first character */
-        return 0;
+    if (first_equal_pos < 1) {
+        return 0; // No equals sign, or it's the first character.
+    }
 
     return 1;
 }
 
-unsigned*
-linker_env_init(unsigned* vecs)
-{
+unsigned* linker_env_init(unsigned* vecs) {
     /* Store environment pointer - can't be NULL */
-    _envp = (char**) vecs;
+    _envp = reinterpret_cast<char**>(vecs);
 
     /* Skip over all definitions */
-    while (vecs[0] != 0)
+    while (vecs[0] != 0) {
         vecs++;
+    }
     /* The end of the environment block is marked by two NULL pointers */
     vecs++;
 
@@ -86,8 +87,9 @@ linker_env_init(unsigned* vecs)
         char** readp  = _envp;
         char** writep = _envp;
         for ( ; readp[0] != NULL; readp++ ) {
-            if (!_is_valid_definition(readp[0]))
+            if (!_is_valid_definition(readp[0])) {
                 continue;
+            }
             writep[0] = readp[0];
             writep++;
         }
@@ -102,55 +104,52 @@ linker_env_init(unsigned* vecs)
  * starts with '<name>=', and if so return the address of the
  * first character after the equal sign. Otherwise return NULL.
  */
-static char*
-env_match(char* envstr, const char* name)
-{
-    size_t  cnt = 0;
+static char* env_match(char* envstr, const char* name) {
+    size_t i = 0;
 
-    while (envstr[cnt] == name[cnt] && name[cnt] != '\0')
-        cnt++;
+    while (envstr[i] == name[i] && name[i] != '\0') {
+        ++i;
+    }
 
-    if (name[cnt] == '\0' && envstr[cnt] == '=')
-        return envstr + cnt + 1;
+    if (name[i] == '\0' && envstr[i] == '=') {
+        return envstr + i + 1;
+    }
 
     return NULL;
 }
 
-#define MAX_ENV_LEN  (16*4096)
-
-const char*
-linker_env_get(const char* name)
-{
+const char* linker_env_get(const char* name) {
     char** readp = _envp;
 
-    if (name == NULL || name[0] == '\0')
+    if (name == NULL || name[0] == '\0') {
         return NULL;
+    }
 
     for ( ; readp[0] != NULL; readp++ ) {
         char* val = env_match(readp[0], name);
         if (val != NULL) {
             /* Return NULL for empty strings, or if it is too large */
-            if (val[0] == '\0')
+            if (val[0] == '\0') {
                 val = NULL;
+            }
             return val;
         }
     }
     return NULL;
 }
 
+void linker_env_unset(const char* name) {
+    char** readp = _envp;
+    char** writep = readp;
 
-void
-linker_env_unset(const char* name)
-{
-    char**  readp = _envp;
-    char**  writep = readp;
-
-    if (name == NULL || name[0] == '\0')
+    if (name == NULL || name[0] == '\0') {
         return;
+    }
 
     for ( ; readp[0] != NULL; readp++ ) {
-        if (env_match(readp[0], name))
+        if (env_match(readp[0], name)) {
             continue;
+        }
         writep[0] = readp[0];
         writep++;
     }
@@ -158,13 +157,7 @@ linker_env_unset(const char* name)
     writep[0] = NULL;
 }
 
-
-
-/* Remove unsafe environment variables. This should be used when
- * running setuid programs. */
-void
-linker_env_secure(void)
-{
+void linker_env_secure() {
     /* The same list than GLibc at this point */
     static const char* const unsec_vars[] = {
         "GCONV_PATH",
@@ -195,8 +188,7 @@ linker_env_secure(void)
         NULL
     };
 
-    int count;
-    for (count = 0; unsec_vars[count] != NULL; count++) {
-        linker_env_unset(unsec_vars[count]);
+    for (size_t i = 0; unsec_vars[i] != NULL; ++i) {
+        linker_env_unset(unsec_vars[i]);
     }
 }

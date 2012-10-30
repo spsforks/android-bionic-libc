@@ -257,8 +257,7 @@ static void notify_gdb_of_unload(soinfo* info) {
     rtld_db_dlactivity();
 }
 
-extern "C" void notify_gdb_of_libraries()
-{
+void notify_gdb_of_libraries() {
     _r_debug.r_state = RT_ADD;
     rtld_db_dlactivity();
     _r_debug.r_state = RT_CONSISTENT;
