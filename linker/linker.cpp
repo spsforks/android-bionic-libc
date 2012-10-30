@@ -257,8 +257,7 @@ static void notify_gdb_of_unload(soinfo* info) {
     rtld_db_dlactivity();
 }
 
-extern "C" void notify_gdb_of_libraries()
-{
+void notify_gdb_of_libraries() {
     _r_debug.r_state = RT_ADD;
     rtld_db_dlactivity();
     _r_debug.r_state = RT_CONSISTENT;
@@ -1750,11 +1749,6 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     int argc = (int) *elfdata;
     char **argv = (char**) (elfdata + 1);
     unsigned *vecs = (unsigned*) (argv + argc + 1);
-    unsigned *v;
-    soinfo *si;
-    int i;
-    const char *ldpath_env = NULL;
-    const char *ldpreload_env = NULL;
 
     /* NOTE: we store the elfdata pointer on a special location
      *       of the temporary TLS area in order to pass it to
@@ -1773,31 +1767,14 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
     gettimeofday(&t0, 0);
 #endif
 
-    /* Initialize environment functions, and get to the ELF aux vectors table */
-    vecs = linker_env_init(vecs);
-
-    /* Check auxv for AT_SECURE first to see if program is setuid, setgid,
-       has file caps, or caused a SELinux/AppArmor domain transition. */
-    for (v = vecs; v[0]; v += 2) {
-        if (v[0] == AT_SECURE) {
-            /* kernel told us whether to enable secure mode */
-            program_is_setuid = v[1];
-            goto sanitize;
-        }
-    }
-
-    /* Kernel did not provide AT_SECURE - fall back on legacy test. */
-    program_is_setuid = (getuid() != geteuid()) || (getgid() != getegid());
-
-sanitize:
-    /* Sanitize environment if we're loading a setuid program */
-    if (program_is_setuid) {
-        linker_env_secure();
-    }
+    // Initialize environment functions, and get to the ELF aux vectors table.
+    vecs = linker_env_init(vecs, program_is_setuid);
 
     debugger_init();
 
-    /* Get a few environment variables */
+    // Get a few environment variables.
+    const char* ldpath_env = NULL;
+    const char* ldpreload_env = NULL;
     {
 #if LINKER_DEBUG
         const char* env;
@@ -1817,8 +1794,8 @@ sanitize:
     INFO("[ android linker & debugger ]\n");
     DEBUG("%5d elfdata @ 0x%08x\n", pid, (unsigned)elfdata);
 
-    si = soinfo_alloc(argv[0]);
-    if(si == 0) {
+    soinfo* si = soinfo_alloc(argv[0]);
+    if (si == NULL) {
         exit(-1);
     }
 
@@ -1858,7 +1835,7 @@ sanitize:
     insert_soinfo_into_debug_map(&linker_soinfo);
 
     /* extract information passed from the kernel */
-    while(vecs[0] != 0){
+    while (vecs[0] != 0){
         switch(vecs[0]){
         case AT_PHDR:
             si->phdr = (Elf32_Phdr*) vecs[1];
@@ -1904,7 +1881,7 @@ sanitize:
 
     soinfo_call_preinit_constructors(si);
 
-    for(i = 0; preloads[i] != NULL; i++) {
+    for (size_t i = 0; preloads[i] != NULL; ++i) {
         soinfo_call_constructors(preloads[i]);
     }
 
