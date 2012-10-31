@@ -53,7 +53,7 @@ static void __init_AT_SECURE(unsigned* auxv) {
 
   // We don't support ancient kernels.
   const char* msg = "FATAL: kernel did not supply AT_SECURE\n";
-  write(2, msg, strlen(msg));
+  write(2, msg, strlen(msg)-1);
   exit(EXIT_FAILURE);
 }
 
