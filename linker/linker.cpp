@@ -433,7 +433,7 @@ soinfo_do_lookup(soinfo *si, const char *name, soinfo **lsi,
          * executable.
          */
 
-        if (!si->has_DT_SYMBOLIC) {
+        if (somain != NULL && !si->has_DT_SYMBOLIC) {
             DEBUG("%5d %s: looking up %s in executable %s\n",
                   pid, si->name, name, somain->name);
             s = soinfo_elf_lookup(somain, elf_hash, name);
@@ -457,6 +457,21 @@ soinfo_do_lookup(soinfo *si, const char *name, soinfo **lsi,
         if (s != NULL) {
             *lsi = si;
             goto done;
+        }
+
+        /*
+         * If this object was built with -Bsymbolic and symbol is not found
+         * in the local scope, try to find the symbol in the main executable.
+         */
+
+        if (somain != NULL && si->has_DT_SYMBOLIC) {
+            DEBUG("%5d %s: looking up %s in executable %s\n",
+                  pid, si->name, name, somain->name);
+            s = soinfo_elf_lookup(somain, elf_hash, name);
+            if (s != NULL) {
+                *lsi = somain;
+                goto done;
+            }
         }
     }
 
