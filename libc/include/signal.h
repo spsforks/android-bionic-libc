@@ -33,6 +33,7 @@
 #include <string.h>		/* For memset() */
 #include <sys/types.h>
 #include <asm/signal.h>
+#include <errno.h>
 
 #define __ARCH_SI_UID_T __kernel_uid32_t
 #include <asm/siginfo.h>
@@ -58,6 +59,11 @@ extern const char * const sys_signame[];
 
 static __inline__ int sigismember(sigset_t *set, int signum)
 {
+    if (set == NULL || signum <= 0 || signum >= NSIG) {
+        __set_errno(EINVAL);
+        return -1;
+    }
+
     unsigned long *local_set = (unsigned long *)set;
     signum--;
     return (int)((local_set[signum/LONG_BIT] >> (signum%LONG_BIT)) & 1);
@@ -66,6 +72,11 @@ static __inline__ int sigismember(sigset_t *set, int signum)
 
 static __inline__ int sigaddset(sigset_t *set, int signum)
 {
+    if (set == NULL || signum <= 0 || signum >= NSIG) {
+        __set_errno(EINVAL);
+        return -1;
+    }
+
     unsigned long *local_set = (unsigned long *)set;
     signum--;
     local_set[signum/LONG_BIT] |= 1UL << (signum%LONG_BIT);
@@ -75,6 +86,11 @@ static __inline__ int sigaddset(sigset_t *set, int signum)
 
 static __inline__ int sigdelset(sigset_t *set, int signum)
 {
+    if (set == NULL || signum <= 0 || signum >= NSIG) {
+        __set_errno(EINVAL);
+        return -1;
+    }
+
     unsigned long *local_set = (unsigned long *)set;
     signum--;
     local_set[signum/LONG_BIT] &= ~(1UL << (signum%LONG_BIT));
@@ -84,12 +100,22 @@ static __inline__ int sigdelset(sigset_t *set, int signum)
 
 static __inline__ int sigemptyset(sigset_t *set)
 {
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
+    }
+
     memset(set, 0, sizeof *set);
     return 0;
 }
 
 static __inline__ int sigfillset(sigset_t *set)
 {
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
+    }
+
     memset(set, ~0, sizeof *set);
     return 0;
 }
