@@ -48,6 +48,7 @@ gmtime64_r() is a 64-bit equivalent of gmtime_r().
 #include <time.h>
 #include <errno.h>
 #include "time64.h"
+#include <bionic_time.h>
 
 /* BIONIC_BEGIN */
 /* the following are here to avoid exposing time64_config.h and
@@ -512,6 +513,30 @@ Time64_T mktime64(const struct TM *input_date) {
 }
 
 
+Time64_T mktime64_tz(struct TM* const input_date, char const* tz) {
+    struct tm safe_date;
+    struct TM date;
+    Time64_T  time;
+    Year      year = input_date->tm_year + 1900;
+
+    if( MIN_SAFE_YEAR <= year && year <= MAX_SAFE_YEAR ) {
+        copy_TM_to_tm(input_date, &safe_date);
+        return (Time64_T)mktime_tz(&safe_date, tz);
+    }
+
+    /* Have to make the year safe in date else it won't fit in safe_date */
+    date = *input_date;
+    date.tm_year = safe_year(year) - 1900;
+    copy_TM_to_tm(&date, &safe_date);
+
+    time = (Time64_T)mktime_tz(&safe_date, tz);
+
+    time += seconds_between_years(year, (Year)(safe_date.tm_year + 1900));
+
+    return time;
+}
+
+
 /* Because I think mktime() is a crappy name */
 Time64_T timelocal64(const struct TM *date) {
     return mktime64(date);
@@ -732,6 +757,91 @@ struct TM *localtime64_r (const Time64_T *time, struct TM *local_tm)
     assert(check_tm(local_tm));
 
     return local_tm;
+}
+
+
+void localtime64_tz (const Time64_T* const time, struct TM *local_tm, const char* tz)
+{
+    time_t safe_time;
+    struct tm safe_date;
+    struct TM gm_tm;
+    Year orig_year;
+    int month_diff;
+
+    assert(local_tm != NULL);
+
+    /* Use the system localtime() if time_t is small enough */
+    if( SHOULD_USE_SYSTEM_LOCALTIME(*time) ) {
+        safe_time = *time;
+
+        TRACE1("Using system localtime for %lld\n", *time);
+
+        localtime_tz(&safe_time, &safe_date, tz);
+
+        copy_tm_to_TM(&safe_date, local_tm);
+        assert(check_tm(local_tm));
+
+        return;
+    }
+
+    if( gmtime64_r(time, &gm_tm) == NULL ) {
+        TRACE1("gmtime64_r returned null for %lld\n", *time);
+        return;
+    }
+
+    orig_year = gm_tm.tm_year;
+
+    if (gm_tm.tm_year > (2037 - 1900) ||
+        gm_tm.tm_year < (1970 - 1900)
+       )
+    {
+        TRACE1("Mapping tm_year %lld to safe_year\n", (Year)gm_tm.tm_year);
+        gm_tm.tm_year = safe_year((Year)(gm_tm.tm_year + 1900)) - 1900;
+    }
+
+    safe_time = timegm64(&gm_tm);
+    localtime_tz(&safe_time, &safe_date, tz);
+
+    copy_tm_to_TM(&safe_date, local_tm);
+
+    local_tm->tm_year = orig_year;
+    if( local_tm->tm_year != orig_year ) {
+        TRACE2("tm_year overflow: tm_year %lld, orig_year %lld\n",
+              (Year)local_tm->tm_year, (Year)orig_year);
+
+#ifdef EOVERFLOW
+        errno = EOVERFLOW;
+#endif
+        return NULL;
+    }
+
+
+    month_diff = local_tm->tm_mon - gm_tm.tm_mon;
+
+    /*  When localtime is Dec 31st previous year and
+        gmtime is Jan 1st next year.
+    */
+    if( month_diff == 11 ) {
+        local_tm->tm_year--;
+    }
+
+    /*  When localtime is Jan 1st, next year and
+        gmtime is Dec 31st, previous year.
+    */
+    if( month_diff == -11 ) {
+        local_tm->tm_year++;
+    }
+
+    /* GMT is Jan 1st, xx01 year, but localtime is still Dec 31st
+       in a non-leap xx00.  There is one point in the cycle
+       we can't account for which the safe xx00 year is a leap
+       year.  So we need to correct for Dec 31st comming out as
+       the 366th day of the year.
+    */
+    if( !IS_LEAP(local_tm->tm_year) && local_tm->tm_yday == 365 )
+        local_tm->tm_yday--;
+
+    assert(check_tm(local_tm));
 }
 
 
