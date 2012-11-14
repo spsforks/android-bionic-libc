@@ -8,6 +8,10 @@
 #include <thread_db.h>
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef __aarch64__
+#include <linux/elfcore.h>
+#include <linux/uio.h>
+#endif
 
 extern int ps_pglobal_lookup (void *, const char *obj, const char *name, void **sym_addr);
 extern pid_t ps_getpid(struct ps_prochandle *ph);
@@ -79,7 +83,21 @@ static td_thrhandle_t gEventMsgHandle;
 static int
 _event_getmsg_helper(td_thrhandle_t const * handle, void * bkpt_addr)
 {
-#if defined(__arm__)
+#if defined(__aarch64__)
+    struct elf_prstatus aarch64_prstatus;
+    struct iovec iov = { &aarch64_prstatus, sizeof(aarch64_prstatus) };
+    if (ptrace(PTRACE_GETREGSET, handle->tid, (void *) NT_PRSTATUS, &iov) == 0) {
+        struct user_pt_regs *aarch64_regs = (struct user_pt_regs *) &aarch64_prstatus.pr_reg;
+        void* pc = (void *) aarch64_regs->pc;
+        if (pc == bkpt_addr) {
+            // The hook function takes the id of the new thread as it's first param,
+            // so grab it from x0.
+            gEventMsgHandle.pid = aarch64_regs->regs[0];
+            gEventMsgHandle.tid = gEventMsgHandle.pid;
+            return 0x42;
+        }
+    }
+#elif defined(__arm__)
     void* pc = (void *)ptrace(PTRACE_PEEKUSR, handle->tid, (void *)60 /* r15/pc */, NULL);
     if (pc == bkpt_addr) {
         // The hook function takes the id of the new thread as it's first param,
