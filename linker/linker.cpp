@@ -1933,7 +1933,7 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
      *We need to update this value for so exe here. So Unwind_Backtrace
      *for some arch like x86 could work correctly within so exe.
      */
-    map->l_addr = si->base;
+    map->l_addr = si->load_bias;
     si->CallConstructors();
 
 #if TIMING
