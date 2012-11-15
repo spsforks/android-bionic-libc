@@ -79,7 +79,7 @@ nextafter(double x, double y)
 }
 
 #if (LDBL_MANT_DIG == 53)
-__weak_reference(nextafter, nexttoward);
-__weak_reference(nextafter, nexttowardl);
-__weak_reference(nextafter, nextafterl);
+__weak_alias(nexttoward, nextafter);
+__weak_alias(nexttowardl, nextafter);
+__weak_alias(nextafterl, nextafter);
 #endif

@@ -198,5 +198,5 @@ fma(double x, double y, double z)
 #endif	/* LDBL_MANT_DIG != 113 */
 
 #if (LDBL_MANT_DIG == 53)
-__weak_reference(fma, fmal);
+__weak_alias(fmal, fma);
 #endif

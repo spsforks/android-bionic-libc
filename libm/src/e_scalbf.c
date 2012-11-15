@@ -43,4 +43,4 @@ __ieee754_scalbf(float x, float fn)
 #endif
 }
 
-__weak_reference(scalbf, ldexpf);
+__weak_alias(ldexpf, scalbf);

@@ -67,13 +67,7 @@ ldexp (double x, int n)
     return scalbn(x,n);
 }
 
-#if (LDBL_MANT_DIG == 53)    //XXX: brian FIXME __weak_reference doesn work
-long double ldexpl (long double x, int n) {
-    return scalbn((double)x,n);
-}
-long double scalbnl (long double x, int n) {
-    return scalbn((double)x,n);
-}
-__weak_reference(scalbn, ldexpl);
-__weak_reference(scalbn, scalbnl);
+#if (LDBL_MANT_DIG == 53)
+__weak_alias(ldexpl, scalbn);
+__weak_alias(scalbnl, scalbn);
 #endif
