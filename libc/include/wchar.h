@@ -45,7 +45,7 @@
 
 __BEGIN_DECLS
 
-typedef int                     wint_t;
+typedef unsigned int            wint_t;
 typedef struct { int  dummy; }  mbstate_t;
 
 typedef enum {
