@@ -192,6 +192,10 @@ extern int cacheflush(long start, long end, long flags);
 extern pid_t tcgetpgrp(int fd);
 extern int   tcsetpgrp(int fd, pid_t _pid);
 
+extern int add_key(const char *type, const char *description, const void *payload, size_t plen, signed int ringid);
+extern int request_key(const char *type, const char *description, const char *callout_info, signed int destringid);
+extern long keyctl(int option, ...);
+
 #if 0 /* MISSING FROM BIONIC */
 extern int execvpe(const char *, char * const *, char * const *);
 extern int execlpe(const char *, const char *, ...);

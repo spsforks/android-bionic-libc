@@ -202,3 +202,6 @@ syscall_src += arch-x86/syscalls/inotify_add_watch.S
 syscall_src += arch-x86/syscalls/inotify_rm_watch.S
 syscall_src += arch-x86/syscalls/poll.S
 syscall_src += arch-x86/syscalls/eventfd.S
+syscall_src += arch-x86/syscalls/add_key.S
+syscall_src += arch-x86/syscalls/request_key.S
+syscall_src += arch-x86/syscalls/keyctl.S

@@ -306,6 +306,13 @@ int     poll(struct pollfd *, unsigned int, long)  168,168,188
 
 int     eventfd:eventfd2(unsigned int, int)  356,328,325
 
+#security
+int add_key(const char *type, const char *description, const void *payload, size_t plen, signed int ringid) 309,286,280
+int request_key(const char *type, const char *description, const char *callout_info, signed int destringid) 310,287,281
+# IMPORTANT: Even though <unistd.h> declares keyctl(int,...), the syscall stub must take 5 arguments
+# to match the kernel implementation.
+long keyctl(int option, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5) 311,288,282
+
 # ARM-specific ARM_NR_BASE == 0x0f0000 == 983040
 int     __set_tls:ARM_set_tls(void*)                                 983045,-1,-1
 int     cacheflush:ARM_cacheflush(long start, long end, long flags)  983042,-1,-1
