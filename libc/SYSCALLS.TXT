@@ -307,6 +307,11 @@ int     poll(struct pollfd *, unsigned int, long)  168,168,188
 
 int     eventfd:eventfd2(unsigned int, int)  356,328,325
 
+#security
+int add_key(const char *type, const char *description, const void *payload, size_t plen, signed int ringid) stub
+int request_key(const char *type, const char *description, const char *callout_info, signed int destringid) stub
+long keyctl(int option, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5) stub
+
 # ARM-specific ARM_NR_BASE == 0x0f0000 == 983040
 int     __set_tls:ARM_set_tls(void*)                                 983045,-1,-1
 int     cacheflush:ARM_cacheflush(long start, long end, long flags)  983042,-1,-1
