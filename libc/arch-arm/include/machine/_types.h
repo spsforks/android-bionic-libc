@@ -41,6 +41,8 @@
 #define _SIZE_T
 #define _SSIZE_T
 #define _PTRDIFF_T
+#define _SIZE_T_DEFINED_
+#define _SSIZE_T_DEFINED_
 typedef unsigned long  size_t;
 typedef long           ssize_t;
 typedef long           ptrdiff_t;
