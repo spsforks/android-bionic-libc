@@ -1,4 +1,4 @@
-/* bionic/arch-x86/include/machine/kernel.h
+/* bionic/arch-x86_64/include/machine/kernel.h
 **
 ** Copyright 2006-2008, The Android Open Source Project
 **
@@ -24,8 +24,8 @@
 ** OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ** ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _ARCH_X86_KERNEL_H
-#define _ARCH_X86_KERNEL_H
+#ifndef _ARCH_X86_64_KERNEL_H
+#define _ARCH_X86_64_KERNEL_H
 
 /* this file contains kernel-specific definitions that were optimized out of
    our processed kernel headers, but still useful nonetheless... */
@@ -38,4 +38,4 @@ typedef unsigned long   __kernel_fsblkcnt_t;
 typedef unsigned long   __kernel_fsfilcnt_t;
 typedef unsigned int    __kernel_id_t;
 
-#endif /* _ARCH_X86_KERNEL_H */
+#endif /* _ARCH_X86_64_KERNEL_H */
