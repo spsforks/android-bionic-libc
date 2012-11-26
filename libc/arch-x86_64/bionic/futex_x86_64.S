@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,41 @@
  * SUCH DAMAGE.
  */
 
-#include "../../bionic/libc_init_common.h"
-#include <stddef.h>
-#include <stdint.h>
+#include <asm/unistd.h>
+#include <machine/asm.h>
 
-__attribute__ ((section (".preinit_array")))
-void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+#define FUTEX_WAIT 0
+#define FUTEX_WAKE 1
 
-__attribute__ ((section (".init_array")))
-void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+/*
+ * int __futex_wait(volatile void *ftx, int val, const struct timespec *timeout)
+ */
+ENTRY(__futex_wait)
+    movq    $FUTEX_WAIT, %rsi
+    mov     %rcx, %r10           /* timeout */
+    movq    $__NR_futex, %rax
+    syscall
+    ret
 
-__LIBC_HIDDEN__
-__attribute__((force_align_arg_pointer))
-void _start() {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#if defined(__x86_64__) && defined(__ILP32__)
-  /* %rbp is pushed in prolog in case of x32, so need frame + 8bytes*/
-  raw_args += sizeof(void *);
-#endif
-  __libc_init(raw_args, NULL, &main, &array);
-}
+/* int __futex_wake(volatile void *ftx, int count) */
 
-#include "__dso_handle.h"
-#include "atexit.h"
-#include "__stack_chk_fail_local.h"
+ENTRY(__futex_wake)
+    movq    $FUTEX_WAKE, %rsi
+    movq    $__NR_futex, %rax
+    syscall
+    ret
+
+/* int __futex_syscall3(volatile void *ftx, int op, int count) */
+ENTRY(__futex_syscall3)
+    movq    $__NR_futex, %rax
+    syscall
+    ret
+
+/* int __futex_syscall4(volatile void *ftx, int op, int val, const struct timespec *timeout) */
+ENTRY(__futex_syscall4)
+    movq    %rcx, %r10      /* timeout */
+    movq    $__NR_futex, %rax
+    syscall
+    ret

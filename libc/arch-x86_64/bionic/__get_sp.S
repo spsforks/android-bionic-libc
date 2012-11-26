@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,36 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+    .text
+    .type __get_sp, @function
+    .global __get_sp
+    .align 4
 
-#include "../../bionic/libc_init_common.h"
-#include <stddef.h>
-#include <stdint.h>
-
-__attribute__ ((section (".preinit_array")))
-void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
-
-__attribute__ ((section (".init_array")))
-void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
-
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
-
-__LIBC_HIDDEN__
-__attribute__((force_align_arg_pointer))
-void _start() {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
-
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#if defined(__x86_64__) && defined(__ILP32__)
-  /* %rbp is pushed in prolog in case of x32, so need frame + 8bytes*/
-  raw_args += sizeof(void *);
-#endif
-  __libc_init(raw_args, NULL, &main, &array);
-}
-
-#include "__dso_handle.h"
-#include "atexit.h"
-#include "__stack_chk_fail_local.h"
+__get_sp:
+    mov  %rsp, %rax
+    ret
