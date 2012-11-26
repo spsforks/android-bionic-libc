@@ -12,6 +12,7 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-x86_64/bionic/sigprocmask.c \
     arch-x86_64/bionic/sigaction.c \
     arch-x86_64/bionic/sigsuspend.c \
+    arch-x86_64/bionic/__rt_sigreturn.S \
 
 _LIBC_ARCH_STATIC_SRC_FILES := \
     bionic/dl_iterate_phdr_static.c \
