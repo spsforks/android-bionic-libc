@@ -149,6 +149,7 @@ syscall_src += arch-x86_64/syscalls/utimensat.S
 syscall_src += arch-x86_64/syscalls/timerfd_create.S
 syscall_src += arch-x86_64/syscalls/timerfd_settime.S
 syscall_src += arch-x86_64/syscalls/timerfd_gettime.S
+syscall_src += arch-x86_64/syscalls/__rt_sigreturn.S
 syscall_src += arch-x86_64/syscalls/__rt_sigsuspend.S
 syscall_src += arch-x86_64/syscalls/__rt_sigaction.S
 syscall_src += arch-x86_64/syscalls/__rt_sigprocmask.S

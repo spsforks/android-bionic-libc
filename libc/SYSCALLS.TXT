@@ -233,6 +233,7 @@ int     sigaction(int, const struct sigaction*, struct sigaction*)  arm,x86,mips
 int     sigprocmask(int, const sigset_t*, sigset_t*)  arm,x86,mips
 int     __sigsuspend:sigsuspend(int unused1, int unused2, unsigned mask)  arm,x86
 int     __sigsuspend:sigsuspend(const sigset_t* mask)  mips
+int     __rt_sigreturn:rt_sigreturn(unsigned long unused)  x86_64
 int     __rt_sigsuspend:rt_sigsuspend(const sigset_t *unewset, size_t sigset_size)  x86_64
 int     __rt_sigaction:rt_sigaction(int sig, const struct sigaction* act, struct sigaction* oact, size_t sigsetsize)  all
 int     __rt_sigprocmask:rt_sigprocmask(int  how, const sigset_t* set, sigset_t* oset, size_t sigsetsize)  all
