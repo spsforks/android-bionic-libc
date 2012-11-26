@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#include "../../bionic/libc_init_common.h"
-#include <stddef.h>
-#include <stdint.h>
+/*
+ * Generic syscall call.
+ * Upon entry:
+ *	%rax: system call number
+ *	%rdi: arg0 to system call
+ *	%rsi: arg1
+ *	%rdx: arg2
+ *	%rcx: arg3 - syscall expects it at %r10
+ *	%r8: arg4
+ *	%r9: arg5
+ */
 
-__attribute__ ((section (".preinit_array")))
-void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+#include <asm/unistd.h>
+#include <machine/asm.h>
 
-__attribute__ ((section (".init_array")))
-void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+ENTRY(syscall)
+    # All arguments are passed via registers, %rcx is exceptional case.
+    # (Not all will be valid, depending on the syscall.)
+    mov     %rcx, %r10
 
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+    # Make the system call.
+    syscall
 
-__LIBC_HIDDEN__
-__attribute__((force_align_arg_pointer))
-void _start() {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
-
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#if defined(__x86_64__) && defined(__ILP32__)
-  /* %rbp is pushed in prolog in case of x32, so need frame + 8bytes*/
-  raw_args += sizeof(void *);
-#endif
-  __libc_init(raw_args, NULL, &main, &array);
-}
-
-#include "__dso_handle.h"
-#include "atexit.h"
-#include "__stack_chk_fail_local.h"
+    # Error?
+    cmpq    $-4095, %rax
+    jb      1f
+    # Yes, so set errno.
+    negq    %rax
+    mov     %rax, %rdi
+    call    __set_errno
+    orq     $-1, %rax
+1:
+    ret

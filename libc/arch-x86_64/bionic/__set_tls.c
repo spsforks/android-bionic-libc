@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,36 +25,31 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#include <pthread.h>
+#include <asm/prctl.h>
+#include <sys/prctl.h>
 
-#include "../../bionic/libc_init_common.h"
-#include <stddef.h>
-#include <stdint.h>
+static pthread_mutex_t  _tls_desc_lock = PTHREAD_MUTEX_INITIALIZER;
 
-__attribute__ ((section (".preinit_array")))
-void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+/*
+ * This is much simple for x86_64 than x86. arch_prctl is x86_64 specific
+ * syscall which does everything we need.
+ */
+int __set_tls(void *ptr)
+{
+    int   rc, segment;
 
-__attribute__ ((section (".init_array")))
-void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+    pthread_mutex_lock(&_tls_desc_lock);
 
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+    rc = arch_prctl(ARCH_SET_FS, (unsigned long) ptr);
+    if (rc != 0)
+    {
+        /* could not set thread local area */
+        pthread_mutex_unlock(&_tls_desc_lock);
+        return -1;
+    }
 
-__LIBC_HIDDEN__
-__attribute__((force_align_arg_pointer))
-void _start() {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
+    pthread_mutex_unlock(&_tls_desc_lock);
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#if defined(__x86_64__) && defined(__ILP32__)
-  /* %rbp is pushed in prolog in case of x32, so need frame + 8bytes*/
-  raw_args += sizeof(void *);
-#endif
-  __libc_init(raw_args, NULL, &main, &array);
+    return 0;
 }
-
-#include "__dso_handle.h"
-#include "atexit.h"
-#include "__stack_chk_fail_local.h"
