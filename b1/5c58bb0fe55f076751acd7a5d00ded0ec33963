@@ -1,0 +1,9 @@
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+1: Raghu Gandham <raghu@mips.com>
+Code-Review+2: Brian Carlstrom <bdc@google.com>
+Code-Review+1: Andrew Hsieh <andrewhsieh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 27 Nov 2012 17:34:52 -0800
+Reviewed-on: https://android-review.googlesource.com/46910
+Project: platform/bionic
+Branch: refs/heads/master
