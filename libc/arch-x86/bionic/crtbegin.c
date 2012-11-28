@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,44 @@
  * SUCH DAMAGE.
  */
 
-# The __dso_handle global variable is used by static
-# C++ constructors and destructors in the binary.
-# See http://www.codesourcery.com/public/cxx-abi/abi.html#dso-dtor
-#
-        .section .bss
-        .align 4
+typedef struct
+{
+    void (**preinit_array)(void);
+    void (**init_array)(void);
+    void (**fini_array)(void);
+} structors_array_t;
 
-#ifndef CRT_LEGACY_WORKAROUND
-	.hidden __dso_handle
-#endif
+extern int main(int argc, char **argv, char **env);
 
-        .globl __dso_handle
-__dso_handle:
-        .long 0
+extern void __libc_init(
+  unsigned int *elfdata,
+  void (*onexit)(void),
+  int (*slingshot)(int, char**, char**),
+  structors_array_t const * const structors
+);
+
+__attribute__ ((section (".preinit_array")))
+void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".init_array")))
+void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__((visibility("hidden")))
+void _start() {
+  structors_array_t array;
+  void *elfdata;
+
+  array.preinit_array = &__PREINIT_ARRAY__;
+  array.init_array =    &__INIT_ARRAY__;
+  array.fini_array =    &__FINI_ARRAY__;
+
+  elfdata = __builtin_frame_address(0) + sizeof(void *);
+  __libc_init(elfdata, (void *) 0, &main, &array);
+}
+
+#include "__dso_handle.h"
+#include "atexit.h"
+#include "__stack_chk_fail_local.h"
