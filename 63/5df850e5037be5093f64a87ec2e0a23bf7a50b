@@ -1,0 +1,8 @@
+Code-Review+2: jp abgrall <jpa@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+1: Ian Rogers <irogers@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Mon, 03 Dec 2012 09:13:20 -0800
+Reviewed-on: https://android-review.googlesource.com/46596
+Project: platform/bionic
+Branch: refs/heads/master
