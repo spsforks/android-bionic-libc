@@ -26,28 +26,29 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
-#include <stdlib.h>
-#include <private/bionic_fortify.h>
+#ifndef _BIONIC_FORTIFY_H
+#define _BIONIC_FORTIFY_H
 
-/*
- * Runtime implementation of __builtin____memmove_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This memmove check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" void *__memmove_chk (void *dest, const void *src,
-              size_t len, size_t dest_len)
-{
-    if (len > dest_len) {
-        __bionic_fortify_die("memmove buffer overflow",
-                             BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
-    }
+#include <sys/cdefs.h>
+#include <stdint.h>
 
-    return memmove(dest, src, len);
-}
+#define BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW 80100
+#define BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW 80105
+#define BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW 80110
+#define BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW 80115
+#define BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW 80120
+#define BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW 80125
+#define BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW 80130
+
+#define BIONIC_EVENT_STRCAT_INTEGER_OVERFLOW 80200
+#define BIONIC_EVENT_STRNCAT_INTEGER_OVERFLOW 80205
+
+
+__BEGIN_DECLS
+
+__noreturn extern void __bionic_fortify_die(const char *, uint32_t);
+
+__END_DECLS
+
+
+#endif

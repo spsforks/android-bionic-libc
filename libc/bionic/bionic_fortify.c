@@ -26,28 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
 #include <stdlib.h>
-#include <private/bionic_fortify.h>
+#include <private/logd.h>
 
-/*
- * Runtime implementation of __builtin____memmove_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This memmove check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" void *__memmove_chk (void *dest, const void *src,
-              size_t len, size_t dest_len)
-{
-    if (len > dest_len) {
-        __bionic_fortify_die("memmove buffer overflow",
-                             BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW);
+__LIBC_HIDDEN__
+void __bionic_fortify_die(const char *msg, uint32_t tag) {
+    __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
+                             "FORTIFY_SOURCE: %s. Calling abort()\n",
+                             msg);
+    if (tag != 0) {
+        __libc_android_log_event_uid(tag);
     }
-
-    return memmove(dest, src, len);
+    abort();
 }
+
+

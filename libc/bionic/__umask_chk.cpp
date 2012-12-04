@@ -30,7 +30,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 #include <stdlib.h>
 
 /*
@@ -43,9 +43,7 @@
  */
 extern "C" mode_t __umask_chk(mode_t mode) {
     if ((mode & 0777) != mode) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** FORTIFY_SOURCE: umask called with invalid mask ***\n");
-        abort();
+        __bionic_fortify_die("umask called with invalid mask", 0);
     }
 
     return umask(mode);

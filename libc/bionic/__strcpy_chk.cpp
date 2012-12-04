@@ -28,7 +28,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 /*
  * Runtime implementation of __builtin____strcpy_chk.
@@ -45,10 +45,8 @@ extern "C" char *__strcpy_chk (char *dest, const char *src, size_t dest_len) {
     // TODO: optimize so we don't scan src twice.
     size_t src_len = strlen(src) + 1;
     if (src_len > dest_len) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strcpy buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
-        abort();
+        __bionic_fortify_die("strcpy buffer overflow",
+                             BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
     }
 
     return strcpy(dest, src);

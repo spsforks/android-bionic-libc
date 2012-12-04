@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 /*
  * Runtime implementation of __builtin____vsnprintf_chk.
@@ -51,9 +51,7 @@ extern "C" int __vsnprintf_chk(
         va_list va)
 {
     if (supplied_size > dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** vsnprintf buffer overflow detected ***\n");
-        abort();
+        __bionic_fortify_die("vsnprintf buffer overflow", 0);
     }
 
     return vsnprintf(dest, supplied_size, format, va);
