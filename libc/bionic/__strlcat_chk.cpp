@@ -28,7 +28,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 /*
  * __strlcat_chk. Called in place of strlcat() when we know the
@@ -46,9 +46,7 @@ extern "C" size_t __strlcat_chk(char *dest, const char *src,
               size_t supplied_size, size_t dest_len_from_compiler)
 {
     if (supplied_size > dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** strlcat buffer overflow detected ***\n");
-        abort();
+        __bionic_fortify_die("strlcat buffer overflow", 0);
     }
 
     return strlcat(dest, src, supplied_size);

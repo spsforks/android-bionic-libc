@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 /*
  * __fgets_chk. Called in place of fgets() when we know the
@@ -45,15 +45,11 @@ extern "C" char *__fgets_chk(char *dest, int supplied_size,
                   FILE *stream, size_t dest_len_from_compiler)
 {
     if (supplied_size < 0) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** fgets buffer size less than 0 ***\n");
-        abort();
+        __bionic_fortify_die("fgets buffer size less than 0", 0);
     }
 
     if (((size_t) supplied_size) > dest_len_from_compiler) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** fgets buffer overflow detected ***\n");
-        abort();
+        __bionic_fortify_die("fgets buffer overflow", 0);
     }
 
     return fgets(dest, supplied_size, stream);

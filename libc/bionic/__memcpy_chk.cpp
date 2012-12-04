@@ -29,7 +29,7 @@
 #undef _FORTIFY_SOURCE
 #include <string.h>
 #include <stdlib.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 /*
  * Runtime implementation of __memcpy_chk.
@@ -46,10 +46,8 @@ extern "C" void *__memcpy_chk(void *dest, const void *src,
               size_t copy_amount, size_t dest_len)
 {
     if (__builtin_expect(copy_amount > dest_len, 0)) {
-        __libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-            "*** memcpy buffer overflow detected ***\n");
-        __libc_android_log_event_uid(BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
-        abort();
+        __bionic_fortify_die("memcpy buffer overflow",
+                             BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
     }
 
     return memcpy(dest, src, copy_amount);

@@ -151,6 +151,7 @@ libc_common_src_files := \
 	bionic/atoll.c \
 	bionic/bindresvport.c \
 	bionic/bionic_clone.c \
+	bionic/bionic_fortify.c \
 	bionic/brk.c \
 	bionic/clearenv.c \
 	bionic/cpuacct.c \

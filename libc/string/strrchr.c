@@ -29,7 +29,7 @@
  */
 
 #include <string.h>
-#include <private/logd.h>
+#include <private/bionic_fortify.h>
 
 char *
 __strrchr_chk(const char *p, int ch, size_t s_len)
@@ -37,11 +37,8 @@ __strrchr_chk(const char *p, int ch, size_t s_len)
 	char *save;
 
 	for (save = NULL;; ++p, s_len--) {
-		if (s_len == 0) {
-			__libc_android_log_print(ANDROID_LOG_FATAL, "libc",
-				"*** FORTIFY_SOURCE strrchr read beyond buffer ***\n");
-			abort();
-		}
+		if (s_len == 0)
+			__bionic_fortify_die("strrchr read beyond buffer", 0);
 		if (*p == (char) ch)
 			save = (char *)p;
 		if (!*p)
