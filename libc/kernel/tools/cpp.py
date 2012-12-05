@@ -1345,7 +1345,11 @@ class CppExpr:
                 if macros[name] == kCppUndefinedMacro:
                     return ("int", 0)
                 else:
-                    return ("int", 1)
+                    try:
+                       value = int(macros[name])
+                       return ("int", value)
+                    except:
+                       return ("defined", macros[name])
 
             if kernel_remove_config_macros and name.startswith("CONFIG_"):
                 return ("int", 0)
@@ -1612,8 +1616,10 @@ class Block:
     def removeWhiteSpace(self):
         # Remove trailing whitespace and empty lines
         # All whitespace is also contracted to a single space
-        if self.directive != None:
-            return
+
+        # Enable to keep trailing spaces after directives
+        # if self.directive != None:
+        #   return
 
         tokens = []
         line   = 0     # index of line start
@@ -2084,6 +2090,7 @@ def test_block_parsing(lines,expected):
     #    print block
 
 def test_BlockParser():
+    print "running test_BlockParser"
     test_block_parsing(["#error hello"],["#error hello"])
     test_block_parsing([ "foo", "", "bar" ], [ "foo\n\nbar\n" ])
     test_block_parsing([ "foo", "  #  ", "bar" ], [ "foo\n","bar\n" ])
@@ -2210,7 +2217,7 @@ def  test_optimizeAll():
 #endif
 
 #if 1
-#define  GOOD_2
+#define  GOOD_2    /*comment to clean*/
 #else
 #define  BAD_4
 #endif
@@ -2230,11 +2237,8 @@ def  test_optimizeAll():
 
     expected = """\
 #define GOOD_1
-
 #define GOOD_2
-
 #define GOOD_3
-
 """
 
     print "running test_BlockList.optimizeAll"
@@ -2244,7 +2248,10 @@ def  test_optimizeAll():
     #D_setlevel(2)
     list.optimizeAll( {"__KERNEL__":kCppUndefinedMacro} )
     #print repr(list)
-    list.write(out)
+    list.removeComments()
+    list.removeWhiteSpace()
+    #print repr(list)
+    list.writeWithWarning(out, "dummy warning", 4)
     if out.get() != expected:
         print "KO: macro optimization failed\n"
         print "<<<< expecting '",

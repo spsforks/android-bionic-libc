@@ -106,7 +106,14 @@
 #endif
 
 #ifndef PAGESIZE
+#ifdef __x86_64__
+#include <asm/page_types.h>
+#elif __i386__
+#include <asm/page_types.h>
+#else
 #include <asm/page.h>
+#endif
+
 #define  PAGESIZE  PAGE_SIZE
 #endif
 

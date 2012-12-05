@@ -31,11 +31,10 @@
 #include <sys/cdefs.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/fd_set.h>
 #include <signal.h>
 
 __BEGIN_DECLS
-
-typedef __kernel_fd_set   fd_set;
 
 extern int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 extern int pselect(int n, fd_set *readfds, fd_set *writefds, fd_set *errfds,
