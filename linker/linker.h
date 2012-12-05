@@ -58,7 +58,8 @@
 #define PAGE_START(x)  ((x) & PAGE_MASK)
 
 // Returns the offset of address 'x' in its page.
-#define PAGE_OFFSET(x) ((x) & ~PAGE_MASK)
+// _X suffix to do not mix with kernel PAGE_OFFSET
+#define PAGE_OFFSET_X(x) ((x) & ~PAGE_MASK)
 
 // Returns the address of the next page after address 'x', unless 'x' is
 // itself at the start of a page.

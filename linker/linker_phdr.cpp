@@ -99,11 +99,11 @@
   And that the phdr0_load_address must start at a page boundary, with
   the segment's real content starting at:
 
-       phdr0_load_address + PAGE_OFFSET(phdr0->p_vaddr)
+       phdr0_load_address + PAGE_OFFSET_X(phdr0->p_vaddr)
 
   Note that ELF requires the following condition to make the mmap()-ing work:
 
-      PAGE_OFFSET(phdr0->p_vaddr) == PAGE_OFFSET(phdr0->p_offset)
+      PAGE_OFFSET_X(phdr0->p_vaddr) == PAGE_OFFSET_X(phdr0->p_offset)
 
   The load_bias must be added to any p_vaddr value read from the ELF file to
   determine the corresponding memory address.
@@ -212,7 +212,7 @@ bool ElfReader::ReadProgramHeader() {
 
   Elf32_Addr page_min = PAGE_START(header_.e_phoff);
   Elf32_Addr page_max = PAGE_END(header_.e_phoff + (phdr_num_ * sizeof(Elf32_Phdr)));
-  Elf32_Addr page_offset = PAGE_OFFSET(header_.e_phoff);
+  Elf32_Addr page_offset = PAGE_OFFSET_X(header_.e_phoff);
 
   phdr_size_ = page_max - page_min;
 
@@ -345,8 +345,8 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && PAGE_OFFSET(seg_file_end) > 0) {
-      memset((void*)seg_file_end, 0, PAGE_SIZE - PAGE_OFFSET(seg_file_end));
+    if ((phdr->p_flags & PF_W) != 0 && PAGE_OFFSET_X(seg_file_end) > 0) {
+      memset((void*)seg_file_end, 0, PAGE_SIZE - PAGE_OFFSET_X(seg_file_end));
     }
 
     seg_file_end = PAGE_END(seg_file_end);
