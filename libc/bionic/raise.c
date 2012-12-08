@@ -28,7 +28,9 @@
 #include <unistd.h>
 #include <signal.h>
 
+extern int tgkill(int tgid, int tid, int sig);
+
 int raise(int signum)
 {
-    return kill(gettid(), signum);
+    return tgkill(getpid(), gettid(), signum);
 }
