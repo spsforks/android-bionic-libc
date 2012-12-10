@@ -72,6 +72,7 @@ abort(void)
 		}
 	}
 
+    signal(SIGSEGV, SIG_DFL);
     /* temporary, for bug hunting */
     /* seg fault seems to produce better debuggerd results than SIGABRT */
 #ifdef __mips__
