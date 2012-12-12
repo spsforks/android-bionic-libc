@@ -103,6 +103,7 @@ int     chroot(const char *)  1
 # IMPORTANT: Even though <sys/prctl.h> declares prctl(int,...), the syscall stub must take 6 arguments
 #            to match the kernel implementation.
 int     prctl(int option, unsigned int arg2, unsigned int arg3, unsigned int arg4, unsigned int arg5) 1
+long    arch_prctl(int, unsigned long) -1,-1,1,-1
 int     capget(cap_user_header_t header, cap_user_data_t data) 1
 int     capset(cap_user_header_t header, const cap_user_data_t data) 1
 int     sigaltstack(const stack_t*, stack_t*) 1
