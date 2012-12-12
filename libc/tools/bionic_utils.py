@@ -4,7 +4,7 @@ import sys, os, commands, string
 
 # support Bionic architectures, add new ones as appropriate
 #
-bionic_archs = [ "arm", "x86", "mips" ]
+bionic_archs = [ "arm", "x86", "x86_64", "mips" ]
 
 # basic debugging trace support
 # call D_setlevel to set the verbosity level
@@ -107,6 +107,7 @@ class SysCallsTxtParser:
             syscall_common = -1
             syscall_arm  = -1
             syscall_x86 = -1
+            syscall_x86_64 = -1
             syscall_mips = -1
         else:
             try:
@@ -117,13 +118,15 @@ class SysCallsTxtParser:
                     syscall_common = int(numbers[0])
                     syscall_arm = -1
                     syscall_x86 = -1
+                    syscall_x86_64 = -1
                     syscall_mips = -1
                 else:
-                    if len(numbers) == 3:
+                    if len(numbers) == 4:
                         syscall_common = -1
                         syscall_arm  = int(numbers[0])
                         syscall_x86 = int(numbers[1])
-                        syscall_mips = int(numbers[2])
+                        syscall_x86_64 = int(numbers[2])
+                        syscall_mips = int(numbers[3])
                     else:
                         E("invalid syscall number format in '%s'" % line)
                         return
@@ -135,17 +138,18 @@ class SysCallsTxtParser:
         if verbose >= 2:
             if call_id == -1:
                 if syscall_common == -1:
-                    print "%s: %d,%d,%d" % (syscall_name, syscall_arm, syscall_x86, syscall_mips)
+                    print "%s: %d,%d,%d,%d" % (syscall_name, syscall_arm, syscall_x86, syscall_x86_64, syscall_mips)
                 else:
                     print "%s: %d" % (syscall_name, syscall_common)
             else:
                 if syscall_common == -1:
-                    print "%s(%d): %d,%d,%d" % (syscall_name, call_id, syscall_arm, syscall_x86, syscall_mips)
+                    print "%s(%d): %d,%d,%d,%d" % (syscall_name, call_id, syscall_arm, syscall_x86, syscall_x86_64, syscall_mips)
                 else:
                     print "%s(%d): %d" % (syscall_name, call_id, syscall_common)
 
         t = { "armid"  : syscall_arm,
               "x86id"  : syscall_x86,
+              "x86_64id"  : syscall_x86_64,
               "mipsid" : syscall_mips,
               "common" : syscall_common,
               "cid"    : call_id,
