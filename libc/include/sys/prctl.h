@@ -41,6 +41,10 @@ __BEGIN_DECLS
  */
 extern int prctl(int option, ...);
 
+#ifdef __x86_64__
+extern long arch_prctl(int code, unsigned long addr);
+#endif
+
 __END_DECLS
 
 #endif /* _SYS_PRCTL_H */
