@@ -57,7 +57,7 @@ union IEEEd2bits {
 		unsigned int	exp	:11;
 		unsigned int	sign	:1;
 		unsigned int	manl	:32;
-#elif  __BYTE_ORDER == __LITTLE_ENDIAN 
+#elif  __BYTE_ORDER == __LITTLE_ENDIAN
 		unsigned int	manl	:32;
 		unsigned int	manh	:20;
 		unsigned int	exp	:11;
@@ -67,6 +67,8 @@ union IEEEd2bits {
 		unsigned int	exp	:11;
 		unsigned int	manh	:20;
 		unsigned int	manl	:32;
+#else
+#error unknown byte order
 #endif
 	} bits;
 };

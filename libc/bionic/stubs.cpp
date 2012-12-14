@@ -31,7 +31,6 @@
 #include <grp.h>
 #include <mntent.h>
 #include <netdb.h>
-#include <private/android_filesystem_config.h>
 #include <private/logd.h>
 #include <pthread.h>
 #include <pwd.h>
@@ -39,18 +38,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// Thread-specific state for the non-reentrant functions.
-static pthread_once_t stubs_once = PTHREAD_ONCE_INIT;
-static pthread_key_t stubs_key;
-struct stubs_state_t {
-  passwd passwd_;
-  group group_;
-  char* group_members_[2];
-  char app_name_buffer_[32];
-  char group_name_buffer_[32];
-  char dir_buffer_[32];
-  char sh_buffer_[32];
-};
+#if defined(HAVE_ANDROID_OS)
+#include <private/android_filesystem_config.h>
+#endif
 
 static int do_getpw_r(int by_name, const char* name, uid_t uid,
                       passwd* dst, char* buf, size_t byte_count,
@@ -113,6 +103,21 @@ int getpwuid_r(uid_t uid, passwd* pwd,
                char* buf, size_t byte_count, passwd** result) {
   return do_getpw_r(0, NULL, uid, pwd, buf, byte_count, result);
 }
+
+#if defined(HAVE_ANDROID_OS)
+
+// Thread-specific state for the non-reentrant passwd functions.
+static pthread_once_t stubs_once = PTHREAD_ONCE_INIT;
+static pthread_key_t stubs_key;
+struct stubs_state_t {
+  passwd passwd_;
+  group group_;
+  char* group_members_[2];
+  char app_name_buffer_[32];
+  char group_name_buffer_[32];
+  char dir_buffer_[32];
+  char sh_buffer_[32];
+};
 
 static stubs_state_t* stubs_state_alloc() {
   stubs_state_t*  s = static_cast<stubs_state_t*>(calloc(1, sizeof(*s)));
@@ -412,6 +417,8 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
 
   return app_id_to_group(app_id_from_name(name), state);
 }
+
+#endif
 
 // We don't have an /etc/networks, so all inputs return NULL.
 netent* getnetbyname(const char* /*name*/) {
