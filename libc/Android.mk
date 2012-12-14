@@ -1,11 +1,14 @@
 LOCAL_PATH:= $(call my-dir)
 
-include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/syscalls.mk
+include bionic/bionic-host.mk
+
+include $(LOCAL_PATH)/arch-arm/syscalls.mk
+include $(LOCAL_PATH)/arch-mips/syscalls.mk
+include $(LOCAL_PATH)/arch-x86/syscalls.mk
 
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
-	$(syscall_src) \
 	unistd/abort.c \
 	unistd/alarm.c \
 	unistd/exec.c \
@@ -343,6 +346,104 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/string/strxfrm.c \
     upstream-netbsd/libc/unistd/killpg.c \
 
+# Architecture-specific source files go here.
+# =========================================================
+
+libc_common_arm_src_files += \
+    arch-arm/bionic/abort_arm.S \
+    arch-arm/bionic/atomics_arm.c \
+    arch-arm/bionic/clone.S \
+    arch-arm/bionic/eabi.c \
+    arch-arm/bionic/_exit_with_stack_teardown.S \
+    arch-arm/bionic/ffs.S \
+    arch-arm/bionic/futex_arm.S \
+    arch-arm/bionic/__get_sp.S \
+    arch-arm/bionic/kill.S \
+    arch-arm/bionic/libgcc_compat.c \
+    arch-arm/bionic/memcmp16.S \
+    arch-arm/bionic/memcmp.S \
+    arch-arm/bionic/memcpy.S \
+    arch-arm/bionic/memset.S \
+    arch-arm/bionic/_setjmp.S \
+    arch-arm/bionic/setjmp.S \
+    arch-arm/bionic/sigsetjmp.S \
+    arch-arm/bionic/strcmp.S \
+    arch-arm/bionic/strcpy.S \
+    arch-arm/bionic/strlen.c.arm \
+    arch-arm/bionic/syscall.S \
+    arch-arm/bionic/tgkill.S \
+    arch-arm/bionic/tkill.S \
+    bionic/memmove.c.arm \
+    bionic/socketcalls.c \
+    string/bcopy.c \
+    string/strncmp.c \
+
+# These files need to be arm so that gdbserver
+# can set breakpoints in them without messing
+# up any thumb code.
+libc_common_arm_src_files += \
+    bionic/pthread-atfork.c.arm \
+    bionic/pthread-rwlocks.c.arm \
+    bionic/pthread-timers.c.arm \
+    bionic/ptrace.c.arm
+
+libc_common_mips_src_files += \
+    arch-mips/bionic/__get_sp.S \
+    arch-mips/bionic/__get_tls.c \
+    arch-mips/bionic/__set_tls.c \
+    arch-mips/bionic/_exit_with_stack_teardown.S \
+    arch-mips/bionic/_setjmp.S \
+    arch-mips/bionic/futex_mips.S \
+    arch-mips/bionic/bzero.S \
+    arch-mips/bionic/cacheflush.c \
+    arch-mips/bionic/clone.S \
+    arch-mips/bionic/ffs.S \
+    arch-mips/bionic/memcmp16.S \
+    arch-mips/bionic/memmove.c \
+    arch-mips/bionic/pipe.S \
+    arch-mips/bionic/setjmp.S \
+    arch-mips/bionic/sigsetjmp.S \
+    arch-mips/bionic/vfork.S \
+    arch-mips/string/memset.S \
+    arch-mips/string/memcpy.S \
+    arch-mips/string/mips_strlen.c \
+    bionic/memcmp.c \
+    string/bcopy.c \
+    string/strcmp.c \
+    string/strcpy.c \
+    string/strncmp.c \
+    bionic/pthread-atfork.c \
+    bionic/pthread-rwlocks.c \
+    bionic/pthread-timers.c \
+    bionic/ptrace.c
+
+libc_common_x86_src_files += \
+    arch-x86/bionic/__get_sp.S \
+    arch-x86/bionic/__get_tls.c \
+    arch-x86/bionic/__set_tls.c \
+    arch-x86/bionic/clone.S \
+    arch-x86/bionic/_exit_with_stack_teardown.S \
+    arch-x86/bionic/futex_x86.S \
+    arch-x86/bionic/setjmp.S \
+    arch-x86/bionic/_setjmp.S \
+    arch-x86/bionic/sigsetjmp.S \
+    arch-x86/bionic/vfork.S \
+    arch-x86/bionic/syscall.S \
+    arch-x86/string/bcopy_wrapper.S \
+    arch-x86/string/memcpy_wrapper.S \
+    arch-x86/string/memmove_wrapper.S \
+    arch-x86/string/bzero_wrapper.S \
+    arch-x86/string/memcmp_wrapper.S \
+    arch-x86/string/memset_wrapper.S \
+    arch-x86/string/strcmp_wrapper.S \
+    arch-x86/string/strncmp_wrapper.S \
+    arch-x86/string/strlen_wrapper.S \
+    string/strcpy.c \
+    bionic/pthread-atfork.c \
+    bionic/pthread-rwlocks.c \
+    bionic/pthread-timers.c \
+    bionic/ptrace.c
+
 # The following files are common, but must be compiled
 # with different C flags when building a static C library.
 #
@@ -351,150 +452,21 @@ libc_upstream_netbsd_src_files := \
 # of the library.
 #
 # See comments in private/bionic_tls.h for more details.
-#
-# NOTE: bionic/pthread.c is added later to this list
-#       because it needs special handling on ARM, see
-#       below.
-#
 libc_static_common_src_files := \
-        bionic/__errno.c \
-        bionic/sysconf.c \
+    bionic/__errno.c \
+    bionic/sysconf.c \
 
-# Architecture specific source files go here
-# =========================================================
-ifeq ($(TARGET_ARCH),arm)
-libc_common_src_files += \
-	arch-arm/bionic/abort_arm.S \
-	arch-arm/bionic/atomics_arm.c \
-	arch-arm/bionic/clone.S \
-	arch-arm/bionic/eabi.c \
-	arch-arm/bionic/_exit_with_stack_teardown.S \
-	arch-arm/bionic/ffs.S \
-	arch-arm/bionic/futex_arm.S \
-	arch-arm/bionic/__get_sp.S \
-	arch-arm/bionic/kill.S \
-	arch-arm/bionic/libgcc_compat.c \
-	arch-arm/bionic/memcmp16.S \
-	arch-arm/bionic/memcmp.S \
-	arch-arm/bionic/memcpy.S \
-	arch-arm/bionic/memset.S \
-	arch-arm/bionic/_setjmp.S \
-	arch-arm/bionic/setjmp.S \
-	arch-arm/bionic/sigsetjmp.S \
-	arch-arm/bionic/strcmp.S \
-	arch-arm/bionic/strcpy.S \
-	arch-arm/bionic/strlen.c.arm \
-	arch-arm/bionic/syscall.S \
-	arch-arm/bionic/tgkill.S \
-	arch-arm/bionic/tkill.S \
-	bionic/memmove.c.arm \
-	bionic/socketcalls.c \
-	string/bcopy.c \
-	string/strncmp.c \
+libc_arm_static_common_src_files += bionic/pthread.c.arm
+libc_arm_static_src_files := arch-arm/bionic/exidx_static.c
+libc_arm_dynamic_src_files := arch-arm/bionic/exidx_dynamic.c
 
-# These files need to be arm so that gdbserver
-# can set breakpoints in them without messing
-# up any thumb code.
-libc_common_src_files += \
-	bionic/pthread-atfork.c.arm \
-	bionic/pthread-rwlocks.c.arm \
-	bionic/pthread-timers.c.arm \
-	bionic/ptrace.c.arm
+libc_x86_static_common_src_files += bionic/pthread.c
+libc_x86_static_src_files := bionic/dl_iterate_phdr_static.c
+libc_x86_dynamic_src_files :=
 
-libc_static_common_src_files += \
-        bionic/pthread.c.arm \
-
-# these are used by the static and dynamic versions of the libc
-# respectively
-libc_arch_static_src_files := \
-	arch-arm/bionic/exidx_static.c
-
-libc_arch_dynamic_src_files := \
-	arch-arm/bionic/exidx_dynamic.c
-endif # arm
-
-ifeq ($(TARGET_ARCH),x86)
-libc_common_src_files += \
-	arch-x86/bionic/__get_sp.S \
-	arch-x86/bionic/__get_tls.c \
-	arch-x86/bionic/__set_tls.c \
-	arch-x86/bionic/clone.S \
-	arch-x86/bionic/_exit_with_stack_teardown.S \
-	arch-x86/bionic/futex_x86.S \
-	arch-x86/bionic/setjmp.S \
-	arch-x86/bionic/_setjmp.S \
-	arch-x86/bionic/sigsetjmp.S \
-	arch-x86/bionic/vfork.S \
-	arch-x86/bionic/syscall.S \
-	arch-x86/string/bcopy_wrapper.S \
-	arch-x86/string/memcpy_wrapper.S \
-	arch-x86/string/memmove_wrapper.S \
-	arch-x86/string/bzero_wrapper.S \
-	arch-x86/string/memcmp_wrapper.S \
-	arch-x86/string/memset_wrapper.S \
-	arch-x86/string/strcmp_wrapper.S \
-	arch-x86/string/strncmp_wrapper.S \
-	arch-x86/string/strlen_wrapper.S \
-	string/strcpy.c \
-	bionic/pthread-atfork.c \
-	bionic/pthread-rwlocks.c \
-	bionic/pthread-timers.c \
-	bionic/ptrace.c
-
-libc_static_common_src_files += \
-        bionic/pthread.c \
-
-libc_arch_static_src_files := \
-	bionic/dl_iterate_phdr_static.c
-
-libc_arch_dynamic_src_files :=
-endif # x86
-
-ifeq ($(TARGET_ARCH),mips)
-libc_common_src_files += \
-	arch-mips/bionic/__get_sp.S \
-	arch-mips/bionic/__get_tls.c \
-	arch-mips/bionic/__set_tls.c \
-	arch-mips/bionic/_exit_with_stack_teardown.S \
-	arch-mips/bionic/_setjmp.S \
-	arch-mips/bionic/futex_mips.S \
-	arch-mips/bionic/bzero.S \
-	arch-mips/bionic/cacheflush.c \
-	arch-mips/bionic/clone.S \
-	arch-mips/bionic/ffs.S \
-	arch-mips/bionic/memcmp16.S \
-	arch-mips/bionic/memmove.c \
-	arch-mips/bionic/pipe.S \
-	arch-mips/bionic/setjmp.S \
-	arch-mips/bionic/sigsetjmp.S \
-	arch-mips/bionic/vfork.S
-
-libc_common_src_files += \
-	arch-mips/string/memset.S \
-	arch-mips/string/memcpy.S \
-	arch-mips/string/mips_strlen.c
-
-libc_common_src_files += \
-	bionic/memcmp.c \
-	string/bcopy.c \
-	string/strcmp.c \
-	string/strcpy.c \
-	string/strncmp.c
-
-libc_common_src_files += \
-	bionic/pthread-atfork.c \
-	bionic/pthread-rwlocks.c \
-	bionic/pthread-timers.c \
-	bionic/ptrace.c
-
-libc_static_common_src_files += \
-	bionic/pthread.c
-
-libc_arch_static_src_files := \
-	bionic/dl_iterate_phdr_static.c
-
-libc_arch_dynamic_src_files :=
-endif # mips
+libc_mips_static_common_src_files += bionic/pthread.c
+libc_mips_static_src_files := bionic/dl_iterate_phdr_static.c
+libc_mips_dynamic_src_files :=
 
 # Define some common cflags
 # ========================================================
@@ -589,10 +561,10 @@ libc_crt_target_cflags += \
 # Define some common includes
 # ========================================================
 libc_common_c_includes := \
-		$(LOCAL_PATH)/stdlib  \
-		$(LOCAL_PATH)/string  \
-		$(LOCAL_PATH)/stdio   \
-		external/safe-iop/include
+    $(LOCAL_PATH)/stdlib  \
+    $(LOCAL_PATH)/string  \
+    $(LOCAL_PATH)/stdio   \
+    external/safe-iop/include
 
 # Needed to access private/__dso_handle.h from
 # crtbegin_xxx.S and crtend_xxx.S
@@ -735,64 +707,94 @@ WITH_MALLOC_CHECK_LIBC_A := $(strip $(WITH_MALLOC_CHECK_LIBC_A))
 # with -fno-stack-protector, since it modifies the
 # stack canary.
 
+# libbionic_ssp.a for the target.
 include $(CLEAR_VARS)
-
 LOCAL_SRC_FILES := bionic/ssp.cpp
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libbionic_ssp
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
 include $(BUILD_STATIC_LIBRARY)
 
+# libbionic_ssp.a for the host.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := bionic/ssp.cpp
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libbionic_ssp
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 # ========================================================
 # libc_netbsd.a - upstream NetBSD C library code
 # ========================================================
 #
 # These files are built with the netbsd-compat.h header file
-# automatically included.
+# automatically included and without -Werror.
 
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
-LOCAL_CFLAGS := \
+libc_upstream_netbsd_cflags := \
     $(libc_common_cflags) \
     -I$(LOCAL_PATH)/upstream-netbsd \
     -I$(LOCAL_PATH)/upstream-netbsd/libc/include \
     -include upstream-netbsd/netbsd-compat.h
+
+# libc_netbsd.a for the target.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
+LOCAL_CFLAGS := $(libc_upstream_netbsd_cflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_netbsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
 include $(BUILD_STATIC_LIBRARY)
+
+# libc_netbsd.a for the host.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
+LOCAL_CFLAGS := $(libc_upstream_netbsd_cflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_netbsd
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 
 # ========================================================
 # libc_bionic.a - home-grown C library code
 # ========================================================
-#
-include $(CLEAR_VARS)
 
+# libc_bionic.a for the target.
+include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_bionic_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) -Werror
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_bionic
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
 include $(BUILD_STATIC_LIBRARY)
 
+# libc_bionic.a for the host.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(libc_bionic_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) -Werror
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_bionic
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 # ========================================================
 # libc_common.a
 # ========================================================
 
+# libc_common.a for the target.
 include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := $(libc_common_src_files)
+LOCAL_SRC_FILES := \
+    $(libc_common_src_files) \
+    $($(TARGET_ARCH)_syscall_src_files) \
+    $(libc_common_$(TARGET_ARCH)_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -std=gnu99 \
     -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for netbsd private headers
@@ -801,9 +803,23 @@ LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_bionic libc_netbsd
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
 include $(BUILD_STATIC_LIBRARY)
 
+# libc_common.a for the host.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := \
+    $(libc_common_src_files) \
+    $(x86_syscall_src_files) \
+    $(libc_common_x86_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -std=gnu99 \
+    -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for netbsd private headers
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_common
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_WHOLE_STATIC_LIBRARIES := libbionic_ssp libc_bionic libc_netbsd
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 # ========================================================
 # libc_nomalloc.a
@@ -815,38 +831,52 @@ include $(BUILD_STATIC_LIBRARY)
 # or wants to explicitly disallow the use of the use of malloc,
 # like the dynamic loader.
 
+libc_nomalloc_cflags := \
+    $(libc_common_cflags) \
+    -DLIBC_STATIC \
+    -std=gnu99
+
+# libc_nomalloc.a for the target.
 include $(CLEAR_VARS)
-
 LOCAL_SRC_FILES := \
-	$(libc_arch_static_src_files) \
-	$(libc_static_common_src_files) \
-	bionic/libc_init_static.c
-
+    $(libc_$(TARGET_ARCH)_static_src_files) \
+    $(libc_$(TARGET_ARCH)_static_common_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/libc_init_static.c
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-LOCAL_CFLAGS := $(libc_common_cflags) \
-                -DLIBC_STATIC \
-                -std=gnu99
-
+LOCAL_CFLAGS := $(libc_nomalloc_cflags)
 LOCAL_MODULE := libc_nomalloc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
 include $(BUILD_STATIC_LIBRARY)
 
+# libc_nomalloc.a for the host.
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := \
+    $(libc_x86_static_src_files) \
+    $(libc_x86_static_common_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/libc_init_static.c
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_CFLAGS := $(libc_nomalloc_cflags)
+LOCAL_MODULE := libc_nomalloc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 # ========================================================
 # libc.a
 # ========================================================
 include $(CLEAR_VARS)
-
 LOCAL_SRC_FILES := \
-	$(libc_arch_static_src_files) \
-	$(libc_static_common_src_files) \
-	bionic/dlmalloc.c \
-	bionic/malloc_debug_common.cpp \
-	bionic/libc_init_static.c
-
+    $(libc_$(TARGET_ARCH)_static_src_files) \
+    $(libc_$(TARGET_ARCH)_static_common_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/dlmalloc.c \
+    bionic/malloc_debug_common.cpp \
+    bionic/libc_init_static.c
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC \
                 -std=gnu99
@@ -857,6 +887,27 @@ LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
+
+# ========================================================
+# libc.a for the host.
+# ========================================================
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := \
+    $(libc_x86_static_src_files) \
+    $(libc_x86_static_common_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/dlmalloc.c \
+    bionic/malloc_debug_common.cpp \
+    bionic/libc_init_static.c
+LOCAL_CFLAGS := $(libc_common_cflags) \
+                -DLIBC_STATIC \
+                -std=gnu99
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+include $(BUILD_BIONIC_HOST_STATIC_LIBRARY)
 
 
 # ========================================================
@@ -874,7 +925,8 @@ LOCAL_CFLAGS := $(libc_common_cflags) -std=gnu99 -DPTHREAD_DEBUG -DPTHREAD_DEBUG
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-	$(libc_arch_dynamic_src_files) \
+	$(libc_$(TARGET_ARCH)_dynamic_src_files) \
+	$(libc_$(TARGET_ARCH)_static_common_src_files) \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
@@ -909,6 +961,36 @@ LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_SHARED_LIBRARY)
+
+
+# ========================================================
+# libc.so for the host.
+# ========================================================
+
+include $(CLEAR_VARS)
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -std=gnu99 \
+    -DHAVE_UNWIND_CONTEXT_STRUCT=1 \
+    -DPTHREAD_DEBUG \
+    -DPTHREAD_DEBUG_ENABLED=0
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_SRC_FILES := \
+    $(libc_x86_dynamic_src_files) \
+    $(libc_x86_static_common_src_files) \
+    $(libc_static_common_src_files) \
+    bionic/dlmalloc.c \
+    bionic/malloc_debug_common.cpp \
+    bionic/pthread_debug.c \
+    bionic/libc_init_dynamic.c
+LOCAL_MODULE:= libc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_REQUIRED_MODULES := tzdata
+LOCAL_SHARED_LIBRARIES := libdl
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+include $(BUILD_BIONIC_HOST_SHARED_LIBRARY)
+
 
 
 # For all builds, except for the -user build we will enable memory
