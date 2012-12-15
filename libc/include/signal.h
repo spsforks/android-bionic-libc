@@ -51,7 +51,11 @@ typedef int sig_atomic_t;
  * architectures except for the 'mips' one which set it to 128.
  */
 #ifndef _NSIG
-#  define _NSIG  64
+#  ifdef __mips__
+#    define _NSIG  128
+#  else
+#    define _NSIG  64
+#  endif
 #endif
 
 extern const char* const sys_siglist[];
