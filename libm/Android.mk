@@ -151,7 +151,9 @@ libm_common_src_files:= \
 	src/s_isnan.c \
 	src/s_modf.c
 
-libm_common_cflags :=
+libm_common_cflags := \
+  -D"__weak_reference(alias,sym)=__weak_alias(alias,sym)" \
+  -D"__strong_reference(alias,sym)=__strong_alias(alias,sym)"
 
 ifeq ($(TARGET_ARCH),arm)
   libm_common_src_files += \
