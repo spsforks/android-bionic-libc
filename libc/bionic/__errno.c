@@ -27,8 +27,9 @@
  */
 #include <errno.h>
 #include <bionic_tls.h>
+#include <stdint.h>
 
 volatile int*  __errno( void )
 {
-  return  &((volatile int*)__get_tls())[TLS_SLOT_ERRNO];
+  return  (int *)&((volatile intptr_t *)__get_tls())[TLS_SLOT_ERRNO];
 }
