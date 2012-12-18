@@ -80,11 +80,9 @@ libc_common_src_files := \
 	bionic/err.c \
 	bionic/ether_aton.c \
 	bionic/ether_ntoa.c \
-	bionic/fcntl.c \
 	bionic/fdprintf.c \
 	bionic/flockfile.c \
 	bionic/fork.c \
-	bionic/fstatfs.c \
 	bionic/ftime.c \
 	bionic/ftok.c \
 	bionic/fts.c \
@@ -133,9 +131,7 @@ libc_common_src_files := \
 	bionic/signal.c \
 	bionic/signame.c \
 	bionic/sigsetmask.c \
-	bionic/sigsuspend.c \
 	bionic/sleep.c \
-	bionic/statfs.c \
 	bionic/strndup.c \
 	bionic/strntoimax.c \
 	bionic/strntoumax.c \
@@ -213,7 +209,6 @@ libc_bionic_src_files := \
     bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
-    bionic/mmap.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_detach.cpp \
     bionic/pthread_equal.cpp \
@@ -363,6 +358,11 @@ libc_upstream_netbsd_src_files := \
 # =========================================================
 ifeq ($(TARGET_ARCH),arm)
 libc_common_src_files += \
+	bionic/mmap.cpp \
+	bionic/fstatfs.c \
+	bionic/statfs.c \
+	bionic/fcntl.c \
+	bionic/sigsuspend.c \
 	bionic/memmove.c.arm \
 	string/bcopy.c \
 	string/strncmp.c \
@@ -402,6 +402,11 @@ endif # arm
 
 ifeq ($(TARGET_ARCH),x86)
 libc_common_src_files += \
+    bionic/mmap.cpp \
+    bionic/fstatfs.c \
+    bionic/statfs.c \
+    bionic/fcntl.c \
+    bionic/sigsuspend.c \
     bionic/pthread-atfork.c \
     bionic/pthread-rwlocks.c \
     bionic/pthread-timers.c \
@@ -414,8 +419,56 @@ libc_static_common_src_files += \
 
 endif # x86
 
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64 x32))
+libc_common_src_files += \
+	bionic/memcpy.c \
+	bionic/memmove.c \
+	bionic/memset.c \
+	bionic/memcmp.c \
+	string/bcopy.c \
+	string/strcmp.c \
+	string/strncmp.c \
+	string/strlen.c \
+	string/strcpy.c \
+	string/strcat.c \
+	string/strncat.c \
+	string/strncpy.c \
+	bionic/strchr.cpp \
+	string/strrchr.c \
+	bionic/memchr.c \
+	bionic/memrchr.c \
+	string/index.c \
+	bionic/strnlen.c \
+	string/strlcat.c \
+	string/strlcpy.c \
+	upstream-freebsd/lib/libc/string/wcschr.c \
+	upstream-freebsd/lib/libc/string/wcsrchr.c \
+	upstream-freebsd/lib/libc/string/wcscmp.c \
+	upstream-freebsd/lib/libc/string/wcscpy.c \
+	upstream-freebsd/lib/libc/string/wmemcmp.c \
+	upstream-freebsd/lib/libc/string/wcslen.c \
+	upstream-freebsd/lib/libc/string/wcscat.c \
+	bionic/pthread-atfork.c \
+	bionic/pthread-rwlocks.c \
+	bionic/pthread-timers.c \
+	bionic/ptrace.c \
+        # no bzero.c version
+        # vfork is in syscall dir
+
+libc_static_common_src_files += \
+        bionic/pthread.c \
+        bionic/pthread_create.cpp \
+        bionic/pthread_key.cpp \
+
+endif # x86_64
+
 ifeq ($(TARGET_ARCH),mips)
 libc_common_src_files += \
+	bionic/mmap.cpp \
+	bionic/fstatfs.c \
+	bionic/statfs.c \
+	bionic/fcntl.c \
+	bionic/sigsuspend.c \
 	bionic/memcmp.c \
 	string/bcopy.c \
 	string/strcmp.c \
@@ -515,16 +568,27 @@ ifeq ($(TARGET_ARCH),arm)
 endif # !arm
 
 ifeq ($(TARGET_ARCH),x86)
-  libc_common_cflags += -DSOFTFLOAT
   libc_crt_target_cflags := -m32
   libc_crt_target_ldflags := -melf_i386
+endif
+ifeq ($(TARGET_ARCH),x86_64)
+  libc_crt_target_cflags := -m64
+  libc_crt_target_ldflags := -melf_x86_64
+endif
+ifeq ($(TARGET_ARCH),x32)
+  libc_crt_target_cflags := -mx32
+  libc_crt_target_ldflags := -melf32_x86_64
+endif
+
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64 x32))
+  libc_common_cflags += -DSOFTFLOAT
   ifeq ($(ARCH_X86_HAVE_SSE2),true)
       libc_crt_target_cflags += -DUSE_SSE2=1
   endif
   ifeq ($(ARCH_X86_HAVE_SSSE3),true)
       libc_crt_target_cflags += -DUSE_SSSE3=1
   endif
-endif # x86
+endif
 
 ifeq ($(TARGET_ARCH),mips)
   ifneq ($(ARCH_MIPS_HAS_FPU),true)
@@ -580,7 +644,7 @@ endif
 ifeq ($(TARGET_ARCH),mips)
     libc_crt_target_so_cflags := -fPIC
 endif
-ifeq ($(TARGET_ARCH),x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64 x32))
     libc_crt_target_so_cflags := -fPIC
 endif
 libc_crt_target_so_cflags += $(libc_crt_target_cflags)
