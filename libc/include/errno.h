@@ -30,6 +30,7 @@
 
 #include <sys/cdefs.h>
 #include <linux/errno.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
@@ -41,7 +42,7 @@ __BEGIN_DECLS
 #endif
 
 /* internal function returning the address of the thread-specific errno */
-extern volatile int*   __errno(void);
+extern volatile intptr_t *   __errno(void);
 
 /* a macro expanding to the errno l-value */
 #define  errno   (*__errno())

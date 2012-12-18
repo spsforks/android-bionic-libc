@@ -87,7 +87,7 @@ extern void  tzset(void);
 /* global includes */
 extern char*     tzname[];
 extern int       daylight;
-extern long int  timezone;
+extern time_t    timezone;
 
 #define CLOCKS_PER_SEC     1000000
 
