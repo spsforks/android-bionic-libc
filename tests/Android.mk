@@ -96,6 +96,8 @@ include $(BUILD_NATIVE_TEST)
 # Test library for the unit tests.
 # -----------------------------------------------------------------------------
 
+ifneq ($(TARGET_ARCH),mips)
+
 # Build no-elf-hash-table-library.so to test dlopen(3) on a library that
 # only has a GNU-style hash table.
 include $(CLEAR_VARS)
@@ -104,6 +106,8 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SRC_FILES := empty.cpp
 LOCAL_LDFLAGS := -Wl,--hash-style=gnu
 include $(BUILD_SHARED_LIBRARY)
+
+endif
 
 # -----------------------------------------------------------------------------
 # Unit tests built against glibc.
