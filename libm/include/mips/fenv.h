@@ -65,8 +65,8 @@ extern const fenv_t	__fe_dfl_env;
 #define	__rfs(__fpsr)	__asm __volatile("rfs %0" : "=r" (*(__fpsr)))
 #define	__wfs(__fpsr)	__asm __volatile("wfs %0" : : "r" (__fpsr))
 #else
-#define __rfs(__fpsr)
-#define __wfs(__fpsr)
+#define __rfs(__fpsr)   __asm __volatile("" : "=r" (*(__fpsr)))
+#define __wfs(__fpsr)   __asm __volatile("" : : "r" (__fpsr))
 #endif
 
 static __inline int
