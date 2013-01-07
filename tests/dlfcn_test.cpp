@@ -188,14 +188,15 @@ TEST(dlfcn, dladdr_invalid) {
   ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
 }
 
-#if __BIONIC__
-// Our dynamic linker doesn't support GNU hash tables.
+#if defined(__BIONIC__) // Our dynamic linker doesn't support GNU hash tables.
+#if !defined(__mips__)  // The MIPS toolchain won't emit GNU hash tables anyway.
 TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("no-elf-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle == NULL);
   ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
 }
+#endif
 #endif
 
 TEST(dlfcn, dlopen_bad_flags) {
