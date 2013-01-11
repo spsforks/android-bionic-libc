@@ -166,6 +166,7 @@ libc_common_src_files := \
 	bionic/ftime.c \
 	bionic/ftok.c \
 	bionic/fts.c \
+	bionic/getauxval.c \
 	bionic/getdtablesize.c \
 	bionic/gethostname.c \
 	bionic/getpgrp.c \
