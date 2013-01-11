@@ -38,6 +38,7 @@
 
 #include <bionic_tls.h>
 #include <errno.h>
+#include <private/bionic_auxv.h>
 
 extern unsigned __get_sp(void);
 extern pid_t gettid(void);
@@ -94,6 +95,15 @@ void __libc_init_common(uintptr_t* elf_data) {
   errno = 0;
   __progname = argv[0] ? argv[0] : "<unknown>";
   environ = envp;
+
+  // The auxiliary vector is at the end of the environment block
+  unsigned long int *local_vecs = (unsigned long int *) envp;
+  while (local_vecs[0] != 0) {
+    local_vecs++;
+  }
+  /* The end of the environment block is marked by two NULL pointers */
+  local_vecs++;
+  vecs = local_vecs;
 
   __system_properties_init(); // Requires 'environ'.
 }
