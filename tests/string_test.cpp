@@ -305,6 +305,25 @@ TEST(string, strcpy) {
   }
 }
 
+
+#if __BIONIC__
+/*
+ * This test generates the following runtime warning:
+ *
+ *   [WARNING] external/gtest/src/../src/gtest-death-test.cc:789::
+ *   Death tests use fork(), which is unsafe particularly in a threaded
+ *   context. For this test, Google Test couldn't detect the number of
+ *   threads.
+ *
+ * I don't know how to fix this warning.
+ */
+TEST(string, strcpy_fortified) {
+  char buf[10];
+  char *orig = strdup("0123456789");
+  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGSEGV), "");
+}
+#endif
+
 #if __BIONIC__
 TEST(string, strlcat) {
   StringTestState state(SMALL);
