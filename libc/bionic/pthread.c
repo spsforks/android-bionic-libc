@@ -1378,14 +1378,40 @@ int pthread_kill(pthread_t tid, int sig)
 {
     int  ret;
     int  old_errno = errno;
-    pthread_internal_t * thread = (pthread_internal_t *)tid;
+    pthread_internal_t * thread;
+    pid_t pid;
 
-    ret = tgkill(getpid(), thread->kernel_id, sig);
-    if (ret < 0) {
-        ret = errno;
-        errno = old_errno;
+    /* check that the thread still exists */
+    pthread_mutex_lock(&gThreadListLock);
+    for (thread = gThreadList; thread != NULL; thread = thread->next)
+        if (thread == (pthread_internal_t*)tid) {
+            /* save process ID for tgkill() */
+            pid = thread->kernel_id;
+            break;
+        }
+    pthread_mutex_unlock(&gThreadListLock);
+
+    /*
+     * If sig is 0, then no signal is sent, but error checking is performed;
+     * this can be used to check for the existence of a thread ID.
+     */
+    if (thread && sig != 0) {
+        /*
+         * *thread may no longer be valid so can't dereference thread here
+         * if target thread has recently exited tgkill() should return ESRCH
+         */
+        ret = tgkill(getpid(), pid, sig);
+        if (ret < 0) {
+            ret = errno;
+            errno = old_errno;
+        }
     }
-
+    else if (thread == NULL)
+        /* target thread does not exist */
+        ret = ESRCH;
+    else
+        /* target thread exists */
+        ret = 0;
     return ret;
 }
 
