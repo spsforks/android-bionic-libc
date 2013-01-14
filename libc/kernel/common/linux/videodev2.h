@@ -2178,4 +2178,3 @@ struct v4l2_create_buffers {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BASE_VIDIOC_PRIVATE 192  
 #endif
-
