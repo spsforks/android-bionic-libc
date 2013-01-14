@@ -29,8 +29,8 @@
 #ifndef _PRIVATE_SSP_H
 #define _PRIVATE_SSP_H
 
-#include <errno.h>
-#include <sys/cdefs.h>
+#include <string.h>
+#include <sys/auxv.h>
 
 __BEGIN_DECLS
 
@@ -48,27 +48,20 @@ extern void* __stack_chk_guard;
 extern void __stack_chk_fail();
 
 __inline__ static void* __attribute__((always_inline)) __generate_stack_chk_guard(void) {
-  union {
-    uintptr_t value;
-    char bytes[sizeof(uintptr_t)];
-  } u;
 
-  /* Try pulling random bytes from /dev/urandom. */
-  int fd = TEMP_FAILURE_RETRY(open("/dev/urandom", O_RDONLY));
-  if (fd != -1) {
-    ssize_t byte_count = TEMP_FAILURE_RETRY(read(fd, &u.bytes, sizeof(u)));
-    close(fd);
-    if (byte_count == sizeof(u)) {
-      return (void*) u.value;
-    }
-  }
+  void* src = (void *) getauxval(AT_RANDOM);
+  uintptr_t retval;
+  memcpy(&retval, src, sizeof(retval));
 
-  /* If that failed, switch to 'terminator canary'. */
-  u.bytes[0] = 0;
-  u.bytes[1] = 0;
-  u.bytes[2] = '\n';
-  u.bytes[3] = 255;
-  return (void*) u.value;
+  // We want the return value here to be different every time.
+  // To approximate that, we xor this value with the current frame
+  // address.
+  //
+  // TODO: Think of a better way to get per-thread randomization without
+  // relying on system calls.
+  retval ^= (uintptr_t) __builtin_frame_address(0);
+
+  return (void*) retval;
 }
 
 __END_DECLS
