@@ -1,0 +1,9 @@
+Code-Review+2: Ben Cheng <bccheng@android.com>
+Code-Review+1: Iliyan Malchev <malchev@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Ian Rogers <irogers@google.com>
+Submitted-at: Mon, 14 Jan 2013 10:54:44 -0800
+Reviewed-on: https://android-review.googlesource.com/49583
+Project: platform/bionic
+Branch: refs/heads/master
