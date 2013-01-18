@@ -89,10 +89,10 @@ void __libc_preinit(void)
     malloc_debug_init();
 }
 
-void __libc_postfini(void)
-{
-    extern void malloc_debug_fini(void);
-    malloc_debug_fini();
+
+void __libc_postfini(void) {
+  extern void malloc_debug_fini(void);
+  malloc_debug_fini();
 }
 
 /* This function is called from the executable's _start entry point
