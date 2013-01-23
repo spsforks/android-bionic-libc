@@ -64,15 +64,19 @@
 #define	__warn_references(sym,msg)					\
     __asm__(".section .gnu.warning." #sym "\n\t.ascii \"" msg "\"\n\t.text");
 
+#define __weak_reference(alias, sym) __weak_alias(alias, sym)
+#define __strong_reference(alias, sym) __strong_alias(alias, sym)
 #else /* !__STDC__ */
 
 #ifdef __LEADING_UNDERSCORE
 #define __weak_alias(alias,sym) ___weak_alias(_/**/alias,_/**/sym)
 #define	___weak_alias(alias,sym)					\
     __asm__(".weak alias\nalias = sym");
+#define __weak_reference(alias, sym) __weak_alias(alias, sym)
 #else
 #define	__weak_alias(alias,sym)						\
     __asm__(".weak alias\nalias = sym");
+#define __weak_reference(alias, sym) __weak_alias(alias, sym)
 #endif
 #ifdef __LEADING_UNDERSCORE
 #define __weak_extern(sym) ___weak_extern(_/**/sym)
