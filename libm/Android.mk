@@ -117,7 +117,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_fdim.c \
     upstream-freebsd/lib/msun/src/s_finite.c \
     upstream-freebsd/lib/msun/src/s_finitef.c \
-    upstream-freebsd/lib/msun/src/s_floor.c \
     upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
@@ -252,6 +251,7 @@ libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
 ifneq ($(TARGET_ARCH),arm)
 libm_common_src_files += \
+    upstream-freebsd/lib/msun/src/s_floor.c \
     upstream-freebsd/lib/msun/src/e_sqrt.c \
     upstream-freebsd/lib/msun/src/e_sqrtf.c
 endif
@@ -262,7 +262,8 @@ libm_arm_src_files += \
     arm/k_pow2.S \
     arm/e_fast_pow.S \
     arm/e_sqrt.S \
-    arm/e_sqrtf.S
+    arm/e_sqrtf.S \
+    arm/s_floor.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A9
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A9
 else
@@ -272,7 +273,8 @@ libm_arm_src_files += \
     arm/k_pow2.S \
     arm/e_fast_pow.S \
     arm/e_sqrt.S \
-    arm/e_sqrtf.S
+    arm/e_sqrtf.S \
+    arm/s_floor.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 else
