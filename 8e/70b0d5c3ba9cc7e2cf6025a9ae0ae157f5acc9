@@ -1,0 +1,7 @@
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+2: Ian Rogers <irogers@google.com>
+Submitted-by: Nick Kralevich <nnk@google.com>
+Submitted-at: Thu, 24 Jan 2013 16:44:59 +0000
+Reviewed-on: https://android-review.googlesource.com/50462
+Project: platform/bionic
+Branch: refs/heads/master
