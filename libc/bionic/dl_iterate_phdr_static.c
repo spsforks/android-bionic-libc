@@ -28,6 +28,7 @@
 
 #include <elf.h>
 #include <sys/types.h>
+#include <linux/auxvec.h>
 #include <link.h>
 
 /* Dynamic binaries get this from the dynamic linker (system/linker), which
@@ -61,5 +62,25 @@ dl_iterate_phdr(int (*cb)(struct dl_phdr_info *info, size_t size, void *data),
     dl_info.dlpi_name = NULL;
     dl_info.dlpi_phdr = phdr;
     dl_info.dlpi_phnum = ehdr->e_phnum;
+
+#ifdef AT_SYSINFO_EHDR
+    int res;
+    if (res = cb(&dl_info, sizeof (struct dl_phdr_info), data))
+        return res;
+
+    int n;
+    Elf32_Ehdr *ehdr_vdso = (Elf32_Ehdr *) getauxval(AT_SYSINFO_EHDR);
+    phdr = (Elf32_Phdr *)((char*)ehdr_vdso + ehdr_vdso->e_phoff);
+    dl_info.dlpi_phdr = phdr;
+    dl_info.dlpi_phnum = ehdr_vdso->e_phnum;
+
+    for (n = 0; n < dl_info.dlpi_phnum; n++) {
+        if (phdr[n].p_type == PT_LOAD) {
+            dl_info.dlpi_addr = (Elf32_Addr)ehdr_vdso - phdr[n].p_vaddr;
+            break;
+        }
+    }
+#endif
+
     return cb(&dl_info, sizeof (struct dl_phdr_info), data);
 }
