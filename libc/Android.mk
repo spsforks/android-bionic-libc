@@ -495,7 +495,7 @@ ifeq ($(TARGET_ARCH),arm)
 endif # !arm
 
 ifeq ($(TARGET_ARCH),x86)
-  libc_common_cflags += -DSOFTFLOAT
+  libc_common_cflags += -DSOFTFLOAT -DKERNEL_PROVIDES_VDSO
   libc_crt_target_cflags :=
   ifeq ($(ARCH_X86_HAVE_SSE2),true)
       libc_crt_target_cflags += -DUSE_SSE2=1

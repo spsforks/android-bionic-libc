@@ -76,10 +76,23 @@ test_src_files = \
     stubs_test.cpp \
     time_test.cpp \
     unistd_test.cpp \
+    stack_unwinding_test.cpp \
 
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
     dlfcn_test.cpp \
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-unit-tests-unwind-test-impl
+LOCAL_CFLAGS += $(test_c_flags) -fexceptions -fnon-call-exceptions
+LOCAL_SRC_FILES := stack_unwinding_test_impl.c
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-unit-tests-unwind-test-impl-host
+LOCAL_CFLAGS += $(test_c_flags) -fexceptions -fnon-call-exceptions
+LOCAL_SRC_FILES := stack_unwinding_test_impl.c
+include $(BUILD_HOST_STATIC_LIBRARY)
 
 # Build tests for the device (with bionic's .so). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
@@ -90,6 +103,7 @@ LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SHARED_LIBRARIES += libdl
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
+LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl
 include $(BUILD_NATIVE_TEST)
 
 # Build tests for the device (with bionic's .a). Run with:
@@ -100,7 +114,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_SRC_FILES := $(test_src_files)
-LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
+LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc bionic-unit-tests-unwind-test-impl
 include $(BUILD_NATIVE_TEST)
 
 # -----------------------------------------------------------------------------
@@ -134,6 +148,7 @@ LOCAL_CFLAGS += $(test_c_flags)
 LOCAL_LDFLAGS += -lpthread -ldl
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
+LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl-host
 include $(BUILD_HOST_NATIVE_TEST)
 endif
 
