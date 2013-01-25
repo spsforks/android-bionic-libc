@@ -1,0 +1,11 @@
+Change-Id: Ifaa0fdb1194172f578f973097d61e580bce528dc
+Code-Review+1: David Turner <digit@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Jeff Brown <jeffbrown@android.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Fri, 25 Jan 2013 21:57:58 +0000
+Reviewed-on: https://android-review.googlesource.com/49950
+Project: platform/bionic
+Branch: refs/heads/master
