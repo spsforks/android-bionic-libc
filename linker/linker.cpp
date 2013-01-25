@@ -416,6 +416,10 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int *pcount)
 
 #elif defined(ANDROID_X86_LINKER) || defined(ANDROID_MIPS_LINKER)
 
+#ifdef KERNEL_PROVIDES_VDSO
+void* __vdso_addr;
+#endif
+
 /* Here, we only have to provide a callback to iterate across all the
  * loaded libraries. gcc_eh does the rest. */
 int
@@ -431,9 +435,29 @@ dl_iterate_phdr(int (*cb)(dl_phdr_info *info, size_t size, void *data),
         dl_info.dlpi_phnum = si->phnum;
         rv = cb(&dl_info, sizeof(dl_phdr_info), data);
         if (rv != 0) {
+            return rv;
+        }
+    }
+
+#ifdef KERNEL_PROVIDES_VDSO
+    int n;
+    dl_phdr_info dl_info;
+    Elf32_Ehdr* ehdr_vdso = (Elf32_Ehdr *) __vdso_addr;
+    Elf32_Phdr* phdr = (Elf32_Phdr *)((char*)ehdr_vdso + ehdr_vdso->e_phoff);
+
+    dl_info.dlpi_phdr = phdr;
+    dl_info.dlpi_phnum = ehdr_vdso->e_phnum;
+
+    for (n = 0; n < dl_info.dlpi_phnum; n++) {
+        if (phdr[n].p_type == PT_LOAD) {
+            dl_info.dlpi_addr = (Elf32_Addr)ehdr_vdso - phdr[n].p_vaddr;
             break;
         }
     }
+
+    rv = cb(&dl_info, sizeof (struct dl_phdr_info), data);
+#endif
+
     return rv;
 }
 
@@ -1883,6 +1907,11 @@ static unsigned __linker_init_post_relocation(unsigned **elfdata, unsigned linke
         case AT_ENTRY:
             si->entry = vecs[1];
             break;
+#ifdef KERNEL_PROVIDES_VDSO
+	case AT_SYSINFO_EHDR :
+	  __vdso_addr = (void*)vecs[1];
+	  break;
+#endif
         }
         vecs += 2;
     }
