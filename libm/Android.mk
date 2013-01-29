@@ -1,5 +1,11 @@
 LOCAL_PATH:= $(call my-dir)
 
+libm_upstream_freebsd_src_files:= \
+	upstream-freebsd/src/s_frexp.c \
+	upstream-freebsd/src/s_fma.c \
+	upstream-freebsd/src/s_nextafter.c \
+	upstream-freebsd/src/e_scalbf.c
+
 libm_common_src_files:= \
 	isinf.c  \
 	fpclassify.c \
@@ -50,7 +56,6 @@ libm_common_src_files:= \
 	src/e_remainder.c \
 	src/e_remainderf.c \
 	src/e_scalb.c \
-	src/e_scalbf.c \
 	src/e_sinh.c \
 	src/e_sinhf.c \
 	src/e_sqrt.c \
@@ -87,7 +92,6 @@ libm_common_src_files:= \
 	src/s_floor.c \
 	src/s_floorf.c \
 	src/s_floorl.c \
-	src/s_fma.c \
 	src/s_fmaf.c \
 	src/s_fmax.c \
 	src/s_fmaxf.c \
@@ -118,7 +122,6 @@ libm_common_src_files:= \
 	src/s_modff.c \
 	src/s_nan.c \
 	src/s_nearbyint.c \
-	src/s_nextafter.c \
 	src/s_nextafterf.c \
 	src/s_nexttowardf.c \
 	src/s_remquo.c \
@@ -147,18 +150,18 @@ libm_common_src_files:= \
 	src/s_copysignl.c \
 	src/s_fabsl.c \
 	src/s_fabs.c \
-	src/s_frexp.c \
 	src/s_isnan.c \
 	src/s_modf.c
 
 libm_common_cflags :=
 
 ifeq ($(TARGET_ARCH),arm)
+  libm_upstream_freebsd_src_files += \
+	upstream-freebsd/src/s_scalbn.c
   libm_common_src_files += \
 	arm/fenv.c \
 	src/e_ldexpf.c \
 	src/s_scalbln.c \
-	src/s_scalbn.c \
 	src/s_scalbnf.c \
 	src/e_sqrtf.c
 
@@ -176,11 +179,12 @@ ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
   libm_common_includes = $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
 endif
 ifeq ($(TARGET_ARCH),mips)
+  libm_upstream_freebsd_src_files += \
+	upstream-freebsd/src/s_scalbn.c
   libm_common_src_files += \
 	mips/fenv.c \
 	src/e_ldexpf.c \
 	src/s_scalbln.c \
-	src/s_scalbn.c \
 	src/s_scalbnf.c \
 	src/e_sqrtf.c
 
@@ -188,6 +192,26 @@ ifeq ($(TARGET_ARCH),mips)
   # Need to build *rint* functions
   libm_common_cflags += -fno-builtin-rintf -fno-builtin-rint
 endif
+
+# libm_freebsd.a
+# ========================================================
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+    $(libm_upstream_freebsd_src_files)
+
+LOCAL_ARM_MODE := arm
+LOCAL_C_INCLUDES += $(libm_common_includes)
+LOCAL_CFLAGS := \
+    $(libm_common_cflags) \
+    -include upstream-freebsd/freebsd-compat.h
+
+LOCAL_MODULE:= libm_freebsd
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+
+include $(BUILD_STATIC_LIBRARY)
 
 # libm.a
 # ========================================================
@@ -204,6 +228,7 @@ LOCAL_CFLAGS := $(libm_common_cflags)
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
+LOCAL_WHOLE_STATIC_LIBRARIES := libm_freebsd
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
 include $(BUILD_STATIC_LIBRARY)
@@ -224,6 +249,7 @@ LOCAL_CFLAGS := $(libm_common_cflags)
 LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
+LOCAL_WHOLE_STATIC_LIBRARIES := libm_freebsd
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 
 include $(BUILD_SHARED_LIBRARY)

@@ -11,7 +11,7 @@
  */
 
 #ifndef lint
-static char rcsid[] = "$FreeBSD: src/lib/msun/src/s_scalbn.c,v 1.11 2005/03/07 21:27:37 das Exp $";
+static char rcsid[] = "$FreeBSD$";
 #endif
 
 /*
@@ -60,20 +60,7 @@ scalbn (double x, int n)
         return x*twom54;
 }
 
-// this is normally in FreeBSD's libc.
-double
-ldexp (double x, int n)
-{
-    return scalbn(x,n);
-}
-
-#if (LDBL_MANT_DIG == 53)    //XXX: brian FIXME __weak_reference doesn work
-long double ldexpl (long double x, int n) {
-    return scalbn((double)x,n);
-}
-long double scalbnl (long double x, int n) {
-    return scalbn((double)x,n);
-}
+#if (LDBL_MANT_DIG == 53)
 __weak_reference(scalbn, ldexpl);
 __weak_reference(scalbn, scalbnl);
 #endif
