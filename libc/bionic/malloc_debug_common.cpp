@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "debug_mapinfo.h"
 #include "dlmalloc.h"
 #include "ScopedPthreadMutexLocker.h"
 
