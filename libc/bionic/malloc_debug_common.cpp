@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "debug_mapinfo.h"
 #include "dlmalloc.h"
 #include "ScopedPthreadMutexLocker.h"
 
@@ -458,6 +459,11 @@ static void malloc_init_impl() {
             dlclose(libc_malloc_impl_handle);
             return;
         }
+    }
+
+    if (false) {
+      error_log("%s: giving up!", __progname);
+      return;
     }
 
     // Initialize malloc dispatch table with appropriate routines.

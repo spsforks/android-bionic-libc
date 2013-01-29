@@ -45,6 +45,7 @@
 #include <unistd.h>
 #include <unwind.h>
 
+#include "debug_mapinfo.h"
 #include "debug_stacktrace.h"
 #include "dlmalloc.h"
 #include "logd.h"
