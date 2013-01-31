@@ -59,6 +59,7 @@ test_src_files = \
     getauxval_test.cpp \
     getcwd_test.cpp \
     libgen_test.cpp \
+    math_test.cpp \
     pthread_test.cpp \
     regex_test.cpp \
     signal_test.cpp \
