@@ -1,0 +1,8 @@
+Code-Review+2: Iliyan Malchev <malchev@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+1: Nick Kralevich <nnk@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Mon, 04 Feb 2013 18:42:14 +0000
+Reviewed-on: https://android-review.googlesource.com/50974
+Project: platform/bionic
+Branch: refs/heads/master
