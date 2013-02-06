@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_ARCH),x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64 x32))
     linker_begin_extension := c
 else
     linker_begin_extension := S
@@ -25,6 +25,7 @@ LOCAL_CFLAGS += -fno-stack-protector \
 
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
+LOCAL_MODULE:= linker
 
 ifeq ($(TARGET_ARCH),arm)
     LOCAL_CFLAGS += -DANDROID_ARM_LINKER
@@ -34,11 +35,16 @@ ifeq ($(TARGET_ARCH),x86)
     LOCAL_CFLAGS += -DANDROID_X86_LINKER
 endif
 
+ifeq ($(TARGET_ARCH),x32)
+    LOCAL_CFLAGS += -DANDROID_X32_LINKER
+    LOCAL_LDFLAGS += -mx32
+    LOCAL_MODULE:= linkerx32
+endif
+
 ifeq ($(TARGET_ARCH),mips)
     LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
 
-LOCAL_MODULE:= linker
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc

@@ -133,6 +133,14 @@ struct soinfo {
   Elf32_Rel* rel;
   size_t rel_count;
 
+#if defined(ANDROID_X32_LINKER)
+  Elf32_Rela *plt_rela;
+  size_t plt_rela_count;
+
+  Elf32_Rela *rela;
+  size_t rela_count;
+#endif /* ANDROID_X32_LINKER */
+
   linker_function_t* preinit_array;
   size_t preinit_array_count;
 

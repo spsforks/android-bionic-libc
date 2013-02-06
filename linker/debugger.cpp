@@ -137,8 +137,8 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
     // "info" will be NULL if the siginfo_t information was not available.
     if (info != NULL) {
         __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                          "Fatal signal %d (%s) at 0x%08x (code=%d), thread %d (%s)",
-                          signum, signal_name, reinterpret_cast<uintptr_t>(info->si_addr),
+                          "Fatal signal %d (%s) at 0x%p (code=%d), thread %d (%s)",
+                          signum, signal_name, info->si_addr,
                           info->si_code, gettid(), thread_name);
     } else {
         __libc_format_log(ANDROID_LOG_FATAL, "libc",
@@ -176,7 +176,12 @@ static bool have_siginfo(int signum) {
  * Catches fatal signals so we can ask debuggerd to ptrace us before
  * we crash.
  */
+#ifdef __x86_64__
+void debuggerd_signal_handler(int n) {
+    siginfo_t* info = NULL;
+#else
 void debuggerd_signal_handler(int n, siginfo_t* info, void*) {
+#endif
     /*
      * It's possible somebody cleared the SA_SIGINFO flag, which would mean
      * our "info" arg holds an undefined value.
@@ -249,8 +254,13 @@ void debuggerd_init() {
     struct sigaction action;
     memset(&action, 0, sizeof(action));
     sigemptyset(&action.sa_mask);
+#ifdef __x86_64__
+    action.sa_handler = debuggerd_signal_handler;
+    action.sa_flags = SA_RESTART;
+#else
     action.sa_sigaction = debuggerd_signal_handler;
     action.sa_flags = SA_RESTART | SA_SIGINFO;
+#endif
 
     // Use the alternate signal stack if available so we can catch stack overflows.
     action.sa_flags |= SA_ONSTACK;
