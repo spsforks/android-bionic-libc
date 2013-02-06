@@ -34,7 +34,12 @@ extern unsigned __linker_init(void* raw_args);
 __LIBC_HIDDEN__ void _start() {
   void (*start)(void);
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
+  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*)
+#if defined(__x86_64__) && defined(__ILP32__)
+  /* %rbp is pushed in prolog in case of x32, so need frame + 8bytes*/
+  + sizeof(void *)
+#endif
+  );
   start = (void(*)(void))__linker_init(raw_args);
 
   /* linker init returns (%eax) the _entry address in the main image */
@@ -42,8 +47,12 @@ __LIBC_HIDDEN__ void _start() {
 
   __asm__ (
      "mov %0, %%esp\n\t"
+#ifdef __x86_64__
+     "jmp *%%rax\n\t"
+#else
      "jmp *%1\n\t"
-     : : "r"(raw_args), "r"(start) :
+#endif
+     : : "r"(raw_args), "a"(start) :
   );
 
   /* Unreachable */
