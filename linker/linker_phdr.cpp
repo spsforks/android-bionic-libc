@@ -147,8 +147,18 @@ bool ElfReader::ReadElfHeader() {
     return false;
   }
   if (rc != sizeof(header_)) {
+#ifdef __x86_64__
+#ifdef __LP64__
+    DL_ERR("\"%s\" is too small to be an ELF executable. Expected at least %ld bytes, only found %ld bytes.",
+           name_, sizeof(header_), rc);
+#else
+    DL_ERR("\"%s\" is too small to be an ELF executable. Expected at least %d bytes, only found %Ld bytes.",
+           name_, sizeof(header_), rc);
+#endif
+#else
     DL_ERR("\"%s\" is too small to be an ELF executable. Expected at least %d bytes, only found %d bytes.",
            name_, sizeof(header_), rc);
+#endif
     return false;
   }
   return true;
@@ -189,6 +199,8 @@ bool ElfReader::VerifyElfHeader() {
       EM_MIPS
 #elif defined(ANDROID_X86_LINKER)
       EM_386
+#elif defined(ANDROID_X32_LINKER)
+      EM_X86_64
 #endif
   ) {
     DL_ERR("\"%s\" has unexpected e_machine: %d", name_, header_.e_machine);
