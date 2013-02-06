@@ -25,6 +25,7 @@ LOCAL_CFLAGS += -fno-stack-protector \
 
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
+LOCAL_MODULE:= linker
 
 ifeq ($(TARGET_ARCH),arm)
     LOCAL_CFLAGS += -DANDROID_ARM_LINKER
@@ -33,12 +34,15 @@ endif
 ifeq ($(TARGET_ARCH),x86)
     LOCAL_CFLAGS += -DANDROID_X86_LINKER
 endif
+ifeq ($(TARGET_ARCH),x86_64)
+    LOCAL_CFLAGS += -DANDROID_X86_64_LINKER
+    LOCAL_MODULE:= linker64
+endif
 
 ifeq ($(TARGET_ARCH),mips)
     LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
 
-LOCAL_MODULE:= linker
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc
