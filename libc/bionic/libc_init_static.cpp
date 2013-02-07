@@ -45,8 +45,8 @@
 #include "pthread_internal.h"
 #include "atexit.h"
 #include "libc_init_common.h"
-
-#include <bionic_tls.h>
+#include "bionic_tls.h"
+#include "ElfData.h"
 #include <errno.h>
 #include <sys/mman.h>
 #include <sys/auxv.h>
@@ -58,71 +58,53 @@
 // itself at the start of a page.
 #define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
-static void call_array(void(**list)())
-{
-    // First element is -1, list is null-terminated
-    while (*++list) {
-        (*list)();
-    }
+static void call_array(void(**list)()) {
+  // First element is -1, list is null-terminated
+  while (*++list) {
+    (*list)();
+  }
 }
 
 static void apply_gnu_relro() {
-    Elf32_Phdr *phdr_start;
-    unsigned long int phdr_ct;
-    Elf32_Phdr *phdr;
+  Elf32_Phdr* phdr_start = reinterpret_cast<Elf32_Phdr*>(getauxval(AT_PHDR));
+  unsigned long int phdr_ct = getauxval(AT_PHNUM);
 
-    phdr_start = (Elf32_Phdr *) getauxval(AT_PHDR);
-    phdr_ct    = getauxval(AT_PHNUM);
-
-    for (phdr = phdr_start; phdr < (phdr_start + phdr_ct); phdr++) {
-        if (phdr->p_type != PT_GNU_RELRO)
-            continue;
-
-        Elf32_Addr seg_page_start = PAGE_START(phdr->p_vaddr);
-        Elf32_Addr seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz);
-
-        // Check return value here? What do we do if we fail?
-        mprotect((void *) seg_page_start,
-                 seg_page_end - seg_page_start,
-                 PROT_READ);
+  for (Elf32_Phdr* phdr = phdr_start; phdr < (phdr_start + phdr_ct); phdr++) {
+    if (phdr->p_type != PT_GNU_RELRO) {
+      continue;
     }
+
+    Elf32_Addr seg_page_start = PAGE_START(phdr->p_vaddr);
+    Elf32_Addr seg_page_end = PAGE_END(phdr->p_vaddr + phdr->p_memsz);
+
+    // Check return value here? What do we do if we fail?
+    mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, PROT_READ);
+  }
 }
 
-__noreturn void __libc_init(uintptr_t *elfdata,
-                       void (*onexit)(void),
-                       int (*slingshot)(int, char**, char**),
-                       structors_array_t const * const structors)
-{
-    int  argc;
-    char **argv, **envp;
+__noreturn void __libc_init(void* raw_elf_data,
+                            void (*onexit)(void),
+                            int (*slingshot)(int, char**, char**),
+                            structors_array_t const * const structors) {
+  __libc_init_tls(NULL);
 
-    __libc_init_tls(NULL);
+  ElfData elf_data(raw_elf_data);
+  __libc_init_common(elf_data);
 
-    /* Initialize the C runtime environment */
-    __libc_init_common(elfdata);
+  apply_gnu_relro();
 
-    apply_gnu_relro();
+  // Several Linux ABIs don't pass the onexit pointer, and the ones that
+  // do never use it.  Therefore, we ignore it.
 
-    /* Several Linux ABIs don't pass the onexit pointer, and the ones that
-     * do never use it.  Therefore, we ignore it.
-     */
+  call_array(structors->preinit_array);
+  call_array(structors->init_array);
 
-    /* pre-init array. */
-    call_array(structors->preinit_array);
+  // The executable may have its own destructors listed in its .fini_array
+  // so we need to ensure that these are called when the program exits
+  // normally.
+  if (structors->fini_array != NULL) {
+    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+  }
 
-    // call static constructors
-    call_array(structors->init_array);
-
-    argc = (int) *elfdata;
-    argv = (char**)(elfdata + 1);
-    envp = argv + argc + 1;
-
-    /* The executable may have its own destructors listed in its .fini_array
-     * so we need to ensure that these are called when the program exits
-     * normally.
-     */
-    if (structors->fini_array)
-        __cxa_atexit(__libc_fini,structors->fini_array,NULL);
-
-    exit(slingshot(argc, argv, envp));
+  exit(slingshot(elf_data.argc, elf_data.argv, elf_data.envp));
 }

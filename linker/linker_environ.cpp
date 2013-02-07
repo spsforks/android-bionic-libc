@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <private/ElfData.h>
+
 static char** _envp;
 static bool _AT_SECURE_value = true;
 
@@ -40,13 +42,14 @@ bool get_AT_SECURE() {
   return _AT_SECURE_value;
 }
 
-static void __init_AT_SECURE(unsigned* auxv) {
+static void __init_AT_SECURE(Elf32_auxv_t* auxv) {
   // Check auxv for AT_SECURE first to see if program is setuid, setgid,
   // has file caps, or caused a SELinux/AppArmor domain transition.
-  for (unsigned* v = auxv; v[0]; v += 2) {
-    if (v[0] == AT_SECURE) {
+  // We can't use getauxval because we don't know whether that's returning "false" or "unknown".
+  for (Elf32_auxv_t* v = auxv; v->a_type != AT_NULL; ++v) {
+    if (v->a_type == AT_SECURE) {
       // Kernel told us whether to enable secure mode.
-      _AT_SECURE_value = v[1];
+      _AT_SECURE_value = v->a_un.a_val;
       return;
     }
   }
@@ -164,22 +167,12 @@ static void __sanitize_environment_variables() {
   dst[0] = NULL;
 }
 
-unsigned* linker_env_init(unsigned* environment_and_aux_vectors) {
+void linker_env_init(ElfData& elf_data) {
   // Store environment pointer - can't be NULL.
-  _envp = reinterpret_cast<char**>(environment_and_aux_vectors);
+  _envp = elf_data.envp;
 
-  // Skip over all environment variable definitions.
-  // The end of the environment block is marked by two NULL pointers.
-  unsigned* aux_vectors = environment_and_aux_vectors;
-  while (aux_vectors[0] != 0) {
-    ++aux_vectors;
-  }
-  ++aux_vectors;
-
-  __init_AT_SECURE(aux_vectors);
+  __init_AT_SECURE(elf_data.auxv);
   __sanitize_environment_variables();
-
-  return aux_vectors;
 }
 
 const char* linker_env_get(const char* name) {
