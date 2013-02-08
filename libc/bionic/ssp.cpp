@@ -32,15 +32,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <unistd.h>
 
 #include "bionic_ssp.h"
 #include "logd.h"
 
-void* __stack_chk_guard = NULL;
+uintptr_t __stack_chk_guard = NULL;
 
 static void __attribute__((constructor)) __init_stack_check_guard() {
-  __stack_chk_guard = __generate_stack_chk_guard();
+  void* src = reinterpret_cast<void*>(getauxval(AT_RANDOM));
+  memcpy(&__stack_chk_guard, src, sizeof(__stack_chk_guard));
 }
 
 // This is the crash handler.
