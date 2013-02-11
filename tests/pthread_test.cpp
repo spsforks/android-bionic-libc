@@ -28,12 +28,14 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
+#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
   // We can allocate _SC_THREAD_KEYS_MAX keys.
   std::vector<pthread_key_t> keys;
   for (int i = 0; i < sysconf(_SC_THREAD_KEYS_MAX); ++i) {
     pthread_key_t key;
-    ASSERT_EQ(0, pthread_key_create(&key, NULL));
+    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
+    ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << sysconf(_SC_THREAD_KEYS_MAX);
     keys.push_back(key);
   }
 
@@ -46,6 +48,7 @@ TEST(pthread, pthread_key_create_lots) {
     ASSERT_EQ(0, pthread_key_delete(keys[i]));
   }
 }
+#endif
 
 static void* IdFn(void* arg) {
   return arg;
