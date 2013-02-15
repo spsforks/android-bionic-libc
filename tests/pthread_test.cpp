@@ -210,9 +210,20 @@ TEST(pthread, pthread_setname_np__self) {
 
 #if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__other) {
-  pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
-  ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
+  // Emulator kernels don't currently support setting the name of other threads.
+  char* filename = NULL;
+  asprintf(&filename, "/proc/self/task/%d/comm", gettid());
+  struct stat sb;
+  bool has_comm = (stat(filename, &sb) != -1);
+  free(filename);
+
+  if (has_comm) {
+    pthread_t t1;
+    ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+    ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
+  } else {
+    fprintf(stderr, "skipping test: this kernel doesn't have /proc/self/task/tid/comm files!\n");
+  }
 }
 #endif
 

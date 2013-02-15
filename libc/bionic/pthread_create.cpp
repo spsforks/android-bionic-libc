@@ -96,16 +96,14 @@ extern "C" void __thread_entry(int (*func)(void*), void *arg, void **tls) {
 }
 
 __LIBC_ABI_PRIVATE__
-int _init_thread(pthread_internal_t* thread, pid_t kernel_id, bool add_to_thread_list) {
+int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
-
-  thread->kernel_id = kernel_id;
 
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
     struct sched_param param;
     param.sched_priority = thread->attr.sched_priority;
-    if (sched_setscheduler(kernel_id, thread->attr.sched_policy, &param) == -1) {
+    if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
       // For backwards compatibility reasons, we just warn about failures here.
       // error = errno;
       const char* msg = "pthread_create sched_setscheduler call failed: %s\n";
@@ -198,9 +196,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   tls[TLS_SLOT_THREAD_ID] = thread;
 
-  int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM | CLONE_DETACHED;
-  int tid = __pthread_clone((int(*)(void*))start_routine, tls, flags, arg);
+  int flags = CLONE_FILES | CLONE_FS | CLONE_VM | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM;
 
+  int tid = __pthread_clone((int (*)(void*))start_routine, tls, flags, arg);
   if (tid < 0) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_STACK) == 0) {
@@ -210,7 +208,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  int init_errno = _init_thread(thread, tid, true);
+  thread->tid = tid;
+
+  int init_errno = _init_thread(thread, true);
   if (init_errno != 0) {
     // Mark the thread detached and let its __thread_entry run to
     // completion. (It'll just exit immediately, cleaning up its resources.)
@@ -222,7 +222,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // Notify any debuggers about the new thread.
   {
     ScopedPthreadMutexLocker debugger_locker(&gDebuggerNotificationLock);
-    _thread_created_hook(tid);
+    _thread_created_hook(thread->tid);
   }
 
   // Publish the pthread_t and let the thread run.

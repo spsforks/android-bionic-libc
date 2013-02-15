@@ -313,9 +313,9 @@ int pthread_getschedparam(pthread_t thid, int * policy,
     int  old_errno = errno;
 
     pthread_internal_t * thread = (pthread_internal_t *)thid;
-    int err = sched_getparam(thread->kernel_id, param);
+    int err = sched_getparam(thread->tid, param);
     if (!err) {
-        *policy = sched_getscheduler(thread->kernel_id);
+        *policy = sched_getscheduler(thread->tid);
     } else {
         err = errno;
         errno = old_errno;
@@ -330,7 +330,7 @@ int pthread_setschedparam(pthread_t thid, int policy,
     int                  old_errno = errno;
     int                  ret;
 
-    ret = sched_setscheduler(thread->kernel_id, policy, param);
+    ret = sched_setscheduler(thread->tid, policy, param);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -783,7 +783,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -877,7 +877,7 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid != MUTEX_OWNER_FROM_BITS(mvalue) )
         return EPERM;
 
@@ -951,7 +951,7 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -1060,7 +1060,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->kernel_id;
+    tid = __get_thread()->tid;
     if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
         return _recursive_increment(mutex, mvalue, mtype);
 
@@ -1379,7 +1379,7 @@ int pthread_kill(pthread_t tid, int sig)
     int  old_errno = errno;
     pthread_internal_t * thread = (pthread_internal_t *)tid;
 
-    ret = tgkill(getpid(), thread->kernel_id, sig);
+    ret = tgkill(getpid(), thread->tid, sig);
     if (ret < 0) {
         ret = errno;
         errno = old_errno;
@@ -1397,7 +1397,7 @@ int pthread_getcpuclockid(pthread_t  tid, clockid_t  *clockid)
     if (!thread)
         return ESRCH;
 
-    *clockid = CLOCK_THREAD_CPUTIME_ID | (thread->kernel_id << CLOCK_IDTYPE_BITS);
+    *clockid = CLOCK_THREAD_CPUTIME_ID | (thread->tid << CLOCK_IDTYPE_BITS);
     return 0;
 }
 
@@ -1483,7 +1483,7 @@ int  pthread_once( pthread_once_t*  once_control,  void (*init_routine)(void) )
 pid_t __pthread_gettid(pthread_t thid)
 {
     pthread_internal_t* thread = (pthread_internal_t*)thid;
-    return thread->kernel_id;
+    return thread->tid;
 }
 
 int __pthread_settid(pthread_t thid, pid_t tid)
@@ -1492,7 +1492,7 @@ int __pthread_settid(pthread_t thid, pid_t tid)
         return EINVAL;
 
     pthread_internal_t* thread = (pthread_internal_t*)thid;
-    thread->kernel_id = tid;
+    thread->tid = tid;
 
     return 0;
 }
