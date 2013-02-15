@@ -64,7 +64,7 @@ extern pthread_internal_t* __get_thread(void);
 /* Return a global kernel ID for the current thread */
 static int __get_thread_id(void)
 {
-    return __get_thread()->kernel_id;
+    return __get_thread()->tid;
 }
 
 int pthread_rwlockattr_init(pthread_rwlockattr_t *attr)
