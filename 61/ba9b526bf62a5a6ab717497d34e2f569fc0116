@@ -1,0 +1,9 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+1: Chirayu Desai <chirayudesai1@gmail.com>
+Code-Review+1: Thorsten Glaser <tg@mirbsd.org>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 19 Feb 2013 21:58:18 +0000
+Reviewed-on: https://android-review.googlesource.com/51723
+Project: platform/bionic
+Branch: refs/heads/master
