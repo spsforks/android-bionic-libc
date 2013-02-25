@@ -157,7 +157,7 @@ int scandir(const char* path, dirent*** namelist,
 
   DIR* d = opendir(path);
   if (d == NULL) {
-    return -1;
+    goto error_return;
   }
 
   while ((this_de = readdir(d)) != NULL) {
@@ -168,19 +168,21 @@ int scandir(const char* path, dirent*** namelist,
       de_list_size = 4;
       de_list = (dirent**) malloc(sizeof(dirent*) * de_list_size);
       if (de_list == NULL) {
-        return -1;
+        goto error_closedir;
       }
     } else if (n_elem == de_list_size) {
       de_list_size += 10;
       dirent** de_list_new = (dirent**) realloc(de_list, sizeof(dirent*) * de_list_size);
       if (de_list_new == NULL) {
-        free(de_list);
-        return -1;
+        goto error_free_list;
       }
       de_list = de_list_new;
     }
-    de = (dirent*) malloc(sizeof(dirent));
-    *de = *this_de;
+    de = (dirent*) malloc(this_de->d_reclen);
+    if (de == NULL) {
+      goto error_free_list;
+    }
+    memcpy(de, this_de, this_de->d_reclen);
     de_list[n_elem++] = de;
   }
   closedir(d);
@@ -189,6 +191,17 @@ int scandir(const char* path, dirent*** namelist,
   }
   *namelist = de_list;
   return n_elem;
+
+error_free_list:
+  while (n_elem != 0) {
+    --n_elem;
+    free(de_list[n_elem]);
+  }
+  free(de_list);
+error_closedir:
+  closedir(d);
+error_return:
+  return -1;
 }
 
 int alphasort(const struct dirent** a, const struct dirent** b) {
