@@ -266,6 +266,7 @@ libc_common_src_files := \
 
 libc_bionic_src_files := \
     bionic/assert.cpp \
+    bionic/bionic_ashmem.cpp \
     bionic/brk.cpp \
     bionic/debug_format.cpp \
     bionic/dirent.cpp \

@@ -33,6 +33,7 @@
 
 #include "pthread_internal.h"
 
+#include "private/bionic_ashmem.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/debug_format.h"
@@ -124,10 +125,10 @@ int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
 static void* __create_thread_stack(size_t stack_size, size_t guard_size) {
   ScopedPthreadMutexLocker lock(&gPthreadStackCreationLock);
 
-  // Create a new private anonymous map.
-  int prot = PROT_READ | PROT_WRITE;
-  int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* stack = mmap(NULL, stack_size, prot, flags, -1, 0);
+  // Create a new private anonymous map. We can't include the tid in the name because we
+  // don't know the tid until the thread starts, and you can't start a thread without a
+  // stack, and you can't rename an ashmem region.
+  void* stack = __libc_ashmem_mmap("thread stack", stack_size);
   if (stack == MAP_FAILED) {
     return NULL;
   }
