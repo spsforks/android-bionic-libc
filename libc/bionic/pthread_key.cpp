@@ -212,7 +212,7 @@ int pthread_key_delete(pthread_key_t key) {
   // Clear value in all threads.
   pthread_mutex_lock(&gThreadListLock);
   for (pthread_internal_t*  t = gThreadList; t != NULL; t = t->next) {
-    // Avoid zombie threads with a negative 'join_count'. These are really
+    // Avoid zombie threads with a 'join_count' of -1. These are really
     // already dead and don't have a TLS area anymore.
 
     // Similarly, it is possible to have t->tls == NULL for threads that
@@ -221,7 +221,7 @@ int pthread_key_delete(pthread_key_t key) {
     // scheduler. t->tls will also be NULL after it's stack has been
     // unmapped but before the ongoing pthread_join() is finished.
     // so check for this too.
-    if (t->join_count < 0 || !t->tls) {
+    if (t->join_count == -1 || !t->tls) {
       continue;
     }
 

@@ -133,9 +133,8 @@ void pthread_exit(void * retval)
        /* the join_count field is used to store the number of threads waiting for
         * the termination of this thread with pthread_join(),
         *
-        * if it is positive we need to signal the waiters, and we do not touch
-        * the count (it will be decremented by the waiters, the last one will
-        * also remove/free the thread structure
+        * if it is positive we need to signal the waiters and negate the count.
+        * the last waiting thread will also remove/free the thread structure
         *
         * if it is zero, we set the count value to -1 to indicate that the
         * thread is in 'zombie' state: it has stopped executing, and its stack
@@ -145,9 +144,8 @@ void pthread_exit(void * retval)
         thread->return_value = retval;
         if (thread->join_count > 0) {
             pthread_cond_broadcast(&thread->join_cond);
-        } else {
-            thread->join_count = -1;  /* zombie thread */
         }
+        thread->join_count = -thread->join_count - 1;
     }
     pthread_mutex_unlock(&gThreadListLock);
 
