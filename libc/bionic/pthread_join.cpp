@@ -46,22 +46,25 @@ int pthread_join(pthread_t t, void ** ret_val) {
 
   // Wait for thread death when needed.
 
-  // If the 'join_count' is negative, this is a 'zombie' thread that
-  // is already dead and without stack/TLS. Otherwise, we need to increment 'join-count'
-  // and wait to be signaled
-  int count = thread->join_count;
-  if (count >= 0) {
+  // If the 'join_count' is negative, this thread has already exited.  If
+  // 'join_count' is -1 this thread is a 'zombie' thread that
+  // is already dead and without stack/TLS. Otherwise, we need to increment
+  // 'join-count' and wait to be signaled.
+  if (thread->join_count >= 0) {
     thread->join_count += 1;
-    pthread_cond_wait(&thread->join_cond, &gThreadListLock);
-    count = --thread->join_count;
+    while (thread->join_count >= 0) {
+      pthread_cond_wait( &thread->join_cond, &gThreadListLock );
+    }
+    thread->join_count += 1;
   }
+
   if (ret_val) {
     *ret_val = thread->return_value;
   }
 
   // Remove thread from thread list when we're the last joiner or when the
   // thread was already a zombie.
-  if (count <= 0) {
+  if (thread->join_count == -1) {
     _pthread_internal_remove_locked(thread.get());
   }
   return 0;
