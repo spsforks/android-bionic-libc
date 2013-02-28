@@ -102,6 +102,26 @@ LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
 # -----------------------------------------------------------------------------
+# Rebuild the unit tests so they can be run as part of CTS.
+# -----------------------------------------------------------------------------
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-unit-tests-cts
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_MODULE_PATH := $(TARGET_OUT_DATA)/nativetest
+LOCAL_CFLAGS += $(test_c_flags)
+LOCAL_LDFLAGS += $(test_dynamic_ldflags)
+LOCAL_SHARED_LIBRARIES += libdl
+LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
+LOCAL_CTS_TEST_PACKAGE := android.bionic
+# TODO: it seems like a bug that for BUILD_CTS_EXECUTABLE these are different than for BUILD_NATIVE_TEST?
+LOCAL_CFLAGS += -DGTEST_OS_LINUX_ANDROID -DGTEST_HAS_STD_STRING
+LOCAL_C_INCLUDES += bionic bionic/libstdc++/include external/gtest/include external/stlport/stlport
+LOCAL_SHARED_LIBRARIES += libstlport
+LOCAL_STATIC_LIBRARIES += libgtest libgtest_main
+include $(BUILD_CTS_EXECUTABLE)
+
+# -----------------------------------------------------------------------------
 # Test library for the unit tests.
 # -----------------------------------------------------------------------------
 
