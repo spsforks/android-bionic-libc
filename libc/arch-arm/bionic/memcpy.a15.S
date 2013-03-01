@@ -26,12 +26,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if (defined (__OPTIMIZE_SIZE__) || defined (PREFER_SIZE_OVER_SPEED) || \
-     (!(defined (__ARM_ARCH_7A__))))
-
-        /* Do nothing here. See memcpy-stub.c in the same directory. */
-
-#else
     /* Prototype: void *memcpy (void *dst, const void *src, size_t count).  */
 
         /* Use the version of memcpy implemented using LDRD and STRD.
@@ -50,16 +44,12 @@
        destination register must be even and the second consecutive in
        ARM state, but not in Thumb state.  */
 
+#include <machine/cpu-features.h>
+#include <machine/asm.h>
+
         .syntax         unified
 
-#if defined (__thumb__)
-        .thumb
-        .thumb_func
-#endif
-
-        .global memcpy
-        .type   memcpy, %function
-memcpy:
+ENTRY(memcpy)
 
        /* Assumes that n >= 0, and dst, src are valid pointers.
           If there is at least 8 bytes to copy, use LDRD/STRD.
@@ -73,7 +63,9 @@ memcpy:
           To try and improve performance, stack layout changed,
           i.e., not keeping the stack looking like users expect
           (highest numbered register at highest address).  */
+        .save       {r0, lr}
         push {r0, lr}
+        .save       {r4, r5}
         strd r4, r5, [sp, #-8]!
 
        /* TODO: Add debug frame directives.
@@ -227,6 +219,7 @@ return:
           We need additional registers for LDRD and STRD, because in ARM state
           the first destination register must be even and the second
       consecutive.  */
+        .save       {r6, r7}
        strd     r6, r7, [sp, #-8]!
 
        subs     r2, r2, #56
@@ -420,4 +413,4 @@ miscopy_24_8:   miscopy pull=24 push=8 shiftleft=lsl shiftright=lsr
 
 #endif  /* not __ARM_FEATURE_UNALIGNED  */
 
-#endif  /* memcpy */
+END(memcpy)
