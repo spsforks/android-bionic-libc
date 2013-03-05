@@ -1,0 +1,7 @@
+Code-Review+2: Brian Carlstrom <bdc@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 05 Mar 2013 20:13:32 +0000
+Reviewed-on: https://android-review.googlesource.com/52670
+Project: platform/bionic
+Branch: refs/heads/master
