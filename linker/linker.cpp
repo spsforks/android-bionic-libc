@@ -41,7 +41,6 @@
 
 // Private C library headers.
 #include <private/bionic_tls.h>
-#include <private/debug_format.h>
 #include <private/KernelArgumentBlock.h>
 #include <private/logd.h>
 #include <private/ScopedPthreadMutexLocker.h>
@@ -105,7 +104,7 @@ static const char* gLdPreloadNames[LDPRELOAD_MAX + 1];
 
 static soinfo* gLdPreloads[LDPRELOAD_MAX + 1];
 
-static int debug_verbosity;
+__LIBC_HIDDEN__ int gLdDebugVerbosity;
 
 enum RelocationKind {
     kRelocAbsolute = 0,
@@ -158,15 +157,13 @@ DISALLOW_ALLOCATION(void*, calloc, (size_t u1 UNUSED, size_t u2 UNUSED));
 
 static char tmp_err_buf[768];
 static char __linker_dl_err_buf[768];
-#define DL_ERR(fmt, x...) \
-    do { \
-        __libc_format_buffer(__linker_dl_err_buf, sizeof(__linker_dl_err_buf), fmt, ##x); \
-        /* If LD_DEBUG is set high enough, send every dlerror(3) message to the log. */ \
-        DEBUG(fmt "\n", ##x); \
-    } while(0)
 
-const char* linker_get_error() {
+char* linker_get_error_buffer() {
   return &__linker_dl_err_buf[0];
+}
+
+size_t linker_get_error_buffer_size() {
+  return sizeof(__linker_dl_err_buf);
 }
 
 /*
@@ -773,34 +770,6 @@ struct scoped_fd {
     int fd;
 };
 
-struct soinfo_ptr {
-    soinfo_ptr(const char* name) {
-        const char* bname = strrchr(name, '/');
-        ptr = soinfo_alloc(bname ? bname + 1 : name);
-    }
-    ~soinfo_ptr() {
-        soinfo_free(ptr);
-    }
-    soinfo* release() {
-        soinfo* result = ptr;
-        ptr = NULL;
-        return result;
-    }
-    soinfo* ptr;
-};
-
-// TODO: rewrite linker_phdr.h to use a class, then lose this.
-struct phdr_ptr {
-    phdr_ptr() : phdr_mmap(NULL) {}
-    ~phdr_ptr() {
-        if (phdr_mmap != NULL) {
-            phdr_table_unload(phdr_mmap, phdr_size);
-        }
-    }
-    void* phdr_mmap;
-    Elf32_Addr phdr_size;
-};
-
 static soinfo* load_library(const char* name) {
     // Open the file.
     scoped_fd fd;
@@ -825,78 +794,31 @@ static soinfo* load_library(const char* name) {
         DL_ERR("not a valid ELF executable: %s", name);
         return NULL;
     }
-
-    // Read the program header table.
-    const Elf32_Phdr* phdr_table;
-    phdr_ptr phdr_holder;
-    ret = phdr_table_load(fd.fd, header->e_phoff, header->e_phnum,
-                          &phdr_holder.phdr_mmap, &phdr_holder.phdr_size, &phdr_table);
-    if (ret < 0) {
-        DL_ERR("can't load program header table: %s: %s", name, strerror(errno));
-        return NULL;
-    }
-    size_t phdr_count = header->e_phnum;
-
-    // Get the load extents.
-    Elf32_Addr ext_sz = phdr_table_get_load_size(phdr_table, phdr_count);
-    TRACE("[ '%s' wants sz=0x%08x ]\n", name, ext_sz);
-    if (ext_sz == 0) {
-        DL_ERR("no loadable segments in file: %s", name);
-        return NULL;
-    }
-
-    // We no longer support pre-linked libraries.
     if (is_prelinked(fd.fd, name)) {
+        // We no longer support pre-linked libraries.
         return NULL;
     }
 
-    // Reserve address space for all loadable segments.
-    void* load_start = NULL;
-    Elf32_Addr load_size = 0;
-    Elf32_Addr load_bias = 0;
-    ret = phdr_table_reserve_memory(phdr_table,
-                                    phdr_count,
-                                    &load_start,
-                                    &load_size,
-                                    &load_bias);
-    if (ret < 0) {
-        DL_ERR("can't reserve %d bytes in address space for \"%s\": %s",
-               ext_sz, name, strerror(errno));
+    // Read the program header table and load the segments.
+    PhdrTable phdr_table;
+    if (!phdr_table.Load(name, fd.fd, *header)) {
         return NULL;
     }
 
-    TRACE("[ allocated memory for %s @ %p (0x%08x) ]\n", name, load_start, load_size);
-
-    /* Map all the segments in our address space with default protections */
-    ret = phdr_table_load_segments(phdr_table,
-                                   phdr_count,
-                                   load_bias,
-                                   fd.fd);
-    if (ret < 0) {
-        DL_ERR("can't map loadable segments for \"%s\": %s",
-               name, strerror(errno));
+    const char* bname = strrchr(name, '/');
+    soinfo* si = soinfo_alloc(bname ? bname + 1 : name);
+    if (si == NULL) {
         return NULL;
     }
-
-    soinfo_ptr si(name);
-    if (si.ptr == NULL) {
-        return NULL;
-    }
-
-    si.ptr->base = (Elf32_Addr) load_start;
-    si.ptr->size = load_size;
-    si.ptr->load_bias = load_bias;
-    si.ptr->flags = 0;
-    si.ptr->entry = 0;
-    si.ptr->dynamic = NULL;
-    si.ptr->phnum = phdr_count;
-    si.ptr->phdr = phdr_table_get_loaded_phdr(phdr_table, phdr_count, load_bias);
-    if (si.ptr->phdr == NULL) {
-        DL_ERR("can't find loaded PHDR for \"%s\"", name);
-        return NULL;
-    }
-
-    return si.release();
+    si->base = phdr_table.load_start();
+    si->size = phdr_table.load_size();
+    si->load_bias = phdr_table.load_bias();
+    si->flags = 0;
+    si->entry = 0;
+    si->dynamic = NULL;
+    si->phnum = phdr_table.phdr_count();
+    si->phdr = phdr_table.loaded_phdr();
+    return si;
 }
 
 static soinfo *find_loaded_library(const char *name)
@@ -1686,7 +1608,7 @@ static bool soinfo_link_image(soinfo* si) {
         for (size_t i = 0; gLdPreloadNames[i] != NULL; i++) {
             soinfo* lsi = find_library(gLdPreloadNames[i]);
             if (lsi == NULL) {
-                strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
+                strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        gLdPreloadNames[i], si->name, tmp_err_buf);
                 return false;
@@ -1704,7 +1626,7 @@ static bool soinfo_link_image(soinfo* si) {
             DEBUG("%s needs %s\n", si->name, library_name);
             soinfo* lsi = find_library(library_name);
             if (lsi == NULL) {
-                strlcpy(tmp_err_buf, linker_get_error(), sizeof(tmp_err_buf));
+                strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
                        library_name, si->name, tmp_err_buf);
                 return false;
@@ -1804,7 +1726,7 @@ static unsigned __linker_init_post_relocation(KernelArgumentBlock& args, unsigne
     // Get a few environment variables.
     const char* LD_DEBUG = linker_env_get("LD_DEBUG");
     if (LD_DEBUG != NULL) {
-      debug_verbosity = atoi(LD_DEBUG);
+      gLdDebugVerbosity = atoi(LD_DEBUG);
     }
 
     // Normally, these are cleaned by linker_env_init, but the test
@@ -1890,9 +1812,7 @@ static unsigned __linker_init_post_relocation(KernelArgumentBlock& args, unsigne
     somain = si;
 
     if (!soinfo_link_image(si)) {
-        const char* msg = "CANNOT LINK EXECUTABLE\n";
-        write(2, __linker_dl_err_buf, strlen(__linker_dl_err_buf));
-        write(2, msg, strlen(msg));
+        __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
         exit(EXIT_FAILURE);
     }
 
