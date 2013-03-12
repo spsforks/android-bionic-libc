@@ -788,13 +788,13 @@ static soinfo* find_library_internal(const char* name) {
 static soinfo* find_library(const char* name) {
   soinfo* si = find_library_internal(name);
   if (si != NULL) {
-    si->refcount++;
+    si->ref_count++;
   }
   return si;
 }
 
 static int soinfo_unload(soinfo* si) {
-  if (si->refcount == 1) {
+  if (si->ref_count == 1) {
     TRACE("unloading '%s'\n", si->name);
     si->CallDestructors();
 
@@ -815,10 +815,10 @@ static int soinfo_unload(soinfo* si) {
     munmap(reinterpret_cast<void*>(si->base), si->size);
     notify_gdb_of_unload(si);
     soinfo_free(si);
-    si->refcount = 0;
+    si->ref_count = 0;
   } else {
-    si->refcount--;
-    TRACE("not unloading '%s', decrementing refcount to %d\n", si->name, si->refcount);
+    si->ref_count--;
+    TRACE("not unloading '%s', decrementing ref_count to %d\n", si->name, si->ref_count);
   }
   return 0;
 }
@@ -1176,7 +1176,7 @@ static int mips_relocate_got(soinfo* si, soinfo* needed[]) {
  *
  *   DT_FINI_ARRAY must be parsed in reverse order.
  */
-void soinfo::CallArray(const char* array_name UNUSED, unsigned* array, int count, bool reverse) {
+void soinfo::CallArray(const char* array_name UNUSED, unsigned* array, size_t count, bool reverse) {
   if (array == NULL) {
     return;
   }
@@ -1189,7 +1189,7 @@ void soinfo::CallArray(const char* array_name UNUSED, unsigned* array, int count
 
   TRACE("[ Calling %s @ %p [%d] for '%s' ]\n", array_name, array, count, name);
 
-  for (int n = count; n > 0; n--) {
+  for (size_t n = count; n > 0; n--) {
     TRACE("[ Looking at %s[%d] *%p == 0x%08x ]\n", array_name, n, array, *array);
     void (*func)() = (void (*)()) *array;
     array += step;
@@ -1706,7 +1706,7 @@ static Elf32_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf32
     si->base = 0;
     si->size = phdr_table_get_load_size(si->phdr, si->phnum);
     si->load_bias = 0;
-    for (int i = 0; i < si->phnum; ++i) {
+    for (size_t i = 0; i < si->phnum; ++i) {
       if (si->phdr[i].p_type == PT_PHDR) {
         si->load_bias = reinterpret_cast<Elf32_Addr>(si->phdr) - si->phdr[i].p_vaddr;
         si->base = reinterpret_cast<Elf32_Addr>(si->phdr) - si->phdr[i].p_offset;
@@ -1714,7 +1714,7 @@ static Elf32_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf32
       }
     }
     si->dynamic = NULL;
-    si->refcount = 1;
+    si->ref_count = 1;
 
     // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
     parse_LD_LIBRARY_PATH(ldpath_env);

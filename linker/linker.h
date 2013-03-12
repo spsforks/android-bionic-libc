@@ -89,17 +89,17 @@ struct r_debug {
 struct soinfo {
   char name[SOINFO_NAME_LEN];
   const Elf32_Phdr* phdr;
-  int phnum;
+  size_t phnum;
   Elf32_Addr entry;
   Elf32_Addr base;
   unsigned size;
 
-  int unused;  // DO NOT USE, maintained for compatibility.
+  uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 
   Elf32_Dyn* dynamic;
 
-  unsigned unused2; // DO NOT USE, maintained for compatibility
-  unsigned unused3; // DO NOT USE, maintained for compatibility
+  uint32_t unused2; // DO NOT USE, maintained for compatibility
+  uint32_t unused3; // DO NOT USE, maintained for compatibility
 
   soinfo* next;
   unsigned flags;
@@ -107,26 +107,26 @@ struct soinfo {
   const char* strtab;
   Elf32_Sym* symtab;
 
-  unsigned nbucket;
-  unsigned nchain;
+  size_t nbucket;
+  size_t nchain;
   unsigned* bucket;
   unsigned* chain;
 
   unsigned* plt_got;
 
   Elf32_Rel* plt_rel;
-  unsigned plt_rel_count;
+  size_t plt_rel_count;
 
   Elf32_Rel* rel;
-  unsigned rel_count;
+  size_t rel_count;
 
   unsigned* preinit_array;
-  unsigned preinit_array_count;
+  size_t preinit_array_count;
 
   unsigned* init_array;
-  unsigned init_array_count;
+  size_t init_array_count;
   unsigned* fini_array;
-  unsigned fini_array_count;
+  size_t fini_array_count;
 
   void (*init_func)();
   void (*fini_func)();
@@ -134,14 +134,14 @@ struct soinfo {
 #if defined(ANDROID_ARM_LINKER)
   // ARM EABI section used for stack unwinding.
   unsigned* ARM_exidx;
-  unsigned ARM_exidx_count;
+  size_t ARM_exidx_count;
 #elif defined(ANDROID_MIPS_LINKER)
   unsigned mips_symtabno;
   unsigned mips_local_gotno;
   unsigned mips_gotsym;
 #endif
 
-  unsigned refcount;
+  size_t ref_count;
   struct link_map linkmap;
 
   bool constructors_called;
@@ -158,7 +158,7 @@ struct soinfo {
   void CallPreInitConstructors();
 
  private:
-  void CallArray(const char* array_name, unsigned* array, int count, bool reverse);
+  void CallArray(const char* array_name, unsigned* array, size_t count, bool reverse);
   void CallFunction(const char* function_name, void (*function)());
 };
 
