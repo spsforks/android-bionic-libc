@@ -26,12 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _DEBUG_FORMAT_H
-#define _DEBUG_FORMAT_H
+#ifndef _LIBC_LOGGING_H
+#define _LIBC_LOGGING_H
 
 #include <sys/cdefs.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
+
+#define BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW 80100
+#define BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW 80105
+#define BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW 80110
+#define BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW 80115
+#define BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW 80120
+#define BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW 80125
+#define BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW 80130
+
+#define BIONIC_EVENT_STRCAT_INTEGER_OVERFLOW 80200
+#define BIONIC_EVENT_STRNCAT_INTEGER_OVERFLOW 80205
+
+#define BIONIC_EVENT_RESOLVER_OLD_RESPONSE 80300
+#define BIONIC_EVENT_RESOLVER_WRONG_SERVER 80305
+#define BIONIC_EVENT_RESOLVER_WRONG_QUERY 80310
+
+enum {
+  ANDROID_LOG_UNKNOWN = 0,
+  ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
+
+  ANDROID_LOG_VERBOSE,
+  ANDROID_LOG_DEBUG,
+  ANDROID_LOG_INFO,
+  ANDROID_LOG_WARN,
+  ANDROID_LOG_ERROR,
+  ANDROID_LOG_FATAL,
+
+  ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
+};
 
 __BEGIN_DECLS
 
@@ -50,6 +80,11 @@ __LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char*
 __LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
                                               va_list ap);
 
+__LIBC_HIDDEN__ void __libc_android_log_event_int(int32_t tag, int value);
+__LIBC_HIDDEN__ void __libc_android_log_event_uid(int32_t tag);
+
+__noreturn void __fortify_chk_fail(const char* msg, uint32_t event_tag);
+
 __END_DECLS
 
-#endif /* _DEBUG_FORMAT_H */
+#endif
