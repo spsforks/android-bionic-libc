@@ -35,7 +35,7 @@
 extern void* __executable_start;
 
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data), void* data) {
-    Elf32_Ehdr* ehdr = (Elf32_Ehdr*) &__executable_start;
+    Elf_Ehdr* ehdr = (Elf_Ehdr*) &__executable_start;
 
     // TODO: again, copied from linker.c. Find a better home for this later.
     if (ehdr->e_ident[EI_MAG0] != ELFMAG0) return -1;

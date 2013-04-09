@@ -41,6 +41,15 @@ ifeq ($(TARGET_ARCH),x32)
     LOCAL_MODULE:= linkerx32
 endif
 
+ifeq ($(TARGET_ARCH),x86_64)
+    LOCAL_CFLAGS += -DANDROID_X86_64_LINKER
+# TODO: gold flag is temporary here until we switch to gold for multilib compiler
+#       or until bfd ld fix is backported:
+#       http://sourceware.org/bugzilla/show_bug.cgi?id=14525
+    LOCAL_LDFLAGS += -m64 -fuse-ld=gold
+    LOCAL_MODULE:= linker64
+endif
+
 ifeq ($(TARGET_ARCH),mips)
     LOCAL_CFLAGS += -DANDROID_MIPS_LINKER
 endif
