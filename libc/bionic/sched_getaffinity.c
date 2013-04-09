@@ -27,6 +27,9 @@
  */
 #define _GNU_SOURCE 1
 #include <sched.h>
+#include <string.h>
+
+int __sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set);
 
 int  sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)
 {
