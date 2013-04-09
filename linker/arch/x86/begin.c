@@ -29,7 +29,7 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
-extern unsigned __linker_init(void* raw_args);
+extern uintptr_t __linker_init(void* raw_args);
 
 __LIBC_HIDDEN__ void _start() {
   void (*start)(void);
@@ -46,7 +46,11 @@ __LIBC_HIDDEN__ void _start() {
   /* entry point expects sp to point to raw_args */
 
   __asm__ (
+#ifdef __LP64__
+     "mov %0, %%rsp\n\t"
+#else
      "mov %0, %%esp\n\t"
+#endif
 #ifdef __x86_64__
      "jmp *%%rax\n\t"
 #else

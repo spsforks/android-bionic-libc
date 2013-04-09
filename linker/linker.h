@@ -101,15 +101,15 @@ typedef void (*linker_function_t)();
 struct soinfo {
  public:
   char name[SOINFO_NAME_LEN];
-  const Elf32_Phdr* phdr;
+  const Elf_Phdr* phdr;
   size_t phnum;
-  Elf32_Addr entry;
-  Elf32_Addr base;
+  Elf_Addr entry;
+  Elf_Addr base;
   unsigned size;
 
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 
-  Elf32_Dyn* dynamic;
+  Elf_Dyn* dynamic;
 
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
@@ -118,7 +118,7 @@ struct soinfo {
   unsigned flags;
 
   const char* strtab;
-  Elf32_Sym* symtab;
+  Elf_Sym* symtab;
 
   size_t nbucket;
   size_t nchain;
@@ -127,17 +127,17 @@ struct soinfo {
 
   unsigned* plt_got;
 
-  Elf32_Rel* plt_rel;
+  Elf_Rel* plt_rel;
   size_t plt_rel_count;
 
-  Elf32_Rel* rel;
+  Elf_Rel* rel;
   size_t rel_count;
 
-#if defined(ANDROID_X32_LINKER)
-  Elf32_Rela *plt_rela;
+#if defined(ANDROID_X32_LINKER) || defined(ANDROID_X86_64_LINKER)
+  Elf_Rela *plt_rela;
   size_t plt_rela_count;
 
-  Elf32_Rela *rela;
+  Elf_Rela *rela;
   size_t rela_count;
 #endif /* ANDROID_X32_LINKER */
 
@@ -169,7 +169,7 @@ struct soinfo {
 
   // When you read a virtual address from the ELF file, add this
   // value to get the corresponding address in the process' address space.
-  Elf32_Addr load_bias;
+  Elf_Addr load_bias;
 
   bool has_text_relocations;
   bool has_DT_SYMBOLIC;
@@ -197,11 +197,11 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags);
 int do_dlclose(soinfo* si);
 
-Elf32_Sym* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+Elf_Sym* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
-Elf32_Sym* dladdr_find_symbol(soinfo* si, const void* addr);
-Elf32_Sym* dlsym_handle_lookup(soinfo* si, const char* name);
+Elf_Sym* dladdr_find_symbol(soinfo* si, const void* addr);
+Elf_Sym* dlsym_handle_lookup(soinfo* si, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* gAbortMessage;
