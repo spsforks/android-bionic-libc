@@ -83,7 +83,7 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   soinfo* found = NULL;
-  Elf32_Sym* sym = NULL;
+  Elf_Sym* sym = NULL;
   if (handle == RTLD_DEFAULT) {
     sym = dlsym_linear_lookup(symbol, &found, NULL);
   } else if (handle == RTLD_NEXT) {
@@ -100,10 +100,10 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   if (sym != NULL) {
-    unsigned bind = ELF32_ST_BIND(sym->st_info);
+    unsigned bind = ELF_ST_BIND(sym->st_info);
 
     if (bind == STB_GLOBAL && sym->st_shndx != 0) {
-      unsigned ret = sym->st_value + found->load_bias;
+      uintptr_t ret = sym->st_value + found->load_bias;
       return (void*) ret;
     }
 
@@ -131,7 +131,7 @@ int dladdr(const void* addr, Dl_info* info) {
   info->dli_fbase = (void*) si->base;
 
   // Determine if any symbol in the library contains the specified address.
-  Elf32_Sym *sym = dladdr_find_symbol(si, addr);
+  Elf_Sym *sym = dladdr_find_symbol(si, addr);
   if (sym != NULL) {
     info->dli_sname = si->strtab + sym->st_name;
     info->dli_saddr = (void*)(si->load_bias + sym->st_value);
@@ -151,7 +151,7 @@ int dlclose(void* handle) {
 #define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0dl_iterate_phdr\0dl_unwind_find_exidx\0"
 #elif defined(ANDROID_X86_LINKER) || defined(ANDROID_X32_LINKER) || \
-      defined(ANDROID_MIPS_LINKER)
+      defined(ANDROID_X86_64_LINKER) || defined(ANDROID_MIPS_LINKER)
 //   0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667
 //   0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890
 #define ANDROID_LIBDL_STRTAB \
@@ -163,27 +163,41 @@ int dlclose(void* handle) {
 // name_offset: starting index of the name in libdl_info.strtab
 #define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
-      reinterpret_cast<Elf32_Addr>(reinterpret_cast<void*>(value)), \
+      reinterpret_cast<Elf_Addr>(reinterpret_cast<void*>(value)), \
       /* st_size */ 0, \
       (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
       shndx }
 
-static Elf32_Sym gLibDlSymtab[] = {
+#define ELF64_SYM_INITIALIZER(name_offset, value, shndx) \
+    { name_offset, \
+      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
+      /* st_other */ 0, \
+      shndx, \
+      reinterpret_cast<Elf_Addr>(reinterpret_cast<void*>(value)), \
+      /* st_size */ 0 }
+
+#ifdef __LP64__
+# define ELF_SYM_INITIALIZER ELF64_SYM_INITIALIZER
+#else
+# define ELF_SYM_INITIALIZER ELF32_SYM_INITIALIZER
+#endif
+
+static Elf_Sym gLibDlSymtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
   // This is actually the STH_UNDEF entry. Technically, it's
   // supposed to have st_name == 0, but instead, it points to an index
   // in the strtab with a \0 to make iterating through the symtab easier.
-  ELF32_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
-  ELF32_SYM_INITIALIZER( 0, &dlopen, 1),
-  ELF32_SYM_INITIALIZER( 7, &dlclose, 1),
-  ELF32_SYM_INITIALIZER(15, &dlsym, 1),
-  ELF32_SYM_INITIALIZER(21, &dlerror, 1),
-  ELF32_SYM_INITIALIZER(29, &dladdr, 1),
-  ELF32_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
-  ELF32_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
+  ELF_SYM_INITIALIZER(sizeof(ANDROID_LIBDL_STRTAB) - 1, NULL, 0),
+  ELF_SYM_INITIALIZER( 0, &dlopen, 1),
+  ELF_SYM_INITIALIZER( 7, &dlclose, 1),
+  ELF_SYM_INITIALIZER(15, &dlsym, 1),
+  ELF_SYM_INITIALIZER(21, &dlerror, 1),
+  ELF_SYM_INITIALIZER(29, &dladdr, 1),
+  ELF_SYM_INITIALIZER(36, &android_update_LD_LIBRARY_PATH, 1),
+  ELF_SYM_INITIALIZER(67, &dl_iterate_phdr, 1),
 #if defined(ANDROID_ARM_LINKER)
-  ELF32_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
+  ELF_SYM_INITIALIZER(83, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -232,7 +246,7 @@ soinfo libdl_info = {
     chain: gLibDlChains,
 
     plt_got: 0, plt_rel: 0, plt_rel_count: 0, rel: 0, rel_count: 0,
-#if defined(ANDROID_X32_LINKER)
+#if defined(ANDROID_X32_LINKER) || defined(ANDROID_X86_64_LINKER)
     plt_rela: 0, plt_rela_count: 0, rela: 0, rela_count: 0,
 #endif
     preinit_array: 0, preinit_array_count: 0, init_array: 0, init_array_count: 0,
