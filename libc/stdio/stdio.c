@@ -40,6 +40,7 @@
  * Small standard I/O/seek/close functions.
  * These maintain the `known seek offset' for seek optimisation.
  */
+__LIBC_HIDDEN__
 int
 __sread(void *cookie, char *buf, int n)
 {
@@ -55,6 +56,7 @@ __sread(void *cookie, char *buf, int n)
 	return (ret);
 }
 
+__LIBC_HIDDEN__
 int
 __swrite(void *cookie, const char *buf, int n)
 {
@@ -66,6 +68,7 @@ __swrite(void *cookie, const char *buf, int n)
 	return (write(fp->_file, buf, n));
 }
 
+__LIBC_HIDDEN__
 fpos_t
 __sseek(void *cookie, fpos_t offset, int whence)
 {
@@ -82,6 +85,7 @@ __sseek(void *cookie, fpos_t offset, int whence)
 	return (ret);
 }
 
+__LIBC_HIDDEN__
 int
 __sclose(void *cookie)
 {

@@ -42,6 +42,7 @@
  * to be passed to an open() syscall through *optr.
  * Return 0 on error.
  */
+__LIBC_HIDDEN__
 int
 __sflags(const char *mode, int *optr)
 {

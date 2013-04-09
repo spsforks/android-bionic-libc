@@ -166,6 +166,7 @@ vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	return (ret);
 }
 
+__LIBC_HIDDEN__
 int
 __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 {

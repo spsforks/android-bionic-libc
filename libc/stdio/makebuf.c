@@ -45,6 +45,7 @@
  * As a side effect, we set __SOPT or __SNPT (en/dis-able fseek
  * optimisation) right after the fstat() that finds the buffer size.
  */
+__LIBC_HIDDEN__
 void
 __smakebuf(FILE *fp)
 {
@@ -77,6 +78,7 @@ __smakebuf(FILE *fp)
 /*
  * Internal routine to determine `proper' buffering for a file.
  */
+__LIBC_HIDDEN__
 int
 __swhatbuf(FILE *fp, size_t *bufsize, int *couldbetty)
 {

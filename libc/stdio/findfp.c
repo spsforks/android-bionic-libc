@@ -41,7 +41,7 @@
 #include "glue.h"
 #include "thread_private.h"
 
-int	__sdidinit;
+__LIBC_HIDDEN__ int __sdidinit;
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
@@ -103,6 +103,7 @@ moreglue(int n)
 /*
  * Find a free FILE for fopen et al.
  */
+__LIBC_HIDDEN__
 FILE *
 __sfp(void)
 {
@@ -178,6 +179,7 @@ f_prealloc(void)
  *
  * The name `_cleanup' is, alas, fairly well known outside stdio.
  */
+__LIBC_HIDDEN__
 void
 _cleanup(void)
 {
@@ -188,6 +190,7 @@ _cleanup(void)
 /*
  * __sinit() is called whenever stdio's internal variables must be set up.
  */
+__LIBC_HIDDEN__
 void
 __sinit(void)
 {

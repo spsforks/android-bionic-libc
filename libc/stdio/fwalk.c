@@ -36,6 +36,7 @@
 #include "local.h"
 #include "glue.h"
 
+__LIBC_HIDDEN__
 int
 _fwalk(int (*function)(FILE *))
 {

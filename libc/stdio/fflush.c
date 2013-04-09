@@ -53,6 +53,7 @@ fflush(FILE *fp)
 	return (r);
 }
 
+__LIBC_HIDDEN__
 int
 __sflush(FILE *fp)
 {
@@ -85,6 +86,7 @@ __sflush(FILE *fp)
 	return (0);
 }
 
+__LIBC_HIDDEN__
 int
 __sflush_locked(FILE *fp)
 {

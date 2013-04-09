@@ -40,6 +40,7 @@
  * because either _flags does not include __SWR, or _buf is NULL.
  * _wsetup returns 0 if OK to write, nonzero otherwise.
  */
+__LIBC_HIDDEN__
 int
 __swsetup(FILE *fp)
 {

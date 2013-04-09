@@ -48,6 +48,7 @@ lflush(FILE *fp)
  * Refill a stdio buffer.
  * Return EOF on eof or error, 0 otherwise.
  */
+__LIBC_HIDDEN__
 int
 __srefill(FILE *fp)
 {
