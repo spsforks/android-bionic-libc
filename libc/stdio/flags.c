@@ -45,8 +45,9 @@
 int
 __sflags(const char *mode, int *optr)
 {
-	int ret, m, o;
+	int ret, m, o, e;
 
+	e = strchr(mode, 'e') ? O_CLOEXEC : 0;
 	switch (*mode++) {
 
 	case 'r':	/* open for reading */
@@ -77,6 +78,6 @@ __sflags(const char *mode, int *optr)
 		ret = __SRW;
 		m = O_RDWR;
 	}
-	*optr = m | o;
+	*optr = m | o | e;
 	return (ret);
 }
