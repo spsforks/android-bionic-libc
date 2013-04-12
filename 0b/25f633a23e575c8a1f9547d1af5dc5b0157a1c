@@ -1,0 +1,7 @@
+Code-Review+2: Nick Kralevich <nnk@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Fri, 12 Apr 2013 19:12:29 +0000
+Reviewed-on: https://android-review.googlesource.com/55645
+Project: platform/bionic
+Branch: refs/heads/master
