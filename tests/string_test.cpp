@@ -242,6 +242,14 @@ TEST(string, strchr) {
   }
 }
 
+TEST(string, strchrnul) {
+  StringTestState state(SMALL);
+  const char *foo = "hello world";
+  ASSERT_TRUE(strchrnul(foo, 'w') == (foo + 6));
+  ASSERT_TRUE(strchrnul(foo, 'l') == (foo + 2));
+  ASSERT_TRUE(strchrnul(foo, 'q') == (foo + 11));
+}
+
 TEST(string, strcmp) {
   StringTestState state(SMALL);
   for (size_t i = 1; i < state.n; i++) {

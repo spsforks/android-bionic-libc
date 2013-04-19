@@ -31,8 +31,8 @@
 #include <string.h>
 #include "libc_logging.h"
 
-char *
-__strchr_chk(const char *p, int ch, size_t s_len)
+static char *
+strchr_impl(const char *p, int ch, size_t s_len, int return_null)
 {
 	for (;; ++p, s_len--) {
 		if (s_len == 0)
@@ -40,12 +40,22 @@ __strchr_chk(const char *p, int ch, size_t s_len)
 		if (*p == (char) ch)
 			return((char *)p);
 		if (!*p)
-			return((char *)NULL);
+			return (char *) (return_null ? NULL : p);
 	}
 	/* NOTREACHED */
 }
 
 char *
 strchr(const char *p, int ch) {
-    return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+    return strchr_impl(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE, 1);
+}
+
+char *
+__strchr_chk(const char *p, int ch, size_t s_len) {
+    return strchr_impl(p, ch, s_len, 1);
+}
+
+char *
+strchrnul(const char *p, int ch) {
+    return strchr_impl(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE, 0);
 }
