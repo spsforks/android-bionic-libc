@@ -242,6 +242,15 @@ TEST(string, strchr) {
   }
 }
 
+TEST(string, strchrnul) {
+  StringTestState state(SMALL);
+  const char* foo = "hello world";
+  ASSERT_TRUE(strchrnul(foo, 'w') == (foo + 6));
+  ASSERT_TRUE(strchrnul(foo, 'l') == (foo + 2));
+  ASSERT_TRUE(strchrnul(foo, 'q') == (foo + 11));
+  ASSERT_TRUE(strchrnul(foo, 0)   == (foo + strlen(foo)));
+}
+
 TEST(string, strcmp) {
   StringTestState state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
@@ -329,6 +338,13 @@ TEST(string_DeathTest, strchr_fortified) {
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(string_DeathTest, strchrnul_fortified) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  char buf[10];
+  memcpy(buf, "0123456789", sizeof(buf));
+  ASSERT_EXIT(printf("%s", strchrnul(buf, 'a')), testing::KilledBySignal(SIGSEGV), "");
 }
 
 TEST(string_DeathTest, strrchr_fortified) {

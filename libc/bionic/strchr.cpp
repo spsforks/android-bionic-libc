@@ -1,4 +1,3 @@
-/*	$OpenBSD: index.c,v 1.5 2005/08/08 08:05:37 espie Exp $ */
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -31,21 +30,31 @@
 #include <string.h>
 #include "libc_logging.h"
 
-char *
-__strchr_chk(const char *p, int ch, size_t s_len)
+extern "C" char* __strchrnul_chk(const char *p, int ch, size_t s_len)
 {
-	for (;; ++p, s_len--) {
-		if (s_len == 0)
-			__fortify_chk_fail("strchr read beyond buffer", 0);
-		if (*p == (char) ch)
-			return((char *)p);
-		if (!*p)
-			return((char *)NULL);
-	}
-	/* NOTREACHED */
+  for (;; ++p, s_len--) {
+    if (s_len == 0) {
+      __fortify_chk_fail("read beyond buffer", 0);
+    }
+    if ((*p == (char) ch) || (*p == '\0')) {
+      return const_cast<char*>(p);
+    }
+  }
+  /* NOTREACHED */
 }
 
-char *
-strchr(const char *p, int ch) {
-    return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+extern "C" char* __strchr_chk(const char *p, int ch, size_t s_len) {
+  char* result = __strchrnul_chk(p, ch, s_len);
+  if ((*result != '\0') || (ch == 0)) {
+    return result;
+  }
+  return NULL;
+}
+
+extern "C" char* strchr(const char *p, int ch) {
+  return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+}
+
+extern "C" char* strchrnul(const char *p, int ch) {
+  return __strchrnul_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }

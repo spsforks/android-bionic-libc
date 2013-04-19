@@ -84,6 +84,10 @@ extern char*  strsignal(int  sig);
 extern int    strcoll(const char *, const char *) __purefunc;
 extern size_t strxfrm(char *, const char *, size_t);
 
+#ifdef _GNU_SOURCE
+extern char*  strchrnul(const char *, int) __purefunc;
+#endif
+
 #if defined(__BIONIC_FORTIFY)
 
 extern void __memcpy_dest_size_error()
@@ -257,6 +261,29 @@ char* strrchr(const char *s, int c) {
     return __strrchr_chk(s, c, bos);
 }
 
+#if defined(_GNU_SOURCE)
+
+extern char* __strchrnul_chk(const char*, int, size_t);
+extern char* __strchrnul_real(const char*, int)
+    __asm__(__USER_LABEL_PREFIX__ "strchrnul");
+
+__BIONIC_FORTIFY_INLINE
+char* strchrnul(const char* s, int c) {
+  size_t bos = __builtin_object_size(s, 0);
+
+  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    return __strchrnul_real(s, c);
+  }
+
+  size_t slen = __builtin_strlen(s);
+  if (__builtin_constant_p(slen) && (slen < bos)) {
+    return __strchrnul_real(s, c);
+  }
+
+  return __strchrnul_chk(s, c, bos);
+}
+
+#endif /* defined(_GNU_SOURCE) */
 
 #endif /* defined(__BIONIC_FORTIFY) */
 
