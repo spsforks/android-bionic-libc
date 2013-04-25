@@ -19,6 +19,8 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/syscall.S \
     arch-arm/bionic/tgkill.S \
     arch-arm/bionic/tkill.S \
+    arch-arm/bionic/byte_swap_2.S \
+    arch-arm/bionic/byte_swap_4.S \
 
 # These are used by the static and dynamic versions of the libc
 # respectively.

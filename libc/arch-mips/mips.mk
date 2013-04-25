@@ -18,6 +18,9 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-mips/string/memset.S \
     arch-mips/string/memcpy.S \
     arch-mips/string/mips_strlen.c \
+    arch-mips/bionic/byte_swap_2.S \
+    arch-mips/bionic/byte_swap_4.S \
+    arch-mips/bionic/byte_swap_8.S
 
 _LIBC_ARCH_STATIC_SRC_FILES := \
     bionic/dl_iterate_phdr_static.c \
