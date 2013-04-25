@@ -31,8 +31,8 @@
 /* endian.h rather than sys/endian.h so we get the machine-specific file. */
 #include <endian.h>
 
-#define  bswap_16(x)   swap16(x)
-#define  bswap_32(x)   swap32(x)
-#define  bswap_64(x)   swap64(x)
+#define  bswap_16(x)   __bswap16(x)
+#define  bswap_32(x)   __bswap32(x)
+#define  bswap_64(x)   __bswap64(x)
 
 #endif /* _BYTESWAP_H_ */

@@ -48,6 +48,11 @@
 #define	_MIPS_ISA_MIPS32 32	/* MIPS32 */
 #endif
 
+/* Android-changed: Define this for compatibility with NetBSD. */
+#if (__mips==32)
+#define __mips_o32
+#endif
+
 #if !defined(ABICALLS) && !defined(_NO_ABICALLS)
 #define	ABICALLS	.abicalls
 #endif

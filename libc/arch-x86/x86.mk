@@ -10,6 +10,8 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-x86/bionic/sigsetjmp.S \
     arch-x86/bionic/syscall.S \
     arch-x86/bionic/vfork.S \
+    arch-x86/bionic/byte_swap_2.S \
+    arch-x86/bionic/byte_swap_4.S \
     arch-x86/string/bcopy_wrapper.S \
     arch-x86/string/bzero_wrapper.S \
     arch-x86/string/ffs.S \
