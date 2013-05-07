@@ -95,9 +95,32 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
 }
 
+#ifdef __arm__
+/*
+ * The instruction pointer is pointing at the instruction after the bl(x), and
+ * the _Unwind_Backtrace routine already masks the Thumb mode indicator (LSB
+ * in PC). So we need to do a quick check here to find out if the previous
+ * instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise 4 from PC.
+ */
+static void adjust_pc(stack_crawl_state_t *state) {
+    for (unsigned int i = 1; i < state->frame_count; i++) {
+        short *ptr = reinterpret_cast<short *>(state->frames[i]);
+        // Thumb BLX(2)
+        if ((*(ptr-1) & 0xff80) == (short) 0x4780) {
+            state->frames[i] -= 2;
+        } else {
+            state->frames[i] -= 4;
+        }
+    }
+}
+#endif
+
 __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
   stack_crawl_state_t state(frames, max_depth);
   _Unwind_Backtrace(trace_function, &state);
+#ifdef __arm__
+  adjust_pc(&state);
+#endif
   return state.frame_count;
 }
 
