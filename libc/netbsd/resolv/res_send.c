@@ -948,7 +948,7 @@ done:
 	fcntl(sock, F_SETFL, origflags);
 	if (DBG) {
 		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d connect_with_timeout returning %s\n", sock, res);
+			"  %d connect_with_timeout returning %d\n", sock, res);
 	}
 	return res;
 }
