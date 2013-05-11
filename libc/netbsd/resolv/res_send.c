@@ -1012,7 +1012,7 @@ retry:
 	}
 	if (DBG) {
 		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d retrying_select returning %d for %d\n",sock, n);
+			"  %d retrying_select returning %d\n",sock, n);
 	}
 
 	return n;
