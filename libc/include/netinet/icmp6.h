@@ -521,6 +521,8 @@ struct icmp6_filter {
 	u_int32_t icmp6_filt[8];
 };
 
+#define ICMP6_FILTER    1
+
 #define	ICMP6_FILTER_SETPASSALL(filterp) \
 	(void)memset(filterp, 0xff, sizeof(struct icmp6_filter))
 #define	ICMP6_FILTER_SETBLOCKALL(filterp) \
