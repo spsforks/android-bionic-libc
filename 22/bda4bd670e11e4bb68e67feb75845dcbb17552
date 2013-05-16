@@ -1,0 +1,10 @@
+Code-Review+2: Dima Zavin <dima@android.com>
+Verified+1: Dima Zavin <dima@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Erik Gilling <konkers@android.com>
+Submitted-at: Thu, 16 May 2013 19:57:28 +0000
+Reviewed-on: https://android-review.googlesource.com/58840
+Project: platform/bionic
+Branch: refs/heads/master
