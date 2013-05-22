@@ -1,7 +1,6 @@
-/*	$OpenBSD: endian.h,v 1.17 2006/01/06 18:53:05 millert Exp $	*/
-
 /*-
- * Copyright (c) 1997 Niklas Hallqvist.  All rights reserved.
+ * Copyright (c) 2002 Thomas Moestl <tmm@FreeBSD.org>
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -12,241 +11,201 @@
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
- * Generic definitions for little- and big-endian systems.  Other endianesses
- * has to be dealt with in the specific machine/endian.h file for that port.
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
  *
- * This file is meant to be included from a little- or big-endian port's
- * machine/endian.h after setting _BYTE_ORDER to either 1234 for little endian
- * or 4321 for big..
+ * $FreeBSD$
  */
 
 #ifndef _SYS_ENDIAN_H_
 #define _SYS_ENDIAN_H_
 
 #include <sys/cdefs.h>
+#include <sys/_types.h>
 #include <machine/endian.h>
-#include <machine/_types.h>
 
-#define _LITTLE_ENDIAN	1234
-#define _BIG_ENDIAN	4321
-#define _PDP_ENDIAN	3412
-
-#if __BSD_VISIBLE
-#define LITTLE_ENDIAN	_LITTLE_ENDIAN
-#define BIG_ENDIAN	_BIG_ENDIAN
-#define PDP_ENDIAN	_PDP_ENDIAN
-#define BYTE_ORDER	_BYTE_ORDER
+#ifndef _UINT8_T_DECLARED
+typedef	__uint8_t	uint8_t;
+#define	_UINT8_T_DECLARED
 #endif
-
-#ifdef __GNUC__
-
-#define __swap16gen(x) __statement({					\
-	__uint16_t __swap16gen_x = (x);					\
-									\
-	(__uint16_t)((__swap16gen_x & 0xff) << 8 |			\
-	    (__swap16gen_x & 0xff00) >> 8);				\
-})
-
-#define __swap32gen(x) __statement({					\
-	__uint32_t __swap32gen_x = (x);					\
-									\
-	(__uint32_t)((__swap32gen_x & 0xff) << 24 |			\
-	    (__swap32gen_x & 0xff00) << 8 |				\
-	    (__swap32gen_x & 0xff0000) >> 8 |				\
-	    (__swap32gen_x & 0xff000000) >> 24);			\
-})
-
-#define __swap64gen(x) __statement({					\
-	__uint64_t __swap64gen_x = (x);					\
-									\
-	(__uint64_t)((__swap64gen_x & 0xff) << 56 |			\
-	    (__swap64gen_x & 0xff00ULL) << 40 |				\
-	    (__swap64gen_x & 0xff0000ULL) << 24 |			\
-	    (__swap64gen_x & 0xff000000ULL) << 8 |			\
-	    (__swap64gen_x & 0xff00000000ULL) >> 8 |			\
-	    (__swap64gen_x & 0xff0000000000ULL) >> 24 |			\
-	    (__swap64gen_x & 0xff000000000000ULL) >> 40 |		\
-	    (__swap64gen_x & 0xff00000000000000ULL) >> 56);		\
-})
-
-#else /* __GNUC__ */
-
-/* Note that these macros evaluate their arguments several times.  */
-#define __swap16gen(x)							\
-    (__uint16_t)(((__uint16_t)(x) & 0xff) << 8 | ((__uint16_t)(x) & 0xff00) >> 8)
-
-#define __swap32gen(x)							\
-    (__uint32_t)(((__uint32_t)(x) & 0xff) << 24 |			\
-    ((__uint32_t)(x) & 0xff00) << 8 | ((__uint32_t)(x) & 0xff0000) >> 8 |\
-    ((__uint32_t)(x) & 0xff000000) >> 24)
-
-#define __swap64gen(x)							\
-	(__uint64_t)((((__uint64_t)(x) & 0xff) << 56) |			\
-	    ((__uint64_t)(x) & 0xff00ULL) << 40 |			\
-	    ((__uint64_t)(x) & 0xff0000ULL) << 24 |			\
-	    ((__uint64_t)(x) & 0xff000000ULL) << 8 |			\
-	    ((__uint64_t)(x) & 0xff00000000ULL) >> 8 |			\
-	    ((__uint64_t)(x) & 0xff0000000000ULL) >> 24 |		\
-	    ((__uint64_t)(x) & 0xff000000000000ULL) >> 40 |		\
-	    ((__uint64_t)(x) & 0xff00000000000000ULL) >> 56)
-
-#endif /* __GNUC__ */
+ 
+#ifndef _UINT16_T_DECLARED
+typedef	__uint16_t	uint16_t;
+#define	_UINT16_T_DECLARED
+#endif
+ 
+#ifndef _UINT32_T_DECLARED
+typedef	__uint32_t	uint32_t;
+#define	_UINT32_T_DECLARED
+#endif
+ 
+#ifndef _UINT64_T_DECLARED
+typedef	__uint64_t	uint64_t;
+#define	_UINT64_T_DECLARED
+#endif
+ 
+/* Android-changed: comment out bswap* due to a conflict in
+   ./compile/mclinker/include/mcld/ADT/SizeTraits.h. And so
+  we have to use everywhere here __bswap* instead of bswap*. */
+/*  * General byte order swapping functions. */
+/*  *\/ */
+/* #define	bswap16(x)	__bswap16(x) */
+/* #define	bswap32(x)	__bswap32(x) */
+/* #define	bswap64(x)	__bswap64(x) */
 
 /*
- * Define MD_SWAP if you provide swap{16,32}md functions/macros that are
- * optimized for your architecture,  These will be used for swap{16,32}
- * unless the argument is a constant and we are using GCC, where we can
- * take advantage of the CSE phase much better by using the generic version.
+ * Host to big endian, host to little endian, big endian to host, and little
+ * endian to host byte order functions as detailed in byteorder(9).
  */
-#ifdef MD_SWAP
-#if __GNUC__
-
-#define __swap16(x) __statement({					\
-	__uint16_t __swap16_x = (x);					\
-									\
-	__builtin_constant_p(x) ? __swap16gen(__swap16_x) :		\
-	    __swap16md(__swap16_x);					\
-})
-
-#define __swap32(x) __statement({					\
-	__uint32_t __swap32_x = (x);					\
-									\
-	__builtin_constant_p(x) ? __swap32gen(__swap32_x) :		\
-	    __swap32md(__swap32_x);					\
-})
-
-#define __swap64(x) __statement({					\
-	__uint64_t __swap64_x = (x);					\
-									\
-	__builtin_constant_p(x) ? __swap64gen(__swap64_x) :		\
-	    __swap64md(__swap64_x);					\
-})
-
-#endif /* __GNUC__  */
-
-#else /* MD_SWAP */
-#define __swap16 __swap16gen
-#define __swap32 __swap32gen
-#define __swap64 __swap64gen
-#endif /* MD_SWAP */
-
-#define __swap16_multi(v, n) do {						\
-	__size_t __swap16_multi_n = (n);				\
-	__uint16_t *__swap16_multi_v = (v);				\
-									\
-	while (__swap16_multi_n) {					\
-		*__swap16_multi_v = swap16(*__swap16_multi_v);		\
-		__swap16_multi_v++;					\
-		__swap16_multi_n--;					\
-	}								\
-} while (0)
-
-#if __BSD_VISIBLE
-#define swap16 __swap16
-#define swap32 __swap32
-#define swap64 __swap64
-#define swap16_multi __swap16_multi
-#endif /* __BSD_VISIBLE */
-
 #if _BYTE_ORDER == _LITTLE_ENDIAN
+#define	htobe16(x)	__bswap16((x))
+#define	htobe32(x)	__bswap32((x))
+#define	htobe64(x)	__bswap64((x))
+#define	htole16(x)	((uint16_t)(x))
+#define	htole32(x)	((uint32_t)(x))
+#define	htole64(x)	((uint64_t)(x))
 
-/* Can be overridden by machine/endian.h before inclusion of this file.  */
-#ifndef _QUAD_HIGHWORD
-#define _QUAD_HIGHWORD 1
-#endif
-#ifndef _QUAD_LOWWORD
-#define _QUAD_LOWWORD 0
-#endif
+#define	be16toh(x)	__bswap16((x))
+#define	be32toh(x)	__bswap32((x))
+#define	be64toh(x)	__bswap64((x))
+#define	le16toh(x)	((uint16_t)(x))
+#define	le32toh(x)	((uint32_t)(x))
+#define	le64toh(x)	((uint64_t)(x))
+#else /* _BYTE_ORDER != _LITTLE_ENDIAN */
+#define	htobe16(x)	((uint16_t)(x))
+#define	htobe32(x)	((uint32_t)(x))
+#define	htobe64(x)	((uint64_t)(x))
+#define	htole16(x)	__bswap16((x))
+#define	htole32(x)	__bswap32((x))
+#define	htole64(x)	__bswap64((x))
 
-#if __BSD_VISIBLE
-#define htobe16 __swap16
-#define htobe32 __swap32
-#define htobe64 __swap64
-#define betoh16 __swap16
-#define betoh32 __swap32
-#define betoh64 __swap64
+#define	be16toh(x)	((uint16_t)(x))
+#define	be32toh(x)	((uint32_t)(x))
+#define	be64toh(x)	((uint64_t)(x))
+#define	le16toh(x)	__bswap16((x))
+#define	le32toh(x)	__bswap32((x))
+#define	le64toh(x)	__bswap64((x))
+#endif /* _BYTE_ORDER == _LITTLE_ENDIAN */
 
-#define htole16(x) (x)
-#define htole32(x) (x)
-#define htole64(x) (x)
-#define letoh16(x) (x)
-#define letoh32(x) (x)
-#define letoh64(x) (x)
-#endif /* __BSD_VISIBLE */
+/* Alignment-agnostic encode/decode bytestream to/from little/big endian. */
 
-#define htons(x) __swap16(x)
-#define htonl(x) __swap32(x)
-#define ntohs(x) __swap16(x)
-#define ntohl(x) __swap32(x)
+static __inline uint16_t
+be16dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-/* Bionic additions */
-#define ntohq(x) __swap64(x)
-#define htonq(x) __swap64(x)
+	return ((p[0] << 8) | p[1]);
+}
 
-#define __LITTLE_ENDIAN_BITFIELD
+static __inline uint32_t
+be32dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-#endif /* _BYTE_ORDER */
+	return (((unsigned)p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3]);
+}
 
-#if _BYTE_ORDER == _BIG_ENDIAN
+static __inline uint64_t
+be64dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-/* Can be overridden by machine/endian.h before inclusion of this file.  */
-#ifndef _QUAD_HIGHWORD
-#define _QUAD_HIGHWORD 0
-#endif
-#ifndef _QUAD_LOWWORD
-#define _QUAD_LOWWORD 1
-#endif
+	return (((uint64_t)be32dec(p) << 32) | be32dec(p + 4));
+}
 
-#if __BSD_VISIBLE
-#define htole16 __swap16
-#define htole32 __swap32
-#define htole64 __swap64
-#define letoh16 __swap16
-#define letoh32 __swap32
-#define letoh64 __swap64
+static __inline uint16_t
+le16dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-#define htobe16(x) (x)
-#define htobe32(x) (x)
-#define htobe64(x) (x)
-#define betoh16(x) (x)
-#define betoh32(x) (x)
-#define betoh64(x) (x)
-#endif /* __BSD_VISIBLE */
+	return ((p[1] << 8) | p[0]);
+}
 
-#define htons(x) (x)
-#define htonl(x) (x)
-#define ntohs(x) (x)
-#define ntohl(x) (x)
+static __inline uint32_t
+le32dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-/* Bionic additions */
-#define ntohq(x) (x)
-#define htonq(x) (x)
+	return (((unsigned)p[3] << 24) | (p[2] << 16) | (p[1] << 8) | p[0]);
+}
 
-#define __BIG_ENDIAN_BITFIELD
+static __inline uint64_t
+le64dec(const void *pp)
+{
+	uint8_t const *p = (uint8_t const *)pp;
 
-#endif /* _BYTE_ORDER */
+	return (((uint64_t)le32dec(p + 4) << 32) | le32dec(p));
+}
 
-#if __BSD_VISIBLE
-#define	NTOHL(x) (x) = ntohl((u_int32_t)(x))
-#define	NTOHS(x) (x) = ntohs((u_int16_t)(x))
-#define	HTONL(x) (x) = htonl((u_int32_t)(x))
-#define	HTONS(x) (x) = htons((u_int16_t)(x))
-#endif
+static __inline void
+be16enc(void *pp, uint16_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
 
+	p[0] = (u >> 8) & 0xff;
+	p[1] = u & 0xff;
+}
 
+static __inline void
+be32enc(void *pp, uint32_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
+
+	p[0] = (u >> 24) & 0xff;
+	p[1] = (u >> 16) & 0xff;
+	p[2] = (u >> 8) & 0xff;
+	p[3] = u & 0xff;
+}
+
+static __inline void
+be64enc(void *pp, uint64_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
+
+	be32enc(p, (uint32_t)(u >> 32));
+	be32enc(p + 4, (uint32_t)(u & 0xffffffffU));
+}
+
+static __inline void
+le16enc(void *pp, uint16_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
+
+	p[0] = u & 0xff;
+	p[1] = (u >> 8) & 0xff;
+}
+
+static __inline void
+le32enc(void *pp, uint32_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
+
+	p[0] = u & 0xff;
+	p[1] = (u >> 8) & 0xff;
+	p[2] = (u >> 16) & 0xff;
+	p[3] = (u >> 24) & 0xff;
+}
+
+static __inline void
+le64enc(void *pp, uint64_t u)
+{
+	uint8_t *p = (uint8_t *)pp;
+
+	le32enc(p, (uint32_t)(u & 0xffffffffU));
+	le32enc(p + 4, (uint32_t)(u >> 32));
+}
+
+/* Android-changed: No __BYTE_ORDER, __LITTLE_ENDIAN, __BIG_ENDIAN
+   in FreeBSD endian.h */
 #define  __BYTE_ORDER       _BYTE_ORDER
 #ifndef  __LITTLE_ENDIAN
 #define  __LITTLE_ENDIAN    _LITTLE_ENDIAN
@@ -255,20 +214,20 @@
 #define  __BIG_ENDIAN       _BIG_ENDIAN
 #endif
 
+/* Android-changed: No letoh* in FreeBSD endian.h */
+#define letoh16(x)              le16toh(x)
+#define letoh32(x)              le32toh(x)
 
-#ifdef __BSD_VISIBLE
-/*
- * glibc-compatible beXXtoh/leXXtoh synonyms for htobeXX/htoleXX.
- * The BSDs export both sets of names, bionic historically only
- * exported the ones above (or on the rhs here), and glibc only
- * exports these names (on the lhs).
- */
-#define be16toh(x) htobe16(x)
-#define be32toh(x) htobe32(x)
-#define be64toh(x) htobe64(x)
-#define le16toh(x) htole16(x)
-#define le32toh(x) htole32(x)
-#define le64toh(x) htole64(x)
-#endif
+/* Android-changed: We can define those functions in arpa/inet.h
+   directly.*/
+#define ntohl(x)                __ntohl(x)
+#define ntohs(x)                __ntohs(x)
+#define htonl(x)                __htonl(x)
+#define htons(x)                __htons(x)
 
-#endif /* _SYS_ENDIAN_H_ */
+/* Android-changed: Needed for backward-compatibility. */
+#define swap16                  __bswap16
+#define swap32                  __bswap32
+#define swap64                  __bswap64
+
+#endif	/* _SYS_ENDIAN_H_ */
