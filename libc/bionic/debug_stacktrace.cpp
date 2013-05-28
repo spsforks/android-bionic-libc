@@ -43,11 +43,18 @@
 #define PAD_PTR "08" PRIxPTR
 #endif
 
+#include <pthread.h>
+
 /* depends how the system includes define this */
 #ifdef HAVE_UNWIND_CONTEXT_STRUCT
 typedef struct _Unwind_Context __unwind_context;
 #else
 typedef _Unwind_Context __unwind_context;
+#endif
+
+/*workaround if _Unwind_Backtrace can not work well */
+#ifdef __i386__
+#define UNWIND_WORKAROUND
 #endif
 
 static mapinfo_t* gMapInfo = NULL;
@@ -134,7 +141,45 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
 
 __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
   stack_crawl_state_t state(frames, max_depth);
+
+#ifdef UNWIND_WORKAROUND
+    int s;
+    pthread_attr_t thread_attr;
+    unsigned sb, st;
+    size_t stacksize;
+    pthread_t thread = pthread_self();
+    unsigned *_ebp, *base_ebp;
+    unsigned *caller;
+
+    pthread_attr_init(&thread_attr);
+    s = pthread_getattr_np(thread, &thread_attr);
+    if (s) goto out;
+    s = pthread_attr_getstack(&thread_attr, (void **)(&sb), &stacksize);
+    if (s) goto out;
+    st = sb + stacksize;
+
+    asm ("movl %%ebp, %0"
+            : "=r" (_ebp)
+    );
+
+    if (_ebp >= (unsigned *)(st - 4) || _ebp < (unsigned *)sb || _ebp == (unsigned *)*_ebp)
+            goto out;
+    base_ebp = _ebp;
+    caller = (unsigned *) *(_ebp + 1);
+
+    while (state.frame_count < max_depth) {
+        state.frames[state.frame_count++] = (intptr_t) caller;
+        _ebp = (unsigned *) *_ebp;
+        if (_ebp >= (unsigned *)(st - 4) || _ebp < base_ebp || _ebp == (unsigned *)*_ebp) break;
+        caller = (unsigned *) *(_ebp + 1);
+    }
+
+out:
+    pthread_attr_destroy(&thread_attr);
+#else
   _Unwind_Backtrace(trace_function, &state);
+#endif // UNWIND_WORKAROUND
+
   return state.frame_count;
 }
 
