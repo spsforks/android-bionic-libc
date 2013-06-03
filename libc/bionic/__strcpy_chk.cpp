@@ -41,13 +41,21 @@
  * This strcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char *__strcpy_chk (char *dest, const char *src, size_t dest_len) {
-    // TODO: optimize so we don't scan src twice.
-    size_t src_len = strlen(src) + 1;
-    if (__predict_false(src_len > dest_len)) {
-        __fortify_chk_fail("strcpy buffer overflow",
-                             BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
+extern "C" char* __strcpy_chk(
+        char* __restrict dest,
+        const char* __restrict src,
+        size_t dest_len)
+{
+    char* save = dest;
+    while (__predict_true(dest_len != 0)) {
+        *dest = *src;
+        if (*src == '\0') {
+            return save;
+        }
+        dest++; src++; dest_len--;
     }
 
-    return strcpy(dest, src);
+    __fortify_chk_fail("strcpy buffer overflow",
+                       BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
+    return save;  // never reached
 }
