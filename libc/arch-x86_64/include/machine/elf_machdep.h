@@ -15,7 +15,11 @@
 #define	ELF32_MACHDEP_ID	EM_386
 #define	ELF64_MACHDEP_ID	EM_X86_64
 
-#define ARCH_ELFSIZE		64	/* MD native binary size */
+#ifdef __LP64__
+# define ARCH_ELFSIZE		64	/* MD native binary size */
+#else
+# define ARCH_ELFSIZE		32	/* MD native binary size */
+#endif
 
 /* x86-64 relocations */
 
