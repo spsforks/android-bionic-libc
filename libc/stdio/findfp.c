@@ -169,18 +169,20 @@ f_prealloc(void)
 	}
 }
 #endif
+#include "libc_logging.h"
 
 /*
- * exit() and abort() call _cleanup() through the callback registered
- * with __atexit_register_cleanup(), set whenever we open or buffer a
- * file. This chicanery is done so that programs that do not use stdio
- * need not link it all in.
+ * exit() calls _cleanup() through *__cleanup, set whenever we
+ * open or buffer a file.  This chicanery is done so that programs
+ * that do not use stdio need not link it all in.
  *
  * The name `_cleanup' is, alas, fairly well known outside stdio.
  */
 void
 _cleanup(void)
 {
+  __libc_format_log(ANDROID_LOG_ERROR, "_cleanup", "in _cleanup");
+
 	/* (void) _fwalk(fclose); */
 	(void) _fwalk(__sflush);		/* `cheating' */
 }
@@ -201,7 +203,7 @@ __sinit(void)
 		_FILEEXT_SETUP(usual+i, usualext+i);
 	}
 	/* make sure we clean up on exit */
-	__atexit_register_cleanup(_cleanup); /* conservative */
+	__cleanup = _cleanup; /* conservative */
 	__sdidinit = 1;
 out:
 	_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
