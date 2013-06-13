@@ -547,7 +547,7 @@ static void* timer_thread_start(void* arg) {
       struct timespec diff = expires;
       timespec_sub(&diff, &now);
 
-      int ret = __pthread_cond_timedwait_relative(&timer->cond, &timer->mutex, &diff);
+      int ret = pthread_cond_timedwait_relative_np(&timer->cond, &timer->mutex, &diff);
 
       // If we didn't time out, it means that a state change
       // occurred, so loop to take care of it.

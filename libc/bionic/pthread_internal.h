@@ -133,10 +133,6 @@ extern int  __pthread_cond_timedwait(pthread_cond_t*,
                                      const struct timespec*,
                                      clockid_t);
 
-extern int  __pthread_cond_timedwait_relative(pthread_cond_t*,
-                                              pthread_mutex_t*,
-                                              const struct timespec*);
-
 /* needed by fork.c */
 extern void __timer_table_start_stop(int  stop);
 extern void __bionic_atfork_run_prepare();
