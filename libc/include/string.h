@@ -93,7 +93,7 @@ extern void __memcpy_src_size_error()
     __error("memcpy called with size bigger than source");
 
 __BIONIC_FORTIFY_INLINE
-void *memcpy (void* __restrict dest, const void* __restrict src, size_t copy_amount) {
+void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     char *d = (char *) dest;
     const char *s = (const char *) src;
     size_t s_len = __builtin_object_size(s, 0);
@@ -111,12 +111,12 @@ void *memcpy (void* __restrict dest, const void* __restrict src, size_t copy_amo
 }
 
 __BIONIC_FORTIFY_INLINE
-void *memmove (void *dest, const void *src, size_t len) {
+void* memmove(void *dest, const void *src, size_t len) {
     return __builtin___memmove_chk(dest, src, len, __builtin_object_size (dest, 0));
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strcpy(char* __restrict dest, const char* __restrict src) {
+char* strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
 
@@ -124,7 +124,7 @@ extern void __strncpy_error()
     __error("strncpy called with size bigger than buffer");
 
 __BIONIC_FORTIFY_INLINE
-char *strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
+char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
     size_t bos = __bos(dest);
     if (__builtin_constant_p(n) && (n > bos)) {
         __strncpy_error();
@@ -133,7 +133,7 @@ char *strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strcat(char* __restrict dest, const char* __restrict src) {
+char* strcat(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcat_chk(dest, src, __bos(dest));
 }
 
@@ -143,10 +143,11 @@ char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-void *memset (void *s, int c, size_t n) {
+void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __builtin_object_size (s, 0));
 }
 
+#if !defined(__clang__)
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcpy");
 extern void __strlcpy_error()
@@ -176,7 +177,9 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
 
     return __strlcpy_chk(dest, src, size, bos);
 }
+#endif /* !defined(__clang__) */
 
+#if !defined(__clang__)
 extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t)
     __asm__(__USER_LABEL_PREFIX__ "strlcat");
 extern void __strlcat_error()
@@ -207,11 +210,13 @@ size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
 
     return __strlcat_chk(dest, src, size, bos);
 }
+#endif /* !defined(__clang__) */
 
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
     size_t bos = __bos(s);
 
+#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlen_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strlen(s);
@@ -221,6 +226,7 @@ size_t strlen(const char *s) {
     if (__builtin_constant_p(slen)) {
         return slen;
     }
+#endif /* !defined(__clang__) */
 
     return __strlen_chk(s, bos);
 }
@@ -231,6 +237,7 @@ __BIONIC_FORTIFY_INLINE
 char* strchr(const char *s, int c) {
     size_t bos = __bos(s);
 
+#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strchr(s, c);
@@ -240,6 +247,7 @@ char* strchr(const char *s, int c) {
     if (__builtin_constant_p(slen) && (slen < bos)) {
         return __builtin_strchr(s, c);
     }
+#endif /* !defined(__clang__) */
 
     return __strchr_chk(s, c, bos);
 }
@@ -250,6 +258,7 @@ __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {
     size_t bos = __bos(s);
 
+#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strrchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strrchr(s, c);
@@ -259,6 +268,7 @@ char* strrchr(const char *s, int c) {
     if (__builtin_constant_p(slen) && (slen < bos)) {
         return __builtin_strrchr(s, c);
     }
+#endif /* !defined(__clang__) */
 
     return __strrchr_chk(s, c, bos);
 }
