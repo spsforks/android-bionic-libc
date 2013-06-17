@@ -47,32 +47,6 @@ def find_program_name():
 def find_program_dir():
     return os.path.dirname(sys.argv[0])
 
-def find_file_from_upwards(from_path,target_file):
-    """find a file in the current directory or its parents. if 'from_path' is None,
-       seach from the current program's directory"""
-    path = from_path
-    if path == None:
-        path = os.path.realpath(sys.argv[0])
-        path = os.path.dirname(path)
-        D("this script seems to be located in: %s" % path)
-
-    while 1:
-        D("probing "+path)
-        if path == "":
-            file = target_file
-        else:
-            file = path + "/" + target_file
-
-        if os.path.isfile(file):
-            D("found %s in %s" % (target_file, path))
-            return file
-
-        if path == "":
-            return None
-
-        path = os.path.dirname(path)
-
-
 class StringOutput:
     def __init__(self):
         self.line = ""

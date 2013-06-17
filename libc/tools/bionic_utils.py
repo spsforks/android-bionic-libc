@@ -53,66 +53,9 @@ def find_dir_of(path):
 #  other stuff
 #
 #
-def find_file_from_upwards(from_path,target_file):
-    """find a file in the current directory or its parents. if 'from_path' is None,
-       seach from the current program's directory"""
-    path = from_path
-    if path == None:
-        path = find_dir_of(sys.argv[0])
-        D("this script seems to be located in: %s" % path)
-
-    while 1:
-        if path == "":
-            path = "."
-
-        file = path + "/" + target_file
-        D("probing "+file)
-
-        if os.path.isfile(file):
-            D("found %s in %s" % (target_file, path))
-            return file
-
-        if path == ".":
-            break
-
-        path = os.path.dirname(path)
-
-    path = ""
-    while 1:
-        path = "../" + path
-        file = path + target_file
-        D("probing "+file)
-
-        if os.path.isfile(file):
-            D("found %s in %s" % (target_file, path))
-            return file
-
-
-    return None
-
-def find_bionic_root():
-    '''find the root of the Bionic source tree. we check for the SYSCALLS.TXT file
-       from the location of the current program's directory.'''
-
-    # note that we can't use find_file_from_upwards() since we can't use os.path.abspath
-    # that's because in some cases the p4 client is in a symlinked directory, and this
-    # function will return the real path instead, which later creates problems when
-    # p4 commands are issued
-    #
-    file = find_file_from_upwards(None, "SYSCALLS.TXT")
-    if file:
-        return os.path.dirname(file)
-    else:
-        return None
-
 def find_original_kernel_headers():
     """try to find the directory containing the original kernel headers"""
-    bionic_root = find_bionic_root()
-    if not bionic_root:
-        D("Could not find Bionic root !!")
-        return None
-
-    path = os.path.normpath(bionic_root + "/../../external/kernel-headers/original")
+    path = os.path.normpath(os.environ["ANDROID_BUILD_TOP"] + "/external/kernel-headers/original")
     if not os.path.isdir(path):
         D("Could not find %s" % (path))
         return None
