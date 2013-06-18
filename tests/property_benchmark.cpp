@@ -87,12 +87,12 @@ static void BM_property_get(int iters, int nprops)
     LocalPropertyTestState pa(nprops);
     char value[PROP_VALUE_MAX];
 
+    srandom(iters * nprops);
+
     StartBenchmarkTiming();
 
     for (int i = 0; i < iters; i++) {
-        for (int j = 0; j < nprops; j++) {
-            __system_property_get(pa.names[j], value);
-        }
+        __system_property_get(pa.names[random() % nprops], value);
     }
     StopBenchmarkTiming();
 }
@@ -106,10 +106,10 @@ static void BM_property_find(int iters, int nprops)
 
     StartBenchmarkTiming();
 
+    srandom(iters * nprops);
+
     for (int i = 0; i < iters; i++) {
-        for (int j = 0; j < nprops; j++) {
-            __system_property_find(pa.names[j]);
-        }
+        __system_property_find(pa.names[random() % nprops]);
     }
     StopBenchmarkTiming();
 }
