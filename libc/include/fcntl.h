@@ -52,9 +52,9 @@ extern int  creat(const char*  path, mode_t  mode);
 #if defined(__BIONIC_FORTIFY)
 
 extern void __creat_error()
-    __attribute__((__error__ ("called with O_CREAT, but missing mode")));
+    __error("called with O_CREAT, but missing mode");
 extern void __too_many_args_error()
-    __attribute__((__error__ ("too many arguments")));
+    __error("too many arguments");
 extern int __open_real(const char *pathname, int flags, ...)
     __asm__(__USER_LABEL_PREFIX__ "open");
 extern int __open_2(const char *, int);

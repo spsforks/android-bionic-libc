@@ -518,6 +518,12 @@
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
+#if !defined(__clang__)
+#define __error(s) __attribute__((__error__(s)))
+#else
+#define __error(s)
+#endif
+
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0 && !defined(__clang__)
 #define __BIONIC_FORTIFY 1
 #if _FORTIFY_SOURCE == 2
