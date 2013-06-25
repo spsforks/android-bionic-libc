@@ -1,0 +1,8 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Ken Sumrall <ksumrall@android.com>
+Verified+1: Rom Lemarchand <romlem@google.com>
+Submitted-by: Rom Lemarchand <romlem@google.com>
+Submitted-at: Tue, 25 Jun 2013 22:25:30 +0000
+Reviewed-on: https://android-review.googlesource.com/61403
+Project: platform/bionic
+Branch: refs/heads/master
