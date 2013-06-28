@@ -58,7 +58,7 @@ extern const short	*_tolower_tab_;
 extern const short	*_toupper_tab_;
 
 /* extern __inline is a GNU C extension */
-#ifdef __GNUC__
+#if defined(__GNUC__) && ! defined(__clang__)
 #  if defined(__GNUC_STDC_INLINE__)
 #define	__CTYPE_INLINE	extern __inline __attribute__((__gnu_inline__))
 #  else
@@ -68,31 +68,40 @@ extern const short	*_toupper_tab_;
 #define	__CTYPE_INLINE	static __inline
 #endif
 
+/* Clang has different behavior on 'extern inline', so we use 'static inline' above.
+   However, that will conflict declaration below, so I add static on those. */
+#if defined(__clang__) && defined(NDEBUG)
+#define __CTYPE_DECLARE static
+#else
+#define __CTYPE_DECLARE extern
+#endif
+
+
 #if defined(__GNUC__) || defined(_ANSI_LIBRARY) || defined(lint)
-int	isalnum(int);
-int	isalpha(int);
-int	iscntrl(int);
-int	isdigit(int);
-int	isgraph(int);
-int	islower(int);
-int	isprint(int);
-int	ispunct(int);
-int	isspace(int);
-int	isupper(int);
-int	isxdigit(int);
-int	tolower(int);
-int	toupper(int);
+__CTYPE_DECLARE int	isalnum(int);
+__CTYPE_DECLARE int	isalpha(int);
+__CTYPE_DECLARE int	iscntrl(int);
+__CTYPE_DECLARE int	isdigit(int);
+__CTYPE_DECLARE int	isgraph(int);
+__CTYPE_DECLARE int	islower(int);
+__CTYPE_DECLARE int	isprint(int);
+__CTYPE_DECLARE int	ispunct(int);
+__CTYPE_DECLARE int	isspace(int);
+__CTYPE_DECLARE int	isupper(int);
+__CTYPE_DECLARE int	isxdigit(int);
+__CTYPE_DECLARE int	tolower(int);
+__CTYPE_DECLARE int	toupper(int);
 
 #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __POSIX_VISIBLE > 200112 \
     || __XPG_VISIBLE > 600
-int	isblank(int);
+__CTYPE_DECLARE int	isblank(int);
 #endif
 
 #if __BSD_VISIBLE || __XPG_VISIBLE
-int	isascii(int);
-int	toascii(int);
-int	_tolower(int);
-int	_toupper(int);
+__CTYPE_DECLARE int	isascii(int);
+__CTYPE_DECLARE int	toascii(int);
+__CTYPE_DECLARE int	_tolower(int);
+__CTYPE_DECLARE int	_toupper(int);
 #endif /* __BSD_VISIBLE || __XPG_VISIBLE */
 
 #endif /* __GNUC__ || _ANSI_LIBRARY || lint */
