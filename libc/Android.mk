@@ -509,6 +509,8 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
 endif
 
+libc_crt_target_ldflags :=
+
 ifeq ($(TARGET_ARCH),arm)
   libc_common_cflags += -DSOFTFLOAT
   libc_common_cflags += -fstrict-aliasing
@@ -517,7 +519,8 @@ endif # !arm
 
 ifeq ($(TARGET_ARCH),x86)
   libc_common_cflags += -DSOFTFLOAT
-  libc_crt_target_cflags :=
+  libc_crt_target_ldflags += -m elf_i386
+  libc_crt_target_cflags := -m32
   ifeq ($(ARCH_X86_HAVE_SSE2),true)
       libc_crt_target_cflags += -DUSE_SSE2=1
   endif
@@ -653,7 +656,7 @@ ALL_GENERATED_SOURCES += $(GEN)
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
 $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_LD) -r -o $@ $^
+	$(hide) $(TARGET_LD) $(libc_crt_target_ldflags) -r -o $@ $^
 ALL_GENERATED_SOURCES += $(GEN)
 
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o
@@ -668,7 +671,7 @@ ALL_GENERATED_SOURCES += $(GEN)
 GEN := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
 $(GEN): $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic1.o $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_LD) -r -o $@ $^
+	$(hide) $(TARGET_LD) $(libc_crt_target_ldflags) -r -o $@ $^
 ALL_GENERATED_SOURCES += $(GEN)
 
 # We rename crtend.o to crtend_android.o to avoid a
