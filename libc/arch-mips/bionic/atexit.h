@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,12 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.text
-	.globl	atexit
-	.hidden	atexit
-	.type	atexit, @function
-	.align  4
-	.ent	atexit
-atexit:
-	.set	noreorder
-	.cpload	$t9
-	.set	reorder
-	la	$t9, __cxa_atexit
-	move	$a1, $0
-	la      $a2, __dso_handle
-	j	$t9
-	.size	atexit, .-atexit
-	.end	atexit
+
+extern void *__dso_handle;
+extern int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
+
+__attribute__ ((visibility ("hidden")))
+int atexit(void (*func)(void))
+{
+  return (__cxa_atexit((void (*)(void *))func, (void *)0, &__dso_handle));
+}
