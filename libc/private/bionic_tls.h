@@ -76,7 +76,7 @@ enum {
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
-#define BIONIC_TLS_SLOTS 128
+#define BIONIC_TLS_SLOTS 144
 
 /* syscall only, do not call directly */
 extern int __set_tls(void* ptr);
