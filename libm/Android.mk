@@ -231,6 +231,7 @@ libm_ld_src_files += \
 
 # TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
+libm_common_asflags :=
 libm_common_cflags := \
     -DFLT_EVAL_METHOD=0 \
     -std=c99 \
@@ -251,6 +252,23 @@ libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
 libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
+ifeq ($(TARGET_CPU_VARIANT),cortex-a9)
+libm_arm_src_files += \
+    arm/k_log2.S \
+    arm/k_pow2.S \
+    arm/e_fast_pow.S
+libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A9
+libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A9
+endif
+ifeq ($(TARGET_CPU_VARIANT),cortex-a15)
+libm_arm_src_files += \
+    arm/k_log2.S \
+    arm/k_pow2.S \
+    arm/e_fast_pow.S
+libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
+libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
+endif
+
 #
 # libm.a for target.
 #
@@ -259,6 +277,7 @@ LOCAL_MODULE:= libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS := $(libm_common_cflags)
+LOCAL_ASFLAGS := $(libm_common_asflags)
 LOCAL_C_INCLUDES += $(libm_common_includes)
 LOCAL_SRC_FILES := $(libm_common_src_files)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
@@ -266,6 +285,11 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 # arch-specific settings
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
 LOCAL_SRC_FILES_arm := arm/fenv.c
+ifeq ($(TARGET_ARCH), arm)
+LOCAL_CFLAGS += $(libm_arm_cflags)
+LOCAL_ASFLAGS += $(libm_arm_asflags)
+LOCAL_SRC_FILES += $(libm_arm_src_files)
+endif
 
 LOCAL_C_INCLUDES_arm64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld_src_files)
