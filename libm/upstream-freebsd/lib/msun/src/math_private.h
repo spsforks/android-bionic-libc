@@ -683,6 +683,10 @@ irintl(long double x)
 #if !defined(TARGET_CPU_VARIANT_CORTEX_A9) && !defined(TARGET_CPU_VARIANT_CORTEX_A15)
 #define	__ieee754_pow	pow
 #endif
+#if !defined(TARGET_CPU_VARIANT_CORTEX_A15)
+#define	__ieee754_sin	sin
+#define	__ieee754_cos	cos
+#endif
 #define	__ieee754_lgamma lgamma
 #define	__ieee754_gamma	gamma
 #define	__ieee754_lgamma_r lgamma_r

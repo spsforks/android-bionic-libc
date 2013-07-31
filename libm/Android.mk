@@ -274,7 +274,9 @@ libm_arm_src_files += \
     arm/e_fast_pow.S \
     arm/e_sqrt.S \
     arm/e_sqrtf.S \
-    arm/s_floor.S
+    arm/s_floor.S \
+    arm/s_fast_sin.S \
+    arm/s_fast_cos.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 else

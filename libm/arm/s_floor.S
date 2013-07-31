@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <machine/asm.h>
+#include <bionic_asm.h>
 
 ENTRY(floor)    /* x in r0, r1 */
 
