@@ -2447,6 +2447,12 @@ _resolv_get_default_iface(char* buff, int buffLen)
     return len;
 }
 
+void
+_resolv_log(const char *str)
+{
+        XLOG("%s", str);
+}
+
 int
 _resolv_populate_res_for_iface(res_state statp)
 {

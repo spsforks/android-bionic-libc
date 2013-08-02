@@ -1864,15 +1864,17 @@ error:
 	free(elems);
 }
 
-static int _using_alt_dns()
+static int _using_alt_dns(const char *iface)
 {
-	char propname[PROP_NAME_MAX];
-	char propvalue[PROP_VALUE_MAX];
+	char buf[IF_NAMESIZE+1];
+	size_t if_len;
 
-	propvalue[0] = 0;
-	snprintf(propname, sizeof(propname), "net.dns1.%d", getpid());
-	if (__system_property_get(propname, propvalue) > 0 ) {
-		return 1;
+	// common case
+	if (iface == NULL || *iface == '\0') return 0;
+
+	if_len = _resolv_get_default_iface(buf, sizeof(buf));
+	if (if_len + 1 <= sizeof(buf)) {
+		if (strcmp(buf, iface) != 0) return 1;
 	}
 	return 0;
 }
@@ -1924,7 +1926,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 			// Only implement AI_ADDRCONFIG if the application is not
 			// using its own DNS servers, since our implementation
 			// only works on the default connection.
-			if (!_using_alt_dns()) {
+			if (!_using_alt_dns(iface)) {
+_resolv_log("RJGRJG using alt dns");
 				query_ipv6 = _have_ipv6();
 				query_ipv4 = _have_ipv4();
 			}
