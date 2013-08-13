@@ -64,8 +64,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/e_scalbf.c \
     upstream-freebsd/lib/msun/src/e_sinh.c \
     upstream-freebsd/lib/msun/src/e_sinhf.c \
-    upstream-freebsd/lib/msun/src/e_sqrt.c \
-    upstream-freebsd/lib/msun/src/e_sqrtf.c \
     upstream-freebsd/lib/msun/src/imprecise.c \
     upstream-freebsd/lib/msun/src/k_cos.c \
     upstream-freebsd/lib/msun/src/k_cosf.c \
@@ -252,21 +250,36 @@ libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
 libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
+ifneq ($(TARGET_ARCH),arm)
+libm_common_src_files += \
+    upstream-freebsd/lib/msun/src/e_sqrt.c \
+    upstream-freebsd/lib/msun/src/e_sqrtf.c
+endif
+
 ifeq ($(TARGET_CPU_VARIANT),cortex-a9)
 libm_arm_src_files += \
     arm/k_log2.S \
     arm/k_pow2.S \
-    arm/e_fast_pow.S
+    arm/e_fast_pow.S \
+    arm/e_sqrt.S \
+    arm/e_sqrtf.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A9
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A9
-endif
+else
 ifeq ($(TARGET_CPU_VARIANT),cortex-a15)
 libm_arm_src_files += \
     arm/k_log2.S \
     arm/k_pow2.S \
-    arm/e_fast_pow.S
+    arm/e_fast_pow.S \
+    arm/e_sqrt.S \
+    arm/e_sqrtf.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
+else
+libm_arm_src_files += \
+    upstream-freebsd/lib/msun/src/e_sqrt.c \
+    upstream-freebsd/lib/msun/src/e_sqrtf.c
+endif
 endif
 
 #
