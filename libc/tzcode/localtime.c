@@ -1812,14 +1812,14 @@ time2sub(struct tm * const tmp,
         } else  dir = tmcomp(&mytm, &yourtm);
         if (dir != 0) {
             if (t == lo) {
-                ++t;
-                if (t <= lo)
+                if (t == time_t_max)
                     return WRONG;
+                ++t;
                 ++lo;
-            } else if (t == hi) {
-                --t;
+            } else if (t == time_t_min) {
                 if (t >= hi)
                     return WRONG;
+                --t;
                 --hi;
             }
             if (lo > hi)
