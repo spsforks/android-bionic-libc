@@ -533,6 +533,7 @@
 #else
 #define __bos(s) __builtin_object_size((s), 0)
 #endif
+#define __bos0(s) __builtin_object_size((s), 0)
 
 #define __BIONIC_FORTIFY_INLINE \
     extern inline \
