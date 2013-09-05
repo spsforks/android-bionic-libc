@@ -293,6 +293,34 @@ extern  ssize_t  recv(int, void *, size_t, unsigned int);
 __socketcall ssize_t sendto(int, const void *, size_t, int, const struct sockaddr *, socklen_t);
 __socketcall ssize_t recvfrom(int, void *, size_t, unsigned int, const struct sockaddr *, socklen_t *);
 
+#if defined(__BIONIC_FORTIFY)
+__errordecl(__recv_error, "recv called with size bigger than buffer");
+extern ssize_t __recv_chk(int, void*, size_t, size_t, unsigned int);
+extern ssize_t __recv_real(int, void *, size_t, unsigned int)
+    __asm__(__USER_LABEL_PREFIX__ "recv");
+
+__BIONIC_FORTIFY_INLINE
+ssize_t recv(int fd, void* buf, size_t len, unsigned int flags) {
+  size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    return __recv_real(fd, buf, len, flags);
+  }
+
+  if (__builtin_constant_p(len) && (len <= bos)) {
+    return __recv_real(fd, buf, len, flags);
+  }
+
+  if (__builtin_constant_p(len) && (len > bos)) {
+    __recv_error();
+  }
+#endif
+
+  return __recv_chk(fd, buf, len, bos, flags);
+}
+#endif /* __BIONIC_FORTIFY */
+
 #undef __socketcall
 
 __END_DECLS
