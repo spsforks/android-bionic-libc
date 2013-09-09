@@ -279,6 +279,7 @@ libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
 else
 libm_arm_src_files += \
+    upstream-freebsd/lib/msun/src/s_floor.c \
     upstream-freebsd/lib/msun/src/e_sqrt.c \
     upstream-freebsd/lib/msun/src/e_sqrtf.c
 endif
