@@ -1,0 +1,8 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Brian Carlstrom <bdc@google.com>
+Code-Review+2: Ian Rogers <irogers@google.com>
+Submitted-by: Brian Carlstrom <bdc@google.com>
+Submitted-at: Sat, 14 Sep 2013 00:00:33 +0000
+Reviewed-on: https://android-review.googlesource.com/65506
+Project: platform/bionic
+Branch: refs/heads/master
