@@ -28,6 +28,9 @@
 
 #include <unistd.h>
 
+#ifdef __x86_64__
+__weak_reference(lseek, lseek64);
+#else
 extern int __llseek(int fd, unsigned long offset_hi, unsigned long offset_lo, off64_t* result, int whence);
 
 off64_t lseek64(int fd, off64_t off, int whence) {
@@ -38,3 +41,4 @@ off64_t lseek64(int fd, off64_t off, int whence) {
 
   return result;
 }
+#endif
