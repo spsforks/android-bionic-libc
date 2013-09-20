@@ -103,7 +103,6 @@ libc_common_src_files := \
 	bionic/isatty.c \
 	bionic/issetugid.c \
 	bionic/ldexp.c \
-	bionic/lseek64.c \
 	bionic/md5.c \
 	bionic/memmem.c \
 	bionic/memswap.c \
@@ -188,6 +187,7 @@ libc_common_src_files += \
     bionic/fstatfs.c \
     bionic/sigsuspend.c \
     bionic/statfs.c \
+    bionic/lseek64.c \
 
 endif
 
