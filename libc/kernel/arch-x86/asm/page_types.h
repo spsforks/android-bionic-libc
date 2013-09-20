@@ -16,15 +16,31 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_X86_DIV64_H
-#define _ASM_X86_DIV64_H
-#ifdef __i386__
+#ifndef _ASM_X86_PAGE_DEFS_H
+#define _ASM_X86_PAGE_DEFS_H
+#include <linux/const.h>
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define do_div(n,base) ({   unsigned long __upper, __low, __high, __mod, __base;   __base = (base);   asm("":"=a" (__low), "=d" (__high):"A" (n));   __upper = __high;   if (__high) {   __upper = __high % (__base);   __high = __high / (__base);   }   asm("divl %2":"=a" (__low), "=d" (__mod):"rm" (__base), "0" (__low), "1" (__upper));   asm("":"=A" (n):"a" (__low),"d" (__high));   __mod;  })
-#define div_long_long_rem(a,b,c) div_ll_X_l_rem(a,b,c)
-#else
-#include <asm-generic/div64.h>
+#define PAGE_SHIFT 12
+#define PAGE_SIZE (_AC(1,UL) << PAGE_SHIFT)
+#define PAGE_MASK (~(PAGE_SIZE-1))
+#define __PHYSICAL_MASK ((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __VIRTUAL_MASK ((1UL << __VIRTUAL_MASK_SHIFT) - 1)
+#define PHYSICAL_PAGE_MASK (((signed long)PAGE_MASK) & __PHYSICAL_MASK)
+#define PMD_PAGE_SIZE (_AC(1, UL) << PMD_SHIFT)
+#define PMD_PAGE_MASK (~(PMD_PAGE_SIZE-1))
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define HPAGE_SHIFT PMD_SHIFT
+#define HPAGE_SIZE (_AC(1,UL) << HPAGE_SHIFT)
+#define HPAGE_MASK (~(HPAGE_SIZE - 1))
+#define HUGETLB_PAGE_ORDER (HPAGE_SHIFT - PAGE_SHIFT)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define HUGE_MAX_HSTATE 2
+#define PAGE_OFFSET ((unsigned long)__PAGE_OFFSET)
+#define VM_DATA_DEFAULT_FLAGS   (((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0 ) |   VM_READ | VM_WRITE | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+#include <asm/page_32_types.h>
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifndef __ASSEMBLY__
 #endif
 #endif
