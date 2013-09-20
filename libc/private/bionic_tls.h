@@ -106,6 +106,19 @@ extern int __set_tls(void* ptr);
     ({ register void* __val; \
        asm ("movl %%gs:0, %0" : "=r"(__val)); \
        (volatile void*) __val; })
+
+#elif defined(__x86_64__)
+#ifdef __ILP32__
+# define __get_tls() \
+    ({ register void* __val; \
+       asm ("movl %%fs:0, %0" : "=r"(__val)); \
+       (volatile void*) __val; })
+#else
+# define __get_tls() \
+    ({ register void* __val; \
+       asm ("movq %%fs:0, %0" : "=r"(__val)); \
+       (volatile void*) __val; })
+#endif
 #else
 #error unsupported architecture
 #endif
