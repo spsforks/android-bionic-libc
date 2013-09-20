@@ -28,13 +28,19 @@
 
 #include <unistd.h>
 
+#ifndef __x86_64__
 extern int __llseek(int fd, unsigned long offset_hi, unsigned long offset_lo, off64_t* result, int whence);
+#endif
 
 off64_t lseek64(int fd, off64_t off, int whence) {
+#ifdef __x86_64__
+  return lseek(fd, off, whence);
+#else
   off64_t result;
   if (__llseek(fd, (unsigned long)(off >> 32),(unsigned long)(off), &result, whence) < 0) {
     return -1;
   }
 
   return result;
+#endif
 }
