@@ -18,8 +18,13 @@
 
 #include <sys/statfs.h>
 
+#if defined(__x86_64__)
+# define __statfs64(A,B,C) statfs(A,C)
+# define __fstatfs64(A,B,C) fstatfs(A,C)
+#else
 extern "C" int __statfs64(const char*, size_t, struct statfs*);
 extern "C" int __fstatfs64(int, size_t, struct statfs*);
+#endif
 
 #define ST_VALID 0x0020
 
