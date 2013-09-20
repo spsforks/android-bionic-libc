@@ -16,4 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#include "page_32.h"
+#ifndef _ASM_X86_PAGE_H
+#define _ASM_X86_PAGE_H
+#include <linux/types.h>
+#endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

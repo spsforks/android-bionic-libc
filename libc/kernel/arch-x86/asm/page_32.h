@@ -16,13 +16,15 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _I386_PAGE_H
-#define _I386_PAGE_H
-#define PAGE_SHIFT 12
-#define PAGE_SIZE (1UL << PAGE_SHIFT)
+#ifndef _ASM_X86_PAGE_32_H
+#define _ASM_X86_PAGE_32_H
+#include <asm/page_32_types.h>
+#ifndef __ASSEMBLY__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PAGE_MASK (~(PAGE_SIZE-1))
-#define LARGE_PAGE_MASK (~(LARGE_PAGE_SIZE-1))
-#define LARGE_PAGE_SIZE (1UL << PMD_SHIFT)
+#define __phys_addr_nodebug(x) ((x) - PAGE_OFFSET)
+#define __phys_addr(x) __phys_addr_nodebug(x)
+#define __phys_reloc_hide(x) RELOC_HIDE((x), 0)
+#include <linux/string.h>
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
