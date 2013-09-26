@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
- * All rights reserved.
+ * Copyright (C) 2013 The Android Open Source Project
+ * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,40 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#include <asm/unistd.h>
+#include <machine/asm.h>
 
-#if defined(__arm__)
-# define __get_tls() \
-    ({ void** __val; \
-       __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); \
-       __val; })
-#elif defined(__aarch64__)
-# define __get_tls() \
-    ({ void** __val; \
-      __asm__("mrs %0, tpidr_el0" : "=r" (__val)); \
-      __val; })
-#elif defined(__mips__)
-# define __get_tls() \
-    /* On mips32r1, this goes via a kernel illegal instruction trap that's optimized for v1. */ \
-    ({ register void** __val asm("v1"); \
-       __asm__(".set    push\n" \
-               ".set    mips32r2\n" \
-               "rdhwr   %0,$29\n" \
-               ".set    pop\n" : "=r"(__val)); \
-       __val; })
-#elif defined(__i386__)
-# define __get_tls() \
-    ({ void** __val; \
-       __asm__("movl %%gs:0, %0" : "=r"(__val)); \
-       __val; })
-#elif defined(__x86_64__)
-# define __get_tls() \
-    ({ void** __val; \
-       __asm__("mov %%fs:0, %0" : "=r"(__val)); \
-       __val; })
-#else
-#error unsupported architecture
-#endif
+/* void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status) */
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+ENTRY(_exit_with_stack_teardown)
+
+    /* munmap thread's memory */
+    mov     w28, w2
+    mov     w8, __NR_munmap
+    svc     #0
+
+    /* terminate process with status = retCode */
+    sxtw    x0, w28
+    mov     w8, __NR_exit
+    svc     #0
+
+    /* exit should never return, crash if it does */
+    mov     x0, xzr
+    ldr     x0, [x0]
+END(_exit_with_stack_teardown)
