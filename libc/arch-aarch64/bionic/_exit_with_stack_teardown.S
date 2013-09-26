@@ -1,16 +1,17 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- * All rights reserved.
+ *  _exit_with_stack_teardown.S
+ *
+ * Copyright (C) 2013 ARM Ltd.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *  *Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *  *Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in
+ *   the documentation and/or other materials provided with the
+ *   distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,13 +27,24 @@
  * SUCH DAMAGE.
  */
 
+#include <asm/unistd.h>
+#include <machine/asm.h>
 
-#ifndef CRT_LEGACY_WORKAROUND
-__attribute__ ((visibility ("hidden")))
-#endif
-#ifdef __aarch64__
-__attribute__ ((section (".data")))
-#else
-__attribute__ ((section (".bss")))
-#endif
-void *__dso_handle = (void *) 0;
+/* void _exit_with_stack_teardown(void * stackBase, int stackSize, int status) */
+
+ENTRY(_exit_with_stack_teardown)
+
+    /* munmap thread's memory */
+    mov     w28, w2
+    mov     w8, __NR_munmap
+    svc     #0
+
+    /* terminate process with status = retCode */
+    sxtw    x0, w28
+    mov     w8, __NR_exit
+    svc     #0
+
+    /* exit should never return, crash if it does */
+    mov     x0, xzr
+    ldr     x0, [x0]
+END(_exit_with_stack_teardown)

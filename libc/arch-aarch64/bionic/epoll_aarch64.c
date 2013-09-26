@@ -1,16 +1,17 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- * All rights reserved.
+ * epoll_aarch64.c
+ *
+ * Copyright (C) 2013 ARM Ltd.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ * *Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * *Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in
+ * the documentation and/or other materials provided with the
+ * distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,13 +27,21 @@
  * SUCH DAMAGE.
  */
 
+#include <linux/stddef.h>
+#include <sys/epoll.h>
+#include <signal.h>
 
-#ifndef CRT_LEGACY_WORKAROUND
-__attribute__ ((visibility ("hidden")))
-#endif
-#ifdef __aarch64__
-__attribute__ ((section (".data")))
-#else
-__attribute__ ((section (".bss")))
-#endif
-void *__dso_handle = (void *) 0;
+extern int epoll_create1(int flags);
+extern int epoll_pwait(int epfd, struct epoll_event* events, int max,
+                       int timeout, const sigset_t *sigmask, size_t sigsetsize);
+
+int epoll_create(int size)
+{
+    (void)size;
+    return epoll_create1(0);
+}
+
+int epoll_wait(int epfd, struct epoll_event *events, int max, int timeout)
+{
+    return epoll_pwait(epfd, events, max, timeout, NULL, sizeof(sigset_t));
+}

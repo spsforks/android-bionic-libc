@@ -1,16 +1,17 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
- * All rights reserved.
+ *  sigsetjmp.S
+ *
+ * Copyright (C) 2013 ARM Ltd.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *  *Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *  *Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in
+ *   the documentation and/or other materials provided with the
+ *   distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,13 +27,26 @@
  * SUCH DAMAGE.
  */
 
+#include <machine/asm.h>
+#include <machine/setjmp.h>
 
-#ifndef CRT_LEGACY_WORKAROUND
-__attribute__ ((visibility ("hidden")))
-#endif
-#ifdef __aarch64__
-__attribute__ ((section (".data")))
-#else
-__attribute__ ((section (".bss")))
-#endif
-void *__dso_handle = (void *) 0;
+/*
+ * int sigsetjmp(sigjmp_buf env, int savesigs);
+ * void siglongjmp(sigjmp_buf env, int val);
+ */
+
+ENTRY(sigsetjmp)
+    cbz     w1, PIC_SYM(_C_LABEL(_setjmp), PLT)
+    b       PIC_SYM(_C_LABEL(setjmp), PLT)
+END(sigsetjmp)
+
+.L_setjmp_magic:
+    .word   _JB_MAGIC__SETJMP
+
+ENTRY(siglongjmp)
+    ldr     w2, .L_setjmp_magic
+    ldr     w3, [x0]
+    cmp     w2, w3
+    b.eq    PIC_SYM(_C_LABEL(_longjmp), PLT)
+    b       PIC_SYM(_C_LABEL(longjmp), PLT)
+END(siglongjmp)

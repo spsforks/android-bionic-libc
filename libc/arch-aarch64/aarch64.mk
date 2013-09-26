@@ -1,0 +1,22 @@
+_LIBC_ARCH_COMMON_SRC_FILES := \
+	arch-aarch64/bionic/__get_sp.S \
+	arch-aarch64/bionic/__rt_sigreturn.S \
+	arch-aarch64/bionic/__set_tls.c \
+	arch-aarch64/bionic/_exit_with_stack_teardown.S \
+	arch-aarch64/bionic/_setjmp.S \
+	arch-aarch64/bionic/cacheflush_aarch64.c \
+	arch-aarch64/bionic/clone.S \
+	arch-aarch64/bionic/epoll_aarch64.c \
+	arch-aarch64/bionic/futex_aarch64.S \
+	arch-aarch64/bionic/inotify_aarch64.c \
+	arch-aarch64/bionic/mmap_aarch64.c \
+	arch-aarch64/bionic/poll_aarch64.c \
+	arch-aarch64/bionic/setjmp.S \
+	arch-aarch64/bionic/sigsetjmp.S \
+	arch-aarch64/bionic/stat_aarch64.c \
+	arch-aarch64/bionic/stdio_aarch64.c \
+	arch-aarch64/bionic/string_aarch64.c \
+	arch-aarch64/bionic/syscall.S \
+	arch-aarch64/bionic/time_aarch64.c \
+	arch-aarch64/bionic/unistd_aarch64.c \
+	arch-aarch64/bionic/vfork.S
