@@ -45,11 +45,18 @@ __attribute__((force_align_arg_pointer))
 #endif
 void _start() {
   structors_array_t array;
+  void *raw_args;
+
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
   array.fini_array = &__FINI_ARRAY__;
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
+#ifdef __aarch64__
+  raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + (8 * sizeof(void *)));
+#else
+  raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
+#endif
+
 #ifdef __x86_64__
   // 16-byte stack alignment is required by x86_64 ABI
   asm("andq  $~15, %rsp");
