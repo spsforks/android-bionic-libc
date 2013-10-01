@@ -796,6 +796,7 @@ LOCAL_SRC_FILES := $(libc_common_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -std=gnu99 \
     -I$(LOCAL_PATH)/upstream-netbsd/libc/include # for netbsd private headers
+LOCAL_CPPFLAGS := -std=gnu++11
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -834,6 +835,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC \
                 -std=gnu99
+LOCAL_CPPFLAGS := -std=gnu++11
 
 LOCAL_MODULE := libc_nomalloc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -858,6 +860,7 @@ LOCAL_SRC_FILES := \
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC \
                 -std=gnu99
+LOCAL_CPPFLAGS := -std=gnu++11
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -879,6 +882,7 @@ include $(CLEAR_VARS)
 # see libc/bionic/pthread_debug.c for details
 
 LOCAL_CFLAGS := $(libc_common_cflags) -std=gnu99 -DPTHREAD_DEBUG -DPTHREAD_DEBUG_ENABLED=0
+LOCAL_CPPFLAGS := -std=gnu++11
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
