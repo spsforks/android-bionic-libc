@@ -7,7 +7,7 @@ from utils import *
 
 # the list of supported architectures
 #
-kernel_archs = [ 'arm', 'x86', 'mips' ]
+kernel_archs = [ 'arm', 'mips', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -33,6 +33,7 @@ kernel_known_macros = {
     "__KERNEL_STRICT_NAMES":"1",
     "__CHECKER__": kCppUndefinedMacro,
     "__CHECK_ENDIAN__": kCppUndefinedMacro,
+    "CONFIG_X86_32": "__i386__",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -44,7 +45,7 @@ kernel_remove_config_macros = True
 # toolchain preprocessor
 kernel_default_arch_macros = {
     "arm": {},
-    "x86": {"__i386__": "1", "CONFIG_X86_32": "1"},
+    "x86": {},
     "mips": {"CONFIG_32BIT":"1"},
     }
 

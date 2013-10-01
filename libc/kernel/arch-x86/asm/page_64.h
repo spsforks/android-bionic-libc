@@ -16,13 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_PAGE_H
-#define _ASM_PAGE_H
-#ifndef PAGE_SHIFT
-#define PAGE_SHIFT 12
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
-#define PAGE_SIZE (1UL << PAGE_SHIFT)
-#define PAGE_MASK (~((1 << PAGE_SHIFT) - 1))
+#ifndef _ASM_X86_PAGE_64_H
+#define _ASM_X86_PAGE_64_H
+#include <asm/page_64_types.h>
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
