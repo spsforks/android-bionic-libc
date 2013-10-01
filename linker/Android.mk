@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_ARCH),x86)
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
     linker_begin_extension := c
 else
     linker_begin_extension := S
@@ -21,6 +21,7 @@ LOCAL_LDFLAGS := -shared -Wl,--exclude-libs,ALL
 LOCAL_CFLAGS += -fno-stack-protector \
         -Wstrict-overflow=5 \
         -fvisibility=hidden \
+        -std=gnu++11 \
         -Wall -Wextra -Werror
 
 # We need to access Bionic private headers in the linker.
