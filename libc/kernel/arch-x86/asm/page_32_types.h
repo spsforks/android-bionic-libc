@@ -16,4 +16,25 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#include "io_apic_64.h"
+#ifndef _ASM_X86_PAGE_32_DEFS_H
+#define _ASM_X86_PAGE_32_DEFS_H
+#include <linux/const.h>
+#define __PAGE_OFFSET _AC(CONFIG_PAGE_OFFSET, UL)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define THREAD_ORDER 1
+#define THREAD_SIZE (PAGE_SIZE << THREAD_ORDER)
+#define STACKFAULT_STACK 0
+#define DOUBLEFAULT_STACK 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NMI_STACK 0
+#define DEBUG_STACK 0
+#define MCE_STACK 0
+#define N_EXCEPTION_STACKS 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __PHYSICAL_MASK_SHIFT 32
+#define __VIRTUAL_MASK_SHIFT 32
+#define KERNEL_IMAGE_SIZE (512 * 1024 * 1024)
+#ifndef __ASSEMBLY__
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
+#endif

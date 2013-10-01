@@ -33,6 +33,7 @@ kernel_known_macros = {
     "__KERNEL_STRICT_NAMES":"1",
     "__CHECKER__": kCppUndefinedMacro,
     "__CHECK_ENDIAN__": kCppUndefinedMacro,
+    "__CONFIG_X86_32": "__i386__",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -44,7 +45,7 @@ kernel_remove_config_macros = True
 # toolchain preprocessor
 kernel_default_arch_macros = {
     "arm": {},
-    "x86": {"__i386__": "1", "CONFIG_X86_32": "1"},
+    "x86": {},
     "mips": {"CONFIG_32BIT":"1"},
     }
 
