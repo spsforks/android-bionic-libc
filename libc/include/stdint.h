@@ -245,8 +245,6 @@ typedef int64_t  intmax_t;
 #  define SIG_ATOMIC_MAX INT32_MAX
 #  define SIG_ATOMIC_MIN INT32_MIN
 
-#  define SIZE_MAX UINT32_MAX
-
 #  ifndef WCHAR_MAX /* These might also have been defined by <wchar.h>. */
 #    define WCHAR_MAX INT32_MAX
 #    define WCHAR_MIN INT32_MIN
@@ -255,6 +253,8 @@ typedef int64_t  intmax_t;
 #  define WINT_MAX INT32_MAX
 #  define WINT_MIN INT32_MIN
 #endif
+
+#define SIZE_MAX UINT32_MAX
 
 /* Keep the kernel from trying to define these types... */
 #define __BIT_TYPES_DEFINED__
