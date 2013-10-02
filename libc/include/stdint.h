@@ -254,6 +254,8 @@ typedef int64_t  intmax_t;
 
 #  define WINT_MAX INT32_MAX
 #  define WINT_MIN INT32_MIN
+#else
+#  define SIZE_MAX UINT_MAX
 #endif
 
 /* Keep the kernel from trying to define these types... */
