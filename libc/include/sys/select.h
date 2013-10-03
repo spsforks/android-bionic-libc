@@ -32,6 +32,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <string.h>
 
 __BEGIN_DECLS
 
@@ -49,18 +50,18 @@ typedef struct {
 #define __FD_CLR(fd, set) (__FDS_BITS(set)[__FDELT(fd)] &= ~__FDMASK(fd))
 #define __FD_SET(fd, set) (__FDS_BITS(set)[__FDELT(fd)] |= __FDMASK(fd))
 #define __FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
-#define __FD_ZERO(set) (__builtin_memset(set, 0, sizeof(*(fd_set*)(set))))
+#define __FD_ZERO(set) (memset(set, 0, sizeof(*(fd_set*)(set))))
 
 #if defined(__BIONIC_FORTIFY)
-extern void __FD_CLR_chk(int, fd_set*);
-extern void __FD_SET_chk(int, fd_set*);
-extern int  __FD_ISSET_chk(int, fd_set*);
+extern void __FD_CLR_chk(int, fd_set*, size_t);
+extern void __FD_SET_chk(int, fd_set*, size_t);
+extern int  __FD_ISSET_chk(int, fd_set*, size_t);
 #undef __FD_CLR
 #undef __FD_SET
 #undef __FD_ISSET
-#define __FD_CLR(fd, set) __FD_CLR_chk(fd, set)
-#define __FD_SET(fd, set) __FD_SET_chk(fd, set)
-#define __FD_ISSET(fd, set) __FD_ISSET_chk(fd, set)
+#define __FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
+#define __FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
+#define __FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 #endif /* defined(__BIONIC_FORTIFY) */
 
 extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
