@@ -31,7 +31,15 @@
 #include <stdlib.h>
 #include "private/libc_logging.h"
 
+#ifdef __aarch64__
+extern int  __openat(int, const char*, int, int);
+
+int  __open(const char* pathname, int flags, int mode) {
+    return __openat(AT_FDCWD, pathname, flags, mode);
+}
+#else
 extern int  __open(const char*, int, int);
+#endif
 
 int open(const char* pathname, int flags, ...) {
   mode_t mode = 0;
