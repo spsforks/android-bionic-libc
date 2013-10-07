@@ -6,7 +6,7 @@
 #
 # where:
 #       arch_list ::= "all" | arch+
-#       arch      ::= "arm" | "mips" | "x86" | "x86_64"
+#       arch      ::= "arm" | "mips" | "x86" | "x86_64" | "aarch64"
 #
 # Note:
 #      - syscall_name corresponds to the name of the syscall, which may differ from
@@ -27,7 +27,7 @@
 # process management
 void    _exit:exit_group(int)      all
 void    _exit_thread:exit(int)     all
-pid_t   __fork:fork(void)           all
+pid_t   __fork:fork(void)           arm,x86,mips,x86_64
 pid_t   wait4(pid_t pid, int* status, int options, struct rusage* rusage)   all
 
 # NOTE: these stubs are unused.
@@ -38,54 +38,54 @@ int     __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)          all
 int     execve(const char*, char* const*, char* const*)  all
 
 uid_t   getuid:getuid32()         arm,x86
-uid_t   getuid:getuid()           mips,x86_64
+uid_t   getuid:getuid()           mips,x86_64,aarch64
 gid_t   getgid:getgid32()         arm,x86
-gid_t   getgid:getgid()           mips,x86_64
+gid_t   getgid:getgid()           mips,x86_64,aarch64
 uid_t   geteuid:geteuid32()       arm,x86
-uid_t   geteuid:geteuid()         mips,x86_64
+uid_t   geteuid:geteuid()         mips,x86_64,aarch64
 gid_t   getegid:getegid32()       arm,x86
-gid_t   getegid:getegid()         mips,x86_64
+gid_t   getegid:getegid()         mips,x86_64,aarch64
 uid_t   getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid)   arm,x86
-uid_t   getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)     mips,x86_64
+uid_t   getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)     mips,x86_64,aarch64
 gid_t   getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid)   arm,x86
-gid_t   getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)     mips,x86_64
+gid_t   getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)     mips,x86_64,aarch64
 pid_t   gettid()                   all
 ssize_t readahead(int, off64_t, size_t)     all
 int     getgroups:getgroups32(int, gid_t*)    arm,x86
-int     getgroups:getgroups(int, gid_t*)      mips,x86_64
+int     getgroups:getgroups(int, gid_t*)      mips,x86_64,aarch64
 pid_t   getpgid(pid_t)             all
 pid_t   getppid()                  all
 pid_t   getsid(pid_t)              all
 pid_t   setsid()                   all
 int     setgid:setgid32(gid_t)     arm,x86
-int     setgid:setgid(gid_t)       mips,x86_64
+int     setgid:setgid(gid_t)       mips,x86_64,aarch64
 int     setuid:setuid32(uid_t)    arm,x86
-int     setuid:setuid(uid_t)      mips,x86_64
+int     setuid:setuid(uid_t)      mips,x86_64,aarch64
 int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
-int     setreuid:setreuid(uid_t, uid_t)     mips,x86_64
+int     setreuid:setreuid(uid_t, uid_t)     mips,x86_64,aarch64
 int     setresuid:setresuid32(uid_t, uid_t, uid_t)   arm,x86
-int     setresuid:setresuid(uid_t, uid_t, uid_t)     mips,x86_64
+int     setresuid:setresuid(uid_t, uid_t, uid_t)     mips,x86_64,aarch64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
-int     setresgid:setresgid(gid_t, gid_t, gid_t)     mips,x86_64
+int     setresgid:setresgid(gid_t, gid_t, gid_t)     mips,x86_64,aarch64
 void*   __brk:brk(void*)           all
 # See comments in kill.S to understand why we don't generate ARM stubs for kill/tkill/tgkill.
-int     kill(pid_t, int)           mips,x86,x86_64
-int     tkill(pid_t tid, int sig)  mips,x86,x86_64
-int     tgkill(pid_t tgid, pid_t tid, int sig)  mips,x86,x86_64
+int     kill(pid_t, int)           mips,x86,x86_64,aarch64
+int     tkill(pid_t tid, int sig)  mips,x86,x86_64,aarch64
+int     tgkill(pid_t tgid, pid_t tid, int sig)  mips,x86,x86_64,aarch64
 int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
 int     __set_thread_area:set_thread_area(void*  user_desc)  mips,x86
 int     __getpriority:getpriority(int, int)  all
 int     setpriority(int, int, int)   all
 int     setrlimit(int resource, const struct rlimit* rlp)  all
 int     getrlimit:ugetrlimit(int resource, struct rlimit* rlp)  arm,x86
-int     getrlimit:getrlimit(int resource, struct rlimit* rlp)  mips,x86_64
+int     getrlimit:getrlimit(int resource, struct rlimit* rlp)  mips,x86_64,aarch64
 int     getrusage(int who, struct rusage*  r_usage)  all
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
-int     setgroups:setgroups(int, const gid_t*)     mips,x86_64
+int     setgroups:setgroups(int, const gid_t*)     mips,x86_64,aarch64
 int     setpgid(pid_t, pid_t)  all
 pid_t   vfork(void)  arm
 int     setregid:setregid32(gid_t, gid_t)  arm,x86
-int     setregid:setregid(gid_t, gid_t)    mips,x86_64
+int     setregid:setregid(gid_t, gid_t)    mips,x86_64,aarch64
 int     chroot(const char*)  all
 # IMPORTANT: Even though <sys/prctl.h> declares prctl(int, ...), the syscall stub must take 6 arguments
 #            to match the kernel implementation.
@@ -101,11 +101,11 @@ ssize_t     read(int, void*, size_t)        all
 ssize_t     write(int, const void*, size_t)       all
 ssize_t     pread64(int, void*, size_t, off64_t) all
 ssize_t     pwrite64(int, void*, size_t, off64_t) all
-int         __open:open(const char*, int, mode_t)  all
+int         __open:open(const char*, int, mode_t)  arm,x86,mips,x86_64
 int         __openat:openat(int, const char*, int, mode_t) all
 int         close(int)                      all
 pid_t       getpid()    all
-void*       mmap(void*, size_t, int, int, int, long)  x86_64
+void*       mmap(void*, size_t, int, int, int, long)  x86_64,aarch64
 void*       __mmap2:mmap2(void*, size_t, int, int, int, long)   arm,x86,mips
 int         munmap(void*, size_t)  all
 void*       mremap(void*, size_t, size_t, unsigned long)  all
@@ -121,25 +121,28 @@ int         __ioctl:ioctl(int, int, void*)  all
 int         readv(int, const struct iovec*, int)   all
 int         writev(int, const struct iovec*, int)  all
 int         __fcntl:fcntl(int, int, void*)  arm,x86,mips
-int         fcntl(int, void*)  x86_64
+int         fcntl(int, void*)  x86_64,aarch64
 int         flock(int, int)   all
 int         fchmod(int, mode_t)  all
 int         dup(int)  all
 int         pipe(int*)  arm,x86,x86_64
 int         pipe2(int*, int) all
-int         dup2(int, int)   all
+int         dup2(int, int)   arm,x86,mips,x86_64
+int         dup3(int, int, int)     aarch64
 int         select:_newselect(int, struct fd_set*, struct fd_set*, struct fd_set*, struct timeval*)  arm,x86,mips
 int         select(int, struct fd_set*, struct fd_set*, struct fd_set*, struct timeval*)  x86_64
+int         pselect:pselect6(int, fd_set *, fd_set *, fd_set *, struct timespec *, void *) aarch64
 int         getdents:getdents64(unsigned int, struct dirent*, unsigned int)   all
 int         fsync(int)  all
 int         fdatasync(int) all
 int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
-int         fchown:fchown(int, uid_t, gid_t)    mips,x86_64
+int         fchown:fchown(int, uid_t, gid_t)    mips,x86_64,aarch64
 void        sync(void)  all
 int         __fcntl64:fcntl64(int, int, void*)  arm,x86,mips
 int         __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,x86,mips
-int         fstatfs(int, struct statfs*)  x86_64
+int         fstatfs(int, struct statfs*)  x86_64,aarch64
 int         fstatat:fstatat64(int dirfd, const char* path, struct stat* buf, int flags)   arm,x86,mips
+int         fstatat:newfstatat(int dirfd, const char* path, struct stat* buf, int flags)   aarch64
 int         mkdirat(int dirfd, const char* pathname, mode_t mode)  all
 int         fchownat(int dirfd, const char* path, uid_t owner, gid_t group, int flags)  all
 int         fchmodat(int dirfd, const char* path, mode_t mode, int flags)  all
@@ -155,24 +158,26 @@ int         fremovexattr(int, const char*) all
 # That means that every system call in this section should take three lines.
 off_t lseek(int, off_t, int) arm,mips,x86
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
-off_t lseek|lseek64(int, off_t, int) x86_64
+off_t lseek|lseek64(int, off_t, int) x86_64,aarch64
 int ftruncate(int, off_t) arm,mips,x86
 int ftruncate64(int, off64_t) arm,mips,x86
-int ftruncate|ftruncate64(int, off_t) x86_64
+int ftruncate|ftruncate64(int, off_t) x86_64,aarch64
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) arm,mips,x86
 ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) arm,mips,x86
-ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) x86_64
+ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) x86_64,aarch64
 int truncate(const char*, off_t) arm,mips,x86
 int truncate64(const char*, off64_t) arm,mips,x86
-int truncate|truncate64(const char*, off_t) x86_64
+int truncate|truncate64(const char*, off_t) x86_64,aarch64
 
 # file system
-int     link(const char*, const char*)  all
-int     unlink(const char*)             all
+int     link(const char*, const char*)  arm,x86,mips,x86_64
+int     linkat (int, const char*, int, const char*, int)  aarch64
+int     unlink(const char*)             arm,x86,mips,x86_64
 int     unlinkat(int, const char*, int)   all
 int     chdir(const char*)              all
-int     mknod(const char*, mode_t, dev_t)  all
-int     chmod(const char*, mode_t)          all
+int     mknod(const char*, mode_t, dev_t)  arm,x86,mips,x86_64
+int     mknodat(int dfd, const char * filename, umode_t mode, unsigned dev)  aarch64
+int     chmod(const char*, mode_t)          arm,x86,mips,x86_64
 int     chown:chown32(const char*, uid_t, gid_t)  arm,x86
 int     chown:chown(const char*, uid_t, gid_t)    mips,x86_64
 int     lchown:lchown32(const char*, uid_t, gid_t)  arm,x86
@@ -180,19 +185,21 @@ int     lchown:lchown(const char*, uid_t, gid_t)  mips,x86_64
 int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
 int     umount2(const char*, int)  all
 int     fstat:fstat64(int, struct stat*)    arm,x86,mips
-int     fstat(int, struct stat*)    x86_64
+int     fstat(int, struct stat*)    x86_64,aarch64
 int     stat:stat64(const char*, struct stat*)  arm,x86,mips
 int     stat(const char*, struct stat*)  x86_64
 int     lstat:lstat64(const char*, struct stat*)  arm,x86,mips
 int     lstat(const char*, struct stat*)  x86_64
-int     mkdir(const char*, mode_t) all
-int     readlink(const char*, char*, size_t)  all
-int     rmdir(const char*)  all
-int     rename(const char*, const char*)  all
+int     mkdir(const char*, mode_t) arm,x86,mips,x86_64
+int     readlink(const char*, char*, size_t)  arm,x86,mips,x86_64
+int     readlinkat(int dfd, const char *path, char *buf,int bufsiz) aarch64
+int     rmdir(const char*)  arm,x86,mips,x86_64
+int     rename(const char*, const char*)  arm,x86,mips,x86_64
 int     __getcwd:getcwd(char* buf, size_t size)  all
-int     access(const char*, int)  all
+int     access(const char*, int)  arm,x86,mips,x86_64
 int     faccessat(int, const char*, int, int)  all
-int     symlink(const char*, const char*)  all
+int     symlink(const char*, const char*)  arm,x86,mips,x86_64
+int     symlinkat(const char *oldname, int newdfd, const char *newname)  aarch64
 int     fchdir(int)    all
 int     setxattr(const char*, const char*, const void*, size_t, int) all
 int     lsetxattr(const char*, const char*, const void*, size_t, int) all
@@ -203,13 +210,13 @@ ssize_t llistxattr(const char*, char*, size_t) all
 int     removexattr(const char*, const char*) all
 int     lremovexattr(const char*, const char*) all
 int     __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,x86,mips
-int     statfs(const char*, struct statfs*)  x86_64
+int     statfs(const char*, struct statfs*)  x86_64,aarch64
 long    unshare(unsigned long)  all
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
 
 # time
-int           pause()                       all
+int           pause()                       arm,x86,mips,x86_64
 int           gettimeofday(struct timeval*, struct timezone*)       all
 int           settimeofday(const struct timeval*, const struct timezone*)   all
 clock_t       times(struct tms*)       all
@@ -225,7 +232,7 @@ int           __timer_settime:timer_settime(timer_t, int, const struct itimerspe
 int           __timer_gettime:timer_gettime(timer_t, struct itimerspec*)                                all
 int           __timer_getoverrun:timer_getoverrun(timer_t)                                              all
 int           __timer_delete:timer_delete(timer_t)                                                      all
-int           utimes(const char*, const struct timeval tvp[2])                          all
+int           utimes(const char*, const struct timeval tvp[2])                          arm,x86,mips,x86_64
 int           utimensat(int, const char*, const struct timespec times[2], int)         all
 int           timerfd_create(clockid_t, int)   all
 int           timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
@@ -241,21 +248,21 @@ int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, st
 int     signalfd4(int, const sigset_t*, size_t, int)  all
 
 # sockets
-int           socket(int, int, int)              arm,mips,x86_64
-int           socketpair(int, int, int, int*)    arm,mips,x86_64
-int           bind(int, struct sockaddr*, int)  arm,mips,x86_64
-int           connect(int, struct sockaddr*, socklen_t)   arm,mips,x86_64
-int           listen(int, int)                   arm,mips,x86_64
-int           accept(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64
-int           getsockname(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64
-int           getpeername(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64
-int           sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,mips,x86_64
-int           recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,mips,x86_64
-int           shutdown(int, int)  arm,mips,x86_64
-int           setsockopt(int, int, int, const void*, socklen_t)  arm,mips,x86_64
-int           getsockopt(int, int, int, void*, socklen_t*)    arm,mips,x86_64
-int           sendmsg(int, const struct msghdr*, unsigned int)  arm,mips,x86_64
-int           recvmsg(int, struct msghdr*, unsigned int)   arm,mips,x86_64
+int           socket(int, int, int)              arm,mips,x86_64,aarch64
+int           socketpair(int, int, int, int*)    arm,mips,x86_64,aarch64
+int           bind(int, struct sockaddr*, int)  arm,mips,x86_64,aarch64
+int           connect(int, struct sockaddr*, socklen_t)   arm,mips,x86_64,aarch64
+int           listen(int, int)                   arm,mips,x86_64,aarch64
+int           accept(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64,aarch64
+int           getsockname(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64,aarch64
+int           getpeername(int, struct sockaddr*, socklen_t*)  arm,mips,x86_64,aarch64
+int           sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,mips,x86_64,aarch64
+int           recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,mips,x86_64,aarch64
+int           shutdown(int, int)  arm,mips,x86_64,aarch64
+int           setsockopt(int, int, int, const void*, socklen_t)  arm,mips,x86_64,aarch64
+int           getsockopt(int, int, int, void*, socklen_t*)    arm,mips,x86_64,aarch64
+int           sendmsg(int, const struct msghdr*, unsigned int)  arm,mips,x86_64,aarch64
+int           recvmsg(int, struct msghdr*, unsigned int)   arm,mips,x86_64,aarch64
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
 int           socket:socketcall:1(int, int, int) x86
@@ -307,15 +314,19 @@ long    perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, i
 int     futex(void*, int, int, void*, void*, int) all
 
 # epoll
-int     epoll_create(int size)     all
+int     epoll_create(int size)     arm,x86,mips,x86_64
+int     epoll_create1(int flags)     aarch64
 int     epoll_ctl(int epfd, int op, int fd, struct epoll_event* event)    all
-int     epoll_wait(int epfd, struct epoll_event* events, int max, int timeout)   all
+int     epoll_wait(int epfd, struct epoll_event* events, int max, int timeout)   arm,x86,mips,x86_64
+int     epoll_pwait(int epfd, struct epoll_event* events, int max, int timeout, const sigset_t *sigmask, size_t sigsetsize)   aarch64
 
-int     inotify_init(void)      all
+int     inotify_init(void)      arm,x86,mips,x86_64
+int     inotify_init1(int flags)      aarch64
 int     inotify_add_watch(int, const char*, unsigned int)  all
 int     inotify_rm_watch(int, unsigned int)  all
 
-int     poll(struct pollfd*, unsigned int, long)  all
+int     poll(struct pollfd*, unsigned int, long)  arm,x86,mips,x86_64
+int     ppoll(struct pollfd*, unsigned int, struct timespec *, const sigset_t *, size_t)  aarch64
 
 int     eventfd:eventfd2(unsigned int, int)  all
 

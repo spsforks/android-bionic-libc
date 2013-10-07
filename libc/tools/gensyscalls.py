@@ -56,6 +56,29 @@ function_alias = """
 
 
 #
+# AArch64 assembler templates for each syscall stub
+#
+
+aarch64_call = syscall_stub_header + """\
+    stp     x29, x30, [sp, #-16]!
+    mov     x29,  sp
+    str     x8,       [sp, #-16]!
+
+    mov     x8, %(__NR_name)s
+    svc     #0
+
+    ldr     x8,       [sp], #16
+    ldp     x29, x30, [sp], #16
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno
+
+    ret
+END(%(func)s)
+"""
+
+#
 # ARM assembler templates for each syscall stub
 #
 
@@ -250,6 +273,8 @@ def arm_eabi_genstub(syscall):
 def mips_genstub(syscall):
     return mips_call % syscall
 
+def aarch64_genstub(syscall):
+    return aarch64_call % syscall
 
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
@@ -351,6 +376,8 @@ class State:
             if syscall.has_key("x86_64"):
                 syscall["asm-x86_64"] = add_aliases(x86_64_genstub(syscall), syscall)
 
+            if syscall.has_key("aarch64"):
+                syscall["asm-aarch64"] = add_aliases(aarch64_genstub(syscall), syscall)
 
     # Scan a Linux kernel asm/unistd.h file containing __NR_* constants
     # and write out equivalent SYS_* constants for glibc source compatibility.
@@ -378,6 +405,8 @@ class State:
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-arm/asm/unistd.h")
         glibc_fp.write("#elif defined(__mips__)\n")
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-mips/asm/unistd.h")
+        glibc_fp.write("#elif defined(__aarch64__)\n")
+        self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/uapi/asm-generic/unistd.h")
         glibc_fp.write("#elif defined(__i386__)\n")
         self.scan_linux_unistd_h(glibc_fp, bionic_libc_root + "/kernel/arch-x86/asm/unistd_32.h")
         glibc_fp.write("#elif defined(__x86_64__)\n")
