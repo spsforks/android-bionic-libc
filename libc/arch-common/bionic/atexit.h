@@ -28,6 +28,8 @@
 
 extern void *__dso_handle;
 
+int __cxa_atexit(void (*)(void *), void *, void *);
+
 __attribute__ ((visibility ("hidden")))
 int atexit(void (*func)(void))
 {
