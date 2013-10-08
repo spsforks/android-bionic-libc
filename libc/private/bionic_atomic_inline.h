@@ -55,6 +55,8 @@ extern "C" {
 #  include "bionic_atomic_x86.h"
 #elif defined(__mips__)
 #  include "bionic_atomic_mips.h"
+#elif defined(__aarch64__)
+#  include "bionic_atomic_aarch64.h"
 #else
 #  include "bionic_atomic_gcc_builtin.h"
 #endif
