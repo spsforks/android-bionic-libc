@@ -19,6 +19,7 @@ LOCAL_SRC_FILES:= \
 LOCAL_LDFLAGS := -shared -Wl,--exclude-libs,ALL
 
 LOCAL_CFLAGS += -fno-stack-protector \
+        -Wno-gnu-designator \
         -Wstrict-overflow=5 \
         -fvisibility=hidden \
         -Wall -Wextra -Werror
