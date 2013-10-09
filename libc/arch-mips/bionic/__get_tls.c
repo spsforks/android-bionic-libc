@@ -25,13 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-void*   __get_tls(void)
-{
-  register void  *tls asm("v1");
-  asm (".set push\n\t"
-       ".set mips32r2\n\t"
-       "rdhwr %0,$29\n\t"
-       ".set pop"
-       : "=r"(tls));
+
+void** __get_tls(void) {
+  register void** tls asm("v1");
+  __asm__(".set push\n\t"
+          ".set mips32r2\n\t"
+          "rdhwr %0,$29\n\t"
+          ".set pop"
+              : "=r"(tls));
   return tls;
 }

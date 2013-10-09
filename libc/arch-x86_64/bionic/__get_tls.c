@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-void* __get_tls(void) {
-  void* tls;
-  asm ("mov %%fs:0, %0" : "=r"(tls));
+void** __get_tls(void) {
+  void** tls;
+  __asm__("mov %%fs:0, %0" : "=r"(tls));
   return tls;
 }

@@ -25,13 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-/* see the implementation of __set_tls and pthread.c to understand this
- * code. Basically, the content of gs:[0] always is a pointer to the base
- * address of the tls region
- */
-void*   __get_tls(void)
-{
-  void*  tls;
-  asm ( "   movl  %%gs:0, %0" : "=r"(tls) );
+
+void** __get_tls(void) {
+  void** tls;
+  __asm__("movl %%gs:0, %0" : "=r"(tls));
   return tls;
 }
