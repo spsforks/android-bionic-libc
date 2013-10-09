@@ -60,7 +60,7 @@ ENTRY(__pthread_clone)
         # we're in the child thread now, call __thread_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        call    __thread_entry
+        call    PIC_PLT(_C_LABEL(__thread_entry))
         hlt
 2:
         ret
@@ -103,7 +103,7 @@ ENTRY(__bionic_clone)
         # we're in the child now, call __bionic_clone_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        call    __bionic_clone_entry
+        call    PIC_PLT(_C_LABEL(__bionic_clone_entry))
         hlt
 
 2:

@@ -42,7 +42,7 @@ pc_child:
         # we're in the child thread now, call __thread_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        call    __thread_entry
+        call    PIC_PLT(_C_LABEL(__thread_entry))
         hlt
 
 pc_parent:
@@ -102,7 +102,7 @@ bc_child:
         # we're in the child now, call __bionic_clone_entry
         # with the appropriate arguments on the child stack
         # we already placed most of them
-        call    __bionic_clone_entry
+        call    PIC_PLT(_C_LABEL(__bionic_clone_entry))
         hlt
 
 bc_parent:
