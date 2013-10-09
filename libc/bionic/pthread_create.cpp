@@ -52,8 +52,6 @@ extern "C" void ATTRIBUTES _thread_created_hook(pid_t thread_id);
 
 extern "C" int __set_tls(void* ptr);
 
-static const int kPthreadInitFailed = 1;
-
 static pthread_mutex_t gPthreadStackCreationLock = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_mutex_t gDebuggerNotificationLock = PTHREAD_MUTEX_INITIALIZER;
@@ -83,7 +81,7 @@ void  __init_tls(pthread_internal_t* thread) {
     thread->alternate_signal_stack = ss.ss_sp;
   }
 }
-
+/*
 // This trampoline is called from the assembly _pthread_clone function.
 // Our 'tls' and __pthread_clone's 'child_stack' are one and the same, just growing in
 // opposite directions.
@@ -100,14 +98,14 @@ extern "C" void __thread_entry(void* (*func)(void*), void* arg, void** tls) {
   thread->tls = tls;
   __init_tls(thread);
 
-  if ((thread->internal_flags & kPthreadInitFailed) != 0) {
+  if ((thread->internal_flags & PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED) != 0) {
     pthread_exit(NULL);
   }
 
   void* result = func(arg);
   pthread_exit(result);
 }
-
+*/
 __LIBC_ABI_PRIVATE__
 int _init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
@@ -240,7 +238,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   if (init_errno != 0) {
     // Mark the thread detached and let its __thread_entry run to
     // completion. (It'll just exit immediately, cleaning up its resources.)
-    thread->internal_flags |= kPthreadInitFailed;
+    thread->internal_flags |= PTHREAD_INTERNAL_FLAG_THREAD_INIT_FAILED;
     thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
     return init_errno;
   }

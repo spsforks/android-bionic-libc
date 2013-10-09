@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <asm/page.h>
-#include <bionic_tls.h>
+//#include <asm/page.h>
+#include "private/bionic_tls.h"
 #include <ctype.h>
 #include <dirent.h>
 #include <errno.h>
