@@ -468,17 +468,22 @@ int vsprintf(char *dest, const char *format, __va_list ap)
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 
-#if defined(__clang__)
-#define snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
-#else
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 4)
 int snprintf(char *dest, size_t size, const char *format, ...)
 {
+#if defined(__clang__)
+    int ret;
+    va_list args;
+    va_start(args, format);
+    ret = __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, args);
+    va_end(args);
+    return ret;
+#else
     return __builtin___snprintf_chk(dest, size, 0,
         __bos(dest), format, __builtin_va_arg_pack());
-}
 #endif
+}
 
 #if defined(__clang__)
 #define sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
