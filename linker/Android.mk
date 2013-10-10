@@ -49,7 +49,11 @@ ifeq ($(TARGET_ARCH),x86_64)
     LOCAL_CFLAGS += -DANDROID_X86_64_LINKER
 endif
 
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
+ifeq ($(TARGET_ARCH),aarch64)
+    LOCAL_CFLAGS += -DANDROID_AARCH64_LINKER
+endif
+
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64 aarch64))
     LOCAL_MODULE := linker64
 else
     LOCAL_MODULE := linker
@@ -89,6 +93,9 @@ $(linked_module): PRIVATE_TARGET_LIBGCC := $(TARGET_LIBGCC)
 $(linked_module): PRIVATE_TARGET_CRTBEGIN_DYNAMIC_O := $(TARGET_CRTBEGIN_DYNAMIC_O)
 $(linked_module): PRIVATE_TARGET_CRTBEGIN_STATIC_O := $(TARGET_CRTBEGIN_STATIC_O)
 $(linked_module): PRIVATE_TARGET_CRTEND_O := $(TARGET_CRTEND_O)
+ifeq ($(TARGET_ARCH),aarch64)
+$(linked_module): PRIVATE_LDFLAGS += -Wl,-Bsymbolic
+endif
 $(linked_module): $(TARGET_CRTBEGIN_STATIC_O) $(all_objects) $(all_libraries) $(TARGET_CRTEND_O)
 	$(transform-o-to-static-executable)
 	@echo "target PrefixSymbols: $(PRIVATE_MODULE) ($@)"

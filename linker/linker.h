@@ -128,7 +128,7 @@ struct soinfo {
   unsigned* bucket;
   unsigned* chain;
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
   Elf_Rela *plt_rela;
   size_t plt_rela_count;
 

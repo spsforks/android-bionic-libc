@@ -210,6 +210,8 @@ bool ElfReader::VerifyElfHeader() {
       EM_386
 #elif defined(ANDROID_X86_64_LINKER)
       EM_X86_64
+#elif defined(ANDROID_AARCH64_LINKER)
+      EM_AARCH64
 #endif
   ) {
     DL_ERR("\"%s\" has unexpected e_machine: %d", name_, header_.e_machine);
