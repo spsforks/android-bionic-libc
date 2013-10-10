@@ -26,6 +26,11 @@
  * SUCH DAMAGE.
  */
 
+#if defined (ANDROID_AARCH64_LINKER)
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
+#endif /* defined (ANDROID_AARCH64_LINKER) */
+
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -137,10 +142,18 @@ static void count_relocation(RelocationKind) {
 
 #if COUNT_PAGES
 static unsigned bitmask[4096];
+#if defined (ANDROID_AARCH64_LINKER)
+#define MARK(offset) \
+    do { \
+        if ((((offset) >> 12) >> 5) < 4096) \
+            bitmask[((offset) >> 12) >> 5] |= (1 << (((offset) >> 12) & 31)); \
+    } while(0)
+#else /* !defined (ANDROID_AARCH64_LINKER) */
 #define MARK(offset) \
     do { \
         bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
     } while(0)
+#endif /* !!defined (ANDROID_AARCH64_LINKER) */
 #else
 #define MARK(x) do {} while (0)
 #endif
@@ -845,7 +858,7 @@ int do_dlclose(soinfo* si) {
   return result;
 }
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
 static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo* needed[]) {
   Elf_Sym* symtab = si->symtab;
   const char* strtab = si->strtab;
@@ -888,6 +901,7 @@ static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo*
          */
 
         switch (type) {
+#if defined(ANDROID_X86_64_LINKER)
         case R_X86_64_JUMP_SLOT:
         case R_X86_64_GLOB_DAT:
         case R_X86_64_32:
@@ -898,7 +912,28 @@ static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo*
         case R_X86_64_PC32:
           sym_addr = reloc;
           break;
+#endif /* ANDROID_X86_64_LINKER */
 
+#if defined(ANDROID_AARCH64_LINKER)
+        case R_AARCH64_JUMP_SLOT:
+        case R_AARCH64_GLOB_DAT:
+        case R_AARCH64_ABS64:
+        case R_AARCH64_ABS32:
+        case R_AARCH64_ABS16:
+        case R_AARCH64_RELATIVE:
+          /*
+           * The sym_addr was initialized to be zero above, or the relocation
+           * code below does not care about value of sym_addr.
+           * No need to do anything.
+           */
+          break;
+
+        case R_AARCH64_COPY:
+          /*
+           * Fall through.
+           * Can't really copy if weak symbol is not found in run-time.
+           */
+#endif /*ANDROID_AARCH64_LINKER */
         default:
           DL_ERR("unknown weak reloc type %d @ %p (%d)", type, rela, (int) (rela - start));
           return -1;
@@ -913,6 +948,7 @@ static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo*
     }
 
     switch (type) {
+#if defined(ANDROID_X86_64_LINKER)
     case R_X86_64_JUMP_SLOT:
       count_relocation(kRelocAbsolute);
       MARK(rela->r_offset);
@@ -963,6 +999,200 @@ static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo*
                  static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
       *reinterpret_cast<Elf_Addr*>(reloc) = sym_addr + rela->r_addend - reloc;
       break;
+#endif /* ANDROID_X86_64_LINKER */
+
+#if defined(ANDROID_AARCH64_LINKER)
+    case R_AARCH64_JUMP_SLOT:
+        count_relocation(kRelocAbsolute);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO JMP_SLOT %16lx <- %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        *reinterpret_cast<Elf_Addr*>(reloc) = (sym_addr + rela->r_addend);
+        break;
+    case R_AARCH64_GLOB_DAT:
+        count_relocation(kRelocAbsolute);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO GLOB_DAT %16lx <- %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        *reinterpret_cast<Elf_Addr*>(reloc) = (sym_addr + rela->r_addend);
+        break;
+    case R_AARCH64_ABS64:
+        count_relocation(kRelocAbsolute);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO ABS64 %16lx <- %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        *reinterpret_cast<Elf_Addr*>(reloc) += (sym_addr + rela->r_addend);
+        break;
+    case R_AARCH64_ABS32:
+        count_relocation(kRelocAbsolute);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO ABS32 %16lx <- %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        if ((static_cast<Elf_Addr>(INT32_MIN) <=
+          (*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend))) &&
+          ((*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend)) <=
+          static_cast<Elf_Addr>(UINT32_MAX))) {
+            *reinterpret_cast<Elf_Addr*>(reloc) += (sym_addr + rela->r_addend);
+        } else {
+            DL_ERR("0x%016lx out of range 0x%016lx to 0x%016lx",
+                    (*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend)),
+                    static_cast<Elf_Addr>(INT32_MIN),
+                    static_cast<Elf_Addr>(UINT32_MAX));
+            return -1;
+        }
+        break;
+    case R_AARCH64_ABS16:
+        count_relocation(kRelocAbsolute);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO ABS16 %16lx <- %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        if ((static_cast<Elf_Addr>(INT16_MIN) <=
+          (*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend))) &&
+          ((*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend)) <=
+          static_cast<Elf_Addr>(UINT16_MAX))) {
+            *reinterpret_cast<Elf_Addr*>(reloc) += (sym_addr + rela->r_addend);
+        } else {
+            DL_ERR("0x%016lx out of range 0x%016lx to 0x%016lx",
+                    (*reinterpret_cast<Elf_Addr*>(reloc) + (sym_addr + rela->r_addend)),
+                    static_cast<Elf_Addr>(INT16_MIN),
+                    static_cast<Elf_Addr>(UINT16_MAX));
+            return -1;
+        }
+        break;
+    case R_AARCH64_PREL64:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO REL64 %16lx <- %16lx - %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    rela->r_offset,
+                    sym_name);
+        *reinterpret_cast<Elf_Addr*>(reloc) += (sym_addr + rela->r_addend) - rela->r_offset;
+        break;
+    case R_AARCH64_PREL32:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO REL32 %16lx <- %16lx - %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    rela->r_offset, sym_name);
+        if ((static_cast<Elf_Addr>(INT32_MIN) <=
+          (*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
+          ((*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <=
+          static_cast<Elf_Addr>(UINT32_MAX))) {
+            *reinterpret_cast<Elf_Addr*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
+        } else {
+            DL_ERR("0x%016lx out of range 0x%016lx to 0x%016lx",
+                    (*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
+                    static_cast<Elf_Addr>(INT32_MIN),
+                    static_cast<Elf_Addr>(UINT32_MAX));
+            return -1;
+        }
+        break;
+    case R_AARCH64_PREL16:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO REL16 %16lx <- %16lx - %16lx %s\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    rela->r_offset, sym_name);
+        if ((static_cast<Elf_Addr>(INT16_MIN) <=
+          (*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
+          ((*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <=
+          static_cast<Elf_Addr>(UINT16_MAX))) {
+            *reinterpret_cast<Elf_Addr*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
+        } else {
+            DL_ERR("0x%016lx out of range 0x%016lx to 0x%016lx",
+                    (*reinterpret_cast<Elf_Addr*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
+                    static_cast<Elf_Addr>(INT16_MIN),
+                    static_cast<Elf_Addr>(UINT16_MAX));
+            return -1;
+        }
+        break;
+
+    case R_AARCH64_RELATIVE:
+        count_relocation(kRelocRelative);
+        MARK(rela->r_offset);
+        if (sym) {
+            DL_ERR("odd RELATIVE form...");
+            return -1;
+        }
+        TRACE_TYPE(RELO, "RELO RELATIVE %16lx <- %16lx\n",
+                    reloc,
+                    (si->base + rela->r_addend));
+        *reinterpret_cast<Elf_Addr*>(reloc) = (si->base + rela->r_addend);
+        break;
+
+    case R_AARCH64_COPY:
+        if ((si->flags & FLAG_EXE) == 0) {
+            /*
+              * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+              *
+              * Section 4.7.1.10 "Dynamic relocations"
+              * R_AARCH64_COPY may only appear in executable objects where e_type is
+              * set to ET_EXEC.
+              *
+              * FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
+              * We should explicitly disallow ET_DYN executables from having
+              * R_AARCH64_COPY relocations.
+              */
+            DL_ERR("%s R_AARCH64_COPY relocations only supported for ET_EXEC", si->name);
+            return -1;
+        }
+        count_relocation(kRelocCopy);
+        MARK(rela->r_offset);
+        TRACE_TYPE(RELO, "RELO COPY %16lx <- %ld @ %16lx %s\n",
+                    reloc,
+                    s->st_size,
+                    (sym_addr + rela->r_addend),
+                    sym_name);
+        if (reloc == (sym_addr + rela->r_addend)) {
+            Elf_Sym *src = soinfo_do_lookup(NULL, sym_name, &lsi, needed);
+
+            if (src == NULL) {
+                DL_ERR("%s R_AARCH64_COPY relocation source cannot be resolved", si->name);
+                return -1;
+            }
+            if (lsi->has_DT_SYMBOLIC) {
+                DL_ERR("%s invalid R_AARCH64_COPY relocation against DT_SYMBOLIC shared "
+                        "library %s (built with -Bsymbolic?)", si->name, lsi->name);
+                return -1;
+            }
+            if (s->st_size < src->st_size) {
+                DL_ERR("%s R_AARCH64_COPY relocation size mismatch (%ld < %ld)",
+                        si->name, s->st_size, src->st_size);
+                return -1;
+            }
+            memcpy((void*)reloc, (void*)(src->st_value + lsi->load_bias), src->st_size);
+        } else {
+            DL_ERR("%s R_AARCH64_COPY relocation target cannot be resolved", si->name);
+            return -1;
+        }
+        break;
+    case R_AARCH64_TLS_TPREL64:
+        TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16lx <- %16lx - %16lx\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    rela->r_offset);
+        break;
+    case R_AARCH64_TLS_DTPREL32:
+        TRACE_TYPE(RELO, "RELO TLS_DTPREL32 *** %16lx <- %16lx - %16lx\n",
+                    reloc,
+                    (sym_addr + rela->r_addend),
+                    rela->r_offset);
+        break;
+#endif /*ANDROID_AARCH64_LINKER */
+
     default:
       DL_ERR("unknown reloc type %d @ %p (%d)", type, rela, (int) (rela - start));
       return -1;
@@ -1481,7 +1711,7 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_SYMTAB:
             si->symtab = (Elf_Sym *) (base + d->d_un.d_ptr);
             break;
-#if !defined(ANDROID_X86_64_LINKER)
+#if !defined(ANDROID_X86_64_LINKER) && !defined (ANDROID_AARCH64_LINKER)
         case DT_PLTREL:
             if (d->d_un.d_val != DT_REL) {
                 DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
@@ -1490,21 +1720,21 @@ static bool soinfo_link_image(soinfo* si) {
             break;
 #endif
         case DT_JMPREL:
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
             si->plt_rela = (Elf_Rela*) (base + d->d_un.d_ptr);
 #else
             si->plt_rel = (Elf_Rel*) (base + d->d_un.d_ptr);
 #endif
             break;
         case DT_PLTRELSZ:
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
             si->plt_rela_count = d->d_un.d_val / sizeof(Elf_Rela);
 #else
             si->plt_rel_count = d->d_un.d_val / sizeof(Elf_Rel);
 #endif
             break;
         case DT_PLTGOT:
-#if !defined(ANDROID_X86_64_LINKER)
+#if !defined(ANDROID_X86_64_LINKER) && !defined (ANDROID_AARCH64_LINKER)
             /* Save this in case we decide to do lazy binding. We don't yet. */
             si->plt_got = (unsigned *)(base + d->d_un.d_ptr);
             break;
@@ -1516,7 +1746,7 @@ static bool soinfo_link_image(soinfo* si) {
                 d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
             }
             break;
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
          case DT_RELA:
             si->rela = (Elf_Rela*) (base + d->d_un.d_ptr);
             break;
@@ -1697,7 +1927,7 @@ static bool soinfo_link_image(soinfo* si) {
         }
     }
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(ANDROID_X86_64_LINKER) || defined (ANDROID_AARCH64_LINKER)
     if (si->plt_rela != NULL) {
         DEBUG("[ relocating %s plt ]\n", si->name );
         if (soinfo_relocate_a(si, si->plt_rela, si->plt_rela_count, needed)) {
@@ -1944,7 +2174,11 @@ static Elf_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf_Add
         for (n = 0; n < 4096; n++) {
             if (bitmask[n]) {
                 unsigned x = bitmask[n];
+#if defined (ANDROID_AARCH64_LINKER)
+                for (i=0; i < 32; i++) {
+#else /* !defined (ANDROID_AARCH64_LINKER) */
                 for (i = 0; i < 8; i++) {
+#endif /* !defined (ANDROID_AARCH64_LINKER) */
                     if (x & 1) {
                         count++;
                     }
@@ -2000,6 +2234,20 @@ extern "C" Elf_Addr __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
   Elf_Addr linker_addr = args.getauxval(AT_BASE);
+#if defined (ANDROID_AARCH64_LINKER)
+  if (!linker_addr) {
+     /*
+      * A problem loading the linker with AT_BASE having a NULL pointer.
+      * In this scenario AT_PHDR has the pointer to the array of Elf_Phdr
+      * structures, and the Elf_Ehdr structure that is expected immediately
+      * preceeds it.
+      */
+     linker_addr = args.getauxval(AT_PHDR);
+     if (linker_addr) {
+       linker_addr -= sizeof(Elf_Ehdr);
+     }
+  }
+#endif /* defined (ANDROID_AARCH64_LINKER) */
 
   Elf_Ehdr* elf_hdr = reinterpret_cast<Elf_Ehdr*>(linker_addr);
   Elf_Phdr* phdr = (Elf_Phdr*)((unsigned char*) linker_addr + elf_hdr->e_phoff);
