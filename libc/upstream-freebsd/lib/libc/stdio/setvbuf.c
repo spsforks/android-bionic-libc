@@ -102,7 +102,6 @@ setvbuf(FILE * __restrict fp, char * __restrict buf, int mode, size_t size)
 			 * Unable to honor user's request.  We will return
 			 * failure, but try again with file system size.
 			 */
-			ret = EOF;
 			if (size != iosize) {
 				size = iosize;
 				buf = malloc(size);
@@ -110,6 +109,7 @@ setvbuf(FILE * __restrict fp, char * __restrict buf, int mode, size_t size)
 		}
 		if (buf == NULL) {
 			/* No luck; switch to unbuffered I/O. */
+			ret = EOF;
 nbf:
 			fp->_flags = flags | __SNBF;
 			fp->_w = 0;
