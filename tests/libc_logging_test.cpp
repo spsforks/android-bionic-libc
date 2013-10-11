@@ -53,10 +53,10 @@ TEST(libc_logging, smoke) {
   __libc_format_buffer(buf, sizeof(buf), "a%db", -8123);
   EXPECT_STREQ("a-8123b", buf);
 
-  __libc_format_buffer(buf, sizeof(buf), "a%hdb", 0x7fff0010);
+  __libc_format_buffer(buf, sizeof(buf), "a%hdb", (short) 0x7fff0010);
   EXPECT_STREQ("a16b", buf);
 
-  __libc_format_buffer(buf, sizeof(buf), "a%hhdb", 0x7fffff10);
+  __libc_format_buffer(buf, sizeof(buf), "a%hhdb", (char) 0x7fffff10);
   EXPECT_STREQ("a16b", buf);
 
   __libc_format_buffer(buf, sizeof(buf), "a%lldb", 0x1000000000LL);
