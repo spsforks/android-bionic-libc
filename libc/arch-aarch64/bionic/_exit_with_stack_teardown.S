@@ -1,16 +1,17 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
- * All rights reserved.
+ *  _exit_with_stack_teardown.S
+ *
+ * Copyright (C) 2013 ARM Ltd.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *  *Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *  *Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in
+ *   the documentation and/or other materials provided with the
+ *   distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,25 +28,23 @@
  */
 
 #include <asm/unistd.h>
+#include <machine/asm.h>
 
-	.text
+/* void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status) */
 
-// void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status)
+ENTRY(_exit_with_stack_teardown)
 
-	.type	_exit_with_stack_teardown, @function
-	.global	_exit_with_stack_teardown
-	.align	4
-	.ent	_exit_with_stack_teardown
-_exit_with_stack_teardown:
-	move	$s0,$a2		/* preserve status for exit() call */
+    /* munmap thread's memory */
+    mov     w28, w2
+    mov     w8, __NR_munmap
+    svc     #0
 
-	li	$v0,__NR_munmap
-	syscall			/* the stack is destroyed by this call */
-	move	$a0,$s0
-	li	$v0,__NR_exit
-	syscall
+    /* terminate process with status = retCode */
+    sxtw    x0, w28
+    mov     w8, __NR_exit
+    svc     #0
 
-	/* exit() should never return, cause a crash if it does */
-	move	$a0,$0
-	lw	$a0,($a0)
-	.end	_exit_with_stack_teardown
+    /* exit should never return, crash if it does */
+    mov     x0, xzr
+    ldr     x0, [x0]
+END(_exit_with_stack_teardown)
