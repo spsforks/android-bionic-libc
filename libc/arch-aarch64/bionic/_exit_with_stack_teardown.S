@@ -30,7 +30,7 @@
 #include <asm/unistd.h>
 #include <machine/asm.h>
 
-/* void _exit_with_stack_teardown(void * stackBase, int stackSize, int status) */
+/* void _exit_with_stack_teardown(void * stackBase, size_t stackSize, int status) */
 
 ENTRY(_exit_with_stack_teardown)
 
