@@ -1079,6 +1079,8 @@ LOCAL_SRC_FILES := \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
 	bionic/pthread_debug.cpp \
+	bionic/debug_stacktrace.cpp \
+	bionic/debug_mapinfo.cpp \
 	bionic/libc_init_dynamic.cpp
 
 ifeq ($(TARGET_ARCH),arm)
