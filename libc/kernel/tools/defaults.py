@@ -7,7 +7,7 @@ from utils import *
 
 # the list of supported architectures
 #
-kernel_archs = [ 'arm', 'mips', 'x86' ]
+kernel_archs = [ 'arm', 'mips', 'x86', 'aarch64' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -47,12 +47,14 @@ kernel_default_arch_macros = {
     "arm": {},
     "mips": {"CONFIG_32BIT":"1"},
     "x86": {},
+    "aarch64": {},
     }
 
 kernel_arch_token_replacements = {
     "arm": {},
     "mips": {"off_t":"__kernel_off_t"},
     "x86": {},
+    "aarch64": {},
     }
 # Replace tokens in the output according to this mapping
 kernel_token_replacements = {
@@ -79,6 +81,11 @@ kernel_known_x86_statics = set(
         ]
     )
 
+kernel_known_aarch64_statics = set(
+        [
+        ]
+    )
+
 kernel_known_generic_statics = set(
         [ "__invalid_size_argument_for_IOC",  # asm-generic/ioctl.h
           "__cmsg_nxthdr",                    # linux/socket.h
@@ -95,6 +102,7 @@ kernel_known_statics = {
         "arm" : kernel_known_arm_statics,
         "mips" : kernel_known_mips_statics,
         "x86" : kernel_known_x86_statics,
+        "aarch64" : kernel_known_aarch64_statics,
     }
 
 # this is a list of macros which we want to specifically exclude from
