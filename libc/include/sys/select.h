@@ -44,6 +44,14 @@ typedef struct {
   unsigned long fds_bits[__FDSET_LONGS];
 } fd_set;
 
+#ifdef __aarch64__
+#define FD_SETSIZE  __FD_SETSIZE
+#define FD_SET(fd,fdsetp) __FD_SET(fd,fdsetp)
+#define FD_CLR(fd,fdsetp) __FD_CLR(fd,fdsetp)
+#define FD_ISSET(fd,fdsetp) __FD_ISSET(fd,fdsetp)
+#define FD_ZERO(fdsetp) __FD_ZERO(fdsetp)
+#endif
+
 #define __FDELT(fd) ((fd) / __NFDBITS)
 #define __FDMASK(fd) (1UL << ((fd) % __NFDBITS))
 #define __FDS_BITS(set) (((fd_set*)(set))->fds_bits)
