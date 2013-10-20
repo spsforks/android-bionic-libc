@@ -33,6 +33,7 @@
 #include <sys/atomics.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <linux/signal.h>
 
 #include "pthread_internal.h"
 
