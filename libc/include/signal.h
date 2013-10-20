@@ -66,6 +66,10 @@ typedef int sig_atomic_t;
 #  define _NSIG  64
 #endif
 
+#ifndef NSIG
+#  define NSIG  _NSIG
+#endif
+
 extern const char* const sys_siglist[];
 extern const char* const sys_signame[];
 
