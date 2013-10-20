@@ -59,7 +59,13 @@ typedef __kernel_id_t        id_t;
 typedef __kernel_ino_t       ino_t;
 typedef __kernel_key_t       key_t;
 typedef __kernel_mode_t      mode_t;
+
+#ifndef __aarch64__
 typedef __kernel_nlink_t	 nlink_t;
+#else
+typedef __u32                nlink_t;
+#endif
+
 #ifndef _OFF_T_DEFINED_
 #define _OFF_T_DEFINED_
 typedef __kernel_off_t       off_t;
