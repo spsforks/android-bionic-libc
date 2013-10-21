@@ -1,0 +1,7 @@
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Mon, 21 Oct 2013 21:20:51 +0000
+Reviewed-on: https://android-review.googlesource.com/68379
+Project: platform/bionic
+Branch: refs/heads/master
