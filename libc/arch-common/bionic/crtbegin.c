@@ -50,6 +50,9 @@ void _start() {
   array.fini_array = &__FINI_ARRAY__;
 
   void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
+#ifdef __x86_64__
+  asm("andq  $~15, %rsp");
+#endif
   __libc_init(raw_args, NULL, &main, &array);
 }
 
