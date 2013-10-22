@@ -57,6 +57,11 @@ test_c_flags = \
     -Werror \
     -fno-builtin \
 
+ifeq ($(TARGET_ARCH),aarch64)
+$(info TODOAArch64: $(LOCAL_PATH)/Android.mk -fstack-protector not yet available for the AArch64 toolchain)
+test_c_flags += -fno-stack-protector
+endif # aarch64
+
 test_src_files = \
     dirent_test.cpp \
     eventfd_test.cpp \
