@@ -56,7 +56,7 @@ TEST(stdlib, lrand48_random_rand) {
 
 TEST(stdlib, mrand48) {
   srand48(0x01020304);
-  EXPECT_EQ(-1476639856, mrand48());
+  EXPECT_EQ(static_cast<long>(-1476639856), mrand48());
   EXPECT_EQ(795539493, mrand48());
   EXPECT_EQ(1804534249, mrand48());
   EXPECT_EQ(264732262, mrand48());
