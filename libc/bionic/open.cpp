@@ -25,13 +25,40 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <unistd.h>
+
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "private/libc_logging.h"
 
-extern int  __openat(int, const char*, int, int);
+extern "C" int __openat(int, const char*, int, int);
+
+int open(const char* pathname, int flags, ...) {
+  mode_t mode = 0;
+
+  flags |= O_LARGEFILE;
+
+  if (flags & O_CREAT) {
+    va_list args;
+    va_start(args, flags);
+    mode = (mode_t) va_arg(args, int);
+    va_end(args);
+  }
+
+  return __openat(AT_FDCWD, pathname, flags, mode);
+}
+
+int __open_2(const char* pathname, int flags) {
+  if (__predict_false(flags & O_CREAT)) {
+    __fortify_chk_fail("open(O_CREAT): called without specifying a mode", 0);
+  }
+
+  flags |= O_LARGEFILE;
+
+  return __openat(AT_FDCWD, pathname, flags, 0);
+}
 
 int openat(int fd, const char *pathname, int flags, ...) {
   mode_t mode = 0;

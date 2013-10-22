@@ -104,8 +104,6 @@ libc_common_src_files := \
 	bionic/md5.c \
 	bionic/memmem.c \
 	bionic/memswap.c \
-	bionic/openat.c \
-	bionic/open.c \
 	bionic/pathconf.c \
 	bionic/perror.c \
 	bionic/pread.c \
@@ -225,6 +223,7 @@ libc_bionic_src_files := \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
     bionic/mkfifo.cpp \
+    bionic/open.cpp \
     bionic/pthread_attr.cpp \
     bionic/pthread_detach.cpp \
     bionic/pthread_equal.cpp \
