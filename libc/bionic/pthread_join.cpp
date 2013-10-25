@@ -27,17 +27,19 @@
  */
 
 #include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "pthread_accessor.h"
 
 int pthread_join(pthread_t t, void** ret_val) {
-  if (t == pthread_self()) {
-    return EDEADLK;
+  pthread_accessor thread(t);
+  if (thread.get() == NULL || thread.get()->tid == getpid()) {
+      return ESRCH;
   }
 
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
-      return ESRCH;
+  if (t == pthread_self()) {
+    return EDEADLK;
   }
 
   if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {

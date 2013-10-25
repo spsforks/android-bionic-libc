@@ -144,9 +144,25 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
-TEST(pthread, pthread_join_self) {
+TEST(pthread, pthread_join_self_no_thread) {
   void* result;
-  ASSERT_EQ(EDEADLK, pthread_join(pthread_self(), &result));
+  ASSERT_EQ(ESRCH, pthread_join(pthread_self(), &result));
+}
+
+static void* TestJoinSelf(void* data) {
+  int* ret_val = reinterpret_cast<int*>(data);
+
+  *ret_val = pthread_join(pthread_self(), NULL);
+  return NULL;
+}
+
+TEST(pthread, pthread_join_self) {
+  int result = 0;
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL, TestJoinSelf, &result));
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+
+  ASSERT_EQ(EDEADLK, result);
 }
 
 #if __BIONIC__ // For some reason, gtest on bionic can cope with this but gtest on glibc can't.
