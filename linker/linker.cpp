@@ -393,7 +393,7 @@ static void parse_LD_PRELOAD(const char* path) {
              gLdPreloadsBuffer, sizeof(gLdPreloadsBuffer), LDPRELOAD_MAX);
 }
 
-#ifdef ANDROID_ARM_LINKER
+#if defined(__arm__)
 
 /* For a given PC, find the .so that it belongs to.
  * Returns the base address of the .ARM.exidx section
@@ -845,7 +845,7 @@ int do_dlclose(soinfo* si) {
   return result;
 }
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(__LP64__)
 static int soinfo_relocate_a(soinfo* si, Elf_Rela* rela, unsigned count, soinfo* needed[]) {
   Elf_Sym* symtab = si->symtab;
   const char* strtab = si->strtab;
@@ -1018,33 +1018,33 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
                   */
 
                 switch (type) {
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
                 case R_ARM_JUMP_SLOT:
                 case R_ARM_GLOB_DAT:
                 case R_ARM_ABS32:
                 case R_ARM_RELATIVE:    /* Don't care. */
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(__i386__)
                 case R_386_JMP_SLOT:
                 case R_386_GLOB_DAT:
                 case R_386_32:
                 case R_386_RELATIVE:    /* Don't care. */
-#endif /* ANDROID_*_LINKER */
+#endif
                     /* sym_addr was initialized to be zero above or relocation
                        code below does not care about value of sym_addr.
                        No need to do anything.  */
                     break;
 
-#if defined(ANDROID_X86_LINKER)
+#if defined(__i386__)
                 case R_386_PC32:
                     sym_addr = reloc;
                     break;
-#endif /* ANDROID_X86_LINKER */
+#endif
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
                 case R_ARM_COPY:
                     /* Fall through.  Can't really copy if weak symbol is
                        not found in run-time.  */
-#endif /* ANDROID_ARM_LINKER */
+#endif
                 default:
                     DL_ERR("unknown weak reloc type %d @ %p (%d)",
                                  type, rel, (int) (rel - start));
@@ -1071,7 +1071,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
  * different files.
  */
         switch (type) {
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
         case R_ARM_JUMP_SLOT:
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
@@ -1097,7 +1097,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
                        reloc, sym_addr, rel->r_offset, sym_name);
             *reinterpret_cast<Elf_Addr*>(reloc) += sym_addr - rel->r_offset;
             break;
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(__i386__)
         case R_386_JMP_SLOT:
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
@@ -1110,7 +1110,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
             TRACE_TYPE(RELO, "RELO GLOB_DAT %08x <- %08x %s", reloc, sym_addr, sym_name);
             *reinterpret_cast<Elf_Addr*>(reloc) = sym_addr;
             break;
-#elif defined(ANDROID_MIPS_LINKER)
+#elif defined(__mips__)
     case R_MIPS_REL32:
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
@@ -1122,13 +1122,13 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
                 *reinterpret_cast<Elf_Addr*>(reloc) += si->base;
             }
             break;
-#endif /* ANDROID_*_LINKER */
+#endif
 
-#if defined(ANDROID_ARM_LINKER)
+#if defined(__arm__)
         case R_ARM_RELATIVE:
-#elif defined(ANDROID_X86_LINKER)
+#elif defined(__i386__)
         case R_386_RELATIVE:
-#endif /* ANDROID_*_LINKER */
+#endif
             count_relocation(kRelocRelative);
             MARK(rel->r_offset);
             if (sym) {
@@ -1140,7 +1140,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
             *reinterpret_cast<Elf_Addr*>(reloc) += si->base;
             break;
 
-#if defined(ANDROID_X86_LINKER)
+#if defined(__i386__)
         case R_386_32:
             count_relocation(kRelocRelative);
             MARK(rel->r_offset);
@@ -1156,9 +1156,9 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
                        reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
             *reinterpret_cast<Elf_Addr*>(reloc) += (sym_addr - reloc);
             break;
-#endif /* ANDROID_X86_LINKER */
+#endif
 
-#ifdef ANDROID_ARM_LINKER
+#if defined(__arm__)
         case R_ARM_COPY:
             if ((si->flags & FLAG_EXE) == 0) {
                 /*
@@ -1201,7 +1201,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
                 return -1;
             }
             break;
-#endif /* ANDROID_ARM_LINKER */
+#endif
 
         default:
             DL_ERR("unknown reloc type %d @ %p (%d)",
@@ -1213,7 +1213,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
 }
 #endif
 
-#ifdef ANDROID_MIPS_LINKER
+#if defined(__mips__)
 static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
     unsigned* got = si->plt_got;
     if (got == NULL) {
@@ -1458,7 +1458,7 @@ static bool soinfo_link_image(soinfo* si) {
         }
     }
 
-#ifdef ANDROID_ARM_LINKER
+#if defined(__arm__)
     (void) phdr_table_get_arm_exidx(phdr, phnum, base,
                                     &si->ARM_exidx, &si->ARM_exidx_count);
 #endif
@@ -1481,7 +1481,7 @@ static bool soinfo_link_image(soinfo* si) {
         case DT_SYMTAB:
             si->symtab = (Elf_Sym *) (base + d->d_un.d_ptr);
             break;
-#if !defined(ANDROID_X86_64_LINKER)
+#if !defined(__LP64__)
         case DT_PLTREL:
             if (d->d_un.d_val != DT_REL) {
                 DL_ERR("unsupported DT_RELA in \"%s\"", si->name);
@@ -1490,22 +1490,22 @@ static bool soinfo_link_image(soinfo* si) {
             break;
 #endif
         case DT_JMPREL:
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(__LP64__)
             si->plt_rela = (Elf_Rela*) (base + d->d_un.d_ptr);
 #else
             si->plt_rel = (Elf_Rel*) (base + d->d_un.d_ptr);
 #endif
             break;
         case DT_PLTRELSZ:
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(__LP64__)
             si->plt_rela_count = d->d_un.d_val / sizeof(Elf_Rela);
 #else
             si->plt_rel_count = d->d_un.d_val / sizeof(Elf_Rel);
 #endif
             break;
+#if !defined(__LP64__)
         case DT_PLTGOT:
-#if !defined(ANDROID_X86_64_LINKER)
-            /* Save this in case we decide to do lazy binding. We don't yet. */
+            // Save this in case we decide to do lazy binding. We don't yet.
             si->plt_got = (unsigned *)(base + d->d_un.d_ptr);
             break;
 #endif
@@ -1516,7 +1516,7 @@ static bool soinfo_link_image(soinfo* si) {
                 d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
             }
             break;
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(__LP64__)
          case DT_RELA:
             si->rela = (Elf_Rela*) (base + d->d_un.d_ptr);
             break;
@@ -1589,7 +1589,7 @@ static bool soinfo_link_image(soinfo* si) {
             }
             break;
 #endif
-#if defined(ANDROID_MIPS_LINKER)
+#if defined(__mips__)
         case DT_STRSZ:
         case DT_SYMENT:
         case DT_RELENT:
@@ -1697,7 +1697,7 @@ static bool soinfo_link_image(soinfo* si) {
         }
     }
 
-#if defined(ANDROID_X86_64_LINKER)
+#if defined(__LP64__)
     if (si->plt_rela != NULL) {
         DEBUG("[ relocating %s plt ]\n", si->name );
         if (soinfo_relocate_a(si, si->plt_rela, si->plt_rela_count, needed)) {
@@ -1725,7 +1725,7 @@ static bool soinfo_link_image(soinfo* si) {
     }
 #endif
 
-#ifdef ANDROID_MIPS_LINKER
+#if defined(__mips__)
     if (!mips_relocate_got(si, needed)) {
         return false;
     }
@@ -1761,7 +1761,7 @@ static bool soinfo_link_image(soinfo* si) {
  * Also, it makes bionic more like glibc.
  */
 static void add_vdso(KernelArgumentBlock& args UNUSED) {
-#ifdef AT_SYSINFO_EHDR
+#if defined(AT_SYSINFO_EHDR)
     Elf_Ehdr* ehdr_vdso = reinterpret_cast<Elf_Ehdr*>(args.getauxval(AT_SYSINFO_EHDR));
 
     soinfo* si = soinfo_alloc("[vdso]");
@@ -1852,7 +1852,7 @@ static Elf_Addr __linker_init_post_relocation(KernelArgumentBlock& args, Elf_Add
      */
     {
         static soinfo linker_soinfo;
-#ifdef __LP64__
+#if defined(__LP64__)
         strlcpy(linker_soinfo.name, "/system/bin/linker64", sizeof(linker_soinfo.name));
 #else
         strlcpy(linker_soinfo.name, "/system/bin/linker", sizeof(linker_soinfo.name));
