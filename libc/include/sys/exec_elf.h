@@ -1,4 +1,4 @@
-/*	$NetBSD: exec_elf.h,v 1.126 2012/08/05 01:43:59 matt Exp $	*/
+/*	$NetBSD: exec_elf.h,v 1.129 2013/09/10 16:24:02 matt Exp $	*/
 
 /*-
  * Copyright (c) 1994 The NetBSD Foundation, Inc.
@@ -429,6 +429,13 @@ typedef struct {
 #define SHT_HIOS	     0x6fffffff
 #define SHT_LOPROC	     0x70000000 /* Processor-specific range */
 #define SHT_AMD64_UNWIND     0x70000001 /* unwind information */
+#define SHT_ARM_EXIDX	     0x70000001	/* exception index table */
+#define SHT_ARM_PREEMPTMAP   0x70000002 /* BPABI DLL dynamic linking 
+					 * pre-emption map */
+#define SHT_ARM_ATTRIBUTES   0x70000003 /* Object file compatibility 
+					 * attributes */
+#define SHT_ARM_DEBUGOVERLAY 0x70000004 /* See DBGOVL for details */
+#define SHT_ARM_OVERLAYSECTION 0x70000005
 #define SHT_HIPROC	     0x7fffffff
 #define SHT_LOUSER	     0x80000000 /* Application-specific range */
 #define SHT_HIUSER	     0xffffffff
@@ -668,7 +675,12 @@ typedef struct {
 #define DT_FINI_ARRAY	26	/* Size, in bytes, of DT_INIT_ARRAY array */
 #define DT_INIT_ARRAYSZ 27	/* Address of termination function array */
 #define DT_FINI_ARRAYSZ 28	/* Size, in bytes, of DT_FINI_ARRAY array*/
-#define DT_NUM		29
+#define DT_RUNPATH	29	/* overrides DT_RPATH */
+#define DT_FLAGS	30	/* Encodes ORIGIN, SYMBOLIC, TEXTREL, BIND_NOW, STATIC_TLS */
+#define DT_ENCODING	31	/* ??? */
+#define DT_PREINIT_ARRAY 32	/* Address of pre-init function array */
+#define DT_PREINIT_ARRAYSZ 33	/* Size, in bytes, of DT_PREINIT_ARRAY array */
+#define DT_NUM		34
 
 #define DT_LOOS		0x60000000	/* Operating system specific range */
 #define DT_VERSYM	0x6ffffff0	/* Symbol versions */
