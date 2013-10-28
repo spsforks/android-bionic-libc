@@ -26,11 +26,11 @@ static int child_fn(void* i_ptr) {
   return 123;
 }
 
-TEST(sched, clone) {
+static void clone_test(int* exit_code) {
   void* child_stack[1024];
 
   int i = 0;
-  pid_t tid = clone(child_fn, &child_stack[1024], /*CLONE_FILES | CLONE_FS | */CLONE_VM/* | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM*/, &i);
+  pid_t tid = clone(child_fn, &child_stack[1024], CLONE_VM, &i);
 
   int status;
   ASSERT_EQ(tid, TEMP_FAILURE_RETRY(waitpid(tid, &status, __WCLONE)));
@@ -39,4 +39,30 @@ TEST(sched, clone) {
 
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(123, WEXITSTATUS(status));
+  if (exit_code != NULL) {
+    // If any of the above asserts fire, this code will not be executed and
+    // exit_code will have the same value as when the function was called.
+    *exit_code = 13;
+  }
+}
+
+TEST(sched, clone) {
+#if __BIONIC__
+  clone_test(NULL);
+#else
+  // There is a bug in glibc that causes pthread tests to fail when clone
+  // is called in the same process. For now fork off a process to allow the
+  // test to complete properly. Making this a DeathTest can work, but loses
+  // fidelity about what failed.
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    int exit_code = 0;
+    clone_test(&exit_code);
+    exit(exit_code);
+  }
+  int status;
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(13, WEXITSTATUS(status));
+#endif
 }
