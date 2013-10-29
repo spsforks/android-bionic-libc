@@ -280,7 +280,7 @@ literal:
 			if (flags & SUPPRESS)
 				continue;
 			if (flags & SHORTSHORT)
-				*va_arg(ap, __signed char *) = nread;
+				*va_arg(ap, signed char *) = nread;
 			else if (flags & SHORT)
 				*va_arg(ap, short *) = nread;
 			else if (flags & LONG)
@@ -595,7 +595,7 @@ literal:
 				else if (flags & SHORT)
 					*va_arg(ap, short *) = res;
 				else if (flags & SHORTSHORT)
-					*va_arg(ap, __signed char *) = res;
+					*va_arg(ap, signed char *) = res;
 				else
 					*va_arg(ap, int *) = res;
 				nassigned++;

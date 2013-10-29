@@ -84,9 +84,6 @@
 #define	__CONCAT(x,y)	x ## y
 #define	__STRING(x)	#x
 
-#define	__const		const		/* define reserved names to standard */
-#define	__signed	signed
-#define	__volatile	volatile
 #if defined(__cplusplus)
 #define	__inline	inline		/* convert to C++ keyword */
 #else
@@ -160,8 +157,8 @@
 #if !__GNUC_PREREQ__(2, 5)
 #define	__attribute__(x)	/* delete __attribute__ if non-gcc or gcc1 */
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
-#define	__dead		__volatile
-#define	__pure		__const
+#define	__dead		volatile
+#define	__pure		const
 #endif
 #endif
 
@@ -269,7 +266,7 @@
  * arbitrary, might work with older compilers.
  */
 #if __GNUC_PREREQ__(2, 95)
-#define	__insn_barrier()	__asm __volatile("":::"memory")
+#define	__insn_barrier()	__asm volatile("":::"memory")
 #else
 #define	__insn_barrier()	/* */
 #endif

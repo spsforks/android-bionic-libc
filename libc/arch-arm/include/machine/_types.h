@@ -36,7 +36,7 @@
 #define _ARM__TYPES_H_
 
 /* 7.18.1.1 Exact-width integer types */
-typedef	__signed char		__int8_t;
+typedef	signed char		__int8_t;
 typedef	unsigned char		__uint8_t;
 typedef	short			__int16_t;
 typedef	unsigned short		__uint16_t;
