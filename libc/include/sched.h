@@ -203,8 +203,8 @@ extern void       __sched_cpufree(cpu_set_t* set);
 
 #define CPU_EQUAL_S(setsize_, set1_, set2_) \
     (__extension__ ({ \
-        __const __CPU_BITTYPE* __src1 = (set1_)->__bits; \
-        __const __CPU_BITTYPE* __src2 = (set2_)->__bits; \
+        const __CPU_BITTYPE* __src1 = (set1_)->__bits; \
+        const __CPU_BITTYPE* __src2 = (set2_)->__bits; \
         size_t __nn = 0, __nn_max = (setsize_)/sizeof(__CPU_BITTYPE); \
         for (; __nn < __nn_max; __nn++) { \
             if (__src1[__nn] != __src2[__nn]) \
