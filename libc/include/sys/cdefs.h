@@ -179,7 +179,7 @@
 
 #define __pure2 __attribute__((__const__)) /* Android-added: used by FreeBSD libm */
 
-#if __GNUC_PREREQ__(3, 1)
+#if __GNUC_PREREQ__(3, 1) && !defined(__clang__)
 #define	__used		__attribute__((__used__))
 #else
 #define	__used		/* delete */
