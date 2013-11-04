@@ -726,9 +726,12 @@ typedef struct MutexProf {
     uint64_t lockedMaxTime;
     uint64_t contendedTotalTime;
     uint64_t lockTimestamp;
+    int stackDepth;
+    uintptr_t stackTrace[STACK_TRACE_DEPTH];
 } MutexProf;
 
 static int sPthreadProfile = 0;
+static pid_t sPthreadProfileDisabledThread = -1;
 static pthread_mutex_t sProfLock = PTHREAD_MUTEX_INITIALIZER;
 
 #define PROF_ALLOC_BLOCK_SIZE PAGESIZE
@@ -774,6 +777,7 @@ static void initMutexProf(MutexProf* object, pthread_mutex_t* mutex) {
     object->lockedTotalTime = 0;
     object->lockedMaxTime = 0;
     object->contendedTotalTime = 0;
+    object->stackDepth = 0;
 }
 
 static void mutex_lock_profile(MutexProf* object, uint64_t cont_time)
@@ -788,6 +792,12 @@ static void mutex_lock_profile(MutexProf* object, uint64_t cont_time)
     if (cont_time) {
         object->contendedCount++;
         object->contendedTotalTime+= cont_time;
+    }
+    if (object->stackDepth == 0) {
+        sPthreadProfileDisabledThread = gettid();
+        object->stackDepth =
+            get_backtrace(object->stackTrace, STACK_TRACE_DEPTH);
+        sPthreadProfileDisabledThread = -1;
     }
 }
 
@@ -838,6 +848,8 @@ void pthread_debug_mutex_lock_profile(pthread_mutex_t* mutex, uint64_t cont_time
 {
     if (!propertyProfileEnabled())
         return;
+    if (sPthreadProfileDisabledThread == gettid())
+        return;
 
     MutexProf* object = get_mutex_profile(mutex);
     mutex_lock_profile(object, cont_time);
@@ -847,6 +859,8 @@ extern "C" __LIBC_HIDDEN__
 void pthread_debug_mutex_unlock_profile(pthread_mutex_t* mutex)
 {
     if (!propertyProfileEnabled())
+        return;
+    if (sPthreadProfileDisabledThread == gettid())
         return;
 
     MutexProf* object = get_mutex_profile(mutex);
@@ -865,15 +879,21 @@ static void ProfShowProfile(void const* data)
         object->lockedTotalTime / (1000*object->lockedCount),
         object->contendedCount, object->contendedTotalTime/1000,
         (int)((object->contendedTotalTime*100)/object->lockedTotalTime));
+    if (object->stackDepth)
+        log_backtrace(object->stackTrace, object->stackDepth);
 }
 
 static void pthread_debug_show_profile()
 {
+    sPthreadProfileDisabledThread = gettid();
+
     LOGI("pthread mutex profile for pid %d (%s)", getpid(), __progname);
     LOGI("Address : Locked LockedTotalTime LockedMaxTime LockedAvgTime"
         " : Contended ContendedTotalTime ContendedProp (time-unit: us)");
 
     hashmap_traverse(&sMutexProfMap, ProfShowProfile);
+
+    sPthreadProfileDisabledThread = -1;
 }
 
 static void pthread_debug_show_profile_final()
