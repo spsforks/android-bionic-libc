@@ -46,7 +46,8 @@ __aeabi_atexit (void *object, void (*destructor) (void *), void *dso_handle)
     return __cxa_atexit(destructor, object, dso_handle);
 }
 
-
+/* Compiler-rt provides it's own implementations of all aeabi_mem* routines */
+#if !defined(__clang__)
 void __aeabi_memcpy8(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
@@ -101,3 +102,4 @@ void __aeabi_memclr4(void *dest, size_t n) {
 void __aeabi_memclr(void *dest, size_t n) {
     __aeabi_memset(dest, n, 0);
 }
+#endif
