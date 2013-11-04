@@ -17,8 +17,23 @@ _LIBC_ARCH_COMMON_SRC_FILES := \
     arch-arm/bionic/tgkill.S \
     arch-arm/bionic/tkill.S \
 
+# Compiler-rt includes these __aeabi_mem* functions already.
+# This is an issue for clang builds when libc is linked once,
+# since static modules then implement compiler-rt's functions
+# over libc's.
+# 
+# By implementing these functions from compiler-rt, modules
+# which link against libc will be able to resolve these symbols.
+_LIBC_ARCH_COMMON_SRC_FILES += \
+    arch-arm/bionic/compiler-rt/aeabi_memclr.S \
+    arch-arm/bionic/compiler-rt/aeabi_memcmp.S \
+    arch-arm/bionic/compiler-rt/aeabi_memcpy.S \
+    arch-arm/bionic/compiler-rt/aeabi_memmove.S \
+    arch-arm/bionic/compiler-rt/aeabi_memset.S
+
 # These are used by the static and dynamic versions of the libc
 # respectively.
+
 _LIBC_ARCH_STATIC_SRC_FILES := \
     arch-arm/bionic/exidx_static.c \
     bionic/dl_iterate_phdr_static.c \
