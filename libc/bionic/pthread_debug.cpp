@@ -267,15 +267,20 @@ static void mutex_unlock_checked(MutexInfo* object);
 
 /****************************************************************************/
 
-extern int pthread_mutex_lock_impl(pthread_mutex_t *mutex);
+extern int pthread_mutex_lock_impl(pthread_mutex_t *mutex, uint64_t *cont_time);
 extern int pthread_mutex_unlock_impl(pthread_mutex_t *mutex);
+extern int pthread_mutex_trylock_impl(pthread_mutex_t *mutex);
 
 static int pthread_mutex_lock_unchecked(pthread_mutex_t *mutex) {
-    return pthread_mutex_lock_impl(mutex);
+    return pthread_mutex_lock_impl(mutex, NULL);
 }
 
 static int pthread_mutex_unlock_unchecked(pthread_mutex_t *mutex) {
     return pthread_mutex_unlock_impl(mutex);
+}
+
+static int pthread_mutex_trylock_unchecked(pthread_mutex_t *mutex) {
+    return pthread_mutex_trylock_impl(mutex);
 }
 
 /****************************************************************************/
@@ -507,7 +512,8 @@ struct HashTable {
     HashEntry* slots[HASHTABLE_SIZE];
 };
 
-static HashTable sMutexMap;
+static HashTable sMutexInfoMap;
+static HashTable sMutexProfMap;
 static HashTable sThreadMap;
 
 /****************************************************************************/
@@ -543,7 +549,8 @@ static void hashmap_init(HashTable* table) {
 
 static HashEntry* hashmap_lookup(HashTable* table,
         void const* key, size_t ksize,
-        int (*equals)(void const* data, void const* key))
+        int (*equals)(void const* data, void const* key),
+        HashEntry *(*AllocLocked)(size_t count))
 {
     const uint32_t hash = get_hashcode(key, ksize);
     const size_t slot = get_index(hash);
@@ -558,7 +565,7 @@ static HashEntry* hashmap_lookup(HashTable* table,
 
     if (entry == NULL) {
         // create a new entry
-        entry = DbgAllocLocked<HashEntry>();
+        entry = AllocLocked(1);
         entry->data = NULL;
         entry->slot = slot;
         entry->prev = NULL;
@@ -571,6 +578,23 @@ static HashEntry* hashmap_lookup(HashTable* table,
     return entry;
 }
 
+static void hashmap_traverse(HashTable* table,
+        void (*DoLocked)(void const* data))
+{
+    int i;
+
+    for (i = 0; i < HASHTABLE_SIZE; i++) {
+        HashEntry* entry = table->slots[i];
+        while (entry) {
+            if (entry->data) {
+                DoLocked(entry->data);
+            }
+            entry = entry->next;
+        }
+    }
+}
+
+
 /****************************************************************************/
 
 static int MutexInfo_equals(void const* data, void const* key) {
@@ -581,9 +605,10 @@ static MutexInfo* get_mutex_info(pthread_mutex_t *mutex)
 {
     pthread_mutex_lock_unchecked(&sDbgLock);
 
-    HashEntry* entry = hashmap_lookup(&sMutexMap,
+    HashEntry* entry = hashmap_lookup(&sMutexInfoMap,
             &mutex, sizeof(mutex),
-            &MutexInfo_equals);
+            &MutexInfo_equals,
+            DbgAllocLocked<HashEntry>);
     if (entry->data == NULL) {
         MutexInfo* mutex_info = DbgAllocLocked<MutexInfo>();
         entry->data = mutex_info;
@@ -607,7 +632,8 @@ static ThreadInfo* get_thread_info(pid_t pid)
 
     HashEntry* entry = hashmap_lookup(&sThreadMap,
             &pid, sizeof(pid),
-            &ThreadInfo_equals);
+            &ThreadInfo_equals,
+            DbgAllocLocked<HashEntry>);
     if (entry->data == NULL) {
         ThreadInfo* thread_info = DbgAllocLocked<ThreadInfo>();
         entry->data = thread_info;
@@ -642,25 +668,6 @@ static void remove_most_recently_locked(MutexInfo* mrl) {
 static MutexInfo* get_most_recently_locked() {
     ThreadInfo* tinfo = get_thread_info(gettid());
     return tinfo->mrl;
-}
-
-/****************************************************************************/
-
-/* pthread_debug_init() is called from libc_init_dynamic() just
- * after system properties have been initialized
- */
-
-extern "C" __LIBC_HIDDEN__ void pthread_debug_init() {
-    char env[PROP_VALUE_MAX];
-    if (__system_property_get("debug.libc.pthread", env)) {
-        int level = atoi(env);
-        if (level) {
-            LOGI("pthread deadlock detection level %d enabled for pid %d (%s)",
-                    level, getpid(), __progname);
-            hashmap_init(&sMutexMap);
-            sPthreadDebugLevel = level;
-        }
-    }
 }
 
 /*
@@ -699,4 +706,266 @@ extern "C" __LIBC_HIDDEN__ void pthread_debug_mutex_unlock_check(pthread_mutex_t
     MutexInfo* object = get_mutex_info(mutex);
     remove_most_recently_locked(object);
     mutex_unlock_checked(object);
+}
+
+/****************************************************************************/
+
+/*
+ * Mutex Profile
+ */
+typedef struct MutexProf {
+    // thread currently holding the lock or 0
+    pid_t               owner;
+
+    // the actual mutex
+    pthread_mutex_t*    mutex;
+
+    int lockedCount;
+    int contendedCount;
+    uint64_t lockedTotalTime;
+    uint64_t lockedMaxTime;
+    uint64_t contendedTotalTime;
+    uint64_t lockTimestamp;
+} MutexProf;
+
+static int sPthreadProfile = 0;
+static pthread_mutex_t sProfLock = PTHREAD_MUTEX_INITIALIZER;
+
+#define PROF_ALLOC_BLOCK_SIZE PAGESIZE
+static size_t sProfAllocOffset = PROF_ALLOC_BLOCK_SIZE;
+static char* sProfAllocPtr = NULL;
+
+__LIBC_HIDDEN__
+uint64_t nsec(void) {
+    struct timespec ts;
+
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+}
+
+__LIBC_HIDDEN__
+int propertyProfileEnabled(void)
+{
+    return sPthreadProfile;
+}
+
+template <typename T>
+static T* ProfAllocLocked(size_t count = 1) {
+    size_t size = sizeof(T) * count;
+    if ((sProfAllocOffset + size) > PROF_ALLOC_BLOCK_SIZE) {
+        sProfAllocOffset = 0;
+        sProfAllocPtr = reinterpret_cast<char*>(mmap(NULL, PROF_ALLOC_BLOCK_SIZE,
+                                                    PROT_READ|PROT_WRITE,
+                                                    MAP_ANON | MAP_PRIVATE, 0, 0));
+        if (sProfAllocPtr == MAP_FAILED) {
+            return NULL;
+        }
+    }
+    void* addr = sProfAllocPtr + sProfAllocOffset;
+    sProfAllocOffset += size;
+    return reinterpret_cast<T*>(addr);
+}
+
+static void initMutexProf(MutexProf* object, pthread_mutex_t* mutex) {
+    object->owner = 0;
+    object->lockedCount = 0;
+    object->contendedCount = 0;
+    object->mutex = mutex;
+    object->lockedTotalTime = 0;
+    object->lockedMaxTime = 0;
+    object->contendedTotalTime = 0;
+}
+
+static void mutex_lock_profile(MutexProf* object, uint64_t cont_time)
+{
+    pid_t tid = gettid();
+    // Skip recursive
+    if (object->owner == tid)
+        return;
+
+    object->owner = tid;
+    object->lockTimestamp = nsec();
+    if (cont_time) {
+        object->contendedCount++;
+        object->contendedTotalTime+= cont_time;
+    }
+}
+
+static void mutex_unlock_profile(MutexProf* object)
+{
+    uint64_t t, tmp;
+
+    pid_t tid = gettid();
+    if (object->owner != tid)
+        return;
+
+    tmp = nsec();
+    if (tmp > object->lockTimestamp)
+        t = tmp - object->lockTimestamp;
+    else
+        t = 0;
+    object->lockedCount++;
+    object->lockedTotalTime += t;
+    if (t > object->lockedMaxTime)
+        object->lockedMaxTime = t;
+}
+
+static int MutexProf_equals(void const* data, void const* key) {
+    return ((MutexProf const *)data)->mutex == *(pthread_mutex_t **)key;
+}
+
+static MutexProf* get_mutex_profile(pthread_mutex_t* mutex)
+{
+    pthread_mutex_lock_unchecked(&sProfLock);
+
+    HashEntry* entry = hashmap_lookup(&sMutexProfMap,
+            &mutex, sizeof(mutex),
+            &MutexProf_equals,
+            ProfAllocLocked<HashEntry>);
+    if (entry->data == NULL) {
+        MutexProf* mutex_prof = ProfAllocLocked<MutexProf>();
+        entry->data = mutex_prof;
+        initMutexProf(mutex_prof, mutex);
+    }
+
+    pthread_mutex_unlock_unchecked(&sProfLock);
+
+    return (MutexProf*)entry->data;
+}
+
+extern "C" __LIBC_HIDDEN__
+void pthread_debug_mutex_lock_profile(pthread_mutex_t* mutex, uint64_t cont_time)
+{
+    if (!propertyProfileEnabled())
+        return;
+
+    MutexProf* object = get_mutex_profile(mutex);
+    mutex_lock_profile(object, cont_time);
+}
+
+extern "C" __LIBC_HIDDEN__
+void pthread_debug_mutex_unlock_profile(pthread_mutex_t* mutex)
+{
+    if (!propertyProfileEnabled())
+        return;
+
+    MutexProf* object = get_mutex_profile(mutex);
+    mutex_unlock_profile(object);
+}
+
+static void ProfShowProfile(void const* data)
+{
+    MutexProf* object = (MutexProf*)data;
+    pthread_mutex_t* mutex = object->mutex;
+    if (!object->lockedCount || !object->lockedTotalTime || !object->contendedCount)
+        return;
+
+    LOGI("%p : %d %llu %llu %llu : %d %llu %d %%", mutex,
+        object->lockedCount, object->lockedTotalTime/1000, object->lockedMaxTime/1000,
+        object->lockedTotalTime / (1000*object->lockedCount),
+        object->contendedCount, object->contendedTotalTime/1000,
+        (int)((object->contendedTotalTime*100)/object->lockedTotalTime));
+}
+
+static void pthread_debug_show_profile()
+{
+    LOGI("pthread mutex profile for pid %d (%s)", getpid(), __progname);
+    LOGI("Address : Locked LockedTotalTime LockedMaxTime LockedAvgTime"
+        " : Contended ContendedTotalTime ContendedProp (time-unit: us)");
+
+    hashmap_traverse(&sMutexProfMap, ProfShowProfile);
+}
+
+static void pthread_debug_show_profile_final()
+{
+    static int shown = 0; /* protected by sProfLock */
+    int err;
+
+    if (!propertyProfileEnabled() || shown)
+        return;
+
+    err = pthread_mutex_trylock_unchecked(&sProfLock);
+    if (err) {
+        LOGI("pthread mutex profile failed to show for pid %d (%s)",
+                getpid(), __progname);
+        return;
+    }
+
+    if (shown) {
+        pthread_mutex_unlock_unchecked(&sProfLock);
+        return;
+    }
+    shown = 1;
+    pthread_debug_show_profile();
+
+    pthread_mutex_unlock_unchecked(&sProfLock);
+}
+
+static void profile_sig_cb(int sig)
+{
+    int err;
+
+    err = pthread_mutex_trylock_unchecked(&sProfLock);
+    if (err) {
+        LOGI("pthread mutex profile failed to show for pid %d (%s) via %d signal",
+                getpid(), __progname, sig);
+        return;
+    }
+
+    pthread_debug_show_profile();
+    pthread_mutex_unlock_unchecked(&sProfLock);
+}
+
+static void profile_sig_init()
+{
+    struct sigaction sig_action;
+
+    if (!propertyProfileEnabled())
+        return;
+
+    sig_action.sa_handler = profile_sig_cb;
+    sigemptyset(&sig_action.sa_mask);
+    sig_action.sa_flags = 0;
+    sigaction(SIGRTMIN, &sig_action, NULL);
+}
+
+/****************************************************************************/
+
+/* pthread_debug_init() is called from libc_init_dynamic() just
+ * after system properties have been initialized
+ */
+
+extern "C" __LIBC_HIDDEN__
+void pthread_debug_init(void) {
+    char env[PROP_VALUE_MAX];
+    if (__system_property_get("debug.libc.pthread", env)) {
+        int level = atoi(env);
+        if (level) {
+            LOGI("pthread deadlock detection level %d enabled for pid %d (%s)",
+                    level, getpid(), __progname);
+            hashmap_init(&sMutexInfoMap);
+            sPthreadDebugLevel = level;
+        }
+    }
+    if (__system_property_get("profile.libc.pthread", env)) {
+        int profile = atoi(env);
+        if (profile) {
+            LOGI("pthread mutex profiling enabled for pid %d (%s)",
+                    getpid(), __progname);
+            sPthreadProfile = 1;
+            hashmap_init(&sMutexProfMap);
+            profile_sig_init();
+        }
+    }
+}
+
+extern "C" __LIBC_HIDDEN__
+void pthread_debug_fini(void) {
+    char env[PROP_VALUE_MAX];
+    if (__system_property_get("show_profile.libc.pthread", env)) {
+        int show = atoi(env);
+        if (show) {
+            pthread_debug_show_profile_final();
+        }
+    }
 }
