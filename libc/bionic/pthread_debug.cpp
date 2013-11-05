@@ -267,8 +267,8 @@ static void mutex_unlock_checked(MutexInfo* object);
 
 /****************************************************************************/
 
-extern "C" int pthread_mutex_lock_impl(pthread_mutex_t *mutex);
-extern "C" int pthread_mutex_unlock_impl(pthread_mutex_t *mutex);
+extern int pthread_mutex_lock_impl(pthread_mutex_t *mutex);
+extern int pthread_mutex_unlock_impl(pthread_mutex_t *mutex);
 
 static int pthread_mutex_lock_unchecked(pthread_mutex_t *mutex) {
     return pthread_mutex_lock_impl(mutex);
@@ -539,18 +539,6 @@ static size_t get_index(uint32_t h)
 
 static void hashmap_init(HashTable* table) {
     memset(table, 0, sizeof(HashTable));
-}
-
-static void hashmap_removeEntry(HashTable* table, HashEntry* entry)
-{
-    HashEntry* prev = entry->prev;
-    HashEntry* next = entry->next;
-    if (prev != NULL) entry->prev->next = next;
-    if (next != NULL) entry->next->prev = prev;
-    if (prev == NULL) {
-        // we are the head of the list. set the head to be next
-        table->slots[entry->slot] = entry->next;
-    }
 }
 
 static HashEntry* hashmap_lookup(HashTable* table,
