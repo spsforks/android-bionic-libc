@@ -42,8 +42,14 @@
 #include "private/bionic_tls.h"
 #include "private/thread_private.h"
 
-extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
-extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
+#ifndef PTHREAD_DEBUG_ENABLED
+#define PTHREAD_DEBUG_ENABLED (false)
+#endif
+
+extern "C" {
+    extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
+    extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
+}
 
 /* a mutex is implemented as a 32-bit integer holding the following fields
  *

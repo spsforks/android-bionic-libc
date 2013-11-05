@@ -888,7 +888,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Set -DPTHREAD_DEBUG_ENABLED=true to enable support for pthread deadlock prediction.
 # Since this code is experimental it is disabled by default.
-LOCAL_CFLAGS += $(libc_common_cflags) -DPTHREAD_DEBUG_ENABLED=false
+LOCAL_CFLAGS += -DPTHREAD_DEBUG_ENABLED=false
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -994,6 +994,8 @@ LOCAL_SRC_FILES := \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
 	bionic/pthread_debug.cpp \
+	bionic/debug_mapinfo.cpp \
+	bionic/debug_stacktrace.cpp \
 	bionic/libc_init_dynamic.cpp
 
 ifeq ($(TARGET_ARCH),arm)
