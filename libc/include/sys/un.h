@@ -29,7 +29,10 @@
 #define _SYS_UN_H_
 
 #include <sys/_types.h>
+
+#ifndef _SYS_SOCKET_H_
 typedef __sa_family_t sa_family_t;
+#endif
 
 #include <linux/un.h>
 
