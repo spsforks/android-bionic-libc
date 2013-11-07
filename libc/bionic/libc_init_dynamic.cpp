@@ -58,6 +58,8 @@ extern "C" {
   extern void pthread_debug_init(void);
   extern void malloc_debug_init(void);
   extern void malloc_debug_fini(void);
+  extern void mmap_debug_init(void);
+  extern void mmap_debug_fini(void);
 };
 
 // We flag the __libc_preinit function as a constructor to ensure
@@ -79,10 +81,12 @@ __attribute__((constructor)) static void __libc_preinit() {
   // Hooks for the debug malloc and pthread libraries to let them know that we're starting up.
   pthread_debug_init();
   malloc_debug_init();
+  mmap_debug_init();
 }
 
 __LIBC_HIDDEN__ void __libc_postfini() {
   // A hook for the debug malloc library to let it know that we're shutting down.
+  mmap_debug_fini();
   malloc_debug_fini();
 }
 

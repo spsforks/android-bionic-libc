@@ -18,6 +18,7 @@
 
 #include "private/bionic_name_mem.h"
 #include "private/libc_logging.h"
+#include "private/mmap_debug.h"
 
 // Send dlmalloc errors to the log.
 static void __bionic_heap_corruption_error(const char* function);
@@ -56,7 +57,10 @@ static void* named_anonymous_mmap(size_t length)
     if (ret == MAP_FAILED)
         return ret;
 
-    __bionic_name_mem(ret, length, "libc_malloc");
+    // If libc.mmap.debug = 1, mmap_debug will fill the name of the VMA with the
+    // backtrace and we don't want to override it in that case.
+    if (!is_mmap_debug_enabled())
+      __bionic_name_mem(ret, length, "libc_malloc");
 
     return ret;
 }

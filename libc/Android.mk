@@ -996,6 +996,8 @@ LOCAL_SRC_FILES := \
 	$(libc_static_common_src_files) \
 	bionic/dlmalloc.c \
 	bionic/malloc_debug_common.cpp \
+	bionic/mmap_debug.cpp \
+	bionic/debug_stacktrace.cpp \
 	bionic/libc_init_static.cpp
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
@@ -1026,6 +1028,7 @@ LOCAL_SRC_FILES := \
     $(libc_static_common_src_files) \
     bionic/dlmalloc.c \
     bionic/malloc_debug_common.cpp \
+    bionic/mmap_debug.cpp \
     bionic/debug_mapinfo.cpp \
     bionic/debug_stacktrace.cpp \
     bionic/pthread_debug.cpp \

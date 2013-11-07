@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,39 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifndef _MMAP_DEBUG_H_
+#define _MMAP_DEBUG_H_
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "private/ErrnoRestorer.h"
+extern __LIBC_HIDDEN__ void (*mmap_debug_anon_fn)(void* addr, size_t size);
 
-// mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
+int is_mmap_debug_enabled(void);
 
-// This function pointer can be assigned to enable mmap backtrace debugging.
-void (*mmap_debug_anon_fn)(void* addr, size_t size);
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
-#define MMAP2_SHIFT 12 // 2**12 == 4096
-
-void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
-    errno = EINVAL;
-    return MAP_FAILED;
-  }
-
-  void* result = __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-  if (result != MAP_FAILED && (flags & (MAP_PRIVATE | MAP_ANONYMOUS)) != 0) {
-    ErrnoRestorer errno_restorer;
-    madvise(result, size, MADV_MERGEABLE);
-    if (mmap_debug_anon_fn != NULL) {
-      mmap_debug_anon_fn(result, size);
-    }
-  }
-
-  return result;
-}
-
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
-}
+#endif /* _MMAP_DEBUG_H_ */
