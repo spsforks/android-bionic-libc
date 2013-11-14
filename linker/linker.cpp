@@ -819,7 +819,7 @@ ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
 }
 
 ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
-  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
+  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - load_bias;
 
   // Search the library's symbol table for any defined symbol which
   // contains this address.
