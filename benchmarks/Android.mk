@@ -25,7 +25,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libbenchmark
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror
+LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror -std=gnu++11
 LOCAL_SRC_FILES := benchmark_main.cpp
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
