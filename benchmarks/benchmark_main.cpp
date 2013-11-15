@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "benchmark.h"
+#include <benchmark.h>
 
 #include <regex.h>
 #include <stdio.h>
@@ -29,7 +29,7 @@ static int64_t gBenchmarkStartTimeNs;
 
 typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
-static BenchmarkMap gBenchmarks;
+static BenchmarkMap *gBenchmarks;
 
 static int Round(int n) {
   int base = 1;
@@ -94,7 +94,10 @@ void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int
     exit(EXIT_FAILURE);
   }
 
-  gBenchmarks.insert(std::make_pair(name, this));
+  if (gBenchmarks == NULL) {
+    gBenchmarks = new BenchmarkMap;
+  }
+  gBenchmarks->insert(std::make_pair(name, this));
 }
 
 void Benchmark::Run() {
@@ -187,13 +190,13 @@ void StartBenchmarkTiming() {
 }
 
 int main(int argc, char* argv[]) {
-  if (gBenchmarks.empty()) {
+  if (gBenchmarks->empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
     exit(EXIT_FAILURE);
   }
 
   bool need_header = true;
-  for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
+  for (BenchmarkMapIt it = gBenchmarks->begin(); it != gBenchmarks->end(); ++it) {
     ::testing::Benchmark* b = it->second;
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
@@ -208,7 +211,7 @@ int main(int argc, char* argv[]) {
   if (need_header) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
-    for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
+    for (BenchmarkMapIt it = gBenchmarks->begin(); it != gBenchmarks->end(); ++it) {
       fprintf(stderr, "  %s\n", it->second->Name());
     }
     exit(EXIT_FAILURE);
