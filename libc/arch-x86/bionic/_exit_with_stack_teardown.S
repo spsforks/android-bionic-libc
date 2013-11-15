@@ -11,12 +11,10 @@ ENTRY(_exit_with_stack_teardown)
     mov     8(%esp), %ecx             // stackSize
     mov     $__NR_munmap, %eax
     int     $0x80
-
     // If munmap failed, we ignore the failure and exit anyway.
 
     mov     %edx, %ebx                // status
     movl    $__NR_exit, %eax
     int     $0x80
-
     // The exit syscall does not return.
 END(_exit_with_stack_teardown)
