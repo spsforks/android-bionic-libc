@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef BIONIC_BENCHMARK_H_
+#define BIONIC_BENCHMARK_H_
+
 #include <stdint.h>
 
 #include <vector>
@@ -59,3 +62,5 @@ void StartBenchmarkTiming();
 #define BENCHMARK(f) \
     static ::testing::Benchmark* _benchmark_##f __attribute__((unused)) = \
         (new ::testing::Benchmark(#f, f))
+
+#endif // BIONIC_BENCHMARK_H_

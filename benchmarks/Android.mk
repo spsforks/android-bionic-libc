@@ -19,6 +19,21 @@ ifneq ($(BUILD_TINY_ANDROID), true)
 LOCAL_PATH := $(call my-dir)
 
 # -----------------------------------------------------------------------------
+# Benchmarks library, used by projects outside this directory
+# -----------------------------------------------------------------------------
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libbenchmark
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror -std=gnu++11
+LOCAL_SRC_FILES := benchmark_main.cpp
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
+LOCAL_STATIC_LIBRARIES += libstlport_static
+include $(BUILD_STATIC_LIBRARY)
+
+# -----------------------------------------------------------------------------
 # Benchmarks.
 # -----------------------------------------------------------------------------
 
@@ -30,7 +45,6 @@ benchmark_c_flags = \
     -std=gnu++11 \
 
 benchmark_src_files = \
-    benchmark_main.cpp \
     math_benchmark.cpp \
     property_benchmark.cpp \
     string_benchmark.cpp \
@@ -42,9 +56,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-benchmarks
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_C_INCLUDES += external/stlport/stlport bionic/ bionic/libstdc++/include
-LOCAL_SHARED_LIBRARIES += libstlport
+LOCAL_STATIC_LIBRARIES += libbenchmark
 LOCAL_SRC_FILES := $(benchmark_src_files)
+include external/stlport/libstlport.mk
 include $(BUILD_EXECUTABLE)
 
 endif # !BUILD_TINY_ANDROID
