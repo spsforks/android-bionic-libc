@@ -22,14 +22,14 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 static int64_t gBytesProcessed;
 static int64_t gBenchmarkTotalTimeNs;
 static int64_t gBenchmarkStartTimeNs;
 
-typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
-typedef BenchmarkMap::iterator BenchmarkMapIt;
-static BenchmarkMap *gBenchmarks;
+typedef std::vector< ::testing::Benchmark* > BenchmarkList;
+static BenchmarkList* gBenchmarks;
 
 static int Round(int n) {
   int base = 1;
@@ -54,16 +54,26 @@ static int64_t NanoTime() {
 
 namespace testing {
 
-Benchmark* Benchmark::Arg(int arg) {
-  args_.push_back(arg);
-  return this;
+int PrettyPrintInt(char* str, int len, unsigned int arg)
+{
+  if (arg >= (1<<30) && arg % (1<<30) == 0) {
+    return snprintf(str, len, "%uGi", arg/(1<<30));
+  } else if (arg >= (1<<20) && arg % (1<<20) == 0) {
+    return snprintf(str, len, "%uMi", arg/(1<<20));
+  } else if (arg >= (1<<10) && arg % (1<<10) == 0) {
+    return snprintf(str, len, "%uKi", arg/(1<<10));
+  } else if (arg >= 1000000000 && arg % 1000000000 == 0) {
+    return snprintf(str, len, "%uG", arg/1000000000);
+  } else if (arg >= 1000000 && arg % 1000000 == 0) {
+    return snprintf(str, len, "%uM", arg/1000000);
+  } else if (arg >= 1000 && arg % 1000 == 0) {
+    return snprintf(str, len, "%uK", arg/1000);
+  } else {
+    return snprintf(str, len, "%u", arg);
+  }
 }
 
-const char* Benchmark::Name() {
-  return name_;
-}
-
-bool Benchmark::ShouldRun(int argc, char* argv[]) {
+bool ShouldRun(Benchmark* b, int argc, char* argv[]) {
   if (argc == 1) {
     return true;  // With no arguments, we run all benchmarks.
   }
@@ -75,7 +85,7 @@ bool Benchmark::ShouldRun(int argc, char* argv[]) {
       fprintf(stderr, "couldn't compile \"%s\" as a regular expression!\n", argv[i]);
       exit(EXIT_FAILURE);
     }
-    int match = regexec(&re, name_, 0, NULL, 0);
+    int match = regexec(&re, b->Name(), 0, NULL, 0);
     regfree(&re);
     if (match != REG_NOMATCH) {
       return true;
@@ -84,54 +94,27 @@ bool Benchmark::ShouldRun(int argc, char* argv[]) {
   return false;
 }
 
-void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int, int)) {
-  name_ = name;
-  fn_ = fn;
-  fn_range_ = fn_range;
-
-  if (fn_ == NULL && fn_range_ == NULL) {
-    fprintf(stderr, "%s: missing function\n", name_);
-    exit(EXIT_FAILURE);
-  }
-
+void BenchmarkRegister(Benchmark* b) {
   if (gBenchmarks == NULL) {
-    gBenchmarks = new BenchmarkMap;
+    gBenchmarks = new BenchmarkList;
   }
-  gBenchmarks->insert(std::make_pair(name, this));
+  gBenchmarks->push_back(b);
 }
 
-void Benchmark::Run() {
-  if (fn_ != NULL) {
-    RunWithArg(0);
-  } else {
-    if (args_.empty()) {
-      fprintf(stderr, "%s: no args!\n", name_);
-      exit(EXIT_FAILURE);
-    }
-    for (size_t i = 0; i < args_.size(); ++i) {
-      RunWithArg(args_[i]);
-    }
-  }
-}
-
-void Benchmark::RunRepeatedlyWithArg(int iterations, int arg) {
+void RunRepeatedly(Benchmark* b, int iterations) {
   gBytesProcessed = 0;
   gBenchmarkTotalTimeNs = 0;
   gBenchmarkStartTimeNs = NanoTime();
-  if (fn_ != NULL) {
-    fn_(iterations);
-  } else {
-    fn_range_(iterations, arg);
-  }
+  b->RunFn(iterations);
   if (gBenchmarkStartTimeNs != 0) {
     gBenchmarkTotalTimeNs += NanoTime() - gBenchmarkStartTimeNs;
   }
 }
 
-void Benchmark::RunWithArg(int arg) {
+void Run(Benchmark* b) {
   // run once in case it's expensive
   int iterations = 1;
-  RunRepeatedlyWithArg(iterations, arg);
+  RunRepeatedly(b, iterations);
   while (gBenchmarkTotalTimeNs < 1e9 && iterations < 1e9) {
     int last = iterations;
     if (gBenchmarkTotalTimeNs/iterations == 0) {
@@ -141,7 +124,7 @@ void Benchmark::RunWithArg(int arg) {
     }
     iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
-    RunRepeatedlyWithArg(iterations, arg);
+    RunRepeatedly(b, iterations);
   }
 
   char throughput[100];
@@ -153,20 +136,12 @@ void Benchmark::RunWithArg(int arg) {
   }
 
   char full_name[100];
-  if (fn_range_ != NULL) {
-    if (arg >= (1<<20)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dM", name_, arg/(1<<20));
-    } else if (arg >= (1<<10)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dK", name_, arg/(1<<10));
-    } else {
-      snprintf(full_name, sizeof(full_name), "%s/%d", name_, arg);
-    }
-  } else {
-    snprintf(full_name, sizeof(full_name), "%s", name_);
-  }
+  snprintf(full_name, sizeof(full_name), "%s%s%s", b->Name(),
+           b->ArgName() ? "/" : "",
+           b->ArgName() ? b->ArgName() : "");
 
-  printf("%-20s %10lld %10lld%s\n", full_name,
-         static_cast<int64_t>(iterations), gBenchmarkTotalTimeNs/iterations, throughput);
+  printf("%-25s %10lld %10lld%s\n", full_name,
+       static_cast<int64_t>(iterations), gBenchmarkTotalTimeNs/iterations, throughput);
   fflush(stdout);
 }
 
@@ -196,23 +171,22 @@ int main(int argc, char* argv[]) {
   }
 
   bool need_header = true;
-  for (BenchmarkMapIt it = gBenchmarks->begin(); it != gBenchmarks->end(); ++it) {
-    ::testing::Benchmark* b = it->second;
-    if (b->ShouldRun(argc, argv)) {
+  for (auto b : *gBenchmarks) {
+    if (ShouldRun(b, argc, argv)) {
       if (need_header) {
-        printf("%-20s %10s %10s\n", "", "iterations", "ns/op");
+        printf("%-25s %10s %10s\n", "", "iterations", "ns/op");
         fflush(stdout);
         need_header = false;
       }
-      b->Run();
+      Run(b);
     }
   }
 
   if (need_header) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
-    for (BenchmarkMapIt it = gBenchmarks->begin(); it != gBenchmarks->end(); ++it) {
-      fprintf(stderr, "  %s\n", it->second->Name());
+    for (auto b : *gBenchmarks) {
+      fprintf(stderr, "  %s\n", b->Name());
     }
     exit(EXIT_FAILURE);
   }
