@@ -55,10 +55,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-benchmarks
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_STATIC_LIBRARIES += libbenchmark
 LOCAL_SRC_FILES := $(benchmark_src_files)
 include external/stlport/libstlport.mk
-include $(BUILD_EXECUTABLE)
+include $(BUILD_NATIVE_BENCHMARK)
 
 # -----------------------------------------------------------------------------
 # Unit tests.
