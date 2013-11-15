@@ -22,12 +22,49 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 static int64_t gBytesProcessed;
 static int64_t gBenchmarkTotalTimeNs;
 static int64_t gBenchmarkStartTimeNs;
 
-typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
+namespace testing {
+
+class BenchmarkImpl : public Benchmark {
+ public:
+  BenchmarkImpl(const char* name, void (*fn)(int)) {
+    Register(name, fn, NULL);
+  }
+
+  BenchmarkImpl(const char* name, void (*fn_range)(int, int)) {
+    Register(name, NULL, fn_range);
+  }
+
+  virtual ~BenchmarkImpl() {}
+
+  virtual Benchmark* Arg(int x);
+
+  const char* Name();
+
+  bool ShouldRun(int argc, char* argv[]);
+  void Run();
+
+ private:
+  const char* name_;
+
+  void (*fn_)(int);
+  void (*fn_range_)(int, int);
+
+  std::vector<int> args_;
+
+  void Register(const char* name, void (*fn)(int), void (*fn_range)(int, int));
+  void RunRepeatedlyWithArg(int iterations, int arg);
+  void RunWithArg(int arg);
+};
+
+}  // namespace testing
+
+typedef std::map<std::string, ::testing::BenchmarkImpl*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
 static BenchmarkMap gBenchmarks;
 
@@ -54,16 +91,16 @@ static int64_t NanoTime() {
 
 namespace testing {
 
-Benchmark* Benchmark::Arg(int arg) {
+Benchmark* BenchmarkImpl::Arg(int arg) {
   args_.push_back(arg);
   return this;
 }
 
-const char* Benchmark::Name() {
+const char* BenchmarkImpl::Name() {
   return name_;
 }
 
-bool Benchmark::ShouldRun(int argc, char* argv[]) {
+bool BenchmarkImpl::ShouldRun(int argc, char* argv[]) {
   if (argc == 1) {
     return true;  // With no arguments, we run all benchmarks.
   }
@@ -84,7 +121,7 @@ bool Benchmark::ShouldRun(int argc, char* argv[]) {
   return false;
 }
 
-void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int, int)) {
+void BenchmarkImpl::Register(const char* name, void (*fn)(int), void (*fn_range)(int, int)) {
   name_ = name;
   fn_ = fn;
   fn_range_ = fn_range;
@@ -97,7 +134,7 @@ void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int
   gBenchmarks.insert(std::make_pair(name, this));
 }
 
-void Benchmark::Run() {
+void BenchmarkImpl::Run() {
   if (fn_ != NULL) {
     RunWithArg(0);
   } else {
@@ -111,7 +148,7 @@ void Benchmark::Run() {
   }
 }
 
-void Benchmark::RunRepeatedlyWithArg(int iterations, int arg) {
+void BenchmarkImpl::RunRepeatedlyWithArg(int iterations, int arg) {
   gBytesProcessed = 0;
   gBenchmarkTotalTimeNs = 0;
   gBenchmarkStartTimeNs = NanoTime();
@@ -125,7 +162,7 @@ void Benchmark::RunRepeatedlyWithArg(int iterations, int arg) {
   }
 }
 
-void Benchmark::RunWithArg(int arg) {
+void BenchmarkImpl::RunWithArg(int arg) {
   // run once in case it's expensive
   int iterations = 1;
   RunRepeatedlyWithArg(iterations, arg);
@@ -186,6 +223,14 @@ void StartBenchmarkTiming() {
   }
 }
 
+::testing::Benchmark *BenchmarkFactory(const char *name, void (*fn)(int)) {
+  return new ::testing::BenchmarkImpl(name, fn);
+}
+
+::testing::Benchmark *BenchmarkFactory(const char *name, void (*fn)(int, int)) {
+  return new ::testing::BenchmarkImpl(name, fn);
+}
+
 int main(int argc, char* argv[]) {
   if (gBenchmarks.empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
@@ -194,7 +239,7 @@ int main(int argc, char* argv[]) {
 
   bool need_header = true;
   for (BenchmarkMapIt it = gBenchmarks.begin(); it != gBenchmarks.end(); ++it) {
-    ::testing::Benchmark* b = it->second;
+    ::testing::BenchmarkImpl* b = it->second;
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
         printf("%-20s %10s %10s\n", "", "iterations", "ns/op");
