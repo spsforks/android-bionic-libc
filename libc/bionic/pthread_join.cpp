@@ -28,7 +28,13 @@
 
 #include <errno.h>
 
+#include "private/bionic_futex.h"
 #include "pthread_accessor.h"
+
+extern "C" int gettid();
+extern "C" void abort();
+
+#include <private/libc_logging.h>
 
 int pthread_join(pthread_t t, void** ret_val) {
   if (t == pthread_self()) {
@@ -53,6 +59,14 @@ int pthread_join(pthread_t t, void** ret_val) {
   while ((thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) == 0) {
     pthread_cond_wait(&thread->join_cond, &gThreadListLock);
   }
+
+  // Wait for the thread to actually exit, if it hasn't already.
+  pid_t tid;
+  while ((tid = thread->tid) != 0) {
+    __libc_format_log(ANDROID_LOG_WARN, "pthread", "pthread_join doing futex_wait on %p tid %d", &thread->tid, tid);
+    __futex_wait(&thread->tid, tid, NULL);
+  }
+
   if (ret_val) {
     *ret_val = thread->return_value;
   }

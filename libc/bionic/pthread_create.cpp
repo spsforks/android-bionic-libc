@@ -222,9 +222,11 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   thread->start_routine = start_routine;
   thread->start_routine_arg = arg;
 
-  int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM | CLONE_SETTLS;
-  int tid = __bionic_clone(flags, child_stack, NULL, thread->tls, NULL, __pthread_start, thread);
-  if (tid < 0) {
+  int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM;
+  flags |= CLONE_SETTLS;
+  flags |= CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+  int rc = __bionic_clone(flags, child_stack, &(thread->tid), thread->tls, &(thread->tid), __pthread_start, thread);
+  if (rc == -1) {
     int clone_errno = errno;
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) == 0) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
@@ -233,8 +235,6 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;
   }
-
-  thread->tid = tid;
 
   int init_errno = _init_thread(thread, true);
   if (init_errno != 0) {

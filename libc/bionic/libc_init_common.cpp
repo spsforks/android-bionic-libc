@@ -50,6 +50,7 @@ extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" uintptr_t __get_sp(void);
 extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
+extern "C" int __set_tid_address(int* tid_address);
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -90,17 +91,21 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   uintptr_t stack_bottom = stack_top - stack_size;
 
   static void* tls[BIONIC_TLS_SLOTS];
-  static pthread_internal_t thread;
-  thread.tid = gettid();
-  thread.tls = tls;
-  pthread_attr_init(&thread.attr);
-  pthread_attr_setstack(&thread.attr, (void*) stack_bottom, stack_size);
-  _init_thread(&thread, false);
-  __init_tls(&thread);
-  __set_tls(thread.tls);
+  static pthread_internal_t main_thread;
+  main_thread.tid = gettid();
+  main_thread.tls = tls;
+
+  // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
+  __set_tid_address(&main_thread.tid);
+
+  pthread_attr_init(&main_thread.attr);
+  pthread_attr_setstack(&main_thread.attr, (void*) stack_bottom, stack_size);
+  _init_thread(&main_thread, false);
+  __init_tls(&main_thread);
+  __set_tls(main_thread.tls);
   tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
-  __init_alternate_signal_stack(&thread);
+  __init_alternate_signal_stack(&main_thread);
 }
 
 void __libc_init_common(KernelArgumentBlock& args) {

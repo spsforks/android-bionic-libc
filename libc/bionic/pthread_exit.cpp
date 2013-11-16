@@ -57,7 +57,7 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   }
 }
 
-void pthread_exit(void* retval) {
+void pthread_exit(void* return_value) {
   pthread_internal_t* thread = __get_thread();
 
   // Call the cleanup handlers first.
@@ -106,7 +106,7 @@ void pthread_exit(void* retval) {
 
     // Indicate that the thread has exited for joining threads.
     thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
-    thread->return_value = retval;
+    thread->return_value = return_value;
 
     // Signal the joining thread if present.
     if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
@@ -131,6 +131,6 @@ void pthread_exit(void* retval) {
     _exit_with_stack_teardown(stack_base, stack_size, 0);
   }
 
-  /* NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us. */
+  // NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us.
   abort();
 }
