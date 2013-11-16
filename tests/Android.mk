@@ -36,6 +36,7 @@ test_src_files = \
     fenv_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
+    histogram_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
@@ -64,6 +65,8 @@ test_src_files = \
     time_test.cpp \
     unistd_test.cpp \
 
+test_c_includes := $(LOCAL_PATH)/../benchmarks/include/
+
 test_dynamic_ldflags = -Wl,--export-dynamic -Wl,-u,DlSymTestFunction
 test_dynamic_src_files = \
     dlfcn_test.cpp \
@@ -89,6 +92,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
+LOCAL_C_INCLUDES += $(test_c_includes)
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SHARED_LIBRARIES += libdl
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
@@ -115,6 +119,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libBionicTests
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
+LOCAL_C_INCLUDES += $(test_c_includes)
 LOCAL_SRC_FILES := $(test_src_files)
 LOCAL_CFLAGS += \
     -DGTEST_OS_LINUX_ANDROID \
@@ -159,6 +164,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-glibc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CFLAGS += $(test_c_flags)
+LOCAL_C_INCLUDES += $(test_c_includes)
 LOCAL_LDFLAGS += -lpthread -ldl -lrt
 LOCAL_LDFLAGS += $(test_dynamic_ldflags)
 LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
