@@ -24,12 +24,18 @@
 #include <map>
 #include <vector>
 
+#include <histogram-inl.h>
+
 static int64_t gBytesProcessed;
+static int64_t gBenchmarkIterationStartTimeNs;
 static int64_t gBenchmarkTotalTimeNs;
 static int64_t gBenchmarkStartTimeNs;
 
 typedef std::vector< ::testing::Benchmark* > BenchmarkList;
 static BenchmarkList* gBenchmarks;
+
+static std::vector<int64_t> gBenchmarkIterationTimesNs;
+static int64_t gBenchmarkMaxIterationTimeNs;
 
 static int Round(int n) {
   int base = 1;
@@ -113,17 +119,22 @@ void RunRepeatedly(Benchmark* b, int iterations) {
 
 void Run(Benchmark* b) {
   // run once in case it's expensive
+  gBenchmarkIterationTimesNs.clear();
+  gBenchmarkMaxIterationTimeNs = 0;
   int iterations = 1;
   RunRepeatedly(b, iterations);
-  while (gBenchmarkTotalTimeNs < 1e9 && iterations < 1e9) {
+  while (gBenchmarkTotalTimeNs < 1e9 && iterations < 1e8) {
     int last = iterations;
     if (gBenchmarkTotalTimeNs/iterations == 0) {
-      iterations = 1e9;
+      iterations = 1e8;
     } else {
-      iterations = 1e9 / (gBenchmarkTotalTimeNs/iterations);
+      iterations = 1e8 / (gBenchmarkTotalTimeNs/iterations);
     }
     iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
+    gBenchmarkIterationTimesNs.reserve(iterations);
+    gBenchmarkIterationTimesNs.clear();
+    gBenchmarkMaxIterationTimeNs = 0;
     RunRepeatedly(b, iterations);
   }
 
@@ -132,16 +143,51 @@ void Run(Benchmark* b) {
   if (gBenchmarkTotalTimeNs > 0 && gBytesProcessed > 0) {
     double mib_processed = static_cast<double>(gBytesProcessed)/1e6;
     double seconds = static_cast<double>(gBenchmarkTotalTimeNs)/1e9;
-    snprintf(throughput, sizeof(throughput), " %8.2f MiB/s", mib_processed/seconds);
+    snprintf(throughput, sizeof(throughput), "%7.2f", mib_processed/seconds);
+  }
+
+  char histogram[100];
+  histogram[0] = '\0';
+  if (gBenchmarkIterationTimesNs.size() == (size_t)iterations) {
+    int64_t avg = gBenchmarkTotalTimeNs / iterations;
+    int64_t buckets = gBenchmarkMaxIterationTimeNs / avg * 100;
+    if (buckets > 1e7) {
+      buckets = 1e7;
+    }
+
+    ::histogram::Histogram<int64_t> h(b->Name(), 10, buckets);
+    for (int64_t t : gBenchmarkIterationTimesNs) {
+      h.AddValue(t);
+    }
+
+    ::histogram::Histogram<int64_t>::CumulativeData data;
+    h.CreateHistogram(data);
+
+    float ci = 0.95;
+    int64_t ci_up = h.Percentile(1 - (1 - ci) / 2, data) - avg;
+    int64_t ci_down = avg - h.Percentile((1 - ci) / 2, data);
+    int64_t percent_up = ci_up * 100 / avg;
+    int64_t percent_down = ci_down * 100 / avg;
+
+    snprintf(histogram, sizeof(histogram), "+%lld/-%-lld%%",
+             percent_up, percent_down);
+  } else if (gBenchmarkIterationTimesNs.size() > 0) {
+      snprintf(histogram, sizeof(histogram), " data points != iterations");
   }
 
   char full_name[100];
+  full_name[0] = '\0';
   snprintf(full_name, sizeof(full_name), "%s%s%s", b->Name(),
            b->ArgName() ? "/" : "",
            b->ArgName() ? b->ArgName() : "");
 
-  printf("%-25s %10lld %10lld%s\n", full_name,
-       static_cast<int64_t>(iterations), gBenchmarkTotalTimeNs/iterations, throughput);
+  char iteration[100];
+  iteration[0] = '\0';
+  PrettyPrintInt(iteration, sizeof(iteration), iterations);
+
+  printf("%-40s %4s %10lld %-10s %10s\n", full_name,
+       iteration, gBenchmarkTotalTimeNs/iterations,
+       histogram, throughput);
   fflush(stdout);
 }
 
@@ -164,6 +210,20 @@ void StartBenchmarkTiming() {
   }
 }
 
+void IterationStart() {
+  StartBenchmarkTiming();
+  gBenchmarkIterationStartTimeNs = gBenchmarkTotalTimeNs;
+}
+
+void IterationEnd() {
+  StopBenchmarkTiming();
+  int64_t t = gBenchmarkTotalTimeNs - gBenchmarkIterationStartTimeNs;
+  gBenchmarkIterationTimesNs.push_back(t);
+  if (gBenchmarkMaxIterationTimeNs < t) {
+    gBenchmarkMaxIterationTimeNs = t;
+  }
+}
+
 int main(int argc, char* argv[]) {
   if (gBenchmarks->empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
@@ -174,7 +234,7 @@ int main(int argc, char* argv[]) {
   for (auto b : *gBenchmarks) {
     if (ShouldRun(b, argc, argv)) {
       if (need_header) {
-        printf("%-25s %10s %10s\n", "", "iterations", "ns/op");
+        printf("%-34s %10s %10s %10s %10s\n", "", "iterations", "ns/op", "", "MiB/s");
         fflush(stdout);
         need_header = false;
       }

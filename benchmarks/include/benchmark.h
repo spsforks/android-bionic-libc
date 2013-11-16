@@ -136,6 +136,8 @@ static inline void BenchmarkAddArg(::testing::Benchmark* b, const char* name, T 
 void SetBenchmarkBytesProcessed(int64_t);
 void StopBenchmarkTiming();
 void StartBenchmarkTiming();
+void IterationStart();
+void IterationEnd();
 
 #define BENCHMARK(f) \
     static ::testing::Benchmark* _benchmark_##f __attribute__((unused)) = \
