@@ -492,6 +492,7 @@ TEST(math, pow) {
 
 TEST(math, powf) {
   ASSERT_TRUE(isnanf(powf(nanf(""), 3.0f)));
+  ASSERT_TRUE(isnanf(powf(1.0f, nanf(""))));
   ASSERT_TRUE(isnanf(powf(2.0f, nanf(""))));
   ASSERT_FLOAT_EQ(8.0f, powf(2.0f, 3.0f));
 }
