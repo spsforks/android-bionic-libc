@@ -34,6 +34,9 @@ static int64_t gBenchmarkStartTimeNs;
 typedef std::vector< ::testing::Benchmark* > BenchmarkList;
 static BenchmarkList* gBenchmarks;
 
+typedef std::vector<std::pair< ::testing::Benchmark*, void (*)(::testing::Benchmark*) >> BenchmarkSetupList;
+static BenchmarkSetupList *gBenchmarkSetupFns;
+
 static std::vector<int64_t> gBenchmarkIterationTimesNs;
 static int64_t gBenchmarkMaxIterationTimeNs;
 
@@ -105,6 +108,13 @@ void BenchmarkRegister(Benchmark* b) {
     gBenchmarks = new BenchmarkList;
   }
   gBenchmarks->push_back(b);
+}
+
+void BenchmarkRegisterSetupFn(Benchmark* b, void (*fn)(Benchmark*)) {
+  if (gBenchmarkSetupFns == NULL) {
+    gBenchmarkSetupFns = new BenchmarkSetupList;
+  }
+  gBenchmarkSetupFns->push_back(std::make_pair(b, fn));
 }
 
 void RunRepeatedly(Benchmark* b, int iterations) {
@@ -225,7 +235,17 @@ void IterationEnd() {
 }
 
 int main(int argc, char* argv[]) {
-  if (gBenchmarks->empty()) {
+  if (gBenchmarkSetupFns) {
+    for (auto setup: *gBenchmarkSetupFns) {
+      ::testing::Benchmark* b = setup.first;
+      void (*fn)(::testing::Benchmark*) = setup.second;
+      if (ShouldRun(b, argc, argv)) {
+        fn(b);
+      }
+    }
+  }
+
+  if (!gBenchmarks || gBenchmarks->empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
     exit(EXIT_FAILURE);
   }

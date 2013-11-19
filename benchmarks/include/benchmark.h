@@ -31,6 +31,7 @@ template <typename T> class BenchmarkWantsArg;
 template <typename T> class BenchmarkWithArg;
 
 void BenchmarkRegister(Benchmark* bm);
+void BenchmarkRegisterSetupFn(Benchmark*, void (*fn)(Benchmark *benchmark));
 int PrettyPrintInt(char* str, int len, unsigned int arg);
 
 class Benchmark {
@@ -42,6 +43,11 @@ class Benchmark {
 
   virtual ~Benchmark() {
     free(name_);
+  }
+
+  virtual Benchmark* SetupFn(void (*fn)(Benchmark *benchmark)) {
+    BenchmarkRegisterSetupFn(this, fn);
+    return this;
   }
 
   const char* Name() { return name_; }
@@ -64,6 +70,11 @@ class BenchmarkWantsArgBase : public Benchmark {
 
   BenchmarkWantsArgBase<T>* Arg(const char* arg_name, T arg) {
     BenchmarkRegister(new BenchmarkWithArg<T>(name_, fn_arg_, arg_name, arg));
+    return this;
+  }
+
+  virtual BenchmarkWantsArgBase<T>* SetupFn(void (*fn)(Benchmark* benchmark)) {
+    BenchmarkRegisterSetupFn(this, fn);
     return this;
   }
 
