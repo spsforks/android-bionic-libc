@@ -685,9 +685,15 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
       continue;
     }
-    int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
-    if (fd != -1) {
-      return fd;
+    int tmp_fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+    if (tmp_fd != -1) {
+      ElfReader elf_reader(name, tmp_fd);
+      if (!(elf_reader.ReadElfHeader() && elf_reader.VerifyElfHeader())) {
+          continue;
+      } else {
+          int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+          return fd;
+      }
     }
   }
   return -1;
