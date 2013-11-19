@@ -49,10 +49,10 @@ class ElfReader {
   size_t load_size() { return load_size_; }
   Elf_Addr load_bias() { return load_bias_; }
   const Elf_Phdr* loaded_phdr() { return loaded_phdr_; }
-
- private:
   bool ReadElfHeader();
   bool VerifyElfHeader();
+
+ private:
   bool ReadProgramHeader();
   bool ReserveAddressSpace();
   bool LoadSegments();
