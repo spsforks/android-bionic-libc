@@ -32,3 +32,8 @@ int reboot (int  mode)
 {
     return __reboot( LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, NULL );
 }
+
+int reboot2 (int mode, char* arg)
+{
+    return __reboot( LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, arg );
+}

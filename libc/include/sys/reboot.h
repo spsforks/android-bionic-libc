@@ -43,6 +43,7 @@ __BEGIN_DECLS
 
 extern int reboot(int  reboot_type);
 extern int __reboot(int, int, int, void *);
+extern int reboot2(int reboot_type, char *arg);
 
 __END_DECLS
 
