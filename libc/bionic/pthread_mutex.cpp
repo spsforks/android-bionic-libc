@@ -46,10 +46,25 @@
 #define PTHREAD_DEBUG_ENABLED (false)
 #endif
 
+#ifndef PTHREAD_PROFILE_ENABLED
+#define PTHREAD_PROFILE_ENABLED (false)
+#endif
+
 extern "C" {
     extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
     extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
+    extern void pthread_debug_mutex_lock_profile(pthread_mutex_t *mutex, uint64_t cont_time);
+    extern void pthread_debug_mutex_unlock_profile(pthread_mutex_t *mutex);
 }
+
+extern uint64_t nsec(void);
+extern int propertyProfileEnabled(void);
+#define profile_begin(cont_time, time) (PTHREAD_PROFILE_ENABLED && \
+                            propertyProfileEnabled() && cont_time ? \
+                            time = nsec() : time = 0 )
+#define profile_end(cont_time, time) (PTHREAD_PROFILE_ENABLED && \
+                            propertyProfileEnabled() && cont_time ? \
+                            *cont_time = nsec() - time : time = 0 );
 
 /* a mutex is implemented as a 32-bit integer holding the following fields
  *
@@ -337,7 +352,7 @@ int pthread_mutex_init(pthread_mutex_t *mutex,
  * the lock state field.
  */
 static __inline__ void
-_normal_lock(pthread_mutex_t*  mutex, int shared)
+_normal_lock(pthread_mutex_t*  mutex, int shared, uint64_t *cont_time)
 {
     /* convenience shortcuts */
     const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
@@ -350,6 +365,9 @@ _normal_lock(pthread_mutex_t*  mutex, int shared)
      */
     if (__bionic_cmpxchg(unlocked, locked_uncontended, &mutex->value) != 0) {
         const int locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+        uint64_t start_time;
+
+        profile_begin(cont_time, start_time);
         /*
          * We want to go to sleep until the mutex is available, which
          * requires promoting it to state 2 (CONTENDED). We need to
@@ -368,6 +386,8 @@ _normal_lock(pthread_mutex_t*  mutex, int shared)
          */
         while (__bionic_swap(locked_contended, &mutex->value) != unlocked)
             __futex_wait_ex(&mutex->value, shared, locked_contended, 0);
+
+        profile_end(cont_time, start_time);
     }
     ANDROID_MEMBAR_FULL();
 }
@@ -476,9 +496,10 @@ _recursive_increment(pthread_mutex_t* mutex, int mvalue, int mtype)
 }
 
 __LIBC_HIDDEN__
-int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
+int pthread_mutex_lock_impl(pthread_mutex_t *mutex, uint64_t *cont_time)
 {
     int mvalue, mtype, tid, shared;
+    uint64_t start_time;
 
     if (__predict_false(mutex == NULL))
         return EINVAL;
@@ -489,7 +510,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
 
     /* Handle normal case first */
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
-        _normal_lock(mutex, shared);
+        _normal_lock(mutex, shared, cont_time);
         return 0;
     }
 
@@ -514,6 +535,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
         mvalue = mutex->value;
     }
 
+    profile_begin(cont_time, start_time);
     for (;;) {
         int newval;
 
@@ -533,6 +555,7 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
                 mvalue = mutex->value;
                 continue;
             }
+            profile_end(cont_time, start_time);
             ANDROID_MEMBAR_FULL();
             return 0;
         }
@@ -558,7 +581,13 @@ int pthread_mutex_lock_impl(pthread_mutex_t *mutex)
 
 int pthread_mutex_lock(pthread_mutex_t *mutex)
 {
-    int err = pthread_mutex_lock_impl(mutex);
+    uint64_t cont_time = 0;
+    int err = pthread_mutex_lock_impl(mutex, &cont_time);
+    if (PTHREAD_PROFILE_ENABLED) {
+        if (!err) {
+            pthread_debug_mutex_lock_profile(mutex, cont_time);
+        }
+    }
     if (PTHREAD_DEBUG_ENABLED) {
         if (!err) {
             pthread_debug_mutex_lock_check(mutex);
@@ -626,6 +655,9 @@ int pthread_mutex_unlock_impl(pthread_mutex_t *mutex)
 
 int pthread_mutex_unlock(pthread_mutex_t *mutex)
 {
+    if (PTHREAD_PROFILE_ENABLED) {
+        pthread_debug_mutex_unlock_profile(mutex);
+    }
     if (PTHREAD_DEBUG_ENABLED) {
         pthread_debug_mutex_unlock_check(mutex);
     }
@@ -680,6 +712,12 @@ int pthread_mutex_trylock_impl(pthread_mutex_t *mutex)
 int pthread_mutex_trylock(pthread_mutex_t *mutex)
 {
     int err = pthread_mutex_trylock_impl(mutex);
+    if (PTHREAD_PROFILE_ENABLED) {
+        if (!err) {
+            /* We cannot meet contention if just trylock */
+            pthread_debug_mutex_lock_profile(mutex, 0);
+        }
+    }
     if (PTHREAD_DEBUG_ENABLED) {
         if (!err) {
             pthread_debug_mutex_lock_check(mutex);
@@ -702,12 +740,13 @@ static void __timespec_to_relative_msec(timespec* abstime, unsigned msecs, clock
 }
 
 __LIBC_HIDDEN__
-int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
+int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs, uint64_t *cont_time)
 {
     clockid_t        clock = CLOCK_MONOTONIC;
     timespec  abstime;
     timespec  ts;
     int               mvalue, mtype, tid, shared;
+    uint64_t start_time;
 
     /* compute absolute expiration time */
     __timespec_to_relative_msec(&abstime, msecs, clock);
@@ -732,6 +771,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
             return 0;
         }
 
+        profile_begin(cont_time, start_time);
         /* loop while needed */
         while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
             if (__timespec_to_absolute(&ts, &abstime, clock) < 0)
@@ -739,6 +779,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
 
             __futex_wait_ex(&mutex->value, shared, locked_contended, &ts);
         }
+        profile_end(cont_time, start_time);
         ANDROID_MEMBAR_FULL();
         return 0;
     }
@@ -764,6 +805,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
         mvalue = mutex->value;
     }
 
+    profile_begin(cont_time, start_time);
     for (;;) {
         timespec ts;
 
@@ -772,6 +814,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
         if (mvalue == mtype) /* unlocked */ {
             mvalue = MUTEX_OWNER_TO_BITS(tid) | mtype | MUTEX_STATE_BITS_LOCKED_CONTENDED;
             if (__bionic_cmpxchg(mtype, mvalue, &mutex->value) == 0) {
+                profile_end(cont_time, start_time);
                 ANDROID_MEMBAR_FULL();
                 return 0;
             }
@@ -818,7 +861,13 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
 
 int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 {
-    int err = pthread_mutex_lock_timeout_np_impl(mutex, msecs);
+    uint64_t cont_time = 0;
+    int err = pthread_mutex_lock_timeout_np_impl(mutex, msecs, &cont_time);
+    if (PTHREAD_PROFILE_ENABLED) {
+        if (!err) {
+            pthread_debug_mutex_lock_profile(mutex, cont_time);
+        }
+    }
     if (PTHREAD_DEBUG_ENABLED) {
         if (!err) {
             pthread_debug_mutex_lock_check(mutex);

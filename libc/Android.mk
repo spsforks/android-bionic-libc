@@ -985,8 +985,10 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 # Set -DPTHREAD_DEBUG_ENABLED=true to enable support for pthread deadlock prediction.
-# Since this code is experimental it is disabled by default.
+# Set -DPTHREAD_PROFILE_ENABLED=true to enable support for pthread contention profiling.
+# Since these codes are experimental they are disabled by default.
 LOCAL_CFLAGS += -DPTHREAD_DEBUG_ENABLED=false
+LOCAL_CFLAGS += -DPTHREAD_PROFILE_ENABLED=false
 
 LOCAL_SRC_FILES := \
 	$(libc_arch_dynamic_src_files) \

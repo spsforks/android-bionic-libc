@@ -56,6 +56,7 @@
 
 extern "C" {
   extern void pthread_debug_init(void);
+  extern void pthread_debug_fini(void);
   extern void malloc_debug_init(void);
   extern void malloc_debug_fini(void);
 };
@@ -84,6 +85,7 @@ __attribute__((constructor)) static void __libc_preinit() {
 __LIBC_HIDDEN__ void __libc_postfini() {
   // A hook for the debug malloc library to let it know that we're shutting down.
   malloc_debug_fini();
+  pthread_debug_fini();
 }
 
 // This function is called from the executable's _start entry point
