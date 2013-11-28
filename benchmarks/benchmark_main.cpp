@@ -132,20 +132,24 @@ void Run(Benchmark* b) {
   gBenchmarkIterationTimesNs.clear();
   gBenchmarkMaxIterationTimeNs = 0;
   int iterations = 1;
+  int64_t realStartTime = NanoTime();
   RunRepeatedly(b, iterations);
-  while (gBenchmarkTotalTimeNs < 1e9 && iterations < 1e8) {
+  int64_t realTotalTime = NanoTime() - realStartTime;
+  while (realTotalTime < 1e9 && iterations < 1e8) {
     int last = iterations;
-    if (gBenchmarkTotalTimeNs/iterations == 0) {
+    if (realTotalTime/iterations == 0) {
       iterations = 1e8;
     } else {
-      iterations = 1e8 / (gBenchmarkTotalTimeNs/iterations);
+      iterations = 1e8 / (realTotalTime/iterations);
     }
     iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
     gBenchmarkIterationTimesNs.reserve(iterations);
     gBenchmarkIterationTimesNs.clear();
     gBenchmarkMaxIterationTimeNs = 0;
+    realStartTime = NanoTime();
     RunRepeatedly(b, iterations);
+    realTotalTime = NanoTime() - realStartTime;
   }
 
   char throughput[100];
