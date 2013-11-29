@@ -282,7 +282,7 @@ libm_arm_src_files += \
     arm/s_fast_sin.S \
     arm/s_fast_cos.S
 libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
-libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15
+libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15 -DFPU_VFPV4
 else
 libm_arm_src_files += \
     upstream-freebsd/lib/msun/src/s_floor.c \
