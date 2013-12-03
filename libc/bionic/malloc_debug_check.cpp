@@ -269,11 +269,11 @@ static inline int check_allocation_locked(hdr_t* hdr, int* safe) {
     if (!valid && *safe) {
         log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                         user(hdr), hdr->size);
-        log_backtrace(hdr->bt, hdr->bt_depth);
+        log_backtrace(hdr->bt, hdr->bt_depth, false);
         if (hdr->tag == BACKLOG_TAG) {
             log_message("+++ ALLOCATION %p SIZE %d FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth, false);
         }
     }
 
@@ -389,18 +389,18 @@ extern "C" void chk_free(void* ptr) {
                        user(hdr), hdr->size);
             log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(hdr->bt, hdr->bt_depth);
+            log_backtrace(hdr->bt, hdr->bt_depth, false);
             /* hdr->freed_bt_depth should be nonzero here */
             log_message("+++ ALLOCATION %p SIZE %d FIRST FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth, false);
             log_message("+++ ALLOCATION %p SIZE %d NOW BEING FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(bt, depth);
+            log_backtrace(bt, depth, false);
         } else {
             log_message("+++ ALLOCATION %p IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr));
-            log_backtrace(bt, depth);
+            log_backtrace(bt, depth, false);
         }
     } else {
         hdr->freed_bt_depth = get_backtrace(hdr->freed_bt, MAX_BACKTRACE_DEPTH);
@@ -432,14 +432,14 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
                        user(hdr), size, hdr->size);
             log_message("+++ ALLOCATION %p SIZE %d ALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(hdr->bt, hdr->bt_depth);
+            log_backtrace(hdr->bt, hdr->bt_depth, false);
             /* hdr->freed_bt_depth should be nonzero here */
             log_message("+++ ALLOCATION %p SIZE %d FIRST FREED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth);
+            log_backtrace(hdr->freed_bt, hdr->freed_bt_depth, false);
             log_message("+++ ALLOCATION %p SIZE %d NOW BEING REALLOCATED HERE:\n",
                        user(hdr), hdr->size);
-            log_backtrace(bt, depth);
+            log_backtrace(bt, depth, false);
 
              /* We take the memory out of the backlog and fall through so the
              * reallocation below succeeds.  Since we didn't really free it, we
@@ -449,7 +449,7 @@ extern "C" void* chk_realloc(void* ptr, size_t size) {
         } else {
             log_message("+++ REALLOCATION %p SIZE %d IS CORRUPTED OR NOT ALLOCATED VIA TRACKER!\n",
                        user(hdr), size);
-            log_backtrace(bt, depth);
+            log_backtrace(bt, depth, false);
             // just get a whole new allocation and leak the old one
             return dlrealloc(0, size);
             // return dlrealloc(user(hdr), size); // assuming it was allocated externally
@@ -536,7 +536,7 @@ static void ReportMemoryLeaks() {
                 exe, block->size, user(block), index++, total);
     if (del_leak(block, &safe)) {
       /* safe == 1, because the allocation is valid */
-      log_backtrace(block->bt, block->bt_depth);
+      log_backtrace(block->bt, block->bt_depth, false);
     }
   }
 

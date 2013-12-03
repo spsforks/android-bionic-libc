@@ -35,6 +35,6 @@
 __LIBC_HIDDEN__ void backtrace_startup();
 __LIBC_HIDDEN__ void backtrace_shutdown();
 __LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count, bool canalloc = 1);
 
 #endif /* DEBUG_STACKTRACE_H */

@@ -138,7 +138,7 @@ __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
   return state.frame_count;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count, bool canalloc) {
   uintptr_t self_bt[16];
   if (frames == NULL) {
     frame_count = get_backtrace(self_bt, 16);
@@ -165,8 +165,11 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       soname = "<unknown>";
     }
     if (symbol != NULL) {
-      // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
-      char* demangled_symbol = demangle(symbol);
+      char* demangled_symbol = NULL;
+      if (canalloc) {
+        // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
+        demangled_symbol = demangle(symbol);
+      }
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
