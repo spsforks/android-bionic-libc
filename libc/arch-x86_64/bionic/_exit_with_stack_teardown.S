@@ -36,10 +36,12 @@ ENTRY(_exit_with_stack_teardown)
     // the status argument for exit(2) while doing the munmap(2).
     mov     $__NR_munmap, %eax
     syscall
-    // If munmap failed, we ignore the failure and exit anyway.
+
+    // If munmap failed, ignore the failure and exit anyway.
 
     mov     %rdx, %rdi        // status
     mov     $__NR_exit, %eax
     syscall
+
     // The exit syscall does not return.
 END(_exit_with_stack_teardown)
