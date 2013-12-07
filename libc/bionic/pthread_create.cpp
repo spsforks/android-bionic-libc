@@ -229,7 +229,12 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   thread->start_routine_arg = arg;
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
-      CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+      CLONE_SETTLS | CLONE_PARENT_SETTID;
+
+  // Only clear the tid if this is not a detached thread.
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0) {
+    flags |= CLONE_CHILD_CLEARTID;
+  }
 #if defined(__i386__)
   // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc rather than
   // a pointer to the TLS itself. Rather than try to deal with that here, we just let x86 set
