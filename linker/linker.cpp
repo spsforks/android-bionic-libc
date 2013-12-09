@@ -1751,6 +1751,8 @@ static void add_vdso(KernelArgumentBlock& args UNUSED) {
 #if defined(AT_SYSINFO_EHDR)
     Elf_Ehdr* ehdr_vdso = reinterpret_cast<Elf_Ehdr*>(args.getauxval(AT_SYSINFO_EHDR));
 
+    if (!ehdr_vdso)
+        return;
     soinfo* si = soinfo_alloc("[vdso]");
 
     si->phdr = reinterpret_cast<Elf_Phdr*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
@@ -1761,7 +1763,6 @@ static void add_vdso(KernelArgumentBlock& args UNUSED) {
     si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
     soinfo_link_image(si);
-    insert_soinfo_into_debug_map(si);
 #endif
 }
 
