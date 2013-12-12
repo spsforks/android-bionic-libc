@@ -30,6 +30,7 @@
 #define __BIONIC_PRIVATE_BIONIC_TLS_H_
 
 #include <sys/cdefs.h>
+#include <sys/limits.h>
 #include "__get_tls.h"
 
 __BEGIN_DECLS
@@ -83,12 +84,13 @@ enum {
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 4
-/*
- * This is PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
- * rounded up to maintain stack alignment.
- */
+
 #define BIONIC_ALIGN(x, a) (((x) + (a - 1)) & ~(a - 1))
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(128 + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
+
+/*
+ * We need to round up to maintain stack alignment.
+ */
+#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT, 4)
 
 __END_DECLS
 
