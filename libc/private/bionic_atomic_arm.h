@@ -82,11 +82,6 @@
  */
 #if defined(ANDROID_SMP) && ANDROID_SMP == 1
 
-/* Sanity check, multi-core is only supported starting from ARMv6 */
-#  if __ARM_ARCH__ < 6
-#    error ANDROID_SMP should not be set to 1 for an ARM architecture less than 6
-#  endif
-
 #  ifdef __ARM_HAVE_DMB
 /* For ARMv7-A, we can use the 'dmb' instruction directly */
 __ATOMIC_INLINE__ void
