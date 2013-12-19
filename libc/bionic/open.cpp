@@ -34,6 +34,8 @@
 #include "private/libc_logging.h"
 
 extern "C" int __openat(int, const char*, int, int);
+extern "C" int __open_2(const char*, int);
+extern "C" int __openat_2(int, const char*, int);
 
 int open(const char* pathname, int flags, ...) {
   mode_t mode = 0;
