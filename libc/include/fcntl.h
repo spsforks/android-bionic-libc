@@ -46,15 +46,17 @@ extern int  unlinkat(int dirfd, const char *pathname, int flags);
 extern int  fcntl(int   fd, int   command, ...);
 extern int  creat(const char*  path, mode_t  mode);
 
-#if defined(__BIONIC_FORTIFY) && !defined(__clang__)
+extern int __open_2(const char*, int);
+extern int __open_real(const char*, int, ...) __asm__(__USER_LABEL_PREFIX__ "open");
+extern int __openat_2(int, const char*, int);
+extern int __openat_real(int, const char*, int, ...) __asm__(__USER_LABEL_PREFIX__ "openat");
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");
-extern int __open_real(const char *pathname, int flags, ...)
-    __asm__(__USER_LABEL_PREFIX__ "open");
-extern int __open_2(const char *, int);
+
+#if defined(__BIONIC_FORTIFY) && !defined(__clang__)
 
 __BIONIC_FORTIFY_INLINE
-int open(const char *pathname, int flags, ...) {
+int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  // compile time error
@@ -72,12 +74,8 @@ int open(const char *pathname, int flags, ...) {
     return __open_real(pathname, flags, __builtin_va_arg_pack());
 }
 
-extern int __openat_2(int, const char *, int);
-extern int __openat_real(int dirfd, const char *pathname, int flags, ...)
-    __asm__(__USER_LABEL_PREFIX__ "openat");
-
 __BIONIC_FORTIFY_INLINE
-int openat(int dirfd, const char *pathname, int flags, ...) {
+int openat(int dirfd, const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  // compile time error
