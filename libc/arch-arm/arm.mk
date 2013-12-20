@@ -50,6 +50,7 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/atomics_arm.c \
     arch-arm/bionic/__bionic_clone.S \
     arch-arm/bionic/eabi.c \
+    arch-arm/bionic/eabi_asm.S \
     arch-arm/bionic/_exit_with_stack_teardown.S \
     arch-arm/bionic/futex_arm.S \
     arch-arm/bionic/__get_sp.S \
