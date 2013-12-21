@@ -17,10 +17,11 @@
 #include <gtest/gtest.h>
 
 #if !defined(__GLIBC__) // Android's prebuilt gcc's header files don't include <sys/eventfd.h>.
-
 #include <sys/eventfd.h>
+#endif
 
 TEST(eventfd, smoke) {
+#if !defined(__GLIBC__)
   unsigned int initial_value = 2;
   int fd = eventfd(initial_value, O_NONBLOCK);
   ASSERT_NE(fd, -1);
@@ -42,6 +43,7 @@ TEST(eventfd, smoke) {
   ASSERT_EQ(3U, value);
 
   close(fd);
-}
-
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}

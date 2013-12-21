@@ -19,24 +19,28 @@
 #include <stdio.h>
 #include <inttypes.h>
 
-#if defined(__BIONIC__) // Doesn't work on glibc because we use -m32.
+#if defined(__LP64__)
+#define PTR_FORMAT "%016"
+#else
+#define PTR_FORMAT "%08"
+#endif
+
 TEST(inttypes, misc) {
   char buf[512];
 
   intptr_t i = 0;
   uintptr_t u = 0;
 
-  snprintf(buf, sizeof(buf), "%08" PRIdPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIiPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIoPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIuPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIxPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIXPTR, u);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIdPTR, i);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIiPTR, i);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIoPTR, i);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIuPTR, u);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIxPTR, u);
+  snprintf(buf, sizeof(buf), PTR_FORMAT PRIXPTR, u);
 
-  sscanf(buf, "%08" SCNdPTR, &i);
-  sscanf(buf, "%08" SCNiPTR, &i);
-  sscanf(buf, "%08" SCNoPTR, &u);
-  sscanf(buf, "%08" SCNuPTR, &u);
-  sscanf(buf, "%08" SCNxPTR, &u);
+  sscanf(buf, PTR_FORMAT SCNdPTR, &i);
+  sscanf(buf, PTR_FORMAT SCNiPTR, &i);
+  sscanf(buf, PTR_FORMAT SCNoPTR, &u);
+  sscanf(buf, PTR_FORMAT SCNuPTR, &u);
+  sscanf(buf, PTR_FORMAT SCNxPTR, &u);
 }
-#endif
