@@ -44,4 +44,11 @@ TEST(eventfd, smoke) {
   close(fd);
 }
 
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(eventfd, smoke) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
 #endif

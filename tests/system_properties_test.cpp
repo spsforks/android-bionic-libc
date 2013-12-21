@@ -373,4 +373,47 @@ TEST(properties_DeathTest, read_only) {
   ASSERT_EXIT(__system_property_add("property", 8, "value", 5), KilledByFault(), "");
 }
 
-#endif
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(properties, add) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, update) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, fill) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, foreach) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, find_nth) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, fill_hierarchical) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, errors) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, serial) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties, wait) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(properties_DeathTest, read_only) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+#endif /* __BIONIC__ */

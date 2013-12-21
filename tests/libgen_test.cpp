@@ -38,7 +38,9 @@ static void TestDirname(const char* in, const char* expected_out) {
   free(writable_in);
 }
 
-TEST(libgen, basename) {
+// Do not use basename as the test name, it's defined to another value in glibc
+// so leads to a differently named test on host versus target archictectures.
+TEST(libgen, basename_check) {
   TestBasename(NULL, ".");
   TestBasename("", ".");
   TestBasename("/usr/lib", "lib");
@@ -114,4 +116,15 @@ TEST(libgen, dirname_r) {
   TestDirname("..", ".", 1, buf, sizeof(buf), 0);
 }
 
-#endif
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(libgen, basename_r) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libgen, dirname_r) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+#endif /* __BIONIC__ */

@@ -66,10 +66,16 @@ TEST(string, strerror_concurrent) {
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 }
 
+#else
+
+TEST(string, strerror_concurrent) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
 #endif
 
-#if __BIONIC__ // glibc's strerror_r doesn't even have the same signature as the POSIX one.
 TEST(string, strerror_r) {
+#if __BIONIC__ // glibc's strerror_r doesn't even have the same signature as the POSIX one.
   char buf[256];
 
   // Valid.
@@ -87,8 +93,10 @@ TEST(string, strerror_r) {
   // Buffer too small.
   ASSERT_EQ(-1, strerror_r(0, buf, 2));
   ASSERT_EQ(ERANGE, errno);
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
 TEST(string, strsignal) {
   // A regular signal.
@@ -478,8 +486,8 @@ TEST(string, strcpy) {
 }
 
 
-#if __BIONIC__
 TEST(string, strlcat) {
+#if __BIONIC__
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
     for (size_t j = 0; j < POS_ITER; j++) {
@@ -504,11 +512,13 @@ TEST(string, strlcat) {
       ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) == 0);
     }
   }
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
-#if __BIONIC__
 TEST(string, strlcpy) {
+#if __BIONIC__
   StringTestState<char> state(SMALL);
   for (size_t j = 0; j < POS_ITER; j++) {
     state.NewIteration();
@@ -539,8 +549,10 @@ TEST(string, strlcpy) {
     ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
 TEST(string, strncat) {
   StringTestState<char> state(SMALL);
@@ -758,6 +770,10 @@ TEST(string, __memcmp16) {
       ASSERT_EQ(expected, actual);
     }
   }
+}
+#else
+TEST(string, __memcmp16) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 }
 #endif
 

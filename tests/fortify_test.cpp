@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <signal.h>
 #include <string.h>
 #include <stdarg.h>
 #include <sys/types.h>
@@ -236,6 +237,39 @@ TEST(DEATHTEST, strlcat_fortified2) {
 }
 #endif
 
+#else
+
+#ifndef __clang__
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(DEATHTEST, strcpy_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strcpy2_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strcpy3_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strchr_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strrchr_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strlcpy_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strlcat_fortified2) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+#endif /* __clang__ */
+
 #endif /* __BIONIC__ */
 
 #ifndef __clang__
@@ -387,7 +421,46 @@ TEST(DEATHTEST, strlcat_fortified) {
   ASSERT_EXIT(strlcat(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
 }
 
-#endif
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(DEATHTEST, strcpy_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strcpy2_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strcpy3_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strcpy4_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strlen_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strchr_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strrchr_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strlcpy_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(DEATHTEST, strlcat_fortified) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+#endif /* __BIONIC__ */
 
 TEST(DEATHTEST, sprintf_fortified) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";

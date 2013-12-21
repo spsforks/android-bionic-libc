@@ -41,6 +41,10 @@ TEST(time, mktime_tz) {
   // Missing. Falls back to UTC.
   ASSERT_EQ(2678400, mktime_tz(&epoch, "PST"));
 }
+#else
+TEST(time, mktime_tz) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
 #endif
 
 TEST(time, gmtime) {
@@ -55,8 +59,8 @@ TEST(time, gmtime) {
   ASSERT_EQ(1970, broken_down->tm_year + 1900);
 }
 
-#if __BIONIC__
 TEST(time, mktime_10310929) {
+#if __BIONIC__
   struct tm t;
   memset(&t, 0, sizeof(tm));
   t.tm_year = 200;
@@ -81,5 +85,7 @@ TEST(time, mktime_10310929) {
   ASSERT_EQ(static_cast<time_t>(4108320000U), mktime(&t));
   ASSERT_EQ(static_cast<time_t>(4108348800U), mktime_tz(&t, "America/Los_Angeles"));
 #endif
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}

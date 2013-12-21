@@ -52,4 +52,14 @@ TEST(getauxval, unexpected_values) {
   ASSERT_EQ((unsigned long int) 0, getauxval(0xdeadbeef));
 }
 
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(getauxval, expected_values) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getauxval, unexpected_values) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
 #endif /* GETAUXVAL_CAN_COMPILE */
