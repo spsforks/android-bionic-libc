@@ -42,8 +42,8 @@ TEST(sys_sendfile, sendfile) {
   ASSERT_STREQ("ll", buf);
 }
 
-#if __BIONIC__
 TEST(sys_sendfile, sendfile64) {
+#if defined(__BIONIC__)
   TemporaryFile src_file;
   ASSERT_EQ(5, TEMP_FAILURE_RETRY(write(src_file.fd, "hello", 5)));
 
@@ -60,5 +60,7 @@ TEST(sys_sendfile, sendfile64) {
   buf[2] = '\0';
   ASSERT_EQ(2, TEMP_FAILURE_RETRY(read(dst_file.fd, &buf, 2)));
   ASSERT_STREQ("ll", buf);
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
 }
-#endif
