@@ -20,6 +20,7 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
+#include <signal.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -31,8 +32,8 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
-#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
 TEST(pthread, pthread_key_create_lots) {
+#if !defined(__GLIBC__) // glibc uses keys internally that its sysconf value doesn't account for.
   // POSIX says PTHREAD_KEYS_MAX should be at least 128.
   ASSERT_GE(PTHREAD_KEYS_MAX, 128);
   // sysconf shouldn't return a smaller value.
@@ -55,8 +56,10 @@ TEST(pthread, pthread_key_create_lots) {
   for (size_t i = 0; i < keys.size(); ++i) {
     ASSERT_EQ(0, pthread_key_delete(keys[i]));
   }
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
 static void* IdFn(void* arg) {
   return arg;
@@ -254,22 +257,30 @@ TEST(pthread, __bionic_clone) {
   ASSERT_EQ(-1, __bionic_clone(CLONE_THREAD, &fake_child_stack[16], NULL, NULL, NULL, NULL, NULL));
   ASSERT_EQ(EINVAL, errno);
 }
+#else
+TEST(pthread, __bionic_clone) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
 #endif
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__too_long) {
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__self) {
-  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
-}
-#endif
-
 #if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
+  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}
+
 TEST(pthread, pthread_setname_np__other) {
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   // Emulator kernels don't currently support setting the name of other threads.
   char* filename = NULL;
   asprintf(&filename, "/proc/self/task/%d/comm", gettid());
@@ -284,18 +295,22 @@ TEST(pthread, pthread_setname_np__other) {
   } else {
     fprintf(stderr, "skipping test: this kernel doesn't have /proc/self/task/tid/comm files!\n");
   }
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
-#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
 TEST(pthread, pthread_setname_np__no_such_thread) {
+#if __BIONIC__ // Not all build servers have a new enough glibc? TODO: remove when they're on gprecise.
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
   ASSERT_EQ(ESRCH, pthread_setname_np(dead_thread, "short 3"));
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
 TEST(pthread, pthread_kill__0) {
   // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.

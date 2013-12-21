@@ -76,7 +76,10 @@ test_dynamic_src_files = \
     dlfcn_test.cpp \
 
 test_fortify_static_libraries = \
-    fortify1-tests-gcc fortify2-tests-gcc fortify1-tests-clang fortify2-tests-clang
+    fortify1-tests-gcc \
+    fortify2-tests-gcc \
+    fortify1-tests-clang \
+    fortify2-tests-clang \
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-unit-tests-unwind-test-impl
@@ -113,6 +116,16 @@ LOCAL_WHOLE_STATIC_LIBRARIES += libBionicTests
 LOCAL_STATIC_LIBRARIES += libstlport_static libstdc++ libm libc
 include $(BUILD_NATIVE_TEST)
 
+# This executable is only for getting the list of tests for CTS. It is not
+# meant to pass.
+include $(CLEAR_VARS)
+LOCAL_MODULE := bionic-unit-tests-static-host
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_WHOLE_STATIC_LIBRARIES += libBionicTestsHost
+LOCAL_LDFLAGS += -lpthread -lrt
+include $(BUILD_HOST_NATIVE_TEST)
+
 # -----------------------------------------------------------------------------
 # We build the static unit tests as a library so they can be used both for
 # bionic-unit-tests-static and also as part of CTS.
@@ -137,6 +150,24 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     bionic-unit-tests-unwind-test-impl \
 
 include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libBionicTestsHost
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS += $(test_c_flags)
+LOCAL_SRC_FILES := $(test_src_files)
+LOCAL_CFLAGS += \
+    -DGTEST_OS_LINUX_ANDROID \
+    -DGTEST_HAS_STD_STRING \
+
+LOCAL_C_INCLUDES += \
+    external/gtest/include \
+
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+    $(patsubst %, %-host, $(test_fortify_static_libraries)) \
+    bionic-unit-tests-unwind-test-impl-host \
+
+include $(BUILD_HOST_STATIC_LIBRARY)
 
 # -----------------------------------------------------------------------------
 # Test library for the unit tests.
@@ -219,7 +250,11 @@ fortify_c_includes = \
     bionic \
     bionic/libstdc++/include \
     external/stlport/stlport \
-    external/gtest/include
+    external/gtest/include \
+
+fortify_c_includes_host = \
+    external/gtest/include \
+
 fortify_test_files = fortify_test.cpp
 
 # -Wno-error=unused-parameter needed as
@@ -227,6 +262,10 @@ fortify_test_files = fortify_test.cpp
 # external/gtest/include/gtest/gtest.h) does not compile cleanly under
 # clang. TODO: fix this.
 fortify_c_flags = $(test_c_flags) -Wno-error=unused-parameter
+
+# Turn off errors for host code. These files are only compiled as a way
+# to get the list of tests for CTS.
+fortify_c_flags_host = $(test_c_flags) -Wno-error
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(fortify_test_files)
@@ -238,11 +277,27 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(fortify_test_files)
+LOCAL_MODULE := fortify1-tests-gcc-host
+LOCAL_CFLAGS += $(fortify_c_flags_host) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DTEST_NAME=Fortify1_Gcc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_C_INCLUDES += $(fortify_c_includes_host)
+include $(BUILD_HOST_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(fortify_test_files)
 LOCAL_MODULE := fortify2-tests-gcc
 LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Gcc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_C_INCLUDES += $(fortify_c_includes)
 include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(fortify_test_files)
+LOCAL_MODULE := fortify2-tests-gcc-host
+LOCAL_CFLAGS += $(fortify_c_flags_host) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Gcc
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_C_INCLUDES = $(fortify_c_includes_host)
+include $(BUILD_HOST_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(fortify_test_files)
@@ -255,11 +310,31 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(fortify_test_files)
+LOCAL_MODULE := fortify1-tests-clang-host
+# These tests are simply compiled to get a list of tests for CTS.
+#LOCAL_CLANG := true
+LOCAL_CFLAGS += $(fortify_c_flags_host) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -DTEST_NAME=Fortify1_Clang -D__clang__
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_C_INCLUDES += $(fortify_c_includes_host)
+include $(BUILD_HOST_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(fortify_test_files)
 LOCAL_MODULE := fortify2-tests-clang
 LOCAL_CLANG := true
 LOCAL_CFLAGS += $(fortify_c_flags) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Clang
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_C_INCLUDES += $(fortify_c_includes)
 include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(fortify_test_files)
+LOCAL_MODULE := fortify2-tests-clang-host
+# These tests are simply compiled to get a list of tests for CTS.
+#LOCAL_CLANG := true
+LOCAL_CFLAGS += $(fortify_c_flags_host) -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -DTEST_NAME=Fortify2_Clang -D__clang__
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_C_INCLUDES += $(fortify_c_includes_host)
+include $(BUILD_HOST_STATIC_LIBRARY)
 
 endif # !BUILD_TINY_ANDROID

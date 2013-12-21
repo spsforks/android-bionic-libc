@@ -105,4 +105,59 @@ TEST(getpwnam, app_id_u1_i0) {
   CHECK_GETPWNAM_FOR("u1_i0", 199000, TYPE_APP);
 }
 
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(getpwnam, system_id_root) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, system_id_system) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_radio) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_nobody) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_all_a0) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u1_a40000) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u0_a0) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u0_a1234) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u0_a9999) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u1_root) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u1_radio) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u1_a0) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(getpwnam, app_id_u1_i0) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
 #endif /* __BIONIC__ */

@@ -33,4 +33,11 @@ TEST(stack_unwinding_DeathTest, unwinding_through_signal_frame) {
   ASSERT_EXIT(do_test(), ::testing::ExitedWithCode(42), "");
 }
 
+#else
+
+TEST(stack_unwinding_DeathTest, unwinding_through_signal_frame) {
+  // In order to enumerate all possible tests for CTS, create an empty test.
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
 #endif

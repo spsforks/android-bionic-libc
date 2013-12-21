@@ -88,6 +88,12 @@ TEST(stack_protector, same_guard_per_thread) {
   ASSERT_EQ(1U, checker.guards.size());
 }
 
+#else
+
+TEST(stack_protector, same_guard_per_thread) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
 #endif
 
 #if defined(__BIONIC__) || defined(__arm__) || defined(__mips__)
@@ -120,6 +126,16 @@ static void do_modify_stack_chk_guard() {
 TEST(stack_protector_DeathTest, modify_stack_protector) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+}
+
+#else
+
+TEST(stack_protector, global_guard) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(stack_protector_DeathTest, modify_stack_protector) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 }
 
 #endif

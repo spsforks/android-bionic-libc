@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 
-#if defined(__BIONIC__) // Doesn't work on glibc because we use -m32.
 TEST(inttypes, misc) {
+#if defined(__BIONIC__) // Doesn't work on glibc because we use -m32.
   char buf[512];
 
   intptr_t i = 0;
@@ -40,5 +40,7 @@ TEST(inttypes, misc) {
   sscanf(buf, "%08" SCNoPTR, &u);
   sscanf(buf, "%08" SCNuPTR, &u);
   sscanf(buf, "%08" SCNxPTR, &u);
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}

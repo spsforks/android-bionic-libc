@@ -191,8 +191,8 @@ TEST(stdio, printf_ssize_t) {
   snprintf(buf, sizeof(buf), "%zd", v);
 }
 
-#if !defined(__GLIBC__)
 TEST(stdio, snprintf_n_format_specifier_not_implemented) {
+#if !defined(__GLIBC__)
   char buf[32];
   int i = 0;
   // We deliberately don't implement %n, so it's treated like
@@ -200,8 +200,10 @@ TEST(stdio, snprintf_n_format_specifier_not_implemented) {
   EXPECT_EQ(5, snprintf(buf, sizeof(buf), "a %n b", &i));
   EXPECT_EQ(0, i);
   EXPECT_STREQ("a n b", buf);
-}
+#else
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
 
 TEST(stdio, snprintf_smoke) {
   char buf[BUFSIZ];

@@ -150,4 +150,35 @@ TEST(libc_logging, lld_LLONG_MIN) {
   EXPECT_STREQ("-9223372036854775808", buf);
 }
 
-#endif
+#else
+
+// In order to enumerate all possible tests for CTS, create an empty test.
+TEST(libc_logging, smoke) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, d_INT_MAX) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, d_INT_MIN) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, ld_LONG_MAX) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, ld_LONG_MIN) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, lld_LLONG_MAX) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+TEST(libc_logging, lld_LLONG_MIN) {
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+}
+
+#endif /* __BIONIC__ */
