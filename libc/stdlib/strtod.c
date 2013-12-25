@@ -1157,7 +1157,7 @@ d2b
 	x = b->x;
 
 	z = d0 & Frac_mask;
-	d0 &= 0x7fffffff;	/* clear sign bit, which we ignore */
+	d0 &= ~(1L << (sizeof (d0) * CHAR_BIT -1));	/* clear sign bit, which we ignore */
 #ifdef Sudden_Underflow
 	de = (int)(d0 >> Exp_shift);
 #ifndef IBM
