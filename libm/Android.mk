@@ -260,9 +260,7 @@ ifeq ($(TARGET_CPU_VARIANT),cortex-a9)
 libm_arm_src_files += \
     arm/k_log2.S \
     arm/k_pow2.S \
-    arm/k_exp.S \
     arm/e_fast_pow.S \
-    arm/e_fast_exp.S \
     arm/e_sqrt.S \
     arm/e_sqrtf.S \
     arm/s_floor.S
@@ -273,9 +271,7 @@ ifeq ($(TARGET_CPU_VARIANT),cortex-a15)
 libm_arm_src_files += \
     arm/k_log2.S \
     arm/k_pow2.S \
-    arm/k_exp.S \
     arm/e_fast_pow.S \
-    arm/e_fast_exp.S \
     arm/e_sqrt.S \
     arm/e_sqrtf.S \
     arm/s_floor.S \
