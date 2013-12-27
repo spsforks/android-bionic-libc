@@ -264,8 +264,8 @@ libm_arm_src_files += \
     arm/e_sqrt.S \
     arm/e_sqrtf.S \
     arm/s_floor.S
-libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A9
-libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A9
+libm_arm_cflags += -DLIBM_OPT_POW
+libm_arm_asflags += -DLIBM_OPT_POW
 else
 ifeq ($(TARGET_CPU_VARIANT),cortex-a15)
 libm_arm_src_files += \
@@ -281,13 +281,31 @@ libm_arm_src_files += \
     arm/k_cos_fast.S \
     arm/s_sin_fast.S \
     arm/s_cos_fast.S
-libm_arm_cflags += -DTARGET_CPU_VARIANT_CORTEX_A15
-libm_arm_asflags += -DTARGET_CPU_VARIANT_CORTEX_A15 -DFPU_VFPV4
+libm_arm_cflags += -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
+libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
+else
+ifeq ($(TARGET_CPU_VARIANT),denver)
+libm_arm_src_files += \
+    arm/k_log2.S \
+    arm/k_pow2.S \
+    arm/e_fast_pow.S \
+    arm/e_sqrt.S \
+    arm/e_sqrtf.S \
+    arm/s_floor.S \
+    arm/e_rem_pio2_fast.S \
+    arm/e_rem_pio2_large.c \
+    arm/k_sin_fast.S \
+    arm/k_cos_fast.S \
+    arm/s_sin_fast.S \
+    arm/s_cos_fast.S
+libm_arm_cflags += -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
+libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
 else
 libm_arm_src_files += \
     upstream-freebsd/lib/msun/src/s_floor.c \
     upstream-freebsd/lib/msun/src/e_sqrt.c \
     upstream-freebsd/lib/msun/src/e_sqrtf.c
+endif
 endif
 endif
 

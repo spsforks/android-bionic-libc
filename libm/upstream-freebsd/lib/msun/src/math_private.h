@@ -677,13 +677,15 @@ irintl(long double x)
 #define	__ieee754_atanh	atanh
 #define	__ieee754_asin	asin
 #define	__ieee754_atan2	atan2
+#if !defined(LIBM_OPT_EXP)
 #define	__ieee754_exp	exp
+#endif
 #define	__ieee754_cosh	cosh
 #define	__ieee754_fmod	fmod
-#if !defined(TARGET_CPU_VARIANT_CORTEX_A9) && !defined(TARGET_CPU_VARIANT_CORTEX_A15)
+#if !defined(LIBM_OPT_POW)
 #define	__ieee754_pow	pow
 #endif
-#if !defined(TARGET_CPU_VARIANT_CORTEX_A15)
+#if !defined(LIBM_OPT_SIN_COS)
 #define	__ieee754_sin	sin
 #define	__ieee754_cos	cos
 #endif
