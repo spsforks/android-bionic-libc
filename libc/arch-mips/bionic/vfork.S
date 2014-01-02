@@ -27,10 +27,13 @@
  */
 
 #include <asm/unistd.h>
+#include <linux/sched.h>
+
+// TODO: mips' uapi signal.h is missing #ifndef __ASSEMBLY__.
+// #include <asm/signal.h>
+#define SIGCHLD 18
 
 	.text
-
-/* int vfork() implemented using clone() */
 
 	.type	vfork, @function
 	.global	vfork
@@ -40,8 +43,11 @@ vfork:
 	.set	noreorder
 	.cpload	$t9
 
-	li	$a0, 0x4112        /* CLONE_VM | CLONE_VFORK | SIGCHLD */
-	move	$a1, $sp
+	li	$a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+	li	$a1, 0
+	li	$a2, 0
+	li	$a3, 0
+	sw	$0, 16($sp)
 	li	$v0, __NR_clone
 	syscall
 	bnez	$a3,1f
