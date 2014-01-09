@@ -25,20 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_PTRACE_H_
 #define _SYS_PTRACE_H_
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-/* For all of the defines */
+
 #include <linux/ptrace.h>
 
 __BEGIN_DECLS
 
-#define PTRACE_POKEUSER     PTRACE_POKEUSR
-#define PTRACE_PEEKUSER     PTRACE_PEEKUSR
+#define PTRACE_PEEKUSER 3
+#define PTRACE_POKEUSER 6
 
-extern long ptrace(int request, pid_t pid, void *addr, void *data);
+extern long ptrace(int, pid_t, void*, void*);
 
 __END_DECLS
 
