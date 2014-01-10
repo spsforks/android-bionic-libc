@@ -281,8 +281,9 @@ libm_arm_src_files += \
     arm/k_cos_fast.S \
     arm/s_sin_fast.S \
     arm/s_cos_fast.S
-libm_arm_cflags += -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
-libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
+libm_arm_cflags += -DLIBM_OPT_SIN_COS -DPRECISE_TRIGONOMETRIC -DLIBM_OPT_POW
+libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DPRECISE_TRIGONOMETRIC \
+-DLIBM_OPT_POW
 else
 ifeq ($(TARGET_CPU_VARIANT),denver)
 libm_arm_src_files += \
@@ -298,8 +299,9 @@ libm_arm_src_files += \
     arm/k_cos_fast.S \
     arm/s_sin_fast.S \
     arm/s_cos_fast.S
-libm_arm_cflags += -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
-libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DLIBM_OPT_POW
+libm_arm_cflags += -DLIBM_OPT_SIN_COS -DPRECISE_TRIGONOMETRIC -DLIBM_OPT_POW
+libm_arm_asflags += -DFPU_VFPV4 -DLIBM_OPT_SIN_COS -DPRECISE_TRIGONOMETRIC\
+-DLIBM_OPT_POW
 else
 libm_arm_src_files += \
     upstream-freebsd/lib/msun/src/s_floor.c \
