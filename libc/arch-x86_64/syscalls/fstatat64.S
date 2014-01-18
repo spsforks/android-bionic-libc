@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fstatat)
+ENTRY(fstatat64)
     movq    %rcx, %r10
     movl    $__NR_newfstatat, %eax
     syscall
@@ -14,4 +14,7 @@ ENTRY(fstatat)
     orq     $-1, %rax
 1:
     ret
-END(fstatat)
+END(fstatat64)
+
+    .globl _C_LABEL(fstatat)
+    .equ _C_LABEL(fstatat), _C_LABEL(fstatat64)
