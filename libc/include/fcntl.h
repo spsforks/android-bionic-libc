@@ -41,11 +41,15 @@ __BEGIN_DECLS
 #define O_ASYNC  FASYNC
 #endif
 
-extern int  open(const char*  path, int  mode, ...);
-extern int  openat(int fd, const char*  path, int  mode, ...);
+extern int open(const char*, int, ...);
+extern int open64(const char*, int, ...);
+extern int openat(int, const char*, int, ...);
+extern int openat64(int, const char*, int, ...);
+extern int creat(const char*, mode_t);
+extern int creat64(const char*, mode_t);
+
 extern int  unlinkat(int dirfd, const char *pathname, int flags);
 extern int  fcntl(int   fd, int   command, ...);
-extern int  creat(const char*  path, mode_t  mode);
 
 #if defined(__BIONIC_FORTIFY)
 

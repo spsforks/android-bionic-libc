@@ -73,7 +73,7 @@ typedef __kernel_time_t time_t;
 #define _OFF_T_DEFINED_
 typedef __kernel_off_t off_t;
 #endif
-typedef __kernel_loff_t loff_t;
+typedef int64_t loff_t;
 typedef loff_t off64_t;
 
 /* This one really is meant to be just 32 bits! */

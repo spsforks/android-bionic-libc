@@ -2,8 +2,8 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fstat)
-    movl    $__NR_fstat, %eax
+ENTRY(fstat64)
+    movl    $__NR_fstat64, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -13,4 +13,7 @@ ENTRY(fstat)
     orq     $-1, %rax
 1:
     ret
-END(fstat)
+END(fstat64)
+
+    .globl _C_LABEL(fstat)
+    .equ _C_LABEL(fstat), _C_LABEL(fstat64)

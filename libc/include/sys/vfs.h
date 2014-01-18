@@ -39,57 +39,57 @@ typedef struct { int __val[2]; } __fsid_t;
 typedef __fsid_t fsid_t;
 
 #if defined(__LP64__)
-struct statfs {
-  uint64_t f_type;
-  uint64_t f_bsize;
-  uint64_t f_blocks;
-  uint64_t f_bfree;
-  uint64_t f_bavail;
-  uint64_t f_files;
-  uint64_t f_ffree;
-  fsid_t f_fsid;
-  uint64_t f_namelen;
-  uint64_t f_frsize;
-  uint64_t f_flags;
-  uint64_t f_spare[4];
-};
+#define __STATFS64_BODY \
+  uint64_t f_type; \
+  uint64_t f_bsize; \
+  uint64_t f_blocks; \
+  uint64_t f_bfree; \
+  uint64_t f_bavail; \
+  uint64_t f_files; \
+  uint64_t f_ffree; \
+  fsid_t f_fsid; \
+  uint64_t f_namelen; \
+  uint64_t f_frsize; \
+  uint64_t f_flags; \
+  uint64_t f_spare[4]; \
+
 #elif defined(__mips__)
 /* 32-bit MIPS (corresponds to the kernel's statfs64 type). */
-struct statfs {
-  uint32_t f_type;
-  uint32_t f_bsize;
-  uint32_t f_frsize;
-  uint32_t __pad;
-  uint64_t f_blocks;
-  uint64_t f_bfree;
-  uint64_t f_files;
-  uint64_t f_ffree;
-  uint64_t f_bavail;
-  fsid_t f_fsid;
-  uint32_t f_namelen;
-  uint32_t f_flags;
-  uint32_t f_spare[5];
-};
+#define __STATFS64_BODY \
+  uint32_t f_type; \
+  uint32_t f_bsize; \
+  uint32_t f_frsize; \
+  uint32_t __pad; \
+  uint64_t f_blocks; \
+  uint64_t f_bfree; \
+  uint64_t f_files; \
+  uint64_t f_ffree; \
+  uint64_t f_bavail; \
+  fsid_t f_fsid; \
+  uint32_t f_namelen; \
+  uint32_t f_flags; \
+  uint32_t f_spare[5]; \
+
 #else
 /* 32-bit ARM or x86 (corresponds to the kernel's statfs64 type). */
-struct statfs {
-  uint32_t f_type;
-  uint32_t f_bsize;
-  uint64_t f_blocks;
-  uint64_t f_bfree;
-  uint64_t f_bavail;
-  uint64_t f_files;
-  uint64_t f_ffree;
-  fsid_t f_fsid;
-  uint32_t f_namelen;
-  uint32_t f_frsize;
-  uint32_t f_flags;
-  uint32_t f_spare[4];
-};
+#define __STATFS64_BODY \
+  uint32_t f_type; \
+  uint32_t f_bsize; \
+  uint64_t f_blocks; \
+  uint64_t f_bfree; \
+  uint64_t f_bavail; \
+  uint64_t f_files; \
+  uint64_t f_ffree; \
+  fsid_t f_fsid; \
+  uint32_t f_namelen; \
+  uint32_t f_frsize; \
+  uint32_t f_flags; \
+  uint32_t f_spare[4]; \
+
 #endif
 
-/* Source compatibility with glibc. */
-#define statfs64 statfs
+struct statfs { __STATFS64_BODY };
+struct statfs64 { __STATFS64_BODY };
 
 /* Declare that we have the f_namelen, f_frsize, and f_flags fields. */
 #define _STATFS_F_NAMELEN
@@ -142,7 +142,9 @@ struct statfs {
 #define  _XIAFS_SUPER_MAGIC    0x012FD16D
 
 extern int statfs(const char*, struct statfs*) __nonnull((1, 2));
+extern int statfs64(const char*, struct statfs64*) __nonnull((1, 2));
 extern int fstatfs(int, struct statfs*) __nonnull((2));
+extern int fstatfs64(int, struct statfs64*) __nonnull((2));
 
 __END_DECLS
 
