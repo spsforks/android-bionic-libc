@@ -103,6 +103,10 @@ LOCAL_SRC_FILES := $(test_src_files) $(test_dynamic_src_files)
 LOCAL_WHOLE_STATIC_LIBRARIES := $(test_fortify_static_libraries)
 LOCAL_STATIC_LIBRARIES += bionic-unit-tests-unwind-test-impl
 include $(BUILD_NATIVE_TEST)
+# -----------------------------------------------------------------------------
+# Run the unit tests built against x86 bionic on an x86 host.
+# -----------------------------------------------------------------------------
+include $(RUN_ON_HOST)
 
 # Build tests for the device (with bionic's .a). Run with:
 #   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
@@ -181,35 +185,6 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc
-endif
-
-# -----------------------------------------------------------------------------
-# Run the unit tests built against x86 bionic on an x86 host.
-# -----------------------------------------------------------------------------
-
-ifeq ($(HOST_OS)-$(HOST_ARCH),linux-x86)
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-ifeq ($(TARGET_ARCH),x86)
-LINKER = linker
-else
-LINKER = linker64
-endif
-# gtest needs ANDROID_DATA/local/tmp for death test output.
-# Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
-# bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
-bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
-	if [ ! -d /system -o ! -d /system/bin ]; then \
-	  echo "Attempting to create /system/bin"; \
-	  sudo mkdir -p -m 0777 /system/bin; \
-	fi
-	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
-	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
-	ANDROID_DATA=$(TARGET_OUT_DATA) \
-	ANDROID_ROOT=$(TARGET_OUT) \
-	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests
-endif
 endif
 
 # -----------------------------------------------------------------------------
