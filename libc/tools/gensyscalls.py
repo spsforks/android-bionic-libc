@@ -54,10 +54,10 @@ function_alias = """
 
 
 #
-# AArch64 assembler templates for each syscall stub
+# Arm64 assembler templates for each syscall stub
 #
 
-aarch64_call = syscall_stub_header + """\
+arm64_call = syscall_stub_header + """\
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
@@ -272,8 +272,8 @@ def add_footer(pointer_length, stub, syscall):
     return stub
 
 
-def aarch64_genstub(syscall):
-    return aarch64_call % syscall
+def arm64_genstub(syscall):
+    return arm64_call % syscall
 
 
 def arm_eabi_genstub(syscall):
@@ -377,8 +377,8 @@ class State:
         for syscall in self.syscalls:
             syscall["__NR_name"] = make__NR_name(syscall["name"])
 
-            if syscall.has_key("aarch64"):
-                syscall["asm-aarch64"] = add_footer(64, aarch64_genstub(syscall), syscall)
+            if syscall.has_key("arm64"):
+                syscall["asm-arm64"] = add_footer(64, arm64_genstub(syscall), syscall)
 
             if syscall.has_key("arm"):
                 syscall["asm-arm"] = add_footer(32, arm_eabi_genstub(syscall), syscall)

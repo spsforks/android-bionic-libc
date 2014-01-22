@@ -186,12 +186,7 @@ copy_hdrs "${KERNEL_DIR}/common/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
 
 for arch in "${ARCH_LIST[@]}"; do
-  if [[ "$arch" == "arm64" ]]; then
-    # The Android headers use aarch64 as the name of the 64 bit arm headers.
-    tgt_arch="asm-aarch64"
-  else
-    tgt_arch="asm-${arch}"
-  fi
+  tgt_arch="asm-${arch}"
   # Copy arch headers.
   copy_hdrs "${KERNEL_DIR}/common/arch/${arch}/include/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/${tgt_arch}"
