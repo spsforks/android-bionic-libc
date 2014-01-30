@@ -36,7 +36,7 @@ LOCAL_CPPFLAGS += \
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
-ifeq ($(TARGET_IS_64_BIT),true)
+ifeq ($(TARGET_IS_64BIT),true)
     LOCAL_MODULE := linker64
 else
     LOCAL_MODULE := linker
