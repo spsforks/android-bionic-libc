@@ -1,0 +1,8 @@
+Verified+1: Arve Hjønnevåg <arve@android.com>
+Code-Review+2: Colin Cross <ccross@android.com>
+Code-Review+1: Serban Constantinescu <serban.constantinescu@arm.com>
+Submitted-by: Arve Hjønnevåg <arve@android.com>
+Submitted-at: Mon, 03 Feb 2014 21:13:22 +0000
+Reviewed-on: https://android-review.googlesource.com/80303
+Project: platform/bionic
+Branch: refs/heads/master
