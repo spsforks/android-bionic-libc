@@ -4104,6 +4104,7 @@ static void* sys_alloc(mstate m, size_t nb) {
 
   if (MORECORE_CONTIGUOUS && !use_noncontiguous(m)) {
     char* br = CMFAIL;
+    size_t max_size = ~(size_t)0;
     size_t ssize = asize; /* sbrk call size */
     msegmentptr ss = (m->top == 0)? 0 : segment_holding(m, (char*)m->top);
     ACQUIRE_MALLOC_GLOBAL_LOCK();
@@ -4116,7 +4117,8 @@ static void* sys_alloc(mstate m, size_t nb) {
         if (!is_page_aligned(base))
           ssize += (page_align((size_t)base) - (size_t)base);
         fp = m->footprint + ssize; /* recheck limits */
-        if (ssize > nb && ssize < HALF_MAX_SIZE_T &&
+        if ((ssize <= max_size - (size_t)base) &&
+            ssize > nb && ssize < HALF_MAX_SIZE_T &&
             (m->footprint_limit == 0 ||
              (fp > m->footprint && fp <= m->footprint_limit)) &&
             (br = (char*)(CALL_MORECORE(ssize))) == base) {
@@ -4129,7 +4131,8 @@ static void* sys_alloc(mstate m, size_t nb) {
       /* Subtract out existing available top space from MORECORE request. */
       ssize = granularity_align(nb - m->topsize + SYS_ALLOC_PADDING);
       /* Use mem here only if it did continuously extend old space */
-      if (ssize < HALF_MAX_SIZE_T &&
+      if ((ssize <= max_size - (size_t)ss->base - ss->size) &&
+          ssize < HALF_MAX_SIZE_T &&
           (br = (char*)(CALL_MORECORE(ssize))) == ss->base+ss->size) {
         tbase = br;
         tsize = ssize;
