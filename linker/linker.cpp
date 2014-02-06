@@ -1370,10 +1370,21 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
             break;
 #elif defined(__mips__)
         case R_MIPS_REL32:
+#if _MIPS_SIM == _ABI64
+            // MIPS Elf64_Rel entries contain compound relocations
+            // We only handle the R_MIPS_NONE|R_MIPS_64|R_MIPS_REL32 case
+            if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
+                ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
+                DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%d)",
+                       type, (unsigned)ELF64_R_TYPE2(rel->r_info),
+                       (unsigned)ELF64_R_TYPE3(rel->r_info), rel, (int) (rel - start));
+                return -1;
+            }
+#endif
             count_relocation(kRelocAbsolute);
             MARK(rel->r_offset);
-            TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x %s",
-                       reloc, sym_addr, (sym_name) ? sym_name : "*SECTIONHDR*");
+            TRACE_TYPE(RELO, "RELO REL32 %08zx <- %08zx %s", static_cast<size_t>(reloc),
+                       static_cast<size_t>(sym_addr), sym_name ? sym_name : "*SECTIONHDR*");
             if (s) {
                 *reinterpret_cast<Elf_Addr*>(reloc) += sym_addr;
             } else {
@@ -1409,7 +1420,7 @@ static int soinfo_relocate(soinfo* si, Elf_Rel* rel, unsigned count,
 
 #if defined(__mips__)
 static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
-    unsigned* got = si->plt_got;
+    Elf_Addr** got = si->plt_got;
     if (got == NULL) {
         return true;
     }
@@ -1428,15 +1439,15 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
 
     if ((si->flags & FLAG_LINKER) == 0) {
         size_t g = 0;
-        got[g++] = 0xdeadbeef;
-        if (got[g] & 0x80000000) {
-            got[g++] = 0xdeadfeed;
+        got[g++] = (Elf_Addr*)0xdeadbeef;
+        if ((signed long)got[g] < 0) {
+            got[g++] = (Elf_Addr*)0xdeadfeed;
         }
         /*
          * Relocate the local GOT entries need to be relocated
          */
         for (; g < local_gotno; g++) {
-            got[g] += si->load_bias;
+            got[g] = (Elf_Addr*)((unsigned long)got[g] + si->load_bias);
         }
     }
 
@@ -1466,7 +1477,7 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
              * For reference see NetBSD link loader
              * http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
              */
-             *got = lsi->load_bias + s->st_value;
+            *got = (Elf_Addr *)(lsi->load_bias + s->st_value);
         }
     }
     return true;
@@ -1697,19 +1708,22 @@ static bool soinfo_link_image(soinfo* si) {
             si->plt_rel_count = d->d_un.d_val / sizeof(Elf_Rel);
 #endif
             break;
-#if !defined(__LP64__)
+#if defined(__mips__)
         case DT_PLTGOT:
-            // Used by 32-bit MIPS.
-            si->plt_got = (unsigned *)(base + d->d_un.d_ptr);
+            // Used by MIPS.
+            si->plt_got = (Elf_Addr**)(base + d->d_un.d_ptr);
             break;
 #endif
         case DT_DEBUG:
             // Set the DT_DEBUG entry to the address of _r_debug for GDB
             // if the dynamic table is writable
+// FIXME: not working for N64
+#if !(defined(__mips__) && defined(__LP64__))
             if ((dynamic_flags & PF_W) != 0) {
                 d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
             }
             break;
+#endif
 #if defined(USE_RELA)
          case DT_RELA:
             si->rela = (Elf_Rela*) (base + d->d_un.d_ptr);
