@@ -146,7 +146,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 # Build no-elf-hash-table-library.so to test dlopen(3) on a library that
 # only has a GNU-style hash table. MIPS doesn't support GNU hash style.
-ifneq ($(TARGET_ARCH),mips)
+ifeq ($(filter $(TARGET_ARCH),mips mips64),)
 include $(CLEAR_VARS)
 LOCAL_MODULE := no-elf-hash-table-library
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
