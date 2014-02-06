@@ -26,6 +26,15 @@ TEST(sys_types, type_sizes) {
   // id_t is the 'generic'.
   ASSERT_EQ(4U, sizeof(id_t));
 
+#if defined(__GLIBC__)
+  ASSERT_EQ(8U, sizeof(off_t));
+  ASSERT_EQ(8U, sizeof(dev_t));
+#if defined(__LP64__)
+  ASSERT_EQ(8U, sizeof(time_t));
+#else
+  ASSERT_EQ(4U, sizeof(time_t));
+#endif
+#else
   // Some types were too small on 32-bit Android by mistake,
   // but are correct on 64-bit Android.
 #if defined(__LP64__)
@@ -36,6 +45,7 @@ TEST(sys_types, type_sizes) {
   ASSERT_EQ(4U, sizeof(dev_t));
   ASSERT_EQ(4U, sizeof(off_t));
   ASSERT_EQ(4U, sizeof(time_t));
+#endif
 #endif
   // These were right even on 32-bit Android.
   ASSERT_EQ(8U, sizeof(loff_t));
