@@ -74,8 +74,8 @@
 
 typedef void (*linker_function_t)();
 
-// Android uses REL for 32-bit but only uses RELA for 64-bit.
-#if defined(__LP64__)
+// Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
+#if defined(__aarch64__) || defined(__x86_64__)
 #define USE_RELA 1
 #endif
 
@@ -110,10 +110,10 @@ struct soinfo {
   unsigned* bucket;
   unsigned* chain;
 
-#if !defined(__LP64__)
-  // This is only used by 32-bit MIPS, but needs to be here for
+#if defined(__mips__) || !defined(__LP64__)
+  // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
-  unsigned* plt_got;
+  ElfW(Addr)** plt_got;
 #endif
 
 #if defined(USE_RELA)
