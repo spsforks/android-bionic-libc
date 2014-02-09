@@ -195,8 +195,13 @@ typedef int64_t       intmax_t;
 #define SIG_ATOMIC_MIN   INT32_MIN
 
 #ifndef WCHAR_MAX /* These might also have been defined by <wchar.h>. */
-#  define WCHAR_MAX      INT32_MAX
-#  define WCHAR_MIN      INT32_MIN
+#  if defined(__clang__) && defined(__cplusplus) && (__cplusplus >= 201103L) /* The C++11 builtin wchar_t is unsigned in clang */
+#      define WCHAR_MAX UINT32_MAX
+#      define WCHAR_MIN 0
+#  else
+#      define WCHAR_MAX INT32_MAX
+#      define WCHAR_MIN INT32_MIN
+#  endif
 #endif
 
 #define WINT_MAX         INT32_MAX

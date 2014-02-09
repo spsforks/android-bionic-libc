@@ -81,7 +81,7 @@ struct stack_crawl_state_t {
   }
 };
 
-#if defined(__arm__) && !defined(_Unwind_GetIP)
+#if defined(__arm__) && !defined(_Unwind_GetIP) && (!defined(__clang__) || (__clang_major__ < 3 || (__clang_major__ == 3 && __clang_minor__ < 4)))
 // Older versions of Clang don't provide a definition of _Unwind_GetIP(), so
 // we include an appropriate version of our own. Once we have updated to
 // Clang 3.4, this code can be removed.
