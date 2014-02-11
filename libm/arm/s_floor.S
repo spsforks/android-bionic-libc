@@ -1,5 +1,5 @@
 /* Copyright (C) 2013 The Android Open Source Project
- * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
+ * Copyright (c) 2013-2014, NVIDIA CORPORATION.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,8 +113,8 @@ return_x_neg:
         bxeq            lr
 
         vmov            d16, r0, r1
-        vmov.f64        d17, #1.0
-        vsub.f64        d16, d16, d17
+        vmov.f64        d18, #1.0
+        vsub.f64        d16, d16, d18
         vmov            r0, r1, d16
         bx              lr
 
