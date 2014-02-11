@@ -34,7 +34,6 @@ syscall_src += arch-mips/syscalls/__timer_gettime.S
 syscall_src += arch-mips/syscalls/__timer_settime.S
 syscall_src += arch-mips/syscalls/__waitid.S
 syscall_src += arch-mips/syscalls/_exit.S
-syscall_src += arch-mips/syscalls/_flush_cache.S
 syscall_src += arch-mips/syscalls/accept.S
 syscall_src += arch-mips/syscalls/acct.S
 syscall_src += arch-mips/syscalls/bind.S

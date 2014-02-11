@@ -185,8 +185,10 @@ extern int sysconf(int  name);
 
 extern int daemon(int, int);
 
-/* A special syscall that is only available on the ARM, not x86 function. */
-extern int cacheflush(long start, long end, long flags);
+#if defined(__arm__) || defined(__mips__)
+/* Deprecated. Use GCC's __builtin___clear_cache instead. */
+extern int cacheflush(long, long, long);
+#endif
 
 extern pid_t tcgetpgrp(int fd);
 extern int   tcsetpgrp(int fd, pid_t _pid);
