@@ -113,8 +113,6 @@ libc_common_src_files := \
 	bionic/setpgrp.c \
 	bionic/sigblock.c \
 	bionic/siginterrupt.c \
-	bionic/siglist.c \
-	bionic/signame.c \
 	bionic/sigsetmask.c \
 	bionic/strndup.c \
 	bionic/strntoimax.c \
@@ -204,8 +202,8 @@ libc_bionic_src_files := \
     bionic/dirent.cpp \
     bionic/dup2.cpp \
     bionic/epoll_create.cpp \
-    bionic/epoll_wait.cpp \
     bionic/epoll_pwait.cpp \
+    bionic/epoll_wait.cpp \
     bionic/__errno.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
@@ -262,7 +260,6 @@ libc_bionic_src_files := \
     bionic/__set_errno.cpp \
     bionic/seteuid.cpp \
     bionic/setlocale.cpp \
-    bionic/signalfd.cpp \
     bionic/sigaction.cpp \
     bionic/sigaddset.cpp \
     bionic/sigdelset.cpp \
@@ -270,6 +267,7 @@ libc_bionic_src_files := \
     bionic/sigfillset.cpp \
     bionic/sigismember.cpp \
     bionic/signal.cpp \
+    bionic/signalfd.cpp \
     bionic/sigpending.cpp \
     bionic/sigprocmask.cpp \
     bionic/sigsuspend.cpp \
@@ -282,8 +280,10 @@ libc_bionic_src_files := \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
-    bionic/thread_atexit.cpp \
+    bionic/sys_siglist.c \
+    bionic/sys_signame.c \
     bionic/tdestroy.cpp \
+    bionic/thread_atexit.cpp \
     bionic/timer.cpp \
     bionic/tmpfile.cpp \
     bionic/unlink.cpp \
