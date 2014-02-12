@@ -51,13 +51,15 @@ __BEGIN_DECLS
 
 typedef int sig_atomic_t;
 
-/* TODO: 64-bit: we should probably #undef the uapi NSIG and add a unit test that NSIG == _NSIG && NSIG >= 64. */
+/* The arm and x86 kernel header files don't define _NSIG. */
 #ifndef _NSIG
-#  define _NSIG 64
+#define _NSIG 64
 #endif
-#ifndef NSIG
-#  define NSIG _NSIG
-#endif
+
+/* Userspace's NSIG is the kernel's _NSIG + 1.
+ * We can't fix _NSIG because the kernel header files use it. */
+#undef NSIG
+#define NSIG (_NSIG + 1)
 
 extern const char* const sys_siglist[];
 extern const char* const sys_signame[];
