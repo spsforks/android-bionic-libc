@@ -183,6 +183,7 @@ __res_vinit(res_state statp, int preinit) {
                 res_ndestroy(statp);
 
 	if (!preinit) {
+		statp->netid = NETID_UNSET;
 		statp->retrans = RES_TIMEOUT;
 		statp->retry = RES_DFLRETRY;
 		statp->options = RES_DEFAULT;
@@ -793,24 +794,10 @@ res_getservers(res_state statp, union res_sockaddr_union *set, int cnt) {
 }
 
 #ifdef ANDROID_CHANGES
-void res_setiface(res_state statp, const char* iface)
+void res_setnetid(res_state statp, unsigned netid)
 {
 	if (statp != NULL) {
-		// set interface
-		if (iface && iface[0] != '\0') {
-			int len = sizeof(statp->iface);
-			strncpy(statp->iface, iface, len - 1);
-			statp->iface[len - 1] = '\0';
-		} else {
-			statp->iface[0] = '\0';
-		}
-	}
-}
-
-void res_setmark(res_state statp, int mark)
-{
-	if (statp != NULL) {
-		statp->_mark = mark;
+		statp->netid = netid;
 	}
 }
 #endif /* ANDROID_CHANGES */

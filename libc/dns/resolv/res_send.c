@@ -388,8 +388,8 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-	// get the cache associated with the interface
-	cache = __get_res_cache(statp->iface);
+	// get the cache associated with the network
+	cache = __get_res_cache(statp->netid);
 	if (cache != NULL) {
 		int  anslen = 0;
 		cache_status = _resolv_cache_lookup(
@@ -399,9 +399,9 @@ res_nsend(res_state statp,
 		if (cache_status == RESOLV_CACHE_FOUND) {
 			return anslen;
 		} else {
-			// had a cache miss for a known interface, so populate the thread private
+			// had a cache miss for a known network, so populate the thread private
 			// data so the normal resolve path can do its thing
-			_resolv_populate_res_for_iface(statp);
+			_resolv_populate_res_for_net(statp);
 		}
 	}
 
@@ -762,13 +762,13 @@ send_vc(res_state statp,
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_storage peer;
 		socklen_t size = sizeof peer;
-		int old_mark;
-		int mark_size = sizeof(old_mark);
+		unsigned oldnetid;
+		int netid_size = sizeof(oldnetid);
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)(void *)&peer, &size) < 0 ||
 		    !sock_eq((struct sockaddr *)(void *)&peer, nsap) ||
-			getsockopt(statp->_vcsock, SOL_SOCKET, SO_MARK, &old_mark, &mark_size) < 0 ||
-			old_mark != statp->_mark) {
+			getsockopt(statp->_vcsock, SOL_SOCKET, SO_MARK, &oldnetid, &netid_size) < 0 ||
+			oldnetid != statp->netid) {
 			res_nclose(statp);
 			statp->_flags &= ~RES_F_VC;
 		}
@@ -798,9 +798,9 @@ send_vc(res_state statp,
 				return (-1);
 			}
 		}
-		if (statp->_mark != 0) {
+		if (statp->netid != NETID_UNSET) {
 			if (setsockopt(statp->_vcsock, SOL_SOCKET,
-				        SO_MARK, &statp->_mark, sizeof(statp->_mark)) < 0) {
+				        SO_MARK, &statp->netid, sizeof(statp->netid)) < 0) {
 				*terrno = errno;
 				Perror(statp, stderr, "setsockopt", errno);
 				return -1;
@@ -1082,9 +1082,9 @@ send_dg(res_state statp,
 			}
 		}
 
-		if (statp->_mark != 0) {
+		if (statp->netid != NETID_UNSET) {
 			if (setsockopt(EXT(statp).nssocks[ns], SOL_SOCKET,
-					SO_MARK, &(statp->_mark), sizeof(statp->_mark)) < 0) {
+					SO_MARK, &(statp->netid), sizeof(statp->netid)) < 0) {
 				res_nclose(statp);
 				return -1;
 			}
