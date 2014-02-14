@@ -279,7 +279,7 @@ res_nsearch(res_state statp,
 		 * be loaded once for the thread instead of each
 		 * time a query is tried.
 		 */
-		_resolv_populate_res_for_iface(statp);
+		_resolv_populate_res_for_net(statp);
 
 		for (domain = (const char * const *)statp->dnsrch;
 		     *domain && !done;
