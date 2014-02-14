@@ -126,7 +126,7 @@ static struct hostent *_gethtbyname2(const char *, int);
 static int _dns_gethtbyaddr(void *, void *, va_list);
 static int _dns_gethtbyname(void *, void *, va_list);
 
-static struct hostent *gethostbyname_internal(const char *, int, res_state, const char *, int);
+static struct hostent *gethostbyname_internal(const char *, int, res_state, unsigned);
 
 static const ns_src default_dns_files[] = {
 	{ NSSRC_FILES, 	NS_SUCCESS },
@@ -497,13 +497,13 @@ gethostbyname(const char *name)
 
 	/* try IPv6 first - if that fails do IPv4 */
 	if (res->options & RES_USE_INET6) {
-		hp = gethostbyname_internal(name, AF_INET6, res, NULL, 0);
+		hp = gethostbyname_internal(name, AF_INET6, res, 0);
 		if (hp) {
 			__res_put_state(res);
 			return hp;
 		}
 	}
-	hp = gethostbyname_internal(name, AF_INET, res, NULL, 0);
+	hp = gethostbyname_internal(name, AF_INET, res, 0);
 	__res_put_state(res);
 	return hp;
 }
@@ -511,18 +511,18 @@ gethostbyname(const char *name)
 struct hostent *
 gethostbyname2(const char *name, int af)
 {
-	return android_gethostbynameforiface(name, af, NULL, 0);
+	return android_gethostbynamefornet(name, af, 0);
 }
 
 struct hostent *
-android_gethostbynameforiface(const char *name, int af, const char *iface, int mark)
+android_gethostbynamefornet(const char *name, int af, unsigned netid)
 {
 	struct hostent *hp;
 	res_state res = __res_get_state();
 
 	if (res == NULL)
 		return NULL;
-	hp = gethostbyname_internal(name, af, res, iface, mark);
+	hp = gethostbyname_internal(name, af, res, netid);
 	__res_put_state(res);
 	return hp;
 }
@@ -741,15 +741,14 @@ gethostbyname_internal_real(const char *name, int af, res_state res)
 
 // very similar in proxy-ness to android_getaddrinfo_proxy
 static struct hostent *
-gethostbyname_internal(const char *name, int af, res_state res, const char *iface, int mark)
+gethostbyname_internal(const char *name, int af, res_state res, unsigned netid)
 {
 	const char *cache_mode = getenv("ANDROID_DNS_MODE");
 	FILE* proxy = NULL;
 	struct hostent *result = NULL;
 
 	if (cache_mode != NULL && strcmp(cache_mode, "local") == 0) {
-		res_setiface(res, iface);
-		res_setmark(res, mark);
+		res_setnetid(res, netid);
 		return gethostbyname_internal_real(name, af, res);
 	}
 
@@ -758,8 +757,8 @@ gethostbyname_internal(const char *name, int af, res_state res, const char *ifac
 
 	/* This is writing to system/netd/DnsProxyListener.cpp and changes
 	 * here need to be matched there */
-	if (fprintf(proxy, "gethostbyname %s %s %d",
-			iface == NULL ? "^" : iface,
+	if (fprintf(proxy, "gethostbyname %d %s %d",
+			netid,
 			name == NULL ? "^" : name,
 			af) < 0) {
 		goto exit;
@@ -780,8 +779,8 @@ exit:
 
 
 struct hostent *
-android_gethostbyaddrforiface_proxy(const void *addr,
-    socklen_t len, int af, const char* iface, int mark)
+android_gethostbyaddrfornet_proxy(const void *addr,
+    socklen_t len, int af, unsigned netid)
 {
 	struct hostent *result = NULL;
 	FILE* proxy = android_open_proxy();
@@ -792,8 +791,8 @@ android_gethostbyaddrforiface_proxy(const void *addr,
 	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
 	if (addrStr == NULL) goto exit;
 
-	if (fprintf(proxy, "gethostbyaddr %s %d %d %s",
-			addrStr, len, af, iface == NULL ? "^" : iface) < 0) {
+	if (fprintf(proxy, "gethostbyaddr %s %d %d %d",
+			addrStr, len, af, netid) < 0) {
 		goto exit;
 	}
 
@@ -810,8 +809,8 @@ exit:
 }
 
 struct hostent *
-android_gethostbyaddrforiface_real(const void *addr,
-    socklen_t len, int af, const char* iface, int mark)
+android_gethostbyaddrfornet_real(const void *addr,
+    socklen_t len, int af, unsigned netid)
 {
 	const u_char *uaddr = (const u_char *)addr;
 	socklen_t size;
@@ -859,28 +858,28 @@ android_gethostbyaddrforiface_real(const void *addr,
 	hp = NULL;
 	h_errno = NETDB_INTERNAL;
 	if (nsdispatch(&hp, dtab, NSDB_HOSTS, "gethostbyaddr",
-		default_dns_files, uaddr, len, af, iface, mark) != NS_SUCCESS)
+		default_dns_files, uaddr, len, af, netid) != NS_SUCCESS)
 		return NULL;
 	h_errno = NETDB_SUCCESS;
 	return hp;
 }
 
 struct hostent *
-android_gethostbyaddrforiface(const void *addr, socklen_t len, int af, const char* iface, int mark)
+android_gethostbyaddrfornet(const void *addr, socklen_t len, int af, unsigned netid)
 {
 	const char *cache_mode = getenv("ANDROID_DNS_MODE");
 
 	if (cache_mode == NULL || strcmp(cache_mode, "local") != 0) {
-		return android_gethostbyaddrforiface_proxy(addr, len, af, iface, mark);
+		return android_gethostbyaddrfornet_proxy(addr, len, af, netid);
 	} else {
-		return android_gethostbyaddrforiface_real(addr,len, af, iface, mark);
+		return android_gethostbyaddrfornet_real(addr,len, af, netid);
 	}
 }
 
 struct hostent *
 gethostbyaddr(const void *addr, socklen_t len, int af)
 {
-	return android_gethostbyaddrforiface(addr, len, af, NULL, 0);
+	return android_gethostbyaddrfornet(addr, len, af, 0);
 }
 
 
@@ -1315,8 +1314,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	const unsigned char *uaddr;
 	int len, af, advance;
 	res_state res;
-	const char* iface;
-	int mark;
+	unsigned netid;
 	res_static rs = __res_get_static();
 
 	assert(rv != NULL);
@@ -1324,8 +1322,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	uaddr = va_arg(ap, unsigned char *);
 	len = va_arg(ap, int);
 	af = va_arg(ap, int);
-	iface = va_arg(ap, char *);
-	mark = va_arg(ap, int);
+	netid = va_arg(ap, int);
 
 	switch (af) {
 	case AF_INET:
@@ -1367,8 +1364,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		free(buf);
 		return NS_NOTFOUND;
 	}
-	res_setiface(res, iface);
-	res_setmark(res, mark);
+	res_setnetid(res, netid);
 	n = res_nquery(res, qbuf, C_IN, T_PTR, buf->buf, sizeof(buf->buf));
 	if (n < 0) {
 		free(buf);
