@@ -388,8 +388,8 @@ res_nsend(res_state statp,
 	terrno = ETIMEDOUT;
 
 #if USE_RESOLV_CACHE
-	// get the cache associated with the interface
-	cache = __get_res_cache(statp->iface);
+	// get the cache associated with the network
+	cache = __get_res_cache(statp->netid);
 	if (cache != NULL) {
 		int  anslen = 0;
 		cache_status = _resolv_cache_lookup(
@@ -399,9 +399,9 @@ res_nsend(res_state statp,
 		if (cache_status == RESOLV_CACHE_FOUND) {
 			return anslen;
 		} else {
-			// had a cache miss for a known interface, so populate the thread private
+			// had a cache miss for a known network, so populate the thread private
 			// data so the normal resolve path can do its thing
-			_resolv_populate_res_for_iface(statp);
+			_resolv_populate_res_for_net(statp);
 		}
 	}
 
@@ -762,7 +762,7 @@ send_vc(res_state statp,
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
 		struct sockaddr_storage peer;
 		socklen_t size = sizeof peer;
-		int old_mark;
+		unsigned old_mark;
 		int mark_size = sizeof(old_mark);
 		if (getpeername(statp->_vcsock,
 				(struct sockaddr *)(void *)&peer, &size) < 0 ||
