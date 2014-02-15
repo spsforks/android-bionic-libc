@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
@@ -87,4 +88,20 @@ TEST(unistd, pause) {
   ASSERT_FALSE(gPauseTestFlag);
   ASSERT_EQ(-1, pause());
   ASSERT_TRUE(gPauseTestFlag);
+}
+
+TEST(unistd, read) {
+  int fd = open("/proc/version", O_RDONLY);
+  char buf[5];
+  ASSERT_TRUE(fd > 0);
+  ASSERT_EQ(5, read(fd, buf, 5));
+  ASSERT_EQ(buf[0], 'L');
+  ASSERT_EQ(buf[1], 'i');
+  ASSERT_EQ(buf[2], 'n');
+  ASSERT_EQ(buf[3], 'u');
+  ASSERT_EQ(buf[4], 'x');
+
+  ASSERT_EQ(-1, read(-1, buf, 5));
+
+  close(fd);
 }
