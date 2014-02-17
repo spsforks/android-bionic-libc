@@ -27,6 +27,7 @@
  */
 
 #include "pthread_internal.h"
+#include "private/bionic_atomic_inline.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -51,23 +52,28 @@ extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*, 
 // corresponding to calls to timer_settime() and timer_delete().
 //
 // Note also an important thing: Posix mandates that in the case of fork(),
-// the timers of the child process should be disarmed, but not deleted.
-// this is implemented by providing a fork() wrapper (see bionic/fork.c) which
-// stops all timers before the fork, and only re-start them in case of error
-// or in the parent process.
+// the child process should not inherit any timers.
+// This is implemented by providing a fork() wrapper (see bionic/fork.c) which
+// increases __timer_base_id so that the child can distinguish ancestor ids
+// from its own.
 //
-// This stop/start is implemented by the __timer_table_start_stop() function
+// This functionality is implemented by the __timer_table_atfork_child() function
 // below.
 //
 // A SIGEV_THREAD timer ID will always have its TIMER_ID_WRAP_BIT
 // set to 1. In this implementation, this is always bit 31, which is
 // guaranteed to never be used by kernel-provided timer ids
 //
+// In the current implementation, 1 bit is used as the wrap bit, and 5 bits are
+// used for the table index. This leaves 26 bits for __timer_base_id, meaning
+// that in a process with 2^26 SIGEV_THREAD-creating ancestors, all new
+// SIGEV_THREAD timer_create() calls will fail.
+//
 // (See code in <kernel>/lib/idr.c, used to manage IDs, to see why.)
 
 #define  TIMER_ID_WRAP_BIT        0x80000000
-#define  TIMER_ID_WRAP(id)        ((timer_t)((id) |  TIMER_ID_WRAP_BIT))
-#define  TIMER_ID_UNWRAP(id)      ((timer_t)((id) & ~TIMER_ID_WRAP_BIT))
+#define  TIMER_ID_WRAP(id)        ((timer_t)((id) + __timer_base_id))
+#define  TIMER_ID_UNWRAP(id)      ((timer_t)((id) - __timer_base_id))
 #define  TIMER_ID_IS_WRAPPED(id)  (((id) & TIMER_ID_WRAP_BIT) != 0)
 
 /* this value is used internally to indicate a 'free' or 'zombie'
@@ -75,10 +81,7 @@ extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*, 
  * has been called, but that the corresponding thread hasn't
  * exited yet.
  */
-#define  TIMER_ID_NONE            ((timer_t)0xffffffff)
-
-/* True iff a timer id is valid */
-#define  TIMER_ID_IS_VALID(id)    ((id) != TIMER_ID_NONE)
+#define  TIMER_ID_NONE            ((timer_t)0x7fffffff)
 
 /* the maximum value of overrun counters */
 #define  DELAYTIMER_MAX    0x7fffffff
@@ -105,7 +108,6 @@ struct thr_timer {
     pthread_mutex_t           mutex;     /* lock */
     pthread_cond_t            cond;      /* signal a state change to thread */
     int volatile              done;      /* set by timer_delete */
-    int volatile              stopped;   /* set by _start_stop() */
     timespec volatile  expires;   /* next expiration time, or 0 */
     timespec volatile  period;    /* reload value, or 0 */
     int volatile              overruns;  /* current number of overruns */
@@ -121,6 +123,8 @@ struct thr_timer_table {
 
 /** GLOBAL TABLE OF THREAD TIMERS
  **/
+
+static timer_t __timer_base_id = TIMER_ID_WRAP_BIT;
 
 static void
 thr_timer_table_init( thr_timer_table_t*  t )
@@ -147,6 +151,9 @@ thr_timer_table_alloc( thr_timer_table_t*  t )
     if (t == NULL)
         return NULL;
 
+    if (!TIMER_ID_IS_WRAPPED(__timer_base_id))
+        return NULL; /* out of timer base ids! */
+
     pthread_mutex_lock(&t->lock);
     timer = t->free_timer;
     if (timer != NULL) {
@@ -168,26 +175,6 @@ thr_timer_table_free( thr_timer_table_t*  t, thr_timer_t*  timer )
     timer->next   = t->free_timer;
     t->free_timer = timer;
     pthread_mutex_unlock( &t->lock );
-}
-
-
-static void thr_timer_table_start_stop(thr_timer_table_t* t, int stop) {
-  if (t == NULL) {
-    return;
-  }
-
-  pthread_mutex_lock(&t->lock);
-  for (int nn = 0; nn < MAX_THREAD_TIMERS; ++nn) {
-    thr_timer_t*  timer  = &t->timers[nn];
-    if (TIMER_ID_IS_VALID(timer->id)) {
-      // Tell the thread to start/stop.
-      pthread_mutex_lock(&timer->mutex);
-      timer->stopped = stop;
-      pthread_cond_signal( &timer->cond );
-      pthread_mutex_unlock(&timer->mutex);
-    }
-  }
-  pthread_mutex_unlock(&t->lock);
 }
 
 
@@ -213,7 +200,7 @@ thr_timer_table_from_id( thr_timer_table_t*  t,
 
     timer = &t->timers[index];
 
-    if (!TIMER_ID_IS_VALID(timer->id)) {
+    if (timer->id == TIMER_ID_NONE) {
         timer = NULL;
     } else {
         /* if we're removing this timer, clear the id
@@ -232,31 +219,48 @@ thr_timer_table_from_id( thr_timer_table_t*  t,
  * pretty infrequent
  */
 
-static pthread_once_t __timer_table_once = PTHREAD_ONCE_INIT;
+static int __timer_table_initialized;
+static pthread_mutex_t __timer_table_once = PTHREAD_MUTEX_INITIALIZER;
 static thr_timer_table_t* __timer_table;
 
 static void __timer_table_init(void) {
-  __timer_table = reinterpret_cast<thr_timer_table_t*>(calloc(1, sizeof(*__timer_table)));
+  if (__timer_table == NULL) {
+    __timer_table = reinterpret_cast<thr_timer_table_t*>(calloc(1, sizeof(*__timer_table)));
+  }
   if (__timer_table != NULL) {
     thr_timer_table_init(__timer_table);
   }
 }
 
 static thr_timer_table_t* __timer_table_get(void) {
-  pthread_once(&__timer_table_once, __timer_table_init);
+  if (__predict_true(__timer_table_initialized)) {
+    ANDROID_MEMBAR_FULL(); // make sure we see the pointer write
+  } else {
+    pthread_mutex_lock(&__timer_table_once);
+    if (!__timer_table_initialized) {
+      __timer_table_init();
+      // make sure the flag write isn't observable before the pointer write
+      ANDROID_MEMBAR_FULL();
+      __timer_table_initialized = 1;
+    }
+    pthread_mutex_unlock(&__timer_table_once);
+  }
   return __timer_table;
 }
 
 /** POSIX THREAD TIMERS CLEANUP ON FORK
  **
- ** this should be called from the 'fork()' wrapper to stop/start
+ ** this should be called from the 'fork()' wrapper to invalidate
  ** all active thread timers. this is used to implement a Posix
- ** requirements: the timers of fork child processes must be
- ** disarmed but not deleted.
+ ** requirements: per-process timers shall not be inherited by a
+ ** child process across a fork()
  **/
-void __timer_table_start_stop(int stop) {
-  // We access __timer_table directly so we don't create it if it doesn't yet exist.
-  thr_timer_table_start_stop(__timer_table, stop);
+void __timer_table_atfork_child() {
+  if (__timer_table_initialized) {
+    __timer_table_initialized = 0;
+    __timer_base_id += MAX_THREAD_TIMERS;
+  }
+  pthread_mutex_init(&__timer_table_once, NULL); // in case parent locked it
 }
 
 static thr_timer_t*
@@ -381,7 +385,6 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   pthread_cond_init(&timer->cond, NULL);
 
   timer->done = 0;
-  timer->stopped = 0;
   timer->expires.tv_sec = timer->expires.tv_nsec = 0;
   timer->period.tv_sec = timer->period.tv_nsec  = 0;
   timer->overruns = 0;
@@ -559,9 +562,9 @@ static void* timer_thread_start(void* arg) {
     timespec expires = const_cast<timespec&>(timer->expires);
     timespec period = const_cast<timespec&>(timer->period);
 
-    // If the timer is stopped or disarmed, wait indefinitely
-    // for a state change from timer_settime/_delete/_start_stop.
-    if (timer->stopped || timespec_is_zero(&expires)) {
+    // If the timer is disarmed, wait indefinitely
+    // for a state change from timer_settime/_delete.
+    if (timespec_is_zero(&expires)) {
       pthread_cond_wait(&timer->cond, &timer->mutex);
       continue;
     }
