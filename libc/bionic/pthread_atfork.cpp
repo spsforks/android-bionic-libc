@@ -28,6 +28,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include "pthread_internal.h"
 
 static pthread_mutex_t gAtForkListMutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
@@ -69,6 +70,11 @@ void __bionic_atfork_run_prepare() {
 }
 
 void __bionic_atfork_run_child() {
+  // if a thread was exiting or being started during fork(), gThreadListLock
+  // will be locked. Re-init here in the child, otherwise we'll deadlock in
+  // pthread_create().
+  pthread_mutex_init(&gThreadListLock, NULL);
+
   for (atfork_t* it = gAtForkList.first; it != NULL; it = it->next) {
     if (it->child != NULL) {
       it->child();

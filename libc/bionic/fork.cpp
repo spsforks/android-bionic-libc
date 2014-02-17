@@ -33,11 +33,6 @@
 #include "pthread_internal.h"
 
 int fork() {
-  // POSIX mandates that the timers of a fork child process be
-  // disarmed, but not destroyed. To avoid a race condition, we're
-  // going to stop all timers now, and only re-start them in case
-  // of error, or in the parent process
-  __timer_table_start_stop(1);
   __bionic_atfork_run_prepare();
 
   pthread_internal_t* self = __get_thread();
@@ -48,9 +43,13 @@ int fork() {
   int result = syscall(__NR_clone, flags, NULL, NULL, NULL, &(self->tid));
 #endif
   if (result == 0) {
+     // Posix mandates that the timers of a fork child process should
+     // not be inherited. Call __timer_table_atfork_child to clean up
+     // mutexes and create a new range of timer_id:s.
+    __timer_table_atfork_child();
+
     __bionic_atfork_run_child();
   } else {
-    __timer_table_start_stop(0);
     __bionic_atfork_run_parent();
   }
   return result;
