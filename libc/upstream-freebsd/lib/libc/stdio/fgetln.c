@@ -59,7 +59,7 @@ __slbexpand(FILE *fp, size_t newsize)
 #ifdef notdef
 	++newsize;
 #endif
-	if (fp->_lb._size >= newsize)
+	if ((size_t)fp->_lb._size >= newsize)
 		return (0);
 	if ((p = realloc(fp->_lb._base, newsize)) == NULL)
 		return (-1);

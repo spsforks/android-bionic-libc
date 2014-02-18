@@ -662,8 +662,6 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_common_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags)
-LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
@@ -708,7 +706,7 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
                 -DLIBC_STATIC
-LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags) 
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_MODULE := libc_nomalloc
