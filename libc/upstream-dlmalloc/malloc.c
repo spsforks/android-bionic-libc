@@ -2830,6 +2830,16 @@ static size_t traverse_and_check(mstate m);
 /* BEGIN android-changed: strict aliasing change: char* cast to void* */
 #define smallbin_at(M, i)   ((sbinptr)((void*)&((M)->smallbins[(i)<<1])))
 /* END android-changed */
+static mchunkptr msmallbin_at(mstate m,bindex_t i)
+{
+	union {
+		sbinptr sb;
+		mchunkptr ret;
+	} u;
+	u.sb = m->smallbins[i<<1];
+	return u.ret;
+}
+
 #define treebin_at(M,i)     (&((M)->treebins[i]))
 
 /* assign tree index for size S to variable I. Use x86 asm if possible  */
@@ -3583,7 +3593,7 @@ static void internal_malloc_stats(mstate m) {
 /* Link a free chunk into a smallbin  */
 #define insert_small_chunk(M, P, S) {\
   bindex_t I  = small_index(S);\
-  mchunkptr B = smallbin_at(M, I);\
+  mchunkptr B = msmallbin_at(M, I);\
   mchunkptr F = B;\
   assert(S >= MIN_CHUNK_SIZE);\
   if (!smallmap_is_marked(M, I))\
@@ -3607,11 +3617,11 @@ static void internal_malloc_stats(mstate m) {
   assert(P != B);\
   assert(P != F);\
   assert(chunksize(P) == small_index2size(I));\
-  if (RTCHECK(F == smallbin_at(M,I) || (ok_address(M, F) && F->bk == P))) { \
+  if (RTCHECK(F == msmallbin_at(M,I) || (ok_address(M, F) && F->bk == P))) { \
     if (B == F) {\
       clear_smallmap(M, I);\
     }\
-    else if (RTCHECK(B == smallbin_at(M,I) ||\
+    else if (RTCHECK(B == msmallbin_at(M,I) ||\
                      (ok_address(M, B) && B->fd == P))) {\
       F->bk = B;\
       B->fd = F;\
@@ -3926,7 +3936,7 @@ static void init_bins(mstate m) {
   /* Establish circular links for smallbins */
   bindex_t i;
   for (i = 0; i < NSMALLBINS; ++i) {
-    sbinptr bin = smallbin_at(m,i);
+    sbinptr bin = msmallbin_at(m,i);
     bin->fd = bin->bk = bin;
   }
 }
@@ -4604,7 +4614,7 @@ void* dlmalloc(size_t bytes) {
       if ((smallbits & 0x3U) != 0) { /* Remainderless fit to a smallbin. */
         mchunkptr b, p;
         idx += ~smallbits & 1;       /* Uses next bin if idx empty */
-        b = smallbin_at(gm, idx);
+        b = msmallbin_at(gm, idx);
         p = b->fd;
         assert(chunksize(p) == small_index2size(idx));
         unlink_first_small_chunk(gm, b, p, idx);
@@ -4622,7 +4632,7 @@ void* dlmalloc(size_t bytes) {
           binmap_t leftbits = (smallbits << idx) & left_bits(idx2bit(idx));
           binmap_t leastbit = least_bit(leftbits);
           compute_bit2idx(leastbit, i);
-          b = smallbin_at(gm, i);
+          b = msmallbin_at(gm, i);
           p = b->fd;
           assert(chunksize(p) == small_index2size(i));
           unlink_first_small_chunk(gm, b, p, i);
@@ -5540,7 +5550,7 @@ void* mspace_malloc(mspace msp, size_t bytes) {
       if ((smallbits & 0x3U) != 0) { /* Remainderless fit to a smallbin. */
         mchunkptr b, p;
         idx += ~smallbits & 1;       /* Uses next bin if idx empty */
-        b = smallbin_at(ms, idx);
+        b = msmallbin_at(ms, idx);
         p = b->fd;
         assert(chunksize(p) == small_index2size(idx));
         unlink_first_small_chunk(ms, b, p, idx);
@@ -5558,7 +5568,7 @@ void* mspace_malloc(mspace msp, size_t bytes) {
           binmap_t leftbits = (smallbits << idx) & left_bits(idx2bit(idx));
           binmap_t leastbit = least_bit(leftbits);
           compute_bit2idx(leastbit, i);
-          b = smallbin_at(ms, i);
+          b = msmallbin_at(ms, i);
           p = b->fd;
           assert(chunksize(p) == small_index2size(i));
           unlink_first_small_chunk(ms, b, p, i);
