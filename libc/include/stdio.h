@@ -203,7 +203,7 @@ int	 feof(FILE *);
 int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
-char	*fgets(char * __restrict, int, FILE * __restrict);
+char	*fgets(char * __restrict,unsigned int, FILE * __restrict);
 FILE	*fopen(const char * __restrict , const char * __restrict);
 int	 fprintf(FILE * __restrict , const char * __restrict, ...)
 		__printflike(2, 3);
@@ -503,7 +503,7 @@ __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 #if !defined(__clang__)
 
 __BIONIC_FORTIFY_INLINE
-char *fgets(char* dest, int size, FILE* stream) {
+char *fgets(char* dest,unsigned int size, FILE* stream) {
     size_t bos = __bos(dest);
 
     // Compiler can prove, at compile time, that the passed in size

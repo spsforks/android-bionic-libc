@@ -209,6 +209,10 @@ MD5_Update (struct md5 *m, const void *v, size_t len)
   const unsigned char *p = v;
   size_t old_sz = m->sz[0];
   size_t offset;
+  union {
+	unsigned char* uchar;
+        u_int32_t* pointer;
+  } u;
 
   m->sz[0] += len * 8;
   if (m->sz[0] < old_sz)
@@ -231,7 +235,8 @@ MD5_Update (struct md5 *m, const void *v, size_t len)
       }
       calc(m, current);
 #else
-      calc(m, (u_int32_t*)m->save);
+      u.uchar = m->save;
+      calc(m, u.pointer);
 #endif
       offset = 0;
     }
