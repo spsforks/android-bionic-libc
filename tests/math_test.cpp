@@ -16,11 +16,31 @@
 
 #define _DECLARE_C99_LDBL_MATH 1
 
+// This include (and the associated definition of __test_capture_signbit)
+// must be placed before any files that include <cmath> (gtest.h in this case).
+//
+// <cmath> is required to undef declarations of signbit etc. in the global
+// namespace and make equivalent functions available in namespace std.
+//
+// NOTE: We don't write our test using std::signbit because we want to be
+// sure that we're testing the bionic version of signbit. The C++ libraries
+// are free to reimplement signbit or delegate to compiler builtins if they
+// please.
+#include <math.h>
+
+namespace {
+template<typename T> inline int test_capture_signbit(const T in) {
+  return signbit(in);
+}
+template<typename T> inline int test_capture_isfinite(const T in) {
+  return isfinite(in);
+}
+}
+
 #include <gtest/gtest.h>
 
 #include <fenv.h>
 #include <limits.h>
-#include <math.h>
 #include <stdint.h>
 
 float float_subnormal() {
@@ -59,14 +79,12 @@ TEST(math, fpclassify) {
   ASSERT_EQ(FP_ZERO, fpclassify(0.0));
 }
 
-/* TODO: stlport breaks the isfinite macro
 TEST(math, isfinite) {
-  ASSERT_TRUE(isfinite(123.0f));
-  ASSERT_TRUE(isfinite(123.0));
-  ASSERT_FALSE(isfinite(HUGE_VALF));
-  ASSERT_FALSE(isfinite(HUGE_VAL));
+  ASSERT_TRUE(test_capture_isfinite(123.0f));
+  ASSERT_TRUE(test_capture_isfinite(123.0));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VALF));
+  ASSERT_FALSE(test_capture_isfinite(HUGE_VAL));
 }
-*/
 
 TEST(math, isinf) {
   ASSERT_FALSE(isinf(123.0f));
@@ -90,19 +108,19 @@ TEST(math, isnormal) {
 }
 
 // TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
-
-/* TODO: stlport breaks the signbit macro
+//
+// NOTE: See the comment near the inclusion of <math.h> for details
+// about why we can't test signbit directly.
 TEST(math, signbit) {
-  ASSERT_EQ(0, signbit(0.0f));
-  ASSERT_EQ(0, signbit(0.0));
+  ASSERT_EQ(0, test_capture_signbit(0.0f));
+  ASSERT_EQ(0, test_capture_signbit(0.0));
 
-  ASSERT_EQ(0, signbit(1.0f));
-  ASSERT_EQ(0, signbit(1.0));
+  ASSERT_EQ(0, test_capture_signbit(1.0f));
+  ASSERT_EQ(0, test_capture_signbit(1.0));
 
-  ASSERT_NE(0, signbit(-1.0f));
-  ASSERT_NE(0, signbit(-1.0));
+  ASSERT_NE(0, test_capture_signbit(-1.0f));
+  ASSERT_NE(0, test_capture_signbit(-1.0));
 }
-*/
 
 TEST(math, __fpclassifyd) {
 #if defined(__BIONIC__)
