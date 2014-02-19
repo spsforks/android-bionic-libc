@@ -44,6 +44,16 @@ int pthread_detach(pthread_t t) {
     return 0; // Already being joined; silently do nothing, like glibc.
   }
 
+  //In cases where pthread_detach() is called after the thread has exited,
+  //memory associated with the thread is leaked(since no one reclaims it in this case)
+  //Here we handle that case.
+  if (thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) {
+    pthread_mutex_lock(&gThreadListLock);
+    _pthread_internal_remove_locked(thread.get());
+    pthread_mutex_unlock(&gThreadListLock);
+    return 0;
+  }
+
   thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
   return 0;
 }
