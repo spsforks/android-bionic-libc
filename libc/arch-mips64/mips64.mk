@@ -67,10 +67,10 @@ libc_arch_dynamic_src_files_mips64 :=
 # crt-related
 libc_crt_target_cflags_mips64 := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
-    -I$(LOCAL_PATH)/arch-mips/include
+    -I$(LOCAL_PATH)/arch-mips64/include
 
 libc_crt_target_crtbegin_file_mips64 := \
-    $(LOCAL_PATH)/arch-mips/bionic/crtbegin.c
+    $(LOCAL_PATH)/arch-mips64/bionic/crtbegin.c
 
 libc_crt_target_crtbegin_so_file_mips64 := \
     $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
