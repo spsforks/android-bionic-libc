@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include <asm/unistd.h>
 
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
-#include <asm/unistd.h>
+#include <private/bionic_asm.h>
 #include <linux/sched.h>
 
 // TODO: mips' uapi signal.h is missing #ifndef __ASSEMBLY__.
