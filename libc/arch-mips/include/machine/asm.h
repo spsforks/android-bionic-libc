@@ -28,13 +28,12 @@
 #ifndef _MIPS64_ASM_H
 #define _MIPS64_ASM_H
 
-#include <machine/regdef.h>
+#undef __bionic_asm_custom_entry
+#undef __bionic_asm_custom_end
+#define __bionic_asm_custom_entry(f) .ent f
+#define __bionic_asm_custom_end(f) .end f
 
-#ifdef NEED_OLD_RM7KFIX
-#define ITLBNOPFIX      nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;
-#else
-#define ITLBNOPFIX      nop;nop;nop;nop
-#endif
+#include <machine/regdef.h>
 
 #define	_MIPS_ISA_MIPS1	1	/* R2000/R3000 */
 #define	_MIPS_ISA_MIPS2	2	/* R4000/R6000 */
@@ -55,8 +54,6 @@
 #if defined(ABICALLS) && !defined(_KERNEL)
 	ABICALLS
 #endif
-
-#define _C_LABEL(x) x		/* XXX Obsolete but keep for a while */
 
 #if !defined(__MIPSEL__) && !defined(__MIPSEB__)
 #error "__MIPSEL__ or __MIPSEB__ must be defined"
@@ -190,28 +187,6 @@
 #endif
 
 /*
- * Define -pg profile entry code.
- */
-#if defined(XGPROF) || defined(XPROF)
-#define	MCOUNT			\
-	PTR_SUBU sp, sp, 32;	\
-	SAVE_GP(16);		\
-	sw	ra, 28(sp);	\
-	sw	gp, 24(sp);	\
-	.set	noat;		\
-	.set	noreorder;	\
-	move	AT, ra;		\
-	jal	_mcount;	\
-	PTR_SUBU sp, sp, 8;	\
-	lw	ra, 28(sp);	\
-	PTR_ADDU sp, sp, 32;	\
-	.set reorder;		\
-	.set	at;
-#else
-#define	MCOUNT
-#endif
-
-/*
  * LEAF(x, fsize)
  *
  *	Declare a leaf routine.
@@ -223,24 +198,6 @@
 x: ;				\
 	.frame sp, fsize, ra;	\
 	SETUP_GP		\
-	MCOUNT
-
-#define	ALEAF(x)		\
-	.globl	x;		\
-x:
-
-/*
- * NLEAF(x)
- *
- *	Declare a non-profiled leaf routine.
- */
-#define NLEAF(x, fsize)		\
-	.align	3;		\
-	.globl x;		\
-	.ent x, 0;		\
-x: ;				\
-	.frame sp, fsize, ra;	\
-	SETUP_GP
 
 /*
  * NON_LEAF(x)
@@ -254,52 +211,5 @@ x: ;				\
 x: ;				\
 	.frame sp, fsize, retpc; \
 	SETUP_GP		\
-	MCOUNT
-
-/*
- * NNON_LEAF(x)
- *
- *	Declare a non-profiled non-leaf routine
- *	(a routine that makes other C calls).
- */
-#define NNON_LEAF(x, fsize, retpc) \
-	.align	3;		\
-	.globl x;		\
-	.ent x, 0;		\
-x: ;				\
-	.frame sp, fsize, retpc	\
-	SETUP_GP
-
-/*
- * END(x)
- *
- *	Mark end of a procedure.
- */
-#define END(x) \
-	.end x
-
-/*
- * Macros to panic and printf from assembly language.
- */
-#define PANIC(msg) \
-	LA	a0, 9f; \
-	jal	panic;	\
-	nop	;	\
-	MSG(msg)
-
-#define	PRINTF(msg) \
-	la	a0, 9f; \
-	jal	printf; \
-	nop	;	\
-	MSG(msg)
-
-#define	MSG(msg) \
-	.rdata; \
-9:	.asciiz	msg; \
-	.text
-
-#define ASMSTR(str) \
-	.asciiz str; \
-	.align	3
 
 #endif /* !_MIPS_ASM_H */
