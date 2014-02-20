@@ -53,6 +53,8 @@ typedef int __intptr_t;
 typedef unsigned int __uintptr_t;
 #endif
 
+/* Exact types */
+
 typedef __int8_t      int8_t;
 typedef __uint8_t     uint8_t;
 
@@ -65,32 +67,46 @@ typedef __uint32_t    uint32_t;
 typedef __int64_t     int64_t;
 typedef __uint64_t    uint64_t;
 
+/* Types for 'void *' pointers. */
+
 typedef __intptr_t    intptr_t;
 typedef __uintptr_t   uintptr_t;
 
-typedef int8_t        int_least8_t;
-typedef int8_t        int_fast8_t;
+/* Small types */
 
+typedef int8_t        int_least8_t;
 typedef uint8_t       uint_least8_t;
-typedef uint8_t       uint_fast8_t;
 
 typedef int16_t       int_least16_t;
-typedef int32_t       int_fast16_t;
-
 typedef uint16_t      uint_least16_t;
-typedef uint32_t      uint_fast16_t;
 
 typedef int32_t       int_least32_t;
-typedef int32_t       int_fast32_t;
-
 typedef uint32_t      uint_least32_t;
-typedef uint32_t      uint_fast32_t;
 
 typedef int64_t       int_least64_t;
-typedef int64_t       int_fast64_t;
-
 typedef uint64_t      uint_least64_t;
+
+/* Fast types */
+
+typedef int8_t        int_fast8_t;
+typedef uint8_t       uint_fast8_t;
+
+typedef int64_t       int_fast64_t;
 typedef uint64_t      uint_fast64_t;
+
+#ifdef __LP64__
+typedef int64_t       int_fast16_t;
+typedef uint64_t      uint_fast16_t;
+typedef int64_t       int_fast32_t;
+typedef uint64_t      uint_fast32_t;
+#else
+typedef int32_t       int_fast16_t;
+typedef uint32_t      uint_fast16_t;
+typedef int32_t       int_fast32_t;
+typedef uint32_t      uint_fast32_t;
+#endif
+
+/* Largest integral types.  */
 
 typedef uint64_t      uintmax_t;
 typedef int64_t       intmax_t;
