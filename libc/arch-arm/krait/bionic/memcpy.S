@@ -28,7 +28,7 @@
 
 /* Assumes neon instructions and a cache line size of 32 bytes. */
 
-#include <machine/asm.h>
+#include <private/bionic_asm.h>
 #include "private/libc_events.h"
 
 /*
