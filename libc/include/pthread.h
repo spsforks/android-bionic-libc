@@ -229,6 +229,12 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
         __pthread_cleanup_pop( &__cleanup, (execute)); \
     } while (0);                                       \
 
+/*
+ * Like pthread_cond_timedwait except 'reltime' is relative to the current time.
+ * TODO: not like glibc; include in LP64?
+ */
+int pthread_cond_timedwait_relative_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
+#define HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE 1
 
 #if !defined(__LP64__)
 
@@ -240,13 +246,6 @@ int pthread_attr_setstackaddr(pthread_attr_t*, void*) __nonnull((1)); /* depreca
 int pthread_cond_timedwait_monotonic_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
 int pthread_cond_timedwait_monotonic(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
 #define HAVE_PTHREAD_COND_TIMEDWAIT_MONOTONIC 1
-
-/*
- * Like pthread_cond_timedwait except 'reltime' is relative to the current time.
- * TODO: not like glibc; include in LP64?
- */
-int pthread_cond_timedwait_relative_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
-#define HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE 1
 
 /* TODO: not like glibc; include in LP64? */
 int pthread_cond_timeout_np(pthread_cond_t*, pthread_mutex_t*, unsigned);
