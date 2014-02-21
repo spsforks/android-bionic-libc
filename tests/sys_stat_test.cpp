@@ -59,7 +59,7 @@ TEST(sys_stat, mkfifo) {
   // Racy but probably sufficient way to get a suitable filename.
   std::string path;
   {
-    TemporaryFile tf;
+    GenericTemporaryFile tf;
     path = tf.filename;
   }
 

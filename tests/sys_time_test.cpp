@@ -43,6 +43,6 @@ TEST(sys_time, utimes) {
 
 // http://b/11383777
 TEST(sys_time, utimes_NULL) {
-  TemporaryFile tf;
+  GenericTemporaryFile tf;
   ASSERT_EQ(0, utimes(tf.filename, NULL));
 }

@@ -16,6 +16,7 @@
 
 #include <unistd.h>
 
+template<int (*mk_func)(char*) = mkstemp>
 class TemporaryFile {
  public:
   TemporaryFile() {
@@ -40,6 +41,8 @@ class TemporaryFile {
  private:
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
-    fd = mkstemp(filename);
+    fd = mk_func(filename);
   }
 };
+
+typedef TemporaryFile<> GenericTemporaryFile;
