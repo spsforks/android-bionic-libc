@@ -38,7 +38,7 @@ TEST(unistd, sbrk) {
 }
 
 TEST(unistd, truncate) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
   ASSERT_EQ(0, close(tf.fd));
   ASSERT_EQ(0, truncate(tf.filename, 123));
 
@@ -48,7 +48,7 @@ TEST(unistd, truncate) {
 }
 
 TEST(unistd, truncate64) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
   ASSERT_EQ(0, close(tf.fd));
   ASSERT_EQ(0, truncate64(tf.filename, 123));
 
@@ -58,7 +58,7 @@ TEST(unistd, truncate64) {
 }
 
 TEST(unistd, ftruncate) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
   ASSERT_EQ(0, ftruncate(tf.fd, 123));
   ASSERT_EQ(0, close(tf.fd));
 
@@ -68,7 +68,7 @@ TEST(unistd, ftruncate) {
 }
 
 TEST(unistd, ftruncate64) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
   ASSERT_EQ(0, ftruncate64(tf.fd, 123));
   ASSERT_EQ(0, close(tf.fd));
 

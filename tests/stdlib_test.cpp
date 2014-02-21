@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "TemporaryFile.h"
 
 #include <errno.h>
 #include <libgen.h>
@@ -156,4 +157,16 @@ TEST(stdlib_DeathTest, getenv_after_main_thread_exits) {
   // https://code.google.com/p/android/issues/detail?id=57421
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
+}
+
+TEST(mkstemp, mkstemp) {
+  TemporaryFile<> tf;
+  struct stat sb;
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+}
+
+TEST(mkstemp, mkstemp64) {
+  TemporaryFile<mkstemp64> tf;
+  struct stat64 sb;
+  ASSERT_EQ(0, fstat64(tf.fd, &sb));
 }
