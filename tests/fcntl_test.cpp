@@ -71,7 +71,7 @@ TEST(fcntl, creat_creat64) {
 }
 
 TEST(fcntl, fallocate_EINVAL) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
 
 #if !defined(__GLIBC__)
   errno = 0;
@@ -93,7 +93,7 @@ TEST(fcntl, fallocate_EINVAL) {
 }
 
 TEST(fcntl, fallocate) {
-  TemporaryFile tf;
+  TemporaryFile<> tf;
   struct stat sb;
   ASSERT_EQ(0, fstat(tf.fd, &sb));
   ASSERT_EQ(0, sb.st_size);

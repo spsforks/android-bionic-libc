@@ -24,10 +24,10 @@
 #include <errno.h>
 
 TEST(sys_sendfile, sendfile) {
-  TemporaryFile src_file;
+  TemporaryFile<> src_file;
   ASSERT_EQ(5, TEMP_FAILURE_RETRY(write(src_file.fd, "hello", 5)));
 
-  TemporaryFile dst_file;
+  TemporaryFile<> dst_file;
 
   off_t offset = 2;
   size_t count = 2;
@@ -43,10 +43,10 @@ TEST(sys_sendfile, sendfile) {
 }
 
 TEST(sys_sendfile, sendfile64) {
-  TemporaryFile src_file;
+  TemporaryFile<> src_file;
   ASSERT_EQ(5, TEMP_FAILURE_RETRY(write(src_file.fd, "hello", 5)));
 
-  TemporaryFile dst_file;
+  TemporaryFile<> dst_file;
 
   off64_t offset = 2;
   size_t count = 2;
