@@ -193,6 +193,7 @@ int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t * mutex, const 
   return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_REALTIME);
 }
 
+#if !defined(__LP64__)
 // TODO: this exists only for backward binary compatibility.
 int pthread_cond_timedwait_monotonic(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
   return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
@@ -211,3 +212,4 @@ int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsign
   timespec_from_ms(ts, ms);
   return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
+#endif /* !defined(__LP64__) */

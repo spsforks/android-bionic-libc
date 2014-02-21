@@ -792,6 +792,7 @@ int pthread_mutex_lock_timeout_np_impl(pthread_mutex_t *mutex, unsigned msecs)
     /* NOTREACHED */
 }
 
+#if !defined(__LP64__)
 int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
 {
     int err = pthread_mutex_lock_timeout_np_impl(mutex, msecs);
@@ -802,6 +803,7 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t *mutex, unsigned msecs)
     }
     return err;
 }
+#endif /* !defined(__LP64__) */
 
 int pthread_mutex_destroy(pthread_mutex_t *mutex)
 {
