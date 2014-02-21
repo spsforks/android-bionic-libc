@@ -17,8 +17,12 @@
 #include <unistd.h>
 
 class TemporaryFile {
+ private:
+  bool useLFS;
+
  public:
-  TemporaryFile() {
+  TemporaryFile(bool useLFS = false) {
+    this->useLFS = useLFS;
     // Since we might be running on the host or the target, and if we're
     // running on the host we might be running under bionic or glibc,
     // let's just try both possible temporary directories and take the
@@ -40,6 +44,7 @@ class TemporaryFile {
  private:
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
-    fd = mkstemp(filename);
+    fd = useLFS ? mkstemp64(filename) : mkstemp(filename);
   }
+
 };

@@ -107,6 +107,7 @@ libc_common_src_files := \
     stdio/ftell.c \
     stdio/fvwrite.c \
     stdio/gets.c \
+    stdio/mkstemp64.c \
     stdio/printf.c \
     stdio/refill.c \
     stdio/rewind.c \
