@@ -19,7 +19,7 @@
 
 /* New code should use sysconf(_SC_PAGESIZE) instead. */
 #define PAGE_SHIFT 12
-#define PAGE_SIZE (1ULL << PAGE_SHIFT)
+#define PAGE_SIZE (1UL << PAGE_SHIFT)
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 
 #endif
