@@ -64,10 +64,16 @@ typedef union epoll_data {
   uint64_t u64;
 } epoll_data_t;
 
+#ifdef __x86_64__
+#define EPOLL_PACKED __attribute__((packed))
+#else
+#define EPOLL_PACKED
+#endif
+
 struct epoll_event {
   uint32_t events;
   epoll_data_t data;
-};
+}EPOLL_PACKED;
 
 int epoll_create(int);
 int epoll_create1(int);
