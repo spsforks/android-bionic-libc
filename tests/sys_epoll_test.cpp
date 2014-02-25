@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/epoll.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 TEST(sys_epoll, smoke) {
   int epoll_fd = epoll_create(1);
@@ -36,4 +38,27 @@ TEST(sys_epoll, smoke) {
   sigemptyset(&ss);
   sigaddset(&ss, SIGPIPE);
   ASSERT_EQ(0, epoll_pwait(epoll_fd, events, 1, 1, &ss));
+}
+
+TEST(sys_epoll, ptr_alignment) {
+  int fd[2];
+  int epoll_fd = epoll_create(1);
+  ASSERT_NE(-1, epoll_fd) << strerror(errno);
+  epoll_event events[1];
+  epoll_event ev;
+
+  ev.events = EPOLLIN;
+  ev.data.ptr = (void *)&ev;
+
+  // Use pipe for ptr alignment testing
+  pipe2(fd, O_NONBLOCK);
+
+  // poll on read pipe
+  ASSERT_NE(-1, epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd[0], &ev));
+
+  // Make epoll_wait return immediately
+  write(fd[1], "\n", 1);
+
+  ASSERT_EQ(1, epoll_wait(epoll_fd, events, 1, 1));
+  ASSERT_EQ(events[0].data.ptr, &ev);
 }
