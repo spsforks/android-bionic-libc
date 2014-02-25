@@ -26,14 +26,14 @@
  * $FreeBSD: src/lib/msun/i387/fenv.h,v 1.4 2005/03/17 22:21:46 das Exp $
  */
 
-#ifndef	_FENV_H_
-#define	_FENV_H_
+#ifndef	_I387_FENV_H_
+#define	_I387_FENV_H_
 
 #include <sys/types.h>
 
 __BEGIN_DECLS
 
-/*                   
+/*
  * To preserve binary compatibility with FreeBSD 5.3, we pack the
  * mxcsr into some reserved fields, rather than changing sizeof(fenv_t).
  */
@@ -70,32 +70,6 @@ typedef	__uint16_t	fexcept_t;
 extern const fenv_t	__fe_dfl_env;
 #define	FE_DFL_ENV	(&__fe_dfl_env)
 
-/* C99 floating-point exception functions */
-int feclearexcept(int excepts);
-int fegetexceptflag(fexcept_t *flagp, int excepts);
-int fesetexceptflag(const fexcept_t *flagp, int excepts);
-/* feraiseexcept does not set the inexact flag on overflow/underflow */
-int feraiseexcept(int excepts);
-int fetestexcept(int excepts);
-
-/* C99 rounding control functions */
-int fegetround(void);
-int fesetround(int round);
-
-/* C99 floating-point environment functions */
-int fegetenv(fenv_t *__envp);
-int feholdexcept(fenv_t *__envp);
-int fesetenv(const fenv_t *envp);
-int feupdateenv(const fenv_t *__envp);
-
-#if __BSD_VISIBLE
-/* Additional support functions to set/query floating point traps */
-int feenableexcept(int __mask);
-int fedisableexcept(int __mask);
-int fegetexcept(void);
-
-#endif /* __BSD_VISIBLE */
-
 __END_DECLS
 
-#endif	/* !_FENV_H_ */
+#endif	/* !I387_FENV_H_ */
