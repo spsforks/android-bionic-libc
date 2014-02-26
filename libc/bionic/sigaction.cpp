@@ -35,7 +35,61 @@ extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*, struct __ke
 extern "C" int __sigaction(int, const struct sigaction*, struct sigaction*);
 #endif
 
+// User's SEGV handler
+static struct sigaction _bionic_user_segv_sigaction;
+static bool _bionic_segv_claimed;
+
+extern "C" {
+
+// Invoke the user's SEGV handler if it has been set, or the default otherwise
+void android_invoke_user_segv_handler(int sig, siginfo_t* info, void* context) {
+  // Only deliver the signal if the SEGV was not masked out.
+  if (sigismember(&_bionic_user_segv_sigaction.sa_mask, SIGSEGV)) {
+     return;
+  }
+  if ((_bionic_user_segv_sigaction.sa_flags & SA_SIGINFO) != 0) {
+    if (_bionic_user_segv_sigaction.sa_handler != NULL) {
+      _bionic_user_segv_sigaction.sa_handler(sig);
+    }
+  } else {
+    if (_bionic_user_segv_sigaction.sa_sigaction != NULL) {
+      _bionic_user_segv_sigaction.sa_sigaction(sig, info, context);
+    }
+  }
+}
+
+// Called to claim the SEGV handler.  From that point on, all calls to sigaction
+// will be deferred until after the claimer has finished.
+void android_claim_segv_signal() {
+  _bionic_segv_claimed = true;
+}
+
+void android_unclaim_segv_signal() {
+  _bionic_segv_claimed = false;
+
+  // now install the user/default signal handler
+  sigaction(SIGSEGV, &_bionic_user_segv_sigaction, nullptr);
+}
+
+bool android_is_segv_claimed() {
+  return _bionic_segv_claimed;
+}
+}
+
 int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+  // Treat SEGV specially.  We want the kernel to call the claimed handler before anything
+  // registered by the user.
+  if (signal == SIGSEGV) {
+     if (_bionic_segv_claimed) {
+       if (bionic_old_action != NULL) {
+           *bionic_old_action = _bionic_user_segv_sigaction;
+       }
+       if (bionic_new_action != NULL) {
+           _bionic_user_segv_sigaction = *bionic_new_action;
+       }
+       return 0;
+    }
+  }
 #if __LP64__
   __kernel_sigaction kernel_new_action;
   if (bionic_new_action != NULL) {
@@ -55,7 +109,7 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
   __kernel_sigaction kernel_old_action;
   int result = __rt_sigaction(signal,
                               (bionic_new_action != NULL) ? &kernel_new_action : NULL,
-                              (bionic_old_action != NULL) ? &kernel_old_action : NULL,
+                              &kernel_old_action,
                               sizeof(sigset_t));
 
   if (bionic_old_action != NULL) {
@@ -67,6 +121,25 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 
     if (bionic_old_action->sa_restorer == &__rt_sigreturn) {
       bionic_old_action->sa_flags &= ~SA_RESTORER;
+    }
+#endif
+  }
+
+  // Grab the default handler for SIGSEGV into the local storage.
+  // In the event that SIGSEGV is claimed and the claimer doesn't
+  // want to deal with the signal, it will be passed to the
+  // handler held in _bionic_user_segv_sigaction.  If there are
+  // no futher calls to sigaction this will be the default handler,
+  // otherwise it will be the user's handler.
+  if (signal == SIGSEGV) {
+    _bionic_user_segv_sigaction.sa_flags = kernel_old_action.sa_flags;
+    _bionic_user_segv_sigaction.sa_handler = kernel_old_action.sa_handler;
+    _bionic_user_segv_sigaction.sa_mask = kernel_old_action.sa_mask;
+#ifdef SA_RESTORER
+    _bionic_user_segv_sigaction.sa_restorer = kernel_old_action.sa_restorer;
+
+    if (_bionic_user_segv_sigaction.sa_restorer == &__rt_sigreturn) {
+      _bionic_user_segv_sigaction.sa_flags &= ~SA_RESTORER;
     }
 #endif
   }

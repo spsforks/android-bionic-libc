@@ -33,12 +33,20 @@
 #include "private/kernel_sigset_t.h"
 
 extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
+extern "C" bool android_is_segv_claimed();
 
 int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
   kernel_sigset_t new_set;
   kernel_sigset_t* new_set_ptr = NULL;
   if (bionic_new_set != NULL) {
-    new_set.set(bionic_new_set);
+    sigset_t tmpset = *bionic_new_set;
+    if (how == SIG_BLOCK && android_is_segv_claimed()) {
+      // Don't allow SIGSEGV in the mask if it is claimed.
+      if (sigismember(&tmpset, SIGSEGV)) {
+          sigdelset(&tmpset, SIGSEGV);
+      }
+    }
+    new_set.set(&tmpset);
     new_set_ptr = &new_set;
   }
 
