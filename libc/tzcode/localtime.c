@@ -147,7 +147,7 @@ struct rule {
 
 static int __bionic_open_tzdata(const char*, int*);
 static int_fast32_t detzcode(const char * codep);
-static int_fast64_t	detzcode64(const char * codep);
+static int_fast64_t detzcode64(const char * codep);
 static int      differ_by_repeat(time_t t1, time_t t0);
 static const char * getzname(const char * strp) ATTRIBUTE_PURE;
 static const char * getqzname(const char * strp, const int delim)
@@ -165,7 +165,7 @@ static struct tm *  localsub(const time_t * timep, int_fast32_t offset,
 static int      increment_overflow(int * number, int delta);
 static int      leaps_thru_end_of(int y) ATTRIBUTE_PURE;
 static int      increment_overflow32(int_fast32_t * number, int delta);
-static int		increment_overflow_time(time_t *t, int_fast32_t delta);
+static int      increment_overflow_time(time_t *t, int_fast32_t delta);
 static int      normalize_overflow32(int_fast32_t * tensptr,
                 int * unitsptr, int base);
 static int      normalize_overflow(int * tensptr, int * unitsptr,
@@ -187,10 +187,10 @@ static struct tm *  timesub(const time_t * timep, int_fast32_t offset,
                 const struct state * sp, struct tm * tmp);
 static int      tmcomp(const struct tm * atmp,
                 const struct tm * btmp);
-static int_fast32_t	transtime(int year, const struct rule * rulep,
-				  int_fast32_t offset)
+static int_fast32_t transtime(int year, const struct rule * rulep,
+                int_fast32_t offset)
         ATTRIBUTE_PURE;
-static int		typesequiv(const struct state * sp, int a, int b);
+static int      typesequiv(const struct state * sp, int a, int b);
 static int      tzload(const char * name, struct state * sp,
                 int doextend);
 static int      tzparse(const char * name, struct state * sp,
@@ -232,36 +232,36 @@ char *          tzname[2] = {
 static struct tm    tmGlobal;
 
 #ifdef USG_COMPAT
-long			timezone = 0;
-int			daylight = 0;
+long                timezone = 0;
+int                 daylight = 0;
 #endif /* defined USG_COMPAT */
 
 #ifdef ALTZONE
-long			altzone = 0;
+long                altzone = 0;
 #endif /* defined ALTZONE */
 
 static int_fast32_t
 detzcode(const char *const codep)
 {
-	register int_fast32_t	result;
-	register int		i;
+    register int_fast32_t result;
+    register int          i;
 
-	result = (codep[0] & 0x80) ? -1 : 0;
-	for (i = 0; i < 4; ++i)
-		result = (result << 8) | (codep[i] & 0xff);
-	return result;
+    result = (codep[0] & 0x80) ? -1 : 0;
+    for (i = 0; i < 4; ++i)
+        result = (result << 8) | (codep[i] & 0xff);
+    return result;
 }
 
 static int_fast64_t
 detzcode64(const char *const codep)
 {
-	register int_fast64_t result;
-	register int	i;
+    register int_fast64_t result;
+    register int          i;
 
-	result = (codep[0] & 0x80) ? -1 : 0;
-	for (i = 0; i < 8; ++i)
-		result = (result << 8) | (codep[i] & 0xff);
-	return result;
+    result = (codep[0] & 0x80) ? -1 : 0;
+    for (i = 0; i < 8; ++i)
+        result = (result << 8) | (codep[i] & 0xff);
+    return result;
 }
 
 static void
@@ -334,10 +334,10 @@ settzname(void)
 static int
 differ_by_repeat(const time_t t1, const time_t t0)
 {
-	if (TYPE_BIT(time_t) - TYPE_SIGNED(time_t) < SECSPERREPEAT_BITS)
-			return 0;
+    if (TYPE_BIT(time_t) - TYPE_SIGNED(time_t) < SECSPERREPEAT_BITS)
+        return 0;
 #if __LP64__ // 32-bit Android only has a signed 32-bit time_t; 64-bit Android is fixed.
-	return t1 - t0 == SECSPERREPEAT;
+    return t1 - t0 == SECSPERREPEAT;
 #endif
 }
 
@@ -345,7 +345,7 @@ static int
 tzload(register const char* name, register struct state* const sp,
        register const int doextend)
 {
-    register const char *       p;
+    register const char *   p;
     register int            i;
     register int            fid;
     register int            stored;
@@ -357,14 +357,14 @@ tzload(register const char* name, register struct state* const sp,
                     4 * TZ_MAX_TIMES];
     } u_t;
 #ifdef ALL_STATE
-    register u_t *			up;
+    register u_t *          up;
 
     up = (u_t *) calloc(1, sizeof *up);
     if (up == NULL)
         return -1;
 #else /* !defined ALL_STATE */
-    u_t				u;
-    register u_t * const		up = &u;
+    u_t             u;
+    register u_t * const    up = &u;
 #endif /* !defined ALL_STATE */
 
     sp->goback = sp->goahead = FALSE;
@@ -380,7 +380,7 @@ tzload(register const char* name, register struct state* const sp,
     for (stored = 4; stored <= 8; stored *= 2) {
         int     ttisstdcnt;
         int     ttisgmtcnt;
-		int		timecnt;
+        int     timecnt;
 
         ttisstdcnt = (int) detzcode(up->tzhead.tzh_ttisstdcnt);
         ttisgmtcnt = (int) detzcode(up->tzhead.tzh_ttisgmtcnt);
@@ -405,37 +405,37 @@ tzload(register const char* name, register struct state* const sp,
             ttisstdcnt +            /* ttisstds */
             ttisgmtcnt)         /* ttisgmts */
                 goto oops;
-		timecnt = 0;
+        timecnt = 0;
         for (i = 0; i < sp->timecnt; ++i) {
-			int_fast64_t at
-			  = stored == 4 ? detzcode(p) : detzcode64(p);
-			sp->types[i] = ((TYPE_SIGNED(time_t)
-					 ? time_t_min <= at
-					 : 0 <= at)
-					&& at <= time_t_max);
-			if (sp->types[i]) {
-				if (i && !timecnt && at != time_t_min) {
-					/*
-					** Keep the earlier record, but tweak
-					** it so that it starts with the
-					** minimum time_t value.
-					*/
-					sp->types[i - 1] = 1;
-					sp->ats[timecnt++] = time_t_min;
-				}
-				sp->ats[timecnt++] = at;
-			}
+            int_fast64_t at
+              = stored == 4 ? detzcode(p) : detzcode64(p);
+            sp->types[i] = ((TYPE_SIGNED(time_t)
+                     ? time_t_min <= at
+                     : 0 <= at)
+                    && at <= time_t_max);
+            if (sp->types[i]) {
+                if (i && !timecnt && at != time_t_min) {
+                    /*
+                    ** Keep the earlier record, but tweak
+                    ** it so that it starts with the
+                    ** minimum time_t value.
+                    */
+                    sp->types[i - 1] = 1;
+                    sp->ats[timecnt++] = time_t_min;
+                }
+                sp->ats[timecnt++] = at;
+            }
             p += stored;
         }
-		timecnt = 0;
+        timecnt = 0;
         for (i = 0; i < sp->timecnt; ++i) {
-			unsigned char typ = *p++;
-			if (sp->typecnt <= typ)
+            unsigned char typ = *p++;
+            if (sp->typecnt <= typ)
                 goto oops;
-			if (sp->types[i])
-				sp->types[timecnt++] = typ;
+            if (sp->types[i])
+                sp->types[timecnt++] = typ;
         }
-		sp->timecnt = timecnt;
+        sp->timecnt = timecnt;
         for (i = 0; i < sp->typecnt; ++i) {
             register struct ttinfo *    ttisp;
 
@@ -498,9 +498,9 @@ tzload(register const char* name, register struct state* const sp,
         for (i = 0; i < nread; ++i)
             up->buf[i] = p[i];
         /*
-		** If this is a signed narrow time_t system, we're done.
+        ** If this is a signed narrow time_t system, we're done.
         */
-		if (TYPE_SIGNED(time_t) && stored >= (int) sizeof(time_t))
+        if (TYPE_SIGNED(time_t) && stored >= (int) sizeof(time_t))
             break;
     }
     if (doextend && nread > 2 &&
@@ -602,23 +602,23 @@ oops:
 static int
 typesequiv(const struct state *const sp, const int a, const int b)
 {
-	register int	result;
+    register int    result;
 
-	if (sp == NULL ||
-		a < 0 || a >= sp->typecnt ||
-		b < 0 || b >= sp->typecnt)
-			result = FALSE;
-	else {
-		register const struct ttinfo *	ap = &sp->ttis[a];
-		register const struct ttinfo *	bp = &sp->ttis[b];
-		result = ap->tt_gmtoff == bp->tt_gmtoff &&
-			ap->tt_isdst == bp->tt_isdst &&
-			ap->tt_ttisstd == bp->tt_ttisstd &&
-			ap->tt_ttisgmt == bp->tt_ttisgmt &&
-			strcmp(&sp->chars[ap->tt_abbrind],
-			&sp->chars[bp->tt_abbrind]) == 0;
-	}
-	return result;
+    if (sp == NULL ||
+        a < 0 || a >= sp->typecnt ||
+        b < 0 || b >= sp->typecnt)
+            result = FALSE;
+    else {
+        register const struct ttinfo *  ap = &sp->ttis[a];
+        register const struct ttinfo *  bp = &sp->ttis[b];
+        result = ap->tt_gmtoff == bp->tt_gmtoff &&
+            ap->tt_isdst == bp->tt_isdst &&
+            ap->tt_ttisstd == bp->tt_ttisstd &&
+            ap->tt_ttisgmt == bp->tt_ttisgmt &&
+            strcmp(&sp->chars[ap->tt_abbrind],
+            &sp->chars[bp->tt_abbrind]) == 0;
+    }
+    return result;
 }
 
 static const int    mon_lengths[2][MONSPERYEAR] = {
@@ -820,10 +820,10 @@ getrule(const char * strp, register struct rule * const rulep)
 
 static int_fast32_t
 transtime(const int year, register const struct rule *const rulep,
-	  const int_fast32_t offset)
+      const int_fast32_t offset)
 {
     register int    leapyear;
-	register int_fast32_t value;
+    register int_fast32_t value;
     register int    i;
     int     d, m1, yy0, yy1, yy2, dow;
 
@@ -839,7 +839,7 @@ transtime(const int year, register const struct rule *const rulep,
         ** add SECSPERDAY times the day number-1 to the time of
         ** January 1, midnight, to get the day.
         */
-		value = (rulep->r_day - 1) * SECSPERDAY;
+        value = (rulep->r_day - 1) * SECSPERDAY;
         if (leapyear && rulep->r_day >= 60)
             value += SECSPERDAY;
         break;
@@ -850,7 +850,7 @@ transtime(const int year, register const struct rule *const rulep,
         ** Just add SECSPERDAY times the day number to the time of
         ** January 1, midnight, to get the day.
         */
-		value = rulep->r_day * SECSPERDAY;
+        value = rulep->r_day * SECSPERDAY;
         break;
 
     case MONTH_NTH_DAY_OF_WEEK:
@@ -889,15 +889,15 @@ transtime(const int year, register const struct rule *const rulep,
         /*
         ** "d" is the day-of-month (zero-origin) of the day we want.
         */
-		value = d * SECSPERDAY;
-		for (i = 0; i < rulep->r_mon - 1; ++i)
-			value += mon_lengths[leapyear][i] * SECSPERDAY;
+        value = d * SECSPERDAY;
+        for (i = 0; i < rulep->r_mon - 1; ++i)
+            value += mon_lengths[leapyear][i] * SECSPERDAY;
         break;
     }
 
     /*
-	** "value" is the year-relative time of 00:00:00 UT on the day in
-	** question. To get the year-relative time of the specified local
+    ** "value" is the year-relative time of 00:00:00 UT on the day in
+    ** question. To get the year-relative time of the specified local
     ** time on that day, add the transition time and the current offset
     ** from UT.
     */
@@ -978,8 +978,8 @@ tzparse(const char * name, register struct state * const sp,
             struct rule end;
             register int    year;
             register int    yearlim;
-			register int	timecnt;
-			time_t		janfirst;
+            register int    timecnt;
+            time_t      janfirst;
 
             ++name;
             if ((name = getrule(name, &start)) == NULL)
@@ -1001,47 +1001,47 @@ tzparse(const char * name, register struct state * const sp,
             sp->ttis[1].tt_gmtoff = -stdoffset;
             sp->ttis[1].tt_isdst = 0;
             sp->ttis[1].tt_abbrind = 0;
-			timecnt = 0;
+            timecnt = 0;
             janfirst = 0;
             yearlim = EPOCH_YEAR + YEARSPERREPEAT;
             for (year = EPOCH_YEAR; year < yearlim; year++) {
-				int_fast32_t
-				  starttime = transtime(year, &start, stdoffset),
-				  endtime = transtime(year, &end, dstoffset);
-				int_fast32_t
+                int_fast32_t
+                  starttime = transtime(year, &start, stdoffset),
+                  endtime = transtime(year, &end, dstoffset);
+                int_fast32_t
                 yearsecs = (year_lengths[isleap(year)]
                             * SECSPERDAY);
-				int reversed = endtime < starttime;
-				if (reversed) {
-					int_fast32_t swap = starttime;
-					starttime = endtime;
-					endtime = swap;
-				}
-				if (reversed
+                int reversed = endtime < starttime;
+                if (reversed) {
+                    int_fast32_t swap = starttime;
+                    starttime = endtime;
+                    endtime = swap;
+                }
+                if (reversed
                     || (starttime < endtime
                         && (endtime - starttime
                             < (yearsecs
                                + (stdoffset - dstoffset))))) {
-					if (TZ_MAX_TIMES - 2 < timecnt)
+                    if (TZ_MAX_TIMES - 2 < timecnt)
                         break;
                     yearlim = year + YEARSPERREPEAT + 1;
-					sp->ats[timecnt] = janfirst;
-					if (increment_overflow_time
-					    (&sp->ats[timecnt], starttime))
-						break;
-					sp->types[timecnt++] = reversed;
-					sp->ats[timecnt] = janfirst;
-					if (increment_overflow_time
-					    (&sp->ats[timecnt], endtime))
-						break;
-					sp->types[timecnt++] = !reversed;
+                    sp->ats[timecnt] = janfirst;
+                    if (increment_overflow_time
+                        (&sp->ats[timecnt], starttime))
+                        break;
+                    sp->types[timecnt++] = reversed;
+                    sp->ats[timecnt] = janfirst;
+                    if (increment_overflow_time
+                        (&sp->ats[timecnt], endtime))
+                        break;
+                    sp->types[timecnt++] = !reversed;
                     }
-				if (increment_overflow_time(&janfirst, yearsecs))
+                if (increment_overflow_time(&janfirst, yearsecs))
                     break;
             }
-			sp->timecnt = timecnt;
-			if (!timecnt)
-                sp->typecnt = 1;	/* Perpetual DST.  */
+            sp->timecnt = timecnt;
+            if (!timecnt)
+                sp->typecnt = 1;    /* Perpetual DST.  */
         } else {
             register int_fast32_t   theirstdoffset;
             register int_fast32_t   theirdstoffset;
@@ -1611,70 +1611,70 @@ ctime_r(const time_t * const timep, char * buf)
 static int
 increment_overflow(int *const ip, int j)
 {
-	register int const	i = *ip;
+    register int const  i = *ip;
 
-	/*
-	** If i >= 0 there can only be overflow if i + j > INT_MAX
-	** or if j > INT_MAX - i; given i >= 0, INT_MAX - i cannot overflow.
-	** If i < 0 there can only be overflow if i + j < INT_MIN
-	** or if j < INT_MIN - i; given i < 0, INT_MIN - i cannot overflow.
-	*/
-	if ((i >= 0) ? (j > INT_MAX - i) : (j < INT_MIN - i))
-		return TRUE;
-	*ip += j;
-	return FALSE;
+    /*
+    ** If i >= 0 there can only be overflow if i + j > INT_MAX
+    ** or if j > INT_MAX - i; given i >= 0, INT_MAX - i cannot overflow.
+    ** If i < 0 there can only be overflow if i + j < INT_MIN
+    ** or if j < INT_MIN - i; given i < 0, INT_MIN - i cannot overflow.
+    */
+    if ((i >= 0) ? (j > INT_MAX - i) : (j < INT_MIN - i))
+        return TRUE;
+    *ip += j;
+    return FALSE;
 }
 
 static int
 increment_overflow32(int_fast32_t *const lp, int const m)
 {
-	register int_fast32_t const	l = *lp;
+    register int_fast32_t const l = *lp;
 
-	if ((l >= 0) ? (m > INT_FAST32_MAX - l) : (m < INT_FAST32_MIN - l))
-		return TRUE;
-	*lp += m;
-	return FALSE;
+    if ((l >= 0) ? (m > INT_FAST32_MAX - l) : (m < INT_FAST32_MIN - l))
+        return TRUE;
+    *lp += m;
+    return FALSE;
 }
 
 static int
 increment_overflow_time(time_t *tp, int_fast32_t j)
 {
-	/*
-	** This is like
-	** 'if (! (time_t_min <= *tp + j && *tp + j <= time_t_max)) ...',
-	** except that it does the right thing even if *tp + j would overflow.
-	*/
-	if (! (j < 0
-	       ? (TYPE_SIGNED(time_t) ? time_t_min - j <= *tp : -1 - j < *tp)
-	       : *tp <= time_t_max - j))
-		return TRUE;
-	*tp += j;
-	return FALSE;
+    /*
+    ** This is like
+    ** 'if (! (time_t_min <= *tp + j && *tp + j <= time_t_max)) ...',
+    ** except that it does the right thing even if *tp + j would overflow.
+    */
+    if (! (j < 0
+           ? (TYPE_SIGNED(time_t) ? time_t_min - j <= *tp : -1 - j < *tp)
+           : *tp <= time_t_max - j))
+        return TRUE;
+    *tp += j;
+    return FALSE;
 }
 
 static int
 normalize_overflow(int *const tensptr, int *const unitsptr, const int base)
 {
-	register int	tensdelta;
+    register int    tensdelta;
 
-	tensdelta = (*unitsptr >= 0) ?
-		(*unitsptr / base) :
-		(-1 - (-1 - *unitsptr) / base);
-	*unitsptr -= tensdelta * base;
-	return increment_overflow(tensptr, tensdelta);
+    tensdelta = (*unitsptr >= 0) ?
+        (*unitsptr / base) :
+        (-1 - (-1 - *unitsptr) / base);
+    *unitsptr -= tensdelta * base;
+    return increment_overflow(tensptr, tensdelta);
 }
 
 static int
 normalize_overflow32(int_fast32_t *const tensptr, int *const unitsptr,
-		     const int base)
+             const int base)
 {
-	register int	tensdelta;
+    register int    tensdelta;
 
-	tensdelta = (*unitsptr >= 0) ?
-		(*unitsptr / base) :
-		(-1 - (-1 - *unitsptr) / base);
-	*unitsptr -= tensdelta * base;
-	return increment_overflow32(tensptr, tensdelta);
+    tensdelta = (*unitsptr >= 0) ?
+        (*unitsptr / base) :
+        (-1 - (-1 - *unitsptr) / base);
+    *unitsptr -= tensdelta * base;
+    return increment_overflow32(tensptr, tensdelta);
 }
 
 static int
