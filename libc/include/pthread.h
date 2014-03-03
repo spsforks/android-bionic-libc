@@ -127,11 +127,13 @@ int pthread_attr_setschedparam(pthread_attr_t*, const struct sched_param*) __non
 int pthread_attr_setschedpolicy(pthread_attr_t*, int) __nonnull((1));
 int pthread_attr_setscope(pthread_attr_t*, int) __nonnull((1));
 int pthread_attr_setstack(pthread_attr_t*, void*, size_t) __nonnull((1));
-int pthread_attr_setstacksize(pthread_attr_t * attr, size_t stack_size) __nonnull((1));
+int pthread_attr_setstacksize(pthread_attr_t *, size_t stack_size) __nonnull((1));
 
 int pthread_condattr_destroy(pthread_condattr_t*) __nonnull((1));
+int pthread_condattr_getclock(const pthread_condattr_t*, clockid_t*) __nonnull((1, 2));
 int pthread_condattr_getpshared(const pthread_condattr_t*, int*) __nonnull((1, 2));
 int pthread_condattr_init(pthread_condattr_t*) __nonnull((1));
+int pthread_condattr_setclock(pthread_condattr_t*, clockid_t) __nonnull((1));
 int pthread_condattr_setpshared(pthread_condattr_t*, int) __nonnull((1));
 
 int pthread_cond_broadcast(pthread_cond_t*) __nonnull((1));

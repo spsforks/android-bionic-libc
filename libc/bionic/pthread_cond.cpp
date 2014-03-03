@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <sys/atomics.h>
 #include <sys/mman.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
@@ -42,11 +43,23 @@
 #include "private/bionic_tls.h"
 #include "private/thread_private.h"
 
+// We use one bit in condition variable values as the 'shared' flag
+// and one bit for the clock type (0 for CLOCK_REALTIME and 1 for
+// CLOCK_MONOTONIC). The rest of the bits are a counter.
+#define COND_SHARED_MASK 0x0001
+#define COND_CLOCK_MASK 0x0002
+#define COND_COUNTER_STEP 0x0004
+#define COND_FLAGS_MASK (COND_SHARED_MASK | COND_CLOCK_MASK)
+#define COND_COUNTER_MASK (~COND_FLAGS_MASK)
+
 int pthread_condattr_init(pthread_condattr_t* attr) {
   if (attr == NULL) {
     return EINVAL;
   }
-  *attr = PTHREAD_PROCESS_PRIVATE;
+
+  *attr = 0;
+  *attr |= PTHREAD_PROCESS_PRIVATE;
+  *attr |= (CLOCK_REALTIME << 1);
   return 0;
 }
 
@@ -54,7 +67,8 @@ int pthread_condattr_getpshared(const pthread_condattr_t* attr, int* pshared) {
   if (attr == NULL || pshared == NULL) {
     return EINVAL;
   }
-  *pshared = *attr;
+
+  *pshared = ((*attr) & COND_SHARED_MASK);
   return 0;
 }
 
@@ -65,7 +79,36 @@ int pthread_condattr_setpshared(pthread_condattr_t* attr, int pshared) {
   if (pshared != PTHREAD_PROCESS_SHARED && pshared != PTHREAD_PROCESS_PRIVATE) {
     return EINVAL;
   }
-  *attr = pshared;
+
+  *attr |= pshared;
+  return 0;
+}
+
+int pthread_condattr_getclock(const pthread_condattr_t* attr, clockid_t* clock) {
+  if (attr == NULL || clock == NULL) {
+    return EINVAL;
+  }
+
+  *clock = ((*attr & COND_CLOCK_MASK) >> 1);
+  return 0;
+}
+
+int pthread_condattr_setclock(pthread_condattr_t* attr, clockid_t clock) {
+  if (attr == NULL) {
+    return EINVAL;
+  }
+
+  // NOTE: CLOCK_REALTIME is 0 and CLOCK_MONOTONIC is 1, so this statement
+  // is equivalent to:
+  //
+  // if (clock & 0xfffe) { return EINVAL; }
+  //
+  // This allows us to represent these clock types in a single bit.
+  if (clock != CLOCK_MONOTONIC && clock != CLOCK_REALTIME) {
+    return EINVAL;
+  }
+
+  *attr |= (clock << 1);
   return 0;
 }
 
@@ -77,13 +120,9 @@ int pthread_condattr_destroy(pthread_condattr_t* attr) {
   return 0;
 }
 
-// We use one bit in condition variable values as the 'shared' flag
-// The rest is a counter.
-#define COND_SHARED_MASK        0x0001
-#define COND_COUNTER_INCREMENT  0x0002
-#define COND_COUNTER_MASK       (~COND_SHARED_MASK)
 
 #define COND_IS_SHARED(c)  (((c)->value & COND_SHARED_MASK) != 0)
+#define COND_GET_CLOCK(c)  (((c)->value & COND_CLOCK_MASK) >> 1)
 
 // XXX *technically* there is a race condition that could allow
 // XXX a signal to be missed.  If thread A is preempted in _wait()
@@ -97,10 +136,10 @@ int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
     return EINVAL;
   }
 
-  cond->value = 0;
-
-  if (attr != NULL && *attr == PTHREAD_PROCESS_SHARED) {
-    cond->value |= COND_SHARED_MASK;
+  if (attr != NULL) {
+    cond->value = (*attr & COND_FLAGS_MASK);
+  } else {
+    cond->value = 0;
   }
 
   return 0;
@@ -123,10 +162,10 @@ static int __pthread_cond_pulse(pthread_cond_t* cond, int counter) {
     return EINVAL;
   }
 
-  long flags = (cond->value & ~COND_COUNTER_MASK);
+  int flags = (cond->value & COND_FLAGS_MASK);
   while (true) {
-    long old_value = cond->value;
-    long new_value = ((old_value - COND_COUNTER_INCREMENT) & COND_COUNTER_MASK) | flags;
+    int old_value = cond->value;
+    int new_value = ((old_value - COND_COUNTER_STEP) & COND_COUNTER_MASK) | flags;
     if (__bionic_cmpxchg(old_value, new_value, &cond->value) == 0) {
       break;
     }
@@ -186,11 +225,11 @@ int pthread_cond_signal(pthread_cond_t* cond) {
 }
 
 int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex) {
-  return __pthread_cond_timedwait(cond, mutex, NULL, CLOCK_REALTIME);
+  return __pthread_cond_timedwait(cond, mutex, NULL, COND_GET_CLOCK(cond));
 }
 
 int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t * mutex, const timespec *abstime) {
-  return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_REALTIME);
+  return __pthread_cond_timedwait(cond, mutex, abstime, COND_GET_CLOCK(cond));
 }
 
 // TODO: this exists only for backward binary compatibility.
