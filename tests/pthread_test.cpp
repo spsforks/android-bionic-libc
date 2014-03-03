@@ -22,6 +22,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sys/mman.h>
+#include <time.h>
 #include <unistd.h>
 
 TEST(pthread, pthread_key_create) {
@@ -596,4 +597,33 @@ TEST(pthread, pthread_attr_getscope) {
   int scope;
   ASSERT_EQ(0, pthread_attr_getscope(&attr, &scope));
   ASSERT_EQ(PTHREAD_SCOPE_SYSTEM, scope);
+}
+
+TEST(pthread, pthread_condattr_init) {
+  pthread_condattr_t attr;
+  pthread_condattr_init(&attr);
+
+  clockid_t clock;
+  ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
+  ASSERT_EQ(CLOCK_REALTIME, clock);
+
+  int pshared;
+  ASSERT_EQ(0, pthread_condattr_getpshared(&attr, &pshared));
+  ASSERT_EQ(PTHREAD_PROCESS_PRIVATE, pshared);
+}
+
+TEST(pthread, pthread_condattr_setclock) {
+  pthread_condattr_t attr;
+  pthread_condattr_init(&attr);
+
+  ASSERT_EQ(0, pthread_condattr_setclock(&attr, CLOCK_REALTIME));
+  clockid_t clock;
+  ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
+  ASSERT_EQ(CLOCK_REALTIME, clock);
+
+  ASSERT_EQ(0, pthread_condattr_setclock(&attr, CLOCK_MONOTONIC));
+  ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
+  ASSERT_EQ(CLOCK_MONOTONIC, clock);
+
+  ASSERT_EQ(EINVAL, pthread_condattr_setclock(&attr, CLOCK_PROCESS_CPUTIME_ID));
 }
