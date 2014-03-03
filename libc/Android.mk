@@ -514,6 +514,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DINET6 \
     -I$(LOCAL_PATH)/private \
+    -I$(LOCAL_PATH)/private/dns \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include # for NetBSD private headers
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
