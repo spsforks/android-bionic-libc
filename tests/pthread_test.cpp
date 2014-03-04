@@ -597,3 +597,26 @@ TEST(pthread, pthread_attr_getscope) {
   ASSERT_EQ(0, pthread_attr_getscope(&attr, &scope));
   ASSERT_EQ(PTHREAD_SCOPE_SYSTEM, scope);
 }
+
+TEST(pthread, pthread_mutex_timedlock) {
+  pthread_mutex_t m;
+  ASSERT_EQ(0, pthread_mutex_init(&m, NULL));
+
+  // If the mutex is already locked, pthread_mutex_timedlock should time out.
+  ASSERT_EQ(0, pthread_mutex_lock(&m));
+
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_nsec += 1;
+  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+
+  // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
+  ASSERT_EQ(0, pthread_mutex_unlock(&m));
+
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_nsec += 1;
+  ASSERT_EQ(0, pthread_mutex_timedlock(&m, &ts));
+
+  ASSERT_EQ(0, pthread_mutex_unlock(&m));
+  ASSERT_EQ(0, pthread_mutex_destroy(&m));
+}
