@@ -44,6 +44,14 @@ int pthread_detach(pthread_t t) {
     return 0; // Already being joined; silently do nothing, like glibc.
   }
 
+  tid_ptr = &thread->tid;
+  if( tid_ptr == 0 ){
+    pthread_mutex_lock(&gThreadListLock);
+    _pthread_internal_remove_locked(thread.get());
+    pthread_mutex_unlock(&gThreadListLock);
+    return 0;
+  }
+
   thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
   return 0;
 }
