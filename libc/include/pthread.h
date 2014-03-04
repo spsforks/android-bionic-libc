@@ -243,7 +243,6 @@ int pthread_attr_setstackaddr(pthread_attr_t*, void*) __nonnull((1)); /* depreca
 // TODO: Remove them once chromium_org / NFC have switched over.
 int pthread_cond_timedwait_monotonic_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
 int pthread_cond_timedwait_monotonic(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
-#define HAVE_PTHREAD_COND_TIMEDWAIT_MONOTONIC 1
 
 /*
  * Like pthread_cond_timedwait except 'reltime' is relative to the current time.
