@@ -27,610 +27,184 @@
  */
 
 #include "pthread_internal.h"
+#include "private/bionic_pthread.h"
+#include "private/kernel_sigset_t.h"
 
 #include <errno.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 
-extern int __pthread_cond_timedwait(pthread_cond_t*, pthread_mutex_t*, const timespec*, clockid_t);
-extern int __pthread_cond_timedwait_relative(pthread_cond_t*, pthread_mutex_t*, const timespec*);
 
-// Normal (i.e. non-SIGEV_THREAD) timers are created directly by the kernel
-// and are passed as is to/from the caller.
-//
-// This file also implements the support required for SIGEV_THREAD ("POSIX interval")
-// timers. See the following pages for additional details:
-//
-// www.opengroup.org/onlinepubs/000095399/functions/timer_create.html
-// www.opengroup.org/onlinepubs/000095399/functions/timer_settime.html
-// www.opengroup.org/onlinepubs/000095399/functions/xsh_chap02_04.html#tag_02_04_01
-//
-// The Linux kernel doesn't support these, so we need to implement them in the
-// C library. We use a very basic scheme where each timer is associated to a
-// thread that will loop, waiting for timeouts or messages from the program
-// corresponding to calls to timer_settime() and timer_delete().
-//
-// Note also an important thing: Posix mandates that in the case of fork(),
-// the timers of the child process should be disarmed, but not deleted.
-// this is implemented by providing a fork() wrapper (see bionic/fork.c) which
-// stops all timers before the fork, and only re-start them in case of error
-// or in the parent process.
-//
-// This stop/start is implemented by the __timer_table_start_stop() function
-// below.
-//
-// A SIGEV_THREAD timer ID will always have its TIMER_ID_WRAP_BIT
-// set to 1. In this implementation, this is always bit 31, which is
-// guaranteed to never be used by kernel-provided timer ids
-//
-// (See code in <kernel>/lib/idr.c, used to manage IDs, to see why.)
 
-#define  TIMER_ID_WRAP_BIT        0x80000000
-#define  TIMER_ID_WRAP(id)        ((timer_t)((id) |  TIMER_ID_WRAP_BIT))
-#define  TIMER_ID_UNWRAP(id)      ((timer_t)((id) & ~TIMER_ID_WRAP_BIT))
-#define  TIMER_ID_IS_WRAPPED(id)  (((id) & TIMER_ID_WRAP_BIT) != 0)
 
-/* this value is used internally to indicate a 'free' or 'zombie'
- * thr_timer structure. Here, 'zombie' means that timer_delete()
- * has been called, but that the corresponding thread hasn't
- * exited yet.
- */
-#define  TIMER_ID_NONE            ((timer_t)0xffffffff)
+//for debugging
+#include <unistd.h>
+#include "private/libc_logging.h"
+//for debugging
 
-/* True iff a timer id is valid */
-#define  TIMER_ID_IS_VALID(id)    ((id) != TIMER_ID_NONE)
 
-/* the maximum value of overrun counters */
-#define  DELAYTIMER_MAX    0x7fffffff
 
-typedef struct thr_timer          thr_timer_t;
-typedef struct thr_timer_table    thr_timer_table_t;
 
-/* The Posix spec says the function receives an unsigned parameter, but
- * it's really a 'union sigval' a.k.a. sigval_t */
-typedef void (*thr_timer_func_t)( sigval_t );
 
-struct thr_timer {
-    thr_timer_t*       next;     /* next in free list */
-    timer_t            id;       /* TIMER_ID_NONE iff free or dying */
-    clockid_t          clock;
-    pthread_t          thread;
-    pthread_attr_t     attributes;
-    thr_timer_func_t   callback;
-    sigval_t           value;
 
-    /* the following are used to communicate between
-     * the timer thread and the timer_XXX() functions
-     */
-    pthread_mutex_t           mutex;     /* lock */
-    pthread_cond_t            cond;      /* signal a state change to thread */
-    int volatile              done;      /* set by timer_delete */
-    int volatile              stopped;   /* set by _start_stop() */
-    timespec volatile  expires;   /* next expiration time, or 0 */
-    timespec volatile  period;    /* reload value, or 0 */
-    int volatile              overruns;  /* current number of overruns */
+// System calls.
+extern "C" int __timer_create(clockid_t, sigevent*, __kernel_timer_t*);
+extern "C" int __timer_delete(__kernel_timer_t);
+extern "C" int __timer_gettime(__kernel_timer_t, itimerspec*);
+extern "C" int __timer_settime(__kernel_timer_t, int, const itimerspec*, itimerspec*);
+extern "C" int __timer_getoverrun(__kernel_timer_t);
+extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*, size_t);
+
+// Most POSIX timers are handled directly by the kernel. We translate SIGEV_THREAD timers
+// into SIGEV_THREAD_ID timers so the kernel handles all the time-related stuff and we just
+// need to worry about running user code on a thread.
+
+struct timer_internal_t {
+  __kernel_timer_t kernel_timer_id;
+
+  int sigev_notify;
+
+  // These fields are only needed for a SIGEV_THREAD timer.
+  pthread_t callback_thread;
+  void (*callback)(sigval_t);
+  sigval_t callback_argument;
 };
 
-#define  MAX_THREAD_TIMERS  32
-
-struct thr_timer_table {
-    pthread_mutex_t  lock;
-    thr_timer_t*     free_timer;
-    thr_timer_t      timers[ MAX_THREAD_TIMERS ];
-};
-
-/** GLOBAL TABLE OF THREAD TIMERS
- **/
-
-static void
-thr_timer_table_init( thr_timer_table_t*  t )
-{
-    int  nn;
-
-    memset(t, 0, sizeof *t);
-    pthread_mutex_init( &t->lock, NULL );
-
-    for (nn = 0; nn < MAX_THREAD_TIMERS; nn++)
-        t->timers[nn].id = TIMER_ID_NONE;
-
-    t->free_timer = &t->timers[0];
-    for (nn = 1; nn < MAX_THREAD_TIMERS; nn++)
-        t->timers[nn-1].next = &t->timers[nn];
+static __kernel_timer_t kernel_timer_id(timer_t timer) {
+  return reinterpret_cast<timer_internal_t*>(timer)->kernel_timer_id;
 }
 
+static void* __timer_thread_start(void* arg) {
+  timer_internal_t* timer = reinterpret_cast<timer_internal_t*>(arg);
 
-static thr_timer_t*
-thr_timer_table_alloc( thr_timer_table_t*  t )
-{
-    thr_timer_t*  timer;
+  // Give ourselves a meaningful name.
+  char name[32];
+  snprintf(name, sizeof(name), "POSIX interval timer %d", timer->kernel_timer_id);
+  pthread_setname_np(pthread_self(), name);
 
-    if (t == NULL)
-        return NULL;
+  __libc_format_log(ANDROID_LOG_INFO, "__timer_thread_start", "\"%s\" started...", name);
 
-    pthread_mutex_lock(&t->lock);
-    timer = t->free_timer;
-    if (timer != NULL) {
-        t->free_timer = timer->next;
-        timer->next   = NULL;
-        timer->id     = TIMER_ID_WRAP((timer - t->timers));
-    }
-    pthread_mutex_unlock(&t->lock);
-    return timer;
-}
+  kernel_sigset_t sigset;
+  sigaddset(sigset.get(), SIGALRM);
 
+  while (true) {
+    // wait for a signal...
+    siginfo_t si;
+    memset(&si, 0, sizeof(si));
+    int rc = __rt_sigtimedwait(sigset.get(), &si, NULL, sizeof(sigset));
+//    __libc_format_log(ANDROID_LOG_INFO, "__timer_thread_start", "__rt_sigtimedwait %d si.si_code=%d", rc, si.si_code);
 
-static void
-thr_timer_table_free( thr_timer_table_t*  t, thr_timer_t*  timer )
-{
-    pthread_mutex_lock( &t->lock );
-    timer->id     = TIMER_ID_NONE;
-    timer->thread = 0;
-    timer->next   = t->free_timer;
-    t->free_timer = timer;
-    pthread_mutex_unlock( &t->lock );
-}
+    // TODO: recognize when we should die!
 
-
-static void thr_timer_table_start_stop(thr_timer_table_t* t, int stop) {
-  if (t == NULL) {
-    return;
+    // call the callback...
+//    __libc_format_log(ANDROID_LOG_INFO, "__timer_thread_start", "callback %p(%p)", timer->callback, &timer->callback_argument);
+    timer->callback(timer->callback_argument);
   }
 
-  pthread_mutex_lock(&t->lock);
-  for (int nn = 0; nn < MAX_THREAD_TIMERS; ++nn) {
-    thr_timer_t*  timer  = &t->timers[nn];
-    if (TIMER_ID_IS_VALID(timer->id)) {
-      // Tell the thread to start/stop.
-      pthread_mutex_lock(&timer->mutex);
-      timer->stopped = stop;
-      pthread_cond_signal( &timer->cond );
-      pthread_mutex_unlock(&timer->mutex);
-    }
-  }
-  pthread_mutex_unlock(&t->lock);
+  return NULL;
 }
 
-
-/* convert a timer_id into the corresponding thr_timer_t* pointer
- * returns NULL if the id is not wrapped or is invalid/free
- */
-static thr_timer_t*
-thr_timer_table_from_id( thr_timer_table_t*  t,
-                         timer_t             id,
-                         int                 remove )
-{
-    unsigned      index;
-    thr_timer_t*  timer;
-
-    if (t == NULL || !TIMER_ID_IS_WRAPPED(id))
-        return NULL;
-
-    index = (unsigned) TIMER_ID_UNWRAP(id);
-    if (index >= MAX_THREAD_TIMERS)
-        return NULL;
-
-    pthread_mutex_lock(&t->lock);
-
-    timer = &t->timers[index];
-
-    if (!TIMER_ID_IS_VALID(timer->id)) {
-        timer = NULL;
-    } else {
-        /* if we're removing this timer, clear the id
-         * right now to prevent another thread to
-         * use the same id after the unlock */
-        if (remove)
-            timer->id = TIMER_ID_NONE;
-    }
-    pthread_mutex_unlock(&t->lock);
-
-    return timer;
-}
-
-/* the static timer table - we only create it if the process
- * really wants to use SIGEV_THREAD timers, which should be
- * pretty infrequent
- */
-
-static pthread_once_t __timer_table_once = PTHREAD_ONCE_INIT;
-static thr_timer_table_t* __timer_table;
-
-static void __timer_table_init(void) {
-  __timer_table = reinterpret_cast<thr_timer_table_t*>(calloc(1, sizeof(*__timer_table)));
-  if (__timer_table != NULL) {
-    thr_timer_table_init(__timer_table);
-  }
-}
-
-static thr_timer_table_t* __timer_table_get(void) {
-  pthread_once(&__timer_table_once, __timer_table_init);
-  return __timer_table;
-}
-
-/** POSIX THREAD TIMERS CLEANUP ON FORK
- **
- ** this should be called from the 'fork()' wrapper to stop/start
- ** all active thread timers. this is used to implement a Posix
- ** requirements: the timers of fork child processes must be
- ** disarmed but not deleted.
- **/
-void __timer_table_start_stop(int stop) {
-  // We access __timer_table directly so we don't create it if it doesn't yet exist.
-  thr_timer_table_start_stop(__timer_table, stop);
-}
-
-static thr_timer_t*
-thr_timer_from_id( timer_t   id )
-{
-    thr_timer_table_t*  table = __timer_table_get();
-    thr_timer_t*        timer = thr_timer_table_from_id( table, id, 0 );
-
-    return timer;
-}
-
-
-static __inline__ void
-thr_timer_lock( thr_timer_t*  t )
-{
-    pthread_mutex_lock(&t->mutex);
-}
-
-static __inline__ void
-thr_timer_unlock( thr_timer_t*  t )
-{
-    pthread_mutex_unlock(&t->mutex);
-}
-
-
-static __inline__ void timespec_add(timespec* a, const timespec* b) {
-  a->tv_sec  += b->tv_sec;
-  a->tv_nsec += b->tv_nsec;
-  if (a->tv_nsec >= 1000000000) {
-    a->tv_nsec -= 1000000000;
-    a->tv_sec  += 1;
-  }
-}
-
-static __inline__ void timespec_sub(timespec* a, const timespec* b) {
-  a->tv_sec  -= b->tv_sec;
-  a->tv_nsec -= b->tv_nsec;
-  if (a->tv_nsec < 0) {
-    a->tv_nsec += 1000000000;
-    a->tv_sec  -= 1;
-  }
-}
-
-static __inline__ void timespec_zero(timespec* a) {
-  a->tv_sec = a->tv_nsec = 0;
-}
-
-static __inline__ int timespec_is_zero(const timespec* a) {
-  return (a->tv_sec == 0 && a->tv_nsec == 0);
-}
-
-static __inline__ int timespec_cmp(const timespec* a, const timespec* b) {
-  if (a->tv_sec  < b->tv_sec)  return -1;
-  if (a->tv_sec  > b->tv_sec)  return +1;
-  if (a->tv_nsec < b->tv_nsec) return -1;
-  if (a->tv_nsec > b->tv_nsec) return +1;
-  return 0;
-}
-
-static __inline__ int timespec_cmp0(const timespec* a) {
-  if (a->tv_sec < 0) return -1;
-  if (a->tv_sec > 0) return +1;
-  if (a->tv_nsec < 0) return -1;
-  if (a->tv_nsec > 0) return +1;
-  return 0;
-}
-
-/** POSIX TIMERS APIs */
-
-extern "C" int __timer_create(clockid_t, sigevent*, timer_t*);
-extern "C" int __timer_delete(timer_t);
-extern "C" int __timer_gettime(timer_t, itimerspec*);
-extern "C" int __timer_settime(timer_t, int, const itimerspec*, itimerspec*);
-extern "C" int __timer_getoverrun(timer_t);
-
-static void* timer_thread_start(void*);
-
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html
 int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
-  // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
-  if (__predict_true(evp == NULL || evp->sigev_notify != SIGEV_THREAD)) {
-    return __timer_create(clock_id, evp, timer_id);
+  timer_internal_t* new_timer = reinterpret_cast<timer_internal_t*>(malloc(sizeof(timer_internal_t)));
+  if (new_timer == NULL) {
+    return -1;
   }
 
-  // Check arguments.
-  if (evp->sigev_notify_function == NULL) {
+  new_timer->sigev_notify = (evp == NULL) ? SIGEV_SIGNAL : evp->sigev_notify;
+
+  // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
+  if (new_timer->sigev_notify != SIGEV_THREAD) {
+    if (__timer_create(clock_id, evp, &new_timer->kernel_timer_id) == -1) {
+      free(new_timer);
+      return -1;
+    }
+
+    *timer_id = new_timer;
+    return 0;
+  }
+
+  // Otherwise, this must be SIGEV_THREAD timer...
+  sigevent se = *evp;
+  new_timer->callback = se.sigev_notify_function;
+  new_timer->callback_argument = se.sigev_value;
+
+  // Check arguments that the kernel doesn't care about but we do.
+  if (se.sigev_notify_function == NULL) {
+    free(new_timer);
     errno = EINVAL;
     return -1;
   }
 
-  // Check that the clock id is supported by the kernel.
-  timespec dummy;
-  if (clock_gettime(clock_id, &dummy) < 0 && errno == EINVAL) {
-    return -1;
-  }
-
-  // Create a new timer and its thread.
-  // TODO: use a single global thread for all timers.
-  thr_timer_table_t* table = __timer_table_get();
-  thr_timer_t* timer = thr_timer_table_alloc(table);
-  if (timer == NULL) {
-    errno = ENOMEM;
-    return -1;
-  }
-
-  // Copy the thread attributes.
+  // Create this timer's thread.
+  pthread_attr_t thread_attributes;
   if (evp->sigev_notify_attributes == NULL) {
-    pthread_attr_init(&timer->attributes);
+    pthread_attr_init(&thread_attributes);
   } else {
-    timer->attributes = ((pthread_attr_t*) evp->sigev_notify_attributes)[0];
+    thread_attributes = *reinterpret_cast<pthread_attr_t*>(evp->sigev_notify_attributes);
   }
+  pthread_attr_setdetachstate(&thread_attributes, PTHREAD_CREATE_DETACHED);
 
-  // Posix says that the default is PTHREAD_CREATE_DETACHED and
-  // that PTHREAD_CREATE_JOINABLE has undefined behavior.
-  // So simply always use DETACHED :-)
-  pthread_attr_setdetachstate(&timer->attributes, PTHREAD_CREATE_DETACHED);
+  // We start the thread with SIGALRM blocked, in case it starts receiving
+  // signals before it's had a change to block SIGALRM itself.
+  kernel_sigset_t sigset;
+  sigaddset(sigset.get(), SIGALRM);
+  kernel_sigset_t old_sigset;
+  pthread_sigmask(SIG_BLOCK, sigset.get(), old_sigset.get());
 
-  timer->callback = evp->sigev_notify_function;
-  timer->value = evp->sigev_value;
-  timer->clock = clock_id;
+  int rc = pthread_create(&new_timer->callback_thread, &thread_attributes, __timer_thread_start, new_timer);
 
-  pthread_mutex_init(&timer->mutex, NULL);
-  pthread_cond_init(&timer->cond, NULL);
+  pthread_sigmask(SIG_SETMASK, old_sigset.get(), NULL);
 
-  timer->done = 0;
-  timer->stopped = 0;
-  timer->expires.tv_sec = timer->expires.tv_nsec = 0;
-  timer->period.tv_sec = timer->period.tv_nsec  = 0;
-  timer->overruns = 0;
-
-  // Create the thread.
-  int rc = pthread_create(&timer->thread, &timer->attributes, timer_thread_start, timer);
   if (rc != 0) {
-    thr_timer_table_free(table, timer);
+    free(new_timer);
     errno = rc;
     return -1;
   }
 
-  *timer_id = timer->id;
+  se.sigev_signo = SIGALRM;
+  se.sigev_notify = SIGEV_THREAD_ID;
+  se.sigev_notify_thread_id = __pthread_gettid(new_timer->callback_thread);
+  se.sigev_value.sival_ptr = new_timer;
+  if (__timer_create(clock_id, &se, &new_timer->kernel_timer_id) == -1) {
+    // TODO: tell the thread to exit as if via timer_delete.
+    __libc_format_log(ANDROID_LOG_INFO, "timer_create", "timer_create SIGEV_THREAD doing pthread_kill... (%s)", strerror(errno));
+    pthread_kill(new_timer->callback_thread, SIGALRM);
+    free(new_timer);
+    return -1;
+  }
+
+  *timer_id = new_timer;
   return 0;
 }
 
-
-int
-timer_delete( timer_t  id )
-{
-    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) )
-        return __timer_delete( id );
-    else
-    {
-        thr_timer_table_t*  table = __timer_table_get();
-        thr_timer_t*        timer = thr_timer_table_from_id(table, id, 1);
-
-        if (timer == NULL) {
-            errno = EINVAL;
-            return -1;
-        }
-
-        /* tell the timer's thread to stop */
-        thr_timer_lock(timer);
-        timer->done = 1;
-        pthread_cond_signal( &timer->cond );
-        thr_timer_unlock(timer);
-
-        /* NOTE: the thread will call __timer_table_free() to free the
-         * timer object. the '1' parameter to thr_timer_table_from_id
-         * above ensured that the object and its timer_id cannot be
-         * reused before that.
-         */
-        return 0;
-    }
-}
-
-/* return the relative time until the next expiration, or 0 if
- * the timer is disarmed */
-static void timer_gettime_internal(thr_timer_t* timer, itimerspec* spec) {
-  timespec diff = const_cast<timespec&>(timer->expires);
-  if (!timespec_is_zero(&diff)) {
-    timespec now;
-
-    clock_gettime(timer->clock, &now);
-    timespec_sub(&diff, &now);
-
-    /* in case of overrun, return 0 */
-    if (timespec_cmp0(&diff) < 0) {
-      timespec_zero(&diff);
-    }
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_delete.html
+int timer_delete(timer_t id) {
+  int rc = __timer_delete(kernel_timer_id(id));
+  if (rc == -1) {
+      return -1;
   }
 
-  spec->it_value = diff;
-  spec->it_interval = const_cast<timespec&>(timer->period);
-}
-
-
-int timer_gettime(timer_t id, itimerspec* ospec) {
-    if (ospec == NULL) {
-        errno = EINVAL;
-        return -1;
-    }
-
-    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
-        return __timer_gettime( id, ospec );
-    } else {
-        thr_timer_t*  timer = thr_timer_from_id(id);
-
-        if (timer == NULL) {
-            errno = EINVAL;
-            return -1;
-        }
-        thr_timer_lock(timer);
-        timer_gettime_internal( timer, ospec );
-        thr_timer_unlock(timer);
-    }
-    return 0;
-}
-
-
-int
-timer_settime(timer_t id, int flags, const itimerspec* spec, itimerspec* ospec) {
-    if (spec == NULL) {
-        errno = EINVAL;
-        return -1;
-    }
-
-    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
-        return __timer_settime( id, flags, spec, ospec );
-    } else {
-        thr_timer_t*        timer = thr_timer_from_id(id);
-        timespec     expires, now;
-
-        if (timer == NULL) {
-            errno = EINVAL;
-            return -1;
-        }
-        thr_timer_lock(timer);
-
-        /* return current timer value if ospec isn't NULL */
-        if (ospec != NULL) {
-            timer_gettime_internal(timer, ospec );
-        }
-
-        /* compute next expiration time. note that if the
-         * new it_interval is 0, we should disarm the timer
-         */
-        expires = spec->it_value;
-        if (!timespec_is_zero(&expires)) {
-            clock_gettime( timer->clock, &now );
-            if (!(flags & TIMER_ABSTIME)) {
-                timespec_add(&expires, &now);
-            } else {
-                if (timespec_cmp(&expires, &now) < 0)
-                    expires = now;
-            }
-        }
-        const_cast<timespec&>(timer->expires) = expires;
-        const_cast<timespec&>(timer->period) = spec->it_interval;
-        thr_timer_unlock( timer );
-
-        /* signal the change to the thread */
-        pthread_cond_signal( &timer->cond );
-    }
-    return 0;
-}
-
-
-int
-timer_getoverrun(timer_t  id)
-{
-    if ( __predict_true(!TIMER_ID_IS_WRAPPED(id)) ) {
-        return __timer_getoverrun( id );
-    } else {
-        thr_timer_t*  timer = thr_timer_from_id(id);
-        int           result;
-
-        if (timer == NULL) {
-            errno = EINVAL;
-            return -1;
-        }
-
-        thr_timer_lock(timer);
-        result = timer->overruns;
-        thr_timer_unlock(timer);
-
-        return result;
-    }
-}
-
-
-static void* timer_thread_start(void* arg) {
-  thr_timer_t* timer = reinterpret_cast<thr_timer_t*>(arg);
-
-  thr_timer_lock(timer);
-
-  // Give this thread a meaningful name.
-  char name[32];
-  snprintf(name, sizeof(name), "POSIX interval timer 0x%08x", timer->id);
-  pthread_setname_np(pthread_self(), name);
-
-  // We loop until timer->done is set in timer_delete().
-  while (!timer->done) {
-    timespec expires = const_cast<timespec&>(timer->expires);
-    timespec period = const_cast<timespec&>(timer->period);
-
-    // If the timer is stopped or disarmed, wait indefinitely
-    // for a state change from timer_settime/_delete/_start_stop.
-    if (timer->stopped || timespec_is_zero(&expires)) {
-      pthread_cond_wait(&timer->cond, &timer->mutex);
-      continue;
-    }
-
-    // Otherwise, we need to do a timed wait until either a
-    // state change of the timer expiration time.
-    timespec now;
-    clock_gettime(timer->clock, &now);
-
-    if (timespec_cmp(&expires, &now) > 0) {
-      // Cool, there was no overrun, so compute the
-      // relative timeout as 'expires - now', then wait.
-      timespec diff = expires;
-      timespec_sub(&diff, &now);
-
-      int ret = __pthread_cond_timedwait_relative(&timer->cond, &timer->mutex, &diff);
-
-      // If we didn't time out, it means that a state change
-      // occurred, so loop to take care of it.
-      if (ret != ETIMEDOUT) {
-        continue;
-      }
-    } else {
-      // Overrun was detected before we could wait!
-      if (!timespec_is_zero(&period)) {
-        // For periodic timers, compute total overrun count.
-        do {
-          timespec_add(&expires, &period);
-          if (timer->overruns < DELAYTIMER_MAX) {
-            timer->overruns += 1;
-          }
-        } while (timespec_cmp(&expires, &now) < 0);
-
-        // Backtrack the last one, because we're going to
-        // add the same value just a bit later.
-        timespec_sub(&expires, &period);
-      } else {
-        // For non-periodic timers, things are simple.
-        timer->overruns = 1;
-      }
-    }
-
-    // If we get here, a timeout was detected.
-    // First reload/disarm the timer as needed.
-    if (!timespec_is_zero(&period)) {
-      timespec_add(&expires, &period);
-    } else {
-      timespec_zero(&expires);
-    }
-    const_cast<timespec&>(timer->expires) = expires;
-
-    // Now call the timer callback function. Release the
-    // lock to allow the function to modify the timer setting
-    // or call timer_getoverrun().
-    // NOTE: at this point we trust the callback not to be a
-    //      total moron and pthread_kill() the timer thread
-    thr_timer_unlock(timer);
-    timer->callback(timer->value);
-    thr_timer_lock(timer);
-
-    // Now clear the overruns counter. it only makes sense
-    // within the callback.
-    timer->overruns = 0;
+  timer_internal_t* timer = reinterpret_cast<timer_internal_t*>(id);
+  if (timer->sigev_notify == SIGEV_THREAD) {
+    // TODO: signal the thread to stop.
+    free(timer);
   }
+  return 0;
+}
 
-  thr_timer_unlock(timer);
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
+int timer_gettime(timer_t id, itimerspec* ts) {
+  return __timer_gettime(kernel_timer_id(id), ts);
+}
 
-  // Free the timer object.
-  thr_timer_table_free(__timer_table_get(), timer);
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
+int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) {
+  return __timer_settime(kernel_timer_id(id), flags, ts, ots);
+}
 
-  return NULL;
+// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
+int timer_getoverrun(timer_t id) {
+  return __timer_getoverrun(kernel_timer_id(id));
 }
