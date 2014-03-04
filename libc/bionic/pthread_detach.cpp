@@ -52,6 +52,7 @@ int pthread_detach(pthread_t t) {
     return 0;
   }
 
+
   thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
   return 0;
 }
