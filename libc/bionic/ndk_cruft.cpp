@@ -29,6 +29,7 @@
 // This file perpetuates the mistakes of the past, but only for 32-bit targets.
 #if !defined(__LP64__)
 
+#include <pthread.h>
 #include <stdlib.h>
 #include <sys/resource.h>
 #include <sys/time.h>
@@ -57,6 +58,19 @@ extern "C" int __open() {
 extern "C" void** __get_tls() {
 #include "private/__get_tls.h"
   return __get_tls();
+}
+
+extern "C" int pthread_attr_setstackaddr(pthread_attr_t*, void*) {
+  // This was removed from POSIX.1-2008, and is not implemented on bionic.
+  // Needed for ABI compatibility with the NDK.
+  return ENOSYS;
+}
+
+extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stack_addr) {
+  // This was removed from POSIX.1-2008.
+  // Needed for ABI compatibility with the NDK.
+  *stack_addr = (char*)attr->stack_base + attr->stack_size;
+  return 0;
 }
 
 #endif
