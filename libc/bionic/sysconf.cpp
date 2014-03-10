@@ -317,12 +317,10 @@ int sysconf(int name) {
 #ifdef _POSIX_THREADS
     case _SC_THREADS:             return _POSIX_THREADS;
 #endif
-#ifdef _POSIX_THREAD_ATTR_STACKADDR
-    case _SC_THREAD_ATTR_STACKADDR:   return _POSIX_THREAD_ATTR_STACKADDR;
-#endif
-#ifdef _POSIX_THREAD_ATTR_STACKSIZE
-    case _SC_THREAD_ATTR_STACKSIZE:   return _POSIX_THREAD_ATTR_STACKSIZE;
-#endif
+
+    case _SC_THREAD_ATTR_STACKADDR:   return 0; // we can't provide these
+    case _SC_THREAD_ATTR_STACKSIZE:   return 0;
+
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
     case _SC_THREAD_PRIORITY_SCHEDULING:  return _POSIX_THREAD_PRIORITY_SCHEDULING;
 #endif
