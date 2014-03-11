@@ -29,6 +29,7 @@
 #define _SYS_TYPES_H_
 
 #include <stddef.h>
+#include <bits/types.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
 
