@@ -24,6 +24,18 @@
 #include <malloc.h>
 #include <fcntl.h>
 
+// Redefine FD_ZERO otherwise the one in prebuilts/gcc's sysroot may be implemened in inline
+// assembly block which appears to be one-more-arg when used in ASSERT_EXIT later
+#undef FD_ZERO
+#define FD_ZERO(set) (memset(set, 0, sizeof(*(fd_set*)(set))))
+
+// In prebuilts/gcc/linux-x86/host/i686-linux-glibc2.11-4.6/sysroot/usr/include/sys/select.h
+// __NFDBITS is "(8 * (int) sizeof (__fd_mask))" and __FDMASK(d) which is "((__fd_mask)1<<((d)%__NFDBITS))"
+// can no longer accept negative d otherwise the shift amount become negative and FD_ISSET(-1) fails
+// compilation.  Redefine __NFDBITS to be unsigned
+#undef __NFDBITS
+#define __NFDBITS  (8 * sizeof (__fd_mask))
+
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
 // easy way to concatenate strings, so we need to use the complicated method
