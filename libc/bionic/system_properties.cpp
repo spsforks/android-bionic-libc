@@ -726,7 +726,12 @@ int __system_property_add(const char *name, unsigned int namelen,
 
 unsigned int __system_property_serial(const prop_info *pi)
 {
-    return pi->serial;
+    unsigned serial = pi->serial;
+    while (SERIAL_DIRTY(serial)) {
+        __futex_wait((volatile void *)&pi->serial, serial, 0);
+        serial = pi->serial;
+    }
+    return serial;
 }
 
 unsigned int __system_property_wait_any(unsigned int serial)
