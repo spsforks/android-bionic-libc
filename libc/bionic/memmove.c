@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
+ * Copyright (c) 2013-2014, NVIDIA CORPORATION.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,6 +30,22 @@
 #include <string.h>
 #include <strings.h>
 
+#if defined(LIBC_OPT_MEMMOVE)
+
+void *r_memcpy(void *, const void *, size_t);
+
+void *memmove(void *dst, const void *src, size_t n)
+{
+    const char *p = src;
+    char *q = dst;
+    if (__builtin_expect((q < p) || ((size_t)(q - p) >= n), 1))
+        return memcpy(dst, src, n);
+    else
+        return r_memcpy(dst, src, n);
+}
+
+#else
+
 void *memmove(void *dst, const void *src, size_t n)
 {
   const char *p = src;
@@ -44,3 +61,5 @@ void *memmove(void *dst, const void *src, size_t n)
     return dst;
   }
 }
+
+#endif
