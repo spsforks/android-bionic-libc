@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002, 2003 David Schultz <das@FreeBSD.ORG>
+ * Copyright (c) 2013 David Chisnall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,44 @@
  * $FreeBSD$
  */
 
-#ifndef __FPMATH_
-#define __FPMATH_
+#include <float.h>
+#include <math.h>
 
-union IEEEl2bits {
-	long double	e;
-	struct {
-		unsigned long	manl	:64;
-		unsigned long	manh	:48;
-		unsigned int	exp	  :15;
-		unsigned int	sign	:1;
-	} bits;
-	struct {
-		unsigned long	manl	:64;
-		unsigned long	manh	:48;
-		unsigned int	expsign	:16;
-	} xbits;
-	unsigned char	c[sizeof(long double)];
-};
+/*
+ * If long double is not the same size as double, then these will lose
+ * precision and we should emit a warning whenever something links against
+ * them.
+ */
+#if (LDBL_MANT_DIG > 53)
+#define WARN_IMPRECISE(x) \
+	__warn_references(x, # x " has lower than advertised precision");
+#else
+#define WARN_IMPRECISE(x)
+#endif
+/*
+ * Declare the functions as weak variants so that other libraries providing
+ * real versions can override them.
+ */
+#define	DECLARE_WEAK(x)\
+	__weak_reference(imprecise_## x, x);\
+	WARN_IMPRECISE(x)
 
-#define	LDBL_NBIT	0
-#define	LDBL_IMPLICIT_NBIT
-#define	mask_nbit_l(u)	((void)0)
+long double
+imprecise_powl(long double x, long double y)
+{
 
-#define	LDBL_MANH_SIZE	48
-#define	LDBL_MANL_SIZE	64
+	return pow(x, y);
+}
+DECLARE_WEAK(powl);
 
-#define	LDBL_TO_ARRAY32(u, a) do {			\
-	(a)[0] = (uint32_t)(u).bits.manl;		\
-	(a)[1] = (uint32_t)((u).bits.manl >> 32);      	\
-	(a)[2] = (uint32_t)(u).bits.manh;		\
-	(a)[3] = (uint32_t)((u).bits.manh >> 32);	\
-} while(0)
+#define DECLARE_IMPRECISE(f) \
+	long double imprecise_ ## f ## l(long double v) { return f(v); }\
+	DECLARE_WEAK(f ## l)
 
-#endif // __FPMATH_
+DECLARE_IMPRECISE(cosh);
+DECLARE_IMPRECISE(erfc);
+DECLARE_IMPRECISE(erf);
+DECLARE_IMPRECISE(lgamma);
+DECLARE_IMPRECISE(sinh);
+DECLARE_IMPRECISE(tanh);
+DECLARE_IMPRECISE(tgamma);
