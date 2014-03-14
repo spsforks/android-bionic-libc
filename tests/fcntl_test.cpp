@@ -36,6 +36,16 @@ TEST(fcntl, fcntl_smoke) {
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
 
+  struct flock check_lock;
+
+  check_lock.l_type = F_WRLCK;
+  check_lock.l_start = 0;
+  check_lock.l_whence = SEEK_SET;
+  check_lock.l_len = 0;
+
+  rc = fcntl(fd, F_GETLK64, &check_lock);
+  ASSERT_EQ(0, rc);
+
   close(fd);
 }
 

@@ -32,10 +32,20 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <linux/fadvise.h>
-#include <linux/fcntl.h>
 #include <unistd.h>  /* this is not required, but makes client code much happier */
 
 __BEGIN_DECLS
+
+/* On LP64 systems F_GETLK64, F_SETLK64 and F_SETLKW64 definitions should map
+ * onto the F_GETLK, F_SETLK and F_SETLKW definitions, respectively.
+ */
+#ifdef __LP64__
+#define F_GETLK64   F_GETLK
+#define F_SETLK64   F_SETLK
+#define F_SETLKW64  F_SETLKW
+#endif
+
+#include <linux/fcntl.h>
 
 #ifndef O_ASYNC
 #define O_ASYNC  FASYNC
