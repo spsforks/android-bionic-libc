@@ -177,44 +177,60 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
+# TODO: on Android, "long double" is "double".
 libm_common_src_files += \
     fake_long_double.c \
     upstream-freebsd/lib/msun/src/s_modfl.c \
 
-# TODO: on Android, "long double" is "double".
-#    upstream-freebsd/lib/msun/src/e_acosl.c \
-#    upstream-freebsd/lib/msun/src/e_asinl.c \
-#    upstream-freebsd/lib/msun/src/e_atan2l.c \
-#    upstream-freebsd/lib/msun/src/e_fmodl.c \
-#    upstream-freebsd/lib/msun/src/e_hypotl.c \
-#    upstream-freebsd/lib/msun/src/e_remainderl.c \
-#    upstream-freebsd/lib/msun/src/e_sqrtl.c \
-#    upstream-freebsd/lib/msun/src/s_atanl.c \
-#    upstream-freebsd/lib/msun/src/s_cbrtl.c \
-#    upstream-freebsd/lib/msun/src/s_ceill.c \
-#    upstream-freebsd/lib/msun/src/s_copysignl.c \
-#    upstream-freebsd/lib/msun/src/s_cosl.c \
-#    upstream-freebsd/lib/msun/src/s_fabsl.c \
-#    upstream-freebsd/lib/msun/src/s_floorl.c \
-#    upstream-freebsd/lib/msun/src/s_fmal.c \
-#    upstream-freebsd/lib/msun/src/s_fmaxl.c \
-#    upstream-freebsd/lib/msun/src/s_fminl.c \
-#    upstream-freebsd/lib/msun/src/s_frexpl.c \
-#    upstream-freebsd/lib/msun/src/s_ilogbl.c \
-#    upstream-freebsd/lib/msun/src/s_llrintl.c \
-#    upstream-freebsd/lib/msun/src/s_llroundl.c \
-#    upstream-freebsd/lib/msun/src/s_logbl.c \
-#    upstream-freebsd/lib/msun/src/s_lrintl.c \
-#    upstream-freebsd/lib/msun/src/s_lroundl.c \
-#    upstream-freebsd/lib/msun/src/s_nextafterl.c \
-#    upstream-freebsd/lib/msun/src/s_nexttoward.c \
-#    upstream-freebsd/lib/msun/src/s_remquol.c \
-#    upstream-freebsd/lib/msun/src/s_rintl.c \
-#    upstream-freebsd/lib/msun/src/s_roundl.c \
-#    upstream-freebsd/lib/msun/src/s_scalbnl.c \
-#    upstream-freebsd/lib/msun/src/s_sinl.c \
-#    upstream-freebsd/lib/msun/src/s_tanl.c \
-#    upstream-freebsd/lib/msun/src/s_truncl.c \
+libm_ld_src_files = \
+    upstream-freebsd/lib/msun/src/e_acosl.c \
+    upstream-freebsd/lib/msun/src/e_acoshl.c \
+    upstream-freebsd/lib/msun/src/e_asinl.c \
+    upstream-freebsd/lib/msun/src/e_atan2l.c \
+    upstream-freebsd/lib/msun/src/e_atanhl.c \
+    upstream-freebsd/lib/msun/src/e_fmodl.c \
+    upstream-freebsd/lib/msun/src/e_hypotl.c \
+    upstream-freebsd/lib/msun/src/e_remainderl.c \
+    upstream-freebsd/lib/msun/src/e_sqrtl.c \
+    upstream-freebsd/lib/msun/src/s_asinhl.c \
+    upstream-freebsd/lib/msun/src/s_atanl.c \
+    upstream-freebsd/lib/msun/src/s_cbrtl.c \
+    upstream-freebsd/lib/msun/src/s_ceill.c \
+    upstream-freebsd/lib/msun/src/s_copysignl.c \
+    upstream-freebsd/lib/msun/src/s_cosl.c \
+    upstream-freebsd/lib/msun/src/s_fabsl.c \
+    upstream-freebsd/lib/msun/src/s_floorl.c \
+    upstream-freebsd/lib/msun/src/s_fmal.c \
+    upstream-freebsd/lib/msun/src/s_fmaxl.c \
+    upstream-freebsd/lib/msun/src/s_fminl.c \
+    upstream-freebsd/lib/msun/src/s_frexpl.c \
+    upstream-freebsd/lib/msun/src/s_ilogbl.c \
+    upstream-freebsd/lib/msun/src/s_llrintl.c \
+    upstream-freebsd/lib/msun/src/s_llroundl.c \
+    upstream-freebsd/lib/msun/src/s_logbl.c \
+    upstream-freebsd/lib/msun/src/s_lrintl.c \
+    upstream-freebsd/lib/msun/src/s_lroundl.c \
+    upstream-freebsd/lib/msun/src/s_nextafterl.c \
+    upstream-freebsd/lib/msun/src/s_nexttoward.c \
+    upstream-freebsd/lib/msun/src/s_remquol.c \
+    upstream-freebsd/lib/msun/src/s_rintl.c \
+    upstream-freebsd/lib/msun/src/s_roundl.c \
+    upstream-freebsd/lib/msun/src/s_scalbnl.c \
+    upstream-freebsd/lib/msun/src/s_sinl.c \
+    upstream-freebsd/lib/msun/src/s_tanl.c \
+    upstream-freebsd/lib/msun/src/s_truncl.c \
+
+LD_FORMAT = ld128
+
+libm_ld_src_files += \
+		upstream-freebsd/lib/msun/$(LD_FORMAT)/invtrig.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/k_cosl.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/k_sinl.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/k_tanl.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/s_exp2l.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/s_expl.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/s_logl.c \
+    upstream-freebsd/lib/msun/$(LD_FORMAT)/s_nanl.c \
 
 # TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
 
@@ -224,6 +240,7 @@ libm_common_cflags := \
     -include $(LOCAL_PATH)/freebsd-compat.h \
 
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
+libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/$(LD_FORMAT)/
 
 #
 # libm.a for target.
@@ -241,14 +258,15 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
 LOCAL_SRC_FILES_arm := arm/fenv.c
 
-LOCAL_C_INCLUDES_arm64 := $(LOCAL_PATH)/arm64
-LOCAL_SRC_FILES_arm64 := arm64/fenv.c
+LOCAL_C_INCLUDES_arm64 := $(LOCAL_PATH)/arm64 $(libm_ld_includes)
+LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld_src_files)
 
 LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
 LOCAL_SRC_FILES_x86 := i387/fenv.c
 
-LOCAL_C_INCLUDES_x86_64 := $(LOCAL_PATH)/amd64
-LOCAL_SRC_FILES_x86_64 := amd64/fenv.c
+LOCAL_CFLAGS_x86_64 := -include $(LOCAL_PATH)/fpmath.h -fms-extensions
+LOCAL_C_INCLUDES_x86_64 := $(LOCAL_PATH)/amd64 $(libm_ld_includes)
+LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld_src_files)
 
 LOCAL_CFLAGS_mips := -fno-builtin-rintf -fno-builtin-rint
 LOCAL_C_INCLUDES_mips := $(LOCAL_PATH)/mips

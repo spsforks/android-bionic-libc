@@ -661,8 +661,8 @@ TEST(math, fminf) {
 
 TEST(math, fminl) {
   ASSERT_FLOAT_EQ(10.0, fminl(12.0, 10.0));
-  ASSERT_FLOAT_EQ(12.0, fminl(12.0, nan("")));
-  ASSERT_FLOAT_EQ(12.0, fminl(nan(""), 12.0));
+  ASSERT_FLOAT_EQ(12.0, fminl(12.0, nanl("")));
+  ASSERT_FLOAT_EQ(12.0, fminl(nanl(""), 12.0));
 }
 
 TEST(math, fma) {

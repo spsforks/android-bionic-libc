@@ -27,65 +27,56 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
-#include <float.h>
-#include <math.h>
+#include "invtrig.h"
 
-#include "fpmath.h"
+/*
+ * asinl() and acosl()
+ */
+const long double
+pS0 =  1.66666666666666666631e-01L,
+pS1 = -4.16313987993683104320e-01L,
+pS2 =  3.69068046323246813704e-01L,
+pS3 = -1.36213932016738603108e-01L,
+pS4 =  1.78324189708471965733e-02L,
+pS5 = -2.19216428382605211588e-04L,
+pS6 = -7.10526623669075243183e-06L,
+qS1 = -2.94788392796209867269e+00L,
+qS2 =  3.27309890266528636716e+00L,
+qS3 = -1.68285799854822427013e+00L,
+qS4 =  3.90699412641738801874e-01L,
+qS5 = -3.14365703596053263322e-02L;
 
-#include <stdint.h>
-#if LDBL_MAX_EXP != 0x4000
-/* We also require the usual bias, min exp and expsign packing. */
-#error "Unsupported long double format"
-#endif
-
-#define	BIAS	(LDBL_MAX_EXP - 1)
-
-static const float
-shift[2] = {
-#if LDBL_MANT_DIG == 64
-	0x1.0p63, -0x1.0p63
-#elif LDBL_MANT_DIG == 113
-	0x1.0p112, -0x1.0p112
-#else
-#error "Unsupported long double format"
-#endif
+/*
+ * atanl()
+ */
+const long double atanhi[] = {
+	 4.63647609000806116202e-01L,
+	 7.85398163397448309628e-01L,
+	 9.82793723247329067960e-01L,
+	 1.57079632679489661926e+00L,
 };
-static const float zero[2] = { 0.0, -0.0 };
 
-long double
-rintl(long double x)
-{
-	union IEEEl2bits u;
-	uint32_t expsign;
-	int ex, sign;
+const long double atanlo[] = {
+	 1.18469937025062860669e-20L,
+	-1.25413940316708300586e-20L,
+	 2.55232234165405176172e-20L,
+	-2.50827880633416601173e-20L,
+};
 
-	u.e = x;
-	expsign = u.xbits.expsign;
-	ex = expsign & 0x7fff;
+const long double aT[] = {
+	 3.33333333333333333017e-01L,
+	-1.99999999999999632011e-01L,
+	 1.42857142857046531280e-01L,
+	-1.11111111100562372733e-01L,
+	 9.09090902935647302252e-02L,
+	-7.69230552476207730353e-02L,
+	 6.66661718042406260546e-02L,
+	-5.88158892835030888692e-02L,
+	 5.25499891539726639379e-02L,
+	-4.70119845393155721494e-02L,
+	 4.03539201366454414072e-02L,
+	-2.91303858419364158725e-02L,
+	 1.24822046299269234080e-02L,
+};
 
-	if (ex >= BIAS + LDBL_MANT_DIG - 1) {
-		if (ex == BIAS + LDBL_MAX_EXP)
-			return (x + x);	/* Inf, NaN, or unsupported format */
-		return (x);		/* finite and already an integer */
-	}
-	sign = expsign >> 15;
-
-	/*
-	 * The following code assumes that intermediate results are
-	 * evaluated in long double precision. If they are evaluated in
-	 * greater precision, double rounding may occur, and if they are
-	 * evaluated in less precision (as on i386), results will be
-	 * wildly incorrect.
-	 */
-	x += shift[sign];
-	x -= shift[sign];
-
-	/*
-	 * If the result is +-0, then it must have the same sign as x, but
-	 * the above calculation doesn't always give this.  Fix up the sign.
-	 */
-	if (ex < BIAS && x == 0.0L)
-		return (zero[sign]);
-
-	return (x);
-}
+const long double pi_lo = -5.01655761266833202345e-20L;

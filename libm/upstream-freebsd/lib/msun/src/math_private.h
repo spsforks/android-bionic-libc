@@ -211,8 +211,8 @@ do {								\
   union IEEEl2bits ew_u;					\
   ew_u.e = (d);							\
   (ix0) = ew_u.xbits.expsign;					\
-  (ix1) = ew_u.xbits.manh;					\
-  (ix2) = ew_u.xbits.manl;					\
+  (ix1) = ew_u.bits.manh;					\
+  (ix2) = ew_u.bits.manl;					\
 } while (0)
 
 /* Get expsign as a 16 bit int from a long double.  */
@@ -485,7 +485,7 @@ cpackl(long double x, long double y)
 	return (z.f);
 }
 #endif /* _COMPLEX_H */
- 
+
 #ifdef __GNUCLIKE_ASM
 
 /* Asm versions of some functions. */
