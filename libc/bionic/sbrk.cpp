@@ -42,6 +42,12 @@ void* sbrk(ptrdiff_t increment) {
   void* original_brk = __bionic_brk;
   void* desired_brk = (void*) ((uintptr_t) original_brk + increment);
 
+  /* Avoid desired_brk overflow */
+  if (increment > 0 && (desired_brk < original_brk)) {
+    errno = ENOMEM;
+    return (void*) -1;
+  }
+
   void* new_brk = __brk(desired_brk);
   if (new_brk == (void*) -1) {
     return new_brk;
@@ -51,5 +57,7 @@ void* sbrk(ptrdiff_t increment) {
   }
 
   __bionic_brk = new_brk;
+  if (original_brk != __bionic_brk)
+    ((int*)__bionic_brk)[-1] = 0;
   return original_brk;
 }
