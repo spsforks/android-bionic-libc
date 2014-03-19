@@ -252,7 +252,7 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
-		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc
+		$(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc $(TF)
 
 # -----------------------------------------------------------------------------
 # Run the unit tests built against x86 bionic on an x86 host.
@@ -278,7 +278,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests
+		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests $(TF)
 endif
 endif
 
