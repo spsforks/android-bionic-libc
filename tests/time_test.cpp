@@ -387,3 +387,49 @@ TEST(time, timer_delete_from_timer_thread) {
   ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
 #endif
 }
+
+TEST(time, strtotimeval) {
+#if defined(__BIONIC__)
+  struct timeval tv1;
+  char* rest1 = strtotimeval("10.123456", &tv1);
+  ASSERT_EQ(10, tv1.tv_sec);
+  ASSERT_EQ(123456, tv1.tv_usec);
+  ASSERT_EQ('\0', *rest1);
+
+  // strtotimeval parses only the stores just the first 6 decimals as us
+  // but it should consume all the digits
+  // TODO: is it ok? or we should return the 7th decimal in the rest?
+  struct timeval tv2;
+  char* rest2 = strtotimeval(".1234567", &tv2);
+  ASSERT_EQ(0, tv2.tv_sec);
+  ASSERT_EQ(123456, tv2.tv_usec);
+  ASSERT_EQ('\0', *rest2);
+
+  struct timeval tv3;
+  char* rest3 = strtotimeval("1.1a", &tv3);
+  ASSERT_EQ(1, tv3.tv_sec);
+  ASSERT_EQ(100000, tv3.tv_usec);
+  ASSERT_EQ('a', *rest3);
+
+  struct timeval tv4;
+  char* rest4 = strtotimeval("a", &tv4);
+  ASSERT_EQ(0, tv4.tv_sec);
+  ASSERT_EQ(0, tv4.tv_usec);
+  ASSERT_EQ('a', *rest4);
+
+  struct timeval tv5;
+  char* rest5 = strtotimeval("0", &tv5);
+  ASSERT_EQ(0, tv5.tv_sec);
+  ASSERT_EQ(0, tv5.tv_usec);
+  ASSERT_EQ('\0', *rest5);
+
+  // TODO: should we reject this case and just return '.'?
+  struct timeval tv6;
+  char* rest6 = strtotimeval(".", &tv6);
+  ASSERT_EQ(0, tv6.tv_sec);
+  ASSERT_EQ(0, tv6.tv_usec);
+  ASSERT_EQ('\0', *rest6);
+
+#endif
+}
+
