@@ -47,11 +47,11 @@ char * strtotimeval (const char *str, struct timeval *ts)
 	/* read up to 6 digits */
 	fs    = 0;
 	count = 0;
-	while ( *s && isdigit(*s) )
+	while ( *s0 && isdigit(*s0) )
 	{
             if ( ++count < 7 )
-	        fs = fs*10 + (*s - '0');
-	    s++;
+	        fs = fs*10 + (*s0 - '0');
+	    s0++;
 	}
 
 	for ( ; count < 6; count++ )
