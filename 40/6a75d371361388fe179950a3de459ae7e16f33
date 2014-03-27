@@ -1,0 +1,7 @@
+Code-Review+2: Brian Carlstrom <bdc@google.com>
+Verified+1: Colin Cross <ccross@android.com>
+Submitted-by: Colin Cross <ccross@android.com>
+Submitted-at: Thu, 27 Mar 2014 18:09:35 +0000
+Reviewed-on: https://android-review.googlesource.com/89282
+Project: platform/bionic
+Branch: refs/heads/master
