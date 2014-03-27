@@ -1226,6 +1226,9 @@ TEST(math, modf) {
   double di;
   double df = modf(123.456, &di);
   ASSERT_DOUBLE_EQ(123.0, di);
+  // ASSERT_DOUBLE uses more decimals than the double precision when performing
+  // the comparison which can result in false failures. Work around this by
+  // tweaking the expected value (taken from the result of glibc modf).
   ASSERT_DOUBLE_EQ(0.45600000000000307, df);
 }
 
@@ -1240,7 +1243,11 @@ TEST(math, modfl) {
   long double ldi;
   long double ldf = modfl(123.456l, &ldi);
   ASSERT_DOUBLE_EQ(123.0l, ldi);
-  ASSERT_DOUBLE_EQ(0.45600000000000002l, ldf);
+#if defined(__LP64__) || !defined(__BIONIC__)
+  ASSERT_DOUBLE_EQ(0.456l, ldf);
+#else
+  ASSERT_DOUBLE_EQ(0.45600000000000307, ldf);
+#endif // __LP64__ || !__BIONIC__
 }
 
 TEST(math, remquo) {
