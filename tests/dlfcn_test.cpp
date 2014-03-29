@@ -197,7 +197,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("no-elf-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle == NULL);
-  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
+  ASSERT_STREQ("dlopen failed: empty/missing DT_HASH in \"/system/lib/no-elf-hash-table-library.so\" (built with --hash-style=gnu?)", dlerror());
 }
 #endif
 #endif

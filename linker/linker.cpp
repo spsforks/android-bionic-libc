@@ -459,13 +459,13 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name)
       case STB_GLOBAL:
       case STB_WEAK:
         if (s->st_shndx == SHN_UNDEF) {
-        continue;
-      }
+          continue;
+        }
 
-      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
                  name, si->name, reinterpret_cast<void*>(s->st_value),
                  static_cast<size_t>(s->st_size));
-      return s;
+        return s;
     }
   }
 
@@ -654,58 +654,83 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
   return NULL;
 }
 
-static int open_library_on_path(const char* name, const char* const paths[]) {
-  char buf[512];
+static bool resolve_path(char* full_path_buff, size_t buffer_size, const char* original_path) {
+  char real_path_buff[PATH_MAX];
+  const char* real_path = realpath(original_path, real_path_buff);
+  if (NULL != real_path) {
+    // check size (this time against buffer_size)
+    if (strlen(real_path) >= buffer_size) {
+      PRINT("Warning: ignoring very long library path: %s", real_path);
+    } else {
+      strncpy(full_path_buff, real_path, buffer_size);
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool resolve_soname_on_path(char* full_path_buff, size_t buffer_size,
+                                   const char* name, const char* const paths[]) {
+  char buf[PATH_MAX];
   for (size_t i = 0; paths[i] != NULL; ++i) {
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
       continue;
     }
-    int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
-    if (fd != -1) {
-      return fd;
+
+    if(resolve_path(full_path_buff, buffer_size, buf)) {
+      return true;
     }
   }
+
+  return false;
+}
+
+static const char* resolve_soname(char* full_path_buff, size_t buffer_size, const char* name) {
+  if (strchr(name, '/') == name) {
+    if (resolve_path(full_path_buff, buffer_size, name)) {
+      return full_path_buff;
+    }
+    // Q: ...do nvidia binary blobs (at least) still rely on this behavior?
+  }
+
+  if (resolve_soname_on_path(full_path_buff, buffer_size, name, gLdPaths)
+      || resolve_soname_on_path(full_path_buff, buffer_size, name, gDefaultLdPaths)) {
+    return full_path_buff;
+  }
+
+  return NULL;
+}
+
+static int open_library(char* full_path_buff, size_t buffer_size, const char* name) {
+  TRACE("[ opening %s ]", name);
+
+  const char* library_name = resolve_soname(full_path_buff, buffer_size, name);
+
+  if (NULL != library_name) {
+    return TEMP_FAILURE_RETRY(open(full_path_buff, O_RDONLY | O_CLOEXEC));
+  }
+
   return -1;
 }
 
-static int open_library(const char* name) {
-  TRACE("[ opening %s ]", name);
-
-  // If the name contains a slash, we should attempt to open it directly and not search the paths.
-  if (strchr(name, '/') != NULL) {
-    int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
-    if (fd != -1) {
-      return fd;
-    }
-    // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
-  }
-
-  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_path(name, gLdPaths);
-  if (fd == -1) {
-    fd = open_library_on_path(name, gDefaultLdPaths);
-  }
-  return fd;
-}
-
 static soinfo* load_library(const char* name) {
+    char path_buff[SOINFO_NAME_LEN];
     // Open the file.
-    int fd = open_library(name);
+    int fd = open_library(path_buff, SOINFO_NAME_LEN, name);
     if (fd == -1) {
         DL_ERR("library \"%s\" not found", name);
         return NULL;
     }
 
     // Read the ELF header and load the segments.
-    ElfReader elf_reader(name, fd);
+    ElfReader elf_reader(path_buff, fd);
     if (!elf_reader.Load()) {
         return NULL;
     }
 
-    const char* bname = strrchr(name, '/');
-    soinfo* si = soinfo_alloc(bname ? bname + 1 : name);
+    soinfo* si = soinfo_alloc(path_buff);
     if (si == NULL) {
         return NULL;
     }
@@ -721,18 +746,52 @@ static soinfo* load_library(const char* name) {
 }
 
 static soinfo *find_loaded_library(const char* name) {
-    // TODO: don't use basename only for determining libraries
-    // http://code.google.com/p/android/issues/detail?id=6670
+  char library_name_buff[SOINFO_NAME_LEN];
+  const char* library_name = resolve_soname(library_name_buff, SOINFO_NAME_LEN, name);
 
-    const char* bname = strrchr(name, '/');
-    bname = bname ? bname + 1 : name;
-
+  if (NULL != library_name) {
     for (soinfo* si = solist; si != NULL; si = si->next) {
-        if (!strcmp(bname, si->name)) {
-            return si;
-        }
+      if (!strcmp(library_name, si->name)) {
+        return si;
+      }
     }
-    return NULL;
+  }
+
+  return NULL;
+}
+
+static soinfo *find_loaded_library_withworkaround(const soinfo* si, const char* name) {
+  soinfo* lsi = find_loaded_library(name);
+
+  // Because of http://code.google.com/p/android/issues/detail?id=6670
+  // there are libraries and executables out there that may rely on the old
+  // lookup logic. This function provides (temporary?) workaround for them.
+  if (!lsi) {
+    // extract path from si->name
+    char path[SOINFO_NAME_LEN];
+    strcpy(path, si->name);
+    char* bname = strrchr(path, '/');
+    if (bname) {
+      *bname = '\0';
+    } else { // can't have this here
+      DL_ERR("Can't find DT_NEEDED library to call constructors %s", name);
+      return NULL;
+    }
+
+    char buffer[2*SOINFO_NAME_LEN];
+    int n = __libc_format_buffer(buffer, sizeof(buffer), "%s/%s", path, name);
+    if (n < 0 || n >= static_cast<int>(sizeof(buffer))) {
+      DL_WARN("Path is too long: %s/%s", path, name);
+    } else {
+      lsi = find_loaded_library(buffer);
+    }
+  }
+
+  if (!lsi) {
+    DL_ERR("Can't find DT_NEEDED library to call constructors %s", name);
+  }
+
+  return lsi;
 }
 
 static soinfo* find_library_internal(const char* name) {
@@ -786,7 +845,7 @@ static int soinfo_unload(soinfo* si) {
       if (d->d_tag == DT_NEEDED) {
         const char* library_name = si->strtab + d->d_un.d_val;
         TRACE("%s needs to unload %s", si->name, library_name);
-        soinfo_unload(find_loaded_library(library_name));
+        soinfo_unload(find_loaded_library_withworkaround(si, library_name));
       }
     }
 
@@ -1477,9 +1536,16 @@ void soinfo::CallConstructors() {
   if (dynamic != NULL) {
     for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
       if (d->d_tag == DT_NEEDED) {
+        char buffer[2*SOINFO_NAME_LEN];
         const char* library_name = strtab + d->d_un.d_val;
         TRACE("\"%s\": calling constructors in DT_NEEDED \"%s\"", name, library_name);
-        find_loaded_library(library_name)->CallConstructors();
+        soinfo* lsi = find_loaded_library_withworkaround(this, library_name);
+        if(NULL == lsi) {
+          // this should not be happening
+          abort();
+        }
+
+        lsi->CallConstructors();
       }
     }
   }
@@ -1813,11 +1879,34 @@ static bool soinfo_link_image(soinfo* si) {
     soinfo** needed = reinterpret_cast<soinfo**>(alloca((1 + needed_count) * sizeof(soinfo*)));
     soinfo** pneeded = needed;
 
+    // extract path from si->name
+    char path[SOINFO_NAME_LEN];
+    strcpy(path, si->name);
+    char* bname = strrchr(path, '/');
+    if (bname) {
+        *bname = '\0';
+    } else {
+        *path = '\0';
+    }
+
     for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
         if (d->d_tag == DT_NEEDED) {
+            char buffer[2*SOINFO_NAME_LEN];
             const char* library_name = si->strtab + d->d_un.d_val;
             DEBUG("%s needs %s", si->name, library_name);
             soinfo* lsi = find_library(library_name);
+            if ( (NULL == lsi) && ('\0' != *path) && ('/' != *library_name) ) {
+              PRINT("Warning: Your program relies on deprecated library lookup, please fix library path.");
+              PRINT("         details: http://code.google.com/p/android/issues/detail?id=6670");
+              PRINT("         Trying to reload library %s with base path: %s", library_name, path);
+              int n = __libc_format_buffer(buffer, sizeof(buffer), "%s/%s", path, library_name);
+              if (n < 0 || n >= static_cast<int>(sizeof(buffer))) {
+                DL_WARN("Path is too long: %s/%s", path, library_name);
+              } else {
+                library_name = buffer;
+                lsi = find_library(library_name);
+              }
+            }
             if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
