@@ -1226,33 +1226,27 @@ TEST(math, modf) {
   double di;
   double df = modf(123.456, &di);
   ASSERT_DOUBLE_EQ(123.0, di);
-  // ASSERT_DOUBLE uses more decimals than the double precision when performing
-  // the comparison which can result in false failures. And it seems that modf
-  // results are not 100% precise as expected but within the acceptable delta.
-  // Work around this by tweaking the expected value (taken) from the result of
-  // glibc modf).
-  ASSERT_DOUBLE_EQ(0.45600000000000307, df);
+  // modf results are not precise enough to allow for a strict comparison.
+  ASSERT_NEAR(0.456, df, pow(10.0, 1 - DBL_DIG));
 }
 
 TEST(math, modff) {
   float fi;
   float ff = modff(123.456f, &fi);
   ASSERT_FLOAT_EQ(123.0f, fi);
-  // See modf comment on why we don't use 0.456f as an excepted value.
-  ASSERT_FLOAT_EQ(0.45600128f, ff);
+  // See modf comment on why we use ASSERT_NEAR.
+  ASSERT_NEAR(0.456f, ff, powf(10.0f, 1 - FLT_DIG));
 }
 
 TEST(math, modfl) {
   long double ldi;
-  long double ldf = modfl(123.456l, &ldi);
-  ASSERT_DOUBLE_EQ(123.0l, ldi);
-  // See modf comment on why we don't use 0.456l as an excepted value when the
-  // modf == modfl. For LP64, where long double != double, modfl algorithm
-  // gives precise results and thus we don't need to tweak the expected value.
+  long double ldf = modfl(123.456L, &ldi);
+  ASSERT_DOUBLE_EQ(123.0L, ldi);
+  // See modf comment on why we use ASSERT_NEAR.
 #if defined(__LP64__) || !defined(__BIONIC__)
-  ASSERT_DOUBLE_EQ(0.456l, ldf);
+  ASSERT_DOUBLE_EQ(0.456L, ldf);
 #else
-  ASSERT_DOUBLE_EQ(0.45600000000000307, ldf);
+  ASSERT_NEAR(0.456, ldf, pow(10.0, 1 - DBL_DIG));
 #endif // __LP64__ || !__BIONIC__
 }
 
