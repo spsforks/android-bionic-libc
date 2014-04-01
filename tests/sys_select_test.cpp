@@ -72,8 +72,28 @@ TEST(sys_select, select_smoke) {
 
   // Valid timeout...
   tv.tv_sec = 1;
-  ASSERT_EQ(2, select(max, &r, &w, &e, &tv));
+
+  int fds[2];
+  ASSERT_EQ(0, pipe(fds));
+  FD_ZERO(&r);
+  FD_SET(fds[0], &r);
+
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    close(fds[0]);
+    usleep(5000);
+    EXPECT_EQ(5, write(fds[1], "1234", 5));
+    close(fds[1]);
+    exit(0);
+  }
+  ASSERT_LT(0, pid);
+  close(fds[1]);
+  ASSERT_EQ(1, select(fds[0]+1, &r, NULL, NULL, &tv));
+  char buf[10];
+  ASSERT_LT(0, read(fds[0], buf, 10));
+  ASSERT_STREQ("1234", buf);
   ASSERT_NE(0, tv.tv_usec); // ...which got updated.
+  ASSERT_EQ(pid, waitpid(pid, NULL, 0));
 }
 
 TEST(sys_select, pselect_smoke) {
@@ -109,6 +129,26 @@ TEST(sys_select, pselect_smoke) {
 
   // Valid timeout...
   tv.tv_sec = 1;
-  ASSERT_EQ(2, pselect(max, &r, &w, &e, &tv, &ss));
+
+  int fds[2];
+  ASSERT_EQ(0, pipe(fds));
+  FD_ZERO(&r);
+  FD_SET(fds[0], &r);
+
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    close(fds[0]);
+    usleep(5000);
+    EXPECT_EQ(5, write(fds[1], "1234", 5));
+    close(fds[1]);
+    exit(0);
+  }
+  ASSERT_LT(0, pid);
+  close(fds[1]);
+  ASSERT_EQ(1, pselect(fds[0]+1, &r, NULL, NULL, &tv, NULL));
+  char buf[10];
+  ASSERT_LT(0, read(fds[0], buf, 10));
+  ASSERT_STREQ("1234", buf);
   ASSERT_EQ(0, tv.tv_nsec); // ...which did _not_ get updated.
+  ASSERT_EQ(pid, waitpid(pid, NULL, 0));
 }
