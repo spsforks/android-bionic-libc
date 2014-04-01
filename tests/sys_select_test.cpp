@@ -73,7 +73,8 @@ TEST(sys_select, select_smoke) {
   // Valid timeout...
   tv.tv_sec = 1;
   ASSERT_EQ(2, select(max, &r, &w, &e, &tv));
-  ASSERT_NE(0, tv.tv_usec); // ...which got updated.
+  ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w) != 0);
+  ASSERT_TRUE(FD_ISSET(STDERR_FILENO, &w) != 0);
 }
 
 TEST(sys_select, pselect_smoke) {
