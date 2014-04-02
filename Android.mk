@@ -16,4 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
+ENABLE_GCOV := false
+
 include $(call all-subdir-makefiles)
