@@ -53,6 +53,7 @@ extern char* __strrchr_chk(const char *, int, size_t);
 extern size_t strlen(const char *) __purefunc;
 extern size_t __strlen_chk(const char *, size_t);
 extern int    strcmp(const char *, const char *) __purefunc;
+extern char*  stpcpy(char* __restrict, const char* __restrict);
 extern char*  strcpy(char* __restrict, const char* __restrict);
 extern char*  strcat(char* __restrict, const char* __restrict);
 
@@ -72,6 +73,7 @@ extern size_t strnlen(const char *, size_t) __purefunc;
 extern char*  strncat(char* __restrict, const char* __restrict, size_t);
 extern char*  strndup(const char *, size_t);
 extern int    strncmp(const char *, const char *, size_t) __purefunc;
+extern char*  stpncpy(char* __restrict, const char* __restrict, size_t);
 extern char*  strncpy(char* __restrict, const char* __restrict, size_t);
 
 extern size_t strlcat(char* __restrict, const char* __restrict, size_t);
@@ -116,8 +118,40 @@ void* memmove(void *dest, const void *src, size_t len) {
 }
 
 __BIONIC_FORTIFY_INLINE
+char* stpcpy(char* __restrict dest, const char* __restrict src) {
+    return __builtin___stpcpy_chk(dest, src, __bos(dest));
+}
+
+__BIONIC_FORTIFY_INLINE
 char* strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
+}
+
+__errordecl(__stpncpy_error, "stpncpy called with size bigger than buffer");
+extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
+
+__BIONIC_FORTIFY_INLINE
+char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
+    size_t bos_dest = __bos(dest);
+    size_t bos_src = __bos(src);
+    if (__builtin_constant_p(n) && (n > bos_dest)) {
+        __stpncpy_error();
+    }
+
+    if (bos_src == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+    }
+
+    if (__builtin_constant_p(n) && (n <= bos_src)) {
+        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+    }
+
+    size_t slen = __builtin_strlen(src);
+    if (__builtin_constant_p(slen)) {
+        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+    }
+
+    return __stpncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
 
 __errordecl(__strncpy_error, "strncpy called with size bigger than buffer");

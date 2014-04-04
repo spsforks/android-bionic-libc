@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LIBC_EVENTS_H
-#define _LIBC_EVENTS_H
+#include <string.h>
+#include <stdlib.h>
+#include "private/libc_logging.h"
 
+/*
+ * Runtime implementation of __builtin____stpcpy_chk.
+ *
+ * See
+ *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+ *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
+ * for details.
+ *
+ * This stpcpy check is called if _FORTIFY_SOURCE is defined and
+ * greater than 0.
+ */
+extern "C" char* __stpcpy_chk (char* dest, const char* src, size_t dest_len) {
+  // TODO: optimize so we don't scan src twice.
+  size_t src_len = strlen(src) + 1;
+  if (__predict_false(src_len > dest_len)) {
+    __fortify_chk_fail("stpcpy: prevented write past end of buffer",
+                       BIONIC_EVENT_STPCPY_BUFFER_OVERFLOW);
+  }
 
-// This is going to be included in assembler code so only allow #define
-// values instead of defining an enum.
-
-#define BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW   80100
-#define BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW   80105
-#define BIONIC_EVENT_MEMMOVE_BUFFER_OVERFLOW  80110
-#define BIONIC_EVENT_STRNCAT_BUFFER_OVERFLOW  80115
-#define BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW  80120
-#define BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW   80125
-#define BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW   80130
-#define BIONIC_EVENT_STPCPY_BUFFER_OVERFLOW   80135
-#define BIONIC_EVENT_STPNCPY_BUFFER_OVERFLOW  80140
-
-#define BIONIC_EVENT_RESOLVER_OLD_RESPONSE    80300
-#define BIONIC_EVENT_RESOLVER_WRONG_SERVER    80305
-#define BIONIC_EVENT_RESOLVER_WRONG_QUERY     80310
-
-#endif // _LIBC_EVENTS_H
+  return stpcpy(dest, src);
+}
