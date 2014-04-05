@@ -156,8 +156,11 @@ int mbsinit(const mbstate_t* /*ps*/) {
   return 1;
 }
 
-size_t mbrlen(const char* /*s*/, size_t n, mbstate_t* /*ps*/) {
-  return (n != 0);
+size_t mbrlen(const char* s, size_t n, mbstate_t* /*ps*/) {
+  if (n < 1) {
+    return -2;
+  }
+  return (*s == 0) ? 0 : 1;
 }
 
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* /*ps*/) {
@@ -217,11 +220,20 @@ wint_t ungetwc(wint_t wc, FILE* stream) {
   return ungetc(static_cast<char>(wc), stream);
 }
 
-size_t wcrtomb(char* s, wchar_t /*wc*/, mbstate_t* /*ps*/) {
-  if (s != NULL) {
-    *s = 1;
+int wctomb(char* s, wchar_t wc) {
+  if (s == NULL) {
+    return 0;
+  }
+  if (wc <= 0xff) {
+    *s = static_cast<char>(wc);
+  } else {
+    *s = '?';
   }
   return 1;
+}
+
+size_t wcrtomb(char* s, wchar_t wc, mbstate_t* /*ps*/) {
+  return wctomb(s, wc);
 }
 
 size_t wcsftime(wchar_t* wcs, size_t maxsize, const wchar_t* format,  const struct tm* timptr) {

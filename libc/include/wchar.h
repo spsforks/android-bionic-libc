@@ -155,7 +155,7 @@ typedef void *wctrans_t;
 extern wint_t		 towctrans(wint_t, wctrans_t);
 extern wctrans_t	 wctrans (const char *);
 
-#if _XOPEN_SOURCE >= 700 || _POSIX_C_SOURCE >= 200809L
+#if __POSIX_VISIBLE >= 200809
 wchar_t* wcsdup(const wchar_t*);
 size_t wcsnlen(const wchar_t*, size_t);
 #endif
