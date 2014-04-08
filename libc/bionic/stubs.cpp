@@ -31,11 +31,13 @@
 #include <grp.h>
 #include <mntent.h>
 #include <netdb.h>
+#include <nl_types.h>
 #include <pthread.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <wctype.h>
 
 #include "private/android_filesystem_config.h"
 #include "private/ErrnoRestorer.h"
@@ -483,4 +485,83 @@ void endusershell() {
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
   return sysconf(_SC_PAGE_SIZE);
+}
+
+int iswblank(wint_t c)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+nl_catd catopen(const char *name, int flag)
+{
+  UNIMPLEMENTED;
+  return (nl_catd)-1;
+}
+
+int catclose(nl_catd catalog)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+char *catgets(nl_catd catalog,
+              int set_number,
+              int message_number,
+              const char *message)
+{
+  UNIMPLEMENTED;
+  return (char *)message;
+}
+
+size_t wcsnrtombs(char *dest,
+                  const wchar_t **src,
+                  size_t nwc,
+                  size_t len,
+                  mbstate_t *ps)
+{
+  UNIMPLEMENTED;
+  errno = EILSEQ;
+  return (size_t)-1;
+}
+
+size_t mbsnrtowcs(wchar_t *dest,
+                  const char **src,
+                  size_t nms,
+                  size_t len,
+                  mbstate_t *ps)
+{
+  UNIMPLEMENTED;
+  errno = EILSEQ;
+  return (size_t)-1;
+}
+
+int mbtowc(wchar_t *pwc, const char *s, size_t n)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+long long wcstoll(const wchar_t *nptr, wchar_t **endptr, int base)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+unsigned long long wcstoull(const wchar_t *nptr, wchar_t **endptr, int base)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+float wcstof(const wchar_t *nptr, wchar_t **endptr)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long double wcstold(const wchar_t *nptr, wchar_t **endptr)
+{
+  UNIMPLEMENTED;
+  return 0;
 }
