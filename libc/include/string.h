@@ -31,6 +31,7 @@
 #include <sys/cdefs.h>
 #include <stddef.h>
 #include <malloc.h>
+#include <locale.h>
 
 __BEGIN_DECLS
 
@@ -85,7 +86,9 @@ extern size_t strspn(const char *, const char *);
 extern char*  strsignal(int  sig);
 
 extern int    strcoll(const char *, const char *) __purefunc;
+extern int    strcoll_l(const char *, const char *, locale_t);
 extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
+extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale_t);
 
 #if defined(__BIONIC_FORTIFY)
 

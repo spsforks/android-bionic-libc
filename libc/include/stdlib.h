@@ -36,11 +36,14 @@
 #include <strings.h>
 #include <memory.h>
 
+#include <locale.h>
+
 __BEGIN_DECLS
 
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
+extern __noreturn void _Exit(int);
 extern __noreturn void exit(int);
 extern __noreturn void abort(void);
 extern int atexit(void (*)(void));
@@ -61,12 +64,17 @@ extern long long strtoll(const char *, char **, int);
 extern unsigned long strtoul(const char *, char **, int);
 extern unsigned long long strtoull(const char *, char **, int);
 
+extern long long          strtoll_l(const char *, char **, int, locale_t);
+extern unsigned long long strtoull_l(const char *, char **, int, locale_t);
+
 extern int posix_memalign(void **memptr, size_t alignment, size_t size);
 
 extern double atof(const char*);
 extern double strtod(const char*, char**);
 extern float strtof(const char*, char**);
 extern long double strtold(const char*, char**);
+
+extern long double strtold_l(const char *, char **, locale_t);
 
 extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;

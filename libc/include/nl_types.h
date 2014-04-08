@@ -25,42 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _FEATURES_H_
-#define _FEATURES_H_
 
-/* certain Linux-specific programs expect a <features.h> header file
- * that defines various features macros
- */
+#define NL_CAT_LOCALE 1
 
-/* we aren't glibc
- *
- * There are some lines in external/libcxx/include/__config that test glibc
- * version for features like quick exit and aligned alloc. Should we be
- * supporting these?
- */
-#define __GLIBC_PREREQ(maj, min) 0
+typedef void *nl_catd;
+typedef int nl_item;
 
-/* we do include a number of BSD extensions */
-#define  _BSD_SOURCE  1
+nl_catd catopen(const char *name, int flag);
+int catclose(nl_catd catalog);
 
-/* we do include a number of GNU extensions */
-#define  _GNU_SOURCE  1
-
-/* C95 support */
-#undef __USE_ISOC95
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199409L
-# define __USE_ISOC95   1
-#endif
-
-/* C99 support */
-#undef __USE_ISOC99
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-# define __USE_ISOC99   1
-#endif
-
-/* Posix support */
-#define  __USE_POSIX   1
-#define  __USE_POSIX2  1
-#define  __USE_XPG     1
-
-#endif /* _FEATURES_H_ */
+char *catgets(nl_catd catalog,
+			  int set_number,
+			  int message_number,
+			  const char *message);

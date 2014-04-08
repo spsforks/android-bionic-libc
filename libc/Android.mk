@@ -222,6 +222,7 @@ libc_bionic_src_files := \
     bionic/utimes.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
+    stubbed.cpp \
 
 libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/ldexp.c \
