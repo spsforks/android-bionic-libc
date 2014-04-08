@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
+#include <locale.h>
 
 __BEGIN_DECLS
 
@@ -75,6 +76,7 @@ extern struct tm* gmtime_r(const time_t*, struct tm*);
 
 extern char* strptime(const char*, const char*, struct tm*);
 extern size_t strftime(char*, size_t, const char*, const struct tm*);
+extern size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t);
 
 extern char* ctime(const time_t*);
 extern char* ctime_r(const time_t*, char*);
