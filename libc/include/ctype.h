@@ -41,6 +41,7 @@
 #define _CTYPE_H_
 
 #include <sys/cdefs.h>
+#include <locale.h>
 
 #define	_CTYPE_U	0x01
 #define	_CTYPE_L	0x02
@@ -73,15 +74,21 @@ int	isalnum(int);
 int	isalpha(int);
 int	iscntrl(int);
 int	isdigit(int);
+int	isdigit_l(int, locale_t);
 int	isgraph(int);
 int	islower(int);
+int	islower_l(int, locale_t);
 int	isprint(int);
 int	ispunct(int);
 int	isspace(int);
 int	isupper(int);
+int	isupper_l(int, locale_t);
 int	isxdigit(int);
+int	isxdigit_l(int, locale_t);
 int	tolower(int);
+int	tolower_l(int, locale_t);
 int	toupper(int);
+int	toupper_l(int, locale_t);
 
 #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __POSIX_VISIBLE > 200112 \
     || __XPG_VISIBLE > 600
