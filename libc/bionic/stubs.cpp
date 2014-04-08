@@ -31,11 +31,14 @@
 #include <grp.h>
 #include <mntent.h>
 #include <netdb.h>
+#include <nl_types.h>
 #include <pthread.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <xlocale.h>
+#include <wctype.h>
 
 #include "private/android_filesystem_config.h"
 #include "private/ErrnoRestorer.h"
@@ -483,4 +486,339 @@ void endusershell() {
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
   return sysconf(_SC_PAGE_SIZE);
+}
+
+int isalnum_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isalpha_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isascii_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isblank_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iscntrl_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isdigit_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isgraph_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int islower_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isprint_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int ispunct_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isspace_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isupper_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int isxdigit_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswalnum_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswalpha_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswascii_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswblank_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswcntrl_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswdigit_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswgraph_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswlower_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswprint_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswpunct_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswspace_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswupper_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int iswxdigit_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+size_t strftime_l(char *s,
+                  size_t max,
+                  const char *format,
+                  const struct tm * tm,
+                  locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+nl_catd catopen(const char *name, int flag)
+{
+  UNIMPLEMENTED;
+  return (nl_catd)-1;
+}
+
+int catclose(nl_catd catalog)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+char *catgets(nl_catd catalog,
+              int set_number,
+              int message_number,
+              const char *message)
+{
+  UNIMPLEMENTED;
+  return (char *)message;
+}
+
+int toupper_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+int tolower_l(int c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+
+wint_t towupper_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+wint_t towlower_l(wint_t c, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+int strcoll_l(const char *s1, const char *s2, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+size_t strxfrm_l(char *__restrict dest,
+                 const char *__restrict src,
+                 size_t n,
+                 locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+int wcscoll_l(const wchar_t *s1, const wchar_t *s2, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+size_t wcsnrtombs(char *dest,
+                  const wchar_t **src,
+                  size_t nwc,
+                  size_t len,
+                  mbstate_t *ps)
+{
+  UNIMPLEMENTED;
+  errno = EILSEQ;
+  return (size_t)-1;
+}
+
+size_t mbsnrtowcs(wchar_t *dest,
+                  const char **src,
+                  size_t nms,
+                  size_t len,
+                  mbstate_t *ps)
+{
+  UNIMPLEMENTED;
+  errno = EILSEQ;
+  return (size_t)-1;
+}
+
+int mbtowc(wchar_t *pwc, const char *s, size_t n)
+{
+  UNIMPLEMENTED;
+  return -1;
+}
+
+long double strtold_l(const char *nptr, char **endptr, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long long strtoll_l(const char *nptr,
+                    char **endptr,
+                    int base,
+                    locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+unsigned long long strtoull_l(const char *nptr,
+                              char **endptr,
+                              int base,
+                              locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long long wcstoll(const wchar_t *nptr, wchar_t **endptr, int base)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+unsigned long long wcstoull(const wchar_t *nptr, wchar_t **endptr, int base)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+float wcstof(const wchar_t *nptr, wchar_t **endptr)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long double wcstold(const wchar_t *nptr, wchar_t **endptr)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+unsigned long long wcstoull_l(const wchar_t *nptr,
+                              wchar_t **endptr,
+                              locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
+}
+
+long double wcstold_l(const wchar_t *nptr, wchar_t **endptr, locale_t locale)
+{
+  UNIMPLEMENTED;
+  return 0;
 }
