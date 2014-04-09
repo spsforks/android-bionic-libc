@@ -54,6 +54,7 @@ static mapinfo_t* gMapInfo = NULL;
 static void* gDemangler;
 typedef char* (*DemanglerFn)(const char*, char*, size_t*, int*);
 static DemanglerFn gDemanglerFn = NULL;
+static DemanglerFn gDemanglerNoAllocFn = NULL;
 
 __LIBC_HIDDEN__ void backtrace_startup() {
   gMapInfo = mapinfo_create(getpid());
@@ -61,6 +62,8 @@ __LIBC_HIDDEN__ void backtrace_startup() {
   if (gDemangler != NULL) {
     void* sym = dlsym(gDemangler, "__cxa_demangle");
     gDemanglerFn = reinterpret_cast<DemanglerFn>(sym);
+    sym = dlsym(gDemangler, "__cxa_demangle_noalloc");
+    gDemanglerNoAllocFn = reinterpret_cast<DemanglerFn>(sym);
   }
 }
 
@@ -74,6 +77,13 @@ static char* demangle(const char* symbol) {
     return NULL;
   }
   return (*gDemanglerFn)(symbol, NULL, NULL, NULL);
+}
+
+static char* demangle_noalloc(const char* symbol, char *output, size_t *out_size) {
+  if (gDemanglerNoAllocFn == NULL) {
+    return NULL;
+  }
+  return (*gDemanglerNoAllocFn)(symbol, output, out_size, NULL);
 }
 
 struct stack_crawl_state_t {
@@ -138,8 +148,9 @@ __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
   return state.frame_count;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count, bool canalloc) {
   uintptr_t self_bt[16];
+  char output[256];
   if (frames == NULL) {
     frame_count = get_backtrace(self_bt, 16);
     frames = self_bt;
@@ -165,15 +176,23 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       soname = "<unknown>";
     }
     if (symbol != NULL) {
-      // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
-      char* demangled_symbol = demangle(symbol);
+      char* demangled_symbol = NULL;
+      if (canalloc) {
+        // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
+        demangled_symbol = demangle(symbol);
+      } else {
+        size_t out_size = 256;
+        demangled_symbol = demangle_noalloc(symbol, output, &out_size);
+      }
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
                         "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
                         i, rel_pc, soname, best_name, frames[i] - offset);
 
-      free(demangled_symbol);
+      if (canalloc) {
+        free(demangled_symbol);
+      }
     } else {
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
                         "          #%02zd  pc %" PAD_PTR "  %s",
