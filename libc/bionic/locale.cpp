@@ -154,3 +154,11 @@ locale_t uselocale(locale_t new_locale) {
 
   return old_locale;
 }
+
+char* strptime_l(const char* s, const char* fmt, tm* t, locale_t) {
+  return strptime(s, fmt, t);
+}
+
+size_t strftime_l(char* buf, size_t buf_size, const char* fmt, const tm* t, locale_t) {
+  return strftime(buf, buf_size, fmt, t);
+}

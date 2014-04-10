@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <features.h>
 #include <gtest/gtest.h>
+#include <locale.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -31,7 +32,7 @@
 
 TEST(time, mktime_tz) {
 #if defined(__BIONIC__)
-  struct tm epoch;
+  tm epoch;
   memset(&epoch, 0, sizeof(tm));
   epoch.tm_year = 1970 - 1900;
   epoch.tm_mon = 1;
@@ -66,7 +67,7 @@ TEST(time, gmtime) {
 }
 
 TEST(time, mktime_10310929) {
-  struct tm t;
+  tm t;
   memset(&t, 0, sizeof(tm));
   t.tm_year = 200;
   t.tm_mon = 2;
@@ -101,7 +102,7 @@ TEST(time, mktime_10310929) {
 TEST(time, strftime) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
+  tm t;
   memset(&t, 0, sizeof(tm));
   t.tm_year = 200;
   t.tm_mon = 2;
@@ -120,21 +121,76 @@ TEST(time, strftime) {
   EXPECT_STREQ("Sun Mar 10 00:00:00 2100", buf);
 }
 
-TEST(time, strptime) {
+TEST(time, strptime_R) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
+  tm t;
+  memset(&t, 0, sizeof(t));
   char buf[64];
 
-  memset(&t, 0, sizeof(t));
-  strptime("11:14", "%R", &t);
+  char* p = strptime("11:14", "%R", &t);
+  ASSERT_EQ('\0', *p);
   strftime(buf, sizeof(buf), "%H:%M", &t);
   EXPECT_STREQ("11:14", buf);
+}
 
+TEST(time, strptime_T) {
+  setenv("TZ", "UTC", 1);
+
+  tm t;
   memset(&t, 0, sizeof(t));
-  strptime("09:41:53", "%T", &t);
+  char buf[64];
+
+  char* p = strptime("09:41:53", "%T", &t);
+  ASSERT_EQ('\0', *p);
   strftime(buf, sizeof(buf), "%H:%M:%S", &t);
   EXPECT_STREQ("09:41:53", buf);
+}
+
+TEST(time, strptime) {
+  tm t;
+  ASSERT_TRUE(NULL == strptime("2009-01", "%Y-%m-%d", &t));
+
+  char* p;
+
+  memset(&t, 0, sizeof(t));
+  p = strptime("2009-01-17", "%Y-%m-%d", &t);
+  ASSERT_EQ('\0', *p);
+  ASSERT_EQ(2009 - 1900, t.tm_year);
+  ASSERT_EQ(0, t.tm_mon);
+  ASSERT_EQ(17, t.tm_mday);
+
+  memset(&t, 0, sizeof(t));
+  p = strptime("2009-01-17 13:45", "%Y-%m-%d", &t);
+  ASSERT_EQ(' ', *p);
+  ASSERT_EQ(2009 - 1900, t.tm_year);
+  ASSERT_EQ(0, t.tm_mon);
+  ASSERT_EQ(17, t.tm_mday);
+}
+
+TEST(time, strptime_l) {
+  locale_t l = newlocale(LC_ALL_MASK, "C", NULL);
+
+  tm t;
+  ASSERT_TRUE(NULL == strptime_l("2009-01", "%Y-%m-%d", &t, l));
+
+  char* p;
+
+  memset(&t, 0, sizeof(t));
+  p = strptime_l("2009-01-17", "%Y-%m-%d", &t, l);
+  ASSERT_EQ('\0', *p);
+  ASSERT_EQ(2009 - 1900, t.tm_year);
+  ASSERT_EQ(0, t.tm_mon);
+  ASSERT_EQ(17, t.tm_mday);
+
+  memset(&t, 0, sizeof(t));
+  p = strptime_l("2009-01-17 13:45", "%Y-%m-%d", &t, l);
+  ASSERT_EQ(' ', *p);
+  ASSERT_EQ(2009 - 1900, t.tm_year);
+  ASSERT_EQ(0, t.tm_mon);
+  ASSERT_EQ(17, t.tm_mday);
+
+  freelocale(l);
 }
 
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
