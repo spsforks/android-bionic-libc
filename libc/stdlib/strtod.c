@@ -1996,24 +1996,6 @@ quorem
 	return q;
 }
 
-/* freedtoa(s) must be used to free values s returned by dtoa
- * when MULTIPLE_THREADS is #defined.  It should be used in all cases,
- * but for consistency with earlier versions of dtoa, it is optional
- * when MULTIPLE_THREADS is not defined.
- */
-
-void
-#ifdef KR_headers
-freedtoa(s) char *s;
-#else
-freedtoa(char *s)
-#endif
-{
-	free(s);
-}
-
-
-
 /* dtoa for IEEE arithmetic (dmg): convert double to ASCII string.
  *
  * Inspired by "How to Print Floating-Point Numbers Accurately" by
