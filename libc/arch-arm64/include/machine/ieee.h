@@ -58,6 +58,22 @@
 #define	DBL_FRACLBITS	32
 #define	DBL_FRACBITS	52
 
+#define	EXT_EXPBITS	15
+#define	EXT_FRACHBITS	16
+#define	EXT_FRACHMBITS	32
+#define	EXT_FRACLMBITS	32
+#define	EXT_FRACLBITS	32
+#define	EXT_FRACBITS	112
+
+#define	EXT_IMPLICIT_NBIT
+
+#define	EXT_TO_ARRAY32(p, a) do {		\
+	(a)[0] = (uint32_t)(p)->ext_fracl;	\
+	(a)[1] = (uint32_t)(p)->ext_fraclm;	\
+	(a)[2] = (uint32_t)(p)->ext_frachm;	\
+	(a)[3] = (uint32_t)(p)->ext_frach;	\
+} while(0)
+
 struct ieee_single {
 	u_int	sng_frac:23;
 	u_int	sng_exp:8;
@@ -69,6 +85,15 @@ struct ieee_double {
 	u_int	dbl_frach:20;
 	u_int	dbl_exp:11;
 	u_int	dbl_sign:1;
+};
+
+struct ieee_ext {
+	u_int	ext_fracl;
+	u_int	ext_fraclm;
+	u_int	ext_frachm;
+	u_int	ext_frach:16;
+	u_int	ext_exp:15;
+	u_int	ext_sign:1;
 };
 
 /*
