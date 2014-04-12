@@ -79,13 +79,11 @@ libc_common_src_files := \
     stdio/fvwrite.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    stdio/vfprintf.c \
     stdlib/atexit.c \
     stdlib/ctype_.c \
     stdlib/getenv.c \
     stdlib/putenv.c \
     stdlib/setenv.c \
-    stdlib/strtod.c \
     unistd/syslog.c \
 
 # Fortify implementations of libc functions.
@@ -207,8 +205,6 @@ libc_bionic_src_files := \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
     bionic/strsignal.cpp \
-    bionic/strtof.cpp \
-    bionic/strtold.cpp \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sysconf.cpp \
@@ -320,6 +316,11 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/gen/time.c \
     upstream-openbsd/lib/libc/gen/tolower_.c \
     upstream-openbsd/lib/libc/gen/toupper_.c \
+    upstream-openbsd/lib/libc/locale/_def_time.c \
+    upstream-openbsd/lib/libc/locale/_def_numeric.c \
+    upstream-openbsd/lib/libc/locale/_def_messages.c \
+    upstream-openbsd/lib/libc/locale/nl_langinfo.c \
+    upstream-openbsd/lib/libc/locale/runetable.c \
     upstream-openbsd/lib/libc/locale/wcscoll.c \
     upstream-openbsd/lib/libc/locale/wcsxfrm.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
@@ -373,6 +374,7 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/stdio/vscanf.c \
     upstream-openbsd/lib/libc/stdio/vsnprintf.c \
     upstream-openbsd/lib/libc/stdio/vsprintf.c \
+    upstream-openbsd/lib/libc/stdio/vfprintf.c \
     upstream-openbsd/lib/libc/stdio/vsscanf.c \
     upstream-openbsd/lib/libc/stdio/wbuf.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
@@ -398,6 +400,26 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/string/strtok.c \
     upstream-openbsd/lib/libc/string/wcslcpy.c \
     upstream-openbsd/lib/libc/string/wcswidth.c \
+    upstream-openbsd/lib/libc/gdtoa/dmisc.c \
+    upstream-openbsd/lib/libc/gdtoa/dtoa.c \
+    upstream-openbsd/lib/libc/gdtoa/gdtoa.c \
+    upstream-openbsd/lib/libc/gdtoa/gethex.c \
+    upstream-openbsd/lib/libc/gdtoa/gmisc.c \
+    upstream-openbsd/lib/libc/gdtoa/hd_init.c \
+    upstream-openbsd/lib/libc/gdtoa/hdtoa.c \
+    upstream-openbsd/lib/libc/gdtoa/hexnan.c \
+    upstream-openbsd/lib/libc/gdtoa/ldtoa.c \
+    upstream-openbsd/lib/libc/gdtoa/locks.c \
+    upstream-openbsd/lib/libc/gdtoa/misc.c \
+    upstream-openbsd/lib/libc/gdtoa/smisc.c \
+    upstream-openbsd/lib/libc/gdtoa/strtod.c \
+    upstream-openbsd/lib/libc/gdtoa/strtodg.c \
+    upstream-openbsd/lib/libc/gdtoa/strtof.c \
+    upstream-openbsd/lib/libc/gdtoa/sum.c \
+    upstream-openbsd/lib/libc/gdtoa/ulp.c \
+    upstream-openbsd/lib/libc/citrus/citrus_ctype.c \
+    upstream-openbsd/lib/libc/citrus/citrus_none.c \
+    upstream-openbsd/lib/libc/citrus/citrus_utf8.c
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
@@ -601,7 +623,15 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -I$(LOCAL_PATH)/upstream-openbsd \
     -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
-    -include upstream-openbsd/openbsd-compat.h
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/arch/amd64/gdtoa/ \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/citrus \
+    -include upstream-openbsd/openbsd-compat.h \
+    -I$(LOCAL_PATH)/private \
+    -DINFNAN_CHECK \
+    -DMULTIPLE_THREADS \
+    -DNO_FENV_H \
+    -DUSE_LOCALE
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)

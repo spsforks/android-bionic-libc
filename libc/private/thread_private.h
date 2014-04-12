@@ -17,6 +17,13 @@
 /*
  * helper macro to make unique names in the thread namespace
  */
+
+#ifdef __cplusplus
+extern "C" int  __isthreaded;
+#else
+extern int  __isthreaded;
+#endif
+
 #define __THREAD_NAME(name)	__CONCAT(_thread_tagname_,name)
 
 struct __thread_private_tag_t {
@@ -30,6 +37,25 @@ struct __thread_private_tag_t {
 	pthread_mutex_lock( &__THREAD_NAME(name)._private_lock )
 #define _THREAD_PRIVATE_MUTEX_UNLOCK(name) \
 	pthread_mutex_unlock( &__THREAD_NAME(name)._private_lock )
+
+/*
+ * Macros used in libc to access mutexes.
+ */
+#define _MUTEX_LOCK(mutex)						\
+	do {								\
+		if (__isthreaded)					\
+			pthread_mutex_lock(mutex);			\
+	} while (0)
+#define _MUTEX_UNLOCK(mutex)						\
+	do {								\
+		if (__isthreaded)					\
+			pthread_mutex_unlock(mutex);			\
+	} while (0)
+#define _MUTEX_DESTROY(mutex)						\
+	do {								\
+		if (__isthreaded)					\
+			pthread_mutex_destroy(mutex);			\
+	} while (0)
 
 void	_thread_atexit_lock(void);
 void	_thread_atexit_unlock(void);

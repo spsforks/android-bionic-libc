@@ -1,11 +1,12 @@
-/*	$OpenBSD: floatio.h,v 1.4 2008/09/07 20:36:08 martynas Exp $	*/
+/*	$OpenBSD: rune.h,v 1.2 2011/03/15 22:27:48 stsp Exp $ */
+/*	$NetBSD: rune.h,v 1.9 2003/08/07 16:43:04 agc Exp $	*/
 
 /*-
- * Copyright (c) 1990, 1993
+ * Copyright (c) 1993
  *	The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
- * Chris Torek.
+ * Paul Borman at Krystal Technologies.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,29 +31,50 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ *
+ *	@(#)rune.h	8.1 (Berkeley) 6/27/93
  */
+
+#ifndef	_RUNE_H_
+#define	_RUNE_H_
+
+#include <stdio.h>
+#include <wchar.h>
+#include "runetype.h"
 
 /*
- * Floating point scanf/printf (input/output) definitions.
+ * map _RTYPE_x to _CTYPE_x
+ *
+ * XXX: these should be defined in ctype.h and used in isxxx macros.
+ *      (note: current isxxx macros use "old" NetBSD masks and
+ *       _CTYPE_x are not public.)
  */
-
-/* 11-bit exponent (VAX G floating point) is 308 decimal digits */
-#define	MAXEXP		308
-/* 128 bit fraction takes up 39 decimal digits; max reasonable precision */
-#define	MAXFRACT	39
+#define	_CTYPE_A	_RUNETYPE_A
+#define	_CTYPE_C	_RUNETYPE_C
+#define	_CTYPE_D	_RUNETYPE_D
+#define	_CTYPE_G	_RUNETYPE_G
+#define	_CTYPE_L	_RUNETYPE_L
+#define	_CTYPE_P	_RUNETYPE_P
+#define	_CTYPE_S	_RUNETYPE_S
+#define	_CTYPE_U	_RUNETYPE_U
+#define	_CTYPE_X	_RUNETYPE_X
+#define	_CTYPE_B	_RUNETYPE_B
+#define	_CTYPE_R	_RUNETYPE_R
+#define	_CTYPE_I	_RUNETYPE_I
+#define	_CTYPE_T	_RUNETYPE_T
+#define	_CTYPE_Q	_RUNETYPE_Q
+#define	_CTYPE_SWM	_RUNETYPE_SWM
+#define	_CTYPE_SWS	_RUNETYPE_SWS
+#define	_CTYPE_SW0	_RUNETYPE_SW0
+#define	_CTYPE_SW1	_RUNETYPE_SW1
+#define	_CTYPE_SW2	_RUNETYPE_SW2
+#define	_CTYPE_SW3	_RUNETYPE_SW3
 
 /*
- * MAXEXPDIG is the maximum number of decimal digits needed to store a
- * floating point exponent in the largest supported format.  It should
- * be ceil(log10(LDBL_MAX_10_EXP)) or, if hexadecimal floating point
- * conversions are supported, ceil(log10(LDBL_MAX_EXP)).  But since it
- * is presently never greater than 5 in practice, we fudge it.
+ * global variables
  */
-#define	MAXEXPDIG	6
-#if LDBL_MAX_EXP > 999999
-#error "floating point buffers too small"
-#endif
+extern size_t __mb_len_max_runtime;
+extern _RuneLocale _DefaultRuneLocale;
+extern _RuneLocale *_CurrentRuneLocale;
 
-char *__hdtoa(double, const char *, int, int *, int *, char **);
-char *__hldtoa(long double, const char *, int, int *, int *, char **);
-char *__ldtoa(long double *, int, int, int *, int *, char **);
+#endif	/*! _RUNE_H_ */

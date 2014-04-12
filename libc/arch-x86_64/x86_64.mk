@@ -28,6 +28,9 @@ libc_common_src_files_x86_64 := \
     upstream-openbsd/lib/libc/string/strncat.c \
     upstream-openbsd/lib/libc/string/strncmp.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
+    upstream-openbsd/lib/libc/arch/amd64/gdtoa/strtold.c \
+    upstream-openbsd/lib/libc/gdtoa/strtorx.c \
+    upstream-openbsd/lib/libc/gdtoa/strtord.c
 
 # Fortify implementations of libc functions.
 libc_common_src_files_x86_64 += \
@@ -53,9 +56,13 @@ libc_bionic_src_files_x86_64 := \
     arch-x86_64/bionic/vfork.S \
     bionic/__memcmp16.cpp \
 
+libc_common_cflags_x86_64 += \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/arch/amd64/gdtoa/ \
+    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/
+
 libc_crt_target_cflags_x86_64 += \
     -m64 \
-    -I$(LOCAL_PATH)/arch-x86_64/include
+    -I$(LOCAL_PATH)/arch-x86_64/include \
 
 libc_crt_target_ldflags_x86_64 := -melf_x86_64
 
