@@ -20,15 +20,15 @@
 
 // Avoid optimization.
 double d;
-double v;
+double v1, v2, v3, v4;
 
 static void BM_math_sqrt(int iters) {
   StartBenchmarkTiming();
 
   d = 0.0;
-  v = 2.0;
+  v1 = 2.0;
   for (int i = 0; i < iters; ++i) {
-    d += sqrt(v);
+    d += sqrt(v1);
   }
 
   StopBenchmarkTiming();
@@ -39,9 +39,9 @@ static void BM_math_log10(int iters) {
   StartBenchmarkTiming();
 
   d = 0.0;
-  v = 1234.0;
+  v1 = 1234.0;
   for (int i = 0; i < iters; ++i) {
-    d += log10(v);
+    d += log10(v1);
   }
 
   StopBenchmarkTiming();
@@ -52,11 +52,29 @@ static void BM_math_logb(int iters) {
   StartBenchmarkTiming();
 
   d = 0.0;
-  v = 1234.0;
+  v1 = 1234.0;
   for (int i = 0; i < iters; ++i) {
-    d += logb(v);
+    d += logb(v1);
   }
 
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_math_logb);
+
+static void BM_math_isinf(int iters) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v1 = 1234.0; // FP_NORMAL
+  v2 = nan(""); // FP_NAN
+  v3 = HUGE_VAL; // FP_INFINITE
+  v4 = 0.0; // FP_ZERO
+  for (int i = 0; i < iters; ++i) {
+    d += (isinf)(v1);
+    d += (isinf)(v2);
+    d += (isinf)(v3);
+    d += (isinf)(v4);
+  }
+
+  StopBenchmarkTiming();
+}
