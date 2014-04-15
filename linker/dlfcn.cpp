@@ -229,7 +229,6 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 // to synchronization functions __cxa_guard_* needed
 // to define statics inside functions.
 static soinfo __libdl_info;
-
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
   if (__libdl_info.name[0] == '\0') {
@@ -247,4 +246,3 @@ soinfo* get_libdl_info() {
 
   return &__libdl_info;
 }
-

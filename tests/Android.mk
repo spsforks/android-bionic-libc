@@ -248,6 +248,14 @@ libdlext_test_norelro_ldflags := \
 
 module := libdlext_test_norelro
 module_tag := optional
+# Couple of simple libraries for dlfcn tests
+# -----------------------------------------------------------------------------
+
+# 1. No references
+libtest_simple_src_files := \
+    dlopen_testlib_simple.cpp
+
+module := libtest_simple
 build_type := target
 build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
@@ -260,6 +268,27 @@ libtest_atexit_src_files := \
     atexit_testlib.cpp
 
 module := libtest_atexit
+# 2. Referenced from libtest_withrunpath
+
+libtest_referenced_src_files := \
+    dlopen_testlib_referenced.cpp
+
+libtest_referenced_relative_path := testlibs
+
+module := libtest_referenced
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+
+# 3. With runpath
+libtest_withrunpath_src_files := \
+    dlopen_testlib_withrunpath.cpp
+
+libtest_withrunpath_shared_libraries = libtest_referenced
+libtest_withrunpath_ldflags := -Wl,-rpath='$${ORIGIN}/testlibs' -Wl,--enable-new-dtags
+
+module := libtest_withrunpath
 build_type := target
 build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
@@ -377,9 +406,25 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	  echo "Attempting to create /system/bin"; \
 	  sudo mkdir -p -m 0777 /system/bin; \
 	fi
+	if [ ! -d /system -o ! -d /system/lib -o ! -d /system/lib/testlibs ]; then \
+	  echo "Attempting to create /system/lib/testlibs"; \
+	  sudo mkdir -p -m 0777 /system/lib/testlibs; \
+	  sudo chmod 0777 /system/lib; \
+	fi
+	if [ ! -d /system -o ! -d /system/lib64 -o ! -d /system/lib64/testlibs ]; then \
+	  echo "Attempting to create /system/lib64/testlibs"; \
+	  sudo mkdir -p -m 0777 /system/lib64/testlibs; \
+	  sudo chmod 0777 /system/lib64; \
+	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
 	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
+	cp $(TARGET_OUT)/lib/libtest* /system/lib
+	cp -rp $(TARGET_OUT)/lib/testlibs/* /system/lib/testlibs
+	if [ -d $(TARGET_OUT)/lib64 ]; then \
+	  cp $(TARGET_OUT)/lib64/libtest* /system/lib64; \
+	  cp -rp $(TARGET_OUT)/lib64/testlibs/* /system/lib64/testlibs; \
+	fi
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \

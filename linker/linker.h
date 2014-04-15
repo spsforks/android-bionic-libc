@@ -89,6 +89,7 @@
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
 #define SOINFO_NAME_LEN 128
+#define SOINFO_REALNAME_LEN 256
 
 typedef void (*linker_function_t)();
 
@@ -113,6 +114,7 @@ struct soinfo {
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
  public:
   char name[SOINFO_NAME_LEN];
+
   const ElfW(Phdr)* phdr;
   size_t phnum;
   ElfW(Addr) entry;
@@ -204,8 +206,10 @@ struct soinfo {
 
   void set_st_dev(dev_t st_dev);
   void set_st_ino(ino_t st_ino);
+  void set_realname(const char* name);
   ino_t get_st_ino();
   dev_t get_st_dev();
+  const char* get_realname();
 
   soinfo_list_t& get_children();
 
@@ -225,6 +229,7 @@ struct soinfo {
   soinfo_list_t children;
   soinfo_list_t parents;
 
+  char realname[SOINFO_REALNAME_LEN];
 };
 
 extern soinfo* get_libdl_info();

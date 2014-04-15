@@ -122,6 +122,7 @@ static void protect_all() {
 
   allocator.protect_all(PROT_READ);
   fprintf(stderr, "trying to access protected page");
+  fflush(stderr);
 
   // this should result in segmentation fault
   page1_ptr->dummy_str[11] = 7;

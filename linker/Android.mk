@@ -9,6 +9,7 @@ LOCAL_SRC_FILES:= \
     linker_allocator.cpp \
     linker_environ.cpp \
     linker_phdr.cpp \
+    linker_util.cpp \
     rt.cpp \
 
 LOCAL_SRC_FILES_arm     := arch/arm/begin.S
@@ -33,6 +34,13 @@ LOCAL_CONLYFLAGS += \
 
 LOCAL_CPPFLAGS += \
     -std=gnu++11 \
+
+LOCAL_CPPFLAGS_arm := -D_BIONIC_LD_PLATFORM=arm
+LOCAL_CPPFLAGS_arm64 := -D_BIONIC_LD_PLATFORM=arm64
+LOCAL_CPPFLAGS_x86 := -D_BIONIC_LD_PLATFORM=x86
+LOCAL_CPPFLAGS_x86_64 := -D_BIONIC_LD_PLATFORM=x86_64
+# TODO: How to detect mips64?
+LOCAL_CPPFLAGS_mips := -D_BIONIC_LD_PLATFORM=mips
 
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/

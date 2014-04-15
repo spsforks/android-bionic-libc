@@ -49,6 +49,7 @@
 #include "linker_environ.h"
 #include "linker_phdr.h"
 #include "linker_allocator.h"
+#include "linker_util.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -65,7 +66,7 @@
  *   and NOEXEC
  */
 
-static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo);
+static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo, const char* origin_path);
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 static LinkerAllocator<soinfo> g_soinfo_allocator;
@@ -74,6 +75,8 @@ static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; /* main process, always the one after libdl_info */
+
+#define LIB_PATH (kDefaultLdPaths[1])
 
 static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
@@ -86,10 +89,12 @@ static const char* const kDefaultLdPaths[] = {
   NULL
 };
 
-#define LDPATH_BUFSIZE (LDPATH_MAX*64)
+#define LDPATH_BUFSIZE (LDPATH_MAX*LDPATH_SIZE)
+#define LDPATH_SIZE 128
 #define LDPATH_MAX 8
 
-#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
+#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*LDPRELOAD_SIZE)
+#define LDPRELOAD_SIZE 64
 #define LDPRELOAD_MAX 8
 
 static char g_ld_library_paths_buffer[LDPATH_BUFSIZE];
@@ -105,11 +110,19 @@ __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 __LIBC_HIDDEN__ abort_msg_t* g_abort_message = NULL; // For debuggerd.
 
 enum RelocationKind {
-    kRelocAbsolute = 0,
-    kRelocRelative,
-    kRelocCopy,
-    kRelocSymbol,
-    kRelocMax
+  kRelocAbsolute = 0,
+  kRelocRelative,
+  kRelocCopy,
+  kRelocSymbol,
+  kRelocMax
+};
+
+struct soinfo_search_paths {
+  soinfo_search_paths(const char* _origin_path, const char** _runpaths)
+    : origin_path(_origin_path), runpaths(_runpaths) {}
+
+  const char* origin_path;
+  const char** runpaths;
 };
 
 #if STATS
@@ -274,7 +287,7 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
+static soinfo* soinfo_alloc(const char* name, const char* realname, const struct stat* file_stat) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return NULL;
@@ -290,12 +303,13 @@ static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
   if (file_stat != NULL) {
     si->set_st_dev(file_stat->st_dev);
     si->set_st_ino(file_stat->st_ino);
+    si->set_realname(realname);
   }
 
   sonext->next = si;
   sonext = si;
 
-  TRACE("name %s: allocated soinfo @ %p", name, si);
+  DEBUG("name %s: allocated soinfo @ %p", name, si);
   return si;
 }
 
@@ -310,7 +324,7 @@ static void soinfo_free(soinfo* si) {
 
     soinfo *prev = NULL, *trav;
 
-    TRACE("name %s: freeing soinfo @ %p", si->name, si);
+    DEBUG("name %s: freeing soinfo @ %p", si->name, si);
 
     for (trav = solist; trav != NULL; trav = trav->next) {
         if (trav == si)
@@ -336,7 +350,6 @@ static void soinfo_free(soinfo* si) {
 
     g_soinfo_allocator.free(si);
 }
-
 
 static void parse_path(const char* path, const char* delimiters,
                        const char** array, char* buf, size_t buf_size, size_t max_count) {
@@ -372,6 +385,26 @@ static void parse_LD_PRELOAD(const char* path) {
   // We have historically supported ':' as well as ' ' in LD_PRELOAD.
   parse_path(path, " :", g_ld_preload_names,
              g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), LDPRELOAD_MAX);
+}
+
+static bool get_origin_path(const char* full_path, char* origin_path, size_t origin_path_size) {
+  // new origin_path is whatever before last '/'
+  *origin_path = '\0';
+  const char* last_slash = strrchr(full_path, '/');
+  if (last_slash == NULL) {
+    return NULL;
+  }
+
+  size_t len = static_cast<size_t>(last_slash-full_path);
+  if (len <= origin_path_size - 1) {
+    strncpy(origin_path, full_path, len);
+    origin_path[len] = '\0';
+  } else {
+    DL_ERR("path is too long: %s", full_path);
+    return false;
+  }
+
+  return true;
 }
 
 #if defined(__arm__)
@@ -629,9 +662,11 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
   return NULL;
 }
 
-static int open_library_on_path(const char* name, const char* const paths[]) {
-  char buf[512];
+
+static int open_library_on_path(const char* name, const char* const paths[], char* new_origin_path, size_t new_origin_path_size) {
+  char buf[PATH_MAX];
   for (size_t i = 0; paths[i] != NULL; ++i) {
+    TRACE_TYPE(LIBS, "Search: %s ... ", paths[i]);
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
@@ -639,43 +674,97 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
     }
     int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
+      TRACE_TYPE(LIBS, "Search: %s ... found.", paths[i]);
+      if (!get_origin_path(buf, new_origin_path, new_origin_path_size)) {
+        DL_ERR("can't extract origin path: %s", buf);
+        return -1;
+      }
       return fd;
     }
   }
+
   return -1;
 }
 
-static int open_library(const char* name) {
-  TRACE("[ opening %s ]", name);
+static int open_library(const char* name, const soinfo_search_paths* search_paths, char* new_origin_path, size_t size) {
+  const char** runpaths = search_paths != NULL ? search_paths->runpaths : NULL;
+
+  TRACE_TYPE(LIBS, "[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != NULL) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
+      if (!get_origin_path(name, new_origin_path, size)) {
+        DL_ERR("can't extract origin path: %s", name);
+        return -1;
+      }
+
       return fd;
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
 #if defined(__LP64__)
+    // our chance to get it right for 64 bits
     return -1;
 #endif
   }
 
-  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_path(name, g_ld_library_paths);
-  if (fd == -1) {
-    fd = open_library_on_path(name, kDefaultLdPaths);
+  int fd = -1;
+  // Trying to make it linux ld.so compliant
+  // 1. Skipping dt_path step, it is deprecated and we did not
+  //    support it in the past anyways.
+
+  // 2. Search LD_LIBRARY_PATH
+  if (!get_AT_SECURE()) {
+    if (fd == -1) {
+      TRACE_TYPE(LIBS, "Search LD_LIBRARY_PATH... ");
+      fd = open_library_on_path(name, g_ld_library_paths, new_origin_path, size);
+    }
   }
+
+  // 3. Search dt_runpath
+  if (fd == -1 && runpaths != NULL && runpaths[0] != '\0') {
+    TRACE_TYPE(LIBS, "Search DT_RUNPATH... ");
+    fd = open_library_on_path(name, runpaths, new_origin_path, size);
+  }
+
+  // 5. Search trusted default path
+  if (fd == -1) {
+    TRACE_TYPE(LIBS, "Search default path... ");
+    fd = open_library_on_path(name, kDefaultLdPaths, new_origin_path, size);
+  }
+
+#if not defined(__LP64__)
+  // 6. This is android specific and deprecated step.
+  //    Looking for the library at the origin. If found
+  //    print warning. The actual case is egl/eglsubAndroid.so
+  //    on nexus5. This step should not be executed for
+  //    64bit platforms.
+  if (fd == -1 && search_paths != NULL && search_paths->origin_path != NULL && !get_AT_SECURE()) {
+    const char* origin_paths[] = {
+      search_paths->origin_path,
+      NULL,
+    };
+    TRACE_TYPE(LIBS, "Search at the origin (android-specific-step)... ");
+    fd = open_library_on_path(name, origin_paths, new_origin_path, size);
+    if (fd != -1) {
+      DL_WARN("This dlopen/lookup relies on deprecated behavior of the linker. Please specify DT_RUNPATH or modify dlopen argument to reflect correct location of the library ‘%s’", name);
+    }
+  }
+#endif
+
   return fd;
 }
 
-static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) {
+static soinfo* load_library(const char* name, const android_dlextinfo* extinfo, const soinfo_search_paths* search_paths, char* new_origin_path, size_t size, int dl_flags) {
     // Open the file.
-    int fd = open_library(name);
+    int fd = open_library(name, search_paths, new_origin_path, size);
     if (fd == -1) {
         DL_ERR("library \"%s\" not found", name);
         return NULL;
     }
 
+    // ElfReader closes fd in d-tor
     ElfReader elf_reader(name, fd);
 
     struct stat file_stat;
@@ -696,16 +785,38 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
       }
     }
 
+    if ((dl_flags & RTLD_NOLOAD) != 0) {
+        DL_ERR("library '%s' is not loaded and RTLD_NOLOAD is specified", name);
+        return NULL;
+    }
+
     // Read the ELF header and load the segments.
     if (!elf_reader.Load(extinfo)) {
         return NULL;
     }
 
+    char realname[SOINFO_REALNAME_LEN];
+    size_t len = strlcpy(realname, new_origin_path, sizeof(realname));
+    if (len < sizeof(realname) - 1) {
+        realname[len++] = '/';
+    }
+
     const char* bname = strrchr(name, '/');
-    soinfo* si = soinfo_alloc(bname ? bname + 1 : name, &file_stat);
+    if (bname == nullptr) {
+      bname = name;
+    }
+
+    len = strlcpy(realname+len, bname, sizeof(realname) - len);
+    if (len < strlen(bname)) {
+        DL_ERR("realname is too long: %s/%s", new_origin_path, bname);
+        return NULL;
+    }
+
+    soinfo* si = soinfo_alloc(name, realname, &file_stat);
     if (si == NULL) {
         return NULL;
     }
+
     si->base = elf_reader.load_start();
     si->size = elf_reader.load_size();
     si->load_bias = elf_reader.load_bias();
@@ -714,33 +825,29 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
 
     // At this point we know that whatever is loaded @ base is a valid ELF
     // shared library whose segments are properly mapped in.
-    TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
-          reinterpret_cast<void*>(si->base), si->size, si->name);
+    TRACE_TYPE(LIBS, "[ find_library_internal base=%p size=%zu name='%s' origin_path='%s' ]",
+        reinterpret_cast<void*>(si->base), si->size, si->name,
+        ( (search_paths != NULL && search_paths->origin_path != NULL)
+            ? search_paths->origin_path : "NULL" ));
 
-    if (!soinfo_link_image(si, extinfo)) {
-      soinfo_free(si);
-      return NULL;
+    if (!soinfo_link_image(si, extinfo, new_origin_path)) {
+        soinfo_free(si);
+        return NULL;
     }
 
     return si;
 }
 
 static soinfo *find_loaded_library(const char* name) {
-    // TODO: don't use basename only for determining libraries
-    // http://code.google.com/p/android/issues/detail?id=6670
-
-    const char* bname = strrchr(name, '/');
-    bname = bname ? bname + 1 : name;
-
     for (soinfo* si = solist; si != NULL; si = si->next) {
-        if (!strcmp(bname, si->name)) {
+        if (!strcmp(name, si->name)) {
             return si;
         }
     }
     return NULL;
 }
 
-static soinfo* find_library_internal(const char* name, const android_dlextinfo* extinfo) {
+static soinfo* find_library_internal(const char* name, const android_dlextinfo* extinfo, const soinfo_search_paths* search_paths, int dl_flags) {
   if (name == NULL) {
     return somain;
   }
@@ -754,12 +861,13 @@ static soinfo* find_library_internal(const char* name, const android_dlextinfo* 
     return NULL;
   }
 
-  TRACE("[ '%s' has not been loaded yet.  Locating...]", name);
-  return load_library(name, extinfo);
+  TRACE_TYPE(LIBS, "[ '%s' has not been loaded yet.  Locating...]", name);
+  char new_origin_path[LDPATH_SIZE];
+  return load_library(name, extinfo, search_paths, new_origin_path, LDPATH_SIZE, dl_flags);
 }
 
-static soinfo* find_library(const char* name, const android_dlextinfo* extinfo) {
-  soinfo* si = find_library_internal(name, extinfo);
+static soinfo* find_library(const char* name, const android_dlextinfo* extinfo, const soinfo_search_paths* search_paths, int dl_flags) {
+  soinfo* si = find_library_internal(name, extinfo, search_paths, dl_flags);
   if (si != NULL) {
     si->ref_count++;
   }
@@ -768,7 +876,7 @@ static soinfo* find_library(const char* name, const android_dlextinfo* extinfo) 
 
 static int soinfo_unload(soinfo* si) {
   if (si->ref_count == 1) {
-    TRACE("unloading '%s'", si->name);
+    TRACE_TYPE(LIBS, "unloading '%s'", si->name);
     si->CallDestructors();
 
     if ((si->flags | FLAG_NEW_SOINFO) != 0) {
@@ -791,11 +899,12 @@ static int soinfo_unload(soinfo* si) {
     soinfo_free(si);
   } else {
     si->ref_count--;
-    TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
+    TRACE_TYPE(LIBS, "not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
   }
   return 0;
 }
 
+// The name is a bit misleading, but it works as intended
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   snprintf(buffer, buffer_size, "%s:%s", kDefaultLdPaths[0], kDefaultLdPaths[1]);
 }
@@ -807,7 +916,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 }
 
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
-  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL)) != 0) {
+  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return NULL;
   }
@@ -816,7 +925,19 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     return NULL;
   }
   protect_data(PROT_READ | PROT_WRITE);
-  soinfo* si = find_library(name, extinfo);
+  char expanded_name_buf[SOINFO_NAME_LEN];
+  const char* expanded_name = name;
+  if (name != NULL && strchr(name, '$') != NULL) {
+    // do not parse $ORIGIN
+    if (parse_so_path_replace_token(expanded_name_buf, sizeof(expanded_name_buf), name, NULL, LIB_PATH, PARSE_LDTOKEN_LIB | PARSE_LDTOKEN_PLATFORM)) {
+      expanded_name = expanded_name_buf;
+    } else {
+      DL_ERR("library name/exanded path is too long.");
+      return NULL;
+    }
+  }
+
+  soinfo* si = find_library(expanded_name, extinfo, NULL, flags);
   if (si != NULL) {
     si->CallConstructors();
     somain->add_child(si);
@@ -1249,7 +1370,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             // We only handle the R_MIPS_NONE|R_MIPS_64|R_MIPS_REL32 case
             if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
                 ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
-                DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
+                DL_ERR("unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
                        type, (unsigned)ELF64_R_TYPE2(rel->r_info),
                        (unsigned)ELF64_R_TYPE3(rel->r_info), rel, idx);
                 return -1;
@@ -1351,18 +1472,18 @@ void soinfo::CallArray(const char* array_name __unused, linker_function_t* funct
     return;
   }
 
-  TRACE("[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, name);
+  DEBUG("[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, name);
 
   int begin = reverse ? (count - 1) : 0;
   int end = reverse ? -1 : count;
   int step = reverse ? -1 : 1;
 
   for (int i = begin; i != end; i += step) {
-    TRACE("[ %s[%d] == %p ]", array_name, i, functions[i]);
+    DEBUG("[ %s[%d] == %p ]", array_name, i, functions[i]);
     CallFunction("function", functions[i]);
   }
 
-  TRACE("[ Done calling %s for '%s' ]", array_name, name);
+  DEBUG("[ Done calling %s for '%s' ]", array_name, name);
 }
 
 void soinfo::CallFunction(const char* function_name __unused, linker_function_t function) {
@@ -1370,9 +1491,9 @@ void soinfo::CallFunction(const char* function_name __unused, linker_function_t 
     return;
   }
 
-  TRACE("[ Calling %s @ %p for '%s' ]", function_name, function, name);
+  DEBUG("[ Calling %s @ %p for '%s' ]", function_name, function, name);
   function();
-  TRACE("[ Done calling %s @ %p for '%s' ]", function_name, function, name);
+  DEBUG("[ Done calling %s @ %p for '%s' ]", function_name, function, name);
 
   // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
   // are still writable. This happens with our debug malloc (see http://b/7941716).
@@ -1412,7 +1533,7 @@ void soinfo::CallConstructors() {
     si->CallConstructors();
   });
 
-  TRACE("\"%s\": calling constructors", name);
+  TRACE_TYPE(LIBS, "\"%s\": calling constructors", name);
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
@@ -1420,7 +1541,7 @@ void soinfo::CallConstructors() {
 }
 
 void soinfo::CallDestructors() {
-  TRACE("\"%s\": calling destructors", name);
+  TRACE_TYPE(LIBS, "\"%s\": calling destructors", name);
 
   // DT_FINI_ARRAY must be parsed in reverse order.
   CallArray("DT_FINI_ARRAY", fini_array, fini_array_count, true);
@@ -1477,6 +1598,22 @@ void soinfo::set_st_ino(ino_t ino) {
   st_ino = ino;
 }
 
+void soinfo::set_realname(const char* name) {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0 || strlen(name) >= sizeof(this->realname)) {
+    return;
+  }
+
+  strlcpy(this->realname, name, sizeof(this->realname));
+}
+
+const char* soinfo::get_realname() {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return ""; // empty string...
+  }
+
+  return this->realname;
+}
+
 dev_t soinfo::get_st_dev() {
   if ((this->flags & FLAG_NEW_SOINFO) == 0) {
     return 0;
@@ -1516,7 +1653,7 @@ static int nullify_closed_stdio() {
         DL_ERR("cannot open /dev/null: %s", strerror(errno));
         return -1;
     }
-    TRACE("[ Opened /dev/null file-descriptor=%d]", dev_null);
+    DEBUG("[ Opened /dev/null file-descriptor=%d]", dev_null);
 
     /* If any of the stdio file descriptors is valid and not associated
        with /dev/null, dup /dev/null to it.  */
@@ -1526,7 +1663,7 @@ static int nullify_closed_stdio() {
             continue;
         }
 
-        TRACE("[ Nullifying stdio file descriptor %d]", i);
+        DEBUG("[ Nullifying stdio file descriptor %d]", i);
         status = TEMP_FAILURE_RETRY(fcntl(i, F_GETFL));
 
         /* If file is opened, we are good. */
@@ -1555,7 +1692,7 @@ static int nullify_closed_stdio() {
 
     /* If /dev/null is not one of the stdio file descriptors, close it. */
     if (dev_null > 2) {
-        TRACE("[ Closing /dev/null file-descriptor=%d]", dev_null);
+        DEBUG("[ Closing /dev/null file-descriptor=%d]", dev_null);
         status = TEMP_FAILURE_RETRY(close(dev_null));
         if (status == -1) {
             DL_ERR("close failed: %s", strerror(errno));
@@ -1566,12 +1703,19 @@ static int nullify_closed_stdio() {
     return return_value;
 }
 
-static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
+static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo, const char* origin_path) {
     /* "base" might wrap around UINT32_MAX. */
     ElfW(Addr) base = si->load_bias;
     const ElfW(Phdr)* phdr = si->phdr;
     int phnum = si->phnum;
     bool relocating_linker = (si->flags & FLAG_LINKER) != 0;
+
+    ssize_t dt_rpath_strtab_offset = -1;
+    ssize_t dt_runpath_strtab_offset = -1;
+
+    char pathBuffer[LDPATH_BUFSIZE];
+    const char* runpaths[LDPATH_MAX + 1];
+    memset(runpaths, 0, sizeof(runpaths));
 
     /* We can't debug anything until the linker is relocated */
     if (!relocating_linker) {
@@ -1712,6 +1856,12 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         case DT_PREINIT_ARRAYSZ:
             si->preinit_array_count = ((unsigned)d->d_un.d_val) / sizeof(ElfW(Addr));
             break;
+        case DT_RPATH:
+            dt_rpath_strtab_offset = d->d_un.d_val;
+            break;
+        case DT_RUNPATH:
+            dt_runpath_strtab_offset = d->d_un.d_val;
+            break;
         case DT_TEXTREL:
 #if defined(__LP64__)
             DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", si->name);
@@ -1803,7 +1953,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
         size_t preload_count = 0;
         for (size_t i = 0; g_ld_preload_names[i] != NULL; i++) {
-            soinfo* lsi = find_library(g_ld_preload_names[i], NULL);
+            soinfo* lsi = find_library(g_ld_preload_names[i], NULL, NULL, 0);
             if (lsi != NULL) {
                 g_ld_preloads[preload_count++] = lsi;
             } else {
@@ -1817,11 +1967,24 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     soinfo** needed = reinterpret_cast<soinfo**>(alloca((1 + needed_count) * sizeof(soinfo*)));
     soinfo** pneeded = needed;
 
+    // if rpath is specified and no runpath found - print warning
+    if (dt_rpath_strtab_offset != -1 && dt_runpath_strtab_offset == -1 ) {
+        DL_WARN("DT_RPATH is not supported. Please relink with --enable-new-dtags flags");
+    }
+
+    if (dt_runpath_strtab_offset != -1) {
+        if(!parse_so_paths(reinterpret_cast<const char*>(si->strtab + dt_runpath_strtab_offset), runpaths, pathBuffer, LDPATH_BUFSIZE, LDPATH_MAX, origin_path, LIB_PATH)) {
+            DL_WARN("DL_RUNPATH is too long: %s", reinterpret_cast<const char*>(si->strtab + dt_runpath_strtab_offset));
+        }
+    }
+
+    soinfo_search_paths search_paths(origin_path, runpaths);
+
     for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
         if (d->d_tag == DT_NEEDED) {
             const char* library_name = si->strtab + d->d_un.d_val;
             DEBUG("%s needs %s", si->name, library_name);
-            soinfo* lsi = find_library(library_name, NULL);
+            soinfo* lsi = find_library(library_name, NULL, &search_paths, 0);
             if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
@@ -1939,7 +2102,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]", NULL);
+  soinfo* si = soinfo_alloc("[vdso]", NULL, NULL);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
@@ -1947,7 +2110,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  soinfo_link_image(si, NULL);
+  soinfo_link_image(si, NULL, NULL);
 #endif
 }
 
@@ -2040,7 +2203,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     INFO("[ android linker & debugger ]");
 
-    soinfo* si = soinfo_alloc(args.argv[0], NULL);
+    soinfo* si = soinfo_alloc(args.argv[0], NULL, NULL);
     if (si == NULL) {
         exit(EXIT_FAILURE);
     }
@@ -2093,7 +2256,25 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     somain = si;
 
-    if (!soinfo_link_image(si, NULL)) {
+    // origin_path
+    const char *executable_name = args.argv[0];
+    char origin_path_buf[LDPATH_SIZE];
+    const char* origin_path = NULL;
+    if (strlen(executable_name) < LDPATH_SIZE - 1) {
+        strcpy(origin_path_buf, executable_name);
+        char* last_slash = strrchr(origin_path_buf, '/');
+        if (last_slash) {
+            *last_slash = '\0';
+            origin_path = origin_path_buf;
+        } else {
+            origin_path = ".";
+        }
+    } else {
+        __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s: path is too long\n", executable_name);
+        exit(EXIT_FAILURE);
+    }
+
+    if (!soinfo_link_image(si, NULL, origin_path)) {
         __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
         exit(EXIT_FAILURE);
     }
@@ -2155,7 +2336,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     fflush(stdout);
 #endif
 
-    TRACE("[ Ready to execute '%s' @ %p ]", si->name, reinterpret_cast<void*>(si->entry));
+    DEBUG("[ Ready to execute '%s' @ %p ]", si->name, reinterpret_cast<void*>(si->entry));
     return si->entry;
 }
 
@@ -2214,7 +2395,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.flags |= FLAG_LINKER;
 
-  if (!soinfo_link_image(&linker_so, NULL)) {
+  if (!soinfo_link_image(&linker_so, NULL, NULL)) {
     // It would be nice to print an error message, but if the linker
     // can't link itself, there's no guarantee that we'll be able to
     // call write() (because it involves a GOT reference). We may as
@@ -2236,3 +2417,4 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Return the address that the calling assembly stub should jump to.
   return start_address;
 }
+
