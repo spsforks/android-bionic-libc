@@ -36,5 +36,6 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
 
 void android_get_LD_LIBRARY_PATH(char* buffer __unused, size_t buffer_size __unused) { }
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path __unused) { }
+void android_get_DEFAULT_LIBRARY_PATH(char* buffer __unused, size_t buffer_size __unused) { }
 
 void* android_dlopen_ext(const char* filename __unused, int flag __unused, const android_dlextinfo* extinfo __unused) { return 0; }

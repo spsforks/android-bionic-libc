@@ -32,6 +32,30 @@ extern "C" void DlSymTestFunction() {
   gCalled = true;
 }
 
+TEST(dlfcn, android_update_LD_LIBARARY_PATH) {
+  char saved_LD_LIBRARY_PATH[PATH_MAX];
+  char pathBufferNormal[PATH_MAX];
+  char pathBufferSmall[10];
+  const char* new_LD_LIBRARY_PATH = "/data/lib:/data/bin:/data/app-libs";
+  const char* expected_small = "/data/lib";
+
+  void (*android_update_LD_LIBRARY_PATH)(const char* ld_library_path);
+  void (*android_get_LD_LIBRARY_PATH)(char* buffer, size_t buffer_size);
+
+  android_update_LD_LIBRARY_PATH = reinterpret_cast<void (*)(const char*)>(dlsym(RTLD_DEFAULT, "android_update_LD_LIBRARY_PATH"));
+  android_get_LD_LIBRARY_PATH = reinterpret_cast<void (*)(char*, size_t)>(dlsym(RTLD_DEFAULT, "android_get_LD_LIBRARY_PATH"));
+
+  android_get_LD_LIBRARY_PATH(saved_LD_LIBRARY_PATH, sizeof(saved_LD_LIBRARY_PATH));
+  android_update_LD_LIBRARY_PATH(new_LD_LIBRARY_PATH);
+  android_get_LD_LIBRARY_PATH(pathBufferNormal, sizeof(pathBufferNormal));
+  ASSERT_STREQ(pathBufferNormal, new_LD_LIBRARY_PATH);
+  android_get_LD_LIBRARY_PATH(pathBufferSmall, sizeof(pathBufferSmall));
+  ASSERT_STREQ(pathBufferSmall, expected_small);
+
+  // Restore
+  android_update_LD_LIBRARY_PATH(saved_LD_LIBRARY_PATH);
+}
+
 TEST(dlfcn, dlsym_in_self) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
@@ -48,6 +72,50 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_TRUE(gCalled);
 
   ASSERT_EQ(0, dlclose(self));
+}
+
+TEST(dlfcn, dlopen_noload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == NULL);
+#if __BIONIC__
+  ASSERT_STREQ("dlopen failed: library 'libtest_simple.so' is not loaded and RTLD_NOLOAD is specified", dlerror());
+#endif
+  handle = dlopen("libtest_simple.so", RTLD_NOW);
+  void* handle2 = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle == handle2);
+  ASSERT_EQ(0, dlclose(handle));
+  ASSERT_EQ(0, dlclose(handle2));
+}
+
+TEST(dlfcn, dlopen_simple) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_libc) {
+  void* handle = dlopen("libc.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_library_with_runpath) {
+  void* handle = dlopen("libtest_withrunpath.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_one_library_twice_using_different_path) {
+  void* handle = dlopen("$LIB/libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  void* handle2 = dlopen("$LIB/testlibs/../libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle2 == handle);
+
+  ASSERT_EQ(0, dlclose(handle2));
+  ASSERT_EQ(0, dlclose(handle));
 }
 
 TEST(dlfcn, dlopen_failure) {
