@@ -247,7 +247,7 @@ soinfo libdl_info = {
 
     .next = 0,
 
-    .flags = FLAG_LINKED,
+    .flags = FLAG_LINKED | FLAG_NEW_SOINFO,
 
     .strtab = ANDROID_LIBDL_STRTAB,
     .symtab = gLibDlSymtab,
@@ -299,4 +299,9 @@ soinfo libdl_info = {
     .has_text_relocations = false,
 #endif
     .has_DT_SYMBOLIC = true,
+    .version = 0,
+    "",
+    .st_dev = 0,
+    .st_ino = 0,
+    "", // reserved bytes
 };
