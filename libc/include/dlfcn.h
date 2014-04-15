@@ -55,6 +55,7 @@ enum {
 
   RTLD_LOCAL  = 0,
   RTLD_GLOBAL = 2,
+  RTLD_NOLOAD = 4,
 };
 
 #define RTLD_DEFAULT  ((void*) 0xffffffff)
