@@ -51,6 +51,7 @@ libBionicStandardTests_src_files := \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
+    linker_test.cpp \
     locale_test.cpp \
     malloc_test.cpp \
     math_test.cpp \
@@ -197,6 +198,31 @@ libdlext_test_src_files := \
 
 module := libdlext_test
 module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+# Couple of simple libraries for dlfcn tests
+# -----------------------------------------------------------------------------
+libtestGoldbach_lib_src_files := \
+    testlib-goldbach.cpp
+
+libtestGoldbach_relative_path := tglb
+
+module := libtestGoldbach
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+libtestCollatz_lib_src_files := \
+    testlib-collatz.cpp
+
+libtestCollatz_shared_libraries = libtestGoldbach
+libtestCollatz_relative_path := tcltz
+# interestingly this appears to be the (only?) way to set DT_RUNPATH
+libtestCollatz_ldflags := -Wl,-rpath='$${ORIGIN}/../tglb' -Wl,--enable-new-dtags
+
+module := libtestCollatz
 build_type := target
 build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
