@@ -26,13 +26,18 @@ LOCAL_MODULE_STEM_64 := $(LOCAL_MODULE)64
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
-LOCAL_CFLAGS += -g -Wall -Wextra -Wunused -Werror -std=gnu++11
+LOCAL_CFLAGS += -g -Wall -Wextra -Wunused -Werror -std=gnu++11 -D_BIONIC_LD_PLATFORM=deep_thought
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
   linked_list_test.cpp \
   linker_allocator_test.cpp \
-  ../linker_allocator.cpp
+  linker_util_test.cpp \
+  ../linker_allocator.cpp \
+  ../linker_util.cpp \
+  test_stubs.cpp
+
+LOCAL_STATIC_LIBRARIES := libc_nomalloc
 
 include $(BUILD_NATIVE_TEST)
 

@@ -345,9 +345,25 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	  echo "Attempting to create /system/bin"; \
 	  sudo mkdir -p -m 0777 /system/bin; \
 	fi
+	if [ ! -d /system -o ! -d /system/lib -o ! -d /system/lib/testlibs ]; then \
+	  echo "Attempting to create /system/lib/testlibs"; \
+	  sudo mkdir -p -m 0777 /system/lib/testlibs; \
+	  sudo chmod 0777 /system/lib; \
+	fi
+	if [ ! -d /system -o ! -d /system/lib64 -o ! -d /system/lib64/testlibs ]; then \
+	  echo "Attempting to create /system/lib64/testlibs"; \
+	  sudo mkdir -p -m 0777 /system/lib64/testlibs; \
+	  sudo chmod 0777 /system/lib64; \
+	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	cp $(TARGET_OUT_EXECUTABLES)/$(LINKER) /system/bin
 	cp $(TARGET_OUT_EXECUTABLES)/sh /system/bin
+	cp $(TARGET_OUT)/lib/libtest* /system/lib
+	cp -rp $(TARGET_OUT)/lib/testlibs/* /system/lib/testlibs
+	if [ -d $(TARGET_OUT)/lib64 ]; then \
+	  cp $(TARGET_OUT)/lib64/libtest* /system/lib64; \
+	  cp -rp $(TARGET_OUT)/lib64/testlibs/* /system/lib64/testlibs; \
+	fi
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
