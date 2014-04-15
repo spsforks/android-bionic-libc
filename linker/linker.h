@@ -33,6 +33,7 @@
 #include <link.h>
 #include <unistd.h>
 #include <android/dlext.h>
+#include <sys/stat.h>
 
 #include "private/libc_logging.h"
 
@@ -84,8 +85,10 @@
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
+#define FLAG_NEW_SOINFO 0x40000000 // soinfo structure has new format (with versions and such)
 
 #define SOINFO_NAME_LEN 128
+#define SOINFO_REALNAME_LEN 256
 
 typedef void (*linker_function_t)();
 
@@ -97,6 +100,7 @@ typedef void (*linker_function_t)();
 struct soinfo {
  public:
   char name[SOINFO_NAME_LEN];
+
   const ElfW(Phdr)* phdr;
   size_t phnum;
   ElfW(Addr) entry;
@@ -184,6 +188,16 @@ struct soinfo {
   void CallDestructors();
   void CallPreInitConstructors();
 
+  // This part is accessible only if FLAG_NEW_SOINFO is set
+  unsigned int version;
+
+  char realname[SOINFO_REALNAME_LEN];
+
+  // st_dev/st_ino from stat to uniquely identify file
+  dev_t st_dev;
+  ino_t st_ino;
+
+  char __reserved[512]; // for future use
  private:
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
