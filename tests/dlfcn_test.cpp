@@ -50,6 +50,44 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_EQ(0, dlclose(self));
 }
 
+TEST(dlfcn, dlopen_noload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == NULL);
+#if __BIONIC__
+  ASSERT_STREQ("dlopen failed: library 'libtest_simple.so' is not loaded and RTLD_NOLOAD is specified", dlerror());
+#endif
+  handle = dlopen("libtest_simple.so", RTLD_NOW);
+  void* handle2 = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle == handle2);
+  ASSERT_EQ(0, dlclose(handle));
+  ASSERT_EQ(0, dlclose(handle2));
+}
+
+TEST(dlfcn, dlopen_simple) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_library_with_runpath) {
+  void* handle = dlopen("libtest_withrunpath.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+TEST(dlfcn, dlopen_one_library_twice_using_different_path) {
+  void* handle = dlopen("$LIB/libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  void* handle2 = dlopen("$LIB/testlibs/../libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle2 == handle);
+
+  ASSERT_EQ(0, dlclose(handle2));
+  ASSERT_EQ(0, dlclose(handle));
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
