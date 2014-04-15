@@ -44,12 +44,14 @@
 
 #define	_CTYPE_U	0x01
 #define	_CTYPE_L	0x02
-#define	_CTYPE_N	0x04
+#define	_CTYPE_D	0x04
 #define	_CTYPE_S	0x08
 #define	_CTYPE_P	0x10
 #define	_CTYPE_C	0x20
 #define	_CTYPE_X	0x40
 #define	_CTYPE_B	0x80
+#define	_CTYPE_R	(_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_D|_CTYPE_B)
+#define	_CTYPE_A	(_CTYPE_L|_CTYPE_U)
 
 __BEGIN_DECLS
 
@@ -101,12 +103,12 @@ int	_toupper(int);
 
 __CTYPE_INLINE int isalnum(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_U|_CTYPE_L|_CTYPE_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_A|_CTYPE_D)));
 }
 
 __CTYPE_INLINE int isalpha(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_U|_CTYPE_L)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_A));
 }
 
 __CTYPE_INLINE int iscntrl(int c)
@@ -116,12 +118,12 @@ __CTYPE_INLINE int iscntrl(int c)
 
 __CTYPE_INLINE int isdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_N));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_D));
 }
 
 __CTYPE_INLINE int isgraph(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_N)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_P|_CTYPE_A|_CTYPE_D)));
 }
 
 __CTYPE_INLINE int islower(int c)
@@ -131,7 +133,7 @@ __CTYPE_INLINE int islower(int c)
 
 __CTYPE_INLINE int isprint(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_N|_CTYPE_B)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & _CTYPE_R));
 }
 
 __CTYPE_INLINE int ispunct(int c)
@@ -151,7 +153,7 @@ __CTYPE_INLINE int isupper(int c)
 
 __CTYPE_INLINE int isxdigit(int c)
 {
-	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_N|_CTYPE_X)));
+	return (c == -1 ? 0 : ((_ctype_ + 1)[(unsigned char)c] & (_CTYPE_D|_CTYPE_X)));
 }
 
 __CTYPE_INLINE int tolower(int c)
