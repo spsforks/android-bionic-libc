@@ -31,6 +31,7 @@ ifeq ($(LOCAL_MULTILIB),both)
     LOCAL_MODULE_STEM_64 := $(module)64
 endif
 endif
+LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
 
 LOCAL_CLANG := $($(module)_clang_$(build_type))
 

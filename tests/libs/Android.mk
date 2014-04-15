@@ -88,6 +88,32 @@ build_type := target
 build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
+# -----------------------------------------------------------------------------
+# Library referenced via DT_NEEDED/DT_RUNPATH
+# -----------------------------------------------------------------------------
+libtest_referenced_src_files := \
+    dlopen_testlib_referenced.cpp
+
+libtest_referenced_relative_path := testlibs
+
+module := libtest_referenced
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library with DT_NEEDED/DT_RUNPATH reference
+# -----------------------------------------------------------------------------
+libtest_withrunpath_src_files := \
+    dlopen_testlib_withrunpath.cpp
+
+libtest_withrunpath_shared_libraries = libtest_referenced
+libtest_withrunpath_ldflags := -Wl,-rpath='$${ORIGIN}/testlibs' -Wl,--enable-new-dtags
+
+module := libtest_withrunpath
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
 # Library used by atexit tests
