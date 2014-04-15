@@ -299,4 +299,7 @@ soinfo libdl_info = {
     .has_text_relocations = false,
 #endif
     .has_DT_SYMBOLIC = true,
+    "",
+    .st_dev = 0,
+    .st_ino = 0,
 };
