@@ -27,28 +27,23 @@
  * $FreeBSD$
  */
 
+// ANDROID changed:
+// - keep only little endian variants as they're the only one supported.
+// - add long double structures here instead of _fpmath.h.
+// - android uses 128 bits long doubles for LP64, so the structure and macros
+//   were reworked for the quad precision ieee representation.
+
 #ifndef _FPMATH_
 #define _FPMATH_
 
 #include <endian.h>
-#include "_fpmath.h"
-
-#ifndef _IEEE_WORD_ORDER
-#define	_IEEE_WORD_ORDER	_BYTE_ORDER
-#endif
 
 union IEEEf2bits {
 	float	f;
 	struct {
-#if _BYTE_ORDER == _LITTLE_ENDIAN
-		unsigned int	man	:23;
-		unsigned int	exp	:8;
+		unsigned int	man 	:23;
+		unsigned int	exp 	:8;
 		unsigned int	sign	:1;
-#else /* _BIG_ENDIAN */
-		unsigned int	sign	:1;
-		unsigned int	exp	:8;
-		unsigned int	man	:23;
-#endif
 	} bits;
 };
 
@@ -58,24 +53,97 @@ union IEEEf2bits {
 union IEEEd2bits {
 	double	d;
 	struct {
-#if _BYTE_ORDER == _LITTLE_ENDIAN
-#if _IEEE_WORD_ORDER == _LITTLE_ENDIAN
 		unsigned int	manl	:32;
-#endif
 		unsigned int	manh	:20;
-		unsigned int	exp	:11;
+		unsigned int	exp	  :11;
 		unsigned int	sign	:1;
-#if _IEEE_WORD_ORDER == _BIG_ENDIAN
-		unsigned int	manl	:32;
-#endif
-#else /* _BIG_ENDIAN */
-		unsigned int	sign	:1;
-		unsigned int	exp	:11;
-		unsigned int	manh	:20;
-		unsigned int	manl	:32;
-#endif
 	} bits;
 };
+
+#ifdef __LP64__
+
+union IEEEl2bits {
+	long double	e;
+	struct {
+		unsigned long	manl	:64;
+		unsigned long	manh	:48;
+		unsigned int	exp	  :15;
+		unsigned int	sign	:1;
+	} bits;
+	struct {
+		unsigned long	manl	  :64;
+		unsigned long	manh	  :48;
+		unsigned int	expsign	:16;
+	} xbits;
+};
+
+#define	LDBL_NBIT	0
+#define	LDBL_IMPLICIT_NBIT
+#define	mask_nbit_l(u)	((void)0)
+
+#define	LDBL_MANH_SIZE	48
+#define	LDBL_MANL_SIZE	64
+
+#define	LDBL_TO_ARRAY32(u, a) do {			\
+	(a)[0] = (uint32_t)(u).bits.manl;		\
+	(a)[1] = (uint32_t)((u).bits.manl >> 32);      	\
+	(a)[2] = (uint32_t)(u).bits.manh;		\
+	(a)[3] = (uint32_t)((u).bits.manh >> 32);	\
+} while(0)
+
+#else // __LP32__
+
+#ifdef __i386__
+
+union IEEEl2bits {
+	long double	e;
+	struct {
+		unsigned int	manl	:32;
+		unsigned int	manh	:32;
+		unsigned int	exp	  :15;
+		unsigned int	sign	:1;
+		unsigned int	junk	:16;
+	} bits;
+	struct {
+		unsigned long long man :64;
+		unsigned int 	expsign	 :16;
+		unsigned int	junk	   :16;
+	} xbits;
+};
+
+#define	LDBL_NBIT	0x80000000
+#define	mask_nbit_l(u)	((u).bits.manh &= ~LDBL_NBIT)
+
+#define	LDBL_MANH_SIZE	32
+#define	LDBL_MANL_SIZE	32
+
+#else // arm, mips
+
+union IEEEl2bits {
+	long double	e;
+	struct {
+		unsigned int	manl	:32;
+		unsigned int	manh	:20;
+		unsigned int	exp	  :11;
+		unsigned int	sign	:1;
+	} bits;
+};
+
+#define	LDBL_NBIT	0
+#define	LDBL_IMPLICIT_NBIT
+#define	mask_nbit_l(u)	((void)0)
+
+#define	LDBL_MANH_SIZE	20
+#define	LDBL_MANL_SIZE	32
+
+#endif // __i386__
+
+#define	LDBL_TO_ARRAY32(u, a) do {			\
+	(a)[0] = (uint32_t)(u).bits.manl;		\
+	(a)[1] = (uint32_t)(u).bits.manh;		\
+} while(0)
+
+#endif // __LP64__
 
 /*
  * The BSD "long double" functions are broken when sizeof(long double) == sizeof(double).
