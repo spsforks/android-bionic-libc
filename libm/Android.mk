@@ -79,7 +79,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_atanf.c \
     upstream-freebsd/lib/msun/src/s_carg.c \
     upstream-freebsd/lib/msun/src/s_cargf.c \
-    upstream-freebsd/lib/msun/src/s_cbrt.c \
     upstream-freebsd/lib/msun/src/s_cbrtf.c \
     upstream-freebsd/lib/msun/src/s_ccosh.c \
     upstream-freebsd/lib/msun/src/s_ccoshf.c \
@@ -128,8 +127,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_frexpf.c \
     upstream-freebsd/lib/msun/src/s_ilogb.c \
     upstream-freebsd/lib/msun/src/s_ilogbf.c \
-    upstream-freebsd/lib/msun/src/s_isfinite.c \
-    upstream-freebsd/lib/msun/src/s_isnormal.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
     upstream-freebsd/lib/msun/src/s_llrintf.c \
     upstream-freebsd/lib/msun/src/s_llround.c \
@@ -148,7 +145,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_nearbyint.c \
     upstream-freebsd/lib/msun/src/s_nextafter.c \
     upstream-freebsd/lib/msun/src/s_nextafterf.c \
-    upstream-freebsd/lib/msun/src/s_nexttowardf.c \
     upstream-freebsd/lib/msun/src/s_remquo.c \
     upstream-freebsd/lib/msun/src/s_remquof.c \
     upstream-freebsd/lib/msun/src/s_rint.c \
@@ -158,7 +154,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_scalbln.c \
     upstream-freebsd/lib/msun/src/s_scalbn.c \
     upstream-freebsd/lib/msun/src/s_scalbnf.c \
-    upstream-freebsd/lib/msun/src/s_signbit.c \
     upstream-freebsd/lib/msun/src/s_signgam.c \
     upstream-freebsd/lib/msun/src/s_significand.c \
     upstream-freebsd/lib/msun/src/s_significandf.c \
@@ -176,7 +171,15 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
+# small divergences with upstream
 libm_common_src_files += \
+    s_cbrt.c \
+    s_isfinite.c \
+    s_isnormal.c \
+    s_signbit.c \
+
+libm_common_src_files += \
+    upstream-freebsd/lib/msun/src/imprecise.c \
     fake_long_double.c \
 
 libm_ld_src_files = \
@@ -210,6 +213,7 @@ libm_ld_src_files = \
     upstream-freebsd/lib/msun/src/s_lroundl.c \
     upstream-freebsd/lib/msun/src/s_nextafterl.c \
     upstream-freebsd/lib/msun/src/s_nexttoward.c \
+    upstream-freebsd/lib/msun/src/s_nexttowardf.c \
     upstream-freebsd/lib/msun/src/s_remquol.c \
     upstream-freebsd/lib/msun/src/s_rintl.c \
     upstream-freebsd/lib/msun/src/s_roundl.c \
@@ -255,21 +259,20 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
 LOCAL_SRC_FILES_arm := arm/fenv.c
 
-LOCAL_C_INCLUDES_arm64 := $(LOCAL_PATH)/arm64 $(libm_ld_includes)
+LOCAL_C_INCLUDES_arm64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld_src_files)
 
-LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
+LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387
 LOCAL_SRC_FILES_x86 := i387/fenv.c
 
-LOCAL_C_INCLUDES_x86_64 := $(LOCAL_PATH)/amd64 $(libm_ld_includes)
+LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld_src_files)
 
 LOCAL_CFLAGS_mips := -fno-builtin-rintf -fno-builtin-rint
-LOCAL_C_INCLUDES_mips := $(LOCAL_PATH)/mips
 LOCAL_SRC_FILES_mips := mips/fenv.c
 
 LOCAL_CFLAGS_mips64 := -fno-builtin-rintf -fno-builtin-rint
-LOCAL_C_INCLUDES_mips64 := $(LOCAL_PATH)/mips $(libm_ld_includes)
+LOCAL_C_INCLUDES_mips64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_mips64 := mips/fenv.c $(libm_ld_src_files)
 
 include $(BUILD_STATIC_LIBRARY)

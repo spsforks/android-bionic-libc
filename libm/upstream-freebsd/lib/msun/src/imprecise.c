@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002, 2003 David Schultz <das@FreeBSD.ORG>
+ * Copyright (c) 2013 David Chisnall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,42 +26,44 @@
  * $FreeBSD$
  */
 
-#if defined(__VFP_FP__)
-#define	_IEEE_WORD_ORDER	_BYTE_ORDER
+#include <float.h>
+#include <math.h>
+
+/*
+ * If long double is not the same size as double, then these will lose
+ * precision and we should emit a warning whenever something links against
+ * them.
+ */
+#if (LDBL_MANT_DIG > 53)
+#define WARN_IMPRECISE(x) \
+	__warn_references(x, # x " has lower than advertised precision");
 #else
-#define	_IEEE_WORD_ORDER	_BIG_ENDIAN
+#define WARN_IMPRECISE(x)
 #endif
+/*
+ * Declare the functions as weak variants so that other libraries providing
+ * real versions can override them.
+ */
+#define	DECLARE_WEAK(x)\
+	__weak_reference(imprecise_## x, x);\
+	WARN_IMPRECISE(x)
 
-union IEEEl2bits {
-	long double	e;
-	struct {
-#if _BYTE_ORDER == _LITTLE_ENDIAN
-#if _IEEE_WORD_ORDER == _LITTLE_ENDIAN
-		unsigned int	manl	:32;
-#endif
-		unsigned int	manh	:20;
-		unsigned int	exp	:11;
-		unsigned int	sign	:1;
-#if _IEEE_WORD_ORDER == _BIG_ENDIAN
-		unsigned int	manl	:32;
-#endif
-#else	/* _BYTE_ORDER == _LITTLE_ENDIAN */
-		unsigned int		sign	:1;
-		unsigned int		exp	:11;
-		unsigned int		manh	:20;
-		unsigned int		manl	:32;
-#endif
-	} bits;
-};
+long double
+imprecise_powl(long double x, long double y)
+{
 
-#define	LDBL_NBIT	0
-#define	LDBL_IMPLICIT_NBIT
-#define	mask_nbit_l(u)	((void)0)
+	return pow(x, y);
+}
+DECLARE_WEAK(powl);
 
-#define	LDBL_MANH_SIZE	20
-#define	LDBL_MANL_SIZE	32
+#define DECLARE_IMPRECISE(f) \
+	long double imprecise_ ## f ## l(long double v) { return f(v); }\
+	DECLARE_WEAK(f ## l)
 
-#define	LDBL_TO_ARRAY32(u, a) do {			\
-	(a)[0] = (uint32_t)(u).bits.manl;		\
-	(a)[1] = (uint32_t)(u).bits.manh;		\
-} while(0)
+DECLARE_IMPRECISE(cosh);
+DECLARE_IMPRECISE(erfc);
+DECLARE_IMPRECISE(erf);
+DECLARE_IMPRECISE(lgamma);
+DECLARE_IMPRECISE(sinh);
+DECLARE_IMPRECISE(tanh);
+DECLARE_IMPRECISE(tgamma);

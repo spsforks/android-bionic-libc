@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002, 2003 David Schultz <das@FreeBSD.ORG>
+ * Copyright (c) 2004 David Schultz <das@FreeBSD.ORG>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,29 +26,37 @@
  * $FreeBSD$
  */
 
-union IEEEl2bits {
-	long double	e;
-	struct {
-		unsigned int	manl	:32;
-		unsigned int	manh	:32;
-		unsigned int	exp	:15;
-		unsigned int	sign	:1;
-		unsigned int	junk	:16;
-	} bits;
-	struct {
-		unsigned long long man	:64;
-		unsigned int 	expsign	:16;
-		unsigned int	junk	:16;
-	} xbits;
-};
+#include <math.h>
 
-#define	LDBL_NBIT	0x80000000
-#define	mask_nbit_l(u)	((u).bits.manh &= ~LDBL_NBIT)
+#include "fpmath.h"
 
-#define	LDBL_MANH_SIZE	32
-#define	LDBL_MANL_SIZE	32
+int
+__isfinite(double d)
+{
+	union IEEEd2bits u;
 
-#define	LDBL_TO_ARRAY32(u, a) do {			\
-	(a)[0] = (uint32_t)(u).bits.manl;		\
-	(a)[1] = (uint32_t)(u).bits.manh;		\
-} while (0)
+	u.d = d;
+	return (u.bits.exp != 2047);
+}
+
+int
+__isfinitef(float f)
+{
+	union IEEEf2bits u;
+
+	u.f = f;
+	return (u.bits.exp != 255);
+}
+
+#ifdef __LP64__
+int
+__isfinitel(long double e)
+{
+	union IEEEl2bits u;
+
+	u.e = e;
+	return (u.bits.exp != 32767);
+}
+#else // __LP32__
+__weak_reference(__isfinite, __isfinitel);
+#endif // __LP64__
