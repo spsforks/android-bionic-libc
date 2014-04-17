@@ -255,21 +255,20 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
 LOCAL_SRC_FILES_arm := arm/fenv.c
 
-LOCAL_C_INCLUDES_arm64 := $(LOCAL_PATH)/arm64 $(libm_ld_includes)
+LOCAL_C_INCLUDES_arm64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld_src_files)
 
-LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i386 $(LOCAL_PATH)/i387
+LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387
 LOCAL_SRC_FILES_x86 := i387/fenv.c
 
-LOCAL_C_INCLUDES_x86_64 := $(LOCAL_PATH)/amd64 $(libm_ld_includes)
+LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld_src_files)
 
 LOCAL_CFLAGS_mips := -fno-builtin-rintf -fno-builtin-rint
-LOCAL_C_INCLUDES_mips := $(LOCAL_PATH)/mips
 LOCAL_SRC_FILES_mips := mips/fenv.c
 
 LOCAL_CFLAGS_mips64 := -fno-builtin-rintf -fno-builtin-rint
-LOCAL_C_INCLUDES_mips64 := $(LOCAL_PATH)/mips $(libm_ld_includes)
+LOCAL_C_INCLUDES_mips64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_mips64 := mips/fenv.c $(libm_ld_src_files)
 
 include $(BUILD_STATIC_LIBRARY)
