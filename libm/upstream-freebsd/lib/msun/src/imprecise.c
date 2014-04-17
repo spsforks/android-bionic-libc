@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2004 David Schultz <das@FreeBSD.ORG>
+ * Copyright (c) 2013 David Chisnall
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,44 @@
  * $FreeBSD$
  */
 
+#include <float.h>
 #include <math.h>
 
-#include "fpmath.h"
+/*
+ * If long double is not the same size as double, then these will lose
+ * precision and we should emit a warning whenever something links against
+ * them.
+ */
+#if (LDBL_MANT_DIG > 53)
+#define WARN_IMPRECISE(x) \
+	__warn_references(x, # x " has lower than advertised precision");
+#else
+#define WARN_IMPRECISE(x)
+#endif
+/*
+ * Declare the functions as weak variants so that other libraries providing
+ * real versions can override them.
+ */
+#define	DECLARE_WEAK(x)\
+	__weak_reference(imprecise_## x, x);\
+	WARN_IMPRECISE(x)
 
-int
-__isnormal(double d)
+long double
+imprecise_powl(long double x, long double y)
 {
-	union IEEEd2bits u;
 
-	u.d = d;
-	return (u.bits.exp != 0 && u.bits.exp != 2047);
+	return pow(x, y);
 }
+DECLARE_WEAK(powl);
 
-int
-__isnormalf(float f)
-{
-	union IEEEf2bits u;
+#define DECLARE_IMPRECISE(f) \
+	long double imprecise_ ## f ## l(long double v) { return f(v); }\
+	DECLARE_WEAK(f ## l)
 
-	u.f = f;
-	return (u.bits.exp != 0 && u.bits.exp != 255);
-}
-
-int
-__isnormall(long double e)
-{
-	union IEEEl2bits u;
-
-	u.e = e;
-	return (u.bits.exp != 0 && u.bits.exp != 32767);
-}
+DECLARE_IMPRECISE(cosh);
+DECLARE_IMPRECISE(erfc);
+DECLARE_IMPRECISE(erf);
+DECLARE_IMPRECISE(lgamma);
+DECLARE_IMPRECISE(sinh);
+DECLARE_IMPRECISE(tanh);
+DECLARE_IMPRECISE(tgamma);

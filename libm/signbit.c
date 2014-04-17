@@ -30,8 +30,7 @@
 
 #include "fpmath.h"
 
-int
-__signbit(double d)
+int __signbit(double d)
 {
 	union IEEEd2bits u;
 
@@ -39,8 +38,7 @@ __signbit(double d)
 	return (u.bits.sign);
 }
 
-int
-__signbitf(float f)
+int __signbitf(float f)
 {
 	union IEEEf2bits u;
 
@@ -48,11 +46,14 @@ __signbitf(float f)
 	return (u.bits.sign);
 }
 
-int
-__signbitl(long double e)
+#ifdef __LP64__
+int __signbitl(long double e)
 {
 	union IEEEl2bits u;
 
 	u.e = e;
 	return (u.bits.sign);
 }
+#else // __LP32__
+__weak_reference(__signbit, __signbitl);
+#endif // __LP64__
