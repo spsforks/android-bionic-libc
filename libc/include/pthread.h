@@ -35,17 +35,26 @@
 #include <limits.h>
 #include <sys/types.h>
 
+#ifdef __LP64__
+  #define __RESERVED_INITIALIZER , { 0 }
+#else
+ #define __RESERVED_INITIALIZER
+#endif
+
 typedef struct {
   int volatile value;
+#ifdef __LP64__
+  char reserved[36]; /* for future extensibility */
+#endif
 } pthread_mutex_t;
 
 #define  __PTHREAD_MUTEX_INIT_VALUE            0
 #define  __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE  0x4000
 #define  __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE 0x8000
 
-#define  PTHREAD_MUTEX_INITIALIZER             {__PTHREAD_MUTEX_INIT_VALUE}
-#define  PTHREAD_RECURSIVE_MUTEX_INITIALIZER   {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE}
-#define  PTHREAD_ERRORCHECK_MUTEX_INITIALIZER  {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE}
+#define  PTHREAD_MUTEX_INITIALIZER             {__PTHREAD_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
+#define  PTHREAD_RECURSIVE_MUTEX_INITIALIZER   {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
+#define  PTHREAD_ERRORCHECK_MUTEX_INITIALIZER  {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
 
 enum {
     PTHREAD_MUTEX_NORMAL = 0,
@@ -60,17 +69,23 @@ enum {
 
 typedef struct {
   int volatile value;
+#ifdef __LP64__
+  char reserved[44]; /* for future extensibility */
+#endif
 } pthread_cond_t;
 
-#define PTHREAD_COND_INITIALIZER  {0}
+#define PTHREAD_COND_INITIALIZER  {0 __RESERVED_INITIALIZER}
 
 typedef struct {
-  uint32_t flags;
-  void* stack_base;
-  size_t stack_size;
-  size_t guard_size;
-  int32_t sched_policy;
-  int32_t sched_priority;
+  uint32_t  flags;
+  void*     stack_base;
+  size_t    stack_size;
+  size_t    guard_size;
+  int32_t   sched_policy;
+  int32_t   sched_priority;
+#ifdef __LP64__
+  char      reserved[16]; /* for future extensibility */
+#endif
 } pthread_attr_t;
 
 typedef long pthread_mutexattr_t;
