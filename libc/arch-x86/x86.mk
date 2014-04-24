@@ -32,54 +32,73 @@ libc_bionic_src_files_x86 += \
     arch-x86/bionic/syscall.S \
     arch-x86/bionic/vfork.S \
 
-ifeq ($(ARCH_X86_HAVE_SSSE3),true)
+ifeq ($(TARGET_ARCH_VARIANT), x86-atom)
 libc_bionic_src_files_x86 += \
+    arch-x86/string/sse2-bzero-atom.S \
+    arch-x86/string/sse2-memset-atom.S \
+    arch-x86/string/sse2-strlen-atom.S \
+    arch-x86/string/ssse3-bcopy-atom.S \
+    arch-x86/string/ssse3-memcmp-atom.S \
     arch-x86/string/ssse3-memcpy-atom.S \
     arch-x86/string/ssse3-memmove-atom.S \
-    arch-x86/string/ssse3-bcopy-atom.S \
-    arch-x86/string/ssse3-strncat-atom.S \
+    arch-x86/string/ssse3-strcpy-atom.S \
     arch-x86/string/ssse3-strncpy-atom.S \
+    arch-x86/string/ssse3-wmemcmp-atom.S
+else
+libc_bionic_src_files_x86 += \
+    arch-x86/string/sse2-bcopy-slm.S \
+    arch-x86/string/sse2-bzero-slm.S \
+    arch-x86/string/sse2-memcpy-slm.S \
+    arch-x86/string/sse2-memmove-slm.S \
+    arch-x86/string/sse2-memset-slm.S \
+    arch-x86/string/sse2-strcpy-slm.S \
+    arch-x86/string/sse2-strlen-slm.S \
+    arch-x86/string/sse2-strncpy-slm.S
+  ifeq ($(ARCH_X86_HAVE_SSE4),true)
+  libc_bionic_src_files_x86 += \
+    arch-x86/string/sse4-memcmp-slm.S \
+    arch-x86/string/sse4-wmemcmp-slm.S
+  else
+  libc_bionic_src_files_x86 += \
+    arch-x86/string/memcmp.S \
+    upstream-freebsd/lib/libc/string/wmemcmp.c
+  endif
+
+endif
+
+ifeq ($(ARCH_X86_HAVE_SSSE3),true)
+libc_bionic_src_files_x86 += \
+    arch-x86/string/ssse3-strncat-atom.S \
     arch-x86/string/ssse3-strlcat-atom.S \
     arch-x86/string/ssse3-strlcpy-atom.S \
     arch-x86/string/ssse3-strcmp-atom.S \
     arch-x86/string/ssse3-strncmp-atom.S \
     arch-x86/string/ssse3-strcat-atom.S \
-    arch-x86/string/ssse3-strcpy-atom.S \
-    arch-x86/string/ssse3-memcmp-atom.S \
-    arch-x86/string/ssse3-wmemcmp-atom.S \
     arch-x86/string/ssse3-memcmp16-atom.S \
     arch-x86/string/ssse3-wcscat-atom.S \
     arch-x86/string/ssse3-wcscpy-atom.S
 else
 libc_bionic_src_files_x86 += \
-    arch-x86/string/memcpy.S \
-    arch-x86/string/memmove.S \
-    arch-x86/string/bcopy.S \
     arch-x86/string/strcmp.S \
     arch-x86/string/strncmp.S \
     arch-x86/string/strcat.S \
-    arch-x86/string/memcmp.S \
     bionic/__memcmp16.cpp \
     upstream-freebsd/lib/libc/string/wcscpy.c \
     upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-    upstream-openbsd/lib/libc/string/strcpy.c \
     upstream-openbsd/lib/libc/string/strlcat.c \
     upstream-openbsd/lib/libc/string/strlcpy.c \
     upstream-openbsd/lib/libc/string/strncat.c \
-    upstream-openbsd/lib/libc/string/strncpy.c \
 
 endif
 
 libc_bionic_src_files_x86 += \
-    arch-x86/string/sse2-memset-atom.S \
-    arch-x86/string/sse2-bzero-atom.S \
     arch-x86/string/sse2-memchr-atom.S \
     arch-x86/string/sse2-memrchr-atom.S \
     arch-x86/string/sse2-strchr-atom.S \
     arch-x86/string/sse2-strrchr-atom.S \
+    arch-x86/string/sse2-stpcpy-slm.S \
+    arch-x86/string/sse2-stpncpy-slm.S \
     arch-x86/string/sse2-index-atom.S \
-    arch-x86/string/sse2-strlen-atom.S \
     arch-x86/string/sse2-strnlen-atom.S \
     arch-x86/string/sse2-wcschr-atom.S \
     arch-x86/string/sse2-wcsrchr-atom.S \

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010, Intel Corporation
+Copyright (c) 2014, Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "cache.h"
+
+#ifndef MEMSET
+# define MEMSET memset
+#endif
 
 #ifndef L
 # define L(label)	.L##label
@@ -60,7 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ENTRY
 # define ENTRY(name)			\
-	.type name,  @function; 	\
+	.type name,  @function;		\
 	.globl name;			\
 	.p2align 4;			\
 name:					\
@@ -138,16 +142,18 @@ __x86.get_pc_thunk.bx:
     jmp		*TABLE(,%ecx,4)
 #endif
 
-#ifndef MEMSET
-# define MEMSET memset
-#endif
-
 	.section .text.sse2,"ax",@progbits
 	ALIGN (4)
 ENTRY (MEMSET)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
+	cmp	$0, %ecx
+	ja	L(1byteormore)
+	SETRTNVAL
+	RETURN
+
+L(1byteormore):
 #ifdef USE_AS_BZERO
 	xor	%eax, %eax
 #else
@@ -155,147 +161,62 @@ ENTRY (MEMSET)
 	movb	%al, %ah
 	/* Fill the whole EAX with pattern.  */
 	movl	%eax, %edx
-	shl	$16, %eax
+	shl	 $16, %eax
 	or	%edx, %eax
 #endif
 	movl	DEST(%esp), %edx
-	cmp	$32, %ecx
-	jae	L(32bytesormore)
+	cmp	$1, %ecx
+	je	L(1byte)
+	cmp	$16, %ecx
+	jae	L(16bytesormore)
 
-L(write_less32bytes):
-	BRANCH_TO_JMPTBL_ENTRY (L(table_less_32bytes))
+	cmp	$4, %ecx
+	jb	L(4bytesless)
+	movl	%eax, (%edx)
+	movl	%eax, -4(%edx, %ecx)
+	cmp	$8, %ecx
+	jb	L(8bytesless)
+	movl	%eax, 4(%edx)
+	movl	%eax, -8(%edx, %ecx)
+L(8bytesless):
+	SETRTNVAL
+	RETURN
 
+L(4bytesless):
+	movw	%ax, (%edx)
+	movw	%ax, -2(%edx, %ecx)
+	SETRTNVAL
+	RETURN
 
-	.pushsection .rodata.sse2,"a",@progbits
-	ALIGN (2)
-L(table_less_32bytes):
-	.int	JMPTBL (L(write_0bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_1bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_2bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_3bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_4bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_5bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_6bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_7bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_8bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_9bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_10bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_11bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_12bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_13bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_14bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_15bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_16bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_17bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_18bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_19bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_20bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_21bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_22bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_23bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_24bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_25bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_26bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_27bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_28bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_29bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_30bytes), L(table_less_32bytes))
-	.int	JMPTBL (L(write_31bytes), L(table_less_32bytes))
-	.popsection
-
-	ALIGN (4)
-L(write_28bytes):
-	movl	%eax, -28(%edx)
-L(write_24bytes):
-	movl	%eax, -24(%edx)
-L(write_20bytes):
-	movl	%eax, -20(%edx)
-L(write_16bytes):
-	movl	%eax, -16(%edx)
-L(write_12bytes):
-	movl	%eax, -12(%edx)
-L(write_8bytes):
-	movl	%eax, -8(%edx)
-L(write_4bytes):
-	movl	%eax, -4(%edx)
-L(write_0bytes):
+L(1byte):
+	movb	%al, (%edx)
 	SETRTNVAL
 	RETURN
 
 	ALIGN (4)
-L(write_29bytes):
-	movl	%eax, -29(%edx)
-L(write_25bytes):
-	movl	%eax, -25(%edx)
-L(write_21bytes):
-	movl	%eax, -21(%edx)
-L(write_17bytes):
-	movl	%eax, -17(%edx)
-L(write_13bytes):
-	movl	%eax, -13(%edx)
-L(write_9bytes):
-	movl	%eax, -9(%edx)
-L(write_5bytes):
-	movl	%eax, -5(%edx)
-L(write_1bytes):
-	movb	%al, -1(%edx)
-	SETRTNVAL
-	RETURN
-
-	ALIGN (4)
-L(write_30bytes):
-	movl	%eax, -30(%edx)
-L(write_26bytes):
-	movl	%eax, -26(%edx)
-L(write_22bytes):
-	movl	%eax, -22(%edx)
-L(write_18bytes):
-	movl	%eax, -18(%edx)
-L(write_14bytes):
-	movl	%eax, -14(%edx)
-L(write_10bytes):
-	movl	%eax, -10(%edx)
-L(write_6bytes):
-	movl	%eax, -6(%edx)
-L(write_2bytes):
-	movw	%ax, -2(%edx)
-	SETRTNVAL
-	RETURN
-
-	ALIGN (4)
-L(write_31bytes):
-	movl	%eax, -31(%edx)
-L(write_27bytes):
-	movl	%eax, -27(%edx)
-L(write_23bytes):
-	movl	%eax, -23(%edx)
-L(write_19bytes):
-	movl	%eax, -19(%edx)
-L(write_15bytes):
-	movl	%eax, -15(%edx)
-L(write_11bytes):
-	movl	%eax, -11(%edx)
-L(write_7bytes):
-	movl	%eax, -7(%edx)
-L(write_3bytes):
-	movw	%ax, -3(%edx)
-	movb	%al, -1(%edx)
-	SETRTNVAL
-	RETURN
-
-	ALIGN (4)
-/* ECX > 32 and EDX is 4 byte aligned.  */
-L(32bytesormore):
-	/* Fill xmm0 with the pattern.  */
+L(16bytesormore):
 #ifdef USE_AS_BZERO
 	pxor	%xmm0, %xmm0
 #else
 	movd	%eax, %xmm0
 	pshufd	$0, %xmm0, %xmm0
 #endif
+
+	cmp	$64, %ecx
+	ja	L(64bytesmore)
+	movdqu	%xmm0, (%edx)
+	movdqu	%xmm0, -16(%edx, %ecx)
+	cmp	$32, %ecx
+	jbe	L(32bytesless)
+	movdqu	%xmm0, 16(%edx)
+	movdqu	%xmm0, -32(%edx, %ecx)
+L(32bytesless):
+	SETRTNVAL
+	RETURN
+
+L(64bytesmore):
 	testl	$0xf, %edx
 	jz	L(aligned_16)
-/* ECX > 32 and EDX is not 16 byte aligned.  */
 L(not_aligned_16):
 	movdqu	%xmm0, (%edx)
 	movl	%edx, %eax
@@ -322,69 +243,71 @@ L(128bytesormore):
 # if (defined SHARED || defined __PIC__)
 	call	__x86.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
-	mov	__x86_shared_cache_size@GOTOFF(%ebx), %ebx
+	mov	$__x86_shared_cache_size@GOTOFF(%ebx), %ebx
 # else
 	PUSH (%ebx)
-	mov	__x86_shared_cache_size, %ebx
+	mov	$__x86_shared_cache_size, %ebx
 # endif
 #endif
 	cmp	%ebx, %ecx
 	jae	L(128bytesormore_nt_start)
 
+	POP (%ebx)
 
 #ifdef DATA_CACHE_SIZE
-	POP (%ebx)
-# define RESTORE_EBX_STATE CFI_PUSH (%ebx)
-	cmp	$DATA_CACHE_SIZE, %ecx
+	PUSH (%ebx)
+	mov	$DATA_CACHE_SIZE, %ebx
 #else
 # if (defined SHARED || defined __PIC__)
-#  define RESTORE_EBX_STATE
 	call	__x86.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
-	cmp	__x86_data_cache_size@GOTOFF(%ebx), %ecx
+	mov	$__x86_data_cache_size@GOTOFF(%ebx), %ebx
 # else
-	POP (%ebx)
-#  define RESTORE_EBX_STATE CFI_PUSH (%ebx)
-	cmp	__x86_data_cache_size, %ecx
+	PUSH (%ebx)
+	mov	$__x86_data_cache_size, %ebx
 # endif
 #endif
 
+	cmp	%ebx, %ecx
 	jae	L(128bytes_L2_normal)
 	subl	$128, %ecx
 L(128bytesormore_normal):
 	sub	$128, %ecx
 	movdqa	%xmm0, (%edx)
-	movdqa	%xmm0, 0x10(%edx)
-	movdqa	%xmm0, 0x20(%edx)
-	movdqa	%xmm0, 0x30(%edx)
-	movdqa	%xmm0, 0x40(%edx)
-	movdqa	%xmm0, 0x50(%edx)
-	movdqa	%xmm0, 0x60(%edx)
-	movdqa	%xmm0, 0x70(%edx)
+	movaps	%xmm0, 0x10(%edx)
+	movaps	%xmm0, 0x20(%edx)
+	movaps	%xmm0, 0x30(%edx)
+	movaps	%xmm0, 0x40(%edx)
+	movaps	%xmm0, 0x50(%edx)
+	movaps	%xmm0, 0x60(%edx)
+	movaps	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
 	jb	L(128bytesless_normal)
 
 
 	sub	$128, %ecx
 	movdqa	%xmm0, (%edx)
-	movdqa	%xmm0, 0x10(%edx)
-	movdqa	%xmm0, 0x20(%edx)
-	movdqa	%xmm0, 0x30(%edx)
-	movdqa	%xmm0, 0x40(%edx)
-	movdqa	%xmm0, 0x50(%edx)
-	movdqa	%xmm0, 0x60(%edx)
-	movdqa	%xmm0, 0x70(%edx)
+	movaps	%xmm0, 0x10(%edx)
+	movaps	%xmm0, 0x20(%edx)
+	movaps	%xmm0, 0x30(%edx)
+	movaps	%xmm0, 0x40(%edx)
+	movaps	%xmm0, 0x50(%edx)
+	movaps	%xmm0, 0x60(%edx)
+	movaps	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
 	jae	L(128bytesormore_normal)
 
 L(128bytesless_normal):
-	add	$128, %ecx
+	lea	128(%ecx), %ecx
+#if defined DATA_CACHE_SIZE || !(defined SHARED || defined __PIC__)
+	POP (%ebx)
+#endif
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
 	ALIGN (4)
 L(128bytes_L2_normal):
-	prefetcht0	0x380(%edx)
-	prefetcht0	0x3c0(%edx)
+	prefetchnta	0x380(%edx)
+	prefetchnta	0x3c0(%edx)
 	sub	$128, %ecx
 	movdqa	%xmm0, (%edx)
 	movaps	%xmm0, 0x10(%edx)
@@ -399,28 +322,26 @@ L(128bytes_L2_normal):
 	jae	L(128bytes_L2_normal)
 
 L(128bytesless_L2_normal):
+#if defined DATA_CACHE_SIZE || !(defined SHARED || defined __PIC__)
+	POP (%ebx)
+#endif
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
-	RESTORE_EBX_STATE
 L(128bytesormore_nt_start):
 	sub	%ebx, %ecx
-	mov	%ebx, %eax
-	and	$0x7f, %eax
-	add	%eax, %ecx
-	movd	%xmm0, %eax
 	ALIGN (4)
 L(128bytesormore_shared_cache_loop):
-	prefetcht0	0x3c0(%edx)
-	prefetcht0	0x380(%edx)
+	prefetchnta	0x3c0(%edx)
+	prefetchnta	0x380(%edx)
 	sub	$0x80, %ebx
 	movdqa	%xmm0, (%edx)
-	movdqa	%xmm0, 0x10(%edx)
-	movdqa	%xmm0, 0x20(%edx)
-	movdqa	%xmm0, 0x30(%edx)
-	movdqa	%xmm0, 0x40(%edx)
-	movdqa	%xmm0, 0x50(%edx)
-	movdqa	%xmm0, 0x60(%edx)
-	movdqa	%xmm0, 0x70(%edx)
+	movaps	%xmm0, 0x10(%edx)
+	movaps	%xmm0, 0x20(%edx)
+	movaps	%xmm0, 0x30(%edx)
+	movaps	%xmm0, 0x40(%edx)
+	movaps	%xmm0, 0x50(%edx)
+	movaps	%xmm0, 0x60(%edx)
+	movaps	%xmm0, 0x70(%edx)
 	add	$0x80, %edx
 	cmp	$0x80, %ebx
 	jae	L(128bytesormore_shared_cache_loop)
@@ -442,7 +363,7 @@ L(128bytesormore_nt):
 	jae	L(128bytesormore_nt)
 	sfence
 L(shared_cache_loop_end):
-#if defined DATA_CACHE_SIZE || !(defined SHARED || defined __PIC__)
+#if defined SHARED_CACHE_SIZE || !(defined SHARED || defined __PIC__)
 	POP (%ebx)
 #endif
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))

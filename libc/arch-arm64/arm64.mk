@@ -21,6 +21,8 @@ libc_common_src_files_arm64 := \
     upstream-openbsd/lib/libc/string/strlcpy.c \
     upstream-openbsd/lib/libc/string/strncat.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/stpncpy.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files_arm64 += \
