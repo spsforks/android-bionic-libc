@@ -31,6 +31,8 @@ libc_common_src_files_arm += \
     upstream-openbsd/lib/libc/string/strncat.c \
     upstream-openbsd/lib/libc/string/strncmp.c \
     upstream-openbsd/lib/libc/string/strncpy.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/stpncpy.c \
 
 # The C++ fortify function implementations for which there is an
 # arm assembler version.
