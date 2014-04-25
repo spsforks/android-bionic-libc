@@ -2115,11 +2115,13 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
     fprintf(stderr, "%s: %s not set!\n", __FUNCTION__, path_prefix_variable);
     return -1;
   }
-  char path[PATH_MAX];
-  snprintf(path, sizeof(path), "%s/%s", path_prefix, path_suffix);
+  size_t path_length = strlen(path_prefix) + 1 + strlen(path_suffix) + 1;
+  char* path = malloc(path_length);
+  snprintf(path, path_length, "%s/%s", path_prefix, path_suffix);
   int fd = TEMP_FAILURE_RETRY(open(path, OPEN_MODE));
   if (fd == -1) {
     XLOG(("%s: could not open \"%s\": %s\n", __FUNCTION__, path, strerror(errno)));
+    free(path);
     return -2; // Distinguish failure to find any data from failure to find a specific id.
   }
 
@@ -2138,6 +2140,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (bytes_read != sizeof(header)) {
     fprintf(stderr, "%s: could not read header of \"%s\": %s\n",
             __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
+    free(path);
     close(fd);
     return -1;
   }
@@ -2145,6 +2148,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
     fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n",
             __FUNCTION__, path, header.tzdata_version);
+    free(path);
     close(fd);
     return -1;
   }
@@ -2159,6 +2163,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
     fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n",
             __FUNCTION__, path, strerror(errno));
+    free(path);
     close(fd);
     return -1;
   }
@@ -2169,6 +2174,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (TEMP_FAILURE_RETRY(read(fd, index, index_size)) != index_size) {
     fprintf(stderr, "%s: could not read index of \"%s\": %s\n",
             __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
+    free(path);
     free(index);
     close(fd);
     return -1;
@@ -2201,6 +2207,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
 
   if (specific_zone_offset == -1) {
     XLOG(("%s: couldn't find zone \"%s\"\n", __FUNCTION__, olson_id));
+    free(path);
     close(fd);
     return -1;
   }
@@ -2208,12 +2215,14 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
     fprintf(stderr, "%s: could not seek to %ld in \"%s\": %s\n",
             __FUNCTION__, specific_zone_offset, path, strerror(errno));
+    free(path);
     close(fd);
     return -1;
   }
 
   // TODO: check that there's TZ_MAGIC at this offset, so we can fall back to the other file if not.
 
+  free(path);
   return fd;
 }
 
