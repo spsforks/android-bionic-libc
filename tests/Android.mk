@@ -48,13 +48,20 @@ test_cppflags = \
     -std=gnu++11 \
 
 libBionicStandardTests_src_files := \
+    alloca_test.cpp \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
+    byteswap_test.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
+    endian_test.cpp \
+    errno_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
     fenv_test.cpp \
+    fnmatch_test.cpp \
+    fsutils_test.cpp \
+    fts_test.cpp \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
@@ -80,10 +87,13 @@ libBionicStandardTests_src_files := \
     math_test.cpp \
     mntent_test.cpp \
     netdb_test.cpp \
+    poll_test.cpp \
     pthread_test.cpp \
+    pwd_test.cpp \
     regex_test.cpp \
     sched_test.cpp \
     signal_test.cpp \
+    sstream_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
     stdatomic_test.cpp \
@@ -93,9 +103,13 @@ libBionicStandardTests_src_files := \
     string_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
-    sstream_test.cpp \
     sys_epoll_test.cpp \
+    sys_ioctl_test.cpp \
+    sys_klog_test.cpp \
     sys_mman_test.cpp \
+    sys_prctl_test.cpp \
+    sys_ptrace_test.cpp \
+    sys_queue_test.cpp \
     sys_resource_test.cpp \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
@@ -103,8 +117,11 @@ libBionicStandardTests_src_files := \
     sys_stat_test.cpp \
     sys_statvfs_test.cpp \
     sys_syscall_test.cpp \
+    sys_sysinfo_test.cpp \
     sys_time_test.cpp \
     sys_types_test.cpp \
+    sys_uio_test.cpp \
+    sys_utsname_test.cpp \
     sys_vfs_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
