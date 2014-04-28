@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "TemporaryFile.h"
 
 #include <sys/vfs.h>
 
@@ -51,6 +52,35 @@ TEST(sys_vfs, fstatfs) {
   ASSERT_EQ(0, fstatfs(fd, &sb));
   close(fd);
   Check(sb);
+}
+TEST(sys_vfs, fstatfs_2)
+{
+  TemporaryFile tf;
+  struct statfs stfs;
+  int fd;
+
+  { SCOPED_TRACE("file prepare");
+
+    FILE *tmpfile = fopen(tf.filename, "w");
+    fprintf(tmpfile, "%s\n", "Quantum physics is not applicable for cats. That's terrible.");
+    fclose(tmpfile);
+    fd = open(tf.filename, O_RDWR);
+  }
+  { SCOPED_TRACE("fstatfs()");
+
+    ASSERT_FALSE( fstatfs(fd, &stfs) < 0 );
+    EXPECT_LT(0, stfs.f_type);
+    EXPECT_LT(0, stfs.f_bsize);
+    EXPECT_LT(0, stfs.f_blocks);
+    EXPECT_LT(0, stfs.f_bfree);
+    EXPECT_LT(0, stfs.f_bavail);
+    EXPECT_LT(0, stfs.f_files);
+    EXPECT_LT(0, stfs.f_ffree);
+    EXPECT_LT(0, stfs.f_namelen);
+    // Check(stfs) is wrong here
+  }
+
+  close(fd);
 }
 TEST(sys_vfs, fstatfs64) {
   struct statfs64 sb;
