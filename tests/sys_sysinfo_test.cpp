@@ -42,4 +42,27 @@ TEST(sys_sysinfo, sysinfo) {
   struct sysinfo si;
   memset(&si, 0, sizeof(si));
   ASSERT_EQ(0, sysinfo(&si));
+
+  EXPECT_LT(0, si.uptime);
+  EXPECT_LE(0, si.loads[0]);
+  EXPECT_LE(0, si.loads[1]);
+  EXPECT_LE(0, si.loads[2]);
+
+  EXPECT_LT(0, si.totalram);
+  EXPECT_LE(0, si.freeram);
+  EXPECT_LE(si.freeram, si.totalram);
+  EXPECT_LE(0, si.sharedram);
+  EXPECT_LE(0, si.bufferram);
+
+  EXPECT_LE(0, si.totalhigh);
+  EXPECT_LE(0, si.freehigh);
+  EXPECT_LE(si.freehigh, si.totalhigh);
+
+  EXPECT_LE(0, si.totalswap);
+  EXPECT_LE(0, si.freeswap);
+  EXPECT_LE(si.freeswap, si.totalswap);
+
+  EXPECT_LT(0, si.mem_unit);
+
+  EXPECT_LT(0, si.procs);
 }

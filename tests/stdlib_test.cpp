@@ -138,9 +138,80 @@ TEST(stdlib, mrand48) {
   EXPECT_EQ(795539493, mrand48());
 }
 
+TEST(stdlib, jrand48_2) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  unsigned short xsubi[3];
+  int bits[32];
+
+  for (int bit = 0; bit < 32; ++bit)
+    bits[bit] = 0;
+
+  { SCOPED_TRACE("jrand48()");
+
+    for (int iter = 0; iter < iterates; ++iter)
+    {
+      long rand_val = jrand48(xsubi);
+      for (int bit = 0; bit < 32; ++bit)
+       bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+    }
+  }
+  { SCOPED_TRACE("jrand48() distribution");
+    // Check that bit probability is uniform
+    for (int bit = 0; bit < 32; ++bit)
+      EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
+TEST(stdlib, mrand48_2) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  int bits[32];
+
+  for (int bit = 0; bit < 32; ++bit)
+    bits[bit] = 0;
+
+  { SCOPED_TRACE("mrand48()");
+
+    for (int iter = 0; iter < iterates; ++iter)
+    {
+      long rand_val = mrand48();
+      for (int bit = 0; bit < 32; ++bit)
+       bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+    }
+  }
+  { SCOPED_TRACE("mrand48() distribution");
+    // Check that bit probability is uniform
+    for (int bit = 0; bit < 32; ++bit)
+      EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
+TEST(stdlib, srand48_2) {
+  { SCOPED_TRACE("srand48() same");
+
+    srand48(3463564);
+    long rand_a = mrand48();
+    srand48(3463564);
+    long rand_b = mrand48();
+    ASSERT_EQ(rand_a, rand_b);
+  }
+  { SCOPED_TRACE("srand48() not same");
+
+    srand48(3463564);
+    long rand_a = mrand48();
+    srand48(3468743);
+    long rand_b = mrand48();
+    ASSERT_NE(rand_a, rand_b);
+  }
+}
+
 TEST(stdlib, posix_memalign_sweep) {
   void* ptr;
-
   // These should all fail.
   for (size_t align = 0; align < sizeof(long); align++) {
     ASSERT_EQ(EINVAL, posix_memalign(&ptr, align, 256))
@@ -319,6 +390,19 @@ TEST(stdlib, system) {
   status = system("exit 1");
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(1, WEXITSTATUS(status));
+
+  { SCOPED_TRACE("system()");
+
+    const std::string cmd = "/system/bin/ls > /dev/null";
+    status = system(cmd.c_str());
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
+  { SCOPED_TRACE("system() fail");
+
+    const std::string cmd = "/system/bin/betterthanls >/dev/null 2>/dev/null";
+    status = system(cmd.c_str());
+    ASSERT_NE(0, WEXITSTATUS(status));
+  }
 }
 
 TEST(stdlib, atof) {

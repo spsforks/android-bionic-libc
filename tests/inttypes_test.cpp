@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,6 @@
   SCANF_TYPED(FAST##SIZE, _fast##SIZE##_t); \
   SCANF_TYPED(LEAST##SIZE, _least##SIZE##_t) \
 
-
 TEST(inttypes, printf_macros) {
   PRINTF_SIZED(8);
   PRINTF_SIZED(16);
@@ -109,6 +108,18 @@ TEST(inttypes, wcstoumax) {
   EXPECT_EQ(L'x', *end);
 }
 
+TEST(inttypes, strtoimax_dec) {
+  char* p;
+  EXPECT_EQ(-18737357, strtoimax("-18737357foobar12", &p, 10));
+  EXPECT_STREQ("foobar12", p);
+}
+
+TEST(inttypes, strtoimax_hex) {
+  char* p;
+  EXPECT_EQ(-0x18737357f, strtoimax("-18737357foobar12", &p, 16));
+  EXPECT_STREQ("oobar12", p);
+}
+
 TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
   strtoimax("123", NULL, -1);
@@ -119,6 +130,24 @@ TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
   strtoimax("123", NULL, 37);
   ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(inttypes, strtoumax_dec) {
+  char* p;
+  EXPECT_EQ(18737357, strtoumax("18737357foobar12", &p, 10));
+  EXPECT_STREQ("foobar12", p);
+}
+
+TEST(inttypes, strtoumax_hex) {
+  char* p;
+  EXPECT_EQ(0x18737357f, strtoumax("18737357foobar12", &p, 16));
+  EXPECT_STREQ("oobar12", p);
+}
+
+TEST(inttypes, strtoumax_negative) {
+  char* p;
+  EXPECT_EQ(UINTMAX_MAX - 18737357 + 1, strtoumax("-18737357foobar12", &p, 16));
+  EXPECT_STREQ("foobar12", p);
 }
 
 TEST(inttypes, strtoumax_EINVAL) {
@@ -182,6 +211,36 @@ TEST(inttypes, imaxdiv) {
 }
 
 TEST(inttypes, imaxabs) {
+  ASSERT_EQ(672423489, imaxabs(672423489));
+  ASSERT_EQ(672423489, imaxabs(-672423489));
   ASSERT_EQ(INTMAX_MAX, imaxabs(-INTMAX_MAX));
   ASSERT_EQ(INTMAX_MAX, imaxabs(INTMAX_MAX));
+}
+
+// TODO: add missing cases to all four *div functions' tests above....
+TEST(inttypes, imaxdiv) {
+  { SCOPED_TRACE("imaxdiv() pos-by-pos");
+    imaxdiv_t res = imaxdiv(10001, 2);
+    EXPECT_EQ(5000, res.quot);
+    EXPECT_EQ(1, res.rem);
+  }
+  { SCOPED_TRACE("imaxdiv() pos-by-neg");
+    imaxdiv_t res = imaxdiv(10001, -2);
+    EXPECT_LT(0, res.rem);
+  }
+  { SCOPED_TRACE("imaxdiv() maxpos-by-pos");
+    imaxdiv_t res = imaxdiv(INTMAX_MAX, 3);
+#if INTMAX_MAX == 9223372036854775807LL
+    EXPECT_EQ(3074457345618258602LL, res.quot);
+    EXPECT_EQ(1, res.rem);
+#elif INTMAX_MAX == 2147483647L
+    EXPECT_EQ(715827882L, res.quot);
+    EXPECT_EQ(1, res.rem);
+#endif
+  }
+  { SCOPED_TRACE("imaxdiv() neg-by-pos");
+    imaxdiv_t res = imaxdiv(-2011034, 17);
+    EXPECT_EQ(-118296, res.quot);
+    EXPECT_EQ(-2, res.rem);  // Negative remainder expected
+  }
 }

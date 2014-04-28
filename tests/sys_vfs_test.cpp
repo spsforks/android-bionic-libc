@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "TemporaryFile.h"
 
 #include <sys/vfs.h>
 
@@ -25,11 +26,13 @@
 #include <string>
 
 template <typename StatFsT> void Check(StatFsT& sb) {
+  EXPECT_NE(0, sb.f_type);
   EXPECT_EQ(4096, static_cast<int>(sb.f_bsize));
   EXPECT_EQ(0U, sb.f_bfree);
   EXPECT_EQ(0U, sb.f_ffree);
   EXPECT_EQ(0, sb.f_fsid.__val[0]);
   EXPECT_EQ(0, sb.f_fsid.__val[1]);
+  EXPECT_GT(sb.f_namelen, 255);
   EXPECT_EQ(255, static_cast<int>(sb.f_namelen));
 
   // The kernel sets a private bit to indicate that f_flags is valid.
