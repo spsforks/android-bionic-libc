@@ -57,6 +57,18 @@
 #define ELFW(what) ELF32_ ## what
 #endif
 
+#if defined(__i386__)
+#define JUMP_SLOT(type) (type == R_386_JMP_SLOT)
+#elif defined (__x86_64__)
+#define JUMP_SLOT(type) (type == R_X86_64_JUMP_SLOT)
+#elif defined (__arm__)
+#define JUMP_SLOT(type) (type == R_ARM_JUMP_SLOT)
+#elif defined (__aarch64__)
+#define JUMP_SLOT(type) (type == R_AARCH64_JUMP_SLOT)
+#else
+#define JUMP_SLOT(type) (false)
+#endif
+
 // mips64 interprets Elf64_Rel structures' r_info field differently.
 // bionic (like other C libraries) has macros that assume regular ELF files,
 // but the dynamic linker needs to be able to load mips64 ELF files.
