@@ -50,3 +50,138 @@ TEST(sched, clone) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 }
 #endif
+
+TEST(sched, cpu_set) {
+  cpu_set_t set;
+
+  CPU_ZERO(&set);
+  CPU_SET(0, &set);
+  CPU_SET(17, &set);
+  ASSERT_EQ(2, CPU_COUNT(&set));
+  ASSERT_TRUE(CPU_ISSET(0, &set));
+  ASSERT_TRUE(CPU_ISSET(17, &set));
+  ASSERT_FALSE(CPU_ISSET(31, &set));
+
+  // We should fail silently if we try to set/test outside the range.
+  CPU_SET(CPU_SETSIZE, &set);
+  ASSERT_FALSE(CPU_ISSET(CPU_SETSIZE, &set));
+}
+
+TEST(sched, cpu_count) {
+  cpu_set_t set;
+
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, CPU_COUNT(&set));
+  CPU_SET(2, &set);
+  CPU_SET(10, &set);
+  ASSERT_EQ(2, CPU_COUNT(&set));
+}
+
+TEST(sched, cpu_zero) {
+  cpu_set_t set;
+
+  CPU_ZERO(&set);
+  CPU_SET(0, &set);
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, CPU_COUNT(&set));
+  ASSERT_FALSE(CPU_ISSET(0, &set));
+}
+
+TEST(sched, cpu_clear) {
+  cpu_set_t set;
+
+  CPU_ZERO(&set);
+  CPU_SET(0, &set);
+  CPU_SET(1, &set);
+  ASSERT_TRUE(CPU_ISSET(0, &set));
+  ASSERT_TRUE(CPU_ISSET(1, &set));
+  CPU_CLR(1, &set);
+  ASSERT_TRUE(CPU_ISSET(0, &set));
+  ASSERT_FALSE(CPU_ISSET(1, &set));
+
+  // We should fail silently if we try to clear/test outside the range.
+  CPU_CLR(CPU_SETSIZE, &set);
+  ASSERT_FALSE(CPU_ISSET(CPU_SETSIZE, &set));
+}
+
+TEST(sched, cpu_equal) {
+  cpu_set_t set1;
+  cpu_set_t set2;
+
+  CPU_ZERO(&set1);
+  CPU_ZERO(&set2);
+  CPU_SET(1, &set1);
+  ASSERT_FALSE(CPU_EQUAL(&set1,&set2));
+  CPU_SET(1, &set2);
+  ASSERT_TRUE(CPU_EQUAL(&set1,&set2));
+}
+
+TEST(sched, cpu_and) {
+  cpu_set_t set1;
+  cpu_set_t set2;
+  cpu_set_t set3;
+
+  CPU_ZERO(&set1);
+  CPU_ZERO(&set2);
+  CPU_ZERO(&set3);
+  CPU_SET(0, &set1);
+  CPU_SET(1, &set2);
+  CPU_AND(&set3, &set1, &set2);
+  ASSERT_FALSE(CPU_ISSET(0, &set3));
+  ASSERT_FALSE(CPU_ISSET(1, &set3));
+}
+
+TEST(sched, cpu_or) {
+  cpu_set_t set1;
+  cpu_set_t set2;
+  cpu_set_t set3;
+
+  CPU_ZERO(&set1);
+  CPU_ZERO(&set2);
+  CPU_ZERO(&set3);
+  CPU_SET(0, &set1);
+  CPU_SET(1, &set2);
+  CPU_OR(&set3, &set1, &set2);
+  ASSERT_TRUE(CPU_ISSET(0, &set3));
+  ASSERT_TRUE(CPU_ISSET(1, &set3));
+}
+
+TEST(sched, cpu_xor) {
+  cpu_set_t set1;
+  cpu_set_t set2;
+  cpu_set_t set3;
+
+  CPU_ZERO(&set1);
+  CPU_ZERO(&set2);
+  CPU_ZERO(&set3);
+  CPU_SET(0, &set1);
+  CPU_SET(0, &set2);
+  CPU_SET(1, &set2);
+  CPU_XOR(&set3, &set1, &set2);
+  ASSERT_FALSE(CPU_ISSET(0, &set3));
+  ASSERT_TRUE(CPU_ISSET(1, &set3));
+}
+
+TEST(sched, cpu_alloc_small) {
+  cpu_set_t* set = CPU_ALLOC(17);
+  size_t size = CPU_ALLOC_SIZE(17);
+
+  CPU_ZERO_S(size, set);
+  ASSERT_EQ(0, CPU_COUNT_S(size, set));
+  CPU_SET_S(16, size, set);
+  ASSERT_TRUE(CPU_ISSET_S(16, size, set));
+
+  CPU_FREE(set);
+}
+
+TEST(sched, cpu_alloc_big) {
+  cpu_set_t* set = CPU_ALLOC(10 * CPU_SETSIZE);
+  size_t size = CPU_ALLOC_SIZE(10 * CPU_SETSIZE);
+
+  CPU_ZERO_S(size, set);
+  ASSERT_EQ(0, CPU_COUNT_S(size, set));
+  CPU_SET_S(CPU_SETSIZE, size, set);
+  ASSERT_TRUE(CPU_ISSET_S(CPU_SETSIZE, size, set));
+
+  CPU_FREE(set);
+}
