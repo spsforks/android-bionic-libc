@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <stdint.h>
 #include <wchar.h>
 
 TEST(wchar, sizeof_wchar_t) {
@@ -211,4 +212,95 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(1U, mbrtowc(NULL, "hello", 1, NULL));
 
   ASSERT_EQ(0U, mbrtowc(NULL, NULL, 0, NULL));
+}
+
+TEST(wchar, wcstod) {
+  ASSERT_DOUBLE_EQ(1.23, wcstod(L"1.23", NULL));
+}
+
+TEST(wchar, wcstof) {
+  ASSERT_FLOAT_EQ(1.23f, wcstof(L"1.23", NULL));
+}
+
+TEST(wchar, wcstol) {
+  ASSERT_EQ(123L, wcstol(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstoll) {
+  ASSERT_EQ(123LL, wcstol(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstold) {
+  ASSERT_DOUBLE_EQ(1.23L, wcstold(L"1.23", NULL));
+}
+
+TEST(wchar, wcstoul) {
+  ASSERT_EQ(123UL, wcstoul(L"123", NULL, 0));
+}
+
+TEST(wchar, wcstoull) {
+  ASSERT_EQ(123ULL, wcstoul(L"123", NULL, 0));
+}
+
+TEST(wchar, mbsnrtowcs) {
+  wchar_t dst[128];
+  const char* s = "hello, world!";
+  const char* src;
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(0U, mbsnrtowcs(dst, &src, 0, 0, NULL));
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(2U, mbsnrtowcs(dst, &src, 2, 123, NULL)); // glibc chokes on SIZE_MAX here.
+  ASSERT_EQ(L'h', dst[0]);
+  ASSERT_EQ(L'e', dst[1]);
+  ASSERT_EQ(&s[2], src);
+
+  memset(dst, 0, sizeof(dst));
+  src = s;
+  ASSERT_EQ(3U, mbsnrtowcs(dst, &src, SIZE_MAX, 3, NULL));
+  ASSERT_EQ(L'h', dst[0]);
+  ASSERT_EQ(L'e', dst[1]);
+  ASSERT_EQ(L'l', dst[2]);
+  ASSERT_EQ(&s[3], src);
+
+  /*
+
+  size_t mbsnrtowcs(wchar_t *dest, const char **src, size_t nms, size_t len, mbstate_t *ps);
+
+  The mbsnrtowcs() function is like the mbsrtowcs(3) function, except
+  that the number of bytes to be converted, starting at *src, is
+  limited to nms.
+
+  If dest is not NULL, the mbsnrtowcs() function converts at most nms
+  bytes from the multibyte string *src to a wide-character string
+  starting at dest.  At most len wide characters are written to dest.
+  The shift state *ps is updated.  The conversion is effectively
+  performed by repeatedly calling mbrtowc(dest, *src, n, ps) where n is
+  some positive number, as long as this call succeeds, and then
+  incrementing dest by one and *src by the number of bytes consumed.
+  The conversion can stop for three reasons:
+
+  1. An invalid multibyte sequence has been encountered.  In this case,
+  *src is left pointing to the invalid multibyte sequence,
+  (size_t) -1 is returned, and errno is set to EILSEQ.
+
+  2. The nms limit forces a stop, or len non-L'\0' wide characters have
+  been stored at dest.  In this case, *src is left pointing to the
+  next multibyte sequence to be converted, and the number of wide
+  characters written to dest is returned.
+
+  3. The multibyte string has been completely converted, including the
+  terminating null wide character ('\0') (which has the side effect
+  of bringing back *ps to the initial state).  In this case, *src is
+  set to NULL, and the number of wide characters written to dest,
+  excluding the terminating null wide character, is returned.
+
+  If dest is NULL, len is ignored, and the conversion proceeds as
+  above, except that the converted wide characters are not written out
+  to memory, and that no destination length limit exists.
+
+   */
 }
