@@ -33,17 +33,14 @@
 #include <sys/cdefs.h>
 
 struct atexit {
-	struct atexit *next;		/* next in list */
-	int ind;			/* next index in this table */
-	int max;			/* max entries >= ATEXIT_SIZE */
-	struct atexit_fn {
-		union {
-			void (*std_func)(void);
-			void (*cxa_func)(void *);
-		} fn_ptr;
-		void *fn_arg;		/* argument for CXA callback */
-		void *fn_dso;		/* shared module handle */
-	} fns[1];			/* the table itself */
+  struct atexit *next;		/* next in list */
+  int ind;			/* next index in this table */
+  int max;			/* max entries >= ATEXIT_SIZE */
+  struct atexit_fn {
+    void (*cxa_func)(void *);
+    void *fn_arg;		/* argument for CXA callback */
+    void *fn_dso;		/* shared module handle */
+  } fns[1];			/* the table itself */
 };
 
 __BEGIN_DECLS
