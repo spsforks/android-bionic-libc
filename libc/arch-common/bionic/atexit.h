@@ -31,6 +31,13 @@ extern void* __dso_handle;
 extern int __cxa_atexit(void (*)(void*), void*, void*);
 
 __attribute__ ((visibility ("hidden")))
+void __atexit_handler_wrapper(void* func) {
+  if (func != 0) {
+    (*(void (*)(void))func)();
+  }
+}
+
+__attribute__ ((visibility ("hidden")))
 int atexit(void (*func)(void)) {
-  return (__cxa_atexit((void (*)(void*)) func, (void*) 0, &__dso_handle));
+  return (__cxa_atexit(&__atexit_handler_wrapper, func, &__dso_handle));
 }
