@@ -94,7 +94,7 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 			__atexit_invalid = 0;
 	}
 	fnp = &p->fns[p->ind++];
-	fnp->fn_ptr.cxa_func = func;
+	fnp->cxa_func = func;
 	fnp->fn_arg = arg;
 	fnp->fn_dso = dso;
 	if (mprotect(p, pgsize, PROT_READ))
@@ -113,57 +113,57 @@ unlock:
 void
 __cxa_finalize(void *dso)
 {
-	struct atexit *p, *q;
+	struct atexit *p, *q, *original_atexit;
 	struct atexit_fn fn;
-	int n, pgsize = getpagesize();
+	int n, pgsize = getpagesize(), original_ind;
 	static int call_depth;
 
 	if (__atexit_invalid)
 		return;
-
 	_ATEXIT_LOCK();
 	call_depth++;
 
-	for (p = __atexit; p != NULL; p = p->next) {
-		for (n = p->ind; --n >= 0;) {
-			if (p->fns[n].fn_ptr.cxa_func == NULL)
-				continue;	/* already called */
-			if (dso != NULL && dso != p->fns[n].fn_dso)
-				continue;	/* wrong DSO */
-
+	p = original_atexit = __atexit;
+	n = original_ind = p != NULL ? p->ind : 0;
+	while(p != NULL) {
+		if (p->fns[n].cxa_func != NULL /* not called */
+				&& (dso == NULL || dso == p->fns[n].fn_dso)) { /* correct DSO */
 			/*
 			 * Mark handler as having been already called to avoid
 			 * dupes and loops, then call the appropriate function.
 			 */
 			fn = p->fns[n];
 			if (mprotect(p, pgsize, PROT_READ | PROT_WRITE) == 0) {
-				p->fns[n].fn_ptr.cxa_func = NULL;
+				p->fns[n].cxa_func = NULL;
 				mprotect(p, pgsize, PROT_READ);
 			}
+
 			_ATEXIT_UNLOCK();
-#if ANDROID
-                        /* it looks like we should always call the function
-                         * with an argument, even if dso is not NULL. Otherwise
-                         * static destructors will not be called properly on
-                         * the ARM.
-                         */
-                        (*fn.fn_ptr.cxa_func)(fn.fn_arg);
-#else /* !ANDROID */
-			if (dso != NULL)
-				(*fn.fn_ptr.cxa_func)(fn.fn_arg);
-			else
-				(*fn.fn_ptr.std_func)();
-#endif /* !ANDROID */
+			(*fn.cxa_func)(fn.fn_arg);
 			_ATEXIT_LOCK();
+			// check for new atexit handlers
+			if ((__atexit->ind != original_ind) || (__atexit != original_atexit)) {
+				p = original_atexit = __atexit;
+				n = original_ind = p->ind;
+				continue;
+			}
+		}
+		if (n == 0) {
+			p = p->next;
+			n = p != NULL ? p->ind : 0;
+		} else {
+			--n;
 		}
 	}
+
+	--call_depth;
 
 	/*
 	 * If called via exit(), unmap the pages since we have now run
 	 * all the handlers.  We defer this until calldepth == 0 so that
 	 * we don't unmap things prematurely if called recursively.
 	 */
-	if (dso == NULL && --call_depth == 0) {
+	if (dso == NULL && call_depth == 0) {
 		for (p = __atexit; p != NULL; ) {
 			q = p;
 			p = p->next;
