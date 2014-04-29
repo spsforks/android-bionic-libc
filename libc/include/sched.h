@@ -59,19 +59,19 @@ extern int unshare(int);
 extern int sched_getcpu(void);
 extern int setns(int, int);
 
-/* Our implementation supports up to 32 independent CPUs, which is also
- * the maximum supported by the kernel at the moment. GLibc uses 1024 by
- * default.
- *
- * If you want to use more than that, you should use CPU_ALLOC() / CPU_FREE()
- * and the CPU_XXX_S() macro variants.
+/*
+ * Custom cpu set sizes can be use in conjuction with
+ * CPU_ALLOC() / CPU_FREE() and the CPU_XXX_S() macro variants.
  */
-#define CPU_SETSIZE   32
+#ifdef __LP32__
+#define CPU_SETSIZE 32
+#else
+#define CPU_SETSIZE 1024
+#endif
 
 #define __CPU_BITTYPE    unsigned long int  /* mandated by the kernel  */
-#define __CPU_BITSHIFT   5                  /* should be log2(BITTYPE) */
-#define __CPU_BITS       (1 << __CPU_BITSHIFT)
-#define __CPU_ELT(x)     ((x) >> __CPU_BITSHIFT)
+#define __CPU_BITS       (8 * sizeof(__CPU_BITTYPE))
+#define __CPU_ELT(x)     ((x) / __CPU_BITS)
 #define __CPU_MASK(x)    ((__CPU_BITTYPE)1 << ((x) & (__CPU_BITS-1)))
 
 typedef struct {
@@ -83,26 +83,27 @@ extern int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set);
 extern int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set);
 
 /* Provide optimized implementation for 32-bit cpu_set_t */
-#if CPU_SETSIZE == __CPU_BITS
+
+#if CPU_SETSIZE == 32
 
 #  define CPU_ZERO(set_)   \
-    do{ \
+    do { \
         (set_)->__bits[0] = 0; \
-    }while(0)
+    } while(0)
 
 #  define CPU_SET(cpu_,set_) \
     do {\
         size_t __cpu = (cpu_); \
         if (__cpu < CPU_SETSIZE) \
             (set_)->__bits[0] |= __CPU_MASK(__cpu); \
-    }while (0)
+    } while (0)
 
 #  define CPU_CLR(cpu_,set_) \
     do {\
         size_t __cpu = (cpu_); \
         if (__cpu < CPU_SETSIZE) \
             (set_)->__bits[0] &= ~__CPU_MASK(__cpu); \
-    }while (0)
+    } while (0)
 
 #  define CPU_ISSET(cpu_, set_) \
     (__extension__({\
@@ -135,9 +136,9 @@ extern int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set);
 
 #endif /* CPU_SETSIZE != __CPU_BITS */
 
-#define CPU_AND(set1_,set2_)   __CPU_OP(set1_,set2_,&)
-#define CPU_OR(set1_,set2_)    __CPU_OP(set1_,set2_,|)
-#define CPU_XOR(set1_,set2_)   __CPU_OP(set1_,set2_,^)
+#define CPU_AND(dst_,set1_,set2_)   __CPU_OP(dst_, set1_,set2_,&)
+#define CPU_OR(dst_,set1_,set2_)    __CPU_OP(dst_, set1_,set2_,|)
+#define CPU_XOR(dst_,set1_,set2_)   __CPU_OP(dst_, set1_,set2_,^)
 
 /* Support for dynamically-allocated cpu_set_t */
 
@@ -194,9 +195,9 @@ extern void       __sched_cpufree(cpu_set_t* set);
 
 #define __CPU_OP_S(setsize_, dstset_, srcset1_, srcset2_, op) \
     do { \
-        cpu_set_t* __dst = (dstset); \
-        const __CPU_BITTYPE* __src1 = (srcset1)->__bits; \
-        const __CPU_BITTYPE* __src2 = (srcset2)->__bits; \
+        cpu_set_t* __dst = (dstset_); \
+        const __CPU_BITTYPE* __src1 = (srcset1_)->__bits; \
+        const __CPU_BITTYPE* __src2 = (srcset2_)->__bits; \
         size_t __nn = 0, __nn_max = (setsize_)/sizeof(__CPU_BITTYPE); \
         for (; __nn < __nn_max; __nn++) \
             (__dst)->__bits[__nn] = __src1[__nn] op __src2[__nn]; \
