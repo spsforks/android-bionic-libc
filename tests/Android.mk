@@ -202,6 +202,18 @@ build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# This library used for atexit tests
+# -----------------------------------------------------------------------------
+
+libtest_atexit_src_files := \
+    atexit_testlib.cpp
+
+module := libtest_atexit
+build_type := target
+build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Tests for the device using bionic's .so. Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 # -----------------------------------------------------------------------------
@@ -209,6 +221,7 @@ bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests_src_files := \
+    atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
 
