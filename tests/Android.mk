@@ -38,6 +38,9 @@ test_cflags = \
     -Werror \
     -fno-builtin \
 
+test_cppflags = \
+    -std=gnu++11 \
+
 libBionicStandardTests_src_files := \
     buffer_tests.cpp \
     ctype_test.cpp \
@@ -88,6 +91,9 @@ libBionicStandardTests_src_files := \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
+
+libBionicStandardTests_cppflags := \
+    $(test_cppflags) \
 
 libBionicStandardTests_ldlibs_host := \
     -lrt \
