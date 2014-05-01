@@ -76,7 +76,9 @@ static void __locale_init() {
 }
 
 static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 || strcmp(locale, "C") == 0 || strcmp(locale, "POSIX") == 0);
+  return (strcmp(locale, "") == 0 ||
+          strcmp(locale, "C") == 0 || strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "POSIX") == 0);
 }
 
 static locale_t __new_locale() {
@@ -124,12 +126,13 @@ char* setlocale(int category, char const* locale_name) {
 
   // Caller just wants to query the current locale?
   if (locale_name == NULL) {
-    return const_cast<char*>("C");
+    return const_cast<char*>("C.UTF-8");
   }
 
   // Caller wants one of the mandatory POSIX locales?
   if (__is_supported_locale(locale_name)) {
-    return const_cast<char*>("C");
+    // TODO: do we need to remember the exact locale, or is any equivalent locale fine?
+    return const_cast<char*>("C.UTF-8");
   }
 
   // We don't support any other locales.
