@@ -221,10 +221,10 @@ TEST(stdio, snprintf_ls) {
 
 TEST(stdio, snprintf_n) {
   char buf[32];
-  int i = 0;
-  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "a %n b", &i));
-  EXPECT_EQ(2, i);
-  EXPECT_STREQ("a  b", buf);
+  int i = 1234;
+  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "a %n b", &i));
+  EXPECT_EQ(1234, i);
+  EXPECT_STREQ("a n b", buf);
 }
 
 TEST(stdio, snprintf_smoke) {
