@@ -257,12 +257,15 @@ bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests_src_files := \
+    ../linker/linker_allocator.cpp \
+    linker_allocator_test.cpp \
     atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
 
 bionic-unit-tests_cppflags := \
-    $(test_cppflags)
+    $(test_cppflags) \
+    -I$(LOCAL_PATH)/../libc/ \
 
 bionic-unit-tests_ldflags := \
     -Wl,--export-dynamic \
