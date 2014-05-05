@@ -56,6 +56,8 @@ libBionicStandardTests_src_files := \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
+    ../linker/linker_allocator.cpp \
+    linker_allocator_test.cpp \
     locale_test.cpp \
     malloc_test.cpp \
     math_test.cpp \

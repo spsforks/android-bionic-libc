@@ -8,6 +8,7 @@ LOCAL_SRC_FILES:= \
     linker.cpp \
     linker_environ.cpp \
     linker_phdr.cpp \
+    linker_allocator.cpp \
     rt.cpp \
 
 LOCAL_SRC_FILES_arm     := arch/arm/begin.S
