@@ -51,13 +51,16 @@ def ExtractCopyrightAt(lines, i):
             break
         if hash and len(lines[i]) == 0:
             break
-        if "\t@(#)" in lines[i] or "\tfrom: @(#)" in lines[i] or "From: @(#)" in lines[i] or "from OpenBSD:" in lines[i]:
+        if "@(#)" in lines[i] or "\tfrom: @(#)" in lines[i] or "From: @(#)" in lines[i] or "from OpenBSD:" in lines[i]:
             break
         if "\tcitrus Id: " in lines[i]:
             break
-        if "\t$OpenBSD: " in lines[i] or " $FreeBSD: " in lines[i] or "\t$NetBSD: " in lines[i]:
+        if "\t$Citrus: " in lines[i] or "\t$OpenBSD: " in lines[i] or " $FreeBSD: " in lines[i] or "\t$NetBSD: " in lines[i]:
             break
         if "$FreeBSD$" in lines[i] or "$Citrus$" in lines[i]:
+            break
+        # OpenBSD likes to say where stuff originally came from:
+        if "^(Citrus|FreeBSD|NetBSD): " in lines[i] or "Original version ID:" in lines[i]:
             break
         i += 1
 
