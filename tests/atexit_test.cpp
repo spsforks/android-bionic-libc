@@ -21,10 +21,17 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include <string>
 
-TEST(atexit, combined_test) {
+#ifdef __LP64__
+#define LP_SUFFIX "64"
+#else
+#define LP_SUFFIX "32"
+#endif
+
+TEST(atexit, dlclose) {
   std::string atexit_call_sequence;
   bool valid_this_in_static_dtor = false;
   void* handle = dlopen("libtest_atexit.so", RTLD_NOW);
@@ -40,5 +47,21 @@ TEST(atexit, combined_test) {
   ASSERT_TRUE(valid_this_in_static_dtor);
 }
 
-// TODO: test for static dtor calls from from exit(.) -> __cxa_finalize(NULL)
+static void execvp_proxy(char* binary_path) {
+  char* argv[] = { binary_path, NULL };
+  execvp(binary_path, argv);
+  exit(-2);
+}
+
+TEST(atexit, exit) {
+  const char* binary_file = "nativetest/test_atexit/test_atexit" LP_SUFFIX;
+
+  char binary_path[PATH_MAX];
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != NULL);
+
+  snprintf(binary_path, sizeof(binary_path), "%s/%s", android_data, binary_file);
+
+  ASSERT_EXIT(execvp_proxy(binary_path), testing::ExitedWithCode(0), "123456");
+}
 
