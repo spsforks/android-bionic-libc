@@ -225,7 +225,7 @@ build_target := SHARED_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# This library used by atexit tests
+# Library used by atexit tests
 # -----------------------------------------------------------------------------
 
 libtest_atexit_src_files := \
@@ -234,6 +234,20 @@ libtest_atexit_src_files := \
 module := libtest_atexit
 build_type := target
 build_target := SHARED_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Binary used by atexit tests
+# -----------------------------------------------------------------------------
+test_atexit_src_files := \
+    atexit_testbin.cpp
+
+
+test_atexit_cppflags := $(test_cppflags)
+module := test_atexit
+test_atexit_multilib := both
+build_type := target
+build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -247,6 +261,9 @@ bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
+
+bionic-unit-tests_cppflags := \
+    $(test_cppflags)
 
 bionic-unit-tests_ldflags := \
     -Wl,--export-dynamic \
@@ -299,6 +316,9 @@ bionic-unit-tests-glibc_whole_static_libraries := \
 
 bionic-unit-tests-glibc_ldlibs := \
     -lrt -ldl \
+
+bionic-unit-tests-glibc_cppflags := \
+    $(test_cppflags)
 
 module := bionic-unit-tests-glibc
 module_tag := optional

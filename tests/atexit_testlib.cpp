@@ -24,14 +24,14 @@ static bool* atexit_valid_this_in_static_dtor = NULL;
 
 class AtExitStaticClass;
 
-static const AtExitStaticClass* valid_this = NULL;
+static const AtExitStaticClass* expected_this = NULL;
 
 static class AtExitStaticClass {
 public:
-  AtExitStaticClass() { valid_this = this; }
+  AtExitStaticClass() { expected_this = this; }
   ~AtExitStaticClass() {
     if (atexit_valid_this_in_static_dtor) {
-      *atexit_valid_this_in_static_dtor = (valid_this == this);
+      *atexit_valid_this_in_static_dtor = (expected_this == this);
     }
   }
 } staticObj;
