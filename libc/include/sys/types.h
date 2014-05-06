@@ -63,7 +63,12 @@ typedef __mode_t mode_t;
 typedef __kernel_key_t __key_t;
 typedef __key_t key_t;
 
+#ifdef __LP64__
+typedef uint64_t __ino_t;
+#else
 typedef uint32_t __ino_t;
+#endif
+
 typedef __ino_t ino_t;
 
 typedef uint32_t __nlink_t;
@@ -72,7 +77,12 @@ typedef __nlink_t nlink_t;
 typedef void* __timer_t;
 typedef __timer_t timer_t;
 
+#ifdef __LP64__
+typedef int64_t __suseconds_t;
+#else
 typedef int32_t __suseconds_t;
+#endif
+
 typedef __suseconds_t suseconds_t;
 
 typedef uint32_t __useconds_t;
