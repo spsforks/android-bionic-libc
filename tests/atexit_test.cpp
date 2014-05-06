@@ -21,10 +21,17 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include <string>
 
-TEST(atexit, combined_test) {
+#ifdef __LP64__
+#define LP_SUFFIX "64"
+#else
+#define LP_SUFFIX "32"
+#endif
+
+TEST(atexit, dlclose) {
   std::string atexit_call_sequence;
   bool valid_this_in_static_dtor = false;
   void* handle = dlopen("libtest_atexit.so", RTLD_NOW);
@@ -40,5 +47,50 @@ TEST(atexit, combined_test) {
   ASSERT_TRUE(valid_this_in_static_dtor);
 }
 
-// TODO: test for static dtor calls from from exit(.) -> __cxa_finalize(NULL)
+TEST(atexit, exit) {
+  const char* binary_file = "nativetest/test_atexit/test_atexit" LP_SUFFIX;
+
+  char binary_path[PATH_MAX];
+  const char* android_data = getenv("ANDROID_DATA");
+  ASSERT_TRUE(android_data != NULL);
+
+  snprintf(binary_path, sizeof(binary_path), "%s/%s", android_data, binary_file);
+  char* argv[] = { binary_path, NULL };
+
+  int pipefd[2];
+
+  ASSERT_TRUE(pipe(pipefd) == 0);
+
+  pid_t cpid = fork();
+
+  ASSERT_TRUE(cpid != -1);
+
+  if (cpid == 0) { // child
+    dup2(pipefd[1], 1); // replace stdout
+    // close pipe
+    close(pipefd[0]);
+    close(pipefd[1]);
+
+    ASSERT_TRUE(execvp(binary_path, argv) != -1);
+  } else { // parent
+    close(pipefd[1]);
+    int in = pipefd[0];
+    // read stdout
+    char buf[1024];
+    ssize_t size = 0, len;
+    while ((len=read(in, buf+size, sizeof(buf) - size)) != 0) {
+      if (len == -1 && errno == EAGAIN) {
+          continue;
+      }
+      ASSERT_TRUE(len != -1);
+      size += len;
+    }
+
+    ASSERT_TRUE(static_cast<size_t>(size) < sizeof(buf));
+    int status;
+    wait(&status);
+    ASSERT_EQ(0, status);
+    ASSERT_STREQ("12345", buf);
+  }
+}
 
