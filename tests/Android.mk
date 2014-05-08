@@ -38,6 +38,8 @@ test_cflags = \
     -Werror \
     -fno-builtin \
 
+test_cflags += -Wno-sign-compare
+
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
 test_cppflags = \
