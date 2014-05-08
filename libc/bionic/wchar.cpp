@@ -32,23 +32,50 @@
 #include <wchar.h>
 
 //
-// This file is basically OpenBSD's citrus_utf8.c but rewritten to not require a 12-byte mbstate_t
-// so we're backwards-compatible with our LP32 ABI where mbstate_t was only 4 bytes. An additional
-// advantage of this is that callers who don't supply their own mbstate_t won't be accessing shared
-// state.
+// This file is basically OpenBSD's citrus_utf8.c but rewritten to not require a
+// 12-byte mbstate_t so we're backwards-compatible with our LP32 ABI where
+// mbstate_t was only 4 bytes.
 //
-// We also implement the POSIX interface directly rather than being accessed via function pointers.
+// The state is the UTF-8 sequence. We only support <= 4-bytes sequences so LP32
+// mbstate_t already offer enough space (out of the 4 available bytes we only
+// need 3 since we should never get to store the entire sequence in the
+// intermediary state).
 //
+// The C standard leaves the conversion state undefined after a bad conversion.
+// To avoid unexpected failures due to the possible use of the internal private
+// state we always reset the conversion state when encountering illegal
+// sequences.
+//
+// We also implement the POSIX interface directly rather than being accessed via
+// function pointers.
+//
+
+// This is the private state used if PS is NULL.
+static mbstate_t __state;
 
 #define ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
 #define ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
 
-int mbsinit(const mbstate_t*) {
-  // We have no state, so we're always in the initial state.
-  return 1;
+int mbsinit(const mbstate_t* ps) {
+  return (ps == NULL || ps->__seq == 0);
 }
 
-size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
+static size_t reset_and_return_illegal(int _errno, mbstate_t* ps) {
+  errno = _errno;
+  ps->__seq = 0;
+  return ERR_ILLEGAL_SEQUENCE;
+}
+
+size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
+  mbstate_t* state = (ps == NULL) ? &__state : ps;
+
+  // We should never get to a sate which has all 4 bytes of the sequence set.
+  // Full state verification is done when decoding the sequence (after we have
+  // all the bytes).
+  if ((state->__seq >> 24) != 0) {
+    return reset_and_return_illegal(EINVAL, ps);
+  }
+
   if (s == NULL) {
     s = "";
     n = 1;
@@ -82,7 +109,15 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
   // between character codes and their multibyte representations.
   wchar_t lower_bound;
 
-  ch = static_cast<uint8_t>(*s);
+  size_t state_length =
+    ((state->__seq >> 16) != 0) ? 3 :
+    ((state->__seq >> 8) != 0) ? 2 :
+    (state->__seq != 0) ? 1 : 0;
+
+  // The first byte in the state (if any) tells the length
+  ch = (state_length == 0)
+    ? static_cast<uint8_t>(*s)
+    : state->__seq >> (8 * (state_length - 1));
   if ((ch & 0x80) == 0) {
     mask = 0x7f;
     length = 1;
@@ -101,40 +136,45 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*) {
     lower_bound = 0x10000;
   } else {
     // Malformed input; input is not UTF-8. See RFC 3629.
-    errno = EILSEQ;
-    return ERR_ILLEGAL_SEQUENCE;
+    return reset_and_return_illegal(EILSEQ, state);
   }
 
-  // Decode the octet sequence representing the character in chunks
-  // of 6 bits, most significant first.
-  wchar_t wch = static_cast<uint8_t>(*s++) & mask;
+  // Fill in the state.
   size_t i;
-  for (i = 1; i < MIN(length, n); i++) {
-    if ((*s & 0xc0) != 0x80) {
+  for (i = 0; i < MIN(length - state_length, n); i++) {
+    if ((state->__seq != 0) && ((*s & 0xc0) != 0x80)) {
       // Malformed input; bad characters in the middle of a character.
       errno = EILSEQ;
       return ERR_ILLEGAL_SEQUENCE;
     }
-    wch <<= 6;
-    wch |= *s++ & 0x3f;
+    state->__seq <<= 8;
+    state->__seq |= static_cast<uint8_t>(*s++);
   }
-  if (i < length) {
+  if (length - state_length > n) {
     return ERR_INCOMPLETE_SEQUENCE;
   }
+
+  // Decode the octet sequence representing the character in chunks
+  // of 6 bits, most significant first.
+  wchar_t wch = static_cast<uint8_t>(state->__seq >> 8 * (length - 1)) & mask;
+  for (i = 1; i < length; i++) {
+    wch <<= 6;
+    wch |= (state->__seq >> 8 * (length - i - 1)) & 0x3f;
+  }
+
   if (wch < lower_bound) {
     // Malformed input; redundant encoding.
-    errno = EILSEQ;
-    return ERR_ILLEGAL_SEQUENCE;
+    return reset_and_return_illegal(EILSEQ, state);
   }
   if ((wch >= 0xd800 && wch <= 0xdfff) || wch == 0xfffe || wch == 0xffff) {
     // Malformed input; invalid code points.
-    errno = EILSEQ;
-    return ERR_ILLEGAL_SEQUENCE;
+    return reset_and_return_illegal(EILSEQ, state);
   }
   if (pwc != NULL) {
     *pwc = wch;
   }
-  return (wch == L'\0' ? 0 : length);
+  state->__seq = 0;
+  return (wch == L'\0' ? 0 : (length - state_length));
 }
 
 size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstate_t* ps) {
@@ -198,6 +238,8 @@ size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
 }
 
 size_t wcrtomb(char* s, wchar_t wc, mbstate_t*) {
+  // We don't use the sate.
+
   if (s == NULL) {
     // Reset to initial shift state (no-op).
     return 1;
