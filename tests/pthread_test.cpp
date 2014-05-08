@@ -706,3 +706,67 @@ TEST(pthread, pthread_mutex_timedlock) {
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
 }
+
+void* spinner(void*) {
+  volatile size_t i = 0;
+  while (true) {
+    i++;
+  }
+  return NULL;
+}
+
+size_t count_keys() {
+  // We can allocate _SC_THREAD_KEYS_MAX keys.
+  std::vector<pthread_key_t> keys;
+  for (size_t i = 0; i < PTHREAD_KEYS_MAX; ++i) {
+    pthread_key_t key;
+    if (pthread_key_create(&key, NULL) != 0) {
+      break;
+    } else {
+      keys.push_back(key);
+    }
+  }
+
+  // (Don't leak all those keys!)
+  for (size_t i = 0; i < keys.size(); ++i) {
+    if (pthread_key_delete(keys[i]) != 0) {
+      printf("Failed to delete key %d\n", i);
+    }
+  }
+  return keys.size();
+}
+
+#if 0
+TEST(pthread, pthread_test) {
+#if defined(__BIONIC__) // glibc uses keys internally that its sysconf value doesn't account for.
+  // POSIX says PTHREAD_KEYS_MAX should be at least 128.
+  ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+
+  int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
+
+  // sysconf shouldn't return a smaller value.
+  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
+
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+  pthread_t thread[10];
+  ASSERT_EQ(0, pthread_create(&thread[0], NULL, spinner, NULL));
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+  ASSERT_EQ(0, pthread_create(&thread[1], NULL, spinner, NULL));
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+  ASSERT_EQ(0, pthread_create(&thread[1], NULL, spinner, NULL));
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+  ASSERT_EQ(0, pthread_create(&thread[1], NULL, spinner, NULL));
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+  ASSERT_EQ(0, pthread_create(&thread[1], NULL, spinner, NULL));
+  sleep(1);
+  printf("Num of keys %zu\n", count_keys());
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
+#endif

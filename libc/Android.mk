@@ -497,6 +497,12 @@ ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
+ifeq ($(MALLOC_IMPL),jemalloc)
+  libc_common_cflags += -DUSE_JEMALLOC
+else
+  libc_common_cflags += -DUSE_DLMALLOC
+endif
+
 # To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
 # the appropriate BoardConfig.mk file.
 #
@@ -524,6 +530,10 @@ libc_common_cppflags := \
 libc_common_c_includes := \
     $(LOCAL_PATH)/stdlib  \
     $(LOCAL_PATH)/stdio   \
+
+ifeq ($(MALLOC_IMPL),jemalloc)
+  libc_common_c_includes += external/jemalloc/include
+endif
 
 # ========================================================
 # Add in the arch-specific flags.
@@ -811,6 +821,11 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_syscalls \
     libc_tzcode \
 
+ifeq ($(MALLOC_IMPL),jemalloc)
+LOCAL_WHOLE_STATIC_LIBRARIES += \
+    libjemalloc
+endif
+
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # TODO: split out the asflags.
@@ -865,9 +880,16 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
     $(libc_static_common_src_files) \
-    bionic/dlmalloc.c \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_static.cpp \
+
+ifeq ($(MALLOC_IMPL),jemalloc)
+LOCAL_SRC_FILES += \
+    bionic/jemalloc.cpp
+else
+LOCAL_SRC_FILES += \
+    bionic/dlmalloc.c
+endif
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -DLIBC_STATIC \
@@ -895,16 +917,22 @@ LOCAL_CFLAGS := $(libc_common_cflags) -Werror
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-
 LOCAL_SRC_FILES := \
     $(libc_arch_dynamic_src_files) \
     $(libc_static_common_src_files) \
-    bionic/dlmalloc.c \
     bionic/malloc_debug_common.cpp \
     bionic/debug_mapinfo.cpp \
     bionic/debug_stacktrace.cpp \
     bionic/libc_init_dynamic.cpp \
     bionic/NetdClient.cpp \
+
+ifeq ($(MALLOC_IMPL),jemalloc)
+LOCAL_SRC_FILES += \
+    bionic/jemalloc.cpp
+else
+LOCAL_SRC_FILES += \
+    bionic/dlmalloc.c
+endif
 
 LOCAL_MODULE := libc
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -968,6 +996,14 @@ LOCAL_SRC_FILES := \
     bionic/debug_stacktrace.cpp \
     bionic/malloc_debug_leak.cpp \
     bionic/malloc_debug_check.cpp \
+
+ifeq ($(MALLOC_IMPL),jemalloc)
+LOCAL_SRC_FILES += \
+    bionic/jemalloc.cpp
+else
+LOCAL_SRC_FILES += \
+    bionic/dlmalloc.c
+endif
 
 LOCAL_MODULE := libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
