@@ -48,6 +48,15 @@ TEST(pthread, pthread_key_create_lots) {
 
   // We can allocate _SC_THREAD_KEYS_MAX keys.
   sysconf_max -= 2; // (Except that gtest takes two for itself.)
+#ifdef USE_JEMALLOC
+  // jemalloc is going to use some of these keys. When no other threads
+  // are running, then five are used. When running as part of the test suite
+  // it's possible some detached threads haven't completed by the time we
+  // get here. As a quick hack, wait one second for all other threads to
+  // finish.
+  sysconf_max -= 5;
+  sleep(1);
+#endif
   std::vector<pthread_key_t> keys;
   for (int i = 0; i < sysconf_max; ++i) {
     pthread_key_t key;
