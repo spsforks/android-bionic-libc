@@ -267,6 +267,34 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(EILSEQ, errno);
 }
 
+void test_mbrtowc_incomplete(mbstate_t* ps) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  wchar_t out;
+  // 2-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "cdef", 5, ps));
+  ASSERT_EQ(0x00a2, out);
+  // 3-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xe2", 1, ps));
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\x82", 1, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xac" "def", 4, ps));
+  ASSERT_EQ(0x20ac, out);
+  // 4-byte UTF-8.
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xf0", 1, ps));
+  ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xa4\xad", 2, ps));
+  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "ef", 3, ps));
+  ASSERT_EQ(0x24b62, out);
+}
+
+TEST(wchar, mbrtowc_incomplete) {
+  mbstate_t ps;
+  memset(&ps, 0, sizeof(ps));
+  test_mbrtowc_incomplete(&ps);
+  test_mbrtowc_incomplete(NULL);
+}
+
 TEST(wchar, wcstod) {
   ASSERT_DOUBLE_EQ(1.23, wcstod(L"1.23", NULL));
 }
