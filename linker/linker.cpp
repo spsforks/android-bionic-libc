@@ -72,12 +72,21 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 // maps, each a single page in size. The pages are broken up into as many struct soinfo
 // objects as will fit, and they're all threaded together on a free list.
 #define SOINFO_PER_POOL ((PAGE_SIZE - sizeof(soinfo_pool_t*)) / sizeof(soinfo))
+#define SOINFO_LINKS_PER_POOL ((PAGE_SIZE - sizeof(soinfo_links_pool_t*)) / sizeof(soinfo_links))
 struct soinfo_pool_t {
   soinfo_pool_t* next;
   soinfo info[SOINFO_PER_POOL];
 };
+
+struct soinfo_links_pool_t {
+  soinfo_links_pool_t* next;
+  soinfo_links links[SOINFO_LINKS_PER_POOL];
+};
+
 static struct soinfo_pool_t* gSoInfoPools = NULL;
+static struct soinfo_links_pool_t* gSoInfoLinksPools = NULL;
 static soinfo* gSoInfoFreeList = NULL;
+static soinfo_links* gSoInfoLinksFreeList = NULL;
 
 static soinfo* solist = &libdl_info;
 static soinfo* sonext = &libdl_info;
@@ -270,6 +279,96 @@ void notify_gdb_of_libraries() {
   rtld_db_dlactivity();
 }
 
+template<typename F>
+static void remove_if(soinfo_links* list, F&& predicate) {
+  if (list == NULL) {
+    return;
+  }
+
+  for (soinfo_links* p = list; p != NULL; p = p->next) {
+    for (size_t n = 0; n < p->links_size; ++n) {
+      if (p->links[n] != NULL && predicate(static_cast<const soinfo*>(p->links[n]))) {
+        p->links[n] = NULL;
+      }
+    }
+  }
+}
+
+template<typename F>
+static void for_each(soinfo_links* list, F&& action) {
+  if (list == NULL) {
+    return;
+  }
+
+  for (soinfo_links* p = list; p != NULL; p = p->next) {
+    for (size_t n = 0; n < p->links_size; ++n) {
+      if (p->links[n] != NULL) {
+        action(p->links[n]);
+      }
+    }
+  }
+}
+
+static void soinfo_links_extend_pool() {
+  soinfo_links_pool_t* pool = reinterpret_cast<soinfo_links_pool_t*>(
+      mmap(NULL, sizeof(*pool), PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+
+  if (pool == MAP_FAILED) {
+    return;
+  }
+
+  for (size_t n = 0; n < SOINFO_LINKS_PER_POOL - 1; ++n) {
+    pool->links[n].next = &pool->links[n+1];
+  }
+
+  pool->links[SOINFO_LINKS_PER_POOL-1].next = gSoInfoLinksFreeList;
+  gSoInfoLinksFreeList = pool->links;
+}
+
+static soinfo_links* soinfo_links_alloc() {
+  if (gSoInfoLinksFreeList == NULL) {
+    soinfo_links_extend_pool();
+  }
+
+  if (gSoInfoLinksFreeList == NULL) { // oom
+    return NULL;
+  }
+
+  soinfo_links* item = gSoInfoLinksFreeList;
+  gSoInfoLinksFreeList = gSoInfoLinksFreeList->next;
+  memset(item, 0, sizeof(*item));
+  return item;
+}
+
+static soinfo_links* soinfo_links_add_element(soinfo_links* list, soinfo* element) {
+  if (list == NULL || list->links_size == SOINFO_MAX_LINKS) {
+    list = soinfo_links_alloc();
+  }
+
+  if (list == NULL) {
+    return NULL;
+  }
+
+  list->links[list->links_size++] = element;
+
+  return list;
+}
+
+static bool soinfo_add_child(soinfo* parent, soinfo* child) {
+  soinfo_links* links_item;
+  if ((links_item = soinfo_links_add_element(parent->children, child)) == NULL) {
+    return false;
+  }
+  parent->children = links_item;
+
+  if ((links_item = soinfo_links_add_element(child->parents, parent)) == NULL) {
+    return false;
+  }
+
+  child->parents = links_item;
+  return true;
+}
+
 static bool ensure_free_list_non_empty() {
   if (gSoInfoFreeList != NULL) {
     return true;
@@ -304,17 +403,23 @@ static void set_soinfo_pool_protection(int protection) {
       abort(); // Can't happen.
     }
   }
+
+  for (soinfo_links_pool_t* p = gSoInfoLinksPools; p != NULL; p = p->next) {
+    if (mprotect(p, sizeof(*p), protection) == -1) {
+      abort(); // Can't happen.
+    }
+  }
 }
 
-static soinfo* soinfo_alloc(const char* name) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return NULL;
   }
 
   if (!ensure_free_list_non_empty()) {
-    DL_ERR("out of memory when loading \"%s\"", name);
-    return NULL;
+    PRINT("out of memory while loading \"%s\"", name);
+    abort();
   }
 
   // Take the head element off the free list.
@@ -324,11 +429,32 @@ static soinfo* soinfo_alloc(const char* name) {
   // Initialize the new element.
   memset(si, 0, sizeof(soinfo));
   strlcpy(si->name, name, sizeof(si->name));
+  si->flags = FLAG_NEW_SOINFO;
+
+  if (file_stat != NULL) {
+    si->st_dev = file_stat->st_dev;
+    si->st_ino = file_stat->st_ino;
+  }
+
   sonext->next = si;
   sonext = si;
 
   TRACE("name %s: allocated soinfo @ %p", name, si);
   return si;
+}
+
+static void soinfo_links_free(soinfo_links* list) {
+  if (list == NULL) {
+    return;
+  }
+
+  soinfo_links* last = list;
+  while(last->next != NULL) {
+    last = last->next;
+  }
+
+  last->next = gSoInfoLinksFreeList;
+  gSoInfoLinksFreeList = list;
 }
 
 static void soinfo_free(soinfo* si) {
@@ -350,6 +476,25 @@ static void soinfo_free(soinfo* si) {
         DL_ERR("name \"%s\" is not in solist!", si->name);
         return;
     }
+
+    // clear links to/from si
+    for_each(si->parents, [&] (soinfo* parent) {
+      remove_if(parent->children, [&] (const soinfo* child) {
+        return child == si;
+      });
+    });
+
+    for_each(si->children, [&] (soinfo* child) {
+      remove_if(child->parents, [&] (const soinfo* parent) {
+        return parent == si;
+      });
+    });
+
+    soinfo_links_free(si->children);
+    soinfo_links_free(si->parents);
+
+    si->children = NULL;
+    si->parents = NULL;
 
     /* prev will never be NULL, because the first entry in solist is
        always the static libdl_info.
@@ -701,25 +846,52 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
         return NULL;
     }
 
-    // Read the ELF header and load the segments.
     ElfReader elf_reader(name, fd);
+
+    struct stat file_stat;
+    if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
+      DL_ERR("unable to stat file for the library %s", name);
+      return NULL;
+    }
+
+    // checking for symlink and other situations where
+    // file can have different names.
+    for(soinfo* si = solist; si != NULL; si = si->next) {
+      if ((si->flags & FLAG_NEW_SOINFO) != 0 && si->st_dev != 0 &&
+          si->st_dev != 0 && si->st_dev == file_stat.st_dev &&
+          si->st_ino == file_stat.st_ino) {
+        TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
+        return si;
+      }
+    }
+
+    // Read the ELF header and load the segments.
     if (!elf_reader.Load(extinfo)) {
         return NULL;
     }
 
     const char* bname = strrchr(name, '/');
-    soinfo* si = soinfo_alloc(bname ? bname + 1 : name);
+    soinfo* si = soinfo_alloc(bname ? bname + 1 : name, &file_stat);
     if (si == NULL) {
         return NULL;
     }
     si->base = elf_reader.load_start();
     si->size = elf_reader.load_size();
     si->load_bias = elf_reader.load_bias();
-    si->flags = 0;
-    si->entry = 0;
-    si->dynamic = NULL;
     si->phnum = elf_reader.phdr_count();
     si->phdr = elf_reader.loaded_phdr();
+
+    // At this point we know that whatever is loaded @ base is a valid ELF
+    // shared library whose segments are properly mapped in.
+    TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
+          reinterpret_cast<void*>(si->base), si->size, si->name);
+
+    if (!soinfo_link_image(si, extinfo)) {
+      munmap(reinterpret_cast<void*>(si->base), si->size);
+      soinfo_free(si);
+      return NULL;
+    }
+
     return si;
 }
 
@@ -753,23 +925,7 @@ static soinfo* find_library_internal(const char* name, const android_dlextinfo* 
   }
 
   TRACE("[ '%s' has not been loaded yet.  Locating...]", name);
-  si = load_library(name, extinfo);
-  if (si == NULL) {
-    return NULL;
-  }
-
-  // At this point we know that whatever is loaded @ base is a valid ELF
-  // shared library whose segments are properly mapped in.
-  TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
-        reinterpret_cast<void*>(si->base), si->size, si->name);
-
-  if (!soinfo_link_image(si, extinfo)) {
-    munmap(reinterpret_cast<void*>(si->base), si->size);
-    soinfo_free(si);
-    return NULL;
-  }
-
-  return si;
+  return load_library(name, extinfo);
 }
 
 static soinfo* find_library(const char* name, const android_dlextinfo* extinfo) {
@@ -795,8 +951,8 @@ static int soinfo_unload(soinfo* si) {
 
     munmap(reinterpret_cast<void*>(si->base), si->size);
     notify_gdb_of_unload(si);
-    soinfo_free(si);
     si->ref_count = 0;
+    soinfo_free(si);
   } else {
     si->ref_count--;
     TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
@@ -827,6 +983,10 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
   soinfo* si = find_library(name, extinfo);
   if (si != NULL) {
     si->CallConstructors();
+    if (!soinfo_add_child(somain, si)) {
+      PRINT("out of memory");
+      abort();
+    }
   }
   set_soinfo_pool_protection(PROT_READ);
   return si;
@@ -1481,15 +1641,9 @@ void soinfo::CallConstructors() {
           name, preinit_array_count);
   }
 
-  if (dynamic != NULL) {
-    for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-      if (d->d_tag == DT_NEEDED) {
-        const char* library_name = strtab + d->d_un.d_val;
-        TRACE("\"%s\": calling constructors in DT_NEEDED \"%s\"", name, library_name);
-        find_loaded_library(library_name)->CallConstructors();
-      }
-    }
-  }
+  for_each(children, [] (soinfo* si) {
+    si->CallConstructors();
+  });
 
   TRACE("\"%s\": calling constructors", name);
 
@@ -1831,6 +1985,11 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
                        library_name, si->name, tmp_err_buf);
                 return false;
             }
+            if(!soinfo_add_child(si, lsi)) {
+              DL_ERR("couldn't load libraray \"%s\" needed by \"%s\": out of memory", library_name, si->name);
+              soinfo_unload(lsi);
+              return false;
+            }
             *pneeded++ = lsi;
         }
     }
@@ -1940,13 +2099,12 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]");
+  soinfo* si = soinfo_alloc("[vdso]", NULL);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
   si->base = reinterpret_cast<ElfW(Addr)>(ehdr_vdso);
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-  si->flags = 0;
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   soinfo_link_image(si, NULL);
@@ -2002,7 +2160,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
     INFO("[ android linker & debugger ]");
 
-    soinfo* si = soinfo_alloc(args.argv[0]);
+    soinfo* si = soinfo_alloc(args.argv[0], NULL);
     if (si == NULL) {
         exit(EXIT_FAILURE);
     }
@@ -2033,7 +2191,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 #else
         strlcpy(linker_soinfo.name, "/system/bin/linker", sizeof(linker_soinfo.name));
 #endif
-        linker_soinfo.flags = 0;
+        linker_soinfo.flags = FLAG_NEW_SOINFO;
         linker_soinfo.base = linker_base;
 
         /*
