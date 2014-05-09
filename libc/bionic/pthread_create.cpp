@@ -39,7 +39,6 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
 extern "C" int __set_tls(void*);
 
 // Used by gdb to track thread creation. See libthread_db.
@@ -231,8 +230,10 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // a pointer to the TLS itself. Rather than try to deal with that here, we just let x86 set
   // the TLS manually in __init_tls, like all architectures used to.
   flags &= ~CLONE_SETTLS;
+  int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), &(thread->tid));
+#else
+  int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), thread->tls, &(thread->tid));
 #endif
-  int rc = __bionic_clone(flags, child_stack, &(thread->tid), thread->tls, &(thread->tid), __pthread_start, thread);
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
