@@ -42,8 +42,6 @@ void LinkerBlockAllocator::init(size_t block_size) {
 void* LinkerBlockAllocator::alloc() {
   if (free_block_list_ == nullptr) {
     create_new_page();
-  } else {
-    protect_page(free_block_list_, PROT_READ | PROT_WRITE);
   }
 
   FreeBlockInfo* block_info = reinterpret_cast<FreeBlockInfo*>(free_block_list_);
@@ -57,8 +55,7 @@ void* LinkerBlockAllocator::alloc() {
     free_block_list_ = block_info->next_block;
   }
 
-  block_info->next_block = nullptr;
-  block_info->num_free_blocks = 0;
+  memset(block_info, 0, block_size_);
 
   return block_info;
 }
@@ -80,12 +77,12 @@ void LinkerBlockAllocator::free(void* block) {
     abort();
   }
 
+  memset(block, 0, block_size_);
+
   FreeBlockInfo* block_info = reinterpret_cast<FreeBlockInfo*>(block);
 
-  protect_page(block_info, PROT_READ | PROT_WRITE);
   block_info->next_block = free_block_list_;
   block_info->num_free_blocks = 1;
-  protect_page(block_info, PROT_READ);
 
   free_block_list_ = block_info;
 }
@@ -98,20 +95,13 @@ void LinkerBlockAllocator::protect_all(int prot) {
   }
 }
 
-void LinkerBlockAllocator::protect_page(void* block, int prot) {
-  LinkerAllocatorPage* page = find_page(block);
-  if (page == nullptr || mprotect(page, PAGE_SIZE, prot) == -1) {
-    abort();
-  }
-}
-
-
 void LinkerBlockAllocator::create_new_page() {
   LinkerAllocatorPage* page = reinterpret_cast<LinkerAllocatorPage*>(mmap(nullptr, PAGE_SIZE,
       PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
   if (page == MAP_FAILED) {
     abort(); // oom
   }
+  memset(page, 0, PAGE_SIZE);
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
