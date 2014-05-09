@@ -33,6 +33,7 @@
 #include <link.h>
 #include <unistd.h>
 #include <android/dlext.h>
+#include <sys/stat.h>
 
 #include "private/libc_logging.h"
 
@@ -84,8 +85,10 @@
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
+#define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
 #define SOINFO_NAME_LEN 128
+#define SOINFO_MAX_LINKS 31
 
 typedef void (*linker_function_t)();
 
@@ -93,6 +96,14 @@ typedef void (*linker_function_t)();
 #if defined(__aarch64__) || defined(__x86_64__)
 #define USE_RELA 1
 #endif
+
+struct soinfo;
+
+struct soinfo_links {
+  soinfo_links* next;
+  size_t size;
+  soinfo* links[SOINFO_MAX_LINKS];
+};
 
 struct soinfo {
  public:
@@ -179,6 +190,16 @@ struct soinfo {
   bool has_text_relocations;
 #endif
   bool has_DT_SYMBOLIC;
+  // this part of the structure is only
+  // availabe if FLAG_NEW_SOINFO is set
+  unsigned int version;
+
+  dev_t st_dev;
+  ino_t st_ino;
+
+  // dependency graph
+  soinfo_links* children;
+  soinfo_links* parents;
 
   void CallConstructors();
   void CallDestructors();
