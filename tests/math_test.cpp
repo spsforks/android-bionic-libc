@@ -1297,3 +1297,21 @@ TEST(math, frexpf_public_bug_6697) {
   float fr = frexpf(14.1f, &exp);
   ASSERT_FLOAT_EQ(14.1f, scalbnf(fr, exp));
 }
+
+// Additional test from data files
+#include "data/math_test_exp_intel.inc"
+#include "data/math_test_log_intel.inc"
+#include "data/math_test_pow_intel.inc"
+#include "data/math_test_sin_intel.inc"
+#include "data/math_test_cos_intel.inc"
+#include "data/math_test_tan_intel.inc"
+
+#include "data/math_test_expf_intel.inc"
+#include "data/math_test_logf_intel.inc"
+#include "data/math_test_powf_intel.inc"
+#include "data/math_test_sinf_intel.inc"
+#include "data/math_test_cosf_intel.inc"
+#include "data/math_test_tanf_intel.inc"
+
+#include "data/math_test_sincos_intel.inc"
+#include "data/math_test_sincosf_intel.inc"
