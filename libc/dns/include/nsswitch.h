@@ -42,15 +42,6 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#define	NSS_MODULE_INTERFACE_VERSION	0
-
-#ifndef _PATH_NS_CONF
-#define _PATH_NS_CONF	"/etc/nsswitch.conf"
-#endif
-
-#define	NS_CONTINUE	0
-#define	NS_RETURN	1
-
 /*
  * Layout of:
  *	uint32_t ns_src.flags
@@ -70,40 +61,11 @@
  */
 #define NSSRC_FILES	"files"		/* local files */
 #define	NSSRC_DNS	"dns"		/* DNS; IN for hosts, HS for others */
-#define	NSSRC_NIS	"nis"		/* YP/NIS */
-#define	NSSRC_COMPAT	"compat"	/* passwd,group in YP compat mode */
 
 /*
  * Currently implemented databases.
  */
 #define NSDB_HOSTS		"hosts"
-#define NSDB_GROUP		"group"
-#define NSDB_GROUP_COMPAT	"group_compat"
-#define NSDB_NETGROUP		"netgroup"
-#define NSDB_NETWORKS		"networks"
-#define NSDB_PASSWD		"passwd"
-#define NSDB_PASSWD_COMPAT	"passwd_compat"
-#define NSDB_SHELLS		"shells"
-
-/*
- * Suggested databases to implement.
- */
-#define NSDB_ALIASES		"aliases"
-#define NSDB_AUTH		"auth"
-#define NSDB_AUTOMOUNT		"automount"
-#define NSDB_BOOTPARAMS		"bootparams"
-#define NSDB_ETHERS		"ethers"
-#define NSDB_EXPORTS		"exports"
-#define NSDB_NETMASKS		"netmasks"
-#define NSDB_PHONES		"phones"
-#define NSDB_PRINTCAP		"printcap"
-#define NSDB_PROTOCOLS		"protocols"
-#define NSDB_REMOTE		"remote"
-#define NSDB_RPC		"rpc"
-#define NSDB_SENDMAILVARS	"sendmailvars"
-#define NSDB_SERVICES		"services"
-#define NSDB_TERMCAP		"termcap"
-#define NSDB_TTYS		"ttys"
 
 /*
  * ns_dtab `callback' function signature.
@@ -124,19 +86,8 @@ typedef struct {
  * Macros to help build an ns_dtab[]
  */
 #define NS_FILES_CB(F,C)	{ NSSRC_FILES,	F,	__UNCONST(C) },
-#define NS_COMPAT_CB(F,C)	{ NSSRC_COMPAT,	F,	__UNCONST(C) },
-
-#ifdef HESIOD
-#   define NS_DNS_CB(F,C)	{ NSSRC_DNS,	F,	__UNCONST(C) },
-#else
-#   define NS_DNS_CB(F,C)
-#endif
-
-#ifdef YP
-#   define NS_NIS_CB(F,C)	{ NSSRC_NIS,	F,	__UNCONST(C) },
-#else
-#   define NS_NIS_CB(F,C)
-#endif
+#define NS_DNS_CB(F,C)
+#define NS_NIS_CB(F,C)
 
 /*
  * ns_src - `nsswitch source'
@@ -148,89 +99,11 @@ typedef struct {
 	uint32_t	 flags;
 } ns_src;
 
-
-#if 0
-/*
- * Default sourcelists (if nsswitch.conf is missing, corrupt,
- * or the requested database doesn't have an entry)
- */
-extern const ns_src __nsdefaultsrc[];
-extern const ns_src __nsdefaultcompat[];
-extern const ns_src __nsdefaultcompat_forceall[];
-extern const ns_src __nsdefaultfiles[];
-extern const ns_src __nsdefaultfiles_forceall[];
-extern const ns_src __nsdefaultnis[];
-extern const ns_src __nsdefaultnis_forceall[];
-#endif
-
-/*
- * ns_mtab - `nsswitch method table'
- * An nsswitch module provides a mapping from (database name, method name)
- * tuples to the nss_method and associated callback data.  Effectively,
- * ns_dtab, but used for dynamically loaded modules.
- */
-typedef struct {
-	const char	*database;
-	const char	*name;
-	nss_method	 method;
-	void		*mdata;
-} ns_mtab;
-
-/*
- * nss_module_register_fn - module registration function
- *	called at module load
- * nss_module_unregister_fn - module un-registration function
- *	called at module unload
- */
-typedef	void (*nss_module_unregister_fn)(ns_mtab *, u_int);
-typedef	ns_mtab *(*nss_module_register_fn)(const char *, u_int *,
-					   nss_module_unregister_fn *);
-
-#ifdef _NS_PRIVATE
-
-/*
- * Private data structures for back-end nsswitch implementation.
- */
-
-/*
- * ns_dbt - `nsswitch database thang'
- * For each database in /etc/nsswitch.conf there is a ns_dbt, with its
- * name and a list of ns_src's containing the source information.
- */
-typedef struct {
-	const char	*name;		/* name of database */
-	ns_src		*srclist;	/* list of sources */
-	u_int		 srclistsize;	/* size of srclist */
-} ns_dbt;
-
-/*
- * ns_mod - `nsswitch module'
- */
-typedef struct {
-	const char	*name;		/* module name */
-	void		*handle;	/* handle from dlopen() */
-	ns_mtab		*mtab;		/* method table */
-	u_int		 mtabsize;	/* size of mtab */
-					/* called to unload module */
-	nss_module_unregister_fn unregister;
-} ns_mod;
-
-#endif /* _NS_PRIVATE */
-
-
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 int	nsdispatch(void *, const ns_dtab [], const char *,
 			const char *, const ns_src [], ...);
-
-#ifdef _NS_PRIVATE
-int		 _nsdbtaddsrc(ns_dbt *, const ns_src *);
-void		 _nsdbtdump(const ns_dbt *);
-int		 _nsdbtput(const ns_dbt *);
-void		 _nsyyerror(const char *);
-int		 _nsyylex(void);
-#endif /* _NS_PRIVATE */
 
 __END_DECLS
 
