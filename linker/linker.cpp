@@ -369,9 +369,29 @@ static void parse_LD_LIBRARY_PATH(const char* path) {
 }
 
 static void parse_LD_PRELOAD(const char* path) {
+  // Add the signal chaining library to the start of the preloads.
+  // This will force its sigaction to be resolved ahead of anything
+  // else.
+
+  // But only do this if it exists.
+#if defined(__LP64__)
+  const char* libsigchain = "/system/lib64/libsigchain.so";
+#else
+  const char* libsigchain = "/system/lib/libsigchain.so";
+#endif
+  const char** preload_names = g_ld_preload_names;
+  size_t max_preloads = LDPRELOAD_MAX;
+
+  struct stat st;
+  if (stat(libsigchain, &st) == 0) {
+    preload_names[0] = libsigchain;
+    ++preload_names;
+    --max_preloads;
+  }
+
   // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-  parse_path(path, " :", g_ld_preload_names,
-             g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), LDPRELOAD_MAX);
+  parse_path(path, " :", preload_names,
+             g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), max_preloads);
 }
 
 #if defined(__arm__)
