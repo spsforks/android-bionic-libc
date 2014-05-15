@@ -4,7 +4,7 @@
 #define FUTEX_WAKE 1
 
 // int __futex_wait(volatile void* ftx, int val, const struct timespec* timeout)
-ENTRY(__futex_wait)
+ENTRY_PRIVATE(__futex_wait)
     pushl   %ebx
     pushl   %esi
     mov     12(%esp), %ebx           /* ftx */
@@ -19,7 +19,7 @@ ENTRY(__futex_wait)
 END(__futex_wait)
 
 // int __futex_wake(volatile void* ftx, int count)
-ENTRY(__futex_wake)
+ENTRY_PRIVATE(__futex_wake)
     pushl   %ebx
     mov     8(%esp), %ebx            /* ftx */
     movl    $FUTEX_WAKE, %ecx
