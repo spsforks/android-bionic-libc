@@ -606,6 +606,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DANDROID_CHANGES \
     -DINET6 \
+    -fvisibility=hidden \
     -I$(LOCAL_PATH)/dns/include \
     -I$(LOCAL_PATH)/private \
     -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
