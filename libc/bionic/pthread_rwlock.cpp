@@ -28,7 +28,8 @@
 
 #include "pthread_internal.h"
 #include <errno.h>
-
+#include <sys/atomics.h>
+#include "private/bionic_atomic_inline.h"
 /* Technical note:
  *
  * Possible states of a read/write lock:
@@ -115,7 +116,7 @@ int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *at
         return ret;
     }
 
-    rwlock->numLocks = 0;
+    rwlock->state = 0;
     rwlock->pendingReaders = 0;
     rwlock->pendingWriters = 0;
     rwlock->writerThreadId = 0;
@@ -125,7 +126,7 @@ int pthread_rwlock_init(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *at
 
 int pthread_rwlock_destroy(pthread_rwlock_t *rwlock)
 {
-    if (rwlock->numLocks > 0)
+    if (rwlock->state != 0)
         return EBUSY;
 
     pthread_cond_destroy(&rwlock->cond);
@@ -133,93 +134,71 @@ int pthread_rwlock_destroy(pthread_rwlock_t *rwlock)
     return 0;
 }
 
-/* Returns TRUE iff we can acquire a read lock. */
-static __inline__ int read_precondition(pthread_rwlock_t* rwlock, int tid)
-{
-    /* We can't have the lock if any writer is waiting for it (writer bias).
-     * This tries to avoid starvation when there are multiple readers racing.
-     */
-    if (rwlock->pendingWriters > 0)
-        return 0;
-
-    /* We can have the lock if there is no writer, or if we write-own it */
-    /* The second test avoids a self-dead lock in case of buggy code. */
-    if (rwlock->writerThreadId == 0 || rwlock->writerThreadId == tid)
-        return 1;
-
-    /* Otherwise, we can't have it */
-    return 0;
-}
-
-/* returns TRUE iff we can acquire a write lock. */
-static __inline__ int write_precondition(pthread_rwlock_t* rwlock, int tid)
-{
-    /* We can get the lock if nobody has it */
-    if (rwlock->numLocks == 0)
-        return 1;
-
-    /* Or if we already own it */
-    if (rwlock->writerThreadId == tid)
-        return 1;
-
-    /* Otherwise, not */
-    return 0;
-}
-
-/* This function is used to waken any waiting thread contending
- * for the lock. One of them should be able to grab it after
- * that.
- */
-static void _pthread_rwlock_pulse(pthread_rwlock_t *rwlock)
-{
-    if (rwlock->pendingReaders > 0 || rwlock->pendingWriters > 0)
-        pthread_cond_broadcast(&rwlock->cond);
-}
 
 static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
-  int ret = 0;
-
-  pthread_mutex_lock(&rwlock->lock);
-  int tid = __get_thread()->tid;
-  if (__predict_false(!read_precondition(rwlock, tid))) {
-    rwlock->pendingReaders += 1;
-    do {
-      ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-    } while (ret == 0 && !read_precondition(rwlock, tid));
-    rwlock->pendingReaders -= 1;
-    if (ret != 0) {
-      goto EXIT;
+  bool done = false;
+  do {
+    int32_t cur_state = rwlock->state;
+    if (__predict_true(cur_state >= 0)) {
+      // Add as an extra reader.
+      done = __atomic_cmpxchg(cur_state, cur_state + 1, &rwlock->state) == 0;
+    } else {
+      timespec ts;
+      timespec* tsp;
+      if (abs_timeout != NULL) {
+        if (__timespec_from_absolute(&ts, abs_timeout, CLOCK_REALTIME) < 0) {
+          return ETIMEDOUT;
+        }
+        tsp = &ts;
+      } else {
+        tsp = NULL;
+      }
+      // Owner holds it exclusively, hang up.
+      __atomic_inc(&rwlock->pendingReaders);
+      if (__futex_wait(&rwlock->state, cur_state, abs_timeout) != 0) {
+        if (errno == ETIMEDOUT) {
+          __atomic_dec(&rwlock->pendingReaders);
+          return ETIMEDOUT;
+        }
+      }
+      __atomic_dec(&rwlock->pendingReaders);
     }
-  }
-  ++rwlock->numLocks;
-EXIT:
-  pthread_mutex_unlock(&rwlock->lock);
-  return ret;
+  } while (!done);
+  return 0;
 }
 
 static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
-  int ret = 0;
-
-  pthread_mutex_lock(&rwlock->lock);
   int tid = __get_thread()->tid;
-  if (__predict_false(!write_precondition(rwlock, tid))) {
-    // If we can't read yet, wait until the rwlock is unlocked
-    // and try again. Increment pendingReaders to get the
-    // cond broadcast when that happens.
-    rwlock->pendingWriters += 1;
-    do {
-      ret = pthread_cond_timedwait(&rwlock->cond, &rwlock->lock, abs_timeout);
-    } while (ret == 0 && !write_precondition(rwlock, tid));
-    rwlock->pendingWriters -= 1;
-    if (ret != 0) {
-      goto EXIT;
+  bool done = false;
+  do {
+    int32_t cur_state = rwlock->state;
+    if (__predict_true(cur_state == 0)) {
+      // Change state from 0 to -1.
+      done =  __atomic_cmpxchg(0 /* cur_state*/, -1 /* new state */, &rwlock->state);
+    } else {
+      timespec ts;
+      timespec* tsp;
+      if (abs_timeout != NULL) {
+        if (__timespec_from_absolute(&ts, abs_timeout, CLOCK_REALTIME) < 0) {
+          return ETIMEDOUT;
+        }
+        tsp = &ts;
+      } else {
+        tsp = NULL;
+      }
+      // Failed to acquire, hang up.
+      __atomic_inc(&rwlock->pendingWriters);
+      if (__futex_wait(&rwlock->state, cur_state, NULL) != 0) {
+        if (errno == ETIMEDOUT) {
+          __atomic_dec(&rwlock->pendingWriters);
+          return ETIMEDOUT;
+        }
+      }
+      __atomic_dec(&rwlock->pendingWriters);
     }
-  }
-  ++rwlock->numLocks;
+  } while (!done);
   rwlock->writerThreadId = tid;
-EXIT:
-  pthread_mutex_unlock(&rwlock->lock);
-  return ret;
+  return 0;
 }
 
 int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock) {
@@ -228,16 +207,17 @@ int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock) {
 
 int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock)
 {
-    int ret = 0;
-
-    pthread_mutex_lock(&rwlock->lock);
-    if (__predict_false(!read_precondition(rwlock, __get_thread()->tid)))
-        ret = EBUSY;
-    else
-        ++rwlock->numLocks;
-    pthread_mutex_unlock(&rwlock->lock);
-
-    return ret;
+  int32_t cur_state = rwlock->state;
+  if (cur_state >= 0) {
+    // Add as an extra reader.
+    if(__atomic_cmpxchg(cur_state, cur_state + 1, &rwlock->state) == 0) {
+      return EBUSY;
+    }
+  } else {
+    // Owner holds it exclusively.
+    return EBUSY;
+  }
+  return 0;
 }
 
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
@@ -250,18 +230,15 @@ int pthread_rwlock_wrlock(pthread_rwlock_t* rwlock) {
 
 int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock)
 {
-    int ret = 0;
-
-    pthread_mutex_lock(&rwlock->lock);
-    int tid = __get_thread()->tid;
-    if (__predict_false(!write_precondition(rwlock, tid))) {
-        ret = EBUSY;
-    } else {
-        ++rwlock->numLocks;
-        rwlock->writerThreadId = tid;
+  int tid = __get_thread()->tid;
+  int32_t cur_state = rwlock->state;
+  if (cur_state == 0) {
+    if(__atomic_cmpxchg(0, -1, &rwlock->state) != 0) {
+      return EBUSY;
     }
-    pthread_mutex_unlock(&rwlock->lock);
-    return ret;
+  }
+  rwlock->writerThreadId = tid;
+  return 0;
 }
 
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
@@ -270,35 +247,38 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock)
 {
-    int  ret = 0;
-
-    pthread_mutex_lock(&rwlock->lock);
-
-    /* The lock must be held */
-    if (rwlock->numLocks == 0) {
-        ret = EPERM;
-        goto EXIT;
+  int tid = __get_thread()->tid;
+  bool done = false;
+  do {
+    int32_t cur_state = rwlock->state;
+    if (cur_state == 0) {
+      return EPERM;
     }
-
-    /* If it has only readers, writerThreadId is 0 */
-    if (rwlock->writerThreadId == 0) {
-        if (--rwlock->numLocks == 0)
-            _pthread_rwlock_pulse(rwlock);
-    }
-    /* Otherwise, it has only a single writer, which
-     * must be ourselves.
-     */
-    else {
-        if (rwlock->writerThreadId != __get_thread()->tid) {
-            ret = EPERM;
-            goto EXIT;
+    if (cur_state == -1) {
+      if (rwlock->writerThreadId != tid) {
+        return EPERM;
+      }
+      // Change state from -1 to 0.
+      done =  __atomic_cmpxchg(-1 /* cur_state*/, 0 /* new state */, &rwlock->state);
+      if (__predict_true(done)) {  // cmpxchg may fail due to noise?
+        // We're no longer the owner.
+        rwlock->writerThreadId = 0;
+        // Wake any waiters.
+        if (__predict_false(rwlock->pendingReaders > 0 || rwlock->pendingWriters > 0)) {
+          __futex_wake(&rwlock->state, 0x7fffffff);
         }
-        if (--rwlock->numLocks == 0) {
-            rwlock->writerThreadId = 0;
-            _pthread_rwlock_pulse(rwlock);
+      }
+    } else { // cur_state > 0
+      // Reduce state by 1.
+      done = __atomic_cmpxchg(cur_state, cur_state - 1, &rwlock->state) == 0;
+      if (done && (cur_state - 1) == 0) {  // cmpxchg may fail due to noise?
+        if (rwlock->pendingReaders > 0 || rwlock->pendingWriters > 0) {
+          // Wake any exclusive waiters as there are now no readers.
+          __futex_wake(&rwlock->state, 0x7fffffff);
         }
+      }
     }
-EXIT:
-    pthread_mutex_unlock(&rwlock->lock);
-    return ret;
+  } while (!done);
+
+  return 0;
 }

@@ -96,7 +96,7 @@ typedef long pthread_rwlockattr_t;
 typedef struct {
   pthread_mutex_t lock;
   pthread_cond_t cond;
-  int numLocks;
+  int state;
   int writerThreadId;
   int pendingReaders;
   int pendingWriters;

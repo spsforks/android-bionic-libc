@@ -551,9 +551,34 @@ TEST(pthread, pthread_rwlock_smoke) {
   pthread_rwlock_t l;
   ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
 
+  // Single read lock
   ASSERT_EQ(0, pthread_rwlock_rdlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
+  // Multiple read lock
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  // Write lock
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  // Try writer lock
+  ASSERT_EQ(0, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  // Try reader lock
+  ASSERT_EQ(0, pthread_rwlock_tryrdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_tryrdlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  // Try writer lock after unlock
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
