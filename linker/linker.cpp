@@ -668,7 +668,7 @@ static int open_library(const char* name) {
   return fd;
 }
 
-static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) {
+static soinfo* load_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
     // Open the file.
     int fd = open_library(name);
     if (fd == -1) {
@@ -694,6 +694,10 @@ static soinfo* load_library(const char* name, const android_dlextinfo* extinfo) 
         TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
         return si;
       }
+    }
+
+    if ((dlflags & RTLD_NOLOAD) != 0) {
+      return NULL;
     }
 
     // Read the ELF header and load the segments.
@@ -740,33 +744,37 @@ static soinfo *find_loaded_library(const char* name) {
     return NULL;
 }
 
-static soinfo* find_library_internal(const char* name, const android_dlextinfo* extinfo) {
+static soinfo* find_library_internal(const char* name, int dlflags, const android_dlextinfo* extinfo) {
   if (name == NULL) {
     return somain;
   }
 
   soinfo* si = find_loaded_library(name);
-  if (si != NULL) {
-    if (si->flags & FLAG_LINKED) {
-      return si;
-    }
+
+  // Library might still be loaded, the accurate detection
+  // this fact is done by load_library
+  if (si == NULL) {
+    TRACE("[ '%s' has not been found by name.  Locating...]", name);
+    si = load_library(name, dlflags, extinfo);
+  }
+
+  if (si != NULL && (si->flags & FLAG_LINKED) == 0) {
     DL_ERR("OOPS: recursive link to \"%s\"", si->name);
     return NULL;
   }
 
-  TRACE("[ '%s' has not been loaded yet.  Locating...]", name);
-  return load_library(name, extinfo);
+  return si;
 }
 
-static soinfo* find_library(const char* name, const android_dlextinfo* extinfo) {
-  soinfo* si = find_library_internal(name, extinfo);
+static soinfo* find_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
+  soinfo* si = find_library_internal(name, dlflags, extinfo);
   if (si != NULL) {
     si->ref_count++;
   }
   return si;
 }
 
-static int soinfo_unload(soinfo* si) {
+static void soinfo_unload(soinfo* si) {
   if (si->ref_count == 1) {
     TRACE("unloading '%s'", si->name);
     si->CallDestructors();
@@ -781,7 +789,14 @@ static int soinfo_unload(soinfo* si) {
         if (d->d_tag == DT_NEEDED) {
           const char* library_name = si->strtab + d->d_un.d_val;
           TRACE("%s needs to unload %s", si->name, library_name);
-          soinfo_unload(find_loaded_library(library_name));
+          soinfo* needed = find_library(library_name, RTLD_NOLOAD, NULL);
+          if (needed != NULL) {
+            soinfo_unload(needed);
+          } else {
+            // Not found: for example if symlink was deleted between dlopen and dlclose
+            // Since we cannot really handle errors at this point - print and continue.
+            PRINT("error: couldn't find %s needed by %s on unload.", library_name, si->name);
+          }
         }
       }
     }
@@ -793,7 +808,6 @@ static int soinfo_unload(soinfo* si) {
     si->ref_count--;
     TRACE("not unloading '%s', decrementing ref_count to %zd", si->name, si->ref_count);
   }
-  return 0;
 }
 
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
@@ -806,8 +820,8 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   }
 }
 
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
-  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL)) != 0) {
+soinfo* do_dlopen(const char* name, int flags, soinfo* caller, const android_dlextinfo* extinfo) {
+  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return NULL;
   }
@@ -816,10 +830,12 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     return NULL;
   }
   protect_data(PROT_READ | PROT_WRITE);
-  soinfo* si = find_library(name, extinfo);
+  soinfo* si = find_library(name, flags, extinfo);
   if (si != NULL) {
     si->CallConstructors();
-    somain->add_child(si);
+    if (caller != NULL) {
+      caller->add_child(si);
+    }
   }
   protect_data(PROT_READ);
   return si;
@@ -827,9 +843,9 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
 
 int do_dlclose(soinfo* si) {
   protect_data(PROT_READ | PROT_WRITE);
-  int result = soinfo_unload(si);
+  soinfo_unload(si);
   protect_data(PROT_READ);
-  return result;
+  return 0;
 }
 
 #if defined(USE_RELA)
@@ -1427,6 +1443,10 @@ void soinfo::CallDestructors() {
 
   // DT_FINI should be called after DT_FINI_ARRAY if both are present.
   CallFunction("DT_FINI", fini_func);
+
+  // This is needed to call constructors on dlopen
+  // after unloading library with RTLD_NODELETE
+  constructors_called = false;
 }
 
 void soinfo::add_child(soinfo* child) {
@@ -1803,7 +1823,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         memset(g_ld_preloads, 0, sizeof(g_ld_preloads));
         size_t preload_count = 0;
         for (size_t i = 0; g_ld_preload_names[i] != NULL; i++) {
-            soinfo* lsi = find_library(g_ld_preload_names[i], NULL);
+            soinfo* lsi = find_library(g_ld_preload_names[i], 0, NULL);
             if (lsi != NULL) {
                 g_ld_preloads[preload_count++] = lsi;
             } else {
@@ -1821,7 +1841,7 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         if (d->d_tag == DT_NEEDED) {
             const char* library_name = si->strtab + d->d_un.d_val;
             DEBUG("%s needs %s", si->name, library_name);
-            soinfo* lsi = find_library(library_name, NULL);
+            soinfo* lsi = find_library(library_name, 0, NULL);
             if (lsi == NULL) {
                 strlcpy(tmp_err_buf, linker_get_error_buffer(), sizeof(tmp_err_buf));
                 DL_ERR("could not load library \"%s\" needed by \"%s\"; caused by %s",
