@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef PRIVATE_NETD_CLIENT_DISPATCH_H
-#define PRIVATE_NETD_CLIENT_DISPATCH_H
+#include "private/NetdClientDispatch.h"
 
-#include <sys/cdefs.h>
 #include <sys/socket.h>
 
-__BEGIN_DECLS
-
-struct NetdClientDispatch {
-    int (*accept)(int, struct sockaddr*, socklen_t*);
-    int (*accept4)(int, struct sockaddr*, socklen_t*, int);
-    int (*connect)(int, const struct sockaddr*, socklen_t);
-    int (*socket)(int, int, int);
-    unsigned (*netIdForResolv)(unsigned);
-};
-
-extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
-
-__END_DECLS
-
-#endif  // PRIVATE_NETD_CLIENT_DISPATCH_H
+int accept4(int sockfd, sockaddr* addr, socklen_t* addrlen, int flags) {
+    return __netdClientDispatch.accept4(sockfd, addr, addrlen, flags);
+}

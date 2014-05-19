@@ -2,13 +2,13 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept4)
+ENTRY(__socket)
     pushl   %ebx
     pushl   %ecx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
     .cfi_rel_offset ecx, 4
-    mov     $18, %ebx
+    mov     $1, %ebx
     mov     %esp, %ecx
     addl    $12, %ecx
     movl    $__NR_socketcall, %eax
@@ -24,4 +24,4 @@ ENTRY(accept4)
     popl    %ecx
     popl    %ebx
     ret
-END(accept4)
+END(__socket)

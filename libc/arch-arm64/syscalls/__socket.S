@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(socket)
+ENTRY(__socket)
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
@@ -18,4 +18,5 @@ ENTRY(socket)
     b.hi    __set_errno
 
     ret
-END(socket)
+END(__socket)
+.hidden __socket

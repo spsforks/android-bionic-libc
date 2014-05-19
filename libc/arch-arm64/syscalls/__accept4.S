@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(accept4)
+ENTRY(__accept4)
     stp     x29, x30, [sp, #-16]!
     mov     x29,  sp
     str     x8,       [sp, #-16]!
@@ -18,4 +18,5 @@ ENTRY(accept4)
     b.hi    __set_errno
 
     ret
-END(accept4)
+END(__accept4)
+.hidden __accept4

@@ -23,7 +23,9 @@
 #endif
 
 extern "C" __socketcall int __accept(int, sockaddr*, socklen_t*);
+extern "C" __socketcall int __accept4(int, sockaddr*, socklen_t*, int);
 extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
+extern "C" __socketcall int __socket(int, int, int);
 
 static unsigned fallBackNetIdForResolv(unsigned netId) {
     return netId;
@@ -33,6 +35,8 @@ static unsigned fallBackNetIdForResolv(unsigned netId) {
 // afterwards, so it's okay that it's read later at runtime without a lock.
 __LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
     __accept,
+    __accept4,
     __connect,
+    __socket,
     fallBackNetIdForResolv,
 };
