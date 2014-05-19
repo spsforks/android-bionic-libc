@@ -232,10 +232,15 @@ TEST(dlfcn, dlopen_check_rtld_global) {
   ASSERT_TRUE(sym == nullptr);
 
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_GLOBAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
   sym = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   ASSERT_TRUE(reinterpret_cast<bool (*)(void)>(sym)());
   dlclose(handle);
+
+  // RTLD_GLOBAL implies RTLD_NODELETE, let's check that
+  void* sym_after_dlclose = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
+  ASSERT_EQ(sym, sym_after_dlclose);
 }
 
 // libtest_with_dependency_loop.so -> libtest_with_dependency_loop_a.so ->
@@ -261,6 +266,30 @@ TEST(dlfcn, dlopen_check_loop) {
   ASSERT_TRUE(handle != nullptr);
   dlclose(handle);
 #endif
+}
+
+TEST(dlfcn, dlopen_nodelete) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NODELETE);
+  ASSERT_TRUE(handle != NULL);
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_TRUE(taxicab_number != NULL);
+  ASSERT_EQ(1729U, *taxicab_number);
+  *taxicab_number = 2;
+
+  dlclose(handle);
+
+  uint32_t* taxicab_number_after_dlclose = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_EQ(taxicab_number_after_dlclose, taxicab_number);
+  ASSERT_EQ(2U, *taxicab_number_after_dlclose);
+
+
+  handle = dlopen("libtest_simple.so", RTLD_NOW);
+  uint32_t* taxicab_number2 = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_EQ(taxicab_number2, taxicab_number);
+
+  ASSERT_EQ(2U, *taxicab_number2);
+
+  dlclose(handle);
 }
 
 TEST(dlfcn, dlopen_failure) {
