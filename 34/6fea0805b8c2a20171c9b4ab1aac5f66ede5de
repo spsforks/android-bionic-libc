@@ -1,0 +1,7 @@
+Code-Review+2: Dmitriy Ivanov <dimitry@google.com>
+Verified+1: Colin Cross <ccross@android.com>
+Submitted-by: Colin Cross <ccross@android.com>
+Submitted-at: Tue, 20 May 2014 23:03:07 +0000
+Reviewed-on: https://android-review.googlesource.com/95247
+Project: platform/bionic
+Branch: refs/heads/master
