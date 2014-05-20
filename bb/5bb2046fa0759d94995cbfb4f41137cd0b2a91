@@ -1,0 +1,7 @@
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+2: Dmitriy Ivanov <dimitry@google.com>
+Submitted-by: Dmitriy Ivanov <dimitry@google.com>
+Submitted-at: Tue, 20 May 2014 19:11:25 +0000
+Reviewed-on: https://android-review.googlesource.com/95119
+Project: platform/bionic
+Branch: refs/heads/master
