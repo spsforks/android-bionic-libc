@@ -36,32 +36,6 @@ __BEGIN_DECLS
 
 #if defined(__arm__)
 
-enum {
-  REG_R0 = 0,
-  REG_R1,
-  REG_R2,
-  REG_R3,
-  REG_R4,
-  REG_R5,
-  REG_R6,
-  REG_R7,
-  REG_R8,
-  REG_R9,
-  REG_R10,
-  REG_R11,
-  REG_R12,
-  REG_R13,
-  REG_R14,
-  REG_R15,
-};
-
-#define NGREG 18 /* Like glibc. */
-
-typedef int greg_t;
-typedef greg_t gregset_t[NGREG];
-
-/* TODO: fpregset_t. */
-
 #include <asm/sigcontext.h>
 typedef struct sigcontext mcontext_t;
 
@@ -76,8 +50,6 @@ typedef struct ucontext {
 } ucontext_t;
 
 #elif defined(__aarch64__)
-
-/* TODO: gregset_t and fpregset_t. */
 
 #include <asm/sigcontext.h>
 typedef struct sigcontext mcontext_t;
