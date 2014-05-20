@@ -1,0 +1,9 @@
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+1: Serban Constantinescu <serban.constantinescu@arm.com>
+Submitted-by: Calin Juravle <calin@google.com>
+Submitted-at: Tue, 20 May 2014 10:14:48 +0000
+Reviewed-on: https://android-review.googlesource.com/94898
+Project: platform/bionic
+Branch: refs/heads/master
