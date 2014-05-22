@@ -187,7 +187,7 @@ extern int sysconf(int  name);
 
 extern int daemon(int, int);
 
-#if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
+#if defined(__arm__) || defined(__mips__)
 extern int cacheflush(long, long, long);
     /* __attribute__((deprecated("use __builtin___clear_cache instead"))); */
 #endif
