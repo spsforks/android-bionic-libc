@@ -205,6 +205,14 @@ extern int getdomainname(char *, size_t);
 extern int setdomainname(const char *, size_t);
 #endif /* MISSING */
 
+#if defined(__clang__)
+/*
+ * Clang only defines typeof() when using -std=gnu*. __typeof__() is always
+ * available.
+ */
+#define typeof(expr) __typeof__(expr)
+#endif
+
 /* Used to retry syscalls that can return EINTR. */
 #define TEMP_FAILURE_RETRY(exp) ({         \
     typeof (exp) _rc;                      \
