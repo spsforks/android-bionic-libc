@@ -205,9 +205,17 @@ extern int getdomainname(char *, size_t);
 extern int setdomainname(const char *, size_t);
 #endif /* MISSING */
 
+#if __cplusplus < 201103L
+/*
+ * This fallback only works for gcc. We could use #error in the case of clang,
+ * but we don't need to fail if the caller isn't using TEMP_FAILURE_RETRY().
+ */
+#define decltype(expr) typeof(expr)
+#endif
+
 /* Used to retry syscalls that can return EINTR. */
 #define TEMP_FAILURE_RETRY(exp) ({         \
-    typeof (exp) _rc;                      \
+    decltype(exp) _rc;                     \
     do {                                   \
         _rc = (exp);                       \
     } while (_rc == -1 && errno == EINTR); \
