@@ -205,9 +205,19 @@ extern int getdomainname(char *, size_t);
 extern int setdomainname(const char *, size_t);
 #endif /* MISSING */
 
+#if defined(__has_feature)
+#if __has_feature(cxx_decltype)
+#define __TYPEOF_KEYWORD decltype
+#else
+#define __TYPEOF_KEYWORD typeof
+#endif
+#else
+#define __TYPEOF_KEYWORD typeof
+#endif
+
 /* Used to retry syscalls that can return EINTR. */
 #define TEMP_FAILURE_RETRY(exp) ({         \
-    typeof (exp) _rc;                      \
+    __TYPEOF_KEYWORD (exp) _rc;            \
     do {                                   \
         _rc = (exp);                       \
     } while (_rc == -1 && errno == EINTR); \
