@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
+#include <sys/syscall.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -197,6 +198,11 @@ extern "C" int fdprintf(int fd, const char* fmt, ...) {
 // POSIX calls this vdprintf, but LP32 Android had fdprintf instead.
 extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
   return vdprintf(fd, fmt, ap);
+}
+
+// Unity's libmono uses this.
+extern "C" int tkill(pid_t tid, int sig) {
+  return syscall(__NR_tkill, tid, sig);
 }
 
 #endif
