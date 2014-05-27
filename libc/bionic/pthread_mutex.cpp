@@ -489,9 +489,6 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
         mvalue = mutex->value;
     }
 
-    // log beginning of lock contention
-    android::BionicScopedTrace(ATRACE_TAG, "Contending for lock in pthread_mutex_lock");
-
     for (;;) {
         int newval;
 
