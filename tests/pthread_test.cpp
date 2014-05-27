@@ -28,6 +28,55 @@
 
 #include "ScopedSignalHandler.h"
 
+typedef struct str_thdata
+{
+  int thread_no;
+  pthread_mutex_t* mutex;
+} thdata;
+
+static void *contend(void *ptr) 
+{
+  thdata *data = (thdata *) ptr;
+  pthread_mutex_t* mutex = data->mutex;
+
+  for(int i=0; i<10; i++)
+  {
+    printf("thread %d is trying for lock\n", data->thread_no);
+    pthread_mutex_lock(mutex);
+    pthread_mutex_lock(mutex);
+    printf("thread %d has the lock\n", data->thread_no);
+    sleep(5);
+    pthread_mutex_unlock(mutex);
+    pthread_mutex_unlock(mutex);
+    sleep(1);
+  }
+
+  return NULL;
+}
+
+TEST(pthread, systrace_test) {
+  pthread_t t1, t2;
+  pthread_mutex_t pmutex;
+  pthread_mutexattr_t attr;
+  thdata d1, d2;
+
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&pmutex, &attr);
+  d1.thread_no = 0;
+  d2.thread_no = 1;
+  d1.mutex = &pmutex;
+  d2.mutex = &pmutex;
+
+  pthread_create(&t1, NULL, contend, (void *) &d1);
+  pthread_create(&t2, NULL, contend, (void *) &d2);
+
+  (void) pthread_join(t1, NULL);
+  (void) pthread_join(t2, NULL);
+
+  pthread_mutex_destroy(&pmutex);
+}
+
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));

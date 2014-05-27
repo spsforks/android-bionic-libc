@@ -40,6 +40,14 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
+
+/* Trace tag:
+ * 
+ * Define the systrace tag so we can filter unwated trace data 
+ */
+#define ATRACE_TAG ATRACE_TAG_BIONIC
+#include "private/bionic_systrace.h"
+
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
@@ -452,7 +460,8 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
     mtype = (mvalue & MUTEX_TYPE_MASK);
     shared = (mvalue & MUTEX_SHARED_MASK);
 
-    /* Handle normal case first */
+    
+    /* Handle non-recursive case first */
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
         _normal_lock(mutex, shared);
         return 0;
@@ -466,6 +475,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
     /* Add in shared state to avoid extra 'or' operations below */
     mtype |= shared;
 
+   
     /* First, if the mutex is unlocked, try to quickly acquire it.
      * In the optimistic case where this works, set the state to 1 to
      * indicate locked with no contention */
@@ -478,6 +488,9 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
         /* argh, the value changed, reload before entering the loop */
         mvalue = mutex->value;
     }
+
+    // log beginning of lock contention
+    android::BionicScopedTrace(ATRACE_TAG, "Contending for lock in pthread_mutex_lock");
 
     for (;;) {
         int newval;
