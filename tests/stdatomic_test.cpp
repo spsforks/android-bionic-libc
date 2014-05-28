@@ -62,12 +62,14 @@ TEST(stdatomic, atomic_signal_fence) {
   atomic_signal_fence(memory_order_seq_cst);
 }
 
+#ifndef __mips__
 TEST(stdatomic, atomic_is_lock_free) {
   atomic_char small;
   atomic_intmax_t big;
   ASSERT_TRUE(atomic_is_lock_free(&small));
   ASSERT_TRUE(atomic_is_lock_free(&big));
 }
+#endif
 
 TEST(stdatomic, atomic_flag) {
   atomic_flag f = ATOMIC_FLAG_INIT;
