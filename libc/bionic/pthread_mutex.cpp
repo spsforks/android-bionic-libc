@@ -39,6 +39,8 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
+#include "private/bionic_systrace.h"
+
 extern void pthread_debug_mutex_lock_check(pthread_mutex_t *mutex);
 extern void pthread_debug_mutex_unlock_check(pthread_mutex_t *mutex);
 
@@ -333,6 +335,11 @@ static inline void _normal_lock(pthread_mutex_t* mutex, int shared) {
          * that the mutex is in state 2 when we go to sleep on it, which
          * guarantees a wake-up call.
          */
+
+         /* begin contention logging */
+         android::BionicScopedTrace("Contending for pthread_mutex");
+
+
         while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
             __futex_wait_ex(&mutex->value, shared, locked_contended, NULL);
         }
@@ -472,6 +479,9 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
         /* argh, the value changed, reload before entering the loop */
         mvalue = mutex->value;
     }
+
+    /* log beginning of recursive lock contention */
+    android::BionicScopedTrace("Contending for pthread_mutex");
 
     for (;;) {
         int newval;
@@ -626,6 +636,9 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
       return 0;
     }
 
+    /* log mutex contention */
+    android::BionicScopedTrace("Contending for pthread_mutex");
+
     // Loop while needed.
     while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
       if (__timespec_from_absolute(&ts, abs_timeout, clock) < 0) {
@@ -657,6 +670,9 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
     }
     mvalue = mutex->value;
   }
+
+  /* log mutex contention */
+  android::BionicScopedTrace("Contending for pthread_mutex");
 
   while (true) {
     // If the value is 'unlocked', try to acquire it directly.
