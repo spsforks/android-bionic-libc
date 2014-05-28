@@ -16,8 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#if !defined(__GLIBC__) /* TODO: fix our prebuilt toolchains! */
-
 #include <stdatomic.h>
 
 TEST(stdatomic, LOCK_FREE) {
@@ -161,5 +159,3 @@ TEST(stdatomic, atomic_fetch_and) {
   ASSERT_EQ(0x003, atomic_fetch_and_explicit(&i, 0x2, memory_order_relaxed));
   ASSERT_EQ(0x002, atomic_load(&i));
 }
-
-#endif
