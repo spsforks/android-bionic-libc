@@ -34,6 +34,16 @@
 
 __BEGIN_DECLS
 
+// Android has a wrong (smaller) sigset_t on ARM and x86.
+#if defined(__arm__) || defined(__i386__)
+typedef union {
+  sigset_t bionic;
+  uint32_t kernel[2];
+} sigmask_t;
+#else
+typedef sigset_t sigmask_t;
+#endif
+
 #if defined(__arm__)
 
 enum {
@@ -68,8 +78,9 @@ typedef struct ucontext {
   struct ucontext* uc_link;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  sigset_t uc_sigmask;
-  char __padding[128 - sizeof(sigset_t)];
+  sigmask_t uc_sigmask;
+  // The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM
+  char __padding[128 - sizeof(sigmask_t)];
   unsigned long uc_regspace[128] __attribute__((__aligned__(8)));
 } ucontext_t;
 
@@ -82,8 +93,9 @@ typedef struct ucontext {
   unsigned long uc_flags;
   struct ucontext *uc_link;
   stack_t uc_stack;
-  sigset_t uc_sigmask;
-  char __padding[128 - sizeof(sigset_t)];
+  sigmask_t uc_sigmask;
+  // The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM64
+  char __padding[128 - sizeof(sigmask_t)];
   mcontext_t uc_mcontext;
 } ucontext_t;
 
@@ -146,8 +158,7 @@ typedef struct ucontext {
   struct ucontext* uc_link;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  sigset_t uc_sigmask;
-  char __padding[128 - sizeof(sigset_t)];
+  sigmask_t uc_sigmask;
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
 
@@ -197,8 +208,7 @@ typedef struct ucontext {
   struct ucontext* uc_link;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  sigset_t uc_sigmask;
-  char __padding[128 - sizeof(sigset_t)];
+  sigmask_t uc_sigmask;
 } ucontext_t;
 
 #elif defined(__mips64__)
@@ -274,8 +284,7 @@ typedef struct ucontext {
   struct ucontext* uc_link;
   stack_t uc_stack;
   mcontext_t uc_mcontext;
-  sigset_t uc_sigmask;
-  char __padding[128 - sizeof(sigset_t)];
+  sigmask_t uc_sigmask;
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
 
