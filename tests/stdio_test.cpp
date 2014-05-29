@@ -62,7 +62,7 @@ TEST(stdio, dprintf) {
 
   lseek(tf.fd, SEEK_SET, 0);
 
-  char buf[6];
+  char buf[7];
   int bytes_to_read = 6;
   do {
     int bytes_read = read(tf.fd, buf, bytes_to_read);
@@ -70,6 +70,8 @@ TEST(stdio, dprintf) {
     bytes_to_read -= bytes_read;
   } while (bytes_to_read > 0);
 
+  // Add the nul terminator.
+  buf[6] = '\0';
   ASSERT_STREQ("hello\n", buf);
 }
 
