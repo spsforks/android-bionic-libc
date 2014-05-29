@@ -48,9 +48,11 @@ fn(type x)
 {
 	fenv_t env;
 	dtype d;
+	type r;
 
 	feholdexcept(&env);
-	d = (dtype)roundit(x);
+	r = roundit(x);
+	d = (dtype)r;
 	if (fetestexcept(FE_INVALID))
 		feclearexcept(FE_INEXACT);
 	feupdateenv(&env);
