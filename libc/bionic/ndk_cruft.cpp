@@ -221,4 +221,9 @@ extern "C" int tkill(pid_t tid, int sig) {
   return syscall(__NR_tkill, tid, sig);
 }
 
+// This used to be in <unistd.h>.
+extern "C" int issetugid(void) {
+  return 0; // This is why we removed this!
+}
+
 #endif
