@@ -241,6 +241,11 @@ libm_common_cflags := \
     -Wno-unknown-pragmas \
     -fvisibility=hidden \
 
+# Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
+# self recursions for lrint, lrintf, and lrintl.
+# BUG: 14225968
+libm_common_cflags += -fno-builtin-rint -fno-builtin-rintf -fno-builtin-rintl
+
 libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 
 libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
