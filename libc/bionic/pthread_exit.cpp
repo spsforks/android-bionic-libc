@@ -34,8 +34,8 @@
 
 #include "pthread_internal.h"
 
-extern "C" void _exit_with_stack_teardown(void*, size_t);
-extern "C" void __exit(int);
+extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
+extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
 
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
@@ -129,5 +129,5 @@ void pthread_exit(void* return_value) {
   }
 
   // NOTREACHED, but we told the compiler this function is noreturn, and it doesn't believe us.
-  abort();
+//  abort();
 }
