@@ -31,6 +31,8 @@
 #include <sys/param.h>
 #include <wchar.h>
 
+#include "private/bionic_mbstate.h"
+
 //
 // This file is basically OpenBSD's citrus_utf8.c but rewritten to not require a
 // 12-byte mbstate_t so we're backwards-compatible with our LP32 ABI where
@@ -49,36 +51,6 @@
 // We also implement the POSIX interface directly rather than being accessed via
 // function pointers.
 //
-
-#define ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
-#define ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
-
-static size_t mbstate_bytes_so_far(const mbstate_t* ps) {
-  return
-    (ps->__seq[2] != 0) ? 3 :
-    (ps->__seq[1] != 0) ? 2 :
-    (ps->__seq[0] != 0) ? 1 : 0;
-}
-
-static void mbstate_set_byte(mbstate_t* ps, int i, char byte) {
-  ps->__seq[i] = static_cast<uint8_t>(byte);
-}
-
-static uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
-  return ps->__seq[n];
-}
-
-static size_t reset_and_return_illegal(int _errno, mbstate_t* ps) {
-  errno = _errno;
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return ERR_ILLEGAL_SEQUENCE;
-}
-
-static size_t reset_and_return(int _return, mbstate_t* ps) {
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return _return;
-}
-
 
 int mbsinit(const mbstate_t* ps) {
   return (ps == NULL || (*(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0));
@@ -163,7 +135,7 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
     mbstate_set_byte(state, bytes_so_far + i, *s++);
   }
   if (i < bytes_wanted) {
-    return ERR_INCOMPLETE_SEQUENCE;
+    return __MB_ERR_INCOMPLETE_SEQUENCE;
   }
 
   // Decode the octet sequence representing the character in chunks
@@ -212,10 +184,10 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
         r = 1;
       } else {
         r = mbrtowc(NULL, *src + i, nmc - i, state);
-        if (r == ERR_ILLEGAL_SEQUENCE) {
+        if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
           return reset_and_return_illegal(EILSEQ, state);
         }
-        if (r == ERR_INCOMPLETE_SEQUENCE) {
+        if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
           return reset_and_return_illegal(EILSEQ, state);
         }
         if (r == 0) {
@@ -246,11 +218,11 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       r = 1;
     } else {
       r = mbrtowc(dst + o, *src + i, nmc - i, state);
-      if (r == ERR_ILLEGAL_SEQUENCE) {
+      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
         *src += i;
         return reset_and_return_illegal(EILSEQ, state);
       }
-      if (r == ERR_INCOMPLETE_SEQUENCE) {
+      if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
         *src += nmc;
         return reset_and_return(EILSEQ, state);
       }
@@ -315,7 +287,7 @@ size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
     length = 4;
   } else {
     errno = EILSEQ;
-    return ERR_ILLEGAL_SEQUENCE;
+    return __MB_ERR_ILLEGAL_SEQUENCE;
   }
 
   // Output the octets representing the character in chunks
@@ -352,7 +324,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
         r = 1;
       } else {
         r = wcrtomb(buf, wc, state);
-        if (r == ERR_ILLEGAL_SEQUENCE) {
+        if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
           return r;
         }
       }
@@ -373,14 +345,14 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
     } else if (len - o >= sizeof(buf)) {
       // Enough space to translate in-place.
       r = wcrtomb(dst + o, wc, state);
-      if (r == ERR_ILLEGAL_SEQUENCE) {
+      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
         *src += i;
         return r;
       }
     } else {
       // May not be enough space; use temp buffer.
       r = wcrtomb(buf, wc, state);
-      if (r == ERR_ILLEGAL_SEQUENCE) {
+      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
         *src += i;
         return r;
       }
