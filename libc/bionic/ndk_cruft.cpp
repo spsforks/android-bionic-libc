@@ -37,6 +37,7 @@
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/time.h>
+#include <sys/timeb.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -224,6 +225,28 @@ extern "C" int tkill(pid_t tid, int sig) {
 
 extern "C" wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
   return wcsstr(haystack, needle);
+}
+
+// This was removed from POSIX.
+extern "C" int ftime(struct timeb *tb)
+{
+    struct timeval  tv;
+    struct timezone tz;
+
+    if (gettimeofday (&tv, &tz) < 0)
+        return -1;
+
+    tb->time    = tv.tv_sec;
+    tb->millitm = (tv.tv_usec + 500) / 1000;
+
+    if (tb->millitm == 1000) {
+        ++tb->time;
+        tb->millitm = 0;
+    }
+    tb->timezone = tz.tz_minuteswest;
+    tb->dstflag  = tz.tz_dsttime;
+
+    return 0;
 }
 
 #endif

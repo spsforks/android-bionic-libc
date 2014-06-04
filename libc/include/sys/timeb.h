@@ -40,8 +40,6 @@ struct timeb {
     short           dstflag;
 };
 
-extern int  ftime(struct timeb*  timebuf);
-
 __END_DECLS
 
 #endif /* _SYS_TIMEB_H */
