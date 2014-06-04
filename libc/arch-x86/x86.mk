@@ -2,6 +2,7 @@
 
 # These are shared by all the 32-bit targets, but not the 64-bit ones.
 libc_common_src_files_x86 := \
+    bionic/ftime.c \
     bionic/legacy_32_bit_support.cpp \
     bionic/ndk_cruft.cpp \
     bionic/time64.c \

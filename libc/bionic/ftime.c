@@ -25,7 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/timeb.h>
+
+#include <sys/time.h>
+
+struct timeb {
+    time_t          time;
+    unsigned short  millitm;
+    short           timezone;
+    short           dstflag;
+};
 
 int ftime(struct timeb *tb)
 {
