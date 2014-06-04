@@ -221,7 +221,12 @@ TEST(wchar, limits) {
   ASSERT_LT(WCHAR_MIN, WCHAR_MAX);
 }
 
+#if defined(__BIONIC__) && !defined(__LP64__)
+extern "C" wchar_t* wcswcs(const wchar_t*, const wchar_t*);
+#endif
+
 TEST(wchar, wcsstr_wcswcs) {
+#if defined(__BIONIC__) && !defined(__LP64__)
   const wchar_t* haystack = L"matches hello world, not the second hello world";
   const wchar_t* empty_needle = L"";
   const wchar_t* good_needle = L"ll";
@@ -234,6 +239,7 @@ TEST(wchar, wcsstr_wcswcs) {
   ASSERT_EQ(haystack, wcswcs(haystack, empty_needle));
   ASSERT_EQ(&haystack[10], wcswcs(haystack, good_needle));
   ASSERT_EQ(NULL, wcswcs(haystack, bad_needle));
+#endif
 }
 
 TEST(wchar, mbtowc) {
