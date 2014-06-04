@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
@@ -219,6 +220,10 @@ extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec
 // Unity's libmono uses this.
 extern "C" int tkill(pid_t tid, int sig) {
   return syscall(__NR_tkill, tid, sig);
+}
+
+sighandler_t bsd_signal(int signum, sighandler_t handler) {
+  return signal(signum, handler);
 }
 
 #endif
