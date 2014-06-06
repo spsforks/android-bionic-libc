@@ -47,12 +47,17 @@ __BEGIN_DECLS
 #define SEEK_CUR 1
 #define SEEK_END 2
 
+/*
+ * Removed from POSIX 2008, but common enough that we don't want to remove it
+ * entirely.
+ */
+#define vfork() fork()
+
 extern char** environ;
 
 extern __noreturn void _exit(int);
 
 extern pid_t  fork(void);
-extern pid_t  vfork(void);
 extern pid_t  getpid(void);
 extern pid_t  gettid(void);
 extern pid_t  getpgid(pid_t);
