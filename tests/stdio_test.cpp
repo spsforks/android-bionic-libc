@@ -426,7 +426,15 @@ TEST(stdio, snprintf_negative_zero_5084292) {
   EXPECT_STREQ("-0.000000", buf);
 }
 
+TEST(stdio, snprintf_cjk_15439554) {
+  // http://b/15439554
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%d\xE3\x81\x82%d", 1, 2);
+  EXPECT_STREQ("1あ2", buf);
+}
+
 TEST(stdio, fprintf_failures_7229520) {
+  // http://b/7229520
   FILE* fp;
 
   // Unbuffered case where the fprintf(3) itself fails.

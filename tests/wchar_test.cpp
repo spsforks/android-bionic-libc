@@ -449,3 +449,14 @@ TEST(wchar, wmemmove) {
   wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
   EXPECT_STREQ(L"This This is a test of something or other", wstr);
 }
+
+TEST(wchar, mbrtowc_15439554) {
+  // http://b/15439554
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  wchar_t wc;
+  size_t n = mbrtowc(&wc, "\xE3\x81\x82", MB_CUR_MAX, NULL);
+  EXPECT_EQ(3U, n);
+  EXPECT_EQ(L'\x3042', wc);
+}
