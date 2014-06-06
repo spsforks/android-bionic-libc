@@ -238,4 +238,10 @@ extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {
   return _signal(signum, handler, SA_RESETHAND);
 }
 
+// vfork(2) was removed from POSIX 2008, but it's common enough that we can't
+// actually remove it entirely.
+extern "C" pid_t vfork(void) {
+  return fork();
+}
+
 #endif
