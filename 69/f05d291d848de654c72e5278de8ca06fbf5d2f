@@ -1,0 +1,8 @@
+Code-Review+1: Yohei Yukawa <yukawa@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Fri, 06 Jun 2014 18:06:44 +0000
+Reviewed-on: https://android-review.googlesource.com/96961
+Project: platform/bionic
+Branch: refs/heads/master
