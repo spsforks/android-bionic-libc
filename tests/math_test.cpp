@@ -1295,3 +1295,11 @@ TEST(math, frexpf_public_bug_6697) {
   float fr = frexpf(14.1f, &exp);
   ASSERT_FLOAT_EQ(14.1f, scalbnf(fr, exp));
 }
+
+TEST(math, exp2_STRICT_ALIGN_bug) {
+  // OpenBSD/x86's libm had a bug here, but it was already fixed in FreeBSD:
+  // http://svnweb.FreeBSD.org/base/head/lib/msun/src/math_private.h?revision=240827&view=markup
+  ASSERT_DOUBLE_EQ(5.0, exp2(log2(5)));
+  ASSERT_FLOAT_EQ(5.0f, exp2f(log2f(5)));
+  ASSERT_DOUBLE_EQ(5.0L, exp2l(log2l(5)));
+}
