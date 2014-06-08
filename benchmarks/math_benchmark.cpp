@@ -17,6 +17,7 @@
 #include "benchmark.h"
 
 #include <math.h>
+#include <fenv.h>
 
 // Avoid optimization.
 double d;
@@ -113,10 +114,49 @@ static void BM_math_isinf_ZERO(int iters) {
 }
 BENCHMARK(BM_math_isinf_ZERO);
 
+static void BM_math_sin_fast(int iters) {
+  StartBenchmarkTiming();
 
+  d = 1.0;
+  for (int i = 0; i < iters; ++i) {
+    d += sin(d);
+  }
 
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_sin_fast);
 
+static void BM_math_sin_fenv1(int iters) {
+  StartBenchmarkTiming();
 
+  d = 1.0;
+  for (int i = 0; i < iters; ++i) {
+    fenv_t __libc_save_rm;
+    feholdexcept(&__libc_save_rm);
+    fesetround(FE_TONEAREST);
+    d += sin(d);
+    feupdateenv(&__libc_save_rm);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_sin_fenv1);
+
+static void BM_math_sin_fenv2(int iters) {
+  StartBenchmarkTiming();
+
+  d = 1.0;
+  for (int i = 0; i < iters; ++i) {
+    fenv_t __libc_save_rm;
+    feholdexcept(&__libc_save_rm);
+    fesetround(FE_TONEAREST);
+    d += sin(d);
+    fesetenv(&__libc_save_rm);
+  }
+
+  StopBenchmarkTiming();
+}
+BENCHMARK(BM_math_sin_fenv2);
 
 static void BM_math_fpclassify_NORMAL(int iters) {
   StartBenchmarkTiming();
