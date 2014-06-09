@@ -17,6 +17,12 @@
 #ifndef _BIONIC_FREEBSD_NAMESPACE_H_included
 #define _BIONIC_FREEBSD_NAMESPACE_H_included
 
+/* Hiding an implementation detail. */
 __attribute__((visibility("hidden"))) char* _mktemp(char*);
+
+/* mktemp(3) was removed from POSIX 2008. */
+#ifdef __LP64__
+__attribute__((visibility("hidden"))) char* mktemp(char*);
+#endif
 
 #endif

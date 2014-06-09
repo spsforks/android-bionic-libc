@@ -52,7 +52,6 @@ using ::setenv;
 using ::unsetenv;
 using ::clearenv;
 
-using ::mktemp;
 using ::mkstemp;
 
 using ::strtol;
