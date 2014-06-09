@@ -31,6 +31,8 @@
 #include "npx.h"
 #include "fenv.h"
 
+#define _ROUND_MASK   (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | FE_TOWARDZERO)
+
 /*
  * As compared to the x87 control word, the SSE unit's control word
  * has the rounding control bits offset by 3 and the exception mask

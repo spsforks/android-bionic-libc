@@ -30,6 +30,15 @@
 #include <fenv.h>
 #include <machine/fpu.h>
 
+#define _SSE_MASK_SHIFT 7
+
+/*
+ * The following symbol is simply the bitwise-inclusive OR of all floating-point
+ * rounding direction constants defined above.
+ */
+#define _X87_ROUND_MASK  (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | FE_TOWARDZERO)
+#define _SSE_ROUND_SHIFT 3
+
 /*
  * The following constant represents the default floating-point environment
  * (that is, the one installed at program startup) and has type pointer to
