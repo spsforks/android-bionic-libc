@@ -19,4 +19,8 @@
 
 __attribute__((visibility("hidden"))) char* _mktemp(char*);
 
+#ifdef __LP64__
+__attribute__((visibility("hidden"))) char* mktemp(char*);
+#endif
+
 #endif
