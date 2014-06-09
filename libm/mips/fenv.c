@@ -28,6 +28,12 @@
 
 #include <fenv.h>
 
+#define _FCSR_CAUSE_SHIFT 10
+#define _ENABLE_SHIFT     5
+#define _FCSR_ENABLE_MASK (FE_ALL_EXCEPT << _ENABLE_SHIFT)
+
+#define _FCSR_RMASK       0x3
+
 /*
  * Hopefully the system ID byte is immutable, so it's valid to use
  * this as a default environment.
@@ -105,7 +111,7 @@ int fesetround(int __round) {
   fenv_t _fcsr;
   fegetenv(&_fcsr);
   _fcsr &= ~_FCSR_RMASK;
-  _fcsr |= (__round & _FCSR_RMASK ) ;
+  _fcsr |= (__round & _FCSR_RMASK);
   fesetenv(&_fcsr);
   return 0;
 }
