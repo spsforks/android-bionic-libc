@@ -44,12 +44,30 @@
 #include <unistd.h>
 #include <stdarg.h>
 
+struct syslog_data {
+  int log_file;
+  int connected;
+  int opened;
+  int log_stat;
+  const char* log_tag;
+  int log_fac;
+  int log_mask;
+};
+
+#define SYSLOG_DATA_INIT {-1, 0, 0, 0, (const char *)0, LOG_USER, 0xff}
+
 static struct syslog_data sdata = SYSLOG_DATA_INIT;
 
 extern const char	*__progname;		/* Program name, from crt0. */
 
 static void	disconnectlog_r(struct syslog_data *);	/* disconnect from syslogd */
 static void	connectlog_r(struct syslog_data *);	/* (re)connect to syslogd */
+
+static void closelog_r(struct syslog_data*);
+static void openlog_r(const char*, int, int, struct syslog_data*);
+static int setlogmask_r(int, struct syslog_data*);
+static void syslog_r(int, struct syslog_data*, const char*, ...) __printflike(3, 4);
+static void vsyslog_r(int, struct syslog_data*, const char*, va_list) __printflike(3, 0);
 
 /*
  * syslog, vsyslog --
@@ -157,7 +175,7 @@ vsyslog_r(int pri, struct syslog_data *data, const char *fmt, va_list ap)
 	prlen = snprintf(p, tbuf_left, "<%d>", pri);
 	DEC();
 
-	/* 
+	/*
 	 * syslogd will expand time automagically for reentrant case, and
 	 * for normal case, just do like before
 	 */
@@ -196,10 +214,10 @@ vsyslog_r(int pri, struct syslog_data *data, const char *fmt, va_list ap)
 			++fmt;
 			if (data == &sdata) {
 				prlen = snprintf(t, fmt_left, "%s",
-				    strerror(saved_errno)); 
+				    strerror(saved_errno));
 			} else {
 				prlen = snprintf(t, fmt_left, "Error %d",
-				    saved_errno); 
+				    saved_errno);
 			}
 			if (prlen < 0)
 				prlen = 0;
@@ -269,7 +287,7 @@ vsyslog_r(int pri, struct syslog_data *data, const char *fmt, va_list ap)
 	if (error == -1 && (data->log_stat & LOG_CONS) &&
 	    (fd = open(_PATH_CONSOLE, O_WRONLY|O_NONBLOCK, 0)) >= 0) {
 		struct iovec iov[2];
-		
+
 		p = strchr(tbuf, '>') + 1;
 		iov[0].iov_base = p;
 		iov[0].iov_len = cnt - (p - tbuf);
