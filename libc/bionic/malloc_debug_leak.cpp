@@ -250,6 +250,33 @@ extern "C" size_t fill_malloc_usable_size(const void* mem) {
     return Malloc(malloc_usable_size)(mem);
 }
 
+extern "C" struct mallinfo fill_mallinfo() {
+  return Malloc(mallinfo)();
+}
+
+extern "C" int fill_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if ((alignment & (alignment - 1)) != 0) {
+    return EINVAL;
+  }
+  int saved_errno = errno;
+  *memptr = fill_memalign(alignment, size);
+  errno = saved_errno;
+  return (*memptr != NULL) ? 0 : ENOMEM;
+}
+
+extern "C" void* fill_pvalloc(size_t bytes) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  if (size < bytes) { // Overflow
+    return NULL;
+  }
+  return fill_memalign(pagesize, size);
+}
+
+extern "C" void* fill_valloc(size_t size) {
+  return fill_memalign(sysconf(_SC_PAGESIZE), size);
+}
+
 // =============================================================================
 // malloc leak functions
 // =============================================================================
@@ -358,8 +385,8 @@ extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
         size_t oldSize = header->entry->size & ~SIZE_FLAG_MASK;
         size_t copySize = (oldSize <= bytes) ? oldSize : bytes;
         memcpy(newMem, oldMem, copySize);
+        leak_free(oldMem);
     }
-    leak_free(oldMem);
 
     return newMem;
 }
@@ -427,4 +454,31 @@ extern "C" size_t leak_malloc_usable_size(const void* mem) {
         }
     }
     return 0;
+}
+
+extern "C" struct mallinfo leak_mallinfo() {
+  return Malloc(mallinfo)();
+}
+
+extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if ((alignment & (alignment - 1)) != 0) {
+    return EINVAL;
+  }
+  int saved_errno = errno;
+  *memptr = leak_memalign(alignment, size);
+  errno = saved_errno;
+  return (*memptr != NULL) ? 0 : ENOMEM;
+}
+
+extern "C" void* leak_pvalloc(size_t bytes) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  if (size < bytes) { // Overflow
+    return NULL;
+  }
+  return leak_memalign(pagesize, size);
+}
+
+extern "C" void* leak_valloc(size_t size) {
+  return leak_memalign(sysconf(_SC_PAGESIZE), size);
 }
