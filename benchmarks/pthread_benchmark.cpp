@@ -21,8 +21,9 @@
 static void BM_pthread_self(int iters) {
   StartBenchmarkTiming();
 
+  volatile pthread_t t;
   for (int i = 0; i < iters; ++i) {
-    pthread_self();
+    t = pthread_self();
   }
 
   StopBenchmarkTiming();

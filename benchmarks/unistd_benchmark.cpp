@@ -33,8 +33,9 @@ BENCHMARK(BM_unistd_getpid);
 static void BM_unistd_gettid(int iters) {
   StartBenchmarkTiming();
 
+  volatile pid_t t;
   for (int i = 0; i < iters; ++i) {
-    gettid();
+    t = gettid();
   }
 
   StopBenchmarkTiming();
