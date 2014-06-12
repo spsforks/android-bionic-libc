@@ -291,27 +291,40 @@ TEST(malloc, realloc_overflow) {
   free(ptr);
 }
 
+#ifndef __LP64__
+extern "C" void* valloc(size_t);
+extern "C" void* pvalloc(size_t);
+#endif
+
 TEST(malloc, pvalloc_std) {
+#ifndef __LP64__
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   ASSERT_LE(pagesize, malloc_usable_size(ptr));
   free(ptr);
+#endif
 }
 
 TEST(malloc, pvalloc_overflow) {
+#ifndef __LP64__
   ASSERT_EQ(NULL, pvalloc(SIZE_MAX));
+#endif
 }
 
 TEST(malloc, valloc_std) {
+#ifndef __LP64__
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   free(ptr);
+#endif
 }
 
 TEST(malloc, valloc_overflow) {
+#ifndef __LP64__
   ASSERT_EQ(NULL, valloc(SIZE_MAX));
+#endif
 }
