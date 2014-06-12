@@ -90,9 +90,13 @@ typedef void* (*MallocDebugMalloc)(size_t);
 typedef size_t (*MallocDebugMallocUsableSize)(const void*);
 typedef void* (*MallocDebugMemalign)(size_t, size_t);
 typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocDebugPvalloc)(size_t);
 typedef void* (*MallocDebugRealloc)(void*, size_t);
+
+#ifndef __LP64__
 typedef void* (*MallocDebugValloc)(size_t);
+typedef void* (*MallocDebugPvalloc)(size_t);
+#endif
+
 struct MallocDebug {
   MallocDebugCalloc calloc;
   MallocDebugFree free;
@@ -101,9 +105,11 @@ struct MallocDebug {
   MallocDebugMallocUsableSize malloc_usable_size;
   MallocDebugMemalign memalign;
   MallocDebugPosixMemalign posix_memalign;
-  MallocDebugPvalloc pvalloc;
   MallocDebugRealloc realloc;
+#ifndef __LP64__
   MallocDebugValloc valloc;
+  MallocDebugPvalloc pvalloc;
+#endif
 };
 
 typedef bool (*MallocDebugInit)(HashTable*);
