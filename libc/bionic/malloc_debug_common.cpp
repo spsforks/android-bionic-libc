@@ -228,6 +228,7 @@ extern "C" struct mallinfo mallinfo() {
     return Malloc(mallinfo)();
 }
 
+#ifndef __LP64__
 extern "C" void* valloc(size_t bytes) {
     return Malloc(valloc)(bytes);
 }
@@ -235,6 +236,7 @@ extern "C" void* valloc(size_t bytes) {
 extern "C" void* pvalloc(size_t bytes) {
     return Malloc(pvalloc)(bytes);
 }
+#endif
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
     return Malloc(posix_memalign)(memptr, alignment, size);
