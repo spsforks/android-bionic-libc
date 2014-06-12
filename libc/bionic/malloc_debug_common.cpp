@@ -258,17 +258,19 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
   return __libc_malloc_dispatch->posix_memalign(memptr, alignment, size);
 }
 
-extern "C" void* pvalloc(size_t bytes) {
-  return __libc_malloc_dispatch->pvalloc(bytes);
-}
-
 extern "C" void* realloc(void* oldMem, size_t bytes) {
   return __libc_malloc_dispatch->realloc(oldMem, bytes);
 }
 
+#ifndef __LP64__
 extern "C" void* valloc(size_t bytes) {
   return __libc_malloc_dispatch->valloc(bytes);
 }
+
+extern "C" void* pvalloc(size_t bytes) {
+  return __libc_malloc_dispatch->pvalloc(bytes);
+}
+#endif
 
 // We implement malloc debugging only in libc.so, so the code below
 // must be excluded if we compile this file for static libc.a
@@ -299,9 +301,11 @@ static void InitMalloc(void* malloc_impl_handler, MallocDebug* table, const char
   InitMallocFunction<MallocDebugMallocUsableSize>(malloc_impl_handler, &table->malloc_usable_size, prefix, "malloc_usable_size");
   InitMallocFunction<MallocDebugMemalign>(malloc_impl_handler, &table->memalign, prefix, "memalign");
   InitMallocFunction<MallocDebugPosixMemalign>(malloc_impl_handler, &table->posix_memalign, prefix, "posix_memalign");
-  InitMallocFunction<MallocDebugPvalloc>(malloc_impl_handler, &table->pvalloc, prefix, "pvalloc");
   InitMallocFunction<MallocDebugRealloc>(malloc_impl_handler, &table->realloc, prefix, "realloc");
+#ifndef __LP64__
   InitMallocFunction<MallocDebugValloc>(malloc_impl_handler, &table->valloc, prefix, "valloc");
+  InitMallocFunction<MallocDebugPvalloc>(malloc_impl_handler, &table->pvalloc, prefix, "pvalloc");
+#endif
 }
 
 // Initializes memory allocation framework once per process.

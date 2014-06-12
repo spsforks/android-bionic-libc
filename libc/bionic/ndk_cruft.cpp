@@ -250,4 +250,10 @@ extern "C" int issetugid() {
   return 0;
 }
 
+// Symbols from dlmalloc are exposed by defining these in bionic. We don't want
+// these two exposed in the headers anymore, as they were removed from POSIX
+// 2004.
+extern "C" void* valloc(size_t byte_count) __mallocfunc __wur __attribute__((alloc_size(1)));
+extern "C" void* pvalloc(size_t byte_count) __mallocfunc __wur __attribute__((alloc_size(1)));
+
 #endif
