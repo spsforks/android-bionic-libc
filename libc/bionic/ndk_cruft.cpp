@@ -36,6 +36,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/time.h>
@@ -248,6 +249,11 @@ extern "C" int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
 // This is a BSDism that we never implemented correctly. Used by Firefox.
 extern "C" int issetugid() {
   return 0;
+}
+
+// This was removed from POSIX 2008.
+extern "C" char* index(const char *str, int ch) {
+  return strchr(str, ch);
 }
 
 #endif
