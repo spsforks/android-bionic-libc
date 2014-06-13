@@ -46,6 +46,12 @@ __BEGIN_DECLS
 #define bcopy(b1, b2, len) (void)(memmove((b2), (b1), (len)))
 #define bzero(b, len) (void)(memset((b), '\0', (len)))
 
+/* POSIX removed index() in 2004 and recommends defining it as a macro here,
+ * but doing so breaks too many sources, so keep a real declaration instead.
+ * The implementation must always be kept for ABI compatibility issues.
+ */
+char*	 index(const char*, int);
+
 int	 ffs(int);
 int	 strcasecmp(const char *, const char *);
 int	 strncasecmp(const char *, const char *, size_t);
