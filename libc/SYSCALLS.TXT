@@ -276,8 +276,8 @@ int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* 
 int __getcpu:getcpu(unsigned*, unsigned*, void*) all
 
 # io priorities
-int ioprio_set(int which, int who, int ioprio) all
-int ioprio_get(int which, int who) all
+int ioprio_set(int which, int who, int ioprio) arm,mips,x86
+int ioprio_get(int which, int who) arm,mips,x86
 
 # other
 int     uname(struct utsname*)  all
