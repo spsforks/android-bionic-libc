@@ -48,6 +48,7 @@
 #include "debug_stacktrace.h"
 #include "malloc_debug_common.h"
 
+#include "private/bionic_macros.h"
 #include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
@@ -255,7 +256,7 @@ extern "C" struct mallinfo fill_mallinfo() {
 }
 
 extern "C" int fill_posix_memalign(void** memptr, size_t alignment, size_t size) {
-  if ((alignment & (alignment - 1)) != 0) {
+  if (!BIONIC_IS_POWER_OF_2(alignment)) {
     return EINVAL;
   }
   int saved_errno = errno;
@@ -266,7 +267,7 @@ extern "C" int fill_posix_memalign(void** memptr, size_t alignment, size_t size)
 
 extern "C" void* fill_pvalloc(size_t bytes) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
   }
@@ -401,8 +402,8 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
     }
 
     // need to make sure it's a power of two
-    if (alignment & (alignment-1)) {
-        alignment = 1L << (31 - __builtin_clz(alignment));
+    if (!BIONIC_IS_POWER_OF_2(alignment)) {
+        alignment = BIONIC_ROUND_UP_POWER_OF_2(alignment);
     }
 
     // here, alignment is at least MALLOC_ALIGNMENT<<1 bytes
@@ -464,7 +465,7 @@ extern "C" struct mallinfo leak_mallinfo() {
 }
 
 extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size) {
-  if ((alignment & (alignment - 1)) != 0) {
+  if (!BIONIC_IS_POWER_OF_2(alignment)) {
     return EINVAL;
   }
   int saved_errno = errno;
@@ -475,7 +476,7 @@ extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size)
 
 extern "C" void* leak_pvalloc(size_t bytes) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  size_t size = (bytes + pagesize - 1) & ~(pagesize - 1);
+  size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
     return NULL;
   }
