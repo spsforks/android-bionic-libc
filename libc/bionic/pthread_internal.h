@@ -36,6 +36,9 @@ struct pthread_internal_t {
 
   pid_t tid;
 
+  // Never access this directly. Always use getpid.
+  pid_t cached_pid;
+
   void** tls;
 
   pthread_attr_t attr;
