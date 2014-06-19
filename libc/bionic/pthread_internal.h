@@ -29,12 +29,33 @@
 #define _PTHREAD_INTERNAL_H_
 
 #include <pthread.h>
+#include <stdatomic.h>
 
 struct pthread_internal_t {
   struct pthread_internal_t* next;
   struct pthread_internal_t* prev;
 
   pid_t tid;
+
+ private:
+  _Atomic(pid_t) cached_pid_;
+
+ public:
+  pid_t invalidate_cached_pid() {
+    pid_t old_value;
+    get_cached_pid(&old_value);
+    set_cached_pid(0);
+    return old_value;
+  }
+
+  void set_cached_pid(pid_t value) {
+    atomic_store(&cached_pid_, value);
+  }
+
+  bool get_cached_pid(pid_t* cached_pid) {
+    *cached_pid = atomic_load(&cached_pid_);
+    return (cached_pid != 0);
+  }
 
   void** tls;
 
