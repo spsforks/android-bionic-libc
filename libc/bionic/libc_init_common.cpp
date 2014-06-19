@@ -93,6 +93,7 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   static void* tls[BIONIC_TLS_SLOTS];
   static pthread_internal_t main_thread;
   main_thread.tls = tls;
+  main_thread.cached_pid = CACHED_PID_UNKNOWN;
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   main_thread.tid = __set_tid_address(&main_thread.tid);
