@@ -36,6 +36,9 @@ struct pthread_internal_t {
 
   pid_t tid;
 
+  // Never access this directly. Always use getpid.
+  pid_t cached_pid;
+
   void** tls;
 
   pthread_attr_t attr;
@@ -57,6 +60,9 @@ struct pthread_internal_t {
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
+
+#define CACHED_PID_UNKNOWN 0
+#define CACHED_PID_DO_NOT_TOUCH -1
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
