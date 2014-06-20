@@ -33,36 +33,12 @@
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-pthread_internal_t* g_thread_list = NULL;
-pthread_mutex_t g_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
-
-void _pthread_internal_remove_locked(pthread_internal_t* thread) {
-  if (thread->next != NULL) {
-    thread->next->prev = thread->prev;
-  }
-  if (thread->prev != NULL) {
-    thread->prev->next = thread->next;
-  } else {
-    g_thread_list = thread->next;
-  }
-
+void pthread_internal_t::destroy() {
   // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
   // and __libc_init_common for the point where it's added to the thread list.
-  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
-    free(thread);
+  if ((attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
+    free(this);
   }
-}
-
-void _pthread_internal_add(pthread_internal_t* thread) {
-  ScopedPthreadMutexLocker locker(&g_thread_list_lock);
-
-  // We insert at the head.
-  thread->next = g_thread_list;
-  thread->prev = NULL;
-  if (thread->next != NULL) {
-    thread->next->prev = thread;
-  }
-  g_thread_list = thread;
 }
 
 pthread_internal_t* __get_thread(void) {
@@ -70,7 +46,7 @@ pthread_internal_t* __get_thread(void) {
 }
 
 pid_t __pthread_gettid(pthread_t t) {
-  return reinterpret_cast<pthread_internal_t*>(t)->tid;
+  return reinterpret_cast<pthread_internal_t*>(t)->tid();
 }
 
 // Initialize 'ts' with the difference between 'abstime' and the current time

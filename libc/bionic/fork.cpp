@@ -42,9 +42,9 @@ int fork() {
   pid_t parent_pid = self->invalidate_cached_pid();
 
 #if defined(__x86_64__) // sys_clone's last two arguments are flipped on x86-64.
-  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, &(self->tid), NULL);
+  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, &(self->tid_), NULL);
 #else
-  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, NULL, &(self->tid));
+  int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, NULL, &(self->tid_));
 #endif
   if (result == 0) {
     self->set_cached_pid(gettid());

@@ -92,13 +92,13 @@ void pthread_exit(void* return_value) {
   size_t stack_size = thread->attr.stack_size;
   bool user_allocated_stack = ((thread->attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0);
 
-  pthread_mutex_lock(&g_thread_list_lock);
+  // TODO: atomic compare exchange the PTHREAD_ATTR_FLAG_DETACHED test!!!!!!!!  XXXXXXXXXXXXXXXXXXX
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
     // The thread is detached, so we can free the pthread_internal_t.
     // First make sure that the kernel does not try to clear the tid field
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
-    _pthread_internal_remove_locked(thread);
+    thread->destroy();
   } else {
     // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
     // will be unmapped after the exit call below.
@@ -110,7 +110,6 @@ void pthread_exit(void* return_value) {
     // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
     // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
   }
-  pthread_mutex_unlock(&g_thread_list_lock);
 
   if (user_allocated_stack) {
     // Cleaning up this thread's stack is the creator's responsibility, not ours.
