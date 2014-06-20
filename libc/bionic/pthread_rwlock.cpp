@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <unistd.h>
 
 #include "pthread_internal.h"
 #include "private/bionic_futex.h"
@@ -132,7 +133,7 @@ int pthread_rwlock_destroy(pthread_rwlock_t* rwlock) {
 }
 
 static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
-  if (__predict_false(__get_thread()->tid == rwlock->writer_thread_id)) {
+  if (__predict_false(gettid() == rwlock->writer_thread_id)) {
     return EDEADLK;
   }
 
@@ -167,7 +168,7 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec
 }
 
 static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
-  int tid = __get_thread()->tid;
+  pid_t tid = gettid();
   if (__predict_false(tid == rwlock->writer_thread_id)) {
     return EDEADLK;
   }
@@ -226,11 +227,10 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 }
 
 int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock) {
-  int tid = __get_thread()->tid;
   int32_t cur_state = rwlock->state;
   if ((cur_state == 0) &&
       __sync_bool_compare_and_swap(&rwlock->state, 0 /* cur state */, -1 /* new state */)) {  // C++11 memory_order_acquire
-    rwlock->writer_thread_id = tid;
+    rwlock->writer_thread_id = gettid();
     return 0;
   }
   return EBUSY;
@@ -238,7 +238,7 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock) {
 
 
 int pthread_rwlock_unlock(pthread_rwlock_t* rwlock) {
-  int tid = __get_thread()->tid;
+  pid_t tid = gettid();
   bool done = false;
   do {
     int32_t cur_state = rwlock->state;

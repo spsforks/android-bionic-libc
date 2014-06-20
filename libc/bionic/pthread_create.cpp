@@ -86,14 +86,14 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
   }
 }
 
-int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
+int __init_thread(pthread_internal_t* thread) {
   int error = 0;
 
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
     sched_param param;
     param.sched_priority = thread->attr.sched_priority;
-    if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
+    if (sched_setscheduler(thread->tid(), thread->attr.sched_policy, &param) == -1) {
 #if __LP64__
       // For backwards compatibility reasons, we only report failures on 64-bit devices.
       error = errno;
@@ -104,10 +104,6 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   }
 
   thread->cleanup_stack = NULL;
-
-  if (add_to_thread_list) {
-    _pthread_internal_add(thread);
-  }
 
   return error;
 }
@@ -233,7 +229,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   __init_user_desc(&tls_descriptor, false, tls);
   tls = &tls_descriptor;
 #endif
-  int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
+  int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid_), tls, &(thread->tid_));
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
@@ -248,7 +244,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  int init_errno = __init_thread(thread, true);
+  int init_errno = __init_thread(thread);
   if (init_errno != 0) {
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
@@ -261,7 +257,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // Notify any debuggers about the new thread.
   {
     ScopedPthreadMutexLocker debugger_locker(&g_debugger_notification_lock);
-    _thread_created_hook(thread->tid);
+    _thread_created_hook(thread->tid());
   }
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.

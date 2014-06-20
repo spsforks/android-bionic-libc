@@ -39,7 +39,7 @@ int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
     return ESRCH;
   }
 
-  int rc = sched_setscheduler(thread->tid, policy, param);
+  int rc = sched_setscheduler(thread.tid(), policy, param);
   if (rc == -1) {
     return errno;
   }

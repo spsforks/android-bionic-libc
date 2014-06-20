@@ -36,6 +36,8 @@ int pthread_detach(pthread_t t) {
       return ESRCH;
   }
 
+  // TODO: atomic compare exchange this!!!!   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
   if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
     return EINVAL; // Already detached.
   }
@@ -44,12 +46,15 @@ int pthread_detach(pthread_t t) {
     return 0; // Already being joined; silently do nothing, like glibc.
   }
 
-  if (thread->tid == 0) {
+  if (thread->tid() == 0) {
     // Already exited; clean up.
-    _pthread_internal_remove_locked(thread.get());
+    thread->destroy();
     return 0;
   }
 
   thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+
+  // TODO: atomic compare exchange this!!!!   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
   return 0;
 }

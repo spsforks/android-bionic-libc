@@ -27,7 +27,8 @@
  */
 
 #include "pthread_internal.h"
+#include "private/bionic_tls.h"
 
 pthread_t pthread_self() {
-  return reinterpret_cast<pthread_t>(__get_thread());
+  return reinterpret_cast<pthread_t>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }

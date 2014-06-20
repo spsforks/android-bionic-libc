@@ -29,12 +29,17 @@
 #define _PTHREAD_INTERNAL_H_
 
 #include <pthread.h>
+#include <stdatomic.h>
 
 struct pthread_internal_t {
   struct pthread_internal_t* next;
   struct pthread_internal_t* prev;
 
-  pid_t tid;
+  _Atomic(pid_t) tid_; // TODO: make private?
+
+  pid_t tid() {
+    return atomic_load(&tid_);
+  }
 
  private:
   pid_t cached_pid_;
@@ -55,6 +60,8 @@ struct pthread_internal_t {
     *cached_pid = cached_pid_;
     return (*cached_pid != 0);
   }
+
+  void destroy();
 
   void** tls;
 
@@ -78,14 +85,11 @@ struct pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t*);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
-__LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
-__LIBC_HIDDEN__ pthread_internal_t* __get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
-__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
 #define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
@@ -107,9 +111,6 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
  * roughly constant.
  */
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
-
-__LIBC_HIDDEN__ extern pthread_internal_t* g_thread_list;
-__LIBC_HIDDEN__ extern pthread_mutex_t g_thread_list_lock;
 
 __LIBC_HIDDEN__ int __timespec_from_absolute(timespec*, const timespec*, clockid_t);
 

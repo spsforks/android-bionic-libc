@@ -33,7 +33,7 @@
 extern "C" pid_t __getpid();
 
 pid_t getpid() {
-  pthread_internal_t* self = __get_thread();
+  pthread_internal_t* self = reinterpret_cast<pthread_internal_t*>(pthread_self());
 
   // Do we have a valid cached pid?
   pid_t cached_pid;

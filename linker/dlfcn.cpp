@@ -40,7 +40,7 @@ static const char* __bionic_set_dlerror(char* new_value) {
 }
 
 static void __bionic_format_dlerror(const char* msg, const char* detail) {
-  char* buffer = __get_thread()->dlerror_buffer;
+  char* buffer = reinterpret_cast<pthread_internal_t*>(pthread_self())->dlerror_buffer;
   strlcpy(buffer, msg, __BIONIC_DLERROR_BUFFER_SIZE);
   if (detail != NULL) {
     strlcat(buffer, ": ", __BIONIC_DLERROR_BUFFER_SIZE);

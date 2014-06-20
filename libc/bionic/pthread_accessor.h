@@ -18,30 +18,19 @@
 #define PTHREAD_ACCESSOR_H
 
 #include <pthread.h>
+#include <stdatomic.h>
 
 #include "private/bionic_macros.h"
 #include "pthread_internal.h"
 
 class pthread_accessor {
  public:
-  explicit pthread_accessor(pthread_t desired_thread) {
-    Lock();
-    for (thread_ = g_thread_list; thread_ != NULL; thread_ = thread_->next) {
-      if (thread_ == reinterpret_cast<pthread_internal_t*>(desired_thread)) {
-        break;
-      }
-    }
-  }
-
-  ~pthread_accessor() {
-    Unlock();
-  }
-
-  void Unlock() {
-    if (is_locked_) {
-      is_locked_ = false;
+  explicit pthread_accessor(pthread_t t) {
+    thread_ = reinterpret_cast<pthread_internal_t*>(t);
+    tid_ = atomic_load(&thread_->tid_);
+    if (tid_ == 0) {
+      // The kernel thinks we're dead.
       thread_ = NULL;
-      pthread_mutex_unlock(&g_thread_list_lock);
     }
   }
 
@@ -49,14 +38,13 @@ class pthread_accessor {
   pthread_internal_t* operator->() const { return thread_; }
   pthread_internal_t* get() const { return thread_; }
 
+  pid_t tid() {
+    return tid_;
+  }
+
  private:
   pthread_internal_t* thread_;
-  bool is_locked_;
-
-  void Lock() {
-    pthread_mutex_lock(&g_thread_list_lock);
-    is_locked_ = true;
-  }
+  pid_t tid_;
 
   DISALLOW_COPY_AND_ASSIGN(pthread_accessor);
 };
