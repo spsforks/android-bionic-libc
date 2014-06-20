@@ -440,7 +440,7 @@ static inline __always_inline int _recursive_increment(pthread_mutex_t* mutex, i
 }
 
 int pthread_mutex_lock(pthread_mutex_t* mutex) {
-    int mvalue, mtype, tid, shared;
+    int mvalue, mtype, shared;
 
     mvalue = mutex->value;
     mtype = (mvalue & MUTEX_TYPE_MASK);
@@ -453,9 +453,10 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->tid;
-    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
+    pid_t tid = gettid();
+    if (tid == MUTEX_OWNER_FROM_BITS(mvalue)) {
         return _recursive_increment(mutex, mvalue, mtype);
+    }
 
     /* Add in shared state to avoid extra 'or' operations below */
     mtype |= shared;
@@ -516,7 +517,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex) {
 }
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex) {
-    int mvalue, mtype, tid, shared;
+    int mvalue, mtype, shared;
 
     mvalue = mutex->value;
     mtype  = (mvalue & MUTEX_TYPE_MASK);
@@ -529,7 +530,7 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex) {
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->tid;
+    pid_t tid = gettid();
     if ( tid != MUTEX_OWNER_FROM_BITS(mvalue) )
         return EPERM;
 
@@ -568,7 +569,7 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex) {
 }
 
 int pthread_mutex_trylock(pthread_mutex_t* mutex) {
-    int mvalue, mtype, tid, shared;
+    int mvalue, mtype, shared;
 
     mvalue = mutex->value;
     mtype  = (mvalue & MUTEX_TYPE_MASK);
@@ -588,9 +589,10 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex) {
     }
 
     /* Do we already own this recursive or error-check mutex ? */
-    tid = __get_thread()->tid;
-    if ( tid == MUTEX_OWNER_FROM_BITS(mvalue) )
+    pid_t tid = gettid();
+    if (tid == MUTEX_OWNER_FROM_BITS(mvalue)) {
         return _recursive_increment(mutex, mvalue, mtype);
+    }
 
     /* Same as pthread_mutex_lock, except that we don't want to wait, and
      * the only operation that can succeed is a single cmpxchg to acquire the
@@ -638,7 +640,7 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex, const timespec* abs
   }
 
   // Do we already own this recursive or error-check mutex?
-  pid_t tid = __get_thread()->tid;
+  pid_t tid = gettid();
   if (tid == MUTEX_OWNER_FROM_BITS(mvalue)) {
     return _recursive_increment(mutex, mvalue, mtype);
   }

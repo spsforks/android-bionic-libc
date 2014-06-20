@@ -92,8 +92,9 @@ void __libc_init_tls(KernelArgumentBlock& args) {
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
-  main_thread.tid = __set_tid_address(&main_thread.tid);
-  main_thread.set_cached_pid(main_thread.tid);
+  pid_t main_thread_tid = __set_tid_address(main_thread.tid_address());
+  main_thread.set_tid(main_thread_tid);
+  main_thread.set_cached_pid(main_thread_tid);
 
   // Work out the extent of the main thread's stack.
   uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
@@ -106,7 +107,7 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   pthread_attr_setstack(&main_thread.attr, stack_bottom, stack_size);
   main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK | PTHREAD_ATTR_FLAG_MAIN_THREAD;
 
-  __init_thread(&main_thread, false);
+  __init_thread(&main_thread);
   __init_tls(&main_thread);
   __set_tls(main_thread.tls);
   tls[TLS_SLOT_BIONIC_PREINIT] = &args;
@@ -124,10 +125,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
   __stack_chk_guard = *reinterpret_cast<uintptr_t*>(getauxval(AT_RANDOM));
-
-  // Get the main thread from TLS and add it to the thread list.
-  pthread_internal_t* main_thread = __get_thread();
-  _pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
 }

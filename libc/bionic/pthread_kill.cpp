@@ -43,10 +43,7 @@ int pthread_kill(pthread_t t, int sig) {
   }
 
   // There's a race here, but it's one we share with all other C libraries.
-  pid_t tid = thread->tid;
-  thread.Unlock();
-
-  int rc = tgkill(getpid(), tid, sig);
+  int rc = tgkill(getpid(), thread.tid(), sig);
   if (rc == -1) {
     return errno;
   }

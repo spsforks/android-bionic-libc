@@ -29,6 +29,7 @@
 #include <errno.h>
 
 #include "private/bionic_futex.h"
+#include "private/ScopedPthreadMutexLocker.h"
 #include "pthread_accessor.h"
 
 int pthread_join(pthread_t t, void** return_value) {
@@ -36,13 +37,11 @@ int pthread_join(pthread_t t, void** return_value) {
     return EDEADLK;
   }
 
-  pid_t tid;
-  volatile int* tid_ptr;
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  pid_t tid = thread->tid();
+
   {
-    pthread_accessor thread(t);
-    if (thread.get() == NULL) {
-      return ESRCH;
-    }
+    ScopedPthreadMutexLocker locker(&thread->flags_mutex);
 
     if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
       return EINVAL;
@@ -54,26 +53,21 @@ int pthread_join(pthread_t t, void** return_value) {
 
     // Okay, looks like we can signal our intention to join.
     thread->attr.flags |= PTHREAD_ATTR_FLAG_JOINED;
-    tid = thread->tid;
-    tid_ptr = &thread->tid;
   }
 
   // We set the PTHREAD_ATTR_FLAG_JOINED flag with the lock held,
   // so no one is going to remove this thread except us.
 
   // Wait for the thread to actually exit, if it hasn't already.
+  volatile pid_t* tid_ptr = thread->tid_address();
   while (*tid_ptr != 0) {
     __futex_wait(tid_ptr, tid, NULL);
   }
-
-  // Take the lock again so we can pull the thread's return value
-  // and remove the thread from the list.
-  pthread_accessor thread(t);
 
   if (return_value) {
     *return_value = thread->return_value;
   }
 
-  _pthread_internal_remove_locked(thread.get());
+  thread->destroy();
   return 0;
 }

@@ -28,13 +28,13 @@
 
 #include <errno.h>
 
+#include "private/ScopedPthreadMutexLocker.h"
 #include "pthread_accessor.h"
 
 int pthread_detach(pthread_t t) {
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
-      return ESRCH;
-  }
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+
+  ScopedPthreadMutexLocker locker(&thread->flags_mutex);
 
   if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
     return EINVAL; // Already detached.
@@ -44,12 +44,13 @@ int pthread_detach(pthread_t t) {
     return 0; // Already being joined; silently do nothing, like glibc.
   }
 
-  if (thread->tid == 0) {
+  if (thread->tid() == 0) {
     // Already exited; clean up.
-    _pthread_internal_remove_locked(thread.get());
+    thread->destroy();
     return 0;
   }
 
   thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+
   return 0;
 }
