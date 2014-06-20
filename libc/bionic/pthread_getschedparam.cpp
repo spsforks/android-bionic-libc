@@ -39,10 +39,10 @@ int pthread_getschedparam(pthread_t t, int* policy, sched_param* param) {
     return ESRCH;
   }
 
-  int rc = sched_getparam(thread->tid, param);
+  int rc = sched_getparam(thread.tid(), param);
   if (rc == -1) {
     return errno;
   }
-  *policy = sched_getscheduler(thread->tid);
+  *policy = sched_getscheduler(thread.tid());
   return 0;
 }

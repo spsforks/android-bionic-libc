@@ -36,44 +36,39 @@ int pthread_join(pthread_t t, void** return_value) {
     return EDEADLK;
   }
 
-  pid_t tid;
-  volatile int* tid_ptr;
-  {
-    pthread_accessor thread(t);
-    if (thread.get() == NULL) {
-      return ESRCH;
-    }
-
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
-      return EINVAL;
-    }
-
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) != 0) {
-      return EINVAL;
-    }
-
-    // Okay, looks like we can signal our intention to join.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_JOINED;
-    tid = thread->tid;
-    tid_ptr = &thread->tid;
+  pthread_accessor thread(t);
+  if (thread.get() == NULL) {
+    return ESRCH;
   }
+
+  // TODO: atomic compare exchange this!!!!   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
+    return EINVAL;
+  }
+
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) != 0) {
+    return EINVAL;
+  }
+
+  // Okay, looks like we can signal our intention to join.
+  thread->attr.flags |= PTHREAD_ATTR_FLAG_JOINED;
+
+  // TODO: atomic compare exchange this!!!!   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   // We set the PTHREAD_ATTR_FLAG_JOINED flag with the lock held,
   // so no one is going to remove this thread except us.
 
   // Wait for the thread to actually exit, if it hasn't already.
+  volatile int* tid_ptr = reinterpret_cast<volatile int*>(&thread->tid_);
   while (*tid_ptr != 0) {
-    __futex_wait(tid_ptr, tid, NULL);
+    __futex_wait(tid_ptr, thread.tid(), NULL);
   }
-
-  // Take the lock again so we can pull the thread's return value
-  // and remove the thread from the list.
-  pthread_accessor thread(t);
 
   if (return_value) {
     *return_value = thread->return_value;
   }
 
-  _pthread_internal_remove_locked(thread.get());
+  thread->destroy();
   return 0;
 }
