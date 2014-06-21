@@ -84,7 +84,7 @@ __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 __LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __get_thread(void);
 
-__LIBC_HIDDEN__ void pthread_key_clean_all(void);
+__LIBC_HIDDEN__ void __pthread_key_clean_all(void);
 __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
 
 /* Has the thread been detached by a pthread_join or pthread_detach call? */

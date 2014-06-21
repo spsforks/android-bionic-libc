@@ -73,7 +73,7 @@ void pthread_exit(void* return_value) {
   // thread from the global list. This will ensure that if someone else deletes
   // a TLS key, the corresponding value will be set to NULL in this thread's TLS
   // space (see pthread_key_delete).
-  pthread_key_clean_all();
+  __pthread_key_clean_all();
 
   if (thread->alternate_signal_stack != NULL) {
     // Tell the kernel to stop using the alternate signal stack.
