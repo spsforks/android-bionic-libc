@@ -43,8 +43,10 @@
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-#define bcopy(b1, b2, len) (void)(memmove((b2), (b1), (len)))
-#define bzero(b, len) (void)(memset((b), '\0', (len)))
+#define bcopy(b1, b2, len) \
+  (void)(__builtin___memmove_chk((b2), (b1), (len), __bos0(b2)))
+#define bzero(b, len) \
+  (void)(__builtin___memset_chk((b), '\0', (len), __bos0(b)))
 
 int	 ffs(int);
 int	 strcasecmp(const char *, const char *);
