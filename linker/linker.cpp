@@ -49,6 +49,7 @@
 #include "linker_environ.h"
 #include "linker_phdr.h"
 #include "linker_allocator.h"
+#include "linker_ziparchive.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -129,6 +130,21 @@ enum class SymbolLookupScope {
   kAllowLocal,
   kExcludeLocal,
 };
+
+struct FileInfo {
+  static FileInfo kInvalid;
+
+  FileInfo(int fd, off_t offset) : fd(fd), offset(offset) {}
+  int fd;
+  off_t offset;
+ private:
+  // note that this does not get called
+  // linker initializes all global variables
+  // manually in __linker_init_post_relocation
+  FileInfo() : fd(-1), offset(0) {}
+};
+
+FileInfo FileInfo::kInvalid(-1,0);
 
 #if STATS
 struct linker_stats_t {
@@ -289,7 +305,7 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off_t file_offset) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return NULL;
@@ -305,6 +321,7 @@ static soinfo* soinfo_alloc(const char* name, struct stat* file_stat) {
   if (file_stat != NULL) {
     si->set_st_dev(file_stat->st_dev);
     si->set_st_ino(file_stat->st_ino);
+    si->set_file_offset(file_offset);
   }
 
   sonext->next = si;
@@ -656,7 +673,42 @@ ElfW(Sym)* dladdr_find_symbol(soinfo* si, const void* addr) {
   return NULL;
 }
 
-static int open_library_on_path(const char* name, const char* const paths[]) {
+static FileInfo open_from_zip(const char* path) {
+  if (strchr(path, '!') == NULL) {
+    return FileInfo::kInvalid;
+  }
+  char zip_name[512];
+
+  size_t actual = strlcpy(zip_name, path, sizeof(zip_name));
+  if (actual != strlen(path)) {
+    PRINT("Warning: ignoring very long library path: %s", path);
+    return FileInfo::kInvalid;
+  }
+
+  char* exclamation = strchr(zip_name, '!');
+  *exclamation = '\0';
+  const char* file_name = exclamation + 1;
+
+  // skip all '/' right after exclamation mark.
+  while (*file_name == '/') {
+    ++file_name;
+  }
+
+  ScopedFd fd(TEMP_FAILURE_RETRY(open(zip_name, O_RDONLY | O_CLOEXEC)));
+
+  char error_msg[128];
+  off_t offset = find_in_zip(fd.get(), file_name, error_msg, sizeof(error_msg));
+  if (offset == -1) {
+    if (*error_msg != '\0') {
+      PRINT("Error reading \"%s\": %s", path, error_msg);
+    }
+    return FileInfo::kInvalid;
+  }
+
+  return FileInfo(fd.release(), offset);
+}
+
+static FileInfo open_library_on_path(const char* name, const char* const paths[]) {
   char buf[512];
   for (size_t i = 0; paths[i] != NULL; ++i) {
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
@@ -664,55 +716,73 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
       continue;
     }
-    int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
-    if (fd != -1) {
-      return fd;
+
+    if (strchr(buf, '!') != NULL) {
+      FileInfo fi = open_from_zip(buf);
+      if (fi.fd != -1) {
+        return fi;
+      }
+    } else {
+      int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+      if (fd != -1) {
+        return FileInfo(fd, 0);
+      }
     }
   }
-  return -1;
+  return FileInfo::kInvalid;
 }
 
-static int open_library(const char* name) {
+static FileInfo open_library(const char* name) {
   TRACE("[ opening %s ]", name);
+
+  // If the name contains '!' this is absolute path into zip
+  // open file from the zip
+  if (strchr(name, '!') != NULL) {
+    return open_from_zip(name);
+  }
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != NULL) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
-      return fd;
+      return FileInfo(fd, 0);
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
 #if defined(__LP64__)
-    return -1;
+    return FileInfo::kInvalid;
 #endif
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_path(name, g_ld_library_paths);
-  if (fd == -1) {
-    fd = open_library_on_path(name, kDefaultLdPaths);
+  FileInfo f = open_library_on_path(name, g_ld_library_paths);
+  if (f.fd == -1) {
+    f = open_library_on_path(name, kDefaultLdPaths);
   }
-  return fd;
+  return f;
 }
 
 static soinfo* load_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
     int fd = -1;
+    off_t file_offset = 0;
     ScopedFd file_guard(-1);
 
     if (extinfo != NULL && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
       fd = extinfo->library_fd;
     } else {
       // Open the file.
-      fd = open_library(name);
-      if (fd == -1) {
+      FileInfo f = open_library(name);
+      if (f.fd == -1) {
         DL_ERR("library \"%s\" not found", name);
         return NULL;
       }
 
+      fd = f.fd;
+      file_offset = f.offset;
+
       file_guard.reset(fd);
     }
 
-    ElfReader elf_reader(name, fd);
+    ElfReader elf_reader(name, fd, file_offset);
 
     struct stat file_stat;
     if (TEMP_FAILURE_RETRY(fstat(fd, &file_stat)) != 0) {
@@ -726,7 +796,8 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       if (si->get_st_dev() != 0 &&
           si->get_st_ino() != 0 &&
           si->get_st_dev() == file_stat.st_dev &&
-          si->get_st_ino() == file_stat.st_ino) {
+          si->get_st_ino() == file_stat.st_ino &&
+          si->get_file_offset() == file_offset) {
         TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
         return si;
       }
@@ -741,7 +812,7 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
         return NULL;
     }
 
-    soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat);
+    soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, file_offset);
     if (si == NULL) {
         return NULL;
     }
@@ -1524,6 +1595,14 @@ void soinfo::set_st_ino(ino_t ino) {
   st_ino = ino;
 }
 
+void soinfo::set_file_offset(off_t offset) {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return;
+  }
+
+  file_offset = offset;
+}
+
 dev_t soinfo::get_st_dev() {
   if ((this->flags & FLAG_NEW_SOINFO) == 0) {
     return 0;
@@ -1538,6 +1617,14 @@ ino_t soinfo::get_st_ino() {
   }
 
   return st_ino;
+}
+
+off_t soinfo::get_file_offset() {
+  if ((this->flags & FLAG_NEW_SOINFO) == 0) {
+    return 0;
+  }
+
+  return file_offset;
 }
 
 // This is a return on get_children() in case
@@ -1984,7 +2071,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
     return;
   }
 
-  soinfo* si = soinfo_alloc("[vdso]", NULL);
+  soinfo* si = soinfo_alloc("[vdso]", NULL, 0);
 
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   si->phnum = ehdr_vdso->e_phnum;
@@ -2082,10 +2169,12 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     // the allocators explicitly.
     g_soinfo_allocator.init();
     g_soinfo_links_allocator.init();
+    FileInfo::kInvalid.fd = -1;
+    FileInfo::kInvalid.offset = 0;
 
     INFO("[ android linker & debugger ]");
 
-    soinfo* si = soinfo_alloc(args.argv[0], NULL);
+    soinfo* si = soinfo_alloc(args.argv[0], NULL, 0);
     if (si == NULL) {
         exit(EXIT_FAILURE);
     }
