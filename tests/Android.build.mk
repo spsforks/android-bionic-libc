@@ -52,6 +52,10 @@ LOCAL_CPPFLAGS += \
     $($(module)_cppflags) \
     $($(module)_cppflags_$(build_type)) \
 
+LOCAL_CPPFLAGS_$(TARGET_2ND_ARCH) := $($(module)_cppflags_$(TARGET_2ND_ARCH))
+
+LOCAL_CPPFLAGS_$(TARGET_ARCH) := $($(module)_cppflags_$(TARGET_ARCH))
+
 LOCAL_C_INCLUDES := \
     $(common_c_includes) \
     $($(module)_c_includes) \
