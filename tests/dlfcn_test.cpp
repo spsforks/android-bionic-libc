@@ -27,6 +27,11 @@
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
+#define QQ(x) #x
+#define Q(x) QQ(x)
+#define _CPU_ABI Q(CPU_ABI)
+
+
 static bool g_called = false;
 extern "C" void DlSymTestFunction() {
   g_called = true;
@@ -80,6 +85,49 @@ TEST(dlfcn, dlsym_local_symbol) {
   ASSERT_EQ(1729U, f());
 }
 #endif
+
+TEST(dlfcn, dlopen_from_zip) {
+  const char* android_data = getenv("ANDROID_DATA");
+  char path[PATH_MAX];
+  snprintf(path, sizeof(path), "%s/nativetest/testapk/testapk_page_aligned.zip!lib/" _CPU_ABI "/libapk_test_simple.so", android_data);
+  void* handle = dlopen(path, RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  int (*f)(void);
+  f = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
+  ASSERT_TRUE(f != NULL);
+  EXPECT_EQ(4, f());
+  ASSERT_EQ(0, dlclose(handle));
+}
+
+extern "C" void android_update_LD_LIBRARY_PATH(const char* ld_library_path);
+
+TEST(dlfcn, dlopen_from_zip_with_dependency) {
+  const char* saved_ld_library_path = getenv("LD_LIBRARY_PATH");
+  const char* android_data = getenv("ANDROID_DATA");
+  char ld_library_path[PATH_MAX];
+  snprintf(ld_library_path, sizeof(ld_library_path), "%s/nativetest/testapk/testapk_page_aligned.zip!lib/" _CPU_ABI, android_data);
+  android_update_LD_LIBRARY_PATH(ld_library_path);
+
+  void* handle = dlopen("libapk_test_with_dependency.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  int (*f)(void);
+  f = reinterpret_cast<int (*)(void)>(dlsym(handle, "useRandomNumber"));
+  ASSERT_TRUE(f != NULL);
+  EXPECT_EQ(44, f());
+  ASSERT_EQ(0, dlclose(handle));
+
+  android_update_LD_LIBRARY_PATH(saved_ld_library_path);
+}
+
+TEST(dlfcn, dlopen_from_zip_missaligned) {
+  const char* android_data = getenv("ANDROID_DATA");
+  char path[PATH_MAX];
+  snprintf(path, sizeof(path), "%s/nativetest/testapk/testapk_misaligned.zip!lib/" _CPU_ABI "/libapk_test_simple.so", android_data);
+
+  void* handle = dlopen(path, RTLD_NOW);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_TRUE(strstr(dlerror(),"nativetest/testapk/testapk_misaligned.zip!lib/armeabi-v7a/libapk_test_simple.so\" not found") != NULL);
+}
 
 TEST(dlfcn, dlopen_noload) {
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
