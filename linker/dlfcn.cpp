@@ -65,6 +65,11 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
+void android_update_lookup_fn(lookup_fn_t fn) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  do_android_update_lookup_fn(fn);
+}
+
 static void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   soinfo* result = do_dlopen(filename, flags, extinfo);
@@ -181,15 +186,15 @@ int dlclose(void* handle) {
     }
 
 #if defined(__arm__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 333333333344444444445
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 012345678901234567890
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 3333333333444444444455555 555556666666666777777
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 0123456789012345678901234 567890123456789012345
 #  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0dl_unwind_find_exidx\0"
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0android_update_lookup_fn\0dl_unwind_find_exidx\0"
 #elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 3333333333444444444455555
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 0123456789012345678901234
 #  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0"
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0android_update_lookup_fn\0"
 #else
 #  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
 #endif
@@ -209,8 +214,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)( 67, &android_get_LD_LIBRARY_PATH, 1),
   ELFW(SYM_INITIALIZER)( 95, &dl_iterate_phdr, 1),
   ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
+  ELFW(SYM_INITIALIZER)(130, &android_update_lookup_fn, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(130, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(155, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -227,12 +233,12 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 #endif
 
-static soinfo __libdl_info("libdl.so", nullptr);
+static soinfo __libdl_info("libdl.so", nullptr, 0);
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
