@@ -220,6 +220,9 @@ bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
 bionic-unit-tests_static_libraries := \
+    libziparchive \
+    libutils \
+    libz \
     libtinyxml2 \
     liblog \
 
@@ -237,6 +240,9 @@ bionic-unit-tests_conlyflags := \
     -fnon-call-exceptions \
 
 bionic-unit-tests_cppflags := $(test_cppflags)
+
+bionic-unit-tests_cppflags_$(TARGET_ARCH) := -DCPU_ABI=$(TARGET_CPU_ABI)
+bionic-unit-tests_cppflags_$(TARGET_2ND_ARCH) := -DCPU_ABI=$(TARGET_2ND_CPU_ABI)
 
 bionic-unit-tests_ldflags := \
     -Wl,--export-dynamic
