@@ -335,6 +335,7 @@ soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
+void do_android_set_dlopen_lookup_action(const android_dlopen_lookup_action* new_action, android_dlopen_lookup_action* old_action);
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo);
 void do_dlclose(soinfo* si);
 

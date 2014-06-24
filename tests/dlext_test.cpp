@@ -31,6 +31,9 @@
 
 #include <pagemap/pagemap.h>
 
+#include <private/ScopedFd.h>
+#include <ziparchive/zip_archive.h>
+
 #include "TemporaryFile.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
@@ -53,14 +56,25 @@ typedef int (*fn)(void);
 
 #if defined(__LP64__)
 #define LIBPATH_PREFIX "%s/nativetest64/libdlext_test_fd/"
+#define ZIPPATH_PREFIX  "%s/nativetest64/testapk/"
 #else
 #define LIBPATH_PREFIX "%s/nativetest/libdlext_test_fd/"
+#define ZIPPATH_PREFIX  "%s/nativetest/testapk/"
 #endif
 
 #define LIBPATH LIBPATH_PREFIX "libdlext_test_fd.so"
 #define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_fd_zipaligned.zip"
 
 #define LIBZIP_OFFSET 2*PAGE_SIZE
+
+#define ZIPPATH ZIPPATH_PREFIX "testapk_page_aligned.zip"
+#define ZIPPATH_MISALIGNED ZIPPATH_PREFIX "testapk_misaligned.zip"
+
+#define QQ(x) #x
+#define Q(x) QQ(x)
+#define _CPU_ABI Q(CPU_ABI)
+
+#define LIB_ZIPPATH "lib/" _CPU_ABI "/"
 
 class DlExtTest : public ::testing::Test {
 protected:
@@ -103,10 +117,8 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFd) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBPATH, getenv("ANDROID_DATA"));
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD;
@@ -120,11 +132,8 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
-
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, getenv("ANDROID_DATA"));
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -140,11 +149,8 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
-
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBPATH, getenv("ANDROID_DATA"));
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -182,6 +188,138 @@ TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
   handle_ = android_dlopen_ext("/some/lib/that/does_not_exist", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
+
+}
+
+
+static bool lookup_fn(const char* filename, int* fd, off64_t *offset, bool* close_flag, void* arg) {
+  const char* zip_path = reinterpret_cast<char*>(arg);
+
+  ScopedFd zip_fd(TEMP_FAILURE_RETRY(open(zip_path, O_RDONLY | O_CLOEXEC)));
+  if (zip_fd.get() == -1) {
+    return false;
+  }
+
+  ZipArchiveHandle zip_handle;
+  if(OpenArchiveFd(zip_fd.get(), NULL, &zip_handle) != 0) {
+    return false;
+  }
+
+  char entry_name[PATH_MAX];
+  snprintf(entry_name, sizeof(entry_name), "%s%s", LIB_ZIPPATH, filename);
+  ZipEntry entry;
+  int32_t ret = FindEntry(zip_handle, ZipEntryName(entry_name), &entry);
+  if (ret != 0) {
+    return false;
+  }
+
+  if (entry.method != kCompressStored) {
+    return false;
+  }
+
+  *offset = entry.offset;
+  *fd = zip_fd.release();
+  *close_flag = true;
+  return true;
+}
+
+TEST_F(DlExtTest, WithLookupFunction) {
+  char zip_path[PATH_MAX];
+  snprintf(zip_path, sizeof(zip_path), ZIPPATH, getenv("ANDROID_DATA"));
+  android_dlextinfo extinfo;
+  extinfo.library_lookup_action.lookup_fn = lookup_fn;
+  extinfo.library_lookup_action.lookup_fn_arg = zip_path;
+  extinfo.flags = ANDROID_DLEXT_USE_LOOKUP_FUNCTION;
+  handle_ = android_dlopen_ext("libapk_test_simple.so", RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(4, f());
+  dlclose(handle_);
+
+  handle_ = android_dlopen_ext("libapk_test_with_dependency.so", RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+  f = reinterpret_cast<fn>(dlsym(handle_, "useRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(44, f());
+}
+
+TEST_F(DlExtTest, WithLookupFunctionInvalidOffset) {
+  char zip_path[PATH_MAX];
+  snprintf(zip_path, sizeof(zip_path), ZIPPATH_MISALIGNED, getenv("ANDROID_DATA"));
+  android_dlextinfo extinfo;
+  extinfo.library_lookup_action.lookup_fn = lookup_fn;
+  extinfo.library_lookup_action.lookup_fn_arg = zip_path;
+  extinfo.flags = ANDROID_DLEXT_USE_LOOKUP_FUNCTION;
+  handle_ = android_dlopen_ext("libapk_test_simple.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == NULL);
+  ASSERT_STREQ("dlopen failed: file offset for the library \"libapk_test_simple.so\" is not page-aligned: 3967", dlerror());
+}
+
+TEST_F(DlExtTest, dlopenWithLookupFn) {
+  static char zip_path[PATH_MAX];
+  snprintf(zip_path, sizeof(zip_path), ZIPPATH, getenv("ANDROID_DATA"));
+  // check if lookup works
+  android_dlopen_lookup_action action, saved_action;
+  action.lookup_fn = lookup_fn;
+  action.lookup_fn_arg = zip_path;
+
+  saved_action  = action;
+
+  android_set_dlopen_lookup_action(&action, &action);
+
+  ASSERT_TRUE(action.lookup_fn == nullptr);
+  ASSERT_TRUE(action.lookup_fn_arg == nullptr);
+
+  android_set_dlopen_lookup_action(nullptr, &action);
+  ASSERT_EQ(saved_action.lookup_fn, action.lookup_fn);
+  ASSERT_EQ(saved_action.lookup_fn_arg, action.lookup_fn_arg);
+
+  handle_ = dlopen("libapk_test_with_dependency.so", RTLD_NOW);
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "useRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(44, f());
+  dlclose(handle_);
+  // open one from /system/lib...
+  handle_ = dlopen(LIBNAME, RTLD_NOW);
+  ASSERT_DL_NOTNULL(handle_);
+  f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_EQ(4, f());
+  dlclose(handle_);
+  // reset
+  android_dlopen_lookup_action empty_action;
+  memset(&empty_action, 0, sizeof(empty_action));
+
+  android_set_dlopen_lookup_action(&empty_action, &action);
+  ASSERT_EQ(saved_action.lookup_fn, action.lookup_fn);
+  ASSERT_EQ(saved_action.lookup_fn_arg, action.lookup_fn_arg);
+
+  handle_ = dlopen("libapk_test_with_dependency.so", RTLD_NOW);
+  ASSERT_TRUE(handle_ == NULL);
+  ASSERT_STREQ("dlopen failed: library \"libapk_test_with_dependency.so\" not found", dlerror());
+}
+
+TEST_F(DlExtTest, dlopenWithLookupFnMissaligned) {
+  static char zip_path[PATH_MAX];
+  // use misaligned one - check for error
+  snprintf(zip_path, sizeof(zip_path), ZIPPATH_MISALIGNED, getenv("ANDROID_DATA"));
+  android_dlopen_lookup_action action, old_action;
+  action.lookup_fn = lookup_fn;
+  action.lookup_fn_arg = zip_path;
+  
+  android_set_dlopen_lookup_action(&action, &old_action);
+
+  handle_ = dlopen("libapk_test_with_dependency.so", RTLD_NOW);
+  ASSERT_TRUE(handle_ == NULL);
+  ASSERT_STREQ("dlopen failed: file offset for the library \"libapk_test_with_dependency.so\" is not page-aligned: 111076", dlerror());
+
+  android_set_dlopen_lookup_action(&old_action, nullptr);
+
+  handle_ = dlopen("libapk_test_with_dependency.so", RTLD_NOW);
+  ASSERT_TRUE(handle_ == NULL);
+  ASSERT_STREQ("dlopen failed: library \"libapk_test_with_dependency.so\" not found", dlerror());
 }
 
 TEST_F(DlExtTest, Reserved) {

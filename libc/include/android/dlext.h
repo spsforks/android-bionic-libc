@@ -17,6 +17,7 @@
 #ifndef __ANDROID_DLEXT_H__
 #define __ANDROID_DLEXT_H__
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -62,14 +63,44 @@ enum {
 
   ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET    = 0x20,
 
+  /* When set, the lookup_fn field is used to open this library and all dependent
+   * libraries.
+   *
+   * Note that if the ANDROID_DLEXT_USE_LIBRARY_FD flag is set the linker uses
+   * the lookup function only for dt_needed libraries; the root library is going
+   * to be linked using library_fd.
+   */
+  ANDROID_DLEXT_USE_LOOKUP_FUNCTION   = 0x40,
+
+  /* Mask of flags preserved while loading dt_needed libraries.
+   */
+  ANDROID_DLEXT_RECURSIVE_FLAG_BITS   = ANDROID_DLEXT_USE_LOOKUP_FUNCTION,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
                                         ANDROID_DLEXT_WRITE_RELRO |
                                         ANDROID_DLEXT_USE_RELRO |
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
-                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET,
+                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
+                                        ANDROID_DLEXT_USE_LOOKUP_FUNCTION,
 };
+
+/* Opens the library named by 'filename' and sets file descriptor and
+ * file offset in case of success. fd and offset are used by the linker to
+ * load the library. The offset must be page-aligned.
+ *
+ * Returns true if file was successfully opened and false otherwise.
+ *
+ * If *close_flag is true (default) linker closes the fd once the library is
+ * loaded or, in the case of an error, before return from android_dlopen_ext.
+ */
+typedef bool (*android_dlopen_lookup_fn_t)(const char* filename, int* fd, off64_t* offset, bool* close_flag, void* arg);
+
+typedef struct {
+  android_dlopen_lookup_fn_t lookup_fn;
+  void* lookup_fn_arg;
+} android_dlopen_lookup_action;
 
 typedef struct {
   uint64_t flags;
@@ -78,9 +109,14 @@ typedef struct {
   int     relro_fd;
   int     library_fd;
   off64_t library_fd_offset;
+  android_dlopen_lookup_action library_lookup_action;
 } android_dlextinfo;
 
-extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+
+/* Sets global file lookup action for dlopen.
+ */
+void android_set_dlopen_lookup_action(const android_dlopen_lookup_action* new_action, android_dlopen_lookup_action* old_action);
 
 __END_DECLS
 

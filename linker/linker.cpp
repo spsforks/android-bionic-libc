@@ -122,6 +122,8 @@ static const char* g_ld_preload_names[LDPRELOAD_MAX + 1];
 
 static soinfo* g_ld_preloads[LDPRELOAD_MAX + 1];
 
+static android_dlopen_lookup_action g_lookup_action;
+
 __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
 __LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr; // For debuggerd.
@@ -841,6 +843,7 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
       PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
       continue;
     }
+
     int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       return fd;
@@ -849,18 +852,33 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
   return -1;
 }
 
-static int open_library(const char* name) {
+static bool open_library(const char* name, int* fd_ptr, off64_t* file_offset, bool* close_file, void* arg __unused) {
   TRACE("[ opening %s ]", name);
+
+  // First check with g_lookup_action
+  if (g_lookup_action.lookup_fn != nullptr) {
+    int fd;
+    off64_t offset;
+    bool close;
+
+    if (g_lookup_action.lookup_fn(name, &fd, &offset, &close, g_lookup_action.lookup_fn_arg)) {
+      *fd_ptr = fd;
+      *file_offset = offset;
+      *close_file = close;
+      return true;
+    }
+  }
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
-      return fd;
+      *fd_ptr = fd;
+      return true;
     }
     // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
 #if defined(__LP64__)
-    return -1;
+    return false;
 #endif
   }
 
@@ -869,7 +887,13 @@ static int open_library(const char* name) {
   if (fd == -1) {
     fd = open_library_on_path(name, kDefaultLdPaths);
   }
-  return fd;
+
+  if (fd == -1) {
+    return false;
+  }
+
+  *fd_ptr = fd;
+  return true;
 }
 
 template<typename F>
@@ -893,21 +917,36 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     }
   } else {
     // Open the file.
-    fd = open_library(name);
-    if (fd == -1) {
+    android_dlopen_lookup_fn_t file_lookup =
+        extinfo && (extinfo->flags & ANDROID_DLEXT_USE_LOOKUP_FUNCTION) != 0 ?
+        extinfo->library_lookup_action.lookup_fn : open_library;
+    void* arg = extinfo && (extinfo->flags & ANDROID_DLEXT_USE_LOOKUP_FUNCTION) != 0 ?
+        extinfo->library_lookup_action.lookup_fn_arg : nullptr;
+
+    bool close_file = true;
+    if (!file_lookup(name, &fd, &file_offset, &close_file, arg)) {
       DL_ERR("library \"%s\" not found", name);
       return nullptr;
     }
 
-    file_guard.reset(fd);
+    if (fd == -1) {
+      DL_ERR("lookup function returned invalid fd for \"%s\"", name);
+      return nullptr;
+    }
+
+    if (close_file) {
+      file_guard.reset(fd);
+    }
+
+  }
+
+  if (file_offset < 0) {
+    DL_ERR("file offset for the library \"%s\" is negative: %" PRId64, name, file_offset);
+    return nullptr;
   }
 
   if ((file_offset % PAGE_SIZE) != 0) {
     DL_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
-    return nullptr;
-  }
-  if (file_offset < 0) {
-    DL_ERR("file offset for the library \"%s\" is negative: %" PRId64, name, file_offset);
     return nullptr;
   }
 
@@ -916,6 +955,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     DL_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
     return nullptr;
   }
+
   if (file_offset >= file_stat.st_size) {
     DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name, file_offset, file_stat.st_size);
     return nullptr;
@@ -1050,14 +1090,24 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
     }
   });
 
+  android_dlextinfo needed_extinfo;
+  const android_dlextinfo* needed_extinfo_ptr = nullptr;
+
+  if (extinfo != nullptr) {
+    needed_extinfo = *extinfo;
+    // clear non-recursive flags
+    needed_extinfo.flags &= ANDROID_DLEXT_RECURSIVE_FLAG_BITS;
+    needed_extinfo_ptr = &needed_extinfo;
+  }
+
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
   for (LoadTask::unique_ptr task(load_tasks.pop_front()); task.get() != nullptr; task.reset(load_tasks.pop_front())) {
-    soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, extinfo);
+    soinfo* needed_by = task->get_needed_by();
+
+    soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, needed_by == nullptr ? extinfo : needed_extinfo_ptr);
     if (si == nullptr) {
       return false;
     }
-
-    soinfo* needed_by = task->get_needed_by();
 
     if (needed_by != nullptr) {
       needed_by->add_child(si);
@@ -1241,6 +1291,21 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   if (!get_AT_SECURE()) {
     parse_LD_LIBRARY_PATH(ld_library_path);
+  }
+}
+
+void do_android_set_dlopen_lookup_action(const android_dlopen_lookup_action* new_action, android_dlopen_lookup_action* old_action) {
+  if (get_AT_SECURE()) {
+    return;
+  }
+
+  android_dlopen_lookup_action current_action = g_lookup_action;
+  if (new_action != nullptr) {
+    g_lookup_action = *new_action;
+  }
+
+  if (old_action != nullptr) {
+    *old_action = current_action;
   }
 }
 
@@ -2250,7 +2315,6 @@ bool soinfo::prelink_image() {
 }
 
 bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
-
   local_group_root_ = local_group.front();
   if (local_group_root_ == nullptr) {
     local_group_root_ = this;
