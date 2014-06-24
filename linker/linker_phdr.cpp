@@ -119,8 +119,8 @@
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-ElfReader::ElfReader(const char* name, int fd)
-    : name_(name), fd_(fd),
+ElfReader::ElfReader(const char* name, int fd, off_t file_offset)
+    : name_(name), fd_(fd), file_offset_(file_offset),
       phdr_num_(0), phdr_mmap_(nullptr), phdr_table_(nullptr), phdr_size_(0),
       load_start_(nullptr), load_size_(0), load_bias_(0),
       loaded_phdr_(nullptr) {
@@ -225,7 +225,7 @@ bool ElfReader::ReadProgramHeader() {
 
   phdr_size_ = page_max - page_min;
 
-  void* mmap_result = mmap(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, page_min);
+  void* mmap_result = mmap(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, page_min + file_offset_);
   if (mmap_result == MAP_FAILED) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_, strerror(errno));
     return false;
@@ -361,7 +361,7 @@ bool ElfReader::LoadSegments() {
                             PFLAGS_TO_PROT(phdr->p_flags),
                             MAP_FIXED|MAP_PRIVATE,
                             fd_,
-                            file_page_start);
+                            file_offset_ + file_page_start);
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_, i, strerror(errno));
         return false;

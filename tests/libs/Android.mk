@@ -92,6 +92,92 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used to test dlopen from zip
+# -----------------------------------------------------------------------------
+libapk_test_simple_src_files := \
+    dlext_test_library.cpp
+
+# hide it from linker.
+libapk_test_simple_install_to_out_data := true
+module := libapk_test_simple
+module_tag := tests
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library used to test dlopen from zip: depends on libapk_test_simple
+# -----------------------------------------------------------------------------
+libapk_test_with_dependency_src_files := \
+    apk_rootlib.cpp
+
+libapk_test_with_dependency_shared_libraries_target := libapk_test_simple
+libapk_test_with_dependency_install_to_out_data := true
+module := libapk_test_with_dependency
+module_tag := tests
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Zip used to test dlopen from zip: contains libapk_test_simple and
+# libapk_test_with_dependency
+# -----------------------------------------------------------------------------
+
+# TODO: Is this correct?
+include $(CLEAR_VARS)
+my_test_zip := $(TARGET_OUT_INTERMEDIATES)/testapk/testapk.zip
+my_test_zip_misaligned := $(TARGET_OUT_DATA_NATIVE_TESTS)/testapk/testapk_misaligned.zip
+my_test_zip_page_aligned := $(TARGET_OUT_DATA_NATIVE_TESTS)/testapk/testapk_page_aligned.zip
+ALL_MODULES += $(my_test_zip_misaligned) $(my_test_zip_page_aligned)
+
+my_built_shared_libraries := \
+    $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_with_dependency.so \
+    $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_simple.so
+
+my_test_zip_lib_tmpdir := $(dir $(my_test_zip))lib/$(TARGET_CPU_ABI)
+my_test_zip_lib_tmpdir_2nd_arch := $(dir $(my_test_zip))lib/$(TARGET_2ND_CPU_ABI)
+
+$(my_test_zip)_prepare: $(my_built_shared_libraries)
+	$(hide) mkdir -p $(my_test_zip_lib_tmpdir)
+	$(hide) cp -p $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_with_dependency.so $(my_test_zip_lib_tmpdir)
+	$(hide) cp -p $(TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_simple.so $(my_test_zip_lib_tmpdir)
+
+ifneq ($(TARGET_2ND_ARCH),)
+my_built_shared_libraries += \
+    $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_with_dependency.so \
+    $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_simple.so
+
+$(my_test_zip)_prepare_2nd: $(my_built_shared_libraries)
+	$(hide) mkdir -p $(my_test_zip_lib_tmpdir_2nd_arch)
+	$(hide) cp -p $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_with_dependency.so $(my_test_zip_lib_tmpdir_2nd_arch)
+	$(hide) cp -p $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libapk_test_simple.so $(my_test_zip_lib_tmpdir_2nd_arch)
+else
+$(my_test_zip)_prepare_2nd: $(my_built_shared_libraries)
+
+endif
+
+my_page_size := 4096
+my_prime_number = 3967
+
+$(my_test_zip): $(my_test_zip)_prepare $(my_test_zip)_prepare_2nd | $(ZIPALIGN)
+	@echo "Zip: $@"
+	$(hide) (cd $(dir $@) && zip -rD0 $(notdir $@) lib)
+	$(hide) rm -rf $(dir $@)lib
+
+$(my_test_zip_misaligned): $(my_test_zip)
+	$(hide) rm -rf $@
+	$(hide) mkdir -p $(dir $@)
+	@echo "Zipalign $(my_prime_number): $@"
+	$(hide) zipalign $(my_prime_number) $< $@
+
+$(my_test_zip_page_aligned): $(my_test_zip)
+	$(hide) rm -rf $@
+	$(hide) mkdir -p $(dir $@)
+	@echo "Zipalign $(my_page_size): $@"
+	$(hide) zipalign $(my_page_size) $< $@
+
+# -----------------------------------------------------------------------------
 # Library used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_simple_src_files := \
