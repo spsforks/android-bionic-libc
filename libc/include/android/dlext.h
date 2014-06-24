@@ -54,13 +54,38 @@ enum {
    */
   ANDROID_DLEXT_USE_LIBRARY_FD        = 0x10,
 
+  /* When set, the lookup_fcn field is used to open this library and all dependent
+   * libraries. The lookup_fcn is scoped to single call.
+   *
+   * Note that if the ANDROID_DLEXT_USE_LIBRARY_FD flag is set the linker uses callback
+   * only for dt_needed libraries; the root library is going to be linked using
+   * library_fd.
+   */
+  ANDROID_DLEXT_USE_LOOKUP_FUNCTION   = 0x20,
+
+  /* Mask of flags preserved while loading dt_needed libraries.
+   */
+  ANDROID_DLEXT_RECURSIVE_FLAG_BITS   = ANDROID_DLEXT_USE_LOOKUP_FUNCTION,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
                                         ANDROID_DLEXT_WRITE_RELRO |
                                         ANDROID_DLEXT_USE_RELRO |
-                                        ANDROID_DLEXT_USE_LIBRARY_FD,
+                                        ANDROID_DLEXT_USE_LIBRARY_FD |
+                                        ANDROID_DLEXT_USE_LOOKUP_FUNCTION,
 };
+
+/* Opens the library named by 'filename' and sets file descriptor and
+ * file offset in case of success. fd and offset are used by linker to
+ * load library. The offset must be page-aligned.
+ *
+ * Returns 0 if file was successfully opened and -1 otherwise.
+ *
+ * If close_flag is non-zero (default) linker closes the fd when it is no
+ * longer needed.
+ */
+typedef int (*lookup_fn_t)(const char* filename, int* fd, off_t* offset, int* close_flag);
 
 typedef struct {
   uint64_t flags;
@@ -68,6 +93,7 @@ typedef struct {
   size_t  reserved_size;
   int     relro_fd;
   int     library_fd;
+  lookup_fn_t lookup_fn;
 } android_dlextinfo;
 
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
