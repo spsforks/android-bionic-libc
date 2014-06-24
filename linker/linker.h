@@ -204,8 +204,10 @@ struct soinfo {
 
   void set_st_dev(dev_t st_dev);
   void set_st_ino(ino_t st_ino);
+  void set_file_offset(off_t offset);
   ino_t get_st_ino();
   dev_t get_st_dev();
+  off_t get_file_offset();
 
   soinfo_list_t& get_children();
 
@@ -220,6 +222,7 @@ struct soinfo {
 
   dev_t st_dev;
   ino_t st_ino;
+  off_t file_offset;
 
   // dependency graph
   soinfo_list_t children;
