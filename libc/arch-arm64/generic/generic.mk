@@ -1,4 +1,5 @@
 libc_bionic_src_files_arm64 += \
+    bionic/strchr.cpp \
     arch-arm64/generic/bionic/memcmp.S \
     arch-arm64/generic/bionic/memcpy.S \
     arch-arm64/generic/bionic/memmove.S \

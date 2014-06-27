@@ -7,3 +7,4 @@ libc_bionic_src_files_arm64 += \
     arch-arm64/generic/bionic/strncmp.S \
     arch-arm64/generic/bionic/strnlen.S \
     arch-arm64/generic-neon/bionic/memcpy.S \
+    arch-arm64/generic-neon/bionic/strchr.S \
