@@ -70,10 +70,6 @@
 // Nvidia drivers are relying on the bug:
 // http://code.google.com/p/android/issues/detail?id=6670
 // so we continue to use base-name lookup for lp32
-static const char* get_base_name(const char* name) {
-  const char* bname = strrchr(name, '/');
-  return bname ? bname + 1 : name;
-}
 #define SEARCH_NAME(x) get_base_name(x)
 #endif
 
@@ -272,6 +268,12 @@ void notify_gdb_of_libraries() {
   _r_debug.r_state = r_debug::RT_CONSISTENT;
   rtld_db_dlactivity();
 }
+
+static const char* get_base_name(const char* name) {
+  const char* bname = strrchr(name, '/');
+  return bname ? bname + 1 : name;
+}
+
 
 LinkedListEntry<soinfo>* SoinfoListAllocator::alloc() {
   return g_soinfo_links_allocator.alloc();
@@ -742,9 +744,11 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
 }
 
 static soinfo *find_loaded_library_by_name(const char* name) {
+  bool full_name = strchr(name, '/') != NULL;
   const char* search_name = SEARCH_NAME(name);
+
   for (soinfo* si = solist; si != NULL; si = si->next) {
-    if (!strcmp(search_name, si->name)) {
+    if (!strcmp(search_name, full_name ? si->name : get_base_name(si->name))) {
       return si;
     }
   }
