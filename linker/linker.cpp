@@ -130,6 +130,23 @@ enum class SymbolLookupScope {
   kExcludeLocal,
 };
 
+class FileGuard {
+ public:
+ FileGuard() : fd_(-1) {}
+  ~FileGuard() {
+    if (fd_ != -1) {
+      close(fd_);
+    }
+  }
+
+  void set_fd(int fd) {
+    fd_ = fd;
+  }
+ private:
+  int fd_;
+  DISALLOW_COPY_AND_ASSIGN(FileGuard);
+};
+
 #if STATS
 struct linker_stats_t {
     int count[kRelocMax];
@@ -696,11 +713,20 @@ static int open_library(const char* name) {
 }
 
 static soinfo* load_library(const char* name, int dlflags, const android_dlextinfo* extinfo) {
-    // Open the file.
-    int fd = open_library(name);
-    if (fd == -1) {
+    int fd = -1;
+    FileGuard file_guard;
+
+    if (extinfo != NULL && (extinfo->flags & ANDROID_DLEXT_USE_FD) != 0) {
+      fd = extinfo->library_fd;
+    } else {
+      // Open the file.
+      fd = open_library(name);
+      if (fd == -1) {
         DL_ERR("library \"%s\" not found", name);
         return NULL;
+      }
+
+      file_guard.set_fd(fd);
     }
 
     ElfReader elf_reader(name, fd);
@@ -744,7 +770,7 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
 
     // At this point we know that whatever is loaded @ base is a valid ELF
     // shared library whose segments are properly mapped in.
-    TRACE("[ find_library_internal base=%p size=%zu name='%s' ]",
+    TRACE("[ load_library base=%p size=%zu name='%s' ]",
           reinterpret_cast<void*>(si->base), si->size, si->name);
 
     if (!soinfo_link_image(si, extinfo)) {
