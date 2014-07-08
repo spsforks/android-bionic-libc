@@ -312,9 +312,11 @@ include $(LOCAL_PATH)/Android.build.mk
 
 ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
 LINKER = linker64
+NATIVE_TEST_DIRECTORY=$(TARGET_OUT_DATA_NATIVE_TESTS)64
 NATIVE_TEST_SUFFIX=64
 else
 LINKER = linker
+NATIVE_TEST_DIRECTORY=$(TARGET_OUT_DATA_NATIVE_TESTS)
 NATIVE_TEST_SUFFIX=32
 endif
 
@@ -348,7 +350,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_ROOT=$(TARGET_OUT) \
 	LD_LIBRARY_PATH=$(TARGET_OUT_SHARED_LIBRARIES) \
-		$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
+		$(NATIVE_TEST_DIRECTORY)/bionic-unit-tests/bionic-unit-tests$(NATIVE_TEST_SUFFIX) $(BIONIC_TEST_FLAGS)
 endif
 
 endif # linux-x86
