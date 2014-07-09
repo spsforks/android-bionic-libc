@@ -35,6 +35,7 @@
 
 int iswalnum(wint_t wc) { return isalnum(wc); }
 int iswalpha(wint_t wc) { return isalpha(wc); }
+int iswascii(wint_t wc) { return isascii(wc); }
 int iswblank(wint_t wc) { return isblank(wc); }
 int iswcntrl(wint_t wc) { return iscntrl(wc); }
 int iswdigit(wint_t wc) { return isdigit(wc); }
