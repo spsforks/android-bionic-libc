@@ -25,31 +25,64 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#include <ctype.h>
 
-#include <wchar.h>
+int isalnum_l(int c, locale_t loc __unused) {
+  return isalnum(c);
+}
 
-__BEGIN_DECLS
+int isalpha_l(int c, locale_t loc __unused) {
+  return isalpha(c);
+}
 
-extern int iswalnum_l(wint_t, locale_t);
-extern int iswalpha_l(wint_t, locale_t);
-extern int iswblank_l(wint_t, locale_t);
-extern int iswcntrl_l(wint_t, locale_t);
-extern int iswdigit_l(wint_t, locale_t);
-extern int iswgraph_l(wint_t, locale_t);
-extern int iswlower_l(wint_t, locale_t);
-extern int iswprint_l(wint_t, locale_t);
-extern int iswpunct_l(wint_t, locale_t);
-extern int iswspace_l(wint_t, locale_t);
-extern int iswupper_l(wint_t, locale_t);
-extern int iswxdigit_l(wint_t, locale_t);
-extern int towlower_l(int, locale_t);
-extern int towupper_l(int, locale_t);
+int isascii_l(int c, locale_t loc __unused) {
+  return isascii(c);
+}
 
-extern int iswctype_l(wint_t, wctype_t, locale_t);
-extern wctype_t wctype_l(const char *, locale_t);
+int isblank_l(int c, locale_t loc __unused) {
+  return isblank(c);
+}
 
-__END_DECLS
+int iscntrl_l(int c, locale_t loc __unused) {
+  return iscntrl(c);
+}
 
-#endif /* _WCTYPE_H_ */
+int isdigit_l(int c, locale_t loc __unused) {
+  return isdigit(c);
+}
+
+int isgraph_l(int c, locale_t loc __unused) {
+  return isgraph(c);
+}
+
+int islower_l(int c, locale_t loc __unused) {
+  return islower(c);
+}
+
+int isprint_l(int c, locale_t loc __unused) {
+  return isprint(c);
+}
+
+int ispunct_l(int c, locale_t loc __unused) {
+  return ispunct(c);
+}
+
+int isspace_l(int c, locale_t loc __unused) {
+  return isspace(c);
+}
+
+int isupper_l(int c, locale_t loc __unused) {
+  return isupper(c);
+}
+
+int isxdigit_l(int c, locale_t loc __unused) {
+  return isxdigit(c);
+}
+
+int toupper_l(int c, locale_t loc __unused) {
+  return toupper(c);
+}
+
+int tolower_l(int c, locale_t loc __unused) {
+  return tolower(c);
+}
