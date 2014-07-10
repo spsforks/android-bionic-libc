@@ -32,11 +32,11 @@ endif
 # All standard tests.
 # -----------------------------------------------------------------------------
 test_cflags = \
-    -fstack-protector-all \
-    -g \
-    -Wall -Wextra -Wunused \
-    -Werror \
-    -fno-builtin \
+	-fstack-protector-all \
+	-g \
+	-Wall -Wextra -Wunused \
+	-Werror \
+	-fno-builtin \
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
@@ -45,75 +45,78 @@ test_cflags += -DUSE_JEMALLOC
 endif
 
 test_cppflags = \
-    -std=gnu++11 \
+	-std=gnu++11 \
+
+$(shell python bionic/tests/create_bionic_tests.py libcore/luni/src/test/resources/math_tests.csv bionic/tests/math_csv_test.cpp)
 
 libBionicStandardTests_src_files := \
-    arpa_inet_test.cpp \
-    buffer_tests.cpp \
-    ctype_test.cpp \
-    dirent_test.cpp \
-    eventfd_test.cpp \
-    fcntl_test.cpp \
-    fenv_test.cpp \
-    ftw_test.cpp \
-    getauxval_test.cpp \
-    getcwd_test.cpp \
-    inttypes_test.cpp \
-    libc_logging_test.cpp \
-    libgen_test.cpp \
-    locale_test.cpp \
-    malloc_test.cpp \
-    math_cos_test.cpp \
-    math_cosf_test.cpp \
-    math_exp_test.cpp \
-    math_expf_test.cpp \
-    math_log_test.cpp \
-    math_logf_test.cpp \
-    math_pow_test.cpp \
-    math_powf_test.cpp \
-    math_sin_test.cpp \
-    math_sinf_test.cpp \
-    math_sincos_test.cpp \
-    math_sincosf_test.cpp \
-    math_tan_test.cpp \
-    math_tanf_test.cpp \
-    math_test.cpp \
-    mntent_test.cpp \
-    netdb_test.cpp \
-    pthread_test.cpp \
-    regex_test.cpp \
-    sched_test.cpp \
-    signal_test.cpp \
-    stack_protector_test.cpp \
-    stack_unwinding_test.cpp \
-    stdatomic_test.cpp \
-    stdint_test.cpp \
-    stdio_test.cpp \
-    stdlib_test.cpp \
-    string_test.cpp \
-    strings_test.cpp \
-    stubs_test.cpp \
-    sstream_test.cpp \
-    sys_epoll_test.cpp \
-    sys_mman_test.cpp \
-    sys_resource_test.cpp \
-    sys_select_test.cpp \
-    sys_sendfile_test.cpp \
-    sys_socket_test.cpp \
-    sys_stat_test.cpp \
-    sys_statvfs_test.cpp \
-    sys_syscall_test.cpp \
-    sys_time_test.cpp \
-    sys_types_test.cpp \
-    sys_vfs_test.cpp \
-    system_properties_test.cpp \
-    time_test.cpp \
-    uchar_test.cpp \
-    unistd_test.cpp \
-    wchar_test.cpp \
+	arpa_inet_test.cpp \
+	buffer_tests.cpp \
+	ctype_test.cpp \
+	dirent_test.cpp \
+	eventfd_test.cpp \
+	fcntl_test.cpp \
+	fenv_test.cpp \
+	ftw_test.cpp \
+	getauxval_test.cpp \
+	getcwd_test.cpp \
+	inttypes_test.cpp \
+	libc_logging_test.cpp \
+	libgen_test.cpp \
+	locale_test.cpp \
+	malloc_test.cpp \
+	math_cos_test.cpp \
+	math_cosf_test.cpp \
+	math_exp_test.cpp \
+	math_expf_test.cpp \
+	math_log_test.cpp \
+	math_logf_test.cpp \
+	math_pow_test.cpp \
+	math_powf_test.cpp \
+	math_sin_test.cpp \
+	math_sinf_test.cpp \
+	math_sincos_test.cpp \
+	math_sincosf_test.cpp \
+	math_tan_test.cpp \
+	math_tanf_test.cpp \
+	math_test.cpp \
+	mntent_test.cpp \
+	netdb_test.cpp \
+	pthread_test.cpp \
+	regex_test.cpp \
+	sched_test.cpp \
+	signal_test.cpp \
+	stack_protector_test.cpp \
+	stack_unwinding_test.cpp \
+	stdatomic_test.cpp \
+	stdint_test.cpp \
+	stdio_test.cpp \
+	stdlib_test.cpp \
+	string_test.cpp \
+	strings_test.cpp \
+	stubs_test.cpp \
+	sstream_test.cpp \
+	sys_epoll_test.cpp \
+	sys_mman_test.cpp \
+	sys_resource_test.cpp \
+	sys_select_test.cpp \
+	sys_sendfile_test.cpp \
+	sys_socket_test.cpp \
+	sys_stat_test.cpp \
+	sys_statvfs_test.cpp \
+	sys_syscall_test.cpp \
+	sys_time_test.cpp \
+	sys_types_test.cpp \
+	sys_vfs_test.cpp \
+	system_properties_test.cpp \
+	time_test.cpp \
+	uchar_test.cpp \
+	unistd_test.cpp \
+	wchar_test.cpp \
+	math_csv_test.cpp \
 
 libBionicStandardTests_cflags := \
-    $(test_cflags) \
+	$(test_cflags) \
 
 ifeq ($(MALLOC_IMPL),jemalloc)
   libBionicStandardTests_cflags += -DUSE_JEMALLOC
@@ -122,16 +125,16 @@ else
 endif
 
 libBionicStandardTests_cppflags := \
-    $(test_cppflags) \
+	$(test_cppflags) \
 
 libBionicStandardTests_c_includes := \
-    bionic/libc \
+	bionic/libc \
 
 libBionicStandardTests_ldlibs_host := \
-    -lrt \
+	-lrt \
 
 libBionicStandardTests_whole_static_libraries := \
-    libBionicUnwindTest \
+	libBionicUnwindTest \
 
 module := libBionicStandardTests
 module_tag := optional
@@ -145,12 +148,12 @@ include $(LOCAL_PATH)/Android.build.mk
 # Special stack unwinding test library compiled with special flags.
 # -----------------------------------------------------------------------------
 libBionicUnwindTest_cflags := \
-    $(test_cflags) \
-    -fexceptions \
-    -fnon-call-exceptions \
+	$(test_cflags) \
+	-fexceptions \
+	-fnon-call-exceptions \
 
 libBionicUnwindTest_src_files := \
-    stack_unwinding_test_impl.c \
+	stack_unwinding_test_impl.c \
 
 module := libBionicUnwindTest
 module_tag := optional
@@ -165,16 +168,16 @@ include $(LOCAL_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 $(foreach compiler,gcc clang, \
   $(foreach test,1 2, \
-    $(eval fortify$(test)-tests-$(compiler)_cflags := \
-      $(test_cflags) \
-      -U_FORTIFY_SOURCE \
-      -D_FORTIFY_SOURCE=$(test) \
-      -DTEST_NAME=Fortify$(test)_$(compiler)); \
-    $(eval fortify$(test)-tests-$(compiler)_cflags_host := \
-      -Wno-error); \
-    $(eval fortify$(test)-tests-$(compiler)_src_files := \
-      fortify_test.cpp); \
-    $(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
+	$(eval fortify$(test)-tests-$(compiler)_cflags := \
+	  $(test_cflags) \
+	  -U_FORTIFY_SOURCE \
+	  -D_FORTIFY_SOURCE=$(test) \
+	  -DTEST_NAME=Fortify$(test)_$(compiler)); \
+	$(eval fortify$(test)-tests-$(compiler)_cflags_host := \
+	  -Wno-error); \
+	$(eval fortify$(test)-tests-$(compiler)_src_files := \
+	  fortify_test.cpp); \
+	$(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
   ) \
 )
 
@@ -221,8 +224,8 @@ include $(LOCAL_PATH)/Android.build.mk
 # Library of all tests (excluding the dynamic linker tests).
 # -----------------------------------------------------------------------------
 libBionicTests_whole_static_libraries := \
-    libBionicStandardTests \
-    $(fortify_libs) \
+	libBionicStandardTests \
+	$(fortify_libs) \
 
 module := libBionicTests
 module_tag := optional
@@ -237,26 +240,26 @@ include $(LOCAL_PATH)/Android.build.mk
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
 # -----------------------------------------------------------------------------
 bionic-unit-tests_whole_static_libraries := \
-    libBionicTests \
+	libBionicTests \
 
 bionic-unit-tests_src_files := \
-    atexit_test.cpp \
-    dlext_test.cpp \
-    dlfcn_test.cpp \
+	atexit_test.cpp \
+	dlext_test.cpp \
+	dlfcn_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
 bionic-unit-tests_cppflags := $(test_cppflags)
 
 bionic-unit-tests_ldflags := \
-    -Wl,--export-dynamic \
-    -Wl,-u,DlSymTestFunction \
+	-Wl,--export-dynamic \
+	-Wl,-u,DlSymTestFunction \
 
 bionic-unit-tests_c_includes := \
-    $(call include-path-for, libpagemap) \
+	$(call include-path-for, libpagemap) \
 
 bionic-unit-tests_shared_libraries_target := \
-    libdl \
-    libpagemap \
+	libdl \
+	libpagemap \
 
 module := bionic-unit-tests
 module_tag := optional
@@ -269,13 +272,13 @@ include $(LOCAL_PATH)/Android.build.mk
 #   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
 # -----------------------------------------------------------------------------
 bionic-unit-tests-static_whole_static_libraries := \
-    libBionicTests \
+	libBionicTests \
 
 bionic-unit-tests-static_static_libraries := \
-    libstlport_static \
-    libm \
-    libc \
-    libstdc++ \
+	libstlport_static \
+	libm \
+	libc \
+	libstdc++ \
 
 bionic-unit-tests-static_force_static_executable := true
 
@@ -293,13 +296,13 @@ include $(LOCAL_PATH)/Android.build.mk
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
 bionic-unit-tests-glibc_src_files := \
-    atexit_test.cpp \
+	atexit_test.cpp \
 
 bionic-unit-tests-glibc_whole_static_libraries := \
-    libBionicStandardTests \
+	libBionicStandardTests \
 
 bionic-unit-tests-glibc_ldlibs := \
-    -lrt -ldl \
+	-lrt -ldl \
 
 bionic-unit-tests-glibc_cflags := $(test_cflags)
 bionic-unit-tests-glibc_cppflags := $(test_cppflags)
