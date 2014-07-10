@@ -1003,6 +1003,10 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DMALLOC_LEAK_CHECK \
 
+ifneq ($(TARGET_USES_LOGD),false)
+LOCAL_CFLAGS += -DTARGET_USES_LOGD
+endif
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
@@ -1011,6 +1015,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
     bionic/debug_mapinfo.cpp \
     bionic/debug_stacktrace.cpp \
+	bionic/libc_logging.cpp \
     bionic/malloc_debug_leak.cpp \
     bionic/malloc_debug_check.cpp \
 
@@ -1018,7 +1023,6 @@ LOCAL_MODULE := libc_malloc_debug_leak
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
@@ -1038,19 +1042,23 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -DMALLOC_QEMU_INSTRUMENT \
 
+ifneq ($(TARGET_USES_LOGD),false)
+LOCAL_CFLAGS += -DTARGET_USES_LOGD
+endif
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
-    bionic/malloc_debug_qemu.cpp
+	bionic/libc_logging.cpp \
+    bionic/malloc_debug_qemu.cpp \
 
 LOCAL_MODULE := libc_malloc_debug_qemu
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't install on release build
