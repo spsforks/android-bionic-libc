@@ -39,5 +39,6 @@
 /* LP32 NDK ctype.h contained references to these. */
 __LIBC64_HIDDEN__ extern const short *_tolower_tab_;
 __LIBC64_HIDDEN__ extern const short *_toupper_tab_;
+__LIBC_HIDDEN__ extern struct atexit *__atexit;
 
 #endif
