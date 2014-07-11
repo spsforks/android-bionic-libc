@@ -506,12 +506,12 @@ ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
-ifeq ($(MALLOC_IMPL),jemalloc)
-  libc_common_cflags += -DUSE_JEMALLOC
-  libc_malloc_src := bionic/jemalloc_wrapper.cpp
-else
+ifeq ($(MALLOC_IMPL),dlmalloc)
   libc_common_cflags += -DUSE_DLMALLOC
   libc_malloc_src := bionic/dlmalloc.c
+else
+  libc_common_cflags += -DUSE_JEMALLOC
+  libc_malloc_src := bionic/jemalloc_wrapper.cpp
 endif
 
 # To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
@@ -542,7 +542,7 @@ libc_common_c_includes := \
     $(LOCAL_PATH)/stdlib  \
     $(LOCAL_PATH)/stdio   \
 
-ifeq ($(MALLOC_IMPL),jemalloc)
+ifneq ($(MALLOC_IMPL),dlmalloc)
   libc_common_c_includes += external/jemalloc/include
 endif
 
@@ -834,7 +834,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_syscalls \
     libc_tzcode \
 
-ifeq ($(MALLOC_IMPL),jemalloc)
+ifneq ($(MALLOC_IMPL),dlmalloc)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
