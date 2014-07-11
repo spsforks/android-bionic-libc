@@ -1,0 +1,9 @@
+Code-Review+2: Stephen Hines <srhines@google.com>
+Code-Review+2: Dan Albert <danalbert@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Fri, 11 Jul 2014 01:13:05 +0000
+Reviewed-on: https://android-review.googlesource.com/100950
+Project: platform/bionic
+Branch: refs/heads/master
