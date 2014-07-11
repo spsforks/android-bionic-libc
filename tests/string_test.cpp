@@ -1279,3 +1279,29 @@ TEST(string, strchr_align) {
 TEST(string, strchr_overread) {
   RunSingleBufferOverreadTest(DoStrchrTest);
 }
+
+static void DoMemchrTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    int value = 32 + (len % 96);
+    int search_value = 33 + (len % 96);
+    memset(buf, value, len - 1);
+    buf[len-1] = '\0';
+    ASSERT_EQ(NULL, memchr(buf, search_value, len));
+    ASSERT_EQ(&buf[len-1], memchr(buf, '\0', len));
+    if (len >= 2) {
+      buf[0] = search_value;
+      ASSERT_EQ(&buf[0], memchr(buf, search_value, len));
+      buf[0] = value;
+      buf[len-2] = search_value;
+      ASSERT_EQ(&buf[len-2], memchr(buf, search_value, len));
+    }
+  }
+}
+
+TEST(string, memchr_align) {
+  RunSingleBufferAlignTest(MEDIUM, DoMemchrTest);
+}
+
+TEST(string, memchr_overread) {
+  RunSingleBufferOverreadTest(DoMemchrTest);
+}
