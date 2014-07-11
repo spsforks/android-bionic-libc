@@ -19,8 +19,16 @@
 
 #include <pthread.h>
 
+__BEGIN_DECLS
 /* Note that these aren't compatible with the usual OpenBSD ones which lazy-initialize! */
 #define _MUTEX_LOCK(l) pthread_mutex_lock((pthread_mutex_t*) l)
 #define _MUTEX_UNLOCK(l) pthread_mutex_unlock((pthread_mutex_t*) l)
 
+__LIBC_HIDDEN__ void	_thread_atexit_lock(void);
+__LIBC_HIDDEN__ void	_thread_atexit_unlock(void);
+
+#define _ATEXIT_LOCK() _thread_atexit_lock()
+#define _ATEXIT_UNLOCK() _thread_atexit_unlock()
+
+__END_DECLS
 #endif /* _THREAD_PRIVATE_H_ */

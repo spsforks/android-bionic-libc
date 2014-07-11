@@ -33,12 +33,6 @@ struct __thread_private_tag_t {
 #define _THREAD_PRIVATE_MUTEX_UNLOCK(name) \
 	pthread_mutex_unlock( &__THREAD_NAME(name)._private_lock )
 
-__LIBC_HIDDEN__ void	_thread_atexit_lock(void);
-__LIBC_HIDDEN__ void	_thread_atexit_unlock(void);
-
-#define _ATEXIT_LOCK() _thread_atexit_lock()
-#define _ATEXIT_UNLOCK() _thread_atexit_unlock()
-
 __LIBC_HIDDEN__ void    _thread_arc4_lock(void);
 __LIBC_HIDDEN__ void    _thread_arc4_unlock(void);
 
