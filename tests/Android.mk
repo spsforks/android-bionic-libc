@@ -47,6 +47,8 @@ endif
 test_cppflags = \
     -std=gnu++11 \
 
+$(shell python bionic/tests/create_bionic_tests.py libcore/luni/src/test/resources/math_tests.csv bionic/tests/math_csv_test.cpp)
+
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
@@ -111,6 +113,7 @@ libBionicStandardTests_src_files := \
     uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
+    math_csv_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
