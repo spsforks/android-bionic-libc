@@ -111,6 +111,7 @@ libBionicStandardTests_src_files := \
     uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
+    math_csv_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
