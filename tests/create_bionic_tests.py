@@ -64,50 +64,50 @@ test_func_footer = '''#else // __BIONIC__
 }'''
 
 class TestCase(object):
-	"""keeps test case together as object"""
-	def __init__(self, func, expected_output, input_value, extra = ""):
-		self.func = func
-		self.input_value = input_value
-		self.expected_output = expected_output
-		self.extra = extra
+    """keeps test case together as object"""
+    def __init__(self, func, expected_output, input_value, extra = ""):
+        self.func = func
+        self.input_value = input_value
+        self.expected_output = expected_output
+        self.extra = extra
 
 
 if __name__ == "__main__":
-	if len(sys.argv) != 3:
-		sys.stderr.write("Usage: this.py input_file output_file\n")
-		# sys.stderr.write("Working directory: " + os.getcwd())
-		sys.exit(1)
+    if len(sys.argv) != 3:
+        sys.stderr.write("Usage: this.py input_file output_file\n")
+        # sys.stderr.write("Working directory: " + os.getcwd())
+        sys.exit(1)
 
-	input_file = open(sys.argv[1], 'r')
+    input_file = open(sys.argv[1], 'r')
 
-	all_functions = {}
-	for line in input_file:
-		test_case_arr = line.split(',')
-		test_case = TestCase(test_case_arr[0], test_case_arr[1], test_case_arr[2])
-		if test_case.func not in all_functions:
-			all_functions[test_case.func] = []
-		all_functions[test_case.func].append(test_case)
+    all_functions = {}
+    for line in input_file:
+        test_case_arr = line.split(',')
+        test_case = TestCase(test_case_arr[0], test_case_arr[1], test_case_arr[2])
+        if test_case.func not in all_functions:
+            all_functions[test_case.func] = []
+        all_functions[test_case.func].append(test_case)
 
-	input_file.close()
-	output_file = open(sys.argv[2], 'w')
+    input_file.close()
+    output_file = open(sys.argv[2], 'w')
 
-	output_file.write(header)
-	output_file.write(struct)
+    output_file.write(header)
+    output_file.write(struct)
 
-	for func in all_functions:
-		output_file.write(array_start % func)
-		test_cases = all_functions[func]
-		for i in range(len(test_cases)):
-			test_case = test_cases[i]
-			output_file.write(array_entry % (i, test_case.expected_output, test_case.input_value))
-		output_file.write(array_end)
+    for func in all_functions:
+        output_file.write(array_start % func)
+        test_cases = all_functions[func]
+        for i in range(len(test_cases)):
+            test_case = test_cases[i]
+            output_file.write(array_entry % (i, test_case.expected_output, test_case.input_value))
+        output_file.write(array_end)
 
-	output_file.write(close_bionic)
-	output_file.write(test_func_header)
+    output_file.write(close_bionic)
+    output_file.write(test_func_header)
 
-	for func in all_functions:
-		output_file.write(test_func_run % (func, func, func, func, func))
+    for func in all_functions:
+        output_file.write(test_func_run % (func, func, func, func, func))
 
-	output_file.write(test_func_footer)
+    output_file.write(test_func_footer)
 
 
