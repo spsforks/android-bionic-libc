@@ -37,3 +37,7 @@ cmsghdr* __cmsg_nxthdr(msghdr* msg, cmsghdr* cmsg) {
   }
   return ptr;
 }
+
+#ifndef __LP64__
+__weak_alias(cmsg_nxthdr, __cmsg_nxthdr);
+#endif
