@@ -65,7 +65,7 @@ struct LocalPropertyTestState {
 
         srandom(nprops);
 
-        for (int i = 0; i < nprops; i++) {
+        for (int i = 0; i < nprops;) {
             name_lens[i] = random() % PROP_NAME_MAX;
             names[i] = new char[PROP_NAME_MAX + 1];
             for (int j = 0; j < name_lens[i]; j++) {
@@ -77,7 +77,12 @@ struct LocalPropertyTestState {
             for (int j = 0; j < value_lens[i]; j++) {
                 values[i][j] = prop_name_chars[random() % (sizeof(prop_name_chars) - 1)];
             }
-            __system_property_add(names[i], name_lens[i], values[i], value_lens[i]);
+            if (__system_property_add(names[i], name_lens[i], values[i], value_lens[i]) < 0) {
+                delete names[i];
+                delete values[i];
+            } else {
+                i++;
+            }
         }
 
         valid = true;
@@ -149,7 +154,6 @@ static void BM_property_find(int iters, int nprops)
     srandom(iters * nprops);
 
     StartBenchmarkTiming();
-
     for (int i = 0; i < iters; i++) {
         __system_property_find(pa.names[random() % nprops]);
     }
