@@ -68,7 +68,6 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 	if (pgsize < sizeof(*p))
 		return (-1);
 	_ATEXIT_LOCK();
-	p = __atexit;
 	if (p != NULL) {
 		if (p->ind + 1 >= p->max)
 			p = NULL;
