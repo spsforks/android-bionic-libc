@@ -63,15 +63,17 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         ldrbmi      ip, [r1], #1
         strbmi      ip, [r0], #1
         /* copy 2 bytes */
-        itt         cs
-        ldrhcs      ip, [r1], #2
-        strhcs      ip, [r0], #2
+        itttt       cs
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
         /* copy 4 bytes */
         movs        ip, r3, lsl #29
-        itt         mi
-        ldrmi       ip, [r1], #4
-        strmi       ip, [r0], #4
-        /* copy 8 bytes */
+        bpl         1f
+        vld4.8      {d0[0], d1[0], d2[0], d3[0]}, [r1]!
+        vst4.8      {d0[0], d1[0], d2[0], d3[0]}, [r0, :32]!
+1:      /* copy 8 bytes */
         bcc         1f
         vld1.8      {d0}, [r1]!
         vst1.8      {d0}, [r0, :64]!
@@ -177,14 +179,16 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         vst1.8      {d0}, [r0, :64]!
 1:      /* copy 4 bytes */
         tst         r2, #4
-        itt         ne
-        ldrne       ip, [r1], #4
-        strne       ip, [r0], #4
-        /* copy 2 bytes */
+        beq         1f
+        vld4.8      {d0[0], d1[0], d2[0], d3[0]}, [r1]!
+        vst4.8      {d0[0], d1[0], d2[0], d3[0]}, [r0]!
+1:      /* copy 2 bytes */
         movs        ip, r2, lsl #31
-        itt         cs
-        ldrhcs      ip, [r1], #2
-        strhcs      ip, [r0], #2
+        itttt       cs
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
         /* copy 1 byte */
         itt         mi
         ldrbmi      ip, [r1]
@@ -216,14 +220,16 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         vst1.8      {d0}, [r0]!
 1:      /* copy 4 bytes */
         tst         r2, #4
-        itt         ne
-        ldrne       ip, [r1], #4
-        strne       ip, [r0], #4
-        /* copy 2 bytes */
+        beq         1f
+        vld4.8      {d0[0], d1[0], d2[0], d3[0]}, [r1]!
+        vst4.8      {d0[0], d1[0], d2[0], d3[0]}, [r0]!
+1:      /* copy 2 bytes */
         movs        ip, r2, lsl #31
-        itt         cs
-        ldrhcs      ip, [r1], #2
-        strhcs      ip, [r0], #2
+        itttt       cs
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
+        ldrbcs      ip, [r1], #1
+        strbcs      ip, [r0], #1
         /* copy 1 byte */
         itt         mi
         ldrbmi      ip, [r1]
