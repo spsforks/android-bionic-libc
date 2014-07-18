@@ -113,6 +113,25 @@ libBionicStandardTests_src_files := \
     uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
+    libc/test_main.cpp \
+    libc/common/test_pthread_mutex.c \
+    libc/common/test_clock.c \
+    libc/common/test_getaddrinfo.c \
+    libc/common/test_gethostbyname.c \
+    libc/common/test_gethostname.c \
+    libc/common/test_pthread_cleanup_push.c \
+    libc/common/test_semaphore.c \
+    libc/common/test_sem_post.c \
+    libc/common/test_seteuid.c \
+    libc/common/test_cpu_set.c \
+    libc/common/test_pthread_rwlock.c \
+    libc/bionic/test_getgrouplist.c \
+    libc/bionic/test_netinet_icmp.c \
+    libc/bionic/test_mutex.c \
+    libc/bionic/test_cond.c \
+    libc/other/test_sysconf.c \
+    libc/other/test_arc4random.c \
+
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
