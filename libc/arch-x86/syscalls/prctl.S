@@ -15,14 +15,10 @@ ENTRY(prctl)
     pushl   %esi
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset esi, 0
-    pushl   %edi
-    .cfi_adjust_cfa_offset 4
-    .cfi_rel_offset edi, 0
-    mov     24(%esp), %ebx
-    mov     28(%esp), %ecx
-    mov     32(%esp), %edx
-    mov     36(%esp), %esi
-    mov     40(%esp), %edi
+    mov     20(%esp), %ebx
+    mov     24(%esp), %ecx
+    mov     28(%esp), %edx
+    mov     32(%esp), %esi
     movl    $__NR_prctl, %eax
     int     $0x80
     cmpl    $-MAX_ERRNO, %eax
@@ -32,7 +28,6 @@ ENTRY(prctl)
     call    __set_errno
     addl    $4, %esp
 1:
-    popl    %edi
     popl    %esi
     popl    %edx
     popl    %ecx

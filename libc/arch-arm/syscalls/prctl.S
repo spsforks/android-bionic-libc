@@ -3,18 +3,10 @@
 #include <private/bionic_asm.h>
 
 ENTRY(prctl)
-    mov     ip, sp
-    stmfd   sp!, {r4, r5, r6, r7}
-    .cfi_def_cfa_offset 16
-    .cfi_rel_offset r4, 0
-    .cfi_rel_offset r5, 4
-    .cfi_rel_offset r6, 8
-    .cfi_rel_offset r7, 12
-    ldmfd   ip, {r4, r5, r6}
+    mov     ip, r7
     ldr     r7, =__NR_prctl
     swi     #0
-    ldmfd   sp!, {r4, r5, r6, r7}
-    .cfi_def_cfa_offset 0
+    mov     r7, ip
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
