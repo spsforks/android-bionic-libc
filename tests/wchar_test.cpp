@@ -332,7 +332,7 @@ TEST(wchar, mbrtowc_incomplete) {
 }
 
 void test_mbsrtowcs(mbstate_t* ps) {
-  wchar_t out[4];
+  wchar_t out[8];
 
   const char* valid = "A" "\xc2\xa2" "\xe2\x82\xac" "\xf0\xa4\xad\xa2" "ef";
   ASSERT_EQ(4U, mbsrtowcs(out, &valid, 4, ps));
@@ -341,6 +341,11 @@ void test_mbsrtowcs(mbstate_t* ps) {
   ASSERT_EQ(static_cast<wchar_t>(0x20ac), out[2]);
   ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[3]);
   ASSERT_EQ('e', *valid);
+  ASSERT_EQ(2U, mbsrtowcs(out, &valid, 4, ps));
+  ASSERT_EQ(L'e', out[0]);
+  ASSERT_EQ(L'f', out[1]);
+  ASSERT_EQ(L'\0', out[2]);
+  ASSERT_EQ(L'\0', *valid);
 
   const char* invalid = "A" "\xc2\x20" "ef";
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &invalid, 4, ps));
