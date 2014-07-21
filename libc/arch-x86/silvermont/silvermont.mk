@@ -30,3 +30,6 @@ libc_bionic_src_files_x86 += \
     arch-x86/atom/string/ssse3-strcat-atom.S \
     arch-x86/atom/string/ssse3-wcscat-atom.S \
     arch-x86/atom/string/ssse3-wcscpy-atom.S
+
+libc_bionic_src_files_x86 += \
+    arch-x86/bionic/libgcc_compat.c
