@@ -93,6 +93,16 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
+TEST(dlfcn, ifunc) {
+  printf("trying to open handle...\n");
+  void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
+  void* sym = dlsym(handle, "foo");
+  if(sym != NULL)
+    printf("good\n");
+  else
+    printf("bad\n");
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
