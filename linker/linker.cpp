@@ -472,6 +472,25 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
   return NULL;
 }
 
+static void resolve_ifunc_symbols(soinfo* si) {
+
+  TRACE_TYPE(IFUNC, "CHECKING FOR IFUNCS AND PERFORMING SYMBOL UPDATES");
+
+  for (size_t i = 0; i < si->nchain; ++i) {
+    ElfW(Sym)* s = &si->symtab[i];
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+      TRACE_TYPE(IFUNC, "FOUND IFUNC");
+      // The address of the ifunc in the symbol table is the address of the
+      // function that chooses the function to which the ifunc will refer.
+      // In order to return the proper value, we run the choosing function
+      // in the linker and then return its result (minus the base offset).
+      ElfW(Addr) (*ifunc_ptr)();
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
+      s->st_value = (ifunc_ptr() - si->base);
+    }
+  }
+}
+
 static unsigned elfhash(const char* _name) {
     const unsigned char* name = reinterpret_cast<const unsigned char*>(_name);
     unsigned h = 0, g;
@@ -760,6 +779,11 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       soinfo_free(si);
       return NULL;
     }
+
+    // make sure that the ifunc's symbols are updated to their proper value
+    phdr_table_unprotect_segments(si->phdr, si->phnum, si->load_bias);
+    resolve_ifunc_symbols(si);
+    phdr_table_protect_segments(si->phdr, si->phnum, si->load_bias);
 
     return si;
 }
