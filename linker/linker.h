@@ -119,6 +119,10 @@ struct soinfo {
   ElfW(Addr) base;
   size_t size;
 
+//#ifdef __x86_64__
+  bool has_ifuncs;
+//#endif
+
 #ifndef __LP64__
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
