@@ -93,6 +93,15 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
+TEST(dlfcn, ifunc) {
+  void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  void* sym = dlsym(handle, "foo");
+  ASSERT_TRUE(sym != NULL);
+  sym = dlsym(handle, "thisdoesntexist");
+  ASSERT_TRUE(sym == NULL);
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
