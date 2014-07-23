@@ -64,8 +64,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/e_scalbf.c \
     upstream-freebsd/lib/msun/src/e_sinh.c \
     upstream-freebsd/lib/msun/src/e_sinhf.c \
-    upstream-freebsd/lib/msun/src/e_sqrt.c \
-    upstream-freebsd/lib/msun/src/e_sqrtf.c \
     upstream-freebsd/lib/msun/src/imprecise.c \
     upstream-freebsd/lib/msun/src/k_cos.c \
     upstream-freebsd/lib/msun/src/k_cosf.c \
@@ -176,6 +174,8 @@ libm_common_src_files += \
 
 libm_default_src_files := \
     upstream-freebsd/lib/msun/src/s_floor.c \
+    upstream-freebsd/lib/msun/src/e_sqrt.c \
+    upstream-freebsd/lib/msun/src/e_sqrtf.c \
 
 libm_common_src_files += \
     fake_long_double.c \
@@ -260,7 +260,7 @@ ifneq ($(strip $(wildcard bionic/libm/$(TARGET_ARCH)/$(TARGET_ARCH).mk)),)
 my_2nd_arch_prefix :=
 include bionic/libm/$(TARGET_ARCH)/$(TARGET_ARCH).mk
 else
-libm_common_src_files_$(TARGET_ARCH) = libm_default_src_files
+libm_common_src_files_$(TARGET_ARCH) := $(libm_default_src_files)
 endif
 
 ifdef TARGET_2ND_ARCH
@@ -269,7 +269,7 @@ ifneq ($(strip $(wildcard bionic/libm/$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk))
 include bionic/libm/$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
 my_2nd_arch_prefix :=
 else
-libm_common_src_files_$(TARGET_2ND_ARCH) = libm_default_src_files
+libm_common_src_files_$(TARGET_2ND_ARCH) := $(libm_default_src_files)
 endif
 endif
 
