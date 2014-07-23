@@ -93,6 +93,28 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
+// ifuncs are only supported on intel for now
+#if defined(__i386__) || defined(__x86_64__)
+TEST(dlfcn, ifunc) {
+  const char* (*foo_ptr)();
+
+  // ifunc's choice depends on whether IFUNC_CHOICE has a value
+  // first check the set case
+  setenv("IFUNC_CHOICE", "set", 1);
+  void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
+  *(void **)(&foo_ptr) = dlsym(handle, "foo");
+  printf("function value is %s\n", (*foo_ptr)());
+  ASSERT_EQ(strncmp("set", (*foo_ptr)(), 3), 0);
+
+  // then check the unset case
+  unsetenv("IFUNC_CHOICE");
+  handle = dlopen("libtest_ifunc.so", RTLD_NOW);
+  *(void **)(&foo_ptr) = dlsym(handle, "foo");
+  printf("function value is %s\n", (*foo_ptr)());
+  ASSERT_EQ(strncmp("unset", (*foo_ptr)(), 5), 0);
+}
+#endif
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
