@@ -442,7 +442,39 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
 
   for (unsigned n = si->bucket[hash % si->nbucket]; n != 0; n = si->chain[n]) {
     ElfW(Sym)* s = symtab + n;
+
     if (strcmp(strtab + s->st_name, name)) continue;
+
+    const char* symtype;
+    switch (ELF_ST_TYPE(s->st_info)) {
+      case STT_NOTYPE:
+        symtype = "NOTYPE";
+        break;
+      case STT_OBJECT:
+        symtype = "OBJECT";
+        break;
+      case STT_FUNC:
+        symtype = "FUNC";
+        break;
+      case STT_SECTION:
+        symtype = "SECTION";
+        break;
+      case STT_FILE:
+        symtype = "FILE";
+        break;
+      case STT_COMMON:
+        symtype = "COMMON";
+        break;
+      case STT_TLS:
+        symtype = "TLS";
+        break;
+      case STT_GNU_IFUNC:
+        symtype = "GNU_IFUNC";
+        break;
+      default:
+        __libc_fatal("ERROR: Unexpected ST_TYPE value: %d for '%s' in '%s'",
+            ELF_ST_TYPE(s->st_info), name, si->name);
+    }
 
     switch (ELF_ST_BIND(s->st_info)) {
       case STB_GLOBAL:
@@ -451,17 +483,17 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
           continue;
         }
 
-        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd -- SYMBOL TYPE %s",
                  name, si->name, reinterpret_cast<void*>(s->st_value),
-                 static_cast<size_t>(s->st_size));
+                 static_cast<size_t>(s->st_size), symtype);
         return s;
       case STB_LOCAL:
         if (lookup_scope != SymbolLookupScope::kAllowLocal) {
           continue;
         }
-        TRACE_TYPE(LOOKUP, "FOUND LOCAL %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND LOCAL %s in %s (%p) %zd -- SYMBOL TYPE %s",
                 name, si->name, reinterpret_cast<void*>(s->st_value),
-                static_cast<size_t>(s->st_size));
+                static_cast<size_t>(s->st_size), symtype);
         return s;
       default:
         __libc_fatal("ERROR: Unexpected ST_BIND value: %d for '%s' in '%s'",
@@ -474,6 +506,25 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
 
 
   return NULL;
+}
+
+static void resolve_ifunc_symbols(soinfo* si) {
+
+  TRACE_TYPE(IFUNC, "CHECKING FOR IFUNCS AND PERFORMING SYMBOL UPDATES");
+
+  for (size_t i = 0; i < si->nchain; ++i) {
+    ElfW(Sym)* s = &si->symtab[i];
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+      TRACE_TYPE(IFUNC, "FOUND IFUNC");
+      // The address of the ifunc in the symbol table is the address of the
+      // function that chooses the function to which the ifunc will refer.
+      // In order to return the proper value, we run the choosing function
+      // in the linker and then return its result (minus the base offset).
+      ElfW(Addr) (*ifunc_ptr)();
+      ifunc_ptr = reinterpret_cast<ElfW(Addr)(*)()>(s->st_value + si->base);
+      s->st_value = (ifunc_ptr() - si->base);
+    }
+  }
 }
 
 static unsigned elfhash(const char* _name) {
@@ -789,6 +840,9 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       soinfo_free(si);
       return NULL;
     }
+
+    // make sure that the ifunc's symbols are updated to their proper value
+    resolve_ifunc_symbols(si);
 
     return si;
 }
@@ -2169,6 +2223,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     add_vdso(args);
 
     si->CallPreInitConstructors();
+
 
     for (size_t i = 0; g_ld_preloads[i] != NULL; ++i) {
         g_ld_preloads[i]->CallConstructors();
