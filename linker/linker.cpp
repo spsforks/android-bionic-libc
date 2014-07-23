@@ -444,6 +444,36 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
     ElfW(Sym)* s = symtab + n;
     if (strcmp(strtab + s->st_name, name)) continue;
 
+    const char* symtype;
+    switch (ELF_ST_TYPE(s->st_info)) {
+      case STT_NOTYPE:
+        symtype = "NOTYPE";
+        break;
+      case STT_OBJECT:
+        symtype = "OBJECT";
+        break;
+      case STT_FUNC:
+        symtype = "FUNC";
+        break;
+      case STT_SECTION:
+        symtype = "SECTION";
+        break;
+      case STT_FILE:
+        symtype = "FILE";
+        break;
+      case STT_COMMON:
+        symtype = "COMMON";
+        break;
+      case STT_TLS:
+        symtype = "TLS";
+        break;
+      case STT_GNU_IFUNC:
+        symtype = "GNU_IFUNC";
+        break;
+      default:
+        __libc_fatal("ERROR: Unexpected ST_TYPE value: %d for '%s' in '%s'",
+            ELF_ST_TYPE(s->st_info), name, si->name);
+    }
     switch (ELF_ST_BIND(s->st_info)) {
       case STB_GLOBAL:
       case STB_WEAK:
@@ -451,17 +481,17 @@ static ElfW(Sym)* soinfo_elf_lookup(soinfo* si, unsigned hash, const char* name,
           continue;
         }
 
-        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd -- SYMBOL TYPE %s",
                  name, si->name, reinterpret_cast<void*>(s->st_value),
-                 static_cast<size_t>(s->st_size));
+                 static_cast<size_t>(s->st_size), symtype);
         return s;
       case STB_LOCAL:
         if (lookup_scope != SymbolLookupScope::kAllowLocal) {
           continue;
         }
-        TRACE_TYPE(LOOKUP, "FOUND LOCAL %s in %s (%p) %zd",
+        TRACE_TYPE(LOOKUP, "FOUND LOCAL %s in %s (%p) %zd -- SYMBOL TYPE %s",
                 name, si->name, reinterpret_cast<void*>(s->st_value),
-                static_cast<size_t>(s->st_size));
+                static_cast<size_t>(s->st_size), symtype);
         return s;
       default:
         __libc_fatal("ERROR: Unexpected ST_BIND value: %d for '%s' in '%s'",
