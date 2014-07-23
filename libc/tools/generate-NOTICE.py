@@ -36,6 +36,8 @@ copyrights = set()
 def ExtractCopyrightAt(lines, i):
     hash = lines[i].startswith("#")
 
+    original_i = i
+
     # Do we need to back up to find the start of the copyright header?
     start = i
     if not hash:
@@ -77,7 +79,7 @@ def ExtractCopyrightAt(lines, i):
     for line in lines[start:end]:
         line = line.replace("\t", "    ")
         line = line.replace("/* ", "")
-        line = line.replace(" * ", "")
+        line = re.sub("^ \* ", "", line)
         line = line.replace("** ", "")
         line = line.replace("# ", "")
         if line.startswith("++Copyright++"):
@@ -144,7 +146,7 @@ for arg in args:
 
             i = 0
             while i < len(lines):
-                if "Copyright" in lines[i]:
+                if "Copyright" in lines[i] and not "__COPYRIGHT" in lines[i]:
                     i = ExtractCopyrightAt(lines, i)
                 i += 1
 
