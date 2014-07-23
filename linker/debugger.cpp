@@ -206,6 +206,13 @@ static bool have_siginfo(int signum) {
 }
 
 static void send_debuggerd_packet(siginfo_t* info) {
+  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
+    // process has disabled core dumps and PTRACE_ATTACH, and does not want to be dumped.
+    // Honor that intention by not connecting to debuggerd and asking it
+    // to dump our internal state.
+    return;
+  }
+
   int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM);
   if (s == -1) {
     __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
