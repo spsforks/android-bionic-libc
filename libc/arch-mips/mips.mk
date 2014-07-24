@@ -47,11 +47,6 @@ libc_common_src_files_mips += \
     bionic/__strcat_chk.cpp \
 
 
-ifneq ($(ARCH_MIPS_HAS_FPU),true)
-libc_common_cflags_mips := \
-    -DSOFTFLOAT
-endif
-
 ##########################################
 ### CPU specific source files
 libc_bionic_src_files_mips += \
@@ -83,3 +78,6 @@ libc_crt_target_crtbegin_so_file_mips := \
 
 libc_crt_target_so_cflags_mips := \
     -fPIC
+
+libc_crt_target_ldflags_mips := \
+    -melf32ltsmip
