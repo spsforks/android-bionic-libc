@@ -98,7 +98,7 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     return _URC_NO_REASON;
   }
 
-#ifdef __arm__
+#if defined(__arm__)
   /*
    * The instruction pointer is pointing at the instruction after the bl(x), and
    * the _Unwind_Backtrace routine already masks the Thumb mode indicator (LSB
@@ -146,7 +146,7 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       symbol = info.dli_sname;
     }
 
-    uintptr_t rel_pc;
+    uintptr_t rel_pc = offset;
     const mapinfo_t* mi = (g_map_info != NULL) ? mapinfo_find(g_map_info, frames[i], &rel_pc) : NULL;
     const char* soname = (mi != NULL) ? mi->name : info.dli_fname;
     if (soname == NULL) {
