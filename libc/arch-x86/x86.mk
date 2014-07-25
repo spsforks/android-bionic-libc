@@ -37,6 +37,12 @@ arch_variant_mk := $(LOCAL_PATH)/arch-x86/$(TARGET_ARCH_VARIANT)/$(TARGET_ARCH_V
 ifeq ($(wildcard $(arch_variant_mk)),)
     arch_variant_mk := $(LOCAL_PATH)/arch-x86/generic/generic.mk
 endif
+
+ifeq ($(ARCH_X86_HAVE_POPCNT)), true)
+    libc_bionic_src_files_x86 += \
+        arch-x86/bionic/libgcc_compat.c
+endif
+
 include $(arch_variant_mk)
 libc_common_additional_dependencies += $(arch_variant_mk)
 
