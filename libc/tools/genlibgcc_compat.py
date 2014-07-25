@@ -78,7 +78,6 @@ class Generator:
         android_build_top_path = os.environ["ANDROID_BUILD_TOP"]
         build_path =  android_build_top_path + "/bionic/libc"
         file_name = "libgcc_compat.c"
-        file_path = build_path + "/arch-arm/bionic/" + file_name
 
         print "* ANDROID_BUILD_TOP=" + android_build_top_path
 
@@ -86,8 +85,10 @@ class Generator:
         arch = subprocess.check_output(["CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core make --no-print-directory -f build/core/config.mk dumpvar-TARGET_ARCH"],
                     cwd=android_build_top_path, shell=True).strip()
 
-        if arch != 'arm':
-            sys.exit("Error: Invalid TARGET_ARCH='" + arch + "' expecting 'arm'")
+        file_path = build_path + "/arch-" + arch + "/bionic/" + file_name
+
+        if arch != 'arm' and arch != 'x86':
+            sys.exit("Error: Invalid TARGET_ARCH='" + arch + "' expecting 'arm' or 'x86'")
 
         build_output_file_path = tempfile.mkstemp()[1]
 
