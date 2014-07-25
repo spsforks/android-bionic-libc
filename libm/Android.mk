@@ -84,8 +84,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_cbrtf.c \
     upstream-freebsd/lib/msun/src/s_ccosh.c \
     upstream-freebsd/lib/msun/src/s_ccoshf.c \
-    upstream-freebsd/lib/msun/src/s_ceil.c \
-    upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_cexp.c \
     upstream-freebsd/lib/msun/src/s_cexpf.c \
     upstream-freebsd/lib/msun/src/s_cimag.c \
@@ -117,7 +115,6 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/s_fdim.c \
     upstream-freebsd/lib/msun/src/s_finite.c \
     upstream-freebsd/lib/msun/src/s_finitef.c \
-    upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_fmax.c \
@@ -173,7 +170,10 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
 libm_arch_src_files_default := \
+    upstream-freebsd/lib/msun/src/s_ceil.c \
+    upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_floor.c \
+    upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/e_sqrt.c \
     upstream-freebsd/lib/msun/src/e_sqrtf.c \
 
