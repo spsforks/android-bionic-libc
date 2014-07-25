@@ -78,7 +78,6 @@ class Generator:
         android_build_top_path = os.environ["ANDROID_BUILD_TOP"]
         build_path =  android_build_top_path + "/bionic/libc"
         file_name = "libgcc_compat.c"
-        file_path = build_path + "/arch-arm/bionic/" + file_name
 
         print "* ANDROID_BUILD_TOP=" + android_build_top_path
 
@@ -86,27 +85,41 @@ class Generator:
         arch = subprocess.check_output(["CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core make --no-print-directory -f build/core/config.mk dumpvar-TARGET_ARCH"],
                     cwd=android_build_top_path, shell=True).strip()
 
-        if arch != 'arm':
-            sys.exit("Error: Invalid TARGET_ARCH='" + arch + "' expecting 'arm'")
+        file_path = build_path + "/arch-" + arch + "/bionic/" + file_name
+
+        if arch != 'arm' and arch != 'x86':
+            sys.exit("Error: Invalid TARGET_ARCH='" + arch + "' expecting 'arm' or 'x86'")
 
         build_output_file_path = tempfile.mkstemp()[1]
 
-        p = subprocess.Popen(["ONE_SHOT_MAKEFILE=bionic/libc/Android.mk make -C " + android_build_top_path
+        symbol_set = set()
+
+        if arch == 'arm':
+            p = subprocess.Popen(["ONE_SHOT_MAKEFILE=bionic/libc/Android.mk make -C " + android_build_top_path
                     + " -f build/core/main.mk all_modules TARGET_LIBGCC= -j20 -B 2>&1 | tee " + build_output_file_path],
                     cwd=build_path, shell=True)
-        p.wait()
+            p.wait()
 
-        print "* Build complete, logfile: " + build_output_file_path
+            print "* Build complete, logfile: " + build_output_file_path
 
-        symbol_set = set()
-        prog=re.compile("(?<=undefined reference to ')\w+")
-        fd = open(build_output_file_path, 'r')
-        for line in fd:
-            m = prog.search(line)
-            if m:
-                symbol_set.add(m.group(0))
+            prog=re.compile("(?<=undefined reference to ')\w+")
+            fd = open(build_output_file_path, 'r')
+            for line in fd:
+                m = prog.search(line)
+                if m:
+                    symbol_set.add(m.group(0))
 
-        fd.close()
+            fd.close()
+
+        elif arch == 'x86':
+            popcnt = subprocess.check_output(["CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core make --no-print-directory -f build/core/config.mk dumpvar-ARCH_X86_HAVE_POPCNT"],
+                    cwd=android_build_top_path, shell=True).strip()
+
+            if popcnt != 'true':
+                sys.exit("Error: only popcnt instruction supported x86 arch needed")
+
+            symbol_set.add('__popcountsi2')
+            symbol_set.add('__popcount_tab')
 
         symbol_list = sorted(symbol_set)
 
