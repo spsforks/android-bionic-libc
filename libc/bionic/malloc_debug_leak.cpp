@@ -287,6 +287,10 @@ extern "C" void* fill_valloc(size_t size) {
 static uint32_t MEMALIGN_GUARD      = 0xA1A41520;
 
 extern "C" void* leak_malloc(size_t bytes) {
+    if (DEBUG_CALLS_DISABLED()) {
+        return g_malloc_dispatch->malloc(bytes);
+    }
+
     // allocate enough space infront of the allocation to store the pointer for
     // the alloc structure. This will making free'ing the structer really fast!
 
@@ -319,6 +323,10 @@ extern "C" void* leak_malloc(size_t bytes) {
 }
 
 extern "C" void leak_free(void* mem) {
+  if (DEBUG_CALLS_DISABLED()) {
+    return g_malloc_dispatch->free(mem);
+  }
+
   if (mem == NULL) {
     return;
   }
@@ -355,6 +363,10 @@ extern "C" void leak_free(void* mem) {
 }
 
 extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
+    if (DEBUG_CALLS_DISABLED()) {
+        return g_malloc_dispatch->calloc(n_elements, elem_size);
+    }
+
     // Fail on overflow - just to be safe even though this code runs only
     // within the debugging C library, not the production one.
     if (n_elements && SIZE_MAX / n_elements < elem_size) {
@@ -370,6 +382,10 @@ extern "C" void* leak_calloc(size_t n_elements, size_t elem_size) {
 }
 
 extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
+    if (DEBUG_CALLS_DISABLED()) {
+        return g_malloc_dispatch->realloc(oldMem, bytes);
+    }
+
     if (oldMem == NULL) {
         return leak_malloc(bytes);
     }
@@ -398,6 +414,10 @@ extern "C" void* leak_realloc(void* oldMem, size_t bytes) {
 }
 
 extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
+    if (DEBUG_CALLS_DISABLED()) {
+        return g_malloc_dispatch->memalign(alignment, bytes);
+    }
+
     // we can just use malloc
     if (alignment <= MALLOC_ALIGNMENT) {
         return leak_malloc(bytes);
@@ -439,6 +459,10 @@ extern "C" void* leak_memalign(size_t alignment, size_t bytes) {
 }
 
 extern "C" size_t leak_malloc_usable_size(const void* mem) {
+    if (DEBUG_CALLS_DISABLED()) {
+        return g_malloc_dispatch->malloc_usable_size(mem);
+    }
+
     if (mem != NULL) {
         // Check the guard to make sure it is valid.
         const AllocationEntry* header = const_to_header((void*)mem);
@@ -467,6 +491,10 @@ extern "C" struct mallinfo leak_mallinfo() {
 }
 
 extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if (DEBUG_CALLS_DISABLED()) {
+    return g_malloc_dispatch->posix_memalign(memptr, alignment, size);
+  }
+
   if (!powerof2(alignment)) {
     return EINVAL;
   }
@@ -477,6 +505,10 @@ extern "C" int leak_posix_memalign(void** memptr, size_t alignment, size_t size)
 }
 
 extern "C" void* leak_pvalloc(size_t bytes) {
+  if (DEBUG_CALLS_DISABLED()) {
+    return g_malloc_dispatch->pvalloc(bytes);
+  }
+
   size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) { // Overflow
@@ -486,5 +518,9 @@ extern "C" void* leak_pvalloc(size_t bytes) {
 }
 
 extern "C" void* leak_valloc(size_t size) {
+  if (DEBUG_CALLS_DISABLED()) {
+    return g_malloc_dispatch->valloc(size);
+  }
+
   return leak_memalign(getpagesize(), size);
 }

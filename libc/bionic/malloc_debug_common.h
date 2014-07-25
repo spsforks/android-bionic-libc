@@ -52,6 +52,31 @@
 #endif
 
 // =============================================================================
+// Used to check disable the debug allocation calls.
+// =============================================================================
+extern pthread_key_t g_debug_calls_disabled;
+
+#define DEBUG_CALLS_DISABLED() \
+  (pthread_getspecific(g_debug_calls_disabled) != NULL)
+
+class ScopedDisableDebugCalls {
+ public:
+  ScopedDisableDebugCalls() : disabled_(DEBUG_CALLS_DISABLED()) {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
+    }
+  }
+  ~ScopedDisableDebugCalls() {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, NULL);
+    }
+  }
+
+ private:
+  bool disabled_;
+};
+
+// =============================================================================
 // Structures
 // =============================================================================
 
