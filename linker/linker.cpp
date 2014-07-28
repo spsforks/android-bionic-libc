@@ -2221,6 +2221,8 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
+extern "C" void _start();
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -2238,11 +2240,17 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
+  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so;
   memset(&linker_so, 0, sizeof(soinfo));
+
+  // test if linker is calling itself
+  if (&_start == reinterpret_cast<void*>(entry_point)) {
+    __libc_fatal("This is bionic linker. Work as an INTER for elf-binaries.\n");
+  }
 
   strcpy(linker_so.name, "[dynamic linker]");
   linker_so.base = linker_addr;
