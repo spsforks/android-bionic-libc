@@ -61,13 +61,16 @@ class LinkedList {
     }
 
     LinkedListEntry<T>* entry = head_;
-    T* element = entry->element;
-    head_ = entry->next;
-    Allocator::free(entry);
+    T* element;
+    do {
+      element = entry->element;
+      head_ = entry->next;
+      Allocator::free(entry);
 
-    if (head_ == nullptr) {
-      tail_ = nullptr;
-    }
+      if (head_ == nullptr) {
+        tail_ = nullptr;
+      }
+    } while(head_ != nullptr && element == nullptr);
 
     return element;
   }
@@ -83,16 +86,25 @@ class LinkedList {
   }
 
   template<typename F>
-  void for_each(F&& action) {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      if (e->element != nullptr) {
-        action(e->element);
-      }
-    }
+  void for_each(F action) {
+    visit([&] (T* si) {
+      action(si);
+      return true;
+    });
   }
 
   template<typename F>
-  void remove_if(F&& predicate) {
+  bool visit(F action) {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element != nullptr && (action(e->element) == false)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  template<typename F>
+  void remove_if(F predicate) {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (e->element != nullptr && predicate(e->element)) {
         e->element = nullptr;
@@ -100,9 +112,21 @@ class LinkedList {
     }
   }
 
+  size_t copy_to_array(T* array[], size_t array_length) const {
+    size_t sz = 0;
+    for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next) {
+      if (e->element != nullptr) {
+        array[sz++] = e->element;
+      }
+    }
+
+    return sz;
+  }
+
  private:
   LinkedListEntry<T>* head_;
   LinkedListEntry<T>* tail_;
+
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
 
