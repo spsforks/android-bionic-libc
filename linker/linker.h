@@ -204,6 +204,8 @@ struct soinfo {
   void CallConstructors();
   void CallDestructors();
   void CallPreInitConstructors();
+  bool PrelinkImage();
+  bool LinkImage(const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -216,6 +218,7 @@ struct soinfo {
   bool get_has_ifuncs();
 
   soinfo_list_t& get_children();
+  soinfo_list_t& get_parents();
 
   bool inline has_min_version(uint32_t min_version) {
     return (flags & FLAG_NEW_SOINFO) != 0 && version >= min_version;
@@ -224,6 +227,11 @@ struct soinfo {
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
   void resolve_ifunc_symbols();
+#if defined(USE_RELA)
+  int Relocate(ElfW(Rela)* rela, unsigned count);
+#else
+  int Relocate(ElfW(Rel)* rel, unsigned count);
+#endif
 
  private:
   // This part of the structure is only available
