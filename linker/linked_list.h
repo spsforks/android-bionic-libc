@@ -92,12 +92,41 @@ class LinkedList {
   }
 
   template<typename F>
+  bool for_each_with_stop(F action) {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element != nullptr && (action(e->element) == false)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  template<typename F>
   void remove_if(F&& predicate) {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (e->element != nullptr && predicate(e->element)) {
         e->element = nullptr;
       }
     }
+  }
+
+  // use wisely - the cost is O(n)
+  size_t size() const {
+    size_t sz = 0;
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      ++sz;
+    }
+
+    return sz;
+  }
+
+  size_t copy_to_array(T* array[], size_t array_length) {
+    size_t sz = 0;
+    for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next, ++sz) {
+      array[sz] = e->element;
+    }
+
+    return sz;
   }
 
  private:
