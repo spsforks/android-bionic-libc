@@ -106,6 +106,37 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
+TEST(dlfcn, dlopen_check_order) {
+  // Here is how test library and it's dt_needed
+  // libraries are arranged
+  //
+  //  libtest_check_order.so
+  //  |
+  //  +-> libtest_check_order_1_left.so
+  //  |   |
+  //  |   +-> libtest_check_order_a.so
+  //  |   |
+  //  |   +-> libtest_check_order_b.so
+  //  |
+  //  +-> libtest_check_order_2_right.so
+  //  |
+  //  +-> libtest_check_order_3_c.so
+  //
+  // Note that in this case get_answer() is defined in all libs except libtest_check_order.so
+  // and libtest_check_order_left.so.
+  // The correct one is in libtest_check_order_right.so which must be resolved first
+  void* sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
+  ASSERT_TRUE(sym == NULL);
+  void* handle = dlopen("libtest_check_order.so", RTLD_NOW);
+  ASSERT_TRUE(handle != NULL);
+  sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
+  ASSERT_TRUE(sym != NULL);
+  int (*fn)(void);
+  fn = reinterpret_cast<int (*)(void)>(sym);
+  ASSERT_EQ(42, fn());
+  dlclose(handle);
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);

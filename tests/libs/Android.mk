@@ -102,6 +102,82 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Libraries used by dlfcn tests to verify correct load order:
+# libtest_check_order_2_right.so
+# -----------------------------------------------------------------------------
+libtest_check_order_2_right_src_files := \
+    dlopen_testlib_answer.cpp
+
+libtest_check_order_2_right_cflags := -D__ANSWER=42
+module := libtest_check_order_2_right
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# libtest_check_order_a.so
+# -----------------------------------------------------------------------------
+libtest_check_order_a_src_files := \
+    dlopen_testlib_answer.cpp
+
+libtest_check_order_a_cflags := -D__ANSWER=1
+module := libtest_check_order_a
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# libtest_check_order_b.so
+# -----------------------------------------------------------------------------
+libtest_check_order_b_src_files := \
+    dlopen_testlib_answer.cpp
+
+libtest_check_order_b_cflags := -D__ANSWER=2
+module := libtest_check_order_b
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# libtest_check_order_c.so
+# -----------------------------------------------------------------------------
+libtest_check_order_3_c_src_files := \
+    dlopen_testlib_answer.cpp
+
+libtest_check_order_3_c_cflags := -D__ANSWER=3
+module := libtest_check_order_3_c
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# libtest_check_order_left.so
+# -----------------------------------------------------------------------------
+libtest_check_order_1_left_src_files := \
+    empty.cpp
+
+libtest_check_order_1_left_shared_libraries := libtest_check_order_a libtest_check_order_b
+
+module := libtest_check_order_1_left
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# libtest_check_order.so
+# -----------------------------------------------------------------------------
+libtest_check_order_src_files := \
+    empty.cpp
+
+libtest_check_order_shared_libraries := libtest_check_order_1_left \
+  libtest_check_order_2_right libtest_check_order_3_c
+
+module := libtest_check_order
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Library with dependency used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_with_dependency_src_files := \
