@@ -86,6 +86,7 @@
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
 #define FLAG_LINKER     0x00000010 // The linker itself
+#define FLAG_LOADED     0x00000040 // marks so as loaded but not yet linked
 #define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
 
 #define SOINFO_NAME_LEN 128
