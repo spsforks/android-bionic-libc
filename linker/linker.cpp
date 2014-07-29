@@ -2221,7 +2221,13 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
-extern "C" void _start();
+#if defined(__mips__)
+#define ENTRY_FN_NAME __start
+#else
+#define ENTRY_FN_NAME _start
+#endif
+
+extern "C" void ENTRY_FN_NAME();
 
 /*
  * This is the entry point for the linker, called from begin.S. This
@@ -2253,7 +2259,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   //
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
-  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
+  if (reinterpret_cast<ElfW(Addr)>(&ENTRY_FN_NAME) == entry_point) {
     __libc_fatal("This is %s, the helper program for shared library executables.\n", args.argv[0]);
   }
 
@@ -2291,3 +2297,4 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Return the address that the calling assembly stub should jump to.
   return start_address;
 }
+#undef ENTRY_FN_NAME
