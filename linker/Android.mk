@@ -19,7 +19,7 @@ LOCAL_SRC_FILES_mips    := arch/mips/begin.S
 LOCAL_SRC_FILES_mips64  := arch/mips64/begin.S
 
 LOCAL_LDFLAGS := \
-    -shared \
+    -shared -fpic -fPIE -pie \
     -Wl,-Bsymbolic \
     -Wl,--exclude-libs,ALL \
 
