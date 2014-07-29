@@ -86,10 +86,19 @@ class LinkedList {
   }
 
   template<typename F>
-  void for_each(F&& action) {
+  void for_each(F action) {
+    visit([&] (T* si) {
+      action(si);
+      return true;
+    });
+  }
+
+  template<typename F>
+  bool visit(F action) {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       action(e->element);
     }
+    return true;
   }
 
   template<typename F>
