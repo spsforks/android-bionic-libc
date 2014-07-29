@@ -115,3 +115,20 @@ TEST(linked_list, push_pop) {
   ASSERT_EQ("r", list.pop_front());
   ASSERT_TRUE(list.pop_front() == nullptr);
 }
+
+TEST(linked_list, remove_if_then_pop) {
+  test_list_t list;
+  list.push_back("a");
+  list.push_back("b");
+  list.push_back("c");
+  list.push_back("d");
+  list.remove_if([](const char* c) {
+    return *c == 'b' || *c == 'c';
+  });
+
+  ASSERT_EQ("ad", test_list_to_string(list));
+  ASSERT_EQ("a", list.pop_front());
+  ASSERT_EQ("d", test_list_to_string(list));
+  ASSERT_EQ("d", list.pop_front());
+  ASSERT_TRUE(list.pop_front() == nullptr);
+}
