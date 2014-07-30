@@ -30,10 +30,12 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#include "private/libc_logging.h"
+
 // We currently support a single locale, the "C" locale (also known as "POSIX").
 
 struct __locale_t {
-  // Because we only support one locale, these are just tokens with no data.
+  size_t mb_cur_max;
 };
 
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
@@ -75,7 +77,19 @@ static void __locale_init() {
   g_locale.int_n_sign_posn = CHAR_MAX;
 }
 
-static bool __bionic_current_locale_is_utf8 = false;
+static bool __bionic_current_locale_is_utf8 = true;
+static const int DEFAULT_MB_CUR_MAX = 4;
+
+size_t __mb_cur_max() {
+  locale_t l = reinterpret_cast<locale_t>(pthread_getspecific(g_uselocale_key));
+  if (l == nullptr) {
+    return __bionic_current_locale_is_utf8 ? 4 : 1;
+  } else if (l == LC_GLOBAL_LOCALE) {
+    return DEFAULT_MB_CUR_MAX;
+  } else {
+    return l->mb_cur_max;
+  }
+}
 
 static bool __is_supported_locale(const char* locale) {
   return (strcmp(locale, "") == 0 ||
@@ -95,9 +109,17 @@ lconv* localeconv() {
 }
 
 locale_t duplocale(locale_t l) {
+  if (l == nullptr) {
+    __libc_fatal("duplocale(3) received invalid locale object");
+  }
+
   locale_t clone = __new_locale();
-  if (clone != NULL && l != LC_GLOBAL_LOCALE) {
-    *clone = *l;
+  if (clone != nullptr) {
+    if (l == LC_GLOBAL_LOCALE) {
+      clone->mb_cur_max = DEFAULT_MB_CUR_MAX;
+    } else {
+      *clone = *l;
+    }
   }
   return clone;
 }
@@ -118,7 +140,11 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
     return NULL;
   }
 
-  return __new_locale();
+  locale_t l = __new_locale();
+  if (l != nullptr) {
+    l->mb_cur_max = strstr(locale_name, "UTF-8") != NULL ? 4 : 1;
+  }
+  return l;
 }
 
 char* setlocale(int category, const char* locale_name) {
