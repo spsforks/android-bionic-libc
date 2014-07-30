@@ -48,8 +48,8 @@ TEST(locale, localeconv) {
 }
 
 TEST(locale, setlocale) {
-  EXPECT_STREQ("C", setlocale(LC_ALL, NULL));
-  EXPECT_STREQ("C", setlocale(LC_CTYPE, NULL));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_ALL, NULL));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_CTYPE, NULL));
 
   errno = 0;
   EXPECT_EQ(NULL, setlocale(-1, NULL));
@@ -104,4 +104,63 @@ TEST(locale, uselocale) {
   EXPECT_TRUE(old == original);
 
   EXPECT_EQ(n, uselocale(NULL));
+}
+
+TEST(locale, mb_cur_max_init) {
+  // Fork to a new process to ensure that no previous tests are screwing with
+  // us.
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+  if (pid == 0) {
+    exit(MB_CUR_MAX);
+  }
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(4, WEXITSTATUS(status));
+}
+
+TEST(locale, mb_cur_max_setlocale) {
+  // Fork for each of these so we aren't affected by any previous tests calling
+  // setlocale(3) or uselocale(3).
+  int status;
+  pid_t pid;
+
+  pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+  if (pid == 0) {
+    setlocale(LC_ALL, "C");
+    exit(MB_CUR_MAX);
+  }
+
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(1, WEXITSTATUS(status));
+
+  pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+  if (pid == 0) {
+    setlocale(LC_ALL, "C.UTF-8");
+    exit(MB_CUR_MAX);
+  }
+
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(4, WEXITSTATUS(status));
+}
+
+TEST(locale, mb_cur_max) {
+  locale_t cloc = newlocale(LC_ALL, "C", 0);
+  locale_t cloc_utf8 = newlocale(LC_ALL, "C.UTF-8", 0);
+
+  uselocale(cloc);
+  ASSERT_EQ(1U, MB_CUR_MAX);
+  uselocale(cloc_utf8);
+  ASSERT_EQ(4U, MB_CUR_MAX);
+  uselocale(LC_GLOBAL_LOCALE);
+  ASSERT_EQ(4U, MB_CUR_MAX);
+
+  freelocale(cloc);
+  freelocale(cloc_utf8);
 }
