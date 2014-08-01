@@ -124,11 +124,14 @@ setenv(const char *name, const char *value, int rewrite)
 					break;
 		}
 	} else {					/* create new slot */
-		size_t cnt;
+		size_t cnt = 0;
 
-		for (P = environ; *P != NULL; P++)
-			;
-		cnt = P - environ;
+		if (environ != NULL) {
+			for (P = environ; *P != NULL; P++)
+				;
+			cnt = P - environ;
+		}
+
 		P = (char **)realloc(lastenv, sizeof(char *) * (cnt + 2));
 		if (!P)
 			return (-1);
