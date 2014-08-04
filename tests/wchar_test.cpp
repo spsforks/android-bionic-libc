@@ -469,6 +469,9 @@ TEST(wchar, mbrtowc_15439554) {
   ASSERT_GE(static_cast<size_t>(MB_LEN_MAX), MB_CUR_MAX);
   ASSERT_GE(MB_CUR_MAX, 4U);
 
+#if !defined(__GLIBC__)
+  // Don't run these tests on glibc. They are known to fail because mbrtowc(3)
+  // is returning an error value for valid inputs. Bug: 16704978
   wchar_t wc;
   size_t n;
 
@@ -488,4 +491,5 @@ TEST(wchar, mbrtowc_15439554) {
   n = mbrtowc(&wc, "\xf0\xa4\xad\xa2", MB_CUR_MAX, NULL);
   EXPECT_EQ(4U, n);
   EXPECT_EQ(L'𤭢', wc);
+#endif
 }
