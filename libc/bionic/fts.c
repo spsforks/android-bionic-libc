@@ -49,7 +49,7 @@ static size_t	 fts_maxarglen(char * const *);
 static void	 fts_padjust(FTS *, FTSENT *);
 static int	 fts_palloc(FTS *, size_t);
 static FTSENT	*fts_sort(FTS *, FTSENT *, int);
-static u_short	 fts_stat(FTS *, FTSENT *, int);
+static u_short	 fts_stat(FTS *, FTSENT *, int, DIR *);
 static int	 fts_safe_changedir(FTS *, FTSENT *, int, char *);
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
@@ -119,7 +119,7 @@ fts_open(char * const *argv, int options,
 		p->fts_level = FTS_ROOTLEVEL;
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
-		p->fts_info = fts_stat(sp, p, ISSET(FTS_COMFOLLOW));
+		p->fts_info = fts_stat(sp, p, ISSET(FTS_COMFOLLOW), NULL);
 
 		/* Command-line "." and ".." are real directories. */
 		if (p->fts_info == FTS_DOT)
@@ -273,7 +273,7 @@ fts_read(FTS *sp)
 
 	/* Any type of file may be re-visited; re-stat and re-turn. */
 	if (instr == FTS_AGAIN) {
-		p->fts_info = fts_stat(sp, p, 0);
+		p->fts_info = fts_stat(sp, p, 0, NULL);
 		return (p);
 	}
 
@@ -285,7 +285,7 @@ fts_read(FTS *sp)
 	 */
 	if (instr == FTS_FOLLOW &&
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
-		p->fts_info = fts_stat(sp, p, 1);
+		p->fts_info = fts_stat(sp, p, 1, NULL);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
 			if ((p->fts_symfd = open(".", O_RDONLY, 0)) < 0) {
 				p->fts_errno = errno;
@@ -374,7 +374,7 @@ next:	tmp = p;
 		if (p->fts_instr == FTS_SKIP)
 			goto next;
 		if (p->fts_instr == FTS_FOLLOW) {
-			p->fts_info = fts_stat(sp, p, 1);
+			p->fts_info = fts_stat(sp, p, 1, NULL);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
 				if ((p->fts_symfd =
 				    open(".", O_RDONLY, 0)) < 0) {
@@ -722,7 +722,7 @@ mem1:				saved_errno = errno;
 			} else
 				p->fts_accpath = p->fts_name;
 			/* Stat it. */
-			p->fts_info = fts_stat(sp, p, 0);
+			p->fts_info = fts_stat(sp, p, 0, dirp);
 
 			/* Decrement link count if applicable. */
 			if (nlinks > 0 && (p->fts_info == FTS_D ||
@@ -789,7 +789,7 @@ mem1:				saved_errno = errno;
 }
 
 static u_short
-fts_stat(FTS *sp, FTSENT *p, int follow)
+fts_stat(FTS *sp, FTSENT *p, int follow, DIR *dirp)
 {
 	FTSENT *t;
 	dev_t dev;
@@ -813,6 +813,11 @@ fts_stat(FTS *sp, FTSENT *p, int follow)
 				return (FTS_SLNONE);
 			}
 			p->fts_errno = saved_errno;
+			goto err;
+		}
+	} else if (dirp) {
+		if (fstatat(dirfd(dirp), p->fts_name, sbp, AT_SYMLINK_NOFOLLOW)) {
+			p->fts_errno = errno;
 			goto err;
 		}
 	} else if (lstat(p->fts_accpath, sbp)) {
