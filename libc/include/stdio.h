@@ -38,6 +38,15 @@
 #ifndef	_STDIO_H_
 #define	_STDIO_H_
 
+/*
+ * x-gcc-no-fixincludes
+ *
+ * This file depends on __gnuc_va_list being used for va_list.
+ * That lets us avoid using GCC's fixincludes, which would get in the
+ * way of pointing one toolchain at various different sets of platform
+ * headers.
+ */
+
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
