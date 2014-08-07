@@ -46,3 +46,19 @@ void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
   }
   return je_memalign(boundary, size);
 }
+
+unsigned android_mallinfo_narenas() {
+  return je_mallinfo_narenas();
+}
+
+unsigned android_mallinfo_nbins() {
+  return je_mallinfo_nbins();
+}
+
+struct mallinfo android_mallinfo_arena_info(unsigned aidx) {
+  return je_mallinfo_arena_info(aidx);
+}
+
+struct mallinfo android_mallinfo_bin_info(unsigned aidx, unsigned bidx) {
+  return je_mallinfo_bin_info(aidx, bidx);
+}

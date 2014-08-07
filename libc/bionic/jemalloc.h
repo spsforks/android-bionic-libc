@@ -24,7 +24,16 @@
 
 __BEGIN_DECLS
 
+unsigned android_mallinfo_narenas() __LIBC_ABI_PUBLIC__;
+unsigned android_mallinfo_nbins() __LIBC_ABI_PUBLIC__;
+struct mallinfo android_mallinfo_arena_info(unsigned) __LIBC_ABI_PUBLIC__;
+struct mallinfo android_mallinfo_bin_info(unsigned, unsigned) __LIBC_ABI_PUBLIC__;
+
+unsigned je_mallinfo_narenas();
+unsigned je_mallinfo_nbins();
 struct mallinfo je_mallinfo();
+struct mallinfo je_mallinfo_arena_info(unsigned);
+struct mallinfo je_mallinfo_bin_info(unsigned, unsigned);
 void* je_memalign_round_up_boundary(size_t, size_t);
 void* je_pvalloc(size_t);
 

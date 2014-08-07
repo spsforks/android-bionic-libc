@@ -54,3 +54,24 @@ static void* named_anonymous_mmap(size_t length) {
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, length, "libc_malloc");
   return map;
 }
+
+unsigned android_mallinfo_narenas() {
+  return 0;
+}
+
+unsigned android_mallinfo_nbins() {
+  return 0;
+}
+
+struct mallinfo android_mallinfo_arena_info(unsigned) {
+  struct mallinfo mi;
+  memset(&mi, 0, sizeof(mi));
+
+  return mi;
+}
+
+struct mallinfo android_mallinfo_bin_info(unsigned, unsigned) {
+  struct mallinfo mi;
+  memset(&mi, 0, sizeof(mi));
+  return mi;
+}
