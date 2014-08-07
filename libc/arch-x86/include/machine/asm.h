@@ -37,6 +37,8 @@
 #ifndef _I386_ASM_H_
 #define _I386_ASM_H_
 
+#define PIC
+
 #ifdef PIC
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
