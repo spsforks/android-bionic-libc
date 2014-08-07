@@ -27,6 +27,20 @@ TEST(netdb, getaddrinfo_NULL_hints) {
   freeaddrinfo(ai);
 }
 
+TEST(netdb, getaddrinfo_hints) {
+  addrinfo* ai = NULL;
+  struct addrinfo  hints;
+
+  /* now try with the hints */
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family   = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+
+  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
+  freeaddrinfo(ai);
+}
+
 TEST(netdb, getnameinfo_salen) {
   sockaddr_storage ss;
   memset(&ss, 0, sizeof(ss));

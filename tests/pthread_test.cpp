@@ -28,6 +28,10 @@
 
 #include "ScopedSignalHandler.h"
 
+#define MAGIC1 0xcafebabeU
+#define MAGIC2 0x8badf00dU
+#define MAGIC3 0x12345667U
+
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
@@ -756,3 +760,113 @@ TEST(pthread, pthread_mutex_timedlock) {
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
 }
+
+static int g_ok1 = 0;
+static int g_ok2 = 0;
+static int g_ok3 = 0;
+
+static void
+cleanup1( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC1)
+        g_ok1 = -1;
+    else
+        g_ok1 = +1;
+}
+
+static void
+cleanup2( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC2) {
+        g_ok2 = -1;
+    } else
+        g_ok2 = +1;
+}
+
+static void
+cleanup3( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC3)
+        g_ok3 = -1;
+    else
+        g_ok3 = +1;
+}
+
+static void*
+thread1_func( void* arg )
+{
+    pthread_cleanup_push( cleanup1, (void*)MAGIC1 );
+    pthread_cleanup_push( cleanup2, (void*)MAGIC2 );
+    pthread_cleanup_push( cleanup3, (void*)MAGIC3 );
+
+    if (arg != NULL)
+        pthread_exit(0);
+
+    pthread_cleanup_pop(0);
+    pthread_cleanup_pop(1);
+    pthread_cleanup_pop(1);
+
+    return NULL;
+}
+
+static int test( int do_exit )
+{
+    pthread_t t;
+
+    void *param = NULL;
+    memcpy(&param, &do_exit, sizeof(void*));
+    pthread_create( &t, NULL, thread1_func, param );
+    pthread_join( t, NULL );
+
+    if (g_ok1 != +1) {
+
+        //#######################################################
+          // if g_ok1 is equal to 0, cleanup1 not called !!
+           //else cleanup1 called with wrong argument except for +1.
+       // #########################################################
+
+        ADD_FAILURE();
+    }
+    else if (g_ok2 != +1) {
+
+        //#######################################################
+          //if g_ok1 is equal to 0, cleanup2 not called !!
+           //else cleanup2 called with wrong argument except for +1.
+        //#########################################################
+
+       ADD_FAILURE();
+    }
+    else if (do_exit && g_ok3 != +1) {
+
+        //######################################################
+          //if g_ok3 is equal to 0 ,cleanup3 not called !!
+          //cleanup3 called with bad argument except for +1.
+        //########################################################
+
+        ADD_FAILURE();
+    }
+    else if (!do_exit && g_ok3 != 0) {
+
+        //#######################################################
+         //if g_ok3 is equal to 1 ,cleanup3 wrongly called,
+         //cleanup3 wrongly called with bad argument except for 0.
+        //#########################################################
+
+        ADD_FAILURE();
+    }
+
+    return 0;
+}
+
+TEST(pthread, pthread_cleanup_push)
+{
+    test(0);
+    test(1);
+}
+
