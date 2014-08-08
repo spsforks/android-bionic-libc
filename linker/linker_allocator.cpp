@@ -16,7 +16,13 @@
 #include "linker_allocator.h"
 #include <inttypes.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <unistd.h>
+
+// why aren't they in prctl.h ?
+#define PR_SET_VMA   0x53564d41
+#define PR_SET_VMA_ANON_NAME    0
+
 
 struct LinkerAllocatorPage {
   LinkerAllocatorPage* next;
@@ -96,6 +102,9 @@ void LinkerBlockAllocator::create_new_page() {
   if (page == MAP_FAILED) {
     abort(); // oom
   }
+
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, PAGE_SIZE, "linker_alloc");
+
   memset(page, 0, PAGE_SIZE);
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
