@@ -25,8 +25,13 @@
 #include <sys/mman.h>
 #include <time.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 #include "ScopedSignalHandler.h"
+
+#define MAGIC1 0xcafebabeU
+#define MAGIC2 0x8badf00dU
+#define MAGIC3 0x12345667U
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -756,3 +761,175 @@ TEST(pthread, pthread_mutex_timedlock) {
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
 }
+
+static int g_ok1 = 0;
+static int g_ok2 = 0;
+static int g_ok3 = 0;
+
+static void
+cleanup1( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC1)
+        g_ok1 = -1;
+    else
+        g_ok1 = +1;
+}
+
+static void
+cleanup2( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC2) {
+        g_ok2 = -1;
+    } else
+        g_ok2 = +1;
+}
+
+static void
+cleanup3( void* arg )
+{
+    unsigned int value = 0;
+    memcpy(&value, &arg, sizeof(unsigned int));
+    if (value != MAGIC3)
+        g_ok3 = -1;
+    else
+        g_ok3 = +1;
+}
+
+static void*
+thread1_func( void* arg )
+{
+    pthread_cleanup_push( cleanup1, (void*)MAGIC1 );
+    pthread_cleanup_push( cleanup2, (void*)MAGIC2 );
+    pthread_cleanup_push( cleanup3, (void*)MAGIC3 );
+
+    if (arg != NULL)
+        pthread_exit(0);
+
+    pthread_cleanup_pop(0);
+    pthread_cleanup_pop(1);
+    pthread_cleanup_pop(1);
+
+    return NULL;
+}
+
+static int test( int do_exit )
+{
+    pthread_t t;
+
+    void *param = NULL;
+    memcpy(&param, &do_exit, sizeof(void*));
+    pthread_create( &t, NULL, thread1_func, param );
+    pthread_join( t, NULL );
+
+    if (g_ok1 != +1) {
+
+        //#######################################################
+          // if g_ok1 is equal to 0, cleanup1 not called !!
+           //else cleanup1 called with wrong argument except for +1.
+       // #########################################################
+
+        ADD_FAILURE();
+    }
+    else if (g_ok2 != +1) {
+
+        //#######################################################
+          //if g_ok1 is equal to 0, cleanup2 not called !!
+           //else cleanup2 called with wrong argument except for +1.
+        //#########################################################
+
+       ADD_FAILURE();
+    }
+    else if (do_exit && g_ok3 != +1) {
+
+        //######################################################
+          //if g_ok3 is equal to 0 ,cleanup3 not called !!
+          //cleanup3 called with bad argument except for +1.
+        //########################################################
+
+        ADD_FAILURE();
+    }
+    else if (!do_exit && g_ok3 != 0) {
+
+        //#######################################################
+         //if g_ok3 is equal to 1 ,cleanup3 wrongly called,
+         //cleanup3 wrongly called with bad argument except for 0.
+        //#########################################################
+
+        ADD_FAILURE();
+    }
+
+    return 0;
+}
+
+TEST(pthread, pthread_cleanup_push)
+{
+    test(0);
+    test(1);
+}
+
+static  sem_t   semaphore;
+
+static void*
+_thread1(void *__u __attribute__((unused)))
+{
+    if(sem_wait( &semaphore ) < 0)
+    {
+        ADD_FAILURE();
+    }
+    sleep( 2 );
+    if(sem_post( &semaphore ) < 0)
+    {
+        ADD_FAILURE();
+    }
+    return NULL;
+}
+
+static void*
+_thread2(void *__u __attribute__((unused)))
+{
+    sleep(1);
+    if ( sem_wait( &semaphore ) < 0 ){
+        ADD_FAILURE();
+    }
+    sleep( 2 );
+    if ( sem_post( &semaphore ) < 0 ){
+        ADD_FAILURE();
+    }
+    return NULL;
+}
+
+static void*
+_thread3(void *__u __attribute__((unused)))
+{
+    sleep(3);
+    if ( sem_wait( &semaphore ) < 0 ){
+        ADD_FAILURE();
+    }
+    return NULL;
+}
+
+typedef void*  (*thread_func)(void*);
+static const  thread_func  thread_routines[] =
+{
+    &_thread1,
+    &_thread2,
+    &_thread3
+};
+
+TEST(pthread, semaphore)
+{
+    pthread_t   t[3];
+    int         nn;
+
+    ASSERT_TRUE( sem_init( &semaphore, 0, 1 ) >= 0 );
+
+    for ( nn = 0; nn < 3; nn++ ) {
+        ASSERT_TRUE(pthread_create( &t[nn], NULL, thread_routines[nn], NULL ) >= 0 );
+    }
+    sleep( 5 );
+}
+

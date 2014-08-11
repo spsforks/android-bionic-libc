@@ -113,6 +113,8 @@ libBionicStandardTests_src_files := \
     uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
+    euid_test.cpp \
+    grp_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
@@ -259,6 +261,7 @@ bionic-unit-tests_c_includes := \
 bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
+    libtest_relocs \
 
 module := bionic-unit-tests
 module_tag := optional
