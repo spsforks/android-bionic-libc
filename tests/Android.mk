@@ -113,6 +113,10 @@ libBionicStandardTests_src_files := \
     uchar_test.cpp \
     unistd_test.cpp \
     wchar_test.cpp \
+    os_gethostname_test.cpp \
+    os_seteuid_test.cpp \
+    grp_test.cpp \
+    os_semaphore_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
@@ -245,6 +249,8 @@ bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
+    os_dlclose_destruction_test.cpp \
+    os_relocs_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
 bionic-unit-tests_cppflags := $(test_cppflags)
@@ -259,6 +265,7 @@ bionic-unit-tests_c_includes := \
 bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
+    libtest_relocs \
 
 module := bionic-unit-tests
 module_tag := optional
