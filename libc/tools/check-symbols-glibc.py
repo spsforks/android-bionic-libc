@@ -3,12 +3,18 @@
 import glob
 import os
 import re
-import string
 import subprocess
 import sys
 
+only_unwanted = False
+if len(sys.argv) > 1:
+  if sys.argv[1] in ('-u', '--unwanted'):
+    only_unwanted = True
+
 toolchain = os.environ['ANDROID_TOOLCHAIN']
 arch = re.sub(r'.*/linux-x86/([^/]+)/.*', r'\1', toolchain)
+if arch == 'aarch64':
+  arch = 'arm64'
 
 def GetSymbolsFromSo(so_file):
   # Example readelf output:
@@ -50,6 +56,15 @@ def MangleGlibcNameToBionic(name):
     return glibc_to_bionic_names[name]
   return name
 
+def GetNdkIgnored():
+  global arch
+  symbols = set()
+  files = glob.glob('%s/ndk/build/tools/unwanted-symbols/%s/*' %
+                    (os.getenv('ANDROID_BUILD_TOP'), arch))
+  for f in files:
+    symbols |= set(open(f, 'r').read().splitlines())
+  return symbols
+
 glibc_to_bionic_names = {
   '__res_init': 'res_init',
   '__res_mkquery': 'res_mkquery',
@@ -59,6 +74,7 @@ glibc_to_bionic_names = {
 
 glibc = GetSymbolsFromSystemSo('libc.so.*', 'librt.so.*', 'libpthread.so.*', 'libresolv.so.*', 'libm.so.*')
 bionic = GetSymbolsFromAndroidSo('libc.so', 'libm.so')
+ndk_ignored = GetNdkIgnored()
 
 glibc = map(MangleGlibcNameToBionic, glibc)
 
@@ -135,19 +151,23 @@ weird_stuff = set([
   'stat64',
 ])
 
-print 'glibc:'
-for symbol in sorted(glibc):
-  print symbol
+if not only_unwanted:
+  print 'glibc:'
+  for symbol in sorted(glibc):
+    print symbol
 
-print
-print 'bionic:'
-for symbol in sorted(bionic):
-  print symbol
+  print
+  print 'bionic:'
+  for symbol in sorted(bionic):
+    print symbol
 
-print
-print 'in bionic but not glibc:'
+  print
+  print 'in bionic but not glibc:'
+
 allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff | std_stuff | weird_stuff)
 for symbol in sorted((bionic - allowed_stuff).difference(glibc)):
+  if symbol in ndk_ignored:
+    symbol += '*'
   print symbol
 
 sys.exit(0)
