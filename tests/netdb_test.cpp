@@ -55,3 +55,16 @@ TEST(netdb, getnameinfo_salen) {
   ASSERT_STREQ("::", tmp);
   ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
 }
+
+TEST(netdb, gethostbyname) {
+  const char* hostname = "localhost";
+  struct hostent* hent;
+
+  hent = gethostbyname(hostname);
+  ASSERT_TRUE(hent != NULL);
+  ASSERT_EQ(hent->h_addrtype, AF_INET);
+  ASSERT_EQ(hent->h_addr[0],127);
+  ASSERT_EQ(hent->h_addr[1],0);
+  ASSERT_EQ(hent->h_addr[2],0);
+  ASSERT_EQ(hent->h_addr[3],1);
+}
