@@ -554,3 +554,19 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
+
+TEST(dlfcn, relocs) {
+  void* handle = dlopen("libtest_relocs.so", RTLD_NOW  | RTLD_GLOBAL);
+  ASSERT_TRUE(handle != nullptr);
+
+  typedef int (*fn_t) (void);
+  fn_t fn, fn2;
+  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "relocs_func1"));
+  ASSERT_TRUE(fn != NULL) << dlerror();
+  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "relocs_func2"));
+  ASSERT_TRUE(fn2 != NULL) << dlerror();
+
+  ASSERT_EQ(1, fn());
+  ASSERT_EQ(2, fn2());
+  dlclose(handle);
+}
