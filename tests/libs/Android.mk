@@ -50,6 +50,36 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by dlclose_destruction tests - with GNU RELRO program header
+# -----------------------------------------------------------------------------
+libdlclosetest1_src_files := \
+    libdlclosetest1.cpp \
+
+libdlclosetest1_ldflags := \
+    -Wl,-z,relro \
+
+module := libdlclosetest1
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library used by dlclose_destruction tests - with GNU RELRO program header
+# -----------------------------------------------------------------------------
+libdlclosetest2_src_files := \
+    libdlclosetest2.cpp \
+
+libdlclosetest2_ldflags := \
+    -Wl,-z,relro \
+
+module := libdlclosetest2
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # create symlink to libdlext_test.so for symlink test
 # -----------------------------------------------------------------------------
 # Use = instead of := to defer the evaluation of $@
