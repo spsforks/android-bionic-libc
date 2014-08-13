@@ -60,6 +60,7 @@ libBionicStandardTests_src_files := \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
+    grp_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
@@ -99,6 +100,7 @@ libBionicStandardTests_src_files := \
     strings_test.cpp \
     stubs_test.cpp \
     sstream_test.cpp \
+    sys_conf_test.cpp \
     sys_epoll_test.cpp \
     sys_mman_test.cpp \
     sys_resource_test.cpp \
@@ -268,6 +270,7 @@ bionic-unit-tests_c_includes := \
 bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
+    librelocs_test \
 
 module := bionic-unit-tests
 module_tag := optional

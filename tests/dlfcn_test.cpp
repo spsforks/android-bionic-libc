@@ -341,3 +341,11 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
+
+extern int func1(void);
+extern int func2(void);
+
+TEST(dlfcn, relocs) {
+  ASSERT_EQ(1, func1());
+  ASSERT_EQ(2, func2());
+}

@@ -262,3 +262,142 @@ TEST(sched, cpu_equal_s) {
   CPU_FREE(set1);
   CPU_FREE(set2);
 }
+
+int failures = 0;
+
+static void test_1(cpu_set_t* set) {
+  cpu_set_t  other[1];
+  int nn, nnMax = CPU_SETSIZE;
+
+  memset(other, 0, sizeof *other);
+  ASSERT_EQ(CPU_COUNT(other),0);
+
+  /* First, cheeck against zero */
+  CPU_ZERO(set);
+  ASSERT_EQ(CPU_COUNT(set),0);
+  ASSERT_TRUE(CPU_EQUAL(other, set));
+  ASSERT_TRUE(CPU_EQUAL(set, other));
+
+  for (nn = 0; nn < nnMax; nn++)
+    ASSERT_TRUE(!CPU_ISSET(nn, set));
+
+  /* Check individual bits */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_SET(nn, set);
+    ASSERT_EQ(CPU_COUNT(set),1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET(mm, set) == (mm == nn));
+    }
+    CPU_CLR(nn, set);
+    ASSERT_TRUE(CPU_EQUAL(set, other));
+  }
+  /* Check cumulative bits, incrementing */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_SET(nn, set);
+    ASSERT_EQ(CPU_COUNT(set), nn+1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET(mm, set) == (mm <= nn));
+    }
+  }
+  /* Check individual clear bits */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_CLR(nn, set);
+    ASSERT_EQ(CPU_COUNT(set), nnMax-1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET(mm, set) == (mm != nn));
+    }
+    CPU_SET(nn, set);
+  }
+  /* Check cumulative bits, decrementing */
+  for (nn = nnMax-1; nn >= 0; nn--) {
+    int mm;
+    CPU_CLR(nn, set);
+    ASSERT_EQ(CPU_COUNT(set), nn);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET(mm, set) == (mm < nn));
+    }
+  }
+  ASSERT_TRUE(CPU_EQUAL(set, other));
+}
+
+static void test_1_s(size_t setsize, cpu_set_t* set) {
+  int nn, nnMax;
+  cpu_set_t* other;
+  /* First, cheeck against zero */
+  other =(cpu_set_t*)calloc(1,setsize);
+  ASSERT_EQ(CPU_COUNT(other),0);
+  CPU_ZERO_S(setsize, set);
+  ASSERT_TRUE(CPU_EQUAL_S(setsize, set, other));
+  ASSERT_TRUE(CPU_EQUAL_S(setsize, other, set));
+
+  nnMax = setsize*8;
+  for (nn = 0; nn < nnMax; nn++)
+    ASSERT_TRUE(!CPU_ISSET_S(nn, setsize, set));
+
+  /* Check individual bits */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_SET_S(nn, setsize, set);
+    ASSERT_EQ(CPU_COUNT_S(setsize, set), 1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET_S(mm, setsize, set) == (mm == nn));
+    }
+    CPU_CLR_S(nn, setsize, set);
+    ASSERT_TRUE(CPU_EQUAL_S(setsize, set, other));
+  }
+  /* Check cumulative bits, incrementing */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_SET_S(nn, setsize, set);
+    ASSERT_EQ(CPU_COUNT_S(setsize, set), nn+1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET_S(mm, setsize, set) == (mm <= nn));
+    }
+  }
+
+  /* Check individual clear bits */
+  for (nn = 0; nn < nnMax; nn++) {
+    int mm;
+    CPU_CLR_S(nn, setsize, set);
+    ASSERT_EQ(CPU_COUNT_S(setsize, set), nnMax-1);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET_S(mm, setsize, set) == (mm != nn));
+    }
+    CPU_SET_S(nn, setsize, set);
+  }
+  /* Check cumulative bits, decrementing */
+  for (nn = nnMax-1; nn >= 0; nn--) {
+    int mm;
+    CPU_CLR_S(nn, setsize, set);
+    ASSERT_EQ(CPU_COUNT_S(setsize, set), nn);
+    for (mm = 0; mm < nnMax; mm++) {
+      ASSERT_TRUE(CPU_ISSET_S(mm, setsize, set) == (mm < nn));
+    }
+  }
+  ASSERT_TRUE(CPU_EQUAL_S(setsize, set, other));
+  free(other);
+}
+
+TEST(sched, cpu_set_s) {
+  cpu_set_t  set0;
+  int cpu;
+  test_1(&set0);
+  test_1_s(sizeof(set0), &set0);
+  size_t count;
+  for (count = 32; count <= 1024; count *= 2) {
+    cpu_set_t* set = CPU_ALLOC(count);
+    test_1_s(count/8, set);
+    CPU_FREE(set);
+  }
+  ASSERT_TRUE((cpu = sched_getcpu()) >= 0);
+
+  int ret;
+  ASSERT_EQ((ret = sched_getaffinity(getpid(), sizeof(cpu_set_t), &set0)), 0);
+  CPU_ZERO(&set0);
+  CPU_SET(cpu, &set0);
+  ASSERT_EQ((ret = sched_setaffinity(getpid(), sizeof(cpu_set_t), &set0)), 0);
+  ASSERT_TRUE(failures == 0);
+}

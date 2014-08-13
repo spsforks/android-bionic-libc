@@ -27,6 +27,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#define HOSTNAMESIZE 512
+
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
 }
@@ -461,4 +463,11 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_EQ(NULL, result);
+}
+
+TEST(unistd, gethostname) {
+  char hostname[HOSTNAMESIZE];
+  memset(hostname, 0, sizeof(hostname));
+  ASSERT_EQ(0, gethostname(hostname, HOSTNAMESIZE));
+  ASSERT_GT((int)strlen(hostname), 0);
 }

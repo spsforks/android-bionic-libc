@@ -26,8 +26,13 @@
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 #include "ScopedSignalHandler.h"
+
+#define MAGIC1 0xcafebabeU
+#define MAGIC2 0x8badf00dU
+#define MAGIC3 0x12345667U
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -105,7 +110,6 @@ TEST(pthread, pthread_key_fork) {
   ASSERT_EQ(99, WEXITSTATUS(status));
 
   ASSERT_EQ(expected, pthread_getspecific(key));
-  ASSERT_EQ(0, pthread_key_delete(key));
 }
 
 static void* DirtyKeyFn(void* key) {
@@ -133,7 +137,6 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(nullptr, result); // Not ~0!
 
   ASSERT_EQ(0, munmap(stack, stack_size));
-  ASSERT_EQ(0, pthread_key_delete(key));
 }
 
 static void* IdFn(void* arg) {
@@ -896,4 +899,234 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 
   EXPECT_EQ(stack_size, stack_size2);
   ASSERT_EQ(6666U, stack_size);
+}
+
+static int g_ok1 = 0;
+static int g_ok2 = 0;
+static int g_ok3 = 0;
+
+static void cleanup1( void* arg ) {
+  unsigned int value = 0;
+  value = reinterpret_cast<unsigned long>(arg);
+  if (value != MAGIC1)
+    g_ok1 = -1;
+  else
+    g_ok1 = +1;
+}
+
+static void cleanup2( void* arg ) {
+  unsigned int value = 0;
+  value = reinterpret_cast<unsigned long>(arg);
+  if (value != MAGIC2)
+    g_ok2 = -1;
+  else
+    g_ok2 = +1;
+}
+
+static void cleanup3( void* arg ) {
+  unsigned int value = 0;
+  value = reinterpret_cast<unsigned long>(arg);
+  if (value != MAGIC3)
+    g_ok3 = -1;
+  else
+    g_ok3 = +1;
+}
+
+static void* thread1_func( void* arg ) {
+  pthread_cleanup_push( cleanup1, reinterpret_cast<void*>(MAGIC1));
+  pthread_cleanup_push( cleanup2, reinterpret_cast<void*>(MAGIC2));
+  pthread_cleanup_push( cleanup3, reinterpret_cast<void*>(MAGIC3));
+
+  if (arg != NULL)
+    pthread_exit(0);
+
+  pthread_cleanup_pop(0);
+  pthread_cleanup_pop(1);
+  pthread_cleanup_pop(1);
+
+  return NULL;
+}
+
+static void test( int do_exit ) {
+  pthread_t t;
+  pthread_create( &t, NULL, thread1_func, reinterpret_cast<void*>(do_exit));
+  pthread_join( t, NULL );
+
+  ASSERT_EQ(+1, g_ok1);
+  ASSERT_EQ(+1, g_ok2);
+  ASSERT_FALSE(do_exit && g_ok3 != +1);
+  ASSERT_FALSE(!do_exit && g_ok3 != 0);
+}
+
+TEST(pthread, pthread_cleanup_push) {
+  test(0);
+  test(1);
+}
+
+static sem_t semaphore;
+
+static void*_thread1(void *__u __attribute__((unused))) {
+  if (sem_wait( &semaphore ) < 0){
+    ADD_FAILURE();
+  }
+  sleep( 2 );
+  if (sem_post( &semaphore ) < 0) {
+    ADD_FAILURE();
+  }
+  return NULL;
+}
+
+static void*_thread2(void *__u __attribute__((unused))) {
+  sleep(1);
+  if ( sem_wait( &semaphore ) < 0 ){
+    ADD_FAILURE();
+  }
+  sleep( 2 );
+  if ( sem_post( &semaphore ) < 0 ){
+    ADD_FAILURE();
+  }
+  return NULL;
+}
+
+static void*_thread3(void *__u __attribute__((unused))) {
+  sleep(3);
+  if ( sem_wait( &semaphore ) < 0 ){
+    ADD_FAILURE();
+  }
+  return NULL;
+}
+
+typedef void*  (*thread_func)(void*);
+
+static const  thread_func  thread_routines[] = {
+    &_thread1,
+    &_thread2,
+    &_thread3
+};
+
+TEST(pthread, semaphore) {
+  pthread_t t[3];
+  int nn;
+  ASSERT_TRUE( sem_init( &semaphore, 0, 1 ) >= 0 );
+
+  for ( nn = 0; nn < 3; nn++ ) {
+    ASSERT_TRUE(pthread_create( &t[nn], NULL, thread_routines[nn], NULL ) >= 0 );
+  }
+  sleep( 5 );
+}
+
+static sem_t semaph;
+
+/* Thread function, just wait for the semaph */
+static void* thread_function(void* arg) {
+  sem_t *psem = (sem_t *)arg;
+  void *me = (void *)pthread_self();
+  sem_wait(psem);
+  return me;
+}
+
+#define MAX_THREADS  10
+
+TEST(pthread, sem_post) {
+  pthread_t t[MAX_THREADS];
+  int nn, value;
+
+  /* Initialize to 1, first thread will exit immediately.
+   * this is used to exercize more of the semaph code path */
+  ASSERT_TRUE( sem_init( &semaph, 0, 1 ) >= 0 );
+
+  for ( nn = 0; nn < MAX_THREADS; nn++ ) {
+    ASSERT_TRUE( pthread_create( &t[nn], NULL, thread_function, &semaph ) >= 0 );
+  }
+  sleep( 1 );
+  for (nn = 0; nn < MAX_THREADS; nn++) {
+    sem_post(&semaph);
+  }
+  for ( nn = 0; nn < MAX_THREADS; nn++) {
+    void* result;
+    pthread_join(t[nn], &result);
+    ASSERT_TRUE(result == (void*)t[nn]);
+  }
+
+  ASSERT_TRUE(sem_getvalue(&semaph, &value) >= 0);
+  ASSERT_EQ(1, value);
+}
+
+TEST(pthread, mutex) {
+  pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutexattr_t attr;
+  int attr_type;
+
+  ASSERT_EQ( pthread_mutexattr_init( &attr ), 0 );
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_NORMAL ), 0 );
+  ASSERT_EQ( pthread_mutexattr_gettype( &attr, &attr_type ), 0 );
+  ASSERT_TRUE( attr_type == PTHREAD_MUTEX_NORMAL );
+
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_ERRORCHECK ), 0 );
+  ASSERT_EQ( pthread_mutexattr_gettype( &attr, &attr_type ), 0 );
+  ASSERT_TRUE( attr_type == PTHREAD_MUTEX_ERRORCHECK );
+
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_RECURSIVE ), 0 );
+  ASSERT_EQ( pthread_mutexattr_gettype( &attr, &attr_type ), 0 );
+  ASSERT_TRUE( attr_type == PTHREAD_MUTEX_RECURSIVE );
+  /* standard mutexes */
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_NORMAL ), 0 );
+  ASSERT_EQ( pthread_mutex_init( &lock, &attr ), 0 );
+  ASSERT_EQ( pthread_mutex_lock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_destroy( &lock ), 0 );
+  /* error-check mutex */
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_ERRORCHECK ), 0 );
+  ASSERT_EQ( pthread_mutex_init( &lock, &attr ), 0 );
+  ASSERT_EQ( pthread_mutex_lock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_lock( &lock ), EDEADLK );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_trylock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_trylock( &lock ), EDEADLK );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), EPERM );
+  ASSERT_EQ( pthread_mutex_destroy( &lock ), 0 );
+  /* recursive mutex */
+  ASSERT_EQ( pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_RECURSIVE ), 0 );
+  ASSERT_EQ( pthread_mutex_init( &lock, &attr ), 0 );
+  ASSERT_EQ( pthread_mutex_lock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_lock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_trylock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), 0 );
+  ASSERT_EQ( pthread_mutex_unlock( &lock ), EPERM );
+  ASSERT_EQ( pthread_mutex_destroy( &lock ), 0 );
+}
+
+class Foo {
+private:
+  pthread_mutex_t mMutex;
+public:
+  virtual int getValue();
+  Foo();
+  virtual ~Foo();
+};
+
+Foo::Foo() {
+  pthread_mutexattr_t mattr;
+
+  pthread_mutexattr_init(&mattr);
+  pthread_mutexattr_settype(&mattr, PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mMutex, &mattr);
+  pthread_mutex_lock(&mMutex);
+}
+
+Foo::~Foo() {
+  pthread_mutex_unlock(&mMutex);
+}
+
+int Foo::getValue() {
+  return 0;
+}
+
+static Foo f;
+
+TEST(pthread, static_cpp_mutex)
+{
 }
