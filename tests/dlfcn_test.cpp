@@ -474,3 +474,13 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
+
+#if defined(__BIONIC__)
+int relocs_func1();
+int relocs_func2();
+
+TEST(dlfcn, relocs) {
+  ASSERT_EQ(1, relocs_func1());
+  ASSERT_EQ(2, relocs_func2());
+}
+#endif

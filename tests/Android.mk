@@ -270,6 +270,7 @@ bionic-unit-tests_c_includes := \
 bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
+    librelocs_test \
 
 module := bionic-unit-tests
 module_tag := optional

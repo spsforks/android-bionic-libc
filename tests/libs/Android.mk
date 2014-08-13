@@ -95,6 +95,18 @@ build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# Library used by relocs tests
+# -----------------------------------------------------------------------------
+librelocs_test_src_files := \
+    lib_relocs.cpp \
+
+module := librelocs_test
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
 # Library used by dlfcn tests
 # -----------------------------------------------------------------------------
 libtest_simple_src_files := \
