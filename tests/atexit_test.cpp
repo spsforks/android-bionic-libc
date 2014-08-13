@@ -94,3 +94,79 @@ TEST(atexit, exit) {
   ASSERT_EXIT(atexit_main(), testing::ExitedWithCode(0), "123456");
 }
 
+static int
+check_library(const char*  libname)
+{
+    void*  lib = dlopen(libname, RTLD_NOW);
+
+    int*   to_x;
+    void  (*set_y)(int *);
+    int    y = 0;
+
+    if(lib == NULL){
+       return 1;
+    }
+
+    to_x =(int *)dlsym(lib, "x");
+    if (to_x == NULL){
+       return 2;
+    }
+
+    if (*to_x != 1){
+       return 3;
+    }
+
+    set_y =(void (*)(int*))dlsym(lib, "set_y");
+    if (set_y == NULL){
+       return 4;
+    }
+
+    y = 0;
+    (*set_y)(&y);
+
+    if (dlclose(lib) < 0){
+        return 5;
+    }
+
+    if(y!=2){
+       return 6;
+    }
+    return 0;
+}
+
+TEST(atexit, dlclose_destruction2)
+{
+   ASSERT_EQ(0,check_library("libdlclosetest2.so"));
+}
+
+static int
+check_library1(const char*  libname)
+{
+    void*  lib = dlopen(libname, RTLD_NOW);
+
+    int*   to_x;
+
+    if(lib == NULL){
+       return 1;
+    }
+
+    to_x =(int *)dlsym(lib, "x");
+    if (to_x == NULL){
+       return 2;
+    }
+
+    if (*to_x != 1){
+       return 3;
+    }
+
+    if (dlclose(lib) < 0){
+        return 4;
+    }
+
+    return 0;
+}
+
+TEST(atexit, dlclose_destruction1)
+{
+   ASSERT_EQ(0,check_library1("libdlclosetest1.so"));
+}

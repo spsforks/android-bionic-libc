@@ -54,12 +54,14 @@ libBionicStandardTests_src_files := \
     buffer_tests.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
+    euid_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
     fenv_test.cpp \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
+    grp_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_test.cpp \
