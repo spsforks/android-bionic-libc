@@ -14,16 +14,34 @@
  * limitations under the License.
  */
 
+
 #include <gtest/gtest.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <unistd.h>
+
+#define HOSTNAMESIZE 512
 
 TEST(netdb, getaddrinfo_NULL_hints) {
   addrinfo* ai = NULL;
   ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &ai));
+  freeaddrinfo(ai);
+}
+
+TEST(netdb, getaddrinfo_hints) {
+  addrinfo* ai = NULL;
+  struct addrinfo  hints;
+
+  /* now try with the hints */
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family   = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+
+  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
   freeaddrinfo(ai);
 }
 
@@ -55,3 +73,21 @@ TEST(netdb, getnameinfo_salen) {
   ASSERT_STREQ("::", tmp);
   ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
 }
+
+TEST(netdb, gethostbyname)
+{
+   const  char*      hostname = "localhost";
+   struct hostent*  hent;
+
+    hent = gethostbyname(hostname);
+    ASSERT_TRUE(hent != NULL);
+    ASSERT_EQ(hent->h_addrtype, AF_INET);
+    ASSERT_TRUE(hent->h_addr[0]==127 && hent->h_addr[1]==0 && hent->h_addr[2]==0 && hent->h_addr[3]==1);
+}
+
+TEST(netdb, gethostname)
+{
+    char  hostname[HOSTNAMESIZE];
+    ASSERT_EQ(0, gethostname(hostname, HOSTNAMESIZE));
+}
+
