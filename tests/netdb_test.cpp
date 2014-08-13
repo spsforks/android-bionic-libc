@@ -21,10 +21,45 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
+bool find_socket_type(int socket_type, addrinfo* ai_link){
+  addrinfo* rp = NULL;
+  for (rp = ai_link; rp != NULL; rp = rp->ai_next) {
+    if(socket_type == rp->ai_socktype){
+        return true;
+    }
+  }
+  return false;
+}
+
 TEST(netdb, getaddrinfo_NULL_hints) {
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &ai));
-  freeaddrinfo(ai);
+  addrinfo* res = NULL;
+  ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &res));
+
+  //assume SOCK_STREAM and SOCK_DGRAM are supported
+  ASSERT_NE((addrinfo *)NULL, res->ai_next);
+  ASSERT_TRUE(find_socket_type(SOCK_STREAM, res));
+  ASSERT_TRUE(find_socket_type(SOCK_DGRAM, res));
+
+  freeaddrinfo(res);
+}
+
+TEST(netdb, getaddrinfo_hints) {
+  addrinfo* res = NULL;
+  struct addrinfo  hints;
+
+  /* now try with the hints */
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family   = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+
+  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &res));
+  //the return information should have the same socket type
+  //and protocol as specified in hints
+  ASSERT_EQ(SOCK_STREAM, res->ai_socktype);
+  ASSERT_EQ(IPPROTO_TCP, res->ai_protocol);
+  ASSERT_EQ((addrinfo *)NULL, res->ai_next);
+  freeaddrinfo(res);
 }
 
 TEST(netdb, getnameinfo_salen) {
