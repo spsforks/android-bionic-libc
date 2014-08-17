@@ -62,9 +62,8 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-#if defined(__arm__)
-// This seems to be working only for arm.
-// Others platforms optimize LOCAL PROTECTED symbols.
+#if defined(__arm__) || defined (__x86__) || defined (__x86_64__)
+// arm64/mips do not expose LOCAL PROTECTED symbols.
 TEST(dlfcn, dlsym_local_symbol) {
   void* handle = dlopen("libtest_local_symbol.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
