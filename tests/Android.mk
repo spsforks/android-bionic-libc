@@ -238,7 +238,7 @@ include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
 # Tests for the device using bionic's .so. Run with:
-#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
+#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
 # -----------------------------------------------------------------------------
 bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
@@ -270,7 +270,7 @@ include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
 # Tests for the device linked against bionic's static library. Run with:
-#   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
+#   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
 # -----------------------------------------------------------------------------
 bionic-unit-tests-static_whole_static_libraries := \
     libBionicTests \
