@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
-#if !defined(__GLIBC__) /* TODO: fix our prebuilt toolchains! */
-
 #include <stdatomic.h>
+#include <gtest/gtest.h>
+#include <pthread.h>
 
 TEST(stdatomic, LOCK_FREE) {
   ASSERT_TRUE(ATOMIC_BOOL_LOCK_FREE);
@@ -167,4 +165,76 @@ TEST(stdatomic, atomic_fetch_and) {
   ASSERT_EQ(0x002, atomic_load(&i));
 }
 
-#endif
+// And a rudimentary test of acquire-release memory ordering:
+
+constexpr static unsigned long BIG = 20000000ul;
+
+struct three_atomics {
+  atomic_ulong x;
+  char a[4013];  // everything in different cache lines,
+                 // worst-case alignment.
+  atomic_ulong y;
+  char b[123];
+  atomic_ulong z;
+};
+
+// Very simple acquire/release memory ordering sanity check.
+void* writer(void* arg) {
+  three_atomics* a = reinterpret_cast<three_atomics*>(arg);
+  for (unsigned long i = 0; i <= BIG; ++i) {
+    atomic_store_explicit(&a->x, i, memory_order_relaxed);
+    atomic_store_explicit(&a->z, i, memory_order_relaxed);
+    atomic_store_explicit(&a->y, i, memory_order_release);
+  }
+  return 0;
+}
+
+void* reader(void* arg) {
+  three_atomics* a = reinterpret_cast<three_atomics*>(arg);
+  unsigned long xval = 0, yval = 0, zval = 0;
+  unsigned repeat = 0;
+  while (yval != BIG) {
+    yval = atomic_load_explicit(&a->y, memory_order_acquire);
+    xval = atomic_load_explicit(&a->x, memory_order_relaxed);
+    zval = atomic_load_explicit(&a->z, memory_order_relaxed);
+    // If we see a given value of y, the immediately preceding
+    // store to x, or a later one, should also be visible.
+    if (xval < yval) {
+      // Cant just ASSERT, since we are in a non-void function.
+      ADD_FAILURE() << "acquire-release ordering violation: "
+                    << xval << " < " << yval << "\n";
+      return 0; // Only report once.
+    }
+    if (zval < yval) {
+      // Cant just ASSERT, since we are in a non-void function.
+      ADD_FAILURE() << "acquire-release ordering violation: "
+                    << zval << " < " << yval << "\n";
+      return 0; // Only report once.
+    }
+    if (repeat < 1000) ++repeat;
+  }
+  // The following assertion is not technically guaranteed to hold.
+  // But if it fails to hold, this test was useless, and we have a
+  // serious scheduling issue that we should probably know about.
+  EXPECT_EQ(repeat, 1000u);
+  return 0;
+}
+
+TEST(atomic, ordering) {
+  // Run a memory ordering sanity test.
+  void* result;
+  three_atomics a;
+  atomic_init(&a.x, 0ul);
+  atomic_init(&a.y, 0ul);
+  atomic_init(&a.z, 0ul);
+  pthread_t t1,t2;
+  ASSERT_EQ(0, pthread_create(&t1, 0, reader, &a));
+  ASSERT_EQ(0, pthread_create(&t2, 0, writer, &a));
+  ASSERT_EQ(0, pthread_join(t1, &result));
+  EXPECT_EQ(0, result);
+  ASSERT_EQ(0, pthread_join(t2, &result));
+  EXPECT_EQ(0, result);
+  EXPECT_EQ(atomic_load_explicit(&a.x, memory_order_consume), BIG);
+  EXPECT_EQ(atomic_load_explicit(&a.y, memory_order_seq_cst), BIG);
+  EXPECT_EQ(atomic_load(&a.z), BIG);
+}
