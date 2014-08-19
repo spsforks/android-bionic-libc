@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define _GNU_SOURCE 1
+
 #include <string.h>
 
 #include <errno.h>
@@ -73,27 +75,32 @@ TEST(string, strerror_concurrent) {
 }
 
 TEST(string, strerror_r) {
-#if defined(__BIONIC__) // glibc's strerror_r doesn't even have the same signature as the POSIX one.
   char buf[256];
 
+  // Note that glibc doesn't necessarily write into the buffer.
+
   // Valid.
-  ASSERT_EQ(0, strerror_r(0, buf, sizeof(buf)));
+  ASSERT_STREQ("Success", strerror_r(0, buf, sizeof(buf)));
+#if defined(__BIONIC__)
   ASSERT_STREQ("Success", buf);
-  ASSERT_EQ(0, strerror_r(1, buf, sizeof(buf)));
+#endif
+  ASSERT_STREQ("Operation not permitted", strerror_r(1, buf, sizeof(buf)));
+#if defined(__BIONIC__)
   ASSERT_STREQ("Operation not permitted", buf);
+#endif
 
   // Invalid.
-  ASSERT_EQ(0, strerror_r(-1, buf, sizeof(buf)));
+  ASSERT_STREQ("Unknown error -1", strerror_r(-1, buf, sizeof(buf)));
   ASSERT_STREQ("Unknown error -1", buf);
-  ASSERT_EQ(0, strerror_r(1234, buf, sizeof(buf)));
+  ASSERT_STREQ("Unknown error 1234", strerror_r(1234, buf, sizeof(buf)));
   ASSERT_STREQ("Unknown error 1234", buf);
 
   // Buffer too small.
-  ASSERT_EQ(-1, strerror_r(0, buf, 2));
-  ASSERT_EQ(ERANGE, errno);
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+  errno = 0;
+  ASSERT_EQ(buf, strerror_r(4567, buf, 2));
+  ASSERT_STREQ("U", buf);
+  // The POSIX strerror_r would set errno to ERANGE, but the glibc one doesn't.
+  ASSERT_EQ(0, errno);
 }
 
 TEST(string, strsignal) {
