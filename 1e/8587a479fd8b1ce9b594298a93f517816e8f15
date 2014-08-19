@@ -1,0 +1,7 @@
+Code-Review+2: Hans Boehm <hboehm@google.com>
+Verified+1: Hans Boehm <hboehm@google.com>
+Submitted-by: Hans Boehm <hboehm@google.com>
+Submitted-at: Tue, 19 Aug 2014 22:34:00 +0000
+Reviewed-on: https://android-review.googlesource.com/104756
+Project: platform/bionic
+Branch: refs/heads/master
