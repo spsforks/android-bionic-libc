@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef LIBC_BIONIC_JEMALLOC_H_
-#define LIBC_BIONIC_JEMALLOC_H_
+#ifndef LIBC_BIONIC_MALLOC_INFO_H_
+#define LIBC_BIONIC_MALLOC_INFO_H_
 
-#include <jemalloc/jemalloc.h>
-
-// Need to wrap memalign since je_memalign fails on non-power of 2 alignments.
-#define je_memalign je_memalign_round_up_boundary
+#include <malloc.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-size_t je_mallinfo_narenas();
-size_t je_mallinfo_nbins();
-struct mallinfo je_mallinfo();
-struct mallinfo je_mallinfo_arena_info(size_t);
-struct mallinfo je_mallinfo_bin_info(size_t, size_t);
-void* je_memalign_round_up_boundary(size_t, size_t);
-void* je_pvalloc(size_t);
+__LIBC_HIDDEN__ size_t __mallinfo_narenas();
+__LIBC_HIDDEN__ size_t __mallinfo_nbins();
+__LIBC_HIDDEN__ struct mallinfo __mallinfo_arena_info(size_t);
+__LIBC_HIDDEN__ struct mallinfo __mallinfo_bin_info(size_t, size_t);
 
 __END_DECLS
 
-#endif  // LIBC_BIONIC_DLMALLOC_H_
+#endif // LIBC_BIONIC_MALLOC_INFO_H_

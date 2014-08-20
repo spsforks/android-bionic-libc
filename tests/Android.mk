@@ -36,6 +36,7 @@ test_cflags = \
     -g \
     -Wall -Wextra -Wunused \
     -Werror \
+    -Wno-undefined-bool-conversion \
     -fno-builtin \
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
@@ -130,6 +131,7 @@ libBionicStandardTests_cppflags := \
 
 libBionicStandardTests_c_includes := \
     bionic/libc \
+    external/tinyxml \
 
 libBionicStandardTests_ldlibs_host := \
     -lrt \
@@ -243,6 +245,9 @@ include $(LOCAL_PATH)/Android.build.mk
 bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
 
+bionic-unit-tests_static_libraries := \
+    libtinyxml \
+
 bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dlext_test.cpp \
@@ -280,6 +285,7 @@ bionic-unit-tests-static_static_libraries := \
     libm \
     libc \
     libstdc++ \
+    libtinyxml \
 
 bionic-unit-tests-static_force_static_executable := true
 
