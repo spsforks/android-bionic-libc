@@ -22,6 +22,8 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#include <tinyxml.h>
+
 #include "private/bionic_config.h"
 
 TEST(malloc, malloc_std) {
@@ -322,3 +324,54 @@ TEST(malloc, valloc_overflow) {
   ASSERT_EQ(NULL, valloc(SIZE_MAX));
 }
 #endif
+
+#ifdef __BIONIC__
+static bool is_int(const char* str) {
+  char* endptr;
+  strtol(str, &endptr, 0);
+  return str != endptr;
+}
+#endif
+
+TEST(malloc, malloc_info) {
+#ifdef __BIONIC__
+  char* buf;
+  size_t bufsize;
+  FILE* memstream = open_memstream(&buf, &bufsize);
+  ASSERT_NE(nullptr, memstream);
+  ASSERT_EQ(0, malloc_info(0, memstream));
+  ASSERT_EQ(0, fclose(memstream));
+
+  TiXmlDocument doc;
+  ASSERT_EQ(nullptr, doc.Parse(buf));
+
+  TiXmlHandle hdoc(&doc);
+
+  auto elem = hdoc.FirstChildElement().Element();
+  ASSERT_NE(nullptr, elem);
+  ASSERT_STREQ("malloc", elem->Value());
+  ASSERT_STREQ("jemalloc-1", elem->Attribute("version"));
+
+  auto arena = elem->FirstChildElement();
+  for (; arena != nullptr; arena = arena->NextSiblingElement()) {
+    int nr;
+
+    ASSERT_STREQ("heap", arena->Value());
+    ASSERT_EQ(TIXML_SUCCESS, arena->QueryIntAttribute("nr", &nr));
+    ASSERT_TRUE(is_int(arena->FirstChildElement("allocated-large")->GetText()));
+    ASSERT_TRUE(is_int(arena->FirstChildElement("allocated-huge")->GetText()));
+    ASSERT_TRUE(is_int(arena->FirstChildElement("allocated-bins")->GetText()));
+    ASSERT_TRUE(is_int(arena->FirstChildElement("bins-total")->GetText()));
+
+    auto bin = arena->FirstChildElement("bin");
+    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+      if (strcmp(bin->Value(), "bin") == 0) {
+        ASSERT_EQ(TIXML_SUCCESS, bin->QueryIntAttribute("nr", &nr));
+        ASSERT_TRUE(is_int(bin->FirstChildElement("allocated")->GetText()));
+        ASSERT_TRUE(is_int(bin->FirstChildElement("nmalloc")->GetText()));
+        ASSERT_TRUE(is_int(bin->FirstChildElement("ndalloc")->GetText()));
+      }
+    }
+  }
+#endif
+}
