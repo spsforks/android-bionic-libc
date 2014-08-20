@@ -489,3 +489,15 @@ TEST(wchar, mbrtowc_15439554) {
   EXPECT_EQ(4U, n);
   EXPECT_EQ(L'𤭢', wc);
 }
+
+TEST(wchar, open_wmemstream) {
+  wchar_t* p = nullptr;
+  size_t size = 0;
+  FILE* fp = open_wmemstream(&p, &size);
+  ASSERT_NE(EOF, fputws(L"hello, world!", fp));
+  fclose(fp);
+
+  ASSERT_STREQ(L"hello, world!", p);
+  ASSERT_EQ(wcslen(L"hello, world!"), size);
+  free(p);
+}

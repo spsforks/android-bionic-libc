@@ -676,3 +676,35 @@ TEST(stdio, fpos_t_and_seek) {
 
   fclose(fp);
 }
+
+TEST(stdio, fmemopen) {
+  char buf[16];
+  memset(buf, 0, sizeof(buf));
+  FILE* fp = fmemopen(buf, sizeof(buf), "r+");
+  ASSERT_EQ('<', fputc('<', fp));
+  ASSERT_NE(EOF, fputs("abc>\n", fp));
+  fflush(fp);
+
+  ASSERT_STREQ("<abc>\n", buf);
+
+  rewind(fp);
+
+  char line[16];
+  char* s = fgets(line, sizeof(line), fp);
+  ASSERT_TRUE(s != NULL);
+  ASSERT_STREQ("<abc>\n", s);
+
+  fclose(fp);
+}
+
+TEST(stdio, open_memstream) {
+  char* p = nullptr;
+  size_t size = 0;
+  FILE* fp = open_memstream(&p, &size);
+  ASSERT_NE(EOF, fputs("hello, world!", fp));
+  fclose(fp);
+
+  ASSERT_STREQ("hello, world!", p);
+  ASSERT_EQ(strlen("hello, world!"), size);
+  free(p);
+}
