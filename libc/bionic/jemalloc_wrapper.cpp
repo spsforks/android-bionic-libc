@@ -18,6 +18,7 @@
 #include <unistd.h>
 
 #include "jemalloc.h"
+#include "malloc_info.h"
 #include "private/bionic_macros.h"
 
 void* je_pvalloc(size_t bytes) {
@@ -45,4 +46,20 @@ void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
     boundary = 1;
   }
   return je_memalign(boundary, size);
+}
+
+unsigned __mallinfo_narenas() {
+  return je_mallinfo_narenas();
+}
+
+unsigned __mallinfo_nbins() {
+  return je_mallinfo_nbins();
+}
+
+struct mallinfo __mallinfo_arena_info(unsigned aidx) {
+  return je_mallinfo_arena_info(aidx);
+}
+
+struct mallinfo __mallinfo_bin_info(unsigned aidx, unsigned bidx) {
+  return je_mallinfo_bin_info(aidx, bidx);
 }

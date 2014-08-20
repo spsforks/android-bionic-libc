@@ -16,6 +16,7 @@
 
 #include "dlmalloc.h"
 
+#include "malloc.h"
 #include "private/bionic_prctl.h"
 #include "private/libc_logging.h"
 
@@ -53,4 +54,25 @@ static void* named_anonymous_mmap(size_t length) {
   }
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, length, "libc_malloc");
   return map;
+}
+
+unsigned __mallinfo_narenas() {
+  return 0;
+}
+
+unsigned __mallinfo_nbins() {
+  return 0;
+}
+
+struct mallinfo __mallinfo_arena_info(unsigned) {
+  struct mallinfo mi;
+  memset(&mi, 0, sizeof(mi));
+
+  return mi;
+}
+
+struct mallinfo __mallinfo_bin_info(unsigned, unsigned) {
+  struct mallinfo mi;
+  memset(&mi, 0, sizeof(mi));
+  return mi;
 }

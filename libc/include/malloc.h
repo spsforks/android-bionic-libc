@@ -24,6 +24,7 @@
  */
 #include <sys/cdefs.h>
 #include <stddef.h>
+#include <stdio.h>
 
 __BEGIN_DECLS
 
@@ -52,6 +53,7 @@ struct mallinfo {
 #endif  /* STRUCT_MALLINFO_DECLARED */
 
 extern struct mallinfo mallinfo(void);
+extern int malloc_info(int, FILE *);
 
 __END_DECLS
 
