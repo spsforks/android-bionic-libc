@@ -30,12 +30,16 @@
 
 #include <elf.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <inttypes.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
+#include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
@@ -73,6 +77,49 @@ static size_t get_main_thread_stack_size() {
   return PTHREAD_STACK_SIZE_DEFAULT;
 }
 
+static char maps_buf[PAGE_SIZE];
+static uintptr_t get_stack_end_from_maps(uintptr_t current_sp)
+{
+  size_t ret;
+  uintptr_t stack_end = 0;
+  int fd = open("/proc/self/maps", O_RDONLY);
+  if (fd == -1)
+    return 0;
+
+  char *c, *b, *end;
+  size_t cn = PAGE_SIZE;
+  c = b = maps_buf;
+  end = c + PAGE_SIZE;
+
+  while ((ret = read(fd, c, cn)) > 0) {
+    if (ret < cn)
+      end = c + ret;
+    while ((c = reinterpret_cast<char*>(memchr(b, '\n', 4096))) != NULL) {
+      if (c > end)
+        goto out;
+      *c = 0;
+      uintptr_t start, end;
+      if (sscanf(b, "%" SCNxPTR "-%" SCNxPTR, &start, &end) != 2) {
+        b = c + 1;
+        continue;
+      }
+
+      if ((start < current_sp) && (end > current_sp)) {
+        stack_end = end;
+        goto out;
+      }
+
+      b = c + 1;
+    }
+    cn = b - maps_buf - 1;
+    memcpy(maps_buf, b, 4096 - cn);
+    c = maps_buf + 4096 - cn + 1;
+    c[-1] = 0;
+  }
+out:
+  return stack_end;
+}
+
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
  * apply to linker-private copies and will not be visible from libc later on.
@@ -98,7 +145,11 @@ void __libc_init_tls(KernelArgumentBlock& args) {
 
   // Work out the extent of the main thread's stack.
   uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  size_t stack_size = get_main_thread_stack_size();
+  size_t stack_size = 0;
+  size_t stack_default_size = get_main_thread_stack_size();
+  uintptr_t stack_end = get_stack_end_from_maps(__get_sp());
+  stack_size = stack_default_size - stack_end + stack_top;
+
   void* stack_bottom = reinterpret_cast<void*>(stack_top - stack_size);
 
   // We don't want to free the main thread's stack even when the main thread exits
