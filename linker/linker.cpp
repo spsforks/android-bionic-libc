@@ -809,10 +809,6 @@ static soinfo* load_library(const char* name, int dlflags, const android_dlextin
       return NULL;
     }
 
-    // if the library has any ifuncs, we will need to resolve them so that dlsym
-    // can handle them properly
-    resolve_ifunc_symbols(si);
-
     return si;
 }
 
@@ -1567,6 +1563,10 @@ void soinfo::CallConstructors() {
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   CallFunction("DT_INIT", init_func);
   CallArray("DT_INIT_ARRAY", init_array, init_array_count, false);
+
+  // if the library has any ifuncs, we will need to resolve them so that dlsym
+  // can handle them properly
+  resolve_ifunc_symbols(this);
 }
 
 void soinfo::CallDestructors() {
