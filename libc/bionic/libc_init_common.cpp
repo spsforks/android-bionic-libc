@@ -30,12 +30,16 @@
 
 #include <elf.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <inttypes.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
+#include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
@@ -73,6 +77,44 @@ static size_t get_main_thread_stack_size() {
   return PTHREAD_STACK_SIZE_DEFAULT;
 }
 
+static char maps_buf[PAGE_SIZE];
+static uintptr_t get_stack_end_from_maps(uintptr_t current_sp)
+{
+  size_t ret;
+  uintptr_t stack_end = 0;
+  int fd = open("/proc/self/maps", O_RDONLY);
+  if (fd == -1)
+    return 0;
+
+  char *c, *b, *end;
+  size_t cn = PAGE_SIZE;
+  c = maps_buf;
+  while ((ret = read(fd, c, cn)) > 0) {
+    b = maps_buf;
+    end = c + ret;
+    while ((c = reinterpret_cast<char*>(memchr(b, '\n', (end - b)))) != NULL) {
+      *c = 0;
+      uintptr_t start, end;
+      if (sscanf(b, "%" SCNxPTR "-%" SCNxPTR, &start, &end) != 2) {
+        b = c + 1;
+        continue;
+      }
+
+      if ((start < current_sp) && (end > current_sp)) {
+        stack_end = end;
+        goto out;
+      }
+
+      b = c + 1;
+    }
+    cn = b - maps_buf;
+    memcpy(maps_buf, b, PAGE_SIZE - cn);
+    c = maps_buf + PAGE_SIZE - cn;
+  }
+out:
+  return stack_end;
+}
+
 /* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
  * in memory. Beware: all writes to libc globals from this function will
  * apply to linker-private copies and will not be visible from libc later on.
@@ -96,9 +138,22 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   main_thread.tid = __set_tid_address(&main_thread.tid);
   main_thread.set_cached_pid(main_thread.tid);
 
+  __init_thread(&main_thread, false);
+  __init_tls(&main_thread);
+  __set_tls(main_thread.tls);
+  tls[TLS_SLOT_BIONIC_PREINIT] = &args;
+
+  __init_alternate_signal_stack(&main_thread);
+
   // Work out the extent of the main thread's stack.
   uintptr_t stack_top = (__get_sp() & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-  size_t stack_size = get_main_thread_stack_size();
+  size_t stack_size = 0;
+  size_t stack_default_size = get_main_thread_stack_size();
+  // This function needs be put after TLS init is done because it
+  // could access __errno.
+  uintptr_t stack_end = get_stack_end_from_maps(__get_sp());
+  stack_size = stack_default_size - stack_end + stack_top;
+
   void* stack_bottom = reinterpret_cast<void*>(stack_top - stack_size);
 
   // We don't want to free the main thread's stack even when the main thread exits
@@ -106,13 +161,6 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   pthread_attr_init(&main_thread.attr);
   pthread_attr_setstack(&main_thread.attr, stack_bottom, stack_size);
   main_thread.attr.flags = PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK | PTHREAD_ATTR_FLAG_MAIN_THREAD;
-
-  __init_thread(&main_thread, false);
-  __init_tls(&main_thread);
-  __set_tls(main_thread.tls);
-  tls[TLS_SLOT_BIONIC_PREINIT] = &args;
-
-  __init_alternate_signal_stack(&main_thread);
 }
 
 void __libc_init_common(KernelArgumentBlock& args) {
