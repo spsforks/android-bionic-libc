@@ -31,6 +31,12 @@
 #include <err.h>
 #include <stdarg.h>
 
+#ifdef __clang__
+#undef errx
+#define _errx errx
+void _errx(int eval, const char *fmt, ...) __attribute__((weak));
+#endif
+
 /* PRINTFLIKE2 */
 __dead void
 _errx(int eval, const char *fmt, ...)
@@ -42,6 +48,8 @@ _errx(int eval, const char *fmt, ...)
 	va_end(ap);
 }
 
+#ifndef __clang__
 /* PRINTFLIKE2 */
 __weak_alias(errx, _errx);
+#endif
 

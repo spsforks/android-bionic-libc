@@ -37,6 +37,12 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
+#ifdef __clang__
+#undef verr
+#define _verr verr
+void _verr(int eval, const char *fmt, va_list ap) __attribute__((weak));
+#endif
+
 __dead void
 _verr(int eval, const char *fmt, va_list ap)
 {
@@ -52,5 +58,7 @@ _verr(int eval, const char *fmt, va_list ap)
 	exit(eval);
 }
 
+#ifndef __clang__
 __weak_alias(verr, _verr);
+#endif
 

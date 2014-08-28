@@ -34,6 +34,12 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
+#ifdef __clang__
+#undef vwarnx
+#define _vwarnx vwarnx
+void _vwarnx(const char *fmt, va_list ap) __attribute__((weak));
+#endif
+
 void
 _vwarnx(const char *fmt, va_list ap)
 {
@@ -43,5 +49,7 @@ _vwarnx(const char *fmt, va_list ap)
 	(void)fprintf(stderr, "\n");
 }
 
+#ifndef __clang__
 __weak_alias(vwarnx, _vwarnx);
+#endif
 

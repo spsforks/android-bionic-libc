@@ -31,6 +31,12 @@
 #include <err.h>
 #include <stdarg.h>
 
+#ifdef __clang__
+#undef warnx
+#define _warnx warnx
+void _warnx(const char *fmt, ...) __attribute__((weak));
+#endif
+
 /* PRINTFLIKE1 */
 void
 _warnx(const char *fmt, ...)
@@ -42,6 +48,8 @@ _warnx(const char *fmt, ...)
 	va_end(ap);
 }
 
+#ifndef __clang__
 /* PRINTFLIKE1 */
 __weak_alias(warnx, _warnx);
+#endif
 
