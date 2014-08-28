@@ -232,6 +232,7 @@ bionic-unit-tests_static_libraries := \
 
 bionic-unit-tests_src_files := \
     atexit_test.cpp \
+    dl_test.cpp \
     dlext_test.cpp \
     dlfcn_test.cpp \
     stack_unwinding_test.cpp \
@@ -256,6 +257,8 @@ bionic-unit-tests_c_includes := \
 bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
+    libdl_preempt_test_1 \
+    libdl_preempt_test_2 \
 
 module := bionic-unit-tests
 module_tag := optional
@@ -303,6 +306,9 @@ ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x
 bionic-unit-tests-glibc_src_files := \
     atexit_test.cpp \
     dlfcn_test.cpp \
+    dl_test.cpp \
+
+bionic-unit-tests-glibc_shared_libraries := libdl_preempt_test_1 libdl_preempt_test_2
 
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
