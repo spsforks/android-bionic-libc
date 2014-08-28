@@ -63,10 +63,14 @@ class LinkedList {
       return nullptr;
     }
 
-    LinkedListEntry<T>* entry = head_;
-    T* element = entry->element;
-    head_ = entry->next;
-    Allocator::free(entry);
+    LinkedListEntry<T>* entry;
+    T* element;
+    do {
+      entry = head_;
+      element = entry->element;
+      head_ = entry->next;
+      Allocator::free(entry);
+    } while(head_ != nullptr && element == nullptr);
 
     if (head_ == nullptr) {
       tail_ = nullptr;
@@ -86,16 +90,25 @@ class LinkedList {
   }
 
   template<typename F>
-  void for_each(F&& action) {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      if (e->element != nullptr) {
-        action(e->element);
-      }
-    }
+  void for_each(F action) {
+    visit([&] (T* si) {
+      action(si);
+      return true;
+    });
   }
 
   template<typename F>
-  void remove_if(F&& predicate) {
+  bool visit(F action) {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element != nullptr && (action(e->element) == false)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  template<typename F>
+  void remove_if(F predicate) {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (e->element != nullptr && predicate(e->element)) {
         e->element = nullptr;
@@ -115,6 +128,7 @@ class LinkedList {
  private:
   LinkedListEntry<T>* head_;
   LinkedListEntry<T>* tail_;
+
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
 
