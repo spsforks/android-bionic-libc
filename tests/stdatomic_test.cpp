@@ -63,13 +63,15 @@ TEST(stdatomic, atomic_signal_fence) {
 
 TEST(stdatomic, atomic_is_lock_free) {
   atomic_char small;
-  atomic_intmax_t big;
   ASSERT_TRUE(atomic_is_lock_free(&small));
+#if !defined(__GLIBC__) /* TODO: Wait for gcc4.6 prebuilt toolchain to die. */
+  atomic_intmax_t big;
   // atomic_intmax_t(size = 64) is not lock free on mips32.
 #if defined(__mips__) && !defined(__LP64__)
   ASSERT_FALSE(atomic_is_lock_free(&big));
 #else
   ASSERT_TRUE(atomic_is_lock_free(&big));
+#endif
 #endif
 }
 
