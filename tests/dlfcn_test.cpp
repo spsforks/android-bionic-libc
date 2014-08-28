@@ -499,6 +499,16 @@ TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
   ASSERT_TRUE(!is_unloaded);
 }
 
+TEST(dlfcn, dlsym_df_1_global) {
+  void* handle = dlopen("libtest_dlsym_df_1_global.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  int (*get_answer)();
+  get_answer = reinterpret_cast<int (*)()>(dlsym(handle, "dl_df_1_global_get_answer"));
+  ASSERT_TRUE(get_answer != nullptr) << dlerror();
+  ASSERT_EQ(42, get_answer());
+  ASSERT_EQ(0, dlclose(handle));
+}
+
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
