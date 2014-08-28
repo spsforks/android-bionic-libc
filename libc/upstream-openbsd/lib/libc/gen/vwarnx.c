@@ -34,7 +34,10 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
-void
+#undef vwarnx
+#undef _vwarnx
+
+void __attribute__((weak))
 _vwarnx(const char *fmt, va_list ap)
 {
 	(void)fprintf(stderr, "%s: ", __progname);

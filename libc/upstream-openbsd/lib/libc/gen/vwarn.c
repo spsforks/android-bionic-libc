@@ -36,7 +36,10 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
-void
+#undef vwarn
+#undef _vwarn
+
+void __attribute__((weak))
 _vwarn(const char *fmt, va_list ap)
 {
 	int sverrno;

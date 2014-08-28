@@ -37,7 +37,10 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
-__dead void
+#undef verr
+#undef _verr
+
+__dead void __attribute__((weak))
 _verr(int eval, const char *fmt, va_list ap)
 {
 	int sverrno;

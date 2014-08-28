@@ -31,8 +31,11 @@
 #include <err.h>
 #include <stdarg.h>
 
+#undef err
+#undef _err
+
 /* PRINTFLIKE2 */
-__dead void
+__dead void __attribute__((weak))
 _err(int eval, const char *fmt, ...)
 {
 	va_list ap;

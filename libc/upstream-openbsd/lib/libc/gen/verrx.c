@@ -35,7 +35,10 @@
 
 extern char *__progname;		/* Program name, from crt0. */
 
-__dead void
+#undef verrx
+#undef _verrx
+
+__dead void __attribute__((weak))
 _verrx(int eval, const char *fmt, va_list ap)
 {
 	(void)fprintf(stderr, "%s: ", __progname);

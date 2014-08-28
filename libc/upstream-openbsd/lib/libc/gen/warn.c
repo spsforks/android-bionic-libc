@@ -31,8 +31,11 @@
 #include <err.h>
 #include <stdarg.h>
 
+#undef warn
+#undef _warn
+
 /* PRINTFLIKE1 */
-void
+void __attribute__((weak))
 _warn(const char *fmt, ...)
 {
 	va_list ap;
