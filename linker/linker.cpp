@@ -481,7 +481,7 @@ static unsigned elfhash(const char* _name) {
   return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
+static ElfW(Sym)* soinfo_do_lookup_legacy(soinfo* si, const char* name, soinfo** lsi) {
   unsigned elf_hash = elfhash(name);
   ElfW(Sym)* s = nullptr;
 
@@ -597,6 +597,74 @@ done:
   }
 
   return nullptr;
+}
+
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in) {
+  *si_found_in = nullptr;
+  if(somain == nullptr || si_from == nullptr) {
+    return nullptr;
+  }
+
+  unsigned elf_hash = elfhash(name);
+  ElfW(Sym)* s = nullptr;
+
+  // step 1: look into libraries loaded before this library
+  // the order is somain, ld_preloads_if_any,  ..., si_from
+  for (soinfo* si = solist; si != nullptr; si = si->next) {
+    if (si != si_from && (si->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+      continue;
+    }
+
+    s = soinfo_elf_lookup(si, elf_hash, name);
+    if (s != nullptr) {
+      *si_found_in = si;
+      break;
+    }
+
+    if (si == si_from) {
+      break;
+    }
+  }
+
+  // step 2: if not found - look into dt_needed list
+  if (s == nullptr) {
+    si_from->get_children().visit([&](soinfo* si) {
+      s = soinfo_elf_lookup(si, elf_hash, name);
+      if (s != nullptr) {
+        *si_found_in = si;
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  if (s != nullptr) {
+    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
+               "found in %s, base = %p, load bias = %p",
+               si_from->name, name, reinterpret_cast<void*>(s->st_value),
+               (*si_found_in)->name, reinterpret_cast<void*>((*si_found_in)->base),
+               reinterpret_cast<void*>((*si_found_in)->load_bias));
+  }
+
+  return s;
+}
+
+static ElfW(Sym)* soinfo_do_lookup_and_compare(soinfo* si_from, const char* name, soinfo** si_found_in) {
+  soinfo* found_in_new = nullptr;
+  soinfo* found_in_old = nullptr;
+  ElfW(Sym)* s_new = soinfo_do_lookup(si_from, name, &found_in_new);
+  ElfW(Sym)* s_old = soinfo_do_lookup_legacy(si_from, name, &found_in_old);
+
+  if (s_new != s_old) {
+    PRINT("Symbol %s requested by %s found in different lib/location, new lookup %s@0x%x, old one %s@0x%x",
+          name, si_from->name,
+          found_in_new != nullptr ? found_in_new->name : "(null)", s_new != nullptr ? s_new->st_value : 0,
+          found_in_old != nullptr ? found_in_old->name : "(null)", s_old != nullptr ? s_old->st_value : 0);
+  }
+
+  *si_found_in = found_in_new;
+  return s_new;
 }
 
 // Each size has it's own allocator.
@@ -1115,7 +1183,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count) {
 
     if (sym != 0) {
       sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi);
+      s = soinfo_do_lookup_and_compare(this, sym_name, &lsi);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1393,7 +1461,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
 
     if (sym != 0) {
       sym_name = reinterpret_cast<const char*>(strtab + symtab[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi);
+      s = soinfo_do_lookup_and_compare(this, sym_name, &lsi);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab[sym];
@@ -1612,7 +1680,7 @@ static bool mips_relocate_got(soinfo* si) {
     // This is an undefined reference... try to locate it.
     const char* sym_name = si->strtab + sym->st_name;
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi);
+    ElfW(Sym)* s = soinfo_do_lookup_and_compare(si, sym_name, &lsi);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab[g];
