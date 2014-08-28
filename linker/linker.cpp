@@ -509,122 +509,51 @@ static unsigned elfhash(const char* _name) {
     return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi) {
-    unsigned elf_hash = elfhash(name);
-    ElfW(Sym)* s = nullptr;
-
-    if (somain != nullptr) {
-        /*
-         * Local scope is executable scope. Just start looking into it right away
-         * for the shortcut.
-         */
-
-        if (si == somain) {
-            s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != nullptr) {
-                *lsi = si;
-                goto done;
-            }
-
-            /* Next, look for it in the preloads list */
-            for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-                s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-                if (s != NULL) {
-                    *lsi = g_ld_preloads[i];
-                    goto done;
-                }
-            }
-        } else {
-            /* Order of symbol lookup is controlled by DT_SYMBOLIC flag */
-
-            /*
-             * If this object was built with symbolic relocations disabled, the
-             * first place to look to resolve external references is the main
-             * executable.
-             */
-
-            if (!si->has_DT_SYMBOLIC) {
-                DEBUG("%s: looking up %s in executable %s",
-                      si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != nullptr) {
-                    *lsi = somain;
-                    goto done;
-                }
-
-                /* Next, look for it in the preloads list */
-                for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-                    s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-                    if (s != NULL) {
-                        *lsi = g_ld_preloads[i];
-                        goto done;
-                    }
-                }
-            }
-
-            /* Look for symbols in the local scope (the object who is
-             * searching). This happens with C++ templates on x86 for some
-             * reason.
-             *
-             * Notes on weak symbols:
-             * The ELF specs are ambiguous about treatment of weak definitions in
-             * dynamic linking.  Some systems return the first definition found
-             * and some the first non-weak definition.   This is system dependent.
-             * Here we return the first definition found for simplicity.  */
-
-            s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != nullptr) {
-                *lsi = si;
-                goto done;
-            }
-
-            /*
-             * If this object was built with -Bsymbolic and symbol is not found
-             * in the local scope, try to find the symbol in the main executable.
-             */
-
-            if (si->has_DT_SYMBOLIC) {
-                DEBUG("%s: looking up %s in executable %s after local scope",
-                      si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != nullptr) {
-                    *lsi = somain;
-                    goto done;
-                }
-
-                /* Next, look for it in the preloads list */
-                for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-                    s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-                    if (s != NULL) {
-                        *lsi = g_ld_preloads[i];
-                        goto done;
-                    }
-                }
-            }
-        }
-    }
-
-    si->get_children().visit([&](soinfo* child) {
-        DEBUG("%s: looking up %s in %s", si->name, name, child->name);
-        s = soinfo_elf_lookup(child, elf_hash, name);
-        if (s != nullptr) {
-            *lsi = child;
-            return false;
-        }
-        return true;
-    });
-
-done:
-    if (s != nullptr) {
-        TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
-                   "found in %s, base = %p, load bias = %p",
-                   si->name, name, reinterpret_cast<void*>(s->st_value),
-                   (*lsi)->name, reinterpret_cast<void*>((*lsi)->base),
-                   reinterpret_cast<void*>((*lsi)->load_bias));
-        return s;
-    }
-
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in) {
+  *si_found_in = nullptr;
+  if(somain == nullptr || si_from == nullptr) {
     return nullptr;
+  }
+
+  unsigned elf_hash = elfhash(name);
+  ElfW(Sym)* s = nullptr;
+
+  // step 1: look into libraries loaded before this library
+  // the order is somain, ld_preloads_if_any,  ..., si_from
+  for (soinfo* si = solist; si != nullptr; si = si->next) {
+    s = soinfo_elf_lookup(si, elf_hash, name);
+    if (s != nullptr) {
+      *si_found_in = si;
+      break;
+    }
+
+    if (si == si_from) {
+      break;
+    }
+  }
+
+  // step 2: if not found - look into dt_needed list
+  if (s == nullptr) {
+    si_from->get_children().visit([&](soinfo* si) {
+      s = soinfo_elf_lookup(si, elf_hash, name);
+      if (s != nullptr) {
+        *si_found_in = si;
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  if (s != nullptr) {
+    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
+               "found in %s, base = %p, load bias = %p",
+               si_from->name, name, reinterpret_cast<void*>(s->st_value),
+               (*si_found_in)->name, reinterpret_cast<void*>((*si_found_in)->base),
+               reinterpret_cast<void*>((*si_found_in)->load_bias));
+  }
+
+  return s;
 }
 
 // Each size has it's own allocator.
@@ -1145,7 +1074,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count) {
 static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     ElfW(Sym)* s;
-    soinfo* lsi;
+    soinfo* lsi = nullptr;
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
