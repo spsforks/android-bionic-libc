@@ -144,6 +144,35 @@ build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
+# This library is used by dl_load test to check symbol preempting
+# by main executable
+# -----------------------------------------------------------------------------
+libdl_preempt_test_1_src_files := dl_preempt_library_1.cpp
+
+libdl_preempt_test_1_clang_host := false
+
+module := libdl_preempt_test_1
+build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# This library is used by dl_load test to check symbol preempting
+# by libdl_preempt_test_1.so
+# -----------------------------------------------------------------------------
+libdl_preempt_test_2_src_files := dl_preempt_library_2.cpp
+
+libdl_preempt_test_2_clang_host := false
+
+module := libdl_preempt_test_2
+build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+# -----------------------------------------------------------------------------
 # Library with weak function
 # -----------------------------------------------------------------------------
 libtest_dlsym_weak_func_src_files := \

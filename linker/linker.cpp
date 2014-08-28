@@ -509,104 +509,73 @@ static unsigned elfhash(const char* _name) {
     return h;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si, const char* name, soinfo** lsi, soinfo* needed[]) {
-    unsigned elf_hash = elfhash(name);
-    ElfW(Sym)* s = NULL;
+static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in) {
+  if(somain == nullptr || si_from == nullptr) {
+    return nullptr;
+  }
 
-    if (si != NULL && somain != NULL) {
-        /*
-         * Local scope is executable scope. Just start looking into it right away
-         * for the shortcut.
-         */
+  unsigned elf_hash = elfhash(name);
+  ElfW(Sym)* s = nullptr;
 
-        if (si == somain) {
-            s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != NULL) {
-                *lsi = si;
-                goto done;
-            }
-        } else {
-            /* Order of symbol lookup is controlled by DT_SYMBOLIC flag */
+  // TODO: this is work around incorrect load order
+  // which forces us to explicitly look into main
+  // and LD_PRELOAD before doing solist search
+  // remove this code after load order fix is merged.
+  // see also: https://code.google.com/p/android/issues/detail?id=74255
+  s = soinfo_elf_lookup(somain, elf_hash, name);
+  if (s != nullptr) {
+    *si_found_in = somain;
+  }
 
-            /*
-             * If this object was built with symbolic relocations disabled, the
-             * first place to look to resolve external references is the main
-             * executable.
-             */
+  if (s == nullptr) {
+    for (int i = 0; g_ld_preloads[i] != nullptr; i++) {
+      s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
+      if (s != nullptr) {
+          *si_found_in= g_ld_preloads[i];
+          break;
+      }
+    }
+  }
 
-            if (!si->has_DT_SYMBOLIC) {
-                DEBUG("%s: looking up %s in executable %s",
-                      si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != NULL) {
-                    *lsi = somain;
-                    goto done;
-                }
-            }
+  if (s == nullptr) { // end of workaround
 
-            /* Look for symbols in the local scope (the object who is
-             * searching). This happens with C++ templates on x86 for some
-             * reason.
-             *
-             * Notes on weak symbols:
-             * The ELF specs are ambiguous about treatment of weak definitions in
-             * dynamic linking.  Some systems return the first definition found
-             * and some the first non-weak definition.   This is system dependent.
-             * Here we return the first definition found for simplicity.  */
+    // step 1: look into libraries loaded before this library
+    // the order is somain, ld_preloads_if_any,  ..., si_from
+    for (soinfo* si = solist; si != nullptr; si = si->next) {
+      s = soinfo_elf_lookup(si, elf_hash, name);
+      if (s != nullptr) {
+        *si_found_in = si;
+        break;
+      }
 
-            s = soinfo_elf_lookup(si, elf_hash, name);
-            if (s != NULL) {
-                *lsi = si;
-                goto done;
-            }
+      if (si == si_from) {
+        break;
+      }
+    }
 
-            /*
-             * If this object was built with -Bsymbolic and symbol is not found
-             * in the local scope, try to find the symbol in the main executable.
-             */
-
-            if (si->has_DT_SYMBOLIC) {
-                DEBUG("%s: looking up %s in executable %s after local scope",
-                      si->name, name, somain->name);
-                s = soinfo_elf_lookup(somain, elf_hash, name);
-                if (s != NULL) {
-                    *lsi = somain;
-                    goto done;
-                }
-            }
+    // step 2: if not found - look into dt_needed list
+    if (s == nullptr) {
+      si_from->get_children().visit([&](soinfo* si) {
+        s = soinfo_elf_lookup(si, elf_hash, name);
+        if (s != nullptr) {
+          *si_found_in = si;
+          return false;
         }
-    }
 
-    /* Next, look for it in the preloads list */
-    for (int i = 0; g_ld_preloads[i] != NULL; i++) {
-        s = soinfo_elf_lookup(g_ld_preloads[i], elf_hash, name);
-        if (s != NULL) {
-            *lsi = g_ld_preloads[i];
-            goto done;
-        }
+        return true;
+      });
     }
+  }
 
-    for (int i = 0; needed[i] != NULL; i++) {
-        DEBUG("%s: looking up %s in %s",
-              si->name, name, needed[i]->name);
-        s = soinfo_elf_lookup(needed[i], elf_hash, name);
-        if (s != NULL) {
-            *lsi = needed[i];
-            goto done;
-        }
-    }
+  if (s != nullptr) {
+    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
+               "found in %s, base = %p, load bias = %p",
+               si_from->name, name, reinterpret_cast<void*>(s->st_value),
+               (*si_found_in)->name, reinterpret_cast<void*>((*si_found_in)->base),
+               reinterpret_cast<void*>((*si_found_in)->load_bias));
+  }
 
-done:
-    if (s != NULL) {
-        TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
-                   "found in %s, base = %p, load bias = %p",
-                   si->name, name, reinterpret_cast<void*>(s->st_value),
-                   (*lsi)->name, reinterpret_cast<void*>((*lsi)->base),
-                   reinterpret_cast<void*>((*lsi)->load_bias));
-        return s;
-    }
-
-    return NULL;
+  return s;
 }
 
 // Another soinfo list allocator to use in dlsym. We don't reuse
@@ -941,7 +910,7 @@ void do_dlclose(soinfo* si) {
 
 // ifuncs are only defined for x86
 #if defined(__i386__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     ElfW(Sym)* s;
     soinfo* lsi;
@@ -951,7 +920,7 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, so
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = NULL;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+    s = soinfo_do_lookup(si, sym_name, &lsi);
 
     if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_386_JMP_SLOT) {
       TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr));
@@ -964,17 +933,17 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, so
 #endif
 
 #if defined(__x86_64__)
-static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     ElfW(Sym)* s;
-    soinfo* lsi;
+    soinfo* lsi = nullptr;
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rela->r_offset + si->load_bias);
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = NULL;
     sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-    s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+    s = soinfo_do_lookup(si, sym_name, &lsi);
 
     if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC && type == R_X86_64_JUMP_SLOT) {
       TRACE("IFUNC RELOCATION, PASS 2: %p",  (void*)(sym_addr + rela->r_addend));
@@ -987,9 +956,9 @@ static void soinfo_ifunc_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, 
 #endif
 
 #if defined(USE_RELA)
-static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo* needed[]) {
+static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count) {
   ElfW(Sym)* s;
-  soinfo* lsi;
+  soinfo* lsi = nullptr;
 
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
@@ -1004,7 +973,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
     }
     if (sym != 0) {
       sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-      s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+      s = soinfo_do_lookup(si, sym_name, &lsi);
       if (s == NULL) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &si->symtab[sym];
@@ -1255,9 +1224,9 @@ static int soinfo_relocate(soinfo* si, ElfW(Rela)* rela, unsigned count, soinfo*
 
 #else // REL, not RELA.
 
-static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* needed[]) {
+static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count) {
     ElfW(Sym)* s;
-    soinfo* lsi;
+    soinfo* lsi = nullptr;
 
     for (size_t idx = 0; idx < count; ++idx, ++rel) {
         unsigned type = ELFW(R_TYPE)(rel->r_info);
@@ -1273,7 +1242,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
         }
         if (sym != 0) {
             sym_name = reinterpret_cast<const char*>(si->strtab + si->symtab[sym].st_name);
-            s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+            s = soinfo_do_lookup(si, sym_name, &lsi);
             if (s == NULL) {
                 // We only allow an undefined symbol if this is a weak reference...
                 s = &si->symtab[sym];
@@ -1456,7 +1425,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
 #endif
 
 #if defined(__mips__)
-static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
+static bool mips_relocate_got(soinfo* si) {
     ElfW(Addr)** got = si->plt_got;
     if (got == NULL) {
         return true;
@@ -1488,8 +1457,8 @@ static bool mips_relocate_got(soinfo* si, soinfo* needed[]) {
     for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
         // This is an undefined reference... try to locate it.
         const char* sym_name = si->strtab + sym->st_name;
-        soinfo* lsi;
-        ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi, needed);
+        soinfo* lsi = nullptr;
+        ElfW(Sym)* s = soinfo_do_lookup(si, sym_name, &lsi);
         if (s == NULL) {
             // We only allow an undefined symbol if this is a weak reference.
             s = &symtab[g];
@@ -1991,9 +1960,6 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
         }
     }
 
-    soinfo** needed = reinterpret_cast<soinfo**>(alloca((1 + needed_count) * sizeof(soinfo*)));
-    soinfo** pneeded = needed;
-
     for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
         if (d->d_tag == DT_NEEDED) {
             const char* library_name = si->strtab + d->d_un.d_val;
@@ -2007,10 +1973,8 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
             }
 
             si->add_child(lsi);
-            *pneeded++ = lsi;
         }
     }
-    *pneeded = NULL;
 
 #if !defined(__LP64__)
     if (si->has_text_relocations) {
@@ -2029,26 +1993,26 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
 #if defined(USE_RELA)
     if (si->plt_rela != NULL) {
         DEBUG("[ relocating %s plt ]\n", si->name);
-        if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count, needed)) {
+        if (soinfo_relocate(si, si->plt_rela, si->plt_rela_count)) {
             return false;
         }
     }
     if (si->rela != NULL) {
         DEBUG("[ relocating %s ]\n", si->name);
-        if (soinfo_relocate(si, si->rela, si->rela_count, needed)) {
+        if (soinfo_relocate(si, si->rela, si->rela_count)) {
             return false;
         }
     }
 #else
     if (si->plt_rel != NULL) {
         DEBUG("[ relocating %s plt ]", si->name);
-        if (soinfo_relocate(si, si->plt_rel, si->plt_rel_count, needed)) {
+        if (soinfo_relocate(si, si->plt_rel, si->plt_rel_count)) {
             return false;
         }
     }
     if (si->rel != NULL) {
         DEBUG("[ relocating %s ]", si->name);
-        if (soinfo_relocate(si, si->rel, si->rel_count, needed)) {
+        if (soinfo_relocate(si, si->rel, si->rel_count)) {
             return false;
         }
     }
@@ -2060,14 +2024,14 @@ static bool soinfo_link_image(soinfo* si, const android_dlextinfo* extinfo) {
     // on relocations.
     if(si->get_has_ifuncs()) {
 #if defined(__i386__)
-      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count, needed);
+      soinfo_ifunc_relocate(si, si->plt_rel, si->plt_rel_count);
 #elif defined(__x86_64__)
-      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count, needed);
+      soinfo_ifunc_relocate(si, si->plt_rela, si->plt_rela_count);
 #endif
     }
 
 #if defined(__mips__)
-    if (!mips_relocate_got(si, needed)) {
+    if (!mips_relocate_got(si)) {
         return false;
     }
 #endif
