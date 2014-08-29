@@ -88,24 +88,59 @@ class LinkedList {
   template<typename F>
   void for_each(F&& action) {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      if (e->element != nullptr) {
-        action(e->element);
-      }
+      action(e->element);
     }
   }
 
   template<typename F>
   void remove_if(F&& predicate) {
+   // remove
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      if (e->element != nullptr && predicate(e->element)) {
+      if (predicate(e->element)) {
         e->element = nullptr;
+      }
+    }
+
+    // erase
+    for (LinkedListEntry<T>* e = head_, *prev = nullptr; e != nullptr; ) {
+      if (e->element == nullptr) {
+        LinkedListEntry<T>* next = e->next;
+        if (prev == nullptr) {
+          head_ = next;
+        } else {
+          prev->next = next;
+        }
+
+        Allocator::free(e);
+        e = next;
+      } else {
+        prev = e;
+        e = e->next;
       }
     }
   }
 
-  bool contains(const T* el) {
+  size_t size() const {
+    size_t sz = 0;
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
-      if (e->element != nullptr && e->element == el) {
+      ++sz;
+    }
+
+    return sz;
+  }
+
+  size_t copy_to_array(T* array[], size_t array_length) const {
+    size_t sz = 0;
+    for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next) {
+      array[sz++] = e->element;
+    }
+
+    return sz;
+  }
+
+  bool contains(const T* el) const {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element == el) {
         return true;
       }
     }
