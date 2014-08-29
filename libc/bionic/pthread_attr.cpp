@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <sys/resource.h>
 
+#include "private/bionic_auxv.h"
 #include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
@@ -143,6 +144,28 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
       }
     }
   }
+
+  // SECOND ATTEMPT: Find the region containing __libc_auxv.
+
+  // FIXME: We need this workaround because [stack] is not available if this
+  // is a 32-bit process running on top of ARM64 kernel in qemu-system-aarch64.
+  // This workaround can be removed after fixing the kernel or QEMU.
+
+  uintptr_t auxv = reinterpret_cast<uintptr_t>(__libc_auxv);
+
+  fseek(fp, 0, SEEK_SET);
+  while (fgets(line, sizeof(line), fp) != NULL) {
+    uintptr_t lo, hi;
+    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+      if (lo <= auxv && auxv <= hi) {
+        *stack_size = stack_limit.rlim_cur;
+        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+        fclose(fp);
+        return 0;
+      }
+    }
+  }
+
   __libc_fatal("No [stack] line found in /proc/self/maps!");
 }
 
