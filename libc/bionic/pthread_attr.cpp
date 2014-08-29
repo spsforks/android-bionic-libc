@@ -143,6 +143,68 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
       }
     }
   }
+  fclose(fp);
+
+  // SECOND ATTEMPT:
+  // Read the start_stack from "/proc/self/stat" and find the region containing
+  // start_stack.
+
+  // FIXME: We need this workaround because [stack] is not available if this
+  // is a 32-bit process running on top of ARM64 kernel in qemu-system-aarch64.
+  // This workaround can be removed after fixing the kernel or QEMU.
+
+  // Read "/proc/self/stat".
+  fp = fopen("/proc/self/stat", "r");
+  if (fp == NULL) {
+    return errno;
+  }
+  if (fgets(line, sizeof(line), fp) == NULL) {
+    fclose(fp);
+    return -1;
+  }
+  fclose(fp);
+
+  // Find the beginning of the start_stack.
+  // Note: This should search from the end-of-string because the program name
+  // might contain space characters.
+  size_t nskip = 25;  // # of space to be skipped.
+  const char* p = line + strlen(line);
+  while (p >= line) {
+    if (*p == ' ') {
+      if ((--nskip) == 0) {
+        break;
+      }
+    }
+    --p;
+  }
+  if (p <= line) {
+    return -1;
+  }
+
+  // Read start_stack.
+  long unsigned value;
+  if (sscanf(p, "%lu", &value) != 1) {
+    return -1;
+  }
+  uintptr_t start_stack = static_cast<uintptr_t>(value);
+
+  // Parse "/proc/self/maps" again and find the region containing start_stack.
+  fp = fopen("/proc/self/maps", "r");
+  if (fp == NULL) {
+    return errno;
+  }
+  while (fgets(line, sizeof(line), fp) != NULL) {
+    uintptr_t lo, hi;
+    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+      if (lo <= start_stack && start_stack <= hi) {
+        *stack_size = stack_limit.rlim_cur;
+        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+        fclose(fp);
+        return 0;
+      }
+    }
+  }
+
   __libc_fatal("No [stack] line found in /proc/self/maps!");
 }
 
