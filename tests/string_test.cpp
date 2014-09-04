@@ -22,6 +22,7 @@
 #include <gtest/gtest.h>
 #include <malloc.h>
 #include <math.h>
+#include <fenv.h>
 
 #include "buffer_tests.h"
 
@@ -196,7 +197,7 @@ class StringTestState {
   const size_t MAX_LEN;
   Character *ptr, *ptr1, *ptr2;
   size_t n;
-  int len[ITER + 1];
+  size_t len[ITER + 1];
 
  private:
   static size_t alignments[];
@@ -209,10 +210,11 @@ class StringTestState {
   // smallest (0) and biggest (MAX_LEN) lengths. Avoid repeats.
   // Return number of lengths to test.
   void InitLenArray() {
+    fesetround(FE_TONEAREST); // other tests may have changed this
     n = 0;
     len[n++] = 0;
     for (size_t i = 1; i < ITER; ++i) {
-      int l = (int) exp(log((double) MAX_LEN) * i / ITER);
+      size_t l = static_cast<size_t>(exp(log(static_cast<double>(MAX_LEN)) * i / ITER));
       if (l != len[n - 1]) {
         len[n++] = l;
       }
@@ -430,7 +432,7 @@ TEST(string, strchr) {
       }
       state.ptr1[state.len[i] - 1] = '\0';
 
-      int pos = random() % state.MAX_LEN;
+      size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i] - 1) {
         if (seek_char == 0) {
@@ -457,7 +459,7 @@ TEST(string, strcmp) {
       state.ptr1[state.len[i] - 1] = '\0';
       state.ptr2[state.len[i] - 1] = '\0';
 
-      int pos = 1 + (random() % (state.MAX_LEN - 1));
+      size_t pos = 1 + (random() % (state.MAX_LEN - 1));
       int actual;
       int expected;
       if (pos >= state.len[i] - 1) {
@@ -625,7 +627,7 @@ TEST(string, strncmp) {
       state.ptr1[state.len[i] - 1] = '\0';
       state.ptr2[state.len[i] - 1] = '\0';
 
-      int pos = 1 + (random() % (state.MAX_LEN - 1));
+      size_t pos = 1 + (random() % (state.MAX_LEN - 1));
       int actual;
       int expected;
       if (pos >= state.len[i] - 1) {
@@ -735,7 +737,7 @@ TEST(string, strrchr) {
       }
       state.ptr1[state.len[i] - 1] = '\0';
 
-      int pos = random() % state.MAX_LEN;
+      size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i] - 1) {
         if (seek_char == 0) {
@@ -760,7 +762,7 @@ TEST(string, memchr) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
-      int pos = random() % state.MAX_LEN;
+      size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i]) {
         expected = NULL;
@@ -789,7 +791,7 @@ TEST(string, memrchr) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
-      int pos = random() % state.MAX_LEN;
+      size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i]) {
         expected = NULL;
