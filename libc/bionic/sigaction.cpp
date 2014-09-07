@@ -32,10 +32,12 @@
 extern "C" void __rt_sigreturn(void);
 extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*, struct __kernel_sigaction*, size_t);
 #else
+extern "C" void __sigreturn(void);
 extern "C" int __sigaction(int, const struct sigaction*, struct sigaction*);
 #endif
 
 int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+  int result;
 #if __LP64__
   __kernel_sigaction kernel_new_action;
   if (bionic_new_action != NULL) {
@@ -53,7 +55,7 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
   }
 
   __kernel_sigaction kernel_old_action;
-  int result = __rt_sigaction(signal,
+  result = __rt_sigaction(signal,
                               (bionic_new_action != NULL) ? &kernel_new_action : NULL,
                               (bionic_old_action != NULL) ? &kernel_old_action : NULL,
                               sizeof(sigset_t));
@@ -67,10 +69,27 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 #endif
   }
 
-  return result;
 #else
   // The 32-bit ABI is broken. struct sigaction includes a too-small sigset_t.
   // TODO: if we also had correct struct sigaction definitions available, we could copy in and out.
-  return __sigaction(signal, bionic_new_action, bionic_old_action);
+  struct sigaction tmp_new_action;
+  if (bionic_new_action != NULL) {
+    tmp_new_action.sa_flags = bionic_new_action->sa_flags;
+    tmp_new_action.sa_handler = bionic_new_action->sa_handler;
+    tmp_new_action.sa_mask = bionic_new_action->sa_mask;
+#ifdef SA_RESTORER
+    if (!(bionic_new_action->sa_flags & SA_RESTORER)) {
+      tmp_new_action.sa_flags |= SA_RESTORER;
+      tmp_new_action.sa_restorer = &__sigreturn;
+    }
 #endif
+  }
+  result =  __sigaction(signal, &tmp_new_action, bionic_old_action);
+  if ((bionic_old_action != NULL) && (bionic_old_action->sa_restorer == &__sigreturn)) {
+#ifdef SA_RESTORER
+    bionic_old_action->sa_flags &= ~SA_RESTORER;
+#endif
+  }
+#endif
+  return result;
 }

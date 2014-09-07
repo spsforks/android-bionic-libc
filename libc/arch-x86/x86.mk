@@ -29,6 +29,7 @@ libc_bionic_src_files_x86 += \
     arch-x86/bionic/setjmp.S \
     arch-x86/bionic/__set_tls.c \
     arch-x86/bionic/sigsetjmp.S \
+    arch-x86/bionic/__sigreturn.S \
     arch-x86/bionic/syscall.S \
     arch-x86/bionic/vfork.S \
 

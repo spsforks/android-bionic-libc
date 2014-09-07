@@ -57,6 +57,7 @@ libc_bionic_src_files_arm += \
     arch-arm/bionic/memcmp.S \
     arch-arm/bionic/_setjmp.S \
     arch-arm/bionic/setjmp.S \
+    arch-arm/bionic/__sigreturn.S \
     arch-arm/bionic/sigsetjmp.S \
     arch-arm/bionic/syscall.S \
 
