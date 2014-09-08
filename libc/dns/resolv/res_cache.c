@@ -1965,10 +1965,23 @@ _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
 {
     int i;
     char** ns;
+    int currentservers;
     int equal = 1;
 
-    // compare each name server against current name servers
     if (numservers > MAXNS) numservers = MAXNS;
+
+    // Find out how many nameservers we had before.
+    currentservers = 0;
+    for (ns = cache_info->nameservers; *ns; ns++)
+        currentservers++;
+
+    if (currentservers != numservers)
+        return 0;
+
+    // Compare each name server against current name servers.
+    // TODO: this is incorrect if the list of current or previous nameservers
+    // contains duplicates. This does not really matter because the framework
+    // filters out duplicates, but we should probably fix it.
     for (i = 0; i < numservers && equal; i++) {
         ns = cache_info->nameservers;
         equal = 0;
