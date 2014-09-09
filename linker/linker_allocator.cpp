@@ -20,6 +20,8 @@
 
 #include "private/bionic_prctl.h"
 
+//#define LINKER_ALLOCATOR_DEBUG
+
 struct LinkerAllocatorPage {
   LinkerAllocatorPage* next;
   uint8_t bytes[PAGE_SIZE-sizeof(LinkerAllocatorPage*)];
@@ -33,8 +35,12 @@ struct FreeBlockInfo {
 LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
   : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
     page_list_(nullptr),
-    free_block_list_(nullptr)
-{}
+    free_block_list_(nullptr) {
+#ifdef LINKER_ALLOCATOR_DEBUG
+  // one page per block...
+  block_size_ = PAGE_SIZE - sizeof(LinkerAllocatorPage*);
+#endif
+}
 
 void* LinkerBlockAllocator::alloc() {
   if (free_block_list_ == nullptr) {
@@ -51,6 +57,10 @@ void* LinkerBlockAllocator::alloc() {
   } else {
     free_block_list_ = block_info->next_block;
   }
+#ifdef LINKER_ALLOCATOR_DEBUG
+  LinkerAllocatorPage* page = find_page(block_info);
+  mprotect(page, PAGE_SIZE, PROT_READ|PROT_WRITE);
+#endif
 
   memset(block_info, 0, block_size_);
 
@@ -81,6 +91,10 @@ void LinkerBlockAllocator::free(void* block) {
   block_info->next_block = free_block_list_;
   block_info->num_free_blocks = 1;
 
+#ifdef LINKER_ALLOCATOR_DEBUG
+  mprotect(page, PAGE_SIZE, PROT_READ);
+#endif
+
   free_block_list_ = block_info;
 }
 
@@ -90,6 +104,16 @@ void LinkerBlockAllocator::protect_all(int prot) {
       abort();
     }
   }
+
+#ifdef LINKER_ALLOCATOR_DEBUG
+  // still... mprotect free pages from write
+  for (FreeBlockInfo* block = reinterpret_cast<FreeBlockInfo*>(free_block_list_);
+      block != nullptr;
+      block = reinterpret_cast<FreeBlockInfo*>(block->next_block)) {
+    LinkerAllocatorPage* page = find_page(block);
+    mprotect(page, PAGE_SIZE, PROT_READ);
+  }
+#endif
 }
 
 void LinkerBlockAllocator::create_new_page() {
