@@ -44,7 +44,7 @@ __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void),
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
+void __libc_fini(void* finit_array);
 
 __END_DECLS
 

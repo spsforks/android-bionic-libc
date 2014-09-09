@@ -27,31 +27,21 @@
  */
 
 #include "../../bionic/libc_init_common.h"
-#include <stddef.h>
-#include <stdint.h>
 
-#include "../../arch-common/bionic/crtbegin_sections.c"
+static void __crt_begin_preinit(void);
 
-__LIBC_HIDDEN__
-#ifdef __i386__
-__attribute__((force_align_arg_pointer))
-#endif
-void _start() {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
+__attribute__ ((section (".preinit_array")))
+void (*__PREINIT_ARRAY__)(void) = __crt_begin_preinit;
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#ifdef __x86_64__
-  // 16-byte stack alignment is required by x86_64 ABI
-  asm("andq  $~15, %rsp");
-#endif
-  __libc_init(raw_args, NULL, &main, &array);
+__attribute__ ((section (".init_array")))
+void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
+
+__attribute__ ((section (".fini_array")))
+void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+
+extern int __cxa_atexit(void (*)(void*), void*, void*);
+
+static void __crt_begin_preinit(void) {
+  __cxa_atexit(__libc_fini, &__FINI_ARRAY__, NULL);
 }
 
-#include "__dso_handle.h"
-#include "atexit.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif
