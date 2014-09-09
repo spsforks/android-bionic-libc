@@ -203,8 +203,49 @@ TEST(dlfcn, dlopen_check_order) {
 // libtest_with_dependency_loop_a.so
 TEST(dlfcn, dlopen_check_loop) {
   void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
-  ASSERT_TRUE(handle == NULL);
+  ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  // This symbol should never be exposed
+  void* f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  // Second time is to make sure that the library has been unloaded.
+  handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  // Let's go full circle (also to make sure libraries have been unloaded)
+  handle = dlopen("libtest_with_dependency_loop_a.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  handle = dlopen("libtest_with_dependency_loop_b.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_b.so\"", dlerror());
+  f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  handle = dlopen("libtest_with_dependency_loop_c.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_c.so\"", dlerror());
+  f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  handle = dlopen("libtest_with_dependency_loop_a.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
 }
 
 TEST(dlfcn, dlopen_failure) {
