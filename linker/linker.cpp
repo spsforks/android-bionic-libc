@@ -976,7 +976,6 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
     soinfo* needed_by = task->get_needed_by();
 
     if (is_recursive(si, needed_by)) {
-      soinfo_free(si);
       return false;
     }
 

@@ -203,7 +203,18 @@ TEST(dlfcn, dlopen_check_order) {
 // libtest_with_dependency_loop_a.so
 TEST(dlfcn, dlopen_check_loop) {
   void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
-  ASSERT_TRUE(handle == NULL);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  // This symbol should never be exposed
+  void* f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
+  ASSERT_TRUE(f == nullptr);
+  ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
+
+  // dlopen second time to make sure that the library wasn't loaded even though dlopen returned null.
+  // This may happen if during cleanup the root library or one of the depended libs were not removed
+  // from soinfo list.
+  handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
 }
 
