@@ -99,7 +99,6 @@ __noreturn void __libc_init(void* raw_args,
   // do never use it.  Therefore, we ignore it.
 
   call_array(structors->preinit_array);
-  call_array(structors->init_array);
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
@@ -107,6 +106,8 @@ __noreturn void __libc_init(void* raw_args,
   if (structors->fini_array != NULL) {
     __cxa_atexit(__libc_fini,structors->fini_array,NULL);
   }
+
+  call_array(structors->init_array);
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }

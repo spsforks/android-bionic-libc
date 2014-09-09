@@ -96,19 +96,11 @@ __LIBC_HIDDEN__ void __libc_postfini() {
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
-
+                            structors_array_t const * const structors __unused) {
   KernelArgumentBlock args(raw_args);
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
-
-  // The executable may have its own destructors listed in its .fini_array
-  // so we need to ensure that these are called when the program exits
-  // normally.
-  if (structors->fini_array) {
-    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
-  }
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
