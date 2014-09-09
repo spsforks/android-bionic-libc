@@ -30,15 +30,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-__attribute__ ((section (".preinit_array")))
-void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
-
-__attribute__ ((section (".init_array")))
-void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
-
-__attribute__ ((section (".fini_array")))
-void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
-
+#include "../../arch-common/bionic/crtbegin_sections.c"
 
 __LIBC_HIDDEN__ void do_arm64_start(void* raw_args) {
   structors_array_t array;
