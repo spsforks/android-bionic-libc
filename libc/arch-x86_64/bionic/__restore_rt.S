@@ -28,7 +28,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY_PRIVATE(__rt_sigreturn)
-  movl $__NR_rt_sigreturn, %eax
+ENTRY(__restore_rt)
+  mov $__NR_rt_sigreturn, %rax
   syscall
-END(__rt_sigreturn)
+END(__restore_rt)
