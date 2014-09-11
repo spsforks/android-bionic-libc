@@ -23,8 +23,15 @@ static void __attribute__((constructor)) init_flag() {
   g_flag = 1;
 }
 
+static const char* is_ctor_called() __attribute__ ((ifunc("is_ctor_called_ifun")));
+
 const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
-const char* is_ctor_called() __attribute__ ((ifunc("is_ctor_called_ifun")));
+const char* is_ctor_called_jump_slot() __attribute__ ((ifunc("is_ctor_called_ifun")));
+
+const char* is_ctor_called_irelative() {
+  // call internal ifun-resolved function
+  return is_ctor_called();
+}
 
 const char* return_true() {
   return "true";
