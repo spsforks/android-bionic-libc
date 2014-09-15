@@ -30,8 +30,10 @@ no-elf-hash-table-library_ldflags := \
 
 module := no-elf-hash-table-library
 module_tag := optional
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 endif
 
@@ -46,8 +48,10 @@ libdlext_test_ldflags := \
 
 module := libdlext_test
 module_tag := optional
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+build_type := target
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -62,6 +66,13 @@ ifneq ($(TARGET_2ND_ARCH),)
 $(TARGET_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
     $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 endif
+
+#host links
+$(HOST_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
+    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
+
+$(HOST_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
+    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - without GNU RELRO program header
@@ -98,8 +109,10 @@ libtest_simple_src_files := \
     dlopen_testlib_simple.cpp
 
 module := libtest_simple
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -111,8 +124,10 @@ libtest_check_order_2_right_src_files := \
 
 libtest_check_order_2_right_cflags := -D__ANSWER=42
 module := libtest_check_order_2_right
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -123,8 +138,10 @@ libtest_check_order_a_src_files := \
 
 libtest_check_order_a_cflags := -D__ANSWER=1
 module := libtest_check_order_a
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -135,8 +152,10 @@ libtest_check_order_b_src_files := \
 
 libtest_check_order_b_cflags := -D__ANSWER=2 -D__ANSWER2=43
 module := libtest_check_order_b
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -147,8 +166,10 @@ libtest_check_order_3_c_src_files := \
 
 libtest_check_order_3_c_cflags := -D__ANSWER=3
 module := libtest_check_order_3_c
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -160,8 +181,10 @@ libtest_check_order_d_src_files := \
 libtest_check_order_d_shared_libraries := libtest_check_order_b
 libtest_check_order_d_cflags := -D__ANSWER=4 -D__ANSWER2=4
 module := libtest_check_order_d
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -173,8 +196,10 @@ libtest_check_order_1_left_src_files := \
 libtest_check_order_1_left_shared_libraries := libtest_check_order_a libtest_check_order_b
 
 module := libtest_check_order_1_left
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -187,8 +212,10 @@ libtest_check_order_shared_libraries := libtest_check_order_1_left \
   libtest_check_order_2_right libtest_check_order_3_c
 
 module := libtest_check_order
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -202,8 +229,10 @@ libtest_with_dependency_loop_shared_libraries := \
     libtest_with_dependency_loop_a
 
 module := libtest_with_dependency_loop
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -215,8 +244,10 @@ libtest_with_dependency_loop_a_shared_libraries := \
     libtest_with_dependency_loop_b_tmp
 
 module := libtest_with_dependency_loop_a
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -228,8 +259,10 @@ libtest_with_dependency_loop_b_tmp_src_files := dlopen_testlib_invalid.cpp
 libtest_with_dependency_loop_b_tmp_ldflags := -Wl,-soname=libtest_with_dependency_loop_b.so
 
 module := libtest_with_dependency_loop_b_tmp
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -239,8 +272,10 @@ libtest_with_dependency_loop_b_src_files := dlopen_testlib_invalid.cpp
 libtest_with_dependency_loop_b_shared_libraries := libtest_with_dependency_loop_c
 
 module := libtest_with_dependency_loop_b
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -252,8 +287,10 @@ libtest_with_dependency_loop_c_shared_libraries := \
     libtest_with_dependency_loop_a
 
 module := libtest_with_dependency_loop_c
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -288,22 +325,26 @@ libtest_with_dependency_src_files := \
 libtest_with_dependency_shared_libraries := libdlext_test
 
 module := libtest_with_dependency
-build_type := target
 build_target := SHARED_LIBRARY
+build_type := target
+include $(TEST_PATH)/Android.build.mk
+build_type := host
 include $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
 # Library used by ifunc tests
 # -----------------------------------------------------------------------------
+libtest_ifunc_src_files := \
+    dlopen_testlib_ifunc.c
+
+libtest_ifunc_clang_host := false
+module := libtest_ifunc
+build_target := SHARED_LIBRARY
+
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm64 x86 x86_64))
-    libtest_ifunc_src_files := \
-        dlopen_testlib_ifunc.c
-
-    LOCAL_SDK_VERSION := current
-    module := libtest_ifunc
-    build_type := target
-    build_target := SHARED_LIBRARY
-
     ifeq ($(TARGET_ARCH),arm64)
       libtest_ifunc_multilib := 64
       # TODO: This is a workaround - remove it once gcc
@@ -311,6 +352,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm64 x86 x86_64))
       libtest_ifunc_cflags := -mglibc
     endif
 
+    build_type := target
     include $(TEST_PATH)/Android.build.mk
 endif
 

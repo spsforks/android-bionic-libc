@@ -15,6 +15,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 
 uint32_t dlopen_testlib_taxicab_number = 1729;
 
