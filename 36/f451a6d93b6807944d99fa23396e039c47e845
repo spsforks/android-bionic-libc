@@ -1,0 +1,10 @@
+Code-Review+2: Dmitriy Ivanov <dimitry@google.com>
+Code-Review+1: Fengwei Yin <fengwei.yin@intel.com>
+Code-Review+1: Evgeniy Stepanov <eugenis@google.com>
+Code-Review+1: Pavel Chupin <pavel.v.chupin@intel.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 16 Sep 2014 15:19:05 +0000
+Reviewed-on: https://android-review.googlesource.com/107692
+Project: platform/bionic
+Branch: refs/heads/master
