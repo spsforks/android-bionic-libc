@@ -600,6 +600,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_stack_protector
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -638,6 +639,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes) $(LOCAL_PATH)/tzcode/
 LOCAL_MODULE := libc_tzcode
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -680,6 +682,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_dns
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -709,6 +712,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_freebsd
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -739,6 +743,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_netbsd
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -777,6 +782,7 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_openbsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -815,6 +821,7 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_gdtoa
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -838,10 +845,11 @@ endif
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_MODULE := libc_bionic
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -861,10 +869,11 @@ LOCAL_CFLAGS := $(libc_common_cflags) \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_MODULE := libc_cxa
 LOCAL_CLANG := true # GCC refuses to hide new/delete
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -883,6 +892,7 @@ endif
 LOCAL_MODULE := libc_syscalls
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -902,6 +912,7 @@ LOCAL_MODULE := libc_aeabi
 LOCAL_CLANG := $(use_clang)
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-builtin
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 include $(BUILD_STATIC_LIBRARY)
@@ -939,6 +950,7 @@ ifneq ($(MALLOC_IMPL),dlmalloc)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # TODO: split out the asflags.
@@ -978,6 +990,7 @@ LOCAL_MODULE := libc_nomalloc
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -999,6 +1012,7 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_malloc
 LOCAL_CLANG := $(use_clang)
+LOCAL_CXX_STL :=
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 include $(BUILD_STATIC_LIBRARY)
 
@@ -1024,6 +1038,7 @@ LOCAL_MODULE := libc
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1066,6 +1081,7 @@ LOCAL_STRIP_MODULE := keep_symbols
 
 LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # We'd really like to do this for all architectures, but since this wasn't done
@@ -1125,6 +1141,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Only need this for arm since libc++ uses its own unwind code that
 # doesn't mix with the other default unwind code.
@@ -1161,6 +1178,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 
 LOCAL_SHARED_LIBRARIES := libc libdl
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't install on release build
@@ -1181,12 +1199,13 @@ libstdcxx_common_src_files := \
     bionic/libc_logging.cpp \
 
 include $(CLEAR_VARS)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
 LOCAL_MODULE:= libstdc++
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 include $(BUILD_SHARED_LIBRARY)
 
@@ -1194,12 +1213,13 @@ include $(BUILD_SHARED_LIBRARY)
 # libstdc++.a
 # ========================================================
 include $(CLEAR_VARS)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
 LOCAL_MODULE:= libstdc++
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CXX_STL :=
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 include $(BUILD_STATIC_LIBRARY)
 
