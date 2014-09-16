@@ -127,6 +127,7 @@ static unsigned g_malloc_debug_backlog = 100;
 // This variable is set to false if the property libc.debug.malloc.nobacktrace
 // is set to non-zero.
 __LIBC_HIDDEN__ bool g_backtrace_enabled = true;
+__LIBC_HIDDEN__ bool g_trackleak_enabled = true;
 
 __LIBC_HIDDEN__ HashTable* g_hash_table;
 __LIBC_HIDDEN__ const MallocDebug* g_malloc_dispatch;
@@ -656,6 +657,12 @@ extern "C" bool malloc_debug_initialize(HashTable* hash_table, const MallocDebug
     __libc_format_log(ANDROID_LOG_INFO, "libc", "not gathering backtrace information\n");
   }
 
+  char disable_trackleak[PROP_VALUE_MAX];
+  if (__system_property_get("libc.debug.malloc.notrackleak", disable_trackleak) && atoi(disable_trackleak) != 0) {
+    g_trackleak_enabled = false;
+    __libc_format_log(ANDROID_LOG_INFO, "libc", "not gathering memory leak information\n");
+  }
+
   if (g_backtrace_enabled) {
     backtrace_startup();
   }
@@ -665,7 +672,7 @@ extern "C" bool malloc_debug_initialize(HashTable* hash_table, const MallocDebug
 
 extern "C" void malloc_debug_finalize(int malloc_debug_level) {
   // We only track leaks at level 10.
-  if (malloc_debug_level == 10) {
+  if (malloc_debug_level == 10 && g_trackleak_enabled) {
     ReportMemoryLeaks();
   }
   if (g_backtrace_enabled) {
