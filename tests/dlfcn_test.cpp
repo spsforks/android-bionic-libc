@@ -458,11 +458,54 @@ TEST(dlfcn, dlsym_weak_func) {
   void* handle = dlopen("libtest_dlsym_weak_func.so",RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
 
-  int (*weak_func)();
-  weak_func = reinterpret_cast<int (*)()>(dlsym(handle, "weak_func"));
+  const char* (*weak_func)();
+  weak_func = reinterpret_cast<const char* (*)()>(dlsym(handle, "weak_func"));
   ASSERT_TRUE(weak_func != NULL) << "dlerror: " << dlerror();
-  EXPECT_EQ(42, weak_func());
+  ASSERT_STREQ("weak", weak_func());
   dlclose(handle);
+}
+
+TEST(dlfcn, dlsym_weak_and_global_in_dt_needed) {
+  void* handle = dlopen("libtest_dlsym_weak_func_with_dt_needed.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef const char* (*func_t)();
+  // weak_func_proxy calls weak_func which is WEAK in libtest_dlsym_weak_func_with_dt_needed.so
+  // and GLOBAL in its dt_needed library.
+  func_t proxy_func = reinterpret_cast<func_t>(dlsym(handle, "weak_func_proxy"));
+  ASSERT_STREQ("weak", proxy_func());
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlsym_weak_then_global) {
+  dlerror();
+  typedef const char* (*weak_func_t)();
+  weak_func_t weak_func = reinterpret_cast<weak_func_t>(dlsym(RTLD_DEFAULT, "weak_func"));
+  ASSERT_TRUE(weak_func == nullptr);
+
+  void* handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW | RTLD_GLOBAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  void* handle2 = dlopen("libtest_dlsym_global_func.so", RTLD_NOW | RTLD_GLOBAL);
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+
+  weak_func = reinterpret_cast<weak_func_t>(dlsym(RTLD_DEFAULT, "weak_func"));
+  ASSERT_TRUE(weak_func != nullptr) << dlerror();
+  ASSERT_STREQ("weak", weak_func());
+
+  weak_func = reinterpret_cast<weak_func_t>(dlsym(RTLD_DEFAULT, "weak_func"));
+  ASSERT_TRUE(weak_func != nullptr) << dlerror();
+  ASSERT_STREQ("weak", weak_func());
+
+  ASSERT_EQ(0, dlclose(handle)) << dlerror();
+
+  // Apparently libs dlopened with RTLD_GLOBAL should not be unloaded
+  handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  weak_func = reinterpret_cast<weak_func_t>(dlsym(RTLD_DEFAULT, "weak_func"));
+  ASSERT_TRUE(weak_func != nullptr) << dlerror();
+  ASSERT_STREQ("weak", weak_func());
+
+  ASSERT_EQ(0, dlclose(handle2)) << dlerror();
 }
 
 TEST(dlfcn, dlopen_symlink) {

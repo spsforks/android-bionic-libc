@@ -301,12 +301,30 @@ module := libtest_atexit
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
-# Library with weak function
+# Library with weak weak_func function
 # -----------------------------------------------------------------------------
 libtest_dlsym_weak_func_src_files := \
     dlsym_weak_function.cpp
 
 module := libtest_dlsym_weak_func
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Library with global weak_func function
+# -----------------------------------------------------------------------------
+libtest_dlsym_global_func_src_files := \
+    dlsym_global_function.cpp
+
+module := libtest_dlsym_global_func
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Library with weak weak_func function
+# -----------------------------------------------------------------------------
+libtest_dlsym_weak_func_with_dt_needed_src_files := dlsym_weak_function.cpp
+libtest_dlsym_weak_func_with_dt_needed_shared_libraries := libtest_dlsym_global_func
+module := libtest_dlsym_weak_func_with_dt_needed
+
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/Android.build.testlib.mk $(TEST_PATH)/Android.build.mk
