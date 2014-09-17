@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-extern "C" const char* __attribute__((weak)) weak_func() {
-  return "weak";
+extern "C" const char* weak_func() {
+  return "global";
 }
 
-extern "C" const char* weak_func_proxy() {
-  return weak_func();
-}
