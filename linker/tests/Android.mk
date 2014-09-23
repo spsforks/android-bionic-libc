@@ -18,6 +18,8 @@ ifneq ($(BUILD_TINY_ANDROID),true)
 
 LOCAL_PATH:= $(call my-dir)
 
+include bionic/BionicOptions.mk
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := linker-unit-tests
 LOCAL_MODULE_STEM_32 := $(LOCAL_MODULE)32

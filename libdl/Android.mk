@@ -1,5 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
+include bionic/BionicOptions.mk
+
 #
 # libdl
 #
@@ -35,5 +37,6 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 # LOCAL_ALLOW_UNDEFINED_SYMBOLS to remove --no-undefined from the linker flags.
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 include $(BUILD_SHARED_LIBRARY)

@@ -1,5 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 
+include bionic/BionicOptions.mk
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
@@ -55,6 +57,8 @@ LOCAL_MODULE := linker
 LOCAL_MODULE_STEM_32 := linker
 LOCAL_MODULE_STEM_64 := linker64
 LOCAL_MULTILIB := both
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 # Leave the symbols in the shared library so that stack unwinders can produce
 # meaningful name resolution.

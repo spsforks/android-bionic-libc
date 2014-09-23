@@ -85,6 +85,8 @@ LOCAL_LDLIBS := \
     $($(module)_ldlibs) \
     $($(module)_ldlibs_$(build_type)) \
 
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
 ifeq ($(build_type),target)
   include external/stlport/libstlport.mk
 
