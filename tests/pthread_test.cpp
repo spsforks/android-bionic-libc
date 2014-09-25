@@ -999,3 +999,35 @@ TEST(pthread, pthread_cleanup_push__pthread_cleanup_pop) {
   pthread_join(t, NULL);
   ASSERT_EQ(2U, cleanup_counter);
 }
+
+class Foo {
+  private:
+    pthread_mutex_t mMutex;
+  public:
+    virtual int getValue();
+    Foo();
+    virtual ~Foo();
+};
+
+Foo::Foo() {
+  pthread_mutexattr_t mattr;
+
+  pthread_mutexattr_init(&mattr);
+  pthread_mutexattr_settype(&mattr, PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mMutex, &mattr);
+  pthread_mutex_lock(&mMutex);
+}
+
+Foo::~Foo() {
+  pthread_mutex_unlock(&mMutex);
+}
+
+int Foo::getValue() {
+  return 5;
+}
+
+TEST(pthread, pthread_static_mutex_recursive)
+{
+  static Foo f;
+  ASSERT_EQ(5, f.getValue());
+}
