@@ -25,7 +25,12 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
+#include <sys/utsname.h>
 #include <sys/wait.h>
+
+#ifndef HOST_NAME_MAX
+#define HOST_NAME_MAX 512
+#endif
 
 TEST(unistd, sysconf_SC_MONOTONIC_CLOCK) {
   ASSERT_GT(sysconf(_SC_MONOTONIC_CLOCK), 0);
@@ -466,4 +471,24 @@ TEST(unistd, getpid_caching_and_pthread_create) {
 TEST(unistd_DeathTest, abort) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST(unistd, gethostname) {
+  char hostname[HOST_NAME_MAX + 1];
+
+  memset(hostname, 0, sizeof(hostname));
+
+  ASSERT_EQ(0, gethostname(hostname, HOST_NAME_MAX));
+  utsname buf;
+  ASSERT_EQ(0, uname(&buf));
+  ASSERT_EQ(0, strncmp(hostname, buf.nodename, SYS_NMLN));
+  ASSERT_GT(strlen(hostname), 0U);
+
+  errno = 0;
+  ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
+#if defined(__BIONIC__)
+  ASSERT_EQ(EINVAL, errno);
+#else
+  ASSERT_NE(0, errno);
+#endif
 }
