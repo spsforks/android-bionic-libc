@@ -2000,7 +2000,6 @@ _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
     int i;
     char** ns;
     int currentservers;
-    int equal = 1;
 
     if (numservers > MAXNS) numservers = MAXNS;
 
@@ -2012,25 +2011,24 @@ _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
     if (currentservers != numservers)
         return 0;
 
-    // Compare each name server against current name servers.
-    // TODO: this is incorrect if the list of current or previous nameservers
-    // contains duplicates. This does not really matter because the framework
-    // filters out duplicates, but we should probably fix it. It's also
-    // insensitive to the order of the nameservers; we should probably fix that
-    // too.
-    for (i = 0; i < numservers && equal; i++) {
-        ns = cache_info->nameservers;
-        equal = 0;
-        while(*ns) {
-            if (strcmp(*ns, servers[i]) == 0) {
-                equal = 1;
-                break;
+    // compare each name server against current name servers
+    if (numservers > MAXNS) numservers = MAXNS;
+    ns = cache_info->nameservers;
+    for (i = 0; i < numservers; i++, ns++) {
+        if (*ns) {
+            if (strncmp(*ns, servers[i], HOST_NAME_MAX) != 0) {
+                return 0;
             }
-            ns++;
+        } else {
+            return 0;
         }
     }
 
-    return equal;
+    if (*ns) {
+        return 0;
+    }
+
+    return 1;
 }
 
 static void
