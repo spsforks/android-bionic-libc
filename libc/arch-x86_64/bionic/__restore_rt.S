@@ -28,9 +28,97 @@
 
 #include <private/bionic_asm.h>
 
-// This function must have exactly this instruction sequence for gdb and libunwind.
-// This function must have exactly this name for gdb.
-ENTRY(__restore_rt)
+// DWARF constants.
+#define DW_CFA_def_cfa_expression 0x0f
+#define DW_CFA_expression 0x10
+#define DW_EH_PE_pcrel 0x10
+#define DW_EH_PE_sdata4 0x0b
+#define DW_OP_breg4 0x74
+#define DW_OP_breg7 0x77
+#define DW_OP_deref 0x06
+
+// Offsets into struct ucontext_t of uc_mcontext.gregs[x].
+#define OFFSET_R8 40
+#define OFFSET_R9 48
+#define OFFSET_R10 56
+#define OFFSET_R11 64
+#define OFFSET_R12 72
+#define OFFSET_R13 80
+#define OFFSET_R14 88
+#define OFFSET_R15 96
+#define OFFSET_RDI 104
+#define OFFSET_RSI 112
+#define OFFSET_RBP 120
+#define OFFSET_RSP 160
+#define OFFSET_RBX 128
+#define OFFSET_RDX 136
+#define OFFSET_RAX 144
+#define OFFSET_RCX 152
+#define OFFSET_RIP 168
+
+#define cfi_signal_frame_start(f) \
+.section .eh_frame,"a",@progbits; \
+.L ## f ## _START_EH_FRAME: \
+  .long 2f - 1f; /* CIE length. */ \
+1:.long 0;       /* CIE ID. */ \
+  .byte 1;       /* Version. */ \
+  .string "zRS"; /* Augmentation string. */ \
+  .uleb128 1;    /* Code alignment factor. */ \
+  .sleb128 -8;   /* Data alignment factor. */ \
+  .uleb128 16;   /* Return address register. */ \
+  .uleb128 1;    /* 1 byte of augmentation data. */ \
+  .byte (DW_EH_PE_pcrel | DW_EH_PE_sdata4); /* FDE encoding. */ \
+  .align 8; \
+2: \
+  .long .L ## f ## _END_FDE - .L ## f ## _START_FDE;   /* FDE length. */ \
+.L ## f ## _START_FDE: \
+  .long .L ## f ## _START_FDE - .L ## f ## _START_EH_FRAME; /* CIE location. */ \
+  .long (.L ## f ## _START - 1) - .;                   /* pcrel start address (see FDE encoding above). */ \
+  .long .L ## f ## _END - (.L ## f ## _START - 1);     /* Function this FDE applies to. */ \
+  .uleb128 0;                                          /* FDE augmentation length. */ \
+
+#define cfi_signal_frame_end(f) \
+.L ## f ## _END_FDE: \
+
+#define cfi_def_cfa(offset) \
+  .byte DW_CFA_def_cfa_expression; \
+  .uleb128 2f-1f; \
+1:.byte DW_OP_breg7; \
+  .sleb128 offset; \
+  .byte DW_OP_deref; \
+2: \
+
+#define cfi_offset(reg_number,offset) \
+  .byte DW_CFA_expression; \
+  .uleb128 reg_number; \
+  .uleb128 2f-1f; \
+1:.byte DW_OP_breg7; \
+  .sleb128 offset; \
+2: \
+
+ENTRY_PRIVATE(__restore_rt)
+.L__restore_rt_START:
   mov $__NR_rt_sigreturn, %rax
   syscall
+.L__restore_rt_END:
 END(__restore_rt)
+cfi_signal_frame_start(__restore_rt)
+  cfi_def_cfa(OFFSET_RSP)
+  cfi_offset( 0, OFFSET_RAX)
+  cfi_offset( 1, OFFSET_RDX)
+  cfi_offset( 2, OFFSET_RCX)
+  cfi_offset( 3, OFFSET_RBX)
+  cfi_offset( 4, OFFSET_RSI)
+  cfi_offset( 5, OFFSET_RDI)
+  cfi_offset( 6, OFFSET_RBP)
+  cfi_offset( 7, OFFSET_RSP)
+  cfi_offset( 8, OFFSET_R8)
+  cfi_offset( 9, OFFSET_R9)
+  cfi_offset(10, OFFSET_R10)
+  cfi_offset(11, OFFSET_R11)
+  cfi_offset(12, OFFSET_R12)
+  cfi_offset(13, OFFSET_R13)
+  cfi_offset(14, OFFSET_R14)
+  cfi_offset(15, OFFSET_R15)
+  cfi_offset(16, OFFSET_RIP)
+cfi_signal_frame_end(__restore_rt)
