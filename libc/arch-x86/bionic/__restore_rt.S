@@ -30,6 +30,11 @@
 
 // This function must have exactly this instruction sequence for gdb and libunwind.
 // This function must have exactly this name for gdb.
+
+// TODO: This function may require unwind info provided to be able to unwind through
+// signal frame, like it is provided for __restore, but it seems we do not have a test
+// case at this moment. In our tests __restore function always used on x86.
+
 ENTRY(__restore_rt)
   movl $__NR_rt_sigreturn, %eax
   int $0x80
