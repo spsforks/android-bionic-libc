@@ -92,11 +92,11 @@ TEST(stack_unwinding, unwind_through_signal_frame) {
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
 }
 
-extern "C" void unwind_through_frame_with_cleanup_function();
+extern "C" void unwind_through_frame_with_sigsegv();
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process.
-TEST(stack_unwinding_DeathTest, unwind_through_frame_with_cleanup_function) {
+TEST(stack_unwinding_DeathTest, unwind_through_frame_with_sigsegv) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  ASSERT_EXIT(unwind_through_frame_with_cleanup_function(), ::testing::ExitedWithCode(42), "");
+  ASSERT_EXIT(unwind_through_frame_with_sigsegv(), ::testing::ExitedWithCode(42), "");
 }
