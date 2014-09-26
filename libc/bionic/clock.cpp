@@ -32,10 +32,8 @@
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html
 clock_t clock() {
-  tms t;
-  times(&t);
-  // Although times(2) and clock(3) both use the type clock_t, the units are
-  // different. For times(2) it's pure clock ticks, but for clock(3) the unit
-  // is CLOCKS_PER_SEC, so we need to scale appropriately.
-  return (t.tms_utime + t.tms_stime) * (CLOCKS_PER_SEC / sysconf(_SC_CLK_TCK));
+  struct timespec t;
+  if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t) != 0)
+  	return (clock_t) -1;
+  return (t.tv_sec * CLOCKS_PER_SEC) + (t.tv_nsec / (1e9 / CLOCKS_PER_SEC));
 }
