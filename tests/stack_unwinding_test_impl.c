@@ -38,19 +38,26 @@ static noinline _Unwind_Reason_Code cleanup_unwind_fn(int a __unused,
     struct _Unwind_Exception* c __unused,
     struct _Unwind_Context* ctx __unused,
     void* e __unused) {
+
+  static int counter;
+
   if ((action & _UA_END_OF_STACK) != 0) {
     abort(); // We reached the end of the stack without executing foo_cleanup (which would have exited). Test failed.
+  } else {
+    // We just check that backtrace has more than 3 frames which is fine enough estimation that unwind is done through signal frame:
+    // cleanup_sigsegv_handler() -> __restore[_rt]() -> crash() -> unwind_through_frame_with_cleanup_function() -> TestBody()
+    // We used to use attribute((cleanup)) function to make sure we go through particular function,
+    // but it's appeared to be not reliable in this case.
+    // printf("%d\n",counter);
+    if (counter > 3)
+       exit(42);
   }
+  counter++;
   return _URC_NO_REASON;
 }
 
-static void noinline foo_cleanup(char* param __unused) {
-  exit(42);
-}
-
-static void noinline function_with_cleanup_function() {
-  char c __attribute__((cleanup(foo_cleanup))) __unused;
-  *((int*) 1) = 0;
+static void noinline crash() {
+  *((int *)1) = 0;
 }
 
 static void noinline cleanup_sigsegv_handler(int param __unused) {
@@ -58,7 +65,7 @@ static void noinline cleanup_sigsegv_handler(int param __unused) {
   _Unwind_ForcedUnwind(exception, cleanup_unwind_fn, 0);
 }
 
-void unwind_through_frame_with_cleanup_function() {
+void unwind_through_frame_with_sigsegv() {
   signal(SIGSEGV, &cleanup_sigsegv_handler);
-  function_with_cleanup_function();
+  crash();
 }
