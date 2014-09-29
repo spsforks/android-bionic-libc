@@ -51,6 +51,17 @@ TEST(pthread, pthread_key_create_lots) {
   // We can allocate _SC_THREAD_KEYS_MAX keys.
   sysconf_max -= 2; // (Except that gtest takes two for itself.)
   std::vector<pthread_key_t> keys;
+
+  // We need to be sure these all get cleaned even if some part of this test
+  // fails, because if we fail any checks after allocating the keys, the keys
+  // won't be reclaimed and any other tests using pthread keys are likely to
+  // fail.
+  auto guard = make_scope_guard([&keys]() {
+    for (size_t i = 0; i < keys.size(); ++i) {
+      pthread_key_delete(keys[i]);
+    }
+  });
+
   for (int i = 0; i < sysconf_max; ++i) {
     pthread_key_t key;
     // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is wrong.
