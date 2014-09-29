@@ -279,6 +279,7 @@ bionic-unit-tests-static_static_libraries := \
     liblog \
 
 bionic-unit-tests-static_force_static_executable := true
+bionic-unit-tests-static_ldflags := -Wl,--allow-multiple-definition
 
 module := bionic-unit-tests-static
 module_tag := optional
