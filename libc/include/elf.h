@@ -54,6 +54,10 @@ typedef struct {
 #define DF_BIND_NOW   0x00000008
 #define DF_STATIC_TLS 0x00000010
 
+// DT_FLAGS_1 values
+#define DF_1_NOW      0x00000001
+#define DF_1_GLOBAL   0x00000002
+
 #define DT_BIND_NOW 24
 #define DT_INIT_ARRAY 25
 #define DT_FINI_ARRAY 26

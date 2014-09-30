@@ -147,7 +147,7 @@ int dladdr(const void* addr, Dl_info* info) {
   // Determine if any symbol in the library contains the specified address.
   ElfW(Sym)* sym = dladdr_find_symbol(si, addr);
   if (sym != nullptr) {
-    info->dli_sname = si->strtab + sym->st_name;
+    info->dli_sname = si->get_string(sym->st_name);
     info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));
   }
 
@@ -185,11 +185,13 @@ int dlclose(void* handle) {
   // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 012345678901234567890
 #  define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0dl_unwind_find_exidx\0"
+#  define ANDROID_LIBDL_STRSZ 151
 #elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
   // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222
   // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789
 #  define ANDROID_LIBDL_STRTAB \
     "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0"
+#  define ANDROID_LIBDL_STRSZ 130
 #else
 #  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
 #endif
@@ -245,6 +247,7 @@ soinfo* get_libdl_info() {
     __libdl_info.bucket = g_libdl_buckets;
     __libdl_info.chain = g_libdl_chains;
     __libdl_info.ref_count = 1;
+    __libdl_info.strtab_size = ANDROID_LIBDL_STRSZ;
   }
 
   return &__libdl_info;
