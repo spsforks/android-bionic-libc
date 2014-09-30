@@ -99,6 +99,18 @@ TEST(stdlib, realpath__ENOENT) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+TEST(stdlib, realpath__r264417) {
+  errno = 0;
+  char* p = realpath("/dev/null/.", NULL);
+  ASSERT_TRUE(p == NULL);
+  ASSERT_EQ(ENOTDIR, errno);
+
+  errno = 0;
+  p = realpath("/dev/null/..", NULL);
+  ASSERT_TRUE(p == NULL);
+  ASSERT_EQ(ENOTDIR, errno);
+}
+
 TEST(stdlib, realpath) {
   // Get the name of this executable.
   char executable_path[PATH_MAX];
