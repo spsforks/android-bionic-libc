@@ -1,0 +1,9 @@
+#!/bin/bash
+FILECHECK=$ANDROID_HOST_OUT/bin/FileCheck
+GXX=$ANDROID_TOOLCHAIN/*-g++
+SOURCE=$(echo $* | grep -oP '\S+\.cpp\b')
+OBJ=$(echo $* | grep -oP '\S+\.o\b')
+$GXX $* 2>&1 | $FILECHECK -check-prefix=GCC $SOURCE
+if [ "$?" -eq 0 ]; then
+  touch $OBJ
+fi

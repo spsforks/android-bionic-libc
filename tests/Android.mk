@@ -322,6 +322,47 @@ build_type := host
 build_target := NATIVE_TEST
 include $(LOCAL_PATH)/Android.build.mk
 
+# -----------------------------------------------------------------------------
+# Compile time tests.
+# -----------------------------------------------------------------------------
+
+include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/file-check-clang++ \
+
+# Intentionally using = instead of := since we don't have access to these
+# variables outside the build system.
+LOCAL_COMPILER_DEPENDENCIES = \
+    $(HOST_OUT_EXECUTABLES)/FileCheck$(HOST_EXECUTABLE_SUFFIX) \
+
+LOCAL_MODULE := bionic-compile-time-tests-g++
+LOCAL_CXX := $(LOCAL_PATH)/file-check-g++
+LOCAL_CXXFLAGS := -Wall
+LOCAL_SRC_FILES := compile_test.cpp
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/file-check-clang++ \
+
+# Intentionally using = instead of := since we don't have access to these
+# variables outside the build system.
+LOCAL_COMPILER_DEPENDENCIES = \
+    $(HOST_OUT_EXECUTABLES)/FileCheck$(HOST_EXECUTABLE_SUFFIX) \
+
+LOCAL_CLANG := true
+LOCAL_MODULE := bionic-compile-time-tests-clang++
+LOCAL_CXX := $(LOCAL_PATH)/file-check-clang++
+LOCAL_CXXFLAGS := -Wall
+LOCAL_SRC_FILES := compile_test.cpp
+include $(BUILD_STATIC_LIBRARY)
+
+# -----------------------------------------------------------------------------
+# Host glibc tests.
+# -----------------------------------------------------------------------------
+
 ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm mips x86))
 LINKER = linker64
 NATIVE_TEST_SUFFIX=64

@@ -1,0 +1,9 @@
+#!/bin/bash
+FILECHECK=$ANDROID_HOST_OUT/bin/FileCheck
+CLANG=$ANDROID_BUILD_TOP/prebuilts/clang/linux-x86/host/3.5/bin/clang++
+SOURCE=$(echo $* | grep -oP '\S+\.cpp\b')
+OBJ=$(echo $* | grep -oP '\S+\.o\b')
+$CLANG $* 2>&1 | $FILECHECK -check-prefix=CLANG $SOURCE
+if [ "$?" -eq 0 ]; then
+  touch $OBJ
+fi
