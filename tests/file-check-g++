@@ -1,0 +1,12 @@
+#!/bin/bash
+FILECHECK=$1
+GXX=$2
+ARGS=${*:3}
+SOURCE=$(echo $ARGS | grep -oP '\S+\.cpp\b')
+OBJ=$(echo $ARGS | grep -oP '\S+\.o\b')
+$GXX $ARGS 2>&1 | $FILECHECK -check-prefix=GCC $SOURCE
+if [ "$?" -eq 0 ]; then
+  touch $OBJ
+else
+  exit 1
+fi
