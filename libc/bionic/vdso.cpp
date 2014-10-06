@@ -19,9 +19,14 @@
 #include <unistd.h>
 
 // x86 has a vdso, but there's nothing useful to us in it.
-#if defined(__aarch64__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__arm__) || defined(__x86_64__)
 
 #if defined(__aarch64__)
+#define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
+#define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
+#elif defined(__arm__)
+/* HACK AT_SYSINFO_EHDR */
+#define AT_SYSINFO_EHDR 33
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
 #elif defined(__x86_64__)

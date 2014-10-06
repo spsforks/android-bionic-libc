@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(gettimeofday)
+ENTRY(__gettimeofday)
     mov     ip, r7
     ldr     r7, =__NR_gettimeofday
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(gettimeofday)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(gettimeofday)
+END(__gettimeofday)

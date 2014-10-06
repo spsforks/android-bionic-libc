@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_gettime)
+ENTRY(__clock_gettime)
     mov     ip, r7
     ldr     r7, =__NR_clock_gettime
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(clock_gettime)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(clock_gettime)
+END(__clock_gettime)
