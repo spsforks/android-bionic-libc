@@ -45,6 +45,9 @@ LOCAL_NO_CRT := true
 # TODO: split out the asflags.
 LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 
+# Clang complains about missing -fPIC for mips/begin.S.
+LOCAL_CLANG_ASFLAGS_mips += -fPIC
+
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc
