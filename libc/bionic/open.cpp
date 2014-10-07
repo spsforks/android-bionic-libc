@@ -34,6 +34,7 @@
 #include "private/libc_logging.h"
 
 extern "C" int __openat(int, const char*, int, int);
+extern "C" int __open_2(const char* pathname, int flags);
 
 static inline int force_O_LARGEFILE(int flags) {
 #if __LP64__
