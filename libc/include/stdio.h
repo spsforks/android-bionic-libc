@@ -381,6 +381,9 @@ __END_DECLS
 #define	fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __BSD_VISIBLE */
 
+extern char* __fgets_chk(char*, int, FILE*, size_t);
+extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
+
 #if defined(__BIONIC_FORTIFY)
 
 __BEGIN_DECLS
@@ -429,8 +432,6 @@ int sprintf(char *dest, const char *format, ...)
 }
 #endif
 
-extern char* __fgets_chk(char*, int, FILE*, size_t);
-extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
