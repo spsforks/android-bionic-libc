@@ -340,10 +340,11 @@ static inline void _normal_lock(pthread_mutex_t* mutex, int shared) {
 
          ScopedTrace trace("Contending for pthread mutex");
 
+         ANDROID_MEMBAR_FULL();
 
-        while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
-            __futex_wait_ex(&mutex->value, shared, locked_contended, NULL);
-        }
+         while (__bionic_swap(locked_contended, &mutex->value) != unlocked) {
+           __futex_wait_ex(&mutex->value, shared, locked_contended, NULL);
+         }
     }
     ANDROID_MEMBAR_FULL();
 }
