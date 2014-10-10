@@ -160,3 +160,22 @@ This is fully automated:
 
   1. Run update-tzdata.py.
 
+
+Gathering test coverage
+-----------------------
+
+To gather test coverage for bionic:
+
+  1. `$ export NATIVE_COVERAGE=true`
+    * Note that the build system is ignorant to this flag being toggled, i.e. if
+      you change this flag, you will have to manually rebuild bionic.
+  2. Set `bionic_coverage=true` in `libc/Android.mk` and `libm/Android.mk` to
+     `true`.
+  3. Build and sync
+  4. `$ adb shell GCOV_PREFIX=/data/local/tmp/gcov \
+         GCOV_PREFIX_STRIP=$(echo $ANDROID_BUILD_TOP | grep -o / | wc -l) \
+         /data/nativetest/bionic-unit-tests/bionic-unit-tests32`
+  5. `$ acov`
+
+acov will pull all coverage information from the device, push it to the right
+directories, run lcov, and open the coverage report in your browser.
