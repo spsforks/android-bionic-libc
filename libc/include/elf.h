@@ -109,4 +109,10 @@ typedef struct {
 #define STT_LOPROC    13
 #define STT_HIPROC    15
 
+// This is not defined in linux kernel headers (for some reason)
+#define AT_FPUCW      18
+
+// Synonyms for some of NT_ constants
+#define NT_FPREGSET NT_PRFPREG
+
 #endif /* _ELF_H */
