@@ -273,9 +273,16 @@ bionic-unit-tests-static_static_libraries := \
     libm \
     libc \
     libc++_static \
+    libcompiler_rt \
     libdl \
     libtinyxml2 \
     liblog \
+
+ifeq ($(TARGET_ARCH),arm)
+bionic-unit-tests-static_static_libraries += libunwind_llvm
+else
+bionic-unit-tests-static_static_libraries += libunwindbacktrace
+endif
 
 bionic-unit-tests-static_force_static_executable := true
 
