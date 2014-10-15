@@ -36,7 +36,6 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(0, pthread_key_delete(key));
   // Can't delete a key that's already been deleted.
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
-}
 
 TEST(pthread, pthread_keys_max) {
   // POSIX says PTHREAD_KEYS_MAX should be at least 128.
