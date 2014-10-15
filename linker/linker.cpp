@@ -2125,6 +2125,8 @@ bool soinfo::PrelinkImage() {
         mips_gotsym = d->d_un.d_val;
         break;
 #endif
+      case DT_BIND_NOW:
+        // Ignored: "Its use has been superseded by the DF_BIND_NOW flag"
       case DT_VERSYM:
       case DT_VERDEF:
       case DT_VERDEFNUM:
