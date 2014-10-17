@@ -39,7 +39,7 @@
 
 ENTRY(__memcpy_chk)
         cmp         r2, r3
-        bgt         fortify_check_failed
+        bhi         fortify_check_failed
 
         // Fall through to memcpy...
 END(__memcpy_chk)
