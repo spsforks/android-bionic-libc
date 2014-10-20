@@ -157,3 +157,10 @@ void* __bionic_libgcc_compat_symbols[] = {
     &__unorddf2,
     &__unordsf2,
 };
+
+int __aeabi_idiv0()
+{
+    int *p = (int *)0;	
+    *p = 1;		
+    return 33;
+}
