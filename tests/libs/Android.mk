@@ -24,6 +24,7 @@ common_additional_dependencies := \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
+    $(LOCAL_PATH)/Android.build.invalid_so.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
     $(TEST_PATH)/Android.build.mk
 
@@ -106,12 +107,21 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
-include $(CLEAR_VARS)
 bionic_2nd_arch_prefix :=
 include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
 ifneq ($(TARGET_2ND_ARCH),)
   bionic_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
   include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
+endif
+
+# -----------------------------------------------------------------------------
+# Library used by linker_phdr tests
+# -----------------------------------------------------------------------------
+bionic_2nd_arch_prefix :=
+include $(LOCAL_PATH)/Android.build.invalid_so.mk
+ifneq ($(TARGET_2ND_ARCH),)
+  bionic_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+  include $(LOCAL_PATH)/Android.build.invalid_so.mk
 endif
 
 # -----------------------------------------------------------------------------

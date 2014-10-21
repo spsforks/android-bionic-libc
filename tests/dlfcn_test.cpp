@@ -710,3 +710,9 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
+
+TEST(dlfcn, dlopen_badmagic) {
+  void* handle = dlopen("libtest_simple_badmagic.so", RTLD_NOW);
+  ASSERT_TRUE(handle == NULL);
+  ASSERT_STREQ("dlopen failed: \"libtest_simple_badmagic.so\" has bad ELF magic", dlerror());
+}
