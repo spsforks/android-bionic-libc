@@ -162,23 +162,23 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   ASSERT_EQ(1, fn());
 }
 
-TEST(dlfcn, dlopen_check_order) {
+TEST(dlfcn, dlopen_check_order_dlsym) {
   // Here is how the test library and its dt_needed
   // libraries are arranged
   //
-  //  libtest_check_order.so
+  //  libtest_check_order_children.so
   //  |
-  //  +-> libtest_check_order_1_left.so
+  //  +-> ..._1_left.so
   //  |   |
-  //  |   +-> libtest_check_order_a.so
+  //  |   +-> ..._a.so
   //  |   |
-  //  |   +-> libtest_check_order_b.so
+  //  |   +-> ...r_b.so
   //  |
-  //  +-> libtest_check_order_2_right.so
+  //  +-> .._2_right.so
   //  |   |
-  //  |   +-> libtest_check_order_d.so
+  //  |   +-> ..._d.so
   //  |       |
-  //  |       +-> libtest_check_order_b.so
+  //  |       +-> ..._b.so
   //  |
   //  +-> libtest_check_order_3_c.so
   //
@@ -186,20 +186,60 @@ TEST(dlfcn, dlopen_check_order) {
   //
   // get_answer() is defined in (2, 3, a, b, c)
   // get_answer2() is defined in (b, d)
-  void* sym = dlsym(RTLD_DEFAULT, "dlopen_test_get_answer");
+  void* sym = dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer");
   ASSERT_TRUE(sym == nullptr);
-  void* handle = dlopen("libtest_check_order.so", RTLD_NOW | RTLD_GLOBAL);
-  ASSERT_TRUE(handle != nullptr);
+  void* handle = dlopen("libtest_check_order_dlsym.so", RTLD_NOW | RTLD_GLOBAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
   typedef int (*fn_t) (void);
   fn_t fn, fn2;
-  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer"));
+  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer"));
   ASSERT_TRUE(fn != NULL) << dlerror();
-  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "dlopen_test_get_answer2"));
+  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer2"));
   ASSERT_TRUE(fn2 != NULL) << dlerror();
 
   ASSERT_EQ(42, fn());
   ASSERT_EQ(43, fn2());
   dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_check_order_reloc_siblings) {
+  // This is now this one works:
+  // we lookup and call get_answer which is defined in '_2.so'
+  // and in turn calls external get_answer_impl() defined in _1.so and in '_[abc].so'
+  // the correct _impl() should be in '_1.so';
+  //
+  // Note that this is test for RTLD_LOCAL (todo: test for GLOBAL?)
+  //
+  // Here is the picture:
+  //
+  // libtest_check_order_reloc_siblings.so
+  // |
+  // +-> ..._1.so <- defines correct get_sibling_test_answer_impl()
+  // |   |
+  // |   +-> ..._a.so
+  // |   |
+  // |   +-> ..._b.so
+  // |
+  // +-> ..._2.so <- defines get_sibling_test_answer() calls get_sibling_test_answer()
+  // |   |
+  // |   +-> ..._c.so
+
+  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#ifdef __BIONIC__
+  // TODO: glibc returns nullptr on dlerror() here.
+  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#endif
+
+  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef int (*fn_t) (void);
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_siblings_get_answer"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(42, fn());
+
+  ASSERT_EQ(0, dlclose(handle));
 }
 
 TEST(dlfcn, dlopen_check_rtld_local) {
@@ -341,7 +381,6 @@ TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
   dlclose(handle);
   ASSERT_TRUE(!is_unloaded);
 }
-
 
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
