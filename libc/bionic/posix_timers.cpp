@@ -206,15 +206,21 @@ int timer_gettime(timer_t id, itimerspec* ts) {
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
 int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) {
   PosixTimer* timer= reinterpret_cast<PosixTimer*>(id);
+
+  // Mark the timer as either being armed or disarmed. This avoids the
+  // callback being called after the disarm for SIGEV_THREAD timers only.
+  // Do this before the call, just in case the signal fires before we
+  // can set the armed value.
+  int old_armed = timer->armed;
+  if (ts->it_value.tv_sec != 0 || ts->it_value.tv_nsec != 0) {
+    timer->armed = true;
+  } else {
+    timer->armed = false;
+  }
   int rc = __timer_settime(timer->kernel_timer_id, flags, ts, ots);
-  if (rc == 0) {
-    // Mark the timer as either being armed or disarmed. This avoids the
-    // callback being called after the disarm for SIGEV_THREAD timers only.
-    if (ts->it_value.tv_sec != 0 || ts->it_value.tv_nsec != 0) {
-      timer->armed = true;
-    } else {
-      timer->armed = false;
-    }
+  if (rc == -1) {
+    // Failed, so reset to the old value.
+    timer->armed = old_armed;
   }
   return rc;
 }
