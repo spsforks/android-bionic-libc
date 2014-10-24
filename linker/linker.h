@@ -258,6 +258,13 @@ struct soinfo {
   size_t strtab_size;
 
   friend soinfo* get_libdl_info();
+
+#if defined(__arm__) || defined(__aarch64__)
+ public:
+  off_t packed_relocations_offset;
+  size_t packed_relocations_size;
+  void* packed_relocations_map;
+#endif
 };
 
 soinfo* get_libdl_info();
