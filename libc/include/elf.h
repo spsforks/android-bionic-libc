@@ -112,4 +112,8 @@ typedef struct {
 /* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
 #define NT_FPREGSET NT_PRFPREG
 
+// Extension dynamic tags for packed relocations.
+#define DT_ANDROID_REL_OFFSET (DT_LOOS)
+#define DT_ANDROID_REL_SIZE (DT_LOOS + 1)
+
 #endif /* _ELF_H */

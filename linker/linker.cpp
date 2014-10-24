@@ -52,6 +52,7 @@
 #include "linker_environ.h"
 #include "linker_phdr.h"
 #include "linker_allocator.h"
+#include "linker_leb128.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -780,6 +781,11 @@ static void for_each_dt_needed(const soinfo* si, F action) {
   }
 }
 
+#if defined(__arm__) || defined(__aarch64__)
+static bool arm_retrieve_packed_relocations(const char* name,
+                                            int fd, soinfo* si);
+#endif
+
 static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
   int fd = -1;
   off64_t file_offset = 0;
@@ -850,6 +856,13 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     soinfo_free(si);
     return nullptr;
   }
+
+#if defined(__arm__) || defined(__aarch64__)
+  if (!arm_retrieve_packed_relocations(name, fd, si)) {
+    soinfo_free(si);
+    return nullptr;
+  }
+#endif
 
   for_each_dt_needed(si, [&] (const char* name) {
     load_tasks.push_back(LoadTask::create(name, si));
@@ -1571,6 +1584,156 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count) {
 }
 #endif
 
+#if defined(__arm__) || defined(__aarch64__)
+static bool arm_retrieve_packed_relocations(const char* name,
+                                            int fd,
+                                            soinfo* si) {
+  si->packed_relocations_map = nullptr;
+
+  if (!(si->packed_relocations_offset && si->packed_relocations_size)) {
+    return true;
+  }
+
+  // Page align the file offset, and calculate the adjustments made.
+  const off_t offset = PAGE_START(si->packed_relocations_offset);
+  const size_t extra = si->packed_relocations_offset - offset;
+  const size_t size = si->packed_relocations_size + extra;
+
+  // Map the packed relocations data.
+  void* mapping = mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, offset);
+  if (mapping == MAP_FAILED) {
+    DL_ERR("unable to map packed relocations in %s: %s", name, strerror(errno));
+    return false;
+  }
+
+  si->packed_relocations_map = mapping;
+  return true;
+}
+
+#if defined(USE_RELA)
+static void arm_apply_rela(ElfW(Addr) relocation_offset,
+                           ssize_t relocation_addend,
+                           soinfo* si) {
+  const ElfW(Addr) reloc =
+      static_cast<ElfW(Addr)>(relocation_offset + si->load_bias);
+
+  // Apply as R_AARCH64_RELATIVE.
+  count_relocation(kRelocRelative);
+  MARK(relocation_offset);
+  TRACE_TYPE(RELO, "PACKED RELO RELATIVE %16llx <- %16llx\n",
+             reloc, (si->base + relocation_addend));
+  *reinterpret_cast<ElfW(Addr)*>(reloc) = (si->base + relocation_addend);
+}
+
+static void arm_apply_packed_rela(const uint8_t* packed_relocations,
+                                  soinfo* si) {
+  Sleb128Decoder decoder(packed_relocations);
+
+  // Find the count of pairs.
+  size_t pairs = decoder.Dequeue();
+
+  ElfW(Addr) relocation_offset = 0;
+  ssize_t relocation_addend = 0;
+
+  // Emit relocations for each deltas pair.
+  while (pairs) {
+    relocation_offset += decoder.Dequeue();
+    relocation_addend += decoder.Dequeue();
+
+    arm_apply_rela(relocation_offset, relocation_addend, si);
+    pairs--;
+  }
+}
+#else
+static void arm_apply_rel(ElfW(Addr) relocation_offset, soinfo* si) {
+  const ElfW(Addr) reloc =
+      static_cast<ElfW(Addr)>(relocation_offset + si->load_bias);
+
+  // Apply as R_ARM_RELATIVE.
+  count_relocation(kRelocRelative);
+  MARK(relocation_offset);
+  TRACE_TYPE(RELO, "PACKED RELO RELATIVE %p <- +%p",
+             reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(si->base));
+  *reinterpret_cast<ElfW(Addr)*>(reloc) += si->base;
+}
+
+static void arm_apply_packed_rel(const uint8_t* packed_relocations,
+                                 soinfo* si) {
+  Leb128Decoder decoder(packed_relocations);
+
+  // Find the count of pairs and the start address.
+  size_t pairs = decoder.Dequeue();
+  const ElfW(Addr) start_address = decoder.Dequeue();
+
+  // Emit initial relative relocation.
+  ElfW(Addr) relocation_offset = start_address;
+  arm_apply_rel(relocation_offset, si);
+
+  // Emit relocations for each count-delta pair.
+  while (pairs) {
+    size_t count = decoder.Dequeue();
+    const size_t delta = decoder.Dequeue();
+
+    // Emit count relative relocations with delta offset.
+    while (count) {
+      relocation_offset += delta;
+      arm_apply_rel(relocation_offset, si);
+      count--;
+    }
+    pairs--;
+  }
+}
+#endif  // USE_RELA
+
+static bool arm_apply_packed_relocations(soinfo* si) {
+  if (!si->packed_relocations_map) {
+    return true;
+  }
+
+  // Page align the file offset, and calculate the adjustments made.
+  const off_t offset = PAGE_START(si->packed_relocations_offset);
+  const size_t extra = si->packed_relocations_offset - offset;
+  const size_t size = si->packed_relocations_size + extra;
+
+  // Locate the packed relocations data inside the mapping.
+  const uint8_t* packed_data =
+      static_cast<uint8_t*>(si->packed_relocations_map) + extra;
+
+#if defined(USE_RELA)
+  // Check for an initial APA1 header, packed relocations with addend.
+  if (packed_data[0] == 'A' &&
+      packed_data[1] == 'P' &&
+      packed_data[2] == 'A' &&
+      packed_data[3] == '1') {
+    arm_apply_packed_rela(packed_data + 4, si);
+  } else {
+    DL_ERR("unsupported signature in packed relocations; expected APA1");
+    return false;
+  }
+#else
+  // Check for an initial APR1 header, packed relocations.
+  if (packed_data[0] == 'A' &&
+      packed_data[1] == 'P' &&
+      packed_data[2] == 'R' &&
+      packed_data[3] == '1') {
+    arm_apply_packed_rel(packed_data + 4, si);
+  } else {
+    DL_ERR("unsupported signature in packed relocations; expected APR1");
+    return false;
+  }
+#endif  // USE_RELA
+
+  // The packed relocations data is no longer needed, so unmap it.
+  if (munmap(si->packed_relocations_map, size) != 0) {
+    DL_ERR("unable to unmap packed relocations: %s", strerror(errno));
+    return false;
+  }
+
+  si->packed_relocations_map = nullptr;
+  return true;
+}
+#endif  // __arm__ || __aarch64__
+
 #if defined(__mips__)
 static bool mips_relocate_got(soinfo* si) {
   ElfW(Addr)** got = si->plt_got;
@@ -1903,6 +2066,8 @@ bool soinfo::PrelinkImage() {
 #if defined(__arm__)
   (void) phdr_table_get_arm_exidx(phdr, phnum, load_bias,
                                   &ARM_exidx, &ARM_exidx_count);
+  packed_relocations_offset = 0;
+  packed_relocations_size = 0;
 #endif
 
   // Extract useful information from dynamic section.
@@ -2129,6 +2294,14 @@ bool soinfo::PrelinkImage() {
           DL_WARN("Unsupported flags DT_FLAGS_1=%p", reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
+#if defined(__arm__) || defined(__mips__)
+      case DT_ANDROID_REL_OFFSET:
+        packed_relocations_offset = static_cast<off_t>(d->d_un.d_val);
+        break;
+      case DT_ANDROID_REL_SIZE:
+        packed_relocations_size = static_cast<size_t>(d->d_un.d_val);
+        break;
+#endif
 #if defined(__mips__)
       case DT_MIPS_RLD_MAP:
         // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
@@ -2211,6 +2384,12 @@ bool soinfo::LinkImage(const android_dlextinfo* extinfo) {
              name, strerror(errno));
       return false;
     }
+  }
+#endif
+
+#if defined(__arm__) || defined(__aarch64__)
+  if (!arm_apply_packed_relocations(this)) {
+    return false;
   }
 #endif
 
