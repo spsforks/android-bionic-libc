@@ -401,6 +401,7 @@ bionic-unit-tests-run-on-host: bionic-unit-tests $(TARGET_OUT_EXECUTABLES)/$(LIN
 	if [ ! -d /system -o ! -d /system/bin ]; then \
 	  echo "Attempting to create /system/bin"; \
 	  sudo mkdir -p -m 0777 /system/bin; \
+	  sudo chmod 0777 /system; \
 	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/$(LINKER)` /system/bin
@@ -419,6 +420,7 @@ bionic-unit-tests-run-on-host32: bionic-unit-tests_32 $(TARGET_OUT_EXECUTABLES)/
 	if [ ! -d /system -o ! -d /system/bin ]; then \
 	  echo "Attempting to create /system/bin"; \
 	  sudo mkdir -p -m 0777 /system/bin; \
+	  sudo chmod 0777 /system; \
 	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ln -fs `realpath $(TARGET_OUT_EXECUTABLES)/linker` /system/bin
