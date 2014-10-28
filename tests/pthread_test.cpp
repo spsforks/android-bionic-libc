@@ -702,6 +702,147 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
+TEST(pthread, pthread_rwlock_attr_pshared) {
+  pthread_rwlock_t l;
+  ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
+  pthread_rwlockattr_t  attr[1];
+  ASSERT_EQ(0, pthread_rwlockattr_init(attr));
+
+  int shared;
+  ASSERT_EQ(0, pthread_rwlockattr_getpshared(attr, &shared));
+  ASSERT_EQ(PTHREAD_PROCESS_PRIVATE, shared);
+  errno = 0;
+  ASSERT_EQ(0, pthread_rwlockattr_setpshared(attr, PTHREAD_PROCESS_SHARED));
+  ASSERT_EQ(0, errno);
+  shared = PTHREAD_PROCESS_PRIVATE;
+  ASSERT_EQ(0, pthread_rwlockattr_getpshared(attr, &shared));
+  ASSERT_EQ(PTHREAD_PROCESS_SHARED, shared);
+
+  // The process-shared attribute shall be set to PTHREAD_PROCESS_SHARED
+  // to permit a read-write lock to be operated upon by any thread that
+  // has access to the memory where the read-write lock is allocated,
+  // even if the read-write lock is allocated in memory that is shared
+  // by multiple processes.
+
+  // TODO: here only check the lock operations in the same process, should
+  // check the operation between processes as well when PTHREAD_PROCESS_SHARED is set
+
+  // Try reader lock
+  ASSERT_EQ(0, pthread_rwlock_tryrdlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  // Try writer lock
+  ASSERT_EQ(0, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&l));
+  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&l));
+  ASSERT_EQ(0, pthread_rwlock_unlock(&l));
+
+  ASSERT_EQ(0, pthread_rwlock_destroy(&l));
+}
+
+
+/* This is more complex example to test contention of rwlockes.
+ * Essentially, what happens is this:
+ *
+ * - main thread creates a rwlock and rdlocks it
+ * - it then creates thread 1 and thread 2
+ *
+ * - it then record the current time, sleep for a specific 'waitDelay'
+ *   then unlock the rwlock.
+ *
+ * - thread 1 tryrdlocks() the rwlock. It shall acquire the lock
+ *   immediately, then release it, then wrlock().
+ *
+ * - thread 2 trywrlocks() the rwlock. In case of failure (EBUSY), it waits
+ *   for a small amount of time (see 'spinDelay') and tries again, until
+ *   it succeeds. It then unlocks the rwlock.
+ *
+ * The goal of this test is to verify that thread 1 has been stopped
+ * for a sufficiently long time (in the wrlock), and that thread 2 has
+ * been spinning for the same minimum period. There is no guarantee as
+ * to which thread is going to acquire the rwlock first.
+ */
+typedef struct {
+    pthread_rwlock_t  rwlock[1];
+    double            t0;
+    double            spinDelay;
+} Test3State;
+
+/* return current time in seconds as floating point value */
+static double time_now(void) {
+  timespec ts[1];
+
+  clock_gettime(CLOCK_MONOTONIC, ts);
+  return (double)ts->tv_sec + ts->tv_nsec/1e9;
+}
+
+static void time_sleep(double delay){
+  timespec ts;
+  ts.tv_sec  = (time_t)delay;
+  ts.tv_nsec = (long)((delay - ts.tv_sec)*1e9);
+
+  int ret;
+  do {
+    ret = nanosleep(&ts, &ts);
+  } while (ret < 0 && errno == EINTR);
+}
+
+double t1_diff = 0;
+double t2_diff = 0;
+static void* do_rwlock_test_t1(void* arg) {
+  Test3State* s = reinterpret_cast<Test3State*>(arg);
+
+  /* try-acquire the lock, should succeed immediately */
+  pthread_rwlock_tryrdlock(s->rwlock);
+  pthread_rwlock_unlock(s->rwlock);
+
+  /* wrlock() the lock, now */
+  pthread_rwlock_wrlock(s->rwlock);
+
+  t1_diff = time_now() - s->t0;
+  pthread_rwlock_unlock(s->rwlock);
+  return NULL;
+}
+
+static void* do_rwlock_test_t2(void* arg){
+  Test3State* s = reinterpret_cast<Test3State*>(arg);
+  for (;;) {
+    int ret = pthread_rwlock_trywrlock(s->rwlock);
+    if (ret == 0) break;
+    if (ret == EBUSY) time_sleep(s->spinDelay);
+  }
+  t2_diff = time_now() - s->t0;
+  // in case thread2 get the rwlock first,
+  // sleep for some time to make thread wait for some before get the rwlock
+  time_sleep(s->spinDelay);
+  pthread_rwlock_unlock(s->rwlock);
+  return NULL;
+}
+
+TEST(pthread, pthread_rwlock_complex_case) {
+  Test3State  s[1];
+  ASSERT_EQ(0, pthread_rwlock_init(s->rwlock, NULL));
+
+  double delay = 0.1;
+  s->spinDelay = delay/20.;
+
+  ASSERT_EQ(0, pthread_rwlock_rdlock(s->rwlock));
+
+  pthread_t th1, th2;
+  pthread_create(&th1, NULL, do_rwlock_test_t1, s);
+  pthread_create(&th2, NULL, do_rwlock_test_t2, s);
+
+  s->t0 = time_now();
+  time_sleep(delay);
+
+  ASSERT_EQ(0, pthread_rwlock_unlock(s->rwlock));
+  ASSERT_EQ(0, pthread_join(th1, NULL));
+  ASSERT_EQ(0, pthread_join(th2, NULL));
+  ASSERT_EQ(0, pthread_rwlock_destroy(s->rwlock));
+  ASSERT_GE(t1_diff, delay);
+}
+
 static int g_once_fn_call_count = 0;
 static void OnceFn() {
   ++g_once_fn_call_count;
