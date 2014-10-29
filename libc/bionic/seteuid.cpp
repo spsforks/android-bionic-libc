@@ -29,5 +29,10 @@
 #include <unistd.h>
 
 int seteuid(uid_t euid) {
+  if (euid == (uid_t) ~0) {
+    errno = EINVAL;
+    return -1;
+  }
+
   return setresuid(-1, euid,-1);
 }
