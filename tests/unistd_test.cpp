@@ -467,3 +467,57 @@ TEST(unistd_DeathTest, abort) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
 }
+
+TEST(unistd, seteuid_non_root){
+  uid_t ruid = getuid();
+  uid_t euid = geteuid();
+  if (ruid != 0 ){
+    errno = 0;
+    ASSERT_EQ(-1, seteuid(0));
+    ASSERT_EQ(EPERM, errno);
+
+    ASSERT_EQ(ruid, getuid());
+    ASSERT_EQ(euid, geteuid());
+
+#if defined(__BIONIC__)
+    // in bionic, seteuid calls setresuid, and -1 means remaining unchanged
+    // as described here for setreuid:
+    // http://pubs.opengroup.org/onlinepubs/009695399/functions/setreuid.html
+    errno = 0;
+    ASSERT_EQ(0, seteuid(-1));
+    ASSERT_EQ(0, errno);
+    ASSERT_EQ(ruid, getuid());
+    ASSERT_EQ(euid, geteuid());
+#endif
+#if defined(__GLIBC__)
+    // According the description here:
+    // http://pubs.opengroup.org/onlinepubs/009695399/functions/seteuid.html
+    // When -1 passed, EINVAL will be set as the error
+    errno = 0;
+    ASSERT_EQ(-1, seteuid(-1));
+    ASSERT_EQ(EINVAL, errno);
+    ASSERT_EQ(ruid, getuid());
+    ASSERT_EQ(euid, geteuid());
+#endif
+  }else{
+    GTEST_LOG_(INFO) << "This test does nothing when run as root.\n";
+  }
+}
+
+TEST(unistd, seteuid_root){
+  uid_t ruid = getuid();
+  if (ruid != 0 ){
+    GTEST_LOG_(INFO) << "This test does nothing when run as non-root user.\n";
+  }else{
+    errno = 0;
+    ASSERT_EQ(0, seteuid(9999));
+    ASSERT_EQ(0, errno);
+
+    ASSERT_EQ((unsigned int)9999, geteuid());
+    ASSERT_EQ((unsigned int)0, getuid());
+
+    //restore
+    ASSERT_EQ(0, seteuid(0));
+    ASSERT_EQ((unsigned int)0, geteuid());
+  }
+}
