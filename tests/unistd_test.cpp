@@ -502,3 +502,59 @@ TEST(unistd, gethostname) {
   ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
   ASSERT_EQ(ENAMETOOLONG, errno);
 }
+
+TEST(unistd, seteuid){
+  uid_t ruid = getuid();
+  uid_t euid = geteuid();
+  if (ruid != 0) {
+    // only tests the error check when run as non-root user
+    errno = 0;
+    ASSERT_EQ(-1, seteuid(0));
+    ASSERT_EQ(EPERM, errno);
+
+    ASSERT_EQ(ruid, getuid());
+    ASSERT_EQ(euid, geteuid());
+
+    errno = 0;
+    ASSERT_EQ(-1, seteuid(-1));
+    ASSERT_EQ(EINVAL, errno);
+    ASSERT_EQ(ruid, getuid());
+    ASSERT_EQ(euid, geteuid());
+
+    errno = 0;
+    ASSERT_EQ(-1, seteuid(-2));
+    ASSERT_EQ(EPERM, errno);
+  }else{
+    // only check result seteuid call when run as root user
+    errno = 0;
+    ASSERT_EQ(0, seteuid(9999));
+    ASSERT_EQ(0, errno);
+
+    ASSERT_EQ(9999U, geteuid());
+    ASSERT_EQ(0U, getuid());
+
+    //restore
+    ASSERT_EQ(0, seteuid(0));
+    ASSERT_EQ(0U, geteuid());
+
+    // It should report EINVAL when pass negative
+    errno = 0;
+    ASSERT_EQ(0, seteuid(-2));
+    ASSERT_EQ(0, errno);
+    // on host it's 4294967294 or other value according to the negative passed
+    // but on android device it's always 4294967295 (UINT_MAX)
+    ASSERT_NE(0U, geteuid());
+    ASSERT_EQ(0U, getuid());
+
+    //restore
+    ASSERT_EQ(0, seteuid(0));
+
+    ASSERT_EQ(0, seteuid(-5));
+    ASSERT_EQ(0U, geteuid());
+    //restore
+    ASSERT_EQ(0, seteuid(0));
+
+    ASSERT_EQ(4294967291U, (uid_t) -5);
+    ASSERT_EQ(4294967295U, (uid_t) -5);
+  }
+}
