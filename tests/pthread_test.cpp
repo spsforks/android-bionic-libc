@@ -1068,3 +1068,67 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock));
 }
+
+static pthread_cond_t cond1;
+static pthread_cond_t cond2;
+static pthread_mutex_t test_lock = PTHREAD_MUTEX_INITIALIZER;
+static std::string sequence_func1 = "";
+static std::string sequence_func2 = "";
+static std::string sequence_func3 = "";
+static std::string sequence_func3_2 = "";
+static std::string sequence_func4 = "";
+
+static void * thread1_func(void*) {
+  pthread_mutex_lock(&test_lock);
+  pthread_cond_wait(&cond1, &test_lock );
+  sequence_func1 = sequence_func4 + " thread1";
+  pthread_mutex_unlock(&test_lock);
+  return NULL;
+}
+
+static void * thread2_func(void*) {
+  pthread_mutex_lock(&test_lock);
+  pthread_cond_wait(&cond2, &test_lock );
+  sequence_func2 = sequence_func3_2 + " thread2";
+  pthread_mutex_unlock(&test_lock);
+  return NULL;
+}
+
+static void * thread3_func(void*) {
+  pthread_mutex_lock(&test_lock);
+  pthread_cond_wait(&cond1, &test_lock );
+  sequence_func3 = sequence_func4 + " thread3";
+  pthread_mutex_unlock(&test_lock);
+  sleep(2);
+  sequence_func3_2 = "thread3_2";
+  pthread_cond_signal(&cond2);
+  return NULL;
+}
+
+static void * thread4_func(void*) {
+  sleep(5);
+  sequence_func4 = "thread4";
+  pthread_cond_broadcast(&cond1);
+  return NULL;
+}
+
+TEST(pthread, pthread_cond_connection){
+  pthread_t t[4];
+
+  ASSERT_EQ(0, pthread_cond_init(&cond1, NULL));
+  ASSERT_EQ(0, pthread_cond_init(&cond2, NULL));
+
+  ASSERT_EQ(0, pthread_create(&t[0], NULL, thread1_func, NULL));
+  ASSERT_EQ(0, pthread_create(&t[1], NULL, thread2_func, NULL));
+  ASSERT_EQ(0, pthread_create(&t[2], NULL, thread3_func, NULL));
+  ASSERT_EQ(0, pthread_create(&t[3], NULL, thread4_func, NULL));
+
+  ASSERT_EQ(0, pthread_join(t[0], NULL));
+  ASSERT_EQ(0, pthread_join(t[1], NULL));
+  ASSERT_EQ(0, pthread_join(t[2], NULL));
+  ASSERT_EQ(0, pthread_join(t[3], NULL));
+
+  ASSERT_EQ("thread4 thread1", sequence_func1);
+  ASSERT_EQ("thread4 thread3", sequence_func3);
+  ASSERT_EQ("thread3_2 thread2", sequence_func2);
+}
