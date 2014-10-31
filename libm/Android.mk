@@ -286,9 +286,15 @@ LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld_src_files)
 
 LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387
 LOCAL_SRC_FILES_x86 := i387/fenv.c
+ifeq ($(TARGET_ARCH), x86)
+include $(LOCAL_PATH)/x86/x86.mk
+endif
 
 LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld_src_files)
+ifeq ($(TARGET_ARCH), x86_64)
+include $(LOCAL_PATH)/x86_64/x86_64.mk
+endif
 
 LOCAL_SRC_FILES_mips := mips/fenv.c
 
