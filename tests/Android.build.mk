@@ -100,6 +100,8 @@ endif
 ifeq ($(build_type),host)
   # Only build if host builds are supported.
   ifeq ($(build_host),true)
+    LOCAL_CPPFLAGS += -Os\
+
     include $(BUILD_HOST_$(build_target))
   endif
 endif
