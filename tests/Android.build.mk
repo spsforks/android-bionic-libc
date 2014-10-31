@@ -57,6 +57,7 @@ LOCAL_CPPFLAGS += \
     $(common_cppflags) \
     $($(module)_cppflags) \
     $($(module)_cppflags_$(build_type)) \
+    -Os \
 
 LOCAL_C_INCLUDES := \
     $(common_c_includes) \
