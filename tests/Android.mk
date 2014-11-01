@@ -411,6 +411,14 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
+#
+# The check for and manual creation of $(TARGET_OUT)/etc/hosts is an egregious
+# hack made necessary because we can't manually invoke the rule for
+# PRODUCT_COPY_FILES, and the only way to make this happen automatically is to
+# invoke a top-level make. We want to avoid doing this on the buildbot because
+# it would require building a whole target as opposed to just these tests
+# (because the host tests must be lunched to an generic Intel target, which the
+# buildbot won't be targeting).
 bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT_EXECUTABLES)/sh
 	if [ ! -d /system ]; then \
 	  echo "Attempting to create /system"; \
@@ -418,6 +426,10 @@ bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TAR
 	fi
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ln -fs `realpath $(TARGET_OUT)/bin` /system/
+	if [ ! -f $(TARGET_OUT)/etc/hosts ]; then \
+		mkdir -p $(TARGET_OUT)/etc; \
+		cp system/core/rootdir/etc/hosts $(TARGET_OUT)/etc; \
+	fi
 	ln -fs `realpath $(TARGET_OUT)/etc` /system/
 
 bionic-unit-tests-run-on-host: bionic-unit-tests bionic-unit-tests-run-on-host-prepare
