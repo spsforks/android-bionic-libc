@@ -16,11 +16,13 @@
 
 #include <gtest/gtest.h>
 
+#include <arpa/inet.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <fcntl.h>
 
 #if defined(__BIONIC__)
   #define RECVMMSG_SUPPORTED 1
@@ -40,7 +42,7 @@ static void* ConnectFn(void* data) {
   bool (*callback_fn)(int) = reinterpret_cast<bool (*)(int)>(data);
   void* return_value = NULL;
 
-  int fd = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
+  int fd = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_CLOEXEC | SOCK_NONBLOCK, IPPROTO_IP);
   if (fd < 0) {
     GTEST_LOG_(ERROR) << "socket call failed: " << strerror(errno);
     return reinterpret_cast<void*>(-1);
@@ -67,7 +69,7 @@ static void* ConnectFn(void* data) {
 
 static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
                     bool (*callback_fn)(int fd)) {
-  int fd = socket(PF_UNIX, SOCK_SEQPACKET, 0);
+  int fd = socket(PF_UNIX, SOCK_SEQPACKET, IPPROTO_IP);
   ASSERT_NE(fd, -1) << strerror(errno);
 
   struct sockaddr_un addr;
@@ -256,4 +258,74 @@ TEST(sys_socket, sendmmsg_error) {
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
+}
+
+#define BUFLEN 512
+#define NPACK  10
+int socketId;
+sockaddr_in sendtoSi;
+
+static void* TestRecvFrom(void*) {
+  void* return_value = NULL;
+  int slen = sizeof(sockaddr_in);
+  char expected[BUFLEN];
+  char actual[BUFLEN];
+  int ret;
+  for (int i=0; i<NPACK; i++) {
+    bzero(actual, sizeof(actual));
+    ret = recvfrom(socketId, actual, BUFLEN, 0, (sockaddr*)&sendtoSi, (socklen_t*)&slen);
+    if (ret == -1 ){
+      GTEST_LOG_(INFO) << "recvfrom return -1 for i=" << i << ": " << strerror(errno);
+      return_value = reinterpret_cast<void*>(-1);
+    }
+
+    bzero(expected, sizeof(expected));
+    sprintf(expected, "This is packet %d\n", i);
+    if(strcmp(expected, actual) != 0){
+      GTEST_LOG_(INFO) << "Received string is not expect for i=" << i << "\n";
+      GTEST_LOG_(INFO) << "Excepted" << expected;
+      GTEST_LOG_(INFO) << "Actual:" << actual;
+      return_value = reinterpret_cast<void*>(-2);
+    }
+  }
+  return_value = reinterpret_cast<void*>(0);
+  return return_value;
+}
+
+TEST(sys_socket, sendto_DGRAM_UDP) {
+  char host[] = "127.0.0.1";
+  int udpPort = 7000;
+
+  ASSERT_NE(0, inet_aton(host, &sendtoSi.sin_addr)) << "Failed to initialise socked address: " << strerror(errno);
+  int address = sendtoSi.sin_addr.s_addr;
+
+  memset((char *) &sendtoSi, 0, sizeof(sockaddr_in));
+  sendtoSi.sin_family      = AF_INET;
+  sendtoSi.sin_port        = htons(udpPort);
+  sendtoSi.sin_addr.s_addr = address;
+
+  socketId = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  ASSERT_NE(-1, socketId) << "Failed to create the socket:" << strerror(errno);
+
+  ASSERT_EQ(0, bind(socketId, (sockaddr*)&sendtoSi, sizeof(sockaddr_in))) << "Failed to bind:" << strerror(errno);
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL, TestRecvFrom, NULL));
+
+  //sleep 1 second to make the recv block first
+  //TODO: Any new better method here?
+  usleep(1000000);
+  char buf[BUFLEN];
+  for (int i=0; i<NPACK; i++) {
+    bzero(buf, sizeof(buf));
+    sprintf(buf, "This is packet %d\n", i);
+    int ret = sendto(socketId, buf, BUFLEN, 0, (struct sockaddr*)&sendtoSi, sizeof(sockaddr_in));
+    ASSERT_NE(-1, ret) << "Failed to call sendto for i=" << i << ": " << strerror(errno);
+  }
+
+  void* ret_val;
+  ASSERT_EQ(0, pthread_join(thread, &ret_val));
+  ASSERT_EQ(NULL, ret_val);
+
+  close(socketId);
 }
