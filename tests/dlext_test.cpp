@@ -149,12 +149,13 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
 
-  extinfo.library_fd_offset = (5LL<<58) + PAGE_SIZE;
+  // http://b/18178121
+  // TODO: change test when kernel support better invalid offset detection
+  extinfo.library_fd_offset = (5LL<<41) + PAGE_SIZE;
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
 
   ASSERT_TRUE(handle_ == nullptr);
-  // TODO: Better error message when reading with offset > file_size
-  ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic", dlerror());
+  ASSERT_STREQ("dlopen failed: \"libname_placeholder\" is too small to be an ELF executable: only found 0 bytes", dlerror());
 
   close(extinfo.library_fd);
 }
