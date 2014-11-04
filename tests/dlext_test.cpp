@@ -17,8 +17,10 @@
 #include <gtest/gtest.h>
 
 #include <dlfcn.h>
+#include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -138,7 +140,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(android_data != nullptr);
 
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -149,11 +151,24 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
 
-  extinfo.library_fd_offset = (5LL<<58) + PAGE_SIZE;
-  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  struct stat file_stat;
+  int ret = TEMP_FAILURE_RETRY(fstat(extinfo.library_fd, &file_stat));
+  ASSERT_EQ(0, ret);
 
+  // test an address above 2^44, for http://b/18178121
+  extinfo.library_fd_offset = (5LL<<48) + PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  // TODO: Better error message when reading with offset > file_size
+  ASSERT_PRED_FORMAT2(::testing::IsSubstring, "dlopen failed: file offset for the library \"libname_placeholder\" >= file size", dlerror());
+
+  extinfo.library_fd_offset = 0LL - PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
+  ASSERT_PRED_FORMAT2(::testing::IsSubstring, "dlopen failed: file offset for the library \"libname_placeholder\" is negative", dlerror());
+
+  extinfo.library_fd_offset = PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic", dlerror());
 
   close(extinfo.library_fd);
