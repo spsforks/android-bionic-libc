@@ -820,6 +820,14 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     DL_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
     return nullptr;
   }
+   if (file_offset < 0) {
+    DL_ERR("file offset for the library \"%s\" is negative: %" PRId64, name, file_offset);
+    return nullptr;
+  } else if (file_offset >= file_stat.st_size) {
+    DL_ERR("file offset for the library \"%s\" is not less than file size: %" PRId64 " >= %" PRId64,
+          name, file_offset, file_stat.st_size);
+    return nullptr;
+  }
 
   // Check for symlink and other situations where
   // file can have different names.

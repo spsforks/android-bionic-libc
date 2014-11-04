@@ -21,11 +21,13 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <android/dlext.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <elf.h>
 
 #include <pagemap/pagemap.h>
 
@@ -138,7 +140,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(android_data != nullptr);
 
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -149,12 +151,55 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
 
-  extinfo.library_fd_offset = (5LL<<58) + PAGE_SIZE;
-  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  struct stat file_stat;
+  int ret = TEMP_FAILURE_RETRY(fstat(extinfo.library_fd, &file_stat));
+  ASSERT_EQ(0, ret);
+  char strbuf[200];
 
+  extinfo.library_fd_offset = (5LL<<48) + PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  snprintf(strbuf, sizeof(strbuf), "dlopen failed: file offset for the library \"libname_placeholder\" is not less than file size: %" PRId64 " >= %" PRId64,
+            extinfo.library_fd_offset, file_stat.st_size);
   ASSERT_TRUE(handle_ == nullptr);
-  // TODO: Better error message when reading with offset > file_size
-  ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic", dlerror());
+  ASSERT_STREQ(strbuf, dlerror());
+  
+  extinfo.library_fd_offset = 0LL - PAGE_SIZE;
+  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
+  snprintf(strbuf, sizeof(strbuf), "dlopen failed: file offset for the library \"libname_placeholder\" is negative: %" PRId64, extinfo.library_fd_offset);
+  ASSERT_STREQ(strbuf, dlerror());
+  
+  if (file_stat.st_size > PAGE_SIZE) {
+    int64_t aligned_offset;
+    if ((file_stat.st_size % PAGE_SIZE) != 0) {
+      aligned_offset = file_stat.st_size - file_stat.st_size % PAGE_SIZE;
+    } else {
+      aligned_offset = file_stat.st_size - PAGE_SIZE;
+    }
+   
+    if ((file_stat.st_size - aligned_offset < sizeof(Elf64_Ehdr)) &&
+          (file_stat.st_size - aligned_offset < sizeof(Elf32_Ehdr))) {
+      GTEST_LOG_(INFO) << "Test smaller data than ELF header\n";
+      extinfo.library_fd_offset = aligned_offset;
+      handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+      ASSERT_TRUE(handle_ == nullptr);
+      snprintf(strbuf, sizeof(strbuf), "dlopen failed: \"libname_placeholder\" is too small to be an ELF executable: only found %" PRId64 " bytes", 
+                (file_stat.st_size - aligned_offset));
+      ASSERT_STREQ(strbuf, dlerror());
+    }
+    while ((aligned_offset >= 0) && (file_stat.st_size - aligned_offset < sizeof(Elf64_Ehdr)) &&
+            (file_stat.st_size - aligned_offset < sizeof(Elf32_Ehdr))) {
+      aligned_offset -= PAGE_SIZE;
+    }
+    if (aligned_offset > 0) {
+      GTEST_LOG_(INFO) << "Test bad ELF header\n";
+      extinfo.library_fd_offset = aligned_offset;
+      handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+      ASSERT_TRUE(handle_ == nullptr);
+      ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic",
+                  dlerror());
+    }
+  }
 
   close(extinfo.library_fd);
 }
