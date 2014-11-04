@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#if defined(__BIONIC__)
 typedef struct {
   float sin_expected;
   float cos_expected;
@@ -4644,10 +4643,8 @@ static sincosf_intel_data_t g_sincosf_intel_data[] = {
     -0.0f,
   },
 };
-#endif // __BIONIC__
 
 TEST(math_sincosf, sincosf_intel) {
-#if defined(__BIONIC__)
   fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_sincosf_intel_data)/sizeof(sincosf_intel_data_t); i++) {
    float fsin, fcos;
@@ -4655,7 +4652,4 @@ TEST(math_sincosf, sincosf_intel) {
    EXPECT_FLOAT_EQ(g_sincosf_intel_data[i].sin_expected, fsin) << "Failed on element " << i;
    EXPECT_FLOAT_EQ(g_sincosf_intel_data[i].cos_expected, fcos) << "Failed on element " << i;
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
 }

@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#if defined(__BIONIC__)
 typedef struct {
   double expected;
   double x_call_data;
@@ -3289,15 +3288,10 @@ static pow_intel_data_t g_pow_intel_data[] = {
     0x1.4p3, 0x1.4p3
   },
 };
-#endif // __BIONIC__
 
 TEST(math_pow, pow_intel) {
-#if defined(__BIONIC__)
   fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_pow_intel_data)/sizeof(pow_intel_data_t); i++) {
     EXPECT_DOUBLE_EQ(g_pow_intel_data[i].expected, pow(g_pow_intel_data[i].x_call_data, g_pow_intel_data[i].y_call_data)) << "Failed on element " << i;
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
 }

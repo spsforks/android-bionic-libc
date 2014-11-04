@@ -29,7 +29,8 @@
 // sure that we're testing the bionic version of signbit. The C++ libraries
 // are free to reimplement signbit or delegate to compiler builtins if they
 // please.
-#include <math.h>
+
+#include "math_data_test.h"
 
 namespace {
 template<typename T> inline int test_capture_signbit(const T in) {
@@ -174,7 +175,7 @@ TEST(math, __fpclassifyd) {
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyd(double_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyd(0.0));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __fpclassifyd.\n";
 #endif // __BIONIC__
 }
 
@@ -186,7 +187,7 @@ TEST(math, __fpclassifyf) {
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyf(float_subnormal()));
   ASSERT_EQ(FP_ZERO, __fpclassifyf(0.0f));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __fpclassifyf.\n";
 #endif // __BIONIC__
 }
 
@@ -198,7 +199,7 @@ TEST(math, __fpclassifyl) {
   EXPECT_EQ(FP_SUBNORMAL, __fpclassifyl(ldouble_subnormal()));
   EXPECT_EQ(FP_ZERO, __fpclassifyl(0.0L));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "glibc doesn't have __fpclassifyl.\n";
 #endif // __BIONIC__
 }
 
@@ -1385,4 +1386,54 @@ TEST(math, nextafterl_OpenBSD_bug) {
   ASSERT_TRUE(nextafter(1.0, 0.0) - 1.0 < 0.0);
   ASSERT_TRUE(nextafterf(1.0f, 0.0f) - 1.0f < 0.0f);
   ASSERT_TRUE(nextafterl(1.0L, 0.0L) - 1.0L < 0.0L);
+}
+
+#include "math_cos_intel_data.h"
+TEST(math, cos_intel) {
+  DoMathDataTest<1>(g_cos_intel_data, cos);
+}
+
+#include "math_cosf_intel_data.h"
+TEST(math, cosf_intel) {
+  DoMathDataTest<1>(g_cosf_intel_data, cosf);
+}
+
+#include "math_exp_intel_data.h"
+TEST(math, exp_intel) {
+  DoMathDataTest<1>(g_exp_intel_data, exp);
+}
+
+#include "math_expf_intel_data.h"
+TEST(math, expf_intel) {
+  DoMathDataTest<1>(g_expf_intel_data, expf);
+}
+
+#include "math_log_intel_data.h"
+TEST(math, log_intel) {
+  DoMathDataTest<1>(g_log_intel_data, log);
+}
+
+#include "math_logf_intel_data.h"
+TEST(math, logf_intel) {
+  DoMathDataTest<1>(g_logf_intel_data, logf);
+}
+
+#include "math_sin_intel_data.h"
+TEST(math, sin_intel) {
+  DoMathDataTest<1>(g_sin_intel_data, sin);
+}
+
+#include "math_sinf_intel_data.h"
+TEST(math, sinf_intel) {
+  DoMathDataTest<1>(g_sinf_intel_data, sinf);
+}
+
+#include "math_tan_intel_data.h"
+TEST(math, tan_intel) {
+  DoMathDataTest<1>(g_tan_intel_data, tan);
+}
+
+#include "math_tanf_intel_data.h"
+TEST(math, tanf_intel) {
+  DoMathDataTest<1>(g_tanf_intel_data, tanf);
 }

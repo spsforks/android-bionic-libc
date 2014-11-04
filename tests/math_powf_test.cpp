@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#if defined(__BIONIC__)
 typedef struct {
   float expected;
   float x_call_data;
@@ -2777,15 +2776,10 @@ static powf_intel_data_t g_powf_intel_data[] = {
     0x1.40p3, 0x1.40p3
   },
 };
-#endif // __BIONIC__
 
 TEST(math_powf, powf_intel) {
-#if defined(__BIONIC__)
   fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < sizeof(g_powf_intel_data)/sizeof(powf_intel_data_t); i++) {
     EXPECT_FLOAT_EQ(g_powf_intel_data[i].expected, powf(g_powf_intel_data[i].x_call_data, g_powf_intel_data[i].y_call_data)) << "Failed on element " << i;
   }
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.";
-#endif // __BIONIC__
 }
