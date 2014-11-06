@@ -1,0 +1,8 @@
+Code-Review+2: Dmitriy Ivanov <dimitry@google.com>
+Code-Review+1: Bionic Buildbot <bionic.buildbot@gmail.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Thu, 06 Nov 2014 06:05:38 +0000
+Reviewed-on: https://android-review.googlesource.com/113227
+Project: platform/bionic
+Branch: refs/heads/master
