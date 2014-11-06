@@ -15,15 +15,18 @@
  */
 
 #include <gtest/gtest.h>
-#include <signal.h>
-#include <string.h>
-#include <stdarg.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <malloc.h>
+#include "BionicDeathTest.h"
+
 #include <fcntl.h>
-#include <sys/prctl.h>
+#include <malloc.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
 
 // We have to say "DeathTest" here so gtest knows to run this test (which exits)
 // in its own process. Unfortunately, the C preprocessor doesn't give us an
@@ -33,20 +36,7 @@
 #define DEATHTEST_EVALUATOR(name) DEATHTEST_PASTER(name)
 #define DEATHTEST DEATHTEST_EVALUATOR(TEST_NAME)
 
-class DEATHTEST : public testing::Test {
- protected:
-  virtual void SetUp() {
-    old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
-    // Suppress debuggerd stack traces. Too slow.
-    prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-  }
-
-  virtual void TearDown() {
-    prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0);
-  }
- private:
-  int old_dumpable_;
-};
+class DEATHTEST : public BionicDeathTest {};
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE == 2
 struct foo {

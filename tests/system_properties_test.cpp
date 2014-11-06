@@ -15,8 +15,10 @@
  */
 
 #include <gtest/gtest.h>
-#include <sys/wait.h>
+#include "BionicDeathTest.h"
+
 #include <errno.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <string>
 
@@ -398,7 +400,9 @@ bool KilledByFault::operator()(int exit_status) const {
          WTERMSIG(exit_status) == SIGABRT);
 }
 
-TEST(properties_DeathTest, read_only) {
+class properties_DeathTest : public BionicDeathTest {};
+
+TEST_F(properties_DeathTest, read_only) {
 #if defined(__BIONIC__)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
