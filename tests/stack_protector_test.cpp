@@ -23,6 +23,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/prctl.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <set>
@@ -120,7 +121,22 @@ TEST(stack_protector, global_guard) {
 #endif // TEST_STACK_CHK_GUARD
 }
 
-TEST(stack_protector_DeathTest, modify_stack_protector) {
+class stack_protector_DeathTest : public testing::Test {
+  protected:
+    virtual void SetUp() {
+      old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
+      // Suppress debuggerd stack traces. Too slow.
+      prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
+    }
+
+    virtual void TearDown() {
+      prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0);
+    }
+  private:
+    int old_dumpable_;
+};
+
+TEST_F(stack_protector_DeathTest, modify_stack_protector) {
 #if defined(TEST_STACK_CHK_GUARD)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");

@@ -15,8 +15,9 @@
  */
 
 #include <gtest/gtest.h>
-#include <sys/wait.h>
 #include <errno.h>
+#include <sys/prctl.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <string>
 
@@ -398,7 +399,22 @@ bool KilledByFault::operator()(int exit_status) const {
          WTERMSIG(exit_status) == SIGABRT);
 }
 
-TEST(properties_DeathTest, read_only) {
+class properties_DeathTest : public testing::Test {
+  protected:
+    virtual void SetUp() {
+      old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
+      // Suppress debuggerd stack traces. Too slow.
+      prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
+    }
+
+    virtual void TearDown() {
+      prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0);
+    }
+  private:
+    int old_dumpable_;
+};
+
+TEST_F(properties_DeathTest, read_only) {
 #if defined(__BIONIC__)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

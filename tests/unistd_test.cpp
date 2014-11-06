@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <sys/prctl.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -463,7 +464,22 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   ASSERT_EQ(NULL, result);
 }
 
-TEST(unistd_DeathTest, abort) {
+class unistd_DeathTest : public testing::Test {
+  protected:
+    virtual void SetUp() {
+      old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
+      // Suppress debuggerd stack traces. Too slow.
+      prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
+    }
+
+    virtual void TearDown() {
+      prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0);
+    }
+  private:
+    int old_dumpable_;
+};
+
+TEST_F(unistd_DeathTest, abort) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
 }
