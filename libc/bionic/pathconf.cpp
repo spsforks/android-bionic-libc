@@ -100,12 +100,20 @@ static long __pathconf(const struct statfs& s, int name) {
     case _PC_2_SYMLINKS:
       return __2_symlinks(s);
 
-#if 0
     case _PC_ALLOC_SIZE_MIN:
+      // linux kernel may not support f_frsize yet.
+      return s.f_frsize ? s.f_frsize : s.f_bsize;
+
+    case _PC_REC_MIN_XFER_SIZE:
+      return s.f_bsize;
+
+    case _PC_REC_XFER_ALIGN:
+      // linux kernel may not support f_frsize yet.
+      return s.f_frsize ? s.f_frsize : s.f_bsize;
+
+#if 0
     case _PC_REC_INCR_XFER_SIZE:
     case _PC_REC_MAX_XFER_SIZE:
-    case _PC_REC_MIN_XFER_SIZE:
-    case _PC_REC_XFER_ALIGN:
 #endif
 
     case _PC_SYMLINK_MAX:

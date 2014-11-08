@@ -478,3 +478,21 @@ TEST(unistd, sethostname) {
   // all we can do for sethostname(2).
   ASSERT_EQ(-1, sethostname("", -1));
 }
+
+TEST(unistd, pathconf_fpathconf) {
+  TemporaryFile tf;
+  long rc = 0L;
+  rc = pathconf(tf.filename, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+  rc = pathconf(tf.filename, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+  rc = pathconf(tf.filename, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+
+  rc = fpathconf(tf.fd, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+  rc = fpathconf(tf.fd, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+  rc = fpathconf(tf.fd, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(rc > 0 && (rc & (rc - 1)) == 0);
+}
