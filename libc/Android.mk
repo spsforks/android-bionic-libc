@@ -1124,6 +1124,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_LDFLAGS_arm64 := -Wl,--exclude-libs,libgcc.a
 LOCAL_LDFLAGS_mips64 := -Wl,--exclude-libs,libgcc.a
 LOCAL_LDFLAGS_x86_64 := -Wl,--exclude-libs,libgcc.a
+LOCAL_LDFLAGS := -Wl,--hash-style=gnu
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
