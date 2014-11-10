@@ -116,9 +116,18 @@ struct addrinfo {
 	int	ai_socktype;	/* SOCK_xxx */
 	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
 	socklen_t ai_addrlen;	/* length of ai_addr */
-	char	*ai_canonname;	/* canonical name for hostname */
-	struct	sockaddr *ai_addr;	/* binary address */
-	struct	addrinfo *ai_next;	/* next structure in linked list */
+	union {
+		char	*ai_canonname;	/* canonical name for hostname */
+		uint64_t	ai_canonnameai_align64  __attribute__((aligned(8)));
+	};
+	union {
+		struct	sockaddr *ai_addr;	/* binary address */
+		uint64_t	ai_addr_align64  __attribute__((aligned(8)));
+	};
+	union {
+		struct	addrinfo *ai_next;	/* next structure in linked list */
+		uint64_t        ai_next_align64  __attribute__((aligned(8)));
+	};
 };
 
 /*
