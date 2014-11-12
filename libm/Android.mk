@@ -293,11 +293,79 @@ LOCAL_SRC_FILES_arm := arm/fenv.c
 LOCAL_C_INCLUDES_arm64 := $(libm_ld_includes)
 LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld128_src_files)
 
-LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387
-LOCAL_SRC_FILES_x86 := i387/fenv.c
+LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387 \
+                        $(LOCAL_PATH)/../libc
 
-LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes)
-LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld128_src_files)
+x86_exclude_files :=	upstream-freebsd/lib/msun/src/e_sqrt.c \
+                        upstream-freebsd/lib/msun/src/e_sqrtf.c\
+
+ifeq ($(ARCH_X86_HAVE_SSE4_1),true)
+x86_exclude_files += \
+	upstream-freebsd/lib/msun/src/s_ceil.c \
+	upstream-freebsd/lib/msun/src/s_ceilf.c \
+	upstream-freebsd/lib/msun/src/s_floor.c \
+	upstream-freebsd/lib/msun/src/s_floorf.c \
+	upstream-freebsd/lib/msun/src/s_trunc.c \
+	upstream-freebsd/lib/msun/src/s_truncf.c
+endif
+
+ifeq ($(TARGET_ARCH), x86)
+LOCAL_SRC_FILES := $(filter-out $(x86_exclude_files),$(LOCAL_SRC_FILES))
+endif
+
+LOCAL_SRC_FILES_x86 += \
+	i387/fenv.c \
+	x86/sqrt.S \
+	x86/sqrtf.S
+
+ifeq ($(ARCH_X86_HAVE_SSE4_1),true)
+LOCAL_SRC_FILES_x86 += \
+	x86/ceil.S \
+	x86/ceilf.S \
+	x86/floorf.S \
+	x86/floor.S \
+	x86/trunc.S \
+	x86/truncf.S\
+
+endif
+
+LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes) \
+							$(LOCAL_PATH)/../libc
+
+x86_64_exclude_files := \
+	upstream-freebsd/lib/msun/src/e_sqrt.c \
+	upstream-freebsd/lib/msun/src/e_sqrtf.c
+
+ifeq ($(ARCH_X86_HAVE_SSE4_1),true)
+x86_64_exclude_files += \
+	upstream-freebsd/lib/msun/src/s_ceil.c \
+	upstream-freebsd/lib/msun/src/s_ceilf.c \
+	upstream-freebsd/lib/msun/src/s_floor.c \
+	upstream-freebsd/lib/msun/src/s_floorf.c \
+	upstream-freebsd/lib/msun/src/s_trunc.c \
+    upstream-freebsd/lib/msun/src/s_truncf.c
+endif
+
+ifeq ($(TARGET_ARCH), x86_64)
+LOCAL_SRC_FILES := $(filter-out $(x86_64_exclude_files),$(LOCAL_SRC_FILES))
+endif
+
+LOCAL_SRC_FILES_x86_64 += \
+	amd64/fenv.c \
+	x86_64/sqrt.S \
+	x86_64/sqrtf.S \
+	$(libm_ld128_src_files)
+
+ifeq ($(ARCH_X86_HAVE_SSE4_1),true)
+LOCAL_SRC_FILES_x86_64 += \
+	x86_64/ceil.S \
+	x86_64/ceilf.S \
+	x86_64/floorf.S \
+	x86_64/floor.S \
+	x86_64/trunc.S \
+	x86_64/truncf.S
+
+endif
 
 LOCAL_SRC_FILES_mips := mips/fenv.c
 
