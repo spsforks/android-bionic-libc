@@ -416,8 +416,8 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return rv;
 }
 
-ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name) {
-  return is_gnu_hash() ? gnu_lookup(symbol_name) : elf_lookup(symbol_name);
+ElfW(Sym)* soinfo::FindSymbolByName(SymbolName& symbol_name) {
+  return is_gnu_hash() ? GnuLookup(symbol_name) : ElfLookup(symbol_name);
 }
 
 static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
@@ -432,7 +432,7 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
   return false;
 }
 
-ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
+ElfW(Sym)* soinfo::GnuLookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.gnu_hash();
   uint32_t h2 = hash >> gnu_shift2;
 
@@ -464,7 +464,7 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
+ElfW(Sym)* soinfo::ElfLookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.elf_hash();
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
@@ -555,7 +555,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
    */
   if (si_from->has_DT_SYMBOLIC) {
     DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->name, name);
-    s = si_from->find_symbol_by_name(symbol_name);
+    s = si_from->FindSymbolByName(symbol_name);
     if (s != nullptr) {
       *si_found_in = si_from;
     }
@@ -565,7 +565,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
   if (s == nullptr) {
     global_group.visit([&](soinfo* global_si) {
       DEBUG("%s: looking up %s in %s (from global group)", si_from->name, name, global_si->name);
-      s = global_si->find_symbol_by_name(symbol_name);
+      s = global_si->FindSymbolByName(symbol_name);
       if (s != nullptr) {
         *si_found_in = global_si;
         return false;
@@ -584,7 +584,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
       }
 
       DEBUG("%s: looking up %s in %s (from local group)", si_from->name, name, local_si->name);
-      s = local_si->find_symbol_by_name(symbol_name);
+      s = local_si->FindSymbolByName(symbol_name);
       if (s != nullptr) {
         *si_found_in = local_si;
         return false;
@@ -725,7 +725,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
 
 
   walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
-    result = current_soinfo->find_symbol_by_name(symbol_name);
+    result = current_soinfo->FindSymbolByName(symbol_name);
     if (result != nullptr) {
       *found = current_soinfo;
       return false;
@@ -755,7 +755,7 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
       continue;
     }
 
-    s = si->find_symbol_by_name(symbol_name);
+    s = si->FindSymbolByName(symbol_name);
     if (s != nullptr) {
       *found = si;
       break;
@@ -780,8 +780,8 @@ soinfo* find_containing_library(const void* p) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::find_symbol_by_address(const void* addr) {
-  return is_gnu_hash() ? gnu_addr_lookup(addr) : elf_addr_lookup(addr);
+ElfW(Sym)* soinfo::FindSymbolByAddress(const void* addr) {
+  return is_gnu_hash() ? GnuAddrLookup(addr) : ElfAddrLookup(addr);
 }
 
 static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
@@ -790,7 +790,7 @@ static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
       soaddr < sym->st_value + sym->st_size;
 }
 
-ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
+ElfW(Sym)* soinfo::GnuAddrLookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
   for (size_t i = 0; i < nbucket; ++i) {
@@ -811,7 +811,7 @@ ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
+ElfW(Sym)* soinfo::ElfAddrLookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
   // Search the library's symbol table for any defined symbol which
@@ -1312,7 +1312,7 @@ int soinfo::Relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         }
       } else {
         // We got a definition.
-        sym_addr = lsi->resolve_symbol_address(s);
+        sym_addr = lsi->ResolveSymbolAddress(s);
       }
       count_relocation(kRelocSymbol);
     }
@@ -1592,7 +1592,7 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         }
       } else {
         // We got a definition.
-        sym_addr = lsi->resolve_symbol_address(s);
+        sym_addr = lsi->ResolveSymbolAddress(s);
       }
       count_relocation(kRelocSymbol);
     }
@@ -1721,17 +1721,14 @@ int soinfo::Relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
 #endif
 
 #if defined(__mips__)
-bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::MipsRelocateGot(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   ElfW(Addr)** got = plt_got;
   if (got == nullptr) {
     return true;
   }
-  unsigned local_gotno = mips_local_gotno;
-  unsigned gotsym = mips_gotsym;
-  unsigned symtabno = mips_symtabno;
 
-  // got[0] is the address of the lazy resolver function.
-  // got[1] may be used for a GNU extension.
+  // mips_got[0] is the address of the lazy resolver function.
+  // mips_got[1] may be used for a GNU extension.
   // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
   // FIXME: maybe this should be in a separate routine?
   if ((flags & FLAG_LINKER) == 0) {
@@ -1741,15 +1738,15 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
       got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadfeed);
     }
     // Relocate the local GOT entries.
-    for (; g < local_gotno; g++) {
+    for (; g < mips_local_gotno; g++) {
       got[g] = reinterpret_cast<ElfW(Addr)*>(reinterpret_cast<uintptr_t>(got[g]) + load_bias);
     }
   }
 
   // Now for the global GOT entries...
-  ElfW(Sym)* sym = symtab + gotsym;
-  got = plt_got + local_gotno;
-  for (size_t g = gotsym; g < symtabno; g++, sym++, got++) {
+  ElfW(Sym)* sym = symtab + mips_gotsym;
+  got = plt_got + mips_local_gotno;
+  for (size_t g = mips_gotsym; g < mips_symtabno; g++, sym++, got++) {
     // This is an undefined reference... try to locate it.
     const char* sym_name = get_string(sym->st_name);
     soinfo* lsi = nullptr;
@@ -1766,7 +1763,7 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
       // FIXME: is this sufficient?
       // For reference see NetBSD link loader
       // http://cvsweb.netbsd.org/bsdweb.cgi/src/libexec/ld.elf_so/arch/mips/mips_reloc.c?rev=1.53&content-type=text/x-cvsweb-markup
-      *got = reinterpret_cast<ElfW(Addr)*>(lsi->resolve_symbol_address(s));
+      *got = reinterpret_cast<ElfW(Addr)*>(lsi->ResolveSymbolAddress(s));
     }
   }
   return true;
@@ -1966,7 +1963,7 @@ soinfo::soinfo_list_t& soinfo::get_parents() {
   return this->parents;
 }
 
-ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
+ElfW(Addr) soinfo::ResolveSymbolAddress(ElfW(Sym)* s) {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
   }
@@ -2440,7 +2437,7 @@ bool soinfo::LinkImage(const soinfo_list_t& global_group, const soinfo_list_t& l
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(global_group, local_group)) {
+  if (!MipsRelocateGot(global_group, local_group)) {
     return false;
   }
 #endif

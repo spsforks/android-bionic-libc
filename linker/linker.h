@@ -213,7 +213,7 @@ struct soinfo {
   uint32_t mips_symtabno;
   uint32_t mips_local_gotno;
   uint32_t mips_gotsym;
-  bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool MipsRelocateGot(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 
  public:
 #endif
@@ -254,9 +254,9 @@ struct soinfo {
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
 
-  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name);
-  ElfW(Sym)* find_symbol_by_address(const void* addr);
-  ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
+  ElfW(Sym)* FindSymbolByName(SymbolName& symbol_name);
+  ElfW(Sym)* FindSymbolByAddress(const void* addr);
+  ElfW(Addr) ResolveSymbolAddress(ElfW(Sym)* s);
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
@@ -267,10 +267,10 @@ struct soinfo {
   }
 
  private:
-  ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
-  ElfW(Sym)* elf_addr_lookup(const void* addr);
-  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
-  ElfW(Sym)* gnu_addr_lookup(const void* addr);
+  ElfW(Sym)* ElfLookup(SymbolName& symbol_name);
+  ElfW(Sym)* ElfAddrLookup(const void* addr);
+  ElfW(Sym)* GnuLookup(SymbolName& symbol_name);
+  ElfW(Sym)* GnuAddrLookup(const void* addr);
 
   void CallArray(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void CallFunction(const char* function_name, linker_function_t function);
