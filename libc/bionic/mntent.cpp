@@ -28,12 +28,45 @@
 
 #include <mntent.h>
 
-mntent* getmntent(FILE*) {
-  return NULL;
+#include "private/ThreadLocalBuffer.h"
+
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(getmntent_mntent);
+GLOBAL_INIT_THREAD_LOCAL_BUFFER(getmntent_strings);
+
+mntent* getmntent(FILE* fp) {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(mntent*, getmntent_mntent, sizeof(mntent));
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, getmntent_strings, BUFSIZ);
+  return getmntent_r(fp, getmntent_mntent_tls_buffer,
+                     getmntent_strings_tls_buffer, getmntent_strings_tls_buffer_size);
 }
 
-mntent* getmntent_r(FILE*, struct mntent*, char*, int) {
-  return NULL;
+mntent* getmntent_r(FILE* fp, struct mntent* entry, char* buf, int buf_len) {
+  if (fgets(buf, buf_len, fp) == NULL) {
+    return NULL;
+  }
+
+  memset(entry, 0, sizeof(*entry));
+  char* p = buf;
+
+  // Entries look like "proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0".
+  // That is: mnt_fsname mnt_dir mnt_type mnt_opts 0 0.
+  entry->mnt_fsname = p;
+  p = strchr(p, ' ');
+  *p++ = '\0';
+
+  entry->mnt_dir = p;
+  p = strchr(p, ' ');
+  *p++ = '\0';
+
+  entry->mnt_type = p;
+  p = strchr(p, ' ');
+  *p++ = '\0';
+
+  entry->mnt_opts = p;
+  p = strchr(p, ' ');
+  *p++ = '\0';
+
+  return entry;
 }
 
 FILE* setmntent(const char* path, const char* mode) {
