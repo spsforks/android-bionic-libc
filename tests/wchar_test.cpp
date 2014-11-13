@@ -450,15 +450,85 @@ TEST(wchar, wcsftime) {
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
 
-TEST(wchar, wmemmove) {
+TEST(wchar, wmemmove_smoke) {
   const wchar_t const_wstr[] = L"This is a test of something or other.....";
   wchar_t* wstr = new wchar_t[sizeof(const_wstr)];
 
-  wmemmove(wstr, const_wstr, sizeof(const_wstr)/sizeof(wchar_t));
+  EXPECT_EQ(wstr, wmemmove(wstr, const_wstr, sizeof(const_wstr)/sizeof(wchar_t)));
   EXPECT_STREQ(const_wstr, wstr);
 
-  wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6);
+  EXPECT_EQ(wstr+5, wmemmove(wstr+5, wstr, sizeof(const_wstr)/sizeof(wchar_t) - 6));
   EXPECT_STREQ(L"This This is a test of something or other", wstr);
+}
+
+TEST(wchar, wmemcpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t* dst = new wchar_t[sizeof(src)];
+
+  EXPECT_EQ(dst, wmemcpy(dst, src, sizeof(src)));
+  EXPECT_STREQ(dst, src);
+}
+
+TEST(wchar, wcpcpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t* dst = new wchar_t[sizeof(src)];
+
+  EXPECT_EQ(dst + wcslen(src), wcpcpy(dst, src));
+  EXPECT_STREQ(dst, src);
+}
+
+TEST(wchar, wcpncpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  size_t src_len = wcslen(src);
+  size_t dst_len = src_len + 5;
+  wchar_t* dst = new wchar_t[dst_len];
+
+  EXPECT_EQ(dst + src_len, wcpncpy(dst, src, src_len + 1));
+  EXPECT_STREQ(dst, src);
+
+  EXPECT_EQ(dst + 6, wcpncpy(dst, src, 6));
+  dst[6] = L'\0';
+  EXPECT_STREQ(dst, L"Source");
+
+  wmemset(dst, L'x', dst_len);
+  EXPECT_EQ(dst + src_len, wcpncpy(dst, src, dst_len - 1));
+  EXPECT_STREQ(dst, src);
+  EXPECT_EQ(dst[src_len], L'\0');
+  EXPECT_EQ(dst[src_len+1], L'\0');
+  EXPECT_EQ(dst[src_len+2], L'\0');
+  EXPECT_EQ(dst[src_len+3], L'\0');
+  EXPECT_EQ(dst[src_len+4], L'x');
+}
+
+TEST(wchar, wcscpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  wchar_t* dst = new wchar_t[sizeof(src)];
+
+  EXPECT_EQ(dst, wcscpy(dst, src));
+  EXPECT_STREQ(src, dst);
+}
+
+TEST(wchar, wcsncpy_smoke) {
+  const wchar_t src[] = L"Source string";
+  size_t src_len = wcslen(src);
+  size_t dst_len = src_len + 5;
+  wchar_t* dst = new wchar_t[dst_len];
+
+  EXPECT_EQ(dst, wcsncpy(dst, src, src_len + 1));
+  EXPECT_STREQ(dst, src);
+
+  EXPECT_EQ(dst, wcsncpy(dst, src, 6));
+  dst[6] = L'\0';
+  EXPECT_STREQ(dst, L"Source");
+
+  wmemset(dst, L'x', dst_len);
+  EXPECT_EQ(dst, wcsncpy(dst, src, dst_len - 1));
+  EXPECT_STREQ(dst, src);
+  EXPECT_EQ(dst[src_len], L'\0');
+  EXPECT_EQ(dst[src_len+1], L'\0');
+  EXPECT_EQ(dst[src_len+2], L'\0');
+  EXPECT_EQ(dst[src_len+3], L'\0');
+  EXPECT_EQ(dst[src_len+4], L'x');
 }
 
 TEST(wchar, mbrtowc_15439554) {
