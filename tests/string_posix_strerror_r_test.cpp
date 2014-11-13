@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-#undef _GNU_SOURCE
-
-// Old versions of glibc (like our current host prebuilt sysroot one) have
-// headers that don't work if you #undef _GNU_SOURCE, which makes it
-// impossible to build this test.
 #include <features.h>
 
-#if !defined(__GLIBC__)
 #include <string.h>
 
 #include <errno.h>
 #include <gtest/gtest.h>
+
+#if (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600) && ! _GNU_SOURCE
+// This test is for the posix version of strerror_r, which returns int.
 
 TEST(string, posix_strerror_r) {
   char buf[256];
@@ -50,8 +47,5 @@ TEST(string, posix_strerror_r) {
   // The POSIX strerror_r sets errno to ERANGE (the GNU one doesn't).
   ASSERT_EQ(ERANGE, errno);
 }
-#else
-# if __GLIBC_PREREQ(2, 15)
-#  error this test should work now
-# endif
+
 #endif

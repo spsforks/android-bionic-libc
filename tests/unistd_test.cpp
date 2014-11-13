@@ -250,8 +250,10 @@ TEST(unistd, getenv_unsetenv) {
 }
 
 TEST(unistd, unsetenv_EINVAL) {
-  EXPECT_EQ(-1, unsetenv(NULL));
-  EXPECT_EQ(EINVAL, errno);
+  // New unsetenv requires non-NULL argument,
+  // so the following test is obsolete.
+  // EXPECT_EQ(-1, unsetenv(NULL));
+  // EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, unsetenv(""));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, unsetenv("a=b"));
