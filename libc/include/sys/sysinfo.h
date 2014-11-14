@@ -33,7 +33,20 @@
 
 __BEGIN_DECLS
 
+/* Return information of overall system statistics. */
 extern int sysinfo (struct sysinfo *info);
+
+/* Return number of configured processors. */
+extern int get_nprocs_conf (void);
+
+/* Return number of available processors. */
+extern int get_nprocs (void);
+
+/* Return number of physical pages of memory. */
+extern long int get_phys_pages (void);
+
+/* Return number of availabel physical pages of memory. */
+extern long int get_avphys_pages (void);
 
 __END_DECLS
 

@@ -122,6 +122,7 @@ libc_bionic_src_files := \
     bionic/gethostname.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
+    bionic/getsysstat.cpp \
     bionic/gettid.cpp \
     bionic/__gnu_basename.cpp \
     bionic/inotify_init.cpp \
