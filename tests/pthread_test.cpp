@@ -1048,3 +1048,162 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock));
 }
+
+#define  MUTEX_TYPE_NORMAL          0  /* Must be 0 to match __PTHREAD_MUTEX_INIT_VALUE */
+#define  MUTEX_TYPE_RECURSIVE       1
+#define  MUTEX_TYPE_ERRORCHECK      2
+#define  MUTEX_TYPE_SHIFT      14
+#define  MUTEX_TYPE_LEN        2
+
+#define  FIELD_TO_BITS(val,shift,bits)    (((val) & ((1 << (bits))-1)) << (shift))
+#define  MUTEX_TYPE_TO_BITS(t)       FIELD_TO_BITS(t, MUTEX_TYPE_SHIFT, MUTEX_TYPE_LEN)
+
+#define  MUTEX_TYPE_BITS_NORMAL      MUTEX_TYPE_TO_BITS(MUTEX_TYPE_NORMAL)
+#define  MUTEX_TYPE_BITS_RECURSIVE   MUTEX_TYPE_TO_BITS(MUTEX_TYPE_RECURSIVE)
+#define  MUTEX_TYPE_BITS_ERRORCHECK  MUTEX_TYPE_TO_BITS(MUTEX_TYPE_ERRORCHECK)
+struct pshare_data_wrapper{
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+  pthread_rwlock_t rwlock;
+  int sum_share;
+};
+
+void create_pshare_data(pshare_data_wrapper **caller, int type) {
+  pshare_data_wrapper *data = (pshare_data_wrapper *) mmap(NULL,
+                                  sizeof(pshare_data_wrapper),
+                                  PROT_READ|PROT_WRITE,
+                                  MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+  pthread_mutexattr_t mutex_attr[1];
+  ASSERT_EQ(0, pthread_mutexattr_init(mutex_attr));
+  ASSERT_EQ(0, pthread_mutexattr_settype(mutex_attr, type));
+  ASSERT_EQ(0, pthread_mutexattr_setpshared(mutex_attr, PTHREAD_PROCESS_SHARED));
+  ASSERT_EQ(0, pthread_mutex_init(&(data->mutex), mutex_attr));
+  ASSERT_EQ(0, pthread_mutexattr_destroy(mutex_attr));
+/*
+  pthread_condattr_t cond_attr[1];
+  ASSERT_EQ(0, pthread_condattr_init(cond_attr));
+  ASSERT_EQ(0, pthread_condattr_setpshared(cond_attr, PTHREAD_PROCESS_SHARED));
+  ASSERT_EQ(0, pthread_cond_init(&(data->cond), cond_attr));
+  ASSERT_EQ(0, pthread_condattr_destroy(cond_attr));
+
+  pthread_rwlockattr_t rwlock_attr[1];
+  ASSERT_EQ(0, pthread_rwlockattr_init(rwlock_attr));
+  ASSERT_EQ(0, pthread_rwlockattr_setpshared(rwlock_attr, PTHREAD_PROCESS_SHARED));
+  ASSERT_EQ(0, pthread_rwlock_init(&(data->rwlock), rwlock_attr));
+  ASSERT_EQ(0, pthread_rwlockattr_destroy(rwlock_attr));
+*/
+  data->sum_share = 0;
+  *caller = data;
+}
+
+void destroy_pshare_data(pshare_data_wrapper *data){
+  ASSERT_EQ(0, pthread_mutex_destroy(&(data->mutex)));
+  ASSERT_EQ(0, pthread_cond_destroy(&(data->cond)));
+  ASSERT_EQ(0, pthread_rwlock_destroy(&(data->rwlock)));
+  ASSERT_EQ(0, munmap(data, sizeof(pshare_data_wrapper))) << "Failed to unmap for pshare_data_wrapper:" << strerror(errno);
+}
+
+void update_sum_share(pshare_data_wrapper *data) {
+  for(int i = 0; i<10; i++){
+    ASSERT_EQ(0, pthread_mutex_lock(&(data->mutex)));
+    data->sum_share++;
+    ASSERT_EQ(0, pthread_mutex_unlock(&(data->mutex)));
+  }
+}
+
+TEST(pthread, pthread_mutex_PTHREAD_PROCESS_SHARED_NORMAL){
+
+  pshare_data_wrapper *data;
+  create_pshare_data(&data, PTHREAD_MUTEX_NORMAL);
+
+  pid_t cpid = fork();
+  ASSERT_GE(cpid, 0) << "Failed to call fork:" <<strerror(errno);
+  if (cpid == 0) {/*child process*/
+    update_sum_share(data);
+  } else { /*parents process*/
+    update_sum_share(data);
+    waitpid(cpid, NULL, 0);
+    ASSERT_EQ(20, data->sum_share);
+    destroy_pshare_data(data);
+  }
+}
+
+TEST(pthread, pthread_mutex_PTHREAD_PROCESS_SHARED_RECURSIVE){
+  pshare_data_wrapper *data;
+  create_pshare_data(&data, PTHREAD_MUTEX_RECURSIVE);
+
+  pid_t cpid = fork();
+  ASSERT_GE(cpid, 0) << "Failed to call fork:" <<strerror(errno);
+  if (cpid == 0) {/*child process*/
+    while(data->sum_share % 2 != 1) sleep(1);
+    ASSERT_EQ(1, data->sum_share);
+    ASSERT_EQ(0, pthread_mutex_lock(&data->mutex));
+    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    data->sum_share++;
+} else { /*parents process*/
+    // 1st check
+    //ASSERT_TRUE((&(data->mutex))->value & MUTEX_TYPE_BITS_ERRORCHECK);
+    ASSERT_EQ(0, pthread_mutex_lock(&data->mutex));
+    ASSERT_EQ(0, pthread_mutex_lock(&data->mutex));
+    data->sum_share++;
+    while(data->sum_share % 2 != 0) sleep(1);
+    ASSERT_EQ(2, data->sum_share);
+    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    ASSERT_EQ(cpid, waitpid(cpid, NULL, 0));
+
+    ASSERT_EQ(2, data->sum_share);
+    destroy_pshare_data(data);
+  }
+}
+
+TEST(pthread, pthread_mutex_PTHREAD_PROCESS_SHARED_ERRORCHECK){
+  pshare_data_wrapper *data;
+  create_pshare_data(&data, PTHREAD_MUTEX_ERRORCHECK);
+
+  pid_t cpid = fork();
+  ASSERT_GE(cpid, 0) << "Failed to call fork:" <<strerror(errno);
+  if (cpid == 0) {/*child process*/
+    while(data->sum_share % 2 != 1) sleep(1);
+    ASSERT_EQ(1, data->sum_share);
+    //GTEST_LOG_(INFO) << "data->sum_share=" << data->sum_share;
+    //ASSERT_TRUE((&(data->mutex))->value & MUTEX_TYPE_BITS_ERRORCHECK);
+    // 2nd check
+    ASSERT_EQ(EDEADLK, pthread_mutex_lock(&data->mutex));
+//    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    data->sum_share++;
+/*    while(data->sum_share % 2 != 1) sleep(1);
+    ASSERT_EQ(3, data->sum_share);
+    GTEST_LOG_(INFO) << "data->sum_share=" << data->sum_share;
+
+    // 4th check
+    ASSERT_EQ(EBUSY, pthread_mutex_trylock(&data->mutex));
+    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    data->sum_share++;
+*/
+} else { /*parents process*/
+    // 1st check
+    //ASSERT_TRUE((&(data->mutex))->value & MUTEX_TYPE_BITS_ERRORCHECK);
+    ASSERT_EQ(0, pthread_mutex_lock(&data->mutex));
+    ASSERT_EQ(EDEADLK, pthread_mutex_lock(&data->mutex));
+    GTEST_LOG_(INFO) << "data->sum_share=" << data->sum_share;
+    data->sum_share++;
+    while(data->sum_share % 2 != 0) sleep(1);
+    ASSERT_EQ(2, data->sum_share);
+/*    GTEST_LOG_(INFO) << "data->sum_share=" << data->sum_share;
+
+    // 3rd check
+    ASSERT_EQ(0, pthread_mutex_trylock(&data->mutex));
+    data->sum_share++;
+    while(data->sum_share % 2 != 0) sleep(1);
+    ASSERT_EQ(4, data->sum_share);
+    GTEST_LOG_(INFO) << "data->sum_share=" << data->sum_share;
+
+*/
+    // 5th check
+    ASSERT_EQ(0, pthread_mutex_unlock(&data->mutex));
+    ASSERT_EQ(EPERM, pthread_mutex_unlock(&data->mutex));
+    ASSERT_EQ(cpid, waitpid(cpid, NULL, 0));
+    destroy_pshare_data(data);
+  }
+}
