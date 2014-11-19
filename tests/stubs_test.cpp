@@ -16,98 +16,221 @@
 
 #include <gtest/gtest.h>
 
-#include <sys/types.h>
-#include <sys/cdefs.h>
+// Below are the header files we want to test.
+#include <grp.h>
 #include <pwd.h>
+
 #include <errno.h>
 #include <limits.h>
+#include <sys/cdefs.h>
+#include <sys/types.h>
 #include <unistd.h>
-
-#if defined(__BIONIC__)
-#define CHECK_GETPWNAM_FOR(username, uid, uid_type) \
-    SCOPED_TRACE(username); \
-    ASSERT_NO_FATAL_FAILURE(check_getpwnam(username, uid, uid_type));
 
 typedef enum {
   TYPE_SYSTEM,
   TYPE_APP
 } uid_type_t;
 
-static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
-  errno = 0;
-  passwd* pwd = getpwuid(uid);
+#if defined(__BIONIC__)
+
+static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type) {
   ASSERT_TRUE(pwd != NULL);
-  ASSERT_EQ(0, errno);
-  EXPECT_STREQ(username, pwd->pw_name);
-  EXPECT_EQ(uid, pwd->pw_uid);
-  EXPECT_EQ(uid, pwd->pw_gid);
+  ASSERT_STREQ(username, pwd->pw_name);
+  ASSERT_EQ(uid, pwd->pw_uid);
+  ASSERT_EQ(uid, pwd->pw_gid);
   ASSERT_EQ(NULL, pwd->pw_passwd);
 #ifdef __LP64__
   ASSERT_EQ(NULL, pwd->pw_gecos);
 #endif
 
   if (uid_type == TYPE_SYSTEM) {
-    EXPECT_STREQ("/", pwd->pw_dir);
-  } else if (uid_type == TYPE_APP) {
-    EXPECT_STREQ("/data", pwd->pw_dir);
+    ASSERT_STREQ("/", pwd->pw_dir);
+  } else {
+    ASSERT_STREQ("/data", pwd->pw_dir);
   }
-
-  EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
+  ASSERT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
-#else
-#define CHECK_GETPWNAM_FOR(username, uid, uid_type) \
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+
+static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
+  errno = 0;
+  passwd* pwd1 = getpwuid(uid);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getpwuid");
+  check_passwd(pwd1, username, uid, uid_type);
+
+  errno = 0;
+  passwd* pwd2 = getpwnam(username);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getpwnam");
+  check_passwd(pwd2, username, uid, uid_type);
+
+  passwd pwd_storage;
+  char buf[512];
+  int result;
+  errno = 0;
+  passwd* pwd3 = NULL;
+  result = getpwnam_r(username, &pwd_storage, buf, sizeof(buf), &pwd3);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getpwnam_r");
+  check_passwd(pwd3, username, uid, uid_type);
+
+  errno = 0;
+  passwd* pwd4 = NULL;
+  result = getpwuid_r(uid, &pwd_storage, buf, sizeof(buf), &pwd4);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getpwuid_r");
+  check_passwd(pwd4, username, uid, uid_type);
+}
+
+#else // !defined(__BIONIC__)
+
+static void check_getpwnam(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
+  GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+}
+
 #endif
 
 TEST(getpwnam, system_id_root) {
-  CHECK_GETPWNAM_FOR("root", 0, TYPE_SYSTEM);
+  check_getpwnam("root", 0, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, system_id_system) {
-  CHECK_GETPWNAM_FOR("system", 1000, TYPE_SYSTEM);
+  check_getpwnam("system", 1000, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_radio) {
-  CHECK_GETPWNAM_FOR("radio", 1001, TYPE_SYSTEM);
+  check_getpwnam("radio", 1001, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_nobody) {
-  CHECK_GETPWNAM_FOR("nobody", 9999, TYPE_SYSTEM);
-}
-
-TEST(getpwnam, app_id_all_a0) {
-  CHECK_GETPWNAM_FOR("all_a0", 50000, TYPE_APP);
-}
-
-TEST(getpwnam, app_id_u1_a40000) {
-  CHECK_GETPWNAM_FOR("u1_a40000", 150000, TYPE_APP);
+  check_getpwnam("nobody", 9999, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_u0_a0) {
-  CHECK_GETPWNAM_FOR("u0_a0", 10000, TYPE_APP);
+  check_getpwnam("u0_a0", 10000, TYPE_APP);
 }
 
 TEST(getpwnam, app_id_u0_a1234) {
-  CHECK_GETPWNAM_FOR("u0_a1234", 11234, TYPE_APP);
+  check_getpwnam("u0_a1234", 11234, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u0_a9999) {
-  CHECK_GETPWNAM_FOR("u0_a9999", 19999, TYPE_APP);
+// Test the difference between uid and shared gid.
+TEST(getpwnam, app_id_u0_a49999) {
+  check_getpwnam("u0_a49999", 59999, TYPE_APP);
 }
 
-// nonsensical, but expected
+TEST(getpwnam, app_id_u0_i1) {
+  check_getpwnam("u0_i1", 99001, TYPE_APP);
+}
+
 TEST(getpwnam, app_id_u1_root) {
-  CHECK_GETPWNAM_FOR("u1_root", 100000, TYPE_SYSTEM);
+  check_getpwnam("u1_root", 100000, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_u1_radio) {
-  CHECK_GETPWNAM_FOR("u1_radio", 101001, TYPE_SYSTEM);
+  check_getpwnam("u1_radio", 101001, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_u1_a0) {
-  CHECK_GETPWNAM_FOR("u1_a0", 110000, TYPE_APP);
+  check_getpwnam("u1_a0", 110000, TYPE_APP);
+}
+
+TEST(getpwnam, app_id_u1_a40000) {
+  check_getpwnam("u1_a40000", 150000, TYPE_APP);
 }
 
 TEST(getpwnam, app_id_u1_i0) {
-  CHECK_GETPWNAM_FOR("u1_i0", 199000, TYPE_APP);
+  check_getpwnam("u1_i0", 199000, TYPE_APP);
+}
+
+#if defined(__BIONIC__)
+
+static void check_group(const group* grp, const char* group_name, gid_t gid) {
+  ASSERT_TRUE(grp != NULL);
+  ASSERT_STREQ(group_name, grp->gr_name);
+  ASSERT_EQ(gid, grp->gr_gid);
+  ASSERT_TRUE(grp->gr_mem != NULL);
+  ASSERT_STREQ(group_name, grp->gr_mem[0]);
+  ASSERT_TRUE(grp->gr_mem[1] == NULL);
+}
+
+static void check_getgrnam(const char* group_name, gid_t gid) {
+  errno = 0;
+  group* grp1 = getgrgid(gid);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrgid");
+  check_group(grp1, group_name, gid);
+
+  errno = 0;
+  group* grp2 = getgrnam(group_name);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrnam");
+  check_group(grp2, group_name, gid);
+}
+
+#else // !defined(__BIONIC__)
+
+static void check_getgrnam(const char* /* group_name */, gid_t /* gid */) {
+  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+}
+
+#endif
+
+TEST(getgrnam, system_id_root) {
+  check_getgrnam("root", 0);
+}
+
+TEST(getgrnam, system_id_system) {
+  check_getgrnam("system", 1000);
+}
+
+TEST(getgrnam, app_id_radio) {
+  check_getgrnam("radio", 1001);
+}
+
+TEST(getgrnam, app_id_nobody) {
+  check_getgrnam("nobody", 9999);
+}
+
+TEST(getgrnam, app_id_u0_a0) {
+  check_getgrnam("u0_a0", 10000);
+}
+
+TEST(getgrnam, app_id_u0_a1234) {
+  check_getgrnam("u0_a1234", 11234);
+}
+
+TEST(getgrnam, app_id_u0_a9999) {
+  check_getgrnam("u0_a9999", 19999);
+}
+
+// Test the difference between uid and shared gid.
+TEST(getgrnam, app_id_all_a9999) {
+  check_getgrnam("all_a9999", 59999);
+}
+
+TEST(getgrnam, app_id_u0_i1) {
+  check_getgrnam("u0_i1", 99001);
+}
+
+TEST(getgrnam, app_id_u1_root) {
+  check_getgrnam("u1_root", 100000);
+}
+
+TEST(getgrnam, app_id_u1_radio) {
+  check_getgrnam("u1_radio", 101001);
+}
+
+TEST(getgrnam, app_id_u1_a0) {
+  check_getgrnam("u1_a0", 110000);
+}
+
+TEST(getgrnam, app_id_u1_a40000) {
+  check_getgrnam("u1_a40000", 150000);
+}
+
+TEST(getgrnam, app_id_u1_i0) {
+  check_getgrnam("u1_i0", 199000);
 }
