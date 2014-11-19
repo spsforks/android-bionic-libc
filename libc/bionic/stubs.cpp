@@ -159,6 +159,7 @@ static passwd* android_iinfo_to_passwd(stubs_state_t* state,
   pw->pw_gid   = iinfo->aid;
   pw->pw_dir   = state->dir_buffer_;
   pw->pw_shell = state->sh_buffer_;
+  pw->pw_passwd = NULL;
   return pw;
 }
 
@@ -168,6 +169,7 @@ static group* android_iinfo_to_group(group* gr,
   gr->gr_gid    = iinfo->aid;
   gr->gr_mem[0] = gr->gr_name;
   gr->gr_mem[1] = NULL;
+  gr->gr_passwd = NULL;
   return gr;
 }
 
@@ -208,18 +210,27 @@ static group* android_name_to_group(group* gr, const char* name) {
 }
 
 // Translate a user/group name to the corresponding user/group id.
+// all_a1234 -> 0 * AID_USER + AID_SHARED_GID_START + 1234 (group name only)
 // u0_a1234 -> 0 * AID_USER + AID_APP + 1234
 // u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
 // u1_system -> 1 * AID_USER + android_ids['system']
 // returns 0 and sets errno to ENOENT in case of error
-static unsigned app_id_from_name(const char* name) {
-  if (name[0] != 'u' || !isdigit(name[1])) {
+static unsigned app_id_from_name(const char* name, bool is_group) {
+  char* end;
+  unsigned long userid;
+  bool is_shared_gid = false;
+
+  if (is_group && name[0] == 'a' && name[1] == 'l' && name[2] == 'l') {
+    end = const_cast<char*>(name+3);
+    userid = 0;
+    is_shared_gid = true;
+  } else if (name[0] == 'u' && isdigit(name[1])) {
+    userid = strtoul(name+1, &end, 10);
+  } else {
     errno = ENOENT;
     return 0;
   }
 
-  char* end;
-  unsigned long userid = strtoul(name+1, &end, 10);
   if (end[0] != '_' || end[1] == 0) {
     errno = ENOENT;
     return 0;
@@ -227,8 +238,17 @@ static unsigned app_id_from_name(const char* name) {
 
   unsigned long appid = 0;
   if (end[1] == 'a' && isdigit(end[2])) {
-    // end will point to \0 if the strtoul below succeeds.
-    appid = strtoul(end+2, &end, 10) + AID_APP;
+    if (is_shared_gid) {
+      // end will point to \0 if the strtoul below succeeds.
+      appid = strtoul(end+2, &end, 10) + AID_SHARED_GID_START;
+      if (appid > AID_SHARED_GID_END) {
+        errno = ENOENT;
+        return 0;
+      }
+    } else {
+      // end will point to \0 if the strtoul below succeeds.
+      appid = strtoul(end+2, &end, 10) + AID_APP;
+    }
   } else if (end[1] == 'i' && isdigit(end[2])) {
     // end will point to \0 if the strtoul below succeeds.
     appid = strtoul(end+2, &end, 10) + AID_ISOLATED_START;
@@ -263,12 +283,11 @@ static unsigned app_id_from_name(const char* name) {
   return (unsigned)(appid + userid*AID_USER);
 }
 
-static void print_app_name_from_appid_userid(const uid_t appid,
-    const uid_t userid, char* buffer, const int bufferlen) {
+static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
+  const uid_t appid = uid % AID_USER;
+  const uid_t userid = uid / AID_USER;
   if (appid >= AID_ISOLATED_START) {
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
-  } else if (userid == 0 && appid >= AID_SHARED_GID_START) {
-    snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
   } else if (appid < AID_APP) {
     for (size_t n = 0; n < android_id_count; n++) {
       if (android_ids[n].aid == appid) {
@@ -281,10 +300,23 @@ static void print_app_name_from_appid_userid(const uid_t appid,
   }
 }
 
-static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
-  const uid_t appid = uid % AID_USER;
-  const uid_t userid = uid / AID_USER;
-  return print_app_name_from_appid_userid(appid, userid, buffer, bufferlen);
+static void print_app_name_from_gid(const gid_t gid, char* buffer, const int bufferlen) {
+  const uid_t appid = gid % AID_USER;
+  const uid_t userid = gid / AID_USER;
+  if (appid >= AID_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+  } else if (userid == 0 && appid >= AID_SHARED_GID_START && appid <= AID_SHARED_GID_END) {
+    snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
+  } else if (appid < AID_APP) {
+    for (size_t n = 0; n < android_id_count; n++) {
+      if (android_ids[n].aid == appid) {
+        snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
+        return;
+      }
+    }
+  } else {
+    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
+  }
 }
 
 // Translate a uid into the corresponding name.
@@ -301,12 +333,10 @@ static passwd* app_id_to_passwd(uid_t uid, stubs_state_t* state) {
     return NULL;
   }
 
+  print_app_name_from_uid(uid, state->app_name_buffer_,
+                               sizeof(state->app_name_buffer_));
+
   const uid_t appid = uid % AID_USER;
-  const uid_t userid = uid / AID_USER;
-
-  print_app_name_from_appid_userid(appid, userid, state->app_name_buffer_,
-                                   sizeof(state->app_name_buffer_));
-
   if (appid < AID_APP) {
       snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   } else {
@@ -320,6 +350,7 @@ static passwd* app_id_to_passwd(uid_t uid, stubs_state_t* state) {
   pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
+  pw->pw_passwd = NULL;
 
   return pw;
 }
@@ -332,7 +363,7 @@ static group* app_id_to_group(gid_t gid, stubs_state_t* state) {
     return NULL;
   }
 
-  print_app_name_from_uid(gid, state->group_name_buffer_,
+  print_app_name_from_gid(gid, state->group_name_buffer_,
                           sizeof(state->group_name_buffer_));
 
   group* gr = &state->group_;
@@ -340,6 +371,8 @@ static group* app_id_to_group(gid_t gid, stubs_state_t* state) {
   gr->gr_gid    = gid;
   gr->gr_mem[0] = gr->gr_name;
   gr->gr_mem[1] = NULL;
+  gr->gr_passwd = NULL;
+
   return gr;
 }
 
@@ -367,7 +400,7 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
-  return app_id_to_passwd(app_id_from_name(login), state);
+  return app_id_to_passwd(app_id_from_name(login, false), state);
 }
 
 // All users are in just one group, the one passed in.
@@ -395,7 +428,6 @@ group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
   if (gr != NULL) {
     return gr;
   }
-
   return app_id_to_group(gid, state);
 }
 
@@ -408,8 +440,7 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
   if (android_name_to_group(&state->group_, name) != 0) {
     return &state->group_;
   }
-
-  return app_id_to_group(app_id_from_name(name), state);
+  return app_id_to_group(app_id_from_name(name, true), state);
 }
 
 // We don't have an /etc/networks, so all inputs return NULL.
