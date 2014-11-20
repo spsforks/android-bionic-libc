@@ -129,6 +129,53 @@ __BEGIN_DECLS
 #define _SC_AVPHYS_PAGES                0x0063
 #define _SC_MONOTONIC_CLOCK             0x0064
 
+#define _SC_2_PBS               0x0065
+#define _SC_2_PBS_ACCOUNTING    0x0066
+#define _SC_2_PBS_CHECKPOINT    0x0067
+#define _SC_2_PBS_LOCATE        0x0068
+#define _SC_2_PBS_MESSAGE       0x0069
+#define _SC_2_PBS_TRACK         0x006a
+#define _SC_ADVISORY_INFO       0x006b
+#define _SC_BARRIERS            0x006c
+#define _SC_CLOCK_SELECTION     0x006d
+#define _SC_CPUTIME             0x006e
+#define _SC_HOST_NAME_MAX       0x006f
+#define _SC_IPV6                0x0070
+#define _SC_RAW_SOCKETS         0x0071
+#define _SC_READER_WRITER_LOCKS 0x0072
+#define _SC_REGEXP              0x0073
+#define _SC_SHELL               0x0074
+#define _SC_SPAWN               0x0075
+#define _SC_SPIN_LOCKS          0x0076
+#define _SC_SPORADIC_SERVER     0x0077
+#define _SC_SS_REPL_MAX         0x0078
+#define _SC_SYMLOOP_MAX         0x0079
+#define _SC_THREAD_CPUTIME      0x007a
+#define _SC_THREAD_PROCESS_SHARED       0x007b
+#define _SC_THREAD_ROBUST_PRIO_INHERIT  0x007c
+#define _SC_THREAD_ROBUST_PRIO_PROTECT  0x007d
+#define _SC_THREAD_SPORADIC_SERVER      0x007e
+#define _SC_TIMEOUTS            0x007f
+#define _SC_TRACE               0x0080
+#define _SC_TRACE_EVENT_FILTER  0x0081
+#define _SC_TRACE_EVENT_NAME_MAX  0x0082
+#define _SC_TRACE_INHERIT       0x0083
+#define _SC_TRACE_LOG           0x0084
+#define _SC_TRACE_NAME_MAX      0x0085
+#define _SC_TRACE_SYS_MAX       0x0086
+#define _SC_TRACE_USER_EVENT_MAX  0x0087
+#define _SC_TYPED_MEMORY_OBJECTS  0x0088
+#define _SC_V6_ILP32_OFF32      0x0089
+#define _SC_V6_ILP32_OFFBIG     0x008a
+#define _SC_V6_LP64_OFF64       0x008b
+#define _SC_V6_LPBIG_OFFBIG     0x008c
+#define _SC_V7_ILP32_OFF32      0x008d
+#define _SC_V7_ILP32_OFFBIG     0x008e
+#define _SC_V7_LP64_OFF64       0x008f
+#define _SC_V7_LPBIG_OFFBIG     0x0090
+#define _SC_XOPEN_STREAMS       0x0091
+#define _SC_XOPEN_UUCP          0x0092
+
 long sysconf(int);
 
 __END_DECLS
