@@ -24,6 +24,7 @@ common_additional_dependencies := \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
+    $(LOCAL_PATH)/Android.build.pthread_atfork.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
     $(TEST_PATH)/Android.build.mk
 
@@ -179,6 +180,11 @@ include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
 # Build libtest_check_order_root.so with its dependencies.
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
+
+# -----------------------------------------------------------------------------
+# Build libraries needed by pthread_atfork tests
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
 
 # -----------------------------------------------------------------------------
 # Library with dependency loop used by dlfcn tests
