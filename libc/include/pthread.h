@@ -118,7 +118,11 @@ typedef struct {
 #endif
 
 typedef int pthread_key_t;
+
+#ifndef _HAVE_DEF_PTHREAD_T
+#define _HAVE_DEF_PTHREAD_T
 typedef long pthread_t;
+#endif /* _HAVE_DEF_PTHREAD_T */
 
 typedef volatile int pthread_once_t;
 
@@ -195,8 +199,6 @@ int pthread_join(pthread_t, void**);
 int pthread_key_create(pthread_key_t*, void (*)(void*)) __nonnull((1));
 int pthread_key_delete(pthread_key_t);
 
-int pthread_kill(pthread_t, int);
-
 int pthread_mutexattr_destroy(pthread_mutexattr_t*) __nonnull((1));
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
 int pthread_mutexattr_gettype(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
@@ -235,8 +237,6 @@ int pthread_setname_np(pthread_t, const char*) __nonnull((2));
 int pthread_setschedparam(pthread_t, int, const struct sched_param*) __nonnull((3));
 
 int pthread_setspecific(pthread_key_t, const void*);
-
-int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
 typedef void (*__pthread_cleanup_func_t)(void*);
 

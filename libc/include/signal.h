@@ -129,6 +129,14 @@ extern int sigaltstack(const stack_t*, stack_t*);
 extern void psiginfo(const siginfo_t*, const char*);
 extern void psignal(int, const char*);
 
+#ifndef _HAVE_DEF_PTHREAD_T
+#define _HAVE_DEF_PTHREAD_T
+typedef long pthread_t;
+#endif /* _HAVE_DEF_PTHREAD_T */
+
+extern int pthread_kill(pthread_t, int);
+extern int pthread_sigmask(int, const sigset_t*, sigset_t*);
+
 __END_DECLS
 
 #endif /* _SIGNAL_H_ */
