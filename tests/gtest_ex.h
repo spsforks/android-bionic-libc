@@ -16,8 +16,13 @@
 
 #include <gtest/gtest.h>
 
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#include <unistd.h>
+
 template<typename F>
-void test_forked(F test) {
+void test_isolated(F test) {
   int pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
