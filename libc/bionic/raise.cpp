@@ -27,6 +27,7 @@
  */
 
 #include <pthread.h>
+#include <signal.h>
 
 int raise(int sig) {
   int rc = pthread_kill(pthread_self(), sig);
