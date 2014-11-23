@@ -23,10 +23,10 @@
 
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__kernel_gettimeofday"
 #elif defined(__x86_64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__vdso_gettimeofday"
 #endif
 
 #include <time.h>
@@ -39,26 +39,23 @@ struct vdso_entry {
   void* fn;
 };
 
-enum {
-  VDSO_CLOCK_GETTIME = 0,
-  VDSO_GETTIMEOFDAY,
-  VDSO_END
-};
+enum { VDSO_CLOCK_GETTIME = 0, VDSO_GETTIMEOFDAY, VDSO_END };
 
 static vdso_entry vdso_entries[] = {
-  [VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, reinterpret_cast<void*>(__clock_gettime) },
-  [VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday) },
+        [VDSO_CLOCK_GETTIME] = {VDSO_CLOCK_GETTIME_SYMBOL,
+                                reinterpret_cast<void*>(__clock_gettime)},
+        [VDSO_GETTIMEOFDAY] = {VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday)},
 };
 
 int clock_gettime(int clock_id, timespec* tp) {
   static int (*vdso_clock_gettime)(int, timespec*) =
-      (int (*)(int, timespec*)) vdso_entries[VDSO_CLOCK_GETTIME].fn;
+      (int (*)(int, timespec*))vdso_entries[VDSO_CLOCK_GETTIME].fn;
   return vdso_clock_gettime(clock_id, tp);
 }
 
 int gettimeofday(timeval* tv, struct timezone* tz) {
   static int (*vdso_gettimeofday)(timeval*, struct timezone*) =
-      (int (*)(timeval*, struct timezone*)) vdso_entries[VDSO_GETTIMEOFDAY].fn;
+      (int (*)(timeval*, struct timezone*))vdso_entries[VDSO_GETTIMEOFDAY].fn;
   return vdso_gettimeofday(tv, tz);
 }
 

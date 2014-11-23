@@ -19,4 +19,4 @@
 
 #define NS_PER_S 1000000000
 
-#endif // _BIONIC_CONSTANTS_H_
+#endif  // _BIONIC_CONSTANTS_H_

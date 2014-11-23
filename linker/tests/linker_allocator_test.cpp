@@ -56,7 +56,7 @@ TEST(linker_allocator, test_nominal) {
   test_struct_nominal* ptr2 = allocator.alloc();
   ASSERT_TRUE(ptr2 != nullptr);
   // they should be next to each other.
-  ASSERT_EQ(ptr1+1, ptr2);
+  ASSERT_EQ(ptr1 + 1, ptr2);
 
   ptr1->value = 42;
 
@@ -72,7 +72,7 @@ TEST(linker_allocator, test_small) {
 
   ASSERT_TRUE(ptr1 != nullptr);
   ASSERT_TRUE(ptr2 != nullptr);
-  ASSERT_EQ(ptr1+2*sizeof(void*), ptr2);
+  ASSERT_EQ(ptr1 + 2 * sizeof(void*), ptr2);
 }
 
 TEST(linker_allocator, test_larger) {
@@ -84,12 +84,12 @@ TEST(linker_allocator, test_larger) {
   ASSERT_TRUE(ptr1 != nullptr);
   ASSERT_TRUE(ptr2 != nullptr);
 
-  ASSERT_EQ(ptr1+1, ptr2);
+  ASSERT_EQ(ptr1 + 1, ptr2);
 
   // lets allocate until we reach next page.
-  size_t n = kPageSize/sizeof(test_struct_larger) + 1 - 2;
+  size_t n = kPageSize / sizeof(test_struct_larger) + 1 - 2;
 
-  for (size_t i=0; i<n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     ASSERT_TRUE(allocator.alloc() != nullptr);
   }
 
@@ -102,10 +102,10 @@ static void protect_all() {
   LinkerAllocator<test_struct_larger> allocator;
 
   // number of allocs to reach the end of first page
-  size_t n = kPageSize/sizeof(test_struct_larger) - 1;
+  size_t n = kPageSize / sizeof(test_struct_larger) - 1;
   test_struct_larger* page1_ptr = allocator.alloc();
 
-  for (size_t i=0; i<n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     allocator.alloc();
   }
 
@@ -127,4 +127,3 @@ TEST(linker_allocator, test_protect) {
   testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(protect_all(), testing::KilledBySignal(SIGSEGV), "trying to access protected page");
 }
-

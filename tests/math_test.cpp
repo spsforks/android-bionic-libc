@@ -34,16 +34,20 @@
 // please.
 
 namespace {
-template<typename T> inline int test_capture_signbit(const T in) {
+template <typename T>
+inline int test_capture_signbit(const T in) {
   return signbit(in);
 }
-template<typename T> inline int test_capture_isfinite(const T in) {
+template <typename T>
+inline int test_capture_isfinite(const T in) {
   return isfinite(in);
 }
-template<typename T> inline int test_capture_isnan(const T in) {
+template <typename T>
+inline int test_capture_isnan(const T in) {
   return isnan(in);
 }
-template<typename T> inline int test_capture_isinf(const T in) {
+template <typename T>
+inline int test_capture_isinf(const T in) {
   return isinf(in);
 }
 }
@@ -155,7 +159,8 @@ TEST(math, isnormal) {
   ASSERT_FALSE(isnormal(ldouble_subnormal()));
 }
 
-// TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
+// TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater,
+// isunordered
 TEST(math, signbit) {
   ASSERT_EQ(0, test_capture_signbit(0.0f));
   ASSERT_EQ(0, test_capture_signbit(0.0));
@@ -232,7 +237,8 @@ TEST(math, finite) {
 }
 
 TEST(math, isinf_function) {
-  // The isinf macro deals with all three types; the isinf function is for doubles.
+  // The isinf macro deals with all three types; the isinf function is for
+  // doubles.
   ASSERT_FALSE((isinf)(123.0));
   ASSERT_TRUE((isinf)(HUGE_VAL));
 }
@@ -248,7 +254,8 @@ TEST(math, __isinfl) {
 }
 
 TEST(math, isnan_function) {
-  // The isnan macro deals with all three types; the isnan function is for doubles.
+  // The isnan macro deals with all three types; the isnan function is for
+  // doubles.
   ASSERT_FALSE((isnan)(123.0));
   ASSERT_TRUE((isnan)(nan("")));
 }
@@ -272,27 +279,27 @@ TEST(math, __isnormal) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormal.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __isnormalf) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormalf.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __isnormall) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __signbit) {
@@ -314,15 +321,15 @@ TEST(math, __signbitl) {
 }
 
 TEST(math, acos) {
-  ASSERT_DOUBLE_EQ(M_PI/2.0, acos(0.0));
+  ASSERT_DOUBLE_EQ(M_PI / 2.0, acos(0.0));
 }
 
 TEST(math, acosf) {
-  ASSERT_FLOAT_EQ(static_cast<float>(M_PI)/2.0f, acosf(0.0f));
+  ASSERT_FLOAT_EQ(static_cast<float>(M_PI) / 2.0f, acosf(0.0f));
 }
 
 TEST(math, acosl) {
-  ASSERT_DOUBLE_EQ(M_PI/2.0L, acosl(0.0L));
+  ASSERT_DOUBLE_EQ(M_PI / 2.0L, acosl(0.0L));
 }
 
 TEST(math, asin) {
@@ -754,65 +761,60 @@ TEST(math, erfcl) {
 }
 
 TEST(math, lrint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
-  fesetround(FE_UPWARD); // lrint/lrintf/lrintl obey the rounding mode.
+  fesetround(FE_UPWARD);  // lrint/lrintf/lrintl obey the rounding mode.
   ASSERT_EQ(1235, lrint(1234.01));
   ASSERT_EQ(1235, lrintf(1234.01f));
   ASSERT_EQ(1235, lrintl(1234.01L));
-  fesetround(FE_TOWARDZERO); // lrint/lrintf/lrintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // lrint/lrintf/lrintl obey the rounding mode.
   ASSERT_EQ(1234, lrint(1234.01));
   ASSERT_EQ(1234, lrintf(1234.01f));
   ASSERT_EQ(1234, lrintl(1234.01L));
 
-  fesetround(FE_UPWARD); // llrint/llrintf/llrintl obey the rounding mode.
+  fesetround(FE_UPWARD);  // llrint/llrintf/llrintl obey the rounding mode.
   ASSERT_EQ(1235L, llrint(1234.01));
   ASSERT_EQ(1235L, llrintf(1234.01f));
   ASSERT_EQ(1235L, llrintl(1234.01L));
-  fesetround(FE_TOWARDZERO); // llrint/llrintf/llrintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // llrint/llrintf/llrintl obey the rounding mode.
   ASSERT_EQ(1234L, llrint(1234.01));
   ASSERT_EQ(1234L, llrintf(1234.01f));
   ASSERT_EQ(1234L, llrintl(1234.01L));
 }
 
 TEST(math, rint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
-  fesetround(FE_UPWARD); // rint/rintf/rintl obey the rounding mode.
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  fesetround(FE_UPWARD);         // rint/rintf/rintl obey the rounding mode.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0, rint(1234.0));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, rint(1234.01));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0f, rintf(1234.0f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0f, rintf(1234.01f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0, rintl(1234.0L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, rintl(1234.01L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  fesetround(FE_TOWARDZERO); // rint/rintf obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // rint/rintf obey the rounding mode.
   ASSERT_EQ(1234.0, rint(1234.01));
   ASSERT_EQ(1234.0f, rintf(1234.01f));
   ASSERT_EQ(1234.0, rintl(1234.01L));
 }
 
 TEST(math, nearbyint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
-  feclearexcept(FE_ALL_EXCEPT); // nearbyint/nearbyintf/nearbyintl don't set the FE_INEXACT flag.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);         // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
+  feclearexcept(FE_ALL_EXCEPT);  // nearbyint/nearbyintf/nearbyintl don't set
+                                 // the FE_INEXACT flag.
   ASSERT_EQ(1234.0, nearbyint(1234.0));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, nearbyint(1234.01));
@@ -824,33 +826,31 @@ TEST(math, nearbyint) {
   ASSERT_EQ(1235.0f, nearbyintf(1234.01f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // nearbyint/nearbyintf/nearbyintl don't set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // nearbyint/nearbyintf/nearbyintl don't set
+                                 // the FE_INEXACT flag.
   ASSERT_EQ(1234.0, nearbyintl(1234.0L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, nearbyintl(1234.01L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
 
-  fesetround(FE_TOWARDZERO); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // nearbyint/nearbyintf/nearbyintl obey the
+                              // rounding mode.
   ASSERT_EQ(1234.0, nearbyint(1234.01));
   ASSERT_EQ(1234.0f, nearbyintf(1234.01f));
   ASSERT_EQ(1234.0, nearbyintl(1234.01L));
 }
 
 TEST(math, lround) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // lround ignores the rounding mode.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // lround ignores the rounding mode.
   ASSERT_EQ(1234, lround(1234.01));
   ASSERT_EQ(1234, lroundf(1234.01f));
   ASSERT_EQ(1234, lroundl(1234.01L));
 }
 
 TEST(math, llround) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // llround ignores the rounding mode.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // llround ignores the rounding mode.
   ASSERT_EQ(1234L, llround(1234.01));
   ASSERT_EQ(1234L, llroundf(1234.01f));
   ASSERT_EQ(1234L, llroundl(1234.01L));
@@ -944,10 +944,9 @@ TEST(math, fdiml) {
 }
 
 TEST(math, round) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // round ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // round ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0, round(0.5));
   ASSERT_DOUBLE_EQ(-1.0, round(-0.5));
   ASSERT_DOUBLE_EQ(0.0, round(0.0));
@@ -957,10 +956,9 @@ TEST(math, round) {
 }
 
 TEST(math, roundf) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // roundf ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // roundf ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_FLOAT_EQ(1.0f, roundf(0.5f));
   ASSERT_FLOAT_EQ(-1.0f, roundf(-0.5f));
   ASSERT_FLOAT_EQ(0.0f, roundf(0.0f));
@@ -970,10 +968,9 @@ TEST(math, roundf) {
 }
 
 TEST(math, roundl) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // roundl ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // roundl ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0L, roundl(0.5L));
   ASSERT_DOUBLE_EQ(-1.0L, roundl(-0.5L));
   ASSERT_DOUBLE_EQ(0.0L, roundl(0.0L));
@@ -983,10 +980,9 @@ TEST(math, roundl) {
 }
 
 TEST(math, trunc) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // trunc ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // trunc ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_DOUBLE_EQ(1.0, trunc(1.5));
   ASSERT_DOUBLE_EQ(-1.0, trunc(-1.5));
   ASSERT_DOUBLE_EQ(0.0, trunc(0.0));
@@ -996,10 +992,9 @@ TEST(math, trunc) {
 }
 
 TEST(math, truncf) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // truncf ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // truncf ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_FLOAT_EQ(1.0f, truncf(1.5f));
   ASSERT_FLOAT_EQ(-1.0f, truncf(-1.5f));
   ASSERT_FLOAT_EQ(0.0f, truncf(0.0f));
@@ -1009,10 +1004,9 @@ TEST(math, truncf) {
 }
 
 TEST(math, truncl) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // truncl ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // truncl ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_DOUBLE_EQ(1.0L, truncl(1.5L));
   ASSERT_DOUBLE_EQ(-1.0L, truncl(-1.5L));
   ASSERT_DOUBLE_EQ(0.0L, truncl(0.0L));
@@ -1147,9 +1141,9 @@ TEST(math, gamma_r) {
   int sign;
   ASSERT_DOUBLE_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have gamma_r.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, gammaf_r) {
@@ -1157,9 +1151,9 @@ TEST(math, gammaf_r) {
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have gammaf_r.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, lgamma) {

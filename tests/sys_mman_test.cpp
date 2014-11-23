@@ -50,7 +50,7 @@ TEST(sys_mman, mmap64_file_bad_offset) {
 
 #define STR_SSIZE(str) static_cast<ssize_t>(sizeof(str))
 
-#define STRING_MSG  "012345678\nabcdefgh\n"
+#define STRING_MSG "012345678\nabcdefgh\n"
 #define INITIAL_MSG "000000000\n00000000\n"
 
 TEST(sys_mman, mmap_file_read) {
@@ -122,7 +122,7 @@ TEST(sys_mman, mmap_file_read_at_offset) {
 
   data = reinterpret_cast<char*>(map);
   ASSERT_STREQ(PAGE2_MSG, data);
-  ASSERT_STREQ(END_MSG, data+pagesize-sizeof(END_MSG));
+  ASSERT_STREQ(END_MSG, data + pagesize - sizeof(END_MSG));
 
   ASSERT_EQ(0, munmap(map, pagesize));
 }
@@ -170,5 +170,5 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   ASSERT_NE(-1, lseek(tf.fd, 2 * pagesize, SEEK_SET));
   ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
   ASSERT_STREQ(NEWPAGE2_MSG, buf);
-  ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
+  ASSERT_STREQ(END_MSG, buf + pagesize - sizeof(END_MSG));
 }

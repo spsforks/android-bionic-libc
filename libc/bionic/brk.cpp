@@ -32,7 +32,7 @@
 #if __LP64__
 static void* __bionic_brk;
 #else
-void* __bionic_brk; // Accidentally exported by the NDK.
+void* __bionic_brk;  // Accidentally exported by the NDK.
 #endif
 
 int brk(void* end_data) {

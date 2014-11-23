@@ -31,10 +31,7 @@
 #include <errno.h>
 
 __LIBC_HIDDEN__ size_t mbstate_bytes_so_far(const mbstate_t* ps) {
-  return
-    (ps->__seq[2] != 0) ? 3 :
-    (ps->__seq[1] != 0) ? 2 :
-    (ps->__seq[0] != 0) ? 1 : 0;
+  return (ps->__seq[2] != 0) ? 3 : (ps->__seq[1] != 0) ? 2 : (ps->__seq[0] != 0) ? 1 : 0;
 }
 
 __LIBC_HIDDEN__ void mbstate_set_byte(mbstate_t* ps, int i, char byte) {

@@ -50,7 +50,8 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   struct dl_phdr_info exe_info;
   exe_info.dlpi_addr = 0;
   exe_info.dlpi_name = NULL;
-  exe_info.dlpi_phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(ehdr) + ehdr->e_phoff);
+  exe_info.dlpi_phdr =
+      reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(ehdr) + ehdr->e_phoff);
   exe_info.dlpi_phnum = ehdr->e_phnum;
 
 #if defined(AT_SYSINFO_EHDR)
@@ -70,11 +71,12 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   struct dl_phdr_info vdso_info;
   vdso_info.dlpi_addr = 0;
   vdso_info.dlpi_name = NULL;
-  vdso_info.dlpi_phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
+  vdso_info.dlpi_phdr =
+      reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   vdso_info.dlpi_phnum = ehdr_vdso->e_phnum;
   for (size_t i = 0; i < vdso_info.dlpi_phnum; ++i) {
     if (vdso_info.dlpi_phdr[i].p_type == PT_LOAD) {
-      vdso_info.dlpi_addr = (ElfW(Addr)) ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
+      vdso_info.dlpi_addr = (ElfW(Addr))ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
       break;
     }
   }

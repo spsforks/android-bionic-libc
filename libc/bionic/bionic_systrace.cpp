@@ -25,7 +25,7 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-#define WRITE_OFFSET   32
+#define WRITE_OFFSET 32
 
 static const prop_info* g_pinfo = NULL;
 static uint32_t g_serial = -1;
@@ -33,12 +33,11 @@ static uint64_t g_tags = 0;
 static int g_trace_marker_fd = -1;
 
 static bool should_trace() {
-  // If g_pinfo is null, this means that systrace hasn't been run and it's safe to
-  // assume that no trace writing will need to take place.  However, to avoid running
-  // this costly find check each time, we set it to a non-tracing value so that next
-  // time, it will just check the serial to see if the value has been changed.
-  // this function also deals with the bootup case, during which the call to property
-  // set will fail if the property server hasn't yet started.
+  // If g_pinfo is null, this means that systrace hasn't been run and it's safe to assume that no
+  // trace writing will need to take place.  However, to avoid running this costly find check each
+  // time, we set it to a non-tracing value so that next time, it will just check the serial to see
+  // if the value has been changed.  this function also deals with the bootup case, during which the
+  // call to property set will fail if the property server hasn't yet started.
   if (g_pinfo == NULL) {
     g_pinfo = __system_property_find("debug.atrace.tags.enableflags");
     if (g_pinfo == NULL) {
@@ -50,12 +49,10 @@ static bool should_trace() {
     }
   }
 
-  // Find out which tags have been enabled on the command line and set
-  // the value of tags accordingly.  If the value of the property changes,
-  // the serial will also change, so the costly system_property_read function
-  // can be avoided by calling the much cheaper system_property_serial
-  // first.  The values within pinfo may change, but its location is guaranteed
-  // not to move.
+  // Find out which tags have been enabled on the command line and set the value of tags
+  // accordingly.  If the value of the property changes, the serial will also change, so the costly
+  // system_property_read function can be avoided by calling the much cheaper system_property_serial
+  // first.  The values within pinfo may change, but its location is guaranteed not to move.
   const uint32_t cur_serial = __system_property_serial(g_pinfo);
   if (cur_serial != g_serial) {
     g_serial = cur_serial;

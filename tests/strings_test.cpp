@@ -21,9 +21,9 @@
 #include <strings.h>
 
 TEST(strings, ffs) {
-  ASSERT_EQ( 0, ffs(0x00000000));
-  ASSERT_EQ( 1, ffs(0x00000001));
-  ASSERT_EQ( 6, ffs(0x00000020));
+  ASSERT_EQ(0, ffs(0x00000000));
+  ASSERT_EQ(1, ffs(0x00000001));
+  ASSERT_EQ(6, ffs(0x00000020));
   ASSERT_EQ(11, ffs(0x00000400));
   ASSERT_EQ(16, ffs(0x00008000));
   ASSERT_EQ(17, ffs(0x00010000));

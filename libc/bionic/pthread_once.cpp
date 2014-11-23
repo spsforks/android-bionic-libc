@@ -31,10 +31,11 @@
 #include "private/bionic_atomic_inline.h"
 #include "private/bionic_futex.h"
 
-#define ONCE_INITIALIZING           (1 << 0)
-#define ONCE_COMPLETED              (1 << 1)
+#define ONCE_INITIALIZING (1 << 0)
+#define ONCE_COMPLETED (1 << 1)
 
-/* NOTE: this implementation doesn't support a init function that throws a C++ exception
+/* NOTE: this implementation doesn't support a init function that throws a C++
+ * exception
  *       or calls fork()
  */
 int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
@@ -59,7 +60,7 @@ int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
     // This requires a cmpxchg loop, and we may need
     // to exit prematurely if we detect that
     // COMPLETED is now set.
-    int32_t  old_value, new_value;
+    int32_t old_value, new_value;
 
     do {
       old_value = *once_control_ptr;
@@ -77,7 +78,8 @@ int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
     }
 
     if ((old_value & ONCE_INITIALIZING) == 0) {
-      // We got there first, we can jump out of the loop to handle the initialization.
+      // We got there first, we can jump out of the loop to handle the
+      // initialization.
       break;
     }
 

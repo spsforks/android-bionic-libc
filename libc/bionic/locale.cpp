@@ -61,7 +61,8 @@ struct __locale_t {
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
 
-// We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
+// We don't use pthread_once for this so that we know when the resource (a TLS
+// slot) will be taken.
 static pthread_key_t g_uselocale_key;
 __attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
   pthread_key_create(&g_uselocale_key, NULL);
@@ -107,11 +108,8 @@ size_t __ctype_get_mb_cur_max() {
 }
 
 static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 ||
-          strcmp(locale, "C") == 0 ||
-          strcmp(locale, "C.UTF-8") == 0 ||
-          strcmp(locale, "en_US.UTF-8") == 0 ||
-          strcmp(locale, "POSIX") == 0);
+  return (strcmp(locale, "") == 0 || strcmp(locale, "C") == 0 || strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "en_US.UTF-8") == 0 || strcmp(locale, "POSIX") == 0);
 }
 
 lconv* localeconv() {
@@ -165,7 +163,8 @@ char* setlocale(int category, const char* locale_name) {
 locale_t uselocale(locale_t new_locale) {
   locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
 
-  // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
+  // If this is the first call to uselocale(3) on this thread, we return
+  // LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
     old_locale = LC_GLOBAL_LOCALE;
   }

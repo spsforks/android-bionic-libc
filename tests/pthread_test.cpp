@@ -32,7 +32,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
@@ -57,7 +56,7 @@ TEST(pthread, pthread_key_many_distinct) {
   int nkeys = sysconf(_SC_THREAD_KEYS_MAX) / 2;
   std::vector<pthread_key_t> keys;
 
-  auto scope_guard = make_scope_guard([&keys]{
+  auto scope_guard = make_scope_guard([&keys] {
     for (auto key : keys) {
       EXPECT_EQ(0, pthread_key_delete(key));
     }
@@ -155,7 +154,7 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
 
   size_t stack_size = 128 * 1024;
-  void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  void* stack = mmap(NULL, stack_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, stack);
   memset(stack, 0xff, stack_size);
 
@@ -168,7 +167,7 @@ TEST(pthread, pthread_key_dirty) {
 
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
-  ASSERT_EQ(nullptr, result); // Not ~0!
+  ASSERT_EQ(nullptr, result);  // Not ~0!
 
   ASSERT_EQ(0, munmap(stack, stack_size));
   ASSERT_EQ(0, pthread_key_delete(key));
@@ -222,7 +221,8 @@ TEST(pthread, pthread_create) {
 TEST(pthread, pthread_create_EAGAIN) {
   pthread_attr_t attributes;
   ASSERT_EQ(0, pthread_attr_init(&attributes));
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, static_cast<size_t>(-1) & ~(getpagesize() - 1)));
+  ASSERT_EQ(0,
+            pthread_attr_setstacksize(&attributes, static_cast<size_t>(-1) & ~(getpagesize() - 1)));
 
   pthread_t t;
   ASSERT_EQ(EAGAIN, pthread_create(&t, &attributes, IdFn, NULL));
@@ -250,7 +250,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
 
-  sleep(1); // (Give t2 a chance to call pthread_join.)
+  sleep(1);  // (Give t2 a chance to call pthread_join.)
 
   // ...a call to pthread_detach on thread 1 will "succeed" (silently fail)...
   ASSERT_EQ(0, pthread_detach(t1));
@@ -258,7 +258,8 @@ TEST(pthread, pthread_no_op_detach_after_join) {
 
   done = true;
 
-  // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
+  // ...but t2's join on t1 still goes ahead (which we can tell because our join
+  // on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
@@ -303,7 +304,8 @@ struct TestBug37410 {
   }
 };
 
-// Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
+// Even though this isn't really a death test, we have to say "DeathTest" here
+// so gtest knows to
 // run this test (which exits normally) in its own process.
 
 class pthread_DeathTest : public BionicDeathTest {};
@@ -383,7 +385,8 @@ TEST(pthread, pthread_setname_np__no_such_thread) {
 }
 
 TEST(pthread, pthread_kill__0) {
-  // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.
+  // Signal 0 just tests that the thread exists, so it's safe to call on
+  // ourselves.
   ASSERT_EQ(0, pthread_kill(pthread_self(), 0));
 }
 
@@ -509,25 +512,28 @@ TEST(pthread, pthread_join__multijoin) {
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
 
-  sleep(1); // (Give t2 a chance to call pthread_join.)
+  sleep(1);  // (Give t2 a chance to call pthread_join.)
 
   // Multiple joins to the same thread should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
 
   done = true;
 
-  // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
+  // ...but t2's join on t1 still goes ahead (which we can tell because our join
+  // on t2 finishes).
   void* join_result;
   ASSERT_EQ(0, pthread_join(t2, &join_result));
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
 }
 
 TEST(pthread, pthread_join__race) {
-  // http://b/11693195 --- pthread_join could return before the thread had actually exited.
-  // If the joiner unmapped the thread's stack, that could lead to SIGSEGV in the thread.
+  // http://b/11693195 --- pthread_join could return before the thread had
+  // actually exited.
+  // If the joiner unmapped the thread's stack, that could lead to SIGSEGV in
+  // the thread.
   for (size_t i = 0; i < 1024; ++i) {
-    size_t stack_size = 64*1024;
-    void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
+    size_t stack_size = 64 * 1024;
+    void* stack = mmap(NULL, stack_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 
     pthread_attr_t a;
     pthread_attr_init(&a);
@@ -578,7 +584,8 @@ TEST(pthread, pthread_attr_setguardsize) {
   size_t default_guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &default_guard_size));
 
-  // No such thing as too small: will be rounded up to one page by pthread_create.
+  // No such thing as too small: will be rounded up to one page by
+  // pthread_create.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 128));
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
@@ -586,14 +593,15 @@ TEST(pthread, pthread_attr_setguardsize) {
   ASSERT_EQ(4096U, GetActualGuardSize(attributes));
 
   // Large enough and a multiple of the page size.
-  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32 * 1024));
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
-  ASSERT_EQ(32*1024U, guard_size);
+  ASSERT_EQ(32 * 1024U, guard_size);
 
-  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
-  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024 + 1));
+  // Large enough but not a multiple of the page size; will be rounded up by
+  // pthread_create.
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32 * 1024 + 1));
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
-  ASSERT_EQ(32*1024U + 1, guard_size);
+  ASSERT_EQ(32 * 1024U + 1, guard_size);
 }
 
 TEST(pthread, pthread_attr_setstacksize) {
@@ -612,22 +620,24 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_GE(GetActualStackSize(attributes), default_stack_size);
 
   // Large enough and a multiple of the page size.
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32 * 1024));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
-  ASSERT_EQ(32*1024U, stack_size);
-  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
+  ASSERT_EQ(32 * 1024U, stack_size);
+  ASSERT_EQ(GetActualStackSize(attributes), 32 * 1024U);
 
-  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
+  // Large enough but not a multiple of the page size; will be rounded up by
+  // pthread_create.
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32 * 1024 + 1));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
-  ASSERT_EQ(32*1024U + 1, stack_size);
+  ASSERT_EQ(32 * 1024U + 1, stack_size);
 #if defined(__BIONIC__)
   // Bionic rounds up, which is what POSIX allows.
-  ASSERT_EQ(GetActualStackSize(attributes), (32 + 4)*1024U);
-#else // __BIONIC__
-  // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
-  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
-#endif // __BIONIC__
+  ASSERT_EQ(GetActualStackSize(attributes), (32 + 4) * 1024U);
+#else   // __BIONIC__
+  // glibc rounds down, in violation of POSIX. They document this in their BUGS
+  // section.
+  ASSERT_EQ(GetActualStackSize(attributes), 32 * 1024U);
+#endif  // __BIONIC__
 }
 
 TEST(pthread, pthread_rwlock_smoke) {
@@ -713,14 +723,26 @@ TEST(pthread, pthread_once_1934122) {
 }
 
 static int g_atfork_prepare_calls = 0;
-static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1; }
-static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2; }
+static void AtForkPrepare1() {
+  g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1;
+}
+static void AtForkPrepare2() {
+  g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2;
+}
 static int g_atfork_parent_calls = 0;
-static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 1; }
-static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 2; }
+static void AtForkParent1() {
+  g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 1;
+}
+static void AtForkParent2() {
+  g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 2;
+}
 static int g_atfork_child_calls = 0;
-static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 1; }
-static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
+static void AtForkChild1() {
+  g_atfork_child_calls = (g_atfork_child_calls << 4) | 1;
+}
+static void AtForkChild2() {
+  g_atfork_child_calls = (g_atfork_child_calls << 4) | 2;
+}
 
 TEST(pthread, pthread_atfork_smoke) {
   test_isolated([] {
@@ -781,7 +803,7 @@ TEST(pthread, pthread_condattr_setclock) {
 }
 
 TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
-#if defined(__BIONIC__) // This tests a bionic implementation detail.
+#if defined(__BIONIC__)  // This tests a bionic implementation detail.
   pthread_condattr_t attr;
   pthread_condattr_init(&attr);
 
@@ -801,9 +823,9 @@ TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
   int pshared;
   ASSERT_EQ(0, pthread_condattr_getpshared(&attr, &pshared));
   ASSERT_EQ(PTHREAD_PROCESS_SHARED, pshared);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(pthread, pthread_mutex_timedlock) {
@@ -830,7 +852,8 @@ TEST(pthread, pthread_mutex_timedlock) {
 }
 
 TEST(pthread, pthread_attr_getstack__main_thread) {
-  // This test is only meaningful for the main thread, so make sure we're running on it!
+  // This test is only meaningful for the main thread, so make sure we're
+  // running on it!
   ASSERT_EQ(getpid(), syscall(__NR_gettid));
 
   // Get the main thread's attributes.
@@ -840,7 +863,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   // Check that we correctly report that the main thread has no guard page.
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
-  ASSERT_EQ(0U, guard_size); // The main thread has no guard page.
+  ASSERT_EQ(0U, guard_size);  // The main thread has no guard page.
 
   // Get the stack base and the stack size (both ways).
   void* stack_base;
@@ -874,7 +897,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   uint64_t original_rlim_cur = rl.rlim_cur;
 #if defined(__BIONIC__)
   if (rl.rlim_cur == RLIM_INFINITY) {
-    rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
+    rl.rlim_cur = 8 * 1024 * 1024;  // Bionic reports unlimited stacks as 8MiB.
   }
 #endif
   EXPECT_EQ(rl.rlim_cur, stack_size);
@@ -884,15 +907,17 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
 
-  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
-  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
+  // The high address of the /proc/self/maps [stack] region should equal
+  // stack_base + stack_size.
+  // Remember that the stack grows down (and is mapped in on demand), so the low
+  // address of the
   // region isn't very interesting.
   EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
 
   //
   // What if RLIMIT_STACK is smaller than the stack's current extent?
   //
-  rl.rlim_cur = rl.rlim_max = 1024; // 1KiB. We know the stack must be at least a page already.
+  rl.rlim_cur = rl.rlim_max = 1024;  // 1KiB. We know the stack must be at least a page already.
   rl.rlim_max = RLIM_INFINITY;
   ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
 
@@ -906,7 +931,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   //
   // What if RLIMIT_STACK isn't a whole number of pages?
   //
-  rl.rlim_cur = rl.rlim_max = 6666; // Not a whole number of pages.
+  rl.rlim_cur = rl.rlim_max = 6666;  // Not a whole number of pages.
   rl.rlim_max = RLIM_INFINITY;
   ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
 
@@ -958,8 +983,8 @@ static void PthreadCleanupTester() {
   pthread_cleanup_push(CountCleanupRoutine, NULL);
   pthread_cleanup_push(AbortCleanupRoutine, NULL);
 
-  pthread_cleanup_pop(0); // Pop the abort without executing it.
-  pthread_cleanup_pop(1); // Pop one count while executing it.
+  pthread_cleanup_pop(0);  // Pop the abort without executing it.
+  pthread_cleanup_pop(1);  // Pop one count while executing it.
   ASSERT_EQ(1U, cleanup_counter);
   // Exit while the other count is still on the cleanup stack.
   pthread_exit(NULL);

@@ -40,6 +40,7 @@ class LinkedListTestAllocator {
     free_called = true;
     ::free(p);
   }
+
  private:
   DISALLOW_IMPLICIT_CONSTRUCTORS(LinkedListTestAllocator);
 };
@@ -48,13 +49,10 @@ typedef LinkedList<const char, LinkedListTestAllocator> test_list_t;
 
 std::string test_list_to_string(test_list_t& list) {
   std::stringstream ss;
-  list.for_each([&] (const char* c) {
-    ss << c;
-  });
+  list.for_each([&](const char* c) { ss << c; });
 
   return ss.str();
 }
-
 };
 
 TEST(linked_list, simple) {
@@ -75,18 +73,14 @@ TEST(linked_list, simple) {
   ASSERT_TRUE(alloc_called);
   ASSERT_TRUE(!free_called);
   alloc_called = free_called = false;
-  list.remove_if([] (const char* c) {
-    return *c == 'c';
-  });
+  list.remove_if([](const char* c) { return *c == 'c'; });
 
   ASSERT_TRUE(!alloc_called);
   ASSERT_TRUE(free_called);
 
   ASSERT_EQ("dba", test_list_to_string(list));
   alloc_called = free_called = false;
-  list.remove_if([] (const char* c) {
-    return *c == '2';
-  });
+  list.remove_if([](const char* c) { return *c == '2'; });
   ASSERT_TRUE(!alloc_called);
   ASSERT_TRUE(!free_called);
   ASSERT_EQ("dba", test_list_to_string(list));
@@ -122,9 +116,7 @@ TEST(linked_list, remove_if_then_pop) {
   list.push_back("b");
   list.push_back("c");
   list.push_back("d");
-  list.remove_if([](const char* c) {
-    return *c == 'b' || *c == 'c';
-  });
+  list.remove_if([](const char* c) { return *c == 'b' || *c == 'c'; });
 
   ASSERT_EQ("ad", test_list_to_string(list));
   ASSERT_STREQ("a", list.pop_front());
@@ -161,18 +153,14 @@ TEST(linked_list, copy_to_array) {
   ASSERT_EQ(nullptr, buf[4]);
 
   memset(buf, 0, sizeof(buf));
-  list.remove_if([](const char* c) {
-    return *c != 'c';
-  });
+  list.remove_if([](const char* c) { return *c != 'c'; });
   ASSERT_EQ(1U, list.copy_to_array(buf, max_size));
   ASSERT_STREQ("c", buf[0]);
   ASSERT_EQ(nullptr, buf[1]);
 
   memset(buf, 0, sizeof(buf));
 
-  list.remove_if([](const char* c) {
-    return *c == 'c';
-  });
+  list.remove_if([](const char* c) { return *c == 'c'; });
 
   ASSERT_EQ(0U, list.copy_to_array(buf, max_size));
   ASSERT_EQ(nullptr, buf[0]);
@@ -213,4 +201,3 @@ TEST(linked_list, test_visit) {
   ASSERT_EQ(3, visits);
   ASSERT_EQ("ab", ss.str());
 }
-

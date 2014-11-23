@@ -41,8 +41,8 @@ static mapinfo_t* parse_maps_line(char* line) {
   uintptr_t start;
   uintptr_t end;
   int name_pos;
-  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start,
-             &end, &name_pos) < 2) {
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start, &end, &name_pos) <
+      2) {
     return NULL;
   }
 
@@ -69,7 +69,7 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
   ScopedDisableDebugCalls disable;
 
   struct mapinfo_t* milist = NULL;
-  char data[1024]; // Used to read lines as well as to construct the filename.
+  char data[1024];  // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
   FILE* fp = fopen(data, "re");
   if (fp != NULL) {

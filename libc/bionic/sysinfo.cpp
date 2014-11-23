@@ -43,7 +43,8 @@ static bool __matches_cpuN(const char* s) {
 }
 
 int get_nprocs_conf() {
-  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
+  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels
+  // offline CPUs disappear
   // from there. This method works on both.
   ScopedReaddir reader("/sys/devices/system/cpu");
   if (reader.IsBad()) {
@@ -94,7 +95,7 @@ static int __get_meminfo(const char* pattern) {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      result = (int) (total / (PAGE_SIZE/1024));
+      result = (int)(total / (PAGE_SIZE / 1024));
       break;
     }
   }

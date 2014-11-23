@@ -48,11 +48,13 @@ static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg
   if (dladdr(ip, &info) != 0) {
     symbol = info.dli_sname;
     if (info.dli_saddr != nullptr) {
-      offset = static_cast<int>(reinterpret_cast<char*>(ip) - reinterpret_cast<char*>(info.dli_saddr));
+      offset =
+          static_cast<int>(reinterpret_cast<char*>(ip) - reinterpret_cast<char*>(info.dli_saddr));
     }
   }
 
-  fprintf(stderr, " #%02d %p %s%+d (%s)\n", *count_ptr, ip, symbol, offset, info.dli_fname ? info.dli_fname : "??");
+  fprintf(stderr, " #%02d %p %s%+d (%s)\n", *count_ptr, ip, symbol, offset,
+          info.dli_fname ? info.dli_fname : "??");
   fflush(stderr);
 #endif
 

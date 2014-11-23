@@ -18,6 +18,7 @@
 #define _FORTIFY_SOURCE 2
 #include <stdio.h>
 
+// clang-format off
 void test_sprintf() {
   char buf[4];
 
@@ -55,3 +56,4 @@ void test_snprintf() {
   // clang should emit a warning, but doesn't
   snprintf(buf, 5, "%d", 100000); // NOLINT(runtime/printf)
 }
+// clang-format on

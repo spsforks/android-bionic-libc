@@ -49,24 +49,27 @@ extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 
 extern "C" int __isthreaded;
 
-// This code is used both by each new pthread and the code that initializes the main thread.
+// This code is used both by each new pthread and the code that initializes the
+// main thread.
 void __init_tls(pthread_internal_t* thread) {
   if (thread->user_allocated_stack()) {
-    // We don't know where the user got their stack, so assume the worst and zero the TLS area.
+    // We don't know where the user got their stack, so assume the worst and
+    // zero the TLS area.
     memset(&thread->tls[0], 0, BIONIC_TLS_SLOTS * sizeof(void*));
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
-  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
-  thread->tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
+  // GCC looks in the TLS for the stack guard on x86, so copy it there from our
+  // global.
+  thread->tls[TLS_SLOT_STACK_GUARD] = (void*)__stack_chk_guard;
 }
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   stack_t ss;
-  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (ss.ss_sp != MAP_FAILED) {
     ss.ss_size = SIGSTKSZ;
     ss.ss_flags = 0;
@@ -84,7 +87,8 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
     param.sched_priority = thread->attr.sched_priority;
     if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
 #if __LP64__
-      // For backwards compatibility reasons, we only report failures on 64-bit devices.
+      // For backwards compatibility reasons, we only report failures on 64-bit
+      // devices.
       error = errno;
 #endif
       __libc_format_log(ANDROID_LOG_WARN, "libc",
@@ -107,8 +111,7 @@ static void* __create_thread_stack(pthread_internal_t* thread) {
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
   void* stack = mmap(NULL, thread->attr.stack_size, prot, flags, -1, 0);
   if (stack == MAP_FAILED) {
-    __libc_format_log(ANDROID_LOG_WARN,
-                      "libc",
+    __libc_format_log(ANDROID_LOG_WARN, "libc",
                       "pthread_create failed: couldn't allocate %zd-byte stack: %s",
                       thread->attr.stack_size, strerror(errno));
     return NULL;
@@ -117,7 +120,8 @@ static void* __create_thread_stack(pthread_internal_t* thread) {
   // Set the guard region at the end of the stack to PROT_NONE.
   if (mprotect(stack, thread->attr.guard_size, PROT_NONE) == -1) {
     __libc_format_log(ANDROID_LOG_WARN, "libc",
-                      "pthread_create failed: couldn't mprotect PROT_NONE %zd-byte stack guard region: %s",
+                      "pthread_create failed: couldn't mprotect PROT_NONE "
+                      "%zd-byte stack guard region: %s",
                       thread->attr.guard_size, strerror(errno));
     munmap(stack, thread->attr.stack_size);
     return NULL;
@@ -144,15 +148,17 @@ static int __pthread_start(void* arg) {
   return 0;
 }
 
-// A dummy start routine for pthread_create failures where we've created a thread but aren't
-// going to run user code on it. We swap out the user's start routine for this and take advantage
+// A dummy start routine for pthread_create failures where we've created a
+// thread but aren't
+// going to run user code on it. We swap out the user's start routine for this
+// and take advantage
 // of the regular thread teardown to free up resources.
 static void* __do_nothing(void*) {
   return NULL;
 }
 
-int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
-                   void* (*start_routine)(void*), void* arg) {
+int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr, void* (*start_routine)(void*),
+                   void* arg) {
   ErrnoRestorer errno_restorer;
 
   // Inform the rest of the C library that at least one thread was created.
@@ -168,7 +174,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     pthread_attr_init(&thread->attr);
   } else {
     thread->attr = *attr;
-    attr = NULL; // Prevent misuse below.
+    attr = NULL;  // Prevent misuse below.
   }
 
   // Make sure the stack size and guard size are multiples of PAGE_SIZE.
@@ -183,20 +189,24 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
       return EAGAIN;
     }
   } else {
-    // The caller did provide a stack, so remember we're not supposed to free it.
+    // The caller did provide a stack, so remember we're not supposed to free
+    // it.
     thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
   }
 
   // Make room for the TLS area.
-  // The child stack is the same address, just growing in the opposite direction.
+  // The child stack is the same address, just growing in the opposite
+  // direction.
   // At offsets >= 0, we have the TLS slots.
   // At offsets < 0, we have the child stack.
-  thread->tls = reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
-                                         thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
+  thread->tls =
+      reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
+                               thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
   void* child_stack = thread->tls;
   __init_tls(thread);
 
-  // Create a mutex for the thread in TLS to wait on once it starts so we can keep
+  // Create a mutex for the thread in TLS to wait on once it starts so we can
+  // keep
   // it from doing anything until after we notify the debugger about it
   //
   // This also provides the memory barrier we need to ensure that all
@@ -211,10 +221,11 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   thread->set_cached_pid(getpid());
 
   int flags = CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD | CLONE_SYSVSEM |
-      CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
+              CLONE_SETTLS | CLONE_PARENT_SETTID | CLONE_CHILD_CLEARTID;
   void* tls = thread->tls;
 #if defined(__i386__)
-  // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc rather than
+  // On x86 (but not x86-64), CLONE_SETTLS takes a pointer to a struct user_desc
+  // rather than
   // a pointer to the TLS itself.
   user_desc tls_descriptor;
   __init_user_desc(&tls_descriptor, false, tls);
@@ -223,15 +234,19 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
   if (rc == -1) {
     int clone_errno = errno;
-    // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
-    // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
-    // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
+    // We don't have to unlock the mutex at all because clone(2) failed so
+    // there's no child waiting to
+    // be unblocked, but we're about to unmap the memory the mutex is stored in,
+    // so this serves as a
+    // reminder that you can't rewrite this function to use a
+    // ScopedPthreadMutexLocker.
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     if (!thread->user_allocated_stack()) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
     free(thread);
-    __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s",
+                      strerror(errno));
     return clone_errno;
   }
 
@@ -245,7 +260,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return init_errno;
   }
 
-  // Publish the pthread_t and unlock the mutex to let the new thread start running.
+  // Publish the pthread_t and unlock the mutex to let the new thread start
+  // running.
   *thread_out = reinterpret_cast<pthread_t>(thread);
   pthread_mutex_unlock(&thread->startup_handshake_mutex);
 

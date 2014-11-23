@@ -40,4 +40,4 @@ class ErrnoRestorer {
   DISALLOW_COPY_AND_ASSIGN(ErrnoRestorer);
 };
 
-#endif // ERRNO_RESTORER_H
+#endif  // ERRNO_RESTORER_H

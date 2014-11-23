@@ -33,14 +33,14 @@
 #include "private/ErrnoRestorer.h"
 
 // mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
+extern "C" void* __mmap2(void*, size_t, int, int, int, size_t);
 
-#define MMAP2_SHIFT 12 // 2**12 == 4096
+#define MMAP2_SHIFT 12  // 2**12 == 4096
 
 static bool kernel_has_MADV_MERGEABLE = true;
 
 void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
+  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT) - 1)) != 0) {
     errno = EINVAL;
     return MAP_FAILED;
   }

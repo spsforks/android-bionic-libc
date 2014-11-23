@@ -19,7 +19,7 @@
 #if defined(__BIONIC__)
 #include "../libc/bionic/libc_logging.cpp"
 extern int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...);
-#endif // __BIONIC__
+#endif  // __BIONIC__
 
 TEST(libc_logging, smoke) {
 #if defined(__BIONIC__)
@@ -104,9 +104,9 @@ TEST(libc_logging, smoke) {
 
   __libc_format_buffer(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, d_INT_MAX) {
@@ -114,9 +114,9 @@ TEST(libc_logging, d_INT_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%d", INT_MAX);
   EXPECT_STREQ("2147483647", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, d_INT_MIN) {
@@ -124,9 +124,9 @@ TEST(libc_logging, d_INT_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%d", INT_MIN);
   EXPECT_STREQ("-2147483648", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, ld_LONG_MAX) {
@@ -138,9 +138,9 @@ TEST(libc_logging, ld_LONG_MAX) {
 #else
   EXPECT_STREQ("2147483647", buf);
 #endif
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, ld_LONG_MIN) {
@@ -152,9 +152,9 @@ TEST(libc_logging, ld_LONG_MIN) {
 #else
   EXPECT_STREQ("-2147483648", buf);
 #endif
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, lld_LLONG_MAX) {
@@ -162,9 +162,9 @@ TEST(libc_logging, lld_LLONG_MAX) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%lld", LLONG_MAX);
   EXPECT_STREQ("9223372036854775807", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, lld_LLONG_MIN) {
@@ -172,9 +172,9 @@ TEST(libc_logging, lld_LLONG_MIN) {
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%lld", LLONG_MIN);
   EXPECT_STREQ("-9223372036854775808", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libc_logging, buffer_overrun) {
@@ -184,7 +184,7 @@ TEST(libc_logging, buffer_overrun) {
   EXPECT_STREQ("hello world", buf);
   ASSERT_EQ(11, __libc_format_buffer(buf, 8, "hello %s", "world"));
   EXPECT_STREQ("hello w", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }

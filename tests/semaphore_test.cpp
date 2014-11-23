@@ -92,7 +92,7 @@ TEST(semaphore, sem_wait__sem_post) {
 }
 
 static inline void timespec_add_ms(timespec& ts, size_t ms) {
-  ts.tv_sec  += ms / 1000;
+  ts.tv_sec += ms / 1000;
   ts.tv_nsec += (ms % 1000) * 1000000;
   if (ts.tv_nsec >= NS_PER_S) {
     ts.tv_sec++;

@@ -96,7 +96,8 @@ int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds
     kernel_ss_ptr = &kernel_ss;
   }
 
-  // The Linux kernel only handles 6 arguments and this system call really needs 7,
+  // The Linux kernel only handles 6 arguments and this system call really needs
+  // 7,
   // so the last argument is a void* pointing to:
   struct pselect6_extra_data_t {
     uintptr_t ss_addr;

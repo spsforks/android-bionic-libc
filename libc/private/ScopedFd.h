@@ -24,36 +24,36 @@
 // Use this when the fd is incidental to the purpose of your function,
 // but needs to be cleaned up on exit.
 class ScopedFd {
-public:
-    explicit ScopedFd(int fd) : fd(fd) {
+ public:
+  explicit ScopedFd(int fd) : fd(fd) {
+  }
+
+  ~ScopedFd() {
+    reset();
+  }
+
+  int get() const {
+    return fd;
+  }
+
+  int release() __attribute__((warn_unused_result)) {
+    int localFd = fd;
+    fd = -1;
+    return localFd;
+  }
+
+  void reset(int new_fd = -1) {
+    if (fd != -1) {
+      TEMP_FAILURE_RETRY(close(fd));
     }
+    fd = new_fd;
+  }
 
-    ~ScopedFd() {
-      reset();
-    }
+ private:
+  int fd;
 
-    int get() const {
-        return fd;
-    }
-
-    int release() __attribute__((warn_unused_result)) {
-        int localFd = fd;
-        fd = -1;
-        return localFd;
-    }
-
-    void reset(int new_fd = -1) {
-      if (fd != -1) {
-          TEMP_FAILURE_RETRY(close(fd));
-      }
-      fd = new_fd;
-    }
-
-private:
-    int fd;
-
-    // Disallow copy and assignment.
-    DISALLOW_COPY_AND_ASSIGN(ScopedFd);
+  // Disallow copy and assignment.
+  DISALLOW_COPY_AND_ASSIGN(ScopedFd);
 };
 
 #endif  // SCOPED_FD_H

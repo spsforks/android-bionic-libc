@@ -19,7 +19,7 @@
 
 #include "private/bionic_macros.h"
 
-template<typename T>
+template <typename T>
 struct LinkedListEntry {
   LinkedListEntry<T>* next;
   T* element;
@@ -28,10 +28,11 @@ struct LinkedListEntry {
 /*
  * Represents linked list of objects of type T
  */
-template<typename T, typename Allocator>
+template <typename T, typename Allocator>
 class LinkedList {
  public:
-  LinkedList() : head_(nullptr), tail_(nullptr) {}
+  LinkedList() : head_(nullptr), tail_(nullptr) {
+  }
   ~LinkedList() {
     clear();
   }
@@ -91,15 +92,15 @@ class LinkedList {
     tail_ = nullptr;
   }
 
-  template<typename F>
+  template <typename F>
   void for_each(F action) const {
-    visit([&] (T* si) {
+    visit([&](T* si) {
       action(si);
       return true;
     });
   }
 
-  template<typename F>
+  template <typename F>
   bool visit(F action) const {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (!action(e->element)) {
@@ -109,9 +110,9 @@ class LinkedList {
     return true;
   }
 
-  template<typename F>
+  template <typename F>
   void remove_if(F predicate) {
-    for (LinkedListEntry<T>* e = head_, *p = nullptr; e != nullptr;) {
+    for (LinkedListEntry<T>* e = head_, * p = nullptr; e != nullptr;) {
       if (predicate(e->element)) {
         LinkedListEntry<T>* next = e->next;
         if (p == nullptr) {
@@ -158,4 +159,4 @@ class LinkedList {
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
 
-#endif // __LINKED_LIST_H
+#endif  // __LINKED_LIST_H

@@ -56,7 +56,7 @@ int __fpclassifyd(double d) {
   }
   return FP_NORMAL;
 }
-__strong_alias(__fpclassify, __fpclassifyd); // glibc uses __fpclassify, BSD __fpclassifyd.
+__strong_alias(__fpclassify, __fpclassifyd);  // glibc uses __fpclassify, BSD __fpclassifyd.
 
 int __fpclassifyf(float f) {
   float_u u;

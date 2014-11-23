@@ -33,15 +33,15 @@
 int pthread_detach(pthread_t t) {
   pthread_accessor thread(t);
   if (thread.get() == NULL) {
-      return ESRCH;
+    return ESRCH;
   }
 
   if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-    return EINVAL; // Already detached.
+    return EINVAL;  // Already detached.
   }
 
   if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-    return 0; // Already being joined; silently do nothing, like glibc.
+    return 0;  // Already being joined; silently do nothing, like glibc.
   }
 
   if (thread->tid == 0) {

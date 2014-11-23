@@ -42,10 +42,10 @@ speed_t cfgetospeed(const termios* s) {
 }
 
 void cfmakeraw(termios* s) {
-  s->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+  s->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
   s->c_oflag &= ~OPOST;
-  s->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  s->c_cflag &= ~(CSIZE|PARENB);
+  s->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+  s->c_cflag &= ~(CSIZE | PARENB);
   s->c_cflag |= CS8;
 }
 
@@ -96,10 +96,18 @@ int tcsendbreak(int fd, int duration) {
 int tcsetattr(int fd, int optional_actions, const termios* s) {
   int cmd;
   switch (optional_actions) {
-    case TCSANOW: cmd = TCSETS; break;
-    case TCSADRAIN: cmd = TCSETSW; break;
-    case TCSAFLUSH: cmd = TCSETSF; break;
-    default: errno = EINVAL; return -1;
+    case TCSANOW:
+      cmd = TCSETS;
+      break;
+    case TCSADRAIN:
+      cmd = TCSETSW;
+      break;
+    case TCSAFLUSH:
+      cmd = TCSETSF;
+      break;
+    default:
+      errno = EINVAL;
+      return -1;
   }
   return ioctl(fd, cmd, s);
 }

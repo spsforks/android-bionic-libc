@@ -76,7 +76,7 @@ static const char* env_match(const char* envstr, const char* name) {
 static bool __is_valid_environment_variable(const char* name) {
   // According to its sources, the kernel uses 32*PAGE_SIZE by default
   // as the maximum size for an env. variable definition.
-  const int MAX_ENV_LEN = 32*4096;
+  const int MAX_ENV_LEN = 32 * 4096;
 
   if (name == nullptr) {
     return false;
@@ -95,12 +95,14 @@ static bool __is_valid_environment_variable(const char* name) {
     pos++;
   }
 
-  // Check that it's smaller than MAX_ENV_LEN (to detect non-zero terminated strings).
+  // Check that it's smaller than MAX_ENV_LEN (to detect non-zero terminated
+  // strings).
   if (pos >= MAX_ENV_LEN) {
     return false;
   }
 
-  // Check that it contains at least one equal sign that is not the first character
+  // Check that it contains at least one equal sign that is not the first
+  // character
   if (first_equal_pos < 1) {
     return false;
   }
@@ -111,33 +113,11 @@ static bool __is_valid_environment_variable(const char* name) {
 static bool __is_unsafe_environment_variable(const char* name) {
   // None of these should be allowed in setuid programs.
   static const char* const UNSAFE_VARIABLE_NAMES[] = {
-      "GCONV_PATH",
-      "GETCONF_DIR",
-      "HOSTALIASES",
-      "LD_AOUT_LIBRARY_PATH",
-      "LD_AOUT_PRELOAD",
-      "LD_AUDIT",
-      "LD_DEBUG",
-      "LD_DEBUG_OUTPUT",
-      "LD_DYNAMIC_WEAK",
-      "LD_LIBRARY_PATH",
-      "LD_ORIGIN_PATH",
-      "LD_PRELOAD",
-      "LD_PROFILE",
-      "LD_SHOW_AUXV",
-      "LD_USE_LOAD_BIAS",
-      "LOCALDOMAIN",
-      "LOCPATH",
-      "MALLOC_CHECK_",
-      "MALLOC_TRACE",
-      "NIS_PATH",
-      "NLSPATH",
-      "RESOLV_HOST_CONF",
-      "RES_OPTIONS",
-      "TMPDIR",
-      "TZDIR",
-      nullptr
-  };
+      "GCONV_PATH", "GETCONF_DIR", "HOSTALIASES", "LD_AOUT_LIBRARY_PATH", "LD_AOUT_PRELOAD",
+      "LD_AUDIT", "LD_DEBUG", "LD_DEBUG_OUTPUT", "LD_DYNAMIC_WEAK", "LD_LIBRARY_PATH",
+      "LD_ORIGIN_PATH", "LD_PRELOAD", "LD_PROFILE", "LD_SHOW_AUXV", "LD_USE_LOAD_BIAS",
+      "LOCALDOMAIN", "LOCPATH", "MALLOC_CHECK_", "MALLOC_TRACE", "NIS_PATH", "NLSPATH",
+      "RESOLV_HOST_CONF", "RES_OPTIONS", "TMPDIR", "TZDIR", nullptr};
   for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != nullptr; ++i) {
     if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != nullptr) {
       return true;
@@ -147,15 +127,16 @@ static bool __is_unsafe_environment_variable(const char* name) {
 }
 
 static void __sanitize_environment_variables() {
-  char** src  = _envp;
+  char** src = _envp;
   char** dst = _envp;
   for (; src[0] != nullptr; ++src) {
     if (!__is_valid_environment_variable(src[0])) {
       continue;
     }
-    // Remove various unsafe environment variables if we're loading a setuid program.
+    // Remove various unsafe environment variables if we're loading a setuid
+    // program.
     if (get_AT_SECURE() && __is_unsafe_environment_variable(src[0])) {
-        continue;
+      continue;
     }
     dst[0] = src[0];
     ++dst;
@@ -180,7 +161,7 @@ const char* linker_env_get(const char* name) {
     const char* val = env_match(p[0], name);
     if (val != nullptr) {
       if (val[0] == '\0') {
-        return nullptr; // Return null for empty strings.
+        return nullptr;  // Return null for empty strings.
       }
       return val;
     }

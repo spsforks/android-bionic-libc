@@ -72,11 +72,14 @@ TEST(unistd, sbrk_ENOMEM) {
   extern void* __bionic_brk;
 
   class ScopedBrk {
-  public:
-    ScopedBrk() : saved_brk_(__bionic_brk) {}
-    virtual ~ScopedBrk() { __bionic_brk = saved_brk_; }
+   public:
+    ScopedBrk() : saved_brk_(__bionic_brk) {
+    }
+    virtual ~ScopedBrk() {
+      __bionic_brk = saved_brk_;
+    }
 
-  private:
+   private:
     void* saved_brk_;
   };
 
@@ -101,18 +104,21 @@ TEST(unistd, sbrk_ENOMEM) {
   ASSERT_EQ(ENOMEM, errno);
 #else
   class ScopedBrk {
-  public:
-    ScopedBrk() : saved_brk_(get_brk()) {}
-    virtual ~ScopedBrk() { brk(saved_brk_); }
+   public:
+    ScopedBrk() : saved_brk_(get_brk()) {
+    }
+    virtual ~ScopedBrk() {
+      brk(saved_brk_);
+    }
 
-  private:
+   private:
     void* saved_brk_;
   };
 
   ScopedBrk scope_brk;
 
   uintptr_t cur_brk = reinterpret_cast<uintptr_t>(get_brk());
-  if (cur_brk < static_cast<uintptr_t>(-(SBRK_MIN+1))) {
+  if (cur_brk < static_cast<uintptr_t>(-(SBRK_MIN + 1))) {
     // Do the overflow test for a max negative increment.
     ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MIN));
 #if defined(__BIONIC__)
@@ -427,9 +433,11 @@ TEST(unistd, getpid_caching_and_clone) {
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
   void* child_stack[1024];
-  int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
+  int clone_result =
+      clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
   if (clone_result == -1 && errno == EPERM && getuid() != 0) {
-    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
+    GTEST_LOG_(INFO)
+        << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
     return;
   }
   ASSERT_NE(clone_result, -1);
@@ -517,9 +525,9 @@ TEST(unistd, pathconf_fpathconf) {
   ASSERT_TRUE(rc > 0 && powerof2(rc));
 }
 
-
 TEST(unistd, _POSIX_macros_smoke) {
-  // Make a tight verification of _POSIX_* / _POSIX2_* / _XOPEN_* macros, to prevent change by mistake.
+  // Make a tight verification of _POSIX_* / _POSIX2_* / _XOPEN_* macros, to prevent change by
+  // mistake.
   // Verify according to POSIX.1-2008.
   EXPECT_EQ(200809L, _POSIX_VERSION);
 
@@ -571,7 +579,7 @@ TEST(unistd, _POSIX_macros_smoke) {
   EXPECT_EQ(_POSIX_VERSION, _POSIX_THREADS);
   EXPECT_EQ(_POSIX_VERSION, _POSIX_THREAD_ATTR_STACKADDR);
   EXPECT_EQ(_POSIX_VERSION, _POSIX_THREAD_ATTR_STACKSIZE);
-  EXPECT_TRUE(_POSIX_VERSION ==  _POSIX_THREAD_CPUTIME || 0 == _POSIX_THREAD_CPUTIME);
+  EXPECT_TRUE(_POSIX_VERSION == _POSIX_THREAD_CPUTIME || 0 == _POSIX_THREAD_CPUTIME);
   EXPECT_GT(_POSIX_THREAD_DESTRUCTOR_ITERATIONS, 0);
   EXPECT_GT(_POSIX_THREAD_KEYS_MAX, 0);
   EXPECT_EQ(_POSIX_VERSION, _POSIX_THREAD_PRIORITY_SCHEDULING);
@@ -638,23 +646,23 @@ TEST(unistd, _POSIX_macros_smoke) {
   EXPECT_EQ(-1, _XOPEN_REALTIME_THREADS);
   EXPECT_EQ(-1, _XOPEN_SHM);
 
-#endif // defined(__BIONIC__)
+#endif  // defined(__BIONIC__)
 }
 
-#define VERIFY_SYSCONF_NOT_SUPPORT(name) VerifySysconf(name, #name, [](long v){return v == -1;})
+#define VERIFY_SYSCONF_NOT_SUPPORT(name) VerifySysconf(name, #name, [](long v) { return v == -1; })
 
 // sysconf() means unlimited when it returns -1 with errno unchanged.
 #define VERIFY_SYSCONF_POSITIVE(name) \
-  VerifySysconf(name, #name, [](long v){return (v > 0 || v == -1);})
+  VerifySysconf(name, #name, [](long v) { return (v > 0 || v == -1); })
 
 #define VERIFY_SYSCONF_POSIX_VERSION(name) \
-  VerifySysconf(name, #name, [](long v){return v == _POSIX_VERSION;})
+  VerifySysconf(name, #name, [](long v) { return v == _POSIX_VERSION; })
 
-static void VerifySysconf(int option, const char *option_name, bool (*verify)(long)) {
+static void VerifySysconf(int option, const char* option_name, bool (*verify)(long)) {
   errno = 0;
   long ret = sysconf(option);
-  EXPECT_TRUE(0 == errno && verify(ret)) << "name = " << option_name << ", ret = "
-      << ret <<", Error Message: " << strerror(errno);
+  EXPECT_TRUE(0 == errno && verify(ret)) << "name = " << option_name << ", ret = " << ret
+                                         << ", Error Message: " << strerror(errno);
 }
 
 TEST(unistd, sysconf) {
@@ -680,7 +688,7 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_POSITIVE(_SC_RE_DUP_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_STREAM_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_TZNAME_MAX);
-  VerifySysconf(_SC_XOPEN_VERSION, "_SC_XOPEN_VERSION", [](long v){return v == _XOPEN_VERSION;});
+  VerifySysconf(_SC_XOPEN_VERSION, "_SC_XOPEN_VERSION", [](long v) { return v == _XOPEN_VERSION; });
   VERIFY_SYSCONF_POSITIVE(_SC_ATEXIT_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_IOV_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_PAGESIZE);
@@ -688,7 +696,7 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_POSITIVE(_SC_XOPEN_UNIX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_LISTIO_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_MAX);
-  VerifySysconf(_SC_AIO_PRIO_DELTA_MAX, "_SC_AIO_PRIO_DELTA_MAX", [](long v){return v >= 0;});
+  VerifySysconf(_SC_AIO_PRIO_DELTA_MAX, "_SC_AIO_PRIO_DELTA_MAX", [](long v) { return v >= 0; });
   VERIFY_SYSCONF_POSITIVE(_SC_DELAYTIMER_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_MQ_OPEN_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_MQ_PRIO_MAX);
@@ -799,5 +807,5 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_REALTIME_THREADS);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_SHM);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_UUCP);
-#endif // defined(__BIONIC__)
+#endif  // defined(__BIONIC__)
 }

@@ -39,4 +39,4 @@ class ScopedSignalHandler {
   const int signal_number_;
 };
 
-#endif // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H
+#endif  // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H

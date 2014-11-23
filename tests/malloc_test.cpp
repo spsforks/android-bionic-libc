@@ -28,7 +28,7 @@
 
 TEST(malloc, malloc_std) {
   // Simple malloc test.
-  void *ptr = malloc(100);
+  void* ptr = malloc(100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   free(ptr);
@@ -43,7 +43,7 @@ TEST(malloc, malloc_overflow) {
 TEST(malloc, calloc_std) {
   // Simple calloc test.
   size_t alloc_len = 100;
-  char *ptr = (char *)calloc(1, alloc_len);
+  char* ptr = (char*)calloc(1, alloc_len);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(alloc_len, malloc_usable_size(ptr));
   for (size_t i = 0; i < alloc_len; i++) {
@@ -76,12 +76,12 @@ TEST(malloc, calloc_overflow) {
 TEST(malloc, memalign_multiple) {
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
-    for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
-      char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));
+    for (size_t alignment = 1 << i; alignment < (1U << (i + 1)); alignment++) {
+      char* ptr = reinterpret_cast<char*>(memalign(alignment, 100));
       ASSERT_TRUE(ptr != NULL) << "Failed at alignment " << alignment;
       ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
-      ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))
-          << "Failed at alignment " << alignment;
+      ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i))) << "Failed at alignment "
+                                                                    << alignment;
       free(ptr);
     }
   }
@@ -113,7 +113,7 @@ TEST(malloc, posix_memalign_overflow) {
 TEST(malloc, memalign_realloc) {
   // Memalign and then realloc the pointer a couple of times.
   for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {
-    char *ptr = (char*)memalign(alignment, 100);
+    char* ptr = (char*)memalign(alignment, 100);
     ASSERT_TRUE(ptr != NULL);
     ASSERT_LE(100U, malloc_usable_size(ptr));
     ASSERT_EQ(0U, (intptr_t)ptr % alignment);
@@ -148,12 +148,12 @@ TEST(malloc, memalign_realloc) {
 
 TEST(malloc, malloc_realloc_larger) {
   // Realloc to a larger size, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(100);
+  char* ptr = (char*)malloc(100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   memset(ptr, 67, 100);
 
-  ptr = (char *)realloc(ptr, 200);
+  ptr = (char*)realloc(ptr, 200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -164,12 +164,12 @@ TEST(malloc, malloc_realloc_larger) {
 
 TEST(malloc, malloc_realloc_smaller) {
   // Realloc to a smaller size, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(200);
+  char* ptr = (char*)malloc(200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
   memset(ptr, 67, 200);
 
-  ptr = (char *)realloc(ptr, 100);
+  ptr = (char*)realloc(ptr, 100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -180,12 +180,12 @@ TEST(malloc, malloc_realloc_smaller) {
 
 TEST(malloc, malloc_multiple_realloc) {
   // Multiple reallocs, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(200);
+  char* ptr = (char*)malloc(200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
   memset(ptr, 0x23, 200);
 
-  ptr = (char *)realloc(ptr, 100);
+  ptr = (char*)realloc(ptr, 100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -218,11 +218,11 @@ TEST(malloc, malloc_multiple_realloc) {
 
 TEST(malloc, calloc_realloc_larger) {
   // Realloc to a larger size, calloc is used for the original allocation.
-  char *ptr = (char *)calloc(1, 100);
+  char* ptr = (char*)calloc(1, 100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
 
-  ptr = (char *)realloc(ptr, 200);
+  ptr = (char*)realloc(ptr, 200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -233,11 +233,11 @@ TEST(malloc, calloc_realloc_larger) {
 
 TEST(malloc, calloc_realloc_smaller) {
   // Realloc to a smaller size, calloc is used for the original allocation.
-  char *ptr = (char *)calloc(1, 200);
+  char* ptr = (char*)calloc(1, 200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
 
-  ptr = (char *)realloc(ptr, 100);
+  ptr = (char*)realloc(ptr, 100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -248,11 +248,11 @@ TEST(malloc, calloc_realloc_smaller) {
 
 TEST(malloc, calloc_multiple_realloc) {
   // Multiple reallocs, calloc is used for the original allocation.
-  char *ptr = (char *)calloc(1, 200);
+  char* ptr = (char*)calloc(1, 200);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(200U, malloc_usable_size(ptr));
 
-  ptr = (char *)realloc(ptr, 100);
+  ptr = (char*)realloc(ptr, 100);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(100U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 100; i++) {
@@ -303,7 +303,7 @@ TEST(malloc, pvalloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
-  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize - 1)) == 0);
   ASSERT_LE(pagesize, malloc_usable_size(ptr));
   free(ptr);
 }
@@ -316,7 +316,7 @@ TEST(malloc, valloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
-  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize - 1)) == 0);
   free(ptr);
 }
 
@@ -354,19 +354,15 @@ TEST(malloc, malloc_info) {
               arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
     ASSERT_EQ(tinyxml2::XML_SUCCESS,
               arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("bins-total")->QueryIntText(&val));
+    ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->FirstChildElement("bins-total")->QueryIntText(&val));
 
     auto bin = arena->FirstChildElement("bin");
-    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+    for (; bin != nullptr; bin = bin->NextSiblingElement()) {
       if (strcmp(bin->Name(), "bin") == 0) {
         ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("allocated")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("nmalloc")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->FirstChildElement("allocated")->QueryIntText(&val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->FirstChildElement("nmalloc")->QueryIntText(&val));
+        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->FirstChildElement("ndalloc")->QueryIntText(&val));
       }
     }
   }

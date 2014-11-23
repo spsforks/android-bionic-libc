@@ -35,7 +35,7 @@ int sched_getcpu() {
   unsigned cpu;
   int rc = __getcpu(&cpu, NULL, NULL);
   if (rc == -1) {
-    return -1; // errno is already set.
+    return -1;  // errno is already set.
   }
   return cpu;
 }
