@@ -29,9 +29,7 @@ class ScopedSignalHandler {
     sigaction(signal_number_, &action_, &old_action_);
   }
 
-  ~ScopedSignalHandler() {
-    sigaction(signal_number_, &old_action_, NULL);
-  }
+  ~ScopedSignalHandler() { sigaction(signal_number_, &old_action_, NULL); }
 
  private:
   struct sigaction action_;
@@ -39,4 +37,4 @@ class ScopedSignalHandler {
   const int signal_number_;
 };
 
-#endif // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H
+#endif  // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H

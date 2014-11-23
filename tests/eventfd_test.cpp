@@ -19,7 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#if defined(__BIONIC__) // Android's prebuilt gcc's header files don't include <sys/eventfd.h>.
+#if defined(__BIONIC__)  // Android's prebuilt gcc's header files don't include
+                         // <sys/eventfd.h>.
 #include <sys/eventfd.h>
 #else
 // Include the necessary components of sys/eventfd.h right here.

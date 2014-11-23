@@ -23,7 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 
-template<typename F>
+template <typename F>
 void test_isolated(F test) {
   int pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);

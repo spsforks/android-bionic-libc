@@ -44,8 +44,7 @@ static bool __bionic_current_locale_is_utf8 = true;
 struct __locale_t {
   size_t mb_cur_max;
 
-  __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
-  }
+  __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {}
 
   __locale_t(const __locale_t* other) {
     if (other == LC_GLOBAL_LOCALE) {
@@ -61,7 +60,8 @@ struct __locale_t {
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
 
-// We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
+// We don't use pthread_once for this so that we know when the resource (a TLS
+// slot) will be taken.
 static pthread_key_t g_uselocale_key;
 __attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
   pthread_key_create(&g_uselocale_key, NULL);
@@ -107,11 +107,9 @@ size_t __ctype_get_mb_cur_max() {
 }
 
 static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 ||
-          strcmp(locale, "C") == 0 ||
+  return (strcmp(locale, "") == 0 || strcmp(locale, "C") == 0 ||
           strcmp(locale, "C.UTF-8") == 0 ||
-          strcmp(locale, "en_US.UTF-8") == 0 ||
-          strcmp(locale, "POSIX") == 0);
+          strcmp(locale, "en_US.UTF-8") == 0 || strcmp(locale, "POSIX") == 0);
 }
 
 lconv* localeconv() {
@@ -119,15 +117,12 @@ lconv* localeconv() {
   return &g_locale;
 }
 
-locale_t duplocale(locale_t l) {
-  return new __locale_t(l);
-}
+locale_t duplocale(locale_t l) { return new __locale_t(l); }
 
-void freelocale(locale_t l) {
-  delete l;
-}
+void freelocale(locale_t l) { delete l; }
 
-locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
+locale_t newlocale(int category_mask, const char* locale_name,
+                   locale_t /*base*/) {
   // Are 'category_mask' and 'locale_name' valid?
   if ((category_mask & ~LC_ALL_MASK) != 0 || locale_name == NULL) {
     errno = EINVAL;
@@ -163,9 +158,11 @@ char* setlocale(int category, const char* locale_name) {
 }
 
 locale_t uselocale(locale_t new_locale) {
-  locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
+  locale_t old_locale =
+      static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
 
-  // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
+  // If this is the first call to uselocale(3) on this thread, we return
+  // LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
     old_locale = LC_GLOBAL_LOCALE;
   }
@@ -185,11 +182,10 @@ int strcoll_l(const char* s1, const char* s2, locale_t) {
   return strcoll(s1, s2);
 }
 
-char* strerror_l(int error, locale_t) {
-  return strerror(error);
-}
+char* strerror_l(int error, locale_t) { return strerror(error); }
 
-size_t strftime_l(char* s, size_t max, const char* format, const struct tm* tm, locale_t) {
+size_t strftime_l(char* s, size_t max, const char* format, const struct tm* tm,
+                  locale_t) {
   return strftime(s, max, format, tm);
 }
 
@@ -205,7 +201,8 @@ long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
   return strtoll(s, end_ptr, base);
 }
 
-unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
+unsigned long long strtoull_l(const char* s, char** end_ptr, int base,
+                              locale_t) {
   return strtoull(s, end_ptr, base);
 }
 

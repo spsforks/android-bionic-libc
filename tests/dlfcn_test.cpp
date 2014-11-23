@@ -27,27 +27,21 @@
 #include <string>
 
 #define ASSERT_SUBSTR(needle, haystack) \
-    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
+  ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
 static bool g_called = false;
-extern "C" void DlSymTestFunction() {
-  g_called = true;
-}
+extern "C" void DlSymTestFunction() { g_called = true; }
 
 static int g_ctor_function_called = 0;
 
-extern "C" void ctor_function() __attribute__ ((constructor));
+extern "C" void ctor_function() __attribute__((constructor));
 
-extern "C" void ctor_function() {
-  g_ctor_function_called = 17;
-}
+extern "C" void ctor_function() { g_ctor_function_called = 17; }
 
-TEST(dlfcn, ctor_function_call) {
-  ASSERT_EQ(17, g_ctor_function_called);
-}
+TEST(dlfcn, ctor_function_call) { ASSERT_EQ(17, g_ctor_function_called); }
 
 TEST(dlfcn, dlsym_in_self) {
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
   ASSERT_TRUE(dlerror() == NULL);
@@ -55,7 +49,7 @@ TEST(dlfcn, dlsym_in_self) {
   void* sym = dlsym(self, "DlSymTestFunction");
   ASSERT_TRUE(sym != NULL);
 
-  void (*function)() = reinterpret_cast<void(*)()>(sym);
+  void (*function)() = reinterpret_cast<void (*)()>(sym);
 
   g_called = false;
   function();
@@ -90,7 +84,7 @@ TEST(dlfcn, dlopen_noload) {
 }
 
 // ifuncs are only supported on intel and arm64 for now
-#if defined (__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
@@ -100,7 +94,8 @@ TEST(dlfcn, ifunc) {
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
   fn_ptr foo_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo"));
-  fn_ptr foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
+  fn_ptr foo_library_ptr =
+      reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
   ASSERT_TRUE(foo_ptr != NULL);
   ASSERT_TRUE(foo_library_ptr != NULL);
   ASSERT_EQ(strncmp("set", foo_ptr(), 3), 0);
@@ -125,11 +120,13 @@ TEST(dlfcn, ifunc_ctor_call) {
 
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  fn_ptr is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_irelative"));
+  fn_ptr is_ctor_called =
+      reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_irelative"));
   ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
   ASSERT_STREQ("false", is_ctor_called());
 
-  is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_jump_slot"));
+  is_ctor_called =
+      reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_jump_slot"));
   ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
@@ -149,14 +146,12 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // in both dt_needed libraries, the correct relocation should
   // use the function defined in libtest_relo_check_dt_needed_order_1.so
   void* handle = nullptr;
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = make_scope_guard([&]() { dlclose(handle); });
 
   handle = dlopen("libtest_relo_check_dt_needed_order.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  typedef int (*fn_t) (void);
+  typedef int (*fn_t)(void);
   fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "relo_test_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(1, fn());
@@ -190,11 +185,13 @@ TEST(dlfcn, dlopen_check_order_dlsym) {
   ASSERT_TRUE(sym == nullptr);
   void* handle = dlopen("libtest_check_order_dlsym.so", RTLD_NOW | RTLD_GLOBAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  typedef int (*fn_t) (void);
+  typedef int (*fn_t)(void);
   fn_t fn, fn2;
-  fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer"));
+  fn = reinterpret_cast<fn_t>(
+      dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer"));
   ASSERT_TRUE(fn != NULL) << dlerror();
-  fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer2"));
+  fn2 = reinterpret_cast<fn_t>(
+      dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer2"));
   ASSERT_TRUE(fn2 != NULL) << dlerror();
 
   ASSERT_EQ(42, fn());
@@ -205,7 +202,8 @@ TEST(dlfcn, dlopen_check_order_dlsym) {
 TEST(dlfcn, dlopen_check_order_reloc_siblings) {
   // This is how this one works:
   // we lookup and call get_answer which is defined in '_2.so'
-  // and in turn calls external get_answer_impl() defined in _1.so and in '_[a-f].so'
+  // and in turn calls external get_answer_impl() defined in _1.so and in
+  // '_[a-f].so'
   // the correct _impl() is implemented by '_a.so';
   //
   // Note that this is test for RTLD_LOCAL (TODO: test for GLOBAL?)
@@ -233,18 +231,24 @@ TEST(dlfcn, dlopen_check_order_reloc_siblings) {
   //     +-> ..._f.so <- exports get_answer() that calls get_anser_impl();
   //                     implements incorrect get_answer_impl()
 
-  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't "
+      "loaded and RTLD_NOLOAD prevented it",
+      dlerror());
 #endif
 
-  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  typedef int (*fn_t) (void);
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
+  typedef int (*fn_t)(void);
+  fn_t fn =
+      reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(42, fn());
 
@@ -257,21 +261,26 @@ TEST(dlfcn, dlopen_check_order_reloc_siblings_with_preload) {
   // libtest_check_order_reloc_siblings_1.so (first dependency) prior to
   // dlopen(libtest_check_order_reloc_siblings.so)
 
-  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
-  handle = dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_NOLOAD);
+  handle =
+      dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 
-  void* handle_for_1 = dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_LOCAL);
+  void* handle_for_1 =
+      dlopen("libtest_check_order_reloc_siblings_1.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle_for_1 != nullptr) << dlerror();
 
-  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   ASSERT_EQ(0, dlclose(handle_for_1));
 
-  typedef int (*fn_t) (void);
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
+  typedef int (*fn_t)(void);
+  fn_t fn =
+      reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(42, fn());
 
@@ -281,7 +290,8 @@ TEST(dlfcn, dlopen_check_order_reloc_siblings_with_preload) {
 TEST(dlfcn, dlopen_check_order_reloc_grandchild) {
   // This is how this one works:
   // we lookup and call grandchild_get_answer which is defined in '_2.so'
-  // and in turn calls external get_answer_impl() defined in '_c_1.so and _c_2.so'
+  // and in turn calls external get_answer_impl() defined in '_c_1.so and
+  // _c_2.so'
   // the correct _impl() is implemented by '_c_1.so';
   //
   // Here is the picture of subtree:
@@ -298,18 +308,24 @@ TEST(dlfcn, dlopen_check_order_reloc_grandchild) {
   //     |
   //     +-> ..._d.so <- empty
 
-  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't "
+      "loaded and RTLD_NOLOAD prevented it",
+      dlerror());
 #endif
 
-  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  typedef int (*fn_t) (void);
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_grandchild_get_answer"));
+  typedef int (*fn_t)(void);
+  fn_t fn = reinterpret_cast<fn_t>(
+      dlsym(handle, "check_order_reloc_grandchild_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(42, fn());
 
@@ -344,27 +360,31 @@ TEST(dlfcn, dlopen_check_order_reloc_nephew) {
   //     |
   //     +-> ..._f.so
 
-  void* handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't "
+      "loaded and RTLD_NOLOAD prevented it",
+      dlerror());
 #endif
 
-  handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
+  handle =
+      dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  typedef int (*fn_t) (void);
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_nephew_get_answer"));
+  typedef int (*fn_t)(void);
+  fn_t fn = reinterpret_cast<fn_t>(
+      dlsym(handle, "check_order_reloc_nephew_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(42, fn());
 
   ASSERT_EQ(0, dlclose(handle));
 }
 
-extern "C" int check_order_reloc_root_get_answer_impl() {
-  return 42;
-}
+extern "C" int check_order_reloc_root_get_answer_impl() { return 42; }
 
 TEST(dlfcn, dlopen_check_order_reloc_main_executable) {
   // This is how this one works:
@@ -379,18 +399,23 @@ TEST(dlfcn, dlopen_check_order_reloc_main_executable) {
   // +-> ..._2.so <- gives incorrect answer for answer_main_impl()
   //
 
-  void* handle = dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle =
+      dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_root.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libtest_check_order_reloc_root.so\" wasn't "
+      "loaded and RTLD_NOLOAD prevented it",
+      dlerror());
 #endif
 
   handle = dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  typedef int (*fn_t) (void);
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "check_order_reloc_root_get_answer"));
+  typedef int (*fn_t)(void);
+  fn_t fn = reinterpret_cast<fn_t>(
+      dlsym(handle, "check_order_reloc_root_get_answer"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(42, fn());
 
@@ -445,19 +470,26 @@ TEST(dlfcn, dlopen_check_loop) {
   void* handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW);
 #if defined(__BIONIC__)
   ASSERT_TRUE(handle == nullptr);
-  ASSERT_STREQ("dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: recursive link to \"libtest_with_dependency_loop_a.so\"",
+      dlerror());
   // This symbol should never be exposed
   void* f = dlsym(RTLD_DEFAULT, "dlopen_test_invalid_function");
   ASSERT_TRUE(f == nullptr);
   ASSERT_SUBSTR("undefined symbol: dlopen_test_invalid_function", dlerror());
 
-  // dlopen second time to make sure that the library wasn't loaded even though dlopen returned null.
-  // This may happen if during cleanup the root library or one of the depended libs were not removed
+  // dlopen second time to make sure that the library wasn't loaded even though
+  // dlopen returned null.
+  // This may happen if during cleanup the root library or one of the depended
+  // libs were not removed
   // from soinfo list.
   handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
-#else // glibc allows recursive links
+  ASSERT_STREQ(
+      "dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't "
+      "loaded and RTLD_NOLOAD prevented it",
+      dlerror());
+#else  // glibc allows recursive links
   ASSERT_TRUE(handle != nullptr);
   dlclose(handle);
 #endif
@@ -469,11 +501,13 @@ TEST(dlfcn, dlopen_nodelete) {
   void* handle = dlopen("libtest_nodelete_1.so", RTLD_NOW | RTLD_NODELETE);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_1_set_unload_flag_ptr"));
+  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(
+      dlsym(handle, "dlopen_nodelete_1_set_unload_flag_ptr"));
   ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
   set_unload_flag_ptr(&is_unloaded);
 
-  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(
+      dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
   ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
   ASSERT_EQ(1729U, *taxicab_number);
   *taxicab_number = 2;
@@ -481,13 +515,14 @@ TEST(dlfcn, dlopen_nodelete) {
   dlclose(handle);
   ASSERT_TRUE(!is_unloaded);
 
-  uint32_t* taxicab_number_after_dlclose = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
+  uint32_t* taxicab_number_after_dlclose = reinterpret_cast<uint32_t*>(
+      dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
   ASSERT_EQ(taxicab_number_after_dlclose, taxicab_number);
   ASSERT_EQ(2U, *taxicab_number_after_dlclose);
 
-
   handle = dlopen("libtest_nodelete_1.so", RTLD_NOW);
-  uint32_t* taxicab_number2 = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
+  uint32_t* taxicab_number2 = reinterpret_cast<uint32_t*>(
+      dlsym(handle, "dlopen_nodelete_1_taxicab_number"));
   ASSERT_EQ(taxicab_number2, taxicab_number);
 
   ASSERT_EQ(2U, *taxicab_number2);
@@ -502,11 +537,13 @@ TEST(dlfcn, dlopen_nodelete_on_second_dlopen) {
   void* handle = dlopen("libtest_nodelete_2.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_2_set_unload_flag_ptr"));
+  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(
+      dlsym(handle, "dlopen_nodelete_2_set_unload_flag_ptr"));
   ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
   set_unload_flag_ptr(&is_unloaded);
 
-  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_nodelete_2_taxicab_number"));
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(
+      dlsym(handle, "dlopen_nodelete_2_taxicab_number"));
   ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
 
   ASSERT_EQ(1729U, *taxicab_number);
@@ -529,7 +566,8 @@ TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
   void* handle = dlopen("libtest_nodelete_dt_flags_1.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   void (*set_unload_flag_ptr)(bool*);
-  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(dlsym(handle, "dlopen_nodelete_dt_flags_1_set_unload_flag_ptr"));
+  set_unload_flag_ptr = reinterpret_cast<void (*)(bool*)>(
+      dlsym(handle, "dlopen_nodelete_dt_flags_1_set_unload_flag_ptr"));
   ASSERT_TRUE(set_unload_flag_ptr != nullptr) << dlerror();
   set_unload_flag_ptr(&is_unloaded);
 
@@ -542,12 +580,14 @@ TEST(dlfcn, dlsym_df_1_global) {
   void* handle = dlopen("libtest_dlsym_df_1_global.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   int (*get_answer)();
-  get_answer = reinterpret_cast<int (*)()>(dlsym(handle, "dl_df_1_global_get_answer"));
+  get_answer =
+      reinterpret_cast<int (*)()>(dlsym(handle, "dl_df_1_global_get_answer"));
   ASSERT_TRUE(get_answer != nullptr) << dlerror();
   ASSERT_EQ(42, get_answer());
   ASSERT_EQ(0, dlclose(handle));
 #else
-  GTEST_LOG_(INFO) << "This test does nothing on arm/arm64 (to be reenabled once b/18137520 or b/18130452 are fixed).\n";
+  GTEST_LOG_(INFO) << "This test does nothing on arm/arm64 (to be reenabled "
+                      "once b/18137520 or b/18130452 are fixed).\n";
 #endif
 }
 
@@ -555,9 +595,13 @@ TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == NULL);
 #if defined(__BIONIC__)
-  ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found", dlerror());
+  ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found",
+               dlerror());
 #else
-  ASSERT_STREQ("/does/not/exist: cannot open shared object file: No such file or directory", dlerror());
+  ASSERT_STREQ(
+      "/does/not/exist: cannot open shared object file: No such file or "
+      "directory",
+      dlerror());
 #endif
 }
 
@@ -583,7 +627,7 @@ TEST(dlfcn, dlerror_concurrent) {
 }
 
 TEST(dlfcn, dlsym_failures) {
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
   ASSERT_TRUE(dlerror() == NULL);
@@ -598,7 +642,7 @@ TEST(dlfcn, dlsym_failures) {
   ASSERT_SUBSTR("dlsym library handle is null", dlerror());
 #endif
 
-  // NULL symbol name.
+// NULL symbol name.
 #if defined(__BIONIC__)
   // glibc marks this parameter non-null and SEGVs if you cheat.
   sym = dlsym(self, NULL);
@@ -615,7 +659,7 @@ TEST(dlfcn, dlsym_failures) {
 }
 
 TEST(dlfcn, dladdr) {
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
   ASSERT_TRUE(dlerror() == NULL);
@@ -623,12 +667,13 @@ TEST(dlfcn, dladdr) {
   void* sym = dlsym(self, "DlSymTestFunction");
   ASSERT_TRUE(sym != NULL);
 
-  // Deliberately ask dladdr for an address inside a symbol, rather than the symbol base address.
+  // Deliberately ask dladdr for an address inside a symbol, rather than the
+  // symbol base address.
   void* addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(sym) + 2);
 
   Dl_info info;
   int rc = dladdr(addr, &info);
-  ASSERT_NE(rc, 0); // Zero on error, non-zero on success.
+  ASSERT_NE(rc, 0);  // Zero on error, non-zero on success.
 
   // Get the name of this executable.
   char executable_path[PATH_MAX];
@@ -638,7 +683,8 @@ TEST(dlfcn, dladdr) {
   std::string executable_name(basename(executable_path));
 
   // The filename should be that of this executable.
-  // Note that we don't know whether or not we have the full path, so we want an "ends_with" test.
+  // Note that we don't know whether or not we have the full path, so we want an
+  // "ends_with" test.
   std::string dli_fname(info.dli_fname);
   dli_fname = basename(&dli_fname[0]);
   ASSERT_EQ(dli_fname, executable_name);
@@ -650,14 +696,15 @@ TEST(dlfcn, dladdr) {
   ASSERT_EQ(info.dli_saddr, sym);
 
   // Look in /proc/pid/maps to find out what address we were loaded at.
-  // TODO: factor /proc/pid/maps parsing out into a class and reuse all over bionic.
+  // TODO: factor /proc/pid/maps parsing out into a class and reuse all over
+  // bionic.
   void* base_address = NULL;
   char line[BUFSIZ];
   FILE* fp = fopen("/proc/self/maps", "r");
   ASSERT_TRUE(fp != NULL);
   while (fgets(line, sizeof(line), fp) != NULL) {
     uintptr_t start = strtoul(line, 0, 16);
-    line[strlen(line) - 1] = '\0'; // Chomp the '\n'.
+    line[strlen(line) - 1] = '\0';  // Chomp the '\n'.
     char* path = strchr(line, '/');
     if (path != NULL && strcmp(executable_path, path) == 0) {
       base_address = reinterpret_cast<void*>(start);
@@ -675,27 +722,26 @@ TEST(dlfcn, dladdr) {
 TEST(dlfcn, dladdr_invalid) {
   Dl_info info;
 
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
 
   // No symbol corresponding to NULL.
-  ASSERT_EQ(dladdr(NULL, &info), 0); // Zero on error, non-zero on success.
-  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
+  ASSERT_EQ(dladdr(NULL, &info), 0);  // Zero on error, non-zero on success.
+  ASSERT_TRUE(dlerror() == NULL);     // dladdr(3) doesn't set dlerror(3).
 
   // No symbol corresponding to a stack address.
-  ASSERT_EQ(dladdr(&info, &info), 0); // Zero on error, non-zero on success.
-  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
+  ASSERT_EQ(dladdr(&info, &info), 0);  // Zero on error, non-zero on success.
+  ASSERT_TRUE(dlerror() == NULL);      // dladdr(3) doesn't set dlerror(3).
 }
 
 // GNU-style ELF hash tables are incompatible with the MIPS ABI.
-// MIPS requires .dynsym to be sorted to match the GOT but GNU-style requires sorting by hash code.
+// MIPS requires .dynsym to be sorted to match the GOT but GNU-style requires
+// sorting by hash code.
 TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
 #if !defined(__mips__)
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
   void* handle = dlopen("libgnu-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
@@ -709,16 +755,15 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
   ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
+  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain "
+                      "does not support '--hash-style=gnu'\n";
 #endif
 }
 
 TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
   void* handle = dlopen("libsysv-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
@@ -734,11 +779,12 @@ TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
 }
 
 TEST(dlfcn, dlopen_bad_flags) {
-  dlerror(); // Clear any pending errors.
+  dlerror();  // Clear any pending errors.
   void* handle;
 
 #if defined(__GLIBC__)
-  // glibc was smart enough not to define RTLD_NOW as 0, so it can detect missing flags.
+  // glibc was smart enough not to define RTLD_NOW as 0, so it can detect
+  // missing flags.
   handle = dlopen(NULL, 0);
   ASSERT_TRUE(handle == NULL);
   ASSERT_SUBSTR("invalid", dlerror());
@@ -748,8 +794,9 @@ TEST(dlfcn, dlopen_bad_flags) {
   ASSERT_TRUE(handle == NULL);
   ASSERT_SUBSTR("invalid", dlerror());
 
-  // glibc actually allows you to choose both RTLD_NOW and RTLD_LAZY at the same time, and so do we.
-  handle = dlopen(NULL, RTLD_NOW|RTLD_LAZY);
+  // glibc actually allows you to choose both RTLD_NOW and RTLD_LAZY at the same
+  // time, and so do we.
+  handle = dlopen(NULL, RTLD_NOW | RTLD_LAZY);
   ASSERT_TRUE(handle != NULL);
   ASSERT_SUBSTR(NULL, dlerror());
 }
@@ -776,7 +823,7 @@ TEST(dlfcn, rtld_next_known_symbol) {
 
 TEST(dlfcn, dlsym_weak_func) {
   dlerror();
-  void* handle = dlopen("libtest_dlsym_weak_func.so",RTLD_NOW);
+  void* handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW);
   ASSERT_TRUE(handle != NULL);
 
   int (*weak_func)();

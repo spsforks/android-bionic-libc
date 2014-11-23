@@ -37,7 +37,7 @@ extern "C" int __openat(int, const char*, int, int);
 
 static inline int force_O_LARGEFILE(int flags) {
 #if __LP64__
-  return flags; // No need, and aarch64's strace gets confused.
+  return flags;  // No need, and aarch64's strace gets confused.
 #else
   return flags | O_LARGEFILE;
 #endif
@@ -54,7 +54,7 @@ int open(const char* pathname, int flags, ...) {
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = (mode_t)va_arg(args, int);
     va_end(args);
   }
 
@@ -70,13 +70,13 @@ int __open_2(const char* pathname, int flags) {
   return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0);
 }
 
-int openat(int fd, const char *pathname, int flags, ...) {
+int openat(int fd, const char* pathname, int flags, ...) {
   mode_t mode = 0;
 
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = (mode_t)va_arg(args, int);
     va_end(args);
   }
 

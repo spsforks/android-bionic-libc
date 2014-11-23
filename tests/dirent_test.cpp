@@ -39,7 +39,8 @@ static void CheckProcSelf(std::set<std::string>& names) {
 
 template <typename DirEntT>
 void ScanEntries(DirEntT** entries, int entry_count,
-                 std::set<std::string>& name_set, std::vector<std::string>& name_list) {
+                 std::set<std::string>& name_set,
+                 std::vector<std::string>& name_list) {
   for (size_t i = 0; i < static_cast<size_t>(entry_count); ++i) {
     name_set.insert(entries[i]->d_name);
     name_list.push_back(entries[i]->d_name);

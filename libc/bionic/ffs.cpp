@@ -28,6 +28,4 @@
 
 #include <strings.h>
 
-int ffs(int x) {
-  return __builtin_ffs(x);
-}
+int ffs(int x) { return __builtin_ffs(x); }

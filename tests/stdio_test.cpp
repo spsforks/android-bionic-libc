@@ -32,12 +32,14 @@
 TEST(stdio, flockfile_18208568_stderr) {
   // Check that we have a _recursive_ mutex for flockfile.
   flockfile(stderr);
-  feof(stderr); // We don't care about the result, but this needs to take the lock.
+  feof(stderr);  // We don't care about the result, but this needs to take the
+                 // lock.
   funlockfile(stderr);
 }
 
 TEST(stdio, flockfile_18208568_regular) {
-  // We never had a bug for streams other than stdin/stdout/stderr, but test anyway.
+  // We never had a bug for streams other than stdin/stdout/stderr, but test
+  // anyway.
   FILE* fp = fopen("/dev/null", "w");
   ASSERT_TRUE(fp != NULL);
   flockfile(fp);
@@ -102,10 +104,11 @@ TEST(stdio, getdelim) {
   char* word_read = NULL;
   size_t allocated_length = 0;
 
-  const char* expected[] = { "This ", " ", "is ", "a ", "test" };
+  const char* expected[] = {"This ", " ", "is ", "a ", "test"};
   for (size_t i = 0; i < 5; ++i) {
     ASSERT_FALSE(feof(fp));
-    ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), static_cast<int>(strlen(expected[i])));
+    ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp),
+              static_cast<int>(strlen(expected[i])));
     ASSERT_GE(allocated_length, strlen(expected[i]));
     ASSERT_STREQ(word_read, expected[i]);
   }
@@ -220,7 +223,8 @@ TEST(stdio, printf_ssize_t) {
   // http://b/8253769
   ASSERT_EQ(sizeof(ssize_t), sizeof(long int));
   ASSERT_EQ(sizeof(ssize_t), sizeof(size_t));
-  // For our 32-bit ABI, we had a ssize_t definition that confuses GCC into saying:
+  // For our 32-bit ABI, we had a ssize_t definition that confuses GCC into
+  // saying:
   // error: format '%zd' expects argument of type 'signed size_t',
   //     but argument 4 has type 'ssize_t {aka long int}' [-Werror=format]
   ssize_t v = 1;
@@ -248,7 +252,7 @@ TEST(stdio, snprintf_ls) {
   EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%ls>", ws));
   EXPECT_STREQ("<(null)>", buf);
 
-  wchar_t chars[] = { L'h', L'i', 0 };
+  wchar_t chars[] = {L'h', L'i', 0};
   ws = chars;
   EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%ls>", ws));
   EXPECT_STREQ("<hi>", buf);
@@ -347,9 +351,9 @@ TEST(stdio, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a%d,%pz", 5, p);
 #if defined(__BIONIC__)
   EXPECT_STREQ("a5,0x0z", buf);
-#else // __BIONIC__
+#else   // __BIONIC__
   EXPECT_STREQ("a5,(nil)z", buf);
-#endif // __BIONIC__
+#endif  // __BIONIC__
 
   snprintf(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
@@ -537,7 +541,8 @@ TEST(stdio, cantwrite_EBADF) {
 
   // ...all attempts to write to that file should return failure.
 
-  // They should also set errno to EBADF. This isn't POSIX, but it's traditional.
+  // They should also set errno to EBADF. This isn't POSIX, but it's
+  // traditional.
   // glibc gets the wide-character functions wrong.
 
   errno = 0;

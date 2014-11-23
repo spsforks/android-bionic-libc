@@ -24,13 +24,9 @@
 
 #include <string>
 
-extern "C" int main_global_default_serial() {
-  return 3370318;
-}
+extern "C" int main_global_default_serial() { return 3370318; }
 
-extern "C" int main_global_protected_serial() {
-  return 2716057;
-}
+extern "C" int main_global_protected_serial() { return 2716057; }
 
 // The following functions are defined in DT_NEEDED
 // libdl_preempt_test.so library.

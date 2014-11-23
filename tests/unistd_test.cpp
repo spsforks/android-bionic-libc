@@ -30,9 +30,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static void* get_brk() {
-  return sbrk(0);
-}
+static void* get_brk() { return sbrk(0); }
 
 static void* page_align(uintptr_t addr) {
   uintptr_t mask = sysconf(_SC_PAGE_SIZE) - 1;
@@ -43,11 +41,13 @@ TEST(unistd, brk) {
   void* initial_break = get_brk();
 
   // The kernel aligns the break to a page.
-  void* new_break = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(initial_break) + 1);
+  void* new_break =
+      reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(initial_break) + 1);
   ASSERT_EQ(0, brk(new_break));
   ASSERT_GE(get_brk(), new_break);
 
-  new_break = page_align(reinterpret_cast<uintptr_t>(initial_break) + sysconf(_SC_PAGE_SIZE));
+  new_break = page_align(reinterpret_cast<uintptr_t>(initial_break) +
+                         sysconf(_SC_PAGE_SIZE));
   ASSERT_EQ(0, brk(new_break));
   ASSERT_EQ(get_brk(), new_break);
 }
@@ -72,18 +72,19 @@ TEST(unistd, sbrk_ENOMEM) {
   extern void* __bionic_brk;
 
   class ScopedBrk {
-  public:
+   public:
     ScopedBrk() : saved_brk_(__bionic_brk) {}
     virtual ~ScopedBrk() { __bionic_brk = saved_brk_; }
 
-  private:
+   private:
     void* saved_brk_;
   };
 
   ScopedBrk scope_brk;
 
   // Set the current break to a point that will cause an overflow.
-  __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) + 2);
+  __bionic_brk =
+      reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) + 2);
 
   // Can't increase by so much that we'd overflow.
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MAX));
@@ -95,24 +96,25 @@ TEST(unistd, sbrk_ENOMEM) {
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN));
   ASSERT_EQ(ENOMEM, errno);
 
-  __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) - 1);
+  __bionic_brk =
+      reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) - 1);
 
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN + 1));
   ASSERT_EQ(ENOMEM, errno);
 #else
   class ScopedBrk {
-  public:
+   public:
     ScopedBrk() : saved_brk_(get_brk()) {}
     virtual ~ScopedBrk() { brk(saved_brk_); }
 
-  private:
+   private:
     void* saved_brk_;
   };
 
   ScopedBrk scope_brk;
 
   uintptr_t cur_brk = reinterpret_cast<uintptr_t>(get_brk());
-  if (cur_brk < static_cast<uintptr_t>(-(SBRK_MIN+1))) {
+  if (cur_brk < static_cast<uintptr_t>(-(SBRK_MIN + 1))) {
     // Do the overflow test for a max negative increment.
     ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MIN));
 #if defined(__BIONIC__)
@@ -177,9 +179,7 @@ TEST(unistd, ftruncate64) {
 }
 
 static bool g_pause_test_flag = false;
-static void PauseTestSignalHandler(int) {
-  g_pause_test_flag = true;
-}
+static void PauseTestSignalHandler(int) { g_pause_test_flag = true; }
 
 TEST(unistd, pause) {
   ScopedSignalHandler handler(SIGALRM, PauseTestSignalHandler);
@@ -205,7 +205,8 @@ TEST(unistd, read) {
 }
 
 TEST(unistd, read_EBADF) {
-  // read returns ssize_t which is 64-bits on LP64, so it's worth explicitly checking that
+  // read returns ssize_t which is 64-bits on LP64, so it's worth explicitly
+  // checking that
   // our syscall stubs correctly return a 64-bit -1.
   char buf[1];
   ASSERT_EQ(-1, read(-1, buf, sizeof(buf)));
@@ -220,9 +221,7 @@ TEST(unistd, syscall_long) {
   ASSERT_EQ(p, static_cast<uintptr_t>(syscall(__NR_brk, 0)));
 }
 
-TEST(unistd, alarm) {
-  ASSERT_EQ(0U, alarm(0));
-}
+TEST(unistd, alarm) { ASSERT_EQ(0U, alarm(0)); }
 
 TEST(unistd, _exit) {
   int pid = fork();
@@ -379,13 +378,9 @@ static void TestFsyncFunction(int (*fn)(int)) {
   close(fd);
 }
 
-TEST(unistd, fdatasync) {
-  TestFsyncFunction(fdatasync);
-}
+TEST(unistd, fdatasync) { TestFsyncFunction(fdatasync); }
 
-TEST(unistd, fsync) {
-  TestFsyncFunction(fsync);
-}
+TEST(unistd, fsync) { TestFsyncFunction(fsync); }
 
 static void AssertGetPidCorrect() {
   // The loop is just to make manual testing/debugging with strace easier.
@@ -427,9 +422,11 @@ TEST(unistd, getpid_caching_and_clone) {
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
   void* child_stack[1024];
-  int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
+  int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024],
+                           CLONE_NEWNS | SIGCHLD, NULL);
   if (clone_result == -1 && errno == EPERM && getuid() != 0) {
-    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
+    GTEST_LOG_(INFO) << "This test only works if you have permission to "
+                        "CLONE_NEWNS; try running as root.\n";
     return;
   }
   ASSERT_NE(clone_result, -1);
@@ -451,7 +448,8 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   pid_t parent_pid = getpid();
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, GetPidCachingPthreadStartRoutine, NULL));
+  ASSERT_EQ(0,
+            pthread_create(&t, NULL, GetPidCachingPthreadStartRoutine, NULL));
 
   ASSERT_EQ(parent_pid, getpid());
 
@@ -517,12 +515,14 @@ TEST(unistd, pathconf_fpathconf) {
   ASSERT_TRUE(rc > 0 && powerof2(rc));
 }
 
-#define verifySysconf(name, ret) \
-{\
-  errno = 0;\
-  ret = sysconf(name);\
-  ASSERT_TRUE((0 == errno) && (-1 != ret)) << "name=" << #name << ", ret=" << ret << ", Error Message: " << strerror(errno);\
-}\
+#define verifySysconf(name, ret)                   \
+  {                                                \
+    errno = 0;                                     \
+    ret = sysconf(name);                           \
+    ASSERT_TRUE((0 == errno) && (-1 != ret))       \
+        << "name=" << #name << ", ret=" << ret     \
+        << ", Error Message: " << strerror(errno); \
+  }
 
 TEST(unistd, sysconf) {
   long ret;
@@ -567,7 +567,7 @@ TEST(unistd, sysconf) {
   ASSERT_GT(ret, 0);
   verifySysconf(_SC_MQ_OPEN_MAX, ret);
   verifySysconf(_SC_MQ_PRIO_MAX, ret);
-  ASSERT_GT(ret ,0);
+  ASSERT_GT(ret, 0);
   verifySysconf(_SC_RTSIG_MAX, ret);
   verifySysconf(_SC_SEM_NSEMS_MAX, ret);
   verifySysconf(_SC_SEM_VALUE_MAX, ret);

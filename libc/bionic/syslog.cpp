@@ -23,9 +23,7 @@
 static const char* syslog_log_tag = NULL;
 static int syslog_priority_mask = 0xff;
 
-void closelog() {
-  syslog_log_tag = NULL;
-}
+void closelog() { syslog_log_tag = NULL; }
 
 void openlog(const char* log_tag, int /*options*/, int /*facility*/) {
   syslog_log_tag = log_tag;
@@ -98,11 +96,14 @@ void vsyslog(int priority, const char* fmt, va_list args) {
         if (dst_len <= 2) {
           break;
         }
-        *dst++ = '%'; --dst_len;
-        *dst++ = '%'; --dst_len;
+        *dst++ = '%';
+        --dst_len;
+        *dst++ = '%';
+        --dst_len;
         ++src;
       } else {
-        *dst++ = *src; --dst_len;
+        *dst++ = *src;
+        --dst_len;
       }
     }
     *dst = '\0';

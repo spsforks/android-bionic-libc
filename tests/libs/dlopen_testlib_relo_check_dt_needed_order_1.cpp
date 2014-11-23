@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-extern "C" int relo_test_get_answer_lib() {
-  return 1;
-}
+extern "C" int relo_test_get_answer_lib() { return 1; }

@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-extern "C" int dl_df_1_global_get_answer_impl() {
-  return 42;
-}
+extern "C" int dl_df_1_global_get_answer_impl() { return 42; }

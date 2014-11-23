@@ -15,7 +15,7 @@
  */
 
 class A {
-public:
+ public:
   virtual int getRandomNumber() {
     return 4;  // chosen by fair dice roll.
                // guaranteed to be random.
@@ -33,8 +33,7 @@ A a;
 #define A_1024 A_128 A_128 A_128 A_128 A_128 A_128 A_128 A_128
 
 extern "C" A* const lots_of_relro[] = {
-  A_1024 A_1024 A_1024 A_1024 A_1024 A_1024 A_1024 A_1024
-};
+    A_1024 A_1024 A_1024 A_1024 A_1024 A_1024 A_1024 A_1024};
 
 extern "C" int getRandomNumber() {
   // access the relro section (twice, in fact, once for the pointer, and once

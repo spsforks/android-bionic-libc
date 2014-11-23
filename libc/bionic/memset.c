@@ -28,17 +28,20 @@
 #include <string.h>
 #include <stdint.h>
 
-void*  memset(void*  dst, int c, size_t n)
-{
-    char*  q   = dst;
-    char*  end = q + n;
+void* memset(void* dst, int c, size_t n) {
+  char* q = dst;
+  char* end = q + n;
 
-    for (;;) {
-        if (q >= end) break; *q++ = (char) c;
-        if (q >= end) break; *q++ = (char) c;
-        if (q >= end) break; *q++ = (char) c;
-        if (q >= end) break; *q++ = (char) c;
-    }
+  for (;;) {
+    if (q >= end) break;
+    *q++ = (char)c;
+    if (q >= end) break;
+    *q++ = (char)c;
+    if (q >= end) break;
+    *q++ = (char)c;
+    if (q >= end) break;
+    *q++ = (char)c;
+  }
 
   return dst;
 }

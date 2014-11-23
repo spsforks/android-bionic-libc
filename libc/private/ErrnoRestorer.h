@@ -23,16 +23,11 @@
 
 class ErrnoRestorer {
  public:
-  explicit ErrnoRestorer() : saved_errno_(errno) {
-  }
+  explicit ErrnoRestorer() : saved_errno_(errno) {}
 
-  ~ErrnoRestorer() {
-    errno = saved_errno_;
-  }
+  ~ErrnoRestorer() { errno = saved_errno_; }
 
-  void override(int new_errno) {
-    saved_errno_ = new_errno;
-  }
+  void override(int new_errno) { saved_errno_ = new_errno; }
 
  private:
   int saved_errno_;
@@ -40,4 +35,4 @@ class ErrnoRestorer {
   DISALLOW_COPY_AND_ASSIGN(ErrnoRestorer);
 };
 
-#endif // ERRNO_RESTORER_H
+#endif  // ERRNO_RESTORER_H

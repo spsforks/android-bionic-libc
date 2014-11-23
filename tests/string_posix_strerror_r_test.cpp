@@ -15,7 +15,7 @@
  */
 
 #undef _GNU_SOURCE
-#include <features.h> // Get __BIONIC__ or __GLIBC__ so we can tell what we're using.
+#include <features.h>  // Get __BIONIC__ or __GLIBC__ so we can tell what we're using.
 
 #if defined(__GLIBC__)
 
@@ -26,9 +26,9 @@
 // For glibc 2.15, the symbols in question are:
 //   at_quick_exit, quick_exit, vasprintf, strtoll_l, strtoull_l, and strtold_l.
 
-# if __GLIBC_PREREQ(2, 19)
-#  error check whether we can build this now...
-# endif
+#if __GLIBC_PREREQ(2, 19)
+#error check whether we can build this now...
+#endif
 
 #else
 

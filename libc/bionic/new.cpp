@@ -23,41 +23,33 @@
 const std::nothrow_t std::nothrow = {};
 
 void* operator new(std::size_t size) {
-    void* p = malloc(size);
-    if (p == NULL) {
-        __libc_fatal("new failed to allocate %zu bytes", size);
-    }
-    return p;
+  void* p = malloc(size);
+  if (p == NULL) {
+    __libc_fatal("new failed to allocate %zu bytes", size);
+  }
+  return p;
 }
 
 void* operator new[](std::size_t size) {
-    void* p = malloc(size);
-    if (p == NULL) {
-        __libc_fatal("new[] failed to allocate %zu bytes", size);
-    }
-    return p;
+  void* p = malloc(size);
+  if (p == NULL) {
+    __libc_fatal("new[] failed to allocate %zu bytes", size);
+  }
+  return p;
 }
 
-void  operator delete(void* ptr) throw() {
-    free(ptr);
-}
+void operator delete(void* ptr) throw() { free(ptr); }
 
-void  operator delete[](void* ptr) throw() {
-    free(ptr);
-}
+void operator delete[](void* ptr) throw() { free(ptr); }
 
 void* operator new(std::size_t size, const std::nothrow_t&) {
-    return malloc(size);
+  return malloc(size);
 }
 
 void* operator new[](std::size_t size, const std::nothrow_t&) {
-    return malloc(size);
+  return malloc(size);
 }
 
-void  operator delete(void* ptr, const std::nothrow_t&) throw() {
-    free(ptr);
-}
+void operator delete(void* ptr, const std::nothrow_t&) throw() { free(ptr); }
 
-void  operator delete[](void* ptr, const std::nothrow_t&) throw() {
-    free(ptr);
-}
+void operator delete[](void* ptr, const std::nothrow_t&) throw() { free(ptr); }

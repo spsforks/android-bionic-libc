@@ -31,9 +31,9 @@
 #endif
 
 #define KB 1024
-#define SMALL 1*KB
-#define MEDIUM 4*KB
-#define LARGE 64*KB
+#define SMALL 1 * KB
+#define MEDIUM 4 * KB
+#define LARGE 64 * KB
 
 static int signum(int i) {
   if (i < 0) {
@@ -59,7 +59,7 @@ static void* ConcurrentStrErrorFn(void*) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
   return reinterpret_cast<void*>(equal);
 }
-#endif // __BIONIC__
+#endif  // __BIONIC__
 
 // glibc's strerror isn't thread safe, only its strsignal.
 TEST(string, strerror_concurrent) {
@@ -74,9 +74,9 @@ TEST(string, strerror_concurrent) {
   ASSERT_TRUE(static_cast<bool>(result));
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "Skipping test, requires a thread safe strerror.";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(string, gnu_strerror_r) {
@@ -119,9 +119,9 @@ TEST(string, strsignal) {
   ASSERT_STREQ("Unknown signal 32", strsignal(__SIGRTMIN));
 
   // Errors.
-  ASSERT_STREQ("Unknown signal -1", strsignal(-1)); // Too small.
-  ASSERT_STREQ("Unknown signal 0", strsignal(0)); // Still too small.
-  ASSERT_STREQ("Unknown signal 1234", strsignal(1234)); // Too large.
+  ASSERT_STREQ("Unknown signal -1", strsignal(-1));      // Too small.
+  ASSERT_STREQ("Unknown signal 0", strsignal(0));        // Still too small.
+  ASSERT_STREQ("Unknown signal 1234", strsignal(1234));  // Too large.
 }
 
 static void* ConcurrentStrSignalFn(void*) {
@@ -143,23 +143,30 @@ TEST(string, strsignal_concurrent) {
 }
 
 // TODO: where did this number come from?
-#define ITER        500
+#define ITER 500
 
 // For every length we want to test, vary and change alignment
 // of allocated memory, fill it with some values, calculate
 // expected result and then run function and compare what we got.
 // These tests contributed by Intel Corporation.
 // TODO: make these tests more intention-revealing and less random.
-template<class Character>
+template <class Character>
 class StringTestState {
  public:
-  StringTestState(size_t MAX_LEN) : MAX_LEN(MAX_LEN), align1_index_(0), align2_index_(0) {
+  StringTestState(size_t MAX_LEN)
+      : MAX_LEN(MAX_LEN), align1_index_(0), align2_index_(0) {
     int max_alignment = 64;
 
     // TODO: fix the tests to not sometimes use twice their specified "MAX_LEN".
-    glob_ptr = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
-    glob_ptr1 = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
-    glob_ptr2 = reinterpret_cast<Character*>(memalign(sysconf(_SC_PAGESIZE), 2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr = reinterpret_cast<Character*>(
+        memalign(sysconf(_SC_PAGESIZE),
+                 2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr1 = reinterpret_cast<Character*>(
+        memalign(sysconf(_SC_PAGESIZE),
+                 2 * sizeof(Character) * MAX_LEN + max_alignment));
+    glob_ptr2 = reinterpret_cast<Character*>(
+        memalign(sysconf(_SC_PAGESIZE),
+                 2 * sizeof(Character) * MAX_LEN + max_alignment));
 
     InitLenArray();
 
@@ -180,11 +187,13 @@ class StringTestState {
   }
 
   bool HasNextIteration() {
-    return (align1_index_ != (alignments_size - 1) || align2_index_ != (alignments_size - 1));
+    return (align1_index_ != (alignments_size - 1) ||
+            align2_index_ != (alignments_size - 1));
   }
 
   void NextIteration() {
-    if (align1_index_ == (alignments_size - 1) && align2_index_ == (alignments_size - 1)) {
+    if (align1_index_ == (alignments_size - 1) &&
+        align2_index_ == (alignments_size - 1)) {
       return;
     }
 
@@ -199,14 +208,14 @@ class StringTestState {
   }
 
   const size_t MAX_LEN;
-  Character *ptr, *ptr1, *ptr2;
+  Character* ptr, *ptr1, *ptr2;
   size_t n;
   size_t len[ITER + 1];
 
  private:
   static size_t alignments[];
   static size_t alignments_size;
-  Character *glob_ptr, *glob_ptr1, *glob_ptr2;
+  Character* glob_ptr, *glob_ptr1, *glob_ptr2;
   size_t align1_index_, align2_index_;
 
   // Calculate input lengths and fill state.len with them.
@@ -217,7 +226,8 @@ class StringTestState {
     n = 0;
     len[n++] = 0;
     for (size_t i = 1; i < ITER; ++i) {
-      size_t l = static_cast<size_t>(exp(log(static_cast<double>(MAX_LEN)) * i / ITER));
+      size_t l = static_cast<size_t>(
+          exp(log(static_cast<double>(MAX_LEN)) * i / ITER));
       if (l != len[n - 1]) {
         len[n++] = l;
       }
@@ -236,16 +246,19 @@ class StringTestState {
   }
 };
 
-template<class Character>
-size_t StringTestState<Character>::alignments[] = { 24, 32, 16, 48, 0, 1, 2, 3, 4, 5, 6, 7, 11 };
+template <class Character>
+size_t StringTestState<Character>::alignments[] = {24, 32, 16, 48, 0, 1, 2,
+                                                   3,  4,  5,  6,  7, 11};
 
-template<class Character>
-size_t StringTestState<Character>::alignments_size = sizeof(alignments)/sizeof(size_t);
+template <class Character>
+size_t StringTestState<Character>::alignments_size = sizeof(alignments) /
+                                                     sizeof(size_t);
 
 TEST(string, strcat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, 2 * state.MAX_LEN);
@@ -278,10 +291,10 @@ TEST(string, strcpy3) {
   memset(buf, 'A', sizeof(buf));
   ASSERT_EQ(buf, strcpy(buf, orig));
   ASSERT_STREQ("12345", buf);
-  ASSERT_EQ('A',  buf[6]);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  ASSERT_EQ('A', buf[6]);
+  ASSERT_EQ('A', buf[7]);
+  ASSERT_EQ('A', buf[8]);
+  ASSERT_EQ('A', buf[9]);
   free(orig);
 }
 
@@ -309,12 +322,12 @@ TEST(string, stpcpy3) {
   char buf[10];
   char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  ASSERT_EQ(buf + strlen(orig), stpcpy(buf, orig));
   ASSERT_STREQ("12345", buf);
-  ASSERT_EQ('A',  buf[6]);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  ASSERT_EQ('A', buf[6]);
+  ASSERT_EQ('A', buf[7]);
+  ASSERT_EQ('A', buf[8]);
+  ASSERT_EQ('A', buf[9]);
   free(orig);
 }
 
@@ -323,7 +336,7 @@ TEST(string, stpcpy4) {
   char buf[10];
   char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  ASSERT_EQ(buf + strlen(orig), stpcpy(buf, orig));
   ASSERT_STREQ("123456789", buf);
   free(orig);
 }
@@ -336,9 +349,9 @@ TEST(string, strcat2) {
   char* res = strcat(buf, "01234");
   ASSERT_EQ(buf, res);
   ASSERT_STREQ("a01234", buf);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  ASSERT_EQ('A', buf[7]);
+  ASSERT_EQ('A', buf[8]);
+  ASSERT_EQ('A', buf[9]);
 }
 
 TEST(string, strcat3) {
@@ -359,9 +372,9 @@ TEST(string, strncat2) {
   char* res = strncat(buf, "01234", sizeof(buf) - strlen(buf) - 1);
   ASSERT_EQ(buf, res);
   ASSERT_STREQ("a01234", buf);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  ASSERT_EQ('A', buf[7]);
+  ASSERT_EQ('A', buf[8]);
+  ASSERT_EQ('A', buf[9]);
 }
 
 TEST(string, strncat3) {
@@ -372,9 +385,9 @@ TEST(string, strncat3) {
   char* res = strncat(buf, "0123456789", 5);
   ASSERT_EQ(buf, res);
   ASSERT_STREQ("a01234", buf);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  ASSERT_EQ('A', buf[7]);
+  ASSERT_EQ('A', buf[8]);
+  ASSERT_EQ('A', buf[9]);
 }
 
 TEST(string, strncat4) {
@@ -407,7 +420,7 @@ TEST(string, strchr_with_0) {
 TEST(string, strchr_multiple) {
   char str[128];
   memset(str, 'a', sizeof(str) - 1);
-  str[sizeof(str)-1] = '\0';
+  str[sizeof(str) - 1] = '\0';
 
   // Verify that strchr finds the first occurrence of 'a' in a string
   // filled with 'a' characters. Iterate over the string putting
@@ -427,7 +440,8 @@ TEST(string, strchr) {
 
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       if (~seek_char > 0) {
         memset(state.ptr1, ~seek_char, state.len[i]);
       } else {
@@ -456,7 +470,8 @@ TEST(string, strchr) {
 TEST(string, strcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, 'v', state.MAX_LEN);
       memset(state.ptr2, 'n', state.MAX_LEN);
       state.ptr1[state.len[i] - 1] = '\0';
@@ -490,7 +505,8 @@ TEST(string, strcmp) {
 
 TEST(string, stpcpy) {
   StringTestState<char> state(SMALL);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
 
     memset(state.ptr1, '\2', pos);
@@ -506,15 +522,18 @@ TEST(string, stpcpy) {
     memcpy(state.ptr + state.MAX_LEN, state.ptr1, pos + 1);
     state.ptr[2 * state.MAX_LEN - 1] = '\0';
 
-    ASSERT_TRUE(stpcpy(state.ptr2, state.ptr1) == state.ptr2 + strlen(state.ptr1));
-    ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN)) != 0 ||
-                 (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
+    ASSERT_TRUE(stpcpy(state.ptr2, state.ptr1) ==
+                state.ptr2 + strlen(state.ptr1));
+    ASSERT_FALSE(
+        (memcmp(state.ptr1, state.ptr, state.MAX_LEN)) != 0 ||
+        (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
 }
 
 TEST(string, strcpy) {
   StringTestState<char> state(SMALL);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
 
     memset(state.ptr1, '\2', pos);
@@ -531,8 +550,9 @@ TEST(string, strcpy) {
     state.ptr[2 * state.MAX_LEN - 1] = '\0';
 
     ASSERT_TRUE(strcpy(state.ptr2, state.ptr1) == state.ptr2);
-    ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN)) != 0 ||
-                 (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
+    ASSERT_FALSE(
+        (memcmp(state.ptr1, state.ptr, state.MAX_LEN)) != 0 ||
+        (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
 }
 
@@ -540,7 +560,8 @@ TEST(string, strlcat) {
 #if defined(STRLCAT_SUPPORTED)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN + state.len[i]);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]);
@@ -557,7 +578,8 @@ TEST(string, strlcat) {
 
       strlcat(state.ptr2, state.ptr1, state.MAX_LEN + state.len[i]);
 
-      ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) == 0);
+      ASSERT_TRUE(memcmp(state.ptr, state.ptr2, state.MAX_LEN + state.len[i]) ==
+                  0);
     }
   }
 #else
@@ -568,7 +590,8 @@ TEST(string, strlcat) {
 TEST(string, strlcpy) {
 #if defined(STRLCPY_SUPPORTED)
   StringTestState<char> state(SMALL);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     int rand = 'O';
     memset(state.ptr1, rand, state.MAX_LEN);
 
@@ -588,9 +611,11 @@ TEST(string, strlcpy) {
       memcpy(state.ptr + state.MAX_LEN, state.ptr1, pos + 1);
     }
 
-    ASSERT_EQ(strlcpy(state.ptr2, state.ptr1, state.MAX_LEN), strlen(state.ptr1));
-    ASSERT_FALSE((memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
-                 (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
+    ASSERT_EQ(strlcpy(state.ptr2, state.ptr1, state.MAX_LEN),
+              strlen(state.ptr1));
+    ASSERT_FALSE(
+        (memcmp(state.ptr1, state.ptr, state.MAX_LEN) != 0) ||
+        (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
 #else
   GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
@@ -600,7 +625,8 @@ TEST(string, strlcpy) {
 TEST(string, strncat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr2, '\2', state.MAX_LEN);
       state.ptr2[state.MAX_LEN - 1] = '\0';
       memcpy(state.ptr, state.ptr2, 2 * state.MAX_LEN);
@@ -624,7 +650,8 @@ TEST(string, strncat) {
 TEST(string, strncmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, 'v', state.MAX_LEN);
       memset(state.ptr2, 'n', state.MAX_LEN);
       state.ptr1[state.len[i] - 1] = '\0';
@@ -658,7 +685,8 @@ TEST(string, strncmp) {
 
 TEST(string, stpncpy) {
   StringTestState<char> state(SMALL);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     memset(state.ptr1, 'J', state.MAX_LEN);
     // Choose a random size for our src buffer.
     size_t ptr1_len = random() % state.MAX_LEN;
@@ -682,7 +710,8 @@ TEST(string, stpncpy) {
       expected_end = copy_len;
     }
 
-    ASSERT_EQ(state.ptr2 + expected_end, stpncpy(state.ptr2, state.ptr1, copy_len));
+    ASSERT_EQ(state.ptr2 + expected_end,
+              stpncpy(state.ptr2, state.ptr1, copy_len));
 
     // Verify ptr1 was not modified.
     ASSERT_EQ(0, memcmp(state.ptr1, state.ptr, state.MAX_LEN));
@@ -693,7 +722,8 @@ TEST(string, stpncpy) {
 
 TEST(string, strncpy) {
   StringTestState<char> state(SMALL);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     // Choose a random value to fill the string, except \0 (string terminator),
     // or \1 (guarantees it's different from anything in ptr2).
     memset(state.ptr1, 'K', state.MAX_LEN);
@@ -719,7 +749,8 @@ TEST(string, strncpy) {
       expected_end = copy_len;
     }
 
-    ASSERT_EQ(state.ptr2 + expected_end, stpncpy(state.ptr2, state.ptr1, copy_len));
+    ASSERT_EQ(state.ptr2 + expected_end,
+              stpncpy(state.ptr2, state.ptr1, copy_len));
 
     // Verify ptr1 was not modified.
     ASSERT_EQ(0, memcmp(state.ptr1, state.ptr, state.MAX_LEN));
@@ -732,7 +763,8 @@ TEST(string, strrchr) {
   int seek_char = 'M';
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       if (~seek_char > 0) {
         memset(state.ptr1, ~seek_char, state.len[i]);
       } else {
@@ -762,7 +794,8 @@ TEST(string, memchr) {
   int seek_char = 'N';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
       size_t pos = random() % state.MAX_LEN;
@@ -791,7 +824,8 @@ TEST(string, memrchr) {
   int seek_char = 'P';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, ~seek_char, state.len[i]);
 
       size_t pos = random() % state.MAX_LEN;
@@ -811,7 +845,8 @@ TEST(string, memrchr) {
 TEST(string, memcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       int c1 = 'A';
       int c2 = 'N';
       memset(state.ptr1, c1, state.MAX_LEN);
@@ -832,8 +867,9 @@ TEST(string, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);
 
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
-      long long mask = ((long long) 1 << 8 * sizeof(wchar_t)) - 1;
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
+      long long mask = ((long long)1 << 8 * sizeof(wchar_t)) - 1;
       int c1 = rand() & mask;
       int c2 = rand() & mask;
       wmemset(state.ptr1, c1, state.MAX_LEN);
@@ -843,7 +879,7 @@ TEST(string, wmemcmp) {
       state.ptr2[pos] = c2;
 
       int expected = (static_cast<int>(c1) - static_cast<int>(c2));
-      int actual = wmemcmp(state.ptr1, state.ptr2, (size_t) state.MAX_LEN);
+      int actual = wmemcmp(state.ptr1, state.ptr2, (size_t)state.MAX_LEN);
 
       ASSERT_EQ(signum(expected), signum(actual));
     }
@@ -854,7 +890,8 @@ TEST(string, memcpy) {
   StringTestState<char> state(LARGE);
   int rand = 4;
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       size_t pos = random() % (state.MAX_LEN - state.len[i]);
 
       memset(state.ptr1, rand, state.len[i]);
@@ -864,7 +901,8 @@ TEST(string, memcpy) {
       memset(state.ptr2 + state.len[i], ~rand, state.MAX_LEN - state.len[i]);
       memset(state.ptr2 + pos, '\0', state.len[i]);
 
-      ASSERT_FALSE(memcpy(state.ptr2 + pos, state.ptr1 + pos, state.len[i]) != state.ptr2 + pos);
+      ASSERT_FALSE(memcpy(state.ptr2 + pos, state.ptr1 + pos, state.len[i]) !=
+                   state.ptr2 + pos);
       ASSERT_EQ(0, memcmp(state.ptr1, state.ptr2, state.MAX_LEN));
     }
   }
@@ -874,16 +912,18 @@ TEST(string, memset) {
   StringTestState<char> state(LARGE);
   char ch = 'P';
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, ~ch, state.MAX_LEN);
       memcpy(state.ptr2, state.ptr1, state.MAX_LEN);
 
-      size_t pos = random () % (state.MAX_LEN - state.len[i]);
+      size_t pos = random() % (state.MAX_LEN - state.len[i]);
       for (size_t k = pos; k < pos + state.len[i]; k++) {
         state.ptr1[k] = ch;
       }
 
-      ASSERT_TRUE(memset(state.ptr2 + pos, ch, state.len[i]) == state.ptr2 + pos);
+      ASSERT_TRUE(memset(state.ptr2 + pos, ch, state.len[i]) ==
+                  state.ptr2 + pos);
 
       ASSERT_EQ(0, memcmp(state.ptr1, state.ptr2, state.MAX_LEN));
     }
@@ -893,7 +933,8 @@ TEST(string, memset) {
 TEST(string, memmove) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n - 1; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, 'Q', 2 * state.MAX_LEN);
 
       size_t pos = random() % (state.MAX_LEN - state.len[i]);
@@ -903,7 +944,8 @@ TEST(string, memmove) {
       memcpy(state.ptr, state.ptr1, state.len[i]);
       memcpy(state.ptr1 + pos, state.ptr, state.len[i]);
 
-      ASSERT_TRUE(memmove(state.ptr2 + pos, state.ptr2, state.len[i]) == state.ptr2 + pos);
+      ASSERT_TRUE(memmove(state.ptr2 + pos, state.ptr2, state.len[i]) ==
+                  state.ptr2 + pos);
       ASSERT_EQ(0, memcmp(state.ptr2, state.ptr1, 2 * state.MAX_LEN));
     }
   }
@@ -915,7 +957,8 @@ TEST(string, memmove_cache_size) {
   int alignments[] = {0, 5, 11, 29, 30};
   char* ptr = reinterpret_cast<char*>(malloc(sizeof(char) * len));
   char* ptr1 = reinterpret_cast<char*>(malloc(2 * sizeof(char) * len));
-  char* glob_ptr2 = reinterpret_cast<char*>(malloc(2 * sizeof(char) * len + max_alignment));
+  char* glob_ptr2 =
+      reinterpret_cast<char*>(malloc(2 * sizeof(char) * len + max_alignment));
   size_t pos = 64;
 
   ASSERT_TRUE(ptr != NULL);
@@ -945,7 +988,7 @@ static void verify_memmove(char* src_copy, char* dst, char* src, size_t size) {
   ASSERT_EQ(0, memcmp(dst, src_copy, size));
 }
 
-#define MEMMOVE_DATA_SIZE (1024*1024*3)
+#define MEMMOVE_DATA_SIZE (1024 * 1024 * 3)
 
 TEST(string, memmove_check) {
   char* buffer = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
@@ -991,7 +1034,8 @@ TEST(string, memmove_check) {
 TEST(string, bcopy) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n; i++) {
-    for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+    for (state.BeginIterations(); state.HasNextIteration();
+         state.NextIteration()) {
       memset(state.ptr1, '4', state.MAX_LEN);
       memset(state.ptr1 + state.MAX_LEN, 'a', state.MAX_LEN);
       memcpy(state.ptr2, state.ptr1, 2 * state.MAX_LEN);
@@ -1007,7 +1051,8 @@ TEST(string, bcopy) {
 
 TEST(string, bzero) {
   StringTestState<char> state(LARGE);
-  for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
+  for (state.BeginIterations(); state.HasNextIteration();
+       state.NextIteration()) {
     memset(state.ptr1, 'R', state.MAX_LEN);
 
     size_t start = random() % state.MAX_LEN;
@@ -1031,13 +1076,9 @@ static void DoMemcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   ASSERT_TRUE(memcmp(src, dst, len) == 0);
 }
 
-TEST(string, memcpy_align) {
-  RunSrcDstBufferAlignTest(LARGE, DoMemcpyTest);
-}
+TEST(string, memcpy_align) { RunSrcDstBufferAlignTest(LARGE, DoMemcpyTest); }
 
-TEST(string, memcpy_overread) {
-  RunSrcDstBufferOverreadTest(DoMemcpyTest);
-}
+TEST(string, memcpy_overread) { RunSrcDstBufferOverreadTest(DoMemcpyTest); }
 
 static void DoMemmoveTest(uint8_t* src, uint8_t* dst, size_t len) {
   memset(src, (len % 255) + 1, len);
@@ -1047,13 +1088,9 @@ static void DoMemmoveTest(uint8_t* src, uint8_t* dst, size_t len) {
   ASSERT_TRUE(memcmp(src, dst, len) == 0);
 }
 
-TEST(string, memmove_align) {
-  RunSrcDstBufferAlignTest(LARGE, DoMemmoveTest);
-}
+TEST(string, memmove_align) { RunSrcDstBufferAlignTest(LARGE, DoMemmoveTest); }
 
-TEST(string, memmove_overread) {
-  RunSrcDstBufferOverreadTest(DoMemmoveTest);
-}
+TEST(string, memmove_overread) { RunSrcDstBufferOverreadTest(DoMemmoveTest); }
 
 static void DoMemsetTest(uint8_t* buf, size_t len) {
   for (size_t i = 0; i < len; i++) {
@@ -1066,53 +1103,44 @@ static void DoMemsetTest(uint8_t* buf, size_t len) {
   }
 }
 
-TEST(string, memset_align) {
-  RunSingleBufferAlignTest(LARGE, DoMemsetTest);
-}
+TEST(string, memset_align) { RunSingleBufferAlignTest(LARGE, DoMemsetTest); }
 
 static void DoStrlenTest(uint8_t* buf, size_t len) {
   if (len >= 1) {
     memset(buf, (32 + (len % 96)), len - 1);
-    buf[len-1] = '\0';
-    ASSERT_EQ(len-1, strlen(reinterpret_cast<char*>(buf)));
+    buf[len - 1] = '\0';
+    ASSERT_EQ(len - 1, strlen(reinterpret_cast<char*>(buf)));
   }
 }
 
-TEST(string, strlen_align) {
-  RunSingleBufferAlignTest(LARGE, DoStrlenTest);
-}
+TEST(string, strlen_align) { RunSingleBufferAlignTest(LARGE, DoStrlenTest); }
 
-TEST(string, strlen_overread) {
-  RunSingleBufferOverreadTest(DoStrlenTest);
-}
+TEST(string, strlen_overread) { RunSingleBufferOverreadTest(DoStrlenTest); }
 
 static void DoStrcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     memset(src, (32 + (len % 96)), len - 1);
-    src[len-1] = '\0';
+    src[len - 1] = '\0';
     memset(dst, 0, len);
-    ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcpy(reinterpret_cast<char*>(dst),
-                                                     reinterpret_cast<char*>(src))));
+    ASSERT_EQ(dst,
+              reinterpret_cast<uint8_t*>(strcpy(reinterpret_cast<char*>(dst),
+                                                reinterpret_cast<char*>(src))));
     ASSERT_TRUE(memcmp(src, dst, len) == 0);
   }
 }
 
-TEST(string, strcpy_align) {
-  RunSrcDstBufferAlignTest(LARGE, DoStrcpyTest);
-}
+TEST(string, strcpy_align) { RunSrcDstBufferAlignTest(LARGE, DoStrcpyTest); }
 
-TEST(string, strcpy_overread) {
-  RunSrcDstBufferOverreadTest(DoStrcpyTest);
-}
+TEST(string, strcpy_overread) { RunSrcDstBufferOverreadTest(DoStrcpyTest); }
 
 #if defined(STRLCPY_SUPPORTED)
 static void DoStrlcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     memset(src, (32 + (len % 96)), len - 1);
-    src[len-1] = '\0';
+    src[len - 1] = '\0';
     memset(dst, 0, len);
-    ASSERT_EQ(len-1, strlcpy(reinterpret_cast<char*>(dst),
-                             reinterpret_cast<char*>(src), len));
+    ASSERT_EQ(len - 1, strlcpy(reinterpret_cast<char*>(dst),
+                               reinterpret_cast<char*>(src), len));
     ASSERT_TRUE(memcmp(src, dst, len) == 0);
   }
 }
@@ -1134,25 +1162,21 @@ TEST(string, strlcpy_overread) {
 #endif
 }
 
-
 static void DoStpcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     memset(src, (32 + (len % 96)), len - 1);
-    src[len-1] = '\0';
+    src[len - 1] = '\0';
     memset(dst, 0, len);
-    ASSERT_EQ(dst+len-1, reinterpret_cast<uint8_t*>(stpcpy(reinterpret_cast<char*>(dst),
-                                                           reinterpret_cast<char*>(src))));
+    ASSERT_EQ(dst + len - 1,
+              reinterpret_cast<uint8_t*>(stpcpy(reinterpret_cast<char*>(dst),
+                                                reinterpret_cast<char*>(src))));
     ASSERT_TRUE(memcmp(src, dst, len) == 0);
   }
 }
 
-TEST(string, stpcpy_align) {
-  RunSrcDstBufferAlignTest(LARGE, DoStpcpyTest);
-}
+TEST(string, stpcpy_align) { RunSrcDstBufferAlignTest(LARGE, DoStpcpyTest); }
 
-TEST(string, stpcpy_overread) {
-  RunSrcDstBufferOverreadTest(DoStpcpyTest);
-}
+TEST(string, stpcpy_overread) { RunSrcDstBufferOverreadTest(DoStpcpyTest); }
 
 // Use our own incrementer to cut down on the total number of calls.
 static size_t LargeSetIncrement(size_t len) {
@@ -1166,13 +1190,13 @@ static size_t LargeSetIncrement(size_t len) {
   return 1;
 }
 
-#define STRCAT_DST_LEN  128
+#define STRCAT_DST_LEN 128
 
 static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     int value = 32 + (len % 96);
     memset(src, value, len - 1);
-    src[len-1] = '\0';
+    src[len - 1] = '\0';
 
     if (len >= STRCAT_DST_LEN) {
       // Create a small buffer for doing quick compares in each loop.
@@ -1182,18 +1206,20 @@ static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
       memset(cmp_buf, value2, sizeof(cmp_buf));
 
       for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
-        memset(dst, value2, i-1);
-        memset(dst+i-1, 0, len-i);
-        src[len-i] = '\0';
-        ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
-                                                         reinterpret_cast<char*>(src))));
-        ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
-        ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+        memset(dst, value2, i - 1);
+        memset(dst + i - 1, 0, len - i);
+        src[len - i] = '\0';
+        ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(
+                           strcat(reinterpret_cast<char*>(dst),
+                                  reinterpret_cast<char*>(src))));
+        ASSERT_TRUE(memcmp(dst, cmp_buf, i - 1) == 0);
+        ASSERT_TRUE(memcmp(src, dst + i - 1, len - i + 1) == 0);
       }
     } else {
       dst[0] = '\0';
-      ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(strcat(reinterpret_cast<char*>(dst),
-                                                       reinterpret_cast<char*>(src))));
+      ASSERT_EQ(dst, reinterpret_cast<uint8_t*>(
+                         strcat(reinterpret_cast<char*>(dst),
+                                reinterpret_cast<char*>(src))));
       ASSERT_TRUE(memcmp(src, dst, len) == 0);
     }
   }
@@ -1203,16 +1229,14 @@ TEST(string, strcat_align) {
   RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, LargeSetIncrement);
 }
 
-TEST(string, strcat_overread) {
-  RunSrcDstBufferOverreadTest(DoStrcatTest);
-}
+TEST(string, strcat_overread) { RunSrcDstBufferOverreadTest(DoStrcatTest); }
 
 #if defined(STRLCAT_SUPPORTED)
 static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
     int value = 32 + (len % 96);
     memset(src, value, len - 1);
-    src[len-1] = '\0';
+    src[len - 1] = '\0';
 
     if (len >= STRCAT_DST_LEN) {
       // Create a small buffer for doing quick compares in each loop.
@@ -1222,18 +1246,18 @@ static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
       memset(cmp_buf, value2, sizeof(cmp_buf));
 
       for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
-        memset(dst, value2, i-1);
-        memset(dst+i-1, 0, len-i);
-        src[len-i] = '\0';
-        ASSERT_EQ(len-1, strlcat(reinterpret_cast<char*>(dst),
-                                 reinterpret_cast<char*>(src), len));
-        ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
-        ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+        memset(dst, value2, i - 1);
+        memset(dst + i - 1, 0, len - i);
+        src[len - i] = '\0';
+        ASSERT_EQ(len - 1, strlcat(reinterpret_cast<char*>(dst),
+                                   reinterpret_cast<char*>(src), len));
+        ASSERT_TRUE(memcmp(dst, cmp_buf, i - 1) == 0);
+        ASSERT_TRUE(memcmp(src, dst + i - 1, len - i + 1) == 0);
       }
     } else {
       dst[0] = '\0';
-      ASSERT_EQ(len-1, strlcat(reinterpret_cast<char*>(dst),
-                               reinterpret_cast<char*>(src), len));
+      ASSERT_EQ(len - 1, strlcat(reinterpret_cast<char*>(dst),
+                                 reinterpret_cast<char*>(src), len));
       ASSERT_TRUE(memcmp(src, dst, len) == 0);
     }
   }
@@ -1259,23 +1283,24 @@ TEST(string, strlcat_overread) {
 static void DoStrcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
   if (len >= 1) {
     memset(buf1, (32 + (len % 96)), len - 1);
-    buf1[len-1] = '\0';
+    buf1[len - 1] = '\0';
     memset(buf2, (32 + (len % 96)), len - 1);
-    buf2[len-1] = '\0';
+    buf2[len - 1] = '\0';
     ASSERT_EQ(0, strcmp(reinterpret_cast<char*>(buf1),
                         reinterpret_cast<char*>(buf2)));
   }
 }
 
-static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1,
+                             size_t len2) {
   // Do string length differences.
   int c = (32 + (len1 % 96));
   memset(buf1, c, len1 - 1);
-  buf1[len1-1] = '\0';
+  buf1[len1 - 1] = '\0';
   memset(buf2, c, len2 - 1);
-  buf2[len2-1] = '\0';
-  ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
-                      reinterpret_cast<char*>(buf2)));
+  buf2[len2 - 1] = '\0';
+  ASSERT_NE(
+      0, strcmp(reinterpret_cast<char*>(buf1), reinterpret_cast<char*>(buf2)));
 
   // Do single character differences.
   size_t len;
@@ -1286,23 +1311,24 @@ static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t l
   }
   // Need at least a two character buffer to do this test.
   if (len > 1) {
-    buf1[len-1] = '\0';
-    buf2[len-1] = '\0';
+    buf1[len - 1] = '\0';
+    buf2[len - 1] = '\0';
     int diff_c = (c + 1) % 96;
 
-    buf1[len-2] = diff_c;
+    buf1[len - 2] = diff_c;
     ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
                         reinterpret_cast<char*>(buf2)));
 
-    buf1[len-2] = c;
-    buf2[len-2] = diff_c;
+    buf1[len - 2] = c;
+    buf2[len - 2] = diff_c;
     ASSERT_NE(0, strcmp(reinterpret_cast<char*>(buf1),
                         reinterpret_cast<char*>(buf2)));
   }
 }
 
 TEST(string, strcmp_align) {
-  RunCmpBufferAlignTest(MEDIUM, DoStrcmpTest, DoStrcmpFailTest, LargeSetIncrement);
+  RunCmpBufferAlignTest(MEDIUM, DoStrcmpTest, DoStrcmpFailTest,
+                        LargeSetIncrement);
 }
 
 TEST(string, strcmp_overread) {
@@ -1310,12 +1336,13 @@ TEST(string, strcmp_overread) {
 }
 
 static void DoMemcmpTest(uint8_t* buf1, uint8_t* buf2, size_t len) {
-  memset(buf1, len+1, len);
-  memset(buf2, len+1, len);
+  memset(buf1, len + 1, len);
+  memset(buf2, len + 1, len);
   ASSERT_EQ(0, memcmp(buf1, buf2, len));
 }
 
-static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t len2) {
+static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1,
+                             size_t len2) {
   size_t len;
   if (len1 > len2) {
     len = len2;
@@ -1323,18 +1350,19 @@ static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t l
     len = len1;
   }
 
-  memset(buf1, len2+1, len);
-  buf1[len-1] = len2;
-  memset(buf2, len2+1, len);
+  memset(buf1, len2 + 1, len);
+  buf1[len - 1] = len2;
+  memset(buf2, len2 + 1, len);
   ASSERT_NE(0, memcmp(buf1, buf2, len));
 
-  buf1[len-1] = len2+1;
-  buf2[len-1] = len2;
+  buf1[len - 1] = len2 + 1;
+  buf2[len - 1] = len2;
   ASSERT_NE(0, memcmp(buf1, buf2, len));
 }
 
 TEST(string, memcmp_align) {
-  RunCmpBufferAlignTest(MEDIUM, DoMemcmpTest, DoMemcmpFailTest, LargeSetIncrement);
+  RunCmpBufferAlignTest(MEDIUM, DoMemcmpTest, DoMemcmpFailTest,
+                        LargeSetIncrement);
 }
 
 TEST(string, memcmp_overread) {
@@ -1346,26 +1374,25 @@ static void DoStrchrTest(uint8_t* buf, size_t len) {
     char value = 32 + (len % 96);
     char search_value = 33 + (len % 96);
     memset(buf, value, len - 1);
-    buf[len-1] = '\0';
+    buf[len - 1] = '\0';
     ASSERT_EQ(NULL, strchr(reinterpret_cast<char*>(buf), search_value));
-    ASSERT_EQ(reinterpret_cast<char*>(&buf[len-1]), strchr(reinterpret_cast<char*>(buf), '\0'));
+    ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 1]),
+              strchr(reinterpret_cast<char*>(buf), '\0'));
     if (len >= 2) {
       buf[0] = search_value;
-      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]), strchr(reinterpret_cast<char*>(buf), search_value));
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]),
+                strchr(reinterpret_cast<char*>(buf), search_value));
       buf[0] = value;
-      buf[len-2] = search_value;
-      ASSERT_EQ(reinterpret_cast<char*>(&buf[len-2]), strchr(reinterpret_cast<char*>(buf), search_value));
+      buf[len - 2] = search_value;
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 2]),
+                strchr(reinterpret_cast<char*>(buf), search_value));
     }
   }
 }
 
-TEST(string, strchr_align) {
-  RunSingleBufferAlignTest(MEDIUM, DoStrchrTest);
-}
+TEST(string, strchr_align) { RunSingleBufferAlignTest(MEDIUM, DoStrchrTest); }
 
-TEST(string, strchr_overread) {
-  RunSingleBufferOverreadTest(DoStrchrTest);
-}
+TEST(string, strchr_overread) { RunSingleBufferOverreadTest(DoStrchrTest); }
 
 static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;

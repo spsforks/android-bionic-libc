@@ -80,6 +80,4 @@ TEST(fenv, feclearexcept_fetestexcept) {
   ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
 }
 
-TEST(fenv, FE_DFL_ENV_macro) {
-  ASSERT_EQ(0, fesetenv(FE_DFL_ENV));
-}
+TEST(fenv, FE_DFL_ENV_macro) { ASSERT_EQ(0, fesetenv(FE_DFL_ENV)); }

@@ -34,7 +34,8 @@
 #define noinline __attribute__((__noinline__))
 #define __unused __attribute__((__unused__))
 
-static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
+static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused,
+                                        void* arg) {
   int* count_ptr = reinterpret_cast<int*>(arg);
 
 #if SHOW_FRAME_LOCATIONS
@@ -48,11 +49,13 @@ static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg
   if (dladdr(ip, &info) != 0) {
     symbol = info.dli_sname;
     if (info.dli_saddr != nullptr) {
-      offset = static_cast<int>(reinterpret_cast<char*>(ip) - reinterpret_cast<char*>(info.dli_saddr));
+      offset = static_cast<int>(reinterpret_cast<char*>(ip) -
+                                reinterpret_cast<char*>(info.dli_saddr));
     }
   }
 
-  fprintf(stderr, " #%02d %p %s%+d (%s)\n", *count_ptr, ip, symbol, offset, info.dli_fname ? info.dli_fname : "??");
+  fprintf(stderr, " #%02d %p %s%+d (%s)\n", *count_ptr, ip, symbol, offset,
+          info.dli_fname ? info.dli_fname : "??");
   fflush(stderr);
 #endif
 

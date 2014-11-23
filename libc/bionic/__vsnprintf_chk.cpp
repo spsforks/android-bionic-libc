@@ -45,7 +45,8 @@
  * greater than 0.
  */
 extern "C" int __vsnprintf_chk(char* dest, size_t supplied_size, int /*flags*/,
-                               size_t dest_len_from_compiler, const char* format, va_list va) {
+                               size_t dest_len_from_compiler,
+                               const char* format, va_list va) {
   if (__predict_false(supplied_size > dest_len_from_compiler)) {
     __fortify_chk_fail("vsnprintf: prevented write past end of buffer", 0);
   }
@@ -65,10 +66,12 @@ extern "C" int __vsnprintf_chk(char* dest, size_t supplied_size, int /*flags*/,
  * greater than 0.
  */
 extern "C" int __snprintf_chk(char* dest, size_t supplied_size, int flags,
-                              size_t dest_len_from_compiler, const char* format, ...) {
+                              size_t dest_len_from_compiler, const char* format,
+                              ...) {
   va_list va;
   va_start(va, format);
-  int result = __vsnprintf_chk(dest, supplied_size, flags, dest_len_from_compiler, format, va);
+  int result = __vsnprintf_chk(dest, supplied_size, flags,
+                               dest_len_from_compiler, format, va);
   va_end(va);
   return result;
 }

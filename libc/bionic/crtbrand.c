@@ -25,10 +25,10 @@
 
 #include <stdint.h>
 
-#define ABI_VENDOR	"Android"
-#define ABI_SECTION	".note.android.ident"
-#define ABI_NOTETYPE	1
-#define ABI_ANDROID_API	PLATFORM_SDK_VERSION
+#define ABI_VENDOR "Android"
+#define ABI_SECTION ".note.android.ident"
+#define ABI_NOTETYPE 1
+#define ABI_ANDROID_API PLATFORM_SDK_VERSION
 
 /*
  * Special ".note" entry to tag an Android binary and specify the ABI version.
@@ -49,15 +49,12 @@
  * These steps are done in the invididual Makefiles for each applicable arch.
  */
 static const struct {
-    int32_t	namesz;
-    int32_t	descsz;
-    int32_t	type;
-    char	name[sizeof ABI_VENDOR];
-    int32_t	android_api;
-} abitag __attribute__ ((section (ABI_SECTION), aligned(4), used)) = {
-    sizeof ABI_VENDOR,
-    sizeof(int32_t),
-    ABI_NOTETYPE,
-    ABI_VENDOR,
-    ABI_ANDROID_API,
+  int32_t namesz;
+  int32_t descsz;
+  int32_t type;
+  char name[sizeof ABI_VENDOR];
+  int32_t android_api;
+} abitag __attribute__((section(ABI_SECTION), aligned(4), used)) = {
+    sizeof ABI_VENDOR, sizeof(int32_t), ABI_NOTETYPE,
+    ABI_VENDOR,        ABI_ANDROID_API,
 };
