@@ -30,14 +30,17 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __epoll_pwait(int, epoll_event*, int, int, const kernel_sigset_t*, size_t);
+extern "C" int __epoll_pwait(int, epoll_event*, int, int,
+                             const kernel_sigset_t*, size_t);
 
-int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
+int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout,
+                const sigset_t* ss) {
   kernel_sigset_t kernel_ss;
   kernel_sigset_t* kernel_ss_ptr = NULL;
   if (ss != NULL) {
     kernel_ss.set(ss);
     kernel_ss_ptr = &kernel_ss;
   }
-  return __epoll_pwait(fd, events, max_events, timeout, kernel_ss_ptr, sizeof(kernel_ss));
+  return __epoll_pwait(fd, events, max_events, timeout, kernel_ss_ptr,
+                       sizeof(kernel_ss));
 }

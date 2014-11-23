@@ -28,9 +28,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-// The random number generator tests all set the seed, get four values, reset the seed and check
-// that they get the first two values repeated, and then reset the seed and check two more values
-// to rule out the possibility that we're just going round a cycle of four values.
+// The random number generator tests all set the seed, get four values, reset
+// the seed and check
+// that they get the first two values repeated, and then reset the seed and
+// check two more values
+// to rule out the possibility that we're just going round a cycle of four
+// values.
 // TODO: factor this out.
 
 TEST(stdlib, drand48) {
@@ -48,7 +51,7 @@ TEST(stdlib, drand48) {
 }
 
 TEST(stdlib, erand48) {
-  const unsigned short seed[3] = { 0x330e, 0xabcd, 0x1234 };
+  const unsigned short seed[3] = {0x330e, 0xabcd, 0x1234};
   unsigned short xsubi[3];
   memcpy(xsubi, seed, sizeof(seed));
   EXPECT_DOUBLE_EQ(0.39646477376027534, erand48(xsubi));
@@ -64,7 +67,8 @@ TEST(stdlib, erand48) {
 }
 
 TEST(stdlib, lcong48) {
-  unsigned short p[7] = { 0x0102, 0x0304, 0x0506, 0x0708, 0x090a, 0x0b0c, 0x0d0e };
+  unsigned short p[7] = {0x0102, 0x0304, 0x0506, 0x0708,
+                         0x090a, 0x0b0c, 0x0d0e};
   lcong48(p);
   EXPECT_EQ(1531389981, lrand48());
   EXPECT_EQ(1598801533, lrand48());
@@ -161,7 +165,8 @@ TEST(stdlib, realpath__empty_filename) {
 
 TEST(stdlib, realpath__ENOENT) {
   errno = 0;
-  char* p = realpath("/this/directory/path/almost/certainly/does/not/exist", NULL);
+  char* p =
+      realpath("/this/directory/path/almost/certainly/does/not/exist", NULL);
   ASSERT_TRUE(p == NULL);
   ASSERT_EQ(ENOENT, errno);
 }
@@ -198,7 +203,8 @@ TEST(stdlib, qsort) {
   struct s {
     char name[16];
     static int comparator(const void* lhs, const void* rhs) {
-      return strcmp(reinterpret_cast<const s*>(lhs)->name, reinterpret_cast<const s*>(rhs)->name);
+      return strcmp(reinterpret_cast<const s*>(lhs)->name,
+                    reinterpret_cast<const s*>(rhs)->name);
     }
   };
   s entries[3];
@@ -229,11 +235,13 @@ static void* TestBug57421_child(void* arg) {
 
 static void TestBug57421_main() {
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, TestBug57421_child, reinterpret_cast<void*>(pthread_self())));
+  ASSERT_EQ(0, pthread_create(&t, NULL, TestBug57421_child,
+                              reinterpret_cast<void*>(pthread_self())));
   pthread_exit(NULL);
 }
 
-// Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
+// Even though this isn't really a death test, we have to say "DeathTest" here
+// so gtest knows to
 // run this test (which exits normally) in its own process.
 
 class stdlib_DeathTest : public BionicDeathTest {};
@@ -307,11 +315,15 @@ TEST(stdlib, strtod_largest_subnormal) {
   // This value has been known to cause javac and java to infinite loop.
   // http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/
   ASSERT_EQ(2.2250738585072014e-308, strtod("2.2250738585072012e-308", NULL));
-  ASSERT_EQ(2.2250738585072014e-308, strtod("0.00022250738585072012e-304", NULL));
-  ASSERT_EQ(2.2250738585072014e-308, strtod("00000002.2250738585072012e-308", NULL));
-  ASSERT_EQ(2.2250738585072014e-308, strtod("2.225073858507201200000e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308,
+            strtod("0.00022250738585072012e-304", NULL));
+  ASSERT_EQ(2.2250738585072014e-308,
+            strtod("00000002.2250738585072012e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308,
+            strtod("2.225073858507201200000e-308", NULL));
   ASSERT_EQ(2.2250738585072014e-308, strtod("2.2250738585072012e-00308", NULL));
-  ASSERT_EQ(2.2250738585072014e-308, strtod("2.22507385850720129978001e-308", NULL));
+  ASSERT_EQ(2.2250738585072014e-308,
+            strtod("2.22507385850720129978001e-308", NULL));
   ASSERT_EQ(-2.2250738585072014e-308, strtod("-2.2250738585072012e-308", NULL));
 }
 
@@ -393,7 +405,7 @@ TEST(stdlib, pty_smoke) {
 }
 
 TEST(stdlib, posix_openpt) {
-  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
+  int fd = posix_openpt(O_RDWR | O_NOCTTY | O_CLOEXEC);
   ASSERT_NE(-1, fd);
   close(fd);
 }

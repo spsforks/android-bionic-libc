@@ -35,21 +35,29 @@
 #include <string.h>
 
 // System calls.
-extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*, size_t);
+extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*,
+                                 const struct timespec*, size_t);
 extern "C" int __timer_create(clockid_t, sigevent*, __kernel_timer_t*);
 extern "C" int __timer_delete(__kernel_timer_t);
 extern "C" int __timer_getoverrun(__kernel_timer_t);
 extern "C" int __timer_gettime(__kernel_timer_t, itimerspec*);
-extern "C" int __timer_settime(__kernel_timer_t, int, const itimerspec*, itimerspec*);
+extern "C" int __timer_settime(__kernel_timer_t, int, const itimerspec*,
+                               itimerspec*);
 
-// Most POSIX timers are handled directly by the kernel. We translate SIGEV_THREAD timers
-// into SIGEV_THREAD_ID timers so the kernel handles all the time-related stuff and we just
+// Most POSIX timers are handled directly by the kernel. We translate
+// SIGEV_THREAD timers
+// into SIGEV_THREAD_ID timers so the kernel handles all the time-related stuff
+// and we just
 // need to worry about running user code on a thread.
 
-// We can't use SIGALRM because too many other C library functions throw that around, and since
-// they don't send to a specific thread, all threads are eligible to handle the signal and we can
-// end up with one of our POSIX timer threads handling it (meaning that the intended recipient
-// doesn't). glibc uses SIGRTMIN for its POSIX timer implementation, so in the absence of any
+// We can't use SIGALRM because too many other C library functions throw that
+// around, and since
+// they don't send to a specific thread, all threads are eligible to handle the
+// signal and we can
+// end up with one of our POSIX timer threads handling it (meaning that the
+// intended recipient
+// doesn't). glibc uses SIGRTMIN for its POSIX timer implementation, so in the
+// absence of any
 // reason to use anything else, we use that too.
 static const int TIMER_SIGNAL = (__SIGRTMIN + 0);
 
@@ -139,18 +147,21 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   if (evp->sigev_notify_attributes == NULL) {
     pthread_attr_init(&thread_attributes);
   } else {
-    thread_attributes = *reinterpret_cast<pthread_attr_t*>(evp->sigev_notify_attributes);
+    thread_attributes =
+        *reinterpret_cast<pthread_attr_t*>(evp->sigev_notify_attributes);
   }
   pthread_attr_setdetachstate(&thread_attributes, PTHREAD_CREATE_DETACHED);
 
-  // We start the thread with TIMER_SIGNAL blocked by blocking the signal here and letting it
+  // We start the thread with TIMER_SIGNAL blocked by blocking the signal here
+  // and letting it
   // inherit. If it tried to block the signal itself, there would be a race.
   kernel_sigset_t sigset;
   sigaddset(sigset.get(), TIMER_SIGNAL);
   kernel_sigset_t old_sigset;
   pthread_sigmask(SIG_BLOCK, sigset.get(), old_sigset.get());
 
-  int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
+  int rc = pthread_create(&timer->callback_thread, &thread_attributes,
+                          __timer_thread_start, timer);
 
   pthread_sigmask(SIG_SETMASK, old_sigset.get(), NULL);
 
@@ -170,9 +181,11 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   }
 
   // Give the thread a meaningful name.
-  // It can't do this itself because the kernel timer isn't created until after it's running.
+  // It can't do this itself because the kernel timer isn't created until after
+  // it's running.
   char name[32];
-  snprintf(name, sizeof(name), "POSIX interval timer %d", to_kernel_timer_id(timer));
+  snprintf(name, sizeof(name), "POSIX interval timer %d",
+           to_kernel_timer_id(timer));
   pthread_setname_np(timer->callback_thread, name);
 
   *timer_id = timer;
@@ -204,8 +217,9 @@ int timer_gettime(timer_t id, itimerspec* ts) {
 }
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
-int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) {
-  PosixTimer* timer= reinterpret_cast<PosixTimer*>(id);
+int timer_settime(timer_t id, int flags, const itimerspec* ts,
+                  itimerspec* ots) {
+  PosixTimer* timer = reinterpret_cast<PosixTimer*>(id);
   int rc = __timer_settime(timer->kernel_timer_id, flags, ts, ots);
   if (rc == 0) {
     // Mark the timer as either being armed or disarmed. This avoids the

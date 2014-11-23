@@ -33,9 +33,11 @@ extern "C" void __restore(void);
 
 #if defined(__LP64__)
 
-extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*, struct __kernel_sigaction*, size_t);
+extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*,
+                              struct __kernel_sigaction*, size_t);
 
-int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+int sigaction(int signal, const struct sigaction* bionic_new_action,
+              struct sigaction* bionic_old_action) {
   __kernel_sigaction kernel_new_action;
   if (bionic_new_action != NULL) {
     kernel_new_action.sa_flags = bionic_new_action->sa_flags;
@@ -44,10 +46,10 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 #if defined(SA_RESTORER)
     kernel_new_action.sa_restorer = bionic_new_action->sa_restorer;
 #if defined(__aarch64__)
-    // arm64 has sa_restorer, but unwinding works best if you just let the
-    // kernel supply the default restorer from [vdso]. gdb doesn't care, but
-    // libgcc needs the nop that the kernel includes before the actual code.
-    // (We could add that ourselves, but why bother?)
+// arm64 has sa_restorer, but unwinding works best if you just let the
+// kernel supply the default restorer from [vdso]. gdb doesn't care, but
+// libgcc needs the nop that the kernel includes before the actual code.
+// (We could add that ourselves, but why bother?)
 #else
     if (!(kernel_new_action.sa_flags & SA_RESTORER)) {
       kernel_new_action.sa_flags |= SA_RESTORER;
@@ -58,10 +60,10 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
   }
 
   __kernel_sigaction kernel_old_action;
-  int result = __rt_sigaction(signal,
-                              (bionic_new_action != NULL) ? &kernel_new_action : NULL,
-                              (bionic_old_action != NULL) ? &kernel_old_action : NULL,
-                              sizeof(sigset_t));
+  int result = __rt_sigaction(
+      signal, (bionic_new_action != NULL) ? &kernel_new_action : NULL,
+      (bionic_old_action != NULL) ? &kernel_old_action : NULL,
+      sizeof(sigset_t));
 
   if (bionic_old_action != NULL) {
     bionic_old_action->sa_flags = kernel_old_action.sa_flags;
@@ -79,7 +81,8 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 
 extern "C" int __sigaction(int, const struct sigaction*, struct sigaction*);
 
-int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+int sigaction(int signal, const struct sigaction* bionic_new_action,
+              struct sigaction* bionic_old_action) {
   // The 32-bit ABI is broken. struct sigaction includes a too-small sigset_t,
   // so we have to use sigaction(2) rather than rt_sigaction(2).
   struct sigaction kernel_new_action;
@@ -92,11 +95,15 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 
     if (!(kernel_new_action.sa_flags & SA_RESTORER)) {
       kernel_new_action.sa_flags |= SA_RESTORER;
-      kernel_new_action.sa_restorer = (kernel_new_action.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
+      kernel_new_action.sa_restorer = (kernel_new_action.sa_flags & SA_SIGINFO)
+                                          ? &__restore_rt
+                                          : &__restore;
     }
 #endif
   }
-  return __sigaction(signal, (bionic_new_action != NULL) ? &kernel_new_action : NULL, bionic_old_action);
+  return __sigaction(signal,
+                     (bionic_new_action != NULL) ? &kernel_new_action : NULL,
+                     bionic_old_action);
 }
 
 #endif

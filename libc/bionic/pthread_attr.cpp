@@ -65,7 +65,8 @@ int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
 }
 
 int pthread_attr_getdetachstate(const pthread_attr_t* attr, int* state) {
-  *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED) ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE;
+  *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED) ? PTHREAD_CREATE_DETACHED
+                                                      : PTHREAD_CREATE_JOINABLE;
   return 0;
 }
 
@@ -102,7 +103,8 @@ int pthread_attr_getstacksize(const pthread_attr_t* attr, size_t* stack_size) {
   return pthread_attr_getstack(attr, &unused, stack_size);
 }
 
-int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_size) {
+int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base,
+                          size_t stack_size) {
   if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
     return EINVAL;
   }
@@ -114,7 +116,8 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
   return 0;
 }
 
-static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
+static int __pthread_attr_getstack_main_thread(void** stack_base,
+                                               size_t* stack_size) {
   ErrnoRestorer errno_restorer;
 
   rlimit stack_limit;
@@ -122,14 +125,18 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     return errno;
   }
 
-  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack for sanity's sake.
+  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack
+  // for sanity's sake.
   if (stack_limit.rlim_cur == RLIM_INFINITY) {
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
 
-  // It shouldn't matter which thread we are because we're just looking for "[stack]", but
-  // valgrind seems to mess with the stack enough that the kernel will report "[stack:pid]"
-  // instead if you look in /proc/self/maps, so we need to look in /proc/pid/task/pid/maps.
+  // It shouldn't matter which thread we are because we're just looking for
+  // "[stack]", but
+  // valgrind seems to mess with the stack enough that the kernel will report
+  // "[stack:pid]"
+  // instead if you look in /proc/self/maps, so we need to look in
+  // /proc/pid/task/pid/maps.
   char path[64];
   snprintf(path, sizeof(path), "/proc/self/task/%d/maps", getpid());
   FILE* fp = fopen(path, "re");
@@ -151,7 +158,8 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   __libc_fatal("No [stack] line found in \"%s\"!", path);
 }
 
-int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
+int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base,
+                          size_t* stack_size) {
   if ((attr->flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) != 0) {
     return __pthread_attr_getstack_main_thread(stack_base, stack_size);
   }

@@ -22,11 +22,11 @@
 // Don't try to compile this code on older glibc versions.
 
 #if defined(__BIONIC__)
-  #define GETAUXVAL_CAN_COMPILE 1
+#define GETAUXVAL_CAN_COMPILE 1
 #elif defined(__GLIBC_PREREQ)
-  #if __GLIBC_PREREQ(2, 16)
-    #define GETAUXVAL_CAN_COMPILE 1
-  #endif
+#if __GLIBC_PREREQ(2, 16)
+#define GETAUXVAL_CAN_COMPILE 1
+#endif
 #endif
 
 #if defined(GETAUXVAL_CAN_COMPILE)
@@ -35,17 +35,17 @@
 
 TEST(getauxval, expected_values) {
 #if defined(GETAUXVAL_CAN_COMPILE)
-  ASSERT_EQ((unsigned long int) 0, getauxval(AT_SECURE));
+  ASSERT_EQ((unsigned long int)0, getauxval(AT_SECURE));
   ASSERT_EQ(getuid(), getauxval(AT_UID));
   ASSERT_EQ(geteuid(), getauxval(AT_EUID));
   ASSERT_EQ(getgid(), getauxval(AT_GID));
   ASSERT_EQ(getegid(), getauxval(AT_EGID));
-  ASSERT_EQ((unsigned long int) getpagesize(), getauxval(AT_PAGESZ));
+  ASSERT_EQ((unsigned long int)getpagesize(), getauxval(AT_PAGESZ));
 
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PHDR));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PHNUM));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_ENTRY));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PAGESZ));
+  ASSERT_NE((unsigned long int)0, getauxval(AT_PHDR));
+  ASSERT_NE((unsigned long int)0, getauxval(AT_PHNUM));
+  ASSERT_NE((unsigned long int)0, getauxval(AT_ENTRY));
+  ASSERT_NE((unsigned long int)0, getauxval(AT_PAGESZ));
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
@@ -53,7 +53,7 @@ TEST(getauxval, expected_values) {
 
 TEST(getauxval, unexpected_values) {
 #if defined(GETAUXVAL_CAN_COMPILE)
-  ASSERT_EQ((unsigned long int) 0, getauxval(0xdeadbeef));
+  ASSERT_EQ((unsigned long int)0, getauxval(0xdeadbeef));
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif

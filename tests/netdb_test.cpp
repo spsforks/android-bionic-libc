@@ -77,7 +77,7 @@ TEST(netdb, getaddrinfo_hints) {
   hints.ai_protocol = IPPROTO_TCP;
 
   addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
+  ASSERT_EQ(0, getaddrinfo("localhost", "9999", &hints, &ai));
   ASSERT_EQ(AF_INET, ai->ai_family);
   ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
   ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);
@@ -96,22 +96,28 @@ TEST(netdb, getnameinfo_salen) {
   socklen_t just_right = sizeof(sockaddr_in);
   socklen_t too_little = sizeof(sockaddr_in) - 1;
 
-  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(
+      0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
   ASSERT_STREQ("0.0.0.0", tmp);
-  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0,
+                           NI_NUMERICHOST));
   ASSERT_STREQ("0.0.0.0", tmp);
-  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0,
+                                    NI_NUMERICHOST));
 
   ss.ss_family = AF_INET6;
   just_right = sizeof(sockaddr_in6);
   too_little = sizeof(sockaddr_in6) - 1;
   too_much = just_right + 1;
 
-  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(
+      0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
   ASSERT_STREQ("::", tmp);
-  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0,
+                           NI_NUMERICHOST));
   ASSERT_STREQ("::", tmp);
-  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0,
+                                    NI_NUMERICHOST));
 }
 
 TEST(netdb, gethostbyname) {

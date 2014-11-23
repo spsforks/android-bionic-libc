@@ -76,10 +76,11 @@ TEST(malloc, calloc_overflow) {
 TEST(malloc, memalign_multiple) {
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
-    for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
-      char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));
+    for (size_t alignment = 1 << i; alignment < (1U << (i + 1)); alignment++) {
+      char *ptr = reinterpret_cast<char *>(memalign(alignment, 100));
       ASSERT_TRUE(ptr != NULL) << "Failed at alignment " << alignment;
-      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
+      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment "
+                                               << alignment;
       ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))
           << "Failed at alignment " << alignment;
       free(ptr);
@@ -92,7 +93,7 @@ TEST(malloc, memalign_overflow) {
 }
 
 TEST(malloc, memalign_non_power2) {
-  void* ptr;
+  void *ptr;
   for (size_t align = 0; align <= 256; align++) {
     ptr = memalign(align, 1024);
     ASSERT_TRUE(ptr != NULL) << "Failed at align " << align;
@@ -101,25 +102,25 @@ TEST(malloc, memalign_non_power2) {
 }
 
 TEST(malloc, posix_memalign_non_power2) {
-  void* ptr;
+  void *ptr;
   ASSERT_EQ(EINVAL, posix_memalign(&ptr, 17, 1024));
 }
 
 TEST(malloc, posix_memalign_overflow) {
-  void* ptr;
+  void *ptr;
   ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
 }
 
 TEST(malloc, memalign_realloc) {
   // Memalign and then realloc the pointer a couple of times.
   for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {
-    char *ptr = (char*)memalign(alignment, 100);
+    char *ptr = (char *)memalign(alignment, 100);
     ASSERT_TRUE(ptr != NULL);
     ASSERT_LE(100U, malloc_usable_size(ptr));
     ASSERT_EQ(0U, (intptr_t)ptr % alignment);
     memset(ptr, 0x23, 100);
 
-    ptr = (char*)realloc(ptr, 200);
+    ptr = (char *)realloc(ptr, 200);
     ASSERT_TRUE(ptr != NULL);
     ASSERT_LE(200U, malloc_usable_size(ptr));
     ASSERT_TRUE(ptr != NULL);
@@ -128,7 +129,7 @@ TEST(malloc, memalign_realloc) {
     }
     memset(ptr, 0x45, 200);
 
-    ptr = (char*)realloc(ptr, 300);
+    ptr = (char *)realloc(ptr, 300);
     ASSERT_TRUE(ptr != NULL);
     ASSERT_LE(300U, malloc_usable_size(ptr));
     for (size_t i = 0; i < 200; i++) {
@@ -136,7 +137,7 @@ TEST(malloc, memalign_realloc) {
     }
     memset(ptr, 0x67, 300);
 
-    ptr = (char*)realloc(ptr, 250);
+    ptr = (char *)realloc(ptr, 250);
     ASSERT_TRUE(ptr != NULL);
     ASSERT_LE(250U, malloc_usable_size(ptr));
     for (size_t i = 0; i < 250; i++) {
@@ -192,14 +193,14 @@ TEST(malloc, malloc_multiple_realloc) {
     ASSERT_EQ(0x23, ptr[i]);
   }
 
-  ptr = (char*)realloc(ptr, 50);
+  ptr = (char *)realloc(ptr, 50);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(50U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 50; i++) {
     ASSERT_EQ(0x23, ptr[i]);
   }
 
-  ptr = (char*)realloc(ptr, 150);
+  ptr = (char *)realloc(ptr, 150);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(150U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 50; i++) {
@@ -207,7 +208,7 @@ TEST(malloc, malloc_multiple_realloc) {
   }
   memset(ptr, 0x23, 150);
 
-  ptr = (char*)realloc(ptr, 425);
+  ptr = (char *)realloc(ptr, 425);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(425U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 150; i++) {
@@ -259,14 +260,14 @@ TEST(malloc, calloc_multiple_realloc) {
     ASSERT_EQ(0, ptr[i]);
   }
 
-  ptr = (char*)realloc(ptr, 50);
+  ptr = (char *)realloc(ptr, 50);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(50U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 50; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
 
-  ptr = (char*)realloc(ptr, 150);
+  ptr = (char *)realloc(ptr, 150);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(150U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 50; i++) {
@@ -274,7 +275,7 @@ TEST(malloc, calloc_multiple_realloc) {
   }
   memset(ptr, 0, 150);
 
-  ptr = (char*)realloc(ptr, 425);
+  ptr = (char *)realloc(ptr, 425);
   ASSERT_TRUE(ptr != NULL);
   ASSERT_LE(425U, malloc_usable_size(ptr));
   for (size_t i = 0; i < 150; i++) {
@@ -287,7 +288,7 @@ TEST(malloc, realloc_overflow) {
   errno = 0;
   ASSERT_EQ(NULL, realloc(NULL, SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
-  void* ptr = malloc(100);
+  void *ptr = malloc(100);
   ASSERT_TRUE(ptr != NULL);
   errno = 0;
   ASSERT_EQ(NULL, realloc(ptr, SIZE_MAX));
@@ -296,14 +297,14 @@ TEST(malloc, realloc_overflow) {
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-extern "C" void* pvalloc(size_t);
-extern "C" void* valloc(size_t);
+extern "C" void *pvalloc(size_t);
+extern "C" void *valloc(size_t);
 
 TEST(malloc, pvalloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  void* ptr = pvalloc(100);
+  void *ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
-  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize - 1)) == 0);
   ASSERT_LE(pagesize, malloc_usable_size(ptr));
   free(ptr);
 }
@@ -314,9 +315,9 @@ TEST(malloc, pvalloc_overflow) {
 
 TEST(malloc, valloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  void* ptr = pvalloc(100);
+  void *ptr = pvalloc(100);
   ASSERT_TRUE(ptr != NULL);
-  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize - 1)) == 0);
   free(ptr);
 }
 
@@ -327,9 +328,9 @@ TEST(malloc, valloc_overflow) {
 
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
-  char* buf;
+  char *buf;
   size_t bufsize;
-  FILE* memstream = open_memstream(&buf, &bufsize);
+  FILE *memstream = open_memstream(&buf, &bufsize);
   ASSERT_NE(nullptr, memstream);
   ASSERT_EQ(0, malloc_info(0, memstream));
   ASSERT_EQ(0, fclose(memstream));
@@ -358,7 +359,7 @@ TEST(malloc, malloc_info) {
               arena->FirstChildElement("bins-total")->QueryIntText(&val));
 
     auto bin = arena->FirstChildElement("bin");
-    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+    for (; bin != nullptr; bin = bin->NextSiblingElement()) {
       if (strcmp(bin->Name(), "bin") == 0) {
         ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
         ASSERT_EQ(tinyxml2::XML_SUCCESS,

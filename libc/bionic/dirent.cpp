@@ -100,7 +100,8 @@ static dirent* __readdir_locked(DIR* d) {
   }
 
   dirent* entry = d->next_;
-  d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) + entry->d_reclen);
+  d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) +
+                                       entry->d_reclen);
   d->available_bytes_ -= entry->d_reclen;
   // The directory entry offset uses 0, 1, 2 instead of real file offset,
   // so the value range of long type is enough.

@@ -30,14 +30,16 @@
 
 #if defined(__GLIBC__)
 // glibc doesn't expose gettid(2).
-pid_t gettid() { return syscall(__NR_gettid); }
-#endif // __GLIBC__
+pid_t gettid() {
+  return syscall(__NR_gettid);
+}
+#endif  // __GLIBC__
 
 // For x86, bionic and glibc have per-thread stack guard values (all identical).
 #if defined(__i386__)
 static uint32_t GetGuardFromTls() {
   uint32_t guard;
-  asm ("mov %%gs:0x14, %0": "=d" (guard));
+  asm("mov %%gs:0x14, %0" : "=d"(guard));
   return guard;
 }
 
@@ -54,7 +56,8 @@ struct stack_protector_checker {
     // Duplicate tid. gettid(2) bug? Seeing this would be very upsetting.
     ASSERT_TRUE(tids.find(tid) == tids.end());
 
-    // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_ get
+    // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_
+    // get
     // four random zero bytes, but it should be vanishingly unlikely.
     ASSERT_NE(guard, 0U);
 
@@ -64,11 +67,12 @@ struct stack_protector_checker {
 };
 
 static void* ThreadGuardHelper(void* arg) {
-  stack_protector_checker* checker = reinterpret_cast<stack_protector_checker*>(arg);
+  stack_protector_checker* checker =
+      reinterpret_cast<stack_protector_checker*>(arg);
   checker->Check();
   return NULL;
 }
-#endif // __i386__
+#endif  // __i386__
 
 TEST(stack_protector, same_guard_per_thread) {
 #if defined(__i386__)
@@ -85,9 +89,9 @@ TEST(stack_protector, same_guard_per_thread) {
 
   // bionic and glibc use the same guard for every thread.
   ASSERT_EQ(1U, checker.guards.size());
-#else // __i386__
+#else   // __i386__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __i386__
+#endif  // __i386__
 }
 
 // For ARM and MIPS, glibc has a global stack check guard value.
@@ -106,8 +110,7 @@ extern "C" uintptr_t __stack_chk_guard;
  * This must be marked with "__attribute__ ((noinline))", to ensure the
  * compiler generates the proper stack guards around this function.
  */
-__attribute__ ((noinline))
-static void do_modify_stack_chk_guard() {
+__attribute__((noinline)) static void do_modify_stack_chk_guard() {
   __stack_chk_guard = 0x12345678;
 }
 #endif
@@ -116,17 +119,18 @@ TEST(stack_protector, global_guard) {
 #if defined(TEST_STACK_CHK_GUARD)
   ASSERT_NE(0, gettid());
   ASSERT_NE(0U, __stack_chk_guard);
-#else // TEST_STACK_CHK_GUARD
+#else  // TEST_STACK_CHK_GUARD
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // TEST_STACK_CHK_GUARD
+#endif  // TEST_STACK_CHK_GUARD
 }
 
 class stack_protector_DeathTest : public BionicDeathTest {};
 
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
 #if defined(TEST_STACK_CHK_GUARD)
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
-#else // TEST_STACK_CHK_GUARD
+  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT),
+              "");
+#else  // TEST_STACK_CHK_GUARD
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // TEST_STACK_CHK_GUARD
+#endif  // TEST_STACK_CHK_GUARD
 }

@@ -26,14 +26,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-enum uid_type_t {
-  TYPE_SYSTEM,
-  TYPE_APP
-};
+enum uid_type_t { TYPE_SYSTEM, TYPE_APP };
 
 #if defined(__BIONIC__)
 
-static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_passwd(const passwd* pwd, const char* username, uid_t uid,
+                         uid_type_t uid_type) {
   ASSERT_TRUE(pwd != NULL);
   ASSERT_STREQ(username, pwd->pw_name);
   ASSERT_EQ(uid, pwd->pw_uid);
@@ -51,7 +49,8 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   ASSERT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
 
-static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid(const char* username, uid_t uid,
+                           uid_type_t uid_type) {
   errno = 0;
   passwd* pwd = getpwuid(uid);
   ASSERT_EQ(0, errno);
@@ -59,7 +58,8 @@ static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type)
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam(const char* username, uid_t uid,
+                           uid_type_t uid_type) {
   errno = 0;
   passwd* pwd = getpwnam(username);
   ASSERT_EQ(0, errno);
@@ -67,7 +67,8 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type)
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid_r(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -81,7 +82,8 @@ static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_typ
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam_r(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -95,17 +97,21 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_get_passwd(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   check_getpwuid(username, uid, uid_type);
   check_getpwnam(username, uid, uid_type);
   check_getpwuid_r(username, uid, uid_type);
   check_getpwnam_r(username, uid, uid_type);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
-static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
-  GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+static void check_get_passwd(const char* /* username */, uid_t /* uid */,
+                             uid_type_t /* uid_type */) {
+  GTEST_LOG_(INFO) << "This test is about uid/username translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif
@@ -195,10 +201,12 @@ static void check_get_group(const char* group_name, gid_t gid) {
   check_getgrnam(group_name, gid);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
 static void check_get_group(const char* /* group_name */, gid_t /* gid */) {
-  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif

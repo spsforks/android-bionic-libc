@@ -23,4 +23,4 @@
 #define HAVE_DEPRECATED_MALLOC_FUNCS 1
 #endif
 
-#endif // _BIONIC_CONFIG_H_
+#endif  // _BIONIC_CONFIG_H_

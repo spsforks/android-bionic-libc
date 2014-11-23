@@ -49,7 +49,7 @@ char* __fgets_chk(char* dest, int supplied_size, FILE* stream,
     __fortify_chk_fail("fgets: buffer size < 0", 0);
   }
 
-  if (((size_t) supplied_size) > dest_len_from_compiler) {
+  if (((size_t)supplied_size) > dest_len_from_compiler) {
     __fortify_chk_fail("fgets: prevented write past end of buffer", 0);
   }
 

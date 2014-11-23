@@ -69,7 +69,7 @@ TEST(stdatomic, atomic_is_lock_free) {
 #if defined(__clang__) || __GNUC_PREREQ(4, 7)
   // Otherwise stdatomic.h doesn't handle this.
   atomic_intmax_t big;
-  // atomic_intmax_t(size = 64) is not lock free on mips32.
+// atomic_intmax_t(size = 64) is not lock free on mips32.
 #if defined(__mips__) && !defined(__LP64__)
   ASSERT_FALSE(atomic_is_lock_free(&big));
 #else
@@ -119,8 +119,10 @@ TEST(stdatomic, atomic_compare_exchange) {
 
   atomic_store(&i, 123);
   expected = 123;
-  ASSERT_TRUE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_FALSE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  ASSERT_TRUE(atomic_compare_exchange_strong_explicit(
+      &i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  ASSERT_FALSE(atomic_compare_exchange_strong_explicit(
+      &i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
   ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
@@ -131,8 +133,10 @@ TEST(stdatomic, atomic_compare_exchange) {
 
   atomic_store(&i, 123);
   expected = 123;
-  ASSERT_TRUE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_FALSE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  ASSERT_TRUE(atomic_compare_exchange_weak_explicit(
+      &i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  ASSERT_FALSE(atomic_compare_exchange_weak_explicit(
+      &i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
   ASSERT_EQ(456, expected);
 }
 
@@ -173,7 +177,7 @@ TEST(stdatomic, atomic_fetch_and) {
 
 // And a rudimentary test of acquire-release memory ordering:
 
-constexpr static uint_least32_t BIG = 10000000ul; // Assumed even below.
+constexpr static uint_least32_t BIG = 10000000ul;  // Assumed even below.
 
 struct three_atomics {
   atomic_uint_least32_t x;
@@ -187,13 +191,13 @@ struct three_atomics {
 // Very simple acquire/release memory ordering sanity check.
 static void* writer(void* arg) {
   three_atomics* a = reinterpret_cast<three_atomics*>(arg);
-  for (uint_least32_t i = 0; i <= BIG; i+=2) {
+  for (uint_least32_t i = 0; i <= BIG; i += 2) {
     atomic_store_explicit(&a->x, i, memory_order_relaxed);
     atomic_store_explicit(&a->z, i, memory_order_relaxed);
     atomic_store_explicit(&a->y, i, memory_order_release);
-    atomic_store_explicit(&a->x, i+1, memory_order_relaxed);
-    atomic_store_explicit(&a->z, i+1, memory_order_relaxed);
-    atomic_store_explicit(&a->y, i+1, memory_order_release);
+    atomic_store_explicit(&a->x, i + 1, memory_order_relaxed);
+    atomic_store_explicit(&a->z, i + 1, memory_order_relaxed);
+    atomic_store_explicit(&a->y, i + 1, memory_order_release);
   }
   return 0;
 }
@@ -211,15 +215,15 @@ static void* reader(void* arg) {
     // stores to z and x, or later ones, should also be visible.
     if (zval < yval) {
       // Cant just ASSERT, since we are in a non-void function.
-      ADD_FAILURE() << "acquire-release ordering violation: "
-                    << zval << " < " << yval << ", " << xval << "\n";
-      return 0; // Only report once.
+      ADD_FAILURE() << "acquire-release ordering violation: " << zval << " < "
+                    << yval << ", " << xval << "\n";
+      return 0;  // Only report once.
     }
     if (xval < yval) {
       // Cant just ASSERT, since we are in a non-void function.
-      ADD_FAILURE() << "acquire-release ordering violation: "
-                    << xval << " < " << yval << ", " << zval <<  "\n";
-      return 0; // Only report once.
+      ADD_FAILURE() << "acquire-release ordering violation: " << xval << " < "
+                    << yval << ", " << zval << "\n";
+      return 0;  // Only report once.
     }
     if (repeat < repeat_limit) ++repeat;
   }
@@ -237,7 +241,7 @@ TEST(stdatomic, ordering) {
   atomic_init(&a.x, 0ul);
   atomic_init(&a.y, 0ul);
   atomic_init(&a.z, 0ul);
-  pthread_t t1,t2;
+  pthread_t t1, t2;
   ASSERT_EQ(0, pthread_create(&t1, 0, reader, &a));
   ASSERT_EQ(0, pthread_create(&t2, 0, writer, &a));
   ASSERT_EQ(0, pthread_join(t1, &result));

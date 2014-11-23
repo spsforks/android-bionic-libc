@@ -45,15 +45,18 @@
 #include <unistd.h>
 #include <wchar.h>
 
-// These were accidentally declared in <unistd.h> because we stupidly used to inline
-// getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
+// These were accidentally declared in <unistd.h> because we stupidly used to
+// inline
+// getpagesize() and __getpageshift(). Needed for backwards compatibility with
+// old NDK apps.
 extern "C" {
-  unsigned int __page_size = PAGE_SIZE;
-  unsigned int __page_shift = 12;
+unsigned int __page_size = PAGE_SIZE;
+unsigned int __page_shift = 12;
 }
 
 // TODO: remove this backward compatibility hack (for jb-mr1 strace binaries).
-extern "C" pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
+extern "C" pid_t __wait4(pid_t pid, int* status, int options,
+                         struct rusage* rusage) {
   return wait4(pid, status, options, rusage);
 }
 
@@ -88,7 +91,8 @@ extern "C" int pthread_attr_setstackaddr(pthread_attr_t*, void*) {
   return ENOSYS;
 }
 
-extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stack_addr) {
+extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr,
+                                         void** stack_addr) {
   // This was removed from POSIX.1-2008.
   // Needed for ABI compatibility with the NDK.
   *stack_addr = (char*)attr->stack_base + attr->stack_size;
@@ -108,7 +112,7 @@ extern "C" char* strtotimeval(const char* str, struct timeval* ts) {
     // Read up to 6 digits (microseconds).
     while (*s && isdigit(*s)) {
       if (++count < 7) {
-        fractional_seconds = fractional_seconds*10 + (*s - '0');
+        fractional_seconds = fractional_seconds * 10 + (*s - '0');
       }
       s++;
     }
@@ -129,21 +133,22 @@ static inline int digitval(int ch) {
   if (d < 10) return (int)d;
 
   d = (unsigned)(ch - 'a');
-  if (d < 6) return (int)(d+10);
+  if (d < 6) return (int)(d + 10);
 
   d = (unsigned)(ch - 'A');
-  if (d < 6) return (int)(d+10);
+  if (d < 6) return (int)(d + 10);
 
   return -1;
 }
 
 // This non-standard function was in our <inttypes.h> for some reason.
-extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_t n) {
-  const unsigned char*  p   = (const unsigned char *)nptr;
-  const unsigned char*  end = p + n;
-  int                   minus = 0;
-  uintmax_t             v = 0;
-  int                   d;
+extern "C" uintmax_t strntoumax(const char* nptr, char** endptr, int base,
+                                size_t n) {
+  const unsigned char* p = (const unsigned char*)nptr;
+  const unsigned char* end = p + n;
+  int minus = 0;
+  uintmax_t v = 0;
+  int d;
 
   while (p < end && isspace(*p)) {
     p++;
@@ -158,36 +163,37 @@ extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_
   }
 
   if (base == 0) {
-    if (p+2 < end && p[0] == '0' && (p[1] == 'x' || p[1] == 'X')) {
+    if (p + 2 < end && p[0] == '0' && (p[1] == 'x' || p[1] == 'X')) {
       p += 2;
       base = 16;
-    } else if (p+1 < end && p[0] == '0') {
-      p   += 1;
+    } else if (p + 1 < end && p[0] == '0') {
+      p += 1;
       base = 8;
     } else {
       base = 10;
     }
   } else if (base == 16) {
-    if (p+2 < end && p[0] == '0' && (p[1] == 'x' || p[1] == 'X')) {
+    if (p + 2 < end && p[0] == '0' && (p[1] == 'x' || p[1] == 'X')) {
       p += 2;
     }
   }
 
   while (p < end && (d = digitval(*p)) >= 0 && d < base) {
-    v = v*base + d;
+    v = v * base + d;
     p += 1;
   }
 
   if (endptr) {
-    *endptr = (char*) p;
+    *endptr = (char*)p;
   }
 
   return minus ? -v : v;
 }
 
 // This non-standard function was in our <inttypes.h> for some reason.
-extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t n) {
-  return (intmax_t) strntoumax(nptr, endptr, base, n);
+extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base,
+                               size_t n) {
+  return (intmax_t)strntoumax(nptr, endptr, base, n);
 }
 
 // POSIX calls this dprintf, but LP32 Android had fdprintf instead.
@@ -216,7 +222,8 @@ extern "C" int __futex_wake(volatile void* ftx, int count) {
 }
 
 // This used to be in <sys/atomics.h>.
-extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
+extern "C" int __futex_wait(volatile void* ftx, int value,
+                            const struct timespec* timeout) {
   return __real_futex_wait(ftx, value, timeout);
 }
 
@@ -270,21 +277,20 @@ extern "C" int getdtablesize() {
 
 // Only used by ftime, which was removed from POSIX 2008.
 struct timeb {
-  time_t          time;
-  unsigned short  millitm;
-  short           timezone;
-  short           dstflag;
+  time_t time;
+  unsigned short millitm;
+  short timezone;
+  short dstflag;
 };
 
 // This was removed from POSIX 2008.
 extern "C" int ftime(struct timeb* tb) {
-  struct timeval  tv;
+  struct timeval tv;
   struct timezone tz;
 
-  if (gettimeofday(&tv, &tz) < 0)
-    return -1;
+  if (gettimeofday(&tv, &tz) < 0) return -1;
 
-  tb->time    = tv.tv_sec;
+  tb->time = tv.tv_sec;
   tb->millitm = (tv.tv_usec + 500) / 1000;
 
   if (tb->millitm == 1000) {
@@ -293,7 +299,7 @@ extern "C" int ftime(struct timeb* tb) {
   }
 
   tb->timezone = tz.tz_minuteswest;
-  tb->dstflag  = tz.tz_dsttime;
+  tb->dstflag = tz.tz_dsttime;
 
   return 0;
 }
@@ -320,7 +326,8 @@ extern "C" size_t dlmalloc_usable_size(void* ptr) {
   return malloc_usable_size(ptr);
 }
 
-// In L we added a public pthread_gettid_np, but some apps were using the private API.
+// In L we added a public pthread_gettid_np, but some apps were using the
+// private API.
 extern "C" pid_t __pthread_gettid(pthread_t t) {
   return pthread_gettid_np(t);
 }
