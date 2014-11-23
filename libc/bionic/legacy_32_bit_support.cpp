@@ -44,7 +44,8 @@ extern "C" int __fstatfs64(int, size_t, struct statfs*);
 extern "C" int __llseek(int, unsigned long, unsigned long, off64_t*, int);
 extern "C" int __statfs64(const char*, size_t, struct statfs*);
 
-// For fcntl we use the fcntl64 system call to signal that we're using struct flock64.
+// For fcntl we use the fcntl64 system call to signal that we're using struct
+// flock64.
 int fcntl(int fd, int cmd, ...) {
   va_list ap;
 
@@ -55,20 +56,24 @@ int fcntl(int fd, int cmd, ...) {
   return __fcntl64(fd, cmd, arg);
 }
 
-// For fstatfs we need to add the extra argument giving the kernel the size of the buffer.
+// For fstatfs we need to add the extra argument giving the kernel the size of
+// the buffer.
 int fstatfs(int fd, struct statfs* stat) {
   return __fstatfs64(fd, sizeof(*stat), stat);
 }
 __strong_alias(fstatfs64, fstatfs);
 
-// For statfs we need to add the extra argument giving the kernel the size of the buffer.
+// For statfs we need to add the extra argument giving the kernel the size of
+// the buffer.
 int statfs(const char* path, struct statfs* stat) {
   return __statfs64(path, sizeof(*stat), stat);
 }
 __strong_alias(statfs64, statfs);
 
-// For lseek64 we need to use the llseek system call which splits the off64_t in two and
-// returns the off64_t result via a pointer because 32-bit kernels can't return 64-bit results.
+// For lseek64 we need to use the llseek system call which splits the off64_t in
+// two and
+// returns the off64_t result via a pointer because 32-bit kernels can't return
+// 64-bit results.
 off64_t lseek64(int fd, off64_t off, int whence) {
   off64_t result;
   unsigned long off_hi = static_cast<unsigned long>(off >> 32);
@@ -89,9 +94,11 @@ ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
 }
 
-// There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
+// There is no fallocate for 32-bit off_t, so we need to widen and call
+// fallocate64.
 int fallocate(int fd, int mode, off_t offset, off_t length) {
-  return fallocate64(fd, mode, static_cast<off64_t>(offset), static_cast<off64_t>(length));
+  return fallocate64(fd, mode, static_cast<off64_t>(offset),
+                     static_cast<off64_t>(length));
 }
 
 // There is no getrlimit64 system call, so we need to use prlimit64.

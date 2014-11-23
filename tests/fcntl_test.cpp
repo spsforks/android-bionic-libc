@@ -163,10 +163,12 @@ TEST(fcntl, splice) {
 
   TemporaryFile tf;
 
-  ssize_t bytes_read = splice(in, 0, pipe_fds[1], NULL, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_read =
+      splice(in, 0, pipe_fds[1], NULL, 8 * 1024, SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_NE(bytes_read, -1);
 
-  ssize_t bytes_written = splice(pipe_fds[0], NULL, tf.fd, 0, bytes_read, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_written = splice(pipe_fds[0], NULL, tf.fd, 0, bytes_read,
+                                 SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_EQ(bytes_read, bytes_written);
 
   close(pipe_fds[0]);
@@ -183,7 +185,8 @@ TEST(fcntl, vmsplice) {
   v[0].iov_len = 6;
   v[1].iov_base = const_cast<char*>("world\n");
   v[1].iov_len = 6;
-  ssize_t bytes_written = vmsplice(pipe_fds[1], v, sizeof(v)/sizeof(iovec), 0);
+  ssize_t bytes_written =
+      vmsplice(pipe_fds[1], v, sizeof(v) / sizeof(iovec), 0);
   ASSERT_EQ(v[0].iov_len + v[1].iov_len, static_cast<size_t>(bytes_written));
   close(pipe_fds[1]);
 
@@ -212,7 +215,8 @@ TEST(fcntl, tee) {
   ASSERT_NE(in, -1);
 
   // Write /proc/version into pipe1.
-  ssize_t bytes_read = splice(in, 0, pipe1[1], NULL, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_read =
+      splice(in, 0, pipe1[1], NULL, 8 * 1024, SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_NE(bytes_read, -1);
   close(pipe1[1]);
 

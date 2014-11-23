@@ -64,8 +64,9 @@ TEST(libgen, dirname) {
 }
 
 #if defined(__BIONIC__) && !defined(__LP64__)
-static void TestBasename(const char* in, const char* expected_out, int expected_rc,
-                         char* buf, size_t buf_size, int expected_errno) {
+static void TestBasename(const char* in, const char* expected_out,
+                         int expected_rc, char* buf, size_t buf_size,
+                         int expected_errno) {
   errno = 0;
   int rc = basename_r(in, buf, buf_size);
   ASSERT_EQ(expected_rc, rc) << in;
@@ -75,8 +76,9 @@ static void TestBasename(const char* in, const char* expected_out, int expected_
   ASSERT_EQ(expected_errno, errno) << in;
 }
 
-static void TestDirname(const char* in, const char* expected_out, int expected_rc,
-                        char* buf, size_t buf_size, int expected_errno) {
+static void TestDirname(const char* in, const char* expected_out,
+                        int expected_rc, char* buf, size_t buf_size,
+                        int expected_errno) {
   errno = 0;
   int rc = dirname_r(in, buf, buf_size);
   ASSERT_EQ(expected_rc, rc) << in;
@@ -85,12 +87,12 @@ static void TestDirname(const char* in, const char* expected_out, int expected_r
   }
   ASSERT_EQ(expected_errno, errno) << in;
 }
-#endif // __BIONIC__
+#endif  // __BIONIC__
 
 TEST(libgen, basename_r) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
-  TestBasename("", ".",  1, NULL, 0, 0);
+  TestBasename("", ".", 1, NULL, 0, 0);
   TestBasename("", ".", -1, buf, 0, ERANGE);
   TestBasename("", ".", -1, buf, 1, ERANGE);
   TestBasename("", ".", 1, buf, 2, 0);
@@ -101,15 +103,15 @@ TEST(libgen, basename_r) {
   TestBasename("/", "/", 1, buf, sizeof(buf), 0);
   TestBasename(".", ".", 1, buf, sizeof(buf), 0);
   TestBasename("..", "..", 2, buf, sizeof(buf), 0);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(libgen, dirname_r) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
-  TestDirname("", ".",  1, NULL, 0, 0);
+  TestDirname("", ".", 1, NULL, 0, 0);
   TestDirname("", ".", -1, buf, 0, ERANGE);
   TestDirname("", ".", -1, buf, 1, ERANGE);
   TestDirname("", ".", 1, buf, 2, 0);
@@ -118,7 +120,7 @@ TEST(libgen, dirname_r) {
   TestDirname("usr", ".", 1, buf, sizeof(buf), 0);
   TestDirname(".", ".", 1, buf, sizeof(buf), 0);
   TestDirname("..", ".", 1, buf, sizeof(buf), 0);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }

@@ -19,6 +19,4 @@
 // This file is used for libraries that are not supposed to
 // be successfully loaded/linked - therefore, this function should
 // not be visible via dlsym - (we are going to use this fact in tests)
-extern "C" int dlopen_test_invalid_function() {
-  abort();
-}
+extern "C" int dlopen_test_invalid_function() { abort(); }

@@ -100,7 +100,7 @@ static long __pathconf(const struct statfs& s, int name) {
     case _PC_2_SYMLINKS:
       return __2_symlinks(s);
 
-    case _PC_ALLOC_SIZE_MIN:  /* fall through */
+    case _PC_ALLOC_SIZE_MIN: /* fall through */
     case _PC_REC_XFER_ALIGN:
       return s.f_frsize;
 

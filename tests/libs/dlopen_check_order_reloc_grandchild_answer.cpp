@@ -19,4 +19,3 @@ extern "C" int check_order_reloc_grandchild_get_answer_impl();
 extern "C" int check_order_reloc_grandchild_get_answer() {
   return check_order_reloc_grandchild_get_answer_impl();
 }
-

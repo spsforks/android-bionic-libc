@@ -33,9 +33,7 @@ class pthread_accessor {
     }
   }
 
-  ~pthread_accessor() {
-    Unlock();
-  }
+  ~pthread_accessor() { Unlock(); }
 
   void Unlock() {
     if (is_locked_) {
@@ -61,4 +59,4 @@ class pthread_accessor {
   DISALLOW_COPY_AND_ASSIGN(pthread_accessor);
 };
 
-#endif // PTHREAD_ACCESSOR_H
+#endif  // PTHREAD_ACCESSOR_H

@@ -28,23 +28,19 @@
 #include <signal.h>
 
 /* called from setjmp assembly fragment */
-int
-sigsetmask(int mask)
-{
-    int  n;
+int sigsetmask(int mask) {
+  int n;
 
-    union {
-        int       the_mask;
-        sigset_t  the_sigset;
-    } in, out;
+  union {
+    int the_mask;
+    sigset_t the_sigset;
+  } in, out;
 
-    sigemptyset(&in.the_sigset);
-    in.the_mask = mask;
+  sigemptyset(&in.the_sigset);
+  in.the_mask = mask;
 
-    n = sigprocmask(SIG_SETMASK, &in.the_sigset, &out.the_sigset);
-    if (n)
-        return n;
+  n = sigprocmask(SIG_SETMASK, &in.the_sigset, &out.the_sigset);
+  if (n) return n;
 
-    return out.the_mask;
+  return out.the_mask;
 }
-

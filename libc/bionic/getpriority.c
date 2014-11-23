@@ -29,9 +29,8 @@
 
 extern int __getpriority(int, int);
 
-int getpriority(int which, int who)
-{
+int getpriority(int which, int who) {
   int result = __getpriority(which, who);
 
-  return ( result < 0 ) ? result : 20-result;
+  return (result < 0) ? result : 20 - result;
 }

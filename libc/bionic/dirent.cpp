@@ -61,9 +61,7 @@ static DIR* __allocate_DIR(int fd) {
   return d;
 }
 
-int dirfd(DIR* dirp) {
-  return dirp->fd_;
-}
+int dirfd(DIR* dirp) { return dirp->fd_; }
 
 DIR* fdopendir(int fd) {
   // Is 'fd' actually a directory?
@@ -100,7 +98,8 @@ static dirent* __readdir_locked(DIR* d) {
   }
 
   dirent* entry = d->next_;
-  d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) + entry->d_reclen);
+  d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) +
+                                       entry->d_reclen);
   d->available_bytes_ -= entry->d_reclen;
   // The directory entry offset uses 0, 1, 2 instead of real file offset,
   // so the value range of long type is enough.
@@ -163,9 +162,7 @@ void seekdir(DIR* d, long offset) {
   }
 }
 
-long telldir(DIR* d) {
-  return d->current_pos_;
-}
+long telldir(DIR* d) { return d->current_pos_; }
 
 int alphasort(const dirent** a, const dirent** b) {
   return strcoll((*a)->d_name, (*b)->d_name);

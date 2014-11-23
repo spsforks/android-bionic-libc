@@ -25,8 +25,7 @@
 // A smart pointer to the scandir dirent**.
 class ScandirResult {
  public:
-  ScandirResult() : names_(NULL), size_(0), capacity_(0) {
-  }
+  ScandirResult() : names_(NULL), size_(0), capacity_(0) {}
 
   ~ScandirResult() {
     while (size_ > 0) {
@@ -35,9 +34,7 @@ class ScandirResult {
     free(names_);
   }
 
-  size_t size() {
-    return size_;
-  }
+  size_t size() { return size_; }
 
   dirent** release() {
     dirent** result = names_;
@@ -49,7 +46,8 @@ class ScandirResult {
   bool Add(dirent* entry) {
     if (size_ >= capacity_) {
       size_t new_capacity = capacity_ + 32;
-      dirent** new_names = (dirent**) realloc(names_, new_capacity * sizeof(dirent*));
+      dirent** new_names =
+          (dirent**)realloc(names_, new_capacity * sizeof(dirent*));
       if (new_names == NULL) {
         return false;
       }
@@ -68,7 +66,8 @@ class ScandirResult {
   void Sort(int (*comparator)(const dirent**, const dirent**)) {
     // If we have entries and a comparator, sort them.
     if (size_ > 0 && comparator != NULL) {
-      qsort(names_, size_, sizeof(dirent*), (int (*)(const void*, const void*)) comparator);
+      qsort(names_, size_, sizeof(dirent*),
+            (int (*)(const void*, const void*))comparator);
     }
   }
 
@@ -78,9 +77,10 @@ class ScandirResult {
   size_t capacity_;
 
   static dirent* CopyDirent(dirent* original) {
-    // Allocate the minimum number of bytes necessary, rounded up to a 4-byte boundary.
+    // Allocate the minimum number of bytes necessary, rounded up to a 4-byte
+    // boundary.
     size_t size = ((original->d_reclen + 3) & ~3);
-    dirent* copy = (dirent*) malloc(size);
+    dirent* copy = (dirent*)malloc(size);
     memcpy(copy, original, original->d_reclen);
     return copy;
   }

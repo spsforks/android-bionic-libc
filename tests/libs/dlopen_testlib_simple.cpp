@@ -19,6 +19,4 @@
 
 uint32_t dlopen_testlib_taxicab_number = 1729;
 
-extern "C" bool dlopen_testlib_simple_func() {
-  return true;
-}
+extern "C" bool dlopen_testlib_simple_func() { return true; }

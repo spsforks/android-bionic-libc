@@ -20,10 +20,6 @@
 // Since we're likely to run code intended for glibc, and POSIX doesn't seem
 // to disallow this, we go that route too.
 
-int rand() {
-  return random();
-}
+int rand() { return random(); }
 
-void srand(unsigned int seed) {
-  return srandom(seed);
-}
+void srand(unsigned int seed) { return srandom(seed); }

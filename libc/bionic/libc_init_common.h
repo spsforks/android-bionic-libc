@@ -40,8 +40,7 @@ __BEGIN_DECLS
 
 extern int main(int argc, char** argv, char** env);
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
+__noreturn void __libc_init(void* raw_args, void (*onexit)(void),
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const* const structors);
 __LIBC_HIDDEN__ void __libc_fini(void* finit_array);

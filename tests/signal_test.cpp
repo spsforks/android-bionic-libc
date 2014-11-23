@@ -22,19 +22,21 @@
 #include "ScopedSignalHandler.h"
 
 static size_t SIGNAL_MIN() {
-  return 1; // Signals start at 1 (SIGHUP), not 0.
+  return 1;  // Signals start at 1 (SIGHUP), not 0.
 }
 
 static size_t SIGNAL_MAX() {
   size_t result = SIGRTMAX;
 
 #if defined(__BIONIC__) && !defined(__mips__) && !defined(__LP64__)
-  // 32-bit bionic's sigset_t is too small for ARM and x86: 32 bits instead of 64.
+  // 32-bit bionic's sigset_t is too small for ARM and x86: 32 bits instead of
+  // 64.
   // This means you can't refer to any of the real-time signals.
   // See http://b/3038348 and http://b/5828899.
   result = 32;
 #else
-  // Otherwise, C libraries should be perfectly capable of using their largest signal.
+  // Otherwise, C libraries should be perfectly capable of using their largest
+  // signal.
   if (sizeof(sigset_t) * 8 < static_cast<size_t>(SIGRTMAX)) {
     abort();
   }
@@ -87,25 +89,15 @@ static void TestSigSet2(Fn fn) {
   ASSERT_EQ(0, errno);
 }
 
-TEST(signal, sigismember_invalid) {
-  TestSigSet2(sigismember);
-}
+TEST(signal, sigismember_invalid) { TestSigSet2(sigismember); }
 
-TEST(signal, sigaddset_invalid) {
-  TestSigSet2(sigaddset);
-}
+TEST(signal, sigaddset_invalid) { TestSigSet2(sigaddset); }
 
-TEST(signal, sigdelset_invalid) {
-  TestSigSet2(sigdelset);
-}
+TEST(signal, sigdelset_invalid) { TestSigSet2(sigdelset); }
 
-TEST(signal, sigemptyset_invalid) {
-  TestSigSet1(sigemptyset);
-}
+TEST(signal, sigemptyset_invalid) { TestSigSet1(sigemptyset); }
 
-TEST(signal, sigfillset_invalid) {
-  TestSigSet1(sigfillset);
-}
+TEST(signal, sigfillset_invalid) { TestSigSet1(sigfillset); }
 
 TEST(signal, raise_invalid) {
   errno = 0;
@@ -148,9 +140,7 @@ TEST(signal, sigwait) {
 
 static int g_sigsuspend_test_helper_call_count = 0;
 
-static void SigSuspendTestHelper(int) {
-  ++g_sigsuspend_test_helper_call_count;
-}
+static void SigSuspendTestHelper(int) { ++g_sigsuspend_test_helper_call_count; }
 
 TEST(signal, sigsuspend_sigpending) {
   // Block SIGALRM.
@@ -224,7 +214,7 @@ TEST(signal, sigaction) {
   memset(&sa, 0, sizeof(sa));
   ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
   ASSERT_TRUE(sa.sa_handler == EmptySignalHandler);
-  ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
+  ASSERT_TRUE((void*)sa.sa_sigaction == (void*)sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK), sa.sa_flags & ~sa_restorer);
 
   // Set a new-style sa_sigaction signal handler.
@@ -238,8 +228,9 @@ TEST(signal, sigaction) {
   memset(&sa, 0, sizeof(sa));
   ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
   ASSERT_TRUE(sa.sa_sigaction == EmptySignalAction);
-  ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
-  ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
+  ASSERT_TRUE((void*)sa.sa_sigaction == (void*)sa.sa_handler);
+  ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO),
+            sa.sa_flags & ~sa_restorer);
 
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction(SIGALRM, &original_sa, NULL));
@@ -266,7 +257,7 @@ TEST(signal, limits) {
   // We reserve a non-zero number at the bottom for ourselves.
   ASSERT_GT(SIGRTMIN, __SIGRTMIN);
 
-  // MIPS has more signals than everyone else.
+// MIPS has more signals than everyone else.
 #if defined(__mips__)
   ASSERT_EQ(128, __SIGRTMAX);
 #else

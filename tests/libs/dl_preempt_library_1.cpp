@@ -23,7 +23,8 @@ extern "C" int __attribute__((weak)) main_global_default_serial() {
 // Even though this one is defined by the main
 // executable it should not be preempted
 // because of protected visibility
-extern "C" int __attribute__((weak, visibility("protected"))) main_global_protected_serial() {
+extern "C" int __attribute__((weak, visibility("protected")))
+main_global_protected_serial() {
   return 3370318;
 }
 
@@ -36,10 +37,6 @@ extern "C" int main_global_protected_get_serial() {
 }
 
 // Trying to preempt functions from a DT_NEEDED .so
-extern "C" int lib_global_default_serial() {
-  return 3370318;
-}
+extern "C" int lib_global_default_serial() { return 3370318; }
 
-extern "C" int lib_global_protected_serial() {
-  return 2716057;
-}
+extern "C" int lib_global_protected_serial() { return 2716057; }

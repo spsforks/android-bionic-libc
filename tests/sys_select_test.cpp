@@ -66,7 +66,8 @@ static void DelayedWrite(int* pid, int* fd) {
 
 static void DelayedWriteCleanup(int pid, int fd) {
   char buf[sizeof(DELAY_MSG)];
-  ASSERT_EQ(static_cast<ssize_t>(sizeof(DELAY_MSG)), read(fd, buf, sizeof(DELAY_MSG)));
+  ASSERT_EQ(static_cast<ssize_t>(sizeof(DELAY_MSG)),
+            read(fd, buf, sizeof(DELAY_MSG)));
   ASSERT_STREQ(DELAY_MSG, buf);
   ASSERT_EQ(pid, waitpid(pid, NULL, 0));
 }
@@ -105,7 +106,7 @@ TEST(sys_select, select_smoke) {
 
   FD_ZERO(&r);
   FD_SET(fd, &r);
-  ASSERT_EQ(1, select(fd+1, &r, NULL, NULL, &tv));
+  ASSERT_EQ(1, select(fd + 1, &r, NULL, NULL, &tv));
   // Both tv_sec and tv_nsec should have been updated.
   ASSERT_EQ(0, tv.tv_sec);
   ASSERT_NE(0, tv.tv_usec);
@@ -151,7 +152,7 @@ TEST(sys_select, pselect_smoke) {
 
   FD_ZERO(&r);
   FD_SET(fd, &r);
-  ASSERT_EQ(1, pselect(fd+1, &r, NULL, NULL, &tv, NULL));
+  ASSERT_EQ(1, pselect(fd + 1, &r, NULL, NULL, &tv, NULL));
   // Neither tv_sec nor tv_nsec should have been updated.
   ASSERT_EQ(1, tv.tv_sec);
   ASSERT_EQ(0, tv.tv_nsec);

@@ -49,14 +49,16 @@ int __fpclassifyd(double d) {
   double_u u;
   u.d = d;
   if (u.bits.dbl_exp == 0) {
-    return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_ZERO : FP_SUBNORMAL;
+    return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_ZERO
+                                                        : FP_SUBNORMAL;
   }
   if (u.bits.dbl_exp == DBL_EXP_INFNAN) {
     return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_INFINITE : FP_NAN;
   }
   return FP_NORMAL;
 }
-__strong_alias(__fpclassify, __fpclassifyd); // glibc uses __fpclassify, BSD __fpclassifyd.
+__strong_alias(__fpclassify,
+               __fpclassifyd);  // glibc uses __fpclassify, BSD __fpclassifyd.
 
 int __fpclassifyf(float f) {
   float_u u;
@@ -70,24 +72,16 @@ int __fpclassifyf(float f) {
   return FP_NORMAL;
 }
 
-int __isinf(double d) {
-  return (__fpclassifyd(d) == FP_INFINITE);
-}
+int __isinf(double d) { return (__fpclassifyd(d) == FP_INFINITE); }
 __strong_alias(isinf, __isinf);
 
-int __isinff(float f) {
-  return (__fpclassifyf(f) == FP_INFINITE);
-}
+int __isinff(float f) { return (__fpclassifyf(f) == FP_INFINITE); }
 __strong_alias(isinff, __isinff);
 
-int __isnan(double d) {
-  return (__fpclassifyd(d) == FP_NAN);
-}
+int __isnan(double d) { return (__fpclassifyd(d) == FP_NAN); }
 __strong_alias(isnan, __isnan);
 
-int __isnanf(float f) {
-  return (__fpclassifyf(f) == FP_NAN);
-}
+int __isnanf(float f) { return (__fpclassifyf(f) == FP_NAN); }
 __strong_alias(isnanf, __isnanf);
 
 int __isfinite(double d) {
@@ -102,14 +96,10 @@ int __isfinitef(float f) {
 }
 __strong_alias(isfinitef, __isfinitef);
 
-int __isnormal(double d) {
-  return (__fpclassifyd(d) == FP_NORMAL);
-}
+int __isnormal(double d) { return (__fpclassifyd(d) == FP_NORMAL); }
 __strong_alias(isnormal, __isnormal);
 
-int __isnormalf(float f) {
-  return (__fpclassifyf(f) == FP_NORMAL);
-}
+int __isnormalf(float f) { return (__fpclassifyf(f) == FP_NORMAL); }
 __strong_alias(isnormalf, __isnormalf);
 
 #if __LP64__
@@ -121,7 +111,8 @@ union long_double_u {
   ieee_ext bits;
 };
 
-#define zero_frac(b) ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
+#define zero_frac(b) \
+  ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
 
 int __fpclassifyl(long double ld) {
   long_double_u u;
@@ -135,22 +126,16 @@ int __fpclassifyl(long double ld) {
   return FP_NORMAL;
 }
 
-int __isinfl(long double ld) {
-  return (__fpclassifyl(ld) == FP_INFINITE);
-}
+int __isinfl(long double ld) { return (__fpclassifyl(ld) == FP_INFINITE); }
 
-int __isnanl(long double ld) {
-  return (__fpclassifyl(ld) == FP_NAN);
-}
+int __isnanl(long double ld) { return (__fpclassifyl(ld) == FP_NAN); }
 
 int __isfinitel(long double ld) {
   int type = __fpclassifyl(ld);
   return ((type != FP_NAN) && (type != FP_INFINITE));
 }
 
-int __isnormall(long double ld) {
-  return (__fpclassifyl(ld) == FP_NORMAL);
-}
+int __isnormall(long double ld) { return (__fpclassifyl(ld) == FP_NORMAL); }
 
 #else
 

@@ -29,36 +29,27 @@
 #include <stdio.h>
 #include <utmp.h>
 
+void pututline(struct utmp* utmp) {
+  FILE* f;
+  struct utmp u;
+  long i;
 
-void pututline(struct utmp* utmp)
-{
-    FILE* f;
-    struct utmp u;
-    long i;
+  if (!(f = fopen(_PATH_UTMP, "w+e"))) return;
 
-    if (!(f = fopen(_PATH_UTMP, "w+e")))
-        return;
-
-    while (fread(&u, sizeof(struct utmp), 1, f) == 1)
-    {
-        if (!strncmp(utmp->ut_line, u.ut_line, sizeof(u.ut_line) -1))
-        {
-            if ((i = ftell(f)) < 0)
-                goto ret;
-            if (fseek(f, i - sizeof(struct utmp), SEEK_SET) < 0)
-                goto ret;
-            fwrite(utmp, sizeof(struct utmp), 1, f);
-            goto ret;
-        }
+  while (fread(&u, sizeof(struct utmp), 1, f) == 1) {
+    if (!strncmp(utmp->ut_line, u.ut_line, sizeof(u.ut_line) - 1)) {
+      if ((i = ftell(f)) < 0) goto ret;
+      if (fseek(f, i - sizeof(struct utmp), SEEK_SET) < 0) goto ret;
+      fwrite(utmp, sizeof(struct utmp), 1, f);
+      goto ret;
     }
+  }
 
+  fclose(f);
 
-    fclose(f);
-
-    if (!(f = fopen(_PATH_UTMP, "w+e")))
-        return;
-    fwrite(utmp, sizeof(struct utmp), 1, f);
+  if (!(f = fopen(_PATH_UTMP, "w+e"))) return;
+  fwrite(utmp, sizeof(struct utmp), 1, f);
 
 ret:
-    fclose(f);
+  fclose(f);
 }

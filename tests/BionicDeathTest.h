@@ -30,12 +30,10 @@ class BionicDeathTest : public testing::Test {
     ::testing::FLAGS_gtest_death_test_style = "threadsafe";
   }
 
-  virtual void TearDown() {
-    prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0);
-  }
+  virtual void TearDown() { prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0); }
 
  private:
   int old_dumpable_;
 };
 
-#endif // BIONIC_TESTS_BIONIC_DEATH_TEST_H_
+#endif  // BIONIC_TESTS_BIONIC_DEATH_TEST_H_

@@ -30,6 +30,4 @@
 
 #include "pthread_internal.h"
 
-pid_t gettid() {
-  return __get_thread()->tid;
-}
+pid_t gettid() { return __get_thread()->tid; }

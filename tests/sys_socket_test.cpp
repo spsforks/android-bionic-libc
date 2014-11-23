@@ -40,11 +40,11 @@ static void* ConnectFn(void* data) {
   addr.sun_path[0] = '\0';
   strcpy(addr.sun_path + 1, SOCK_PATH);
 
-  if (connect(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0) {
+  if (connect(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) <
+      0) {
     GTEST_LOG_(ERROR) << "connect call failed: " << strerror(errno);
     return_value = reinterpret_cast<void*>(-1);
-  }
-  else if (callback_fn != NULL && !callback_fn(fd)) {
+  } else if (callback_fn != NULL && !callback_fn(fd)) {
     return_value = reinterpret_cast<void*>(-1);
   }
 
@@ -64,12 +64,15 @@ static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
   addr.sun_path[0] = '\0';
   strcpy(addr.sun_path + 1, SOCK_PATH);
 
-  ASSERT_NE(-1, bind(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr))) << strerror(errno);
+  ASSERT_NE(-1,
+            bind(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)))
+      << strerror(errno);
 
   ASSERT_NE(-1, listen(fd, 1)) << strerror(errno);
 
   pthread_t thread;
-  ASSERT_EQ(0, pthread_create(&thread, NULL, ConnectFn, reinterpret_cast<void*>(callback_fn)));
+  ASSERT_EQ(0, pthread_create(&thread, NULL, ConnectFn,
+                              reinterpret_cast<void*>(callback_fn)));
 
   fd_set read_set;
   FD_ZERO(&read_set);
@@ -77,7 +80,7 @@ static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
   timeval tv;
   tv.tv_sec = 5;
   tv.tv_usec = 0;
-  ASSERT_LT(0, select(fd+1, &read_set, NULL, NULL, &tv));
+  ASSERT_LT(0, select(fd + 1, &read_set, NULL, NULL, &tv));
 
   test_fn(&addr, fd);
 
@@ -95,7 +98,8 @@ TEST(sys_socket, accept4_error) {
 
 static void TestAccept4(struct sockaddr_un* addr, int fd) {
   socklen_t len = sizeof(*addr);
-  int fd_acc = accept4(fd, reinterpret_cast<struct sockaddr*>(addr), &len, SOCK_CLOEXEC);
+  int fd_acc =
+      accept4(fd, reinterpret_cast<struct sockaddr*>(addr), &len, SOCK_CLOEXEC);
   ASSERT_NE(fd_acc, -1) << strerror(errno);
 
   // Check that the flag was set properly.
@@ -104,16 +108,12 @@ static void TestAccept4(struct sockaddr_un* addr, int fd) {
   close(fd_acc);
 }
 
-TEST(sys_socket, accept4_smoke) {
-  RunTest(TestAccept4, NULL);
-}
+TEST(sys_socket, accept4_smoke) { RunTest(TestAccept4, NULL); }
 
 const char* g_RecvMsgs[] = {
-  "RECVMMSG_ONE",
-  "RECVMMSG_TWO",
-  "RECVMMSG_THREE",
+    "RECVMMSG_ONE", "RECVMMSG_TWO", "RECVMMSG_THREE",
 };
-#define NUM_RECV_MSGS (sizeof(g_RecvMsgs)/sizeof(const char*))
+#define NUM_RECV_MSGS (sizeof(g_RecvMsgs) / sizeof(const char*))
 
 static bool SendMultiple(int fd) {
   for (size_t i = 0; i < NUM_RECV_MSGS; i++) {
@@ -126,13 +126,13 @@ static bool SendMultiple(int fd) {
   return true;
 }
 
-static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
+static void TestRecvMMsg(struct sockaddr_un* addr, int fd) {
   socklen_t len = sizeof(*addr);
   int fd_acc = accept(fd, reinterpret_cast<struct sockaddr*>(addr), &len);
   ASSERT_NE(fd_acc, -1) << strerror(errno);
 
   struct mmsghdr msgs[NUM_RECV_MSGS];
-  memset(msgs, 0, sizeof(struct mmsghdr)*NUM_RECV_MSGS);
+  memset(msgs, 0, sizeof(struct mmsghdr) * NUM_RECV_MSGS);
 
   struct iovec io[NUM_RECV_MSGS];
   char bufs[NUM_RECV_MSGS][100];
@@ -151,7 +151,7 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
   ts.tv_nsec = 0;
   ASSERT_EQ(NUM_RECV_MSGS,
             static_cast<size_t>(recvmmsg(fd_acc, msgs, NUM_RECV_MSGS, 0, &ts)))
-           << strerror(errno);
+      << strerror(errno);
   for (size_t i = 0; i < NUM_RECV_MSGS; i++) {
     ASSERT_STREQ(g_RecvMsgs[i], bufs[i]);
   }
@@ -159,25 +159,19 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
   close(fd_acc);
 }
 
-TEST(sys_socket, recvmmsg_smoke) {
-  RunTest(TestRecvMMsg, SendMultiple);
-}
+TEST(sys_socket, recvmmsg_smoke) { RunTest(TestRecvMMsg, SendMultiple); }
 
 TEST(sys_socket, recvmmsg_error) {
   ASSERT_EQ(-1, recvmmsg(-1, NULL, 0, 0, NULL));
   ASSERT_EQ(EBADF, errno);
 }
 
-const char* g_SendMsgs[] = {
-  "MSG_ONE",
-  "MSG_TWO",
-  "MSG_THREE"
-};
-#define NUM_SEND_MSGS (sizeof(g_SendMsgs)/sizeof(const char*))
+const char* g_SendMsgs[] = {"MSG_ONE", "MSG_TWO", "MSG_THREE"};
+#define NUM_SEND_MSGS (sizeof(g_SendMsgs) / sizeof(const char*))
 
 static bool SendMMsg(int fd) {
   struct mmsghdr msgs[NUM_SEND_MSGS];
-  memset(msgs, 0, sizeof(struct mmsghdr)*NUM_SEND_MSGS);
+  memset(msgs, 0, sizeof(struct mmsghdr) * NUM_SEND_MSGS);
   struct iovec io[NUM_SEND_MSGS];
   for (size_t i = 0; i < NUM_SEND_MSGS; i++) {
     io[i].iov_base = reinterpret_cast<void*>(const_cast<char*>(g_SendMsgs[i]));
@@ -194,7 +188,7 @@ static bool SendMMsg(int fd) {
   return true;
 }
 
-static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
+static void TestSendMMsg(struct sockaddr_un* addr, int fd) {
   socklen_t len = sizeof(*addr);
   int fd_acc = accept(fd, reinterpret_cast<struct sockaddr*>(addr), &len);
   ASSERT_NE(fd_acc, -1) << strerror(errno);
@@ -207,7 +201,7 @@ static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
     timeval tv;
     tv.tv_sec = 5;
     tv.tv_usec = 0;
-    ASSERT_LT(0, select(fd_acc+1, &read_set, NULL, NULL, &tv));
+    ASSERT_LT(0, select(fd_acc + 1, &read_set, NULL, NULL, &tv));
     char buffer[100];
     ASSERT_EQ(strlen(g_SendMsgs[i]) + 1,
               static_cast<size_t>(recv(fd_acc, buffer, sizeof(buffer), 0)));
@@ -217,9 +211,7 @@ static void TestSendMMsg(struct sockaddr_un *addr, int fd) {
   close(fd_acc);
 }
 
-TEST(sys_socket, sendmmsg_smoke) {
-  RunTest(TestSendMMsg, SendMMsg);
-}
+TEST(sys_socket, sendmmsg_smoke) { RunTest(TestSendMMsg, SendMMsg); }
 
 TEST(sys_socket, sendmmsg_error) {
   ASSERT_EQ(-1, sendmmsg(-1, NULL, 0, 0));

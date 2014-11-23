@@ -34,17 +34,11 @@
 #include <termios.h>
 #include <unistd.h>
 
-int getpt(void) {
-  return posix_openpt(O_RDWR|O_NOCTTY);
-}
+int getpt(void) { return posix_openpt(O_RDWR | O_NOCTTY); }
 
-int grantpt(int) {
-  return 0;
-}
+int grantpt(int) { return 0; }
 
-int posix_openpt(int flags) {
-  return open("/dev/ptmx", flags);
-}
+int posix_openpt(int flags) { return open("/dev/ptmx", flags); }
 
 char* ptsname(int fd) {
   static char buf[64];
