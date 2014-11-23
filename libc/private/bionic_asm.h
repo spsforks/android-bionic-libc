@@ -38,23 +38,23 @@
 
 #include <machine/asm.h>
 
-#define ENTRY(f) \
-    .text; \
-    .globl f; \
-    .align __bionic_asm_align; \
-    .type f, __bionic_asm_function_type; \
-    f: \
-    __bionic_asm_custom_entry(f); \
-    .cfi_startproc \
+#define ENTRY(f)                       \
+  .text;                               \
+  .globl f;                            \
+  .align __bionic_asm_align;           \
+  .type f, __bionic_asm_function_type; \
+  f:                                   \
+  __bionic_asm_custom_entry(f);        \
+  .cfi_startproc
 
-#define END(f) \
-    .cfi_endproc; \
-    .size f, .-f; \
-    __bionic_asm_custom_end(f) \
+#define END(f)   \
+  .cfi_endproc;  \
+  .size f, .- f; \
+  __bionic_asm_custom_end(f)
 
 /* Like ENTRY, but with hidden visibility. */
 #define ENTRY_PRIVATE(f) \
-    ENTRY(f); \
-    .hidden f \
+  ENTRY(f);              \
+  .hidden f
 
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

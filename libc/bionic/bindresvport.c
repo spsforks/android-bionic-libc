@@ -32,41 +32,37 @@
 #include <string.h>
 #include <unistd.h>
 
-#define START_PORT	600
-#define END_PORT	IPPORT_RESERVED
-#define NUM_PORTS	(END_PORT - START_PORT)
+#define START_PORT 600
+#define END_PORT IPPORT_RESERVED
+#define NUM_PORTS (END_PORT - START_PORT)
 
-int bindresvport(int sd, struct sockaddr_in *sin)
-{
-    static short        port;
-    struct sockaddr_in  sin0;
-    int                 nn, ret;
+int bindresvport(int sd, struct sockaddr_in *sin) {
+  static short port;
+  struct sockaddr_in sin0;
+  int nn, ret;
 
-    if (sin == NULL) {
-        sin = &sin0;
-        memset( sin, 0, sizeof *sin );
-        sin->sin_family = AF_INET;
-    } else if (sin->sin_family != AF_INET) {
-        errno = EPFNOSUPPORT;
-        return -1;
-    }
+  if (sin == NULL) {
+    sin = &sin0;
+    memset(sin, 0, sizeof *sin);
+    sin->sin_family = AF_INET;
+  } else if (sin->sin_family != AF_INET) {
+    errno = EPFNOSUPPORT;
+    return -1;
+  }
 
-    if (port == 0) {
-        port = START_PORT + (getpid() % NUM_PORTS);
-    }
+  if (port == 0) {
+    port = START_PORT + (getpid() % NUM_PORTS);
+  }
 
-    for (nn = NUM_PORTS; nn > 0; nn--, port++) 
-    {
-        if (port == END_PORT)
-            port = START_PORT;
+  for (nn = NUM_PORTS; nn > 0; nn--, port++) {
+    if (port == END_PORT) port = START_PORT;
 
-        sin->sin_port = htons(port);
-        do {
-            ret = bind(sd, (struct sockaddr*)sin, sizeof(*sin));
-        } while (ret < 0 && errno == EINTR);
+    sin->sin_port = htons(port);
+    do {
+      ret = bind(sd, (struct sockaddr *)sin, sizeof(*sin));
+    } while (ret < 0 && errno == EINTR);
 
-        if (!ret)
-            break;
-    }
-    return ret;
+    if (!ret) break;
+  }
+  return ret;
 }

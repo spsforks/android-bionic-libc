@@ -20,20 +20,16 @@
 // Default deleter for pointer types.
 template <typename T>
 struct DefaultDelete {
-    enum { type_must_be_complete = sizeof(T) };
-    DefaultDelete() {}
-    void operator()(T* p) const {
-        delete p;
-    }
+  enum { type_must_be_complete = sizeof(T) };
+  DefaultDelete() {}
+  void operator()(T* p) const { delete p; }
 };
 
 // Default deleter for array types.
 template <typename T>
 struct DefaultDelete<T[]> {
-    enum { type_must_be_complete = sizeof(T) };
-    void operator()(T* p) const {
-        delete[] p;
-    }
+  enum { type_must_be_complete = sizeof(T) };
+  void operator()(T* p) const { delete[] p; }
 };
 
 // A smart pointer that deletes the given pointer on destruction.
@@ -46,95 +42,90 @@ struct DefaultDelete<T[]> {
 //   UniquePtr<C> c(new C);
 template <typename T, typename D = DefaultDelete<T> >
 class UniquePtr {
-public:
-    // Construct a new UniquePtr, taking ownership of the given raw pointer.
-    explicit UniquePtr(T* ptr = nullptr) : mPtr(ptr) { }
+ public:
+  // Construct a new UniquePtr, taking ownership of the given raw pointer.
+  explicit UniquePtr(T* ptr = nullptr) : mPtr(ptr) {}
 
-    UniquePtr(UniquePtr<T, D>&& that) {
-      mPtr = that.mPtr;
-      that.mPtr = nullptr;
+  UniquePtr(UniquePtr<T, D>&& that) {
+    mPtr = that.mPtr;
+    that.mPtr = nullptr;
+  }
+
+  ~UniquePtr() { reset(); }
+
+  // Accessors.
+  T& operator*() const { return *mPtr; }
+  T* operator->() const { return mPtr; }
+  T* get() const { return mPtr; }
+
+  // Returns the raw pointer and hands over ownership to the caller.
+  // The pointer will not be deleted by UniquePtr.
+  T* release() __attribute__((warn_unused_result)) {
+    T* result = mPtr;
+    mPtr = nullptr;
+    return result;
+  }
+
+  // Takes ownership of the given raw pointer.
+  // If this smart pointer previously owned a different raw pointer, that
+  // raw pointer will be freed.
+  void reset(T* ptr = nullptr) {
+    if (ptr != mPtr) {
+      D()(mPtr);
+      mPtr = ptr;
     }
+  }
 
-    ~UniquePtr() {
-        reset();
-    }
+ private:
+  // The raw pointer.
+  T* mPtr;
 
-    // Accessors.
-    T& operator*() const { return *mPtr; }
-    T* operator->() const { return mPtr; }
-    T* get() const { return mPtr; }
+  // Comparing unique pointers is probably a mistake, since they're unique.
+  template <typename T2>
+  bool operator==(const UniquePtr<T2>& p) const = delete;
+  template <typename T2>
+  bool operator!=(const UniquePtr<T2>& p) const = delete;
 
-    // Returns the raw pointer and hands over ownership to the caller.
-    // The pointer will not be deleted by UniquePtr.
-    T* release() __attribute__((warn_unused_result)) {
-        T* result = mPtr;
-        mPtr = nullptr;
-        return result;
-    }
-
-    // Takes ownership of the given raw pointer.
-    // If this smart pointer previously owned a different raw pointer, that
-    // raw pointer will be freed.
-    void reset(T* ptr = nullptr) {
-        if (ptr != mPtr) {
-            D()(mPtr);
-            mPtr = ptr;
-        }
-    }
-
-private:
-    // The raw pointer.
-    T* mPtr;
-
-    // Comparing unique pointers is probably a mistake, since they're unique.
-    template <typename T2> bool operator==(const UniquePtr<T2>& p) const = delete;
-    template <typename T2> bool operator!=(const UniquePtr<T2>& p) const = delete;
-
-    // Disallow copy and assignment.
-    UniquePtr(const UniquePtr&) = delete;
-    void operator=(const UniquePtr&) = delete;
+  // Disallow copy and assignment.
+  UniquePtr(const UniquePtr&) = delete;
+  void operator=(const UniquePtr&) = delete;
 };
 
 // Partial specialization for array types. Like std::unique_ptr, this removes
 // operator* and operator-> but adds operator[].
 template <typename T, typename D>
 class UniquePtr<T[], D> {
-public:
-    explicit UniquePtr(T* ptr = NULL) : mPtr(ptr) {
-    }
-    UniquePtr(UniquePtr<T, D>&& that) {
-      mPtr = that.mPtr;
-      that.mPtr = nullptr;
-    }
+ public:
+  explicit UniquePtr(T* ptr = NULL) : mPtr(ptr) {}
+  UniquePtr(UniquePtr<T, D>&& that) {
+    mPtr = that.mPtr;
+    that.mPtr = nullptr;
+  }
 
-    ~UniquePtr() {
-        reset();
+  ~UniquePtr() { reset(); }
+
+  T& operator[](size_t i) const { return mPtr[i]; }
+  T* get() const { return mPtr; }
+
+  T* release() __attribute__((warn_unused_result)) {
+    T* result = mPtr;
+    mPtr = NULL;
+    return result;
+  }
+
+  void reset(T* ptr = NULL) {
+    if (ptr != mPtr) {
+      D()(mPtr);
+      mPtr = ptr;
     }
+  }
 
-    T& operator[](size_t i) const {
-        return mPtr[i];
-    }
-    T* get() const { return mPtr; }
+ private:
+  T* mPtr;
 
-    T* release() __attribute__((warn_unused_result)) {
-        T* result = mPtr;
-        mPtr = NULL;
-        return result;
-    }
-
-    void reset(T* ptr = NULL) {
-        if (ptr != mPtr) {
-            D()(mPtr);
-            mPtr = ptr;
-        }
-    }
-
-private:
-    T* mPtr;
-
-    // Disallow copy and assignment.
-    UniquePtr(const UniquePtr&) = delete;
-    void operator=(const UniquePtr&) = delete;
+  // Disallow copy and assignment.
+  UniquePtr(const UniquePtr&) = delete;
+  void operator=(const UniquePtr&) = delete;
 };
 
 #endif  // UNIQUE_PTR_H_included

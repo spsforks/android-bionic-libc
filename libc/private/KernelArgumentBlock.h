@@ -44,19 +44,22 @@ class KernelArgumentBlock {
     while (*p != NULL) {
       ++p;
     }
-    ++p; // Skip second NULL;
+    ++p;  // Skip second NULL;
 
     auxv = reinterpret_cast<ElfW(auxv_t)*>(p);
   }
 
-  // Similar to ::getauxval but doesn't require the libc global variables to be set up,
-  // so it's safe to call this really early on. This function also lets you distinguish
-  // between the inability to find the given type and its value just happening to be 0.
+  // Similar to ::getauxval but doesn't require the libc global variables to be
+  // set up,
+  // so it's safe to call this really early on. This function also lets you
+  // distinguish
+  // between the inability to find the given type and its value just happening
+  // to be 0.
   unsigned long getauxval(unsigned long type, bool* found_match = NULL) {
     for (ElfW(auxv_t)* v = auxv; v->a_type != AT_NULL; ++v) {
       if (v->a_type == type) {
         if (found_match != NULL) {
-            *found_match = true;
+          *found_match = true;
         }
         return v->a_un.a_val;
       }
@@ -70,7 +73,7 @@ class KernelArgumentBlock {
   int argc;
   char** argv;
   char** envp;
-  ElfW(auxv_t)* auxv;
+  ElfW(auxv_t) * auxv;
 
   abort_msg_t** abort_message_ptr;
 
@@ -78,4 +81,4 @@ class KernelArgumentBlock {
   DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
 };
 
-#endif // KERNEL_ARGUMENT_BLOCK_H
+#endif  // KERNEL_ARGUMENT_BLOCK_H

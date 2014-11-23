@@ -17,5 +17,7 @@
 #include <private/libc_logging.h>
 
 extern "C" void __cxa_pure_virtual() {
-  __libc_fatal("Pure virtual function called. Are you calling virtual methods from a destructor?");
+  __libc_fatal(
+      "Pure virtual function called. Are you calling virtual methods from a "
+      "destructor?");
 }

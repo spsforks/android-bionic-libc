@@ -49,7 +49,5 @@ extern "C" __LIBC_HIDDEN__ long __set_errno_internal(int n) {
 
 // This one exists for the LP32 NDK and is not present at all in LP64.
 #if !defined(__LP64__)
-extern "C" long __set_errno(int n) {
-  return __set_errno_internal(n);
-}
+extern "C" long __set_errno(int n) { return __set_errno_internal(n); }
 #endif

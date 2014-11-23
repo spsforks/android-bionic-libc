@@ -33,7 +33,7 @@ int __sched_cpucount(size_t setsize, cpu_set_t* set) {
   int nn_max = setsize / sizeof(__CPU_BITTYPE);
   int count = 0;
 
-  for ( ; nn < nn_max; nn++ ) {
+  for (; nn < nn_max; nn++) {
     count += __builtin_popcountl(set->__bits[nn]);
   }
 

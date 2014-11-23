@@ -18,11 +18,13 @@
 
 #include <sys/statfs.h>
 
-// Paper over the fact that 32-bit kernels use fstatfs64/statfs64 with an extra argument,
-// but 64-bit kernels don't have the "64" bit suffix or the extra size_t argument.
+// Paper over the fact that 32-bit kernels use fstatfs64/statfs64 with an extra
+// argument,
+// but 64-bit kernels don't have the "64" bit suffix or the extra size_t
+// argument.
 #if __LP64__
-#  define __fstatfs64(fd,size,buf) fstatfs(fd,buf)
-#  define __statfs64(path,size,buf) statfs(path,buf)
+#define __fstatfs64(fd, size, buf) fstatfs(fd, buf)
+#define __statfs64(path, size, buf) statfs(path, buf)
 #else
 extern "C" int __fstatfs64(int, size_t, struct statfs*);
 extern "C" int __statfs64(const char*, size_t, struct statfs*);
@@ -39,7 +41,8 @@ static void __statfs_to_statvfs(const struct statfs& in, struct statvfs* out) {
   out->f_files = in.f_files;
   out->f_ffree = in.f_ffree;
   out->f_favail = in.f_ffree;
-  out->f_fsid = in.f_fsid.__val[0] | (static_cast<uint64_t>(in.f_fsid.__val[1]) << 32);
+  out->f_fsid =
+      in.f_fsid.__val[0] | (static_cast<uint64_t>(in.f_fsid.__val[1]) << 32);
   out->f_flag = in.f_flags & ~ST_VALID;
   out->f_namemax = in.f_namelen;
 }

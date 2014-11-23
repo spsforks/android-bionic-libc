@@ -28,6 +28,4 @@
 
 #include <unistd.h>
 
-int dup2(int old_fd, int new_fd) {
-  return dup3(old_fd, new_fd, 0);
-}
+int dup2(int old_fd, int new_fd) { return dup3(old_fd, new_fd, 0); }

@@ -38,5 +38,6 @@ clock_t clock() {
   if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == -1) {
     return -1;
   }
-  return (ts.tv_sec * CLOCKS_PER_SEC) + (ts.tv_nsec / (NS_PER_S / CLOCKS_PER_SEC));
+  return (ts.tv_sec * CLOCKS_PER_SEC) +
+         (ts.tv_nsec / (NS_PER_S / CLOCKS_PER_SEC));
 }

@@ -28,6 +28,4 @@
 
 #include "pthread_internal.h"
 
-pthread_t pthread_self() {
-  return reinterpret_cast<pthread_t>(__get_thread());
-}
+pthread_t pthread_self() { return reinterpret_cast<pthread_t>(__get_thread()); }

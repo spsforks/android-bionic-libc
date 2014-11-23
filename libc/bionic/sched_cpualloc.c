@@ -29,12 +29,8 @@
 #include <sched.h>
 #include <stdlib.h>
 
-cpu_set_t* __sched_cpualloc(size_t count)
-{
-    return (cpu_set_t*) malloc(CPU_ALLOC_SIZE(count));
+cpu_set_t* __sched_cpualloc(size_t count) {
+  return (cpu_set_t*)malloc(CPU_ALLOC_SIZE(count));
 }
 
-void __sched_cpufree(cpu_set_t* set)
-{
-    free(set);
-}
+void __sched_cpufree(cpu_set_t* set) { free(set); }

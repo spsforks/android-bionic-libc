@@ -28,6 +28,4 @@
 
 #include <sys/inotify.h>
 
-int inotify_init() {
-  return inotify_init1(0);
-}
+int inotify_init() { return inotify_init1(0); }

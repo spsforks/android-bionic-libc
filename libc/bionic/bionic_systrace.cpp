@@ -25,7 +25,7 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-#define WRITE_OFFSET   32
+#define WRITE_OFFSET 32
 
 static const prop_info* g_pinfo = NULL;
 static uint32_t g_serial = -1;
@@ -33,11 +33,15 @@ static uint64_t g_tags = 0;
 static int g_trace_marker_fd = -1;
 
 static bool should_trace() {
-  // If g_pinfo is null, this means that systrace hasn't been run and it's safe to
-  // assume that no trace writing will need to take place.  However, to avoid running
-  // this costly find check each time, we set it to a non-tracing value so that next
+  // If g_pinfo is null, this means that systrace hasn't been run and it's safe
+  // to
+  // assume that no trace writing will need to take place.  However, to avoid
+  // running
+  // this costly find check each time, we set it to a non-tracing value so that
+  // next
   // time, it will just check the serial to see if the value has been changed.
-  // this function also deals with the bootup case, during which the call to property
+  // this function also deals with the bootup case, during which the call to
+  // property
   // set will fail if the property server hasn't yet started.
   if (g_pinfo == NULL) {
     g_pinfo = __system_property_find("debug.atrace.tags.enableflags");
@@ -74,7 +78,8 @@ ScopedTrace::ScopedTrace(const char* message) {
   }
 
   if (g_trace_marker_fd == -1) {
-    g_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
+    g_trace_marker_fd =
+        open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     if (g_trace_marker_fd == -1) {
       __libc_fatal("Could not open kernel trace file: %s\n", strerror(errno));
     }
@@ -84,7 +89,8 @@ ScopedTrace::ScopedTrace(const char* message) {
   // kernel trace_marker.
   int length = strlen(message);
   char buf[length + WRITE_OFFSET];
-  size_t len = snprintf(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
+  size_t len =
+      snprintf(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
   ssize_t wbytes = TEMP_FAILURE_RETRY(write(g_trace_marker_fd, buf, len));
 
   // Error while writing
