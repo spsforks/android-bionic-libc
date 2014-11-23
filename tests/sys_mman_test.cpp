@@ -23,13 +23,15 @@
 #include "TemporaryFile.h"
 
 TEST(sys_mman, mmap_std) {
-  void* map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+  void* map =
+      mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
   ASSERT_EQ(0, munmap(map, 4096));
 }
 
 TEST(sys_mman, mmap64_std) {
-  void* map = mmap64(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+  void* map =
+      mmap64(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
   ASSERT_EQ(0, munmap(map, 4096));
 }
@@ -50,13 +52,14 @@ TEST(sys_mman, mmap64_file_bad_offset) {
 
 #define STR_SSIZE(str) static_cast<ssize_t>(sizeof(str))
 
-#define STRING_MSG  "012345678\nabcdefgh\n"
+#define STRING_MSG "012345678\nabcdefgh\n"
 #define INITIAL_MSG "000000000\n00000000\n"
 
 TEST(sys_mman, mmap_file_read) {
   TemporaryFile tf;
 
-  ASSERT_EQ(STR_SSIZE(STRING_MSG), write(tf.fd, STRING_MSG, sizeof(STRING_MSG)));
+  ASSERT_EQ(STR_SSIZE(STRING_MSG),
+            write(tf.fd, STRING_MSG, sizeof(STRING_MSG)));
 
   void* map = mmap(NULL, sizeof(STRING_MSG), PROT_READ, MAP_SHARED, tf.fd, 0);
   ASSERT_NE(MAP_FAILED, map);
@@ -70,7 +73,8 @@ TEST(sys_mman, mmap_file_read) {
 TEST(sys_mman, mmap_file_write) {
   TemporaryFile tf;
 
-  ASSERT_EQ(STR_SSIZE(INITIAL_MSG), write(tf.fd, INITIAL_MSG, sizeof(INITIAL_MSG)));
+  ASSERT_EQ(STR_SSIZE(INITIAL_MSG),
+            write(tf.fd, INITIAL_MSG, sizeof(INITIAL_MSG)));
   lseek(tf.fd, 0, SEEK_SET);
 
   void* map = mmap(NULL, sizeof(STRING_MSG), PROT_WRITE, MAP_SHARED, tf.fd, 0);
@@ -122,7 +126,7 @@ TEST(sys_mman, mmap_file_read_at_offset) {
 
   data = reinterpret_cast<char*>(map);
   ASSERT_STREQ(PAGE2_MSG, data);
-  ASSERT_STREQ(END_MSG, data+pagesize-sizeof(END_MSG));
+  ASSERT_STREQ(END_MSG, data + pagesize - sizeof(END_MSG));
 
   ASSERT_EQ(0, munmap(map, pagesize));
 }
@@ -170,5 +174,5 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   ASSERT_NE(-1, lseek(tf.fd, 2 * pagesize, SEEK_SET));
   ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
   ASSERT_STREQ(NEWPAGE2_MSG, buf);
-  ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
+  ASSERT_STREQ(END_MSG, buf + pagesize - sizeof(END_MSG));
 }

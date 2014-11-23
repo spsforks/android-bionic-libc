@@ -28,6 +28,4 @@
 
 #include <unistd.h>
 
-int setpgrp() {
-  return setpgid(0, 0);
-}
+int setpgrp() { return setpgid(0, 0); }

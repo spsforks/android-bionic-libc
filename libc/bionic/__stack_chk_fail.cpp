@@ -31,6 +31,4 @@
 #include "private/bionic_ssp.h"
 #include "private/libc_logging.h"
 
-void __stack_chk_fail() {
-  __libc_fatal("stack corruption detected");
-}
+void __stack_chk_fail() { __libc_fatal("stack corruption detected"); }

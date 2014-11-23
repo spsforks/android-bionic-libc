@@ -40,7 +40,7 @@ __BEGIN_DECLS
 
 enum {
   ANDROID_LOG_UNKNOWN = 0,
-  ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
+  ANDROID_LOG_DEFAULT, /* only for SetMinPriority() */
 
   ANDROID_LOG_VERBOSE,
   ANDROID_LOG_DEBUG,
@@ -49,7 +49,7 @@ enum {
   ANDROID_LOG_ERROR,
   ANDROID_LOG_FATAL,
 
-  ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
+  ANDROID_LOG_SILENT, /* only for SetMinPriority(); must be last */
 };
 
 enum {
@@ -73,7 +73,8 @@ struct abort_msg_t {
 // Formats a message to the log (priority 'fatal'), then aborts.
 //
 
-__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...) __printflike(1, 2);
+__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...)
+    __printflike(1, 2);
 
 //
 // Formats a message to the log (priority 'fatal'), but doesn't abort.
@@ -86,20 +87,23 @@ __LIBC_HIDDEN__ void __libc_fatal_no_abort(const char* format, ...)
 
 //
 // Formatting routines for the C library's internal debugging.
-// Unlike the usual alternatives, these don't allocate, and they don't drag in all of stdio.
+// Unlike the usual alternatives, these don't allocate, and they don't drag in
+// all of stdio.
 //
 
-__LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
+__LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size,
+                                         const char* format, ...)
     __printflike(3, 4);
 
 __LIBC_HIDDEN__ int __libc_format_fd(int fd, const char* format, ...)
     __printflike(2, 3);
 
-__LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char* format, ...)
+__LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag,
+                                      const char* format, ...)
     __printflike(3, 4);
 
-__LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
-                                              va_list ap);
+__LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag,
+                                              const char* format, va_list ap);
 
 //
 // Event logging.
@@ -108,7 +112,8 @@ __LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, con
 __LIBC_HIDDEN__ void __libc_android_log_event_int(int32_t tag, int value);
 __LIBC_HIDDEN__ void __libc_android_log_event_uid(int32_t tag);
 
-__LIBC_HIDDEN__ __noreturn void __fortify_chk_fail(const char* msg, uint32_t event_tag);
+__LIBC_HIDDEN__ __noreturn void __fortify_chk_fail(const char* msg,
+                                                   uint32_t event_tag);
 
 __END_DECLS
 

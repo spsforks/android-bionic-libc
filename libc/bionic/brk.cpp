@@ -32,7 +32,7 @@
 #if __LP64__
 static void* __bionic_brk;
 #else
-void* __bionic_brk; // Accidentally exported by the NDK.
+void* __bionic_brk;  // Accidentally exported by the NDK.
 #endif
 
 int brk(void* end_data) {
@@ -57,7 +57,8 @@ void* sbrk(ptrdiff_t increment) {
 
   // Avoid overflow.
   uintptr_t old_brk = reinterpret_cast<uintptr_t>(__bionic_brk);
-  if ((increment > 0 && static_cast<uintptr_t>(increment) > (UINTPTR_MAX - old_brk)) ||
+  if ((increment > 0 &&
+       static_cast<uintptr_t>(increment) > (UINTPTR_MAX - old_brk)) ||
       (increment < 0 && static_cast<uintptr_t>(-increment) > old_brk)) {
     errno = ENOMEM;
     return reinterpret_cast<void*>(-1);

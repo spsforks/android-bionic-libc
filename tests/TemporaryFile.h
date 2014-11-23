@@ -71,9 +71,7 @@ class TemporaryDir {
     }
   }
 
-  ~TemporaryDir() {
-    rmdir(dirname);
-  }
+  ~TemporaryDir() { rmdir(dirname); }
 
   char dirname[1024];
 

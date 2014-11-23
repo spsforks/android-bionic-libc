@@ -63,9 +63,7 @@ TEST(semaphore, sem_trywait) {
   ASSERT_EQ(0, sem_destroy(&s));
 }
 
-static void SemWaitThreadTestFn(sem_t& sem) {
-  ASSERT_EQ(0, sem_wait(&sem));
-}
+static void SemWaitThreadTestFn(sem_t& sem) { ASSERT_EQ(0, sem_wait(&sem)); }
 
 static void* SemWaitThreadFn(void* arg) {
   SemWaitThreadTestFn(*reinterpret_cast<sem_t*>(arg));
@@ -92,7 +90,7 @@ TEST(semaphore, sem_wait__sem_post) {
 }
 
 static inline void timespec_add_ms(timespec& ts, size_t ms) {
-  ts.tv_sec  += ms / 1000;
+  ts.tv_sec += ms / 1000;
   ts.tv_nsec += (ms % 1000) * 1000000;
   if (ts.tv_nsec >= NS_PER_S) {
     ts.tv_sec++;

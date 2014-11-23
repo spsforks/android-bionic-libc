@@ -32,6 +32,4 @@
 // libbacktrace uses __SIGRTMIN + 1.
 // libcore uses __SIGRTMIN + 2.
 
-int __libc_current_sigrtmin(void) {
-  return __SIGRTMIN + 3;
-}
+int __libc_current_sigrtmin(void) { return __SIGRTMIN + 3; }

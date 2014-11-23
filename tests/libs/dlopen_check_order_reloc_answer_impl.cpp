@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-extern "C" int check_order_reloc_get_answer_impl() {
-  return __ANSWER;
-}
+extern "C" int check_order_reloc_get_answer_impl() { return __ANSWER; }

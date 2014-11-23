@@ -48,9 +48,7 @@ class ScopedSignalBlocker {
     sigprocmask(SIG_BLOCK, &set, &old_set_);
   }
 
-  ~ScopedSignalBlocker() {
-    sigprocmask(SIG_SETMASK, &old_set_, NULL);
-  }
+  ~ScopedSignalBlocker() { sigprocmask(SIG_SETMASK, &old_set_, NULL); }
 
  private:
   sigset_t old_set_;
@@ -76,7 +74,8 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
     free(path);
 
     // Can we still use the file now it's unlinked?
-    // File systems without hard link support won't have the usual Unix semantics.
+    // File systems without hard link support won't have the usual Unix
+    // semantics.
     struct stat sb;
     int rc = fstat(fd, &sb);
     if (rc == -1) {
@@ -99,14 +98,18 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
 }
 
 FILE* tmpfile() {
-  // TODO: get this app's temporary directory from the framework ("/data/data/app/cache").
+  // TODO: get this app's temporary directory from the framework
+  // ("/data/data/app/cache").
 
-  // $EXTERNAL_STORAGE turns out not to be very useful because it doesn't support hard links.
-  // This means we can't do the usual trick of calling unlink before handing the file back.
+  // $EXTERNAL_STORAGE turns out not to be very useful because it doesn't
+  // support hard links.
+  // This means we can't do the usual trick of calling unlink before handing the
+  // file back.
 
   FILE* fp = __tmpfile_dir("/data/local/tmp");
   if (fp == NULL) {
-    // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try P_tmpdir before
+    // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try
+    // P_tmpdir before
     // giving up. This is potentially useful for bionic on the host anyway.
     fp = __tmpfile_dir(P_tmpdir);
   }

@@ -28,4 +28,4 @@ static inline bool ends_with(const char* s1, const char* s2) {
   return memcmp(s1 + (s1_length - s2_length), s2, s2_length) == 0;
 }
 
-#endif // _BIONIC_STRING_UTILS_H_
+#endif  // _BIONIC_STRING_UTILS_H_

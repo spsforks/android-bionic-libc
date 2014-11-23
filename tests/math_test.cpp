@@ -34,16 +34,20 @@
 // please.
 
 namespace {
-template<typename T> inline int test_capture_signbit(const T in) {
+template <typename T>
+inline int test_capture_signbit(const T in) {
   return signbit(in);
 }
-template<typename T> inline int test_capture_isfinite(const T in) {
+template <typename T>
+inline int test_capture_isfinite(const T in) {
   return isfinite(in);
 }
-template<typename T> inline int test_capture_isnan(const T in) {
+template <typename T>
+inline int test_capture_isnan(const T in) {
   return isnan(in);
 }
-template<typename T> inline int test_capture_isinf(const T in) {
+template <typename T>
+inline int test_capture_isinf(const T in) {
   return isinf(in);
 }
 }
@@ -155,7 +159,8 @@ TEST(math, isnormal) {
   ASSERT_FALSE(isnormal(ldouble_subnormal()));
 }
 
-// TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
+// TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater,
+// isunordered
 TEST(math, signbit) {
   ASSERT_EQ(0, test_capture_signbit(0.0f));
   ASSERT_EQ(0, test_capture_signbit(0.0));
@@ -232,7 +237,8 @@ TEST(math, finite) {
 }
 
 TEST(math, isinf_function) {
-  // The isinf macro deals with all three types; the isinf function is for doubles.
+  // The isinf macro deals with all three types; the isinf function is for
+  // doubles.
   ASSERT_FALSE((isinf)(123.0));
   ASSERT_TRUE((isinf)(HUGE_VAL));
 }
@@ -248,7 +254,8 @@ TEST(math, __isinfl) {
 }
 
 TEST(math, isnan_function) {
-  // The isnan macro deals with all three types; the isnan function is for doubles.
+  // The isnan macro deals with all three types; the isnan function is for
+  // doubles.
   ASSERT_FALSE((isnan)(123.0));
   ASSERT_TRUE((isnan)(nan("")));
 }
@@ -272,27 +279,27 @@ TEST(math, __isnormal) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormal.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __isnormalf) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormalf.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __isnormall) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, __signbit) {
@@ -313,221 +320,115 @@ TEST(math, __signbitl) {
   ASSERT_NE(0L, __signbitl(-1.0L));
 }
 
-TEST(math, acos) {
-  ASSERT_DOUBLE_EQ(M_PI/2.0, acos(0.0));
-}
+TEST(math, acos) { ASSERT_DOUBLE_EQ(M_PI / 2.0, acos(0.0)); }
 
 TEST(math, acosf) {
-  ASSERT_FLOAT_EQ(static_cast<float>(M_PI)/2.0f, acosf(0.0f));
+  ASSERT_FLOAT_EQ(static_cast<float>(M_PI) / 2.0f, acosf(0.0f));
 }
 
-TEST(math, acosl) {
-  ASSERT_DOUBLE_EQ(M_PI/2.0L, acosl(0.0L));
-}
+TEST(math, acosl) { ASSERT_DOUBLE_EQ(M_PI / 2.0L, acosl(0.0L)); }
 
-TEST(math, asin) {
-  ASSERT_DOUBLE_EQ(0.0, asin(0.0));
-}
+TEST(math, asin) { ASSERT_DOUBLE_EQ(0.0, asin(0.0)); }
 
-TEST(math, asinf) {
-  ASSERT_FLOAT_EQ(0.0f, asinf(0.0f));
-}
+TEST(math, asinf) { ASSERT_FLOAT_EQ(0.0f, asinf(0.0f)); }
 
-TEST(math, asinl) {
-  ASSERT_DOUBLE_EQ(0.0L, asinl(0.0L));
-}
+TEST(math, asinl) { ASSERT_DOUBLE_EQ(0.0L, asinl(0.0L)); }
 
-TEST(math, atan) {
-  ASSERT_DOUBLE_EQ(0.0, atan(0.0));
-}
+TEST(math, atan) { ASSERT_DOUBLE_EQ(0.0, atan(0.0)); }
 
-TEST(math, atanf) {
-  ASSERT_FLOAT_EQ(0.0f, atanf(0.0f));
-}
+TEST(math, atanf) { ASSERT_FLOAT_EQ(0.0f, atanf(0.0f)); }
 
-TEST(math, atanl) {
-  ASSERT_DOUBLE_EQ(0.0L, atanl(0.0L));
-}
+TEST(math, atanl) { ASSERT_DOUBLE_EQ(0.0L, atanl(0.0L)); }
 
-TEST(math, atan2) {
-  ASSERT_DOUBLE_EQ(0.0, atan2(0.0, 0.0));
-}
+TEST(math, atan2) { ASSERT_DOUBLE_EQ(0.0, atan2(0.0, 0.0)); }
 
-TEST(math, atan2f) {
-  ASSERT_FLOAT_EQ(0.0f, atan2f(0.0f, 0.0f));
-}
+TEST(math, atan2f) { ASSERT_FLOAT_EQ(0.0f, atan2f(0.0f, 0.0f)); }
 
-TEST(math, atan2l) {
-  ASSERT_DOUBLE_EQ(0.0L, atan2l(0.0L, 0.0L));
-}
+TEST(math, atan2l) { ASSERT_DOUBLE_EQ(0.0L, atan2l(0.0L, 0.0L)); }
 
-TEST(math, cos) {
-  ASSERT_DOUBLE_EQ(1.0, cos(0.0));
-}
+TEST(math, cos) { ASSERT_DOUBLE_EQ(1.0, cos(0.0)); }
 
-TEST(math, cosf) {
-  ASSERT_FLOAT_EQ(1.0f, cosf(0.0f));
-}
+TEST(math, cosf) { ASSERT_FLOAT_EQ(1.0f, cosf(0.0f)); }
 
-TEST(math, cosl) {
-  ASSERT_DOUBLE_EQ(1.0L, cosl(0.0L));
-}
+TEST(math, cosl) { ASSERT_DOUBLE_EQ(1.0L, cosl(0.0L)); }
 
-TEST(math, sin) {
-  ASSERT_DOUBLE_EQ(0.0, sin(0.0));
-}
+TEST(math, sin) { ASSERT_DOUBLE_EQ(0.0, sin(0.0)); }
 
-TEST(math, sinf) {
-  ASSERT_FLOAT_EQ(0.0f, sinf(0.0f));
-}
+TEST(math, sinf) { ASSERT_FLOAT_EQ(0.0f, sinf(0.0f)); }
 
-TEST(math, sinl) {
-  ASSERT_DOUBLE_EQ(0.0L, sinl(0.0L));
-}
+TEST(math, sinl) { ASSERT_DOUBLE_EQ(0.0L, sinl(0.0L)); }
 
-TEST(math, tan) {
-  ASSERT_DOUBLE_EQ(0.0, tan(0.0));
-}
+TEST(math, tan) { ASSERT_DOUBLE_EQ(0.0, tan(0.0)); }
 
-TEST(math, tanf) {
-  ASSERT_FLOAT_EQ(0.0f, tanf(0.0f));
-}
+TEST(math, tanf) { ASSERT_FLOAT_EQ(0.0f, tanf(0.0f)); }
 
-TEST(math, tanl) {
-  ASSERT_DOUBLE_EQ(0.0L, tanl(0.0L));
-}
+TEST(math, tanl) { ASSERT_DOUBLE_EQ(0.0L, tanl(0.0L)); }
 
-TEST(math, acosh) {
-  ASSERT_DOUBLE_EQ(0.0, acosh(1.0));
-}
+TEST(math, acosh) { ASSERT_DOUBLE_EQ(0.0, acosh(1.0)); }
 
-TEST(math, acoshf) {
-  ASSERT_FLOAT_EQ(0.0f, acoshf(1.0f));
-}
+TEST(math, acoshf) { ASSERT_FLOAT_EQ(0.0f, acoshf(1.0f)); }
 
-TEST(math, acoshl) {
-  ASSERT_DOUBLE_EQ(0.0L, acoshl(1.0L));
-}
+TEST(math, acoshl) { ASSERT_DOUBLE_EQ(0.0L, acoshl(1.0L)); }
 
-TEST(math, asinh) {
-  ASSERT_DOUBLE_EQ(0.0, asinh(0.0));
-}
+TEST(math, asinh) { ASSERT_DOUBLE_EQ(0.0, asinh(0.0)); }
 
-TEST(math, asinhf) {
-  ASSERT_FLOAT_EQ(0.0f, asinhf(0.0f));
-}
+TEST(math, asinhf) { ASSERT_FLOAT_EQ(0.0f, asinhf(0.0f)); }
 
-TEST(math, asinhl) {
-  ASSERT_DOUBLE_EQ(0.0L, asinhl(0.0L));
-}
+TEST(math, asinhl) { ASSERT_DOUBLE_EQ(0.0L, asinhl(0.0L)); }
 
-TEST(math, atanh) {
-  ASSERT_DOUBLE_EQ(0.0, atanh(0.0));
-}
+TEST(math, atanh) { ASSERT_DOUBLE_EQ(0.0, atanh(0.0)); }
 
-TEST(math, atanhf) {
-  ASSERT_FLOAT_EQ(0.0f, atanhf(0.0f));
-}
+TEST(math, atanhf) { ASSERT_FLOAT_EQ(0.0f, atanhf(0.0f)); }
 
-TEST(math, atanhl) {
-  ASSERT_DOUBLE_EQ(0.0L, atanhl(0.0L));
-}
+TEST(math, atanhl) { ASSERT_DOUBLE_EQ(0.0L, atanhl(0.0L)); }
 
-TEST(math, cosh) {
-  ASSERT_DOUBLE_EQ(1.0, cosh(0.0));
-}
+TEST(math, cosh) { ASSERT_DOUBLE_EQ(1.0, cosh(0.0)); }
 
-TEST(math, coshf) {
-  ASSERT_FLOAT_EQ(1.0f, coshf(0.0f));
-}
+TEST(math, coshf) { ASSERT_FLOAT_EQ(1.0f, coshf(0.0f)); }
 
-TEST(math, coshl) {
-  ASSERT_DOUBLE_EQ(1.0L, coshl(0.0L));
-}
+TEST(math, coshl) { ASSERT_DOUBLE_EQ(1.0L, coshl(0.0L)); }
 
-TEST(math, sinh) {
-  ASSERT_DOUBLE_EQ(0.0, sinh(0.0));
-}
+TEST(math, sinh) { ASSERT_DOUBLE_EQ(0.0, sinh(0.0)); }
 
-TEST(math, sinhf) {
-  ASSERT_FLOAT_EQ(0.0f, sinhf(0.0f));
-}
+TEST(math, sinhf) { ASSERT_FLOAT_EQ(0.0f, sinhf(0.0f)); }
 
-TEST(math, sinhl) {
-  ASSERT_DOUBLE_EQ(0.0L, sinhl(0.0L));
-}
+TEST(math, sinhl) { ASSERT_DOUBLE_EQ(0.0L, sinhl(0.0L)); }
 
-TEST(math, tanh) {
-  ASSERT_DOUBLE_EQ(0.0, tanh(0.0));
-}
+TEST(math, tanh) { ASSERT_DOUBLE_EQ(0.0, tanh(0.0)); }
 
-TEST(math, tanhf) {
-  ASSERT_FLOAT_EQ(0.0f, tanhf(0.0f));
-}
+TEST(math, tanhf) { ASSERT_FLOAT_EQ(0.0f, tanhf(0.0f)); }
 
-TEST(math, tanhl) {
-  ASSERT_DOUBLE_EQ(0.0L, tanhl(0.0L));
-}
+TEST(math, tanhl) { ASSERT_DOUBLE_EQ(0.0L, tanhl(0.0L)); }
 
-TEST(math, log) {
-  ASSERT_DOUBLE_EQ(1.0, log(M_E));
-}
+TEST(math, log) { ASSERT_DOUBLE_EQ(1.0, log(M_E)); }
 
-TEST(math, logf) {
-  ASSERT_FLOAT_EQ(1.0f, logf(static_cast<float>(M_E)));
-}
+TEST(math, logf) { ASSERT_FLOAT_EQ(1.0f, logf(static_cast<float>(M_E))); }
 
-TEST(math, logl) {
-  ASSERT_DOUBLE_EQ(1.0L, logl(M_E));
-}
+TEST(math, logl) { ASSERT_DOUBLE_EQ(1.0L, logl(M_E)); }
 
-TEST(math, log2) {
-  ASSERT_DOUBLE_EQ(12.0, log2(4096.0));
-}
+TEST(math, log2) { ASSERT_DOUBLE_EQ(12.0, log2(4096.0)); }
 
-TEST(math, log2f) {
-  ASSERT_FLOAT_EQ(12.0f, log2f(4096.0f));
-}
+TEST(math, log2f) { ASSERT_FLOAT_EQ(12.0f, log2f(4096.0f)); }
 
-TEST(math, log2l) {
-  ASSERT_DOUBLE_EQ(12.0L, log2l(4096.0L));
-}
+TEST(math, log2l) { ASSERT_DOUBLE_EQ(12.0L, log2l(4096.0L)); }
 
-TEST(math, log10) {
-  ASSERT_DOUBLE_EQ(3.0, log10(1000.0));
-}
+TEST(math, log10) { ASSERT_DOUBLE_EQ(3.0, log10(1000.0)); }
 
-TEST(math, log10f) {
-  ASSERT_FLOAT_EQ(3.0f, log10f(1000.0f));
-}
+TEST(math, log10f) { ASSERT_FLOAT_EQ(3.0f, log10f(1000.0f)); }
 
-TEST(math, log10l) {
-  ASSERT_DOUBLE_EQ(3.0L, log10l(1000.0L));
-}
+TEST(math, log10l) { ASSERT_DOUBLE_EQ(3.0L, log10l(1000.0L)); }
 
-TEST(math, cbrt) {
-  ASSERT_DOUBLE_EQ(3.0, cbrt(27.0));
-}
+TEST(math, cbrt) { ASSERT_DOUBLE_EQ(3.0, cbrt(27.0)); }
 
-TEST(math, cbrtf) {
-  ASSERT_FLOAT_EQ(3.0f, cbrtf(27.0f));
-}
+TEST(math, cbrtf) { ASSERT_FLOAT_EQ(3.0f, cbrtf(27.0f)); }
 
-TEST(math, cbrtl) {
-  ASSERT_DOUBLE_EQ(3.0L, cbrtl(27.0L));
-}
+TEST(math, cbrtl) { ASSERT_DOUBLE_EQ(3.0L, cbrtl(27.0L)); }
 
-TEST(math, sqrt) {
-  ASSERT_DOUBLE_EQ(2.0, sqrt(4.0));
-}
+TEST(math, sqrt) { ASSERT_DOUBLE_EQ(2.0, sqrt(4.0)); }
 
-TEST(math, sqrtf) {
-  ASSERT_FLOAT_EQ(2.0f, sqrtf(4.0f));
-}
+TEST(math, sqrtf) { ASSERT_FLOAT_EQ(2.0f, sqrtf(4.0f)); }
 
-TEST(math, sqrtl) {
-  ASSERT_DOUBLE_EQ(2.0L, sqrtl(4.0L));
-}
+TEST(math, sqrtl) { ASSERT_DOUBLE_EQ(2.0L, sqrtl(4.0L)); }
 
 TEST(math, exp) {
   ASSERT_DOUBLE_EQ(1.0, exp(0.0));
@@ -544,29 +445,19 @@ TEST(math, expl) {
   ASSERT_DOUBLE_EQ(M_E, expl(1.0L));
 }
 
-TEST(math, exp2) {
-  ASSERT_DOUBLE_EQ(8.0, exp2(3.0));
-}
+TEST(math, exp2) { ASSERT_DOUBLE_EQ(8.0, exp2(3.0)); }
 
-TEST(math, exp2f) {
-  ASSERT_FLOAT_EQ(8.0f, exp2f(3.0f));
-}
+TEST(math, exp2f) { ASSERT_FLOAT_EQ(8.0f, exp2f(3.0f)); }
 
-TEST(math, exp2l) {
-  ASSERT_DOUBLE_EQ(8.0L, exp2l(3.0L));
-}
+TEST(math, exp2l) { ASSERT_DOUBLE_EQ(8.0L, exp2l(3.0L)); }
 
-TEST(math, expm1) {
-  ASSERT_DOUBLE_EQ(M_E - 1.0, expm1(1.0));
-}
+TEST(math, expm1) { ASSERT_DOUBLE_EQ(M_E - 1.0, expm1(1.0)); }
 
 TEST(math, expm1f) {
   ASSERT_FLOAT_EQ(static_cast<float>(M_E) - 1.0f, expm1f(1.0f));
 }
 
-TEST(math, expm1l) {
-  ASSERT_DOUBLE_EQ(M_E - 1.0L, expm1l(1.0L));
-}
+TEST(math, expm1l) { ASSERT_DOUBLE_EQ(M_E - 1.0L, expm1l(1.0L)); }
 
 TEST(math, pow) {
   ASSERT_TRUE(isnan(pow(nan(""), 3.0)));
@@ -589,85 +480,45 @@ TEST(math, powl) {
   ASSERT_DOUBLE_EQ(8.0L, powl(2.0L, 3.0L));
 }
 
-TEST(math, ceil) {
-  ASSERT_DOUBLE_EQ(1.0, ceil(0.9));
-}
+TEST(math, ceil) { ASSERT_DOUBLE_EQ(1.0, ceil(0.9)); }
 
-TEST(math, ceilf) {
-  ASSERT_FLOAT_EQ(1.0f, ceilf(0.9f));
-}
+TEST(math, ceilf) { ASSERT_FLOAT_EQ(1.0f, ceilf(0.9f)); }
 
-TEST(math, ceill) {
-  ASSERT_DOUBLE_EQ(1.0L, ceill(0.9L));
-}
+TEST(math, ceill) { ASSERT_DOUBLE_EQ(1.0L, ceill(0.9L)); }
 
-TEST(math, floor) {
-  ASSERT_DOUBLE_EQ(1.0, floor(1.1));
-}
+TEST(math, floor) { ASSERT_DOUBLE_EQ(1.0, floor(1.1)); }
 
-TEST(math, floorf) {
-  ASSERT_FLOAT_EQ(1.0f, floorf(1.1f));
-}
+TEST(math, floorf) { ASSERT_FLOAT_EQ(1.0f, floorf(1.1f)); }
 
-TEST(math, floorl) {
-  ASSERT_DOUBLE_EQ(1.0L, floorl(1.1L));
-}
+TEST(math, floorl) { ASSERT_DOUBLE_EQ(1.0L, floorl(1.1L)); }
 
-TEST(math, fabs) {
-  ASSERT_DOUBLE_EQ(1.0, fabs(-1.0));
-}
+TEST(math, fabs) { ASSERT_DOUBLE_EQ(1.0, fabs(-1.0)); }
 
-TEST(math, fabsf) {
-  ASSERT_FLOAT_EQ(1.0f, fabsf(-1.0f));
-}
+TEST(math, fabsf) { ASSERT_FLOAT_EQ(1.0f, fabsf(-1.0f)); }
 
-TEST(math, fabsl) {
-  ASSERT_DOUBLE_EQ(1.0L, fabsl(-1.0L));
-}
+TEST(math, fabsl) { ASSERT_DOUBLE_EQ(1.0L, fabsl(-1.0L)); }
 
-TEST(math, ldexp) {
-  ASSERT_DOUBLE_EQ(16.0, ldexp(2.0, 3.0));
-}
+TEST(math, ldexp) { ASSERT_DOUBLE_EQ(16.0, ldexp(2.0, 3.0)); }
 
-TEST(math, ldexpf) {
-  ASSERT_FLOAT_EQ(16.0f, ldexpf(2.0f, 3.0f));
-}
+TEST(math, ldexpf) { ASSERT_FLOAT_EQ(16.0f, ldexpf(2.0f, 3.0f)); }
 
-TEST(math, ldexpl) {
-  ASSERT_DOUBLE_EQ(16.0L, ldexpl(2.0L, 3.0));
-}
+TEST(math, ldexpl) { ASSERT_DOUBLE_EQ(16.0L, ldexpl(2.0L, 3.0)); }
 
-TEST(math, fmod) {
-  ASSERT_DOUBLE_EQ(2.0, fmod(12.0, 10.0));
-}
+TEST(math, fmod) { ASSERT_DOUBLE_EQ(2.0, fmod(12.0, 10.0)); }
 
-TEST(math, fmodf) {
-  ASSERT_FLOAT_EQ(2.0f, fmodf(12.0f, 10.0f));
-}
+TEST(math, fmodf) { ASSERT_FLOAT_EQ(2.0f, fmodf(12.0f, 10.0f)); }
 
-TEST(math, fmodl) {
-  ASSERT_DOUBLE_EQ(2.0L, fmodl(12.0L, 10.0L));
-}
+TEST(math, fmodl) { ASSERT_DOUBLE_EQ(2.0L, fmodl(12.0L, 10.0L)); }
 
-TEST(math, remainder) {
-  ASSERT_DOUBLE_EQ(2.0, remainder(12.0, 10.0));
-}
+TEST(math, remainder) { ASSERT_DOUBLE_EQ(2.0, remainder(12.0, 10.0)); }
 
-TEST(math, remainderf) {
-  ASSERT_FLOAT_EQ(2.0f, remainderf(12.0f, 10.0f));
-}
+TEST(math, remainderf) { ASSERT_FLOAT_EQ(2.0f, remainderf(12.0f, 10.0f)); }
 
-TEST(math, remainderl) {
-  ASSERT_DOUBLE_EQ(2.0L, remainderl(12.0L, 10.0L));
-}
+TEST(math, remainderl) { ASSERT_DOUBLE_EQ(2.0L, remainderl(12.0L, 10.0L)); }
 
-TEST(math, drem) {
-  ASSERT_DOUBLE_EQ(2.0, drem(12.0, 10.0));
-}
+TEST(math, drem) { ASSERT_DOUBLE_EQ(2.0, drem(12.0, 10.0)); }
 
-TEST(math, dremf) {
-  ASSERT_FLOAT_EQ(2.0f, dremf(12.0f, 10.0f));
-}
+TEST(math, dremf) { ASSERT_FLOAT_EQ(2.0f, dremf(12.0f, 10.0f)); }
 
 TEST(math, fmax) {
   ASSERT_DOUBLE_EQ(12.0, fmax(12.0, 10.0));
@@ -705,114 +556,86 @@ TEST(math, fminl) {
   ASSERT_DOUBLE_EQ(12.0L, fminl(nanl(""), 12.0L));
 }
 
-TEST(math, fma) {
-  ASSERT_DOUBLE_EQ(10.0, fma(2.0, 3.0, 4.0));
-}
+TEST(math, fma) { ASSERT_DOUBLE_EQ(10.0, fma(2.0, 3.0, 4.0)); }
 
-TEST(math, fmaf) {
-  ASSERT_FLOAT_EQ(10.0f, fmaf(2.0f, 3.0f, 4.0f));
-}
+TEST(math, fmaf) { ASSERT_FLOAT_EQ(10.0f, fmaf(2.0f, 3.0f, 4.0f)); }
 
-TEST(math, fmal) {
-  ASSERT_DOUBLE_EQ(10.0L, fmal(2.0L, 3.0L, 4.0L));
-}
+TEST(math, fmal) { ASSERT_DOUBLE_EQ(10.0L, fmal(2.0L, 3.0L, 4.0L)); }
 
-TEST(math, hypot) {
-  ASSERT_DOUBLE_EQ(5.0, hypot(3.0, 4.0));
-}
+TEST(math, hypot) { ASSERT_DOUBLE_EQ(5.0, hypot(3.0, 4.0)); }
 
-TEST(math, hypotf) {
-  ASSERT_FLOAT_EQ(5.0f, hypotf(3.0f, 4.0f));
-}
+TEST(math, hypotf) { ASSERT_FLOAT_EQ(5.0f, hypotf(3.0f, 4.0f)); }
 
-TEST(math, hypotl) {
-  ASSERT_DOUBLE_EQ(5.0L, hypotl(3.0L, 4.0L));
-}
+TEST(math, hypotl) { ASSERT_DOUBLE_EQ(5.0L, hypotl(3.0L, 4.0L)); }
 
-TEST(math, erf) {
-  ASSERT_DOUBLE_EQ(0.84270079294971489, erf(1.0));
-}
+TEST(math, erf) { ASSERT_DOUBLE_EQ(0.84270079294971489, erf(1.0)); }
 
-TEST(math, erff) {
-  ASSERT_FLOAT_EQ(0.84270078f, erff(1.0f));
-}
+TEST(math, erff) { ASSERT_FLOAT_EQ(0.84270078f, erff(1.0f)); }
 
-TEST(math, erfl) {
-  ASSERT_DOUBLE_EQ(0.84270079294971489L, erfl(1.0L));
-}
+TEST(math, erfl) { ASSERT_DOUBLE_EQ(0.84270079294971489L, erfl(1.0L)); }
 
-TEST(math, erfc) {
-  ASSERT_DOUBLE_EQ(0.15729920705028513, erfc(1.0));
-}
+TEST(math, erfc) { ASSERT_DOUBLE_EQ(0.15729920705028513, erfc(1.0)); }
 
-TEST(math, erfcf) {
-  ASSERT_FLOAT_EQ(0.15729921f, erfcf(1.0f));
-}
+TEST(math, erfcf) { ASSERT_FLOAT_EQ(0.15729921f, erfcf(1.0f)); }
 
-TEST(math, erfcl) {
-  ASSERT_DOUBLE_EQ(0.15729920705028513l, erfcl(1.0L));
-}
+TEST(math, erfcl) { ASSERT_DOUBLE_EQ(0.15729920705028513l, erfcl(1.0L)); }
 
 TEST(math, lrint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
-  fesetround(FE_UPWARD); // lrint/lrintf/lrintl obey the rounding mode.
+  fesetround(FE_UPWARD);  // lrint/lrintf/lrintl obey the rounding mode.
   ASSERT_EQ(1235, lrint(1234.01));
   ASSERT_EQ(1235, lrintf(1234.01f));
   ASSERT_EQ(1235, lrintl(1234.01L));
-  fesetround(FE_TOWARDZERO); // lrint/lrintf/lrintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // lrint/lrintf/lrintl obey the rounding mode.
   ASSERT_EQ(1234, lrint(1234.01));
   ASSERT_EQ(1234, lrintf(1234.01f));
   ASSERT_EQ(1234, lrintl(1234.01L));
 
-  fesetround(FE_UPWARD); // llrint/llrintf/llrintl obey the rounding mode.
+  fesetround(FE_UPWARD);  // llrint/llrintf/llrintl obey the rounding mode.
   ASSERT_EQ(1235L, llrint(1234.01));
   ASSERT_EQ(1235L, llrintf(1234.01f));
   ASSERT_EQ(1235L, llrintl(1234.01L));
-  fesetround(FE_TOWARDZERO); // llrint/llrintf/llrintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // llrint/llrintf/llrintl obey the rounding mode.
   ASSERT_EQ(1234L, llrint(1234.01));
   ASSERT_EQ(1234L, llrintf(1234.01f));
   ASSERT_EQ(1234L, llrintl(1234.01L));
 }
 
 TEST(math, rint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
-  fesetround(FE_UPWARD); // rint/rintf/rintl obey the rounding mode.
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  fesetround(FE_UPWARD);         // rint/rintf/rintl obey the rounding mode.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0, rint(1234.0));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, rint(1234.01));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0f, rintf(1234.0f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0f, rintf(1234.01f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // rint/rintf/rintl do set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // rint/rintf/rintl do set the FE_INEXACT flag.
   ASSERT_EQ(1234.0, rintl(1234.0L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, rintl(1234.01L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) != 0);
 
-  fesetround(FE_TOWARDZERO); // rint/rintf obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // rint/rintf obey the rounding mode.
   ASSERT_EQ(1234.0, rint(1234.01));
   ASSERT_EQ(1234.0f, rintf(1234.01f));
   ASSERT_EQ(1234.0, rintl(1234.01L));
 }
 
 TEST(math, nearbyint) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
-  feclearexcept(FE_ALL_EXCEPT); // nearbyint/nearbyintf/nearbyintl don't set the FE_INEXACT flag.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(
+      FE_UPWARD);  // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
+  feclearexcept(FE_ALL_EXCEPT);  // nearbyint/nearbyintf/nearbyintl don't set
+                                 // the FE_INEXACT flag.
   ASSERT_EQ(1234.0, nearbyint(1234.0));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, nearbyint(1234.01));
@@ -824,33 +647,31 @@ TEST(math, nearbyint) {
   ASSERT_EQ(1235.0f, nearbyintf(1234.01f));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
 
-  feclearexcept(FE_ALL_EXCEPT); // nearbyint/nearbyintf/nearbyintl don't set the FE_INEXACT flag.
+  feclearexcept(FE_ALL_EXCEPT);  // nearbyint/nearbyintf/nearbyintl don't set
+                                 // the FE_INEXACT flag.
   ASSERT_EQ(1234.0, nearbyintl(1234.0L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
   ASSERT_EQ(1235.0, nearbyintl(1234.01L));
   ASSERT_TRUE((fetestexcept(FE_ALL_EXCEPT) & FE_INEXACT) == 0);
 
-  fesetround(FE_TOWARDZERO); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
+  fesetround(FE_TOWARDZERO);  // nearbyint/nearbyintf/nearbyintl obey the
+                              // rounding mode.
   ASSERT_EQ(1234.0, nearbyint(1234.01));
   ASSERT_EQ(1234.0f, nearbyintf(1234.01f));
   ASSERT_EQ(1234.0, nearbyintl(1234.01L));
 }
 
 TEST(math, lround) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // lround ignores the rounding mode.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // lround ignores the rounding mode.
   ASSERT_EQ(1234, lround(1234.01));
   ASSERT_EQ(1234, lroundf(1234.01f));
   ASSERT_EQ(1234, lroundl(1234.01L));
 }
 
 TEST(math, llround) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // llround ignores the rounding mode.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // llround ignores the rounding mode.
   ASSERT_EQ(1234L, llround(1234.01));
   ASSERT_EQ(1234L, llroundf(1234.01f));
   ASSERT_EQ(1234L, llroundl(1234.01L));
@@ -944,10 +765,9 @@ TEST(math, fdiml) {
 }
 
 TEST(math, round) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // round ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // round ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0, round(0.5));
   ASSERT_DOUBLE_EQ(-1.0, round(-0.5));
   ASSERT_DOUBLE_EQ(0.0, round(0.0));
@@ -957,10 +777,9 @@ TEST(math, round) {
 }
 
 TEST(math, roundf) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // roundf ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // roundf ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_FLOAT_EQ(1.0f, roundf(0.5f));
   ASSERT_FLOAT_EQ(-1.0f, roundf(-0.5f));
   ASSERT_FLOAT_EQ(0.0f, roundf(0.0f));
@@ -970,10 +789,9 @@ TEST(math, roundf) {
 }
 
 TEST(math, roundl) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_TOWARDZERO); // roundl ignores the rounding mode and always rounds away from zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_TOWARDZERO);  // roundl ignores the rounding mode and always
+                              // rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0L, roundl(0.5L));
   ASSERT_DOUBLE_EQ(-1.0L, roundl(-0.5L));
   ASSERT_DOUBLE_EQ(0.0L, roundl(0.0L));
@@ -983,10 +801,9 @@ TEST(math, roundl) {
 }
 
 TEST(math, trunc) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // trunc ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // trunc ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_DOUBLE_EQ(1.0, trunc(1.5));
   ASSERT_DOUBLE_EQ(-1.0, trunc(-1.5));
   ASSERT_DOUBLE_EQ(0.0, trunc(0.0));
@@ -996,10 +813,9 @@ TEST(math, trunc) {
 }
 
 TEST(math, truncf) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // truncf ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // truncf ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_FLOAT_EQ(1.0f, truncf(1.5f));
   ASSERT_FLOAT_EQ(-1.0f, truncf(-1.5f));
   ASSERT_FLOAT_EQ(0.0f, truncf(0.0f));
@@ -1009,10 +825,9 @@ TEST(math, truncf) {
 }
 
 TEST(math, truncl) {
-  auto guard = make_scope_guard([]() {
-    fesetenv(FE_DFL_ENV);
-  });
-  fesetround(FE_UPWARD); // truncl ignores the rounding mode and always rounds toward zero.
+  auto guard = make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
+  fesetround(FE_UPWARD);  // truncl ignores the rounding mode and always rounds
+                          // toward zero.
   ASSERT_DOUBLE_EQ(1.0L, truncl(1.5L));
   ASSERT_DOUBLE_EQ(-1.0L, truncl(-1.5L));
   ASSERT_DOUBLE_EQ(0.0L, truncl(0.0L));
@@ -1102,54 +917,34 @@ TEST(math, significandl) {
   ASSERT_DOUBLE_EQ(1.53125L, significandl(12.25L));
 }
 
-TEST(math, scalb) {
-  ASSERT_DOUBLE_EQ(12.0, scalb(3.0, 2.0));
-}
+TEST(math, scalb) { ASSERT_DOUBLE_EQ(12.0, scalb(3.0, 2.0)); }
 
-TEST(math, scalbf) {
-  ASSERT_FLOAT_EQ(12.0f, scalbf(3.0f, 2.0f));
-}
+TEST(math, scalbf) { ASSERT_FLOAT_EQ(12.0f, scalbf(3.0f, 2.0f)); }
 
-TEST(math, scalbln) {
-  ASSERT_DOUBLE_EQ(12.0, scalbln(3.0, 2L));
-}
+TEST(math, scalbln) { ASSERT_DOUBLE_EQ(12.0, scalbln(3.0, 2L)); }
 
-TEST(math, scalblnf) {
-  ASSERT_FLOAT_EQ(12.0f, scalblnf(3.0f, 2L));
-}
+TEST(math, scalblnf) { ASSERT_FLOAT_EQ(12.0f, scalblnf(3.0f, 2L)); }
 
-TEST(math, scalblnl) {
-  ASSERT_DOUBLE_EQ(12.0L, scalblnl(3.0L, 2L));
-}
+TEST(math, scalblnl) { ASSERT_DOUBLE_EQ(12.0L, scalblnl(3.0L, 2L)); }
 
-TEST(math, scalbn) {
-  ASSERT_DOUBLE_EQ(12.0, scalbn(3.0, 2));
-}
+TEST(math, scalbn) { ASSERT_DOUBLE_EQ(12.0, scalbn(3.0, 2)); }
 
-TEST(math, scalbnf) {
-  ASSERT_FLOAT_EQ(12.0f, scalbnf(3.0f, 2));
-}
+TEST(math, scalbnf) { ASSERT_FLOAT_EQ(12.0f, scalbnf(3.0f, 2)); }
 
-TEST(math, scalbnl) {
-  ASSERT_DOUBLE_EQ(12.0L, scalbnl(3.0L, 2));
-}
+TEST(math, scalbnl) { ASSERT_DOUBLE_EQ(12.0L, scalbnl(3.0L, 2)); }
 
-TEST(math, gamma) {
-  ASSERT_DOUBLE_EQ(log(24.0), gamma(5.0));
-}
+TEST(math, gamma) { ASSERT_DOUBLE_EQ(log(24.0), gamma(5.0)); }
 
-TEST(math, gammaf) {
-  ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f));
-}
+TEST(math, gammaf) { ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f)); }
 
 TEST(math, gamma_r) {
 #if defined(__BIONIC__)
   int sign;
   ASSERT_DOUBLE_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have gamma_r.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
 TEST(math, gammaf_r) {
@@ -1157,22 +952,16 @@ TEST(math, gammaf_r) {
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
-#else // __BIONIC__
+#else   // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have gammaf_r.\n";
-#endif // __BIONIC__
+#endif  // __BIONIC__
 }
 
-TEST(math, lgamma) {
-  ASSERT_DOUBLE_EQ(log(24.0), lgamma(5.0));
-}
+TEST(math, lgamma) { ASSERT_DOUBLE_EQ(log(24.0), lgamma(5.0)); }
 
-TEST(math, lgammaf) {
-  ASSERT_FLOAT_EQ(logf(24.0f), lgammaf(5.0f));
-}
+TEST(math, lgammaf) { ASSERT_FLOAT_EQ(logf(24.0f), lgammaf(5.0f)); }
 
-TEST(math, lgammal) {
-  ASSERT_DOUBLE_EQ(logl(24.0L), lgammal(5.0L));
-}
+TEST(math, lgammal) { ASSERT_DOUBLE_EQ(logl(24.0L), lgammal(5.0L)); }
 
 TEST(math, lgamma_r) {
   int sign;
@@ -1225,17 +1014,11 @@ TEST(math, lgammal_r_17471883) {
   ASSERT_EQ(-1, sign);
 }
 
-TEST(math, tgamma) {
-  ASSERT_DOUBLE_EQ(24.0, tgamma(5.0));
-}
+TEST(math, tgamma) { ASSERT_DOUBLE_EQ(24.0, tgamma(5.0)); }
 
-TEST(math, tgammaf) {
-  ASSERT_FLOAT_EQ(24.0f, tgammaf(5.0f));
-}
+TEST(math, tgammaf) { ASSERT_FLOAT_EQ(24.0f, tgammaf(5.0f)); }
 
-TEST(math, tgammal) {
-  ASSERT_DOUBLE_EQ(24.0L, tgammal(5.0L));
-}
+TEST(math, tgammal) { ASSERT_DOUBLE_EQ(24.0L, tgammal(5.0L)); }
 
 TEST(math, j0) {
   ASSERT_DOUBLE_EQ(1.0, j0(0.0));
@@ -1380,71 +1163,43 @@ TEST(math, nextafterl_OpenBSD_bug) {
 }
 
 #include "math_cos_intel_data.h"
-TEST(math, cos_intel) {
-  DoMathDataTest<1>(g_cos_intel_data, cos);
-}
+TEST(math, cos_intel) { DoMathDataTest<1>(g_cos_intel_data, cos); }
 
 #include "math_cosf_intel_data.h"
-TEST(math, cosf_intel) {
-  DoMathDataTest<1>(g_cosf_intel_data, cosf);
-}
+TEST(math, cosf_intel) { DoMathDataTest<1>(g_cosf_intel_data, cosf); }
 
 #include "math_exp_intel_data.h"
-TEST(math, exp_intel) {
-  DoMathDataTest<1>(g_exp_intel_data, exp);
-}
+TEST(math, exp_intel) { DoMathDataTest<1>(g_exp_intel_data, exp); }
 
 #include "math_expf_intel_data.h"
-TEST(math, expf_intel) {
-  DoMathDataTest<1>(g_expf_intel_data, expf);
-}
+TEST(math, expf_intel) { DoMathDataTest<1>(g_expf_intel_data, expf); }
 
 #include "math_log_intel_data.h"
-TEST(math, log_intel) {
-  DoMathDataTest<1>(g_log_intel_data, log);
-}
+TEST(math, log_intel) { DoMathDataTest<1>(g_log_intel_data, log); }
 
 #include "math_logf_intel_data.h"
-TEST(math, logf_intel) {
-  DoMathDataTest<1>(g_logf_intel_data, logf);
-}
+TEST(math, logf_intel) { DoMathDataTest<1>(g_logf_intel_data, logf); }
 
 #include "math_pow_intel_data.h"
-TEST(math, pow_intel) {
-  DoMathDataTest<1>(g_pow_intel_data, pow);
-}
+TEST(math, pow_intel) { DoMathDataTest<1>(g_pow_intel_data, pow); }
 
 #include "math_powf_intel_data.h"
-TEST(math, powf_intel) {
-  DoMathDataTest<1>(g_powf_intel_data, powf);
-}
+TEST(math, powf_intel) { DoMathDataTest<1>(g_powf_intel_data, powf); }
 
 #include "math_sin_intel_data.h"
-TEST(math, sin_intel) {
-  DoMathDataTest<1>(g_sin_intel_data, sin);
-}
+TEST(math, sin_intel) { DoMathDataTest<1>(g_sin_intel_data, sin); }
 
 #include "math_sincos_intel_data.h"
-TEST(math, sincos_intel) {
-  DoMathDataTest<1>(g_sincos_intel_data, sincos);
-}
+TEST(math, sincos_intel) { DoMathDataTest<1>(g_sincos_intel_data, sincos); }
 
 #include "math_sincosf_intel_data.h"
-TEST(math, sincosf_intel) {
-  DoMathDataTest<1>(g_sincosf_intel_data, sincosf);
-}
+TEST(math, sincosf_intel) { DoMathDataTest<1>(g_sincosf_intel_data, sincosf); }
 
 #include "math_sinf_intel_data.h"
-TEST(math, sinf_intel) {
-  DoMathDataTest<1>(g_sinf_intel_data, sinf);
-}
+TEST(math, sinf_intel) { DoMathDataTest<1>(g_sinf_intel_data, sinf); }
 
 #include "math_tan_intel_data.h"
-TEST(math, tan_intel) {
-  DoMathDataTest<1>(g_tan_intel_data, tan);
-}
+TEST(math, tan_intel) { DoMathDataTest<1>(g_tan_intel_data, tan); }
 
 #include "math_tanf_intel_data.h"
-TEST(math, tanf_intel) {
-  DoMathDataTest<1>(g_tanf_intel_data, tanf);
-}
+TEST(math, tanf_intel) { DoMathDataTest<1>(g_tanf_intel_data, tanf); }

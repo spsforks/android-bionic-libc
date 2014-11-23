@@ -29,30 +29,26 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#define  INIT_GROUPS  2
+#define INIT_GROUPS 2
 
-int
-initgroups (const char *user, gid_t group)
-{
-    gid_t   groups0[ INIT_GROUPS ];
-    gid_t*  groups    = groups0;
-    int     ret       = -1;
-    int     numgroups = INIT_GROUPS;
+int initgroups(const char* user, gid_t group) {
+  gid_t groups0[INIT_GROUPS];
+  gid_t* groups = groups0;
+  int ret = -1;
+  int numgroups = INIT_GROUPS;
 
+  if (getgrouplist(user, group, groups, &numgroups) < 0) {
+    groups = malloc(numgroups * sizeof(groups[0]));
+    if (groups == NULL) return -1;
     if (getgrouplist(user, group, groups, &numgroups) < 0) {
-        groups = malloc(numgroups*sizeof(groups[0]));
-        if (groups == NULL)
-            return -1;
-        if (getgrouplist(user,group,groups,&numgroups) < 0) {
-            goto EXIT;
-        }
+      goto EXIT;
     }
+  }
 
-    ret = setgroups(numgroups, groups);
+  ret = setgroups(numgroups, groups);
 
 EXIT:
-    if (groups != groups0)
-        free(groups);
+  if (groups != groups0) free(groups);
 
-    return ret;
+  return ret;
 }

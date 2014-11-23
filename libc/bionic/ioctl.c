@@ -29,15 +29,13 @@
 
 extern int __ioctl(int, int, void *);
 
-int ioctl(int fd, int request, ...)
-{
-    va_list ap;
-    void * arg;
+int ioctl(int fd, int request, ...) {
+  va_list ap;
+  void *arg;
 
-    va_start(ap, request);
-    arg = va_arg(ap, void *);
-    va_end(ap);
+  va_start(ap, request);
+  arg = va_arg(ap, void *);
+  va_end(ap);
 
-    return __ioctl(fd, request, arg);
+  return __ioctl(fd, request, arg);
 }
-

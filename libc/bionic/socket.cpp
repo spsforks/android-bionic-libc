@@ -19,5 +19,5 @@
 #include <sys/socket.h>
 
 int socket(int domain, int type, int protocol) {
-    return __netdClientDispatch.socket(domain, type, protocol);
+  return __netdClientDispatch.socket(domain, type, protocol);
 }

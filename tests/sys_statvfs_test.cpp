@@ -24,7 +24,8 @@
 
 #include <string>
 
-template <typename StatVfsT> void Check(StatVfsT& sb) {
+template <typename StatVfsT>
+void Check(StatVfsT& sb) {
   EXPECT_EQ(4096U, sb.f_bsize);
   EXPECT_EQ(0U, sb.f_bfree);
   EXPECT_EQ(0U, sb.f_ffree);

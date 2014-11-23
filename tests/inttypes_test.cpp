@@ -40,13 +40,9 @@ TEST(inttypes, misc) {
   sscanf(buf, "%08" SCNxPTR, &u);
 }
 
-TEST(inttypes, wcstoimax) {
-  ASSERT_EQ(123, wcstoimax(L"123", NULL, 10));
-}
+TEST(inttypes, wcstoimax) { ASSERT_EQ(123, wcstoimax(L"123", NULL, 10)); }
 
-TEST(inttypes, wcstoumax) {
-  ASSERT_EQ(123U, wcstoumax(L"123", NULL, 10));
-}
+TEST(inttypes, wcstoumax) { ASSERT_EQ(123U, wcstoumax(L"123", NULL, 10)); }
 
 TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;

@@ -29,7 +29,8 @@ TEST(mntent, mntent_smoke) {
   struct mntent entry;
   char buf[BUFSIZ];
   while (getmntent_r(fp, &entry, buf, sizeof(buf)) != NULL) {
-    if (strcmp(entry.mnt_fsname, "proc") == 0 && strcmp(entry.mnt_dir, "/proc") == 0) {
+    if (strcmp(entry.mnt_fsname, "proc") == 0 &&
+        strcmp(entry.mnt_dir, "/proc") == 0) {
       saw_proc = true;
     }
   }

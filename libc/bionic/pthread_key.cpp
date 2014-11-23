@@ -59,10 +59,10 @@
  * were pointed to by these data fields (either before or after the call).
  */
 
-#define TLSMAP_BITS       32
-#define TLSMAP_WORDS      ((BIONIC_TLS_SLOTS+TLSMAP_BITS-1)/TLSMAP_BITS)
-#define TLSMAP_WORD(m,k)  (m).map[(k)/TLSMAP_BITS]
-#define TLSMAP_MASK(k)    (1U << ((k)&(TLSMAP_BITS-1)))
+#define TLSMAP_BITS 32
+#define TLSMAP_WORDS ((BIONIC_TLS_SLOTS + TLSMAP_BITS - 1) / TLSMAP_BITS)
+#define TLSMAP_WORD(m, k) (m).map[(k) / TLSMAP_BITS]
+#define TLSMAP_MASK(k) (1U << ((k) & (TLSMAP_BITS - 1)))
 
 static inline bool IsValidUserKey(pthread_key_t key) {
   return (key >= TLS_SLOT_FIRST_USER_SLOT && key < BIONIC_TLS_SLOTS);
@@ -98,9 +98,7 @@ class ScopedTlsMapAccess {
     }
   }
 
-  ~ScopedTlsMapAccess() {
-    Unlock();
-  }
+  ~ScopedTlsMapAccess() { Unlock(); }
 
   int CreateKey(pthread_key_t* result, void (*key_destructor)(void*)) {
     // Take the first unallocated key.
@@ -150,7 +148,8 @@ class ScopedTlsMapAccess {
             // destructor (or a later one) from seeing the old value if
             // it calls pthread_getspecific() for some odd reason
 
-            // we do not do this if 'key_destructor == NULL' just in case another
+            // we do not do this if 'key_destructor == NULL' just in case
+            // another
             // destructor function might be responsible for manually
             // releasing the corresponding data.
             tls[key] = NULL;
@@ -166,7 +165,8 @@ class ScopedTlsMapAccess {
         }
       }
 
-      // If we didn't call any destructors, there is no need to check the TLS data again.
+      // If we didn't call any destructors, there is no need to check the TLS
+      // data again.
       if (called_destructor_count == 0) {
         break;
       }
@@ -177,13 +177,9 @@ class ScopedTlsMapAccess {
   static tls_map_t s_tls_map_;
   static pthread_mutex_t s_tls_map_lock_;
 
-  void Lock() {
-    pthread_mutex_lock(&s_tls_map_lock_);
-  }
+  void Lock() { pthread_mutex_lock(&s_tls_map_lock_); }
 
-  void Unlock() {
-    pthread_mutex_unlock(&s_tls_map_lock_);
-  }
+  void Unlock() { pthread_mutex_unlock(&s_tls_map_lock_); }
 };
 
 __LIBC_HIDDEN__ tls_map_t ScopedTlsMapAccess::s_tls_map_;
@@ -212,7 +208,7 @@ int pthread_key_delete(pthread_key_t key) {
 
   // Clear value in all threads.
   pthread_mutex_lock(&g_thread_list_lock);
-  for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
+  for (pthread_internal_t* t = g_thread_list; t != NULL; t = t->next) {
     // Skip zombie threads. They don't have a valid TLS area any more.
     // Similarly, it is possible to have t->tls == NULL for threads that
     // were just recently created through pthread_create() but whose

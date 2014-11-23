@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-extern "C" int check_order_dlsym_get_answer() {
-  return __ANSWER;
-}
+extern "C" int check_order_dlsym_get_answer() { return __ANSWER; }
 
 #ifdef __ANSWER2
-extern "C" int check_order_dlsym_get_answer2() {
-  return __ANSWER2;
-}
+extern "C" int check_order_dlsym_get_answer2() { return __ANSWER2; }
 #endif

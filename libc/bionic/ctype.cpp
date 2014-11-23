@@ -28,58 +28,30 @@
 
 #include <ctype.h>
 
-int isalnum_l(int c, locale_t) {
-  return isalnum(c);
-}
+int isalnum_l(int c, locale_t) { return isalnum(c); }
 
-int isalpha_l(int c, locale_t) {
-  return isalpha(c);
-}
+int isalpha_l(int c, locale_t) { return isalpha(c); }
 
-int isblank_l(int c, locale_t) {
-  return isblank(c);
-}
+int isblank_l(int c, locale_t) { return isblank(c); }
 
-int iscntrl_l(int c, locale_t) {
-  return iscntrl(c);
-}
+int iscntrl_l(int c, locale_t) { return iscntrl(c); }
 
-int isdigit_l(int c, locale_t) {
-  return isdigit(c);
-}
+int isdigit_l(int c, locale_t) { return isdigit(c); }
 
-int isgraph_l(int c, locale_t) {
-  return isgraph(c);
-}
+int isgraph_l(int c, locale_t) { return isgraph(c); }
 
-int islower_l(int c, locale_t) {
-  return islower(c);
-}
+int islower_l(int c, locale_t) { return islower(c); }
 
-int isprint_l(int c, locale_t) {
-  return isprint(c);
-}
+int isprint_l(int c, locale_t) { return isprint(c); }
 
-int ispunct_l(int c, locale_t) {
-  return ispunct(c);
-}
+int ispunct_l(int c, locale_t) { return ispunct(c); }
 
-int isspace_l(int c, locale_t) {
-  return isspace(c);
-}
+int isspace_l(int c, locale_t) { return isspace(c); }
 
-int isupper_l(int c, locale_t) {
-  return isupper(c);
-}
+int isupper_l(int c, locale_t) { return isupper(c); }
 
-int isxdigit_l(int c, locale_t) {
-  return isxdigit(c);
-}
+int isxdigit_l(int c, locale_t) { return isxdigit(c); }
 
-int toupper_l(int c, locale_t) {
-  return toupper(c);
-}
+int toupper_l(int c, locale_t) { return toupper(c); }
 
-int tolower_l(int c, locale_t) {
-  return tolower(c);
-}
+int tolower_l(int c, locale_t) { return tolower(c); }

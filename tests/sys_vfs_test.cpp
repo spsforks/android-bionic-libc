@@ -24,7 +24,8 @@
 
 #include <string>
 
-template <typename StatFsT> void Check(StatFsT& sb) {
+template <typename StatFsT>
+void Check(StatFsT& sb) {
   EXPECT_EQ(4096, static_cast<int>(sb.f_bsize));
   EXPECT_EQ(0U, sb.f_bfree);
   EXPECT_EQ(0U, sb.f_ffree);

@@ -18,6 +18,4 @@
 
 #include <sys/syscall.h>
 
-TEST(unistd, syscall) {
-  ASSERT_EQ(getpid(), syscall(SYS_getpid));
-}
+TEST(unistd, syscall) { ASSERT_EQ(getpid(), syscall(SYS_getpid)); }

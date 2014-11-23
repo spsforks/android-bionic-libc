@@ -19,5 +19,5 @@
 #include <sys/socket.h>
 
 int connect(int sockfd, const sockaddr* addr, socklen_t addrlen) {
-    return __netdClientDispatch.connect(sockfd, addr, addrlen);
+  return __netdClientDispatch.connect(sockfd, addr, addrlen);
 }

@@ -29,7 +29,7 @@ TEST(arpa_inet, inet_aton) {
 }
 
 TEST(arpa_inet, inet_lnaof) {
-  in_addr a = { htonl(0x12345678) };
+  in_addr a = {htonl(0x12345678)};
   ASSERT_EQ(0x00345678U, inet_lnaof(a));
 }
 
@@ -39,7 +39,7 @@ TEST(arpa_inet, inet_makeaddr) {
 }
 
 TEST(arpa_inet, inet_netof) {
-  in_addr a = { htonl(0x12345678) };
+  in_addr a = {htonl(0x12345678)};
   ASSERT_EQ(0x12U, inet_netof(a));
 }
 
@@ -48,7 +48,7 @@ TEST(arpa_inet, inet_network) {
 }
 
 TEST(arpa_inet, inet_ntoa) {
-  in_addr a = { (htonl)(0x7f000001) };
+  in_addr a = {(htonl)(0x7f000001)};
   ASSERT_STREQ("127.0.0.1", inet_ntoa(a));
 }
 
@@ -61,8 +61,10 @@ TEST(arpa_inet, inet_pton__inet_ntop) {
 }
 
 TEST(arpa_inet, inet_ntop_overflow) {
-  // OpenBSD's inet_ntop had a bug where passing a 'size' larger than INET_ADDRSTRLEN
-  // for AF_INET or INET6_ADDRSTRLEN for AF_INET6 would cause inet_ntop to overflow an
+  // OpenBSD's inet_ntop had a bug where passing a 'size' larger than
+  // INET_ADDRSTRLEN
+  // for AF_INET or INET6_ADDRSTRLEN for AF_INET6 would cause inet_ntop to
+  // overflow an
   // internal buffer.
 
   sockaddr_storage ss4;
@@ -74,8 +76,8 @@ TEST(arpa_inet, inet_ntop_overflow) {
   char s4[INET_ADDRSTRLEN];
   char s6[INET6_ADDRSTRLEN];
   ASSERT_STREQ("127.0.0.1", inet_ntop(AF_INET, &ss4, s4, INET_ADDRSTRLEN));
-  ASSERT_STREQ("127.0.0.1", inet_ntop(AF_INET, &ss4, s4, 2*INET_ADDRSTRLEN));
+  ASSERT_STREQ("127.0.0.1", inet_ntop(AF_INET, &ss4, s4, 2 * INET_ADDRSTRLEN));
   ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, INET_ADDRSTRLEN));
   ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, INET6_ADDRSTRLEN));
-  ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, 2*INET6_ADDRSTRLEN));
+  ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, 2 * INET6_ADDRSTRLEN));
 }

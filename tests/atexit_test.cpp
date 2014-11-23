@@ -34,8 +34,10 @@ TEST(atexit, sofile) {
 
   typedef int (*int_fn)(void);
   int_fn get_cxx_ctor_called, get_attr_ctor_called;
-  get_cxx_ctor_called = reinterpret_cast<int_fn>(dlsym(handle, "get_cxx_ctor_called"));
-  get_attr_ctor_called = reinterpret_cast<int_fn>(dlsym(handle, "get_attr_ctor_called"));
+  get_cxx_ctor_called =
+      reinterpret_cast<int_fn>(dlsym(handle, "get_cxx_ctor_called"));
+  get_attr_ctor_called =
+      reinterpret_cast<int_fn>(dlsym(handle, "get_attr_ctor_called"));
   ASSERT_TRUE(get_cxx_ctor_called != nullptr);
   ASSERT_TRUE(get_attr_ctor_called != nullptr);
 
@@ -44,10 +46,12 @@ TEST(atexit, sofile) {
 
   void* sym = dlsym(handle, "register_atexit");
   ASSERT_TRUE(sym != nullptr);
-  reinterpret_cast<void (*)(std::string*, bool*, bool*)>(sym)(&atexit_call_sequence, &valid_this_in_static_dtor, &attr_dtor_called);
+  reinterpret_cast<void (*)(std::string*, bool*, bool*)>(sym)(
+      &atexit_call_sequence, &valid_this_in_static_dtor, &attr_dtor_called);
 
   ASSERT_EQ(0, dlclose(handle));
-  // this test verifies atexit call from atexit handler. as well as the order of calls
+  // this test verifies atexit call from atexit handler. as well as the order of
+  // calls
   ASSERT_EQ("Humpty Dumpty sat on a wall", atexit_call_sequence);
   ASSERT_TRUE(valid_this_in_static_dtor);
   ASSERT_TRUE(attr_dtor_called);
@@ -55,43 +59,37 @@ TEST(atexit, sofile) {
 
 class TestMainStaticDtorClass {
  public:
-  TestMainStaticDtorClass() {
-    expected_this = this;
-  }
+  TestMainStaticDtorClass() { expected_this = this; }
 
   ~TestMainStaticDtorClass() {
     if (this != expected_this) {
-      fprintf(stderr, "\nerror: static d-tor called with incorrect this pointer: %p, expected: %p\n", this, expected_this);
+      fprintf(stderr,
+              "\nerror: static d-tor called with incorrect this pointer: %p, "
+              "expected: %p\n",
+              this, expected_this);
     } else {
       fprintf(stderr, "6");
     }
   }
+
  private:
   static const TestMainStaticDtorClass* expected_this;
 };
 
 const TestMainStaticDtorClass* TestMainStaticDtorClass::expected_this = nullptr;
 
-static void atexit_func5() {
-  fprintf(stderr, "5");
-}
+static void atexit_func5() { fprintf(stderr, "5"); }
 
-static void atexit_func4() {
-  fprintf(stderr, "4");
-}
+static void atexit_func4() { fprintf(stderr, "4"); }
 
 static void atexit_func3() {
   fprintf(stderr, "3");
   atexit(atexit_func4);
 }
 
-static void atexit_func2() {
-  fprintf(stderr, "2");
-}
+static void atexit_func2() { fprintf(stderr, "2"); }
 
-static void atexit_func1() {
-  fprintf(stderr, "1");
-}
+static void atexit_func1() { fprintf(stderr, "1"); }
 
 static void atexit_main() {
   // This should result in "123456" output to stderr
@@ -106,4 +104,3 @@ static void atexit_main() {
 TEST(atexit, exit) {
   ASSERT_EXIT(atexit_main(), testing::ExitedWithCode(0), "123456");
 }
-

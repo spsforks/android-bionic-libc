@@ -26,14 +26,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-enum uid_type_t {
-  TYPE_SYSTEM,
-  TYPE_APP
-};
+enum uid_type_t { TYPE_SYSTEM, TYPE_APP };
 
 #if defined(__BIONIC__)
 
-static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_passwd(const passwd* pwd, const char* username, uid_t uid,
+                         uid_type_t uid_type) {
   ASSERT_TRUE(pwd != NULL);
   ASSERT_STREQ(username, pwd->pw_name);
   ASSERT_EQ(uid, pwd->pw_uid);
@@ -51,7 +49,8 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   ASSERT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
 
-static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid(const char* username, uid_t uid,
+                           uid_type_t uid_type) {
   errno = 0;
   passwd* pwd = getpwuid(uid);
   ASSERT_EQ(0, errno);
@@ -59,7 +58,8 @@ static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type)
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam(const char* username, uid_t uid,
+                           uid_type_t uid_type) {
   errno = 0;
   passwd* pwd = getpwnam(username);
   ASSERT_EQ(0, errno);
@@ -67,7 +67,8 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type)
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid_r(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -81,7 +82,8 @@ static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_typ
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam_r(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -95,40 +97,36 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
   check_passwd(pwd, username, uid, uid_type);
 }
 
-static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_get_passwd(const char* username, uid_t uid,
+                             uid_type_t uid_type) {
   check_getpwuid(username, uid, uid_type);
   check_getpwnam(username, uid, uid_type);
   check_getpwuid_r(username, uid, uid_type);
   check_getpwnam_r(username, uid, uid_type);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
-static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
-  GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+static void check_get_passwd(const char* /* username */, uid_t /* uid */,
+                             uid_type_t /* uid_type */) {
+  GTEST_LOG_(INFO) << "This test is about uid/username translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif
 
-TEST(getpwnam, system_id_root) {
-  check_get_passwd("root", 0, TYPE_SYSTEM);
-}
+TEST(getpwnam, system_id_root) { check_get_passwd("root", 0, TYPE_SYSTEM); }
 
 TEST(getpwnam, system_id_system) {
   check_get_passwd("system", 1000, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_radio) {
-  check_get_passwd("radio", 1001, TYPE_SYSTEM);
-}
+TEST(getpwnam, app_id_radio) { check_get_passwd("radio", 1001, TYPE_SYSTEM); }
 
-TEST(getpwnam, app_id_nobody) {
-  check_get_passwd("nobody", 9999, TYPE_SYSTEM);
-}
+TEST(getpwnam, app_id_nobody) { check_get_passwd("nobody", 9999, TYPE_SYSTEM); }
 
-TEST(getpwnam, app_id_u0_a0) {
-  check_get_passwd("u0_a0", 10000, TYPE_APP);
-}
+TEST(getpwnam, app_id_u0_a0) { check_get_passwd("u0_a0", 10000, TYPE_APP); }
 
 TEST(getpwnam, app_id_u0_a1234) {
   check_get_passwd("u0_a1234", 11234, TYPE_APP);
@@ -139,9 +137,7 @@ TEST(getpwnam, app_id_u0_a49999) {
   check_get_passwd("u0_a49999", 59999, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u0_i1) {
-  check_get_passwd("u0_i1", 99001, TYPE_APP);
-}
+TEST(getpwnam, app_id_u0_i1) { check_get_passwd("u0_i1", 99001, TYPE_APP); }
 
 TEST(getpwnam, app_id_u1_root) {
   check_get_passwd("u1_root", 100000, TYPE_SYSTEM);
@@ -151,17 +147,13 @@ TEST(getpwnam, app_id_u1_radio) {
   check_get_passwd("u1_radio", 101001, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_u1_a0) {
-  check_get_passwd("u1_a0", 110000, TYPE_APP);
-}
+TEST(getpwnam, app_id_u1_a0) { check_get_passwd("u1_a0", 110000, TYPE_APP); }
 
 TEST(getpwnam, app_id_u1_a40000) {
   check_get_passwd("u1_a40000", 150000, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u1_i0) {
-  check_get_passwd("u1_i0", 199000, TYPE_APP);
-}
+TEST(getpwnam, app_id_u1_i0) { check_get_passwd("u1_i0", 199000, TYPE_APP); }
 
 #if defined(__BIONIC__)
 
@@ -195,67 +187,41 @@ static void check_get_group(const char* group_name, gid_t gid) {
   check_getgrnam(group_name, gid);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
 static void check_get_group(const char* /* group_name */, gid_t /* gid */) {
-  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif
 
-TEST(getgrnam, system_id_root) {
-  check_get_group("root", 0);
-}
+TEST(getgrnam, system_id_root) { check_get_group("root", 0); }
 
-TEST(getgrnam, system_id_system) {
-  check_get_group("system", 1000);
-}
+TEST(getgrnam, system_id_system) { check_get_group("system", 1000); }
 
-TEST(getgrnam, app_id_radio) {
-  check_get_group("radio", 1001);
-}
+TEST(getgrnam, app_id_radio) { check_get_group("radio", 1001); }
 
-TEST(getgrnam, app_id_nobody) {
-  check_get_group("nobody", 9999);
-}
+TEST(getgrnam, app_id_nobody) { check_get_group("nobody", 9999); }
 
-TEST(getgrnam, app_id_u0_a0) {
-  check_get_group("u0_a0", 10000);
-}
+TEST(getgrnam, app_id_u0_a0) { check_get_group("u0_a0", 10000); }
 
-TEST(getgrnam, app_id_u0_a1234) {
-  check_get_group("u0_a1234", 11234);
-}
+TEST(getgrnam, app_id_u0_a1234) { check_get_group("u0_a1234", 11234); }
 
-TEST(getgrnam, app_id_u0_a9999) {
-  check_get_group("u0_a9999", 19999);
-}
+TEST(getgrnam, app_id_u0_a9999) { check_get_group("u0_a9999", 19999); }
 
 // Test the difference between uid and shared gid.
-TEST(getgrnam, app_id_all_a9999) {
-  check_get_group("all_a9999", 59999);
-}
+TEST(getgrnam, app_id_all_a9999) { check_get_group("all_a9999", 59999); }
 
-TEST(getgrnam, app_id_u0_i1) {
-  check_get_group("u0_i1", 99001);
-}
+TEST(getgrnam, app_id_u0_i1) { check_get_group("u0_i1", 99001); }
 
-TEST(getgrnam, app_id_u1_root) {
-  check_get_group("u1_root", 100000);
-}
+TEST(getgrnam, app_id_u1_root) { check_get_group("u1_root", 100000); }
 
-TEST(getgrnam, app_id_u1_radio) {
-  check_get_group("u1_radio", 101001);
-}
+TEST(getgrnam, app_id_u1_radio) { check_get_group("u1_radio", 101001); }
 
-TEST(getgrnam, app_id_u1_a0) {
-  check_get_group("u1_a0", 110000);
-}
+TEST(getgrnam, app_id_u1_a0) { check_get_group("u1_a0", 110000); }
 
-TEST(getgrnam, app_id_u1_a40000) {
-  check_get_group("u1_a40000", 150000);
-}
+TEST(getgrnam, app_id_u1_a40000) { check_get_group("u1_a40000", 150000); }
 
-TEST(getgrnam, app_id_u1_i0) {
-  check_get_group("u1_i0", 199000);
-}
+TEST(getgrnam, app_id_u1_i0) { check_get_group("u1_i0", 199000); }

@@ -33,7 +33,8 @@ void sanity_check_ftw(const char* fpath, const struct stat* sb, int tflag) {
   }
 }
 
-void sanity_check_nftw(const char* fpath, const struct stat* sb, int tflag, struct FTW* ftwbuf) {
+void sanity_check_nftw(const char* fpath, const struct stat* sb, int tflag,
+                       struct FTW* ftwbuf) {
   sanity_check_ftw(fpath, sb, tflag);
 
   size_t slash_count = 0;
@@ -56,28 +57,23 @@ int check_ftw64(const char* fpath, const struct stat64* sb, int tflag) {
   return 0;
 }
 
-int check_nftw(const char* fpath, const struct stat* sb, int tflag, struct FTW* ftwbuf) {
+int check_nftw(const char* fpath, const struct stat* sb, int tflag,
+               struct FTW* ftwbuf) {
   sanity_check_nftw(fpath, sb, tflag, ftwbuf);
   return 0;
 }
 
-int check_nftw64(const char* fpath, const struct stat64* sb, int tflag, struct FTW* ftwbuf) {
-  sanity_check_nftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag, ftwbuf);
+int check_nftw64(const char* fpath, const struct stat64* sb, int tflag,
+                 struct FTW* ftwbuf) {
+  sanity_check_nftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag,
+                    ftwbuf);
   return 0;
 }
 
-TEST(ftw, ftw) {
-  ASSERT_EQ(0, ftw("/sys", check_ftw, 128));
-}
+TEST(ftw, ftw) { ASSERT_EQ(0, ftw("/sys", check_ftw, 128)); }
 
-TEST(ftw, ftw64) {
-  ASSERT_EQ(0, ftw64("/sys", check_ftw64, 128));
-}
+TEST(ftw, ftw64) { ASSERT_EQ(0, ftw64("/sys", check_ftw64, 128)); }
 
-TEST(ftw, nftw) {
-  ASSERT_EQ(0, nftw("/sys", check_nftw, 128, 0));
-}
+TEST(ftw, nftw) { ASSERT_EQ(0, nftw("/sys", check_nftw, 128, 0)); }
 
-TEST(ftw, nftw64) {
-  ASSERT_EQ(0, nftw64("/sys", check_nftw64, 128, 0));
-}
+TEST(ftw, nftw64) { ASSERT_EQ(0, nftw64("/sys", check_nftw64, 128, 0)); }

@@ -27,12 +27,11 @@
  */
 #include <string.h>
 
-size_t  strnlen(const char*  str, size_t  maxlen)
-{
-    char*  p = memchr(str, 0, maxlen);
+size_t strnlen(const char* str, size_t maxlen) {
+  char* p = memchr(str, 0, maxlen);
 
-    if (p == NULL)
-        return maxlen;
-    else
-        return (p - str);
+  if (p == NULL)
+    return maxlen;
+  else
+    return (p - str);
 }

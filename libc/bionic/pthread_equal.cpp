@@ -28,6 +28,4 @@
 
 #include <pthread.h>
 
-int pthread_equal(pthread_t lhs, pthread_t rhs) {
-  return (lhs == rhs ? 1 : 0);
-}
+int pthread_equal(pthread_t lhs, pthread_t rhs) { return (lhs == rhs ? 1 : 0); }

@@ -25,7 +25,7 @@ static void __bionic_heap_corruption_error(const char* function);
 static void __bionic_heap_usage_error(const char* function, void* address);
 #define PROCEED_ON_ERROR 0
 #define CORRUPTION_ERROR_ACTION(m) __bionic_heap_corruption_error(__FUNCTION__)
-#define USAGE_ERROR_ACTION(m,p) __bionic_heap_usage_error(__FUNCTION__, p)
+#define USAGE_ERROR_ACTION(m, p) __bionic_heap_usage_error(__FUNCTION__, p)
 
 // Bionic named anonymous memory declarations.
 static void* named_anonymous_mmap(size_t length);
@@ -40,15 +40,18 @@ static void __bionic_heap_corruption_error(const char* function) {
 }
 
 static void __bionic_heap_usage_error(const char* function, void* address) {
-  __libc_fatal_no_abort("invalid address or address of corrupt block %p passed to %s",
-               address, function);
+  __libc_fatal_no_abort(
+      "invalid address or address of corrupt block %p passed to %s", address,
+      function);
   // So that debuggerd gives us a memory dump around the specific address.
-  // TODO: improve the debuggerd protocol so we can tell it to dump an address when we abort.
-  *((int**) 0xdeadbaad) = (int*) address;
+  // TODO: improve the debuggerd protocol so we can tell it to dump an address
+  // when we abort.
+  *((int**)0xdeadbaad) = (int*)address;
 }
 
 static void* named_anonymous_mmap(size_t length) {
-  void* map = mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  void* map = mmap(NULL, length, PROT_READ | PROT_WRITE,
+                   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (map == MAP_FAILED) {
     return map;
   }
@@ -58,13 +61,9 @@ static void* named_anonymous_mmap(size_t length) {
 
 // Since dlmalloc isn't the default, we'll leave this unimplemented for now. If
 // we decide we need it later, we can fill it in.
-size_t __mallinfo_narenas() {
-  return 0;
-}
+size_t __mallinfo_narenas() { return 0; }
 
-size_t __mallinfo_nbins() {
-  return 0;
-}
+size_t __mallinfo_nbins() { return 0; }
 
 struct mallinfo __mallinfo_arena_info(size_t aidx __unused) {
   struct mallinfo mi;
@@ -72,7 +71,8 @@ struct mallinfo __mallinfo_arena_info(size_t aidx __unused) {
   return mi;
 }
 
-struct mallinfo __mallinfo_bin_info(size_t aidx __unused, size_t bidx __unused) {
+struct mallinfo __mallinfo_bin_info(size_t aidx __unused,
+                                    size_t bidx __unused) {
   struct mallinfo mi;
   memset(&mi, 0, sizeof(mi));
   return mi;

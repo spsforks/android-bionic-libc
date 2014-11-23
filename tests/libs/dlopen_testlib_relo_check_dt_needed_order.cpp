@@ -16,6 +16,4 @@
 
 extern "C" int relo_test_get_answer_lib();
 
-extern "C" int relo_test_get_answer() {
-  return relo_test_get_answer_lib();
-}
+extern "C" int relo_test_get_answer() { return relo_test_get_answer_lib(); }
