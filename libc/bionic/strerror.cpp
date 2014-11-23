@@ -29,18 +29,18 @@
 #include <string.h>
 #include "private/ThreadLocalBuffer.h"
 
-extern "C" const char* __strerror_lookup(int);
+extern "C" const char *__strerror_lookup(int);
 
 GLOBAL_INIT_THREAD_LOCAL_BUFFER(strerror);
 
-char* strerror(int error_number) {
+char *strerror(int error_number) {
   // Just return the original constant in the easy cases.
-  char* result = const_cast<char*>(__strerror_lookup(error_number));
+  char *result = const_cast<char *>(__strerror_lookup(error_number));
   if (result != NULL) {
     return result;
   }
 
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strerror, NL_TEXTMAX);
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char *, strerror, NL_TEXTMAX);
   strerror_r(error_number, strerror_tls_buffer, strerror_tls_buffer_size);
   return strerror_tls_buffer;
 }

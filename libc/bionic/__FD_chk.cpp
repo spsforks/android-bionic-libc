@@ -30,7 +30,7 @@
 #include <sys/select.h>
 #include "private/libc_logging.h"
 
-extern "C" int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
+extern "C" int __FD_ISSET_chk(int fd, fd_set *set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("FD_ISSET: file descriptor < 0", 0);
   }
@@ -43,7 +43,7 @@ extern "C" int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
   return FD_ISSET(fd, set);
 }
 
-extern "C" void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
+extern "C" void __FD_CLR_chk(int fd, fd_set *set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("FD_CLR: file descriptor < 0", 0);
   }
@@ -56,7 +56,7 @@ extern "C" void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
   FD_CLR(fd, set);
 }
 
-extern "C" void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
+extern "C" void __FD_SET_chk(int fd, fd_set *set, size_t set_size) {
   if (__predict_false(fd < 0)) {
     __fortify_chk_fail("FD_SET: file descriptor < 0", 0);
   }

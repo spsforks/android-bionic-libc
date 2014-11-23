@@ -38,7 +38,7 @@
 #include "private/libc_logging.h"
 #include "pthread_internal.h"
 
-int pthread_attr_init(pthread_attr_t* attr) {
+int pthread_attr_init(pthread_attr_t *attr) {
   attr->flags = 0;
   attr->stack_base = NULL;
   attr->stack_size = PTHREAD_STACK_SIZE_DEFAULT;
@@ -48,12 +48,12 @@ int pthread_attr_init(pthread_attr_t* attr) {
   return 0;
 }
 
-int pthread_attr_destroy(pthread_attr_t* attr) {
+int pthread_attr_destroy(pthread_attr_t *attr) {
   memset(attr, 0x42, sizeof(pthread_attr_t));
   return 0;
 }
 
-int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
+int pthread_attr_setdetachstate(pthread_attr_t *attr, int state) {
   if (state == PTHREAD_CREATE_DETACHED) {
     attr->flags |= PTHREAD_ATTR_FLAG_DETACHED;
   } else if (state == PTHREAD_CREATE_JOINABLE) {
@@ -64,32 +64,33 @@ int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
   return 0;
 }
 
-int pthread_attr_getdetachstate(const pthread_attr_t* attr, int* state) {
-  *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED) ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE;
+int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *state) {
+  *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED) ? PTHREAD_CREATE_DETACHED
+                                                      : PTHREAD_CREATE_JOINABLE;
   return 0;
 }
 
-int pthread_attr_setschedpolicy(pthread_attr_t* attr, int policy) {
+int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy) {
   attr->sched_policy = policy;
   return 0;
 }
 
-int pthread_attr_getschedpolicy(const pthread_attr_t* attr, int* policy) {
+int pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy) {
   *policy = attr->sched_policy;
   return 0;
 }
 
-int pthread_attr_setschedparam(pthread_attr_t* attr, const sched_param* param) {
+int pthread_attr_setschedparam(pthread_attr_t *attr, const sched_param *param) {
   attr->sched_priority = param->sched_priority;
   return 0;
 }
 
-int pthread_attr_getschedparam(const pthread_attr_t* attr, sched_param* param) {
+int pthread_attr_getschedparam(const pthread_attr_t *attr, sched_param *param) {
   param->sched_priority = attr->sched_priority;
   return 0;
 }
 
-int pthread_attr_setstacksize(pthread_attr_t* attr, size_t stack_size) {
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stack_size) {
   if (stack_size < PTHREAD_STACK_MIN) {
     return EINVAL;
   }
@@ -97,12 +98,12 @@ int pthread_attr_setstacksize(pthread_attr_t* attr, size_t stack_size) {
   return 0;
 }
 
-int pthread_attr_getstacksize(const pthread_attr_t* attr, size_t* stack_size) {
-  void* unused;
+int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stack_size) {
+  void *unused;
   return pthread_attr_getstack(attr, &unused, stack_size);
 }
 
-int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_size) {
+int pthread_attr_setstack(pthread_attr_t *attr, void *stack_base, size_t stack_size) {
   if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
     return EINVAL;
   }
@@ -114,7 +115,7 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
   return 0;
 }
 
-static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
+static int __pthread_attr_getstack_main_thread(void **stack_base, size_t *stack_size) {
   ErrnoRestorer errno_restorer;
 
   rlimit stack_limit;
@@ -122,17 +123,21 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     return errno;
   }
 
-  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack for sanity's sake.
+  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack
+  // for sanity's sake.
   if (stack_limit.rlim_cur == RLIM_INFINITY) {
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
 
-  // It shouldn't matter which thread we are because we're just looking for "[stack]", but
-  // valgrind seems to mess with the stack enough that the kernel will report "[stack:pid]"
-  // instead if you look in /proc/self/maps, so we need to look in /proc/pid/task/pid/maps.
+  // It shouldn't matter which thread we are because we're just looking for
+  // "[stack]", but
+  // valgrind seems to mess with the stack enough that the kernel will report
+  // "[stack:pid]"
+  // instead if you look in /proc/self/maps, so we need to look in
+  // /proc/pid/task/pid/maps.
   char path[64];
   snprintf(path, sizeof(path), "/proc/self/task/%d/maps", getpid());
-  FILE* fp = fopen(path, "re");
+  FILE *fp = fopen(path, "re");
   if (fp == NULL) {
     return errno;
   }
@@ -142,7 +147,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
       uintptr_t lo, hi;
       if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
         *stack_size = stack_limit.rlim_cur;
-        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+        *stack_base = reinterpret_cast<void *>(hi - *stack_size);
         fclose(fp);
         return 0;
       }
@@ -151,7 +156,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   __libc_fatal("No [stack] line found in \"%s\"!", path);
 }
 
-int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
+int pthread_attr_getstack(const pthread_attr_t *attr, void **stack_base, size_t *stack_size) {
   if ((attr->flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) != 0) {
     return __pthread_attr_getstack_main_thread(stack_base, stack_size);
   }
@@ -160,22 +165,22 @@ int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t*
   return 0;
 }
 
-int pthread_attr_setguardsize(pthread_attr_t* attr, size_t guard_size) {
+int pthread_attr_setguardsize(pthread_attr_t *attr, size_t guard_size) {
   attr->guard_size = guard_size;
   return 0;
 }
 
-int pthread_attr_getguardsize(const pthread_attr_t* attr, size_t* guard_size) {
+int pthread_attr_getguardsize(const pthread_attr_t *attr, size_t *guard_size) {
   *guard_size = attr->guard_size;
   return 0;
 }
 
-int pthread_getattr_np(pthread_t t, pthread_attr_t* attr) {
-  *attr = reinterpret_cast<pthread_internal_t*>(t)->attr;
+int pthread_getattr_np(pthread_t t, pthread_attr_t *attr) {
+  *attr = reinterpret_cast<pthread_internal_t *>(t)->attr;
   return 0;
 }
 
-int pthread_attr_setscope(pthread_attr_t*, int scope) {
+int pthread_attr_setscope(pthread_attr_t *, int scope) {
   if (scope == PTHREAD_SCOPE_SYSTEM) {
     return 0;
   }
@@ -185,7 +190,7 @@ int pthread_attr_setscope(pthread_attr_t*, int scope) {
   return EINVAL;
 }
 
-int pthread_attr_getscope(const pthread_attr_t*, int* scope) {
+int pthread_attr_getscope(const pthread_attr_t *, int *scope) {
   *scope = PTHREAD_SCOPE_SYSTEM;
   return 0;
 }

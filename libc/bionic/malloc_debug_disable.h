@@ -46,7 +46,7 @@ class ScopedDisableDebugCalls {
  public:
   ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
     if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
+      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void *>(1));
     }
   }
   ~ScopedDisableDebugCalls() {

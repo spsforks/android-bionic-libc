@@ -33,41 +33,44 @@
 
 #include "pthread_internal.h"
 
-extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
+extern "C" pid_t __bionic_clone(uint32_t flags, void *child_stack, int *parent_tid, void *tls,
+                                int *child_tid, int (*fn)(void *), void *arg);
 extern "C" __noreturn void __exit(int status);
 
-// Called from the __bionic_clone assembler to call the thread function then exit.
-extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
+// Called from the __bionic_clone assembler to call the thread function then
+// exit.
+extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void *), void *arg) {
   int status = (*fn)(arg);
   __exit(status);
 }
 
-int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
-  int* parent_tid = NULL;
-  void* new_tls = NULL;
-  int* child_tid = NULL;
+int clone(int (*fn)(void *), void *child_stack, int flags, void *arg, ...) {
+  int *parent_tid = NULL;
+  void *new_tls = NULL;
+  int *child_tid = NULL;
 
   // Extract any optional parameters required by the flags.
   va_list args;
   va_start(args, arg);
-  if ((flags & (CLONE_PARENT_SETTID|CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
-    parent_tid = va_arg(args, int*);
+  if ((flags & (CLONE_PARENT_SETTID | CLONE_SETTLS | CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)) !=
+      0) {
+    parent_tid = va_arg(args, int *);
   }
-  if ((flags & (CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
-    new_tls = va_arg(args, void*);
+  if ((flags & (CLONE_SETTLS | CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)) != 0) {
+    new_tls = va_arg(args, void *);
   }
-  if ((flags & (CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
-    child_tid = va_arg(args, int*);
+  if ((flags & (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)) != 0) {
+    child_tid = va_arg(args, int *);
   }
   va_end(args);
 
   // Align 'child_stack' to 16 bytes.
   uintptr_t child_stack_addr = reinterpret_cast<uintptr_t>(child_stack);
   child_stack_addr &= ~0xf;
-  child_stack = reinterpret_cast<void*>(child_stack_addr);
+  child_stack = reinterpret_cast<void *>(child_stack_addr);
 
   // Remember the parent pid and invalidate the cached value while we clone.
-  pthread_internal_t* self = __get_thread();
+  pthread_internal_t *self = __get_thread();
   pid_t parent_pid = self->invalidate_cached_pid();
 
   // Actually do the clone.
@@ -75,9 +78,11 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
 
   // We're the parent, so put our known pid back in place.
   // We leave the child without a cached pid, but:
-  // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
+  // 1. pthread_create gives its children their own pthread_internal_t with the
+  // correct pid.
   // 2. fork makes a clone system call directly.
-  // If any other cases become important, we could use a double trampoline like __pthread_start.
+  // If any other cases become important, we could use a double trampoline like
+  // __pthread_start.
   self->set_cached_pid(parent_pid);
   return clone_result;
 }

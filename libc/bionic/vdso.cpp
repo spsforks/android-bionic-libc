@@ -23,56 +23,53 @@
 
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__kernel_gettimeofday"
 #elif defined(__x86_64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__vdso_gettimeofday"
 #endif
 
 #include <time.h>
 
-extern "C" int __clock_gettime(int, timespec*);
-extern "C" int __gettimeofday(timeval*, struct timezone*);
+extern "C" int __clock_gettime(int, timespec *);
+extern "C" int __gettimeofday(timeval *, struct timezone *);
 
 struct vdso_entry {
-  const char* name;
-  void* fn;
+  const char *name;
+  void *fn;
 };
 
-enum {
-  VDSO_CLOCK_GETTIME = 0,
-  VDSO_GETTIMEOFDAY,
-  VDSO_END
-};
+enum { VDSO_CLOCK_GETTIME = 0, VDSO_GETTIMEOFDAY, VDSO_END };
 
 static vdso_entry vdso_entries[] = {
-  [VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, reinterpret_cast<void*>(__clock_gettime) },
-  [VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday) },
+        [VDSO_CLOCK_GETTIME] = {VDSO_CLOCK_GETTIME_SYMBOL,
+                                reinterpret_cast<void *>(__clock_gettime)},
+        [VDSO_GETTIMEOFDAY] = {VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void *>(__gettimeofday)},
 };
 
-int clock_gettime(int clock_id, timespec* tp) {
-  static int (*vdso_clock_gettime)(int, timespec*) =
-      (int (*)(int, timespec*)) vdso_entries[VDSO_CLOCK_GETTIME].fn;
+int clock_gettime(int clock_id, timespec *tp) {
+  static int (*vdso_clock_gettime)(int, timespec *) =
+      (int (*)(int, timespec *))vdso_entries[VDSO_CLOCK_GETTIME].fn;
   return vdso_clock_gettime(clock_id, tp);
 }
 
-int gettimeofday(timeval* tv, struct timezone* tz) {
-  static int (*vdso_gettimeofday)(timeval*, struct timezone*) =
-      (int (*)(timeval*, struct timezone*)) vdso_entries[VDSO_GETTIMEOFDAY].fn;
+int gettimeofday(timeval *tv, struct timezone *tz) {
+  static int (*vdso_gettimeofday)(timeval *, struct timezone *) =
+      (int (*)(timeval *, struct timezone *))vdso_entries[VDSO_GETTIMEOFDAY].fn;
   return vdso_gettimeofday(tv, tz);
 }
 
 void __libc_init_vdso() {
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
-  ElfW(Ehdr)* vdso_ehdr = reinterpret_cast<ElfW(Ehdr)*>(vdso_ehdr_addr);
+  ElfW(Ehdr) *vdso_ehdr = reinterpret_cast<ElfW(Ehdr) *>(vdso_ehdr_addr);
   if (vdso_ehdr == NULL) {
     return;
   }
 
   // How many symbols does it have?
   size_t symbol_count = 0;
-  ElfW(Shdr)* vdso_shdr = reinterpret_cast<ElfW(Shdr)*>(vdso_ehdr_addr + vdso_ehdr->e_shoff);
+  ElfW(Shdr) *vdso_shdr = reinterpret_cast<ElfW(Shdr) *>(vdso_ehdr_addr + vdso_ehdr->e_shoff);
   for (size_t i = 0; i < vdso_ehdr->e_shnum; ++i) {
     if (vdso_shdr[i].sh_type == SHT_DYNSYM) {
       symbol_count = vdso_shdr[i].sh_size / sizeof(ElfW(Sym));
@@ -84,11 +81,11 @@ void __libc_init_vdso() {
 
   // Where's the dynamic table?
   ElfW(Addr) vdso_addr = 0;
-  ElfW(Dyn)* vdso_dyn = NULL;
-  ElfW(Phdr)* vdso_phdr = reinterpret_cast<ElfW(Phdr)*>(vdso_ehdr_addr + vdso_ehdr->e_phoff);
+  ElfW(Dyn) *vdso_dyn = NULL;
+  ElfW(Phdr) *vdso_phdr = reinterpret_cast<ElfW(Phdr) *>(vdso_ehdr_addr + vdso_ehdr->e_phoff);
   for (size_t i = 0; i < vdso_ehdr->e_phnum; ++i) {
     if (vdso_phdr[i].p_type == PT_DYNAMIC) {
-      vdso_dyn = reinterpret_cast<ElfW(Dyn)*>(vdso_ehdr_addr + vdso_phdr[i].p_offset);
+      vdso_dyn = reinterpret_cast<ElfW(Dyn) *>(vdso_ehdr_addr + vdso_phdr[i].p_offset);
     } else if (vdso_phdr[i].p_type == PT_LOAD) {
       vdso_addr = vdso_ehdr_addr + vdso_phdr[i].p_offset - vdso_phdr[i].p_vaddr;
     }
@@ -98,13 +95,13 @@ void __libc_init_vdso() {
   }
 
   // Where are the string and symbol tables?
-  const char* strtab = NULL;
-  ElfW(Sym)* symtab = NULL;
-  for (ElfW(Dyn)* d = vdso_dyn; d->d_tag != DT_NULL; ++d) {
+  const char *strtab = NULL;
+  ElfW(Sym) *symtab = NULL;
+  for (ElfW(Dyn) *d = vdso_dyn; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_STRTAB) {
-      strtab = reinterpret_cast<const char*>(vdso_addr + d->d_un.d_ptr);
+      strtab = reinterpret_cast<const char *>(vdso_addr + d->d_un.d_ptr);
     } else if (d->d_tag == DT_SYMTAB) {
-      symtab = reinterpret_cast<ElfW(Sym)*>(vdso_addr + d->d_un.d_ptr);
+      symtab = reinterpret_cast<ElfW(Sym) *>(vdso_addr + d->d_un.d_ptr);
     }
   }
   if (strtab == NULL || symtab == NULL) {
@@ -115,7 +112,7 @@ void __libc_init_vdso() {
   for (size_t i = 0; i < symbol_count; ++i) {
     for (size_t j = 0; j < VDSO_END; ++j) {
       if (strcmp(vdso_entries[j].name, strtab + symtab[i].st_name) == 0) {
-        vdso_entries[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
+        vdso_entries[j].fn = reinterpret_cast<void *>(vdso_addr + symtab[i].st_value);
       }
     }
   }

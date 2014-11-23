@@ -35,7 +35,7 @@
 
 #include "private/ScopedReaddir.h"
 
-static bool __matches_cpuN(const char* s) {
+static bool __matches_cpuN(const char *s) {
   // The %c trick is to ensure that we have the anchored match "^cpu[0-9]+$".
   unsigned cpu;
   char dummy;
@@ -43,7 +43,8 @@ static bool __matches_cpuN(const char* s) {
 }
 
 int get_nprocs_conf() {
-  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
+  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels
+  // offline CPUs disappear
   // from there. This method works on both.
   ScopedReaddir reader("/sys/devices/system/cpu");
   if (reader.IsBad()) {
@@ -51,7 +52,7 @@ int get_nprocs_conf() {
   }
 
   int result = 0;
-  dirent* entry;
+  dirent *entry;
   while ((entry = reader.ReadEntry()) != NULL) {
     if (entry->d_type == DT_DIR && __matches_cpuN(entry->d_name)) {
       ++result;
@@ -61,7 +62,7 @@ int get_nprocs_conf() {
 }
 
 int get_nprocs() {
-  FILE* fp = fopen("/proc/stat", "re");
+  FILE *fp = fopen("/proc/stat", "re");
   if (fp == NULL) {
     return 1;
   }
@@ -71,7 +72,7 @@ int get_nprocs() {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     // Extract just the first word from the line.
     // 'cpu0 7976751 1364388 3116842 469770388 8629405 0 49047 0 0 0'
-    char* p = strchr(buf, ' ');
+    char *p = strchr(buf, ' ');
     if (p != NULL) {
       *p = 0;
     }
@@ -83,8 +84,8 @@ int get_nprocs() {
   return result;
 }
 
-static int __get_meminfo(const char* pattern) {
-  FILE* fp = fopen("/proc/meminfo", "re");
+static int __get_meminfo(const char *pattern) {
+  FILE *fp = fopen("/proc/meminfo", "re");
   if (fp == NULL) {
     return -1;
   }
@@ -94,7 +95,7 @@ static int __get_meminfo(const char* pattern) {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      result = (int) (total / (PAGE_SIZE/1024));
+      result = (int)(total / (PAGE_SIZE / 1024));
       break;
     }
   }

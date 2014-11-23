@@ -43,7 +43,7 @@
  * This stpcpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __stpcpy_chk(char* dest, const char* src, size_t dest_len) {
+extern "C" char *__stpcpy_chk(char *dest, const char *src, size_t dest_len) {
   // TODO: optimize so we don't scan src twice.
   size_t src_len = strlen(src) + 1;
   if (__predict_false(src_len > dest_len)) {

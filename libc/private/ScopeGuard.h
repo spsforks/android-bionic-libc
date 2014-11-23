@@ -20,12 +20,13 @@
 #include "private/bionic_macros.h"
 
 // TODO: include explicit std::move when it becomes available
-template<typename F>
+template <typename F>
 class ScopeGuard {
  public:
-  ScopeGuard(F f) : f_(f), active_(true) {}
+  ScopeGuard(F f) : f_(f), active_(true) {
+  }
 
-  ScopeGuard(ScopeGuard&& that) : f_(that.f_), active_(that.active_) {
+  ScopeGuard(ScopeGuard &&that) : f_(that.f_), active_(that.active_) {
     that.active_ = false;
   }
 
@@ -38,6 +39,7 @@ class ScopeGuard {
   void disable() {
     active_ = false;
   }
+
  private:
   F f_;
   bool active_;
@@ -45,7 +47,7 @@ class ScopeGuard {
   DISALLOW_IMPLICIT_CONSTRUCTORS(ScopeGuard);
 };
 
-template<typename T>
+template <typename T>
 ScopeGuard<T> make_scope_guard(T f) {
   return ScopeGuard<T>(f);
 }

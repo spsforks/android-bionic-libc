@@ -23,7 +23,7 @@ extern "C" int __attribute__((weak)) lib_global_default_serial() {
 // Even though this one is defined by
 // libdl_preempt_test_1.so it should not be
 // preempted because of protected visibility
-extern "C" int __attribute__((weak,visibility("protected"))) lib_global_protected_serial() {
+extern "C" int __attribute__((weak, visibility("protected"))) lib_global_protected_serial() {
   return 3370318;
 }
 
@@ -34,4 +34,3 @@ extern "C" int lib_global_default_get_serial() {
 extern "C" int lib_global_protected_get_serial() {
   return lib_global_protected_serial();
 }
-

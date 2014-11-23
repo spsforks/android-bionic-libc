@@ -32,9 +32,9 @@
 
 #include "private/bionic_time_conversions.h"
 
-int utimes(const char* path, const timeval tv[2]) {
+int utimes(const char *path, const timeval tv[2]) {
   timespec ts[2];
-  timespec* ts_ptr = NULL;
+  timespec *ts_ptr = NULL;
   if (tv != NULL) {
     if (!timespec_from_timeval(ts[0], tv[0]) || !timespec_from_timeval(ts[1], tv[1])) {
       errno = EINVAL;

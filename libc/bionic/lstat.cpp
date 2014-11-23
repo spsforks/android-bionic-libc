@@ -31,7 +31,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int lstat(const char* path, struct stat* sb) {
+int lstat(const char *path, struct stat *sb) {
   return fstatat(AT_FDCWD, path, sb, AT_SYMLINK_NOFOLLOW);
 }
 __strong_alias(lstat64, lstat);

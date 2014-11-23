@@ -29,6 +29,6 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-int rename(const char* old_path, const char* new_path) {
+int rename(const char *old_path, const char *new_path) {
   return renameat(AT_FDCWD, old_path, AT_FDCWD, new_path);
 }

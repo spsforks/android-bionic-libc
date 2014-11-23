@@ -30,10 +30,10 @@
 
 #include <fcntl.h>
 
-int mkfifo(const char* path, mode_t mode) {
+int mkfifo(const char *path, mode_t mode) {
   return mkfifoat(AT_FDCWD, path, mode);
 }
 
-int mkfifoat(int fd, const char* path, mode_t mode) {
+int mkfifoat(int fd, const char *path, mode_t mode) {
   return mknodat(fd, path, (mode & ~S_IFMT) | S_IFIFO, 0);
 }

@@ -30,9 +30,9 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigsuspend(const kernel_sigset_t*, size_t);
+extern "C" int __rt_sigsuspend(const kernel_sigset_t *, size_t);
 
-int sigsuspend(const sigset_t* bionic_set) {
+int sigsuspend(const sigset_t *bionic_set) {
   kernel_sigset_t set(bionic_set);
   return __rt_sigsuspend(&set, sizeof(set));
 }

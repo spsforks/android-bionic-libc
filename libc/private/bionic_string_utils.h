@@ -19,7 +19,7 @@
 
 #include <string.h>
 
-static inline bool ends_with(const char* s1, const char* s2) {
+static inline bool ends_with(const char *s1, const char *s2) {
   size_t s1_length = strlen(s1);
   size_t s2_length = strlen(s2);
   if (s2_length > s1_length) {
@@ -28,4 +28,4 @@ static inline bool ends_with(const char* s1, const char* s2) {
   return memcmp(s1 + (s1_length - s2_length), s2, s2_length) == 0;
 }
 
-#endif // _BIONIC_STRING_UTILS_H_
+#endif  // _BIONIC_STRING_UTILS_H_

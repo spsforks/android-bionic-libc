@@ -47,7 +47,7 @@ struct __locale_t {
   __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
   }
 
-  __locale_t(const __locale_t* other) {
+  __locale_t(const __locale_t *other) {
     if (other == LC_GLOBAL_LOCALE) {
       mb_cur_max = __bionic_current_locale_is_utf8 ? 4 : 1;
     } else {
@@ -61,16 +61,17 @@ struct __locale_t {
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
 
-// We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
+// We don't use pthread_once for this so that we know when the resource (a TLS
+// slot) will be taken.
 static pthread_key_t g_uselocale_key;
 __attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
   pthread_key_create(&g_uselocale_key, NULL);
 }
 
 static void __locale_init() {
-  g_locale.decimal_point = const_cast<char*>(".");
+  g_locale.decimal_point = const_cast<char *>(".");
 
-  char* not_available = const_cast<char*>("");
+  char *not_available = const_cast<char *>("");
   g_locale.thousands_sep = not_available;
   g_locale.grouping = not_available;
   g_locale.int_curr_symbol = not_available;
@@ -106,15 +107,12 @@ size_t __ctype_get_mb_cur_max() {
   }
 }
 
-static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 ||
-          strcmp(locale, "C") == 0 ||
-          strcmp(locale, "C.UTF-8") == 0 ||
-          strcmp(locale, "en_US.UTF-8") == 0 ||
-          strcmp(locale, "POSIX") == 0);
+static bool __is_supported_locale(const char *locale) {
+  return (strcmp(locale, "") == 0 || strcmp(locale, "C") == 0 || strcmp(locale, "C.UTF-8") == 0 ||
+          strcmp(locale, "en_US.UTF-8") == 0 || strcmp(locale, "POSIX") == 0);
 }
 
-lconv* localeconv() {
+lconv *localeconv() {
   pthread_once(&g_locale_once, __locale_init);
   return &g_locale;
 }
@@ -127,7 +125,7 @@ void freelocale(locale_t l) {
   delete l;
 }
 
-locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
+locale_t newlocale(int category_mask, const char *locale_name, locale_t /*base*/) {
   // Are 'category_mask' and 'locale_name' valid?
   if ((category_mask & ~LC_ALL_MASK) != 0 || locale_name == NULL) {
     errno = EINVAL;
@@ -142,7 +140,7 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
   return new __locale_t(strstr(locale_name, "UTF-8") != NULL ? 4 : 1);
 }
 
-char* setlocale(int category, const char* locale_name) {
+char *setlocale(int category, const char *locale_name) {
   // Is 'category' valid?
   if (category < LC_CTYPE || category > LC_IDENTIFICATION) {
     errno = EINVAL;
@@ -159,13 +157,14 @@ char* setlocale(int category, const char* locale_name) {
     __bionic_current_locale_is_utf8 = (strstr(locale_name, "UTF-8") != NULL);
   }
 
-  return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
+  return const_cast<char *>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
 }
 
 locale_t uselocale(locale_t new_locale) {
   locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
 
-  // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
+  // If this is the first call to uselocale(3) on this thread, we return
+  // LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
     old_locale = LC_GLOBAL_LOCALE;
   }
@@ -177,46 +176,46 @@ locale_t uselocale(locale_t new_locale) {
   return old_locale;
 }
 
-int strcasecmp_l(const char* s1, const char* s2, locale_t) {
+int strcasecmp_l(const char *s1, const char *s2, locale_t) {
   return strcasecmp(s1, s2);
 }
 
-int strcoll_l(const char* s1, const char* s2, locale_t) {
+int strcoll_l(const char *s1, const char *s2, locale_t) {
   return strcoll(s1, s2);
 }
 
-char* strerror_l(int error, locale_t) {
+char *strerror_l(int error, locale_t) {
   return strerror(error);
 }
 
-size_t strftime_l(char* s, size_t max, const char* format, const struct tm* tm, locale_t) {
+size_t strftime_l(char *s, size_t max, const char *format, const struct tm *tm, locale_t) {
   return strftime(s, max, format, tm);
 }
 
-int strncasecmp_l(const char* s1, const char* s2, size_t n, locale_t) {
+int strncasecmp_l(const char *s1, const char *s2, size_t n, locale_t) {
   return strncasecmp(s1, s2, n);
 }
 
-long double strtold_l(const char* s, char** end_ptr, locale_t) {
+long double strtold_l(const char *s, char **end_ptr, locale_t) {
   return strtold(s, end_ptr);
 }
 
-long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
+long long strtoll_l(const char *s, char **end_ptr, int base, locale_t) {
   return strtoll(s, end_ptr, base);
 }
 
-unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
+unsigned long long strtoull_l(const char *s, char **end_ptr, int base, locale_t) {
   return strtoull(s, end_ptr, base);
 }
 
-size_t strxfrm_l(char* dst, const char* src, size_t n, locale_t) {
+size_t strxfrm_l(char *dst, const char *src, size_t n, locale_t) {
   return strxfrm(dst, src, n);
 }
 
-int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
+int wcscasecmp_l(const wchar_t *ws1, const wchar_t *ws2, locale_t) {
   return wcscasecmp(ws1, ws2);
 }
 
-int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
+int wcsncasecmp_l(const wchar_t *ws1, const wchar_t *ws2, size_t n, locale_t) {
   return wcsncasecmp(ws1, ws2, n);
 }

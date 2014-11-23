@@ -43,8 +43,8 @@
  * This strncpy check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strncpy_chk(char* __restrict dest, const char* __restrict src,
-                               size_t len, size_t dest_len) {
+extern "C" char *__strncpy_chk(char *__restrict dest, const char *__restrict src, size_t len,
+                               size_t dest_len) {
   if (__predict_false(len > dest_len)) {
     __fortify_chk_fail("strncpy: prevented write past end of buffer",
                        BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
@@ -61,16 +61,15 @@ extern "C" char* __strncpy_chk(char* __restrict dest, const char* __restrict src
  * based on the original version of strncpy, but modified to check
  * how much we read from "src" at the end of the copy operation.
  */
-extern "C" char* __strncpy_chk2(char* __restrict dst, const char* __restrict src,
-              size_t n, size_t dest_len, size_t src_len)
-{
+extern "C" char *__strncpy_chk2(char *__restrict dst, const char *__restrict src, size_t n,
+                                size_t dest_len, size_t src_len) {
   if (__predict_false(n > dest_len)) {
     __fortify_chk_fail("strncpy: prevented write past end of buffer",
                        BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
   }
   if (n != 0) {
-    char* d = dst;
-    const char* s = src;
+    char *d = dst;
+    const char *s = src;
 
     do {
       if ((*d++ = *s++) == 0) {

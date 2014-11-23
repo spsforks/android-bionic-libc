@@ -27,7 +27,7 @@ class pthread_accessor {
   explicit pthread_accessor(pthread_t desired_thread) {
     Lock();
     for (thread_ = g_thread_list; thread_ != NULL; thread_ = thread_->next) {
-      if (thread_ == reinterpret_cast<pthread_internal_t*>(desired_thread)) {
+      if (thread_ == reinterpret_cast<pthread_internal_t *>(desired_thread)) {
         break;
       }
     }
@@ -45,12 +45,18 @@ class pthread_accessor {
     }
   }
 
-  pthread_internal_t& operator*() const { return *thread_; }
-  pthread_internal_t* operator->() const { return thread_; }
-  pthread_internal_t* get() const { return thread_; }
+  pthread_internal_t &operator*() const {
+    return *thread_;
+  }
+  pthread_internal_t *operator->() const {
+    return thread_;
+  }
+  pthread_internal_t *get() const {
+    return thread_;
+  }
 
  private:
-  pthread_internal_t* thread_;
+  pthread_internal_t *thread_;
   bool is_locked_;
 
   void Lock() {
@@ -61,4 +67,4 @@ class pthread_accessor {
   DISALLOW_COPY_AND_ASSIGN(pthread_accessor);
 };
 
-#endif // PTHREAD_ACCESSOR_H
+#endif  // PTHREAD_ACCESSOR_H

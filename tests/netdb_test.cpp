@@ -77,7 +77,7 @@ TEST(netdb, getaddrinfo_hints) {
   hints.ai_protocol = IPPROTO_TCP;
 
   addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
+  ASSERT_EQ(0, getaddrinfo("localhost", "9999", &hints, &ai));
   ASSERT_EQ(AF_INET, ai->ai_family);
   ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
   ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);

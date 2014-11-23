@@ -53,21 +53,21 @@
 // function pointers.
 //
 
-int mbsinit(const mbstate_t* ps) {
-  return (ps == NULL || (*(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0));
+int mbsinit(const mbstate_t *ps) {
+  return (ps == NULL || (*(reinterpret_cast<const uint32_t *>(ps->__seq)) == 0));
 }
 
-size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
+size_t mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
 
   // Our wchar_t is UTF-32
-  return mbrtoc32(reinterpret_cast<char32_t*>(pwc), s, n, state);
+  return mbrtoc32(reinterpret_cast<char32_t *>(pwc), s, n, state);
 }
 
-size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstate_t* ps) {
+size_t mbsnrtowcs(wchar_t *dst, const char **src, size_t nmc, size_t len, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
   size_t i, o, r;
 
   if (dst == NULL) {
@@ -76,8 +76,8 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
      * character appears as anything but the first byte of a
      * multibyte sequence. Check now to avoid doing it in the loop.
      */
-    if ((nmc > 0) && (mbstate_bytes_so_far(state) > 0)
-        && (static_cast<uint8_t>((*src)[0]) < 0x80)) {
+    if ((nmc > 0) && (mbstate_bytes_so_far(state) > 0) &&
+        (static_cast<uint8_t>((*src)[0]) < 0x80)) {
       return reset_and_return_illegal(EILSEQ, state);
     }
     for (i = o = 0; i < nmc; i += r, o++) {
@@ -110,8 +110,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
    * character appears as anything but the first byte of a
    * multibyte sequence. Check now to avoid doing it in the loop.
    */
-  if ((nmc > 0) && (mbstate_bytes_so_far(state) > 0)
-      && (static_cast<uint8_t>((*src)[0]) < 0x80)) {
+  if ((nmc > 0) && (mbstate_bytes_so_far(state) > 0) && (static_cast<uint8_t>((*src)[0]) < 0x80)) {
     return reset_and_return_illegal(EILSEQ, state);
   }
   for (i = o = 0; i < nmc && o < len; i += r, o++) {
@@ -143,21 +142,21 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
   return reset_and_return(o, state);
 }
 
-size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
+size_t mbsrtowcs(wchar_t *dst, const char **src, size_t len, mbstate_t *ps) {
   return mbsnrtowcs(dst, src, SIZE_MAX, len, ps);
 }
 
-size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
+size_t wcrtomb(char *s, wchar_t wc, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
 
   // Our wchar_t is UTF-32
   return c32rtomb(s, static_cast<char32_t>(wc), state);
 }
 
-size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstate_t* ps) {
+size_t wcsnrtombs(char *dst, const wchar_t **src, size_t nwc, size_t len, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
 
   if (!mbsinit(state)) {
     return reset_and_return_illegal(EILSEQ, state);
@@ -218,7 +217,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
   return o;
 }
 
-size_t wcsrtombs(char* dst, const wchar_t** src, size_t len, mbstate_t* ps) {
+size_t wcsrtombs(char *dst, const wchar_t **src, size_t len, mbstate_t *ps) {
   return wcsnrtombs(dst, src, SIZE_MAX, len, ps);
 }
 
@@ -230,13 +229,11 @@ size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t) {
   return wcsxfrm(dest, src, n);
 }
 
-long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base,
-                    locale_t) {
+long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base, locale_t) {
   return wcstoll(nptr, endptr, base);
 }
 
-unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr,
-                              int base, locale_t) {
+unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr, int base, locale_t) {
   return wcstoull(nptr, endptr, base);
 }
 

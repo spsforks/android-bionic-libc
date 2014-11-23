@@ -51,9 +51,9 @@ typedef struct _Unwind_Context __unwind_context;
 typedef _Unwind_Context __unwind_context;
 #endif
 
-static mapinfo_t* g_map_info = NULL;
-static void* g_demangler;
-typedef char* (*DemanglerFn)(const char*, char*, size_t*, int*);
+static mapinfo_t *g_map_info = NULL;
+static void *g_demangler;
+typedef char *(*DemanglerFn)(const char *, char *, size_t *, int *);
 static DemanglerFn g_demangler_fn = NULL;
 
 __LIBC_HIDDEN__ void backtrace_startup() {
@@ -62,7 +62,7 @@ __LIBC_HIDDEN__ void backtrace_startup() {
   g_map_info = mapinfo_create(getpid());
   g_demangler = dlopen("libgccdemangle.so", RTLD_NOW);
   if (g_demangler != NULL) {
-    void* sym = dlsym(g_demangler, "__cxa_demangle");
+    void *sym = dlsym(g_demangler, "__cxa_demangle");
     g_demangler_fn = reinterpret_cast<DemanglerFn>(sym);
   }
 }
@@ -74,7 +74,7 @@ __LIBC_HIDDEN__ void backtrace_shutdown() {
   dlclose(g_demangler);
 }
 
-static char* demangle(const char* symbol) {
+static char *demangle(const char *symbol) {
   if (g_demangler_fn == NULL) {
     return NULL;
   }
@@ -82,18 +82,18 @@ static char* demangle(const char* symbol) {
 }
 
 struct stack_crawl_state_t {
-  uintptr_t* frames;
+  uintptr_t *frames;
   size_t frame_count;
   size_t max_depth;
   bool have_skipped_self;
 
-  stack_crawl_state_t(uintptr_t* frames, size_t max_depth)
+  stack_crawl_state_t(uintptr_t *frames, size_t max_depth)
       : frames(frames), frame_count(0), max_depth(max_depth), have_skipped_self(false) {
   }
 };
 
-static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
-  stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
+static _Unwind_Reason_Code trace_function(__unwind_context *context, void *arg) {
+  stack_crawl_state_t *state = static_cast<stack_crawl_state_t *>(arg);
 
   uintptr_t ip = _Unwind_GetIP(context);
 
@@ -111,9 +111,9 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
    * instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise 4 from PC.
    */
   if (ip != 0) {
-    short* ptr = reinterpret_cast<short*>(ip);
+    short *ptr = reinterpret_cast<short *>(ip);
     // Thumb BLX(2)
-    if ((*(ptr-1) & 0xff80) == 0x4780) {
+    if ((*(ptr - 1) & 0xff80) == 0x4780) {
       ip -= 2;
     } else {
       ip -= 4;
@@ -125,7 +125,7 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
 }
 
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
+__LIBC_HIDDEN__ int get_backtrace(uintptr_t *frames, size_t max_depth) {
   ScopedDisableDebugCalls disable;
 
   stack_crawl_state_t state(frames, max_depth);
@@ -133,7 +133,7 @@ __LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
   return state.frame_count;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
+__LIBC_HIDDEN__ void log_backtrace(uintptr_t *frames, size_t frame_count) {
   ScopedDisableDebugCalls disable;
 
   uintptr_t self_bt[16];
@@ -145,36 +145,37 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
   __libc_format_log(ANDROID_LOG_ERROR, "libc",
                     "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 
-  for (size_t i = 0 ; i < frame_count; ++i) {
+  for (size_t i = 0; i < frame_count; ++i) {
     uintptr_t offset = 0;
-    const char* symbol = NULL;
+    const char *symbol = NULL;
 
     Dl_info info;
-    if (dladdr((void*) frames[i], &info) != 0) {
+    if (dladdr((void *)frames[i], &info) != 0) {
       offset = reinterpret_cast<uintptr_t>(info.dli_saddr);
       symbol = info.dli_sname;
     }
 
     uintptr_t rel_pc = offset;
-    const mapinfo_t* mi = (g_map_info != NULL) ? mapinfo_find(g_map_info, frames[i], &rel_pc) : NULL;
-    const char* soname = (mi != NULL) ? mi->name : info.dli_fname;
+    const mapinfo_t *mi =
+        (g_map_info != NULL) ? mapinfo_find(g_map_info, frames[i], &rel_pc) : NULL;
+    const char *soname = (mi != NULL) ? mi->name : info.dli_fname;
     if (soname == NULL) {
       soname = "<unknown>";
     }
     if (symbol != NULL) {
-      // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
-      char* demangled_symbol = demangle(symbol);
-      const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
+      // TODO: we might need a flag to say whether it's safe to allocate
+      // (demangling allocates).
+      char *demangled_symbol = demangle(symbol);
+      const char *best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
       __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
-                        i, rel_pc, soname, best_name, frames[i] - offset);
+                        "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")", i, rel_pc,
+                        soname, best_name, frames[i] - offset);
 
       free(demangled_symbol);
     } else {
-      __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %" PAD_PTR "  %s",
-                        i, rel_pc, soname);
+      __libc_format_log(ANDROID_LOG_ERROR, "libc", "          #%02zd  pc %" PAD_PTR "  %s", i,
+                        rel_pc, soname);
     }
   }
 }

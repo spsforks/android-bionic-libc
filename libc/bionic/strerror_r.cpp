@@ -17,10 +17,10 @@
 
 struct Pair {
   int code;
-  const char* msg;
+  const char *msg;
 };
 
-static const char* __code_string_lookup(const Pair* strings, int code) {
+static const char *__code_string_lookup(const Pair *strings, int code) {
   for (size_t i = 0; strings[i].msg != NULL; ++i) {
     if (strings[i].code == code) {
       return strings[i].msg;
@@ -30,30 +30,32 @@ static const char* __code_string_lookup(const Pair* strings, int code) {
 }
 
 static const Pair _sys_error_strings[] = {
-#define  __BIONIC_ERRDEF(x,y,z)  { x, z },
+#define __BIONIC_ERRDEF(x, y, z) \
+  { x, z }                       \
+  ,
 #include <sys/_errdefs.h>
-  { 0, NULL }
-};
+    {0, NULL}};
 
-extern "C" __LIBC_HIDDEN__ const char* __strerror_lookup(int error_number) {
+extern "C" __LIBC_HIDDEN__ const char *__strerror_lookup(int error_number) {
   return __code_string_lookup(_sys_error_strings, error_number);
 }
 
 static const Pair _sys_signal_strings[] = {
-#define  __BIONIC_SIGDEF(signal_number, signal_description)  { signal_number, signal_description },
+#define __BIONIC_SIGDEF(signal_number, signal_description) \
+  { signal_number, signal_description }                    \
+  ,
 #include <sys/_sigdefs.h>
-  { 0, NULL }
-};
+    {0, NULL}};
 
-extern "C" __LIBC_HIDDEN__ const char* __strsignal_lookup(int signal_number) {
+extern "C" __LIBC_HIDDEN__ const char *__strsignal_lookup(int signal_number) {
   return __code_string_lookup(_sys_signal_strings, signal_number);
 }
 
-int strerror_r(int error_number, char* buf, size_t buf_len) {
+int strerror_r(int error_number, char *buf, size_t buf_len) {
   ErrnoRestorer errno_restorer;
   size_t length;
 
-  const char* error_name = __strerror_lookup(error_number);
+  const char *error_name = __strerror_lookup(error_number);
   if (error_name != NULL) {
     length = strlcpy(buf, error_name, buf_len);
   } else {
@@ -67,19 +69,20 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
   return 0;
 }
 
-extern "C" char* __gnu_strerror_r(int error_number, char* buf, size_t buf_len) {
-  ErrnoRestorer errno_restorer; // The glibc strerror_r doesn't set errno if it truncates...
+extern "C" char *__gnu_strerror_r(int error_number, char *buf, size_t buf_len) {
+  ErrnoRestorer errno_restorer;  // The glibc strerror_r doesn't set errno if it
+                                 // truncates...
   strerror_r(error_number, buf, buf_len);
-  return buf; // ...and just returns whatever fit.
+  return buf;  // ...and just returns whatever fit.
 }
 
-extern "C" __LIBC_HIDDEN__ const char* __strsignal(int signal_number, char* buf, size_t buf_len) {
-  const char* signal_name = __strsignal_lookup(signal_number);
+extern "C" __LIBC_HIDDEN__ const char *__strsignal(int signal_number, char *buf, size_t buf_len) {
+  const char *signal_name = __strsignal_lookup(signal_number);
   if (signal_name != NULL) {
     return signal_name;
   }
 
-  const char* prefix = "Unknown";
+  const char *prefix = "Unknown";
   if (signal_number >= SIGRTMIN && signal_number <= SIGRTMAX) {
     prefix = "Real-time";
     signal_number -= SIGRTMIN;

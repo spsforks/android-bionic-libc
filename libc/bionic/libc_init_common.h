@@ -38,19 +38,18 @@ typedef struct {
 
 __BEGIN_DECLS
 
-extern int main(int argc, char** argv, char** env);
+extern int main(int argc, char **argv, char **env);
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
+__noreturn void __libc_init(void *raw_args, void (*onexit)(void),
+                            int (*slingshot)(int, char **, char **),
+                            structors_array_t const *const structors);
+__LIBC_HIDDEN__ void __libc_fini(void *finit_array);
 
 __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-__LIBC_HIDDEN__ void __libc_init_common(KernelArgumentBlock& args);
+__LIBC_HIDDEN__ void __libc_init_common(KernelArgumentBlock &args);
 #endif
 
 #endif

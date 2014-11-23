@@ -36,12 +36,12 @@
 int fork() {
   __bionic_atfork_run_prepare();
 
-  pthread_internal_t* self = __get_thread();
+  pthread_internal_t *self = __get_thread();
 
   // Remember the parent pid and invalidate the cached value while we fork.
   pid_t parent_pid = self->invalidate_cached_pid();
 
-#if defined(__x86_64__) // sys_clone's last two arguments are flipped on x86-64.
+#if defined(__x86_64__)  // sys_clone's last two arguments are flipped on x86-64.
   int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, &(self->tid), NULL);
 #else
   int result = syscall(__NR_clone, FORK_FLAGS, NULL, NULL, NULL, &(self->tid));

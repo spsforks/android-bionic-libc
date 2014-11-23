@@ -35,7 +35,7 @@
 // APIs not available on Linux. Instead we use a pthread_mutex_t within
 // struct __sfileext (see fileext.h).
 
-void flockfile(FILE* fp) {
+void flockfile(FILE *fp) {
   if (!__sdidinit) {
     __sinit();
   }
@@ -45,7 +45,7 @@ void flockfile(FILE* fp) {
   }
 }
 
-int ftrylockfile(FILE* fp) {
+int ftrylockfile(FILE *fp) {
   if (!__sdidinit) {
     __sinit();
   }
@@ -59,7 +59,7 @@ int ftrylockfile(FILE* fp) {
   return pthread_mutex_trylock(&_FLOCK(fp));
 }
 
-void funlockfile(FILE* fp) {
+void funlockfile(FILE *fp) {
   if (!__sdidinit) {
     __sinit();
   }

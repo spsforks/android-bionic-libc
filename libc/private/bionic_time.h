@@ -34,7 +34,7 @@
 __BEGIN_DECLS
 
 // We can't remove this (and this file) until we fix MtpUtils.cpp.
-time_t mktime_tz(struct tm* const, char const*);
+time_t mktime_tz(struct tm *const, char const *);
 
 __END_DECLS
 

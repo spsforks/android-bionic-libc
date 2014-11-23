@@ -30,6 +30,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-int chmod(const char* path, mode_t mode) {
+int chmod(const char *path, mode_t mode) {
   return fchmodat(AT_FDCWD, path, mode, 0);
 }

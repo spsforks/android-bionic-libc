@@ -30,9 +30,9 @@
 #include <sched.h>
 #include <string.h>
 
-extern "C" int __sched_getaffinity(pid_t, size_t, cpu_set_t*);
+extern "C" int __sched_getaffinity(pid_t, size_t, cpu_set_t *);
 
-int sched_getaffinity(pid_t pid, size_t set_size, cpu_set_t* set) {
+int sched_getaffinity(pid_t pid, size_t set_size, cpu_set_t *set) {
   int rc = __sched_getaffinity(pid, set_size, set);
   if (rc == -1) {
     return -1;
@@ -40,6 +40,6 @@ int sched_getaffinity(pid_t pid, size_t set_size, cpu_set_t* set) {
 
   // Clear any bytes the kernel didn't touch.
   // (The kernel returns the number of bytes written on success.)
-  memset(reinterpret_cast<char*>(set) + rc, 0, set_size - rc);
+  memset(reinterpret_cast<char *>(set) + rc, 0, set_size - rc);
   return 0;
 }

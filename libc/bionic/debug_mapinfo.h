@@ -32,14 +32,14 @@
 #include <sys/cdefs.h>
 
 struct mapinfo_t {
-  struct mapinfo_t* next;
+  struct mapinfo_t *next;
   uintptr_t start;
   uintptr_t end;
   char name[];
 };
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid);
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc);
+__LIBC_HIDDEN__ mapinfo_t *mapinfo_create(pid_t pid);
+__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t *mi);
+__LIBC_HIDDEN__ const mapinfo_t *mapinfo_find(mapinfo_t *mi, uintptr_t pc, uintptr_t *rel_pc);
 
 #endif /* DEBUG_MAPINFO_H */

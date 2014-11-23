@@ -28,7 +28,7 @@
 
 #include <stdlib.h>
 
-double atof(const char* s) {
+double atof(const char *s) {
   // Despite the 'f' in the name, this returns a double and is
   // specified to be equivalent to strtod.
   return strtod(s, NULL);

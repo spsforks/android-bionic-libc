@@ -26,10 +26,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-enum uid_type_t {
-  TYPE_SYSTEM,
-  TYPE_APP
-};
+enum uid_type_t { TYPE_SYSTEM, TYPE_APP };
 
 #if defined(__BIONIC__)
 
@@ -102,10 +99,13 @@ static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_typ
   check_getpwnam_r(username, uid, uid_type);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
-static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
-  GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+static void check_get_passwd(const char* /* username */, uid_t /* uid */,
+                             uid_type_t /* uid_type */) {
+  GTEST_LOG_(INFO) << "This test is about uid/username translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif
@@ -195,10 +195,12 @@ static void check_get_group(const char* group_name, gid_t gid) {
   check_getgrnam(group_name, gid);
 }
 
-#else // !defined(__BIONIC__)
+#else  // !defined(__BIONIC__)
 
 static void check_get_group(const char* /* group_name */, gid_t /* gid */) {
-  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for "
+                      "Android, which does nothing on libc other than "
+                      "bionic.\n";
 }
 
 #endif

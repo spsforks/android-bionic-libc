@@ -31,7 +31,7 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 
-int gethostname(char* buf, size_t n) {
+int gethostname(char *buf, size_t n) {
   struct utsname name;
   if (uname(&name) == -1) {
     return -1;

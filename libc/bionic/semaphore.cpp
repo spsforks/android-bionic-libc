@@ -58,12 +58,12 @@
 
 // Use the upper 31-bits for the counter, and the lower one
 // for the shared flag.
-#define SEMCOUNT_SHARED_MASK      0x00000001
-#define SEMCOUNT_VALUE_MASK       0xfffffffe
-#define SEMCOUNT_VALUE_SHIFT      1
+#define SEMCOUNT_SHARED_MASK 0x00000001
+#define SEMCOUNT_VALUE_MASK 0xfffffffe
+#define SEMCOUNT_VALUE_SHIFT 1
 
 // Convert a value into the corresponding sem->count bit pattern.
-#define SEMCOUNT_FROM_VALUE(val)    (((val) << SEMCOUNT_VALUE_SHIFT) & SEMCOUNT_VALUE_MASK)
+#define SEMCOUNT_FROM_VALUE(val) (((val) << SEMCOUNT_VALUE_SHIFT) & SEMCOUNT_VALUE_MASK)
 
 // Convert a sem->count bit pattern into the corresponding signed value.
 static inline int SEMCOUNT_TO_VALUE(uint32_t sval) {
@@ -71,21 +71,20 @@ static inline int SEMCOUNT_TO_VALUE(uint32_t sval) {
 }
 
 // The value +1 as a sem->count bit-pattern.
-#define SEMCOUNT_ONE              SEMCOUNT_FROM_VALUE(1)
+#define SEMCOUNT_ONE SEMCOUNT_FROM_VALUE(1)
 
 // The value -1 as a sem->count bit-pattern.
-#define SEMCOUNT_MINUS_ONE        SEMCOUNT_FROM_VALUE(-1)
+#define SEMCOUNT_MINUS_ONE SEMCOUNT_FROM_VALUE(-1)
 
-#define SEMCOUNT_DECREMENT(sval)    (((sval) - (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
-#define SEMCOUNT_INCREMENT(sval)    (((sval) + (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
+#define SEMCOUNT_DECREMENT(sval) (((sval) - (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
+#define SEMCOUNT_INCREMENT(sval) (((sval) + (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
 
 // Return the shared bitflag from a semaphore.
-static inline uint32_t SEM_GET_SHARED(sem_t* sem) {
+static inline uint32_t SEM_GET_SHARED(sem_t *sem) {
   return (sem->count & SEMCOUNT_SHARED_MASK);
 }
 
-
-int sem_init(sem_t* sem, int pshared, unsigned int value) {
+int sem_init(sem_t *sem, int pshared, unsigned int value) {
   // Ensure that 'value' can be stored in the semaphore.
   if (value > SEM_VALUE_MAX) {
     errno = EINVAL;
@@ -99,21 +98,21 @@ int sem_init(sem_t* sem, int pshared, unsigned int value) {
   return 0;
 }
 
-int sem_destroy(sem_t*) {
+int sem_destroy(sem_t *) {
   return 0;
 }
 
-sem_t* sem_open(const char*, int, ...) {
+sem_t *sem_open(const char *, int, ...) {
   errno = ENOSYS;
   return SEM_FAILED;
 }
 
-int sem_close(sem_t*) {
+int sem_close(sem_t *) {
   errno = ENOSYS;
   return -1;
 }
 
-int sem_unlink(const char*) {
+int sem_unlink(const char *) {
   errno = ENOSYS;
   return -1;
 }
@@ -122,8 +121,8 @@ int sem_unlink(const char*) {
 // and return the old one. As a special case,
 // this returns immediately if the value is
 // negative (i.e. -1)
-static int __sem_dec(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
+static int __sem_dec(volatile uint32_t *sem) {
+  volatile int32_t *ptr = reinterpret_cast<volatile int32_t *>(sem);
   uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
   uint32_t old_value, new_value;
   int ret;
@@ -136,18 +135,18 @@ static int __sem_dec(volatile uint32_t* sem) {
     }
 
     new_value = SEMCOUNT_DECREMENT(old_value);
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
+  } while (__bionic_cmpxchg((old_value | shared), (new_value | shared), ptr) != 0);
 
   return ret;
 }
 
 // Same as __sem_dec, but will not touch anything if the
 // value is already negative *or* 0. Returns the old value.
-static int __sem_trydec(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
+static int __sem_trydec(volatile uint32_t *sem) {
+  volatile int32_t *ptr = reinterpret_cast<volatile int32_t *>(sem);
   uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
   uint32_t old_value, new_value;
-  int          ret;
+  int ret;
 
   do {
     old_value = (*sem & SEMCOUNT_VALUE_MASK);
@@ -157,11 +156,10 @@ static int __sem_trydec(volatile uint32_t* sem) {
     }
 
     new_value = SEMCOUNT_DECREMENT(old_value);
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
+  } while (__bionic_cmpxchg((old_value | shared), (new_value | shared), ptr) != 0);
 
   return ret;
 }
-
 
 // "Increment" the value of a semaphore atomically and
 // return its old value. Note that this implements
@@ -169,8 +167,8 @@ static int __sem_trydec(volatile uint32_t* sem) {
 // value to +1 directly.
 //
 // NOTE: The value will _not_ wrap above SEM_VALUE_MAX
-static int __sem_inc(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
+static int __sem_inc(volatile uint32_t *sem) {
+  volatile int32_t *ptr = reinterpret_cast<volatile int32_t *>(sem);
   uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
   uint32_t old_value, new_value;
   int ret;
@@ -186,16 +184,16 @@ static int __sem_inc(volatile uint32_t* sem) {
 
     // If the counter is negative, go directly to +1, otherwise just increment.
     if (ret < 0) {
-        new_value = SEMCOUNT_ONE;
+      new_value = SEMCOUNT_ONE;
     } else {
       new_value = SEMCOUNT_INCREMENT(old_value);
     }
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
+  } while (__bionic_cmpxchg((old_value | shared), (new_value | shared), ptr) != 0);
 
   return ret;
 }
 
-int sem_wait(sem_t* sem) {
+int sem_wait(sem_t *sem) {
   uint32_t shared = SEM_GET_SHARED(sem);
 
   while (true) {
@@ -204,11 +202,11 @@ int sem_wait(sem_t* sem) {
       return 0;
     }
 
-    __futex_wait_ex(&sem->count, shared, shared|SEMCOUNT_MINUS_ONE, NULL);
+    __futex_wait_ex(&sem->count, shared, shared | SEMCOUNT_MINUS_ONE, NULL);
   }
 }
 
-int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
+int sem_timedwait(sem_t *sem, const timespec *abs_timeout) {
   // POSIX says we need to try to decrement the semaphore
   // before checking the timeout value. Note that if the
   // value is currently 0, __sem_trydec() does nothing.
@@ -218,7 +216,8 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
   }
 
   // Check it as per POSIX.
-  if (abs_timeout == NULL || abs_timeout->tv_sec < 0 || abs_timeout->tv_nsec < 0 || abs_timeout->tv_nsec >= NS_PER_S) {
+  if (abs_timeout == NULL || abs_timeout->tv_sec < 0 || abs_timeout->tv_nsec < 0 ||
+      abs_timeout->tv_nsec >= NS_PER_S) {
     errno = EINVAL;
     return -1;
   }
@@ -233,14 +232,15 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
       return -1;
     }
 
-    // Try to grab the semaphore. If the value was 0, this will also change it to -1.
+    // Try to grab the semaphore. If the value was 0, this will also change it
+    // to -1.
     if (__sem_dec(&sem->count) > 0) {
       ANDROID_MEMBAR_FULL();
       break;
     }
 
     // Contention detected. Wait for a wakeup event.
-    int ret = __futex_wait_ex(&sem->count, shared, shared|SEMCOUNT_MINUS_ONE, &ts);
+    int ret = __futex_wait_ex(&sem->count, shared, shared | SEMCOUNT_MINUS_ONE, &ts);
 
     // Return in case of timeout or interrupt.
     if (ret == -ETIMEDOUT || ret == -EINTR) {
@@ -251,7 +251,7 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
   return 0;
 }
 
-int sem_post(sem_t* sem) {
+int sem_post(sem_t *sem) {
   uint32_t shared = SEM_GET_SHARED(sem);
 
   ANDROID_MEMBAR_FULL();
@@ -268,7 +268,7 @@ int sem_post(sem_t* sem) {
   return 0;
 }
 
-int sem_trywait(sem_t* sem) {
+int sem_trywait(sem_t *sem) {
   if (__sem_trydec(&sem->count) > 0) {
     ANDROID_MEMBAR_FULL();
     return 0;
@@ -278,7 +278,7 @@ int sem_trywait(sem_t* sem) {
   }
 }
 
-int sem_getvalue(sem_t* sem, int* sval) {
+int sem_getvalue(sem_t *sem, int *sval) {
   int val = SEMCOUNT_TO_VALUE(sem->count);
   if (val < 0) {
     val = 0;

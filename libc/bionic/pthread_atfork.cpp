@@ -31,8 +31,8 @@
 #include <stdlib.h>
 
 struct atfork_t {
-  atfork_t* next;
-  atfork_t* prev;
+  atfork_t *next;
+  atfork_t *prev;
 
   void (*prepare)(void);
   void (*child)(void);
@@ -40,26 +40,29 @@ struct atfork_t {
 };
 
 struct atfork_list_t {
-  atfork_t* first;
-  atfork_t* last;
+  atfork_t *first;
+  atfork_t *last;
 };
 
 static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
-static atfork_list_t g_atfork_list = { NULL, NULL };
+static atfork_list_t g_atfork_list = {NULL, NULL};
 
 void __bionic_atfork_run_prepare() {
-  // We lock the atfork list here, unlock it in the parent, and reset it in the child.
+  // We lock the atfork list here, unlock it in the parent, and reset it in the
+  // child.
   // This ensures that nobody can modify the handler array between the calls
   // to the prepare and parent/child handlers.
   //
-  // TODO: If a handler tries to mutate the list, they'll block. We should probably copy
-  // the list before forking, and have prepare, parent, and child all work on the consistent copy.
+  // TODO: If a handler tries to mutate the list, they'll block. We should
+  // probably copy
+  // the list before forking, and have prepare, parent, and child all work on
+  // the consistent copy.
   pthread_mutex_lock(&g_atfork_list_mutex);
 
   // Call pthread_atfork() prepare handlers. POSIX states that the prepare
   // handlers should be called in the reverse order of the parent/child
   // handlers, so we iterate backwards.
-  for (atfork_t* it = g_atfork_list.last; it != NULL; it = it->prev) {
+  for (atfork_t *it = g_atfork_list.last; it != NULL; it = it->prev) {
     if (it->prepare != NULL) {
       it->prepare();
     }
@@ -67,7 +70,7 @@ void __bionic_atfork_run_prepare() {
 }
 
 void __bionic_atfork_run_child() {
-  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
+  for (atfork_t *it = g_atfork_list.first; it != NULL; it = it->next) {
     if (it->child != NULL) {
       it->child();
     }
@@ -77,7 +80,7 @@ void __bionic_atfork_run_child() {
 }
 
 void __bionic_atfork_run_parent() {
-  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
+  for (atfork_t *it = g_atfork_list.first; it != NULL; it = it->next) {
     if (it->parent != NULL) {
       it->parent();
     }
@@ -86,8 +89,8 @@ void __bionic_atfork_run_parent() {
   pthread_mutex_unlock(&g_atfork_list_mutex);
 }
 
-int pthread_atfork(void (*prepare)(void), void (*parent)(void), void(*child)(void)) {
-  atfork_t* entry = reinterpret_cast<atfork_t*>(malloc(sizeof(atfork_t)));
+int pthread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void)) {
+  atfork_t *entry = reinterpret_cast<atfork_t *>(malloc(sizeof(atfork_t)));
   if (entry == NULL) {
     return ENOMEM;
   }

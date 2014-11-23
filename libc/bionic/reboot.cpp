@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <sys/reboot.h>
 
-extern "C" int __reboot(int, int, int, void*);
+extern "C" int __reboot(int, int, int, void *);
 
 int reboot(int mode) {
   return __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, mode, NULL);

@@ -25,7 +25,7 @@
 
 class __LIBC_HIDDEN__ ScopedTrace {
  public:
-  explicit ScopedTrace(const char* message);
+  explicit ScopedTrace(const char *message);
   ~ScopedTrace();
 
  private:

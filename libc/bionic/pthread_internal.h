@@ -43,8 +43,8 @@
 #define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
 
 struct pthread_internal_t {
-  struct pthread_internal_t* next;
-  struct pthread_internal_t* prev;
+  struct pthread_internal_t *next;
+  struct pthread_internal_t *prev;
 
   pid_t tid;
 
@@ -63,7 +63,7 @@ struct pthread_internal_t {
     cached_pid_ = value;
   }
 
-  bool get_cached_pid(pid_t* cached_pid) {
+  bool get_cached_pid(pid_t *cached_pid) {
     *cached_pid = cached_pid_;
     return (*cached_pid != 0);
   }
@@ -72,38 +72,40 @@ struct pthread_internal_t {
     return (attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0;
   }
 
-  void** tls;
+  void **tls;
 
   pthread_attr_t attr;
 
-  __pthread_cleanup_t* cleanup_stack;
+  __pthread_cleanup_t *cleanup_stack;
 
-  void* (*start_routine)(void*);
-  void* start_routine_arg;
-  void* return_value;
+  void *(*start_routine)(void *);
+  void *start_routine_arg;
+  void *return_value;
 
-  void* alternate_signal_stack;
+  void *alternate_signal_stack;
 
   pthread_mutex_t startup_handshake_mutex;
 
-  /*
-   * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
-   * per-thread buffer by simply using malloc(3) and free(3).
-   */
+/*
+ * The dynamic linker implements dlerror(3), which makes it hard for us to
+ * implement this
+ * per-thread buffer by simply using malloc(3) and free(3).
+ */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
-__LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t *thread, bool add_to_thread_list);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t *thread);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t *);
+__LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t *thread);
 
-/* Various third-party apps contain a backport of our pthread_rwlock implementation that uses this. */
-extern "C" __LIBC64_HIDDEN__ pthread_internal_t* __get_thread(void);
+/* Various third-party apps contain a backport of our pthread_rwlock
+ * implementation that uses this. */
+extern "C" __LIBC64_HIDDEN__ pthread_internal_t *__get_thread(void);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
-__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t *thread);
 
 /*
  * Traditionally we gave threads a 1MiB stack. When we started
@@ -114,7 +116,7 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread)
  */
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
 
-__LIBC_HIDDEN__ extern pthread_internal_t* g_thread_list;
+__LIBC_HIDDEN__ extern pthread_internal_t *g_thread_list;
 __LIBC_HIDDEN__ extern pthread_mutex_t g_thread_list_lock;
 
 /* Needed by fork. */

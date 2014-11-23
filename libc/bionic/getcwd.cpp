@@ -29,9 +29,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-extern "C" int __getcwd(char* buf, size_t size);
+extern "C" int __getcwd(char *buf, size_t size);
 
-char* getcwd(char* buf, size_t size) {
+char *getcwd(char *buf, size_t size) {
   // You can't specify size 0 unless you're asking us to allocate for you.
   if (buf != NULL && size == 0) {
     errno = EINVAL;
@@ -39,15 +39,17 @@ char* getcwd(char* buf, size_t size) {
   }
 
   // Allocate a buffer if necessary.
-  char* allocated_buf = NULL;
+  char *allocated_buf = NULL;
   size_t allocated_size = size;
   if (buf == NULL) {
     if (size == 0) {
-      // The Linux kernel won't return more than a page, so translate size 0 to 4KiB.
-      // TODO: if we need to support paths longer than that, we'll have to walk the tree ourselves.
+      // The Linux kernel won't return more than a page, so translate size 0 to
+      // 4KiB.
+      // TODO: if we need to support paths longer than that, we'll have to walk
+      // the tree ourselves.
       allocated_size = getpagesize();
     }
-    buf = allocated_buf = static_cast<char*>(malloc(allocated_size));
+    buf = allocated_buf = static_cast<char *>(malloc(allocated_size));
     if (buf == NULL) {
       // malloc should set errno, but valgrind's malloc wrapper doesn't.
       errno = ENOMEM;
@@ -63,7 +65,8 @@ char* getcwd(char* buf, size_t size) {
     return NULL;
   }
 
-  // If we allocated a whole page, only return as large an allocation as necessary.
+  // If we allocated a whole page, only return as large an allocation as
+  // necessary.
   if (allocated_buf != NULL) {
     if (size == 0) {
       buf = strdup(allocated_buf);

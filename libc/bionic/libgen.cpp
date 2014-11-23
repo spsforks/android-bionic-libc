@@ -36,9 +36,9 @@
 
 #include "private/ThreadLocalBuffer.h"
 
-__LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_size) {
-  const char* startp = NULL;
-  const char* endp = NULL;
+__LIBC64_HIDDEN__ int basename_r(const char *path, char *buffer, size_t buffer_size) {
+  const char *startp = NULL;
+  const char *endp = NULL;
   int len;
   int result;
 
@@ -68,9 +68,9 @@ __LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_s
     startp--;
   }
 
-  len = endp - startp +1;
+  len = endp - startp + 1;
 
- Exit:
+Exit:
   result = len;
   if (buffer == NULL) {
     return result;
@@ -88,8 +88,8 @@ __LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_s
   return result;
 }
 
-__LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_size) {
-  const char* endp = NULL;
+__LIBC64_HIDDEN__ int dirname_r(const char *path, char *buffer, size_t buffer_size) {
+  const char *endp = NULL;
   int len;
   int result;
 
@@ -124,7 +124,7 @@ __LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_si
 
   len = endp - path + 1;
 
- Exit:
+Exit:
   result = len;
   if (len + 1 > MAXPATHLEN) {
     errno = ENAMETOOLONG;
@@ -150,14 +150,14 @@ __LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_si
 GLOBAL_INIT_THREAD_LOCAL_BUFFER(basename);
 GLOBAL_INIT_THREAD_LOCAL_BUFFER(dirname);
 
-char* basename(const char* path) {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, basename, MAXPATHLEN);
+char *basename(const char *path) {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char *, basename, MAXPATHLEN);
   int rc = basename_r(path, basename_tls_buffer, basename_tls_buffer_size);
   return (rc < 0) ? NULL : basename_tls_buffer;
 }
 
-char* dirname(const char* path) {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, dirname, MAXPATHLEN);
+char *dirname(const char *path) {
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char *, dirname, MAXPATHLEN);
   int rc = dirname_r(path, dirname_tls_buffer, dirname_tls_buffer_size);
   return (rc < 0) ? NULL : dirname_tls_buffer;
 }

@@ -18,6 +18,6 @@
 
 #include <sys/socket.h>
 
-int accept4(int sockfd, sockaddr* addr, socklen_t* addrlen, int flags) {
-    return __netdClientDispatch.accept4(sockfd, addr, addrlen, flags);
+int accept4(int sockfd, sockaddr *addr, socklen_t *addrlen, int flags) {
+  return __netdClientDispatch.accept4(sockfd, addr, addrlen, flags);
 }

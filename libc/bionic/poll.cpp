@@ -32,12 +32,12 @@
 #include "private/bionic_time_conversions.h"
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const kernel_sigset_t*, size_t);
-extern "C" int __pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*);
+extern "C" int __ppoll(pollfd *, unsigned int, timespec *, const kernel_sigset_t *, size_t);
+extern "C" int __pselect6(int, fd_set *, fd_set *, fd_set *, timespec *, void *);
 
-int poll(pollfd* fds, nfds_t fd_count, int ms) {
+int poll(pollfd *fds, nfds_t fd_count, int ms) {
   timespec ts;
-  timespec* ts_ptr = NULL;
+  timespec *ts_ptr = NULL;
   if (ms >= 0) {
     timespec_from_ms(ts, ms);
     ts_ptr = &ts;
@@ -45,16 +45,16 @@ int poll(pollfd* fds, nfds_t fd_count, int ms) {
   return __ppoll(fds, fd_count, ts_ptr, NULL, 0);
 }
 
-int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) {
+int ppoll(pollfd *fds, nfds_t fd_count, const timespec *ts, const sigset_t *ss) {
   timespec mutable_ts;
-  timespec* mutable_ts_ptr = NULL;
+  timespec *mutable_ts_ptr = NULL;
   if (ts != NULL) {
     mutable_ts = *ts;
     mutable_ts_ptr = &mutable_ts;
   }
 
   kernel_sigset_t kernel_ss;
-  kernel_sigset_t* kernel_ss_ptr = NULL;
+  kernel_sigset_t *kernel_ss_ptr = NULL;
   if (ss != NULL) {
     kernel_ss.set(ss);
     kernel_ss_ptr = &kernel_ss;
@@ -63,9 +63,9 @@ int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) 
   return __ppoll(fds, fd_count, mutable_ts_ptr, kernel_ss_ptr, sizeof(kernel_ss));
 }
 
-int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds, timeval* tv) {
+int select(int fd_count, fd_set *read_fds, fd_set *write_fds, fd_set *error_fds, timeval *tv) {
   timespec ts;
-  timespec* ts_ptr = NULL;
+  timespec *ts_ptr = NULL;
   if (tv != NULL) {
     if (!timespec_from_timeval(ts, *tv)) {
       errno = EINVAL;
@@ -80,23 +80,24 @@ int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
   return result;
 }
 
-int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
-            const timespec* ts, const sigset_t* ss) {
+int pselect(int fd_count, fd_set *read_fds, fd_set *write_fds, fd_set *error_fds,
+            const timespec *ts, const sigset_t *ss) {
   timespec mutable_ts;
-  timespec* mutable_ts_ptr = NULL;
+  timespec *mutable_ts_ptr = NULL;
   if (ts != NULL) {
     mutable_ts = *ts;
     mutable_ts_ptr = &mutable_ts;
   }
 
   kernel_sigset_t kernel_ss;
-  kernel_sigset_t* kernel_ss_ptr = NULL;
+  kernel_sigset_t *kernel_ss_ptr = NULL;
   if (ss != NULL) {
     kernel_ss.set(ss);
     kernel_ss_ptr = &kernel_ss;
   }
 
-  // The Linux kernel only handles 6 arguments and this system call really needs 7,
+  // The Linux kernel only handles 6 arguments and this system call really needs
+  // 7,
   // so the last argument is a void* pointing to:
   struct pselect6_extra_data_t {
     uintptr_t ss_addr;

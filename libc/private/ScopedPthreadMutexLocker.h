@@ -23,7 +23,7 @@
 
 class ScopedPthreadMutexLocker {
  public:
-  explicit ScopedPthreadMutexLocker(pthread_mutex_t* mu) : mu_(mu) {
+  explicit ScopedPthreadMutexLocker(pthread_mutex_t *mu) : mu_(mu) {
     pthread_mutex_lock(mu_);
   }
 
@@ -32,9 +32,9 @@ class ScopedPthreadMutexLocker {
   }
 
  private:
-  pthread_mutex_t* mu_;
+  pthread_mutex_t *mu_;
 
   DISALLOW_COPY_AND_ASSIGN(ScopedPthreadMutexLocker);
 };
 
-#endif // SCOPED_PTHREAD_MUTEX_LOCKER_H
+#endif  // SCOPED_PTHREAD_MUTEX_LOCKER_H

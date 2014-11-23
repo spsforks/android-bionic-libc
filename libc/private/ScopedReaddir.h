@@ -23,7 +23,7 @@
 
 class ScopedReaddir {
  public:
-  ScopedReaddir(const char* path) {
+  ScopedReaddir(const char *path) {
     dir_ = opendir(path);
   }
 
@@ -37,14 +37,14 @@ class ScopedReaddir {
     return dir_ == NULL;
   }
 
-  dirent* ReadEntry() {
+  dirent *ReadEntry() {
     return readdir(dir_);
   }
 
  private:
-  DIR* dir_;
+  DIR *dir_;
 
   DISALLOW_COPY_AND_ASSIGN(ScopedReaddir);
 };
 
-#endif // SCOPED_READDIR_H
+#endif  // SCOPED_READDIR_H

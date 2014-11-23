@@ -22,7 +22,7 @@
 // the intricacies of floating point math.)
 // http://llvm.org/bugs/show_bug.cgi?id=21504
 
-#include <math.h> // For M_PI.
+#include <math.h>  // For M_PI.
 
 extern "C" double cabs(double _Complex);
 TEST(complex, cabs) {
@@ -41,12 +41,12 @@ TEST(complex, cabsl) {
 
 extern "C" double _Complex cacos(double _Complex);
 TEST(complex, cacos) {
-  ASSERT_EQ(M_PI/2.0, cacos(0.0));
+  ASSERT_EQ(M_PI / 2.0, cacos(0.0));
 }
 
 extern "C" float _Complex cacosf(float _Complex);
 TEST(complex, cacosf) {
-  ASSERT_EQ(static_cast<float>(M_PI)/2.0f, cacosf(0.0));
+  ASSERT_EQ(static_cast<float>(M_PI) / 2.0f, cacosf(0.0));
 }
 
 extern "C" double _Complex cacosh(double _Complex);

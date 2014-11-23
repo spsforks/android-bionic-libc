@@ -29,6 +29,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int symlink(const char* old_path, const char* new_path) {
+int symlink(const char *old_path, const char *new_path) {
   return symlinkat(old_path, AT_FDCWD, new_path);
 }

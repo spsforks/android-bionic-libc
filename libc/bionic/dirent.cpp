@@ -37,19 +37,19 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-extern "C" int __getdents64(unsigned int, dirent*, unsigned int);
+extern "C" int __getdents64(unsigned int, dirent *, unsigned int);
 
 struct DIR {
   int fd_;
   size_t available_bytes_;
-  dirent* next_;
+  dirent *next_;
   long current_pos_;
   pthread_mutex_t mutex_;
   dirent buff_[15];
 };
 
-static DIR* __allocate_DIR(int fd) {
-  DIR* d = reinterpret_cast<DIR*>(malloc(sizeof(DIR)));
+static DIR *__allocate_DIR(int fd) {
+  DIR *d = reinterpret_cast<DIR *>(malloc(sizeof(DIR)));
   if (d == NULL) {
     return NULL;
   }
@@ -61,11 +61,11 @@ static DIR* __allocate_DIR(int fd) {
   return d;
 }
 
-int dirfd(DIR* dirp) {
+int dirfd(DIR *dirp) {
   return dirp->fd_;
 }
 
-DIR* fdopendir(int fd) {
+DIR *fdopendir(int fd) {
   // Is 'fd' actually a directory?
   struct stat sb;
   if (fstat(fd, &sb) == -1) {
@@ -79,12 +79,12 @@ DIR* fdopendir(int fd) {
   return __allocate_DIR(fd);
 }
 
-DIR* opendir(const char* path) {
+DIR *opendir(const char *path) {
   int fd = open(path, O_CLOEXEC | O_DIRECTORY | O_RDONLY);
   return (fd != -1) ? __allocate_DIR(fd) : NULL;
 }
 
-static bool __fill_DIR(DIR* d) {
+static bool __fill_DIR(DIR *d) {
   int rc = TEMP_FAILURE_RETRY(__getdents64(d->fd_, d->buff_, sizeof(d->buff_)));
   if (rc <= 0) {
     return false;
@@ -94,13 +94,13 @@ static bool __fill_DIR(DIR* d) {
   return true;
 }
 
-static dirent* __readdir_locked(DIR* d) {
+static dirent *__readdir_locked(DIR *d) {
   if (d->available_bytes_ == 0 && !__fill_DIR(d)) {
     return NULL;
   }
 
-  dirent* entry = d->next_;
-  d->next_ = reinterpret_cast<dirent*>(reinterpret_cast<char*>(entry) + entry->d_reclen);
+  dirent *entry = d->next_;
+  d->next_ = reinterpret_cast<dirent *>(reinterpret_cast<char *>(entry) + entry->d_reclen);
   d->available_bytes_ -= entry->d_reclen;
   // The directory entry offset uses 0, 1, 2 instead of real file offset,
   // so the value range of long type is enough.
@@ -108,13 +108,13 @@ static dirent* __readdir_locked(DIR* d) {
   return entry;
 }
 
-dirent* readdir(DIR* d) {
+dirent *readdir(DIR *d) {
   ScopedPthreadMutexLocker locker(&d->mutex_);
   return __readdir_locked(d);
 }
 __strong_alias(readdir64, readdir);
 
-int readdir_r(DIR* d, dirent* entry, dirent** result) {
+int readdir_r(DIR *d, dirent *entry, dirent **result) {
   ErrnoRestorer errno_restorer;
 
   *result = NULL;
@@ -122,7 +122,7 @@ int readdir_r(DIR* d, dirent* entry, dirent** result) {
 
   ScopedPthreadMutexLocker locker(&d->mutex_);
 
-  dirent* next = __readdir_locked(d);
+  dirent *next = __readdir_locked(d);
   if (errno != 0 && next == NULL) {
     return errno;
   }
@@ -135,7 +135,7 @@ int readdir_r(DIR* d, dirent* entry, dirent** result) {
 }
 __strong_alias(readdir64_r, readdir_r);
 
-int closedir(DIR* d) {
+int closedir(DIR *d) {
   if (d == NULL) {
     errno = EINVAL;
     return -1;
@@ -147,14 +147,14 @@ int closedir(DIR* d) {
   return close(fd);
 }
 
-void rewinddir(DIR* d) {
+void rewinddir(DIR *d) {
   ScopedPthreadMutexLocker locker(&d->mutex_);
   lseek(d->fd_, 0, SEEK_SET);
   d->available_bytes_ = 0;
   d->current_pos_ = 0L;
 }
 
-void seekdir(DIR* d, long offset) {
+void seekdir(DIR *d, long offset) {
   ScopedPthreadMutexLocker locker(&d->mutex_);
   off_t ret = lseek(d->fd_, offset, SEEK_SET);
   if (ret != -1L) {
@@ -163,11 +163,11 @@ void seekdir(DIR* d, long offset) {
   }
 }
 
-long telldir(DIR* d) {
+long telldir(DIR *d) {
   return d->current_pos_;
 }
 
-int alphasort(const dirent** a, const dirent** b) {
+int alphasort(const dirent **a, const dirent **b) {
   return strcoll((*a)->d_name, (*b)->d_name);
 }
 __strong_alias(alphasort64, alphasort);

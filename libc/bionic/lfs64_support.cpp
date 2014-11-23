@@ -20,29 +20,27 @@
 // Delegation will work in these cases because all the transitive dependencies
 // are already 64-bit ready. In particular, we don't have non-O_LARGEFILE
 // open (our open is actually open64) and stat and stat64 are the same.
-int mkstemp64(char* path) {
+int mkstemp64(char *path) {
   return mkstemp(path);
 }
-int mkostemp64(char* path, int flags) {
+int mkostemp64(char *path, int flags) {
   return mkostemp(path, flags);
 }
-int mkstemps64(char* path, int suffix_length) {
+int mkstemps64(char *path, int suffix_length) {
   return mkstemps(path, suffix_length);
 }
-int mkostemps64(char* path, int suffix_length, int flags) {
+int mkostemps64(char *path, int suffix_length, int flags) {
   return mkostemps(path, suffix_length, flags);
 }
 
-typedef int (*ftw_fn)(const char*, const struct stat*, int);
-typedef int (*nftw_fn)(const char*, const struct stat*, int, struct FTW*);
+typedef int (*ftw_fn)(const char *, const struct stat *, int);
+typedef int (*nftw_fn)(const char *, const struct stat *, int, struct FTW *);
 
-int ftw64(const char *dirpath,
-    int (*fn)(const char*, const struct stat64*, int), int nopenfd) {
+int ftw64(const char *dirpath, int (*fn)(const char *, const struct stat64 *, int), int nopenfd) {
   return ftw(dirpath, reinterpret_cast<ftw_fn>(fn), nopenfd);
 }
 
-int nftw64(const char * dirpath,
-    int (*fn)(const char*, const struct stat64*, int, struct FTW*),
-    int nopenfd, int flags) {
+int nftw64(const char *dirpath, int (*fn)(const char *, const struct stat64 *, int, struct FTW *),
+           int nopenfd, int flags) {
   return nftw(dirpath, reinterpret_cast<nftw_fn>(fn), nopenfd, flags);
 }

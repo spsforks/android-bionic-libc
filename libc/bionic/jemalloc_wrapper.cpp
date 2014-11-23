@@ -20,7 +20,7 @@
 #include "jemalloc.h"
 #include "private/bionic_macros.h"
 
-void* je_pvalloc(size_t bytes) {
+void *je_pvalloc(size_t bytes) {
   size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) {
@@ -36,7 +36,7 @@ void* je_pvalloc(size_t bytes) {
 // The man page for memalign says it fails if boundary is not a power of 2,
 // but this is not true. Both glibc and dlmalloc round up to the next power
 // of 2, so we'll do the same.
-void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
+void *je_memalign_round_up_boundary(size_t boundary, size_t size) {
   if (boundary != 0) {
     if (!powerof2(boundary)) {
       boundary = BIONIC_ROUND_UP_POWER_OF_2(boundary);

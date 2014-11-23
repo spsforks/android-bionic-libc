@@ -28,6 +28,6 @@
 
 #include <sys/epoll.h>
 
-int epoll_wait(int fd, struct epoll_event* events, int max_events, int timeout) {
+int epoll_wait(int fd, struct epoll_event *events, int max_events, int timeout) {
   return epoll_pwait(fd, events, max_events, timeout, NULL);
 }

@@ -29,17 +29,17 @@
 #include <sys/wait.h>
 #include <stddef.h>
 
-extern "C" int __waitid(idtype_t which, id_t id, siginfo_t* info, int options, struct rusage* ru);
+extern "C" int __waitid(idtype_t which, id_t id, siginfo_t *info, int options, struct rusage *ru);
 
-pid_t wait(int* status) {
+pid_t wait(int *status) {
   return wait4(-1, status, 0, NULL);
 }
 
-pid_t waitpid(pid_t pid, int* status, int options) {
+pid_t waitpid(pid_t pid, int *status, int options) {
   return wait4(pid, status, options, NULL);
 }
 
-int waitid(idtype_t which, id_t id, siginfo_t* info, int options) {
+int waitid(idtype_t which, id_t id, siginfo_t *info, int options) {
   // The system call takes an optional struct rusage that we don't need.
   return __waitid(which, id, info, options, NULL);
 }

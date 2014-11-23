@@ -20,10 +20,9 @@
 #include "private/bionic_macros.h"
 
 class __LIBC_HIDDEN__ Elem {
-public:
+ public:
   // name must be valid throughout lifetime of the object.
-  explicit Elem(FILE* fp, const char* name,
-                const char* attr_fmt = nullptr, ...) {
+  explicit Elem(FILE *fp, const char *name, const char *attr_fmt = nullptr, ...) {
     this->fp = fp;
     this->name = name;
 
@@ -42,21 +41,21 @@ public:
     fprintf(fp, "</%s>", name);
   }
 
-  void contents(const char* fmt, ...) {
-      va_list args;
-      va_start(args, fmt);
-      vfprintf(fp, fmt, args);
-      va_end(args);
+  void contents(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(fp, fmt, args);
+    va_end(args);
   }
 
-private:
-  FILE* fp;
-  const char* name;
+ private:
+  FILE *fp;
+  const char *name;
 
   DISALLOW_COPY_AND_ASSIGN(Elem);
 };
 
-int malloc_info(int options, FILE* fp) {
+int malloc_info(int options, FILE *fp) {
   if (options != 0) {
     errno = EINVAL;
     return -1;

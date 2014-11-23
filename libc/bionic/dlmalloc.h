@@ -47,7 +47,8 @@
 /* Export two symbols used by the VM. */
 __BEGIN_DECLS
 int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;
-void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void*) __LIBC_ABI_PUBLIC__;
+void dlmalloc_inspect_all(void (*handler)(void *, void *, size_t, void *),
+                          void *) __LIBC_ABI_PUBLIC__;
 __END_DECLS
 
 /* Include the proper definitions. */

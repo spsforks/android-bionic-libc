@@ -19,16 +19,19 @@
 
 #include <signal.h>
 
-// Our sigset_t is wrong for ARM and x86. It's 32-bit but the kernel expects 64 bits.
-// This means we can't support real-time signals correctly until we can change the ABI.
-// In the meantime, we can use this union to pass an appropriately-sized block of memory
+// Our sigset_t is wrong for ARM and x86. It's 32-bit but the kernel expects 64
+// bits.
+// This means we can't support real-time signals correctly until we can change
+// the ABI.
+// In the meantime, we can use this union to pass an appropriately-sized block
+// of memory
 // to the kernel, at the cost of not being able to refer to real-time signals.
 union kernel_sigset_t {
   kernel_sigset_t() {
     clear();
   }
 
-  kernel_sigset_t(const sigset_t* value) {
+  kernel_sigset_t(const sigset_t *value) {
     clear();
     set(value);
   }
@@ -37,11 +40,11 @@ union kernel_sigset_t {
     __builtin_memset(this, 0, sizeof(*this));
   }
 
-  void set(const sigset_t* value) {
+  void set(const sigset_t *value) {
     bionic = *value;
   }
 
-  sigset_t* get() {
+  sigset_t *get() {
     return &bionic;
   }
 

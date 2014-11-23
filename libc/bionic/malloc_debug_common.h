@@ -40,11 +40,11 @@
 #include "private/bionic_config.h"
 #include "private/libc_logging.h"
 
-#define HASHTABLE_SIZE      1543
-#define BACKTRACE_SIZE      32
+#define HASHTABLE_SIZE 1543
+#define BACKTRACE_SIZE 32
 /* flag definitions, currently sharing storage with "size" */
-#define SIZE_FLAG_ZYGOTE_CHILD  (1<<31)
-#define SIZE_FLAG_MASK          (SIZE_FLAG_ZYGOTE_CHILD)
+#define SIZE_FLAG_ZYGOTE_CHILD (1 << 31)
+#define SIZE_FLAG_MASK (SIZE_FLAG_ZYGOTE_CHILD)
 
 // This must match the alignment used by the malloc implementation.
 #ifndef MALLOC_ALIGNMENT
@@ -56,36 +56,36 @@
 // =============================================================================
 
 struct HashEntry {
-    size_t slot;
-    HashEntry* prev;
-    HashEntry* next;
-    size_t numEntries;
-    // fields above "size" are NOT sent to the host
-    size_t size;
-    size_t allocations;
-    uintptr_t backtrace[0];
+  size_t slot;
+  HashEntry *prev;
+  HashEntry *next;
+  size_t numEntries;
+  // fields above "size" are NOT sent to the host
+  size_t size;
+  size_t allocations;
+  uintptr_t backtrace[0];
 };
 
 struct HashTable {
-    pthread_mutex_t lock;
-    size_t count;
-    HashEntry* slots[HASHTABLE_SIZE];
+  pthread_mutex_t lock;
+  size_t count;
+  HashEntry *slots[HASHTABLE_SIZE];
 };
 
 /* Entry in malloc dispatch table. */
-typedef void* (*MallocDebugCalloc)(size_t, size_t);
-typedef void (*MallocDebugFree)(void*);
+typedef void *(*MallocDebugCalloc)(size_t, size_t);
+typedef void (*MallocDebugFree)(void *);
 typedef struct mallinfo (*MallocDebugMallinfo)();
-typedef void* (*MallocDebugMalloc)(size_t);
-typedef size_t (*MallocDebugMallocUsableSize)(const void*);
-typedef void* (*MallocDebugMemalign)(size_t, size_t);
-typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
+typedef void *(*MallocDebugMalloc)(size_t);
+typedef size_t (*MallocDebugMallocUsableSize)(const void *);
+typedef void *(*MallocDebugMemalign)(size_t, size_t);
+typedef int (*MallocDebugPosixMemalign)(void **, size_t, size_t);
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocDebugPvalloc)(size_t);
+typedef void *(*MallocDebugPvalloc)(size_t);
 #endif
-typedef void* (*MallocDebugRealloc)(void*, size_t);
+typedef void *(*MallocDebugRealloc)(void *, size_t);
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocDebugValloc)(size_t);
+typedef void *(*MallocDebugValloc)(size_t);
 #endif
 
 struct MallocDebug {
@@ -105,18 +105,18 @@ struct MallocDebug {
 #endif
 };
 
-typedef bool (*MallocDebugInit)(HashTable*, const MallocDebug*);
+typedef bool (*MallocDebugInit)(HashTable *, const MallocDebug *);
 typedef void (*MallocDebugFini)(int);
 
 // =============================================================================
 // log functions
 // =============================================================================
 
-#define debug_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_DEBUG, "malloc_leak_check", (format), ##__VA_ARGS__ )
-#define error_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__ )
-#define info_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__ )
+#define debug_log(format, ...) \
+  __libc_format_log(ANDROID_LOG_DEBUG, "malloc_leak_check", (format), ##__VA_ARGS__)
+#define error_log(format, ...) \
+  __libc_format_log(ANDROID_LOG_ERROR, "malloc_leak_check", (format), ##__VA_ARGS__)
+#define info_log(format, ...) \
+  __libc_format_log(ANDROID_LOG_INFO, "malloc_leak_check", (format), ##__VA_ARGS__)
 
 #endif  // MALLOC_DEBUG_COMMON_H

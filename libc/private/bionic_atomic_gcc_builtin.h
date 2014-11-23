@@ -29,12 +29,13 @@ __ATOMIC_INLINE__ void __bionic_memory_barrier() {
   __sync_synchronize();
 }
 
-__ATOMIC_INLINE__ int __bionic_cmpxchg(int32_t old_value, int32_t new_value, volatile int32_t* ptr) {
+__ATOMIC_INLINE__ int __bionic_cmpxchg(int32_t old_value, int32_t new_value,
+                                       volatile int32_t *ptr) {
   /* We must return 0 on success. */
   return __sync_val_compare_and_swap(ptr, old_value, new_value) != old_value;
 }
 
-__ATOMIC_INLINE__ int32_t __bionic_swap(int32_t new_value, volatile int32_t* ptr) {
+__ATOMIC_INLINE__ int32_t __bionic_swap(int32_t new_value, volatile int32_t *ptr) {
   int32_t old_value;
   do {
     old_value = *ptr;
@@ -42,7 +43,7 @@ __ATOMIC_INLINE__ int32_t __bionic_swap(int32_t new_value, volatile int32_t* ptr
   return old_value;
 }
 
-__ATOMIC_INLINE__ int32_t __bionic_atomic_dec(volatile int32_t* ptr) {
+__ATOMIC_INLINE__ int32_t __bionic_atomic_dec(volatile int32_t *ptr) {
   /* We must return the old value. */
   return __sync_fetch_and_add(ptr, -1);
 }

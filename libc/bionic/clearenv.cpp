@@ -30,7 +30,7 @@
 #include <unistd.h>
 
 int clearenv() {
-  char** e = environ;
+  char **e = environ;
   if (e != NULL) {
     for (; *e; ++e) {
       *e = NULL;

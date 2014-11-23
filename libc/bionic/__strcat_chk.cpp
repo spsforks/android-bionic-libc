@@ -41,9 +41,9 @@
  * This strcat check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strcat_chk(char* __restrict dest, const char* __restrict src,
+extern "C" char *__strcat_chk(char *__restrict dest, const char *__restrict src,
                               size_t dest_buf_size) {
-  char* save = dest;
+  char *save = dest;
   size_t dest_len = __strlen_chk(dest, dest_buf_size);
 
   dest += dest_len;

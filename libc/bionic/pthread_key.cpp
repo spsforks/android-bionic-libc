@@ -59,16 +59,16 @@
  * were pointed to by these data fields (either before or after the call).
  */
 
-#define TLSMAP_BITS       32
-#define TLSMAP_WORDS      ((BIONIC_TLS_SLOTS+TLSMAP_BITS-1)/TLSMAP_BITS)
-#define TLSMAP_WORD(m,k)  (m).map[(k)/TLSMAP_BITS]
-#define TLSMAP_MASK(k)    (1U << ((k)&(TLSMAP_BITS-1)))
+#define TLSMAP_BITS 32
+#define TLSMAP_WORDS ((BIONIC_TLS_SLOTS + TLSMAP_BITS - 1) / TLSMAP_BITS)
+#define TLSMAP_WORD(m, k) (m).map[(k) / TLSMAP_BITS]
+#define TLSMAP_MASK(k) (1U << ((k) & (TLSMAP_BITS - 1)))
 
 static inline bool IsValidUserKey(pthread_key_t key) {
   return (key >= TLS_SLOT_FIRST_USER_SLOT && key < BIONIC_TLS_SLOTS);
 }
 
-typedef void (*key_destructor_t)(void*);
+typedef void (*key_destructor_t)(void *);
 
 struct tls_map_t {
   bool is_initialized;
@@ -102,7 +102,7 @@ class ScopedTlsMapAccess {
     Unlock();
   }
 
-  int CreateKey(pthread_key_t* result, void (*key_destructor)(void*)) {
+  int CreateKey(pthread_key_t *result, void (*key_destructor)(void *)) {
     // Take the first unallocated key.
     for (int key = 0; key < BIONIC_TLS_SLOTS; ++key) {
       if (!IsInUse(key)) {
@@ -125,7 +125,7 @@ class ScopedTlsMapAccess {
     return (TLSMAP_WORD(s_tls_map_, key) & TLSMAP_MASK(key)) != 0;
   }
 
-  void SetInUse(pthread_key_t key, void (*key_destructor)(void*)) {
+  void SetInUse(pthread_key_t key, void (*key_destructor)(void *)) {
     TLSMAP_WORD(s_tls_map_, key) |= TLSMAP_MASK(key);
     s_tls_map_.key_destructors[key] = key_destructor;
   }
@@ -134,7 +134,7 @@ class ScopedTlsMapAccess {
   // from this thread's TLS area. This must call the destructor of all keys
   // that have a non-NULL data value and a non-NULL destructor.
   void CleanAll() {
-    void** tls = __get_tls();
+    void **tls = __get_tls();
 
     // Because destructors can do funky things like deleting/creating other
     // keys, we need to implement this in a loop.
@@ -142,15 +142,16 @@ class ScopedTlsMapAccess {
       size_t called_destructor_count = 0;
       for (int key = 0; key < BIONIC_TLS_SLOTS; ++key) {
         if (IsInUse(key)) {
-          void* data = tls[key];
-          void (*key_destructor)(void*) = s_tls_map_.key_destructors[key];
+          void *data = tls[key];
+          void (*key_destructor)(void *) = s_tls_map_.key_destructors[key];
 
           if (data != NULL && key_destructor != NULL) {
             // we need to clear the key data now, this will prevent the
             // destructor (or a later one) from seeing the old value if
             // it calls pthread_getspecific() for some odd reason
 
-            // we do not do this if 'key_destructor == NULL' just in case another
+            // we do not do this if 'key_destructor == NULL' just in case
+            // another
             // destructor function might be responsible for manually
             // releasing the corresponding data.
             tls[key] = NULL;
@@ -166,7 +167,8 @@ class ScopedTlsMapAccess {
         }
       }
 
-      // If we didn't call any destructors, there is no need to check the TLS data again.
+      // If we didn't call any destructors, there is no need to check the TLS
+      // data again.
       if (called_destructor_count == 0) {
         break;
       }
@@ -194,7 +196,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
   tls_map.CleanAll();
 }
 
-int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
+int pthread_key_create(pthread_key_t *key, void (*key_destructor)(void *)) {
   ScopedTlsMapAccess tls_map;
   return tls_map.CreateKey(key, key_destructor);
 }
@@ -212,7 +214,7 @@ int pthread_key_delete(pthread_key_t key) {
 
   // Clear value in all threads.
   pthread_mutex_lock(&g_thread_list_lock);
-  for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
+  for (pthread_internal_t *t = g_thread_list; t != NULL; t = t->next) {
     // Skip zombie threads. They don't have a valid TLS area any more.
     // Similarly, it is possible to have t->tls == NULL for threads that
     // were just recently created through pthread_create() but whose
@@ -231,7 +233,7 @@ int pthread_key_delete(pthread_key_t key) {
   return 0;
 }
 
-void* pthread_getspecific(pthread_key_t key) {
+void *pthread_getspecific(pthread_key_t key) {
   if (!IsValidUserKey(key)) {
     return NULL;
   }
@@ -243,13 +245,13 @@ void* pthread_getspecific(pthread_key_t key) {
   return __get_tls()[key];
 }
 
-int pthread_setspecific(pthread_key_t key, const void* ptr) {
+int pthread_setspecific(pthread_key_t key, const void *ptr) {
   ScopedTlsMapAccess tls_map;
 
   if (!IsValidUserKey(key) || !tls_map.IsInUse(key)) {
     return EINVAL;
   }
 
-  __get_tls()[key] = const_cast<void*>(ptr);
+  __get_tls()[key] = const_cast<void *>(ptr);
   return 0;
 }

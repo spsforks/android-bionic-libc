@@ -60,7 +60,8 @@ TEST(locale, setlocale) {
 
 #if defined(__BIONIC__)
   // The "" locale is implementation-defined. For bionic, it's the C locale.
-  // glibc will give us something like "en_US.UTF-8", depending on the user's configuration.
+  // glibc will give us something like "en_US.UTF-8", depending on the user's
+  // configuration.
   EXPECT_STREQ("C", setlocale(LC_ALL, ""));
 #endif
   EXPECT_STREQ("C", setlocale(LC_ALL, "C"));
@@ -68,7 +69,7 @@ TEST(locale, setlocale) {
 
   errno = 0;
   EXPECT_EQ(NULL, setlocale(LC_ALL, "this-is-not-a-locale"));
-  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+  EXPECT_EQ(ENOENT, errno);  // POSIX specified, not an implementation detail!
 }
 
 TEST(locale, newlocale_invalid_category_mask) {
@@ -86,7 +87,7 @@ TEST(locale, newlocale_NULL_locale_name) {
 TEST(locale, newlocale_bad_locale_name) {
   errno = 0;
   EXPECT_EQ(0, newlocale(LC_ALL, "this-is-not-a-locale", 0));
-  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+  EXPECT_EQ(ENOENT, errno);  // POSIX specified, not an implementation detail!
 }
 
 TEST(locale, newlocale) {

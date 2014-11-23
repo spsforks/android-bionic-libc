@@ -29,6 +29,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int link(const char* old_path, const char* new_path) {
+int link(const char *old_path, const char *new_path) {
   return linkat(AT_FDCWD, old_path, AT_FDCWD, new_path, 0);
 }

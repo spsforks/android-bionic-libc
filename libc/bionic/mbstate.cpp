@@ -30,28 +30,25 @@
 
 #include <errno.h>
 
-__LIBC_HIDDEN__ size_t mbstate_bytes_so_far(const mbstate_t* ps) {
-  return
-    (ps->__seq[2] != 0) ? 3 :
-    (ps->__seq[1] != 0) ? 2 :
-    (ps->__seq[0] != 0) ? 1 : 0;
+__LIBC_HIDDEN__ size_t mbstate_bytes_so_far(const mbstate_t *ps) {
+  return (ps->__seq[2] != 0) ? 3 : (ps->__seq[1] != 0) ? 2 : (ps->__seq[0] != 0) ? 1 : 0;
 }
 
-__LIBC_HIDDEN__ void mbstate_set_byte(mbstate_t* ps, int i, char byte) {
+__LIBC_HIDDEN__ void mbstate_set_byte(mbstate_t *ps, int i, char byte) {
   ps->__seq[i] = static_cast<uint8_t>(byte);
 }
 
-__LIBC_HIDDEN__ uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
+__LIBC_HIDDEN__ uint8_t mbstate_get_byte(const mbstate_t *ps, int n) {
   return ps->__seq[n];
 }
 
-__LIBC_HIDDEN__ size_t reset_and_return_illegal(int _errno, mbstate_t* ps) {
+__LIBC_HIDDEN__ size_t reset_and_return_illegal(int _errno, mbstate_t *ps) {
   errno = _errno;
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
+  *(reinterpret_cast<uint32_t *>(ps->__seq)) = 0;
   return __MB_ERR_ILLEGAL_SEQUENCE;
 }
 
-__LIBC_HIDDEN__ size_t reset_and_return(int _return, mbstate_t* ps) {
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
+__LIBC_HIDDEN__ size_t reset_and_return(int _return, mbstate_t *ps) {
+  *(reinterpret_cast<uint32_t *>(ps->__seq)) = 0;
   return _return;
 }

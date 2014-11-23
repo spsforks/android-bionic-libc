@@ -20,8 +20,8 @@
 
 // Destroy a tree and free all allocated resources.
 // This is a GNU extension, not available from BSD.
-void tdestroy(void* root, void (*destroy_func)(void*)) {
-  node_t* root_node = (node_t*) root;
+void tdestroy(void *root, void (*destroy_func)(void *)) {
+  node_t *root_node = (node_t *)root;
   if (root_node == NULL) {
     return;
   }

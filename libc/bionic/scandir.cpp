@@ -39,17 +39,17 @@ class ScandirResult {
     return size_;
   }
 
-  dirent** release() {
-    dirent** result = names_;
+  dirent **release() {
+    dirent **result = names_;
     names_ = NULL;
     size_ = capacity_ = 0;
     return result;
   }
 
-  bool Add(dirent* entry) {
+  bool Add(dirent *entry) {
     if (size_ >= capacity_) {
       size_t new_capacity = capacity_ + 32;
-      dirent** new_names = (dirent**) realloc(names_, new_capacity * sizeof(dirent*));
+      dirent **new_names = (dirent **)realloc(names_, new_capacity * sizeof(dirent *));
       if (new_names == NULL) {
         return false;
       }
@@ -57,7 +57,7 @@ class ScandirResult {
       capacity_ = new_capacity;
     }
 
-    dirent* copy = CopyDirent(entry);
+    dirent *copy = CopyDirent(entry);
     if (copy == NULL) {
       return false;
     }
@@ -65,22 +65,23 @@ class ScandirResult {
     return true;
   }
 
-  void Sort(int (*comparator)(const dirent**, const dirent**)) {
+  void Sort(int (*comparator)(const dirent **, const dirent **)) {
     // If we have entries and a comparator, sort them.
     if (size_ > 0 && comparator != NULL) {
-      qsort(names_, size_, sizeof(dirent*), (int (*)(const void*, const void*)) comparator);
+      qsort(names_, size_, sizeof(dirent *), (int (*)(const void *, const void *))comparator);
     }
   }
 
  private:
-  dirent** names_;
+  dirent **names_;
   size_t size_;
   size_t capacity_;
 
-  static dirent* CopyDirent(dirent* original) {
-    // Allocate the minimum number of bytes necessary, rounded up to a 4-byte boundary.
+  static dirent *CopyDirent(dirent *original) {
+    // Allocate the minimum number of bytes necessary, rounded up to a 4-byte
+    // boundary.
     size_t size = ((original->d_reclen + 3) & ~3);
-    dirent* copy = (dirent*) malloc(size);
+    dirent *copy = (dirent *)malloc(size);
     memcpy(copy, original, original->d_reclen);
     return copy;
   }
@@ -88,16 +89,15 @@ class ScandirResult {
   DISALLOW_COPY_AND_ASSIGN(ScandirResult);
 };
 
-int scandir(const char* dirname, dirent*** name_list,
-            int (*filter)(const dirent*),
-            int (*comparator)(const dirent**, const dirent**)) {
+int scandir(const char *dirname, dirent ***name_list, int (*filter)(const dirent *),
+            int (*comparator)(const dirent **, const dirent **)) {
   ScopedReaddir reader(dirname);
   if (reader.IsBad()) {
     return -1;
   }
 
   ScandirResult names;
-  dirent* entry;
+  dirent *entry;
   while ((entry = reader.ReadEntry()) != NULL) {
     // If we have a filter, skip names that don't match.
     if (filter != NULL && !(*filter)(entry)) {

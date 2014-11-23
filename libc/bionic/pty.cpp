@@ -35,7 +35,7 @@
 #include <unistd.h>
 
 int getpt(void) {
-  return posix_openpt(O_RDWR|O_NOCTTY);
+  return posix_openpt(O_RDWR | O_NOCTTY);
 }
 
 int grantpt(int) {
@@ -46,12 +46,12 @@ int posix_openpt(int flags) {
   return open("/dev/ptmx", flags);
 }
 
-char* ptsname(int fd) {
+char *ptsname(int fd) {
   static char buf[64];
   return ptsname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
 }
 
-int ptsname_r(int fd, char* buf, size_t len) {
+int ptsname_r(int fd, char *buf, size_t len) {
   if (buf == NULL) {
     errno = EINVAL;
     return errno;
@@ -71,12 +71,12 @@ int ptsname_r(int fd, char* buf, size_t len) {
   return 0;
 }
 
-char* ttyname(int fd) {
+char *ttyname(int fd) {
   static char buf[64];
   return ttyname_r(fd, buf, sizeof(buf)) == 0 ? buf : NULL;
 }
 
-int ttyname_r(int fd, char* buf, size_t len) {
+int ttyname_r(int fd, char *buf, size_t len) {
   if (buf == NULL) {
     errno = EINVAL;
     return errno;

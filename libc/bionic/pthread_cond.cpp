@@ -53,24 +53,23 @@
 #define COND_FLAGS_MASK (COND_SHARED_MASK | COND_CLOCK_MASK)
 #define COND_COUNTER_MASK (~COND_FLAGS_MASK)
 
-#define COND_IS_SHARED(c) (((c) & COND_SHARED_MASK) != 0)
-#define COND_GET_CLOCK(c) (((c) & COND_CLOCK_MASK) >> 1)
+#define COND_IS_SHARED(c) (((c)&COND_SHARED_MASK) != 0)
+#define COND_GET_CLOCK(c) (((c)&COND_CLOCK_MASK) >> 1)
 #define COND_SET_CLOCK(attr, c) ((attr) | (c << 1))
 
-
-int pthread_condattr_init(pthread_condattr_t* attr) {
+int pthread_condattr_init(pthread_condattr_t *attr) {
   *attr = 0;
   *attr |= PTHREAD_PROCESS_PRIVATE;
   *attr |= (CLOCK_REALTIME << 1);
   return 0;
 }
 
-int pthread_condattr_getpshared(const pthread_condattr_t* attr, int* pshared) {
+int pthread_condattr_getpshared(const pthread_condattr_t *attr, int *pshared) {
   *pshared = static_cast<int>(COND_IS_SHARED(*attr));
   return 0;
 }
 
-int pthread_condattr_setpshared(pthread_condattr_t* attr, int pshared) {
+int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared) {
   if (pshared != PTHREAD_PROCESS_SHARED && pshared != PTHREAD_PROCESS_PRIVATE) {
     return EINVAL;
   }
@@ -79,12 +78,12 @@ int pthread_condattr_setpshared(pthread_condattr_t* attr, int pshared) {
   return 0;
 }
 
-int pthread_condattr_getclock(const pthread_condattr_t* attr, clockid_t* clock) {
+int pthread_condattr_getclock(const pthread_condattr_t *attr, clockid_t *clock) {
   *clock = COND_GET_CLOCK(*attr);
   return 0;
 }
 
-int pthread_condattr_setclock(pthread_condattr_t* attr, clockid_t clock) {
+int pthread_condattr_setclock(pthread_condattr_t *attr, clockid_t clock) {
   if (clock != CLOCK_MONOTONIC && clock != CLOCK_REALTIME) {
     return EINVAL;
   }
@@ -93,11 +92,10 @@ int pthread_condattr_setclock(pthread_condattr_t* attr, clockid_t clock) {
   return 0;
 }
 
-int pthread_condattr_destroy(pthread_condattr_t* attr) {
+int pthread_condattr_destroy(pthread_condattr_t *attr) {
   *attr = 0xdeada11d;
   return 0;
 }
-
 
 // XXX *technically* there is a race condition that could allow
 // XXX a signal to be missed.  If thread A is preempted in _wait()
@@ -106,7 +104,7 @@ int pthread_condattr_destroy(pthread_condattr_t* attr) {
 // XXX before thread A is scheduled again and calls futex_wait(),
 // XXX then the signal will be lost.
 
-int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
+int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr) {
   if (attr != NULL) {
     cond->value = (*attr & COND_FLAGS_MASK);
   } else {
@@ -116,7 +114,7 @@ int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
   return 0;
 }
 
-int pthread_cond_destroy(pthread_cond_t* cond) {
+int pthread_cond_destroy(pthread_cond_t *cond) {
   cond->value = 0xdeadc04d;
   return 0;
 }
@@ -124,7 +122,7 @@ int pthread_cond_destroy(pthread_cond_t* cond) {
 // This function is used by pthread_cond_broadcast and
 // pthread_cond_signal to atomically decrement the counter
 // then wake up 'counter' threads.
-static int __pthread_cond_pulse(pthread_cond_t* cond, int counter) {
+static int __pthread_cond_pulse(pthread_cond_t *cond, int counter) {
   int flags = (cond->value & COND_FLAGS_MASK);
   while (true) {
     int old_value = cond->value;
@@ -149,7 +147,8 @@ static int __pthread_cond_pulse(pthread_cond_t* cond, int counter) {
 }
 
 __LIBC_HIDDEN__
-int __pthread_cond_timedwait_relative(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* reltime) {
+int __pthread_cond_timedwait_relative(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                      const timespec *reltime) {
   int old_value = cond->value;
 
   pthread_mutex_unlock(mutex);
@@ -163,9 +162,10 @@ int __pthread_cond_timedwait_relative(pthread_cond_t* cond, pthread_mutex_t* mut
 }
 
 __LIBC_HIDDEN__
-int __pthread_cond_timedwait(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abs_ts, clockid_t clock) {
+int __pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const timespec *abs_ts,
+                             clockid_t clock) {
   timespec ts;
-  timespec* tsp;
+  timespec *tsp;
 
   if (abs_ts != NULL) {
     if (!timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
@@ -179,39 +179,42 @@ int __pthread_cond_timedwait(pthread_cond_t* cond, pthread_mutex_t* mutex, const
   return __pthread_cond_timedwait_relative(cond, mutex, tsp);
 }
 
-int pthread_cond_broadcast(pthread_cond_t* cond) {
+int pthread_cond_broadcast(pthread_cond_t *cond) {
   return __pthread_cond_pulse(cond, INT_MAX);
 }
 
-int pthread_cond_signal(pthread_cond_t* cond) {
+int pthread_cond_signal(pthread_cond_t *cond) {
   return __pthread_cond_pulse(cond, 1);
 }
 
-int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex) {
+int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex) {
   return __pthread_cond_timedwait(cond, mutex, NULL, COND_GET_CLOCK(cond->value));
 }
 
-int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t * mutex, const timespec *abstime) {
+int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const timespec *abstime) {
   return __pthread_cond_timedwait(cond, mutex, abstime, COND_GET_CLOCK(cond->value));
 }
 
 #if !defined(__LP64__)
 // TODO: this exists only for backward binary compatibility on 32 bit platforms.
-extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
+extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                const timespec *abstime) {
   return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
 }
 
-extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
+extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                   const timespec *abstime) {
   return __pthread_cond_timedwait(cond, mutex, abstime, CLOCK_MONOTONIC);
 }
 
-extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* reltime) {
+extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t *cond, pthread_mutex_t *mutex,
+                                                  const timespec *reltime) {
   return __pthread_cond_timedwait_relative(cond, mutex, reltime);
 }
 
-extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsigned ms) {
+extern "C" int pthread_cond_timeout_np(pthread_cond_t *cond, pthread_mutex_t *mutex, unsigned ms) {
   timespec ts;
   timespec_from_ms(ts, ms);
   return __pthread_cond_timedwait_relative(cond, mutex, &ts);
 }
-#endif // !defined(__LP64__)
+#endif  // !defined(__LP64__)

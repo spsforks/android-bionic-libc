@@ -56,8 +56,8 @@ class ScopedSignalBlocker {
   sigset_t old_set_;
 };
 
-static FILE* __tmpfile_dir(const char* tmp_dir) {
-  char* path = NULL;
+static FILE *__tmpfile_dir(const char *tmp_dir) {
+  char *path = NULL;
   if (asprintf(&path, "%s/tmp.XXXXXXXXXX", tmp_dir) == -1) {
     return NULL;
   }
@@ -76,7 +76,8 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
     free(path);
 
     // Can we still use the file now it's unlinked?
-    // File systems without hard link support won't have the usual Unix semantics.
+    // File systems without hard link support won't have the usual Unix
+    // semantics.
     struct stat sb;
     int rc = fstat(fd, &sb);
     if (rc == -1) {
@@ -87,7 +88,7 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
   }
 
   // Turn the file descriptor into a FILE*.
-  FILE* fp = fdopen(fd, "w+");
+  FILE *fp = fdopen(fd, "w+");
   if (fp != NULL) {
     return fp;
   }
@@ -98,15 +99,19 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
   return NULL;
 }
 
-FILE* tmpfile() {
-  // TODO: get this app's temporary directory from the framework ("/data/data/app/cache").
+FILE *tmpfile() {
+  // TODO: get this app's temporary directory from the framework
+  // ("/data/data/app/cache").
 
-  // $EXTERNAL_STORAGE turns out not to be very useful because it doesn't support hard links.
-  // This means we can't do the usual trick of calling unlink before handing the file back.
+  // $EXTERNAL_STORAGE turns out not to be very useful because it doesn't
+  // support hard links.
+  // This means we can't do the usual trick of calling unlink before handing the
+  // file back.
 
-  FILE* fp = __tmpfile_dir("/data/local/tmp");
+  FILE *fp = __tmpfile_dir("/data/local/tmp");
   if (fp == NULL) {
-    // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try P_tmpdir before
+    // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try
+    // P_tmpdir before
     // giving up. This is potentially useful for bionic on the host anyway.
     fp = __tmpfile_dir(P_tmpdir);
   }

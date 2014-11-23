@@ -33,28 +33,28 @@
 
 #include "private/libc_logging.h"
 
-extern "C" int __openat(int, const char*, int, int);
+extern "C" int __openat(int, const char *, int, int);
 
 static inline int force_O_LARGEFILE(int flags) {
 #if __LP64__
-  return flags; // No need, and aarch64's strace gets confused.
+  return flags;  // No need, and aarch64's strace gets confused.
 #else
   return flags | O_LARGEFILE;
 #endif
 }
 
-int creat(const char* pathname, mode_t mode) {
+int creat(const char *pathname, mode_t mode) {
   return open(pathname, O_CREAT | O_TRUNC | O_WRONLY, mode);
 }
 __strong_alias(creat64, creat);
 
-int open(const char* pathname, int flags, ...) {
+int open(const char *pathname, int flags, ...) {
   mode_t mode = 0;
 
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = (mode_t)va_arg(args, int);
     va_end(args);
   }
 
@@ -62,7 +62,7 @@ int open(const char* pathname, int flags, ...) {
 }
 __strong_alias(open64, open);
 
-int __open_2(const char* pathname, int flags) {
+int __open_2(const char *pathname, int flags) {
   if (__predict_false((flags & O_CREAT) != 0)) {
     __fortify_chk_fail("open(O_CREAT): called without specifying a mode", 0);
   }
@@ -76,7 +76,7 @@ int openat(int fd, const char *pathname, int flags, ...) {
   if ((flags & O_CREAT) != 0) {
     va_list args;
     va_start(args, flags);
-    mode = (mode_t) va_arg(args, int);
+    mode = (mode_t)va_arg(args, int);
     va_end(args);
   }
 
@@ -84,7 +84,7 @@ int openat(int fd, const char *pathname, int flags, ...) {
 }
 __strong_alias(openat64, openat);
 
-int __openat_2(int fd, const char* pathname, int flags) {
+int __openat_2(int fd, const char *pathname, int flags) {
   if ((flags & O_CREAT) != 0) {
     __fortify_chk_fail("openat(O_CREAT): called without specifying a mode", 0);
   }

@@ -31,8 +31,9 @@
 #include <strings.h>
 
 // Our unoptimized memcpy just calls the best bcopy available.
-// (It's this way round rather than the opposite because we're based on BSD source.)
-void* memcpy(void* dst, const void* src, size_t n) {
+// (It's this way round rather than the opposite because we're based on BSD
+// source.)
+void *memcpy(void *dst, const void *src, size_t n) {
   bcopy(src, dst, n);
   return dst;
 }

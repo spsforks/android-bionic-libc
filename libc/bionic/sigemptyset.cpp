@@ -28,7 +28,7 @@
 
 #include <signal.h>
 
-int sigemptyset(sigset_t* set) {
+int sigemptyset(sigset_t *set) {
   if (set == NULL) {
     errno = EINVAL;
     return -1;

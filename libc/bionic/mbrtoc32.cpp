@@ -33,9 +33,9 @@
 
 #include "private/bionic_mbstate.h"
 
-size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
+size_t mbrtoc32(char32_t *pc32, const char *s, size_t n, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
 
   // We should never get to a state which has all 4 bytes of the sequence set.
   // Full state verification is done when decoding the sequence (after we have

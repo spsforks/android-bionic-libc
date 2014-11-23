@@ -32,11 +32,11 @@
 
 #include "private/libc_logging.h"
 
-void __assert(const char* file, int line, const char* failed_expression) {
+void __assert(const char *file, int line, const char *failed_expression) {
   __libc_fatal("%s:%d: assertion \"%s\" failed", file, line, failed_expression);
 }
 
-void __assert2(const char* file, int line, const char* function, const char* failed_expression) {
+void __assert2(const char *file, int line, const char *function, const char *failed_expression) {
   __libc_fatal("%s:%d: %s: assertion \"%s\" failed", file, line, function, failed_expression);
 }
 

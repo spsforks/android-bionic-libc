@@ -33,12 +33,11 @@
 
 #include "private/bionic_mbstate.h"
 
-static inline bool mbspartialc16(const mbstate_t* state) {
+static inline bool mbspartialc16(const mbstate_t *state) {
   return mbstate_get_byte(state, 3) != 0;
 }
 
-static size_t begin_surrogate(char32_t c32, char16_t* pc16,
-                              size_t nconv, mbstate_t* state) {
+static size_t begin_surrogate(char32_t c32, char16_t *pc16, size_t nconv, mbstate_t *state) {
   c32 -= 0x10000;
   char16_t trail = (c32 & 0x3ff) | 0xdc00;
 
@@ -51,16 +50,15 @@ static size_t begin_surrogate(char32_t c32, char16_t* pc16,
   return static_cast<size_t>(-3);
 }
 
-static size_t finish_surrogate(char16_t* pc16, mbstate_t* state) {
-  char16_t trail = mbstate_get_byte(state, 1) << 8 |
-                   mbstate_get_byte(state, 0);
+static size_t finish_surrogate(char16_t *pc16, mbstate_t *state) {
+  char16_t trail = mbstate_get_byte(state, 1) << 8 | mbstate_get_byte(state, 0);
   *pc16 = trail;
   return reset_and_return(mbstate_get_byte(state, 3), state);
 }
 
-size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {
+size_t mbrtoc16(char16_t *pc16, const char *s, size_t n, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
 
   char16_t __private_pc16;
   if (pc16 == NULL) {

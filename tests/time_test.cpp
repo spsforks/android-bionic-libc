@@ -42,7 +42,8 @@ TEST(time, gmtime) {
 
 static void* gmtime_no_stack_overflow_14313703_fn(void*) {
   const char* original_tz = getenv("TZ");
-  // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
+  // Ensure we'll actually have to enter tzload by using a time zone that
+  // doesn't exist.
   setenv("TZ", "gmtime_stack_overflow_14313703", 1);
   tzset();
   if (original_tz != NULL) {
@@ -90,7 +91,7 @@ TEST(time, mktime_empty_TZ) {
   t.tm_mon = 6;
   t.tm_mday = 2;
 
-  setenv("TZ", "", 1); // Implies UTC.
+  setenv("TZ", "", 1);  // Implies UTC.
   tzset();
   ASSERT_EQ(static_cast<time_t>(331344000U), mktime(&t));
 }
@@ -130,8 +131,8 @@ TEST(time, strftime) {
 
   char buf[64];
 
-  // Seconds since the epoch.
-#if defined(__BIONIC__) || defined(__LP64__) // Not 32-bit glibc.
+// Seconds since the epoch.
+#if defined(__BIONIC__) || defined(__LP64__)  // Not 32-bit glibc.
   EXPECT_EQ(10U, strftime(buf, sizeof(buf), "%s", &t));
   EXPECT_STREQ("4108320000", buf);
 #endif
@@ -216,7 +217,7 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
   ASSERT_EQ(0, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
 
   itimerspec ts;
-  ts.it_value.tv_sec =  0;
+  ts.it_value.tv_sec = 0;
   ts.it_value.tv_nsec = 1;
   ts.it_interval.tv_sec = 0;
   ts.it_interval.tv_nsec = 0;
@@ -293,7 +294,8 @@ TEST(time, timer_settime_0) {
   counter.SetTime(0, 1, 1, 0);
   usleep(500000);
 
-  // The count should just be 1 because we disarmed the timer the first time it fired.
+  // The count should just be 1 because we disarmed the timer the first time it
+  // fired.
   ASSERT_EQ(1, counter.value);
 }
 
@@ -418,14 +420,16 @@ TEST(time, timer_delete_from_timer_thread) {
   ASSERT_EQ(0, timer_settime(tdd.timer_id, TIMER_ABSTIME, &ts, NULL));
 
   time_t cur_time = time(NULL);
-  while (!tdd.complete && (time(NULL) - cur_time) < 5);
+  while (!tdd.complete && (time(NULL) - cur_time) < 5)
+    ;
   ASSERT_TRUE(tdd.complete);
 
 #if defined(__BIONIC__)
   // Since bionic timers are implemented by creating a thread to handle the
   // callback, verify that the thread actually completes.
   cur_time = time(NULL);
-  while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5);
+  while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5)
+    ;
   ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
 #endif
 }

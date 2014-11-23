@@ -29,7 +29,7 @@
 #include <pthread.h>
 
 #include <fcntl.h>
-#include <stdio.h> // For snprintf.
+#include <stdio.h>  // For snprintf.
 #include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -43,7 +43,7 @@
 #define MAX_TASK_COMM_LEN 16
 #define TASK_COMM_FMT "/proc/self/task/%d/comm"
 
-int pthread_setname_np(pthread_t t, const char* thread_name) {
+int pthread_setname_np(pthread_t t, const char *thread_name) {
   ErrnoRestorer errno_restorer;
 
   size_t thread_name_len = strlen(thread_name);

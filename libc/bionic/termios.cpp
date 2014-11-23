@@ -29,35 +29,35 @@
 #include <termios.h>
 #include <unistd.h>
 
-static speed_t cfgetspeed(const termios* s) {
+static speed_t cfgetspeed(const termios *s) {
   return (s->c_cflag & CBAUD);
 }
 
-speed_t cfgetispeed(const termios* s) {
+speed_t cfgetispeed(const termios *s) {
   return cfgetspeed(s);
 }
 
-speed_t cfgetospeed(const termios* s) {
+speed_t cfgetospeed(const termios *s) {
   return cfgetspeed(s);
 }
 
-void cfmakeraw(termios* s) {
-  s->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+void cfmakeraw(termios *s) {
+  s->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
   s->c_oflag &= ~OPOST;
-  s->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  s->c_cflag &= ~(CSIZE|PARENB);
+  s->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+  s->c_cflag &= ~(CSIZE | PARENB);
   s->c_cflag |= CS8;
 }
 
-int cfsetispeed(termios* s, speed_t speed) {
+int cfsetispeed(termios *s, speed_t speed) {
   return cfsetspeed(s, speed);
 }
 
-int cfsetospeed(termios* s, speed_t speed) {
+int cfsetospeed(termios *s, speed_t speed) {
   return cfsetspeed(s, speed);
 }
 
-int cfsetspeed(termios* s, speed_t speed) {
+int cfsetspeed(termios *s, speed_t speed) {
   // TODO: check 'speed' is valid.
   s->c_cflag = (s->c_cflag & ~CBAUD) | (speed & CBAUD);
   return 0;
@@ -77,7 +77,7 @@ int tcflush(int fd, int queue) {
   return ioctl(fd, TCFLSH, static_cast<unsigned long>(queue));
 }
 
-int tcgetattr(int fd, termios* s) {
+int tcgetattr(int fd, termios *s) {
   return ioctl(fd, TCGETS, s);
 }
 
@@ -93,13 +93,21 @@ int tcsendbreak(int fd, int duration) {
   return ioctl(fd, TCSBRKP, static_cast<unsigned long>(duration));
 }
 
-int tcsetattr(int fd, int optional_actions, const termios* s) {
+int tcsetattr(int fd, int optional_actions, const termios *s) {
   int cmd;
   switch (optional_actions) {
-    case TCSANOW: cmd = TCSETS; break;
-    case TCSADRAIN: cmd = TCSETSW; break;
-    case TCSAFLUSH: cmd = TCSETSF; break;
-    default: errno = EINVAL; return -1;
+    case TCSANOW:
+      cmd = TCSETS;
+      break;
+    case TCSADRAIN:
+      cmd = TCSETSW;
+      break;
+    case TCSAFLUSH:
+      cmd = TCSETSF;
+      break;
+    default:
+      errno = EINVAL;
+      return -1;
   }
   return ioctl(fd, cmd, s);
 }

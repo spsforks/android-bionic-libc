@@ -30,6 +30,6 @@
 #undef _FORTIFY_SOURCE
 #include <string.h>
 
-char* strrchr(const char* p, int ch) {
+char *strrchr(const char *p, int ch) {
   return __strrchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }

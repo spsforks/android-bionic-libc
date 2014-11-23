@@ -31,13 +31,13 @@
 #include "private/bionic_futex.h"
 #include "pthread_accessor.h"
 
-int pthread_join(pthread_t t, void** return_value) {
+int pthread_join(pthread_t t, void **return_value) {
   if (t == pthread_self()) {
     return EDEADLK;
   }
 
   pid_t tid;
-  volatile int* tid_ptr;
+  volatile int *tid_ptr;
   {
     pthread_accessor thread(t);
     if (thread.get() == NULL) {

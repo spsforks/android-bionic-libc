@@ -41,8 +41,8 @@
  * This strncat check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" char* __strncat_chk(char* __restrict dest, const char* __restrict src,
-                               size_t len, size_t dest_buf_size) {
+extern "C" char *__strncat_chk(char *__restrict dest, const char *__restrict src, size_t len,
+                               size_t dest_buf_size) {
   if (len == 0) {
     return dest;
   }
@@ -53,7 +53,8 @@ extern "C" char* __strncat_chk(char* __restrict dest, const char* __restrict src
 
   while (*src != '\0') {
     *d++ = *src++;
-    len--; dest_buf_size--;
+    len--;
+    dest_buf_size--;
 
     if (__predict_false(dest_buf_size == 0)) {
       __fortify_chk_fail("strncat: prevented write past end of buffer",

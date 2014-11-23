@@ -23,10 +23,10 @@
 __BEGIN_DECLS
 
 struct NetdClientDispatch {
-    int (*accept4)(int, struct sockaddr*, socklen_t*, int);
-    int (*connect)(int, const struct sockaddr*, socklen_t);
-    int (*socket)(int, int, int);
-    unsigned (*netIdForResolv)(unsigned);
+  int (*accept4)(int, struct sockaddr *, socklen_t *, int);
+  int (*connect)(int, const struct sockaddr *, socklen_t);
+  int (*socket)(int, int, int);
+  unsigned (*netIdForResolv)(unsigned);
 };
 
 extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;

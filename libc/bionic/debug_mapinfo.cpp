@@ -37,25 +37,25 @@
 
 // Format of /proc/<PID>/maps:
 //   6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so
-static mapinfo_t* parse_maps_line(char* line) {
+static mapinfo_t *parse_maps_line(char *line) {
   uintptr_t start;
   uintptr_t end;
   int name_pos;
-  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start,
-             &end, &name_pos) < 2) {
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start, &end, &name_pos) <
+      2) {
     return NULL;
   }
 
   while (isspace(line[name_pos])) {
     name_pos += 1;
   }
-  const char* name = line + name_pos;
+  const char *name = line + name_pos;
   size_t name_len = strlen(name);
   if (name_len && name[name_len - 1] == '\n') {
     name_len -= 1;
   }
 
-  mapinfo_t* mi = reinterpret_cast<mapinfo_t*>(calloc(1, sizeof(mapinfo_t) + name_len + 1));
+  mapinfo_t *mi = reinterpret_cast<mapinfo_t *>(calloc(1, sizeof(mapinfo_t) + name_len + 1));
   if (mi) {
     mi->start = start;
     mi->end = end;
@@ -65,16 +65,16 @@ static mapinfo_t* parse_maps_line(char* line) {
   return mi;
 }
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
+__LIBC_HIDDEN__ mapinfo_t *mapinfo_create(pid_t pid) {
   ScopedDisableDebugCalls disable;
 
-  struct mapinfo_t* milist = NULL;
-  char data[1024]; // Used to read lines as well as to construct the filename.
+  struct mapinfo_t *milist = NULL;
+  char data[1024];  // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
-  FILE* fp = fopen(data, "re");
+  FILE *fp = fopen(data, "re");
   if (fp != NULL) {
     while (fgets(data, sizeof(data), fp) != NULL) {
-      mapinfo_t* mi = parse_maps_line(data);
+      mapinfo_t *mi = parse_maps_line(data);
       if (mi) {
         mi->next = milist;
         milist = mi;
@@ -85,18 +85,18 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
   return milist;
 }
 
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
+__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t *mi) {
   ScopedDisableDebugCalls disable;
 
   while (mi != NULL) {
-    mapinfo_t* del = mi;
+    mapinfo_t *del = mi;
     mi = mi->next;
     free(del);
   }
 }
 
 // Find the containing map info for the PC.
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc) {
+__LIBC_HIDDEN__ const mapinfo_t *mapinfo_find(mapinfo_t *mi, uintptr_t pc, uintptr_t *rel_pc) {
   for (; mi != NULL; mi = mi->next) {
     if ((pc >= mi->start) && (pc < mi->end)) {
       *rel_pc = pc - mi->start;

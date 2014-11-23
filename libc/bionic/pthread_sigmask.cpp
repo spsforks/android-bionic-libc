@@ -32,7 +32,7 @@
 
 #include "private/ErrnoRestorer.h"
 
-int pthread_sigmask(int how, const sigset_t* new_set, sigset_t* old_set) {
+int pthread_sigmask(int how, const sigset_t *new_set, sigset_t *old_set) {
   ErrnoRestorer errno_restorer;
   int result = sigprocmask(how, new_set, old_set);
   return (result == -1) ? errno : 0;

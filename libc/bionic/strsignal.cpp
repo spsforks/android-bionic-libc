@@ -29,18 +29,19 @@
 #include <string.h>
 #include "private/ThreadLocalBuffer.h"
 
-extern "C" const char* __strsignal_lookup(int);
-extern "C" const char* __strsignal(int, char*, size_t);
+extern "C" const char *__strsignal_lookup(int);
+extern "C" const char *__strsignal(int, char *, size_t);
 
 GLOBAL_INIT_THREAD_LOCAL_BUFFER(strsignal);
 
-char* strsignal(int signal_number) {
+char *strsignal(int signal_number) {
   // Just return the original constant in the easy cases.
-  char* result = const_cast<char*>(__strsignal_lookup(signal_number));
+  char *result = const_cast<char *>(__strsignal_lookup(signal_number));
   if (result != NULL) {
     return result;
   }
 
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strsignal, NL_TEXTMAX);
-  return const_cast<char*>(__strsignal(signal_number, strsignal_tls_buffer, strsignal_tls_buffer_size));
+  LOCAL_INIT_THREAD_LOCAL_BUFFER(char *, strsignal, NL_TEXTMAX);
+  return const_cast<char *>(
+      __strsignal(signal_number, strsignal_tls_buffer, strsignal_tls_buffer_size));
 }

@@ -25,8 +25,8 @@
 __BEGIN_DECLS
 
 struct mallinfo je_mallinfo();
-void* je_memalign_round_up_boundary(size_t, size_t);
-void* je_pvalloc(size_t);
+void *je_memalign_round_up_boundary(size_t, size_t);
+void *je_pvalloc(size_t);
 
 __END_DECLS
 

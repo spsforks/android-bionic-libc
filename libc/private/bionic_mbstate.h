@@ -40,15 +40,14 @@ __BEGIN_DECLS
 #define __MB_ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
 #define __MB_ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
 
-#define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || \
-                         rv == __MB_ERR_INCOMPLETE_SEQUENCE)
+#define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || rv == __MB_ERR_INCOMPLETE_SEQUENCE)
 
-size_t mbstate_bytes_so_far(const mbstate_t* ps);
-void mbstate_set_byte(mbstate_t* ps, int i, char byte);
-uint8_t mbstate_get_byte(const mbstate_t* ps, int n);
-size_t reset_and_return_illegal(int _errno, mbstate_t* ps);
-size_t reset_and_return(int _return, mbstate_t* ps);
+size_t mbstate_bytes_so_far(const mbstate_t *ps);
+void mbstate_set_byte(mbstate_t *ps, int i, char byte);
+uint8_t mbstate_get_byte(const mbstate_t *ps, int n);
+size_t reset_and_return_illegal(int _errno, mbstate_t *ps);
+size_t reset_and_return(int _return, mbstate_t *ps);
 
 __END_DECLS
 
-#endif // _BIONIC_MBSTATE_H
+#endif  // _BIONIC_MBSTATE_H

@@ -32,7 +32,7 @@
 #include <sys/limits.h>
 #include <sys/vfs.h>
 
-static long __filesizebits(const struct statfs& s) {
+static long __filesizebits(const struct statfs &s) {
   switch (s.f_type) {
     case JFFS2_SUPER_MAGIC:
     case MSDOS_SUPER_MAGIC:
@@ -43,7 +43,7 @@ static long __filesizebits(const struct statfs& s) {
   return 64;
 }
 
-static long __link_max(const struct statfs& s) {
+static long __link_max(const struct statfs &s) {
   // These constant values were taken from kernel headers.
   // They're not available in uapi headers.
   switch (s.f_type) {
@@ -61,7 +61,7 @@ static long __link_max(const struct statfs& s) {
   return LINK_MAX;
 }
 
-static long __2_symlinks(const struct statfs& s) {
+static long __2_symlinks(const struct statfs &s) {
   switch (s.f_type) {
     case ADFS_SUPER_MAGIC:
     case BFS_MAGIC:
@@ -74,7 +74,7 @@ static long __2_symlinks(const struct statfs& s) {
   return 1;
 }
 
-static long __pathconf(const struct statfs& s, int name) {
+static long __pathconf(const struct statfs &s, int name) {
   switch (name) {
     case _PC_FILESIZEBITS:
       return __filesizebits(s);
@@ -100,7 +100,7 @@ static long __pathconf(const struct statfs& s, int name) {
     case _PC_2_SYMLINKS:
       return __2_symlinks(s);
 
-    case _PC_ALLOC_SIZE_MIN:  /* fall through */
+    case _PC_ALLOC_SIZE_MIN: /* fall through */
     case _PC_REC_XFER_ALIGN:
       return s.f_frsize;
 
@@ -139,7 +139,7 @@ static long __pathconf(const struct statfs& s, int name) {
   }
 }
 
-long pathconf(const char* path, int name) {
+long pathconf(const char *path, int name) {
   struct statfs sb;
   if (statfs(path, &sb) == -1) {
     return -1;

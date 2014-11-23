@@ -34,37 +34,38 @@
 
 #include "pthread_internal.h"
 
-extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
+extern "C" __noreturn void _exit_with_stack_teardown(void *, size_t);
 extern "C" __noreturn void __exit(int);
-extern "C" int __set_tid_address(int*);
+extern "C" int __set_tid_address(int *);
 
-/* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
+/* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++
+ * exceptions
  *         and thread cancelation
  */
 
-void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t routine, void* arg) {
-  pthread_internal_t* thread = __get_thread();
+void __pthread_cleanup_push(__pthread_cleanup_t *c, __pthread_cleanup_func_t routine, void *arg) {
+  pthread_internal_t *thread = __get_thread();
   c->__cleanup_routine = routine;
   c->__cleanup_arg = arg;
   c->__cleanup_prev = thread->cleanup_stack;
   thread->cleanup_stack = c;
 }
 
-void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
-  pthread_internal_t* thread = __get_thread();
+void __pthread_cleanup_pop(__pthread_cleanup_t *c, int execute) {
+  pthread_internal_t *thread = __get_thread();
   thread->cleanup_stack = c->__cleanup_prev;
   if (execute) {
     c->__cleanup_routine(c->__cleanup_arg);
   }
 }
 
-void pthread_exit(void* return_value) {
-  pthread_internal_t* thread = __get_thread();
+void pthread_exit(void *return_value) {
+  pthread_internal_t *thread = __get_thread();
   thread->return_value = return_value;
 
   // Call the cleanup handlers first.
   while (thread->cleanup_stack) {
-    __pthread_cleanup_t* c = thread->cleanup_stack;
+    __pthread_cleanup_t *c = thread->cleanup_stack;
     thread->cleanup_stack = c->__cleanup_prev;
     c->__cleanup_routine(c->__cleanup_arg);
   }
@@ -87,8 +88,9 @@ void pthread_exit(void* return_value) {
     thread->alternate_signal_stack = NULL;
   }
 
-  // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
-  void* stack_base = thread->attr.stack_base;
+  // Keep track of what we need to know about the stack before we lose the
+  // pthread_internal_t.
+  void *stack_base = thread->attr.stack_base;
   size_t stack_size = thread->attr.stack_size;
   bool user_allocated_stack = thread->user_allocated_stack();
 
@@ -100,15 +102,18 @@ void pthread_exit(void* return_value) {
     __set_tid_address(NULL);
     _pthread_internal_remove_locked(thread);
   } else {
-    // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
+    // Make sure that the pthread_internal_t doesn't have stale pointers to a
+    // stack that
     // will be unmapped after the exit call below.
     if (!user_allocated_stack) {
       thread->attr.stack_base = NULL;
       thread->attr.stack_size = 0;
       thread->tls = NULL;
     }
-    // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
-    // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
+    // pthread_join is responsible for destroying the pthread_internal_t for
+    // non-detached threads.
+    // The kernel will futex_wake on the pthread_internal_t::tid field to wake
+    // pthread_join.
   }
   pthread_mutex_unlock(&g_thread_list_lock);
 
@@ -119,7 +124,8 @@ void pthread_exit(void* return_value) {
   pthread_key_clean_all();
 
   if (user_allocated_stack) {
-    // Cleaning up this thread's stack is the creator's responsibility, not ours.
+    // Cleaning up this thread's stack is the creator's responsibility, not
+    // ours.
     __exit(0);
   } else {
     // We need to munmap the stack we're running on before calling exit.

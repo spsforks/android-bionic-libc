@@ -153,7 +153,7 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
       break;
   }
 
-  char thread_name[MAX_TASK_NAME_LEN + 1]; // one more for termination
+  char thread_name[MAX_TASK_NAME_LEN + 1];  // one more for termination
   if (prctl(PR_GET_NAME, (unsigned long)thread_name, 0, 0, 0) != 0) {
     strcpy(thread_name, "<name unknown>");
   } else {
@@ -164,20 +164,20 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
 
   // "info" will be null if the siginfo_t information was not available.
   // Many signals don't have an address or a code.
-  char code_desc[32]; // ", code -6"
-  char addr_desc[32]; // ", fault addr 0x1234"
+  char code_desc[32];  // ", code -6"
+  char addr_desc[32];  // ", fault addr 0x1234"
   addr_desc[0] = code_desc[0] = 0;
   if (info != nullptr) {
-    // For a rethrown signal, this si_code will be right and the one debuggerd shows will
+    // For a rethrown signal, this si_code will be right and the one debuggerd
+    // shows will
     // always be SI_TKILL.
     __libc_format_buffer(code_desc, sizeof(code_desc), ", code %d", info->si_code);
     if (has_address) {
       __libc_format_buffer(addr_desc, sizeof(addr_desc), ", fault addr %p", info->si_addr);
     }
   }
-  __libc_format_log(ANDROID_LOG_FATAL, "libc",
-                    "Fatal signal %d (%s)%s%s in tid %d (%s)",
-                    signum, signal_name, code_desc, addr_desc, gettid(), thread_name);
+  __libc_format_log(ANDROID_LOG_FATAL, "libc", "Fatal signal %d (%s)%s%s in tid %d (%s)", signum,
+                    signal_name, code_desc, addr_desc, gettid(), thread_name);
 }
 
 /*
@@ -207,7 +207,8 @@ static bool have_siginfo(int signum) {
 
 static void send_debuggerd_packet(siginfo_t* info) {
   if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
-    // process has disabled core dumps and PTRACE_ATTACH, and does not want to be dumped.
+    // process has disabled core dumps and PTRACE_ATTACH, and does not want to
+    // be dumped.
     // Honor that intention by not connecting to debuggerd and asking it
     // to dump our internal state.
     __libc_format_log(ANDROID_LOG_INFO, "libc",
@@ -281,7 +282,7 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
     case SIGTRAP:
       tgkill(getpid(), gettid(), signal_number);
       break;
-    default:    // SIGILL, SIGBUS, SIGSEGV
+    default:  // SIGILL, SIGBUS, SIGSEGV
       break;
   }
 }
@@ -293,7 +294,8 @@ __LIBC_HIDDEN__ void debuggerd_init() {
   action.sa_sigaction = debuggerd_signal_handler;
   action.sa_flags = SA_RESTART | SA_SIGINFO;
 
-  // Use the alternate signal stack if available so we can catch stack overflows.
+  // Use the alternate signal stack if available so we can catch stack
+  // overflows.
   action.sa_flags |= SA_ONSTACK;
 
   sigaction(SIGABRT, &action, nullptr);

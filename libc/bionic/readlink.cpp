@@ -30,6 +30,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-ssize_t readlink(const char* path, char* buf, size_t size) {
+ssize_t readlink(const char *path, char *buf, size_t size) {
   return readlinkat(AT_FDCWD, path, buf, size);
 }

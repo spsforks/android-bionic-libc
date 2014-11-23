@@ -23,12 +23,13 @@ static void __attribute__((constructor)) init_flag() {
   g_flag = 1;
 }
 
-static const char* is_ctor_called() __attribute__ ((ifunc("is_ctor_called_ifun")));
+static const char* is_ctor_called() __attribute__((ifunc("is_ctor_called_ifun")));
 
-const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
+const char* foo() __attribute__((ifunc("foo_ifunc")));
 
-// Static linker creates GLOBAL/IFUNC symbol and JUMP_SLOT relocation type for plt segment
-const char* is_ctor_called_jump_slot() __attribute__ ((ifunc("is_ctor_called_ifun")));
+// Static linker creates GLOBAL/IFUNC symbol and JUMP_SLOT relocation type for
+// plt segment
+const char* is_ctor_called_jump_slot() __attribute__((ifunc("is_ctor_called_ifun")));
 
 const char* is_ctor_called_irelative() {
   // Call internal ifunc-resolved function with IRELATIVE reloc
@@ -52,14 +53,14 @@ const char* f2() {
 }
 
 void* is_ctor_called_ifun() {
-  return g_flag == 0 ? return_false : return_true;
+  return g_flag == 0 ? reinterpret_cast<void*>(return_false) : reinterpret_cast<void*>(return_true);
 }
 
 void* foo_ifunc() {
-   char* choice = getenv("IFUNC_CHOICE");
-   return choice == NULL ? f1 : f2;
+  char* choice = getenv("IFUNC_CHOICE");
+  return choice == NULL ? f1 : f2;
 }
 
 const char* foo_library() {
-   return foo();
+  return foo();
 }

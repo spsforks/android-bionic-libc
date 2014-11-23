@@ -20,14 +20,14 @@
 
 #include "private/libc_logging.h"
 
-static const char* syslog_log_tag = NULL;
+static const char *syslog_log_tag = NULL;
 static int syslog_priority_mask = 0xff;
 
 void closelog() {
   syslog_log_tag = NULL;
 }
 
-void openlog(const char* log_tag, int /*options*/, int /*facility*/) {
+void openlog(const char *log_tag, int /*options*/, int /*facility*/) {
   syslog_log_tag = log_tag;
 }
 
@@ -40,14 +40,14 @@ int setlogmask(int new_mask) {
   return old_mask;
 }
 
-void syslog(int priority, const char* fmt, ...) {
+void syslog(int priority, const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
   vsyslog(priority, fmt, args);
   va_end(args);
 }
 
-void vsyslog(int priority, const char* fmt, va_list args) {
+void vsyslog(int priority, const char *fmt, va_list args) {
   int caller_errno = errno;
 
   // Check whether we're supposed to be logging messages of this priority.
@@ -56,7 +56,7 @@ void vsyslog(int priority, const char* fmt, va_list args) {
   }
 
   // What's our log tag?
-  const char* log_tag = syslog_log_tag;
+  const char *log_tag = syslog_log_tag;
   if (log_tag == NULL) {
     log_tag = getprogname();
   }
@@ -76,13 +76,13 @@ void vsyslog(int priority, const char* fmt, va_list args) {
 
   // glibc's printf family support %m directly, but our BSD-based one doesn't.
   // If the format string seems to contain "%m", rewrite it.
-  const char* log_fmt = fmt;
+  const char *log_fmt = fmt;
   if (strstr(fmt, "%m") != NULL) {
     size_t dst_len = 1024;
-    char* dst = reinterpret_cast<char*>(malloc(dst_len));
+    char *dst = reinterpret_cast<char *>(malloc(dst_len));
     log_fmt = dst;
 
-    const char* src = fmt;
+    const char *src = fmt;
     for (; dst_len > 0 && *src != '\0'; ++src) {
       if (*src == '%' && *(src + 1) == 'm') {
         // Expand %m.
@@ -98,11 +98,14 @@ void vsyslog(int priority, const char* fmt, va_list args) {
         if (dst_len <= 2) {
           break;
         }
-        *dst++ = '%'; --dst_len;
-        *dst++ = '%'; --dst_len;
+        *dst++ = '%';
+        --dst_len;
+        *dst++ = '%';
+        --dst_len;
         ++src;
       } else {
-        *dst++ = *src; --dst_len;
+        *dst++ = *src;
+        --dst_len;
       }
     }
     *dst = '\0';
@@ -114,7 +117,7 @@ void vsyslog(int priority, const char* fmt, va_list args) {
   vsnprintf(log_line, sizeof(log_line), log_fmt, args);
 
   if (log_fmt != fmt) {
-    free(const_cast<char*>(log_fmt));
+    free(const_cast<char *>(log_fmt));
   }
 
   __libc_format_log(android_log_priority, log_tag, "%s", log_line);

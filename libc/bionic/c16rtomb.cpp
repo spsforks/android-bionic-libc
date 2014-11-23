@@ -40,9 +40,9 @@ static inline constexpr bool is_low_surrogate(char16_t c16) {
   return c16 >= 0xdc00 && c16 < 0xe000;
 }
 
-size_t c16rtomb(char* s, char16_t c16, mbstate_t* ps) {
+size_t c16rtomb(char *s, char16_t c16, mbstate_t *ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t *state = (ps == NULL) ? &__private_state : ps;
   if (mbsinit(state)) {
     if (is_high_surrogate(c16)) {
       char32_t c32 = (c16 & ~0xd800) << 10;
@@ -59,9 +59,9 @@ size_t c16rtomb(char* s, char16_t c16, mbstate_t* ps) {
       return reset_and_return_illegal(EINVAL, state);
     }
 
-    char32_t c32 = ((mbstate_get_byte(state, 3) << 16) |
-                    (mbstate_get_byte(state, 2) << 8) |
-                    (c16 & ~0xdc00)) + 0x10000;
+    char32_t c32 =
+        ((mbstate_get_byte(state, 3) << 16) | (mbstate_get_byte(state, 2) << 8) | (c16 & ~0xdc00)) +
+        0x10000;
     return reset_and_return(c32rtomb(s, c32, NULL), state);
   }
 }

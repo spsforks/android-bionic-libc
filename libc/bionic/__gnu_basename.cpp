@@ -29,7 +29,7 @@
 #define _GNU_SOURCE 1
 #include <string.h>
 
-extern "C" const char* __gnu_basename(const char* path) {
-  const char* last_slash = strrchr(path, '/');
+extern "C" const char *__gnu_basename(const char *path) {
+  const char *last_slash = strrchr(path, '/');
   return (last_slash != NULL) ? last_slash + 1 : path;
 }

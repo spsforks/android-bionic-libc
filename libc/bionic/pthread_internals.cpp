@@ -34,10 +34,10 @@
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-pthread_internal_t* g_thread_list = NULL;
+pthread_internal_t *g_thread_list = NULL;
 pthread_mutex_t g_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
 
-void _pthread_internal_remove_locked(pthread_internal_t* thread) {
+void _pthread_internal_remove_locked(pthread_internal_t *thread) {
   if (thread->next != NULL) {
     thread->next->prev = thread->prev;
   }
@@ -47,14 +47,15 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
     g_thread_list = thread->next;
   }
 
-  // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
+  // The main thread is not heap-allocated. See __libc_init_tls for the
+  // declaration,
   // and __libc_init_common for the point where it's added to the thread list.
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
     free(thread);
   }
 }
 
-void _pthread_internal_add(pthread_internal_t* thread) {
+void _pthread_internal_add(pthread_internal_t *thread) {
   ScopedPthreadMutexLocker locker(&g_thread_list_lock);
 
   // We insert at the head.
@@ -66,6 +67,6 @@ void _pthread_internal_add(pthread_internal_t* thread) {
   g_thread_list = thread;
 }
 
-pthread_internal_t* __get_thread(void) {
-  return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
+pthread_internal_t *__get_thread(void) {
+  return reinterpret_cast<pthread_internal_t *>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }

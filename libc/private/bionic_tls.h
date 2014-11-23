@@ -47,9 +47,10 @@ __BEGIN_DECLS
  ** pre-allocated slot directly for performance reason).
  **/
 
-// Well-known TLS slots. What data goes in which slot is arbitrary unless otherwise noted.
+// Well-known TLS slots. What data goes in which slot is arbitrary unless
+// otherwise noted.
 enum {
-  TLS_SLOT_SELF = 0, // The kernel requires this specific slot for x86.
+  TLS_SLOT_SELF = 0,  // The kernel requires this specific slot for x86.
   TLS_SLOT_THREAD_ID,
   TLS_SLOT_ERRNO,
 
@@ -64,16 +65,19 @@ enum {
   // we reuse an existing location that isn't needed during libc startup.
   TLS_SLOT_BIONIC_PREINIT = TLS_SLOT_OPENGL_API,
 
-  TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
+  TLS_SLOT_STACK_GUARD = 5,  // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
-  TLS_SLOT_FIRST_USER_SLOT // Must come last!
+  TLS_SLOT_FIRST_USER_SLOT  // Must come last!
 };
 
 /*
- * There are two kinds of slot used internally by bionic --- there are the well-known slots
- * enumerated above, and then there are those that are allocated during startup by calls to
- * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
+ * There are two kinds of slot used internally by bionic --- there are the
+ * well-known slots
+ * enumerated above, and then there are those that are allocated during startup
+ * by calls to
+ * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those.
+ * We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
 #define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
@@ -90,13 +94,14 @@ enum {
  * This includes space for pthread keys and our own internal slots.
  * We need to round up to maintain stack alignment.
  */
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS, 4)
+#define BIONIC_TLS_SLOTS \
+  BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS, 4)
 
 __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
+extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock &args);
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */
