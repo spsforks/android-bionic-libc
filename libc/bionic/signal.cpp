@@ -33,7 +33,8 @@ static
 #else
 __LIBC_HIDDEN__
 #endif
-sighandler_t _signal(int signum, sighandler_t handler, int flags) {
+    sighandler_t
+    _signal(int signum, sighandler_t handler, int flags) {
   struct sigaction sa;
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = handler;
@@ -43,7 +44,7 @@ sighandler_t _signal(int signum, sighandler_t handler, int flags) {
     return SIG_ERR;
   }
 
-  return (sighandler_t) sa.sa_handler;
+  return (sighandler_t)sa.sa_handler;
 }
 
 sighandler_t signal(int signum, sighandler_t handler) {

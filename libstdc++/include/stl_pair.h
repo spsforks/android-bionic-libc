@@ -67,24 +67,25 @@ struct pair {
 
   _T1 first;
   _T2 second;
-  pair() : first(), second() {}
-  pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {}
+  pair() : first(), second() {
+  }
+  pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {
+  }
 
   template <class _U1, class _U2>
-  pair(const pair<_U1, _U2>& __p) : first(__p.first), second(__p.second) {}
+  pair(const pair<_U1, _U2>& __p)
+      : first(__p.first), second(__p.second) {
+  }
 };
 
 template <class _T1, class _T2>
-inline bool operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
-{
+inline bool operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
   return __x.first == __y.first && __x.second == __y.second;
 }
 
 template <class _T1, class _T2>
-inline bool operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
-{
-  return __x.first < __y.first ||
-         (!(__y.first < __x.first) && __x.second < __y.second);
+inline bool operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return __x.first < __y.first || (!(__y.first < __x.first) && __x.second < __y.second);
 }
 
 template <class _T1, class _T2>
@@ -108,8 +109,7 @@ inline bool operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
 }
 
 template <class _T1, class _T2>
-inline pair<_T1, _T2> make_pair(_T1 __x, _T2 __y)
-{
+inline pair<_T1, _T2> make_pair(_T1 __x, _T2 __y) {
   return pair<_T1, _T2>(__x, __y);
 }
 

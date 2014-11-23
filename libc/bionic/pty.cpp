@@ -35,7 +35,7 @@
 #include <unistd.h>
 
 int getpt(void) {
-  return posix_openpt(O_RDWR|O_NOCTTY);
+  return posix_openpt(O_RDWR | O_NOCTTY);
 }
 
 int grantpt(int) {

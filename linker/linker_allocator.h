@@ -56,15 +56,23 @@ class LinkerBlockAllocator {
  * of a single fixed-size type. Allocations are backed by page-sized private
  * anonymous mmaps.
  */
-template<typename T>
+template <typename T>
 class LinkerAllocator {
  public:
-  LinkerAllocator() : block_allocator_(sizeof(T)) {}
-  T* alloc() { return reinterpret_cast<T*>(block_allocator_.alloc()); }
-  void free(T* t) { block_allocator_.free(t); }
-  void protect_all(int prot) { block_allocator_.protect_all(prot); }
+  LinkerAllocator() : block_allocator_(sizeof(T)) {
+  }
+  T* alloc() {
+    return reinterpret_cast<T*>(block_allocator_.alloc());
+  }
+  void free(T* t) {
+    block_allocator_.free(t);
+  }
+  void protect_all(int prot) {
+    block_allocator_.protect_all(prot);
+  }
+
  private:
   LinkerBlockAllocator block_allocator_;
   DISALLOW_COPY_AND_ASSIGN(LinkerAllocator);
 };
-#endif // __LINKER_ALLOCATOR_H
+#endif  // __LINKER_ALLOCATOR_H

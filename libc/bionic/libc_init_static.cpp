@@ -53,15 +53,15 @@
 #include "private/KernelArgumentBlock.h"
 
 // Returns the address of the page containing address 'x'.
-#define PAGE_START(x)  ((x) & PAGE_MASK)
+#define PAGE_START(x) ((x)&PAGE_MASK)
 
 // Returns the address of the next page after address 'x', unless 'x' is
 // itself at the start of a page.
-#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
+#define PAGE_END(x) PAGE_START((x) + (PAGE_SIZE - 1))
 
-extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
+extern "C" int __cxa_atexit(void (*)(void*), void*, void*);
 
-static void call_array(void(**list)()) {
+static void call_array(void (**list)()) {
   // First element is -1, list is null-terminated
   while (*++list) {
     (*list)();
@@ -85,10 +85,9 @@ static void apply_gnu_relro() {
   }
 }
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
+__noreturn void __libc_init(void* raw_args, void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+                            structors_array_t const* const structors) {
   KernelArgumentBlock args(raw_args);
   __libc_init_tls(args);
   __libc_init_common(args);
@@ -105,7 +104,7 @@ __noreturn void __libc_init(void* raw_args,
   // so we need to ensure that these are called when the program exits
   // normally.
   if (structors->fini_array != NULL) {
-    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+    __cxa_atexit(__libc_fini, structors->fini_array, NULL);
   }
 
   exit(slingshot(args.argc, args.argv, args.envp));

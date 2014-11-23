@@ -59,9 +59,9 @@ size_t c16rtomb(char* s, char16_t c16, mbstate_t* ps) {
       return reset_and_return_illegal(EINVAL, state);
     }
 
-    char32_t c32 = ((mbstate_get_byte(state, 3) << 16) |
-                    (mbstate_get_byte(state, 2) << 8) |
-                    (c16 & ~0xdc00)) + 0x10000;
+    char32_t c32 =
+        ((mbstate_get_byte(state, 3) << 16) | (mbstate_get_byte(state, 2) << 8) | (c16 & ~0xdc00)) +
+        0x10000;
     return reset_and_return(c32rtomb(s, c32, NULL), state);
   }
 }

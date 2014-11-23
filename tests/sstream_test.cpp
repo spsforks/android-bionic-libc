@@ -29,7 +29,7 @@ static void CheckOverflow(T expected, const char* value, bool should_overflow) {
   ss >> result;
   EXPECT_FALSE(ss.bad()) << value << ' ' << int64_t(result);
   EXPECT_EQ(should_overflow, ss.fail()) << value << ' ' << int64_t(result);
-  if (!should_overflow) { // glibc writes garbage on overflow.
+  if (!should_overflow) {  // glibc writes garbage on overflow.
     ASSERT_EQ(expected, result) << value;
   }
 }

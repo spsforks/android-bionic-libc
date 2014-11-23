@@ -32,49 +32,111 @@
 #include <wchar.h>
 #include <wctype.h>
 
-// TODO: these only work for the ASCII range; rewrite to dlsym icu4c? http://b/14499654
+// TODO: these only work for the ASCII range; rewrite to dlsym icu4c?
+// http://b/14499654
 
-int iswalnum(wint_t wc) { return isalnum(wc); }
-int iswalpha(wint_t wc) { return isalpha(wc); }
-int iswblank(wint_t wc) { return isblank(wc); }
-int iswcntrl(wint_t wc) { return iscntrl(wc); }
-int iswdigit(wint_t wc) { return isdigit(wc); }
-int iswgraph(wint_t wc) { return isgraph(wc); }
-int iswlower(wint_t wc) { return islower(wc); }
-int iswprint(wint_t wc) { return isprint(wc); }
-int iswpunct(wint_t wc) { return ispunct(wc); }
-int iswspace(wint_t wc) { return isspace(wc); }
-int iswupper(wint_t wc) { return isupper(wc); }
-int iswxdigit(wint_t wc) { return isxdigit(wc); }
+int iswalnum(wint_t wc) {
+  return isalnum(wc);
+}
+int iswalpha(wint_t wc) {
+  return isalpha(wc);
+}
+int iswblank(wint_t wc) {
+  return isblank(wc);
+}
+int iswcntrl(wint_t wc) {
+  return iscntrl(wc);
+}
+int iswdigit(wint_t wc) {
+  return isdigit(wc);
+}
+int iswgraph(wint_t wc) {
+  return isgraph(wc);
+}
+int iswlower(wint_t wc) {
+  return islower(wc);
+}
+int iswprint(wint_t wc) {
+  return isprint(wc);
+}
+int iswpunct(wint_t wc) {
+  return ispunct(wc);
+}
+int iswspace(wint_t wc) {
+  return isspace(wc);
+}
+int iswupper(wint_t wc) {
+  return isupper(wc);
+}
+int iswxdigit(wint_t wc) {
+  return isxdigit(wc);
+}
 
-int iswalnum_l(wint_t c, locale_t) { return iswalnum(c); }
-int iswalpha_l(wint_t c, locale_t) { return iswalpha(c); }
-int iswblank_l(wint_t c, locale_t) { return iswblank(c); }
-int iswcntrl_l(wint_t c, locale_t) { return iswcntrl(c); }
-int iswdigit_l(wint_t c, locale_t) { return iswdigit(c); }
-int iswgraph_l(wint_t c, locale_t) { return iswgraph(c); }
-int iswlower_l(wint_t c, locale_t) { return iswlower(c); }
-int iswprint_l(wint_t c, locale_t) { return iswprint(c); }
-int iswpunct_l(wint_t c, locale_t) { return iswpunct(c); }
-int iswspace_l(wint_t c, locale_t) { return iswspace(c); }
-int iswupper_l(wint_t c, locale_t) { return iswupper(c); }
-int iswxdigit_l(wint_t c, locale_t) { return iswxdigit(c); }
+int iswalnum_l(wint_t c, locale_t) {
+  return iswalnum(c);
+}
+int iswalpha_l(wint_t c, locale_t) {
+  return iswalpha(c);
+}
+int iswblank_l(wint_t c, locale_t) {
+  return iswblank(c);
+}
+int iswcntrl_l(wint_t c, locale_t) {
+  return iswcntrl(c);
+}
+int iswdigit_l(wint_t c, locale_t) {
+  return iswdigit(c);
+}
+int iswgraph_l(wint_t c, locale_t) {
+  return iswgraph(c);
+}
+int iswlower_l(wint_t c, locale_t) {
+  return iswlower(c);
+}
+int iswprint_l(wint_t c, locale_t) {
+  return iswprint(c);
+}
+int iswpunct_l(wint_t c, locale_t) {
+  return iswpunct(c);
+}
+int iswspace_l(wint_t c, locale_t) {
+  return iswspace(c);
+}
+int iswupper_l(wint_t c, locale_t) {
+  return iswupper(c);
+}
+int iswxdigit_l(wint_t c, locale_t) {
+  return iswxdigit(c);
+}
 
 int iswctype(wint_t wc, wctype_t char_class) {
   switch (char_class) {
-    case WC_TYPE_ALNUM: return iswalnum(wc);
-    case WC_TYPE_ALPHA: return iswalpha(wc);
-    case WC_TYPE_BLANK: return iswblank(wc);
-    case WC_TYPE_CNTRL: return iswcntrl(wc);
-    case WC_TYPE_DIGIT: return iswdigit(wc);
-    case WC_TYPE_GRAPH: return iswgraph(wc);
-    case WC_TYPE_LOWER: return iswlower(wc);
-    case WC_TYPE_PRINT: return iswprint(wc);
-    case WC_TYPE_PUNCT: return iswpunct(wc);
-    case WC_TYPE_SPACE: return iswspace(wc);
-    case WC_TYPE_UPPER: return iswupper(wc);
-    case WC_TYPE_XDIGIT: return iswxdigit(wc);
-    default: return 0;
+    case WC_TYPE_ALNUM:
+      return iswalnum(wc);
+    case WC_TYPE_ALPHA:
+      return iswalpha(wc);
+    case WC_TYPE_BLANK:
+      return iswblank(wc);
+    case WC_TYPE_CNTRL:
+      return iswcntrl(wc);
+    case WC_TYPE_DIGIT:
+      return iswdigit(wc);
+    case WC_TYPE_GRAPH:
+      return iswgraph(wc);
+    case WC_TYPE_LOWER:
+      return iswlower(wc);
+    case WC_TYPE_PRINT:
+      return iswprint(wc);
+    case WC_TYPE_PUNCT:
+      return iswpunct(wc);
+    case WC_TYPE_SPACE:
+      return iswspace(wc);
+    case WC_TYPE_UPPER:
+      return iswupper(wc);
+    case WC_TYPE_XDIGIT:
+      return iswxdigit(wc);
+    default:
+      return 0;
   }
 }
 
@@ -82,18 +144,24 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
   return iswctype(wc, char_class);
 }
 
-wint_t towlower(wint_t wc) { return tolower(wc); }
-wint_t towupper(wint_t wc) { return toupper(wc); }
+wint_t towlower(wint_t wc) {
+  return tolower(wc);
+}
+wint_t towupper(wint_t wc) {
+  return toupper(wc);
+}
 
-int towupper_l(int c, locale_t) { return towupper(c); }
-int towlower_l(int c, locale_t) { return towlower(c); }
+int towupper_l(int c, locale_t) {
+  return towupper(c);
+}
+int towlower_l(int c, locale_t) {
+  return towlower(c);
+}
 
 wctype_t wctype(const char* property) {
-  static const char* const  properties[WC_TYPE_MAX] = {
-    "<invalid>",
-    "alnum", "alpha", "blank", "cntrl", "digit", "graph",
-    "lower", "print", "punct", "space", "upper", "xdigit"
-  };
+  static const char* const properties[WC_TYPE_MAX] = {
+      "<invalid>", "alnum", "alpha", "blank", "cntrl", "digit", "graph",
+      "lower",     "print", "punct", "space", "upper", "xdigit"};
   for (size_t i = 0; i < WC_TYPE_MAX; ++i) {
     if (!strcmp(properties[i], property)) {
       return static_cast<wctype_t>(i);

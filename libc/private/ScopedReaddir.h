@@ -47,4 +47,4 @@ class ScopedReaddir {
   DISALLOW_COPY_AND_ASSIGN(ScopedReaddir);
 };
 
-#endif // SCOPED_READDIR_H
+#endif  // SCOPED_READDIR_H

@@ -98,11 +98,14 @@ void vsyslog(int priority, const char* fmt, va_list args) {
         if (dst_len <= 2) {
           break;
         }
-        *dst++ = '%'; --dst_len;
-        *dst++ = '%'; --dst_len;
+        *dst++ = '%';
+        --dst_len;
+        *dst++ = '%';
+        --dst_len;
         ++src;
       } else {
-        *dst++ = *src; --dst_len;
+        *dst++ = *src;
+        --dst_len;
       }
     }
     *dst = '\0';

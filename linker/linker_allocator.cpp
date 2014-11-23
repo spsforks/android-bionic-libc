@@ -22,7 +22,7 @@
 
 struct LinkerAllocatorPage {
   LinkerAllocatorPage* next;
-  uint8_t bytes[PAGE_SIZE-sizeof(LinkerAllocatorPage*)];
+  uint8_t bytes[PAGE_SIZE - sizeof(LinkerAllocatorPage*)];
 };
 
 struct FreeBlockInfo {
@@ -31,10 +31,10 @@ struct FreeBlockInfo {
 };
 
 LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
-  : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
-    page_list_(nullptr),
-    free_block_list_(nullptr)
-{}
+    : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
+      page_list_(nullptr),
+      free_block_list_(nullptr) {
+}
 
 void* LinkerBlockAllocator::alloc() {
   if (free_block_list_ == nullptr) {
@@ -43,8 +43,8 @@ void* LinkerBlockAllocator::alloc() {
 
   FreeBlockInfo* block_info = reinterpret_cast<FreeBlockInfo*>(free_block_list_);
   if (block_info->num_free_blocks > 1) {
-    FreeBlockInfo* next_block_info = reinterpret_cast<FreeBlockInfo*>(
-      reinterpret_cast<char*>(free_block_list_) + block_size_);
+    FreeBlockInfo* next_block_info =
+        reinterpret_cast<FreeBlockInfo*>(reinterpret_cast<char*>(free_block_list_) + block_size_);
     next_block_info->next_block = block_info->next_block;
     next_block_info->num_free_blocks = block_info->num_free_blocks - 1;
     free_block_list_ = next_block_info;
@@ -93,10 +93,10 @@ void LinkerBlockAllocator::protect_all(int prot) {
 }
 
 void LinkerBlockAllocator::create_new_page() {
-  LinkerAllocatorPage* page = reinterpret_cast<LinkerAllocatorPage*>(mmap(nullptr, PAGE_SIZE,
-      PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+  LinkerAllocatorPage* page = reinterpret_cast<LinkerAllocatorPage*>(
+      mmap(nullptr, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0));
   if (page == MAP_FAILED) {
-    abort(); // oom
+    abort();  // oom
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, PAGE_SIZE, "linker_alloc");
@@ -105,7 +105,7 @@ void LinkerBlockAllocator::create_new_page() {
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
-  first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerAllocatorPage*))/block_size_;
+  first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerAllocatorPage*)) / block_size_;
 
   free_block_list_ = first_block;
 

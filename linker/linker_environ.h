@@ -41,4 +41,4 @@ extern const char* linker_env_get(const char* name);
 // Returns the value of this program's AT_SECURE variable.
 extern bool get_AT_SECURE();
 
-#endif // LINKER_ENVIRON_H
+#endif  // LINKER_ENVIRON_H

@@ -44,10 +44,10 @@
  * This vsprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" int __vsprintf_chk(char* dest, int /*flags*/,
-                              size_t dest_len_from_compiler, const char* format, va_list va) {
+extern "C" int __vsprintf_chk(char* dest, int /*flags*/, size_t dest_len_from_compiler,
+                              const char* format, va_list va) {
   int result = vsnprintf(dest, dest_len_from_compiler, format, va);
-  if ((size_t) result >= dest_len_from_compiler) {
+  if ((size_t)result >= dest_len_from_compiler) {
     __fortify_chk_fail("vsprintf: prevented write past end of buffer", 0);
   }
   return result;
@@ -64,8 +64,8 @@ extern "C" int __vsprintf_chk(char* dest, int /*flags*/,
  * This sprintf check is called if _FORTIFY_SOURCE is defined and
  * greater than 0.
  */
-extern "C" int __sprintf_chk(char* dest, int flags,
-                             size_t dest_len_from_compiler, const char* format, ...) {
+extern "C" int __sprintf_chk(char* dest, int flags, size_t dest_len_from_compiler,
+                             const char* format, ...) {
   va_list va;
   va_start(va, format);
   int result = __vsprintf_chk(dest, flags, dest_len_from_compiler, format, va);

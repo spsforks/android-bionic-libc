@@ -162,24 +162,19 @@ int dlclose(void* handle) {
 }
 
 // name_offset: starting index of the name in libdl_info.strtab
-#define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
-    { name_offset, \
-      reinterpret_cast<Elf32_Addr>(value), \
-      /* st_size */ 0, \
-      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
-      /* st_other */ 0, \
-      shndx, \
-    }
+#define ELF32_SYM_INITIALIZER(name_offset, value, shndx)               \
+  {                                                                    \
+    name_offset, reinterpret_cast<Elf32_Addr>(value), /* st_size */ 0, \
+        (shndx == 0) ? 0 : (STB_GLOBAL << 4), /* st_other */ 0, shndx, \
+  }
 
-#define ELF64_SYM_INITIALIZER(name_offset, value, shndx) \
-    { name_offset, \
-      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
-      /* st_other */ 0, \
-      shndx, \
-      reinterpret_cast<Elf64_Addr>(value), \
-      /* st_size */ 0, \
-    }
+#define ELF64_SYM_INITIALIZER(name_offset, value, shndx)                        \
+  {                                                                             \
+    name_offset, (shndx == 0) ? 0 : (STB_GLOBAL << 4), /* st_other */ 0, shndx, \
+        reinterpret_cast<Elf64_Addr>(value), /* st_size */ 0,                   \
+  }
 
+// clang-format off
 #if defined(__arm__)
   // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 333333333344444444445
   // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 012345678901234567890
@@ -193,55 +188,60 @@ int dlclose(void* handle) {
 #else
 #  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
 #endif
+// clang-format on
 
 static ElfW(Sym) g_libdl_symtab[] = {
-  // Total length of libdl_info.strtab, including trailing 0.
-  // This is actually the STH_UNDEF entry. Technically, it's
-  // supposed to have st_name == 0, but instead, it points to an index
-  // in the strtab with a \0 to make iterating through the symtab easier.
-  ELFW(SYM_INITIALIZER)(sizeof(ANDROID_LIBDL_STRTAB) - 1, nullptr, 0),
-  ELFW(SYM_INITIALIZER)(  0, &dlopen, 1),
-  ELFW(SYM_INITIALIZER)(  7, &dlclose, 1),
-  ELFW(SYM_INITIALIZER)( 15, &dlsym, 1),
-  ELFW(SYM_INITIALIZER)( 21, &dlerror, 1),
-  ELFW(SYM_INITIALIZER)( 29, &dladdr, 1),
-  ELFW(SYM_INITIALIZER)( 36, &android_update_LD_LIBRARY_PATH, 1),
-  ELFW(SYM_INITIALIZER)( 67, &android_get_LD_LIBRARY_PATH, 1),
-  ELFW(SYM_INITIALIZER)( 95, &dl_iterate_phdr, 1),
-  ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
+    // Total length of libdl_info.strtab, including trailing 0.
+    // This is actually the STH_UNDEF entry. Technically, it's
+    // supposed to have st_name == 0, but instead, it points to an index
+    // in the strtab with a \0 to make iterating through the symtab easier.
+    ELFW(SYM_INITIALIZER)(sizeof(ANDROID_LIBDL_STRTAB) - 1, nullptr, 0),
+    ELFW(SYM_INITIALIZER)(0, &dlopen, 1), ELFW(SYM_INITIALIZER)(7, &dlclose, 1),
+    ELFW(SYM_INITIALIZER)(15, &dlsym, 1), ELFW(SYM_INITIALIZER)(21, &dlerror, 1),
+    ELFW(SYM_INITIALIZER)(29, &dladdr, 1),
+    ELFW(SYM_INITIALIZER)(36, &android_update_LD_LIBRARY_PATH, 1),
+    ELFW(SYM_INITIALIZER)(67, &android_get_LD_LIBRARY_PATH, 1),
+    ELFW(SYM_INITIALIZER)(95, &dl_iterate_phdr, 1),
+    ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(130, &dl_unwind_find_exidx, 1),
+    ELFW(SYM_INITIALIZER)(130, &dl_unwind_find_exidx, 1),
 #endif
 };
 
 // Fake out a hash table with a single bucket.
 //
-// A search of the hash table will look through g_libdl_symtab starting with index 1, then
-// use g_libdl_chains to find the next index to look at. g_libdl_chains should be set up to
-// walk through every element in g_libdl_symtab, and then end with 0 (sentinel value).
+// A search of the hash table will look through g_libdl_symtab starting with
+// index 1, then
+// use g_libdl_chains to find the next index to look at. g_libdl_chains should
+// be set up to
+// walk through every element in g_libdl_symtab, and then end with 0 (sentinel
+// value).
 //
-// That is, g_libdl_chains should look like { 0, 2, 3, ... N, 0 } where N is the number
-// of actual symbols, or nelems(g_libdl_symtab)-1 (since the first element of g_libdl_symtab is not
+// That is, g_libdl_chains should look like { 0, 2, 3, ... N, 0 } where N is the
+// number
+// of actual symbols, or nelems(g_libdl_symtab)-1 (since the first element of
+// g_libdl_symtab is not
 // a real symbol). (See soinfo_elf_lookup().)
 //
 // Note that adding any new symbols here requires stubbing them out in libdl.
-static unsigned g_libdl_buckets[1] = { 1 };
+static unsigned g_libdl_buckets[1] = {1};
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
+static unsigned g_libdl_chains[] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0};
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+static unsigned g_libdl_chains[] = {0, 2, 3, 4, 5, 6, 7, 8, 9, 0};
 #endif
 
 static soinfo __libdl_info("libdl.so", nullptr, 0, RTLD_GLOBAL);
 
-// This is used by the dynamic linker. Every process gets these symbols for free.
+// This is used by the dynamic linker. Every process gets these symbols for
+// free.
 soinfo* get_libdl_info() {
   if ((__libdl_info.flags & FLAG_LINKED) == 0) {
     __libdl_info.flags |= FLAG_LINKED;
     __libdl_info.strtab_ = ANDROID_LIBDL_STRTAB;
     __libdl_info.symtab_ = g_libdl_symtab;
-    __libdl_info.nbucket_ = sizeof(g_libdl_buckets)/sizeof(unsigned);
-    __libdl_info.nchain_ = sizeof(g_libdl_chains)/sizeof(unsigned);
+    __libdl_info.nbucket_ = sizeof(g_libdl_buckets) / sizeof(unsigned);
+    __libdl_info.nchain_ = sizeof(g_libdl_chains) / sizeof(unsigned);
     __libdl_info.bucket_ = g_libdl_buckets;
     __libdl_info.chain_ = g_libdl_chains;
     __libdl_info.ref_count = 1;

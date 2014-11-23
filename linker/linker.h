@@ -39,25 +39,25 @@
 #include "private/libc_logging.h"
 #include "linked_list.h"
 
-#define DL_ERR(fmt, x...) \
-    do { \
-      __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
-      /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
-      DEBUG("%s\n", linker_get_error_buffer()); \
-    } while (false)
+#define DL_ERR(fmt, x...)                                                                      \
+  do {                                                                                         \
+    __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
+    /* If LD_DEBUG is set high enough, log every dlerror(3) message. */                        \
+    DEBUG("%s\n", linker_get_error_buffer());                                                  \
+  } while (false)
 
-#define DL_WARN(fmt, x...) \
-    do { \
-      __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
-      __libc_format_fd(2, "WARNING: linker: "); \
-      __libc_format_fd(2, fmt, ##x); \
-      __libc_format_fd(2, "\n"); \
-    } while (false)
+#define DL_WARN(fmt, x...)                                   \
+  do {                                                       \
+    __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
+    __libc_format_fd(2, "WARNING: linker: ");                \
+    __libc_format_fd(2, fmt, ##x);                           \
+    __libc_format_fd(2, "\n");                               \
+  } while (false)
 
 #if defined(__LP64__)
-#define ELFW(what) ELF64_ ## what
+#define ELFW(what) ELF64_##what
 #else
-#define ELFW(what) ELF32_ ## what
+#define ELFW(what) ELF32_##what
 #endif
 
 // mips64 interprets Elf64_Rel structures' r_info field differently.
@@ -67,28 +67,28 @@
 #undef ELF64_R_SYM
 #undef ELF64_R_TYPE
 #undef ELF64_R_INFO
-#define ELF64_R_SYM(info)   (((info) >> 0) & 0xffffffff)
-#define ELF64_R_SSYM(info)  (((info) >> 32) & 0xff)
+#define ELF64_R_SYM(info) (((info) >> 0) & 0xffffffff)
+#define ELF64_R_SSYM(info) (((info) >> 32) & 0xff)
 #define ELF64_R_TYPE3(info) (((info) >> 40) & 0xff)
 #define ELF64_R_TYPE2(info) (((info) >> 48) & 0xff)
-#define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
+#define ELF64_R_TYPE(info) (((info) >> 56) & 0xff)
 #endif
 
 // Returns the address of the page containing address 'x'.
-#define PAGE_START(x)  ((x) & PAGE_MASK)
+#define PAGE_START(x) ((x)&PAGE_MASK)
 
 // Returns the offset of address 'x' in its page.
 #define PAGE_OFFSET(x) ((x) & ~PAGE_MASK)
 
 // Returns the address of the next page after address 'x', unless 'x' is
 // itself at the start of a page.
-#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
+#define PAGE_END(x) PAGE_START((x) + (PAGE_SIZE - 1))
 
-#define FLAG_LINKED     0x00000001
-#define FLAG_EXE        0x00000004 // The main executable
-#define FLAG_LINKER     0x00000010 // The linker itself
-#define FLAG_GNU_HASH   0x00000040 // uses gnu hash
-#define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
+#define FLAG_LINKED 0x00000001
+#define FLAG_EXE 0x00000004         // The main executable
+#define FLAG_LINKER 0x00000010      // The linker itself
+#define FLAG_GNU_HASH 0x00000040    // uses gnu hash
+#define FLAG_NEW_SOINFO 0x40000000  // new soinfo format
 
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
 
@@ -118,8 +118,8 @@ class SoinfoListAllocator {
 class SymbolName {
  public:
   explicit SymbolName(const char* name)
-      : name_(name), has_elf_hash_(false), has_gnu_hash_(false),
-        elf_hash_(0), gnu_hash_(0) { }
+      : name_(name), has_elf_hash_(false), has_gnu_hash_(false), elf_hash_(0), gnu_hash_(0) {
+  }
 
   const char* get_name() {
     return name_;
@@ -141,9 +141,10 @@ class SymbolName {
 struct soinfo {
  public:
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
+
  public:
   char name[SOINFO_NAME_LEN];
-  const ElfW(Phdr)* phdr;
+  const ElfW(Phdr) * phdr;
   size_t phnum;
   ElfW(Addr) entry;
   ElfW(Addr) base;
@@ -153,11 +154,11 @@ struct soinfo {
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
-  ElfW(Dyn)* dynamic;
+  ElfW(Dyn) * dynamic;
 
 #ifndef __LP64__
-  uint32_t unused2; // DO NOT USE, maintained for compatibility
-  uint32_t unused3; // DO NOT USE, maintained for compatibility
+  uint32_t unused2;  // DO NOT USE, maintained for compatibility
+  uint32_t unused3;  // DO NOT USE, maintained for compatibility
 #endif
 
   soinfo* next;
@@ -165,7 +166,7 @@ struct soinfo {
 
  private:
   const char* strtab_;
-  ElfW(Sym)* symtab_;
+  ElfW(Sym) * symtab_;
 
   size_t nbucket_;
   size_t nchain_;
@@ -175,20 +176,20 @@ struct soinfo {
 #if defined(__mips__) || !defined(__LP64__)
   // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
-  ElfW(Addr)** plt_got_;
+  ElfW(Addr) * *plt_got_;
 #endif
 
 #if defined(USE_RELA)
-  ElfW(Rela)* plt_rela_;
+  ElfW(Rela) * plt_rela_;
   size_t plt_rela_count_;
 
-  ElfW(Rela)* rela_;
+  ElfW(Rela) * rela_;
   size_t rela_count_;
 #else
-  ElfW(Rel)* plt_rel_;
+  ElfW(Rel) * plt_rel_;
   size_t plt_rel_count_;
 
-  ElfW(Rel)* rel_;
+  ElfW(Rel) * rel_;
   size_t rel_count_;
 #endif
 
@@ -239,7 +240,8 @@ struct soinfo {
   void call_destructors();
   void call_pre_init_constructors();
   bool prelink_image();
-  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
+  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                  const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -255,9 +257,9 @@ struct soinfo {
   soinfo_list_t& get_children();
   soinfo_list_t& get_parents();
 
-  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name);
-  ElfW(Sym)* find_symbol_by_address(const void* addr);
-  ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
+  ElfW(Sym) * find_symbol_by_name(SymbolName& symbol_name);
+  ElfW(Sym) * find_symbol_by_address(const void* addr);
+  ElfW(Addr) resolve_symbol_address(ElfW(Sym) * s);
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
@@ -268,17 +270,19 @@ struct soinfo {
   }
 
  private:
-  ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
-  ElfW(Sym)* elf_addr_lookup(const void* addr);
-  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
-  ElfW(Sym)* gnu_addr_lookup(const void* addr);
+  ElfW(Sym) * elf_lookup(SymbolName& symbol_name);
+  ElfW(Sym) * elf_addr_lookup(const void* addr);
+  ElfW(Sym) * gnu_lookup(SymbolName& symbol_name);
+  ElfW(Sym) * gnu_addr_lookup(const void* addr);
 
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void call_function(const char* function_name, linker_function_t function);
 #if defined(USE_RELA)
-  int relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  int relocate(ElfW(Rela) * rela, unsigned count, const soinfo_list_t& global_group,
+               const soinfo_list_t& local_group);
 #else
-  int relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  int relocate(ElfW(Rel) * rel, unsigned count, const soinfo_list_t& global_group,
+               const soinfo_list_t& local_group);
 #endif
 
  private:
@@ -304,7 +308,7 @@ struct soinfo {
   uint32_t gnu_maskwords_;
   uint32_t gnu_shift2_;
 
-  ElfW(Addr)* gnu_bloom_filter_;
+  ElfW(Addr) * gnu_bloom_filter_;
 
   friend soinfo* get_libdl_info();
 };
@@ -316,10 +320,10 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo);
 void do_dlclose(soinfo* si);
 
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+ElfW(Sym) * dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
 soinfo* find_containing_library(const void* addr);
 
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
+ElfW(Sym) * dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;

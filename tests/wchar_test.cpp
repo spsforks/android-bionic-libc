@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#define NUM_WCHARS(num_bytes) (num_bytes/sizeof(wchar_t))
+#define NUM_WCHARS(num_bytes) (num_bytes / sizeof(wchar_t))
 
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));
@@ -30,7 +30,7 @@ TEST(wchar, sizeof_wchar_t) {
 }
 
 TEST(wchar, mbrlen) {
-  char bytes[] = { 'h', 'e', 'l', 'l', 'o', '\0' };
+  char bytes[] = {'h', 'e', 'l', 'l', 'o', '\0'};
   EXPECT_EQ(0U, mbrlen(&bytes[0], 0, NULL));
   EXPECT_EQ(1U, mbrlen(&bytes[0], 1, NULL));
 
@@ -113,8 +113,8 @@ TEST(wchar, wcrtomb_start_state) {
 }
 
 TEST(wchar, wcstombs_wcrtombs) {
-  const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
-  const wchar_t bad_chars[] = { L'h', L'i', static_cast<wchar_t>(0xffffffff), 0 };
+  const wchar_t chars[] = {L'h', L'e', L'l', L'l', L'o', 0};
+  const wchar_t bad_chars[] = {L'h', L'i', static_cast<wchar_t>(0xffffffff), 0};
   const wchar_t* src;
   char bytes[BUFSIZ];
 
@@ -177,13 +177,13 @@ TEST(wchar, wcstombs_wcrtombs) {
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(0U, wcsrtombs(bytes, &src, 0, NULL));
-  EXPECT_EQ(&chars[0], src); // No input consumed.
+  EXPECT_EQ(&chars[0], src);  // No input consumed.
   EXPECT_EQ(EILSEQ, errno);
 
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(4U, wcsrtombs(bytes, &src, 4, NULL));
-  EXPECT_EQ(&chars[4], src); // Some input consumed.
+  EXPECT_EQ(&chars[4], src);  // Some input consumed.
   EXPECT_EQ(EILSEQ, errno);
   bytes[5] = 0;
   EXPECT_STREQ("hellx", bytes);
@@ -191,14 +191,14 @@ TEST(wchar, wcstombs_wcrtombs) {
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(5U, wcsrtombs(bytes, &src, 256, NULL));
-  EXPECT_EQ(NULL, src); // All input consumed!
+  EXPECT_EQ(NULL, src);  // All input consumed!
   EXPECT_EQ(EILSEQ, errno);
   EXPECT_STREQ("hello", bytes);
 
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(5U, wcsrtombs(bytes, &src, 6, NULL));
-  EXPECT_EQ(NULL, src); // All input consumed.
+  EXPECT_EQ(NULL, src);  // All input consumed.
   EXPECT_EQ(EILSEQ, errno);
   EXPECT_STREQ("hello", bytes);
 
@@ -278,21 +278,36 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(1U, mbrtowc(out, "abcdef", 6, NULL));
   ASSERT_EQ(L'a', out[0]);
   // 2-byte UTF-8.
-  ASSERT_EQ(2U, mbrtowc(out, "\xc2\xa2" "cdef", 6, NULL));
+  ASSERT_EQ(2U, mbrtowc(out,
+                        "\xc2\xa2"
+                        "cdef",
+                        6, NULL));
   ASSERT_EQ(static_cast<wchar_t>(0x00a2), out[0]);
   // 3-byte UTF-8.
-  ASSERT_EQ(3U, mbrtowc(out, "\xe2\x82\xac" "def", 6, NULL));
+  ASSERT_EQ(3U, mbrtowc(out,
+                        "\xe2\x82\xac"
+                        "def",
+                        6, NULL));
   ASSERT_EQ(static_cast<wchar_t>(0x20ac), out[0]);
   // 4-byte UTF-8.
-  ASSERT_EQ(4U, mbrtowc(out, "\xf0\xa4\xad\xa2" "ef", 6, NULL));
+  ASSERT_EQ(4U, mbrtowc(out,
+                        "\xf0\xa4\xad\xa2"
+                        "ef",
+                        6, NULL));
   ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[0]);
-#if defined(__BIONIC__) // glibc allows this.
+#if defined(__BIONIC__)  // glibc allows this.
   // Illegal 5-byte UTF-8.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out,
+                                             "\xf8\xa1\xa2\xa3\xa4"
+                                             "f",
+                                             6, NULL));
   ASSERT_EQ(EILSEQ, errno);
 #endif
   // Illegal over-long sequence.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf0\x82\x82\xac" "ef", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out,
+                                             "\xf0\x82\x82\xac"
+                                             "ef",
+                                             6, NULL));
   ASSERT_EQ(EILSEQ, errno);
 }
 
@@ -303,25 +318,37 @@ void test_mbrtowc_incomplete(mbstate_t* ps) {
   wchar_t out;
   // 2-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
-  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "cdef", 5, ps));
+  ASSERT_EQ(1U, mbrtowc(&out,
+                        "\xa2"
+                        "cdef",
+                        5, ps));
   ASSERT_EQ(static_cast<wchar_t>(0x00a2), out);
   ASSERT_TRUE(mbsinit(ps));
   // 3-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xe2", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\x82", 1, ps));
-  ASSERT_EQ(1U, mbrtowc(&out, "\xac" "def", 4, ps));
+  ASSERT_EQ(1U, mbrtowc(&out,
+                        "\xac"
+                        "def",
+                        4, ps));
   ASSERT_EQ(static_cast<wchar_t>(0x20ac), out);
   ASSERT_TRUE(mbsinit(ps));
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xf0", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xa4\xad", 2, ps));
-  ASSERT_EQ(1U, mbrtowc(&out, "\xa2" "ef", 3, ps));
+  ASSERT_EQ(1U, mbrtowc(&out,
+                        "\xa2"
+                        "ef",
+                        3, ps));
   ASSERT_EQ(static_cast<wchar_t>(0x24b62), out);
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(&out, "\x20" "cdef", 5, ps));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(&out,
+                                             "\x20"
+                                             "cdef",
+                                             5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
 
@@ -336,7 +363,12 @@ TEST(wchar, mbrtowc_incomplete) {
 void test_mbsrtowcs(mbstate_t* ps) {
   wchar_t out[4];
 
-  const char* valid = "A" "\xc2\xa2" "\xe2\x82\xac" "\xf0\xa4\xad\xa2" "ef";
+  const char* valid =
+      "A"
+      "\xc2\xa2"
+      "\xe2\x82\xac"
+      "\xf0\xa4\xad\xa2"
+      "ef";
   ASSERT_EQ(4U, mbsrtowcs(out, &valid, 4, ps));
   ASSERT_EQ(L'A', out[0]);
   ASSERT_EQ(static_cast<wchar_t>(0x00a2), out[1]);
@@ -355,12 +387,17 @@ void test_mbsrtowcs(mbstate_t* ps) {
   // Check that valid has advanced to the end of the string.
   ASSERT_EQ(nullptr, valid);
 
-  const char* invalid = "A" "\xc2\x20" "ef";
+  const char* invalid =
+      "A"
+      "\xc2\x20"
+      "ef";
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &invalid, 4, ps));
   EXPECT_EQ(EILSEQ, errno);
   ASSERT_EQ('\xc2', *invalid);
 
-  const char* incomplete = "A" "\xc2";
+  const char* incomplete =
+      "A"
+      "\xc2";
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &incomplete, 2, ps));
   EXPECT_EQ(EILSEQ, errno);
   ASSERT_EQ('\xc2', *incomplete);
@@ -423,7 +460,7 @@ TEST(wchar, mbsnrtowcs) {
 
   memset(dst, 0, sizeof(dst));
   src = s;
-  ASSERT_EQ(2U, mbsnrtowcs(dst, &src, 2, 123, NULL)); // glibc chokes on SIZE_MAX here.
+  ASSERT_EQ(2U, mbsnrtowcs(dst, &src, 2, 123, NULL));  // glibc chokes on SIZE_MAX here.
   ASSERT_EQ(L'h', dst[0]);
   ASSERT_EQ(L'e', dst[1]);
   ASSERT_EQ(&s[2], src);
@@ -459,7 +496,7 @@ TEST(wchar, wmemmove_smoke) {
   EXPECT_EQ(wstr, wmemmove(wstr, const_wstr, NUM_WCHARS(sizeof(const_wstr))));
   EXPECT_STREQ(const_wstr, wstr);
 
-  EXPECT_EQ(wstr+5, wmemmove(wstr+5, wstr, NUM_WCHARS(sizeof(const_wstr)) - 6));
+  EXPECT_EQ(wstr + 5, wmemmove(wstr + 5, wstr, NUM_WCHARS(sizeof(const_wstr)) - 6));
   EXPECT_STREQ(L"This This is a test of something or other", wstr);
 }
 
@@ -495,10 +532,10 @@ TEST(wchar, wcpncpy_smoke) {
   EXPECT_EQ(dst + src_len, wcpncpy(dst, src, src_len + 4));
   EXPECT_STREQ(dst, src);
   EXPECT_EQ(dst[src_len], L'\0');
-  EXPECT_EQ(dst[src_len+1], L'\0');
-  EXPECT_EQ(dst[src_len+2], L'\0');
-  EXPECT_EQ(dst[src_len+3], L'\0');
-  EXPECT_EQ(dst[src_len+4], L'x');
+  EXPECT_EQ(dst[src_len + 1], L'\0');
+  EXPECT_EQ(dst[src_len + 2], L'\0');
+  EXPECT_EQ(dst[src_len + 3], L'\0');
+  EXPECT_EQ(dst[src_len + 4], L'x');
 }
 
 TEST(wchar, wcscpy_smoke) {
@@ -525,10 +562,10 @@ TEST(wchar, wcsncpy_smoke) {
   EXPECT_EQ(dst, wcsncpy(dst, src, src_len + 4));
   EXPECT_STREQ(dst, src);
   EXPECT_EQ(dst[src_len], L'\0');
-  EXPECT_EQ(dst[src_len+1], L'\0');
-  EXPECT_EQ(dst[src_len+2], L'\0');
-  EXPECT_EQ(dst[src_len+3], L'\0');
-  EXPECT_EQ(dst[src_len+4], L'x');
+  EXPECT_EQ(dst[src_len + 1], L'\0');
+  EXPECT_EQ(dst[src_len + 2], L'\0');
+  EXPECT_EQ(dst[src_len + 3], L'\0');
+  EXPECT_EQ(dst[src_len + 4], L'x');
 }
 
 TEST(wchar, mbrtowc_15439554) {

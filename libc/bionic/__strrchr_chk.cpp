@@ -30,16 +30,16 @@
 #include <string.h>
 #include "private/libc_logging.h"
 
-extern "C" char* __strrchr_chk(const char *p, int ch, size_t s_len) {
+extern "C" char* __strrchr_chk(const char* p, int ch, size_t s_len) {
   for (char* save = NULL;; ++p, s_len--) {
     if (s_len == 0) {
       __fortify_chk_fail("strrchr: prevented read past end of buffer", 0);
     }
-    if (*p == (char) ch) {
-      save = (char *)p;
+    if (*p == (char)ch) {
+      save = (char*)p;
     }
     if (!*p) {
-      return(save);
+      return (save);
     }
   }
   /* NOTREACHED */

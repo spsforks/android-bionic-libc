@@ -68,9 +68,9 @@ __LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_s
     startp--;
   }
 
-  len = endp - startp +1;
+  len = endp - startp + 1;
 
- Exit:
+Exit:
   result = len;
   if (buffer == NULL) {
     return result;
@@ -124,7 +124,7 @@ __LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_si
 
   len = endp - path + 1;
 
- Exit:
+Exit:
   result = len;
   if (len + 1 > MAXPATHLEN) {
     errno = ENAMETOOLONG;

@@ -29,4 +29,4 @@ __LIBC_HIDDEN__ struct mallinfo __mallinfo_bin_info(size_t, size_t);
 
 __END_DECLS
 
-#endif // LIBC_BIONIC_MALLOC_INFO_H_
+#endif  // LIBC_BIONIC_MALLOC_INFO_H_

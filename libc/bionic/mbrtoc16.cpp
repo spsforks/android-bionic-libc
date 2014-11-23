@@ -37,8 +37,7 @@ static inline bool mbspartialc16(const mbstate_t* state) {
   return mbstate_get_byte(state, 3) != 0;
 }
 
-static size_t begin_surrogate(char32_t c32, char16_t* pc16,
-                              size_t nconv, mbstate_t* state) {
+static size_t begin_surrogate(char32_t c32, char16_t* pc16, size_t nconv, mbstate_t* state) {
   c32 -= 0x10000;
   char16_t trail = (c32 & 0x3ff) | 0xdc00;
 
@@ -52,8 +51,7 @@ static size_t begin_surrogate(char32_t c32, char16_t* pc16,
 }
 
 static size_t finish_surrogate(char16_t* pc16, mbstate_t* state) {
-  char16_t trail = mbstate_get_byte(state, 1) << 8 |
-                   mbstate_get_byte(state, 0);
+  char16_t trail = mbstate_get_byte(state, 1) << 8 | mbstate_get_byte(state, 0);
   *pc16 = trail;
   return reset_and_return(mbstate_get_byte(state, 3), state);
 }

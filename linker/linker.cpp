@@ -82,30 +82,27 @@ static const char* get_base_name(const char* name) {
 #define SEARCH_NAME(x) get_base_name(x)
 #endif
 
-static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
+static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr) * elf);
 
 static LinkerAllocator<soinfo> g_soinfo_allocator;
 static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 
 static soinfo* solist;
 static soinfo* sonext;
-static soinfo* somain; // main process, always the one after libdl_info
+static soinfo* somain;  // main process, always the one after libdl_info
 
 static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
-  "/vendor/lib64",
-  "/system/lib64",
+    "/vendor/lib64", "/system/lib64",
 #else
-  "/vendor/lib",
-  "/system/lib",
+    "/vendor/lib", "/system/lib",
 #endif
-  nullptr
-};
+    nullptr};
 
-#define LDPATH_BUFSIZE (LDPATH_MAX*64)
+#define LDPATH_BUFSIZE (LDPATH_MAX * 64)
 #define LDPATH_MAX 8
 
-#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
+#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX * 64)
 #define LDPRELOAD_MAX 8
 
 static char g_ld_library_paths_buffer[LDPATH_BUFSIZE];
@@ -118,15 +115,9 @@ static soinfo* g_ld_preloads[LDPRELOAD_MAX + 1];
 
 __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
-__LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr; // For debuggerd.
+__LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr;  // For debuggerd.
 
-enum RelocationKind {
-  kRelocAbsolute = 0,
-  kRelocRelative,
-  kRelocCopy,
-  kRelocSymbol,
-  kRelocMax
-};
+enum RelocationKind { kRelocAbsolute = 0, kRelocRelative, kRelocCopy, kRelocSymbol, kRelocMax };
 
 #if STATS
 struct linker_stats_t {
@@ -146,28 +137,29 @@ static void count_relocation(RelocationKind) {
 #if COUNT_PAGES
 static unsigned bitmask[4096];
 #if defined(__LP64__)
-#define MARK(offset) \
-    do { \
-      if ((((offset) >> 12) >> 5) < 4096) \
-          bitmask[((offset) >> 12) >> 5] |= (1 << (((offset) >> 12) & 31)); \
-    } while (0)
+#define MARK(offset)                                                    \
+  do {                                                                  \
+    if ((((offset) >> 12) >> 5) < 4096)                                 \
+      bitmask[((offset) >> 12) >> 5] |= (1 << (((offset) >> 12) & 31)); \
+  } while (0)
 #else
-#define MARK(offset) \
-    do { \
-      bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
-    } while (0)
+#define MARK(offset)                                                 \
+  do {                                                               \
+    bitmask[((offset) >> 12) >> 3] |= (1 << (((offset) >> 12) & 7)); \
+  } while (0)
 #endif
 #else
-#define MARK(x) do {} while (0)
+#define MARK(x) \
+  do {          \
+  } while (0)
 #endif
 
 // You shouldn't try to call memory-allocating functions in the dynamic linker.
 // Guard against the most obvious ones.
-#define DISALLOW_ALLOCATION(return_type, name, ...) \
-    return_type name __VA_ARGS__ \
-    { \
-      __libc_fatal("ERROR: " #name " called from the dynamic linker!\n"); \
-    }
+#define DISALLOW_ALLOCATION(return_type, name, ...)                     \
+  return_type name __VA_ARGS__ {                                        \
+    __libc_fatal("ERROR: " #name " called from the dynamic linker!\n"); \
+  }
 DISALLOW_ALLOCATION(void*, malloc, (size_t u __unused));
 DISALLOW_ALLOCATION(void, free, (void* u __unused));
 DISALLOW_ALLOCATION(void*, realloc, (void* u1 __unused, size_t u2 __unused));
@@ -185,10 +177,12 @@ size_t linker_get_error_buffer_size() {
 
 // This function is an empty stub where GDB locates a breakpoint to get notified
 // about linker activity.
-extern "C" void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
+extern "C" void __attribute__((noinline)) __attribute__((visibility("default")))
+rtld_db_dlactivity();
 
 static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
-static r_debug _r_debug = {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
+static r_debug _r_debug = {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity),
+                           r_debug::RT_CONSISTENT, 0};
 static link_map* r_debug_tail = 0;
 
 static void insert_soinfo_into_debug_map(soinfo* info) {
@@ -283,7 +277,8 @@ static void protect_data(int protection) {
   g_soinfo_links_allocator.protect_all(protection);
 }
 
-static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset, uint32_t rtld_flags) {
+static soinfo* soinfo_alloc(const char* name, struct stat* file_stat, off64_t file_offset,
+                            uint32_t rtld_flags) {
   if (strlen(name) >= SOINFO_NAME_LEN) {
     DL_ERR("library name \"%s\" too long", name);
     return nullptr;
@@ -307,7 +302,7 @@ static void soinfo_free(soinfo* si) {
     munmap(reinterpret_cast<void*>(si->base), si->size);
   }
 
-  soinfo *prev = nullptr, *trav;
+  soinfo* prev = nullptr, *trav;
 
   TRACE("name %s: freeing soinfo @ %p", si->name, si);
 
@@ -337,8 +332,8 @@ static void soinfo_free(soinfo* si) {
   g_soinfo_allocator.free(si);
 }
 
-static void parse_path(const char* path, const char* delimiters,
-                       const char** array, char* buf, size_t buf_size, size_t max_count) {
+static void parse_path(const char* path, const char* delimiters, const char** array, char* buf,
+                       size_t buf_size, size_t max_count) {
   if (path == nullptr) {
     return;
   }
@@ -363,14 +358,14 @@ static void parse_path(const char* path, const char* delimiters,
 }
 
 static void parse_LD_LIBRARY_PATH(const char* path) {
-  parse_path(path, ":", g_ld_library_paths,
-             g_ld_library_paths_buffer, sizeof(g_ld_library_paths_buffer), LDPATH_MAX);
+  parse_path(path, ":", g_ld_library_paths, g_ld_library_paths_buffer,
+             sizeof(g_ld_library_paths_buffer), LDPATH_MAX);
 }
 
 static void parse_LD_PRELOAD(const char* path) {
   // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-  parse_path(path, " :", g_ld_preload_names,
-             g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), LDPRELOAD_MAX);
+  parse_path(path, " :", g_ld_preload_names, g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer),
+             LDPRELOAD_MAX);
 }
 
 #if defined(__arm__)
@@ -388,8 +383,8 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
 
   for (soinfo* si = solist; si != 0; si = si->next) {
     if ((addr >= si->base) && (addr < (si->base + si->size))) {
-        *pcount = si->ARM_exidx_count;
-        return (_Unwind_Ptr)si->ARM_exidx;
+      *pcount = si->ARM_exidx_count;
+      return (_Unwind_Ptr)si->ARM_exidx;
     }
   }
   *pcount = 0;
@@ -416,27 +411,26 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return rv;
 }
 
-ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name) {
+ElfW(Sym) * soinfo::find_symbol_by_name(SymbolName& symbol_name) {
   return is_gnu_hash() ? gnu_lookup(symbol_name) : elf_lookup(symbol_name);
 }
 
-static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
-  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
-      ELF_ST_BIND(s->st_info) == STB_WEAK) {
+static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym) * s) {
+  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL || ELF_ST_BIND(s->st_info) == STB_WEAK) {
     return s->st_shndx != SHN_UNDEF;
   } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("unexpected ST_BIND value: %d for '%s' in '%s'",
-        ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->name);
+    DL_WARN("unexpected ST_BIND value: %d for '%s' in '%s'", ELF_ST_BIND(s->st_info),
+            si->get_string(s->st_name), si->name);
   }
 
   return false;
 }
 
-ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
+ElfW(Sym) * soinfo::gnu_lookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.gnu_hash();
   uint32_t h2 = hash >> gnu_shift2_;
 
-  uint32_t bloom_mask_bits = sizeof(ElfW(Addr))*8;
+  uint32_t bloom_mask_bits = sizeof(ElfW(Addr)) * 8;
   uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
   ElfW(Addr) bloom_word = gnu_bloom_filter_[word_num];
 
@@ -464,24 +458,24 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
+ElfW(Sym) * soinfo::elf_lookup(SymbolName& symbol_name) {
   uint32_t hash = symbol_name.elf_hash();
 
-  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
-             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket_);
+  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd", symbol_name.get_name(), name,
+             reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
   for (uint32_t n = bucket_[hash % nbucket_]; n != 0; n = chain_[n]) {
     ElfW(Sym)* s = symtab_ + n;
-    if (strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 && is_symbol_global_and_defined(this, s)) {
-      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
-               symbol_name.get_name(), name, reinterpret_cast<void*>(s->st_value),
-               static_cast<size_t>(s->st_size));
+    if (strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
+        is_symbol_global_and_defined(this, s)) {
+      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd", symbol_name.get_name(), name,
+                 reinterpret_cast<void*>(s->st_value), static_cast<size_t>(s->st_size));
       return s;
     }
   }
 
-  TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p %x %zd",
-             symbol_name.get_name(), name, reinterpret_cast<void*>(base), hash, hash % nbucket_);
+  TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p %x %zd", symbol_name.get_name(), name,
+             reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
   return nullptr;
 }
@@ -501,7 +495,6 @@ soinfo::soinfo(const char* name, const struct stat* file_stat, off64_t file_offs
 
   this->rtld_flags_ = rtld_flags;
 }
-
 
 uint32_t SymbolName::elf_hash() {
   if (!has_elf_hash_) {
@@ -527,26 +520,32 @@ uint32_t SymbolName::gnu_hash() {
     uint32_t h = 5381;
     const unsigned char* name = reinterpret_cast<const unsigned char*>(name_);
     while (*name != 0) {
-      h += (h << 5) + *name++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
+      h += (h << 5) + *name++;  // h*33 + c = h + h * 32 + c = h + h << 5 + c
     }
 
-    gnu_hash_ =  h;
+    gnu_hash_ = h;
     has_gnu_hash_ = true;
   }
 
   return gnu_hash_;
 }
 
-static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
-    const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
+static ElfW(Sym) * soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
+                                    const soinfo::soinfo_list_t& global_group,
+                                    const soinfo::soinfo_list_t& local_group) {
   SymbolName symbol_name(name);
   ElfW(Sym)* s = nullptr;
 
-  /* "This element's presence in a shared object library alters the dynamic linker's
-   * symbol resolution algorithm for references within the library. Instead of starting
-   * a symbol search with the executable file, the dynamic linker starts from the shared
-   * object itself. If the shared object fails to supply the referenced symbol, the
-   * dynamic linker then searches the executable file and other shared objects as usual."
+  /* "This element's presence in a shared object library alters the dynamic
+   *linker's
+   * symbol resolution algorithm for references within the library. Instead of
+   *starting
+   * a symbol search with the executable file, the dynamic linker starts from
+   *the shared
+   * object itself. If the shared object fails to supply the referenced symbol,
+   *the
+   * dynamic linker then searches the executable file and other shared objects
+   *as usual."
    *
    * http://www.sco.com/developers/gabi/2012-12-31/ch5.dynamic.html
    *
@@ -595,10 +594,11 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
   }
 
   if (s != nullptr) {
-    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
+    TRACE_TYPE(LOOKUP,
+               "si %s sym %s s->st_value = %p, "
                "found in %s, base = %p, load bias = %p",
-               si_from->name, name, reinterpret_cast<void*>(s->st_value),
-               (*si_found_in)->name, reinterpret_cast<void*>((*si_found_in)->base),
+               si_from->name, name, reinterpret_cast<void*>(s->st_value), (*si_found_in)->name,
+               reinterpret_cast<void*>((*si_found_in)->base),
                reinterpret_cast<void*>((*si_found_in)->load_bias));
   }
 
@@ -606,7 +606,7 @@ static ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** s
 }
 
 // Each size has it's own allocator.
-template<size_t size>
+template <size_t size>
 class SizeBasedAllocator {
  public:
   static void* alloc() {
@@ -621,10 +621,10 @@ class SizeBasedAllocator {
   static LinkerBlockAllocator allocator_;
 };
 
-template<size_t size>
+template <size_t size>
 LinkerBlockAllocator SizeBasedAllocator<size>::allocator_(size);
 
-template<typename T>
+template <typename T>
 class TypeBasedAllocator {
  public:
   static T* alloc() {
@@ -660,9 +660,10 @@ class LoadTask {
   soinfo* get_needed_by() const {
     return needed_by_;
   }
+
  private:
-  LoadTask(const char* name, soinfo* needed_by)
-    : name_(name), needed_by_(needed_by) {}
+  LoadTask(const char* name, soinfo* needed_by) : name_(name), needed_by_(needed_by) {
+  }
 
   const char* name_;
   soinfo* needed_by_;
@@ -679,7 +680,6 @@ typedef linked_list_t<soinfo> SoinfoLinkedList;
 typedef linked_list_t<const char> StringLinkedList;
 typedef linked_list_t<LoadTask> LoadTaskList;
 
-
 // This function walks down the tree of soinfo dependencies
 // in breadth-first order and
 //   * calls action(soinfo* si) for each node, and
@@ -687,7 +687,7 @@ typedef linked_list_t<LoadTask> LoadTaskList;
 //
 // walk_dependencies_tree returns false if walk was terminated
 // by the action and true otherwise.
-template<typename F>
+template <typename F>
 static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_size, F action) {
   SoinfoLinkedList visit_list;
   SoinfoLinkedList visited;
@@ -708,21 +708,17 @@ static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_s
 
     visited.push_back(si);
 
-    si->get_children().for_each([&](soinfo* child) {
-      visit_list.push_back(child);
-    });
+    si->get_children().for_each([&](soinfo* child) { visit_list.push_back(child); });
   }
 
   return true;
 }
 
-
 // This is used by dlsym(3).  It performs symbol lookup only within the
 // specified soinfo object and its dependencies in breadth first order.
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+ElfW(Sym) * dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
   ElfW(Sym)* result = nullptr;
   SymbolName symbol_name(name);
-
 
   walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
     result = current_soinfo->find_symbol_by_name(symbol_name);
@@ -742,7 +738,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
    beginning of the global solist. Otherwise the search starts at the
    specified soinfo (for RTLD_NEXT).
  */
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
+ElfW(Sym) * dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
   SymbolName symbol_name(name);
 
   if (start == nullptr) {
@@ -763,8 +759,8 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
   }
 
   if (s != nullptr) {
-    TRACE_TYPE(LOOKUP, "%s s->st_value = %p, found->base = %p",
-               name, reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
+    TRACE_TYPE(LOOKUP, "%s s->st_value = %p, found->base = %p", name,
+               reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
   }
 
   return s;
@@ -780,17 +776,16 @@ soinfo* find_containing_library(const void* p) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::find_symbol_by_address(const void* addr) {
+ElfW(Sym) * soinfo::find_symbol_by_address(const void* addr) {
   return is_gnu_hash() ? gnu_addr_lookup(addr) : elf_addr_lookup(addr);
 }
 
-static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
-  return sym->st_shndx != SHN_UNDEF &&
-      soaddr >= sym->st_value &&
-      soaddr < sym->st_value + sym->st_size;
+static bool symbol_matches_soaddr(const ElfW(Sym) * sym, ElfW(Addr) soaddr) {
+  return sym->st_shndx != SHN_UNDEF && soaddr >= sym->st_value &&
+         soaddr < sym->st_value + sym->st_size;
 }
 
-ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
+ElfW(Sym) * soinfo::gnu_addr_lookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
   for (size_t i = 0; i < nbucket_; ++i) {
@@ -811,7 +806,7 @@ ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
   return nullptr;
 }
 
-ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
+ElfW(Sym) * soinfo::elf_addr_lookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - base;
 
   // Search the library's symbol table for any defined symbol which
@@ -845,19 +840,22 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
 static int open_library(const char* name) {
   TRACE("[ opening %s ]", name);
 
-  // If the name contains a slash, we should attempt to open it directly and not search the paths.
+  // If the name contains a slash, we should attempt to open it directly and not
+  // search the paths.
   if (strchr(name, '/') != nullptr) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       return fd;
     }
-    // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
+// ...but nvidia binary blobs (at least) rely on this behavior, so fall through
+// for now.
 #if defined(__LP64__)
     return -1;
 #endif
   }
 
-  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
+  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well
+  // known paths.
   int fd = open_library_on_path(name, g_ld_library_paths);
   if (fd == -1) {
     fd = open_library_on_path(name, kDefaultLdPaths);
@@ -865,7 +863,7 @@ static int open_library(const char* name) {
   return fd;
 }
 
-template<typename F>
+template <typename F>
 static void for_each_dt_needed(const soinfo* si, F action) {
   for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
@@ -874,7 +872,8 @@ static void for_each_dt_needed(const soinfo* si, F action) {
   }
 }
 
-static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld_flags,
+                            const android_dlextinfo* extinfo) {
   int fd = -1;
   off64_t file_offset = 0;
   ScopedFd file_guard(-1);
@@ -910,19 +909,20 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     return nullptr;
   }
   if (file_offset >= file_stat.st_size) {
-    DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name, file_offset, file_stat.st_size);
+    DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name,
+           file_offset, file_stat.st_size);
     return nullptr;
   }
 
   // Check for symlink and other situations where
   // file can have different names.
   for (soinfo* si = solist; si != nullptr; si = si->next) {
-    if (si->get_st_dev() != 0 &&
-        si->get_st_ino() != 0 &&
-        si->get_st_dev() == file_stat.st_dev &&
-        si->get_st_ino() == file_stat.st_ino &&
-        si->get_file_offset() == file_offset) {
-      TRACE("library \"%s\" is already loaded under different name/path \"%s\" - will return existing soinfo", name, si->name);
+    if (si->get_st_dev() != 0 && si->get_st_ino() != 0 && si->get_st_dev() == file_stat.st_dev &&
+        si->get_st_ino() == file_stat.st_ino && si->get_file_offset() == file_offset) {
+      TRACE(
+          "library \"%s\" is already loaded under different name/path \"%s\" - "
+          "will return existing soinfo",
+          name, si->name);
       return si;
     }
   }
@@ -953,14 +953,13 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     return nullptr;
   }
 
-  for_each_dt_needed(si, [&] (const char* name) {
-    load_tasks.push_back(LoadTask::create(name, si));
-  });
+  for_each_dt_needed(si,
+                     [&](const char* name) { load_tasks.push_back(LoadTask::create(name, si)); });
 
   return si;
 }
 
-static soinfo *find_loaded_library_by_name(const char* name) {
+static soinfo* find_loaded_library_by_name(const char* name) {
   const char* search_name = SEARCH_NAME(name);
   for (soinfo* si = solist; si != nullptr; si = si->next) {
     if (!strcmp(search_name, si->name)) {
@@ -970,8 +969,8 @@ static soinfo *find_loaded_library_by_name(const char* name) {
   return nullptr;
 }
 
-static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
-
+static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name, int rtld_flags,
+                                     const android_dlextinfo* extinfo) {
   soinfo* si = find_loaded_library_by_name(name);
 
   // Library might still be loaded, the accurate detection
@@ -996,9 +995,8 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
     return true;
   }
 
-  return !parent->get_parents().visit([&](soinfo* grandparent) {
-    return !is_recursive(si, grandparent);
-  });
+  return !parent->get_parents().visit(
+      [&](soinfo* grandparent) { return !is_recursive(si, grandparent); });
 }
 
 // TODO: this is slightly unusual way to construct
@@ -1019,8 +1017,10 @@ static soinfo::soinfo_list_t make_global_group() {
   return global_group;
 }
 
-static bool find_libraries(soinfo* start_with, const char* const library_names[], size_t library_names_count, soinfo* soinfos[],
-    soinfo* ld_preloads[], size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
+static bool find_libraries(soinfo* start_with, const char* const library_names[],
+                           size_t library_names_count, soinfo* soinfos[], soinfo* ld_preloads[],
+                           size_t ld_preloads_count, int rtld_flags,
+                           const android_dlextinfo* extinfo) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
   for (size_t i = 0; i < library_names_count; ++i) {
@@ -1039,7 +1039,7 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
   // See also implementation of failure_guard below.
 
   if (soinfos == nullptr) {
-    size_t soinfos_size = sizeof(soinfo*)*library_names_count;
+    size_t soinfos_size = sizeof(soinfo*) * library_names_count;
     soinfos = reinterpret_cast<soinfo**>(alloca(soinfos_size));
     memset(soinfos, 0, soinfos_size);
   }
@@ -1049,17 +1049,16 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
 
   auto failure_guard = make_scope_guard([&]() {
     // Housekeeping
-    load_tasks.for_each([] (LoadTask* t) {
-      LoadTask::deleter(t);
-    });
+    load_tasks.for_each([](LoadTask* t) { LoadTask::deleter(t); });
 
-    for (size_t i = 0; i<soinfos_count; ++i) {
+    for (size_t i = 0; i < soinfos_count; ++i) {
       soinfo_unload(soinfos[i]);
     }
   });
 
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
-  for (LoadTask::unique_ptr task(load_tasks.pop_front()); task.get() != nullptr; task.reset(load_tasks.pop_front())) {
+  for (LoadTask::unique_ptr task(load_tasks.pop_front()); task.get() != nullptr;
+       task.reset(load_tasks.pop_front())) {
     soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, extinfo);
     if (si == nullptr) {
       return false;
@@ -1094,10 +1093,8 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
 
   // Step 2: link libraries.
   soinfo::soinfo_list_t local_group;
-  walk_dependencies_tree(
-      start_with == nullptr ? soinfos : &start_with,
-      start_with == nullptr ? soinfos_count : 1,
-      [&] (soinfo* si) {
+  walk_dependencies_tree(start_with == nullptr ? soinfos : &start_with,
+                         start_with == nullptr ? soinfos_count : 1, [&](soinfo* si) {
     local_group.push_back(si);
     return true;
   });
@@ -1151,14 +1148,16 @@ static void soinfo_unload_schedule(soinfo::soinfo_list_t& unload_list, soinfo* s
         soinfo_unload_schedule(unload_list, child);
       }
     } else {
-      for_each_dt_needed(si, [&] (const char* library_name) {
+      for_each_dt_needed(si, [&](const char* library_name) {
         TRACE("deprecated (old format of soinfo): %s needs to unload %s", si->name, library_name);
         soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
         if (needed != nullptr) {
           soinfo_unload_schedule(unload_list, needed);
         } else {
-          // Not found: for example if symlink was deleted between dlopen and dlclose
-          // Since we cannot really handle errors at this point - print and continue.
+          // Not found: for example if symlink was deleted between dlopen and
+          // dlclose
+          // Since we cannot really handle errors at this point - print and
+          // continue.
           PRINT("warning: couldn't find %s needed by %s on unload.", library_name, si->name);
         }
       });
@@ -1174,9 +1173,7 @@ static void soinfo_unload_schedule(soinfo::soinfo_list_t& unload_list, soinfo* s
 static void soinfo_unload(soinfo* root) {
   soinfo::soinfo_list_t unload_list;
   soinfo_unload_schedule(unload_list, root);
-  unload_list.for_each([](soinfo* si) {
-    si->call_destructors();
-  });
+  unload_list.for_each([](soinfo* si) { si->call_destructors(); });
 
   soinfo* si = nullptr;
   while ((si = unload_list.pop_front()) != nullptr) {
@@ -1196,8 +1193,10 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // snprintf again.
   size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
   if (buffer_size < required_len) {
-    __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: buffer len %zu, required len %zu",
-                 buffer_size, required_len);
+    __libc_fatal(
+        "android_get_LD_LIBRARY_PATH failed, buffer too small: buffer len %zu, "
+        "required len %zu",
+        buffer_size, required_len);
   }
   char* end = stpcpy(buffer, kDefaultLdPaths[0]);
   *end = ':';
@@ -1211,7 +1210,8 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 }
 
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
-  if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
+  if ((flags & ~(RTLD_NOW | RTLD_LAZY | RTLD_LOCAL | RTLD_GLOBAL | RTLD_NODELETE | RTLD_NOLOAD)) !=
+      0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
   }
@@ -1222,7 +1222,11 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
     }
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) == 0 &&
         (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
-      DL_ERR("invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64, extinfo->flags);
+      DL_ERR(
+          "invalid extended flag combination "
+          "(ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without "
+          "ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64,
+          extinfo->flags);
       return nullptr;
     }
   }
@@ -1245,13 +1249,15 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
   ElfW(Addr) ifunc_addr = ifunc_resolver();
-  TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p", ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
+  TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p", ifunc_resolver,
+             reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
 
 #if defined(USE_RELA)
-int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+int soinfo::relocate(ElfW(Rela) * rela, unsigned count, const soinfo_list_t& global_group,
+                     const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rela) {
     unsigned type = ELFW(R_TYPE)(rela->r_info);
     unsigned sym = ELFW(R_SYM)(rela->r_info);
@@ -1260,7 +1266,7 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
     const char* sym_name = nullptr;
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
-    if (type == 0) { // R_*_NONE
+    if (type == 0) {  // R_*_NONE
       continue;
     }
 
@@ -1269,7 +1275,7 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
+      s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab_[sym];
@@ -1334,92 +1340,102 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
       case R_AARCH64_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
+        TRACE_TYPE(RELO, "RELO JMP_SLOT %16llx <- %16llx %s\n", reloc, (sym_addr + rela->r_addend),
+                   sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
         break;
       case R_AARCH64_GLOB_DAT:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
+        TRACE_TYPE(RELO, "RELO GLOB_DAT %16llx <- %16llx %s\n", reloc, (sym_addr + rela->r_addend),
+                   sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + rela->r_addend);
         break;
       case R_AARCH64_ABS64:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
+        TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n", reloc, (sym_addr + rela->r_addend),
+                   sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
         break;
       case R_AARCH64_ABS32:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
+        TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n", reloc, (sym_addr + rela->r_addend),
+                   sym_name);
+        if ((static_cast<ElfW(Addr)>(INT32_MIN) <=
+             (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <=
+             static_cast<ElfW(Addr)>(UINT32_MAX))) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)),
-                 static_cast<ElfW(Addr)>(INT32_MIN),
-                 static_cast<ElfW(Addr)>(UINT32_MAX));
+                 static_cast<ElfW(Addr)>(INT32_MIN), static_cast<ElfW(Addr)>(UINT32_MAX));
           return -1;
         }
         break;
       case R_AARCH64_ABS16:
         count_relocation(kRelocAbsolute);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), sym_name);
-        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
+        TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n", reloc, (sym_addr + rela->r_addend),
+                   sym_name);
+        if ((static_cast<ElfW(Addr)>(INT16_MIN) <=
+             (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)) <=
+             static_cast<ElfW(Addr)>(UINT16_MAX))) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + rela->r_addend)),
-                 static_cast<ElfW(Addr)>(INT16_MIN),
-                 static_cast<ElfW(Addr)>(UINT16_MAX));
+                 static_cast<ElfW(Addr)>(INT16_MIN), static_cast<ElfW(Addr)>(UINT16_MAX));
           return -1;
         }
         break;
       case R_AARCH64_PREL64:
         count_relocation(kRelocRelative);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
+        TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n", reloc,
+                   (sym_addr + rela->r_addend), rela->r_offset, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + rela->r_addend) - rela->r_offset;
         break;
       case R_AARCH64_PREL32:
         count_relocation(kRelocRelative);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
-        if ((static_cast<ElfW(Addr)>(INT32_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <= static_cast<ElfW(Addr)>(UINT32_MAX))) {
+        TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n", reloc,
+                   (sym_addr + rela->r_addend), rela->r_offset, sym_name);
+        if ((static_cast<ElfW(Addr)>(INT32_MIN) <=
+             (*reinterpret_cast<ElfW(Addr)*>(reloc) +
+              ((sym_addr + rela->r_addend) - rela->r_offset))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) +
+              ((sym_addr + rela->r_addend) - rela->r_offset)) <=
+             static_cast<ElfW(Addr)>(UINT32_MAX))) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
-                 static_cast<ElfW(Addr)>(INT32_MIN),
-                 static_cast<ElfW(Addr)>(UINT32_MAX));
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) +
+                  ((sym_addr + rela->r_addend) - rela->r_offset)),
+                 static_cast<ElfW(Addr)>(INT32_MIN), static_cast<ElfW(Addr)>(UINT32_MAX));
           return -1;
         }
         break;
       case R_AARCH64_PREL16:
         count_relocation(kRelocRelative);
         MARK(rela->r_offset);
-        TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset, sym_name);
-        if ((static_cast<ElfW(Addr)>(INT16_MIN) <= (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset))) &&
-            ((*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)) <= static_cast<ElfW(Addr)>(UINT16_MAX))) {
+        TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n", reloc,
+                   (sym_addr + rela->r_addend), rela->r_offset, sym_name);
+        if ((static_cast<ElfW(Addr)>(INT16_MIN) <=
+             (*reinterpret_cast<ElfW(Addr)*>(reloc) +
+              ((sym_addr + rela->r_addend) - rela->r_offset))) &&
+            ((*reinterpret_cast<ElfW(Addr)*>(reloc) +
+              ((sym_addr + rela->r_addend) - rela->r_offset)) <=
+             static_cast<ElfW(Addr)>(UINT16_MAX))) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + rela->r_addend) - rela->r_offset);
         } else {
           DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                 (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + rela->r_addend) - rela->r_offset)),
-                 static_cast<ElfW(Addr)>(INT16_MIN),
-                 static_cast<ElfW(Addr)>(UINT16_MAX));
+                 (*reinterpret_cast<ElfW(Addr)*>(reloc) +
+                  ((sym_addr + rela->r_addend) - rela->r_offset)),
+                 static_cast<ElfW(Addr)>(INT16_MIN), static_cast<ElfW(Addr)>(UINT16_MAX));
           return -1;
         }
         break;
@@ -1431,8 +1447,7 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
           DL_ERR("odd RELATIVE form...");
           return -1;
         }
-        TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n",
-                   reloc, (base + rela->r_addend));
+        TRACE_TYPE(RELO, "RELO RELATIVE %16llx <- %16llx\n", reloc, (base + rela->r_addend));
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + rela->r_addend);
         break;
 
@@ -1456,12 +1471,12 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         DL_ERR("%s R_AARCH64_COPY relocations are not supported", name);
         return -1;
       case R_AARCH64_TLS_TPREL64:
-        TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset);
+        TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n", reloc,
+                   (sym_addr + rela->r_addend), rela->r_offset);
         break;
       case R_AARCH64_TLS_DTPREL32:
-        TRACE_TYPE(RELO, "RELO TLS_DTPREL32 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + rela->r_addend), rela->r_offset);
+        TRACE_TYPE(RELO, "RELO TLS_DTPREL32 *** %16llx <- %16llx - %16llx\n", reloc,
+                   (sym_addr + rela->r_addend), rela->r_offset);
         break;
 #elif defined(__x86_64__)
       case R_X86_64_JUMP_SLOT:
@@ -1527,8 +1542,9 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
   return 0;
 }
 
-#else // REL, not RELA.
-int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+#else  // REL, not RELA.
+int soinfo::relocate(ElfW(Rel) * rel, unsigned count, const soinfo_list_t& global_group,
+                     const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     unsigned type = ELFW(R_TYPE)(rel->r_info);
     // TODO: don't use unsigned for 'sym'. Use uint32_t or ElfW(Addr) instead.
@@ -1538,7 +1554,7 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
     const char* sym_name = nullptr;
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
-    if (type == 0) { // R_*_NONE
+    if (type == 0) {  // R_*_NONE
       continue;
     }
 
@@ -1574,7 +1590,7 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
           case R_ARM_JUMP_SLOT:
           case R_ARM_GLOB_DAT:
           case R_ARM_ABS32:
-          case R_ARM_RELATIVE:    /* Don't care. */
+          case R_ARM_RELATIVE: /* Don't care. */
             // sym_addr was initialized to be zero above or relocation
             // code below does not care about value of sym_addr.
             // No need to do anything.
@@ -1583,7 +1599,7 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
           case R_386_JMP_SLOT:
           case R_386_GLOB_DAT:
           case R_386_32:
-          case R_386_RELATIVE:    /* Don't care. */
+          case R_386_RELATIVE: /* Don't care. */
           case R_386_IRELATIVE:
             // sym_addr was initialized to be zero above or relocation
             // code below does not care about value of sym_addr.
@@ -1596,7 +1612,7 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
 
 #if defined(__arm__)
           case R_ARM_COPY:
-            // Fall through. Can't really copy if weak symbol is not found at run-time.
+// Fall through. Can't really copy if weak symbol is not found at run-time.
 #endif
           default:
             DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
@@ -1632,8 +1648,8 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
       case R_ARM_REL32:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x - %08x %s",
-                   reloc, sym_addr, rel->r_offset, sym_name);
+        TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x - %08x %s", reloc, sym_addr, rel->r_offset,
+                   sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
         break;
       case R_ARM_COPY:
@@ -1670,8 +1686,8 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
       case R_386_PC32:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s",
-                   reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
+        TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s", reloc,
+                   (sym_addr - reloc), sym_addr, reloc, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
         break;
 #elif defined(__mips__)
@@ -1679,11 +1695,12 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
 #if defined(__LP64__)
         // MIPS Elf64_Rel entries contain compound relocations
         // We only handle the R_MIPS_NONE|R_MIPS_64|R_MIPS_REL32 case
-        if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
-            ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
-          DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
-                 type, (unsigned)ELF64_R_TYPE2(rel->r_info),
-                 (unsigned)ELF64_R_TYPE3(rel->r_info), rel, idx);
+        if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 || ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
+          DL_ERR(
+              "Unexpected compound relocation type:%d type2:%d type3:%d @ %p "
+              "(%zu)",
+              type, (unsigned)ELF64_R_TYPE2(rel->r_info), (unsigned)ELF64_R_TYPE3(rel->r_info), rel,
+              idx);
           return -1;
         }
 #endif
@@ -1710,16 +1727,18 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
           DL_ERR("odd RELATIVE form...");
           return -1;
         }
-        TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p",
-                   reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
+        TRACE_TYPE(RELO, "RELO RELATIVE %p <- +%p", reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(base));
         *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
         break;
 #if defined(__i386__)
       case R_386_IRELATIVE:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc), reinterpret_cast<void*>(base));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
+        TRACE_TYPE(RELO, "RELO IRELATIVE %p <- %p", reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(base));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) =
+            call_ifunc_resolver(base + *reinterpret_cast<ElfW(Addr)*>(reloc));
         break;
 #endif
 
@@ -1741,7 +1760,8 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
 
   // got[0] is the address of the lazy resolver function.
   // got[1] may be used for a GNU extension.
-  // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
+  // Set it to a recognizable address in case someone calls it (should be
+  // _rtld_bind_start).
   // FIXME: maybe this should be in a separate routine?
   if ((flags & FLAG_LINKER) == 0) {
     size_t g = 0;
@@ -1782,7 +1802,8 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
 }
 #endif
 
-void soinfo::call_array(const char* array_name __unused, linker_function_t* functions, size_t count, bool reverse) {
+void soinfo::call_array(const char* array_name __unused, linker_function_t* functions, size_t count,
+                        bool reverse) {
   if (functions == nullptr) {
     return;
   }
@@ -1810,13 +1831,16 @@ void soinfo::call_function(const char* function_name __unused, linker_function_t
   function();
   TRACE("[ Done calling %s @ %p for '%s' ]", function_name, function, name);
 
-  // The function may have called dlopen(3) or dlclose(3), so we need to ensure our data structures
-  // are still writable. This happens with our debug malloc (see http://b/7941716).
+  // The function may have called dlopen(3) or dlclose(3), so we need to ensure
+  // our data structures
+  // are still writable. This happens with our debug malloc (see
+  // http://b/7941716).
   protect_data(PROT_READ | PROT_WRITE);
 }
 
 void soinfo::call_pre_init_constructors() {
-  // DT_PREINIT_ARRAY functions are called before any other constructors for executables,
+  // DT_PREINIT_ARRAY functions are called before any other constructors for
+  // executables,
   // but ignored in a shared library.
   call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false);
 }
@@ -1826,9 +1850,12 @@ void soinfo::call_constructors() {
     return;
   }
 
-  // We set constructors_called before actually calling the constructors, otherwise it doesn't
-  // protect against recursive constructor calls. One simple example of constructor recursion
-  // is the libc debug malloc, which is implemented in libc_malloc_debug_leak.so:
+  // We set constructors_called before actually calling the constructors,
+  // otherwise it doesn't
+  // protect against recursive constructor calls. One simple example of
+  // constructor recursion
+  // is the libc debug malloc, which is implemented in
+  // libc_malloc_debug_leak.so:
   // 1. The program depends on libc, so libc's constructor is called here.
   // 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.
   // 3. dlopen() calls the constructors on the newly created
@@ -1840,13 +1867,11 @@ void soinfo::call_constructors() {
 
   if ((flags & FLAG_EXE) == 0 && preinit_array_ != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
-    PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!",
-          name, preinit_array_count_);
+    PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!", name,
+          preinit_array_count_);
   }
 
-  get_children().for_each([] (soinfo* si) {
-    si->call_constructors();
-  });
+  get_children().for_each([](soinfo* si) { si->call_constructors(); });
 
   TRACE("\"%s\": calling constructors", name);
 
@@ -1885,16 +1910,12 @@ void soinfo::remove_all_links() {
   }
 
   // 1. Untie connected soinfos from 'this'.
-  children_.for_each([&] (soinfo* child) {
-    child->parents_.remove_if([&] (const soinfo* parent) {
-      return parent == this;
-    });
+  children_.for_each([&](soinfo* child) {
+    child->parents_.remove_if([&](const soinfo* parent) { return parent == this; });
   });
 
-  parents_.for_each([&] (soinfo* parent) {
-    parent->children_.remove_if([&] (const soinfo* child) {
-      return child == this;
-    });
+  parents_.for_each([&](soinfo* parent) {
+    parent->children_.remove_if([&](const soinfo* child) { return child == this; });
   });
 
   // 2. Once everything untied - clear local lists.
@@ -1975,7 +1996,7 @@ soinfo::soinfo_list_t& soinfo::get_parents() {
   return g_empty_list;
 }
 
-ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym)* s) {
+ElfW(Addr) soinfo::resolve_symbol_address(ElfW(Sym) * s) {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
   }
@@ -2084,15 +2105,14 @@ bool soinfo::prelink_image() {
   }
 
 #if defined(__arm__)
-  (void) phdr_table_get_arm_exidx(phdr, phnum, load_bias,
-                                  &ARM_exidx, &ARM_exidx_count);
+  (void)phdr_table_get_arm_exidx(phdr, phnum, load_bias, &ARM_exidx, &ARM_exidx_count);
 #endif
 
   // Extract useful information from dynamic section.
   uint32_t needed_count = 0;
   for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-    DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p",
-          d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+    DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p", d, reinterpret_cast<void*>(d->d_tag),
+          reinterpret_cast<void*>(d->d_un.d_val));
     switch (d->d_tag) {
       case DT_SONAME:
         // TODO: glibc dynamic linker uses this name for
@@ -2128,7 +2148,10 @@ bool soinfo::prelink_image() {
         chain_ = bucket_ + nbucket_ - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
 
         if (!powerof2(gnu_maskwords_)) {
-          DL_ERR("invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting power to two", gnu_maskwords_, name);
+          DL_ERR(
+              "invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting "
+              "power to two",
+              gnu_maskwords_, name);
           return false;
         }
         --gnu_maskwords_;
@@ -2194,8 +2217,8 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_DEBUG:
-        // Set the DT_DEBUG entry to the address of _r_debug for GDB
-        // if the dynamic table is writable
+// Set the DT_DEBUG entry to the address of _r_debug for GDB
+// if the dynamic table is writable
 // FIXME: not working currently for N64
 // The flags for the LOAD and DYNAMIC program headers do not agree.
 // The LOAD section containing the dynamic table has been mapped as
@@ -2249,10 +2272,12 @@ bool soinfo::prelink_image() {
         }
         break;
 
-      // "Indicates that all RELATIVE relocations have been concatenated together,
+      // "Indicates that all RELATIVE relocations have been concatenated
+      // together,
       // and specifies the RELATIVE relocation count."
       //
-      // TODO: Spec also mentions that this can be used to optimize relocation process;
+      // TODO: Spec also mentions that this can be used to optimize relocation
+      // process;
       // Not currently used by bionic linker - ignored.
       case DT_RELCOUNT:
         break;
@@ -2374,15 +2399,15 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
-          DL_WARN("%s: unused DT entry: type %p arg %p", name,
-              reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+          DL_WARN("%s: unused DT entry: type %p arg %p", name, reinterpret_cast<void*>(d->d_tag),
+                  reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
     }
   }
 
-  DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
-        reinterpret_cast<void*>(base), strtab_, symtab_);
+  DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p", reinterpret_cast<void*>(base), strtab_,
+        symtab_);
 
   // Sanity checks.
   if (relocating_linker && needed_count != 0) {
@@ -2390,7 +2415,10 @@ bool soinfo::prelink_image() {
     return false;
   }
   if (nbucket_ == 0) {
-    DL_ERR("empty/missing DT_HASH/DT_GNU_HASH in \"%s\" (new hash type from the future?)", name);
+    DL_ERR(
+        "empty/missing DT_HASH/DT_GNU_HASH in \"%s\" (new hash type from the "
+        "future?)",
+        name);
     return false;
   }
   if (strtab_ == 0) {
@@ -2404,17 +2432,20 @@ bool soinfo::prelink_image() {
   return true;
 }
 
-bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
-
+bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                        const android_dlextinfo* extinfo) {
 #if !defined(__LP64__)
   if (has_text_relocations) {
-    // Make segments writable to allow text relocations to work properly. We will later call
-    // phdr_table_protect_segments() after all of them are applied and all constructors are run.
-    DL_WARN("%s has text relocations. This is wasting memory and prevents "
-            "security hardening. Please fix.", name);
+    // Make segments writable to allow text relocations to work properly. We
+    // will later call
+    // phdr_table_protect_segments() after all of them are applied and all
+    // constructors are run.
+    DL_WARN(
+        "%s has text relocations. This is wasting memory and prevents "
+        "security hardening. Please fix.",
+        name);
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-             name, strerror(errno));
+      DL_ERR("can't unprotect loadable segments for \"%s\": %s", name, strerror(errno));
       return false;
     }
   }
@@ -2460,8 +2491,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
     if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't protect segments for \"%s\": %s",
-             name, strerror(errno));
+      DL_ERR("can't protect segments for \"%s\": %s", name, strerror(errno));
       return false;
     }
   }
@@ -2469,24 +2499,19 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 
   /* We can also turn on GNU RELRO protection */
   if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
-           name, strerror(errno));
+    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s", name, strerror(errno));
     return false;
   }
 
   /* Handle serializing/sharing the RELRO segment */
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
-    if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
-                                       extinfo->relro_fd) < 0) {
-      DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
-             name, strerror(errno));
+    if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias, extinfo->relro_fd) < 0) {
+      DL_ERR("failed serializing GNU RELRO section for \"%s\": %s", name, strerror(errno));
       return false;
     }
   } else if (extinfo && (extinfo->flags & ANDROID_DLEXT_USE_RELRO)) {
-    if (phdr_table_map_gnu_relro(phdr, phnum, load_bias,
-                                 extinfo->relro_fd) < 0) {
-      DL_ERR("failed mapping GNU RELRO section for \"%s\": %s",
-             name, strerror(errno));
+    if (phdr_table_map_gnu_relro(phdr, phnum, load_bias, extinfo->relro_fd) < 0) {
+      DL_ERR("failed mapping GNU RELRO section for \"%s\": %s", name, strerror(errno));
       return false;
     }
   }
@@ -2669,7 +2694,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   memset(needed_library_names, 0, sizeof(needed_library_names));
   needed_library_name_list.copy_to_array(needed_library_names, needed_libraries_count);
 
-  if (needed_libraries_count > 0 && !find_libraries(si, needed_library_names, needed_libraries_count, nullptr, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
+  if (needed_libraries_count > 0 &&
+      !find_libraries(si, needed_library_names, needed_libraries_count, nullptr, g_ld_preloads,
+                      ld_preloads_count, RTLD_GLOBAL, nullptr)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
   }
@@ -2688,16 +2715,14 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
 #if TIMING
   gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", args.argv[0], (int) (
-           (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
-           (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
+  PRINT("LINKER TIME: %s: %d microseconds", args.argv[0],
+        (int)((((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
+              (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
   PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", args.argv[0],
-         linker_stats.count[kRelocAbsolute],
-         linker_stats.count[kRelocRelative],
-         linker_stats.count[kRelocCopy],
-         linker_stats.count[kRelocSymbol]);
+        linker_stats.count[kRelocAbsolute], linker_stats.count[kRelocRelative],
+        linker_stats.count[kRelocCopy], linker_stats.count[kRelocSymbol]);
 #endif
 #if COUNT_PAGES
   {
@@ -2741,9 +2766,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
  *    load bias, i.e. add the value of any p_vaddr in the file to get
  *    the corresponding address in memory.
  */
-static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
+static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr) * elf) {
   ElfW(Addr) offset = elf->e_phoff;
-  const ElfW(Phdr)* phdr_table = reinterpret_cast<const ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(elf) + offset);
+  const ElfW(Phdr)* phdr_table =
+      reinterpret_cast<const ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(elf) + offset);
   const ElfW(Phdr)* phdr_end = phdr_table + elf->e_phnum;
 
   for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_end; phdr++) {
@@ -2795,7 +2821,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because
-  // linker is built with DT_SYMBOLIC and therefore relocates its symbols against
+  // linker is built with DT_SYMBOLIC and therefore relocates its symbols
+  // against
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.

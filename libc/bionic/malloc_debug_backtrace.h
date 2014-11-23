@@ -31,7 +31,6 @@
 
 extern bool g_backtrace_enabled;
 
-#define GET_BACKTRACE(bt, depth) \
-  (g_backtrace_enabled ? get_backtrace(bt, depth) : 0)
+#define GET_BACKTRACE(bt, depth) (g_backtrace_enabled ? get_backtrace(bt, depth) : 0)
 
 #endif  // MALLOC_DEBUG_BACKTRACE_H

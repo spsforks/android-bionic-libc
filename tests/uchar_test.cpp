@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 #include <sys/cdefs.h>
 #if defined(__BIONIC__)
 #define HAVE_UCHAR 1
@@ -184,10 +183,16 @@ TEST(uchar, mbrtoc16) {
   ASSERT_EQ(1U, mbrtoc16(&out, "abcdef", 6, NULL));
   ASSERT_EQ(L'a', out);
   // 2-byte UTF-8.
-  ASSERT_EQ(2U, mbrtoc16(&out, "\xc2\xa2" "cdef", 6, NULL));
+  ASSERT_EQ(2U, mbrtoc16(&out,
+                         "\xc2\xa2"
+                         "cdef",
+                         6, NULL));
   ASSERT_EQ(static_cast<char16_t>(0x00a2), out);
   // 3-byte UTF-8.
-  ASSERT_EQ(3U, mbrtoc16(&out, "\xe2\x82\xac" "def", 6, NULL));
+  ASSERT_EQ(3U, mbrtoc16(&out,
+                         "\xe2\x82\xac"
+                         "def",
+                         6, NULL));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
 #else
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
@@ -198,10 +203,12 @@ TEST(uchar, mbrtoc16_surrogate) {
 #if HAVE_UCHAR
   char16_t out;
 
-  ASSERT_EQ(static_cast<size_t>(-3),
-            mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, NULL));
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, NULL));
+  ASSERT_EQ(4U, mbrtoc16(&out,
+                         "\xf4\x8a\xaf\x8d"
+                         "ef",
+                         6, NULL));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
 #else
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
@@ -211,8 +218,7 @@ TEST(uchar, mbrtoc16_surrogate) {
 TEST(uchar, mbrtoc16_reserved_range) {
 #if HAVE_UCHAR
   char16_t out;
-  ASSERT_EQ(static_cast<size_t>(-1),
-            mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, NULL));
 #else
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
 #endif
@@ -221,8 +227,7 @@ TEST(uchar, mbrtoc16_reserved_range) {
 TEST(uchar, mbrtoc16_beyond_range) {
 #if HAVE_UCHAR
   char16_t out;
-  ASSERT_EQ(static_cast<size_t>(-1),
-            mbrtoc16(&out, "\xf5\x80\x80\x80", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf5\x80\x80\x80", 6, NULL));
 #else
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
 #endif
@@ -236,27 +241,42 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   char16_t out;
   // 2-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xc2", 1, ps));
-  ASSERT_EQ(1U, mbrtoc16(&out, "\xa2" "cdef", 5, ps));
+  ASSERT_EQ(1U, mbrtoc16(&out,
+                         "\xa2"
+                         "cdef",
+                         5, ps));
   ASSERT_EQ(static_cast<char16_t>(0x00a2), out);
   ASSERT_TRUE(mbsinit(ps));
   // 3-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xe2", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\x82", 1, ps));
-  ASSERT_EQ(1U, mbrtoc16(&out, "\xac" "def", 4, ps));
+  ASSERT_EQ(1U, mbrtoc16(&out,
+                         "\xac"
+                         "def",
+                         4, ps));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
   ASSERT_TRUE(mbsinit(ps));
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xf4", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\x8a\xaf", 2, ps));
-  ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out, "\x8d" "ef", 3, ps));
+  ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out,
+                                              "\x8d"
+                                              "ef",
+                                              3, ps));
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(1U, mbrtoc16(&out, "\x80" "ef", 3, ps));
+  ASSERT_EQ(1U, mbrtoc16(&out,
+                         "\x80"
+                         "ef",
+                         3, ps));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xc2", 1, ps));
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\x20" "cdef", 5, ps));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out,
+                                              "\x20"
+                                              "cdef",
+                                              5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
 #endif
@@ -345,21 +365,36 @@ TEST(uchar, mbrtoc32) {
   ASSERT_EQ(1U, mbrtoc32(out, "abcdef", 6, NULL));
   ASSERT_EQ(static_cast<char32_t>(L'a'), out[0]);
   // 2-byte UTF-8.
-  ASSERT_EQ(2U, mbrtoc32(out, "\xc2\xa2" "cdef", 6, NULL));
+  ASSERT_EQ(2U, mbrtoc32(out,
+                         "\xc2\xa2"
+                         "cdef",
+                         6, NULL));
   ASSERT_EQ(static_cast<char32_t>(0x00a2), out[0]);
   // 3-byte UTF-8.
-  ASSERT_EQ(3U, mbrtoc32(out, "\xe2\x82\xac" "def", 6, NULL));
+  ASSERT_EQ(3U, mbrtoc32(out,
+                         "\xe2\x82\xac"
+                         "def",
+                         6, NULL));
   ASSERT_EQ(static_cast<char32_t>(0x20ac), out[0]);
   // 4-byte UTF-8.
-  ASSERT_EQ(4U, mbrtoc32(out, "\xf0\xa4\xad\xa2" "ef", 6, NULL));
+  ASSERT_EQ(4U, mbrtoc32(out,
+                         "\xf0\xa4\xad\xa2"
+                         "ef",
+                         6, NULL));
   ASSERT_EQ(static_cast<char32_t>(0x24b62), out[0]);
-#if defined(__BIONIC__) // glibc allows this.
+#if defined(__BIONIC__)  // glibc allows this.
   // Illegal 5-byte UTF-8.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out,
+                                              "\xf8\xa1\xa2\xa3\xa4"
+                                              "f",
+                                              6, NULL));
   ASSERT_EQ(EILSEQ, errno);
 #endif
   // Illegal over-long sequence.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf0\x82\x82\xac" "ef", 6, NULL));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out,
+                                              "\xf0\x82\x82\xac"
+                                              "ef",
+                                              6, NULL));
   ASSERT_EQ(EILSEQ, errno);
 #else
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
@@ -374,25 +409,37 @@ void test_mbrtoc32_incomplete(mbstate_t* ps) {
   char32_t out;
   // 2-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xc2", 1, ps));
-  ASSERT_EQ(1U, mbrtoc32(&out, "\xa2" "cdef", 5, ps));
+  ASSERT_EQ(1U, mbrtoc32(&out,
+                         "\xa2"
+                         "cdef",
+                         5, ps));
   ASSERT_EQ(static_cast<char32_t>(0x00a2), out);
   ASSERT_TRUE(mbsinit(ps));
   // 3-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xe2", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\x82", 1, ps));
-  ASSERT_EQ(1U, mbrtoc32(&out, "\xac" "def", 4, ps));
+  ASSERT_EQ(1U, mbrtoc32(&out,
+                         "\xac"
+                         "def",
+                         4, ps));
   ASSERT_EQ(static_cast<char32_t>(0x20ac), out);
   ASSERT_TRUE(mbsinit(ps));
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xf0", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xa4\xad", 2, ps));
-  ASSERT_EQ(1U, mbrtoc32(&out, "\xa2" "ef", 3, ps));
+  ASSERT_EQ(1U, mbrtoc32(&out,
+                         "\xa2"
+                         "ef",
+                         3, ps));
   ASSERT_EQ(static_cast<char32_t>(0x24b62), out);
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xc2", 1, ps));
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(&out, "\x20" "cdef", 5, ps));
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(&out,
+                                              "\x20"
+                                              "cdef",
+                                              5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
 #endif
@@ -408,4 +455,3 @@ TEST(uchar, mbrtoc32_incomplete) {
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
 #endif
 }
-

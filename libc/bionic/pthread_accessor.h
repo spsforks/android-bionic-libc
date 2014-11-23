@@ -45,9 +45,15 @@ class pthread_accessor {
     }
   }
 
-  pthread_internal_t& operator*() const { return *thread_; }
-  pthread_internal_t* operator->() const { return thread_; }
-  pthread_internal_t* get() const { return thread_; }
+  pthread_internal_t& operator*() const {
+    return *thread_;
+  }
+  pthread_internal_t* operator->() const {
+    return thread_;
+  }
+  pthread_internal_t* get() const {
+    return thread_;
+  }
 
  private:
   pthread_internal_t* thread_;
@@ -61,4 +67,4 @@ class pthread_accessor {
   DISALLOW_COPY_AND_ASSIGN(pthread_accessor);
 };
 
-#endif // PTHREAD_ACCESSOR_H
+#endif  // PTHREAD_ACCESSOR_H

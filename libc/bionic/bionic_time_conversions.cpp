@@ -53,7 +53,8 @@ void timeval_from_timespec(timeval& tv, const timespec& ts) {
 }
 
 // Initializes 'ts' with the difference between 'abs_ts' and the current time
-// according to 'clock'. Returns false if abstime already expired, true otherwise.
+// according to 'clock'. Returns false if abstime already expired, true
+// otherwise.
 bool timespec_from_absolute_timespec(timespec& ts, const timespec& abs_ts, clockid_t clock) {
   clock_gettime(clock, &ts);
   ts.tv_sec = abs_ts.tv_sec - ts.tv_sec;
