@@ -32,9 +32,11 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
+extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*,
+                                size_t);
 
-int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
+int sigprocmask(int how, const sigset_t* bionic_new_set,
+                sigset_t* bionic_old_set) {
   kernel_sigset_t new_set;
   kernel_sigset_t* new_set_ptr = NULL;
   if (bionic_new_set != NULL) {

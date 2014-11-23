@@ -37,6 +37,7 @@ static class AtExitStaticClass {
       *atexit_valid_this_in_static_dtor = (expected_this == this);
     }
   }
+
  private:
   static const AtExitStaticClass* expected_this;
 
@@ -84,7 +85,9 @@ static void __attribute__((destructor)) atexit_attr_dtor() {
   }
 }
 
-extern "C" void register_atexit(std::string* sequence, bool* valid_this_in_static_dtor, bool* attr_dtor_called) {
+extern "C" void register_atexit(std::string* sequence,
+                                bool* valid_this_in_static_dtor,
+                                bool* attr_dtor_called) {
   atexit_sequence = sequence;
   atexit_valid_this_in_static_dtor = valid_this_in_static_dtor;
   atexit_attr_dtor_called = attr_dtor_called;
@@ -99,4 +102,3 @@ extern "C" int get_cxx_ctor_called() {
 extern "C" int get_attr_ctor_called() {
   return attr_ctor_called;
 }
-

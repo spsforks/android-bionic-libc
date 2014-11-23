@@ -47,7 +47,8 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
     g_thread_list = thread->next;
   }
 
-  // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
+  // The main thread is not heap-allocated. See __libc_init_tls for the
+  // declaration,
   // and __libc_init_common for the point where it's added to the thread list.
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
     free(thread);

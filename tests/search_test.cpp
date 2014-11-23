@@ -19,7 +19,8 @@
 #include <search.h>
 
 static int int_cmp(const void* lhs, const void* rhs) {
-  return *reinterpret_cast<const int*>(rhs) - *reinterpret_cast<const int*>(lhs);
+  return *reinterpret_cast<const int*>(rhs) -
+         *reinterpret_cast<const int*>(lhs);
 }
 
 TEST(search, lfind_lsearch) {
@@ -49,20 +50,22 @@ TEST(search, lfind_lsearch) {
 }
 
 struct node {
-  node(const char* s) : s(strdup(s)) {}
+  node(const char* s) : s(strdup(s)) {
+  }
 
   char* s;
 };
 
 static int node_cmp(const void* lhs, const void* rhs) {
-  return strcmp(reinterpret_cast<const node*>(lhs)->s, reinterpret_cast<const node*>(rhs)->s);
+  return strcmp(reinterpret_cast<const node*>(lhs)->s,
+                reinterpret_cast<const node*>(rhs)->s);
 }
 
 static std::vector<std::string> g_nodes;
 
 static void node_walk(const void* p, VISIT order, int) {
   const node* n = *reinterpret_cast<const node* const*>(p);
-  if (order == postorder || order == leaf)  {
+  if (order == postorder || order == leaf) {
     g_nodes.push_back(n->s);
   }
 }
@@ -108,19 +111,22 @@ TEST(search, tfind_tsearch_twalk_tdestroy) {
   ASSERT_EQ("m", g_nodes[1]);
   ASSERT_EQ("z", g_nodes[2]);
 
-  // tdestroy(3) removes nodes under a node, calling our callback to destroy each one.
+  // tdestroy(3) removes nodes under a node, calling our callback to destroy
+  // each one.
   g_free_calls = 0;
   tdestroy(root, node_free);
   ASSERT_EQ(3U, g_free_calls);
 }
 
 struct pod_node {
-  pod_node(int i) : i(i) {}
+  pod_node(int i) : i(i) {
+  }
   int i;
 };
 
 static int pod_node_cmp(const void* lhs, const void* rhs) {
-  return reinterpret_cast<const pod_node*>(rhs)->i - reinterpret_cast<const pod_node*>(lhs)->i;
+  return reinterpret_cast<const pod_node*>(rhs)->i -
+         reinterpret_cast<const pod_node*>(lhs)->i;
 }
 
 TEST(search, tdelete) {
@@ -136,7 +142,8 @@ TEST(search, tdelete) {
 }
 
 struct q_node {
-  q_node(int i) : i(i) {}
+  q_node(int i) : i(i) {
+  }
 
   q_node* next;
   q_node* prev;

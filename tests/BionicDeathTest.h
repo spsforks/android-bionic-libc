@@ -38,4 +38,4 @@ class BionicDeathTest : public testing::Test {
   int old_dumpable_;
 };
 
-#endif // BIONIC_TESTS_BIONIC_DEATH_TEST_H_
+#endif  // BIONIC_TESTS_BIONIC_DEATH_TEST_H_

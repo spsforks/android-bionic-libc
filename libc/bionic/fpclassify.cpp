@@ -49,14 +49,16 @@ int __fpclassifyd(double d) {
   double_u u;
   u.d = d;
   if (u.bits.dbl_exp == 0) {
-    return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_ZERO : FP_SUBNORMAL;
+    return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_ZERO
+                                                        : FP_SUBNORMAL;
   }
   if (u.bits.dbl_exp == DBL_EXP_INFNAN) {
     return ((u.bits.dbl_fracl | u.bits.dbl_frach) == 0) ? FP_INFINITE : FP_NAN;
   }
   return FP_NORMAL;
 }
-__strong_alias(__fpclassify, __fpclassifyd); // glibc uses __fpclassify, BSD __fpclassifyd.
+__strong_alias(__fpclassify,
+               __fpclassifyd);  // glibc uses __fpclassify, BSD __fpclassifyd.
 
 int __fpclassifyf(float f) {
   float_u u;
@@ -121,7 +123,8 @@ union long_double_u {
   ieee_ext bits;
 };
 
-#define zero_frac(b) ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
+#define zero_frac(b) \
+  ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
 
 int __fpclassifyl(long double ld) {
   long_double_u u;

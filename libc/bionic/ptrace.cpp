@@ -32,7 +32,8 @@
 extern "C" long __ptrace(int req, pid_t pid, void* addr, void* data);
 
 long ptrace(int req, ...) {
-  bool is_peek = (req == PTRACE_PEEKUSR || req == PTRACE_PEEKTEXT || req == PTRACE_PEEKDATA);
+  bool is_peek = (req == PTRACE_PEEKUSR || req == PTRACE_PEEKTEXT ||
+                  req == PTRACE_PEEKDATA);
   long peek_result;
 
   va_list args;

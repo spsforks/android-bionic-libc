@@ -41,7 +41,8 @@ pid_t getpid() {
     return cached_pid;
   }
 
-  // We're still in the dynamic linker or we're in the middle of forking, so ask the kernel.
+  // We're still in the dynamic linker or we're in the middle of forking, so ask
+  // the kernel.
   // We don't know whether it's safe to update the cached value, so don't try.
   return __getpid();
 }

@@ -49,8 +49,8 @@
 // values. The LSB is tested by the compiler-generated code before calling
 // __cxa_guard_acquire.
 union _guard_t {
-    int volatile state;
-    int32_t aligner;
+  int volatile state;
+  int32_t aligner;
 };
 
 const static int ready = 0x1;
@@ -62,53 +62,56 @@ const static int waiting = 0x6;
 // guard variables are 64-bit aligned, 64-bit values. The LSB is tested by
 // the compiler-generated code before calling __cxa_guard_acquire.
 union _guard_t {
-    int volatile state;
-    int64_t aligner;
+  int volatile state;
+  int64_t aligner;
 };
 
-const static int ready     = letoh32(0x1);
-const static int pending   = letoh32(0x100);
-const static int waiting   = letoh32(0x10000);
+const static int ready = letoh32(0x1);
+const static int pending = letoh32(0x100);
+const static int waiting = letoh32(0x10000);
 #endif
 
 extern "C" int __cxa_guard_acquire(_guard_t* gv) {
-    // 0 -> pending, return 1
-    // pending -> waiting, wait and return 0
-    // waiting: untouched, wait and return 0
-    // ready: untouched, return 0
+// clang-format off
+  // 0 -> pending, return 1
+  // pending -> waiting, wait and return 0
+  // waiting: untouched, wait and return 0
+  // ready: untouched, return 0
+// clang-format on
 
 retry:
-    if (__bionic_cmpxchg(0, pending, &gv->state) == 0) {
-        ANDROID_MEMBAR_FULL();
-        return 1;
-    }
-    __bionic_cmpxchg(pending, waiting, &gv->state); // Indicate there is a waiter
-    __futex_wait(&gv->state, waiting, NULL);
-
-    if (gv->state != ready) {
-        // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
-        goto retry;
-    }
-
+  if (__bionic_cmpxchg(0, pending, &gv->state) == 0) {
     ANDROID_MEMBAR_FULL();
-    return 0;
+    return 1;
+  }
+  __bionic_cmpxchg(pending, waiting, &gv->state);  // Indicate there is a waiter
+  __futex_wait(&gv->state, waiting, NULL);
+
+  if (gv->state != ready) {
+    // __cxa_guard_abort was called, let every thread try since there is no
+    // return code for this condition
+    goto retry;
+  }
+
+  ANDROID_MEMBAR_FULL();
+  return 0;
 }
 
 extern "C" void __cxa_guard_release(_guard_t* gv) {
-    // pending -> ready
-    // waiting -> ready, and wake
+  // pending -> ready
+  // waiting -> ready, and wake
 
-    ANDROID_MEMBAR_FULL();
-    if (__bionic_cmpxchg(pending, ready, &gv->state) == 0) {
-        return;
-    }
+  ANDROID_MEMBAR_FULL();
+  if (__bionic_cmpxchg(pending, ready, &gv->state) == 0) {
+    return;
+  }
 
-    gv->state = ready;
-    __futex_wake(&gv->state, 0x7fffffff);
+  gv->state = ready;
+  __futex_wake(&gv->state, 0x7fffffff);
 }
 
 extern "C" void __cxa_guard_abort(_guard_t* gv) {
-    ANDROID_MEMBAR_FULL();
-    gv->state= 0;
-    __futex_wake(&gv->state, 0x7fffffff);
+  ANDROID_MEMBAR_FULL();
+  gv->state = 0;
+  __futex_wake(&gv->state, 0x7fffffff);
 }

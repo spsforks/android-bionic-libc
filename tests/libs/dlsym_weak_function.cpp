@@ -17,4 +17,3 @@
 extern "C" int __attribute__((weak)) weak_func() {
   return 42;
 }
-

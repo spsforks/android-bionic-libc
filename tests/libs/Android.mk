@@ -271,7 +271,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # Library used by ifunc tests
 # -----------------------------------------------------------------------------
 libtest_ifunc_src_files := \
-    dlopen_testlib_ifunc.c
+    dlopen_testlib_ifunc.cpp
 
 libtest_ifunc_clang_host := false
 module := libtest_ifunc
