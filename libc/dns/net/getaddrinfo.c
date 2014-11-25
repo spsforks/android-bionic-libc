@@ -463,6 +463,15 @@ android_getaddrinfo_proxy(
 
 	// Send the request.
 	proxy = fdopen(sock, "r+");
+	if (proxy == NULL) {
+		// Failed to map sock to FILE*. Check errno for hint of
+		// cause.  One common cause of fail is that sock has a value
+		// larger than SHRT_MAX and thus cannot map to an fd.  Fail the
+		// lookup with EAI_SYSTEM and let callers handle the fail.
+		close(sock);
+		return EAI_SYSTEM;
+	}
+
 	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %u",
 		    hostname == NULL ? "^" : hostname,
 		    servname == NULL ? "^" : servname,
