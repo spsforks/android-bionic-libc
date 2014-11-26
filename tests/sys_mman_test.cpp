@@ -172,3 +172,58 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   ASSERT_STREQ(NEWPAGE2_MSG, buf);
   ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
 }
+
+TEST(sys_mman, posix_madvise) {
+  TemporaryFile tf;
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  char buf[pagesize];
+
+  // Prepare environment.
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), write(tf.fd, buf, pagesize));
+  void* map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, tf.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Verify different options of posix_madvise.
+  int result = posix_madvise(map, pagesize, POSIX_MADV_NORMAL);
+  ASSERT_EQ(0, result) << "POSIX_MADV_NORMAL:" << strerror(errno);
+  result = posix_madvise(map, pagesize, POSIX_MADV_SEQUENTIAL);
+  ASSERT_EQ(0, result) << "POSIX_MADV_SEQUENTIAL:" << strerror(errno);
+  result = posix_madvise(map, pagesize, POSIX_MADV_RANDOM);
+  ASSERT_EQ(0, result) << "POSIX_MADV_RANDOM:" << strerror(errno);
+  result = posix_madvise(map, pagesize, POSIX_MADV_WILLNEED);
+  ASSERT_EQ(0, result) << "POSIX_MADV_WILLNEED:" << strerror(errno);
+
+  int* int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    *int_ptr++ = i;
+  }
+
+  result = posix_madvise(map, pagesize, POSIX_MADV_DONTNEED);
+  ASSERT_EQ(0, result) << "POSIX_MADV_DONTNEED:" << strerror(errno);
+
+  // Verify that memory can still be accessed after POSIX_MADV_DONTNEED.
+  int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    ASSERT_EQ(i, *int_ptr++);
+  }
+
+  result = munmap(map, pagesize);
+  ASSERT_EQ(0, result);
+  close(tf.fd);
+  tf.reopen();
+  map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, tf.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Verify previous written data.
+  result = posix_madvise(map, pagesize, POSIX_MADV_WILLNEED);
+  ASSERT_EQ(0, result) << "POSIX_MADV_WILLNEED:" << strerror(errno);
+
+  int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    ASSERT_EQ(i, *int_ptr++);
+  }
+  result = posix_madvise(map, pagesize, POSIX_MADV_DONTNEED);
+  ASSERT_EQ(0, result) << "POSIX_MADV_DONTNEED:" << strerror(errno);
+  result = munmap(map, pagesize);
+  ASSERT_EQ(0, result);
+}

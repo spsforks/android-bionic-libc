@@ -43,6 +43,12 @@ __BEGIN_DECLS
 #define MREMAP_MAYMOVE  1
 #define MREMAP_FIXED    2
 
+#define POSIX_MADV_NORMAL     MADV_NORMAL
+#define POSIX_MADV_RANDOM     MADV_RANDOM
+#define POSIX_MADV_SEQUENTIAL MADV_SEQUENTIAL
+#define POSIX_MADV_WILLNEED   MADV_WILLNEED
+#define POSIX_MADV_DONTNEED   MADV_DONTNEED
+
 extern void* mmap(void*, size_t, int, int, int, off_t);
 extern void* mmap64(void*, size_t, int, int, int, off64_t);
 extern int munmap(void*, size_t);
@@ -60,6 +66,10 @@ extern int mlock(const void*, size_t);
 extern int munlock(const void*, size_t);
 
 extern int mincore(void*, size_t, unsigned char*);
+
+// TODO: Remove undef when external/fio doesn't use posix_madvise macro. see b/18472477.
+#undef posix_madvise
+extern int posix_madvise(void*, size_t, int);
 
 __END_DECLS
 
