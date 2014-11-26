@@ -172,3 +172,70 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   ASSERT_STREQ(NEWPAGE2_MSG, buf);
   ASSERT_STREQ(END_MSG, buf+pagesize-sizeof(END_MSG));
 }
+
+TEST(sys_mman, posix_madvise_map_anonymous) {
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+
+  // Prepare environment.
+  void* map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Verify different options of posix_madvise.
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_NORMAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_SEQUENTIAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_RANDOM));
+
+#if defined(__BIONIC__)
+  // As Android doesn't use swap, kernel returns EBADF when the map is not a file.
+  ASSERT_EQ(EBADF, posix_madvise(map, pagesize, POSIX_MADV_WILLNEED));
+#else
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_WILLNEED));
+#endif
+
+  int* int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    *int_ptr++ = i;
+  }
+
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_DONTNEED));
+
+  // Verify that memory can still be accessed after POSIX_MADV_DONTNEED.
+  int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    ASSERT_EQ(i, *int_ptr++);
+  }
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+}
+
+TEST(sys_mman, posix_madvise_map_file) {
+  TemporaryFile tempfile;
+  size_t pagesize = sysconf(_SC_PAGESIZE);
+  char buf[pagesize];
+
+  // Prepare environment.
+  ASSERT_EQ(static_cast<ssize_t>(pagesize), write(tempfile.fd, buf, pagesize));
+  void* map = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, tempfile.fd, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Verify different options of posix_madvise.
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_NORMAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_SEQUENTIAL));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_RANDOM));
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_WILLNEED));
+
+  int* int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    *int_ptr++ = i;
+  }
+
+  ASSERT_EQ(0, posix_madvise(map, pagesize, POSIX_MADV_DONTNEED));
+
+  // Verify that memory can still be accessed after POSIX_MADV_DONTNEED.
+  int_ptr = reinterpret_cast<int*>(map);
+  for (int i = 0; i < static_cast<int>(pagesize / sizeof(int)); ++i) {
+    ASSERT_EQ(i, *int_ptr++);
+  }
+
+  ASSERT_EQ(0, munmap(map, pagesize));
+}
