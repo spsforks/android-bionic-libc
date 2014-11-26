@@ -23,6 +23,7 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -456,6 +457,26 @@ TEST(time, clock) {
   sleep(1);
   clock_t t1 = clock();
   ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
+}
+
+TEST(time, clock_getcpuclockid) {
+  pid_t pid = getpid();
+  clockid_t clockid;
+
+  // For current process.
+  int result = clock_getcpuclockid(pid, &clockid);
+  ASSERT_EQ(0, result);
+  
+  timespec ts;
+  result = clock_gettime(clockid, &ts);
+  ASSERT_EQ(0, result);
+
+  // For parent process;
+  pid_t ppid = getppid();
+  result = clock_getcpuclockid(ppid, &clockid);
+  ASSERT_EQ(0, result);
+  result = clock_gettime(clockid, &ts);
+  ASSERT_EQ(0, result);
 }
 
 TEST(time, clock_settime) {
