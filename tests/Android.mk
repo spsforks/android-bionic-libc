@@ -395,25 +395,11 @@ bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 # Run the unit tests built against x86 bionic on an x86 host.
 # -----------------------------------------------------------------------------
 
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
-# gtest needs ANDROID_DATA/local/tmp for death test output.
-# Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
-# bionic itself should always work relative to ANDROID_DATA or ANDROID_ROOT.
-# BIONIC_TEST_FLAGS is either empty or it comes from the user.
-bionic-unit-tests-run-on-host-prepare: $(TARGET_OUT_EXECUTABLES)/$(LINKER) $(TARGET_OUT)/etc/hosts $(TARGET_OUT_EXECUTABLES)/sh
-	if [ ! -d /system ]; then \
-	  echo "Attempting to create /system"; \
-	  sudo mkdir -p -m 0777 /system; \
-	fi
-	mkdir -p $(TARGET_OUT_DATA)/local/tmp
-	ln -fs `realpath $(TARGET_OUT)/bin` /system/
-	ln -fs `realpath $(TARGET_OUT)/etc` /system/
-	ln -fs `realpath $(TARGET_OUT)/lib` /system/
-	if [ -d "$(TARGET_OUT)/lib64" ]; then \
-	  ln -fs `realpath $(TARGET_OUT)/lib64` /system/; \
-	fi
+include $(LOCAL_PATH)/../build/run-on-host.mk
 
-bionic-unit-tests-run-on-host: bionic-unit-tests bionic-unit-tests-run-on-host-prepare
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+# BIONIC_TEST_FLAGS is either empty or it comes from the user.
+bionic-unit-tests-run-on-host: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
@@ -422,7 +408,7 @@ endif
 
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 # add target to run lp32 tests
-bionic-unit-tests-run-on-host32: bionic-unit-tests_32 bionic-unit-tests-run-on-host-prepare
+bionic-unit-tests-run-on-host32: bionic-unit-tests_32 bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
 	ANDROID_ROOT=$(TARGET_OUT) \
