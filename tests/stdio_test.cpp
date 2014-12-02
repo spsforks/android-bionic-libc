@@ -813,3 +813,16 @@ TEST(stdio, freopen_CLOEXEC) {
 
   fclose(fp);
 }
+
+// https://code.google.com/p/android/issues/detail?id=81155
+// http://b/18556607
+TEST(stdio, fread_unbuffered) {
+  FILE* fp = fopen("/dev/zero", "r");
+  ASSERT_TRUE(fp != NULL);
+  setvbuf(fp, 0, _IONBF, 0);
+  char buf[64*1024];
+  for (size_t i = 0; i < 1024; ++i) {
+    fread(buf, 64*1024, 1, fp);
+  }
+  fclose(fp);
+}
