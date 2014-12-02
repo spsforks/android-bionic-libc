@@ -31,6 +31,10 @@
 
 #include <sys/types.h>
 
+#if defined(__USE_GNU)
+typedef struct cpu_set cpu_set_t;
+#endif
+
 typedef long pthread_t;
 
 typedef struct {
@@ -40,8 +44,13 @@ typedef struct {
   size_t guard_size;
   int32_t sched_policy;
   int32_t sched_priority;
-#ifdef __LP64__
+#if defined(__USE_GNU)
+  cpu_set_t* cpu_set;
+  size_t cpu_set_size;
+#else
+  #if defined(__LP64__)
   char __reserved[16];
+  #endif
 #endif
 } pthread_attr_t;
 

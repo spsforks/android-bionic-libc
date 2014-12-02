@@ -630,6 +630,132 @@ TEST(pthread, pthread_attr_setstacksize) {
 #endif // __BIONIC__
 }
 
+static void* pthread_attr_setaffinity_np_helper_1(void* arg) {
+  cpu_set_t set;
+  pthread_attr_t attributes;
+
+  pthread_getattr_np(pthread_self(), &attributes);
+  pthread_attr_getaffinity_np(&attributes, sizeof(cpu_set_t), &set);
+
+  *reinterpret_cast<cpu_set_t*>(arg) = set;
+
+  return NULL;
+}
+
+static void* pthread_attr_setaffinity_np_helper_2(void* arg) {
+  cpu_set_t set;
+
+  sched_getaffinity(0, sizeof(cpu_set_t), &set);
+  *reinterpret_cast<cpu_set_t*>(arg) = set;
+
+  return NULL;
+}
+
+TEST(pthread, pthread_attr_setaffinity_np) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  cpu_set_t set1;
+
+  // 1. Get the affinity for current thread.
+  ASSERT_EQ(0, pthread_attr_getaffinity_np(&attributes, sizeof(cpu_set_t), &set1));
+
+  // 2. Set then get should return the same affinity.
+  CPU_ZERO(&set1);
+  for (int i = 0; i < 10; i += 2) {
+    CPU_SET(i, &set1);
+  }
+
+  // 3. Random set some bit in set2 that should be overwritten later after calling
+  // pthread_attr_getaffinity_np().
+  cpu_set_t set2;
+  CPU_SET(5, &set2);
+
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &set1));
+  ASSERT_EQ(0, pthread_attr_getaffinity_np(&attributes, sizeof(cpu_set_t), &set2));
+  ASSERT_TRUE(CPU_EQUAL(&set1, &set2));
+
+  // 4. The newly created thread should have the specified cpuset.
+  cpu_set_t set3;
+  pthread_t t;
+
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &set1));
+  pthread_create(&t, &attributes, pthread_attr_setaffinity_np_helper_1, &set3);
+  pthread_join(t, NULL);
+  ASSERT_TRUE(CPU_EQUAL(&set1, &set3));
+
+  // 5. Setting an all-zero mask by pthread_attr_setaffinity_np() will not cause error.
+  // But it should report EINVAL when calling pthread_create().
+  CPU_ZERO(&set3);
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &set3));
+  ASSERT_EQ(EINVAL, pthread_create(&t, &attributes, pthread_attr_setaffinity_np_helper_1, &set3));
+
+  // 6.1. If CPU 0 is included in the set, e.g. set1 = {0, 2, 4, 6, 8}.
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &set1));
+  pthread_create(&t, &attributes, pthread_attr_setaffinity_np_helper_2, &set3);
+  pthread_join(t, NULL);
+
+  // The returned result set3 should be the intersection of set1 and the set of CPUs
+  // available on the system, i.e. {0, 2, 4, 6, 8} INTERSECT {0, 1, ...}. So set3
+  // should be the subset of set1.
+  for (int i = 0; i < CPU_SETSIZE; i++) {
+    if (CPU_ISSET(i, &set3)) {
+      ASSERT_TRUE(CPU_ISSET(i, &set1));
+    }
+
+    if (!CPU_ISSET(i, &set1)) {
+      ASSERT_FALSE(CPU_ISSET(i, &set3));
+    }
+  }
+
+  // 6.2. If CPU 0 is excluded from the set, e.g. set1 = {1, 3, 5, 7, 9}.
+  CPU_ZERO(&set1);
+  for (int i = 1; i < 10; i += 2) {
+    CPU_SET(i, &set1);
+  }
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &set1));
+
+  // a) If cpuset is not supported on the system, it will cause error EINVAL, since
+  //    {1, 3, 5, 7, 9} INTERSECT {0} = EMPTY.
+  // b) Otherwise, it should return the same result as in 6.1.
+  int rc = pthread_create(&t, &attributes, pthread_attr_setaffinity_np_helper_2, &set3);
+  if (rc != EINVAL) {
+    pthread_join(t, NULL);
+
+    for (int i = 0; i < CPU_SETSIZE; i++) {
+      if (CPU_ISSET(i, &set3)) {
+        ASSERT_TRUE(CPU_ISSET(i, &set1));
+      }
+
+      if (!CPU_ISSET(i, &set1)) {
+        ASSERT_FALSE(CPU_ISSET(i, &set3));
+      }
+    }
+  }
+
+  // 7. Dynamically sized CPU sets
+  cpu_set_t *set4 = CPU_ALLOC(512);
+  size_t set_size4 = CPU_ALLOC_SIZE(512);
+  CPU_ZERO_S(set_size4, set4);
+  ASSERT_EQ(0, pthread_attr_setaffinity_np(&attributes, set_size4, set4));
+  CPU_FREE(set4);
+
+  cpu_set_t *set5 = CPU_ALLOC(1);
+  size_t set_size5 = CPU_ALLOC_SIZE(1);
+  ASSERT_EQ(0, pthread_attr_getaffinity_np(&attributes, set_size5, set5));
+  CPU_FREE(set5);
+
+  // 8. Extra room in the set should be cleared.
+  cpu_set_t *set6 = CPU_ALLOC(64);
+  size_t set_size6 = CPU_ALLOC_SIZE(64);
+  CPU_SET_S(17, set_size6, set6);
+  ASSERT_EQ(0, pthread_attr_getaffinity_np(&attributes, set_size6, set6));
+  ASSERT_FALSE(CPU_ISSET_S(17, set_size6, set6));
+  CPU_FREE(set6);
+
+  ASSERT_EQ(0, pthread_attr_destroy(&attributes));
+}
+
 TEST(pthread, pthread_rwlock_smoke) {
   pthread_rwlock_t l;
   ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));

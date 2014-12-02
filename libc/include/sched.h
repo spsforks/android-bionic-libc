@@ -69,9 +69,11 @@ extern int setns(int, int);
 #define __CPU_ELT(x)   ((x) / __CPU_BITS)
 #define __CPU_MASK(x)  ((__CPU_BITTYPE)1 << ((x) & (__CPU_BITS - 1)))
 
-typedef struct {
+struct cpu_set {
   __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
-} cpu_set_t;
+};
+
+typedef struct cpu_set cpu_set_t;
 
 extern int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set);
 

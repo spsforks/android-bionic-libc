@@ -45,6 +45,10 @@ int pthread_attr_init(pthread_attr_t* attr) {
   attr->guard_size = PAGE_SIZE;
   attr->sched_policy = SCHED_NORMAL;
   attr->sched_priority = 0;
+#if defined(__USE_GNU)
+  attr->cpu_set = NULL;
+  attr->cpu_set_size = 0;
+#endif
   return 0;
 }
 
@@ -189,3 +193,102 @@ int pthread_attr_getscope(const pthread_attr_t*, int* scope) {
   *scope = PTHREAD_SCOPE_SYSTEM;
   return 0;
 }
+
+#if defined(__USE_GNU)
+static size_t __kernel_set_size = 0;
+extern "C" int __sched_getaffinity(pid_t, size_t, cpu_set_t*);
+
+static int __check_cpuset_attr(const size_t set_size, const cpu_set_t* set)
+{
+  size_t i;
+  size_t kernel_set_size;
+
+  // Determine the kernel cpuset size if not available yet
+  if (__kernel_set_size == 0) {
+    int rc;
+    size_t probe_size;
+    cpu_set_t* kernel_set;
+
+    probe_size = 64;
+    kernel_set = reinterpret_cast<cpu_set_t*>(malloc(probe_size));
+
+    // rc holds cpu_set_size that is used internally by the kernel to represent the
+    // CPU set bit mask on success.
+    while ((rc = __sched_getaffinity(0, probe_size, kernel_set)) == -1) {
+      probe_size *= 2;
+      kernel_set = reinterpret_cast<cpu_set_t*>(realloc(kernel_set, probe_size));
+      if (kernel_set == NULL) {
+        return ENOMEM;
+      }
+    }
+
+    __kernel_set_size = rc;
+    free(kernel_set);
+  }
+
+  kernel_set_size = __kernel_set_size;
+
+  // Invalid request if there is any bit set beyond kernel set size
+  for (i = kernel_set_size; i < set_size; i++) {
+    if (reinterpret_cast<const char*>(set)[i] != '\0') {
+      return EINVAL;
+    }
+  }
+
+  return 0;
+}
+
+int pthread_attr_getaffinity_np(const pthread_attr_t* attr, size_t cpu_set_size, cpu_set_t* cpu_set) {
+
+  if (attr->cpu_set != NULL) {
+    // Return EINVAL if there are bits already set beyond the provided cpu_set_size
+    size_t i;
+    for (i = cpu_set_size; i < attr->cpu_set_size; i++)
+      if (reinterpret_cast<char*>(attr->cpu_set)[i] != 0) {
+        return EINVAL;
+      }
+
+    if (attr->cpu_set_size < cpu_set_size) {
+      memcpy(cpu_set, attr->cpu_set, attr->cpu_set_size);
+      // Clear up the extra room
+      memset(cpu_set + attr->cpu_set_size, '\0', cpu_set_size - attr->cpu_set_size);
+    } else {
+      memcpy(cpu_set, attr->cpu_set, attr->cpu_set_size);
+    }
+  } else {
+    // no information available
+    memset (cpu_set, -1, cpu_set_size);
+  }
+
+  return 0;
+}
+
+int pthread_attr_setaffinity_np(pthread_attr_t* attr, size_t set_size, const cpu_set_t* set) {
+
+  if (set == NULL || set_size == 0) {
+    attr->cpu_set = NULL;
+    attr->cpu_set_size = 0;
+  } else {
+    // Check input validity
+    int ret = __check_cpuset_attr (set_size, set);
+
+    if (ret != 0) {
+      return ret;
+    }
+
+    if (attr->cpu_set_size != set_size) {
+      cpu_set_t* new_set = reinterpret_cast<cpu_set_t*>(realloc(attr->cpu_set, set_size));
+      if (new_set == NULL) {
+        return ENOMEM;
+      }
+
+      attr->cpu_set = new_set;
+      attr->cpu_set_size = set_size;
+    }
+
+    memcpy (attr->cpu_set, set, set_size);
+  }
+
+  return 0;
+}
+#endif

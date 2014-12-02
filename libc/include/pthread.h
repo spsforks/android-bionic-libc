@@ -152,6 +152,11 @@ int pthread_attr_setscope(pthread_attr_t*, int) __nonnull((1));
 int pthread_attr_setstack(pthread_attr_t*, void*, size_t) __nonnull((1));
 int pthread_attr_setstacksize(pthread_attr_t*, size_t stack_size) __nonnull((1));
 
+#if defined(__USE_GNU)
+int pthread_attr_getaffinity_np(const pthread_attr_t*, size_t, cpu_set_t*) __nonnull((1, 3));
+int pthread_attr_setaffinity_np(pthread_attr_t*, size_t, const cpu_set_t*) __nonnull((1, 3));
+#endif
+
 int pthread_condattr_destroy(pthread_condattr_t*) __nonnull((1));
 int pthread_condattr_getclock(const pthread_condattr_t*, clockid_t*) __nonnull((1, 2));
 int pthread_condattr_getpshared(const pthread_condattr_t*, int*) __nonnull((1, 2));

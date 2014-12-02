@@ -78,6 +78,18 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
 int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
 
+#if defined(__USE_GNU)
+  // Set the affinity of the thread.
+  if (thread->attr.cpu_set != NULL) {
+    if (sched_setaffinity(thread->tid, thread->attr.cpu_set_size, thread->attr.cpu_set) == -1) {
+      error = errno;
+
+      __libc_format_log(ANDROID_LOG_WARN, "libc",
+                        "pthread_create sched_setaffinity call failed: %s", strerror(errno));
+    }
+  }
+#endif
+
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
     sched_param param;
