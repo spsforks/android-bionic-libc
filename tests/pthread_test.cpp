@@ -178,15 +178,13 @@ static void* IdFn(void* arg) {
   return arg;
 }
 
-static void* SleepFn(void* arg) {
-  sleep(reinterpret_cast<uintptr_t>(arg));
-  return NULL;
-}
-
-static void* SpinFn(void* arg) {
-  volatile bool* b = reinterpret_cast<volatile bool*>(arg);
-  while (!*b) {
-  }
+// We may not make spin_flag passed by argument. As the test may use local variable
+// on stack for it, if the test finishes before SpinFn thread has a chance to run,
+// SpinFn will be left testing random value on stack. However, things will become
+// better when we can run each test on a single process.
+static volatile bool spin_flag;
+static void* SpinFn(void*) {
+  while (spin_flag) {}
   return NULL;
 }
 
@@ -230,7 +228,8 @@ TEST(pthread, pthread_create_EAGAIN) {
 
 TEST(pthread, pthread_no_join_after_detach) {
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  spin_flag = true;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, NULL));
 
   // After a pthread_detach...
   ASSERT_EQ(0, pthread_detach(t1));
@@ -238,13 +237,14 @@ TEST(pthread, pthread_no_join_after_detach) {
 
   // ...pthread_join should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
+
+  spin_flag = false;
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
-  bool done = false;
-
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
+  spin_flag = true;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, NULL));
 
   // If thread 2 is already waiting to join thread 1...
   pthread_t t2;
@@ -256,7 +256,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
   ASSERT_EQ(0, pthread_detach(t1));
   AssertDetached(t1, false);
 
-  done = true;
+  spin_flag = false;
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
@@ -370,8 +370,11 @@ TEST(pthread, pthread_setname_np__self) {
 
 TEST(pthread, pthread_setname_np__other) {
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  spin_flag = true;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, NULL));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
+
+  spin_flag = false;
 }
 
 TEST(pthread, pthread_setname_np__no_such_thread) {
@@ -452,12 +455,15 @@ TEST(pthread, pthread_detach__leak) {
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  spin_flag = true;
+  ASSERT_EQ(0, pthread_create(&t, NULL, SpinFn, NULL));
 
   clockid_t c;
   ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
   timespec ts;
   ASSERT_EQ(0, clock_gettime(c, &ts));
+
+  spin_flag = false;
 }
 
 TEST(pthread, pthread_getcpuclockid__no_such_thread) {
@@ -501,10 +507,9 @@ TEST(pthread, pthread_kill__no_such_thread) {
 }
 
 TEST(pthread, pthread_join__multijoin) {
-  bool done = false;
-
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, &done));
+  spin_flag = true;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, SpinFn, NULL));
 
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
@@ -514,7 +519,7 @@ TEST(pthread, pthread_join__multijoin) {
   // Multiple joins to the same thread should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
 
-  done = true;
+  spin_flag = false;
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;

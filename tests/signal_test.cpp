@@ -16,8 +16,10 @@
 
 #include <signal.h>
 
-#include <errno.h>
 #include <gtest/gtest.h>
+
+#include <errno.h>
+#include <time.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -275,4 +277,127 @@ TEST(signal, limits) {
 
   // We don't currently reserve any at the top.
   ASSERT_EQ(SIGRTMAX, __SIGRTMAX);
+}
+
+static int g_sigqueue_signal_handler_call_count = 0;
+
+static void SigqueueSignalHandler(int signum, siginfo_t* info, void*) {
+  ASSERT_EQ(SIGALRM, signum);
+  ASSERT_EQ(SIGALRM, info->si_signo);
+  ASSERT_EQ(SI_QUEUE, info->si_code);
+  ASSERT_EQ(1, info->si_value.sival_int);
+  ++g_sigqueue_signal_handler_call_count;
+}
+
+TEST(signal, sigqueue) {
+  ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
+  sigval_t sigval;
+  sigval.sival_int = 1;
+  errno = 0;
+  ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
+}
+
+TEST(signal, sigwaitinfo) {
+  // Block SIGALRM.
+  sigset_t just_SIGALRM;
+  sigemptyset(&just_SIGALRM);
+  sigaddset(&just_SIGALRM, SIGALRM);
+  sigset_t original_set;
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
+
+  // Raise SIGALRM.
+  sigval_t sigval;
+  sigval.sival_int = 1;
+  ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
+
+  // Get pending SIGALRM.
+  siginfo_t info;
+  errno = 0;
+  ASSERT_EQ(SIGALRM, sigwaitinfo(&just_SIGALRM, &info));
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(SIGALRM, info.si_signo);
+  ASSERT_EQ(1, info.si_value.sival_int);
+
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
+}
+
+static void WaitUntilParentSleep() {
+  bool wait_ok = false;
+  while (!wait_ok) {
+    timespec spec;
+    spec.tv_sec = 0;
+    spec.tv_nsec = 1000000;
+    nanosleep(&spec, NULL);
+    char buf[100];
+    snprintf(buf, sizeof(buf), "/proc/%lu/stat", static_cast<unsigned long>(getppid()));
+    FILE* fp = fopen(buf, "r");
+    while (fscanf(fp, "%s", buf) == 1) {
+      if (buf[0] == 'S' && buf[1] == '\0') {
+        wait_ok = true;
+        break;
+      }
+    }
+    fclose(fp);
+  }
+}
+
+TEST(signal, sigtimedwait_ok) {
+  // Block SIGALRM.
+  sigset_t just_SIGALRM;
+  sigemptyset(&just_SIGALRM);
+  sigaddset(&just_SIGALRM, SIGALRM);
+  sigset_t original_set;
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid);
+  if (pid == 0) {
+    // Use child process to send signal.
+    WaitUntilParentSleep();
+    sigval_t sigval;
+    sigval.sival_int = 1;
+    ASSERT_EQ(0, sigqueue(getppid(), SIGALRM, sigval));
+    exit(0);
+  } else {
+    // Use parent process to wait for the signal.
+    siginfo_t info;
+    struct timespec timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_nsec = 0;
+    errno = 0;
+    ASSERT_EQ(SIGALRM, sigtimedwait(&just_SIGALRM, &info, &timeout));
+    ASSERT_EQ(0, errno);
+  }
+
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
+}
+
+static int64_t NanoTime() {
+  struct timespec t;
+  t.tv_sec = t.tv_nsec = 0;
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+}
+
+TEST(signal, sigtimedwait_timeout) {
+  // Block SIGALRM.
+  sigset_t just_SIGALRM;
+  sigemptyset(&just_SIGALRM);
+  sigaddset(&just_SIGALRM, SIGALRM);
+  sigset_t original_set;
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
+
+  // Wait timeout.
+  int64_t start_time = NanoTime();
+  siginfo_t info;
+  struct timespec timeout;
+  timeout.tv_sec = 0;
+  timeout.tv_nsec = 1000000;
+  errno = 0;
+  ASSERT_EQ(-1, sigtimedwait(&just_SIGALRM, &info, &timeout));
+  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_GE(NanoTime() - start_time, 1000000);
+
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
 }
