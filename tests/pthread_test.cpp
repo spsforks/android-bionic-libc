@@ -178,8 +178,9 @@ static void* IdFn(void* arg) {
   return arg;
 }
 
-static void* SleepFn(void* arg) {
-  sleep(reinterpret_cast<uintptr_t>(arg));
+static volatile bool loopfn_finish_flag;
+static void* LoopFn(void* /* arg */) {
+  while (loopfn_finish_flag == false);
   return NULL;
 }
 
@@ -230,7 +231,8 @@ TEST(pthread, pthread_create_EAGAIN) {
 
 TEST(pthread, pthread_no_join_after_detach) {
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  loopfn_finish_flag = false;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, LoopFn, NULL));
 
   // After a pthread_detach...
   ASSERT_EQ(0, pthread_detach(t1));
@@ -238,6 +240,9 @@ TEST(pthread, pthread_no_join_after_detach) {
 
   // ...pthread_join should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
+
+  // Make thread finish to avoid making trouble to other tests.
+  loopfn_finish_flag = true;
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
@@ -370,8 +375,12 @@ TEST(pthread, pthread_setname_np__self) {
 
 TEST(pthread, pthread_setname_np__other) {
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  loopfn_finish_flag = false;
+  ASSERT_EQ(0, pthread_create(&t1, NULL, LoopFn, NULL));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
+
+  // Make thread finish to avoid making trouble to other tests.
+  loopfn_finish_flag = true;
 }
 
 TEST(pthread, pthread_setname_np__no_such_thread) {
@@ -452,12 +461,16 @@ TEST(pthread, pthread_detach__leak) {
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, SleepFn, reinterpret_cast<void*>(5)));
+  loopfn_finish_flag = false;
+  ASSERT_EQ(0, pthread_create(&t, NULL, LoopFn, NULL));
 
   clockid_t c;
   ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
   timespec ts;
   ASSERT_EQ(0, clock_gettime(c, &ts));
+
+  // Make thread finish to avoid making trouble to other tests.
+  loopfn_finish_flag = true;
 }
 
 TEST(pthread, pthread_getcpuclockid__no_such_thread) {
