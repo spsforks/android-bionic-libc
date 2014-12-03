@@ -67,30 +67,32 @@ enum {
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
-  TLS_SLOT_FIRST_USER_SLOT // Must come last!
+  TLS_SLOT_PTHREAD_KEY_ARRAY,  // Tls slot for pthread key array address.
+  BIONIC_TLS_SLOTS             // This entry goes last to count the tls slot num.
 };
 
+
 /*
- * There are two kinds of slot used internally by bionic --- there are the well-known slots
- * enumerated above, and then there are those that are allocated during startup by calls to
- * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
- * maintain that second number, but pthread_test will fail if we forget.
+ * Each thread contains a pthread key array, which stores the contents for each pthread key
+ * in the thread. The pthread key array contains two parts: first part is used internally
+ * by bionic/jemalloc usage, second part is used by users.
  */
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
+/*
+ * Grep GLOBAL_INIT_THREAD_LOCAL_BUFFER for how many entries are used by bionic internally.
+*/
+#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 7
 
 #if defined(USE_JEMALLOC)
-/* jemalloc uses 5 keys for itself. */
-#define BIONIC_TLS_RESERVED_SLOTS (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 5)
+/* jemalloc uses 6 keys for itself. */
+#define BIONIC_PTHREAD_KEY_RESERVED_NUM (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 6)
 #else
-#define BIONIC_TLS_RESERVED_SLOTS GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
+#define BIONIC_PTHREAD_KEY_RESERVED_NUM GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
 #endif
 
 /*
- * Maximum number of elements in the TLS array.
- * This includes space for pthread keys and our own internal slots.
- * We need to round up to maintain stack alignment.
+ * Maximum number of pthread key entries.
  */
-#define BIONIC_TLS_SLOTS BIONIC_ALIGN(PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS, 4)
+#define BIONIC_PTHREAD_KEY_NUM (BIONIC_PTHREAD_KEY_RESERVED_NUM + PTHREAD_KEYS_MAX)
 
 __END_DECLS
 

@@ -30,6 +30,8 @@
 
 #include <pthread.h>
 
+#include "private/bionic_tls.h"
+
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
 #define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
@@ -72,7 +74,7 @@ struct pthread_internal_t {
     return (attr.flags & PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK) != 0;
   }
 
-  void** tls;
+  void* tls[BIONIC_TLS_SLOTS];
 
   pthread_attr_t attr;
 
@@ -96,8 +98,10 @@ struct pthread_internal_t {
 
 __LIBC_HIDDEN__ pthread_internal_t* __create_thread_struct();
 __LIBC_HIDDEN__ void __free_thread_struct(pthread_internal_t*);
+__LIBC_HIDDEN__ void** __create_pthread_key_array();
+__LIBC_HIDDEN__ void __free_pthread_key_array(void** pthread_key_array);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread, void** pthread_key_array);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 __LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
 

@@ -60,6 +60,26 @@ void __free_thread_struct(pthread_internal_t* thread) {
   }
 }
 
+void** __create_pthread_key_array() {
+  void* result = mmap(NULL, BIONIC_PTHREAD_KEY_NUM * sizeof(void*),
+                      PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+  if (result == MAP_FAILED) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc",
+                      "__create_pthread_key_array() failed: %s", strerror(errno));
+    return NULL;
+  }
+  return reinterpret_cast<void**>(result);
+}
+
+void __free_pthread_key_array(void** pthread_key_array) {
+  int result = munmap(reinterpret_cast<void*>(pthread_key_array),
+                      BIONIC_PTHREAD_KEY_NUM * sizeof(void*));
+  if (result != 0) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc",
+                      "__free_pthread_key_array() failed: %s", strerror(errno));
+  }
+}
+
 void _pthread_internal_remove_locked(pthread_internal_t* thread) {
   if (thread->next != NULL) {
     thread->next->prev = thread->prev;
@@ -70,8 +90,6 @@ void _pthread_internal_remove_locked(pthread_internal_t* thread) {
     g_thread_list = thread->next;
   }
 
-  // The main thread is not heap-allocated. See __libc_init_tls for the declaration,
-  // and __libc_init_common for the point where it's added to the thread list.
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
     __free_thread_struct(thread);
   }
