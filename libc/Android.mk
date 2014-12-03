@@ -1114,6 +1114,23 @@ LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+# We need to not export the libgcc unwinder, since some not completely
+# understood circumstances can cause the libgcc unwinder to call in to the
+# libc++ unwinder in other binaries, resulting in a segfault
+# (http://b/18317554). However, we can't simply stop exporting the unwinder
+# because of some backward compatibilty issues with the NDK, so instead we just
+# bundle the same unwinder that libc++ uses to ensure compatibility. In the case
+# of ARM, this is libunwind_llvm. For the rest of the architectures, this is
+# libunwindbacktrace. ARM also needs libc++abi, because the EHABI unwinder
+# depends on __gxx_personality_v0, which is defined as a part of the C++ ABI,
+# not the unwinder.
+LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm libc++abi
+LOCAL_STATIC_LIBRARIES_arm64 := libunwindbacktrace
+LOCAL_STATIC_LIBRARIES_mips := libunwindbacktrace
+LOCAL_STATIC_LIBRARIES_mips64 := libunwindbacktrace
+LOCAL_STATIC_LIBRARIES_x86 := libunwindbacktrace
+LOCAL_STATIC_LIBRARIES_x86_64 := libunwindbacktrace
+
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
