@@ -27,9 +27,11 @@
  */
 
 #include <errno.h>
+#include <sys/mman.h>
 
 #include "private/bionic_futex.h"
 #include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 int pthread_join(pthread_t t, void** return_value) {
   if (t == pthread_self()) {
@@ -66,14 +68,24 @@ int pthread_join(pthread_t t, void** return_value) {
     __futex_wait(tid_ptr, tid, NULL);
   }
 
-  // Take the lock again so we can pull the thread's return value
-  // and remove the thread from the list.
-  pthread_accessor thread(t);
+  bool need_free_thread = false;
+  {
+    // Take the lock again so we can pull the thread's return value
+    // and remove the thread from the list.
+    pthread_accessor thread(t);
 
-  if (return_value) {
-    *return_value = thread->return_value;
+    if (return_value) {
+      *return_value = thread->return_value;
+    }
+
+    _pthread_internal_remove_locked(thread.get());
+    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
+      need_free_thread = true;
+    }
   }
 
-  _pthread_internal_remove_locked(thread.get());
+  if (need_free_thread) {
+    munmap(reinterpret_cast<void*>(t), sizeof(pthread_internal_t));
+  }
   return 0;
 }
