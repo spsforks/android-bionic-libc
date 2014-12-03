@@ -50,17 +50,14 @@ extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 extern "C" int __isthreaded;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
-void __init_tls(pthread_internal_t* thread) {
-  if (thread->user_allocated_stack()) {
-    // We don't know where the user got their stack, so assume the worst and zero the TLS area.
-    memset(&thread->tls[0], 0, BIONIC_TLS_SLOTS * sizeof(void*));
-  }
+void __init_tls(pthread_internal_t* thread, void** pthread_key_array) {
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
-  thread->tls[TLS_SLOT_STACK_GUARD] = (void*) __stack_chk_guard;
+  thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
+  thread->tls[TLS_SLOT_PTHREAD_KEY_ARRAY] = reinterpret_cast<void*>(pthread_key_array);
 }
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
@@ -185,15 +182,21 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // The caller did provide a stack, so remember we're not supposed to free it.
     thread->attr.flags |= PTHREAD_ATTR_FLAG_USER_ALLOCATED_STACK;
   }
+  void* child_stack = reinterpret_cast<void*>(
+                        reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
+                                                   thread->attr.stack_size);
 
-  // Make room for the TLS area.
-  // The child stack is the same address, just growing in the opposite direction.
-  // At offsets >= 0, we have the TLS slots.
-  // At offsets < 0, we have the child stack.
-  thread->tls = reinterpret_cast<void**>(reinterpret_cast<uint8_t*>(thread->attr.stack_base) +
-                                         thread->attr.stack_size - BIONIC_TLS_SLOTS * sizeof(void*));
-  void* child_stack = thread->tls;
-  __init_tls(thread);
+  // Make room for the pthread_key_array area.
+  void** pthread_key_array = __create_pthread_key_array();
+  if (pthread_key_array == NULL) {
+    if (!thread->user_allocated_stack()) {
+      munmap(thread->attr.stack_base, thread->attr.stack_size);
+    }
+    __free_thread_struct(thread);
+    return EAGAIN;
+  }
+
+  __init_tls(thread, pthread_key_array);
 
   // Create a mutex for the thread in TLS to wait on once it starts so we can keep
   // it from doing anything until after we notify the debugger about it
@@ -226,6 +229,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
+    __free_pthread_key_array(pthread_key_array);
     if (!thread->user_allocated_stack()) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }

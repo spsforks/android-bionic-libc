@@ -37,6 +37,7 @@
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
 extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
+extern "C" void __set_tls(void*);
 
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation
@@ -69,11 +70,23 @@ void pthread_exit(void* return_value) {
     c->__cleanup_routine(c->__cleanup_arg);
   }
 
-  // Call the TLS destructors. It is important to do that before removing this
+  // Call the pthread key destructors. It is important to do that before removing this
   // thread from the global list. This will ensure that if someone else deletes
-  // a TLS key, the corresponding value will be set to NULL in this thread's TLS
-  // space (see pthread_key_delete).
+  // a pthread key, the corresponding value will be set to NULL in this thread's pthread
+  // key array space (see pthread_key_delete).
   pthread_key_clean_all();
+
+  // Prevent further access of pthread_key_array of current thread before it is freed.
+  // The access may come from pthread_key_delete called by other threads.
+  void** pthread_key_array = reinterpret_cast<void**>(thread->tls[TLS_SLOT_PTHREAD_KEY_ARRAY]);
+  pthread_mutex_lock(&g_thread_list_lock);
+  thread->tls[TLS_SLOT_PTHREAD_KEY_ARRAY] = NULL;
+  pthread_mutex_unlock(&g_thread_list_lock);
+
+  // The main thread is static allocated. See __libc_init_tls for the declaration.
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
+    __free_pthread_key_array(pthread_key_array);
+  }
 
   if (thread->alternate_signal_stack != NULL) {
     // Tell the kernel to stop using the alternate signal stack.
@@ -92,6 +105,11 @@ void pthread_exit(void* return_value) {
   size_t stack_size = thread->attr.stack_size;
   bool user_allocated_stack = thread->user_allocated_stack();
 
+  // Use temp_tls in case we need to set errno after we lose the pthread_internal_t.
+  void* temp_tls[BIONIC_TLS_SLOTS];
+  memcpy(temp_tls, thread->tls, sizeof(temp_tls));
+  __set_tls(temp_tls);
+
   pthread_mutex_lock(&g_thread_list_lock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
     // The thread is detached, so we can free the pthread_internal_t.
@@ -105,7 +123,6 @@ void pthread_exit(void* return_value) {
     if (!user_allocated_stack) {
       thread->attr.stack_base = NULL;
       thread->attr.stack_size = 0;
-      thread->tls = NULL;
     }
     // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
     // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.

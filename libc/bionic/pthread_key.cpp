@@ -60,42 +60,27 @@
  */
 
 #define TLSMAP_BITS       32
-#define TLSMAP_WORDS      ((BIONIC_TLS_SLOTS+TLSMAP_BITS-1)/TLSMAP_BITS)
+#define TLSMAP_WORDS      ((BIONIC_PTHREAD_KEY_NUM+TLSMAP_BITS-1)/TLSMAP_BITS)
 #define TLSMAP_WORD(m,k)  (m).map[(k)/TLSMAP_BITS]
 #define TLSMAP_MASK(k)    (1U << ((k)&(TLSMAP_BITS-1)))
 
 static inline bool IsValidUserKey(pthread_key_t key) {
-  return (key >= TLS_SLOT_FIRST_USER_SLOT && key < BIONIC_TLS_SLOTS);
+  return (key >= 0 && key < BIONIC_PTHREAD_KEY_NUM);
 }
 
 typedef void (*key_destructor_t)(void*);
 
 struct tls_map_t {
-  bool is_initialized;
-
   /* bitmap of allocated keys */
   uint32_t map[TLSMAP_WORDS];
 
-  key_destructor_t key_destructors[BIONIC_TLS_SLOTS];
+  key_destructor_t key_destructors[BIONIC_PTHREAD_KEY_NUM];
 };
 
 class ScopedTlsMapAccess {
  public:
   ScopedTlsMapAccess() {
     Lock();
-
-    // If this is the first time the TLS map has been accessed,
-    // mark the slots belonging to well-known keys as being in use.
-    // This isn't currently necessary because the well-known keys
-    // can only be accessed directly by bionic itself, do not have
-    // destructors, and all the functions that touch the TLS map
-    // start after the maximum well-known slot.
-    if (!s_tls_map_.is_initialized) {
-      for (pthread_key_t key = 0; key < TLS_SLOT_FIRST_USER_SLOT; ++key) {
-        SetInUse(key, NULL);
-      }
-      s_tls_map_.is_initialized = true;
-    }
   }
 
   ~ScopedTlsMapAccess() {
@@ -104,7 +89,7 @@ class ScopedTlsMapAccess {
 
   int CreateKey(pthread_key_t* result, void (*key_destructor)(void*)) {
     // Take the first unallocated key.
-    for (int key = 0; key < BIONIC_TLS_SLOTS; ++key) {
+    for (int key = 0; key < BIONIC_PTHREAD_KEY_NUM; ++key) {
       if (!IsInUse(key)) {
         SetInUse(key, key_destructor);
         *result = key;
@@ -134,15 +119,14 @@ class ScopedTlsMapAccess {
   // from this thread's TLS area. This must call the destructor of all keys
   // that have a non-NULL data value and a non-NULL destructor.
   void CleanAll() {
-    void** tls = __get_tls();
-
+    void** pthread_key_array = reinterpret_cast<void**>(__get_tls()[TLS_SLOT_PTHREAD_KEY_ARRAY]);
     // Because destructors can do funky things like deleting/creating other
     // keys, we need to implement this in a loop.
     for (int rounds = PTHREAD_DESTRUCTOR_ITERATIONS; rounds > 0; --rounds) {
       size_t called_destructor_count = 0;
-      for (int key = 0; key < BIONIC_TLS_SLOTS; ++key) {
+      for (int key = 0; key < BIONIC_PTHREAD_KEY_NUM; ++key) {
         if (IsInUse(key)) {
-          void* data = tls[key];
+          void* data = pthread_key_array[key];
           void (*key_destructor)(void*) = s_tls_map_.key_destructors[key];
 
           if (data != NULL && key_destructor != NULL) {
@@ -153,7 +137,7 @@ class ScopedTlsMapAccess {
             // we do not do this if 'key_destructor == NULL' just in case another
             // destructor function might be responsible for manually
             // releasing the corresponding data.
-            tls[key] = NULL;
+            pthread_key_array[key] = NULL;
 
             // because the destructor is free to call pthread_key_create
             // and/or pthread_key_delete, we need to temporarily unlock
@@ -214,16 +198,13 @@ int pthread_key_delete(pthread_key_t key) {
   pthread_mutex_lock(&g_thread_list_lock);
   for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
     // Skip zombie threads. They don't have a valid TLS area any more.
-    // Similarly, it is possible to have t->tls == NULL for threads that
-    // were just recently created through pthread_create() but whose
-    // startup trampoline (__pthread_start) hasn't been run yet by the
-    // scheduler. t->tls will also be NULL after a thread's stack has been
-    // unmapped but before the ongoing pthread_join() is finished.
-    if (t->tid == 0 || t->tls == NULL) {
+    // t->tls[TLS_SLOT_PTHREAD_KEY_ARRAY] will be NULL after a thread's pthread
+    // kye array is unmapped but before the ongoing pthread_join() is finished.
+    if (t->tid == 0 || t->tls[TLS_SLOT_PTHREAD_KEY_ARRAY] == NULL) {
       continue;
     }
-
-    t->tls[key] = NULL;
+    void** pthread_key_array = reinterpret_cast<void**>(t->tls[TLS_SLOT_PTHREAD_KEY_ARRAY]);
+    pthread_key_array[key] = NULL;
   }
   tls_map.DeleteKey(key);
 
@@ -240,7 +221,8 @@ void* pthread_getspecific(pthread_key_t key) {
   // to check that the key is properly allocated. If the key was not
   // allocated, the value read from the TLS should always be NULL
   // due to pthread_key_delete() clearing the values for all threads.
-  return __get_tls()[key];
+  void** pthread_key_array = reinterpret_cast<void**>(__get_tls()[TLS_SLOT_PTHREAD_KEY_ARRAY]);
+  return pthread_key_array[key];
 }
 
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
@@ -250,6 +232,7 @@ int pthread_setspecific(pthread_key_t key, const void* ptr) {
     return EINVAL;
   }
 
-  __get_tls()[key] = const_cast<void*>(ptr);
+  void** pthread_key_array = reinterpret_cast<void**>(__get_tls()[TLS_SLOT_PTHREAD_KEY_ARRAY]);
+  pthread_key_array[key] = const_cast<void*>(ptr);
   return 0;
 }
