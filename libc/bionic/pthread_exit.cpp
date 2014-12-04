@@ -92,6 +92,7 @@ void pthread_exit(void* return_value) {
   size_t stack_size = thread->attr.stack_size;
   bool user_allocated_stack = thread->user_allocated_stack();
 
+  bool need_free_thread = false;
   pthread_mutex_lock(&g_thread_list_lock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
     // The thread is detached, so we can free the pthread_internal_t.
@@ -99,6 +100,12 @@ void pthread_exit(void* return_value) {
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
     _pthread_internal_remove_locked(thread);
+
+    // The main thread is static allocated. See __libc_init_tls for the declaration,
+    // and __libc_init_common for the point where it's added to the thread list.
+    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
+      need_free_thread = true;
+    }
   } else {
     // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
     // will be unmapped after the exit call below.
@@ -111,6 +118,10 @@ void pthread_exit(void* return_value) {
     // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
   }
   pthread_mutex_unlock(&g_thread_list_lock);
+
+  if (need_free_thread) {
+    munmap(thread, sizeof(pthread_internal_t));
+  }
 
   if (user_allocated_stack) {
     // Cleaning up this thread's stack is the creator's responsibility, not ours.
