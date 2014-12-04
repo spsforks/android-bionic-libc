@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
+#include "private/bionic_macros.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -94,11 +95,13 @@ void pthread_exit(void* return_value) {
 
   pthread_mutex_lock(&g_thread_list_lock);
   if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
-    // The thread is detached, so we can free the pthread_internal_t.
+    // The thread is detached, so we can free pthread_internal_t.
     // First make sure that the kernel does not try to clear the tid field
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
-    _pthread_internal_remove_locked(thread);
+
+    // pthread_internal_t is freed below with stack, not here.
+    _pthread_internal_remove_locked(thread, false);
   } else {
     // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
     // will be unmapped after the exit call below.
@@ -106,6 +109,8 @@ void pthread_exit(void* return_value) {
       thread->attr.stack_base = NULL;
       thread->attr.stack_size = 0;
       thread->tls = NULL;
+      // Keep mapped section for pthread_internal_t, while freeing other parts of stack.
+      stack_size -= BIONIC_ALIGN(sizeof(pthread_internal_t), PAGE_SIZE);
     }
     // pthread_join is responsible for destroying the pthread_internal_t for non-detached threads.
     // The kernel will futex_wake on the pthread_internal_t::tid field to wake pthread_join.
