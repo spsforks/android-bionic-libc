@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <sys/mman.h>
 
 #include "pthread_accessor.h"
 
@@ -47,6 +48,7 @@ int pthread_detach(pthread_t t) {
   if (thread->tid == 0) {
     // Already exited; clean up.
     _pthread_internal_remove_locked(thread.get());
+
     return 0;
   }
 

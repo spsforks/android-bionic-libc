@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <sys/mman.h>
 
 #include "private/bionic_futex.h"
 #include "pthread_accessor.h"
@@ -75,5 +76,6 @@ int pthread_join(pthread_t t, void** return_value) {
   }
 
   _pthread_internal_remove_locked(thread.get());
+
   return 0;
 }

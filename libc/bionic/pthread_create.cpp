@@ -35,6 +35,7 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_macros.h"
+#include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
@@ -72,6 +73,10 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
     thread->alternate_signal_stack = ss.ss_sp;
+
+    // We can only use const static allocated string for mapped region name, as Android kernel
+    // uses the string pointer directly when dumping /proc/pid/maps.
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
   }
 }
 
@@ -158,8 +163,11 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   // Inform the rest of the C library that at least one thread was created.
   __isthreaded = 1;
 
-  pthread_internal_t* thread = __create_thread_struct();
-  if (thread == NULL) {
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(
+                                 mmap(NULL, sizeof(pthread_internal_t), PROT_READ | PROT_WRITE,
+                                      MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0));
+  if (thread == MAP_FAILED) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: couldn't allocate thread");
     return EAGAIN;
   }
 
@@ -178,7 +186,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // The caller didn't provide a stack, so allocate one.
     thread->attr.stack_base = __create_thread_stack(thread);
     if (thread->attr.stack_base == NULL) {
-      __free_thread_struct(thread);
+      munmap(thread, sizeof(pthread_internal_t));
       return EAGAIN;
     }
   } else {
@@ -229,10 +237,15 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     if (!thread->user_allocated_stack()) {
       munmap(thread->attr.stack_base, thread->attr.stack_size);
     }
-    __free_thread_struct(thread);
+    munmap(thread, sizeof(pthread_internal_t));
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;
   }
+
+  // We can only use const static allocated string for mapped region name, as Android kernel
+  // uses the string pointer directly when dumping /proc/pid/maps.
+  // Note we should not name mapped memory for thread stack, kernel will take care of it.
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread, sizeof(pthread_internal_t), "thread struct");
 
   int init_errno = __init_thread(thread, true);
   if (init_errno != 0) {
