@@ -76,11 +76,11 @@ enum {
  * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
  * maintain that second number, but pthread_test will fail if we forget.
  */
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 5
+#define GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT 7
 
 #if defined(USE_JEMALLOC)
-/* jemalloc uses 5 keys for itself. */
-#define BIONIC_TLS_RESERVED_SLOTS (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 5)
+/* jemalloc uses 6 keys for itself. */
+#define BIONIC_TLS_RESERVED_SLOTS (GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT + 6)
 #else
 #define BIONIC_TLS_RESERVED_SLOTS GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT
 #endif

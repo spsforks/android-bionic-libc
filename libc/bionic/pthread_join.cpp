@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <sys/mman.h>
 
 #include "private/bionic_futex.h"
 #include "pthread_accessor.h"
@@ -75,5 +76,12 @@ int pthread_join(pthread_t t, void** return_value) {
   }
 
   _pthread_internal_remove_locked(thread.get());
+
+  // The main thread is static allocated. See __libc_init_tls for the declaration,
+  // and __libc_init_common for the point where it's added to the thread list.
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) == 0) {
+    thread.Unlock();
+    munmap(reinterpret_cast<void*>(t), sizeof(pthread_internal_t));
+  }
   return 0;
 }
