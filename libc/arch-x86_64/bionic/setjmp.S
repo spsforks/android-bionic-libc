@@ -68,12 +68,13 @@ ENTRY(sigsetjmp)
   testl %esi,%esi
   jz 2f
 
-  // Save the signal mask.
+  // Save current signal mask.
   pushq %rdi
-  xorq %rdi,%rdi
-  call PIC_PLT(sigblock)
+  leaq (_JB_SIGMASK * 8)(%rdi),%rdx
+  xorq %rsi,%rsi
+  movq $2,%rdi // SIG_SETMASK
+  call PIC_PLT(sigprocmask)
   popq %rdi
-  movq %rax,(_JB_SIGMASK * 8)(%rdi)
 
 2:
   // Save the callee-save registers.
@@ -97,12 +98,14 @@ ENTRY(siglongjmp)
   pushq %rsi // Push 'value'.
 
   // Do we need to restore the signal mask?
-  cmpl $0, (_JB_SIGFLAG * 8)(%rdi)
+  cmpl $0,(_JB_SIGFLAG * 8)(%rdi)
   jz 2f
 
   // Restore the signal mask.
-  movq (_JB_SIGMASK * 8)(%rdi),%rdi
-  call PIC_PLT(sigsetmask)
+  movq $2,%rdi // SIG_SETMASK
+  leaq (_JB_SIGMASK * 8)(%r12),%rsi
+  xorq %rdx,%rdx
+  call PIC_PLT(sigprocmask)
 
 2:
   popq %rax // Pop 'value'.
