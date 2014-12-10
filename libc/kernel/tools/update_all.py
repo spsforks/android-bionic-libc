@@ -42,7 +42,8 @@ else:
 
 # Fixme: This should be removed after next release.
 # Do not update ion.h ion_test.h until after next release in aosp.
-source = subprocess.check_output('git remote show', shell=True).strip()
+#source = subprocess.check_output('git remote show', shell=True).strip()
+source=''
 skip_ion = False
 if source == "aosp":
     skip_ion = True

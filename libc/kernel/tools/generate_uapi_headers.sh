@@ -156,12 +156,14 @@ fi
 
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
+  pushd . 2>&1 > /dev/null
   cd "${TMPDIR}"
   echo "Fetching android kernel source ${KERNEL_VERSION}"
   git clone https://android.googlesource.com/kernel/common.git
-  cd "${COMMON}"
+  cd "${src_dir}"
   git checkout "${KERNEL_VERSION}"
   KERNEL_DIR="${TMPDIR}"
+  popd 2>&1 > /dev/null
 elif [[ "${KERNEL_DIR}" == "" ]]; then
   echo "Must specify one of --use-kernel-dir or --download-kernel."
   exit 1
@@ -169,15 +171,19 @@ elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/${src_dir}" ]]; then
   echo "The kernel directory $KERNEL_DIR or $KERNEL_DIR/${src_dir} does not exist."
   exit 1
 else
-  cd "${KERNEL_DIR}/${src_dir}"
+  echo "skip download"
+#  cd "${KERNEL_DIR}/${src_dir}"
 fi
 
 if [[ ${SKIP_GENERATION} -eq 0 ]]; then
+  pushd . 2>&1 > /dev/null
+  cd ${KERNEL_DIR}/${src_dir}
   # Build all of the generated headers.
   for arch in "${ARCH_LIST[@]}"; do
     echo "Generating headers for arch ${arch}"
-    make ARCH=${arch} headers_install
+    make ARCH=${arch} headers_install -j4
   done
+  popd 2>&1 > /dev/null
 fi
 
 # Copy all of the include/uapi files to the kernel headers uapi directory.
