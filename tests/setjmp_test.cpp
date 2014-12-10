@@ -63,13 +63,15 @@ TEST(setjmp, sigsetjmp_1_smoke) {
   }
 }
 
-static sigset_t SigSetOf(int signal, int rt_signal = 0) {
+static sigset_t MakeSigSet(int which) {
   sigset_t ss;
   sigemptyset(&ss);
-  sigaddset(&ss, signal);
-  if (rt_signal != 0) {
-    sigaddset(&ss, rt_signal);
-  }
+  sigaddset(&ss, SIGUSR1 + (which - 1));
+#if defined(__LP64__)
+  // For arm and x86, sigset_t was too small for the RT signals.
+  // For mips, sigset_t was large enough but jmp_buf wasn't.
+  sigaddset(&ss, SIGRTMIN + 8 + which);
+#endif
   return ss;
 }
 
@@ -84,8 +86,8 @@ void AssertSigmaskEquals(const sigset_t& expected) {
 
 TEST(setjmp, _setjmp_signal_mask) {
   // _setjmp/_longjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
+  sigset_t ss1(MakeSigSet(1));
+  sigset_t ss2(MakeSigSet(2));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
@@ -103,8 +105,8 @@ TEST(setjmp, setjmp_signal_mask) {
   // setjmp/longjmp do save/restore the signal mask on bionic, but not on glibc.
   // This is a BSD versus System V historical accident. POSIX leaves the
   // behavior unspecified, so any code that cares needs to use sigsetjmp.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
+  sigset_t ss1(MakeSigSet(1));
+  sigset_t ss2(MakeSigSet(2));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   jmp_buf jb;
@@ -126,8 +128,8 @@ TEST(setjmp, setjmp_signal_mask) {
 
 TEST(setjmp, sigsetjmp_0_signal_mask) {
   // sigsetjmp(0)/siglongjmp do not save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
+  sigset_t ss1(MakeSigSet(1));
+  sigset_t ss2(MakeSigSet(2));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
@@ -143,8 +145,8 @@ TEST(setjmp, sigsetjmp_0_signal_mask) {
 
 TEST(setjmp, sigsetjmp_1_signal_mask) {
   // sigsetjmp(1)/siglongjmp does save/restore the signal mask.
-  sigset_t ss1(SigSetOf(SIGUSR1, SIGRTMIN + 8));
-  sigset_t ss2(SigSetOf(SIGUSR2, SIGRTMIN + 9));
+  sigset_t ss1(MakeSigSet(1));
+  sigset_t ss2(MakeSigSet(2));
   sigset_t original_set;
   sigprocmask(SIG_SETMASK, &ss1, &original_set);
   sigjmp_buf sjb;
