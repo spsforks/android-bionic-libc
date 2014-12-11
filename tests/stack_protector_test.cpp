@@ -105,10 +105,23 @@ extern "C" uintptr_t __stack_chk_guard;
  *
  * This must be marked with "__attribute__ ((noinline))", to ensure the
  * compiler generates the proper stack guards around this function.
+ * Gcc 4.9.x doesn't generate stack guards without local buffer operations.
  */
 __attribute__ ((noinline))
-static void do_modify_stack_chk_guard() {
+static int do_modify_stack_chk_guard(int buf_len) {
+  // Use modification of local buffer to enable stack protector check. See b/18721888.
+  char buf[128];
+
+  buf[0] = 0;
+  for (int i = 1; i < 128; ++i) {
+    buf[i] = buf[i - 1] + 1;
+  }
+  int res = 0;
+  for (int i = 0; i < buf_len; ++i) {
+    res += buf[i];
+  }
   __stack_chk_guard = 0x12345678;
+  return res;
 }
 #endif
 
@@ -125,7 +138,7 @@ class stack_protector_DeathTest : public BionicDeathTest {};
 
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
 #if defined(TEST_STACK_CHK_GUARD)
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(do_modify_stack_chk_guard(128), testing::KilledBySignal(SIGABRT), "");
 #else // TEST_STACK_CHK_GUARD
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // TEST_STACK_CHK_GUARD
