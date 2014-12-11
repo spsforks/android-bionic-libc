@@ -53,6 +53,7 @@ test_cppflags = \
 
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
+    bionic_string_utils_test.cpp \
     buffer_tests.cpp \
     complex_test.cpp \
     ctype_test.cpp \

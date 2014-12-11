@@ -73,6 +73,7 @@
 #include <strings.h>
 #include <syslog.h>
 #include <unistd.h>
+#include "private/bionic_string_utils.h"
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
@@ -890,6 +891,38 @@ struct hostent *
 gethostbyaddr(const void *addr, socklen_t len, int af)
 {
 	return android_gethostbyaddrfornet(addr, len, af, NETID_UNSET, MARK_UNSET);
+}
+
+int gethostbyaddr_r(const void *addr, int len, int type, struct hostent *ret, char *buf,
+                    size_t buflen, struct hostent **result, int *h_errnop) {
+  *result = NULL;
+  struct hostent *tmp_result = gethostbyaddr(addr, len, type);
+  if (tmp_result == NULL) {
+    *h_errnop = h_errno;
+    return -1;
+  }
+  // We want to copy \0 at the end as well
+  size_t h_name_len = strlen(tmp_result->h_name) + 1;
+  memcpy(buf, tmp_result->h_name, h_name_len);
+  ret->h_name = buf;
+  buf += h_name_len;
+  buflen -= h_name_len;
+  int copied = copy_list(tmp_result->h_aliases, buf, buflen);
+  if (copied < 0) {
+    return ERANGE;
+  }
+  ret->h_aliases = (char **) buf;
+  buf += copied;
+  buflen -= copied;
+  ret->h_addrtype = tmp_result->h_addrtype;
+  ret->h_length = tmp_result->h_length;
+  copied = copy_list(tmp_result->h_addr_list, buf, buflen);
+  if (copied < 0) {
+    return ERANGE;
+  }
+  ret->h_addr_list = (char **) buf;
+  *result = ret;
+  return 0;
 }
 
 
