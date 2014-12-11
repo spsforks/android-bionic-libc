@@ -17,7 +17,11 @@
 #ifndef _BIONIC_STRING_UTILS_H_
 #define _BIONIC_STRING_UTILS_H_
 
+#include <stdbool.h>
 #include <string.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 static inline bool ends_with(const char* s1, const char* s2) {
   size_t s1_length = strlen(s1);
@@ -27,5 +31,19 @@ static inline bool ends_with(const char* s1, const char* s2) {
   }
   return memcmp(s1 + (s1_length - s2_length), s2, s2_length) == 0;
 }
+
+/*
+ * Copy null-terminated |list| of strings to the |buf|.
+ * Copy is layed out so that first part of the |buf| is a list of char** and
+ * the second part contains a concatenation of values of char* pointed to by elements of
+ * |list|. For example the list of {"a", "bc" and "d"} will look like:
+ * memory address |0|1|2|3|4|5|6|7|8|9|10|
+ * memory value    4 6 9 0 a 0 b c 0 d 0
+ *
+ * Returns number of bytes used at the beginning of the |buf|.
+ */
+int copy_list(char **list, char *buf, size_t buflen);
+
+__END_DECLS
 
 #endif // _BIONIC_STRING_UTILS_H_
