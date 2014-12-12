@@ -85,9 +85,9 @@ TEST(pthread, pthread_key_EAGAIN) {
 
   std::vector<pthread_key_t> keys;
   int rv = 0;
-  // Two keys are used by gtest, so sysconf_max should be more than we are
-  // allowed to allocate now.
-  for (int i = 0; i < sysconf_max; i++) {
+  // Although one or two keys are used by gtest, bionic may provide more pthread_keys
+  // than sysconf_max, so we should increase time to call pthread_key_create. See b/18723085.
+  for (int i = 0; i < sysconf_max + 10; i++) {
     pthread_key_t key;
     rv = pthread_key_create(&key, NULL);
     if (rv == EAGAIN) {
