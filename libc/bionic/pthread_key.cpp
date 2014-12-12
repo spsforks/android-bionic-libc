@@ -194,8 +194,12 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
   tls_map.CleanAll();
 }
 
+int global_pthread_key_num = 0;
+int global_pthread_key_del_num = 0;
+
 int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
   ScopedTlsMapAccess tls_map;
+  ++global_pthread_key_num;
   return tls_map.CreateKey(key, key_destructor);
 }
 
@@ -209,7 +213,7 @@ int pthread_key_delete(pthread_key_t key) {
   if (!IsValidUserKey(key) || !tls_map.IsInUse(key)) {
     return EINVAL;
   }
-
+  ++global_pthread_key_del_num;
   // Clear value in all threads.
   pthread_mutex_lock(&g_thread_list_lock);
   for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
