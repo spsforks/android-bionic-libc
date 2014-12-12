@@ -42,14 +42,13 @@ TEST(pthread, pthread_key_create) {
 }
 
 TEST(pthread, pthread_keys_max) {
-  // POSIX says PTHREAD_KEYS_MAX should be at least 128.
-  ASSERT_GE(PTHREAD_KEYS_MAX, 128);
+  // POSIX says PTHREAD_KEYS_MAX should be at least _POSIX_THREAD_KEYS_MAX.
+  ASSERT_GE(PTHREAD_KEYS_MAX, _POSIX_THREAD_KEYS_MAX);
 }
 
-TEST(pthread, _SC_THREAD_KEYS_MAX_big_enough_for_POSIX) {
-  // sysconf shouldn't return a smaller value.
+TEST(pthread, sysconf_SC_THREAD_KEYS_MAX_eq_PTHREAD_KEYS_MAX) {
   int sysconf_max = sysconf(_SC_THREAD_KEYS_MAX);
-  ASSERT_GE(sysconf_max, PTHREAD_KEYS_MAX);
+  ASSERT_EQ(sysconf_max, PTHREAD_KEYS_MAX);
 }
 
 TEST(pthread, pthread_key_many_distinct) {
@@ -85,9 +84,9 @@ TEST(pthread, pthread_key_EAGAIN) {
 
   std::vector<pthread_key_t> keys;
   int rv = 0;
-  // Two keys are used by gtest, so sysconf_max should be more than we are
-  // allowed to allocate now.
-  for (int i = 0; i < sysconf_max; i++) {
+  // Although one or two keys are used by gtest, bionic may provide more pthread_keys
+  // than sysconf_max, so we should increase times to call pthread_key_create. See b/18723085.
+  for (int i = 0; i < sysconf_max * 2; i++) {
     pthread_key_t key;
     rv = pthread_key_create(&key, NULL);
     if (rv == EAGAIN) {
