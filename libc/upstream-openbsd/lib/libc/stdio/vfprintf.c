@@ -753,10 +753,9 @@ fp_common:
 			if (signflag)
 				sign = '-';
 			if (expt == INT_MAX) {	/* inf or nan */
-				if (*cp == 'N') {
+				if (*cp == 'N')
 					cp = (ch >= 'a') ? "nan" : "NAN";
-					sign = '\0';
-				} else
+				else
 					cp = (ch >= 'a') ? "inf" : "INF";
  				size = 3;
 				flags &= ~ZEROPAD;
