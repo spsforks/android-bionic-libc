@@ -910,7 +910,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     return nullptr;
   }
   if (file_offset >= file_stat.st_size) {
-    DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name, file_offset, file_stat.st_size);
+    DL_ERR("file offset for the library \"%s\" >= file size: %" PRId64 " >= %" PRId64, name, file_offset, (off64_t)file_stat.st_size);
     return nullptr;
   }
 
