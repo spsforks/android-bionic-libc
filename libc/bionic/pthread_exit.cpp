@@ -100,6 +100,9 @@ void pthread_exit(void* return_value) {
     __set_tid_address(NULL);
     _pthread_internal_remove_locked(thread);
   } else {
+    // Mark the thread is exiting without freeing pthread_internal_t.
+    thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
+
     // Make sure that the pthread_internal_t doesn't have stale pointers to a stack that
     // will be unmapped after the exit call below.
     if (!user_allocated_stack) {
