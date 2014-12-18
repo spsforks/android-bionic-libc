@@ -28,28 +28,44 @@
 
 #include <errno.h>
 
+#include "private/bionic_futex.h"
 #include "pthread_accessor.h"
 
 int pthread_detach(pthread_t t) {
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
+  pid_t tid;
+  volatile int* tid_ptr;
+  {
+    pthread_accessor thread(t);
+    if (thread.get() == NULL) {
       return ESRCH;
+    }
+
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
+      return EINVAL; // Already detached.
+    }
+
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
+      return 0; // Already being joined; silently do nothing, like glibc.
+    }
+
+    thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+
+    // Check whether we are responsible to clean up the thread.
+    if (thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) {
+      tid = thread->tid;
+      tid_ptr = &thread->tid;
+    } else {
+      return 0;
+    }
   }
 
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-    return EINVAL; // Already detached.
+  // The thread is in zombie state, wait for the thread exit and clean it up like pthread_join.
+  while (*tid_ptr != 0) {
+    __futex_wait(tid_ptr, tid, NULL);
   }
 
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-    return 0; // Already being joined; silently do nothing, like glibc.
-  }
-
-  if (thread->tid == 0) {
-    // Already exited; clean up.
-    _pthread_internal_remove_locked(thread.get());
-    return 0;
-  }
-
-  thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+  // Take the lock again so we can remove the thread from the list.
+  pthread_accessor thread(t);
+  _pthread_internal_remove_locked(thread.get());
   return 0;
 }
