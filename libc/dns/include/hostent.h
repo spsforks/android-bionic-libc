@@ -52,6 +52,11 @@ struct getnamaddr {
 	char *buf;
 	size_t buflen;
 	int *he;
+
+	/* Used to indicate the buf is not enough to hold the result. So we can support ERANGE for
+	 * gethostbyname_r/gethostbyname2_r/gethostbyaddr_r with not enough buffer. See b/18802601.
+	 */
+	int buf_not_enough_flag;
 };
 
 /* /etc/hosts lookup */
