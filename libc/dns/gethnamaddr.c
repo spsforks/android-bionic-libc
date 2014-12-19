@@ -774,9 +774,14 @@ gethostbyname_internal_real(const char *name, int af, res_state res, struct host
 	info.buf = buf;
 	info.buflen = buflen;
 	info.he = he;
+	info.buf_not_enough_flag = 0;
 	if (nsdispatch(&info, dtab, NSDB_HOSTS, "gethostbyname",
-	    default_dns_files, name, strlen(name), af) != NS_SUCCESS)
+	    default_dns_files, name, strlen(name), af) != NS_SUCCESS) {
+		if (info.buf_not_enough_flag) {
+			goto nospc;
+		}
 		return NULL;
+  }
 	*he = NETDB_SUCCESS;
 	return hp;
 nospc:
@@ -906,10 +911,15 @@ android_gethostbyaddrfornet_real(const void *addr, socklen_t len, int af, struct
 	info.buf = buf;
 	info.buflen = buflen;
 	info.he = he;
+	info.buf_not_enough_flag = 0;
 	*he = NETDB_INTERNAL;
 	if (nsdispatch(&info, dtab, NSDB_HOSTS, "gethostbyaddr",
-	    default_dns_files, uaddr, len, af, netid, mark) != NS_SUCCESS)
+	    default_dns_files, uaddr, len, af, netid, mark) != NS_SUCCESS) {
+		if (info.buf_not_enough_flag) {
+			errno = ENOSPC;
+		}
 		return NULL;
+	}
 	*he = NETDB_SUCCESS;
 	return hp;
 }
@@ -1207,7 +1217,10 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 	    info->buflen, info->he);
 	free(buf);
 	__res_put_state(res);
-	if (hp == NULL)
+	if (hp == NULL) {
+		if (errno == ENOSPC) {
+			info->buf_not_enough_flag = 1;
+		}
 		switch (h_errno) {
 		case HOST_NOT_FOUND:
 			return NS_NOTFOUND;
@@ -1216,6 +1229,7 @@ _dns_gethtbyname(void *rv, void *cb_data, va_list ap)
 		default:
 			return NS_UNAVAIL;
 		}
+	}
 	return NS_SUCCESS;
 }
 
@@ -1297,6 +1311,9 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	free(buf);
 	if (hp == NULL) {
 		__res_put_state(res);
+		if (errno == ENOSPC) {
+		  info->buf_not_enough_flag = 1;
+		}
 		switch (*info->he) {
 		case HOST_NOT_FOUND:
 			return NS_NOTFOUND;
@@ -1326,6 +1343,8 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	*info->he = NETDB_SUCCESS;
 	return NS_SUCCESS;
 nospc:
+	errno = ENOSPC;
+	info->buf_not_enough_flag = 1;
 	*info->he = NETDB_INTERNAL;
 	return NS_UNAVAIL;
 }
