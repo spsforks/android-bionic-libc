@@ -86,6 +86,9 @@ struct pthread_internal_t {
 
   pthread_mutex_t startup_handshake_mutex;
 
+  /* Store internal allocation size, including thread stack and pthread_internal_t. */
+  int internal_allocate_size;
+
   void* tls[BIONIC_TLS_SLOTS];
 
   /*
