@@ -35,7 +35,6 @@ TEST(sys_resource, smoke) {
   ASSERT_EQ(0, getrlimit(RLIMIT_CORE, &l32));
   ASSERT_EQ(0, getrlimit64(RLIMIT_CORE, &l64));
   ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, NULL, &pr_l64));
-  ASSERT_EQ(l64.rlim_cur, l32.rlim_cur);
   ASSERT_EQ(l64.rlim_cur, pr_l64.rlim_cur);
   ASSERT_EQ(l64.rlim_max, pr_l64.rlim_max);
   if (l64.rlim_max == RLIM64_INFINITY) {
