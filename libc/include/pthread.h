@@ -119,7 +119,7 @@ typedef volatile int pthread_once_t;
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
 #else
-#define PTHREAD_STACK_MIN (2 * PAGE_SIZE)
+#define PTHREAD_STACK_MIN (3 * PAGE_SIZE)
 #endif
 
 #define PTHREAD_CREATE_DETACHED  0x00000001
