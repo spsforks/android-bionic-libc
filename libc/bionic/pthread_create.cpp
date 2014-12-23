@@ -202,6 +202,12 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   } else {
     thread_attr = *attr;
     attr = NULL; // Prevent misuse below.
+
+    // If user request stack_size explicitly, we should allocate internal structure besides that
+    // to provide enough stack space.
+    if (thread_attr.stack_base == NULL && thread_attr.stack_size != 0) {
+      thread_attr.stack_size += sizeof(pthread_internal_t);
+    }
   }
 
   pthread_internal_t* thread = NULL;
