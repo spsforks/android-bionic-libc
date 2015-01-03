@@ -42,8 +42,10 @@ enum GTestColor {
 
 void ColoredPrintf(GTestColor color, const char* fmt, ...);
 
-} // namespace internal
-} // namespace testing
+}  // namespace internal
+}  // namespace testing
+
+namespace {
 
 using testing::internal::GTestColor;
 using testing::internal::COLOR_DEFAULT;
@@ -57,20 +59,38 @@ constexpr int DEFAULT_GLOBAL_TEST_RUN_WARNLINE_IN_MS = 2000;
 
 // The time each test can run before killed for the reason of timeout.
 // It takes effect only with --isolate option.
-static int global_test_run_deadline_in_ms = DEFAULT_GLOBAL_TEST_RUN_DEADLINE_IN_MS;
+int global_test_run_deadline_in_ms = DEFAULT_GLOBAL_TEST_RUN_DEADLINE_IN_MS;
 
 // The time each test can run before be warned for too much running time.
 // It takes effect only with --isolate option.
-static int global_test_run_warnline_in_ms = DEFAULT_GLOBAL_TEST_RUN_WARNLINE_IN_MS;
+int global_test_run_warnline_in_ms = DEFAULT_GLOBAL_TEST_RUN_WARNLINE_IN_MS;
 
 // Return deadline duration for a test, in ms.
-static int GetDeadlineInfo(const std::string& /*test_name*/) {
+int GetDeadlineInfo(const std::string& /*test_name*/) {
   return global_test_run_deadline_in_ms;
 }
 
 // Return warnline duration for a test, in ms.
-static int GetWarnlineInfo(const std::string& /*test_name*/) {
+int GetWarnlineInfo(const std::string& /*test_name*/) {
   return global_test_run_warnline_in_ms;
+}
+
+void PrintHelpInfo() {
+  printf("Bionic Unit Test Options:\n"
+         "  -j [JOB_NUM]\n"
+         "      Run up to JOB_NUM tests in parallel.\n"
+         "      Use isolation mode, Run each test in a separate process.\n"
+         "      If JOB_NUM is not given, it is set to the number of available processors.\n"
+         "  --no-isolate\n"
+         "      Don't use isolation mode, run all tests in a single process.\n"
+         "  --deadline=[TIME_IN_MS]\n"
+         "      Run each test in no longer than [TIME_IN_MS] time.\n"
+         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
+         "  --warnline=[TIME_IN_MS]\n"
+         "      Test running longer than [TIME_IN_MS] will be warned.\n"
+         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
+         "\nDefault bionic unit test option is -j.\n"
+         "\n");
 }
 
 enum TestResult {
@@ -212,14 +232,14 @@ void TestResultPrinter::OnTestEnd(const testing::TestInfo& test_info) {
   fflush(stdout);
 }
 
-static int64_t NanoTime() {
+int64_t NanoTime() {
   struct timespec t;
   t.tv_sec = t.tv_nsec = 0;
   clock_gettime(CLOCK_MONOTONIC, &t);
   return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
 }
 
-static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
+bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
   std::string command;
   for (int i = 0; i < argc; ++i) {
     command += argv[i];
@@ -265,28 +285,11 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   return (result != -1 && WEXITSTATUS(result) == 0);
 }
 
-static void PrintHelpInfo() {
-  printf("Bionic Unit Test Options:\n"
-         "  --isolate\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "  --deadline=[TIME_IN_MS]\n"
-         "      Run each test in no longer than [TIME_IN_MS] time.\n"
-         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
-         "  --warnline=[TIME_IN_MS]\n"
-         "      Test running longer than [TIME_IN_MS] will be warned.\n"
-         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
-         "  -j [JOB_NUM]\n"
-         "      Run up to JOB_NUM tests in parallel.\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "      If JOB_NUM is not given, it is set to the number of cpus available.\n"
-         "\n");
-}
-
 // Part of the following *Print functions are copied from external/gtest/src/gtest.cc:
 // PrettyUnitTestResultPrinter. The reason for copy is that PrettyUnitTestResultPrinter
 // is defined and used in gtest.cc, which is hard to reuse.
-static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, int iteration,
-                                      int num_iterations) {
+void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, int iteration,
+                               int num_iterations) {
   if (num_iterations > 1) {
     printf("\nRepeating all tests (iteration %d) . . .\n\n", iteration);
   }
@@ -304,14 +307,14 @@ static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list
   fflush(stdout);
 }
 
-static void OnTestTimeoutPrint(const TestCase& testcase, int test_id) {
+void OnTestTimeoutPrint(const TestCase& testcase, int test_id) {
   ColoredPrintf(COLOR_RED, "[ TIMEOUT  ] ");
   printf("%s (killed by timeout at %lld ms)\n", testcase.GetTestName(test_id).c_str(),
                                                 testcase.GetTestTime(test_id) / 1000000LL);
   fflush(stdout);
 }
 
-static void TestcaseTimePrint(const TestCase& testcase) {
+void TestcaseTimePrint(const TestCase& testcase) {
   int64_t testcase_time = 0;
   for (int i = 0; i < testcase.NumTests(); ++i) {
     testcase_time += testcase.GetTestTime(i);
@@ -323,8 +326,8 @@ static void TestcaseTimePrint(const TestCase& testcase) {
   fflush(stdout);
 }
 
-static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, int /*iteration*/,
-                                    int64_t elapsed_time) {
+void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, int /*iteration*/,
+                             int64_t elapsed_time) {
 
   std::vector<std::string> fail_test_name_list;
   std::vector<std::pair<std::string, int64_t>> timeout_test_list;
@@ -419,7 +422,7 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
 }
 
 // Forked Child process, run the single test.
-static void ChildProcessFn(int argc, char** argv, const std::string& test_name) {
+void ChildProcessFn(int argc, char** argv, const std::string& test_name) {
   char** new_argv = new char*[argc + 1];
   memcpy(new_argv, argv, sizeof(char*) * argc);
 
@@ -444,7 +447,7 @@ struct ChildProcInfo {
   ChildProcInfo() : pid(0) {}
 };
 
-static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
+void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
   pid_t result;
   int exit_status;
   bool loop_flag = true;
@@ -491,7 +494,7 @@ static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
   }
 }
 
-static TestResult WaitChildProc(pid_t pid) {
+TestResult WaitChildProc(pid_t pid) {
   pid_t result;
   int exit_status;
 
@@ -510,7 +513,7 @@ static TestResult WaitChildProc(pid_t pid) {
 
 // We choose to use multi-fork and multi-wait here instead of multi-thread, because it always
 // makes deadlock to use fork in multi-thread.
-static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
+void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
                                   int num_iterations, int num_jobs) {
   // Stop default result printer to avoid environment setup/teardown information for each test.
   testing::UnitTest::GetInstance()->listeners().Release(
@@ -586,9 +589,9 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   }
 }
 
-static int GetCpuNumber() {
+int GetProcessorNumber() {
   FILE* fp = popen("cat /proc/cpuinfo | grep processor | wc -l", "r");
-  int result = 1; // Return 1 if we can't get the exact cpu number.
+  int result = 1; // Return 1 if we can't get the exact processor number.
   if (fp != NULL) {
     fscanf(fp, "%d", &result);
     if (result < 1) {
@@ -599,11 +602,25 @@ static int GetCpuNumber() {
   return result;
 }
 
+void InsertArg(int* pargc, char** argv, int insert_pos, const char* arg) {
+  for (int i = *pargc; i >= insert_pos; --i) {
+    argv[i + 1] = argv[i];
+  }
+  argv[insert_pos] = strdup(arg);
+  ++*pargc;
+}
+
+void RemoveArg(int* pargc, char** argv, int remove_pos) {
+  for (int i = remove_pos; i < *pargc; ++i) {
+    argv[i] = argv[i + 1];
+  }
+  --*pargc;
+}
+
 // Pick options not for gtest; Return false if run error.
 // Use exit_flag to indicate whether we need to run gtest flow after PickOptions.
-static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
+bool PickOptions(int* pargc, char** argv, bool* exit_flag) {
   int argc = *pargc;
-  char** argv = *pargv;
   *exit_flag = false;
   for (int i = 0; i < argc; ++i) {
     if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
@@ -612,53 +629,39 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
     }
   }
 
-  // Move --gtest_filter option to last, and add "-bionic_gtest*" to disable self test.
-  int gtest_filter_option_pos = 0;
+  // Move --gtest_filter option to last, and add "-bionic_selftest*" to disable self test.
+  std::string gtest_filter_str = "--gtest_filter=-bionic_selftest*";
   for (int i = argc - 1; i >= 1; --i) {
     if (strncmp(argv[i], "--gtest_filter=", sizeof("--gtest_filter=") - 1) == 0) {
-      gtest_filter_option_pos = i;
+      gtest_filter_str = std::string(argv[i]) + ":-bionic_selftest*";
+      RemoveArg(&argc, argv, i);
       break;
     }
   }
-  if (gtest_filter_option_pos != 0) {
-    char* gtest_filter_arg = argv[gtest_filter_option_pos];
-    for (int i = gtest_filter_option_pos; i < argc - 1; ++i) {
-      argv[i] = argv[i + 1];
-    }
-    char* new_arg = new char[strlen(gtest_filter_arg) + sizeof(":-bionic_gtest*")];
-    strcpy(new_arg, gtest_filter_arg);
-    strcat(new_arg, ":-bionic_gtest*");
-    argv[argc - 1] = new_arg;
-  } else {
-    char** new_argv = new char* [argc + 1];
-    for (int i = 0; i < argc; ++i) {
-      new_argv[i] = argv[i];
-    }
-    new_argv[argc++] = const_cast<char*>("--gtest_filter=-bionic_gtest*");
-    *pargv = argv = new_argv;
-  }
+  InsertArg(&argc, argv, argc, gtest_filter_str.c_str());
 
-  // Parse bionic_gtest specific options.
-  bool isolate_option = false;
-  int job_num_option = 1;
+  // Init default bionic_gtest option.
+  bool isolate_option = true;
+  int job_num_option = GetProcessorNumber();
 
   int deadline_option_len = sizeof("--deadline=") - 1;
   int warnline_option_len = sizeof("--warnline=") - 1;
   int gtest_color_option_len = sizeof("--gtest_color=") - 1;
 
+  // Parse bionic_gtest specific options in arguments.
   for (int i = 1; i < argc; ++i) {
     int remove_arg_num = 0;
 
-    // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
-    // So we should parse gtest options for printing here.
-    if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
-      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
-
-    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
-      testing::GTEST_FLAG(print_time) = false;
-
-    } else if (strcmp(argv[i], "--isolate") == 0) {
-      isolate_option = true;
+    if (strcmp(argv[i], "-j") == 0) {
+      isolate_option = true; // Enable isolation mode when -j is used.
+      if (i + 1 < argc && (job_num_option = atoi(argv[i + 1])) > 0) {
+        remove_arg_num = 2;
+      } else {
+        job_num_option = GetProcessorNumber();
+        remove_arg_num = 1;
+      }
+    } else if (strcmp(argv[i], "--no-isolate") == 0) {
+      isolate_option = false;
       remove_arg_num = 1;
 
     } else if (strncmp(argv[i], "--deadline=", deadline_option_len) == 0) {
@@ -679,26 +682,28 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
       }
       remove_arg_num = 1;
 
-    } else if (strcmp(argv[i], "--bionic_gtest") == 0) {
-      // Enable "bionic_gtest*" for self test.
-      // Don't remove this option from argument list.
-      argv[argc - 1] = const_cast<char*>("--gtest_filter=bionic_gtest*");
+    } else if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
+      // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
+    // So we should parse gtest options for printing by ourselves.
+      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
 
-    } else if (strcmp(argv[i], "-j") == 0) {
-      isolate_option = true; // Enable isolation mode when -j is used.
-      if (i + 1 < argc && (job_num_option = atoi(argv[i + 1])) > 0) {
-        remove_arg_num = 2;
-      } else {
-        job_num_option = GetCpuNumber();
-        remove_arg_num = 1;
-      }
+    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
+      testing::GTEST_FLAG(print_time) = false;
+
+    } else if (strcmp(argv[i], "--gtest_list_tests") == 0) {
+      // Disable isolation mode in gtest_list_tests option.
+      isolate_option = false;
+
+    } else if (strcmp(argv[i], "--bionic-selftest") == 0) {
+      // This option is to enable "bionic_selftest*" for self test, and not shown in help informantion.
+      // Don't remove this option from argument list.
+      argv[argc - 1] = strdup("--gtest_filter=bionic_selftest*");
     }
 
     if (remove_arg_num != 0) {
-      for (int j = i; j < argc - remove_arg_num; ++j) {
-        argv[j] = argv[j + remove_arg_num];
+      while (remove_arg_num--) {
+        RemoveArg(&argc, argv, i);
       }
-      argc -= remove_arg_num;
       --i;
     }
   }
@@ -716,14 +721,15 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
           fprintf(stderr, "error count for option --gtest_repeat=[COUNT]\n");
           return false;
         }
-        for (int j = i; j < argc - 1; ++j) {
-          argv[j] = argv[j + 1];
-        }
-        --argc;
+        RemoveArg(&argc, argv, i);
         break;
       }
     }
   }
+
+  // Add --no-isolate option in argv to suppress subprocess running in isolation mode again.
+  // As DeathTest will try to execve again, this option should always be set.
+  InsertArg(&argc, argv, 1, "--no-isolate");
 
   *pargc = argc;
 
@@ -741,34 +747,43 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
   return true;
 }
 
+}  // namespace
+
 int main(int argc, char** argv) {
+  // Allocate bigger argv to convenient following changes to argv.
+  char** use_argv = new char*[argc + 10];
+  for (int i = 0; i < argc; ++i) {
+    use_argv[i] = argv[i];
+  }
+  use_argv[argc] = NULL;
+
   bool exit_flag;
   int return_result = 0;
 
-  if (PickOptions(&argc, &argv, &exit_flag) == false) {
+  if (PickOptions(&argc, use_argv, &exit_flag) == false) {
     return_result = 1;
   } else if (!exit_flag) {
-    testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, use_argv);
     return_result = RUN_ALL_TESTS();
   }
   return return_result;
 }
 
 //################################################################################
-// Bionic Gtest self test, run this by --bionic_gtest --isolate option.
+// Bionic Gtest self test, run this by --bionic-selftest option.
 
-TEST(bionic_gtest, test_success) {
+TEST(bionic_selftest, test_success) {
   ASSERT_EQ(1, 1);
 }
 
-TEST(bionic_gtest, test_fail) {
+TEST(bionic_selftest, test_fail) {
   ASSERT_EQ(0, 1);
 }
 
-TEST(bionic_gtest, test_time_warn) {
+TEST(bionic_selftest, test_time_warn) {
   sleep(4);
 }
 
-TEST(bionic_gtest, test_timeout) {
+TEST(bionic_selftest, test_timeout) {
   while (1) {}
 }
