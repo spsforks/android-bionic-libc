@@ -42,8 +42,8 @@ enum GTestColor {
 
 void ColoredPrintf(GTestColor color, const char* fmt, ...);
 
-} // namespace internal
-} // namespace testing
+}  // namespace internal
+}  // namespace testing
 
 using testing::internal::GTestColor;
 using testing::internal::COLOR_DEFAULT;
@@ -71,6 +71,24 @@ static int GetDeadlineInfo(const std::string& /*test_name*/) {
 // Return warnline duration for a test, in ms.
 static int GetWarnlineInfo(const std::string& /*test_name*/) {
   return global_test_run_warnline_in_ms;
+}
+
+static void PrintHelpInfo() {
+  printf("Bionic Unit Test Options:\n"
+         "  -j [NUM_JOBS]\n"
+         "      Run up to NUM_JOBS tests in parallel.\n"
+         "      Use isolation mode, Run each test in a separate process.\n"
+         "      If NUM_JOBS is not given, it is set to the count of available processors.\n"
+         "  --no-isolate\n"
+         "      Don't use isolation mode, run all tests in a single process.\n"
+         "  --deadline=[TIME_IN_MS]\n"
+         "      Run each test in no longer than [TIME_IN_MS] time.\n"
+         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
+         "  --warnline=[TIME_IN_MS]\n"
+         "      Test running longer than [TIME_IN_MS] will be warned.\n"
+         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
+         "\nDefault bionic unit test option is -j.\n"
+         "\n");
 }
 
 enum TestResult {
@@ -263,23 +281,6 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   }
   int result = pclose(fp);
   return (result != -1 && WEXITSTATUS(result) == 0);
-}
-
-static void PrintHelpInfo() {
-  printf("Bionic Unit Test Options:\n"
-         "  --isolate\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "  --deadline=[TIME_IN_MS]\n"
-         "      Run each test in no longer than [TIME_IN_MS] time.\n"
-         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
-         "  --warnline=[TIME_IN_MS]\n"
-         "      Test running longer than [TIME_IN_MS] will be warned.\n"
-         "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
-         "  -j [JOB_NUM]\n"
-         "      Run up to JOB_NUM tests in parallel.\n"
-         "      Use isolation mode, Run each test in a separate process.\n"
-         "      If JOB_NUM is not given, it is set to the number of cpus available.\n"
-         "\n");
 }
 
 // Part of the following *Print functions are copied from external/gtest/src/gtest.cc:
@@ -586,80 +587,57 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   }
 }
 
-static int GetCpuNumber() {
-  FILE* fp = popen("cat /proc/cpuinfo | grep processor | wc -l", "r");
-  int result = 1; // Return 1 if we can't get the exact cpu number.
-  if (fp != NULL) {
-    fscanf(fp, "%d", &result);
-    if (result < 1) {
-      result = 1;
-    }
-    pclose(fp);
-  }
-  return result;
+static int GetProcessorCount() {
+  return static_cast<int>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
 // Pick options not for gtest; Return false if run error.
 // Use exit_flag to indicate whether we need to run gtest flow after PickOptions.
-static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
-  int argc = *pargc;
-  char** argv = *pargv;
+static bool PickOptions(std::vector<char*>* pargs, bool* exit_flag) {
+  std::vector<char*>& argv = *pargs;
   *exit_flag = false;
-  for (int i = 0; i < argc; ++i) {
+  for (size_t i = 1; i < argv.size() - 1; ++i) {
     if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
       PrintHelpInfo();
       return true;
     }
   }
 
-  // Move --gtest_filter option to last, and add "-bionic_gtest*" to disable self test.
-  int gtest_filter_option_pos = 0;
-  for (int i = argc - 1; i >= 1; --i) {
+  // Move --gtest_filter option to last, and add "-bionic_selftest*" to disable self test.
+  std::string gtest_filter_str = "--gtest_filter=-bionic_selftest*";
+  for (size_t i = argv.size() - 2; i >= 1; --i) {
     if (strncmp(argv[i], "--gtest_filter=", sizeof("--gtest_filter=") - 1) == 0) {
-      gtest_filter_option_pos = i;
+      gtest_filter_str = std::string(argv[i]) + ":-bionic_selftest*";
+      argv.erase(argv.begin() + i);
       break;
     }
   }
-  if (gtest_filter_option_pos != 0) {
-    char* gtest_filter_arg = argv[gtest_filter_option_pos];
-    for (int i = gtest_filter_option_pos; i < argc - 1; ++i) {
-      argv[i] = argv[i + 1];
-    }
-    char* new_arg = new char[strlen(gtest_filter_arg) + sizeof(":-bionic_gtest*")];
-    strcpy(new_arg, gtest_filter_arg);
-    strcat(new_arg, ":-bionic_gtest*");
-    argv[argc - 1] = new_arg;
-  } else {
-    char** new_argv = new char* [argc + 1];
-    for (int i = 0; i < argc; ++i) {
-      new_argv[i] = argv[i];
-    }
-    new_argv[argc++] = const_cast<char*>("--gtest_filter=-bionic_gtest*");
-    *pargv = argv = new_argv;
-  }
+  argv.insert(argv.end() - 1, strdup(gtest_filter_str.c_str()));
 
-  // Parse bionic_gtest specific options.
-  bool isolate_option = false;
-  int job_num_option = 1;
+  // Init default bionic_gtest option.
+  bool isolate_option = true;
+  int num_jobs_option = GetProcessorCount();
 
   int deadline_option_len = sizeof("--deadline=") - 1;
   int warnline_option_len = sizeof("--warnline=") - 1;
   int gtest_color_option_len = sizeof("--gtest_color=") - 1;
 
-  for (int i = 1; i < argc; ++i) {
-    int remove_arg_num = 0;
+  // Parse bionic_gtest specific options in arguments.
+  for (size_t i = 1; i < argv.size() - 1; ++i) {
+    if (strcmp(argv[i], "-j") == 0) {
+      isolate_option = true; // Enable isolation mode when -j is used.
+      if (argv[i + 1] != NULL && (num_jobs_option = atoi(argv[i + 1])) > 0) {
+        argv.erase(argv.begin() + i);
+      } else {
+        num_jobs_option = GetProcessorCount();
+      }
+      argv.erase(argv.begin() + i);
+      --i;
 
-    // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
-    // So we should parse gtest options for printing here.
-    if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
-      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
-
-    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
-      testing::GTEST_FLAG(print_time) = false;
-
-    } else if (strcmp(argv[i], "--isolate") == 0) {
-      isolate_option = true;
-      remove_arg_num = 1;
+    } else if (strcmp(argv[i], "--no-isolate") == 0) {
+      isolate_option = false;
+      argv.erase(argv.begin() + i);
+      --i;
 
     } else if (strncmp(argv[i], "--deadline=", deadline_option_len) == 0) {
       global_test_run_deadline_in_ms = atoi(argv[i] + deadline_option_len);
@@ -668,7 +646,8 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
                 argv[i] + deadline_option_len);
         exit(1);
       }
-      remove_arg_num = 1;
+      argv.erase(argv.begin() + i);
+      --i;
 
     } else if (strncmp(argv[i], "--warnline=", warnline_option_len) == 0) {
       global_test_run_warnline_in_ms = atoi(argv[i] + warnline_option_len);
@@ -677,98 +656,101 @@ static bool PickOptions(int* pargc, char*** pargv, bool* exit_flag) {
                 argv[i] + warnline_option_len);
         exit(1);
       }
-      remove_arg_num = 1;
-
-    } else if (strcmp(argv[i], "--bionic_gtest") == 0) {
-      // Enable "bionic_gtest*" for self test.
-      // Don't remove this option from argument list.
-      argv[argc - 1] = const_cast<char*>("--gtest_filter=bionic_gtest*");
-
-    } else if (strcmp(argv[i], "-j") == 0) {
-      isolate_option = true; // Enable isolation mode when -j is used.
-      if (i + 1 < argc && (job_num_option = atoi(argv[i + 1])) > 0) {
-        remove_arg_num = 2;
-      } else {
-        job_num_option = GetCpuNumber();
-        remove_arg_num = 1;
-      }
-    }
-
-    if (remove_arg_num != 0) {
-      for (int j = i; j < argc - remove_arg_num; ++j) {
-        argv[j] = argv[j + remove_arg_num];
-      }
-      argc -= remove_arg_num;
+      argv.erase(argv.begin() + i);
       --i;
+
+    } else if (strncmp(argv[i], "--gtest_color=", gtest_color_option_len) == 0) {
+      // If running in isolation mode, main process doesn't call testing::InitGoogleTest(&argc, argv).
+    // So we should parse gtest options for printing by ourselves.
+      testing::GTEST_FLAG(color) = argv[i] + gtest_color_option_len;
+
+    } else if (strcmp(argv[i], "--gtest_print_time=0") == 0) {
+      testing::GTEST_FLAG(print_time) = false;
+
+    } else if (strcmp(argv[i], "--gtest_list_tests") == 0) {
+      // Disable isolation mode in gtest_list_tests option.
+      isolate_option = false;
+
+    } else if (strcmp(argv[i], "--bionic-selftest") == 0) {
+      // This option is to enable "bionic_selftest*" for self test, and not shown in help informantion.
+      // Don't remove this option from argument list.
+      argv[argv.size() - 2] = strdup("--gtest_filter=bionic_selftest*");
     }
   }
 
   // Handle --gtest_repeat=[COUNT] option if we are in isolation mode.
   // We should check and remove this option to avoid child process running single test for several
   // iterations.
-  int gtest_repeat_num = 1;
+  int gtest_repeat_count = 1;
   if (isolate_option == true) {
     int len = sizeof("--gtest_repeat=") - 1;
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argv.size() - 1; ++i) {
       if (strncmp(argv[i], "--gtest_repeat=", len) == 0) {
-        gtest_repeat_num = atoi(argv[i] + len);
-        if (gtest_repeat_num < 0) {
+        gtest_repeat_count = atoi(argv[i] + len);
+        if (gtest_repeat_count < 0) {
           fprintf(stderr, "error count for option --gtest_repeat=[COUNT]\n");
           return false;
         }
-        for (int j = i; j < argc - 1; ++j) {
-          argv[j] = argv[j + 1];
-        }
-        --argc;
+        argv.erase(argv.begin() + i);
         break;
       }
     }
   }
 
-  *pargc = argc;
+  // Add --no-isolate option in argv to suppress subprocess running in isolation mode again.
+  // As DeathTest will try to execve again, this option should always be set.
+  argv.insert(argv.begin() + 1, strdup("--no-isolate"));
 
   // Run tests in isolation mode.
   if (isolate_option) {
     *exit_flag = true;
 
     std::vector<TestCase> testcase_list;
-    if (EnumerateTests(argc, argv, testcase_list) == false) {
+    int argc = static_cast<int>(argv.size()) - 1;
+    if (EnumerateTests(argc, argv.data(), testcase_list) == false) {
       return false;
     }
-    RunTestInSeparateProc(argc, argv, testcase_list, gtest_repeat_num, job_num_option);
+    RunTestInSeparateProc(argc, argv.data(), testcase_list, gtest_repeat_count, num_jobs_option);
     return true;
   }
   return true;
 }
 
 int main(int argc, char** argv) {
+  std::vector<char*> arg_list;
+  for (int i = 0; i < argc; ++i) {
+    arg_list.push_back(argv[i]);
+  }
+  arg_list.push_back(NULL);
+
   bool exit_flag;
   int return_result = 0;
 
-  if (PickOptions(&argc, &argv, &exit_flag) == false) {
+  if (PickOptions(&arg_list, &exit_flag) == false) {
     return_result = 1;
   } else if (!exit_flag) {
-    testing::InitGoogleTest(&argc, argv);
+    argc = static_cast<int>(arg_list.size()) - 1;
+    testing::InitGoogleTest(&argc, arg_list.data());
     return_result = RUN_ALL_TESTS();
   }
   return return_result;
 }
 
 //################################################################################
-// Bionic Gtest self test, run this by --bionic_gtest --isolate option.
+// Bionic Gtest self test, run this by --bionic-selftest option.
 
-TEST(bionic_gtest, test_success) {
+TEST(bionic_selftest, test_success) {
   ASSERT_EQ(1, 1);
 }
 
-TEST(bionic_gtest, test_fail) {
+TEST(bionic_selftest, test_fail) {
   ASSERT_EQ(0, 1);
 }
 
-TEST(bionic_gtest, test_time_warn) {
+TEST(bionic_selftest, test_time_warn) {
   sleep(4);
 }
 
-TEST(bionic_gtest, test_timeout) {
+TEST(bionic_selftest, test_timeout) {
   while (1) {}
 }
