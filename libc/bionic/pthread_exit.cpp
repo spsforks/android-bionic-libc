@@ -89,7 +89,7 @@ void pthread_exit(void* return_value) {
 
   // Keep track of what we need to know about the stack before we lose the pthread_internal_t.
   void* stack_base = thread->attr.stack_base;
-  size_t stack_size = thread->allocated_stack_size;
+  size_t mmap_size = thread->mmap_size;
   bool free_stack = false;
 
   pthread_mutex_lock(&g_thread_list_lock);
@@ -119,7 +119,7 @@ void pthread_exit(void* return_value) {
     sigfillset(&mask);
     sigprocmask(SIG_SETMASK, &mask, NULL);
 
-    _exit_with_stack_teardown(stack_base, stack_size);
+    _exit_with_stack_teardown(stack_base, mmap_size);
   } else {
     __exit(0);
   }

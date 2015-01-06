@@ -86,8 +86,11 @@ struct pthread_internal_t {
 
   pthread_mutex_t startup_handshake_mutex;
 
-  /* Store real allocated stack size, including thread stack and pthread_internal_t. */
-  int allocated_stack_size;
+  /* mmap() allocated size for current thread, valid only without user allocated stack, used for:
+   *   thread_internal_t (including tls array)
+   *   thread stack (including guard page)
+   */
+  size_t mmap_size;
 
   void* tls[BIONIC_TLS_SLOTS];
 
