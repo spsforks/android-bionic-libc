@@ -1385,3 +1385,10 @@ TEST(string, __gnu_basename) {
   TestBasename("///", "");
   TestBasename("//usr//lib//", "");
 }
+
+TEST(string, memmove_tester) {
+  char* test_string = strdup("Foobar");
+  void* ptr = memmove(test_string + 1, test_string, sizeof("Foobar") - 2);
+  ASSERT_EQ(ptr, test_string + 1);
+  free(test_string);
+}
