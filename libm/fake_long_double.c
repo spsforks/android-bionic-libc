@@ -17,7 +17,10 @@
 #include <float.h>
 #include <math.h>
 
-#ifndef __LP64__
+#if defined(__LP64__)
+#error These function should not be defined for LP64.
+#endif
+
 /*
  * The BSD "long double" functions are broken when sizeof(long double) == sizeof(double).
  * Android works around those cases by replacing the broken functions with our own trivial stubs
@@ -37,5 +40,3 @@ long lroundl(long double a1) { return lround(a1); }
 long double modfl(long double a1, long double* a2) { double i; double f = modf(a1, &i); *a2 = i; return f; }
 float nexttowardf(float a1, long double a2) { return nextafterf(a1, (float) a2); }
 long double roundl(long double a1) { return round(a1); }
-
-#endif // __LP64__

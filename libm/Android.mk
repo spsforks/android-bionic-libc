@@ -3,18 +3,14 @@ LOCAL_PATH:= $(call my-dir)
 
 bionic_coverage := false
 
-# TODO: this comes from from upstream's libc, not libm, but it's an
-# implementation detail that should have hidden visibility, so it needs
-# to be in whatever library the math code is in.
-libm_common_src_files := \
-    digittoint.c  \
+ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
+# Clang has wrong long double sizes for x86.
+libm_clang := false
+endif
 
-# TODO: this is not in the BSDs.
-libm_common_src_files += \
-    significandl.c \
-    sincos.c \
+include $(CLEAR_VARS)
 
-libm_common_src_files += \
+LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/bsdsrc/b_exp.c \
     upstream-freebsd/lib/msun/bsdsrc/b_log.c \
     upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c \
@@ -186,11 +182,10 @@ libm_common_src_files += \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
-libm_common_src_files += \
+LOCAL_SRC_FILES_32 += \
     fake_long_double.c \
-    signbit.c \
 
-libm_ld128_src_files = \
+LOCAL_SRC_FILES_64 := \
     upstream-freebsd/lib/msun/src/e_acosl.c \
     upstream-freebsd/lib/msun/src/e_acoshl.c \
     upstream-freebsd/lib/msun/src/e_asinl.c \
@@ -234,7 +229,7 @@ libm_ld128_src_files = \
     upstream-freebsd/lib/msun/src/s_tanl.c \
     upstream-freebsd/lib/msun/src/s_truncl.c \
 
-libm_ld128_src_files += \
+LOCAL_SRC_FILES_64 += \
     upstream-freebsd/lib/msun/ld128/invtrig.c \
     upstream-freebsd/lib/msun/ld128/e_lgammal_r.c \
     upstream-freebsd/lib/msun/ld128/k_cosl.c \
@@ -246,11 +241,50 @@ libm_ld128_src_files += \
     upstream-freebsd/lib/msun/ld128/s_logl.c \
     upstream-freebsd/lib/msun/ld128/s_nanl.c \
 
-# TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
+# TODO: this comes from from upstream's libc, not libm, but it's an
+# implementation detail that should have hidden visibility, so it needs
+# to be in whatever library the math code is in.
+LOCAL_SRC_FILES += \
+    digittoint.c  \
 
-libm_common_cflags := \
+# Functionality not in the BSDs.
+LOCAL_SRC_FILES += \
+    significandl.c \
+    sincos.c \
+
+# Modified versions of BSD code.
+LOCAL_SRC_FILES += \
+    signbit.c \
+
+LOCAL_SRC_FILES_arm += \
+    arm/fenv.c \
+
+LOCAL_SRC_FILES_arm64 += \
+    arm64/fenv.c \
+
+LOCAL_SRC_FILES_mips += \
+    mips/fenv.c \
+
+LOCAL_SRC_FILES_x86 += \
+    i387/fenv.c \
+
+LOCAL_SRC_FILES_x86_64 += \
+    amd64/fenv.c \
+
+LOCAL_C_INCLUDES_x86 += $(LOCAL_PATH)/x86
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
+LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_freebsd
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ARM_MODE := arm
+# weak_symbols.h marks all exported symbols as weak so that they
+# can be overridden by arch specific optimized routines.
+LOCAL_CFLAGS := \
     -DFLT_EVAL_METHOD=0 \
-    -std=c99 \
+    -include $(LOCAL_PATH)/freebsd-weak-symbols.h \
     -include $(LOCAL_PATH)/freebsd-compat.h \
     -Wno-missing-braces \
     -Wno-parentheses \
@@ -259,64 +293,63 @@ libm_common_cflags := \
     -Wno-unknown-pragmas \
     -fvisibility=hidden \
 
+LOCAL_CONLY_FLAGS := \
+    -std=c99 \
+
 # Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
 # self recursions for lrint, lrintf, and lrintl.
 # BUG: 14225968
-libm_common_cflags += -fno-builtin-rint -fno-builtin-rintf -fno-builtin-rintl
-
-libm_common_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
-
-libm_ld_includes := $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
-
-#
-# libm.a for target.
-#
-include $(CLEAR_VARS)
-ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-# Clang has wrong long double sizes for x86.
-LOCAL_CLANG := false
-endif
-LOCAL_MODULE:= libm
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_ARM_MODE := arm
-LOCAL_CFLAGS := $(libm_common_cflags)
-LOCAL_C_INCLUDES += $(libm_common_includes)
-LOCAL_SRC_FILES := $(libm_common_src_files)
-LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+libm_common_cflags += \
+    -fno-builtin-rint \
+    -fno-builtin-rintf \
+    -fno-builtin-rintl \
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 LOCAL_ADDRESS_SANITIZER := false
-
-# arch-specific settings
-LOCAL_C_INCLUDES_arm := $(LOCAL_PATH)/arm
-LOCAL_SRC_FILES_arm := arm/fenv.c
-
-LOCAL_C_INCLUDES_arm64 := $(libm_ld_includes)
-LOCAL_SRC_FILES_arm64 := arm64/fenv.c $(libm_ld128_src_files)
-
-LOCAL_C_INCLUDES_x86 := $(LOCAL_PATH)/i387
-LOCAL_SRC_FILES_x86 := i387/fenv.c
-
-LOCAL_C_INCLUDES_x86_64 := $(libm_ld_includes)
-LOCAL_SRC_FILES_x86_64 := amd64/fenv.c $(libm_ld128_src_files)
-
-LOCAL_SRC_FILES_mips := mips/fenv.c
-
-LOCAL_C_INCLUDES_mips64 := $(libm_ld_includes)
-LOCAL_SRC_FILES_mips64 := mips/fenv.c $(libm_ld128_src_files)
-
-LOCAL_CXX_STL := none
 include $(BUILD_STATIC_LIBRARY)
 
-#
-# libm.so for target.
-#
 include $(CLEAR_VARS)
-ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-# Clang has wrong long double sizes for x86.
-LOCAL_CLANG := false
+
+# This library includes any function overrides or arch specific functions.
+LOCAL_MODULE := libm_arch
+
+include $(LOCAL_PATH)/arch/$(TARGET_ARCH)/$(TARGET_ARCH).mk
+LOCAL_ADDITIONAL_DEPENDENCIES += $(LOCAL_PATH)/arch/$(TARGET_ARCH)/$(TARGET_ARCH).mk
+ifdef TARGET_2ND_ARCH
+include $(LOCAL_PATH)/arch/$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
+LOCAL_ADDITIONAL_DEPENDENCIES += $(LOCAL_PATH)/arch/$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
 endif
-LOCAL_MODULE:= libm
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_ADDITIONAL_DEPENDENCIES += $(LOCAL_PATH)/Android.mk
+LOCAL_ARM_MODE := arm
+LOCAL_CFLAGS :=
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+include $(BUILD_STATIC_LIBRARY)
+
+# libm.a for target.
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+# libm_arch must go first. It allows arch dependent code to override
+# the weak symbols found in libm_freebsd.
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+    libm_arch \
+    libm_freebsd \
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+include $(BUILD_STATIC_LIBRARY)
+
+# libm.so for target.
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
@@ -329,8 +362,92 @@ LOCAL_CXX_STL := none
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
-LOCAL_LDFLAGS_arm64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_mips64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_x86_64 := -Wl,--exclude-libs,libgcc.a
+LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
+
 include $(BUILD_SHARED_LIBRARY)
+
+#---------------------------------------------------------------------------
+# This produces a test executable that verifies that the function override
+# works properly.
+#---------------------------------------------------------------------------
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_test
+LOCAL_SRC_FILES := test/overrides.cpp
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_CFLAGS := $(libm_common_cflags)
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_test_override
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+# libm_test must go first. It allows the test code to override
+# the weak symbols found in libm_freebsd.
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+	libm_test \
+    libm_freebsd \
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_test_override
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+LOCAL_WHOLE_STATIC_LIBRARIES := libm_test_override
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+
+LOCAL_CXX_STL := none
+
+# We'd really like to do this for all architectures, but since this wasn't done
+# before, these symbols must continue to be exported on LP32 for binary
+# compatibility.
+LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_override_test_static
+LOCAL_SRC_FILES := test/main.cpp
+LOCAL_CFLAGS := -fno-builtin
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_STATIC_LIBRARIES := libm_test_override
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+
+LOCAL_CXX_STL := none
+
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
+LOCAL_CLANG := $(libm_clang)
+LOCAL_MODULE := libm_override_test
+LOCAL_SRC_FILES := test/main.cpp
+LOCAL_CFLAGS := -fno-builtin
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_SHARED_LIBRARIES := libm_test_override
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_ADDRESS_SANITIZER := false
+
+LOCAL_CXX_STL := none
+
+include $(BUILD_EXECUTABLE)
 endif
