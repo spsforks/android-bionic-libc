@@ -79,16 +79,31 @@ TEST(netdb, getaddrinfo_service_lookup) {
 TEST(netdb, getaddrinfo_hints) {
   addrinfo hints;
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_protocol = IPPROTO_TCP;
 
   addrinfo* ai = NULL;
   ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
-  ASSERT_EQ(AF_INET, ai->ai_family);
-  ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
-  ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);
-  ASSERT_TRUE(ai->ai_next == NULL);
+  addrinfo* tai = ai;
+  while (tai != NULL) {
+    ASSERT_EQ(AF_INET, tai->ai_family);
+    ASSERT_EQ(SOCK_STREAM, tai->ai_socktype);
+    ASSERT_EQ(IPPROTO_TCP, tai->ai_protocol);
+    tai = tai->ai_next;
+  }
+  freeaddrinfo(ai);
+}
+
+TEST(netdb, getaddrinfo_ip6_localhost) {
+  addrinfo* ai = NULL;
+  ASSERT_EQ(0, getaddrinfo("ip6-localhost", NULL, NULL, &ai));
+  ASSERT_TRUE(ai != NULL);
+  ASSERT_GE(ai->ai_addrlen, static_cast<socklen_t>(sizeof(sockaddr_in6)));
+  ASSERT_TRUE(ai->ai_addr != NULL);
+  sockaddr_in6 *addr = reinterpret_cast<sockaddr_in6*>(ai->ai_addr);
+  ASSERT_EQ(addr->sin6_family, AF_INET6);
+  ASSERT_EQ(0, memcmp(&addr->sin6_addr, &in6addr_loopback, sizeof(in6_addr)));
   freeaddrinfo(ai);
 }
 
@@ -121,8 +136,42 @@ TEST(netdb, getnameinfo_salen) {
   ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
 }
 
-void VerifyLocalhost(hostent *hent) {
+TEST(netdb, getnameinfo_localhost) {
+  sockaddr_in addr;
+  char host[NI_MAXHOST];
+  in_addr a = { htonl(0x7f000001) };
+  memset(&addr, 0, sizeof(sockaddr_in));
+  addr.sin_family = AF_INET;
+  addr.sin_addr = a;
+  ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
+                           host, sizeof(host), NULL, 0, 0));
+  ASSERT_STREQ(host, "localhost");
+}
+
+TEST(netdb, getnameinfo_ip6_localhost) {
+  sockaddr_in6 addr;
+  char host[NI_MAXHOST];
+  memset(&addr, 0, sizeof(sockaddr_in6));
+  addr.sin6_family = AF_INET6;
+  addr.sin6_addr = in6addr_loopback;
+  ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
+                           host, sizeof(host), NULL, 0, 0));
+  // Relax test of host name, which depends on /etc/hosts and can be "localhost".
+  //ASSERT_STREQ(host, "ip6-localhost");
+}
+
+static void VerifyLocalhost(hostent *hent) {
   ASSERT_TRUE(hent != NULL);
+  bool match_name = false;
+  if (strcmp(hent->h_name, "localhost") == 0) {
+    match_name = true;
+  }
+  for (size_t i = 0; hent->h_aliases[i] != NULL; ++i) {
+    if (strcmp(hent->h_aliases[i], "localhost") == 0) {
+      match_name = true;
+    }
+  }
+  ASSERT_TRUE(match_name);
   ASSERT_EQ(hent->h_addrtype, AF_INET);
   ASSERT_EQ(hent->h_addr[0], 127);
   ASSERT_EQ(hent->h_addr[1], 0);
@@ -185,21 +234,18 @@ TEST(netdb, gethostbyname2_r) {
 }
 
 TEST(netdb, gethostbyaddr) {
-  char addr[4];
-  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
-  hostent *hp = gethostbyaddr(addr, sizeof(addr), AF_INET);
+  in_addr addr = { htonl(0x7f000001) };
+  hostent *hp = gethostbyaddr(&addr, sizeof(addr), AF_INET);
   VerifyLocalhost(hp);
 }
 
 TEST(netdb, gethostbyaddr_r) {
-  char addr[4];
-  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
-
+  in_addr addr = { htonl(0x7f000001) };
   hostent hent;
   hostent *hp;
   char buf[512];
   int err;
-  int result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   ASSERT_EQ(0, result);
   VerifyLocalhost(hp);
 
@@ -209,7 +255,7 @@ TEST(netdb, gethostbyaddr_r) {
   hostent hent2;
   hostent *hp2;
   char buf2[512];
-  result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent2, buf2, sizeof(buf2), &hp2, &err);
+  result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent2, buf2, sizeof(buf2), &hp2, &err);
   ASSERT_EQ(0, result);
   VerifyLocalhost(hp2);
 
@@ -237,14 +283,12 @@ TEST(netdb, gethostbyname2_r_ERANGE) {
 }
 
 TEST(netdb, gethostbyaddr_r_ERANGE) {
-  char addr[4];
-  ASSERT_EQ(1, inet_pton(AF_INET, "127.0.0.1", addr));
-
+  in_addr addr = { htonl(0x7f000001) };
   hostent hent;
   hostent *hp;
   char buf[4]; // Use too small buffer.
   int err;
-  int result = gethostbyaddr_r(addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   ASSERT_EQ(ERANGE, result);
   ASSERT_EQ(NULL, hp);
 }
