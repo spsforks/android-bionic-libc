@@ -1320,33 +1320,25 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
          */
 
         switch (type) {
+          case R_GENERIC_JUMP_SLOT:
+          case R_GENERIC_GLOB_DAT:
+          case R_GENERIC_RELATIVE:
+          case R_GENERIC_IRELATIVE:
 #if defined(__aarch64__)
-          case R_AARCH64_JUMP_SLOT:
-          case R_AARCH64_GLOB_DAT:
           case R_AARCH64_ABS64:
           case R_AARCH64_ABS32:
           case R_AARCH64_ABS16:
-          case R_AARCH64_RELATIVE:
-          case R_AARCH64_IRELATIVE:
+#elif defined(__x86_64__)
+          case R_X86_64_32:
+          case R_X86_64_64:
+          case R_X86_64_PC32:
+#endif
             /*
              * The sym_addr was initialized to be zero above, or the relocation
              * code below does not care about value of sym_addr.
              * No need to do anything.
              */
             break;
-#elif defined(__x86_64__)
-          case R_X86_64_JUMP_SLOT:
-          case R_X86_64_GLOB_DAT:
-          case R_X86_64_32:
-          case R_X86_64_64:
-          case R_X86_64_RELATIVE:
-          case R_X86_64_IRELATIVE:
-            // No need to do anything.
-            break;
-          case R_X86_64_PC32:
-            sym_addr = reloc;
-            break;
-#endif
           default:
             DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rela, idx);
             return -1;
@@ -1513,7 +1505,14 @@ int soinfo::relocate(ElfW(Rela)* rela, unsigned count, const soinfo_list_t& glob
         TRACE_TYPE(RELO, "RELO R_X86_64_PC32 %08zx <- +%08zx (%08zx - %08zx) %s",
                    static_cast<size_t>(reloc), static_cast<size_t>(sym_addr - reloc),
                    static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + rela->r_addend - reloc;
+        // TODO: this relocation does not make any sense for position independent code:
+        // 1. If the symbol is defined in same .so (which is the only way to get predictable value for position independent code) -
+        //    there should be no relocation - the value is constant.
+        // 2. If the symbol is defined in different .so file - this will produce undefined value (the delta between sym_addr and reloc is undefined)
+        // 3. If the symbol is not defined - unpredictable value (the load address is not fixed)
+        // 4. If the symbol is weak-undefined - some fixed offset...
+        // Same goes for R_386_PC32
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym != 0 && sym_addr == 0) ? rela->r_addend : sym_addr + rela->r_addend - reloc;
         break;
 #endif
 
@@ -1583,18 +1582,11 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
             break;
 #elif defined(__i386__)
           case R_386_32:
+          case R_386_PC32:
             // sym_addr was initialized to be zero above or relocation
             // code below does not care about value of sym_addr.
             // No need to do anything.
             break;
-          case R_386_PC32:
-            sym_addr = reloc;
-            break;
-#endif
-
-#if defined(__arm__)
-          case R_ARM_COPY:
-            // Fall through. Can't really copy if weak symbol is not found at run-time.
 #endif
           default:
             DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
@@ -1681,7 +1673,11 @@ int soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s",
                    reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
+        if (sym != 0 && sym_addr == 0) {
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
+        } else { // relocation against weak-undefined symbol
+          // TODO: should we zero it out?
+        }
         break;
 #elif defined(__mips__)
       case R_MIPS_REL32:
