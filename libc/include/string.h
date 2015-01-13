@@ -246,7 +246,6 @@ __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
     size_t bos = __bos(s);
 
-#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlen_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strlen(s);
@@ -256,7 +255,6 @@ size_t strlen(const char *s) {
     if (__builtin_constant_p(slen)) {
         return slen;
     }
-#endif /* !defined(__clang__) */
 
     return __strlen_chk(s, bos);
 }
@@ -265,7 +263,6 @@ __BIONIC_FORTIFY_INLINE
 char* strchr(const char *s, int c) {
     size_t bos = __bos(s);
 
-#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strchr(s, c);
@@ -275,7 +272,6 @@ char* strchr(const char *s, int c) {
     if (__builtin_constant_p(slen) && (slen < bos)) {
         return __builtin_strchr(s, c);
     }
-#endif /* !defined(__clang__) */
 
     return __strchr_chk(s, c, bos);
 }
@@ -284,7 +280,6 @@ __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {
     size_t bos = __bos(s);
 
-#if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strrchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strrchr(s, c);
@@ -294,7 +289,6 @@ char* strrchr(const char *s, int c) {
     if (__builtin_constant_p(slen) && (slen < bos)) {
         return __builtin_strrchr(s, c);
     }
-#endif /* !defined(__clang__) */
 
     return __strrchr_chk(s, c, bos);
 }
