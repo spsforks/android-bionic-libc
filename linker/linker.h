@@ -214,6 +214,7 @@ struct soinfo {
   uint32_t mips_local_gotno_;
   uint32_t mips_gotsym_;
   bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool mips_relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
 
 #endif
   size_t ref_count_;
@@ -286,9 +287,10 @@ struct soinfo {
 
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void call_function(const char* function_name, linker_function_t function);
+#if !defined(__mips__)
   template<typename ElfRelT>
-  int relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
-
+  bool relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+#endif
  private:
   // This part of the structure is only available
   // when FLAG_NEW_SOINFO is set in this->flags.
