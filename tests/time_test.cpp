@@ -197,7 +197,7 @@ TEST(time, timer_create) {
   ASSERT_EQ(0, timer_delete(timer_id));
 }
 
-static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
+static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
 static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
   ++timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
   ASSERT_EQ(SIGUSR1, signal_number);
@@ -212,6 +212,7 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
 
+  timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGUSR1, timer_create_SIGEV_SIGNAL_signal_handler);
 
   ASSERT_EQ(0, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
@@ -310,7 +311,7 @@ TEST(time, timer_settime_repeats) {
   ASSERT_TRUE(counter.ValueUpdated());
 }
 
-static int timer_create_NULL_signal_handler_invocation_count = 0;
+static int timer_create_NULL_signal_handler_invocation_count;
 static void timer_create_NULL_signal_handler(int signal_number) {
   ++timer_create_NULL_signal_handler_invocation_count;
   ASSERT_EQ(SIGALRM, signal_number);
@@ -321,6 +322,7 @@ TEST(time, timer_create_NULL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
 
+  timer_create_NULL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGALRM, timer_create_NULL_signal_handler);
 
   ASSERT_EQ(0, timer_create_NULL_signal_handler_invocation_count);
@@ -500,30 +502,10 @@ TEST(time, clock_nanosleep) {
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
 }
 
-// Test to verify that disarming a repeatable timer disables the
-// callbacks.
-TEST(time, timer_disarm_terminates) {
-  Counter counter(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter.timer_valid);
-
-  ASSERT_EQ(0, counter.value);
-
-  counter.SetTime(0, 1, 0, 1);
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-
-  counter.SetTime(0, 0, 1, 0);
-  volatile int value = counter.value;
-  usleep(500000);
-
-  // Verify the counter has not been incremented.
-  ASSERT_EQ(value, counter.value);
-}
-
 // Test to verify that deleting a repeatable timer disables the
 // callbacks.
 TEST(time, timer_delete_terminates) {
+#if defined(__BIONIC__)
   Counter counter(Counter::CountNotifyFunction);
   ASSERT_TRUE(counter.timer_valid);
 
@@ -535,9 +517,15 @@ TEST(time, timer_delete_terminates) {
   ASSERT_TRUE(counter.ValueUpdated());
 
   counter.DeleteTimer();
-  volatile int value = counter.value;
+  int value = counter.value;
   usleep(500000);
 
   // Verify the counter has not been incremented.
   ASSERT_EQ(value, counter.value);
+
+#else
+  // Each time to run callback for SIGEV_THREAD timers, glibc start a new thread.
+  // It is hard to decide when these threads will finish, making counter.value flakey to test.
+  GTEST_LOG_(INFO) << "glibc can't strictly stop running callback after SIGEV_THREAD timers are deleted.\n";
+#endif
 }
