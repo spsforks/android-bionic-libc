@@ -197,7 +197,7 @@ TEST(time, timer_create) {
   ASSERT_EQ(0, timer_delete(timer_id));
 }
 
-static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
+static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
 static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
   ++timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
   ASSERT_EQ(SIGUSR1, signal_number);
@@ -212,6 +212,7 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
 
+  timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGUSR1, timer_create_SIGEV_SIGNAL_signal_handler);
 
   ASSERT_EQ(0, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
@@ -257,6 +258,14 @@ struct Counter {
     if (timer_valid) {
       DeleteTimer();
     }
+#if !defined(__BIONIC__)
+    // Each time to run callback for SIGEV_THREAD timers, glibc starts a new thread.
+    // For a repeatable SIGEV_THREAD timer with very small period (like below 1ms),
+    // there may have multiple threads running callback when the timer is deleted.
+    // So we have to sleep for a while, to make sure all callback threads are finished
+    // before destroying this Counter object. Bionic doesn't need this work-around.
+    usleep(500000);
+#endif
   }
 
   void SetTime(time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
@@ -291,7 +300,7 @@ TEST(time, timer_settime_0) {
 
   ASSERT_EQ(0, counter.value);
 
-  counter.SetTime(0, 1, 1, 0);
+  counter.SetTime(0, 1, 0, 0);
   usleep(500000);
 
   // The count should just be 1 because we disarmed the timer the first time it fired.
@@ -310,7 +319,7 @@ TEST(time, timer_settime_repeats) {
   ASSERT_TRUE(counter.ValueUpdated());
 }
 
-static int timer_create_NULL_signal_handler_invocation_count = 0;
+static int timer_create_NULL_signal_handler_invocation_count;
 static void timer_create_NULL_signal_handler(int signal_number) {
   ++timer_create_NULL_signal_handler_invocation_count;
   ASSERT_EQ(SIGALRM, signal_number);
@@ -321,6 +330,7 @@ TEST(time, timer_create_NULL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
 
+  timer_create_NULL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGALRM, timer_create_NULL_signal_handler);
 
   ASSERT_EQ(0, timer_create_NULL_signal_handler_invocation_count);
@@ -514,7 +524,9 @@ TEST(time, timer_disarm_terminates) {
   ASSERT_TRUE(counter.ValueUpdated());
 
   counter.SetTime(0, 0, 1, 0);
-  volatile int value = counter.value;
+  // Add a sleep as the kernel may send a little more events after the timer is disarmed.
+  usleep(500000);
+  int value = counter.value;
   usleep(500000);
 
   // Verify the counter has not been incremented.
@@ -535,7 +547,9 @@ TEST(time, timer_delete_terminates) {
   ASSERT_TRUE(counter.ValueUpdated());
 
   counter.DeleteTimer();
-  volatile int value = counter.value;
+  // Add a sleep as the kernel may send a little more events after the timer is deleted.
+  usleep(500000);
+  int value = counter.value;
   usleep(500000);
 
   // Verify the counter has not been incremented.
