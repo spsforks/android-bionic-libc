@@ -26,13 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include "pthread_internal.h"
-#include "private/bionic_futex.h"
 #include "private/kernel_sigset_t.h"
 
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
+#include <time.h>
 
 // System calls.
 extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*, size_t);
@@ -62,7 +62,8 @@ struct PosixTimer {
   pthread_t callback_thread;
   void (*callback)(sigval_t);
   sigval_t callback_argument;
-  volatile bool armed;
+  // Set when timer is deleted, prevent further calling of callback.
+  volatile int deleted_flag;
 };
 
 static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
@@ -84,8 +85,13 @@ static void* __timer_thread_start(void* arg) {
       continue;
     }
 
-    if (si.si_code == SI_TIMER && timer->armed) {
+    if (si.si_code == SI_TIMER) {
       // This signal was sent because a timer fired, so call the callback.
+
+      // It is dangerous to call callback if timer was deleted, see b/18039727.
+      if (timer->deleted_flag) {
+        continue;
+      }
       timer->callback(timer->callback_argument);
     } else if (si.si_code == SI_TKILL) {
       // This signal was sent because someone wants us to exit.
@@ -96,9 +102,7 @@ static void* __timer_thread_start(void* arg) {
 }
 
 static void __timer_thread_stop(PosixTimer* timer) {
-  // Immediately mark the timer as disarmed so even if some events
-  // continue to happen, the callback won't be called.
-  timer->armed = false;
+  timer->deleted_flag = true;
   pthread_kill(timer->callback_thread, TIMER_SIGNAL);
 }
 
@@ -125,7 +129,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   // Otherwise, this must be SIGEV_THREAD timer...
   timer->callback = evp->sigev_notify_function;
   timer->callback_argument = evp->sigev_value;
-  timer->armed = false;
+  timer->deleted_flag = false;
 
   // Check arguments that the kernel doesn't care about but we do.
   if (timer->callback == NULL) {
@@ -206,17 +210,7 @@ int timer_gettime(timer_t id, itimerspec* ts) {
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
 int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) {
   PosixTimer* timer= reinterpret_cast<PosixTimer*>(id);
-  int rc = __timer_settime(timer->kernel_timer_id, flags, ts, ots);
-  if (rc == 0) {
-    // Mark the timer as either being armed or disarmed. This avoids the
-    // callback being called after the disarm for SIGEV_THREAD timers only.
-    if (ts->it_value.tv_sec != 0 || ts->it_value.tv_nsec != 0) {
-      timer->armed = true;
-    } else {
-      timer->armed = false;
-    }
-  }
-  return rc;
+  return __timer_settime(timer->kernel_timer_id, flags, ts, ots);
 }
 
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
