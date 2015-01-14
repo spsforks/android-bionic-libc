@@ -1,0 +1,7 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Submitted-by: Andres Morales <anmorales@google.com>
+Submitted-at: Wed, 14 Jan 2015 15:54:03 +0000
+Reviewed-on: https://android-review.googlesource.com/123183
+Project: platform/bionic
+Branch: refs/heads/master
