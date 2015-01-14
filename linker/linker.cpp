@@ -1292,10 +1292,9 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
   return 0;
 }
 #endif
-#endif
 
 template<typename ElfRelT>
-int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; idx < count; ++idx, ++rel) {
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
@@ -1303,9 +1302,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
     ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
-#if !defined(__mips__)
     ElfW(Addr) addend = get_addend(rel, reloc);
-#endif
 
     DEBUG("Processing '%s' relocation at index %zd", name, idx);
     if (type == R_GENERIC_NONE) {
@@ -1323,7 +1320,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
         s = &symtab_[sym];
         if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
           DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
-          return -1;
+          return false;
         }
 
         /* IHI0044C AAELF 4.5.1.1:
@@ -1339,7 +1336,6 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
          */
 
         switch (type) {
-#if !defined(__mips__)
           case R_GENERIC_JUMP_SLOT:
           case R_GENERIC_GLOB_DAT:
           case R_GENERIC_RELATIVE:
@@ -1371,10 +1367,9 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
             sym_addr = reloc;
             break;
 #endif
-#endif
           default:
             DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
-            return -1;
+            return false;
         }
       } else {
         // We got a definition.
@@ -1384,7 +1379,6 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
     }
 
     switch (type) {
-#if !defined(__mips__)
       case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
@@ -1418,7 +1412,6 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                     reinterpret_cast<void*>(base + addend));
         *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + addend);
         break;
-#endif
 
 #if defined(__aarch64__)
       case R_AARCH64_ABS64:
@@ -1441,7 +1434,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)),
                  static_cast<ElfW(Addr)>(INT32_MIN),
                  static_cast<ElfW(Addr)>(UINT32_MAX));
-          return -1;
+          return false;
         }
         break;
       case R_AARCH64_ABS16:
@@ -1457,7 +1450,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + (sym_addr + addend)),
                  static_cast<ElfW(Addr)>(INT16_MIN),
                  static_cast<ElfW(Addr)>(UINT16_MAX));
-          return -1;
+          return false;
         }
         break;
       case R_AARCH64_PREL64:
@@ -1480,7 +1473,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)),
                  static_cast<ElfW(Addr)>(INT32_MIN),
                  static_cast<ElfW(Addr)>(UINT32_MAX));
-          return -1;
+          return false;
         }
         break;
       case R_AARCH64_PREL16:
@@ -1496,7 +1489,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                  (*reinterpret_cast<ElfW(Addr)*>(reloc) + ((sym_addr + addend) - rel->r_offset)),
                  static_cast<ElfW(Addr)>(INT16_MIN),
                  static_cast<ElfW(Addr)>(UINT16_MAX));
-          return -1;
+          return false;
         }
         break;
 
@@ -1511,7 +1504,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
          * set to ET_EXEC.
          */
         DL_ERR("%s R_AARCH64_COPY relocations are not supported", name);
-        return -1;
+        return false;
       case R_AARCH64_TLS_TPREL64:
         TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
                    reloc, (sym_addr + addend), rel->r_offset);
@@ -1568,7 +1561,7 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
          * set to ET_EXEC.
          */
         DL_ERR("%s R_ARM_COPY relocations are not supported", name);
-        return -1;
+        return false;
 #elif defined(__i386__)
       case R_386_32:
         count_relocation(kRelocRelative);
@@ -1583,7 +1576,48 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
                    reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
         break;
-#elif defined(__mips__)
+#endif
+      default:
+        DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
+        return false;
+    }
+  }
+  return true;
+}
+
+#else // defined(__mips__)
+bool soinfo::mips_relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+    ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
+    ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
+
+    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
+    ElfW(Addr) sym_addr = 0;
+    const char* sym_name = nullptr;
+
+    DEBUG("Processing '%s' relocation at index %zd", name, idx);
+    if (type == R_GENERIC_NONE) {
+      continue;
+    }
+
+    ElfW(Sym)* s = nullptr;
+    soinfo* lsi = nullptr;
+
+    if (sym != 0) {
+      sym_name = get_string(symtab_[sym].st_name);
+      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
+      if (s == nullptr) {
+        // mips does not support relocation with weak-undefined symbols
+        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
+        return false;
+      } else {
+        // We got a definition.
+        sym_addr = lsi->resolve_symbol_address(s);
+      }
+      count_relocation(kRelocSymbol);
+    }
+
+    switch (type) {
       case R_MIPS_REL32:
 #if defined(__LP64__)
         // MIPS Elf64_Rel entries contain compound relocations
@@ -1593,29 +1627,27 @@ int soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_g
           DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
                  type, (unsigned)ELF64_R_TYPE2(rel->r_info),
                  (unsigned)ELF64_R_TYPE3(rel->r_info), rel, idx);
-          return -1;
+          return false;
         }
 #endif
-        count_relocation(kRelocAbsolute);
+        count_relocation(s == nullptr ? kRelocAbsolute : kRelocRelative);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL32 %08zx <- %08zx %s", static_cast<size_t>(reloc),
                    static_cast<size_t>(sym_addr), sym_name ? sym_name : "*SECTIONHDR*");
-        if (s) {
+        if (s != nullptr) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
         } else {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
         }
         break;
-#endif
       default:
         DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
-        return -1;
+        return false;
     }
   }
-  return 0;
+  return true;
 }
 
-#if defined(__mips__)
 bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   ElfW(Addr)** got = plt_got_;
   if (got == nullptr) {
@@ -2349,39 +2381,52 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #endif
 
+#if defined(__mips__)
+  if (rel_ != nullptr) {
+    DEBUG("[ relocating %s ]", name);
+    if (!mips_relocate(rel_, rel_count_, global_group, local_group)) {
+      return false;
+    }
+  }
+  if (plt_rel_ != nullptr) {
+    DEBUG("[ relocating %s plt ]", name);
+    if (!mips_relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
+      return false;
+    }
+  }
+
+  if (!mips_relocate_got(global_group, local_group)) {
+    return false;
+  }
+#else // !defined(__mips__)
 #if defined(USE_RELA)
   if (rela_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (relocate(rela_, rela_count_, global_group, local_group)) {
+    if (!relocate(rela_, rela_count_, global_group, local_group)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (relocate(plt_rela_, plt_rela_count_, global_group, local_group)) {
+    if (!relocate(plt_rela_, plt_rela_count_, global_group, local_group)) {
       return false;
     }
   }
 #else
   if (rel_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (relocate(rel_, rel_count_, global_group, local_group)) {
+    if (!relocate(rel_, rel_count_, global_group, local_group)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
+    if (!relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
       return false;
     }
   }
 #endif
-
-#if defined(__mips__)
-  if (!mips_relocate_got(global_group, local_group)) {
-    return false;
-  }
-#endif
+#endif // !defined(__mips__)
 
   DEBUG("[ finished linking %s ]", name);
 
