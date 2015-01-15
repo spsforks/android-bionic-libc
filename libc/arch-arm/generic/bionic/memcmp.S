@@ -40,7 +40,6 @@
  * Optimized memcmp() for Cortex-A9.
  */
 
-.syntax unified
 
 ENTRY(memcmp)
         pld         [r0, #(CACHE_LINE_SIZE * 0)]
@@ -48,6 +47,7 @@ ENTRY(memcmp)
 
         /* take of the case where length is 0 or the buffers are the same */
         cmp         r0, r1
+        cmpne       r2, #0
         moveq       r0, #0
         bxeq        lr
 
@@ -57,13 +57,16 @@ ENTRY(memcmp)
         /* make sure we have at least 8+4 bytes, this simplify things below
          * and avoid some overhead for small blocks
          */
+        eor         r12, r0, r1
+        tst         r12, #0x03
+        beq         .Lmemcmp_align_routine
         cmp        r2, #(8+4)
         bmi        10f
 /*
  * Neon optimization
  * Comparing 32 bytes at a time
  */
-#if defined(__ARM_NEON__) && defined(NEON_UNALIGNED_ACCESS)
+#if defined(__ARM_NEON__)
         subs        r2, r2, #32
         blo         3f
 
@@ -163,25 +166,25 @@ ENTRY(memcmp)
         eors        r0, r0, ip
         ldreq       r0, [r4], #4
         ldreq       ip, [r1, #4]!
-        eorseq      r0, r0, lr
+        eoreqs      r0, r0, lr
         ldreq       r0, [r4], #4
         ldreq       lr, [r1, #4]!
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         ldreq       r0, [r4], #4
         ldreq       ip, [r1, #4]!
-        eorseq      r0, r0, lr
+        eoreqs      r0, r0, lr
         ldreq       r0, [r4], #4
         ldreq       lr, [r1, #4]!
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         ldreq       r0, [r4], #4
         ldreq       ip, [r1, #4]!
-        eorseq      r0, r0, lr
+        eoreqs      r0, r0, lr
         ldreq       r0, [r4], #4
         ldreq       lr, [r1, #4]!
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         ldreq       r0, [r4], #4
         ldreq       ip, [r1, #4]!
-        eorseq      r0, r0, lr
+        eoreqs      r0, r0, lr
         bne         2f
         subs        r2, r2, #32
         bhs         0b
@@ -221,7 +224,8 @@ ENTRY(memcmp)
         bne         8b
 
 9:      /* restore registers and return */
-        ldmfd       sp!, {r4, pc}
+        ldmfd       sp!, {r4, lr}
+        bx          lr
 
 10:     /* process less than 12 bytes */
         cmp         r2, #0
@@ -264,17 +268,17 @@ ENTRY(memcmp)
         ldreq       lr, [r1], #4
         ldreq       r0, [r4], #4
         orreq       ip, ip, lr, lsl #16
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         moveq       ip, lr, lsr #16
         ldreq       lr, [r1], #4
         ldreq       r0, [r4], #4
         orreq       ip, ip, lr, lsl #16
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         moveq       ip, lr, lsr #16
         ldreq       lr, [r1], #4
         ldreq       r0, [r4], #4
         orreq       ip, ip, lr, lsl #16
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         bne         7f
         subs        r2, r2, #16
         bhs         6b
@@ -318,7 +322,7 @@ ENTRY(memcmp)
         ldreq       r7, [r1], #4
         ldreq       r0, [r4], #4
         orreq       ip, ip, r7, lsl r6
-        eorseq      r0, r0, ip
+        eoreqs      r0, r0, ip
         bne         7f
         subs        r2, r2, #8
         bhs         6b
@@ -341,4 +345,150 @@ ENTRY(memcmp)
         mov         r2, #4
 		ldmfd		sp!, {r5, r6, r7}
         b           8b
+
+    /* int memcmp(const void *, const void *, size_t); */
+.Lmemcmp_align_routine:
+        mov         r3, r0
+        PLD         [r0, #32]
+        PLD         [r1, #32]
+        push        {lr}
+        tst         r3,  #0x03
+        beq         .Lmemcmp_align
+
+.Lmemcmp_make_align:
+        ldrb        r0,  [r3], #1               // align to 4 byte
+        ldrb        r12, [r1], #1
+        subs        r0,  r0, r12
+        popne       {pc}
+        subs        r2,  r2,  #1
+        popeq       {pc}
+        tst         r3,  #0x03
+        bne         .Lmemcmp_make_align
+
+.Lmemcmp_align:
+        subs        r2, r2, #16
+        blt         .Lmemcmp_align_less16
+        push        {r4 - r10}
+.Lmemcmp_align_loop16:
+        ldmia       r3!, {r4, r5, r6,  r7}
+        ldmia       r1!, {r8, r9, r10, lr}
+        pld         [r3, #64]
+        pld         [r1, #64]
+        eors        r0,  r8, r4
+        bne         .Lmemcmp_align_out_l1
+        eors        r0,  r9, r5
+        bne         .Lmemcmp_align_out_l2
+        eors        r0,  r10, r6
+        bne         .Lmemcmp_align_out_l3
+        eors        r0,  lr, r7
+        bne         .Lmemcmp_align_out_l4
+        subs        r2, r2, #16
+        bge         .Lmemcmp_align_loop16
+        adds        r2, r2, #16
+        pop         {r4 - r10}
+        popeq       {pc}
+        sub         r2, r2, #16
+        b           .Lmemcmp_align_less16
+
+.Lmemcmp_align_out_l1:
+        mov         r3, r4
+        mov         r2, r8
+        b           .Lmemcmp_align_check_not_equal
+.Lmemcmp_align_out_l2:
+        mov         r3, r5
+        mov         r2, r9
+        b           .Lmemcmp_align_check_not_equal
+.Lmemcmp_align_out_l3:
+        mov         r3, r6
+        mov         r2, r10
+        b           .Lmemcmp_align_check_not_equal
+.Lmemcmp_align_out_l4:
+        mov         r3, r7
+        mov         r2, lr
+.Lmemcmp_align_check_not_equal:
+        mov         r12, #0xff
+        and         r0, r12, r3
+        and         r1, r12, r2
+        subs        r0, r0, r1
+        popne       {r4 - r10, pc}
+        and         r0, r12, r3, lsr #8
+        and         r1, r12, r2, lsr #8
+        subs        r0, r0, r1
+        popne       {r4 - r10, pc}
+        and         r0, r12, r3, lsr #16
+        and         r1, r12, r2, lsr #16
+        subs        r0, r0, r1
+        popne       {r4 - r10, pc}
+        and         r0, r12, r3, lsr #24
+        sub         r0, r0, r2, lsr #24
+        pop         {r4 - r10, pc}
+
+.Lmemcmp_align_less16:
+        add         r2, r2, #16
+        cmp         r2,  #4
+        blt         .Lmemcmp_align_less4
+.Lmemcmp_align_loop4:
+        ldr         lr,  [r3], #4
+        ldr         r12, [r1], #4
+        sub         r2, r2, #4
+        eors        r0, r12, lr
+        bne         .Lmemcmp_align_check_not_equal5
+        cmp         r2, #4
+        bge         .Lmemcmp_align_loop4
+        cmp         r2, #0
+        moveq       r0, #0
+        popeq       {pc}
+        b           .Lmemcmp_align_less4
+
+.Lmemcmp_align_check_not_equal5:
+        mov         r3, #0xff
+        and         r0, r3, lr
+        and         r1, r3, r12
+        subs        r0, r0, r1
+        popne       {pc}
+        and         r0, r3, lr,  lsr #8
+        and         r1, r3, r12, lsr #8
+        subs        r0, r0, r1
+        popne       {pc}
+        and         r0, r3, lr,  lsr #16
+        and         r1, r3, r12, lsr #16
+        subs        r0, r0, r1
+        popne       {pc}
+        and         r0, r3,  lr, lsr #24
+        sub         r0, r0, r12, lsr #24
+        pop         {pc}
+.Lmemcmp_align_less4:
+        ldrb        lr, [r3], #1
+        ldrb        r12, [r1], #1
+        subs        r0, lr, r12
+        popne       {pc}
+        subs        r2, r2, #1
+        bne         .Lmemcmp_align_less4
+        pop         {pc}
+.Lmemcmp_nalign:
+        push        {lr}
+        subs        r2, #(16)
+        blt         .Lmemcmp_align_less16
+.Lmemcmp_nalign_loop16:
+        PLD         [r3, #64]
+        PLD         [r1, #64]
+        ldr         lr,  [r3], #4
+        ldr         r12, [r1], #4
+        eors        r0, r12, lr
+        ldreq       lr,  [r3], #4
+        ldreq       r12, [r1], #4
+        eoreqs      r0, r12, lr
+        ldreq       lr,  [r3], #4
+        ldreq       r12, [r1], #4
+        eoreqs      r0, r12, lr
+        ldreq       lr,  [r3], #4
+        ldreq       r12, [r1], #4
+        eoreqs      r0, r12, lr
+        bne         .Lmemcmp_align_check_not_equal5
+        subs        r2, r2, #16
+        bge         .Lmemcmp_nalign_loop16
+        adds        r2, r2, #16
+        popeq       {pc}
+        sub         r2, r2, #16
+        b           .Lmemcmp_align_less16
 END(memcmp)
