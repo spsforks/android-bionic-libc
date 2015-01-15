@@ -56,7 +56,7 @@ __BEGIN_DECLS
   unsigned int __unused4; \
   unsigned int __unused5; \
 
-#elif defined(__mips__) /* and mips64 */
+#elif defined(__mips__) && !defined(__LP64__)
 #define __STAT64_BODY \
   unsigned int st_dev; \
   unsigned int __pad0[3]; \
@@ -74,6 +74,26 @@ __BEGIN_DECLS
   unsigned int st_blksize; \
   unsigned int __pad2; \
   unsigned long long st_blocks; \
+
+#elif defined(__mips__) && defined(__LP64__)
+#define __STAT64_BODY \
+  dev_t st_dev; \
+  ino_t st_ino; \
+  mode_t st_mode; \
+  nlink_t st_nlink; \
+  uid_t st_uid; \
+  gid_t st_gid; \
+  dev_t st_rdev; \
+  unsigned long __pad1; \
+  off64_t st_size; \
+  int st_blksize; \
+  int __pad2; \
+  long st_blocks; \
+  struct timespec st_atim; \
+  struct timespec st_mtim; \
+  struct timespec st_ctim; \
+  unsigned int __unused4; \
+  unsigned int __unused5; \
 
 #elif defined(__x86_64__)
 #define __STAT64_BODY \
