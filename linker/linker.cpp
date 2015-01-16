@@ -55,6 +55,7 @@
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_allocator.h"
+#include "linker_zip.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -828,15 +829,79 @@ ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
   return nullptr;
 }
 
-static int open_library_on_path(const char* name, const char* const paths[]) {
+static int open_library_directly(const char* name,
+                                 const char* const path) {
+  TRACE("Trying direct open of '%s' from path '%s'", name, path);
   char buf[512];
-  for (size_t i = 0; paths[i] != nullptr; ++i) {
-    int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", paths[i], name);
+  int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", path, name);
+  if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
+    PRINT("Warning: ignoring very long library path: %s/%s", path, name);
+    return -1;
+  }
+  int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+  return fd;
+}
+
+static int open_library_in_zipfile(const char* name,
+                                   const char* const path,
+                                   off64_t* file_offset) {
+  TRACE("Trying zip file open of '%s' from path '%s'", name, path);
+  const char* zip_path = path;
+  const char* file_path = name;
+
+  // Treat an '@' character inside a path as the separator between the name
+  // of the zip file on disk and the subdirectory to search within it.
+  // For example, if path is "foo.zip@bar/bas" and name is "x.so", then we
+  // search for "bar/bas/x.so" within "foo.zip".
+  char buf[512];
+  const char* separator = strchr(path, '@');
+  if (separator != NULL) {
+    int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", path, name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
-      PRINT("Warning: ignoring very long library path: %s/%s", paths[i], name);
-      continue;
+      PRINT("Warning: ignoring very long library path: %s/%s", path, name);
+      return -1;
     }
-    int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
+    buf[separator - path] = '\0';
+    zip_path = buf;
+    file_path = &buf[separator - path + 1];
+  }
+
+  int fd = TEMP_FAILURE_RETRY(open(zip_path, O_RDONLY | O_CLOEXEC));
+  if (fd == -1) {
+    return -1;
+  }
+
+  // Check that this zip path is a valid zip file.
+  char magic[4];
+  if (TEMP_FAILURE_RETRY(read(fd, magic, sizeof(magic))) != 4) {
+    close(fd);
+    return -1;
+  }
+  if (memcmp(magic, "PK\x03\x04", sizeof(magic)) != 0) {
+    close(fd);
+    return -1;
+  }
+
+  int offset = FindStartOffsetOfFileInZipFile(fd, file_path);
+  if (offset == ZIP_FIND_FAILED) {
+    close(fd);
+    return -1;
+  }
+
+  *file_offset = offset;
+  return fd;
+}
+
+static int open_library_on_path(const char* name,
+                                const char* const paths[],
+                                off64_t* file_offset) {
+  for (size_t i = 0; paths[i] != nullptr; ++i) {
+    const char* const path = paths[i];
+    int fd = open_library_directly(name, path);
+    if (fd != -1) {
+      return fd;
+    }
+    fd = open_library_in_zipfile(name, path, file_offset);
     if (fd != -1) {
       return fd;
     }
@@ -844,7 +909,7 @@ static int open_library_on_path(const char* name, const char* const paths[]) {
   return -1;
 }
 
-static int open_library(const char* name) {
+static int open_library(const char* name, off64_t* file_offset) {
   TRACE("[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
@@ -860,9 +925,9 @@ static int open_library(const char* name) {
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_path(name, g_ld_library_paths);
+  int fd = open_library_on_path(name, g_ld_library_paths, file_offset);
   if (fd == -1) {
-    fd = open_library_on_path(name, kDefaultLdPaths);
+    fd = open_library_on_path(name, kDefaultLdPaths, file_offset);
   }
   return fd;
 }
@@ -888,7 +953,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name, int rtld
     }
   } else {
     // Open the file.
-    fd = open_library(name);
+    fd = open_library(name, &file_offset);
     if (fd == -1) {
       DL_ERR("library \"%s\" not found", name);
       return nullptr;

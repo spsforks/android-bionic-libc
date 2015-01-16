@@ -10,6 +10,7 @@ LOCAL_SRC_FILES:= \
     linker_environ.cpp \
     linker_libc_support.c \
     linker_phdr.cpp \
+    linker_zip.cpp \
     rt.cpp \
 
 LOCAL_SRC_FILES_arm     := arch/arm/begin.S
