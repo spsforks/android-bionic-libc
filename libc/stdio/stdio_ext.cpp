@@ -27,13 +27,9 @@
  */
 
 #include <stdio_ext.h>
+#include <stdlib.h>
 
-#include <stdio.h>
 #include "local.h"
-
-#define FSETLOCKING_QUERY 0
-#define FSETLOCKING_INTERNAL 1
-#define FSETLOCKING_BYCALLER 2
 
 size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;
@@ -76,11 +72,19 @@ void _flushlbf() {
   fflush(NULL);
 }
 
-int __fsetlocking(FILE*, int) {
-  // We don't currently have an implementation that would obey this,
-  // so make setting the state a no-op and always return "we handle locking for you".
-  // http://b/17154740 suggests ways we could fix this.
-  return FSETLOCKING_INTERNAL;
+int __fsetlocking(FILE* fp, int type) {
+  int old_state = _EXT(fp)->do_not_lock ? FSETLOCKING_BYCALLER : FSETLOCKING_INTERNAL;
+  if (type == FSETLOCKING_QUERY) {
+    return old_state;
+  }
+
+  if (type != FSETLOCKING_INTERNAL && type != FSETLOCKING_BYCALLER) {
+    // The API doesn't let us report an error, so blow up.
+    abort();
+  }
+
+  _EXT(fp)->do_not_lock = (type == FSETLOCKING_BYCALLER);
+  return old_state;
 }
 
 void clearerr_unlocked(FILE* fp) {
