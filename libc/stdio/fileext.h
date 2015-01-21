@@ -33,6 +33,7 @@
 #define _FILEEXT_H_
 
 #include <pthread.h>
+#include <stdbool.h>
 
 __BEGIN_DECLS
 
@@ -43,6 +44,7 @@ struct __sfileext {
 	struct	__sbuf _ub; /* ungetc buffer */
 	struct wchar_io_data _wcio;	/* wide char io status */
 	pthread_mutex_t _lock; /* file lock */
+	bool do_not_lock;
 };
 
 #define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
@@ -55,6 +57,7 @@ do { \
 	_UB(fp)._size = 0; \
 	WCIO_INIT(fp); \
         _FLOCK(fp).value = __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE; \
+        _EXT(fp)->do_not_lock = false; \
 } while (0)
 
 #define _FILEEXT_SETUP(f, fext) \

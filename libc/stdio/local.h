@@ -111,8 +111,8 @@ extern void __atexit_register_cleanup(void (*)(void));
 	(fp)->_lb._base = NULL; \
 }
 
-#define FLOCKFILE(fp)   flockfile(fp)
-#define FUNLOCKFILE(fp) funlockfile(fp)
+#define FLOCKFILE(fp)   if (!(_EXT(fp)->do_not_lock)) flockfile(fp)
+#define FUNLOCKFILE(fp) if (!(_EXT(fp)->do_not_lock)) funlockfile(fp)
 
 #define FLOATING_POINT
 #define PRINTF_WIDE_CHAR
