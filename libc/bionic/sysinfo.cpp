@@ -94,7 +94,7 @@ static int __get_meminfo(const char* pattern) {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      result = (int) (total / (PAGE_SIZE/1024));
+      result = static_cast<int>(total / (PAGE_SIZE/1024));
       break;
     }
   }
