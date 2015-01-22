@@ -944,6 +944,18 @@ LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
+# libc_ndk.a
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := libc_ndk
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_syscalls libm
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+
+include $(BUILD_STATIC_LIBRARY)
+
+# ========================================================
 # libc_common.a
 # ========================================================
 
