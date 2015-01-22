@@ -92,6 +92,8 @@ typedef struct {
   pthread_cond_t __unused_cond;
 #endif
   volatile int32_t state; // 0=unlock, -1=writer lock, +n=reader lock
+                          // 0x80000000 +n = reader lock, writer waiting
+# define WRITER_WAITING ((int32_t)0x80000000)
   volatile int32_t writer_thread_id;
   volatile int32_t pending_readers;
   volatile int32_t pending_writers;

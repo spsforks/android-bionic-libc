@@ -152,7 +152,7 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec
       if (!timespec_from_absolute(rel_timeout, abs_timeout)) {
         return ETIMEDOUT;
       }
-      // Owner holds it in write mode, hang up.
+      // Owner holds it in write mode or there is a waiting writer, hang up.
       // To avoid losing wake ups the pending_readers update and the state read should be
       // sequentially consistent. (currently enforced by __sync_fetch_and_add which creates a full barrier)
       __sync_fetch_and_add(&rwlock->pending_readers, 1);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
@@ -167,6 +167,16 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec
   return 0;
 }
 
+// Remove the writer waiting bit from rwlock, unless someone else
+// beats us to it.
+static void remove_writer_waiting(pthread_rwlock_t* rwlock) {
+    int32_t cur_state = rwlock->state;
+    do {
+        cur_state = rwlock->state;
+        if (cur_state == -1 || !(cur_state & WRITER_WAITING)) return;
+    } while (!__sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state & ~WRITER_WAITING));
+}
+
 static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_timeout) {
   int tid = __get_thread()->tid;
   if (__predict_false(tid == rwlock->writer_thread_id)) {
@@ -176,22 +186,36 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec
   timespec ts;
   timespec* rel_timeout = (abs_timeout == NULL) ? NULL : &ts;
   bool done = false;
+  bool added_waiting_bit = false;
   do {
     int32_t cur_state = rwlock->state;
-    if (__predict_true(cur_state == 0)) {
-      // Change state from 0 to -1.
-      done =  __sync_bool_compare_and_swap(&rwlock->state, 0 /* cur state */, -1 /* new state */);  // C++11 memory_order_aquire
+    if (__predict_true((cur_state & ~WRITER_WAITING) == 0)) {
+      // Change state from available to -1.
+      done =  __sync_bool_compare_and_swap(&rwlock->state, cur_state, -1 /* new state */);  // C++11 memory_order_aquire
     } else {
       if (!timespec_from_absolute(rel_timeout, abs_timeout)) {
+        if (added_waiting_bit) remove_writer_waiting(rwlock);
         return ETIMEDOUT;
       }
       // Failed to acquire, hang up.
+      if (!(cur_state & WRITER_WAITING)) {
+          // Note that if the state is -1 because there is an active writer, we don't get here.
+          if (!__sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state | WRITER_WAITING)) continue;
+          added_waiting_bit = true;
+          // Obligate ourselves to remove the bit if/when we time out.
+          // It is implicitly removed when we finally acquire and remove the lock.
+          // There may be another waiting writer, but it'll again set the bit the next time.
+          // In the case of multiple writers, this is argubaly not strict writer preference,
+          // since we effectively start over after the first one gets in.
+          cur_state |= WRITER_WAITING;
+      }
       // To avoid losing wake ups the pending_writers update and the state read should be
       // sequentially consistent. (currently enforced by __sync_fetch_and_add which creates a full barrier)
       __sync_fetch_and_add(&rwlock->pending_writers, 1);  // C++11 memory_order_relaxed (if the futex_wait ensures the ordering)
       int ret = __futex_wait_ex(&rwlock->state, rwlock_is_shared(rwlock), cur_state, rel_timeout);
       __sync_fetch_and_sub(&rwlock->pending_writers, 1);  // C++11 memory_order_relaxed
       if (ret == -ETIMEDOUT) {
+        if (added_waiting_bit) remove_writer_waiting(rwlock);
         return ETIMEDOUT;
       }
     }
@@ -211,7 +235,7 @@ int pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* rwlock) {
   int32_t cur_state = rwlock->state;
-  if ((cur_state >= 0) &&
+  if ((cur_state >= 0 /* precludes WRITER_WAITING */) &&
       __sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state + 1)) {  // C++11 memory_order_acquire
     return 0;
   }
@@ -229,8 +253,8 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock, const timespec* abs_tim
 int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock) {
   int tid = __get_thread()->tid;
   int32_t cur_state = rwlock->state;
-  if ((cur_state == 0) &&
-      __sync_bool_compare_and_swap(&rwlock->state, 0 /* cur state */, -1 /* new state */)) {  // C++11 memory_order_acquire
+  if ((cur_state & ~WRITER_WAITING) == 0 &&
+      __sync_bool_compare_and_swap(&rwlock->state, cur_state, -1 /* new state */)) {  // C++11 memory_order_acquire
     rwlock->writer_thread_id = tid;
     return 0;
   }
@@ -243,7 +267,7 @@ int pthread_rwlock_unlock(pthread_rwlock_t* rwlock) {
   bool done = false;
   do {
     int32_t cur_state = rwlock->state;
-    if (cur_state == 0) {
+    if ((cur_state & ~WRITER_WAITING) == 0) {
       return EPERM;
     }
     if (cur_state == -1) {
@@ -264,7 +288,7 @@ int pthread_rwlock_unlock(pthread_rwlock_t* rwlock) {
         __futex_wake_ex(&rwlock->state, rwlock_is_shared(rwlock), INT_MAX);
       }
       done = true;
-    } else { // cur_state > 0
+    } else { // cur_state had active readers
       // Reduce state by 1.
       // See the comment above on why we need __sync_bool_compare_and_swap.
       done = __sync_bool_compare_and_swap(&rwlock->state, cur_state, cur_state - 1);  // C++11 maybe memory_order_seq_cst?
