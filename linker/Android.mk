@@ -19,8 +19,11 @@ LOCAL_SRC_FILES_x86_64  := arch/x86_64/begin.S
 LOCAL_SRC_FILES_mips    := arch/mips/begin.S linker_mips.cpp
 LOCAL_SRC_FILES_mips64  := arch/mips64/begin.S linker_mips.cpp
 
+# -Wl,shared is used to overwrite the -Bstatic and -static
+# flags triggered by LOCAL_FORCE_STATIC_EXECUTABLE.
+# This dynamic linker is actually a shared object linked with static libraries.
 LOCAL_LDFLAGS := \
-    -shared \
+    -Wl,-shared \
     -Wl,-Bsymbolic \
     -Wl,--exclude-libs,ALL \
 
