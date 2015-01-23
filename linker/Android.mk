@@ -28,6 +28,7 @@ LOCAL_CFLAGS += \
     -fno-stack-protector \
     -Wstrict-overflow=5 \
     -fvisibility=hidden \
+    -Wold-style-cast \
     -Wall -Wextra -Wunused -Werror \
 
 LOCAL_CONLYFLAGS += \
