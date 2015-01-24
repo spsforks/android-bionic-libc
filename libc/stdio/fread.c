@@ -118,6 +118,8 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 	 * Read directly into the caller's buffer.
 	 */
 	while (total > 0) {
+		__flush_line_buffered_output_files(fp);
+
 		ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, total);
 		if (bytes_read <= 0) {
 			fp->_flags = (fp->_r == 0) ? __SEOF : __SERR;

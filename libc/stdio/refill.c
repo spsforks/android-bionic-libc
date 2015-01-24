@@ -36,14 +36,6 @@
 #include <stdlib.h>
 #include "local.h"
 
-static int
-lflush(FILE *fp)
-{
-	if ((fp->_flags & (__SLBF|__SWR)) == (__SLBF|__SWR))
-		return (__sflush_locked(fp));	/* ignored... */
-	return (0);
-}
-
 /*
  * Refill a stdio buffer.
  * Return EOF on eof or error, 0 otherwise.
@@ -97,21 +89,8 @@ __srefill(FILE *fp)
 	if (fp->_bf._base == NULL)
 		__smakebuf(fp);
 
-	/*
-	 * Before reading from a line buffered or unbuffered file,
-	 * flush all line buffered output files, per the ANSI C
-	 * standard.
-	 */
-	if (fp->_flags & (__SLBF|__SNBF)) {
-		/* Ignore this file in _fwalk to avoid potential deadlock. */
-		fp->_flags |= __SIGN;
-		(void) _fwalk(lflush);
-		fp->_flags &= ~__SIGN;
+	__flush_line_buffered_output_files(fp);
 
-		/* Now flush this file without locking it. */
-		if ((fp->_flags & (__SLBF|__SWR)) == (__SLBF|__SWR))
-			__sflush(fp);
-	}
 	fp->_p = fp->_bf._base;
 	fp->_r = (*fp->_read)(fp->_cookie, (char *)fp->_p, fp->_bf._size);
 	fp->_flags &= ~__SMOD;	/* buffer contents are again pristine */

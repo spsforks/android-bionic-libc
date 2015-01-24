@@ -84,6 +84,34 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 
 extern void __atexit_register_cleanup(void (*)(void));
 
+static inline int
+__sflush_if_line_buffered_output(FILE *fp)
+{
+  if ((fp->_flags & (__SLBF|__SWR)) == (__SLBF|__SWR))
+    return (__sflush_locked(fp));	/* ignored... */
+  return (0);
+}
+
+/*
+ * Called before reading from a line buffered or unbuffered file
+ * to flush all line buffered output files, per the ANSI C
+ * standard.
+ */
+static inline void
+__flush_line_buffered_output_files(FILE *fp)
+{
+  if (fp->_flags & (__SLBF|__SNBF)) {
+    /* Ignore this file in _fwalk to avoid potential deadlock. */
+    fp->_flags |= __SIGN;
+    (void) _fwalk(__sflush_if_line_buffered_output);
+    fp->_flags &= ~__SIGN;
+
+    /* Now flush this file without locking it. */
+    if ((fp->_flags & (__SLBF|__SWR)) == (__SLBF|__SWR))
+      __sflush(fp);
+  }
+}
+
 /*
  * Return true if the given FILE cannot be written now.
  */

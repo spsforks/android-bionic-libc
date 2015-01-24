@@ -872,7 +872,7 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
 
   time_t t0 = time(NULL);
   for (size_t i = 0; i < 1024; ++i) {
-    fread(buf, 64*1024, 1, fp);
+    ASSERT_EQ(1U, fread(buf, 64*1024, 1, fp));
   }
   time_t t1 = time(NULL);
 
