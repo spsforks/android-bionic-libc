@@ -27,6 +27,8 @@
 #include <wchar.h>
 #include <locale.h>
 
+#include <vector>
+
 #include "TemporaryFile.h"
 
 TEST(stdio, flockfile_18208568_stderr) {
@@ -872,7 +874,7 @@ TEST(stdio, fread_unbuffered_pathological_performance) {
 
   time_t t0 = time(NULL);
   for (size_t i = 0; i < 1024; ++i) {
-    fread(buf, 64*1024, 1, fp);
+    ASSERT_EQ(1U, fread(buf, 64*1024, 1, fp));
   }
   time_t t1 = time(NULL);
 
@@ -910,4 +912,23 @@ TEST(stdio, fread_EOF) {
   ASSERT_TRUE(feof(fp));
 
   fclose(fp);
+}
+
+static void test_fread_from_write_only_stream(size_t n) {
+  FILE* fp = fopen("/dev/null", "w");
+  std::vector<char> buf(n, 0);
+  errno = 0;
+  ASSERT_EQ(0U, fread(&buf[0], n, 1, fp));
+  ASSERT_EQ(EBADF, errno);
+  ASSERT_TRUE(ferror(fp));
+  ASSERT_FALSE(feof(fp));
+  fclose(fp);
+}
+
+TEST(stdio, fread_from_write_only_stream_slow_path) {
+  test_fread_from_write_only_stream(1);
+}
+
+TEST(stdio, fread_from_write_only_stream_fast_path) {
+  test_fread_from_write_only_stream(64*1024);
 }
