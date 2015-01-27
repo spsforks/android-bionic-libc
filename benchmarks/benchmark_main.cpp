@@ -88,10 +88,14 @@ static int Round(int n) {
 }
 
 static int64_t NanoTime() {
+#ifndef __APPLE__
   struct timespec t;
   t.tv_sec = t.tv_nsec = 0;
   clock_gettime(CLOCK_MONOTONIC, &t);
   return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+#else
+  return 0;  // Ignore benchmarking on apple.
+#endif
 }
 
 namespace testing {
