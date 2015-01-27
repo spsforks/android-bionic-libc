@@ -1,0 +1,8 @@
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Lorenzo Colitti <lorenzo@google.com>
+Submitted-by: Lorenzo Colitti <lorenzo@google.com>
+Submitted-at: Tue, 27 Jan 2015 04:02:42 +0000
+Reviewed-on: https://android-review.googlesource.com/124850
+Project: platform/bionic
+Branch: refs/heads/master
