@@ -369,16 +369,16 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     printf(" (%" PRId64 " ms total)", elapsed_time_ns / 1000000);
   }
   printf("\n");
-  ColoredPrintf(COLOR_GREEN,  "[  PASSED  ] ");
+  ColoredPrintf(COLOR_GREEN,  "[   PASS   ] ");
   printf("%zu %s.\n", success_test_count, (success_test_count == 1) ? "test" : "tests");
 
   // Print tests failed.
   size_t fail_test_count = fail_test_name_list.size();
   if (fail_test_count > 0) {
-    ColoredPrintf(COLOR_RED,  "[  FAILED  ] ");
+    ColoredPrintf(COLOR_RED,  "[   FAIL   ] ");
     printf("%zu %s, listed below:\n", fail_test_count, (fail_test_count == 1) ? "test" : "tests");
     for (const auto& name : fail_test_name_list) {
-      ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
+      ColoredPrintf(COLOR_RED, "[   FAIL   ] ");
       printf("%s\n", name.c_str());
     }
   }
@@ -398,10 +398,10 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   // Print tests run exceed warnline.
   size_t timewarn_test_count = timewarn_test_list.size();
   if (timewarn_test_count > 0) {
-    ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
+    ColoredPrintf(COLOR_YELLOW, "[   SLOW   ] ");
     printf("%zu %s, listed below:\n", timewarn_test_count, (timewarn_test_count == 1) ? "test" : "tests");
     for (const auto& timewarn_tuple : timewarn_test_list) {
-      ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
+      ColoredPrintf(COLOR_YELLOW, "[   SLOW   ] ");
       printf("%s (%" PRId64 " ms, exceed warnline %d ms)\n", std::get<0>(timewarn_tuple).c_str(),
              std::get<1>(timewarn_tuple) / 1000000, std::get<2>(timewarn_tuple));
     }
@@ -414,7 +414,7 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     printf("%2zu TIMEOUT %s\n", timeout_test_count, (timeout_test_count == 1) ? "TEST" : "TESTS");
   }
   if (timewarn_test_count > 0) {
-    printf("%2zu TIMEWARN %s\n", timewarn_test_count, (timewarn_test_count == 1) ? "TEST" : "TESTS");
+    printf("%2zu SLOW %s\n", timewarn_test_count, (timewarn_test_count == 1) ? "TEST" : "TESTS");
   }
   fflush(stdout);
 }
