@@ -25,7 +25,10 @@
 
 #include "debug.h"
 #include "elf_file.h"
+#include "elf_traits.h"
 #include "libelf.h"
+
+#include "nativehelper/ScopedFd.h"
 
 namespace {
 
@@ -45,6 +48,7 @@ void PrintUsage(const char* argv0) {
       "  -p, --pad      do not shrink relocations, but pad (for debugging)\n\n",
       basename);
 
+/*
   if (ELF::kMachine == EM_ARM) {
     printf(
         "Extracts relative relocations from the .rel.dyn section, packs them\n"
@@ -90,6 +94,7 @@ void PrintUsage(const char* argv0) {
   } else {
     NOTREACHED();
   }
+*/
 
   printf(
       "Debug sections are not handled, so packing should not be used on\n"
@@ -143,11 +148,9 @@ int main(int argc, char* argv[]) {
     LOG(WARNING) << "Elf Library is out of date!";
   }
 
-  LOG(INFO) << "Configured for " << ELF::Machine();
-
   const char* file = argv[argc - 1];
-  const int fd = open(file, O_RDWR);
-  if (fd == -1) {
+  ScopedFd fd(open(file, O_RDWR));
+  if (fd.get() == -1) {
     LOG(ERROR) << file << ": " << strerror(errno);
     return 1;
   }
@@ -155,16 +158,43 @@ int main(int argc, char* argv[]) {
   if (is_verbose)
     relocation_packer::Logger::SetVerbose(1);
 
-  relocation_packer::ElfFile elf_file(fd);
-  elf_file.SetPadding(is_padding);
+  // We need to detect elf class in order to create
+  // correct implementation
+  uint8_t e_ident[EI_NIDENT];
+  if (TEMP_FAILURE_RETRY(read(fd.get(), e_ident, EI_NIDENT) != EI_NIDENT)) {
+    LOG(ERROR) << file << ": failed to read elf header:" << strerror(errno);
+    return 1;
+  }
 
-  bool status;
-  if (is_unpacking)
-    status = elf_file.UnpackRelocations();
-  else
-    status = elf_file.PackRelocations();
+  if (TEMP_FAILURE_RETRY(lseek(fd.get(), 0, SEEK_SET)) != 0) {
+    LOG(ERROR) << file << ": lseek to 0 failed:" << strerror(errno);
+    return 1;
+  }
 
-  close(fd);
+  bool status = false;
+
+  if (e_ident[EI_CLASS] == ELFCLASS32) {
+    relocation_packer::ElfFile<ELF32_traits> elf_file(fd.get());
+    elf_file.SetPadding(is_padding);
+
+    if (is_unpacking) {
+      status = elf_file.UnpackRelocations();
+    } else {
+      status = elf_file.PackRelocations();
+    }
+  } else if (e_ident[EI_CLASS] == ELFCLASS64) {
+    relocation_packer::ElfFile<ELF64_traits> elf_file(fd.get());
+    elf_file.SetPadding(is_padding);
+
+    if (is_unpacking) {
+      status = elf_file.UnpackRelocations();
+    } else {
+      status = elf_file.PackRelocations();
+    }
+  } else {
+    LOG(ERROR) << file << ": unknown ELFCLASS: " << e_ident[EI_CLASS];
+    return 1;
+  }
 
   if (!status) {
     LOG(ERROR) << file << ": failed to pack/unpack file";
