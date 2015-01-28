@@ -141,8 +141,11 @@ def cleanupFile(path, original_path):
 
     # now, let's parse the file
     #
-    blocks = cpp.BlockParser().parseFile(path)
-    if not blocks:
+    parser = cpp.BlockParser()
+    # set up the vars and funcs that we want to keep before we start parsing
+    parser.setStatics(statics)
+    blocks = parser.parseFile(path)
+    if not parser.parsed:
         sys.stderr.write( "error: can't parse '%s'" % path )
         sys.exit(1)
 
@@ -154,10 +157,14 @@ def cleanupFile(path, original_path):
         blocks.replaceTokens( kernel_arch_token_replacements[arch] )
 
     blocks.optimizeMacros( macros )
+    # blocks.dump()
+    # print('before optimizaIf01')
     blocks.optimizeIf01()
+
+    # blocks.dump()
+    # print('before removeVarsAndFuncs')
     blocks.removeVarsAndFuncs( statics )
     blocks.replaceTokens( kernel_token_replacements )
-    blocks.removeComments()
     blocks.removeMacroDefines( kernel_ignored_macros )
     blocks.removeWhiteSpace()
 
