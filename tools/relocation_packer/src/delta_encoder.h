@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// TODO: (dimitry) update this doc... The delta calculation logic has
+// changed.
+
 // Delta encode and decode relative relocations with addends.
 //
 // Relative relocations are the bulk of dynamic relocations (the
@@ -53,26 +56,39 @@
 #include <vector>
 
 #include "elf.h"
-#include "elf_traits.h"
 
 namespace relocation_packer {
 
 // A RelocationDeltaCodec packs vectors of relative relocations with
 // addends into more compact forms, and unpacks them to reproduce the
 // pre-packed data.
+template<typename R>
 class RelocationDeltaCodec {
  public:
-  // Encode relative relocations with addends into a more compact form.
+  typedef int64_t ElfAddr;
+
+  // Encode relocations with addends into a more compact form.
   // |relocations| is a vector of relative relocation with addend structs.
   // |packed| is the vector of packed words into which relocations are packed.
-  static void Encode(const std::vector<ELF::Rela>& relocations,
-                     std::vector<ELF::Sxword>* packed);
+  static void Encode(const std::vector<R>& relocations,
+                     std::vector<ElfAddr>* packed);
 
   // Decode relative relocations with addends from their more compact form.
   // |packed| is the vector of packed relocations.
   // |relocations| is a vector of unpacked relative relocations.
-  static void Decode(const std::vector<ELF::Sxword>& packed,
-                     std::vector<ELF::Rela>* relocations);
+  static void Decode(const std::vector<ElfAddr>& packed,
+                     std::vector<R>* relocations);
+ private:
+  static void DetectGroup(const std::vector<R>& relocations,
+                          size_t group_starts_with, ElfAddr previous_offset,
+                          ElfAddr* group_size, ElfAddr* group_flags,
+                          ElfAddr* group_offset_delta, ElfAddr* group_info,
+                          ElfAddr* group_addend);
+
+  static void DetectGroupFields(const R& reloc_one, const R& reloc_two,
+                                ElfAddr current_offset_delta, ElfAddr* group_flags,
+                                ElfAddr* group_offset_delta, ElfAddr* group_info,
+                                ElfAddr* group_addend);
 };
 
 }  // namespace relocation_packer

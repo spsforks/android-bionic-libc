@@ -6,12 +6,12 @@
 
 #include <vector>
 #include "elf_traits.h"
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 namespace relocation_packer {
 
 TEST(Sleb128, Encoder) {
-  std::vector<ELF::Sxword> values;
+  std::vector<int64_t> values;
   values.push_back(624485);
   values.push_back(0);
   values.push_back(1);
@@ -143,11 +143,11 @@ TEST(Sleb128, Decoder) {
   encoding.push_back(0x80);
   encoding.push_back(0x7f);
 
-  Sleb128Decoder decoder(encoding);
+  Sleb128Decoder decoder(encoding, 0);
 
   EXPECT_EQ(624485, decoder.Dequeue());
 
-  std::vector<ELF::Sxword> dequeued;
+  std::vector<int64_t> dequeued;
   decoder.DequeueAll(&dequeued);
 
   EXPECT_EQ(10u, dequeued.size());

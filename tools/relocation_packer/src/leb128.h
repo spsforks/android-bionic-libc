@@ -29,11 +29,11 @@ class Leb128Encoder {
 
   // Add a value to the encoding stream.
   // |value| is the unsigned int to add.
-  void Enqueue(ELF::Xword value);
+  void Enqueue(int64_t value);
 
   // Add a vector of values to the encoding stream.
   // |values| is the vector of unsigned ints to add.
-  void EnqueueAll(const std::vector<ELF::Xword>& values);
+  void EnqueueAll(const std::vector<int64_t>& values);
 
   // Retrieve the encoded representation of the values.
   // |encoding| is the returned vector of encoded data.
@@ -49,17 +49,17 @@ class Leb128Decoder {
  public:
   // Create a new decoder for the given encoded stream.
   // |encoding| is the vector of encoded data.
-  explicit Leb128Decoder(const std::vector<uint8_t>& encoding);
+  explicit Leb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with);
 
   // Explicit (but empty) destructor, for chromium-style.
   ~Leb128Decoder();
 
   // Retrieve the next value from the encoded stream.
-  ELF::Xword Dequeue();
+  int64_t Dequeue();
 
   // Retrieve all remaining values from the encoded stream.
   // |values| is the vector of decoded data.
-  void DequeueAll(std::vector<ELF::Xword>* values);
+  void DequeueAll(std::vector<int64_t>* values);
 
  private:
   // Encoded LEB128 stream.

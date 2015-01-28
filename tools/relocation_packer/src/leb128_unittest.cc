@@ -5,12 +5,12 @@
 #include "leb128.h"
 
 #include <vector>
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 namespace relocation_packer {
 
 TEST(Leb128, Encoder) {
-  std::vector<ELF::Xword> values;
+  std::vector<int64_t> values;
   values.push_back(624485);
   values.push_back(0);
   values.push_back(1);
@@ -92,11 +92,11 @@ TEST(Leb128, Decoder) {
   encoding.push_back(0xff);
   encoding.push_back(0x01);
 
-  Leb128Decoder decoder(encoding);
+  Leb128Decoder decoder(encoding, 0);
 
   EXPECT_EQ(624485, decoder.Dequeue());
 
-  std::vector<ELF::Xword> dequeued;
+  std::vector<int64_t> dequeued;
   decoder.DequeueAll(&dequeued);
 
   EXPECT_EQ(6, dequeued.size());
