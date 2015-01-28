@@ -204,21 +204,27 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
 // responsibility of the caller to properly dispose of the corresponding data
 // and resources, using any means it finds suitable.
 int pthread_key_delete(pthread_key_t key) {
-  ScopedTlsMapAccess tls_map;
-
-  if (!IsValidUserKey(key) || !tls_map.IsInUse(key)) {
-    return EINVAL;
-  }
+  int ret=0;
 
   // Clear value in all threads.
   pthread_mutex_lock(&g_thread_list_lock);
-  for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
-    t->tls[key] = NULL;
-  }
-  tls_map.DeleteKey(key);
+  {
+    // Acquire ScopedTlsMapAccess lock after g_thread_list_lock to avoid deadlock
+    // with pthread_exit()
+    ScopedTlsMapAccess tls_map;
 
+    if (!IsValidUserKey(key) || !tls_map.IsInUse(key)) {
+      ret=EINVAL;
+    }
+    else {
+      for (pthread_internal_t*  t = g_thread_list; t != NULL; t = t->next) {
+        t->tls[key] = NULL;
+      }
+      tls_map.DeleteKey(key);
+    }
+  }
   pthread_mutex_unlock(&g_thread_list_lock);
-  return 0;
+  return ret;
 }
 
 void* pthread_getspecific(pthread_key_t key) {
