@@ -22,7 +22,7 @@ Sleb128Encoder::~Sleb128Encoder() { }
 // value is sign extended up to a multiple of 7 bits (ensuring that the
 // most significant bit is zero for a positive number and one for a
 // negative number).
-void Sleb128Encoder::Enqueue(ELF::Sxword value) {
+void Sleb128Encoder::Enqueue(int64_t value) {
   static const size_t size = CHAR_BIT * sizeof(value);
 
   bool more = true;
@@ -34,7 +34,7 @@ void Sleb128Encoder::Enqueue(ELF::Sxword value) {
 
     // Sign extend if encoding a -ve value.
     if (negative)
-      value |= -(static_cast<ELF::Sxword>(1) << (size - 7));
+      value |= -(static_cast<int64_t>(1) << (size - 7));
 
     // The sign bit of byte is second high order bit.
     const bool sign_bit = byte & 64;
@@ -47,15 +47,15 @@ void Sleb128Encoder::Enqueue(ELF::Sxword value) {
 }
 
 // Add a vector of values to the encoding.
-void Sleb128Encoder::EnqueueAll(const std::vector<ELF::Sxword>& values) {
+void Sleb128Encoder::EnqueueAll(const std::vector<int64_t>& values) {
   for (size_t i = 0; i < values.size(); ++i)
     Enqueue(values[i]);
 }
 
 // Create a new decoder for the given encoded stream.
-Sleb128Decoder::Sleb128Decoder(const std::vector<uint8_t>& encoding) {
+Sleb128Decoder::Sleb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with) {
   encoding_ = encoding;
-  cursor_ = 0;
+  cursor_ = start_with;
 }
 
 // Empty destructor to silence chromium-style.
@@ -64,8 +64,8 @@ Sleb128Decoder::~Sleb128Decoder() { }
 // Decode and retrieve a single value from the encoding.  Consume bytes
 // until one without its most significant bit is found, and re-form the
 // value from the 7 bit fields of the bytes consumed.
-ELF::Sxword Sleb128Decoder::Dequeue() {
-  ELF::Sxword value = 0;
+int64_t Sleb128Decoder::Dequeue() {
+  int64_t value = 0;
   static const size_t size = CHAR_BIT * sizeof(value);
 
   size_t shift = 0;
@@ -74,20 +74,20 @@ ELF::Sxword Sleb128Decoder::Dequeue() {
   // Loop until we reach a byte with its high order bit clear.
   do {
     byte = encoding_[cursor_++];
-    value |= (static_cast<ELF::Sxword>(byte & 127) << shift);
+    value |= (static_cast<int64_t>(byte & 127) << shift);
     shift += 7;
   } while (byte & 128);
 
   // The sign bit is second high order bit of the final byte decoded.
   // Sign extend if value is -ve and we did not shift all of it.
   if (shift < size && (byte & 64))
-    value |= -(static_cast<ELF::Sxword>(1) << shift);
+    value |= -(static_cast<int64_t>(1) << shift);
 
   return value;
 }
 
 // Decode and retrieve all remaining values from the encoding.
-void Sleb128Decoder::DequeueAll(std::vector<ELF::Sxword>* values) {
+void Sleb128Decoder::DequeueAll(std::vector<int64_t>* values) {
   while (cursor_ < encoding_.size())
     values->push_back(Dequeue());
 }
