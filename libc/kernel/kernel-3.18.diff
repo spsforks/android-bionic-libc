@@ -1,0 +1,3756 @@
+diff -uwr uapi-3.18.bak.stripped/asm-arm/asm/a.out.h uapi/asm-arm/asm/a.out.h
+--- uapi-3.18.bak.stripped/asm-arm/asm/a.out.h	2015-01-28 15:14:56.183628207 -0800
++++ uapi/asm-arm/asm/a.out.h	2015-01-28 14:59:07.819502323 -0800
+@@ -20,8 +20,7 @@
+ #define __ARM_A_OUT_H__
+ #include <linux/personality.h>
+ #include <linux/types.h>
+-struct exec
+-{
++struct exec {
+  __u32 a_info;
+  __u32 a_text;
+  __u32 a_data;
+diff -uwr uapi-3.18.bak.stripped/asm-mips/asm/inst.h uapi/asm-mips/asm/inst.h
+--- uapi-3.18.bak.stripped/asm-mips/asm/inst.h	2015-01-28 15:14:56.227628398 -0800
++++ uapi/asm-mips/asm/inst.h	2015-01-28 14:59:07.819502323 -0800
+@@ -20,129 +20,311 @@
+ #define _UAPI_ASM_INST_H
+ #include <asm/bitfield.h>
+ enum major_op {
+- spec_op, bcond_op, j_op, jal_op,
+- beq_op, bne_op, blez_op, bgtz_op,
+- addi_op, addiu_op, slti_op, sltiu_op,
+- andi_op, ori_op, xori_op, lui_op,
+- cop0_op, cop1_op, cop2_op, cop1x_op,
+- beql_op, bnel_op, blezl_op, bgtzl_op,
+- daddi_op, daddiu_op, ldl_op, ldr_op,
+- spec2_op, jalx_op, mdmx_op, spec3_op,
+- lb_op, lh_op, lwl_op, lw_op,
+- lbu_op, lhu_op, lwr_op, lwu_op,
+- sb_op, sh_op, swl_op, sw_op,
+- sdl_op, sdr_op, swr_op, cache_op,
+- ll_op, lwc1_op, lwc2_op, pref_op,
+- lld_op, ldc1_op, ldc2_op, ld_op,
+- sc_op, swc1_op, swc2_op, major_3b_op,
+- scd_op, sdc1_op, sdc2_op, sd_op
++  spec_op,
++  bcond_op,
++  j_op,
++  jal_op,
++  beq_op,
++  bne_op,
++  blez_op,
++  bgtz_op,
++  addi_op,
++  addiu_op,
++  slti_op,
++  sltiu_op,
++  andi_op,
++  ori_op,
++  xori_op,
++  lui_op,
++  cop0_op,
++  cop1_op,
++  cop2_op,
++  cop1x_op,
++  beql_op,
++  bnel_op,
++  blezl_op,
++  bgtzl_op,
++  daddi_op,
++  daddiu_op,
++  ldl_op,
++  ldr_op,
++  spec2_op,
++  jalx_op,
++  mdmx_op,
++  spec3_op,
++  lb_op,
++  lh_op,
++  lwl_op,
++  lw_op,
++  lbu_op,
++  lhu_op,
++  lwr_op,
++  lwu_op,
++  sb_op,
++  sh_op,
++  swl_op,
++  sw_op,
++  sdl_op,
++  sdr_op,
++  swr_op,
++  cache_op,
++  ll_op,
++  lwc1_op,
++  lwc2_op,
++  pref_op,
++  lld_op,
++  ldc1_op,
++  ldc2_op,
++  ld_op,
++  sc_op,
++  swc1_op,
++  swc2_op,
++  major_3b_op,
++  scd_op,
++  sdc1_op,
++  sdc2_op,
++  sd_op
+ };
+ enum spec_op {
+- sll_op, movc_op, srl_op, sra_op,
+- sllv_op, pmon_op, srlv_op, srav_op,
+- jr_op, jalr_op, movz_op, movn_op,
+- syscall_op, break_op, spim_op, sync_op,
+- mfhi_op, mthi_op, mflo_op, mtlo_op,
+- dsllv_op, spec2_unused_op, dsrlv_op, dsrav_op,
+- mult_op, multu_op, div_op, divu_op,
+- dmult_op, dmultu_op, ddiv_op, ddivu_op,
+- add_op, addu_op, sub_op, subu_op,
+- and_op, or_op, xor_op, nor_op,
+- spec3_unused_op, spec4_unused_op, slt_op, sltu_op,
+- dadd_op, daddu_op, dsub_op, dsubu_op,
+- tge_op, tgeu_op, tlt_op, tltu_op,
+- teq_op, spec5_unused_op, tne_op, spec6_unused_op,
+- dsll_op, spec7_unused_op, dsrl_op, dsra_op,
+- dsll32_op, spec8_unused_op, dsrl32_op, dsra32_op
++  sll_op,
++  movc_op,
++  srl_op,
++  sra_op,
++  sllv_op,
++  pmon_op,
++  srlv_op,
++  srav_op,
++  jr_op,
++  jalr_op,
++  movz_op,
++  movn_op,
++  syscall_op,
++  break_op,
++  spim_op,
++  sync_op,
++  mfhi_op,
++  mthi_op,
++  mflo_op,
++  mtlo_op,
++  dsllv_op,
++  spec2_unused_op,
++  dsrlv_op,
++  dsrav_op,
++  mult_op,
++  multu_op,
++  div_op,
++  divu_op,
++  dmult_op,
++  dmultu_op,
++  ddiv_op,
++  ddivu_op,
++  add_op,
++  addu_op,
++  sub_op,
++  subu_op,
++  and_op,
++  or_op,
++  xor_op,
++  nor_op,
++  spec3_unused_op,
++  spec4_unused_op,
++  slt_op,
++  sltu_op,
++  dadd_op,
++  daddu_op,
++  dsub_op,
++  dsubu_op,
++  tge_op,
++  tgeu_op,
++  tlt_op,
++  tltu_op,
++  teq_op,
++  spec5_unused_op,
++  tne_op,
++  spec6_unused_op,
++  dsll_op,
++  spec7_unused_op,
++  dsrl_op,
++  dsra_op,
++  dsll32_op,
++  spec8_unused_op,
++  dsrl32_op,
++  dsra32_op
+ };
+ enum spec2_op {
+- madd_op, maddu_op, mul_op, spec2_3_unused_op,
+- msub_op, msubu_op,
+- clz_op = 0x20, clo_op,
+- dclz_op = 0x24, dclo_op,
++  madd_op,
++  maddu_op,
++  mul_op,
++  spec2_3_unused_op,
++  msub_op,
++  msubu_op,
++  clz_op = 0x20,
++  clo_op,
++  dclz_op = 0x24,
++  dclo_op,
+  sdbpp_op = 0x3f
+ };
+ enum spec3_op {
+- ext_op, dextm_op, dextu_op, dext_op,
+- ins_op, dinsm_op, dinsu_op, dins_op,
+- yield_op = 0x09, lx_op = 0x0a,
+- lwle_op = 0x19, lwre_op = 0x1a,
+- cachee_op = 0x1b, sbe_op = 0x1c,
+- she_op = 0x1d, sce_op = 0x1e,
+- swe_op = 0x1f, bshfl_op = 0x20,
+- swle_op = 0x21, swre_op = 0x22,
+- prefe_op = 0x23, dbshfl_op = 0x24,
+- lbue_op = 0x28, lhue_op = 0x29,
+- lbe_op = 0x2c, lhe_op = 0x2d,
+- lle_op = 0x2e, lwe_op = 0x2f,
++  ext_op,
++  dextm_op,
++  dextu_op,
++  dext_op,
++  ins_op,
++  dinsm_op,
++  dinsu_op,
++  dins_op,
++  yield_op = 0x09,
++  lx_op = 0x0a,
++  lwle_op = 0x19,
++  lwre_op = 0x1a,
++  cachee_op = 0x1b,
++  sbe_op = 0x1c,
++  she_op = 0x1d,
++  sce_op = 0x1e,
++  swe_op = 0x1f,
++  bshfl_op = 0x20,
++  swle_op = 0x21,
++  swre_op = 0x22,
++  prefe_op = 0x23,
++  dbshfl_op = 0x24,
++  lbue_op = 0x28,
++  lhue_op = 0x29,
++  lbe_op = 0x2c,
++  lhe_op = 0x2d,
++  lle_op = 0x2e,
++  lwe_op = 0x2f,
+  rdhwr_op = 0x3b
+ };
+ enum rt_op {
+- bltz_op, bgez_op, bltzl_op, bgezl_op,
+- spimi_op, unused_rt_op_0x05, unused_rt_op_0x06, unused_rt_op_0x07,
+- tgei_op, tgeiu_op, tlti_op, tltiu_op,
+- teqi_op, unused_0x0d_rt_op, tnei_op, unused_0x0f_rt_op,
+- bltzal_op, bgezal_op, bltzall_op, bgezall_op,
+- rt_op_0x14, rt_op_0x15, rt_op_0x16, rt_op_0x17,
+- rt_op_0x18, rt_op_0x19, rt_op_0x1a, rt_op_0x1b,
+- bposge32_op, rt_op_0x1d, rt_op_0x1e, rt_op_0x1f
++  bltz_op,
++  bgez_op,
++  bltzl_op,
++  bgezl_op,
++  spimi_op,
++  unused_rt_op_0x05,
++  unused_rt_op_0x06,
++  unused_rt_op_0x07,
++  tgei_op,
++  tgeiu_op,
++  tlti_op,
++  tltiu_op,
++  teqi_op,
++  unused_0x0d_rt_op,
++  tnei_op,
++  unused_0x0f_rt_op,
++  bltzal_op,
++  bgezal_op,
++  bltzall_op,
++  bgezall_op,
++  rt_op_0x14,
++  rt_op_0x15,
++  rt_op_0x16,
++  rt_op_0x17,
++  rt_op_0x18,
++  rt_op_0x19,
++  rt_op_0x1a,
++  rt_op_0x1b,
++  bposge32_op,
++  rt_op_0x1d,
++  rt_op_0x1e,
++  rt_op_0x1f
+ };
+ enum cop_op {
+- mfc_op = 0x00, dmfc_op = 0x01,
+- cfc_op = 0x02, mfhc_op = 0x03,
+- mtc_op = 0x04, dmtc_op = 0x05,
+- ctc_op = 0x06, mthc_op = 0x07,
+- bc_op = 0x08, cop_op = 0x10,
++  mfc_op = 0x00,
++  dmfc_op = 0x01,
++  cfc_op = 0x02,
++  mfhc_op = 0x03,
++  mtc_op = 0x04,
++  dmtc_op = 0x05,
++  ctc_op = 0x06,
++  mthc_op = 0x07,
++  bc_op = 0x08,
++  cop_op = 0x10,
+  copm_op = 0x18
+ };
+ enum bcop_op {
+- bcf_op, bct_op, bcfl_op, bctl_op
++  bcf_op,
++  bct_op,
++  bcfl_op,
++  bctl_op
+ };
+ enum cop0_coi_func {
+- tlbr_op = 0x01, tlbwi_op = 0x02,
+- tlbwr_op = 0x06, tlbp_op = 0x08,
+- rfe_op = 0x10, eret_op = 0x18,
++  tlbr_op = 0x01,
++  tlbwi_op = 0x02,
++  tlbwr_op = 0x06,
++  tlbp_op = 0x08,
++  rfe_op = 0x10,
++  eret_op = 0x18,
+  wait_op = 0x20,
+ };
+ enum cop0_com_func {
+- tlbr1_op = 0x01, tlbw_op = 0x02,
+- tlbp1_op = 0x08, dctr_op = 0x09,
++  tlbr1_op = 0x01,
++  tlbw_op = 0x02,
++  tlbp1_op = 0x08,
++  dctr_op = 0x09,
+  dctw_op = 0x0a
+ };
+ enum cop1_fmt {
+- s_fmt, d_fmt, e_fmt, q_fmt,
+- w_fmt, l_fmt
++  s_fmt,
++  d_fmt,
++  e_fmt,
++  q_fmt,
++  w_fmt,
++  l_fmt
+ };
+ enum cop1_sdw_func {
+- fadd_op = 0x00, fsub_op = 0x01,
+- fmul_op = 0x02, fdiv_op = 0x03,
+- fsqrt_op = 0x04, fabs_op = 0x05,
+- fmov_op = 0x06, fneg_op = 0x07,
+- froundl_op = 0x08, ftruncl_op = 0x09,
+- fceill_op = 0x0a, ffloorl_op = 0x0b,
+- fround_op = 0x0c, ftrunc_op = 0x0d,
+- fceil_op = 0x0e, ffloor_op = 0x0f,
+- fmovc_op = 0x11, fmovz_op = 0x12,
+- fmovn_op = 0x13, frecip_op = 0x15,
+- frsqrt_op = 0x16, fcvts_op = 0x20,
+- fcvtd_op = 0x21, fcvte_op = 0x22,
+- fcvtw_op = 0x24, fcvtl_op = 0x25,
++  fadd_op = 0x00,
++  fsub_op = 0x01,
++  fmul_op = 0x02,
++  fdiv_op = 0x03,
++  fsqrt_op = 0x04,
++  fabs_op = 0x05,
++  fmov_op = 0x06,
++  fneg_op = 0x07,
++  froundl_op = 0x08,
++  ftruncl_op = 0x09,
++  fceill_op = 0x0a,
++  ffloorl_op = 0x0b,
++  fround_op = 0x0c,
++  ftrunc_op = 0x0d,
++  fceil_op = 0x0e,
++  ffloor_op = 0x0f,
++  fmovc_op = 0x11,
++  fmovz_op = 0x12,
++  fmovn_op = 0x13,
++  frecip_op = 0x15,
++  frsqrt_op = 0x16,
++  fcvts_op = 0x20,
++  fcvtd_op = 0x21,
++  fcvte_op = 0x22,
++  fcvtw_op = 0x24,
++  fcvtl_op = 0x25,
+  fcmp_op = 0x30
+ };
+ enum cop1x_func {
+- lwxc1_op = 0x00, ldxc1_op = 0x01,
+- swxc1_op = 0x08, sdxc1_op = 0x09,
+- pfetch_op = 0x0f, madd_s_op = 0x20,
+- madd_d_op = 0x21, madd_e_op = 0x22,
+- msub_s_op = 0x28, msub_d_op = 0x29,
+- msub_e_op = 0x2a, nmadd_s_op = 0x30,
+- nmadd_d_op = 0x31, nmadd_e_op = 0x32,
+- nmsub_s_op = 0x38, nmsub_d_op = 0x39,
++  lwxc1_op = 0x00,
++  ldxc1_op = 0x01,
++  swxc1_op = 0x08,
++  sdxc1_op = 0x09,
++  pfetch_op = 0x0f,
++  madd_s_op = 0x20,
++  madd_d_op = 0x21,
++  madd_e_op = 0x22,
++  msub_s_op = 0x28,
++  msub_d_op = 0x29,
++  msub_e_op = 0x2a,
++  nmadd_s_op = 0x30,
++  nmadd_d_op = 0x31,
++  nmadd_e_op = 0x32,
++  nmsub_s_op = 0x38,
++  nmsub_d_op = 0x39,
+  nmsub_e_op = 0x3a
+ };
+ enum mad_func {
+- madd_fp_op = 0x08, msub_fp_op = 0x0a,
+- nmadd_fp_op = 0x0c, nmsub_fp_op = 0x0e
++  madd_fp_op = 0x08,
++  msub_fp_op = 0x0a,
++  nmadd_fp_op = 0x0c,
++  nmsub_fp_op = 0x0e
+ };
+ enum lx_func {
+  lwx_op = 0x00,
+@@ -160,33 +342,108 @@
+  seh_op = 0x18,
+ };
+ enum mm_major_op {
+- mm_pool32a_op, mm_pool16a_op, mm_lbu16_op, mm_move16_op,
+- mm_addi32_op, mm_lbu32_op, mm_sb32_op, mm_lb32_op,
+- mm_pool32b_op, mm_pool16b_op, mm_lhu16_op, mm_andi16_op,
+- mm_addiu32_op, mm_lhu32_op, mm_sh32_op, mm_lh32_op,
+- mm_pool32i_op, mm_pool16c_op, mm_lwsp16_op, mm_pool16d_op,
+- mm_ori32_op, mm_pool32f_op, mm_reserved1_op, mm_reserved2_op,
+- mm_pool32c_op, mm_lwgp16_op, mm_lw16_op, mm_pool16e_op,
+- mm_xori32_op, mm_jals32_op, mm_addiupc_op, mm_reserved3_op,
+- mm_reserved4_op, mm_pool16f_op, mm_sb16_op, mm_beqz16_op,
+- mm_slti32_op, mm_beq32_op, mm_swc132_op, mm_lwc132_op,
+- mm_reserved5_op, mm_reserved6_op, mm_sh16_op, mm_bnez16_op,
+- mm_sltiu32_op, mm_bne32_op, mm_sdc132_op, mm_ldc132_op,
+- mm_reserved7_op, mm_reserved8_op, mm_swsp16_op, mm_b16_op,
+- mm_andi32_op, mm_j32_op, mm_sd32_op, mm_ld32_op,
+- mm_reserved11_op, mm_reserved12_op, mm_sw16_op, mm_li16_op,
+- mm_jalx32_op, mm_jal32_op, mm_sw32_op, mm_lw32_op,
++  mm_pool32a_op,
++  mm_pool16a_op,
++  mm_lbu16_op,
++  mm_move16_op,
++  mm_addi32_op,
++  mm_lbu32_op,
++  mm_sb32_op,
++  mm_lb32_op,
++  mm_pool32b_op,
++  mm_pool16b_op,
++  mm_lhu16_op,
++  mm_andi16_op,
++  mm_addiu32_op,
++  mm_lhu32_op,
++  mm_sh32_op,
++  mm_lh32_op,
++  mm_pool32i_op,
++  mm_pool16c_op,
++  mm_lwsp16_op,
++  mm_pool16d_op,
++  mm_ori32_op,
++  mm_pool32f_op,
++  mm_reserved1_op,
++  mm_reserved2_op,
++  mm_pool32c_op,
++  mm_lwgp16_op,
++  mm_lw16_op,
++  mm_pool16e_op,
++  mm_xori32_op,
++  mm_jals32_op,
++  mm_addiupc_op,
++  mm_reserved3_op,
++  mm_reserved4_op,
++  mm_pool16f_op,
++  mm_sb16_op,
++  mm_beqz16_op,
++  mm_slti32_op,
++  mm_beq32_op,
++  mm_swc132_op,
++  mm_lwc132_op,
++  mm_reserved5_op,
++  mm_reserved6_op,
++  mm_sh16_op,
++  mm_bnez16_op,
++  mm_sltiu32_op,
++  mm_bne32_op,
++  mm_sdc132_op,
++  mm_ldc132_op,
++  mm_reserved7_op,
++  mm_reserved8_op,
++  mm_swsp16_op,
++  mm_b16_op,
++  mm_andi32_op,
++  mm_j32_op,
++  mm_sd32_op,
++  mm_ld32_op,
++  mm_reserved11_op,
++  mm_reserved12_op,
++  mm_sw16_op,
++  mm_li16_op,
++  mm_jalx32_op,
++  mm_jal32_op,
++  mm_sw32_op,
++  mm_lw32_op,
+ };
+ enum mm_32i_minor_op {
+- mm_bltz_op, mm_bltzal_op, mm_bgez_op, mm_bgezal_op,
+- mm_blez_op, mm_bnezc_op, mm_bgtz_op, mm_beqzc_op,
+- mm_tlti_op, mm_tgei_op, mm_tltiu_op, mm_tgeiu_op,
+- mm_tnei_op, mm_lui_op, mm_teqi_op, mm_reserved13_op,
+- mm_synci_op, mm_bltzals_op, mm_reserved14_op, mm_bgezals_op,
+- mm_bc2f_op, mm_bc2t_op, mm_reserved15_op, mm_reserved16_op,
+- mm_reserved17_op, mm_reserved18_op, mm_bposge64_op, mm_bposge32_op,
+- mm_bc1f_op, mm_bc1t_op, mm_reserved19_op, mm_reserved20_op,
+- mm_bc1any2f_op, mm_bc1any2t_op, mm_bc1any4f_op, mm_bc1any4t_op,
++  mm_bltz_op,
++  mm_bltzal_op,
++  mm_bgez_op,
++  mm_bgezal_op,
++  mm_blez_op,
++  mm_bnezc_op,
++  mm_bgtz_op,
++  mm_beqzc_op,
++  mm_tlti_op,
++  mm_tgei_op,
++  mm_tltiu_op,
++  mm_tgeiu_op,
++  mm_tnei_op,
++  mm_lui_op,
++  mm_teqi_op,
++  mm_reserved13_op,
++  mm_synci_op,
++  mm_bltzals_op,
++  mm_reserved14_op,
++  mm_bgezals_op,
++  mm_bc2f_op,
++  mm_bc2t_op,
++  mm_reserved15_op,
++  mm_reserved16_op,
++  mm_reserved17_op,
++  mm_reserved18_op,
++  mm_bposge64_op,
++  mm_bposge32_op,
++  mm_bc1f_op,
++  mm_bc1t_op,
++  mm_reserved19_op,
++  mm_reserved20_op,
++  mm_bc1any2f_op,
++  mm_bc1any2t_op,
++  mm_bc1any4f_op,
++  mm_bc1any4t_op,
+ };
+ enum mm_32a_minor_op {
+  mm_sll32_op = 0x000,
+@@ -382,318 +639,160 @@
+ };
+ #define MM_NOP16 0x0c00
+ struct j_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int target : 26,
+- ;))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int target : 26,;
++ ))
+ };
+ struct i_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(signed int simmediate : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(signed int simmediate : 16,;
++ ))))
+ };
+ struct u_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int uimmediate : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int uimmediate : 16,;
++ ))))
+ };
+ struct c_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int c_op : 3,
+- __BITFIELD_FIELD(unsigned int cache : 2,
+- __BITFIELD_FIELD(unsigned int simmediate : 16,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int c_op : 3, __BITFIELD_FIELD(unsigned int cache : 2, __BITFIELD_FIELD(unsigned int simmediate : 16,;
++ )))))
+ };
+ struct r_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int rd : 5,
+- __BITFIELD_FIELD(unsigned int re : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int re : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct p_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int rd : 5,
+- __BITFIELD_FIELD(unsigned int re : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int re : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct f_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int : 1,
+- __BITFIELD_FIELD(unsigned int fmt : 4,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int rd : 5,
+- __BITFIELD_FIELD(unsigned int re : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;)))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int : 1, __BITFIELD_FIELD(unsigned int fmt : 4, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int re : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ )))))))
+ };
+ struct ma_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int fr : 5,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int func : 4,
+- __BITFIELD_FIELD(unsigned int fmt : 2,
+- ;)))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int fr : 5, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int func : 4, __BITFIELD_FIELD(unsigned int fmt : 2,;
++ )))))))
+ };
+ struct b_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int code : 20,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;)))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int code : 20, __BITFIELD_FIELD(unsigned int func : 6,;
++ )))
+ };
+ struct ps_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct v_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int sel : 4,
+- __BITFIELD_FIELD(unsigned int fmt : 1,
+- __BITFIELD_FIELD(unsigned int vt : 5,
+- __BITFIELD_FIELD(unsigned int vs : 5,
+- __BITFIELD_FIELD(unsigned int vd : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;)))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int sel : 4, __BITFIELD_FIELD(unsigned int fmt : 1, __BITFIELD_FIELD(unsigned int vt : 5, __BITFIELD_FIELD(unsigned int vs : 5, __BITFIELD_FIELD(unsigned int vd : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ )))))))
+ };
+ struct spec3_format {
+- __BITFIELD_FIELD(unsigned int opcode:6,
+- __BITFIELD_FIELD(unsigned int rs:5,
+- __BITFIELD_FIELD(unsigned int rt:5,
+- __BITFIELD_FIELD(signed int simmediate:9,
+- __BITFIELD_FIELD(unsigned int func:7,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(signed int simmediate : 9, __BITFIELD_FIELD(unsigned int func : 7,;
++ )))))
+ };
+ struct fb_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int bc : 5,
+- __BITFIELD_FIELD(unsigned int cc : 3,
+- __BITFIELD_FIELD(unsigned int flag : 2,
+- __BITFIELD_FIELD(signed int simmediate : 16,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int bc : 5, __BITFIELD_FIELD(unsigned int cc : 3, __BITFIELD_FIELD(unsigned int flag : 2, __BITFIELD_FIELD(signed int simmediate : 16,;
++ )))))
+ };
+ struct fp0_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int fmt : 5,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int fmt : 5, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_fp0_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int fmt : 3,
+- __BITFIELD_FIELD(unsigned int op : 2,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;)))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int fmt : 3, __BITFIELD_FIELD(unsigned int op : 2, __BITFIELD_FIELD(unsigned int func : 6,;
++ )))))))
+ };
+ struct fp1_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int op : 5,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int op : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_fp1_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fmt : 2,
+- __BITFIELD_FIELD(unsigned int op : 8,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fmt : 2, __BITFIELD_FIELD(unsigned int op : 8, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_fp2_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int cc : 3,
+- __BITFIELD_FIELD(unsigned int zero : 2,
+- __BITFIELD_FIELD(unsigned int fmt : 2,
+- __BITFIELD_FIELD(unsigned int op : 3,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int cc : 3, __BITFIELD_FIELD(unsigned int zero : 2, __BITFIELD_FIELD(unsigned int fmt : 2, __BITFIELD_FIELD(unsigned int op : 3, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))))
+ };
+ struct mm_fp3_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fmt : 3,
+- __BITFIELD_FIELD(unsigned int op : 7,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fmt : 3, __BITFIELD_FIELD(unsigned int op : 7, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_fp4_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int cc : 3,
+- __BITFIELD_FIELD(unsigned int fmt : 3,
+- __BITFIELD_FIELD(unsigned int cond : 4,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;)))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int cc : 3, __BITFIELD_FIELD(unsigned int fmt : 3, __BITFIELD_FIELD(unsigned int cond : 4, __BITFIELD_FIELD(unsigned int func : 6,;
++ )))))))
+ };
+ struct mm_fp5_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int index : 5,
+- __BITFIELD_FIELD(unsigned int base : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int op : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int index : 5, __BITFIELD_FIELD(unsigned int base : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int op : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct fp6_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int fr : 5,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int fr : 5, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_fp6_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int ft : 5,
+- __BITFIELD_FIELD(unsigned int fs : 5,
+- __BITFIELD_FIELD(unsigned int fd : 5,
+- __BITFIELD_FIELD(unsigned int fr : 5,
+- __BITFIELD_FIELD(unsigned int func : 6,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int ft : 5, __BITFIELD_FIELD(unsigned int fs : 5, __BITFIELD_FIELD(unsigned int fd : 5, __BITFIELD_FIELD(unsigned int fr : 5, __BITFIELD_FIELD(unsigned int func : 6,;
++ ))))))
+ };
+ struct mm_i_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(unsigned int rs : 5,
+- __BITFIELD_FIELD(signed int simmediate : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(signed int simmediate : 16,;
++ ))))
+ };
+ struct mm_m_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rd : 5,
+- __BITFIELD_FIELD(unsigned int base : 5,
+- __BITFIELD_FIELD(unsigned int func : 4,
+- __BITFIELD_FIELD(signed int simmediate : 12,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int base : 5, __BITFIELD_FIELD(unsigned int func : 4, __BITFIELD_FIELD(signed int simmediate : 12,;
++ )))))
+ };
+ struct mm_x_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int index : 5,
+- __BITFIELD_FIELD(unsigned int base : 5,
+- __BITFIELD_FIELD(unsigned int rd : 5,
+- __BITFIELD_FIELD(unsigned int func : 11,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int index : 5, __BITFIELD_FIELD(unsigned int base : 5, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int func : 11,;
++ )))))
+ };
+ struct mm_b0_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(signed int simmediate : 10,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;)))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(signed int simmediate : 10, __BITFIELD_FIELD(unsigned int : 16,;
++ )))
+ };
+ struct mm_b1_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rs : 3,
+- __BITFIELD_FIELD(signed int simmediate : 7,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 3, __BITFIELD_FIELD(signed int simmediate : 7, __BITFIELD_FIELD(unsigned int : 16,;
++ ))))
+ };
+ struct mm16_m_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int func : 4,
+- __BITFIELD_FIELD(unsigned int rlist : 2,
+- __BITFIELD_FIELD(unsigned int imm : 4,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int func : 4, __BITFIELD_FIELD(unsigned int rlist : 2, __BITFIELD_FIELD(unsigned int imm : 4, __BITFIELD_FIELD(unsigned int : 16,;
++ )))))
+ };
+ struct mm16_rb_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 3,
+- __BITFIELD_FIELD(unsigned int base : 3,
+- __BITFIELD_FIELD(signed int simmediate : 4,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;)))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 3, __BITFIELD_FIELD(unsigned int base : 3, __BITFIELD_FIELD(signed int simmediate : 4, __BITFIELD_FIELD(unsigned int : 16,;
++ )))))
+ };
+ struct mm16_r3_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 3,
+- __BITFIELD_FIELD(signed int simmediate : 7,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 3, __BITFIELD_FIELD(signed int simmediate : 7, __BITFIELD_FIELD(unsigned int : 16,;
++ ))))
+ };
+ struct mm16_r5_format {
+- __BITFIELD_FIELD(unsigned int opcode : 6,
+- __BITFIELD_FIELD(unsigned int rt : 5,
+- __BITFIELD_FIELD(signed int simmediate : 5,
+- __BITFIELD_FIELD(unsigned int : 16,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(signed int simmediate : 5, __BITFIELD_FIELD(unsigned int : 16,;
++ ))))
+ };
+ struct m16e_rr {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int rx : 3,
+- __BITFIELD_FIELD(unsigned int nd : 1,
+- __BITFIELD_FIELD(unsigned int l : 1,
+- __BITFIELD_FIELD(unsigned int ra : 1,
+- __BITFIELD_FIELD(unsigned int func : 5,
+- ;))))))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int rx : 3, __BITFIELD_FIELD(unsigned int nd : 1, __BITFIELD_FIELD(unsigned int l : 1, __BITFIELD_FIELD(unsigned int ra : 1, __BITFIELD_FIELD(unsigned int func : 5,;
++ ))))))
+ };
+ struct m16e_jal {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int x : 1,
+- __BITFIELD_FIELD(unsigned int imm20_16 : 5,
+- __BITFIELD_FIELD(signed int imm25_21 : 5,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int x : 1, __BITFIELD_FIELD(unsigned int imm20_16 : 5, __BITFIELD_FIELD(signed int imm25_21 : 5,;
++ ))))
+ };
+ struct m16e_i64 {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int func : 3,
+- __BITFIELD_FIELD(unsigned int imm : 8,
+- ;)))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int func : 3, __BITFIELD_FIELD(unsigned int imm : 8,;
++ )))
+ };
+ struct m16e_ri64 {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int func : 3,
+- __BITFIELD_FIELD(unsigned int ry : 3,
+- __BITFIELD_FIELD(unsigned int imm : 5,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int func : 3, __BITFIELD_FIELD(unsigned int ry : 3, __BITFIELD_FIELD(unsigned int imm : 5,;
++ ))))
+ };
+ struct m16e_ri {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int rx : 3,
+- __BITFIELD_FIELD(unsigned int imm : 8,
+- ;)))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int rx : 3, __BITFIELD_FIELD(unsigned int imm : 8,;
++ )))
+ };
+ struct m16e_rri {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int rx : 3,
+- __BITFIELD_FIELD(unsigned int ry : 3,
+- __BITFIELD_FIELD(unsigned int imm : 5,
+- ;))))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int rx : 3, __BITFIELD_FIELD(unsigned int ry : 3, __BITFIELD_FIELD(unsigned int imm : 5,;
++ ))))
+ };
+ struct m16e_i8 {
+- __BITFIELD_FIELD(unsigned int opcode : 5,
+- __BITFIELD_FIELD(unsigned int func : 3,
+- __BITFIELD_FIELD(unsigned int imm : 8,
+- ;)))
++  __BITFIELD_FIELD(unsigned int opcode : 5, __BITFIELD_FIELD(unsigned int func : 3, __BITFIELD_FIELD(unsigned int imm : 8,;
++ )))
+ };
+ union mips_instruction {
+  unsigned int word;
+diff -uwr uapi-3.18.bak.stripped/asm-x86/asm/a.out.h uapi/asm-x86/asm/a.out.h
+--- uapi-3.18.bak.stripped/asm-x86/asm/a.out.h	2015-01-28 15:14:57.475633823 -0800
++++ uapi/asm-x86/asm/a.out.h	2015-01-28 14:59:07.823502341 -0800
+@@ -18,8 +18,7 @@
+  ****************************************************************************/
+ #ifndef _ASM_X86_A_OUT_H
+ #define _ASM_X86_A_OUT_H
+-struct exec
+-{
++struct exec {
+  unsigned int a_info;
+  unsigned a_text;
+  unsigned a_data;
+diff -uwr uapi-3.18.bak.stripped/asm-x86/asm/stat.h uapi/asm-x86/asm/stat.h
+--- uapi-3.18.bak.stripped/asm-x86/asm/stat.h	2015-01-28 15:14:57.447633702 -0800
++++ uapi/asm-x86/asm/stat.h	2015-01-28 14:59:07.823502341 -0800
+@@ -41,7 +41,8 @@
+  unsigned long __unused4;
+  unsigned long __unused5;
+ };
+-#define INIT_STRUCT_STAT_PADDING(st) do {   st.__unused4 = 0;   st.__unused5 = 0;  } while (0)
++#define INIT_STRUCT_STAT_PADDING(st) do { st.__unused4 = 0; st.__unused5 = 0; \
++} while(0)
+ #define STAT64_HAS_BROKEN_ST_INO 1
+ struct stat64 {
+  unsigned long long st_dev;
+@@ -64,7 +65,8 @@
+  unsigned long st_ctime_nsec;
+  unsigned long long st_ino;
+ };
+-#define INIT_STRUCT_STAT64_PADDING(st) do {   memset(&st.__pad0, 0, sizeof(st.__pad0));   memset(&st.__pad3, 0, sizeof(st.__pad3));  } while (0)
++#define INIT_STRUCT_STAT64_PADDING(st) do { memset(& st.__pad0, 0, sizeof(st.__pad0)); memset(& st.__pad3, 0, sizeof(st.__pad3)); \
++} while(0)
+ #else
+ struct stat {
+  __kernel_ulong_t st_dev;
+@@ -86,7 +88,8 @@
+  __kernel_ulong_t st_ctime_nsec;
+  __kernel_long_t __linux_unused[3];
+ };
+-#define INIT_STRUCT_STAT_PADDING(st) do {   st.__pad0 = 0;   st.__linux_unused[0] = 0;   st.__linux_unused[1] = 0;   st.__linux_unused[2] = 0;  } while (0)
++#define INIT_STRUCT_STAT_PADDING(st) do { st.__pad0 = 0; st.__linux_unused[0] = 0; st.__linux_unused[1] = 0; st.__linux_unused[2] = 0; \
++} while(0)
+ #endif
+ struct __old_kernel_stat {
+  unsigned short st_dev;
+diff -uwr uapi-3.18.bak.stripped/drm/exynos_drm.h uapi/drm/exynos_drm.h
+--- uapi-3.18.bak.stripped/drm/exynos_drm.h	2015-01-28 15:14:57.595634345 -0800
++++ uapi/drm/exynos_drm.h	2015-01-28 15:13:49.415337999 -0800
+@@ -40,8 +40,7 @@
+  EXYNOS_BO_NONCACHABLE = 0 << 1,
+  EXYNOS_BO_CACHABLE = 1 << 1,
+  EXYNOS_BO_WC = 1 << 2,
+- EXYNOS_BO_MASK = EXYNOS_BO_NONCONTIG | EXYNOS_BO_CACHABLE |
+- EXYNOS_BO_WC
++  EXYNOS_BO_MASK = EXYNOS_BO_NONCONTIG | EXYNOS_BO_CACHABLE | EXYNOS_BO_WC
+ };
+ struct drm_exynos_g2d_get_ver {
+  __u32 major;
+@@ -93,8 +92,7 @@
+  EXYNOS_DRM_FLIP_NONE = (0 << 0),
+  EXYNOS_DRM_FLIP_VERTICAL = (1 << 0),
+  EXYNOS_DRM_FLIP_HORIZONTAL = (1 << 1),
+- EXYNOS_DRM_FLIP_BOTH = EXYNOS_DRM_FLIP_VERTICAL |
+- EXYNOS_DRM_FLIP_HORIZONTAL,
++  EXYNOS_DRM_FLIP_BOTH = EXYNOS_DRM_FLIP_VERTICAL | EXYNOS_DRM_FLIP_HORIZONTAL,
+ };
+ enum drm_exynos_degree {
+  EXYNOS_DRM_DEGREE_0,
+diff -uwr uapi-3.18.bak.stripped/drm/radeon_drm.h uapi/drm/radeon_drm.h
+--- uapi-3.18.bak.stripped/drm/radeon_drm.h	2015-01-28 15:14:57.623634467 -0800
++++ uapi/drm/radeon_drm.h	2015-01-28 15:13:49.419338017 -0800
+@@ -332,8 +332,7 @@
+  unsigned int last_frame;
+  unsigned int last_dispatch;
+  unsigned int last_clear;
+- struct drm_tex_region tex_list[RADEON_NR_TEX_HEAPS][RADEON_NR_TEX_REGIONS +
+- 1];
++  struct drm_tex_region tex_list[RADEON_NR_TEX_HEAPS][RADEON_NR_TEX_REGIONS + 1];
+  unsigned int tex_age[RADEON_NR_TEX_HEAPS];
+  int ctx_owner;
+  int pfState;
+diff -uwr uapi-3.18.bak.stripped/drm/savage_drm.h uapi/drm/savage_drm.h
+--- uapi-3.18.bak.stripped/drm/savage_drm.h	2015-01-28 15:14:57.599634362 -0800
++++ uapi/drm/savage_drm.h	2015-01-28 14:59:07.827502358 -0800
+@@ -27,8 +27,7 @@
+ #define SAVAGE_LOG_MIN_TEX_REGION_SIZE 16
+ #endif
+ typedef struct _drm_savage_sarea {
+- struct drm_tex_region texList[SAVAGE_NR_TEX_HEAPS][SAVAGE_NR_TEX_REGIONS +
+- 1];
++  struct drm_tex_region texList[SAVAGE_NR_TEX_HEAPS][SAVAGE_NR_TEX_REGIONS + 1];
+  unsigned int texAge[SAVAGE_NR_TEX_HEAPS];
+  int ctxOwner;
+ } drm_savage_sarea_t, *drm_savage_sarea_ptr;
+diff -uwr uapi-3.18.bak.stripped/linux/acct.h uapi/linux/acct.h
+--- uapi-3.18.bak.stripped/linux/acct.h	2015-01-28 15:14:56.527629703 -0800
++++ uapi/linux/acct.h	2015-01-28 14:59:07.827502358 -0800
+@@ -24,8 +24,7 @@
+ typedef __u16 comp_t;
+ typedef __u32 comp2_t;
+ #define ACCT_COMM 16
+-struct acct
+-{
++struct acct {
+  char ac_flag;
+  char ac_version;
+  __u16 ac_uid16;
+@@ -49,8 +48,7 @@
+  __u32 ac_uid;
+  __u32 ac_gid;
+ };
+-struct acct_v3
+-{
++struct acct_v3 {
+  char ac_flag;
+  char ac_version;
+  __u16 ac_tty;
+diff -uwr uapi-3.18.bak.stripped/linux/android_alarm.h uapi/linux/android_alarm.h
+--- uapi-3.18.bak.stripped/linux/android_alarm.h	2015-01-28 15:14:57.367633354 -0800
++++ uapi/linux/android_alarm.h	2015-01-28 14:59:07.827502358 -0800
+@@ -31,10 +31,8 @@
+ enum android_alarm_return_flags {
+  ANDROID_ALARM_RTC_WAKEUP_MASK = 1U << ANDROID_ALARM_RTC_WAKEUP,
+  ANDROID_ALARM_RTC_MASK = 1U << ANDROID_ALARM_RTC,
+- ANDROID_ALARM_ELAPSED_REALTIME_WAKEUP_MASK =
+- 1U << ANDROID_ALARM_ELAPSED_REALTIME_WAKEUP,
+- ANDROID_ALARM_ELAPSED_REALTIME_MASK =
+- 1U << ANDROID_ALARM_ELAPSED_REALTIME,
++  ANDROID_ALARM_ELAPSED_REALTIME_WAKEUP_MASK = 1U << ANDROID_ALARM_ELAPSED_REALTIME_WAKEUP,
++  ANDROID_ALARM_ELAPSED_REALTIME_MASK = 1U << ANDROID_ALARM_ELAPSED_REALTIME,
+  ANDROID_ALARM_SYSTEMTIME_MASK = 1U << ANDROID_ALARM_SYSTEMTIME,
+  ANDROID_ALARM_TIME_CHANGE_MASK = 1U << 16
+ };
+diff -uwr uapi-3.18.bak.stripped/linux/a.out.h uapi/linux/a.out.h
+--- uapi-3.18.bak.stripped/linux/a.out.h	2015-01-28 15:14:57.003631771 -0800
++++ uapi/linux/a.out.h	2015-01-28 14:59:07.827502358 -0800
+@@ -165,8 +165,7 @@
+ #define N_SETB 0x1A
+ #define N_SETV 0x1C
+ #ifndef N_RELOCATION_INFO_DECLARED
+-struct relocation_info
+-{
++struct relocation_info {
+  int r_address;
+  unsigned int r_symbolnum:24;
+  unsigned int r_pcrel:1;
+diff -uwr uapi-3.18.bak.stripped/linux/atmapi.h uapi/linux/atmapi.h
+--- uapi-3.18.bak.stripped/linux/atmapi.h	2015-01-28 15:14:56.427629268 -0800
++++ uapi/linux/atmapi.h	2015-01-28 14:59:07.827502358 -0800
+@@ -23,5 +23,7 @@
+ #else
+ #define __ATM_API_ALIGN
+ #endif
+-typedef struct { unsigned char _[8]; } __ATM_API_ALIGN atm_kptr_t;
++typedef struct {
++  unsigned char _[8];
++} __ATM_API_ALIGN atm_kptr_t;
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/atm_nicstar.h uapi/linux/atm_nicstar.h
+--- uapi-3.18.bak.stripped/linux/atm_nicstar.h	2015-01-28 15:14:57.147632398 -0800
++++ uapi/linux/atm_nicstar.h	2015-01-28 14:59:07.827502358 -0800
+@@ -23,14 +23,12 @@
+ #define NS_GETPSTAT _IOWR('a',ATMIOC_SARPRV+1,struct atmif_sioc)
+ #define NS_SETBUFLEV _IOW('a',ATMIOC_SARPRV+2,struct atmif_sioc)
+ #define NS_ADJBUFLEV _IO('a',ATMIOC_SARPRV+3)
+-typedef struct buf_nr
+-{
++typedef struct buf_nr {
+  unsigned min;
+  unsigned init;
+  unsigned max;
+ }buf_nr;
+-typedef struct pool_levels
+-{
++typedef struct pool_levels {
+  int buftype;
+  int count;
+  buf_nr level;
+diff -uwr uapi-3.18.bak.stripped/linux/atmsvc.h uapi/linux/atmsvc.h
+--- uapi-3.18.bak.stripped/linux/atmsvc.h	2015-01-28 15:14:56.427629268 -0800
++++ uapi/linux/atmsvc.h	2015-01-28 14:59:07.827502358 -0800
+@@ -22,10 +22,24 @@
+ #include <linux/atm.h>
+ #include <linux/atmioc.h>
+ #define ATMSIGD_CTRL _IO('a',ATMIOC_SPECIAL)
+-enum atmsvc_msg_type { as_catch_null, as_bind, as_connect, as_accept, as_reject,
+- as_listen, as_okay, as_error, as_indicate, as_close,
+- as_itf_notify, as_modify, as_identify, as_terminate,
+- as_addparty, as_dropparty };
++enum atmsvc_msg_type {
++  as_catch_null,
++  as_bind,
++  as_connect,
++  as_accept,
++  as_reject,
++  as_listen,
++  as_okay,
++  as_error,
++  as_indicate,
++  as_close,
++  as_itf_notify,
++  as_modify,
++  as_identify,
++  as_terminate,
++  as_addparty,
++  as_dropparty
++};
+ struct atmsvc_msg {
+  enum atmsvc_msg_type type;
+  atm_kptr_t vcc;
+diff -uwr uapi-3.18.bak.stripped/linux/bcache.h uapi/linux/bcache.h
+--- uapi-3.18.bak.stripped/linux/bcache.h	2015-01-28 15:14:56.999631754 -0800
++++ uapi/linux/bcache.h	2015-01-28 21:08:39.588786234 -0800
+@@ -19,17 +19,25 @@
+ #ifndef _LINUX_BCACHE_H
+ #define _LINUX_BCACHE_H
+ #include <asm/types.h>
+-#define BITMASK(name, type, field, offset, size)  static inline __u64 name(const type *k)  { return (k->field >> offset) & ~(~0ULL << size); }    static inline void SET_##name(type *k, __u64 v)  {   k->field &= ~(~(~0ULL << size) << offset);   k->field |= (v & ~(~0ULL << size)) << offset;  }
++#define BITMASK(name,type,field,offset,size) static inline __u64 name(const type * k) \
++{ return(k->field >> offset) & ~(~0ULL << size); } static inline void SET_ ##name(type * k, __u64 v) \
++{ k->field &= ~(~(~0ULL << size) << offset); k->field |= (v & ~(~0ULL << size)) << offset; \
++}
+ struct bkey {
+  __u64 high;
+  __u64 low;
+  __u64 ptr[];
+ };
+ #define KEY_FIELD(name, field, offset, size)   BITMASK(name, struct bkey, field, offset, size)
+-#define PTR_FIELD(name, offset, size)  static inline __u64 name(const struct bkey *k, unsigned i)  { return (k->ptr[i] >> offset) & ~(~0ULL << size); }    static inline void SET_##name(struct bkey *k, unsigned i, __u64 v)  {   k->ptr[i] &= ~(~(~0ULL << size) << offset);   k->ptr[i] |= (v & ~(~0ULL << size)) << offset;  }
++#define PTR_FIELD(name,offset,size) static inline __u64 name(const struct bkey * k, unsigned i) \
++{ return(k->ptr[i] >> offset) & ~(~0ULL << size); } static inline void SET_ ##name(struct bkey * k, unsigned i, __u64 v) \
++{ k->ptr[i] &= ~(~(~0ULL << size) << offset); k->ptr[i] |= (v & ~(~0ULL << size)) << offset; \
++}
+ #define KEY_SIZE_BITS 16
+ #define KEY_MAX_U64S 8
+-#define KEY(inode, offset, size)  ((struct bkey) {   .high = (1ULL << 63) | ((__u64) (size) << 20) | (inode),   .low = (offset)  })
++#define KEY(inode,offset,size) \
++((struct bkey) {.high = (1ULL << 63) | ((__u64) (size) << 20) | (inode),.low = (offset) \
++})
+ #define ZERO_KEY KEY(0, 0, 0)
+ #define MAX_KEY_INODE (~(~0 << 20))
+ #define MAX_KEY_OFFSET (~0ULL >> 1)
+diff -uwr uapi-3.18.bak.stripped/linux/binder.h uapi/linux/binder.h
+--- uapi-3.18.bak.stripped/linux/binder.h	2015-01-28 15:14:56.923631424 -0800
++++ uapi/linux/binder.h	2015-01-28 15:13:49.419338017 -0800
+@@ -149,10 +149,8 @@
+  BC_REGISTER_LOOPER = _IO('c', 11),
+  BC_ENTER_LOOPER = _IO('c', 12),
+  BC_EXIT_LOOPER = _IO('c', 13),
+- BC_REQUEST_DEATH_NOTIFICATION = _IOW('c', 14,
+- struct binder_handle_cookie),
+- BC_CLEAR_DEATH_NOTIFICATION = _IOW('c', 15,
+- struct binder_handle_cookie),
++  BC_REQUEST_DEATH_NOTIFICATION = _IOW('c', 14, struct binder_handle_cookie),
++  BC_CLEAR_DEATH_NOTIFICATION = _IOW('c', 15, struct binder_handle_cookie),
+  BC_DEAD_BINDER_DONE = _IOW('c', 16, binder_uintptr_t),
+ };
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/can.h uapi/linux/can.h
+--- uapi-3.18.bak.stripped/linux/can.h	2015-01-28 15:14:57.159632449 -0800
++++ uapi/linux/can.h	2015-01-28 14:59:07.827502358 -0800
+@@ -63,7 +63,9 @@
+  __kernel_sa_family_t can_family;
+  int can_ifindex;
+  union {
+- struct { canid_t rx_id, tx_id; } tp;
++    struct {
++      canid_t rx_id, tx_id;
++    } tp;
+  } can_addr;
+ };
+ struct can_filter {
+diff -uwr uapi-3.18.bak.stripped/linux/cciss_ioctl.h uapi/linux/cciss_ioctl.h
+--- uapi-3.18.bak.stripped/linux/cciss_ioctl.h	2015-01-28 15:14:56.755630694 -0800
++++ uapi/linux/cciss_ioctl.h	2015-01-28 14:59:07.827502358 -0800
+@@ -22,15 +22,13 @@
+ #include <linux/ioctl.h>
+ #include <linux/cciss_defs.h>
+ #define CCISS_IOC_MAGIC 'B'
+-typedef struct _cciss_pci_info_struct
+-{
++typedef struct _cciss_pci_info_struct {
+  unsigned char bus;
+  unsigned char dev_fn;
+  unsigned short domain;
+  __u32 board_id;
+ } cciss_pci_info_struct;
+-typedef struct _cciss_coalint_struct
+-{
++typedef struct _cciss_coalint_struct {
+  __u32 delay;
+  __u32 count;
+ } cciss_coalint_struct;
+diff -uwr uapi-3.18.bak.stripped/linux/cdrom.h uapi/linux/cdrom.h
+--- uapi-3.18.bak.stripped/linux/cdrom.h	2015-01-28 15:14:56.751630676 -0800
++++ uapi/linux/cdrom.h	2015-01-28 14:59:07.831502377 -0800
+@@ -67,19 +67,16 @@
+ #define CDROM_SEND_PACKET 0x5393
+ #define CDROM_NEXT_WRITABLE 0x5394
+ #define CDROM_LAST_WRITTEN 0x5395
+-struct cdrom_msf0
+-{
++struct cdrom_msf0 {
+  __u8 minute;
+  __u8 second;
+  __u8 frame;
+ };
+-union cdrom_addr
+-{
++union cdrom_addr {
+  struct cdrom_msf0 msf;
+  int lba;
+ };
+-struct cdrom_msf
+-{
++struct cdrom_msf {
+  __u8 cdmsf_min0;
+  __u8 cdmsf_sec0;
+  __u8 cdmsf_frame0;
+@@ -87,27 +84,23 @@
+  __u8 cdmsf_sec1;
+  __u8 cdmsf_frame1;
+ };
+-struct cdrom_ti
+-{
++struct cdrom_ti {
+  __u8 cdti_trk0;
+  __u8 cdti_ind0;
+  __u8 cdti_trk1;
+  __u8 cdti_ind1;
+ };
+-struct cdrom_tochdr
+-{
++struct cdrom_tochdr {
+  __u8 cdth_trk0;
+  __u8 cdth_trk1;
+ };
+-struct cdrom_volctrl
+-{
++struct cdrom_volctrl {
+  __u8 channel0;
+  __u8 channel1;
+  __u8 channel2;
+  __u8 channel3;
+ };
+-struct cdrom_subchnl
+-{
++struct cdrom_subchnl {
+  __u8 cdsc_format;
+  __u8 cdsc_audiostatus;
+  __u8 cdsc_adr: 4;
+@@ -117,8 +110,7 @@
+  union cdrom_addr cdsc_absaddr;
+  union cdrom_addr cdsc_reladdr;
+ };
+-struct cdrom_tocentry
+-{
++struct cdrom_tocentry {
+  __u8 cdte_track;
+  __u8 cdte_adr :4;
+  __u8 cdte_ctrl :4;
+@@ -126,31 +118,26 @@
+  union cdrom_addr cdte_addr;
+  __u8 cdte_datamode;
+ };
+-struct cdrom_read
+-{
++struct cdrom_read {
+  int cdread_lba;
+  char *cdread_bufaddr;
+  int cdread_buflen;
+ };
+-struct cdrom_read_audio
+-{
++struct cdrom_read_audio {
+  union cdrom_addr addr;
+  __u8 addr_format;
+  int nframes;
+  __u8 __user *buf;
+ };
+-struct cdrom_multisession
+-{
++struct cdrom_multisession {
+  union cdrom_addr addr;
+  __u8 xa_flag;
+  __u8 addr_format;
+ };
+-struct cdrom_mcn
+-{
++struct cdrom_mcn {
+  __u8 medium_catalog_number[14];
+ };
+-struct cdrom_blk
+-{
++struct cdrom_blk {
+  unsigned from;
+  unsigned short len;
+ };
+@@ -159,8 +146,7 @@
+ #define CGC_DATA_WRITE 1
+ #define CGC_DATA_READ 2
+ #define CGC_DATA_NONE 3
+-struct cdrom_generic_command
+-{
++struct cdrom_generic_command {
+  unsigned char cmd[CDROM_PACKET_SIZE];
+  unsigned char __user *buffer;
+  unsigned int buflen;
+diff -uwr uapi-3.18.bak.stripped/linux/coda.h uapi/linux/coda.h
+--- uapi-3.18.bak.stripped/linux/coda.h	2015-01-28 15:14:56.899631319 -0800
++++ uapi/linux/coda.h	2015-01-28 14:59:07.831502377 -0800
+@@ -121,7 +121,17 @@
+ #define coda_f2i(fid)  (fid ? (fid->opaque[3] ^ (fid->opaque[2]<<10) ^ (fid->opaque[1]<<20) ^ fid->opaque[0]) : 0)
+ #ifndef _VENUS_VATTR_T_
+ #define _VENUS_VATTR_T_
+-enum coda_vtype { C_VNON, C_VREG, C_VDIR, C_VBLK, C_VCHR, C_VLNK, C_VSOCK, C_VFIFO, C_VBAD };
++enum coda_vtype {
++  C_VNON,
++  C_VREG,
++  C_VDIR,
++  C_VBLK,
++  C_VCHR,
++  C_VLNK,
++  C_VSOCK,
++  C_VFIFO,
++  C_VBAD
++};
+ struct coda_vattr {
+  long va_type;
+  u_short va_mode;
+diff -uwr uapi-3.18.bak.stripped/linux/coff.h uapi/linux/coff.h
+--- uapi-3.18.bak.stripped/linux/coff.h	2015-01-28 15:14:56.971631633 -0800
++++ uapi/linux/coff.h	2015-01-28 14:59:07.831502377 -0800
+@@ -50,8 +50,7 @@
+ #define COFF_I386BADMAG(x) (COFF_SHORT((x).f_magic) != COFF_I386MAGIC)
+ #define COFF_FILHDR struct COFF_filehdr
+ #define COFF_FILHSZ sizeof(COFF_FILHDR)
+-typedef struct
+-{
++typedef struct {
+  char magic[2];
+  char vstamp[2];
+  char tsize[4];
+@@ -60,8 +59,7 @@
+  char entry[4];
+  char text_start[4];
+  char data_start[4];
+-}
+-COFF_AOUTHDR;
++} COFF_AOUTHDR;
+ #define COFF_AOUTSZ (sizeof(COFF_AOUTHDR))
+ #define COFF_STMAGIC 0401
+ #define COFF_OMAGIC 0404
+@@ -122,8 +120,7 @@
+ #define COFF_E_SYMNMLEN 8
+ #define COFF_E_FILNMLEN 14
+ #define COFF_E_DIMNUM 4
+-struct COFF_syment
+-{
++struct COFF_syment {
+  union {
+  char e_name[E_SYMNMLEN];
+  struct {
+diff -uwr uapi-3.18.bak.stripped/linux/dccp.h uapi/linux/dccp.h
+--- uapi-3.18.bak.stripped/linux/dccp.h	2015-01-28 15:14:56.723630554 -0800
++++ uapi/linux/dccp.h	2015-01-28 14:59:07.831502377 -0800
+@@ -21,27 +21,20 @@
+ #include <linux/types.h>
+ #include <asm/byteorder.h>
+ struct dccp_hdr {
+- __be16 dccph_sport,
+- dccph_dport;
++  __be16 dccph_sport, dccph_dport;
+  __u8 dccph_doff;
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 dccph_cscov:4,
+- dccph_ccval:4;
++  __u8 dccph_cscov : 4, dccph_ccval : 4;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u8 dccph_ccval:4,
+- dccph_cscov:4;
++  __u8 dccph_ccval : 4, dccph_cscov : 4;
+ #else
+ #error "Adjust your <asm/byteorder.h> defines"
+ #endif
+  __sum16 dccph_checksum;
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 dccph_x:1,
+- dccph_type:4,
+- dccph_reserved:3;
++  __u8 dccph_x : 1, dccph_type : 4, dccph_reserved : 3;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u8 dccph_reserved:3,
+- dccph_type:4,
+- dccph_x:1;
++  __u8 dccph_reserved : 3, dccph_type : 4, dccph_x : 1;
+ #else
+ #error "Adjust your <asm/byteorder.h> defines"
+ #endif
+@@ -65,8 +58,7 @@
+ };
+ struct dccp_hdr_reset {
+  struct dccp_hdr_ack_bits dccph_reset_ack;
+- __u8 dccph_reset_code,
+- dccph_reset_data[3];
++  __u8 dccph_reset_code, dccph_reset_data[3];
+ };
+ enum dccp_pkt_type {
+  DCCP_PKT_REQUEST = 0,
+diff -uwr uapi-3.18.bak.stripped/linux/dvb/audio.h uapi/linux/dvb/audio.h
+--- uapi-3.18.bak.stripped/linux/dvb/audio.h	2015-01-28 15:14:57.203632641 -0800
++++ uapi/linux/dvb/audio.h	2015-01-28 14:59:07.831502377 -0800
+@@ -48,8 +48,7 @@
+  int bypass_mode;
+  audio_mixer_t mixer_state;
+ } audio_status_t;
+-typedef
+-struct audio_karaoke {
++typedef struct audio_karaoke {
+  int vocal1;
+  int vocal2;
+  int melody;
+diff -uwr uapi-3.18.bak.stripped/linux/dvb/dmx.h uapi/linux/dvb/dmx.h
+--- uapi-3.18.bak.stripped/linux/dvb/dmx.h	2015-01-28 15:14:57.203632641 -0800
++++ uapi/linux/dvb/dmx.h	2015-01-28 14:59:07.831502377 -0800
+@@ -21,20 +21,17 @@
+ #include <linux/types.h>
+ #include <time.h>
+ #define DMX_FILTER_SIZE 16
+-typedef enum
+-{
++typedef enum {
+  DMX_OUT_DECODER,
+  DMX_OUT_TAP,
+  DMX_OUT_TS_TAP,
+  DMX_OUT_TSDEMUX_TAP
+ } dmx_output_t;
+-typedef enum
+-{
++typedef enum {
+  DMX_IN_FRONTEND,
+  DMX_IN_DVR
+ } dmx_input_t;
+-typedef enum dmx_ts_pes
+-{
++typedef enum dmx_ts_pes {
+  DMX_PES_AUDIO0,
+  DMX_PES_VIDEO0,
+  DMX_PES_TELETEXT0,
+@@ -62,14 +59,12 @@
+ #define DMX_PES_TELETEXT DMX_PES_TELETEXT0
+ #define DMX_PES_SUBTITLE DMX_PES_SUBTITLE0
+ #define DMX_PES_PCR DMX_PES_PCR0
+-typedef struct dmx_filter
+-{
++typedef struct dmx_filter {
+  __u8 filter[DMX_FILTER_SIZE];
+  __u8 mask[DMX_FILTER_SIZE];
+  __u8 mode[DMX_FILTER_SIZE];
+ } dmx_filter_t;
+-struct dmx_sct_filter_params
+-{
++struct dmx_sct_filter_params {
+  __u16 pid;
+  dmx_filter_t filter;
+  __u32 timeout;
+@@ -79,8 +74,7 @@
+ #define DMX_IMMEDIATE_START 4
+ #define DMX_KERNEL_CLIENT 0x8000
+ };
+-struct dmx_pes_filter_params
+-{
++struct dmx_pes_filter_params {
+  __u16 pid;
+  dmx_input_t input;
+  dmx_output_t output;
+diff -uwr uapi-3.18.bak.stripped/linux/dvb/video.h uapi/linux/dvb/video.h
+--- uapi-3.18.bak.stripped/linux/dvb/video.h	2015-01-28 15:14:57.191632589 -0800
++++ uapi/linux/dvb/video.h	2015-01-28 14:59:07.831502377 -0800
+@@ -108,8 +108,7 @@
+  char __user *iFrame;
+  __s32 size;
+ };
+-typedef
+-struct video_highlight {
++typedef struct video_highlight {
+  int active;
+  __u8 contrast1;
+  __u8 contrast2;
+diff -uwr uapi-3.18.bak.stripped/linux/elfcore.h uapi/linux/elfcore.h
+--- uapi-3.18.bak.stripped/linux/elfcore.h	2015-01-28 15:14:57.067632050 -0800
++++ uapi/linux/elfcore.h	2015-01-28 14:59:07.831502377 -0800
+@@ -24,8 +24,7 @@
+ #include <linux/ptrace.h>
+ #include <linux/elf.h>
+ #include <linux/fs.h>
+-struct elf_siginfo
+-{
++struct elf_siginfo {
+  int si_signo;
+  int si_code;
+  int si_errno;
+@@ -35,8 +34,7 @@
+ typedef elf_fpregset_t fpregset_t;
+ typedef elf_fpxregset_t fpxregset_t;
+ #define NGREG ELF_NGREG
+-struct elf_prstatus
+-{
++struct elf_prstatus {
+  struct elf_siginfo pr_info;
+  short pr_cursig;
+  unsigned long pr_sigpend;
+@@ -53,8 +51,7 @@
+  int pr_fpvalid;
+ };
+ #define ELF_PRARGSZ (80)
+-struct elf_prpsinfo
+-{
++struct elf_prpsinfo {
+  char pr_state;
+  char pr_sname;
+  char pr_zomb;
+diff -uwr uapi-3.18.bak.stripped/linux/fd.h uapi/linux/fd.h
+--- uapi-3.18.bak.stripped/linux/fd.h	2015-01-28 15:14:56.939631493 -0800
++++ uapi/linux/fd.h	2015-01-28 14:59:07.831502377 -0800
+@@ -21,26 +21,20 @@
+ #include <linux/ioctl.h>
+ #include <linux/compiler.h>
+ struct floppy_struct {
+- unsigned int size,
+- sect,
+- head,
+- track,
+- stretch;
++  unsigned int size, sect, head, track, stretch;
+ #define FD_STRETCH 1
+ #define FD_SWAPSIDES 2
+ #define FD_ZEROBASED 4
+ #define FD_SECTBASEMASK 0x3FC
+ #define FD_MKSECTBASE(s) (((s) ^ 1) << 2)
+ #define FD_SECTBASE(floppy) ((((floppy)->stretch & FD_SECTBASEMASK) >> 2) ^ 1)
+- unsigned char gap,
+- rate,
++  unsigned char gap, rate,
+ #define FD_2M 0x4
+ #define FD_SIZECODEMASK 0x38
+ #define FD_SIZECODE(floppy) (((((floppy)->rate&FD_SIZECODEMASK)>> 3)+ 2) %8)
+ #define FD_SECTSIZE(floppy) ( (floppy)->rate & FD_2M ?   512 : 128 << FD_SIZECODE(floppy) )
+ #define FD_PERP 0x40
+- spec1,
+- fmt_gap;
++  spec1, fmt_gap;
+  const char * name;
+ };
+ #define FDCLRPRM _IO(2, 0x41)
+@@ -60,12 +54,7 @@
+ #define FDFMTTRK _IOW(2,0x48, struct format_descr)
+ #define FDFMTEND _IO(2,0x49)
+ struct floppy_max_errors {
+- unsigned int
+- abort,
+- read_track,
+- reset,
+- recal,
+- reporting;
++  unsigned int abort, read_track, reset, recal, reporting;
+ };
+ #define FDSETEMSGTRESH _IO(2,0x4a)
+ #define FDFLUSH _IO(2,0x4b)
+diff -uwr uapi-3.18.bak.stripped/linux/icmpv6.h uapi/linux/icmpv6.h
+--- uapi-3.18.bak.stripped/linux/icmpv6.h	2015-01-28 15:14:56.699630450 -0800
++++ uapi/linux/icmpv6.h	2015-01-28 14:59:07.835502394 -0800
+@@ -34,16 +34,9 @@
+  } u_echo;
+  struct icmpv6_nd_advt {
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u32 reserved:5,
+- override:1,
+- solicited:1,
+- router:1,
+- reserved2:24;
++      __u32 reserved : 5, override : 1, solicited : 1, router : 1, reserved2 : 24;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u32 router:1,
+- solicited:1,
+- override:1,
+- reserved:29;
++      __u32 router : 1, solicited : 1, override : 1, reserved : 29;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+@@ -51,17 +44,9 @@
+  struct icmpv6_nd_ra {
+  __u8 hop_limit;
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 reserved:3,
+- router_pref:2,
+- home_agent:1,
+- other:1,
+- managed:1;
++      __u8 reserved : 3, router_pref : 2, home_agent : 1, other : 1, managed : 1;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u8 managed:1,
+- other:1,
+- home_agent:1,
+- router_pref:2,
+- reserved:3;
++      __u8 managed : 1, other : 1, home_agent : 1, router_pref : 2, reserved : 3;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/if_arcnet.h uapi/linux/if_arcnet.h
+--- uapi-3.18.bak.stripped/linux/if_arcnet.h	2015-01-28 15:14:56.967631615 -0800
++++ uapi/linux/if_arcnet.h	2015-01-28 14:59:07.835502394 -0800
+@@ -63,9 +63,7 @@
+  } mes;
+ };
+ struct arc_hardware {
+- __u8 source,
+- dest,
+- offset[2];
++  __u8 source, dest, offset[2];
+ };
+ #define ARC_HDR_SIZE 4
+ struct archdr {
+diff -uwr uapi-3.18.bak.stripped/linux/if_frad.h uapi/linux/if_frad.h
+--- uapi-3.18.bak.stripped/linux/if_frad.h	2015-01-28 15:14:56.451629373 -0800
++++ uapi/linux/if_frad.h	2015-01-28 14:59:07.835502394 -0800
+@@ -19,8 +19,7 @@
+ #ifndef _UAPI_FRAD_H_
+ #define _UAPI_FRAD_H_
+ #include <linux/if.h>
+-struct dlci_add
+-{
++struct dlci_add {
+  char devname[IFNAMSIZ];
+  short dlci;
+ };
+@@ -47,8 +46,7 @@
+ #define FRAD_GET_CONF (SIOCDEVPRIVATE)
+ #define FRAD_SET_CONF (SIOCDEVPRIVATE + 1)
+ #define FRAD_LAST_IOCTL FRAD_SET_CONF
+-struct frad_conf
+-{
++struct frad_conf {
+  short station;
+  short flags;
+  short kbaud;
+diff -uwr uapi-3.18.bak.stripped/linux/if.h uapi/linux/if.h
+--- uapi-3.18.bak.stripped/linux/if.h	2015-01-28 15:14:56.923631424 -0800
++++ uapi/linux/if.h	2015-01-28 14:59:07.835502394 -0800
+@@ -123,8 +123,7 @@
+ };
+ struct ifreq {
+ #define IFHWADDRLEN 6
+- union
+- {
++  union {
+  char ifrn_name[IFNAMSIZ];
+  } ifr_ifrn;
+  union {
+diff -uwr uapi-3.18.bak.stripped/linux/if_hippi.h uapi/linux/if_hippi.h
+--- uapi-3.18.bak.stripped/linux/if_hippi.h	2015-01-28 15:14:57.127632311 -0800
++++ uapi/linux/if_hippi.h	2015-01-28 14:59:07.835502394 -0800
+@@ -62,11 +62,9 @@
+ #endif
+  __u8 dest_switch_addr[3];
+ #ifdef __BIG_ENDIAN_BITFIELD
+- __u8 dest_addr_type:4,
+- src_addr_type:4;
++  __u8 dest_addr_type : 4, src_addr_type : 4;
+ #elif defined(__LITTLE_ENDIAN_BITFIELD)
+- __u8 src_addr_type:4,
+- dest_addr_type:4;
++  __u8 src_addr_type : 4, dest_addr_type : 4;
+ #endif
+  __u8 src_switch_addr[3];
+  __u16 reserved;
+diff -uwr uapi-3.18.bak.stripped/linux/igmp.h uapi/linux/igmp.h
+--- uapi-3.18.bak.stripped/linux/igmp.h	2015-01-28 15:14:56.355628955 -0800
++++ uapi/linux/igmp.h	2015-01-28 14:59:07.835502394 -0800
+@@ -53,13 +53,9 @@
+  __be16 csum;
+  __be32 group;
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 qrv:3,
+- suppress:1,
+- resv:4;
++  __u8 qrv : 3, suppress : 1, resv : 4;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u8 resv:4,
+- suppress:1,
+- qrv:3;
++  __u8 resv : 4, suppress : 1, qrv : 3;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/in.h uapi/linux/in.h
+--- uapi-3.18.bak.stripped/linux/in.h	2015-01-28 15:14:56.447629355 -0800
++++ uapi/linux/in.h	2015-01-28 14:59:07.835502394 -0800
+@@ -176,8 +176,7 @@
+  __kernel_sa_family_t sin_family;
+  __be16 sin_port;
+  struct in_addr sin_addr;
+- unsigned char __pad[__SOCK_SIZE__ - sizeof(short int) -
+- sizeof(unsigned short int) - sizeof(struct in_addr)];
++  unsigned char __pad[__SOCK_SIZE__ - sizeof(short int) - sizeof(unsigned short int) - sizeof(struct in_addr)];
+ };
+ #define sin_zero __pad
+ #define IN_CLASSA(a) ((((long int) (a)) & 0x80000000) == 0)
+diff -uwr uapi-3.18.bak.stripped/linux/ipc.h uapi/linux/ipc.h
+--- uapi-3.18.bak.stripped/linux/ipc.h	2015-01-28 15:14:56.503629599 -0800
++++ uapi/linux/ipc.h	2015-01-28 14:59:07.835502394 -0800
+@@ -20,8 +20,7 @@
+ #define _UAPI_LINUX_IPC_H
+ #include <linux/types.h>
+ #define IPC_PRIVATE ((__kernel_key_t) 0)
+-struct ipc_perm
+-{
++struct ipc_perm {
+  __kernel_key_t key;
+  __kernel_uid_t uid;
+  __kernel_gid_t gid;
+diff -uwr uapi-3.18.bak.stripped/linux/ip.h uapi/linux/ip.h
+--- uapi-3.18.bak.stripped/linux/ip.h	2015-01-28 15:14:56.403629164 -0800
++++ uapi/linux/ip.h	2015-01-28 14:59:07.835502394 -0800
+@@ -73,11 +73,9 @@
+ #define IPV4_BEET_PHMAXLEN 8
+ struct iphdr {
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 ihl:4,
+- version:4;
++  __u8 ihl : 4, version : 4;
+ #elif defined (__BIG_ENDIAN_BITFIELD)
+- __u8 version:4,
+- ihl:4;
++  __u8 version : 4, ihl : 4;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+@@ -115,8 +113,7 @@
+  __u8 padlen;
+  __u8 reserved;
+ };
+-enum
+-{
++enum {
+  IPV4_DEVCONF_FORWARDING=1,
+  IPV4_DEVCONF_MC_FORWARDING,
+  IPV4_DEVCONF_PROXY_ARP,
+diff -uwr uapi-3.18.bak.stripped/linux/ipv6.h uapi/linux/ipv6.h
+--- uapi-3.18.bak.stripped/linux/ipv6.h	2015-01-28 15:14:56.991631720 -0800
++++ uapi/linux/ipv6.h	2015-01-28 15:13:49.423338034 -0800
+@@ -70,11 +70,9 @@
+ } __attribute__((packed));
+ struct ipv6hdr {
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u8 priority:4,
+- version:4;
++  __u8 priority : 4, version : 4;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u8 version:4,
+- priority:4;
++  __u8 version : 4, priority : 4;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/isdn_ppp.h uapi/linux/isdn_ppp.h
+--- uapi-3.18.bak.stripped/linux/isdn_ppp.h	2015-01-28 15:14:56.419629233 -0800
++++ uapi/linux/isdn_ppp.h	2015-01-28 14:59:07.839502411 -0800
+@@ -22,8 +22,7 @@
+ #define CALLTYPE_OUTGOING 0x2
+ #define CALLTYPE_CALLBACK 0x4
+ #define IPPP_VERSION "2.2.0"
+-struct pppcallinfo
+-{
++struct pppcallinfo {
+  int calltype;
+  unsigned char local_num[64];
+  unsigned char remote_num[64];
+diff -uwr uapi-3.18.bak.stripped/linux/ixjuser.h uapi/linux/ixjuser.h
+--- uapi-3.18.bak.stripped/linux/ixjuser.h	2015-01-28 15:14:57.407633528 -0800
++++ uapi/linux/ixjuser.h	2015-01-28 14:59:07.839502411 -0800
+@@ -41,15 +41,87 @@
+ #define IXJCTL_REC_VOLUME PHONE_REC_VOLUME
+ #define IXJCTL_REC_LEVEL PHONE_REC_LEVEL
+ typedef enum {
+- f300_640 = 4, f300_500, f1100, f350, f400, f480, f440, f620, f20_50,
+- f133_200, f300, f300_420, f330, f300_425, f330_440, f340, f350_400,
+- f350_440, f350_450, f360, f380_420, f392, f400_425, f400_440, f400_450,
+- f420, f425, f425_450, f425_475, f435, f440_450, f440_480, f445, f450,
+- f452, f475, f480_620, f494, f500, f520, f523, f525, f540_660, f587,
+- f590, f600, f660, f700, f740, f750, f750_1450, f770, f800, f816, f850,
+- f857_1645, f900, f900_1300, f935_1215, f941_1477, f942, f950, f950_1400,
+- f975, f1000, f1020, f1050, f1100_1750, f1140, f1200, f1209, f1330, f1336,
+- lf1366, f1380, f1400, f1477, f1600, f1633_1638, f1800, f1860
++  f300_640 = 4,
++  f300_500,
++  f1100,
++  f350,
++  f400,
++  f480,
++  f440,
++  f620,
++  f20_50,
++  f133_200,
++  f300,
++  f300_420,
++  f330,
++  f300_425,
++  f330_440,
++  f340,
++  f350_400,
++  f350_440,
++  f350_450,
++  f360,
++  f380_420,
++  f392,
++  f400_425,
++  f400_440,
++  f400_450,
++  f420,
++  f425,
++  f425_450,
++  f425_475,
++  f435,
++  f440_450,
++  f440_480,
++  f445,
++  f450,
++  f452,
++  f475,
++  f480_620,
++  f494,
++  f500,
++  f520,
++  f523,
++  f525,
++  f540_660,
++  f587,
++  f590,
++  f600,
++  f660,
++  f700,
++  f740,
++  f750,
++  f750_1450,
++  f770,
++  f800,
++  f816,
++  f850,
++  f857_1645,
++  f900,
++  f900_1300,
++  f935_1215,
++  f941_1477,
++  f942,
++  f950,
++  f950_1400,
++  f975,
++  f1000,
++  f1020,
++  f1050,
++  f1100_1750,
++  f1140,
++  f1200,
++  f1209,
++  f1330,
++  f1336,
++  lf1366,
++  f1380,
++  f1400,
++  f1477,
++  f1600,
++  f1633_1638,
++  f1800,
++  f1860
+ } IXJ_FILTER_FREQ;
+ typedef struct {
+  unsigned int filter;
+@@ -386,8 +458,14 @@
+  SIG_PSTN_RING,
+  SIG_CALLER_ID,
+  SIG_PSTN_WINK,
+- SIG_F0, SIG_F1, SIG_F2, SIG_F3,
+- SIG_FC0, SIG_FC1, SIG_FC2, SIG_FC3,
++  SIG_F0,
++  SIG_F1,
++  SIG_F2,
++  SIG_F3,
++  SIG_FC0,
++  SIG_FC1,
++  SIG_FC2,
++  SIG_FC3,
+  SIG_READ_READY = 33,
+  SIG_WRITE_READY = 34
+ } IXJ_SIGEVENT;
+diff -uwr uapi-3.18.bak.stripped/linux/jffs2.h uapi/linux/jffs2.h
+--- uapi-3.18.bak.stripped/linux/jffs2.h	2015-01-28 15:14:56.371629025 -0800
++++ uapi/linux/jffs2.h	2015-01-28 14:59:07.839502411 -0800
+@@ -66,15 +66,13 @@
+ typedef struct {
+  __u16 v16;
+ } __attribute__((packed)) jint16_t;
+-struct jffs2_unknown_node
+-{
++struct jffs2_unknown_node {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
+  jint32_t hdr_crc;
+ };
+-struct jffs2_raw_dirent
+-{
++struct jffs2_raw_dirent {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
+@@ -90,8 +88,7 @@
+  jint32_t name_crc;
+  __u8 name[0];
+ };
+-struct jffs2_raw_inode
+-{
++struct jffs2_raw_inode {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
+@@ -129,8 +126,7 @@
+  jint32_t node_crc;
+  __u8 data[0];
+ } __attribute__((packed));
+-struct jffs2_raw_xref
+-{
++struct jffs2_raw_xref {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
+@@ -140,8 +136,7 @@
+  jint32_t xseqno;
+  jint32_t node_crc;
+ } __attribute__((packed));
+-struct jffs2_raw_summary
+-{
++struct jffs2_raw_summary {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
+@@ -153,8 +148,7 @@
+  jint32_t node_crc;
+  jint32_t sum[0];
+ };
+-union jffs2_node_union
+-{
++union jffs2_node_union {
+  struct jffs2_raw_inode i;
+  struct jffs2_raw_dirent d;
+  struct jffs2_raw_xattr x;
+diff -uwr uapi-3.18.bak.stripped/linux/l2tp.h uapi/linux/l2tp.h
+--- uapi-3.18.bak.stripped/linux/l2tp.h	2015-01-28 15:14:57.395633475 -0800
++++ uapi/linux/l2tp.h	2015-01-28 14:59:07.839502411 -0800
+@@ -28,10 +28,7 @@
+  __be16 l2tp_unused;
+  struct in_addr l2tp_addr;
+  __u32 l2tp_conn_id;
+- unsigned char __pad[sizeof(struct sockaddr) -
+- sizeof(__kernel_sa_family_t) -
+- sizeof(__be16) - sizeof(struct in_addr) -
+- sizeof(__u32)];
++  unsigned char __pad[sizeof(struct sockaddr) - sizeof(__kernel_sa_family_t) - sizeof(__be16) - sizeof(struct in_addr) - sizeof(__u32)];
+ };
+ struct sockaddr_l2tpip6 {
+  __kernel_sa_family_t l2tp_family;
+diff -uwr uapi-3.18.bak.stripped/linux/llc.h uapi/linux/llc.h
+--- uapi-3.18.bak.stripped/linux/llc.h	2015-01-28 15:14:57.067632050 -0800
++++ uapi/linux/llc.h	2015-01-28 14:59:07.839502411 -0800
+@@ -28,9 +28,7 @@
+  unsigned char sllc_ua;
+  unsigned char sllc_sap;
+  unsigned char sllc_mac[IFHWADDRLEN];
+- unsigned char __pad[__LLC_SOCK_SIZE__ -
+- sizeof(__kernel_sa_family_t) * 2 -
+- sizeof(unsigned char) * 4 - IFHWADDRLEN];
++  unsigned char __pad[__LLC_SOCK_SIZE__ - sizeof(__kernel_sa_family_t) * 2 - sizeof(unsigned char) * 4 - IFHWADDRLEN];
+ };
+ enum llc_sockopts {
+  LLC_OPT_UNKNOWN = 0,
+diff -uwr uapi-3.18.bak.stripped/linux/ncp_fs.h uapi/linux/ncp_fs.h
+--- uapi-3.18.bak.stripped/linux/ncp_fs.h	2015-01-28 15:14:57.371633370 -0800
++++ uapi/linux/ncp_fs.h	2015-01-28 14:59:07.839502411 -0800
+@@ -49,13 +49,11 @@
+  __u32 dummy2;
+  __u32 dummy3;
+ };
+-struct ncp_sign_init
+-{
++struct ncp_sign_init {
+  char sign_root[8];
+  char sign_last[16];
+ };
+-struct ncp_lock_ioctl
+-{
++struct ncp_lock_ioctl {
+ #define NCP_LOCK_LOG 0
+ #define NCP_LOCK_SH 1
+ #define NCP_LOCK_EX 2
+@@ -68,14 +66,12 @@
+ #define NCP_LOCK_MAX_TIMEOUT 180
+  int timeout;
+ };
+-struct ncp_setroot_ioctl
+-{
++struct ncp_setroot_ioctl {
+  int volNumber;
+  int namespace;
+  __le32 dirEntNum;
+ };
+-struct ncp_objectname_ioctl
+-{
++struct ncp_objectname_ioctl {
+ #define NCP_AUTH_NONE 0x00
+ #define NCP_AUTH_BIND 0x31
+ #define NCP_AUTH_NDS 0x32
+@@ -83,14 +79,12 @@
+  size_t object_name_len;
+  void __user * object_name;
+ };
+-struct ncp_privatedata_ioctl
+-{
++struct ncp_privatedata_ioctl {
+  size_t len;
+  void __user * data;
+ };
+ #define NCP_IOCSNAME_LEN 20
+-struct ncp_nls_ioctl
+-{
++struct ncp_nls_ioctl {
+  unsigned char codepage[NCP_IOCSNAME_LEN+1];
+  unsigned char iocharset[NCP_IOCSNAME_LEN+1];
+ };
+diff -uwr uapi-3.18.bak.stripped/linux/net_dropmon.h uapi/linux/net_dropmon.h
+--- uapi-3.18.bak.stripped/linux/net_dropmon.h	2015-01-28 15:14:56.511629633 -0800
++++ uapi/linux/net_dropmon.h	2015-01-28 14:59:07.839502411 -0800
+@@ -24,7 +24,8 @@
+  __u8 pc[8];
+  __u32 count;
+ };
+-#define is_drop_point_hw(x) do {  int ____i, ____j;  for (____i = 0; ____i < 8; i ____i++)  ____j |= x[____i];  ____j; } while (0)
++#define is_drop_point_hw(x) do { int ____i, ____j; for(____i = 0; ____i < 8; i ____i ++) ____j |= x[____i]; ____j; \
++} while(0)
+ #define NET_DM_CFG_VERSION 0
+ #define NET_DM_CFG_ALERT_COUNT 1
+ #define NET_DM_CFG_ALERT_DELAY 2
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter/ipset/ip_set.h uapi/linux/netfilter/ipset/ip_set.h
+--- uapi-3.18.bak.stripped/linux/netfilter/ipset/ip_set.h	2015-01-28 15:14:56.571629893 -0800
++++ uapi/linux/netfilter/ipset/ip_set.h	2015-01-28 15:13:49.423338034 -0800
+@@ -143,11 +143,9 @@
+  IPSET_FLAG_BIT_LIST_HEADER = 2,
+  IPSET_FLAG_LIST_HEADER = (1 << IPSET_FLAG_BIT_LIST_HEADER),
+  IPSET_FLAG_BIT_SKIP_COUNTER_UPDATE = 3,
+- IPSET_FLAG_SKIP_COUNTER_UPDATE =
+- (1 << IPSET_FLAG_BIT_SKIP_COUNTER_UPDATE),
++  IPSET_FLAG_SKIP_COUNTER_UPDATE = (1 << IPSET_FLAG_BIT_SKIP_COUNTER_UPDATE),
+  IPSET_FLAG_BIT_SKIP_SUBCOUNTER_UPDATE = 4,
+- IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE =
+- (1 << IPSET_FLAG_BIT_SKIP_SUBCOUNTER_UPDATE),
++  IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE = (1 << IPSET_FLAG_BIT_SKIP_SUBCOUNTER_UPDATE),
+  IPSET_FLAG_BIT_MATCH_COUNTERS = 5,
+  IPSET_FLAG_MATCH_COUNTERS = (1 << IPSET_FLAG_BIT_MATCH_COUNTERS),
+  IPSET_FLAG_BIT_RETURN_NOMATCH = 7,
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter/nfnetlink_compat.h uapi/linux/netfilter/nfnetlink_compat.h
+--- uapi-3.18.bak.stripped/linux/netfilter/nfnetlink_compat.h	2015-01-28 15:14:56.579629929 -0800
++++ uapi/linux/netfilter/nfnetlink_compat.h	2015-01-28 14:59:07.843502428 -0800
+@@ -39,9 +39,12 @@
+ #define NFA_SPACE(len) NFA_ALIGN(NFA_LENGTH(len))
+ #define NFA_DATA(nfa) ((void *)(((char *)(nfa)) + NFA_LENGTH(0)))
+ #define NFA_PAYLOAD(nfa) ((int)((nfa)->nfa_len) - NFA_LENGTH(0))
+-#define NFA_NEST(skb, type)  ({ struct nfattr *__start = (struct nfattr *)skb_tail_pointer(skb);   NFA_PUT(skb, (NFNL_NFA_NEST | type), 0, NULL);   __start; })
+-#define NFA_NEST_END(skb, start)  ({ (start)->nfa_len = skb_tail_pointer(skb) - (unsigned char *)(start);   (skb)->len; })
+-#define NFA_NEST_CANCEL(skb, start)  ({ if (start)   skb_trim(skb, (unsigned char *) (start) - (skb)->data);   -1; })
++#define NFA_NEST(skb,type) \
++({ struct nfattr * __start = (struct nfattr *) skb_tail_pointer(skb); NFA_PUT(skb, (NFNL_NFA_NEST | type), 0, NULL); __start; })
++#define NFA_NEST_END(skb,start) \
++({ (start)->nfa_len = skb_tail_pointer(skb) - (unsigned char *) (start); (skb)->len; })
++#define NFA_NEST_CANCEL(skb,start) \
++({ if(start) skb_trim(skb, (unsigned char *) (start) - (skb)->data); - 1; })
+ #define NFM_NFA(n) ((struct nfattr *)(((char *)(n))   + NLMSG_ALIGN(sizeof(struct nfgenmsg))))
+ #define NFM_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct nfgenmsg))
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter/x_tables.h uapi/linux/netfilter/x_tables.h
+--- uapi-3.18.bak.stripped/linux/netfilter/x_tables.h	2015-01-28 15:14:56.675630346 -0800
++++ uapi/linux/netfilter/x_tables.h	2015-01-28 21:08:39.588786234 -0800
+@@ -53,7 +53,9 @@
+  } u;
+  unsigned char data[0];
+ };
+-#define XT_TARGET_INIT(__name, __size)  {   .target.u.user = {   .target_size = XT_ALIGN(__size),   .name = __name,   },  }
++#define XT_TARGET_INIT(__name,__size) \
++{.target.u.user = {.target_size = XT_ALIGN(__size),.name = __name, }, \
++}
+ struct xt_standard_target {
+  struct xt_entry_target target;
+  int verdict;
+@@ -88,8 +90,12 @@
+  struct xt_counters counters[0];
+ };
+ #define XT_INV_PROTO 0x40
+-#define XT_MATCH_ITERATE(type, e, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct xt_entry_match *__m;     for (__i = sizeof(type);   __i < (e)->target_offset;   __i += __m->u.match_size) {   __m = (void *)e + __i;     __ret = fn(__m , ## args);   if (__ret != 0)   break;   }   __ret;  })
+-#define XT_ENTRY_ITERATE_CONTINUE(type, entries, size, n, fn, args...)  ({   unsigned int __i, __n;   int __ret = 0;   type *__entry;     for (__i = 0, __n = 0; __i < (size);   __i += __entry->next_offset, __n++) {   __entry = (void *)(entries) + __i;   if (__n < n)   continue;     __ret = fn(__entry , ## args);   if (__ret != 0)   break;   }   __ret;  })
++#define XT_MATCH_ITERATE(type,e,fn,args...) \
++({ unsigned int __i; int __ret = 0; struct xt_entry_match * __m; for(__i = sizeof(type); __i < (e)->target_offset; __i += __m->u.match_size) { __m = (void *) e + __i; __ret = fn(__m, ##args); if(__ret != 0) break; } __ret; \
++})
++#define XT_ENTRY_ITERATE_CONTINUE(type,entries,size,n,fn,args...) \
++({ unsigned int __i, __n; int __ret = 0; type * __entry; for(__i = 0, __n = 0; __i < (size); __i += __entry->next_offset, __n ++) { __entry = (void *) (entries) + __i; if(__n < n) continue; __ret = fn(__entry, ##args); if(__ret != 0) break; } __ret; \
++})
+ #define XT_ENTRY_ITERATE(type, entries, size, fn, args...)   XT_ENTRY_ITERATE_CONTINUE(type, entries, size, 0, fn, args)
+ #define xt_entry_foreach(pos, ehead, esize)   for ((pos) = (typeof(pos))(ehead);   (pos) < (typeof(pos))((char *)(ehead) + (esize));   (pos) = (typeof(pos))((char *)(pos) + (pos)->next_offset))
+ #define xt_ematch_foreach(pos, entry)   for ((pos) = (struct xt_entry_match *)entry->elems;   (pos) < (struct xt_entry_match *)((char *)(entry) +   (entry)->target_offset);   (pos) = (struct xt_entry_match *)((char *)(pos) +   (pos)->u.match_size))
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter/xt_policy.h uapi/linux/netfilter/xt_policy.h
+--- uapi-3.18.bak.stripped/linux/netfilter/xt_policy.h	2015-01-28 15:14:56.535629737 -0800
++++ uapi/linux/netfilter/xt_policy.h	2015-01-28 14:59:07.843502428 -0800
+@@ -31,12 +31,7 @@
+  XT_POLICY_MODE_TUNNEL
+ };
+ struct xt_policy_spec {
+- __u8 saddr:1,
+- daddr:1,
+- proto:1,
+- mode:1,
+- spi:1,
+- reqid:1;
++  __u8 saddr : 1, daddr : 1, proto : 1, mode : 1, spi : 1, reqid : 1;
+ };
+ union xt_policy_addr {
+  struct in_addr a4;
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter/xt_sctp.h uapi/linux/netfilter/xt_sctp.h
+--- uapi-3.18.bak.stripped/linux/netfilter/xt_sctp.h	2015-01-28 15:14:56.555629824 -0800
++++ uapi/linux/netfilter/xt_sctp.h	2015-01-28 14:59:07.843502428 -0800
+@@ -45,7 +45,9 @@
+ #define bytes(type) (sizeof(type) * 8)
+ #define SCTP_CHUNKMAP_SET(chunkmap, type)   do {   (chunkmap)[type / bytes(__u32)] |=   1 << (type % bytes(__u32));   } while (0)
+ #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)   do {   (chunkmap)[type / bytes(__u32)] &=   ~(1 << (type % bytes(__u32)));   } while (0)
+-#define SCTP_CHUNKMAP_IS_SET(chunkmap, type)  ({   ((chunkmap)[type / bytes (__u32)] &   (1 << (type % bytes (__u32)))) ? 1: 0;  })
++#define SCTP_CHUNKMAP_IS_SET(chunkmap,type) \
++({ ((chunkmap)[type / bytes(__u32)] & (1 << (type % bytes(__u32)))) ? 1 : 0; \
++})
+ #define SCTP_CHUNKMAP_RESET(chunkmap)   memset((chunkmap), 0, sizeof(chunkmap))
+ #define SCTP_CHUNKMAP_SET_ALL(chunkmap)   memset((chunkmap), ~0U, sizeof(chunkmap))
+ #define SCTP_CHUNKMAP_COPY(destmap, srcmap)   memcpy((destmap), (srcmap), sizeof(srcmap))
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_arp/arp_tables.h uapi/linux/netfilter_arp/arp_tables.h
+--- uapi-3.18.bak.stripped/linux/netfilter_arp/arp_tables.h	2015-01-28 15:14:56.951631546 -0800
++++ uapi/linux/netfilter_arp/arp_tables.h	2015-01-28 21:08:39.588786234 -0800
+@@ -65,8 +65,7 @@
+ #define ARPT_INV_ARPPRO 0x0100
+ #define ARPT_INV_ARPHLN 0x0200
+ #define ARPT_INV_MASK 0x03FF
+-struct arpt_entry
+-{
++struct arpt_entry {
+  struct arpt_arp arp;
+  __u16 target_offset;
+  __u16 next_offset;
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_arp/arpt_mangle.h uapi/linux/netfilter_arp/arpt_mangle.h
+--- uapi-3.18.bak.stripped/linux/netfilter_arp/arpt_mangle.h	2015-01-28 15:14:56.947631529 -0800
++++ uapi/linux/netfilter_arp/arpt_mangle.h	2015-01-28 15:13:49.423338034 -0800
+@@ -20,8 +20,7 @@
+ #define _ARPT_MANGLE_H
+ #include <linux/netfilter_arp/arp_tables.h>
+ #define ARPT_MANGLE_ADDR_LEN_MAX sizeof(struct in_addr)
+-struct arpt_mangle
+-{
++struct arpt_mangle {
+  char src_devaddr[ARPT_DEV_ADDR_LEN_MAX];
+  char tgt_devaddr[ARPT_DEV_ADDR_LEN_MAX];
+  union {
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_bridge/ebtables.h uapi/linux/netfilter_bridge/ebtables.h
+--- uapi-3.18.bak.stripped/linux/netfilter_bridge/ebtables.h	2015-01-28 15:14:56.787630832 -0800
++++ uapi/linux/netfilter_bridge/ebtables.h	2015-01-28 21:08:39.588786234 -0800
+@@ -133,7 +133,13 @@
+ #define EBT_SO_GET_INIT_INFO (EBT_SO_GET_ENTRIES+1)
+ #define EBT_SO_GET_INIT_ENTRIES (EBT_SO_GET_INIT_INFO+1)
+ #define EBT_SO_GET_MAX (EBT_SO_GET_INIT_ENTRIES+1)
+-#define EBT_MATCH_ITERATE(e, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct ebt_entry_match *__match;     for (__i = sizeof(struct ebt_entry);   __i < (e)->watchers_offset;   __i += __match->match_size +   sizeof(struct ebt_entry_match)) {   __match = (void *)(e) + __i;     __ret = fn(__match , ## args);   if (__ret != 0)   break;   }   if (__ret == 0) {   if (__i != (e)->watchers_offset)   __ret = -EINVAL;   }   __ret;  })
+-#define EBT_WATCHER_ITERATE(e, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct ebt_entry_watcher *__watcher;     for (__i = e->watchers_offset;   __i < (e)->target_offset;   __i += __watcher->watcher_size +   sizeof(struct ebt_entry_watcher)) {   __watcher = (void *)(e) + __i;     __ret = fn(__watcher , ## args);   if (__ret != 0)   break;   }   if (__ret == 0) {   if (__i != (e)->target_offset)   __ret = -EINVAL;   }   __ret;  })
+-#define EBT_ENTRY_ITERATE(entries, size, fn, args...)  ({   unsigned int __i;   int __ret = 0;   struct ebt_entry *__entry;     for (__i = 0; __i < (size);) {   __entry = (void *)(entries) + __i;   __ret = fn(__entry , ## args);   if (__ret != 0)   break;   if (__entry->bitmask != 0)   __i += __entry->next_offset;   else   __i += sizeof(struct ebt_entries);   }   if (__ret == 0) {   if (__i != (size))   __ret = -EINVAL;   }   __ret;  })
++#define EBT_MATCH_ITERATE(e,fn,args...) \
++({ unsigned int __i; int __ret = 0; struct ebt_entry_match * __match; for(__i = sizeof(struct ebt_entry); __i < (e)->watchers_offset; __i += __match->match_size + sizeof(struct ebt_entry_match)) { __match = (void *) (e) + __i; __ret = fn(__match, ##args); if(__ret != 0) break; } if(__ret == 0) { if(__i != (e)->watchers_offset) __ret = - EINVAL; } __ret; \
++})
++#define EBT_WATCHER_ITERATE(e,fn,args...) \
++({ unsigned int __i; int __ret = 0; struct ebt_entry_watcher * __watcher; for(__i = e->watchers_offset; __i < (e)->target_offset; __i += __watcher->watcher_size + sizeof(struct ebt_entry_watcher)) { __watcher = (void *) (e) + __i; __ret = fn(__watcher, ##args); if(__ret != 0) break; } if(__ret == 0) { if(__i != (e)->target_offset) __ret = - EINVAL; } __ret; \
++})
++#define EBT_ENTRY_ITERATE(entries,size,fn,args...) \
++({ unsigned int __i; int __ret = 0; struct ebt_entry * __entry; for(__i = 0; __i < (size);) { __entry = (void *) (entries) + __i; __ret = fn(__entry, ##args); if(__ret != 0) break; if(__entry->bitmask != 0) __i += __entry->next_offset; else __i += sizeof(struct ebt_entries); } if(__ret == 0) { if(__i != (size)) __ret = - EINVAL; } __ret; \
++})
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_bridge/ebt_arp.h uapi/linux/netfilter_bridge/ebt_arp.h
+--- uapi-3.18.bak.stripped/linux/netfilter_bridge/ebt_arp.h	2015-01-28 15:14:56.779630798 -0800
++++ uapi/linux/netfilter_bridge/ebt_arp.h	2015-01-28 14:59:07.847502445 -0800
+@@ -29,8 +29,7 @@
+ #define EBT_ARP_GRAT 0x80
+ #define EBT_ARP_MASK (EBT_ARP_OPCODE | EBT_ARP_HTYPE | EBT_ARP_PTYPE |   EBT_ARP_SRC_IP | EBT_ARP_DST_IP | EBT_ARP_SRC_MAC | EBT_ARP_DST_MAC |   EBT_ARP_GRAT)
+ #define EBT_ARP_MATCH "arp"
+-struct ebt_arp_info
+-{
++struct ebt_arp_info {
+  __be16 htype;
+  __be16 ptype;
+  __be16 opcode;
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_bridge/ebt_ulog.h uapi/linux/netfilter_bridge/ebt_ulog.h
+--- uapi-3.18.bak.stripped/linux/netfilter_bridge/ebt_ulog.h	2015-01-28 15:14:56.783630816 -0800
++++ uapi/linux/netfilter_bridge/ebt_ulog.h	2015-01-28 14:59:07.847502445 -0800
+@@ -43,7 +43,6 @@
+  unsigned long mark;
+  unsigned int hook;
+  size_t data_len;
+- unsigned char data[0] __attribute__
+- ((aligned (__alignof__(struct ebt_ulog_info))));
++  unsigned char data[0] __attribute__((aligned(__alignof__(struct ebt_ulog_info))));
+ } ebt_ulog_packet_msg_t;
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_ipv4/ip_tables.h uapi/linux/netfilter_ipv4/ip_tables.h
+--- uapi-3.18.bak.stripped/linux/netfilter_ipv4/ip_tables.h	2015-01-28 15:14:57.119632275 -0800
++++ uapi/linux/netfilter_ipv4/ip_tables.h	2015-01-28 21:08:39.588786234 -0800
+@@ -119,9 +119,7 @@
+  unsigned int size;
+  struct ipt_entry entrytable[0];
+ };
+-static __inline__ struct xt_entry_target *
+-ipt_get_target(struct ipt_entry *e)
+-{
++static __inline__ struct xt_entry_target * ipt_get_target(struct ipt_entry * e) {
+  return (void *)e + e->target_offset;
+ }
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/netfilter_ipv6/ip6_tables.h uapi/linux/netfilter_ipv6/ip6_tables.h
+--- uapi-3.18.bak.stripped/linux/netfilter_ipv6/ip6_tables.h	2015-01-28 15:14:57.335633214 -0800
++++ uapi/linux/netfilter_ipv6/ip6_tables.h	2015-01-28 21:08:39.588786234 -0800
+@@ -90,9 +90,15 @@
+  struct ip6t_entry entry;
+  struct xt_error_target target;
+ };
+-#define IP6T_ENTRY_INIT(__size)  {   .target_offset = sizeof(struct ip6t_entry),   .next_offset = (__size),  }
+-#define IP6T_STANDARD_INIT(__verdict)  {   .entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_standard)),   .target = XT_TARGET_INIT(XT_STANDARD_TARGET,   sizeof(struct xt_standard_target)),   .target.verdict = -(__verdict) - 1,  }
+-#define IP6T_ERROR_INIT  {   .entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_error)),   .target = XT_TARGET_INIT(XT_ERROR_TARGET,   sizeof(struct xt_error_target)),   .target.errorname = "ERROR",  }
++#define IP6T_ENTRY_INIT(__size) \
++{.target_offset = sizeof(struct ip6t_entry),.next_offset = (__size), \
++}
++#define IP6T_STANDARD_INIT(__verdict) \
++{.entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_standard)),.target = XT_TARGET_INIT(XT_STANDARD_TARGET, sizeof(struct xt_standard_target)),.target.verdict = - (__verdict) - 1, \
++}
++#define IP6T_ERROR_INIT \
++{.entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_error)),.target = XT_TARGET_INIT(XT_ERROR_TARGET, sizeof(struct xt_error_target)),.target.errorname = "ERROR", \
++}
+ #define IP6T_BASE_CTL 64
+ #define IP6T_SO_SET_REPLACE (IP6T_BASE_CTL)
+ #define IP6T_SO_SET_ADD_COUNTERS (IP6T_BASE_CTL + 1)
+@@ -133,9 +139,7 @@
+  unsigned int size;
+  struct ip6t_entry entrytable[0];
+ };
+-static __inline__ struct xt_entry_target *
+-ip6t_get_target(struct ip6t_entry *e)
+-{
++static __inline__ struct xt_entry_target * ip6t_get_target(struct ip6t_entry * e) {
+  return (void *)e + e->target_offset;
+ }
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/net_tstamp.h uapi/linux/net_tstamp.h
+--- uapi-3.18.bak.stripped/linux/net_tstamp.h	2015-01-28 15:14:56.763630729 -0800
++++ uapi/linux/net_tstamp.h	2015-01-28 15:13:49.423338034 -0800
+@@ -31,8 +31,7 @@
+  SOF_TIMESTAMPING_TX_SCHED = (1<<8),
+  SOF_TIMESTAMPING_TX_ACK = (1<<9),
+  SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_TX_ACK,
+- SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) |
+- SOF_TIMESTAMPING_LAST
++  SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) | SOF_TIMESTAMPING_LAST
+ };
+ struct hwtstamp_config {
+  int flags;
+diff -uwr uapi-3.18.bak.stripped/linux/nfc.h uapi/linux/nfc.h
+--- uapi-3.18.bak.stripped/linux/nfc.h	2015-01-28 15:14:56.903631338 -0800
++++ uapi/linux/nfc.h	2015-01-28 14:59:07.847502445 -0800
+@@ -141,7 +141,8 @@
+  __u32 nfc_protocol;
+  __u8 dsap;
+  __u8 ssap;
+- char service_name[NFC_LLCP_MAX_SERVICE_NAME];  ;
++  char service_name[NFC_LLCP_MAX_SERVICE_NAME];
++;
+  size_t service_name_len;
+ };
+ #define NFC_SOCKPROTO_RAW 0
+diff -uwr uapi-3.18.bak.stripped/linux/nl80211.h uapi/linux/nl80211.h
+--- uapi-3.18.bak.stripped/linux/nl80211.h	2015-01-28 15:14:57.263632901 -0800
++++ uapi/linux/nl80211.h	2015-01-28 15:13:49.423338034 -0800
+@@ -586,8 +586,7 @@
+  NL80211_SCHED_SCAN_MATCH_ATTR_SSID,
+  NL80211_SCHED_SCAN_MATCH_ATTR_RSSI,
+  __NL80211_SCHED_SCAN_MATCH_ATTR_AFTER_LAST,
+- NL80211_SCHED_SCAN_MATCH_ATTR_MAX =
+- __NL80211_SCHED_SCAN_MATCH_ATTR_AFTER_LAST - 1
++  NL80211_SCHED_SCAN_MATCH_ATTR_MAX = __NL80211_SCHED_SCAN_MATCH_ATTR_AFTER_LAST - 1
+ };
+ #define NL80211_ATTR_SCHED_SCAN_MATCH_SSID NL80211_SCHED_SCAN_MATCH_ATTR_SSID
+ enum nl80211_reg_rule_flags {
+diff -uwr uapi-3.18.bak.stripped/linux/n_r3964.h uapi/linux/n_r3964.h
+--- uapi-3.18.bak.stripped/linux/n_r3964.h	2015-01-28 15:14:56.503629599 -0800
++++ uapi/linux/n_r3964.h	2015-01-28 14:59:07.839502411 -0800
+@@ -29,7 +29,10 @@
+ #define R3964_SIG_ALL 0x000f
+ #define R3964_SIG_NONE 0x0000
+ #define R3964_USE_SIGIO 0x1000
+-enum {R3964_MSG_ACK=1, R3964_MSG_DATA };
++enum {
++  R3964_MSG_ACK = 1,
++  R3964_MSG_DATA
++};
+ #define R3964_MAX_MSG_COUNT 32
+ #define R3964_OK 0
+ #define R3964_TX_FAIL -1
+diff -uwr uapi-3.18.bak.stripped/linux/nubus.h uapi/linux/nubus.h
+--- uapi-3.18.bak.stripped/linux/nubus.h	2015-01-28 15:14:56.759630711 -0800
++++ uapi/linux/nubus.h	2015-01-28 14:59:07.851502463 -0800
+@@ -153,15 +153,13 @@
+  NUBUS_RESID_FIFTHMODE = 0x0084,
+  NUBUS_RESID_SIXTHMODE = 0x0085
+ };
+-struct nubus_dir
+-{
++struct nubus_dir {
+  unsigned char *base;
+  unsigned char *ptr;
+  int done;
+  int mask;
+ };
+-struct nubus_dirent
+-{
++struct nubus_dirent {
+  unsigned char *base;
+  unsigned char type;
+  __u32 data;
+diff -uwr uapi-3.18.bak.stripped/linux/perf_event.h uapi/linux/perf_event.h
+--- uapi-3.18.bak.stripped/linux/perf_event.h	2015-01-28 15:14:57.059632015 -0800
++++ uapi/linux/perf_event.h	2015-01-28 21:08:39.588786234 -0800
+@@ -152,31 +152,7 @@
+  };
+  __u64 sample_type;
+  __u64 read_format;
+- __u64 disabled : 1,
+- inherit : 1,
+- pinned : 1,
+- exclusive : 1,
+- exclude_user : 1,
+- exclude_kernel : 1,
+- exclude_hv : 1,
+- exclude_idle : 1,
+- mmap : 1,
+- comm : 1,
+- freq : 1,
+- inherit_stat : 1,
+- enable_on_exec : 1,
+- task : 1,
+- watermark : 1,
+- precise_ip : 2,
+- mmap_data : 1,
+- sample_id_all : 1,
+- exclude_host : 1,
+- exclude_guest : 1,
+- exclude_callchain_kernel : 1,
+- exclude_callchain_user : 1,
+- mmap2 : 1,
+- comm_exec : 1,
+- __reserved_1 : 39;
++  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, __reserved_1 : 39;
+  union {
+  __u32 wakeup_events;
+  __u32 wakeup_watermark;
+@@ -218,12 +194,7 @@
+  union {
+  __u64 capabilities;
+  struct {
+- __u64 cap_bit0 : 1,
+- cap_bit0_is_deprecated : 1,
+- cap_user_rdpmc : 1,
+- cap_user_time : 1,
+- cap_user_time_zero : 1,
+- cap_____res : 59;
++      __u64 cap_bit0 : 1, cap_bit0_is_deprecated : 1, cap_user_rdpmc : 1, cap_user_time : 1, cap_user_time_zero : 1, cap_____res : 59;
+  };
+  };
+  __u16 pmc_width;
+@@ -282,12 +253,7 @@
+ union perf_mem_data_src {
+  __u64 val;
+  struct {
+- __u64 mem_op:5,
+- mem_lvl:14,
+- mem_snoop:5,
+- mem_lock:2,
+- mem_dtlb:7,
+- mem_rsvd:31;
++    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_rsvd : 31;
+  };
+ };
+ #define PERF_MEM_OP_NA 0x01
+@@ -332,10 +298,6 @@
+ struct perf_branch_entry {
+  __u64 from;
+  __u64 to;
+- __u64 mispred:1,
+- predicted:1,
+- in_tx:1,
+- abort:1,
+- reserved:60;
++  __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, reserved : 60;
+ };
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/personality.h uapi/linux/personality.h
+--- uapi-3.18.bak.stripped/linux/personality.h	2015-01-28 15:14:56.307628747 -0800
++++ uapi/linux/personality.h	2015-01-28 14:59:07.851502463 -0800
+@@ -38,8 +38,7 @@
+  PER_LINUX_FDPIC = 0x0000 | FDPIC_FUNCPTRS,
+  PER_SVR4 = 0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
+  PER_SVR3 = 0x0002 | STICKY_TIMEOUTS | SHORT_INODE,
+- PER_SCOSVR3 = 0x0003 | STICKY_TIMEOUTS |
+- WHOLE_SECONDS | SHORT_INODE,
++  PER_SCOSVR3 = 0x0003 | STICKY_TIMEOUTS | WHOLE_SECONDS | SHORT_INODE,
+  PER_OSR5 = 0x0003 | STICKY_TIMEOUTS | WHOLE_SECONDS,
+  PER_WYSEV386 = 0x0004 | STICKY_TIMEOUTS | SHORT_INODE,
+  PER_ISCR4 = 0x0005 | STICKY_TIMEOUTS,
+diff -uwr uapi-3.18.bak.stripped/linux/quota.h uapi/linux/quota.h
+--- uapi-3.18.bak.stripped/linux/quota.h	2015-01-28 15:14:57.135632345 -0800
++++ uapi/linux/quota.h	2015-01-28 14:59:07.851502463 -0800
+@@ -24,7 +24,8 @@
+ #define MAXQUOTAS 2
+ #define USRQUOTA 0
+ #define GRPQUOTA 1
+-#define INITQFNAMES {   "user",     "group",     "undefined",  };
++#define INITQFNAMES { "user", "group", "undefined", \
++};
+ #define SUBCMDMASK 0x00ff
+ #define SUBCMDSHIFT 8
+ #define QCMD(cmd, type) (((cmd) << SUBCMDSHIFT) | ((type) & SUBCMDMASK))
+diff -uwr uapi-3.18.bak.stripped/linux/raid/md_u.h uapi/linux/raid/md_u.h
+--- uapi-3.18.bak.stripped/linux/raid/md_u.h	2015-01-28 15:14:56.875631215 -0800
++++ uapi/linux/raid/md_u.h	2015-01-28 15:13:49.423338034 -0800
+@@ -85,12 +85,10 @@
+  int raid_disk;
+  int state;
+ } mdu_start_info_t;
+-typedef struct mdu_bitmap_file_s
+-{
++typedef struct mdu_bitmap_file_s {
+  char pathname[4096];
+ } mdu_bitmap_file_t;
+-typedef struct mdu_param_s
+-{
++typedef struct mdu_param_s {
+  int personality;
+  int chunk_size;
+  int max_fault;
+diff -uwr uapi-3.18.bak.stripped/linux/raw.h uapi/linux/raw.h
+--- uapi-3.18.bak.stripped/linux/raw.h	2015-01-28 15:14:56.919631406 -0800
++++ uapi/linux/raw.h	2015-01-28 14:59:07.851502463 -0800
+@@ -21,8 +21,7 @@
+ #include <linux/types.h>
+ #define RAW_SETBIND _IO( 0xac, 0 )
+ #define RAW_GETBIND _IO( 0xac, 1 )
+-struct raw_config_request
+-{
++struct raw_config_request {
+  int raw_minor;
+  __u64 block_major;
+  __u64 block_minor;
+diff -uwr uapi-3.18.bak.stripped/linux/rtnetlink.h uapi/linux/rtnetlink.h
+--- uapi-3.18.bak.stripped/linux/rtnetlink.h	2015-01-28 15:14:57.039631928 -0800
++++ uapi/linux/rtnetlink.h	2015-01-28 14:59:07.851502463 -0800
+@@ -332,8 +332,7 @@
+  unsigned char prefix_flags;
+  unsigned char prefix_pad3;
+ };
+-enum
+-{
++enum {
+  PREFIX_UNSPEC,
+  PREFIX_ADDRESS,
+  PREFIX_CACHEINFO,
+diff -uwr uapi-3.18.bak.stripped/linux/sctp.h uapi/linux/sctp.h
+--- uapi-3.18.bak.stripped/linux/sctp.h	2015-01-28 15:14:56.927631442 -0800
++++ uapi/linux/sctp.h	2015-01-28 15:13:49.423338034 -0800
+@@ -213,7 +213,9 @@
+  __u32 pdapi_indication;
+  sctp_assoc_t pdapi_assoc_id;
+ };
+-enum { SCTP_PARTIAL_DELIVERY_ABORTED=0, };
++enum {
++  SCTP_PARTIAL_DELIVERY_ABORTED = 0,
++};
+ struct sctp_authkey_event {
+  __u16 auth_type;
+  __u16 auth_flags;
+@@ -223,7 +225,9 @@
+  __u32 auth_indication;
+  sctp_assoc_t auth_assoc_id;
+ };
+-enum { SCTP_AUTH_NEWKEY = 0, };
++enum {
++  SCTP_AUTH_NEWKEY = 0,
++};
+ struct sctp_sender_dry_event {
+  __u16 sender_dry_type;
+  __u16 sender_dry_flags;
+diff -uwr uapi-3.18.bak.stripped/linux/snmp.h uapi/linux/snmp.h
+--- uapi-3.18.bak.stripped/linux/snmp.h	2015-01-28 15:14:56.847631094 -0800
++++ uapi/linux/snmp.h	2015-01-28 14:59:07.851502463 -0800
+@@ -18,8 +18,7 @@
+  ****************************************************************************/
+ #ifndef _LINUX_SNMP_H
+ #define _LINUX_SNMP_H
+-enum
+-{
++enum {
+  IPSTATS_MIB_NUM = 0,
+  IPSTATS_MIB_INPKTS,
+  IPSTATS_MIB_INOCTETS,
+@@ -58,8 +57,7 @@
+  IPSTATS_MIB_CEPKTS,
+  __IPSTATS_MIB_MAX
+ };
+-enum
+-{
++enum {
+  ICMP_MIB_NUM = 0,
+  ICMP_MIB_INMSGS,
+  ICMP_MIB_INERRORS,
+@@ -91,8 +89,7 @@
+  __ICMP_MIB_MAX
+ };
+ #define __ICMPMSG_MIB_MAX 512
+-enum
+-{
++enum {
+  ICMP6_MIB_NUM = 0,
+  ICMP6_MIB_INMSGS,
+  ICMP6_MIB_INERRORS,
+@@ -102,8 +99,7 @@
+  __ICMP6_MIB_MAX
+ };
+ #define __ICMP6MSG_MIB_MAX 512
+-enum
+-{
++enum {
+  TCP_MIB_NUM = 0,
+  TCP_MIB_RTOALGORITHM,
+  TCP_MIB_RTOMIN,
+@@ -122,8 +118,7 @@
+  TCP_MIB_CSUMERRORS,
+  __TCP_MIB_MAX
+ };
+-enum
+-{
++enum {
+  UDP_MIB_NUM = 0,
+  UDP_MIB_INDATAGRAMS,
+  UDP_MIB_NOPORTS,
+@@ -134,8 +129,7 @@
+  UDP_MIB_CSUMERRORS,
+  __UDP_MIB_MAX
+ };
+-enum
+-{
++enum {
+  LINUX_MIB_NUM = 0,
+  LINUX_MIB_SYNCOOKIESSENT,
+  LINUX_MIB_SYNCOOKIESRECV,
+@@ -241,8 +235,7 @@
+  LINUX_MIB_TCPORIGDATASENT,
+  __LINUX_MIB_MAX
+ };
+-enum
+-{
++enum {
+  LINUX_MIB_XFRMNUM = 0,
+  LINUX_MIB_XFRMINERROR,
+  LINUX_MIB_XFRMINBUFFERERROR,
+diff -uwr uapi-3.18.bak.stripped/linux/soundcard.h uapi/linux/soundcard.h
+--- uapi-3.18.bak.stripped/linux/soundcard.h	2015-01-28 15:14:56.495629564 -0800
++++ uapi/linux/soundcard.h	2015-01-28 14:59:07.855502481 -0800
+@@ -103,13 +103,11 @@
+ #define SNDCTL_SYNTH_ID _SIOWR('Q',20, struct synth_info)
+ #define SNDCTL_SYNTH_CONTROL _SIOWR('Q',21, struct synth_control)
+ #define SNDCTL_SYNTH_REMOVESAMPLE _SIOWR('Q',22, struct remove_sample)
+-typedef struct synth_control
+-{
++typedef struct synth_control {
+  int devno;
+  char data[4000];
+ }synth_control;
+-typedef struct remove_sample
+-{
++typedef struct remove_sample {
+  int devno;
+  int bankno;
+  int instrno;
+@@ -576,15 +574,13 @@
+ #define SOUND_MIXER_WRITE_ENHANCE MIXER_WRITE(SOUND_MIXER_ENHANCE)
+ #define SOUND_MIXER_WRITE_LOUD MIXER_WRITE(SOUND_MIXER_LOUD)
+ #define SOUND_MIXER_WRITE_RECSRC MIXER_WRITE(SOUND_MIXER_RECSRC)
+-typedef struct mixer_info
+-{
++typedef struct mixer_info {
+  char id[16];
+  char name[32];
+  int modify_counter;
+  int fillers[10];
+ } mixer_info;
+-typedef struct _old_mixer_info
+-{
++typedef struct _old_mixer_info {
+  char id[16];
+  char name[32];
+ } _old_mixer_info;
+diff -uwr uapi-3.18.bak.stripped/linux/synclink.h uapi/linux/synclink.h
+--- uapi-3.18.bak.stripped/linux/synclink.h	2015-01-28 15:14:56.963631597 -0800
++++ uapi/linux/synclink.h	2015-01-28 14:59:07.855502481 -0800
+@@ -133,8 +133,7 @@
+ #define MGSL_INTERFACE_LL 0x20
+ #define MGSL_INTERFACE_RL 0x40
+ #define MGSL_INTERFACE_MSB_FIRST 0x80
+-typedef struct _MGSL_PARAMS
+-{
++typedef struct _MGSL_PARAMS {
+  unsigned long mode;
+  unsigned char loopback;
+  unsigned short flags;
+diff -uwr uapi-3.18.bak.stripped/linux/sysctl.h uapi/linux/sysctl.h
+--- uapi-3.18.bak.stripped/linux/sysctl.h	2015-01-28 15:14:57.087632137 -0800
++++ uapi/linux/sysctl.h	2015-01-28 15:13:49.423338034 -0800
+@@ -32,8 +32,7 @@
+  size_t newlen;
+  unsigned long __linux_unused[4];
+ };
+-enum
+-{
++enum {
+  CTL_KERN=1,
+  CTL_VM=2,
+  CTL_NET=3,
+@@ -50,18 +49,15 @@
+  CTL_PM=9899,
+  CTL_FRV=9898,
+ };
+-enum
+-{
++enum {
+  CTL_BUS_ISA=1
+ };
+-enum
+-{
++enum {
+  INOTIFY_MAX_USER_INSTANCES=1,
+  INOTIFY_MAX_USER_WATCHES=2,
+  INOTIFY_MAX_QUEUED_EVENTS=3
+ };
+-enum
+-{
++enum {
+  KERN_OSTYPE=1,
+  KERN_OSRELEASE=2,
+  KERN_OSREV=3,
+@@ -129,8 +125,7 @@
+  KERN_NMI_WATCHDOG=75,
+  KERN_PANIC_ON_NMI=76,
+ };
+-enum
+-{
++enum {
+  VM_UNUSED1=1,
+  VM_UNUSED2=2,
+  VM_UNUSED3=3,
+@@ -167,8 +162,7 @@
+  VM_VDSO_ENABLED=34,
+  VM_MIN_SLAB=35,
+ };
+-enum
+-{
++enum {
+  NET_CORE=1,
+  NET_ETHER=2,
+  NET_802=3,
+@@ -191,8 +185,7 @@
+  NET_DCCP=20,
+  NET_IRDA=412,
+ };
+-enum
+-{
++enum {
+  RANDOM_POOLSIZE=1,
+  RANDOM_ENTROPY_COUNT=2,
+  RANDOM_READ_THRESH=3,
+@@ -200,19 +193,16 @@
+  RANDOM_BOOT_ID=5,
+  RANDOM_UUID=6
+ };
+-enum
+-{
++enum {
+  PTY_MAX=1,
+  PTY_NR=2
+ };
+-enum
+-{
++enum {
+  BUS_ISA_MEM_BASE=1,
+  BUS_ISA_PORT_BASE=2,
+  BUS_ISA_PORT_SHIFT=3
+ };
+-enum
+-{
++enum {
+  NET_CORE_WMEM_MAX=1,
+  NET_CORE_RMEM_MAX=2,
+  NET_CORE_WMEM_DEFAULT=3,
+@@ -235,14 +225,12 @@
+  NET_CORE_AEVENT_RSEQTH=21,
+  NET_CORE_WARNINGS=22,
+ };
+-enum
+-{
++enum {
+  NET_UNIX_DESTROY_DELAY=1,
+  NET_UNIX_DELETE_DELAY=2,
+  NET_UNIX_MAX_DGRAM_QLEN=3,
+ };
+-enum
+-{
++enum {
+  NET_NF_CONNTRACK_MAX=1,
+  NET_NF_CONNTRACK_TCP_TIMEOUT_SYN_SENT=2,
+  NET_NF_CONNTRACK_TCP_TIMEOUT_SYN_RECV=3,
+@@ -276,8 +264,7 @@
+  NET_NF_CONNTRACK_FRAG6_HIGH_THRESH=31,
+  NET_NF_CONNTRACK_CHECKSUM=32,
+ };
+-enum
+-{
++enum {
+  NET_IPV4_FORWARD=8,
+  NET_IPV4_DYNADDR=9,
+  NET_IPV4_CONF=16,
+@@ -392,13 +379,11 @@
+  NET_IPV4_ROUTE_SECRET_INTERVAL=18,
+  NET_IPV4_ROUTE_GC_MIN_INTERVAL_MS=19,
+ };
+-enum
+-{
++enum {
+  NET_PROTO_CONF_ALL=-2,
+  NET_PROTO_CONF_DEFAULT=-3
+ };
+-enum
+-{
++enum {
+  NET_IPV4_CONF_FORWARDING=1,
+  NET_IPV4_CONF_MC_FORWARDING=2,
+  NET_IPV4_CONF_PROXY_ARP=3,
+@@ -422,8 +407,7 @@
+  NET_IPV4_CONF_ARP_ACCEPT=21,
+  NET_IPV4_CONF_ARP_NOTIFY=22,
+ };
+-enum
+-{
++enum {
+  NET_IPV4_NF_CONNTRACK_MAX=1,
+  NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_SYN_SENT=2,
+  NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_SYN_RECV=3,
+@@ -607,8 +591,7 @@
+  NET_X25_ACK_HOLD_BACK_TIMEOUT=5,
+  NET_X25_FORWARD=6
+ };
+-enum
+-{
++enum {
+  NET_TR_RIF_TIMEOUT=1
+ };
+ enum {
+@@ -687,8 +670,7 @@
+  NET_IRDA_WARN_NOREPLY_TIME=13,
+  NET_IRDA_LAP_KEEPALIVE_TIME=14,
+ };
+-enum
+-{
++enum {
+  FS_NRINODE=1,
+  FS_STATINODE=2,
+  FS_MAXINODE=3,
+@@ -779,8 +761,7 @@
+ enum {
+  DEV_IPMI_POWEROFF_POWERCYCLE=1,
+ };
+-enum
+-{
++enum {
+  ABI_DEFHANDLER_COFF=1,
+  ABI_DEFHANDLER_ELF=2,
+  ABI_DEFHANDLER_LCALL7=3,
+diff -uwr uapi-3.18.bak.stripped/linux/tcp.h uapi/linux/tcp.h
+--- uapi-3.18.bak.stripped/linux/tcp.h	2015-01-28 15:14:57.055631998 -0800
++++ uapi/linux/tcp.h	2015-01-28 14:59:07.855502481 -0800
+@@ -27,27 +27,9 @@
+  __be32 seq;
+  __be32 ack_seq;
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+- __u16 res1:4,
+- doff:4,
+- fin:1,
+- syn:1,
+- rst:1,
+- psh:1,
+- ack:1,
+- urg:1,
+- ece:1,
+- cwr:1;
++  __u16 res1 : 4, doff : 4, fin : 1, syn : 1, rst : 1, psh : 1, ack : 1, urg : 1, ece : 1, cwr : 1;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+- __u16 doff:4,
+- res1:4,
+- cwr:1,
+- ece:1,
+- urg:1,
+- ack:1,
+- psh:1,
+- rst:1,
+- syn:1,
+- fin:1;
++  __u16 doff : 4, res1 : 4, cwr : 1, ece : 1, urg : 1, ack : 1, psh : 1, rst : 1, syn : 1, fin : 1;
+ #else
+ #error "Adjust your <asm/byteorder.h> defines"
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/telephony.h uapi/linux/telephony.h
+--- uapi-3.18.bak.stripped/linux/telephony.h	2015-01-28 15:14:56.955631563 -0800
++++ uapi/linux/telephony.h	2015-01-28 14:59:07.855502481 -0800
+@@ -123,16 +123,14 @@
+  WSS = 12,
+  G729B = 13
+ } phone_codec;
+-struct phone_codec_data
+-{
++struct phone_codec_data {
+  phone_codec type;
+  unsigned short buf_min, buf_opt, buf_max;
+ };
+ #define PHONE_QUERY_CODEC _IOWR ('q', 0xA7, struct phone_codec_data *)
+ #define PHONE_PSTN_LINETEST _IO ('q', 0xA8)
+ #define PHONE_VAD _IOW ('q', 0xA9, int)
+-struct phone_except
+-{
++struct phone_except {
+  unsigned int dtmf_ready:1;
+  unsigned int hookstate:1;
+  unsigned int pstn_ring:1;
+diff -uwr uapi-3.18.bak.stripped/linux/termios.h uapi/linux/termios.h
+--- uapi-3.18.bak.stripped/linux/termios.h	2015-01-28 15:14:57.135632345 -0800
++++ uapi/linux/termios.h	2015-01-28 14:59:07.855502481 -0800
+@@ -21,8 +21,7 @@
+ #include <linux/types.h>
+ #include <asm/termios.h>
+ #define NFF 5
+-struct termiox
+-{
++struct termiox {
+  __u16 x_hflag;
+  __u16 x_cflag;
+  __u16 x_rflag[NFF];
+diff -uwr uapi-3.18.bak.stripped/linux/timex.h uapi/linux/timex.h
+--- uapi-3.18.bak.stripped/linux/timex.h	2015-01-28 15:14:57.171632502 -0800
++++ uapi/linux/timex.h	2015-01-28 14:59:07.855502481 -0800
+@@ -41,9 +41,17 @@
+  __kernel_long_t errcnt;
+  __kernel_long_t stbcnt;
+  int tai;
+- int :32; int :32; int :32; int :32;
+- int :32; int :32; int :32; int :32;
+- int :32; int :32; int :32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
++  int : 32;
+ };
+ #define ADJ_OFFSET 0x0001
+ #define ADJ_FREQUENCY 0x0002
+diff -uwr uapi-3.18.bak.stripped/linux/uio.h uapi/linux/uio.h
+--- uapi-3.18.bak.stripped/linux/uio.h	2015-01-28 15:14:57.399633492 -0800
++++ uapi/linux/uio.h	2015-01-28 14:59:07.855502481 -0800
+@@ -20,8 +20,7 @@
+ #define _UAPI__LINUX_UIO_H
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+-struct iovec
+-{
++struct iovec {
+  void __user *iov_base;
+  __kernel_size_t iov_len;
+ };
+diff -uwr uapi-3.18.bak.stripped/linux/usb/audio.h uapi/linux/usb/audio.h
+--- uapi-3.18.bak.stripped/linux/usb/audio.h	2015-01-28 15:14:56.491629546 -0800
++++ uapi/linux/usb/audio.h	2015-01-28 21:08:39.588786234 -0800
+@@ -111,7 +111,8 @@
+  __u8 baInterfaceNr[];
+ } __attribute__ ((packed));
+ #define UAC_DT_AC_HEADER_SIZE(n) (8 + (n))
+-#define DECLARE_UAC_AC_HEADER_DESCRIPTOR(n)  struct uac1_ac_header_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __le16 bcdADC;   __le16 wTotalLength;   __u8 bInCollection;   __u8 baInterfaceNr[n];  } __attribute__ ((packed))
++#define DECLARE_UAC_AC_HEADER_DESCRIPTOR(n) struct uac1_ac_header_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __le16 bcdADC; __le16 wTotalLength; __u8 bInCollection; __u8 baInterfaceNr[n]; \
++} __attribute__((packed))
+ struct uac_input_terminal_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -153,7 +154,8 @@
+ #define UAC_OUTPUT_TERMINAL_COMMUNICATION_SPEAKER 0x306
+ #define UAC_OUTPUT_TERMINAL_LOW_FREQ_EFFECTS_SPEAKER 0x307
+ #define UAC_DT_FEATURE_UNIT_SIZE(ch) (7 + ((ch) + 1) * 2)
+-#define DECLARE_UAC_FEATURE_UNIT_DESCRIPTOR(ch)  struct uac_feature_unit_descriptor_##ch {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bUnitID;   __u8 bSourceID;   __u8 bControlSize;   __le16 bmaControls[ch + 1];   __u8 iFeature;  } __attribute__ ((packed))
++#define DECLARE_UAC_FEATURE_UNIT_DESCRIPTOR(ch) struct uac_feature_unit_descriptor_ ##ch { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bUnitID; __u8 bSourceID; __u8 bControlSize; __le16 bmaControls[ch + 1]; __u8 iFeature; \
++} __attribute__((packed))
+ struct uac_mixer_unit_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -227,7 +229,8 @@
+  __u8 bSamFreqType;
+  __u8 tSamFreq[][3];
+ } __attribute__ ((packed));
+-#define DECLARE_UAC_FORMAT_TYPE_I_DISCRETE_DESC(n)  struct uac_format_type_i_discrete_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bFormatType;   __u8 bNrChannels;   __u8 bSubframeSize;   __u8 bBitResolution;   __u8 bSamFreqType;   __u8 tSamFreq[n][3];  } __attribute__ ((packed))
++#define DECLARE_UAC_FORMAT_TYPE_I_DISCRETE_DESC(n) struct uac_format_type_i_discrete_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bFormatType; __u8 bNrChannels; __u8 bSubframeSize; __u8 bBitResolution; __u8 bSamFreqType; __u8 tSamFreq[n][3]; \
++} __attribute__((packed))
+ #define UAC_FORMAT_TYPE_I_DISCRETE_DESC_SIZE(n) (8 + (n * 3))
+ struct uac_format_type_i_ext_descriptor {
+  __u8 bLength;
+diff -uwr uapi-3.18.bak.stripped/linux/usb/ch11.h uapi/linux/usb/ch11.h
+--- uapi-3.18.bak.stripped/linux/usb/ch11.h	2015-01-28 15:14:56.483629512 -0800
++++ uapi/linux/usb/ch11.h	2015-01-28 14:59:07.855502481 -0800
+@@ -154,9 +154,12 @@
+ enum hub_led_mode {
+  INDICATOR_AUTO = 0,
+  INDICATOR_CYCLE,
+- INDICATOR_GREEN_BLINK, INDICATOR_GREEN_BLINK_OFF,
+- INDICATOR_AMBER_BLINK, INDICATOR_AMBER_BLINK_OFF,
+- INDICATOR_ALT_BLINK, INDICATOR_ALT_BLINK_OFF
++  INDICATOR_GREEN_BLINK,
++  INDICATOR_GREEN_BLINK_OFF,
++  INDICATOR_AMBER_BLINK,
++  INDICATOR_AMBER_BLINK_OFF,
++  INDICATOR_ALT_BLINK,
++  INDICATOR_ALT_BLINK_OFF
+ } __attribute__ ((packed));
+ #define HUB_TTTT_8_BITS 0x00
+ #define HUB_TTTT_16_BITS 0x20
+diff -uwr uapi-3.18.bak.stripped/linux/usb/ch9.h uapi/linux/usb/ch9.h
+--- uapi-3.18.bak.stripped/linux/usb/ch9.h	2015-01-28 15:14:56.479629494 -0800
++++ uapi/linux/usb/ch9.h	2015-01-28 14:59:07.855502481 -0800
+@@ -398,7 +398,8 @@
+ } __attribute__((packed));
+ enum usb_device_speed {
+  USB_SPEED_UNKNOWN = 0,
+- USB_SPEED_LOW, USB_SPEED_FULL,
++  USB_SPEED_LOW,
++  USB_SPEED_FULL,
+  USB_SPEED_HIGH,
+  USB_SPEED_WIRELESS,
+  USB_SPEED_SUPER,
+diff -uwr uapi-3.18.bak.stripped/linux/usb/midi.h uapi/linux/usb/midi.h
+--- uapi-3.18.bak.stripped/linux/usb/midi.h	2015-01-28 15:14:56.467629442 -0800
++++ uapi/linux/usb/midi.h	2015-01-28 21:08:39.592786248 -0800
+@@ -57,7 +57,8 @@
+  struct usb_midi_source_pin pins[];
+ } __attribute__ ((packed));
+ #define USB_DT_MIDI_OUT_SIZE(p) (7 + 2 * (p))
+-#define DECLARE_USB_MIDI_OUT_JACK_DESCRIPTOR(p)  struct usb_midi_out_jack_descriptor_##p {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bJackType;   __u8 bJackID;   __u8 bNrInputPins;   struct usb_midi_source_pin pins[p];   __u8 iJack;  } __attribute__ ((packed))
++#define DECLARE_USB_MIDI_OUT_JACK_DESCRIPTOR(p) struct usb_midi_out_jack_descriptor_ ##p { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bJackType; __u8 bJackID; __u8 bNrInputPins; struct usb_midi_source_pin pins[p]; __u8 iJack; \
++} __attribute__((packed))
+ struct usb_ms_endpoint_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -66,5 +67,6 @@
+  __u8 baAssocJackID[];
+ } __attribute__ ((packed));
+ #define USB_DT_MS_ENDPOINT_SIZE(n) (4 + (n))
+-#define DECLARE_USB_MS_ENDPOINT_DESCRIPTOR(n)  struct usb_ms_endpoint_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bNumEmbMIDIJack;   __u8 baAssocJackID[n];  } __attribute__ ((packed))
++#define DECLARE_USB_MS_ENDPOINT_DESCRIPTOR(n) struct usb_ms_endpoint_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bNumEmbMIDIJack; __u8 baAssocJackID[n]; \
++} __attribute__((packed))
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/usb/video.h uapi/linux/usb/video.h
+--- uapi-3.18.bak.stripped/linux/usb/video.h	2015-01-28 15:14:56.471629460 -0800
++++ uapi/linux/usb/video.h	2015-01-28 21:08:39.592786248 -0800
+@@ -155,7 +155,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_HEADER_SIZE(n) (12+(n))
+ #define UVC_HEADER_DESCRIPTOR(n)   uvc_header_descriptor_##n
+-#define DECLARE_UVC_HEADER_DESCRIPTOR(n)  struct UVC_HEADER_DESCRIPTOR(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u16 bcdUVC;   __u16 wTotalLength;   __u32 dwClockFrequency;   __u8 bInCollection;   __u8 baInterfaceNr[n];  } __attribute__ ((packed))
++#define DECLARE_UVC_HEADER_DESCRIPTOR(n) struct UVC_HEADER_DESCRIPTOR(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u16 bcdUVC; __u16 wTotalLength; __u32 dwClockFrequency; __u8 bInCollection; __u8 baInterfaceNr[n]; \
++} __attribute__((packed))
+ struct uvc_input_terminal_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -203,7 +204,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_SELECTOR_UNIT_SIZE(n) (6+(n))
+ #define UVC_SELECTOR_UNIT_DESCRIPTOR(n)   uvc_selector_unit_descriptor_##n
+-#define DECLARE_UVC_SELECTOR_UNIT_DESCRIPTOR(n)  struct UVC_SELECTOR_UNIT_DESCRIPTOR(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bUnitID;   __u8 bNrInPins;   __u8 baSourceID[n];   __u8 iSelector;  } __attribute__ ((packed))
++#define DECLARE_UVC_SELECTOR_UNIT_DESCRIPTOR(n) struct UVC_SELECTOR_UNIT_DESCRIPTOR(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bUnitID; __u8 bNrInPins; __u8 baSourceID[n]; __u8 iSelector; \
++} __attribute__((packed))
+ struct uvc_processing_unit_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -231,7 +233,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_EXTENSION_UNIT_SIZE(p, n) (24+(p)+(n))
+ #define UVC_EXTENSION_UNIT_DESCRIPTOR(p, n)   uvc_extension_unit_descriptor_##p_##n
+-#define DECLARE_UVC_EXTENSION_UNIT_DESCRIPTOR(p, n)  struct UVC_EXTENSION_UNIT_DESCRIPTOR(p, n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bUnitID;   __u8 guidExtensionCode[16];   __u8 bNumControls;   __u8 bNrInPins;   __u8 baSourceID[p];   __u8 bControlSize;   __u8 bmControls[n];   __u8 iExtension;  } __attribute__ ((packed))
++#define DECLARE_UVC_EXTENSION_UNIT_DESCRIPTOR(p,n) struct UVC_EXTENSION_UNIT_DESCRIPTOR(p, n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bUnitID; __u8 guidExtensionCode[16]; __u8 bNumControls; __u8 bNrInPins; __u8 baSourceID[p]; __u8 bControlSize; __u8 bmControls[n]; __u8 iExtension; \
++} __attribute__((packed))
+ struct uvc_control_endpoint_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -256,7 +259,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_INPUT_HEADER_SIZE(n, p) (13+(n*p))
+ #define UVC_INPUT_HEADER_DESCRIPTOR(n, p)   uvc_input_header_descriptor_##n_##p
+-#define DECLARE_UVC_INPUT_HEADER_DESCRIPTOR(n, p)  struct UVC_INPUT_HEADER_DESCRIPTOR(n, p) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bNumFormats;   __u16 wTotalLength;   __u8 bEndpointAddress;   __u8 bmInfo;   __u8 bTerminalLink;   __u8 bStillCaptureMethod;   __u8 bTriggerSupport;   __u8 bTriggerUsage;   __u8 bControlSize;   __u8 bmaControls[p][n];  } __attribute__ ((packed))
++#define DECLARE_UVC_INPUT_HEADER_DESCRIPTOR(n,p) struct UVC_INPUT_HEADER_DESCRIPTOR(n, p) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bNumFormats; __u16 wTotalLength; __u8 bEndpointAddress; __u8 bmInfo; __u8 bTerminalLink; __u8 bStillCaptureMethod; __u8 bTriggerSupport; __u8 bTriggerUsage; __u8 bControlSize; __u8 bmaControls[p][n]; \
++} __attribute__((packed))
+ struct uvc_output_header_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -270,7 +274,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_OUTPUT_HEADER_SIZE(n, p) (9+(n*p))
+ #define UVC_OUTPUT_HEADER_DESCRIPTOR(n, p)   uvc_output_header_descriptor_##n_##p
+-#define DECLARE_UVC_OUTPUT_HEADER_DESCRIPTOR(n, p)  struct UVC_OUTPUT_HEADER_DESCRIPTOR(n, p) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bNumFormats;   __u16 wTotalLength;   __u8 bEndpointAddress;   __u8 bTerminalLink;   __u8 bControlSize;   __u8 bmaControls[p][n];  } __attribute__ ((packed))
++#define DECLARE_UVC_OUTPUT_HEADER_DESCRIPTOR(n,p) struct UVC_OUTPUT_HEADER_DESCRIPTOR(n, p) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bNumFormats; __u16 wTotalLength; __u8 bEndpointAddress; __u8 bTerminalLink; __u8 bControlSize; __u8 bmaControls[p][n]; \
++} __attribute__((packed))
+ struct uvc_color_matching_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -330,7 +335,8 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_FRAME_UNCOMPRESSED_SIZE(n) (26+4*(n))
+ #define UVC_FRAME_UNCOMPRESSED(n)   uvc_frame_uncompressed_##n
+-#define DECLARE_UVC_FRAME_UNCOMPRESSED(n)  struct UVC_FRAME_UNCOMPRESSED(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bFrameIndex;   __u8 bmCapabilities;   __u16 wWidth;   __u16 wHeight;   __u32 dwMinBitRate;   __u32 dwMaxBitRate;   __u32 dwMaxVideoFrameBufferSize;   __u32 dwDefaultFrameInterval;   __u8 bFrameIntervalType;   __u32 dwFrameInterval[n];  } __attribute__ ((packed))
++#define DECLARE_UVC_FRAME_UNCOMPRESSED(n) struct UVC_FRAME_UNCOMPRESSED(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bFrameIndex; __u8 bmCapabilities; __u16 wWidth; __u16 wHeight; __u32 dwMinBitRate; __u32 dwMaxBitRate; __u32 dwMaxVideoFrameBufferSize; __u32 dwDefaultFrameInterval; __u8 bFrameIntervalType; __u32 dwFrameInterval[n]; \
++} __attribute__((packed))
+ struct uvc_format_mjpeg {
+  __u8 bLength;
+  __u8 bDescriptorType;
+@@ -362,5 +368,6 @@
+ } __attribute__((__packed__));
+ #define UVC_DT_FRAME_MJPEG_SIZE(n) (26+4*(n))
+ #define UVC_FRAME_MJPEG(n)   uvc_frame_mjpeg_##n
+-#define DECLARE_UVC_FRAME_MJPEG(n)  struct UVC_FRAME_MJPEG(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bFrameIndex;   __u8 bmCapabilities;   __u16 wWidth;   __u16 wHeight;   __u32 dwMinBitRate;   __u32 dwMaxBitRate;   __u32 dwMaxVideoFrameBufferSize;   __u32 dwDefaultFrameInterval;   __u8 bFrameIntervalType;   __u32 dwFrameInterval[n];  } __attribute__ ((packed))
++#define DECLARE_UVC_FRAME_MJPEG(n) struct UVC_FRAME_MJPEG(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bFrameIndex; __u8 bmCapabilities; __u16 wWidth; __u16 wHeight; __u32 dwMinBitRate; __u32 dwMaxBitRate; __u32 dwMaxVideoFrameBufferSize; __u32 dwDefaultFrameInterval; __u8 bFrameIntervalType; __u32 dwFrameInterval[n]; \
++} __attribute__((packed))
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/uuid.h uapi/linux/uuid.h
+--- uapi-3.18.bak.stripped/linux/uuid.h	2015-01-28 15:14:56.739630624 -0800
++++ uapi/linux/uuid.h	2015-01-28 14:59:07.855502481 -0800
+@@ -26,8 +26,12 @@
+ typedef struct {
+  __u8 b[16];
+ } uuid_be;
+-#define UUID_LE(a, b, c, d0, d1, d2, d3, d4, d5, d6, d7)  ((uuid_le)  {{ (a) & 0xff, ((a) >> 8) & 0xff, ((a) >> 16) & 0xff, ((a) >> 24) & 0xff,   (b) & 0xff, ((b) >> 8) & 0xff,   (c) & 0xff, ((c) >> 8) & 0xff,   (d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) }})
+-#define UUID_BE(a, b, c, d0, d1, d2, d3, d4, d5, d6, d7)  ((uuid_be)  {{ ((a) >> 24) & 0xff, ((a) >> 16) & 0xff, ((a) >> 8) & 0xff, (a) & 0xff,   ((b) >> 8) & 0xff, (b) & 0xff,   ((c) >> 8) & 0xff, (c) & 0xff,   (d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) }})
++#define UUID_LE(a,b,c,d0,d1,d2,d3,d4,d5,d6,d7) \
++((uuid_le) \
++{ { (a) & 0xff, ((a) >> 8) & 0xff, ((a) >> 16) & 0xff, ((a) >> 24) & 0xff, (b) & 0xff, ((b) >> 8) & 0xff, (c) & 0xff, ((c) >> 8) & 0xff, (d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) } })
++#define UUID_BE(a,b,c,d0,d1,d2,d3,d4,d5,d6,d7) \
++((uuid_be) \
++{ { ((a) >> 24) & 0xff, ((a) >> 16) & 0xff, ((a) >> 8) & 0xff, (a) & 0xff, ((b) >> 8) & 0xff, (b) & 0xff, ((c) >> 8) & 0xff, (c) & 0xff, (d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) } })
+ #define NULL_UUID_LE   UUID_LE(0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x00)
+ #define NULL_UUID_BE   UUID_BE(0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x00)
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/v4l2-dv-timings.h uapi/linux/v4l2-dv-timings.h
+--- uapi-3.18.bak.stripped/linux/v4l2-dv-timings.h	2015-01-28 15:14:56.307628747 -0800
++++ uapi/linux/v4l2-dv-timings.h	2015-01-28 21:08:39.592786248 -0800
+@@ -23,119 +23,231 @@
+ #else
+ #define V4L2_INIT_BT_TIMINGS(_width, args...)   .bt = { _width , ## args }
+ #endif
+-#define V4L2_DV_BT_CEA_640X480P59_94 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 480, 0, 0,   25175000, 16, 96, 48, 10, 2, 33, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_720X480I59_94 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(720, 480, 1, 0,   13500000, 19, 62, 57, 4, 3, 15, 4, 3, 16,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE)  }
+-#define V4L2_DV_BT_CEA_720X480P59_94 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(720, 480, 0, 0,   27000000, 16, 62, 60, 9, 6, 30, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_720X576I50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(720, 576, 1, 0,   13500000, 12, 63, 69, 2, 3, 19, 2, 3, 20,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE)  }
+-#define V4L2_DV_BT_CEA_720X576P50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(720, 576, 0, 0,   27000000, 12, 64, 68, 5, 5, 39, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_1280X720P24 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 720, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   59400000, 1760, 40, 220, 5, 5, 20, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861,   V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_1280X720P25 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 720, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 2420, 40, 220, 5, 5, 20, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_1280X720P30 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 720, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 1760, 40, 220, 5, 5, 20, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_1280X720P50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 720, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 440, 40, 220, 5, 5, 20, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_1280X720P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 720, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 110, 40, 220, 5, 5, 20, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_1920X1080P24 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 638, 44, 148, 4, 5, 36, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_1920X1080P25 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 528, 44, 148, 4, 5, 36, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_1920X1080P30 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 88, 44, 148, 4, 5, 36, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_1920X1080I50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 1,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 528, 44, 148, 2, 5, 15, 2, 5, 16,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE)  }
+-#define V4L2_DV_BT_CEA_1920X1080P50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   148500000, 528, 44, 148, 4, 5, 36, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_1920X1080I60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 1,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   74250000, 88, 44, 148, 2, 5, 15, 2, 5, 16,   V4L2_DV_BT_STD_CEA861,   V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_HALF_LINE)  }
+-#define V4L2_DV_BT_CEA_1920X1080P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1080, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   148500000, 88, 44, 148, 4, 5, 36, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861,   V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_3840X2160P24 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_3840X2160P25 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_3840X2160P30 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 176, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_3840X2160P50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL,   594000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_3840X2160P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL,   594000000, 176, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_4096X2160P24 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_4096X2160P25 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 968, 88, 128, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_4096X2160P30 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   297000000, 88, 88, 128, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_CEA_4096X2160P50 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   594000000, 968, 88, 128, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, 0)  }
+-#define V4L2_DV_BT_CEA_4096X2160P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   594000000, 88, 88, 128, 8, 10, 72, 0, 0, 0,   V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS)  }
+-#define V4L2_DV_BT_DMT_640X350P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 350, 0, V4L2_DV_HSYNC_POS_POL,   31500000, 32, 64, 96, 32, 3, 60, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_640X400P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 400, 0, V4L2_DV_VSYNC_POS_POL,   31500000, 32, 64, 96, 1, 3, 41, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_720X400P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(720, 400, 0, V4L2_DV_VSYNC_POS_POL,   35500000, 36, 72, 108, 1, 3, 42, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
++#define V4L2_DV_BT_CEA_640X480P59_94 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, 25175000, 16, 96, 48, 10, 2, 33, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_720X480I59_94 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(720, 480, 1, 0, 13500000, 19, 62, 57, 4, 3, 15, 4, 3, 16, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++#define V4L2_DV_BT_CEA_720X480P59_94 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(720, 480, 0, 0, 27000000, 16, 62, 60, 9, 6, 30, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_720X576I50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(720, 576, 1, 0, 13500000, 12, 63, 69, 2, 3, 19, 2, 3, 20, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++#define V4L2_DV_BT_CEA_720X576P50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(720, 576, 0, 0, 27000000, 12, 64, 68, 5, 5, 39, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_1280X720P24 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 720, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 59400000, 1760, 40, 220, 5, 5, 20, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_1280X720P25 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 720, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 2420, 40, 220, 5, 5, 20, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_1280X720P30 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 720, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 1760, 40, 220, 5, 5, 20, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_1280X720P50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 720, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 440, 40, 220, 5, 5, 20, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_1280X720P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 720, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 110, 40, 220, 5, 5, 20, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_1920X1080P24 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 638, 44, 148, 4, 5, 36, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_1920X1080P25 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 528, 44, 148, 4, 5, 36, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_1920X1080P30 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 88, 44, 148, 4, 5, 36, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_1920X1080I50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 1, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 528, 44, 148, 2, 5, 15, 2, 5, 16, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++#define V4L2_DV_BT_CEA_1920X1080P50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 148500000, 528, 44, 148, 4, 5, 36, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_1920X1080I60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 1, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 74250000, 88, 44, 148, 2, 5, 15, 2, 5, 16, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_HALF_LINE) \
++}
++#define V4L2_DV_BT_CEA_1920X1080P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1080, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 148500000, 88, 44, 148, 4, 5, 36, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_3840X2160P24 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_3840X2160P25 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_3840X2160P30 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 176, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_3840X2160P50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, 594000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_3840X2160P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, 594000000, 176, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_4096X2160P24 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_4096X2160P25 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 968, 88, 128, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_4096X2160P30 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 297000000, 88, 88, 128, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_CEA_4096X2160P50 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 594000000, 968, 88, 128, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, 0) \
++}
++#define V4L2_DV_BT_CEA_4096X2160P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 594000000, 88, 88, 128, 8, 10, 72, 0, 0, 0, V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++#define V4L2_DV_BT_DMT_640X350P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 350, 0, V4L2_DV_HSYNC_POS_POL, 31500000, 32, 64, 96, 32, 3, 60, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_640X400P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 400, 0, V4L2_DV_VSYNC_POS_POL, 31500000, 32, 64, 96, 1, 3, 41, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_720X400P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(720, 400, 0, V4L2_DV_VSYNC_POS_POL, 35500000, 36, 72, 108, 1, 3, 42, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
+ #define V4L2_DV_BT_DMT_640X480P60 V4L2_DV_BT_CEA_640X480P59_94
+-#define V4L2_DV_BT_DMT_640X480P72 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 480, 0, 0,   31500000, 24, 40, 128, 9, 3, 28, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_640X480P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 480, 0, 0,   31500000, 16, 64, 120, 1, 3, 16, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_640X480P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(640, 480, 0, 0,   36000000, 56, 56, 80, 1, 3, 25, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P56 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   36000000, 24, 72, 128, 1, 2, 22, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   40000000, 40, 128, 88, 1, 4, 23, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P72 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   50000000, 56, 120, 64, 37, 6, 23, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   49500000, 16, 80, 160, 1, 3, 21, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   56250000, 32, 64, 152, 1, 3, 27, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_800X600P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL,   73250000, 48, 32, 80, 3, 4, 29, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_848X480P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(848, 480, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   33750000, 16, 112, 112, 6, 8, 23, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768I43 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 1,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   44900000, 8, 176, 56, 0, 4, 20, 0, 4, 21,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0,   65000000, 24, 136, 160, 3, 6, 29, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768P70 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0,   75000000, 24, 136, 144, 3, 6, 29, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   78750000, 16, 96, 176, 1, 3, 28, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   94500000, 48, 96, 208, 1, 3, 36, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1024X768P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1024, 768, 0, V4L2_DV_HSYNC_POS_POL,   115500000, 48, 32, 80, 3, 4, 38, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1152X864P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1152, 864, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   108000000, 64, 128, 256, 1, 3, 32, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
++#define V4L2_DV_BT_DMT_640X480P72 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, 31500000, 24, 40, 128, 9, 3, 28, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_640X480P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, 31500000, 16, 64, 120, 1, 3, 16, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_640X480P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, 36000000, 56, 56, 80, 1, 3, 25, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P56 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 36000000, 24, 72, 128, 1, 2, 22, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 40000000, 40, 128, 88, 1, 4, 23, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P72 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 50000000, 56, 120, 64, 37, 6, 23, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 49500000, 16, 80, 160, 1, 3, 21, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 56250000, 32, 64, 152, 1, 3, 27, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_800X600P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL, 73250000, 48, 32, 80, 3, 4, 29, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_848X480P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(848, 480, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 33750000, 16, 112, 112, 6, 8, 23, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768I43 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 1, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 44900000, 8, 176, 56, 0, 4, 20, 0, 4, 21, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0, 65000000, 24, 136, 160, 3, 6, 29, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768P70 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0, 75000000, 24, 136, 144, 3, 6, 29, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 78750000, 16, 96, 176, 1, 3, 28, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 94500000, 48, 96, 208, 1, 3, 36, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1024X768P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1024, 768, 0, V4L2_DV_HSYNC_POS_POL, 115500000, 48, 32, 80, 3, 4, 38, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1152X864P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1152, 864, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 108000000, 64, 128, 256, 1, 3, 32, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
+ #define V4L2_DV_BT_DMT_1280X720P60 V4L2_DV_BT_CEA_1280X720P60
+-#define V4L2_DV_BT_DMT_1280X768P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL,   68250000, 48, 32, 80, 3, 7, 12, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1280X768P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL,   79500000, 64, 128, 192, 3, 7, 20, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X768P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL,   102250000, 80, 128, 208, 3, 7, 27, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X768P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL,   117500000, 80, 136, 216, 3, 7, 31, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X768P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL,   140250000, 48, 32, 80, 3, 7, 35, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1280X800P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL,   71000000, 48, 32, 80, 3, 6, 14, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1280X800P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL,   83500000, 72, 128, 200, 3, 6, 22, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X800P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL,   106500000, 80, 128, 208, 3, 6, 29, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X800P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL,   122500000, 80, 136, 216, 3, 6, 34, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X800P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL,   146250000, 48, 32, 80, 3, 6, 38, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1280X960P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 960, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   108000000, 96, 112, 312, 1, 3, 36, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X960P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 960, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   148500000, 64, 160, 224, 1, 3, 47, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X960P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 960, 0, V4L2_DV_HSYNC_POS_POL,   175500000, 48, 32, 80, 3, 4, 50, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1280X1024P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 1024, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   108000000, 48, 112, 248, 1, 3, 38, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X1024P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 1024, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   135000000, 16, 144, 248, 1, 3, 38, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X1024P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 1024, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   157500000, 64, 160, 224, 1, 3, 44, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1280X1024P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL,   187250000, 48, 32, 80, 3, 7, 50, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1360X768P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1360, 768, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   85500000, 64, 112, 256, 3, 6, 18, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1360X768P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1360, 768, 0, V4L2_DV_HSYNC_POS_POL,   148250000, 48, 32, 80, 3, 5, 37, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1366X768P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1366, 768, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   85500000, 70, 143, 213, 3, 3, 24, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1366X768P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1366, 768, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   72000000, 14, 56, 64, 1, 3, 28, 0, 0, 0,   V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1400X1050P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL,   101000000, 48, 32, 80, 3, 4, 23, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1400X1050P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL,   121750000, 88, 144, 232, 3, 4, 32, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1400X1050P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL,   156000000, 104, 144, 248, 3, 4, 42, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1400X1050P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL,   179500000, 104, 152, 256, 3, 4, 48, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1400X1050P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL,   208000000, 48, 32, 80, 3, 4, 55, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1440X900P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL,   88750000, 48, 32, 80, 3, 6, 17, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1440X900P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL,   106500000, 80, 152, 232, 3, 6, 25, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1440X900P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL,   136750000, 96, 152, 248, 3, 6, 33, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1440X900P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL,   157000000, 104, 152, 256, 3, 6, 39, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1440X900P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL,   182750000, 48, 32, 80, 3, 6, 44, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1600X900P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 900, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   108000000, 24, 80, 96, 1, 3, 96, 0, 0, 0,   V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1600X1200P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   162000000, 64, 192, 304, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1600X1200P65 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   175500000, 64, 192, 304, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1600X1200P70 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   189000000, 64, 192, 304, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1600X1200P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   202500000, 64, 192, 304, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1600X1200P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   229500000, 64, 192, 304, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1600X1200P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL,   268250000, 48, 32, 80, 3, 4, 64, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1680X1050P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL,   119000000, 48, 32, 80, 3, 6, 21, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1680X1050P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL,   146250000, 104, 176, 280, 3, 6, 30, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1680X1050P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL,   187000000, 120, 176, 296, 3, 6, 40, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1680X1050P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL,   214750000, 128, 176, 304, 3, 6, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1680X1050P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL,   245500000, 48, 32, 80, 3, 6, 53, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1792X1344P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL,   204750000, 128, 200, 328, 1, 3, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1792X1344P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL,   261000000, 96, 216, 352, 1, 3, 69, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1792X1344P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_HSYNC_POS_POL,   333250000, 48, 32, 80, 3, 4, 72, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1856X1392P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL,   218250000, 96, 224, 352, 1, 3, 43, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1856X1392P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL,   288000000, 128, 224, 352, 1, 3, 104, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1856X1392P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_HSYNC_POS_POL,   356500000, 48, 32, 80, 3, 4, 75, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
++#define V4L2_DV_BT_DMT_1280X768P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL, 68250000, 48, 32, 80, 3, 7, 12, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1280X768P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, 79500000, 64, 128, 192, 3, 7, 20, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X768P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, 102250000, 80, 128, 208, 3, 7, 27, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X768P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, 117500000, 80, 136, 216, 3, 7, 31, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X768P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL, 140250000, 48, 32, 80, 3, 7, 35, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1280X800P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL, 71000000, 48, 32, 80, 3, 6, 14, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1280X800P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, 83500000, 72, 128, 200, 3, 6, 22, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X800P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, 106500000, 80, 128, 208, 3, 6, 29, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X800P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, 122500000, 80, 136, 216, 3, 6, 34, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X800P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL, 146250000, 48, 32, 80, 3, 6, 38, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1280X960P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 960, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 108000000, 96, 112, 312, 1, 3, 36, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X960P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 960, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 148500000, 64, 160, 224, 1, 3, 47, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X960P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 960, 0, V4L2_DV_HSYNC_POS_POL, 175500000, 48, 32, 80, 3, 4, 50, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1280X1024P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 108000000, 48, 112, 248, 1, 3, 38, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X1024P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 135000000, 16, 144, 248, 1, 3, 38, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X1024P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 157500000, 64, 160, 224, 1, 3, 44, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1280X1024P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL, 187250000, 48, 32, 80, 3, 7, 50, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1360X768P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1360, 768, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 85500000, 64, 112, 256, 3, 6, 18, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1360X768P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1360, 768, 0, V4L2_DV_HSYNC_POS_POL, 148250000, 48, 32, 80, 3, 5, 37, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1366X768P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1366, 768, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 85500000, 70, 143, 213, 3, 3, 24, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1366X768P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1366, 768, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 72000000, 14, 56, 64, 1, 3, 28, 0, 0, 0, V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1400X1050P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL, 101000000, 48, 32, 80, 3, 4, 23, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1400X1050P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, 121750000, 88, 144, 232, 3, 4, 32, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1400X1050P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, 156000000, 104, 144, 248, 3, 4, 42, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1400X1050P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, 179500000, 104, 152, 256, 3, 4, 48, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1400X1050P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL, 208000000, 48, 32, 80, 3, 4, 55, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1440X900P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL, 88750000, 48, 32, 80, 3, 6, 17, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1440X900P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, 106500000, 80, 152, 232, 3, 6, 25, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1440X900P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, 136750000, 96, 152, 248, 3, 6, 33, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1440X900P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, 157000000, 104, 152, 256, 3, 6, 39, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1440X900P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL, 182750000, 48, 32, 80, 3, 6, 44, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1600X900P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 900, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 108000000, 24, 80, 96, 1, 3, 96, 0, 0, 0, V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 162000000, 64, 192, 304, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P65 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 175500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P70 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 189000000, 64, 192, 304, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 202500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 229500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1600X1200P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL, 268250000, 48, 32, 80, 3, 4, 64, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1680X1050P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL, 119000000, 48, 32, 80, 3, 6, 21, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1680X1050P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, 146250000, 104, 176, 280, 3, 6, 30, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1680X1050P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, 187000000, 120, 176, 296, 3, 6, 40, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1680X1050P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, 214750000, 128, 176, 304, 3, 6, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1680X1050P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL, 245500000, 48, 32, 80, 3, 6, 53, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1792X1344P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL, 204750000, 128, 200, 328, 1, 3, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1792X1344P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL, 261000000, 96, 216, 352, 1, 3, 69, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1792X1344P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_HSYNC_POS_POL, 333250000, 48, 32, 80, 3, 4, 72, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1856X1392P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL, 218250000, 96, 224, 352, 1, 3, 43, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1856X1392P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL, 288000000, 128, 224, 352, 1, 3, 104, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1856X1392P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_HSYNC_POS_POL, 356500000, 48, 32, 80, 3, 4, 75, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
+ #define V4L2_DV_BT_DMT_1920X1080P60 V4L2_DV_BT_CEA_1920X1080P60
+-#define V4L2_DV_BT_DMT_1920X1200P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL,   154000000, 48, 32, 80, 3, 6, 26, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1920X1200P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL,   193250000, 136, 200, 336, 3, 6, 36, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1920X1200P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL,   245250000, 136, 208, 344, 3, 6, 46, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1920X1200P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL,   281250000, 144, 208, 352, 3, 6, 53, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_1920X1200P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL,   317000000, 48, 32, 80, 3, 6, 62, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_1920X1440P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL,   234000000, 128, 208, 344, 1, 3, 56, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1920X1440P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL,   297000000, 144, 224, 352, 1, 3, 56, 0, 0, 0,   V4L2_DV_BT_STD_DMT, 0)  }
+-#define V4L2_DV_BT_DMT_1920X1440P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_HSYNC_POS_POL,   380500000, 48, 32, 80, 3, 4, 78, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_2048X1152P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2048, 1152, 0,   V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL,   162000000, 26, 80, 96, 1, 3, 44, 0, 0, 0,   V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_2560X1600P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL,   268500000, 48, 32, 80, 3, 6, 37, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_2560X1600P60 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL,   348500000, 192, 280, 472, 3, 6, 49, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_2560X1600P75 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL,   443250000, 208, 280, 488, 3, 6, 63, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_2560X1600P85 {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL,   505250000, 208, 280, 488, 3, 6, 73, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0)  }
+-#define V4L2_DV_BT_DMT_2560X1600P120_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL,   552750000, 48, 32, 80, 3, 6, 85, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_4096X2160P60_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   556744000, 8, 32, 40, 48, 8, 6, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
+-#define V4L2_DV_BT_DMT_4096X2160P59_94_RB {   .type = V4L2_DV_BT_656_1120,   V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL,   556188000, 8, 32, 40, 48, 8, 6, 0, 0, 0,   V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT,   V4L2_DV_FL_REDUCED_BLANKING)  }
++#define V4L2_DV_BT_DMT_1920X1200P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL, 154000000, 48, 32, 80, 3, 6, 26, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1920X1200P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, 193250000, 136, 200, 336, 3, 6, 36, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1920X1200P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, 245250000, 136, 208, 344, 3, 6, 46, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1920X1200P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, 281250000, 144, 208, 352, 3, 6, 53, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_1920X1200P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL, 317000000, 48, 32, 80, 3, 6, 62, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_1920X1440P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL, 234000000, 128, 208, 344, 1, 3, 56, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1920X1440P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL, 297000000, 144, 224, 352, 1, 3, 56, 0, 0, 0, V4L2_DV_BT_STD_DMT, 0) \
++}
++#define V4L2_DV_BT_DMT_1920X1440P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_HSYNC_POS_POL, 380500000, 48, 32, 80, 3, 4, 78, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_2048X1152P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2048, 1152, 0, V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, 162000000, 26, 80, 96, 1, 3, 44, 0, 0, 0, V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_2560X1600P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL, 268500000, 48, 32, 80, 3, 6, 37, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_2560X1600P60 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, 348500000, 192, 280, 472, 3, 6, 49, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_2560X1600P75 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, 443250000, 208, 280, 488, 3, 6, 63, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_2560X1600P85 {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, 505250000, 208, 280, 488, 3, 6, 73, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++#define V4L2_DV_BT_DMT_2560X1600P120_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL, 552750000, 48, 32, 80, 3, 6, 85, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_4096X2160P60_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 556744000, 8, 32, 40, 48, 8, 6, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++#define V4L2_DV_BT_DMT_4096X2160P59_94_RB {.type = V4L2_DV_BT_656_1120, V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, 556188000, 8, 32, 40, 48, 8, 6, 0, 0, 0, V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/virtio_balloon.h uapi/linux/virtio_balloon.h
+--- uapi-3.18.bak.stripped/linux/virtio_balloon.h	2015-01-28 15:14:57.363633337 -0800
++++ uapi/linux/virtio_balloon.h	2015-01-28 14:59:07.859502498 -0800
+@@ -23,8 +23,7 @@
+ #define VIRTIO_BALLOON_F_MUST_TELL_HOST 0
+ #define VIRTIO_BALLOON_F_STATS_VQ 1
+ #define VIRTIO_BALLOON_PFN_SHIFT 12
+-struct virtio_balloon_config
+-{
++struct virtio_balloon_config {
+  __le32 num_pages;
+  __le32 actual;
+ };
+diff -uwr uapi-3.18.bak.stripped/linux/vm_sockets.h uapi/linux/vm_sockets.h
+--- uapi-3.18.bak.stripped/linux/vm_sockets.h	2015-01-28 15:14:56.391629112 -0800
++++ uapi/linux/vm_sockets.h	2015-01-28 14:59:07.859502498 -0800
+@@ -40,10 +40,7 @@
+  unsigned short svm_reserved1;
+  unsigned int svm_port;
+  unsigned int svm_cid;
+- unsigned char svm_zero[sizeof(struct sockaddr) -
+- sizeof(sa_family_t) -
+- sizeof(unsigned short) -
+- sizeof(unsigned int) - sizeof(unsigned int)];
++  unsigned char svm_zero[sizeof(struct sockaddr) - sizeof(sa_family_t) - sizeof(unsigned short) - sizeof(unsigned int) - sizeof(unsigned int)];
+ };
+ #define IOCTL_VM_SOCKETS_GET_LOCAL_CID _IO(7, 0xb9)
+ #endif
+diff -uwr uapi-3.18.bak.stripped/linux/wanrouter.h uapi/linux/wanrouter.h
+--- uapi-3.18.bak.stripped/linux/wanrouter.h	2015-01-28 15:14:57.131632328 -0800
++++ uapi/linux/wanrouter.h	2015-01-28 14:59:07.859502498 -0800
+@@ -18,8 +18,7 @@
+  ****************************************************************************/
+ #ifndef _UAPI_ROUTER_H
+ #define _UAPI_ROUTER_H
+-enum wan_states
+-{
++enum wan_states {
+  WAN_UNCONFIGURED,
+  WAN_DISCONNECTED,
+  WAN_CONNECTING,
+diff -uwr uapi-3.18.bak.stripped/linux/wireless.h uapi/linux/wireless.h
+--- uapi-3.18.bak.stripped/linux/wireless.h	2015-01-28 15:14:57.219632710 -0800
++++ uapi/linux/wireless.h	2015-01-28 14:59:07.859502498 -0800
+@@ -256,54 +256,46 @@
+ #define IW_EVENT_CAPA_K_1 (IW_EVENT_CAPA_MASK(0x8B2A))
+ #define IW_EVENT_CAPA_SET(event_capa, cmd) (event_capa[IW_EVENT_CAPA_INDEX(cmd)] |= IW_EVENT_CAPA_MASK(cmd))
+ #define IW_EVENT_CAPA_SET_KERNEL(event_capa) {event_capa[0] |= IW_EVENT_CAPA_K_0; event_capa[1] |= IW_EVENT_CAPA_K_1; }
+-struct iw_param
+-{
++struct iw_param {
+  __s32 value;
+  __u8 fixed;
+  __u8 disabled;
+  __u16 flags;
+ };
+-struct iw_point
+-{
++struct iw_point {
+  void __user *pointer;
+  __u16 length;
+  __u16 flags;
+ };
+-struct iw_freq
+-{
++struct iw_freq {
+  __s32 m;
+  __s16 e;
+  __u8 i;
+  __u8 flags;
+ };
+-struct iw_quality
+-{
++struct iw_quality {
+  __u8 qual;
+  __u8 level;
+  __u8 noise;
+  __u8 updated;
+ };
+-struct iw_discarded
+-{
++struct iw_discarded {
+  __u32 nwid;
+  __u32 code;
+  __u32 fragment;
+  __u32 retries;
+  __u32 misc;
+ };
+-struct iw_missed
+-{
++struct iw_missed {
+  __u32 beacon;
+ };
+-struct iw_thrspy
+-{
++struct iw_thrspy {
+  struct sockaddr addr;
+  struct iw_quality qual;
+  struct iw_quality low;
+  struct iw_quality high;
+ };
+-struct iw_scan_req
+-{
++struct iw_scan_req {
+  __u8 scan_type;
+  __u8 essid_len;
+  __u8 num_channels;
+@@ -314,8 +306,7 @@
+  __u32 max_channel_time;
+  struct iw_freq channel_list[IW_MAX_FREQUENCIES];
+ };
+-struct iw_encode_ext
+-{
++struct iw_encode_ext {
+  __u32 ext_flags;
+  __u8 tx_seq[IW_ENCODE_SEQ_MAX_SIZE];
+  __u8 rx_seq[IW_ENCODE_SEQ_MAX_SIZE];
+@@ -324,8 +315,7 @@
+  __u16 key_len;
+  __u8 key[0];
+ };
+-struct iw_mlme
+-{
++struct iw_mlme {
+  __u16 cmd;
+  __u16 reason_code;
+  struct sockaddr addr;
+@@ -334,34 +324,29 @@
+ #define IW_PMKSA_REMOVE 2
+ #define IW_PMKSA_FLUSH 3
+ #define IW_PMKID_LEN 16
+-struct iw_pmksa
+-{
++struct iw_pmksa {
+  __u32 cmd;
+  struct sockaddr bssid;
+  __u8 pmkid[IW_PMKID_LEN];
+ };
+-struct iw_michaelmicfailure
+-{
++struct iw_michaelmicfailure {
+  __u32 flags;
+  struct sockaddr src_addr;
+  __u8 tsc[IW_ENCODE_SEQ_MAX_SIZE];
+ };
+ #define IW_PMKID_CAND_PREAUTH 0x00000001
+-struct iw_pmkid_cand
+-{
++struct iw_pmkid_cand {
+  __u32 flags;
+  __u32 index;
+  struct sockaddr bssid;
+ };
+-struct iw_statistics
+-{
++struct iw_statistics {
+  __u16 status;
+  struct iw_quality qual;
+  struct iw_discarded discard;
+  struct iw_missed miss;
+ };
+-union iwreq_data
+-{
++union iwreq_data {
+  char name[IFNAMSIZ];
+  struct iw_point essid;
+  struct iw_param nwid;
+@@ -381,16 +366,13 @@
+  struct iw_param param;
+  struct iw_point data;
+ };
+-struct iwreq
+-{
+- union
+- {
++struct iwreq {
++  union {
+  char ifrn_name[IFNAMSIZ];
+  } ifr_ifrn;
+  union iwreq_data u;
+ };
+-struct iw_range
+-{
++struct iw_range {
+  __u32 throughput;
+  __u32 min_nwid;
+  __u32 max_nwid;
+@@ -435,15 +417,13 @@
+  struct iw_freq freq[IW_MAX_FREQUENCIES];
+  __u32 enc_capa;
+ };
+-struct iw_priv_args
+-{
++struct iw_priv_args {
+  __u32 cmd;
+  __u16 set_args;
+  __u16 get_args;
+  char name[IFNAMSIZ];
+ };
+-struct iw_event
+-{
++struct iw_event {
+  __u16 len;
+  __u16 cmd;
+  union iwreq_data u;
+diff -uwr uapi-3.18.bak.stripped/scsi/fc/fc_els.h uapi/scsi/fc/fc_els.h
+--- uapi-3.18.bak.stripped/scsi/fc/fc_els.h	2015-01-28 15:14:57.539634101 -0800
++++ uapi/scsi/fc/fc_els.h	2015-01-28 14:59:07.859502498 -0800
+@@ -81,7 +81,8 @@
+  ELS_LKA = 0x80,
+  ELS_AUTH_ELS = 0x90,
+ };
+-#define FC_ELS_CMDS_INIT {   [ELS_LS_RJT] = "LS_RJT",   [ELS_LS_ACC] = "LS_ACC",   [ELS_PLOGI] = "PLOGI",   [ELS_FLOGI] = "FLOGI",   [ELS_LOGO] = "LOGO",   [ELS_ABTX] = "ABTX",   [ELS_RCS] = "RCS",   [ELS_RES] = "RES",   [ELS_RSS] = "RSS",   [ELS_RSI] = "RSI",   [ELS_ESTS] = "ESTS",   [ELS_ESTC] = "ESTC",   [ELS_ADVC] = "ADVC",   [ELS_RTV] = "RTV",   [ELS_RLS] = "RLS",   [ELS_ECHO] = "ECHO",   [ELS_TEST] = "TEST",   [ELS_RRQ] = "RRQ",   [ELS_REC] = "REC",   [ELS_SRR] = "SRR",   [ELS_PRLI] = "PRLI",   [ELS_PRLO] = "PRLO",   [ELS_SCN] = "SCN",   [ELS_TPLS] = "TPLS",   [ELS_TPRLO] = "TPRLO",   [ELS_LCLM] = "LCLM",   [ELS_GAID] = "GAID",   [ELS_FACT] = "FACT",   [ELS_FDACDT] = "FDACDT",   [ELS_NACT] = "NACT",   [ELS_NDACT] = "NDACT",   [ELS_QOSR] = "QOSR",   [ELS_RVCS] = "RVCS",   [ELS_PDISC] = "PDISC",   [ELS_FDISC] = "FDISC",   [ELS_ADISC] = "ADISC",   [ELS_RNC] = "RNC",   [ELS_FARP_REQ] = "FARP_REQ",   [ELS_FARP_REPL] = "FARP_REPL",   [ELS_RPS] = "RPS",   [ELS_RPL] = "RPL",   [ELS_RPBC] = "RPBC",   [ELS_FAN] = "FAN",   [ELS_RSCN] = "RSCN",   [ELS_SCR] = "SCR",   [ELS_RNFT] = "RNFT",   [ELS_CSR] = "CSR",   [ELS_CSU] = "CSU",   [ELS_LINIT] = "LINIT",   [ELS_LSTS] = "LSTS",   [ELS_RNID] = "RNID",   [ELS_RLIR] = "RLIR",   [ELS_LIRR] = "LIRR",   [ELS_SRL] = "SRL",   [ELS_SBRP] = "SBRP",   [ELS_RPSC] = "RPSC",   [ELS_QSA] = "QSA",   [ELS_EVFP] = "EVFP",   [ELS_LKA] = "LKA",   [ELS_AUTH_ELS] = "AUTH_ELS",  }
++#define FC_ELS_CMDS_INIT {[ELS_LS_RJT] = "LS_RJT",[ELS_LS_ACC] = "LS_ACC",[ELS_PLOGI] = "PLOGI",[ELS_FLOGI] = "FLOGI",[ELS_LOGO] = "LOGO",[ELS_ABTX] = "ABTX",[ELS_RCS] = "RCS",[ELS_RES] = "RES",[ELS_RSS] = "RSS",[ELS_RSI] = "RSI",[ELS_ESTS] = "ESTS",[ELS_ESTC] = "ESTC",[ELS_ADVC] = "ADVC",[ELS_RTV] = "RTV",[ELS_RLS] = "RLS",[ELS_ECHO] = "ECHO",[ELS_TEST] = "TEST",[ELS_RRQ] = "RRQ",[ELS_REC] = "REC",[ELS_SRR] = "SRR",[ELS_PRLI] = "PRLI",[ELS_PRLO] = "PRLO",[ELS_SCN] = "SCN",[ELS_TPLS] = "TPLS",[ELS_TPRLO] = "TPRLO",[ELS_LCLM] = "LCLM",[ELS_GAID] = "GAID",[ELS_FACT] = "FACT",[ELS_FDACDT] = "FDACDT",[ELS_NACT] = "NACT",[ELS_NDACT] = "NDACT",[ELS_QOSR] = "QOSR",[ELS_RVCS] = "RVCS",[ELS_PDISC] = "PDISC",[ELS_FDISC] = "FDISC",[ELS_ADISC] = "ADISC",[ELS_RNC] = "RNC",[ELS_FARP_REQ] = "FARP_REQ",[ELS_FARP_REPL] = "FARP_REPL",[ELS_RPS] = "RPS",[ELS_RPL] = "RPL",[ELS_RPBC] = "RPBC",[ELS_FAN] = "FAN",[ELS_RSCN] = "RSCN",[ELS_SCR] = "SCR",[ELS_RNFT] = "RNFT",[ELS_CSR] = "CSR",[ELS_CSU] = "CSU",[ELS_LINIT] = "LINIT",[ELS_LSTS] = "LSTS",[ELS_RNID] = "RNID",[ELS_RLIR] = "RLIR",[ELS_LIRR] = "LIRR",[ELS_SRL] = "SRL",[ELS_SBRP] = "SBRP",[ELS_RPSC] = "RPSC",[ELS_QSA] = "QSA",[ELS_EVFP] = "EVFP",[ELS_LKA] = "LKA",[ELS_AUTH_ELS] = "AUTH_ELS", \
++}
+ struct fc_els_ls_acc {
+  __u8 la_cmd;
+  __u8 la_resv[3];
+diff -uwr uapi-3.18.bak.stripped/scsi/fc/fc_fs.h uapi/scsi/fc/fc_fs.h
+--- uapi-3.18.bak.stripped/scsi/fc/fc_fs.h	2015-01-28 15:14:57.543634119 -0800
++++ uapi/scsi/fc/fc_fs.h	2015-01-28 14:59:07.859502498 -0800
+@@ -72,7 +72,8 @@
+  FC_RCTL_LCR = 0xc7,
+  FC_RCTL_END = 0xc9,
+ };
+-#define FC_RCTL_NAMES_INIT {   [FC_RCTL_DD_UNCAT] = "uncat",   [FC_RCTL_DD_SOL_DATA] = "sol data",   [FC_RCTL_DD_UNSOL_CTL] = "unsol ctl",   [FC_RCTL_DD_SOL_CTL] = "sol ctl/reply",   [FC_RCTL_DD_UNSOL_DATA] = "unsol data",   [FC_RCTL_DD_DATA_DESC] = "data desc",   [FC_RCTL_DD_UNSOL_CMD] = "unsol cmd",   [FC_RCTL_DD_CMD_STATUS] = "cmd status",   [FC_RCTL_ELS_REQ] = "ELS req",   [FC_RCTL_ELS_REP] = "ELS rep",   [FC_RCTL_ELS4_REQ] = "FC-4 ELS req",   [FC_RCTL_ELS4_REP] = "FC-4 ELS rep",   [FC_RCTL_BA_NOP] = "BLS NOP",   [FC_RCTL_BA_ABTS] = "BLS abort",   [FC_RCTL_BA_RMC] = "BLS remove connection",   [FC_RCTL_BA_ACC] = "BLS accept",   [FC_RCTL_BA_RJT] = "BLS reject",   [FC_RCTL_BA_PRMT] = "BLS dedicated connection preempted",   [FC_RCTL_ACK_1] = "LC ACK_1",   [FC_RCTL_ACK_0] = "LC ACK_0",   [FC_RCTL_P_RJT] = "LC port reject",   [FC_RCTL_F_RJT] = "LC fabric reject",   [FC_RCTL_P_BSY] = "LC port busy",   [FC_RCTL_F_BSY] = "LC fabric busy to data frame",   [FC_RCTL_F_BSYL] = "LC fabric busy to link control frame",  [FC_RCTL_LCR] = "LC link credit reset",   [FC_RCTL_END] = "LC end",  }
++#define FC_RCTL_NAMES_INIT {[FC_RCTL_DD_UNCAT] = "uncat",[FC_RCTL_DD_SOL_DATA] = "sol data",[FC_RCTL_DD_UNSOL_CTL] = "unsol ctl",[FC_RCTL_DD_SOL_CTL] = "sol ctl/reply",[FC_RCTL_DD_UNSOL_DATA] = "unsol data",[FC_RCTL_DD_DATA_DESC] = "data desc",[FC_RCTL_DD_UNSOL_CMD] = "unsol cmd",[FC_RCTL_DD_CMD_STATUS] = "cmd status",[FC_RCTL_ELS_REQ] = "ELS req",[FC_RCTL_ELS_REP] = "ELS rep",[FC_RCTL_ELS4_REQ] = "FC-4 ELS req",[FC_RCTL_ELS4_REP] = "FC-4 ELS rep",[FC_RCTL_BA_NOP] = "BLS NOP",[FC_RCTL_BA_ABTS] = "BLS abort",[FC_RCTL_BA_RMC] = "BLS remove connection",[FC_RCTL_BA_ACC] = "BLS accept",[FC_RCTL_BA_RJT] = "BLS reject",[FC_RCTL_BA_PRMT] = "BLS dedicated connection preempted",[FC_RCTL_ACK_1] = "LC ACK_1",[FC_RCTL_ACK_0] = "LC ACK_0",[FC_RCTL_P_RJT] = "LC port reject",[FC_RCTL_F_RJT] = "LC fabric reject",[FC_RCTL_P_BSY] = "LC port busy",[FC_RCTL_F_BSY] = "LC fabric busy to data frame",[FC_RCTL_F_BSYL] = "LC fabric busy to link control frame",[FC_RCTL_LCR] = "LC link credit reset",[FC_RCTL_END] = "LC end", \
++}
+ enum fc_well_known_fid {
+  FC_FID_NONE = 0x000000,
+  FC_FID_BCAST = 0xffffff,
+@@ -101,7 +102,8 @@
+  FC_TYPE_CT = 0x20,
+  FC_TYPE_ILS = 0x22,
+ };
+-#define FC_TYPE_NAMES_INIT {   [FC_TYPE_BLS] = "BLS",   [FC_TYPE_ELS] = "ELS",   [FC_TYPE_IP] = "IP",   [FC_TYPE_FCP] = "FCP",   [FC_TYPE_CT] = "CT",   [FC_TYPE_ILS] = "ILS",  }
++#define FC_TYPE_NAMES_INIT {[FC_TYPE_BLS] = "BLS",[FC_TYPE_ELS] = "ELS",[FC_TYPE_IP] = "IP",[FC_TYPE_FCP] = "FCP",[FC_TYPE_CT] = "CT",[FC_TYPE_ILS] = "ILS", \
++}
+ #define FC_XID_UNKNOWN 0xffff
+ #define FC_XID_MIN 0x0
+ #define FC_XID_MAX 0xfffe
+diff -uwr uapi-3.18.bak.stripped/sound/asound.h uapi/sound/asound.h
+--- uapi-3.18.bak.stripped/sound/asound.h	2015-01-28 15:14:57.555634171 -0800
++++ uapi/sound/asound.h	2015-01-28 21:08:39.592786248 -0800
+@@ -268,10 +268,7 @@
+ #define SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP (1<<2)
+ struct snd_interval {
+  unsigned int min, max;
+- unsigned int openmin:1,
+- openmax:1,
+- integer:1,
+- empty:1;
++  unsigned int openmin : 1, openmax : 1, integer : 1, empty : 1;
+ };
+ #define SNDRV_MASK_MAX 256
+ struct snd_mask {
+@@ -279,11 +276,9 @@
+ };
+ struct snd_pcm_hw_params {
+  unsigned int flags;
+- struct snd_mask masks[SNDRV_PCM_HW_PARAM_LAST_MASK -
+- SNDRV_PCM_HW_PARAM_FIRST_MASK + 1];
++  struct snd_mask masks[SNDRV_PCM_HW_PARAM_LAST_MASK - SNDRV_PCM_HW_PARAM_FIRST_MASK + 1];
+  struct snd_mask mres[5];
+- struct snd_interval intervals[SNDRV_PCM_HW_PARAM_LAST_INTERVAL -
+- SNDRV_PCM_HW_PARAM_FIRST_INTERVAL + 1];
++  struct snd_interval intervals[SNDRV_PCM_HW_PARAM_LAST_INTERVAL - SNDRV_PCM_HW_PARAM_FIRST_INTERVAL + 1];
+  struct snd_interval ires[9];
+  unsigned int rmask;
+  unsigned int cmask;
