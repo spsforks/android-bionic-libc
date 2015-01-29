@@ -102,6 +102,10 @@ int	_toupper(int);
 
 #endif /* __GNUC__ || _ANSI_LIBRARY || lint */
 
+#if __ANDROID_API__ < 21
+#include <android/legacy_ctype_inlines.h>
+#endif
+
 __END_DECLS
 
 #endif /* !_CTYPE_H_ */

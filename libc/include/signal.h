@@ -136,6 +136,10 @@ extern int sigqueue(pid_t, int, const union sigval);
 extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*);
 extern int sigwaitinfo(const sigset_t*, siginfo_t*);
 
+#if __ANDROID_API__ < 21
+#include <android/legacy_signal_inlines.h>
+#endif
+
 __END_DECLS
 
 #endif /* _SIGNAL_H_ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,31 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _ERRNO_H
-#define _ERRNO_H
 
-#include <sys/cdefs.h>
-#include <linux/errno.h>
+#ifndef _SYS_ATOMICS_H_
+#define _SYS_ATOMICS_H_
 
-__BEGIN_DECLS
-
-/* on Linux, ENOTSUP and EOPNOTSUPP are defined as the same error code
- * even if 1000.3 states that they should be different
+/*
+ * These got proper out of line definitions in L. Putting the inline definitions
+ * back for old targets brings us closer to being able to use one set of headers
+ * for all API levels.
+ *
+ * The other inlines we put back went in to their appropriate headers, but the
+ * sys/atomics.h header was removed, so we'll just add these somewhere we can be
+ * sure they will be included.
  */
-#ifndef  ENOTSUP
-#define  ENOTSUP  EOPNOTSUPP
-#endif
-
-/* internal function returning the address of the thread-specific errno */
-extern volatile int* __errno(void) __pure2;
-
-/* a macro expanding to the errno l-value */
-#define  errno   (*__errno())
-
 #if __ANDROID_API__ < 21
-#include <android/legacy_errno_inlines.h>
+#include <android/legacy_sys_atomics_inlines.h>
 #endif
 
-__END_DECLS
-
-#endif /* _ERRNO_H */
+#endif /* _SYS_ATOMICS_H_ */
