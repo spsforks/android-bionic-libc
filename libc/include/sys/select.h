@@ -31,7 +31,6 @@
 
 #include <linux/time.h>
 #include <signal.h>
-#include <string.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
