@@ -556,4 +556,18 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
+#if __ANDROID_API__ < 21
+/*
+ * All the inlines in <android/ndk_inline_cruft.h> were turned in to out of line
+ * definitions in L.  There have been a number of bug reports and SO questions
+ * about people targeting API level 21, trying to run on pre-21, and getting
+ * errors about the linker not being able to find rand(3) (or others).
+ *
+ * While this isn't strictly supported, we can put the inline definitions back
+ * for the older API levels. It clutters up the default namespace a bit, but
+ * that's sort of how things were anyway.
+ */
+#include <android/ndk_inline_cruft.h>
+#endif
+
 #endif /* !_SYS_CDEFS_H_ */
