@@ -30,13 +30,13 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <stdatomic.h>
 #include <sys/mman.h>
 #include <time.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
 
-#include "private/bionic_atomic_inline.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
@@ -125,24 +125,24 @@ int pthread_cond_destroy(pthread_cond_t* cond) {
 // pthread_cond_signal to atomically decrement the counter
 // then wake up 'counter' threads.
 static int __pthread_cond_pulse(pthread_cond_t* cond, int counter) {
-  int flags = (cond->value & COND_FLAGS_MASK);
-  while (true) {
-    int old_value = cond->value;
-    int new_value = ((old_value - COND_COUNTER_STEP) & COND_COUNTER_MASK) | flags;
-    if (__bionic_cmpxchg(old_value, new_value, &cond->value) == 0) {
-      break;
-    }
-  }
+  static_assert(sizeof(atomic_int) == sizeof(cond->value),
+                "cond->value should actually be atomic_int in implementation.");
 
-  // Ensure that all memory accesses previously made by this thread are
-  // visible to the woken thread(s).  On the other side, the "wait"
-  // code will issue any necessary barriers when locking the mutex.
-  //
-  // This may not strictly be necessary -- if the caller follows
-  // recommended practice and holds the mutex before signaling the cond
-  // var, the mutex ops will provide correct semantics.  If they don't
-  // hold the mutex, they're subject to race conditions anyway.
-  ANDROID_MEMBAR_FULL();
+  // We prefer casting to atomic_int instead of declaring cond->value to be atomic_int directly.
+  // Because using the second method pollutes pthread.h, and causes an error when compiling libcxx.
+  atomic_int* cond_value_ptr = reinterpret_cast<atomic_int*>(&cond->value);
+
+  int old_value = atomic_load_explicit(cond_value_ptr, memory_order_relaxed);
+  int flags = old_value & COND_FLAGS_MASK;
+  int new_value;
+
+  // Use compare_exchange to change value, so we can use futex_wake to wake up waiters.
+  // If exchanged successfully, a release fence is required to expose all stores to the
+  // waiting threads.
+  do {
+    new_value = ((old_value - COND_COUNTER_STEP) & COND_COUNTER_MASK) | flags;
+  } while (!atomic_compare_exchange_weak_explicit(cond_value_ptr, &old_value, new_value,
+                                                  memory_order_release, memory_order_relaxed));
 
   __futex_wake_ex(&cond->value, COND_IS_SHARED(cond->value), counter);
   return 0;
@@ -154,6 +154,8 @@ int __pthread_cond_timedwait_relative(pthread_cond_t* cond, pthread_mutex_t* mut
 
   pthread_mutex_unlock(mutex);
   int status = __futex_wait_ex(&cond->value, COND_IS_SHARED(cond->value), old_value, reltime);
+  // pthread_mutex_lock has an acquire fence, which makes all stores made before
+  // pthread_cond_signal/pthread_cond_broadcast visible here.
   pthread_mutex_lock(mutex);
 
   if (status == -ETIMEDOUT) {
