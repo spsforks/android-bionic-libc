@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,31 +25,41 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _ERRNO_H
-#define _ERRNO_H
 
+#ifndef _ANDROID_LEGACY_STDLIB_INLINES_H_
+#define _ANDROID_LEGACY_STDLIB_INLINES_H_
+
+#include <stdlib.h>
 #include <sys/cdefs.h>
-#include <linux/errno.h>
 
 __BEGIN_DECLS
 
-/* on Linux, ENOTSUP and EOPNOTSUPP are defined as the same error code
- * even if 1000.3 states that they should be different
- */
-#ifndef  ENOTSUP
-#define  ENOTSUP  EOPNOTSUPP
-#endif
+static __inline__ float strtof(const char *nptr, char **endptr) {
+  return (float)strtod(nptr, endptr);
+}
 
-/* internal function returning the address of the thread-specific errno */
-extern volatile int* __errno(void) __pure2;
+static __inline__ double atof(const char *nptr) { return (strtod(nptr, NULL)); }
 
-/* a macro expanding to the errno l-value */
-#define  errno   (*__errno())
+static __inline__ int abs(int __n) { return (__n < 0) ? -__n : __n; }
 
-#if __ANDROID_API__ < 21
-#include <android/legacy_errno_inlines.h>
-#endif
+static __inline__ long labs(long __n) { return (__n < 0L) ? -__n : __n; }
+
+static __inline__ long long llabs(long long __n) {
+  return (__n < 0LL) ? -__n : __n;
+}
+
+static __inline__ int rand(void) { return (int)lrand48(); }
+
+static __inline__ void srand(unsigned int __s) { srand48(__s); }
+
+static __inline__ long random(void) { return lrand48(); }
+
+static __inline__ void srandom(unsigned int __s) { srand48(__s); }
+
+static __inline__ int grantpt(int __fd __attribute((unused))) {
+  return 0; /* devpts does this all for us! */
+}
 
 __END_DECLS
 
-#endif /* _ERRNO_H */
+#endif /* _ANDROID_LEGACY_STDLIB_INLINES_H_ */

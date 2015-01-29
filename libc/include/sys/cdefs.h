@@ -556,4 +556,17 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
+/*
+ * These got proper out of line definitions in L. Putting the inline definitions
+ * back for old targets brings us closer to being able to use one set of headers
+ * for all API levels.
+ *
+ * The other inlines we put back went in to their appropriate headers, but the
+ * sys/atomics.h header was removed, so we'll just add these somewhere we can be
+ * sure they will be included.
+ */
+#if __ANDROID_API__ < 21
+#include <android/legacy_sys_atomics_inlines.h>
+#endif
+
 #endif /* !_SYS_CDEFS_H_ */

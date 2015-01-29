@@ -49,6 +49,10 @@ pid_t tcgetsid(int);
 int tcsendbreak(int, int);
 int tcsetattr(int, int, const struct termios*);
 
+#if __ANDROID_API__ < 21
+#include <android/legacy_termios_inlines.h>
+#endif
+
 __END_DECLS
 
 #endif /* _TERMIOS_H_ */

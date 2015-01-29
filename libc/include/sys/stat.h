@@ -183,6 +183,10 @@ extern int mknodat(int, const char*, mode_t, dev_t);
 extern int utimensat(int fd, const char *path, const struct timespec times[2], int flags);
 extern int futimens(int fd, const struct timespec times[2]);
 
+#if __ANDROID_API__ < 21
+#include <android/legacy_sys_stat_inlines.h>
+#endif
+
 __END_DECLS
 
 #endif /* _SYS_STAT_H_ */

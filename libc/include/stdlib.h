@@ -172,6 +172,10 @@ extern size_t	wcstombs(char *, const wchar_t *, size_t);
 extern size_t __ctype_get_mb_cur_max(void);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 
+#if __ANDROID_API__ < 21
+#include <android/legacy_stdlib_inlines.h>
+#endif
+
 __END_DECLS
 
 #endif /* _STDLIB_H */
