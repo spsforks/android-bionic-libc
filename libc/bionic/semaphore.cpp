@@ -29,10 +29,10 @@
 #include <semaphore.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdatomic.h>
 #include <sys/time.h>
 #include <time.h>
 
-#include "private/bionic_atomic_inline.h"
 #include "private/bionic_constants.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_time_conversions.h"
@@ -66,7 +66,7 @@
 #define SEMCOUNT_FROM_VALUE(val)    (((val) << SEMCOUNT_VALUE_SHIFT) & SEMCOUNT_VALUE_MASK)
 
 // Convert a sem->count bit pattern into the corresponding signed value.
-static inline int SEMCOUNT_TO_VALUE(uint32_t sval) {
+static inline int SEMCOUNT_TO_VALUE(unsigned int sval) {
   return (static_cast<int>(sval) >> SEMCOUNT_VALUE_SHIFT);
 }
 
@@ -79,11 +79,19 @@ static inline int SEMCOUNT_TO_VALUE(uint32_t sval) {
 #define SEMCOUNT_DECREMENT(sval)    (((sval) - (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
 #define SEMCOUNT_INCREMENT(sval)    (((sval) + (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
 
-// Return the shared bitflag from a semaphore.
-static inline uint32_t SEM_GET_SHARED(sem_t* sem) {
-  return (sem->count & SEMCOUNT_SHARED_MASK);
+static inline atomic_uint* SEM_TO_ATOMIC_POINTER(sem_t* sem) {
+  static_assert(sizeof(atomic_uint) == sizeof(sem->count),
+                "sem->count should actually be atomic_uint in implementation.");
+
+  // We prefer casting to atomic_uint instead of declaring sem->count to be atomic_uint directly.
+  // Because using the second method pollutes semaphore.h.
+  return reinterpret_cast<atomic_uint*>(&sem->count);
 }
 
+// Return the shared bitflag from a semaphore counter.
+static inline unsigned int SEM_GET_SHARED(atomic_uint* sem_count_ptr) {
+  return (atomic_load_explicit(sem_count_ptr, memory_order_relaxed) & SEMCOUNT_SHARED_MASK);
+}
 
 int sem_init(sem_t* sem, int pshared, unsigned int value) {
   // Ensure that 'value' can be stored in the semaphore.
@@ -92,10 +100,13 @@ int sem_init(sem_t* sem, int pshared, unsigned int value) {
     return -1;
   }
 
-  sem->count = SEMCOUNT_FROM_VALUE(value);
+  unsigned int count = SEMCOUNT_FROM_VALUE(value);
   if (pshared != 0) {
-    sem->count |= SEMCOUNT_SHARED_MASK;
+    count |= SEMCOUNT_SHARED_MASK;
   }
+
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+  atomic_store_explicit(sem_count_ptr, count, memory_order_relaxed);
   return 0;
 }
 
@@ -122,46 +133,35 @@ int sem_unlink(const char*) {
 // and return the old one. As a special case,
 // this returns immediately if the value is
 // negative (i.e. -1)
-static int __sem_dec(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
-  uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
-  uint32_t old_value, new_value;
-  int ret;
+static int __sem_dec(atomic_uint* sem_count_ptr) {
+  unsigned int old_value = atomic_load_explicit(sem_count_ptr, memory_order_relaxed);
+  unsigned int shared = old_value & SEMCOUNT_SHARED_MASK;
 
   do {
-    old_value = (*sem & SEMCOUNT_VALUE_MASK);
-    ret = SEMCOUNT_TO_VALUE(old_value);
-    if (ret < 0) {
+    if (SEMCOUNT_TO_VALUE(old_value) < 0) {
       break;
     }
+  } while (!atomic_compare_exchange_weak_explicit(sem_count_ptr, &old_value,
+           SEMCOUNT_DECREMENT(old_value) | shared, memory_order_relaxed, memory_order_relaxed));
 
-    new_value = SEMCOUNT_DECREMENT(old_value);
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
-
-  return ret;
+  return SEMCOUNT_TO_VALUE(old_value);
 }
 
 // Same as __sem_dec, but will not touch anything if the
 // value is already negative *or* 0. Returns the old value.
-static int __sem_trydec(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
-  uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
-  uint32_t old_value, new_value;
-  int          ret;
+static int __sem_trydec(atomic_uint* sem_count_ptr) {
+  unsigned int old_value = atomic_load_explicit(sem_count_ptr, memory_order_relaxed);
+  unsigned int shared = old_value & SEMCOUNT_SHARED_MASK;
 
   do {
-    old_value = (*sem & SEMCOUNT_VALUE_MASK);
-    ret = SEMCOUNT_TO_VALUE(old_value);
-    if (ret <= 0) {
+    if (SEMCOUNT_TO_VALUE(old_value) <= 0) {
       break;
     }
+  } while (!atomic_compare_exchange_weak_explicit(sem_count_ptr, &old_value,
+           SEMCOUNT_DECREMENT(old_value) | shared, memory_order_relaxed, memory_order_relaxed));
 
-    new_value = SEMCOUNT_DECREMENT(old_value);
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
-
-  return ret;
+  return SEMCOUNT_TO_VALUE(old_value);
 }
-
 
 // "Increment" the value of a semaphore atomically and
 // return its old value. Note that this implements
@@ -169,51 +169,55 @@ static int __sem_trydec(volatile uint32_t* sem) {
 // value to +1 directly.
 //
 // NOTE: The value will _not_ wrap above SEM_VALUE_MAX
-static int __sem_inc(volatile uint32_t* sem) {
-  volatile int32_t* ptr = reinterpret_cast<volatile int32_t*>(sem);
-  uint32_t shared = (*sem & SEMCOUNT_SHARED_MASK);
-  uint32_t old_value, new_value;
-  int ret;
+static int __sem_inc(atomic_uint* sem_count_ptr) {
+  unsigned int old_value = atomic_load_explicit(sem_count_ptr, memory_order_relaxed);
+  unsigned int shared = old_value  & SEMCOUNT_SHARED_MASK;
+  unsigned int new_value;
 
   do {
-    old_value = (*sem & SEMCOUNT_VALUE_MASK);
-    ret = SEMCOUNT_TO_VALUE(old_value);
-
     // Can't go higher than SEM_VALUE_MAX.
-    if (ret == SEM_VALUE_MAX) {
+    if (SEMCOUNT_TO_VALUE(old_value) == SEM_VALUE_MAX) {
       break;
     }
 
-    // If the counter is negative, go directly to +1, otherwise just increment.
-    if (ret < 0) {
-        new_value = SEMCOUNT_ONE;
+    // If the counter is negative, go directly to one, otherwise just increment.
+    if (SEMCOUNT_TO_VALUE(old_value) < 0) {
+      new_value = SEMCOUNT_ONE | shared;
     } else {
-      new_value = SEMCOUNT_INCREMENT(old_value);
+      new_value = SEMCOUNT_INCREMENT(old_value) | shared;
     }
-  } while (__bionic_cmpxchg((old_value|shared), (new_value|shared), ptr) != 0);
+  } while (!atomic_compare_exchange_weak_explicit(sem_count_ptr, &old_value,
+           new_value, memory_order_relaxed, memory_order_relaxed));
 
-  return ret;
+  return SEMCOUNT_TO_VALUE(old_value);
 }
 
 int sem_wait(sem_t* sem) {
-  uint32_t shared = SEM_GET_SHARED(sem);
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+  unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
 
   while (true) {
-    if (__sem_dec(&sem->count) > 0) {
-      ANDROID_MEMBAR_FULL();
+    if (__sem_dec(sem_count_ptr) > 0) {
+      // An acquire fence is needed to ensure that all changes made by previous
+      // semaphore owners can be seen in current CPU.
+      atomic_thread_fence(memory_order_acquire);
       return 0;
     }
 
-    __futex_wait_ex(&sem->count, shared, shared|SEMCOUNT_MINUS_ONE, NULL);
+    __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, NULL);
   }
 }
 
 int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+
   // POSIX says we need to try to decrement the semaphore
   // before checking the timeout value. Note that if the
   // value is currently 0, __sem_trydec() does nothing.
-  if (__sem_trydec(&sem->count) > 0) {
-    ANDROID_MEMBAR_FULL();
+  if (__sem_trydec(sem_count_ptr) > 0) {
+    // An acquire fence is needed to ensure that all changes made by previous
+    // semaphore owners can be seen in current CPU.
+    atomic_thread_fence(memory_order_acquire);
     return 0;
   }
 
@@ -223,7 +227,7 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
     return -1;
   }
 
-  uint32_t shared = SEM_GET_SHARED(sem);
+  unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
 
   while (true) {
     // POSIX mandates CLOCK_REALTIME here.
@@ -234,13 +238,15 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
     }
 
     // Try to grab the semaphore. If the value was 0, this will also change it to -1.
-    if (__sem_dec(&sem->count) > 0) {
-      ANDROID_MEMBAR_FULL();
+    if (__sem_dec(sem_count_ptr) > 0) {
+      // An acquire fence is needed to ensure that all changes made by previous
+      // semaphore owners can be seen in current CPU.
+      atomic_thread_fence(memory_order_acquire);
       break;
     }
 
     // Contention detected. Wait for a wakeup event.
-    int ret = __futex_wait_ex(&sem->count, shared, shared|SEMCOUNT_MINUS_ONE, &ts);
+    int ret = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, &ts);
 
     // Return in case of timeout or interrupt.
     if (ret == -ETIMEDOUT || ret == -EINTR) {
@@ -252,13 +258,17 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
 }
 
 int sem_post(sem_t* sem) {
-  uint32_t shared = SEM_GET_SHARED(sem);
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+  unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
 
-  ANDROID_MEMBAR_FULL();
-  int old_value = __sem_inc(&sem->count);
+  // A release fence is needed to to ensure that all changes made by
+  // current CPU can be seen by following semaphore owners.
+  atomic_thread_fence(memory_order_release);
+
+  int old_value = __sem_inc(sem_count_ptr);
   if (old_value < 0) {
     // Contention on the semaphore. Wake up all waiters.
-    __futex_wake_ex(&sem->count, shared, INT_MAX);
+    __futex_wake_ex(sem_count_ptr, shared, INT_MAX);
   } else if (old_value == SEM_VALUE_MAX) {
     // Overflow detected.
     errno = EOVERFLOW;
@@ -269,8 +279,11 @@ int sem_post(sem_t* sem) {
 }
 
 int sem_trywait(sem_t* sem) {
-  if (__sem_trydec(&sem->count) > 0) {
-    ANDROID_MEMBAR_FULL();
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+  if (__sem_trydec(sem_count_ptr) > 0) {
+    // An acquire fence is needed to ensure that all changes made by previous
+    // semaphore owners can be seen in current CPU.
+    atomic_thread_fence(memory_order_acquire);
     return 0;
   } else {
     errno = EAGAIN;
@@ -279,7 +292,8 @@ int sem_trywait(sem_t* sem) {
 }
 
 int sem_getvalue(sem_t* sem, int* sval) {
-  int val = SEMCOUNT_TO_VALUE(sem->count);
+  atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
+  int val = SEMCOUNT_TO_VALUE(atomic_load_explicit(sem_count_ptr, memory_order_relaxed));
   if (val < 0) {
     val = 0;
   }
