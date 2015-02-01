@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fchmodat)
+ENTRY(__fchmodat)
     movq    %rcx, %r10
     movl    $__NR_fchmodat, %eax
     syscall
@@ -13,4 +13,5 @@ ENTRY(fchmodat)
     call    __set_errno_internal
 1:
     ret
-END(fchmodat)
+END(__fchmodat)
+.hidden __fchmodat
