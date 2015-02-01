@@ -95,3 +95,83 @@ TEST(sys_stat, stat64_lstat64_fstat64) {
   ASSERT_EQ(0, fstat64(fd, &sb));
   close(fd);
 }
+
+TEST(sys_stat, fchmodat_EFAULT_file) {
+  ASSERT_EQ(-1, fchmodat(AT_FDCWD, (char *) 0x1, 0751, 0));
+  ASSERT_EQ(EFAULT, errno);
+}
+
+TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_EFAULT_file) {
+  ASSERT_EQ(-1, fchmodat(AT_FDCWD, (char *) 0x1, 0751, AT_SYMLINK_NOFOLLOW));
+#if defined(__BIONIC__)
+  ASSERT_EQ(EFAULT, errno);
+#else
+  ASSERT_EQ(ENOTSUP, errno);
+#endif
+}
+
+TEST(sys_stat, fchmodat_nonexistant_file) {
+  ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, 0));
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_nonexistant_file) {
+  ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, AT_SYMLINK_NOFOLLOW));
+#if defined(__BIONIC__)
+  ASSERT_EQ(ENOENT, errno);
+#else
+  ASSERT_EQ(ENOTSUP, errno);
+#endif
+}
+
+TEST(sys_stat, fchmodat_file) {
+  TemporaryFile tf;
+  struct stat sb;
+
+  ASSERT_EQ(0, fchmodat(AT_FDCWD, tf.filename, 0751, 0));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+}
+
+TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_file) {
+  TemporaryFile tf;
+  errno = 0;
+  int result = fchmodat(AT_FDCWD, tf.filename, 0751, AT_SYMLINK_NOFOLLOW);
+
+#if defined(__BIONIC__)
+  struct stat sb;
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+#else
+  ASSERT_EQ(-1, result);
+  ASSERT_EQ(ENOTSUP, errno);
+#endif
+}
+
+TEST(sys_stat, fchmodat_symlink) {
+  TemporaryFile tf;
+  char linkname[255];
+  struct stat sb;
+
+  snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
+
+  ASSERT_EQ(0, symlink(tf.filename, linkname));
+  ASSERT_EQ(0, fchmodat(AT_FDCWD, linkname, 0751, 0));
+  ASSERT_EQ(0, fstat(tf.fd, &sb));
+  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+  unlink(linkname);
+}
+
+TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_symlink) {
+  TemporaryFile tf;
+  char linkname[255];
+
+  snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
+
+  ASSERT_EQ(0, symlink(tf.filename, linkname));
+  ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW));
+  ASSERT_EQ(ENOTSUP, errno);
+  unlink(linkname);
+}
