@@ -1,0 +1,7 @@
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Hans Boehm <hboehm@google.com>
+Submitted-by: Hans Boehm <hboehm@google.com>
+Submitted-at: Tue, 03 Feb 2015 02:42:53 +0000
+Reviewed-on: https://android-review.googlesource.com/127534
+Project: platform/bionic
+Branch: refs/heads/master
