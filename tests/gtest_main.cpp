@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -93,7 +94,10 @@ static void PrintHelpInfo() {
          "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
          "  --gtest-filter=POSITIVE_PATTERNS[-NEGATIVE_PATTERNS]\n"
          "      Used as a synonym for --gtest_filter option in gtest.\n"
-         "\nDefault bionic unit test option is -j.\n"
+         "Default bionic unit test option is -j.\n"
+         "In isolation mode, you can send SIGQUIT to the parent process to show current\n"
+         "running tests, or send SIGINT to the parent process to stop testing and\n"
+         "clean up current running tests.\n"
          "\n");
 }
 
@@ -517,17 +521,54 @@ struct ChildProcInfo {
   ChildProcInfo() : pid(0) {}
 };
 
-static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
-  pid_t result;
-  int status;
+static void HandleSignals(std::vector<TestCase>& testcase_list,
+                            std::vector<ChildProcInfo>& child_proc_list) {
+  sigset_t waiting_mask;
+  sigemptyset(&waiting_mask);
+  sigaddset(&waiting_mask, SIGINT);
+  sigaddset(&waiting_mask, SIGQUIT);
+  timespec timeout;
+  timeout.tv_sec = timeout.tv_nsec = 0;
+  while (true) {
+    int signo = TEMP_FAILURE_RETRY(sigtimedwait(&waiting_mask, NULL, &timeout));
+    if (signo == -1) {
+      if (errno == EAGAIN) {
+        break; // Timeout, no pending signal.
+      }
+      perror("sigtimedwait");
+      exit(1);
+    } else if (signo == SIGQUIT) {
+      // Print current running tests.
+      printf("List of current running tests:\n");
+      for (auto& child_proc : child_proc_list) {
+        if (child_proc.pid != 0) {
+          std::string test_name = testcase_list[child_proc.testcase_id].GetTestName(child_proc.test_id);
+          int64_t current_time_ns = NanoTime();
+          int64_t run_time_ms = (current_time_ns - child_proc.start_time_ns) / 1000000;
+          printf("  %s (%" PRId64 " ms)\n", test_name.c_str(), run_time_ms);
+        }
+      }
+    } else if (signo == SIGINT) {
+      // Kill current running tests.
+      for (auto& child_proc : child_proc_list) {
+        if (child_proc.pid != 0) {
+          // Send SIGKILL to ensure the child process can be killed unconditionally.
+          kill(child_proc.pid, SIGKILL);
+        }
+      }
+      // SIGINT kills the parent process as well.
+      exit(1);
+    }
+  }
+}
+
+static void WaitChildProcs(std::vector<TestCase>& testcase_list,
+                           std::vector<ChildProcInfo>& child_proc_list) {
   bool loop_flag = true;
 
   while (true) {
-    while ((result = waitpid(-1, &status, WNOHANG)) == -1) {
-      if (errno != EINTR) {
-        break;
-      }
-    }
+    int status;
+    pid_t result = TEMP_FAILURE_RETRY(waitpid(-1, &status, WNOHANG));
 
     if (result == -1) {
       perror("waitpid");
@@ -556,6 +597,9 @@ static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
     }
 
     if (!loop_flag) break;
+
+    HandleSignals(testcase_list, child_proc_list);
+
     // sleep 1 ms to avoid busy looping.
     timespec sleep_time;
     sleep_time.tv_sec = 0;
@@ -591,6 +635,16 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
                         testing::UnitTest::GetInstance()->listeners().default_result_printer());
   testing::UnitTest::GetInstance()->listeners().Append(new TestResultPrinter);
 
+  // Signals are blocked here as we want to handle them in HandleSignals() later.
+  sigset_t block_mask, orig_mask;
+  sigemptyset(&block_mask);
+  sigaddset(&block_mask, SIGINT);
+  sigaddset(&block_mask, SIGQUIT);
+  if (sigprocmask(SIG_BLOCK, &block_mask, &orig_mask) == -1) {
+    perror("sigprocmask SIG_BLOCK");
+    exit(1);
+  }
+
   for (size_t iteration = 1; iteration <= iteration_count; ++iteration) {
     OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
     int64_t iteration_start_time_ns = NanoTime();
@@ -625,6 +679,12 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
           } else if (pid == 0) {
             close(pipefd[0]);
             child_output_fd = pipefd[1];
+
+            // Restore signal mask.
+            if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) == -1) {
+              perror("sigprocmask SIG_SETMASK");
+              exit(1);
+            }
             // Run child process test, never return.
             ChildProcessFn(argc, argv, test_name);
           }
@@ -646,7 +706,7 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
       }
 
       // Wait for any child proc finish or timeout.
-      WaitChildProcs(child_proc_list);
+      WaitChildProcs(testcase_list, child_proc_list);
 
       // Collect result.
       for (auto& child_proc : child_proc_list) {
@@ -715,6 +775,12 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
       OnTestIterationEndXmlPrint(xml_output_filename, testcase_list, epoch_iteration_start_time,
                                  elapsed_time_ns);
     }
+  }
+
+  // Restore signal mask.
+  if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) == -1) {
+    perror("sigprocmask SIG_SETMASK");
+    exit(1);
   }
 }
 
