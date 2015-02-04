@@ -29,7 +29,10 @@
 #define _SYS_PARAM_H_
 
 #include <limits.h>
-#include <linux/param.h>
+
+#ifndef HZ
+#define HZ 100
+#endif
 
 #define MAXPATHLEN  PATH_MAX
 #define MAXSYMLINKS 8
