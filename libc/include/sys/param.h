@@ -29,7 +29,6 @@
 #define _SYS_PARAM_H_
 
 #include <limits.h>
-#include <linux/param.h>
 
 #define MAXPATHLEN  PATH_MAX
 #define MAXSYMLINKS 8
