@@ -937,12 +937,14 @@ TEST(TEST_NAME, s_n_printf_macro_expansion) {
 
 TEST_F(DEATHTEST, poll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
-  pollfd buf[1] = {{0, POLLIN, 0}};
+  // Use impossible fd here, so it won't be suspended in poll even if fortify test fails.
+  pollfd buf[1] = {{1000000000, POLLIN, 0}};
   ASSERT_FORTIFY(poll(buf, fd_count, -1));
 }
 
 TEST_F(DEATHTEST, ppoll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
-  pollfd buf[1] = {{0, POLLIN, 0}};
+  // Use impossible fd here, so it won't be suspended in ppoll even if fortify test fails.
+  pollfd buf[1] = {{1000000000, POLLIN, 0}};
   ASSERT_FORTIFY(ppoll(buf, fd_count, NULL, NULL));
 }
