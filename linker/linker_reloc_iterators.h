@@ -19,6 +19,16 @@
 
 #include "linker.h"
 
+#define RELOCATION_GROUPED_BY_INFO_FLAG 1
+#define RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG 2
+#define RELOCATION_GROUPED_BY_ADDEND_FLAG 4
+#define RELOCATION_GROUP_HAS_ADDEND_FLAG 8
+
+#define RELOCATION_GROUPED_BY_INFO(flags) (((flags) & RELOCATION_GROUPED_BY_INFO_FLAG) != 0)
+#define RELOCATION_GROUPED_BY_OFFSET_DELTA(flags) (((flags) & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) != 0)
+#define RELOCATION_GROUPED_BY_ADDEND(flags) (((flags) & RELOCATION_GROUPED_BY_ADDEND_FLAG) != 0)
+#define RELOCATION_GROUP_HAS_ADDEND(flags) (((flags) & RELOCATION_GROUP_HAS_ADDEND_FLAG) != 0)
+
 class plain_reloc_iterator {
 #if defined(USE_RELA)
   typedef ElfW(Rela) rel_t;
@@ -42,6 +52,98 @@ class plain_reloc_iterator {
   rel_t* current_;
 
   DISALLOW_COPY_AND_ASSIGN(plain_reloc_iterator);
+};
+
+template <typename decoder_t>
+class packed_reloc_iterator {
+#if defined(USE_RELA)
+  typedef ElfW(Rela) rel_t;
+#else
+  typedef ElfW(Rel) rel_t;
+#endif
+ public:
+  explicit packed_reloc_iterator(decoder_t&& decoder)
+      : decoder_(decoder) {
+    // initialize fields
+    memset(&reloc_, 0, sizeof(reloc_));
+    relocation_count_ = decoder_.dequeue();
+    reloc_.r_offset = decoder_.dequeue();
+    relocation_index_ = 0;
+    relocation_group_index_ = 0;
+    group_size_ = 0;
+  }
+
+  bool has_next() const {
+    return relocation_index_ < relocation_count_;
+  }
+
+  rel_t* next() {
+    if (relocation_group_index_ == group_size_) {
+      if (!read_group_fields()) {
+        return nullptr;
+      }
+    }
+
+    if (RELOCATION_GROUPED_BY_OFFSET_DELTA(group_flags_)) {
+      reloc_.r_offset += group_r_offset_delta_;
+    } else {
+      reloc_.r_offset += decoder_.dequeue();
+    }
+
+    if (!RELOCATION_GROUPED_BY_INFO(group_flags_)) {
+      reloc_.r_info = decoder_.dequeue();
+    }
+
+    if (RELOCATION_GROUP_HAS_ADDEND(group_flags_) && !RELOCATION_GROUPED_BY_ADDEND(group_flags_)) {
+#if defined(USE_RELA)
+      reloc_.r_addend += decoder_.dequeue();
+#else
+      // This platform does not support rela, and yet we have it encoded in android_rel section.
+      return nullptr;
+#endif
+    }
+
+    relocation_index_++;
+    relocation_group_index_++;
+
+    return &reloc_;
+  }
+ private:
+  bool read_group_fields() {
+    group_size_ = decoder_.dequeue();
+    group_flags_ = decoder_.dequeue();
+
+    if (RELOCATION_GROUPED_BY_OFFSET_DELTA(group_flags_)) {
+      group_r_offset_delta_ = decoder_.dequeue();
+    }
+
+    if (RELOCATION_GROUPED_BY_INFO(group_flags_)) {
+      reloc_.r_info = decoder_.dequeue();
+    }
+
+    if (RELOCATION_GROUP_HAS_ADDEND(group_flags_) && RELOCATION_GROUPED_BY_ADDEND(group_flags_)) {
+#if !defined(USE_RELA)
+      // This platform does not support rela, and yet we have it encoded in android_rel section.
+      return false;
+#else
+      reloc_.r_addend += decoder_.dequeue();
+    } else if (!RELOCATION_GROUP_HAS_ADDEND(group_flags_)) {
+      reloc_.r_addend = 0;
+#endif
+    }
+
+    relocation_group_index_ = 0;
+    return true;
+  }
+
+  decoder_t decoder_;
+  size_t relocation_count_;
+  size_t group_size_;
+  size_t group_flags_;
+  size_t group_r_offset_delta_;
+  size_t relocation_index_;
+  size_t relocation_group_index_;
+  rel_t reloc_;
 };
 
 #endif  // __LINKER_RELOC_ITERATORS_H
