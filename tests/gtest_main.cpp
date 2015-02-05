@@ -16,9 +16,11 @@
 
 #include <gtest/gtest.h>
 
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -821,6 +823,34 @@ static size_t GetProcessorCount() {
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
+static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
+  // Gtest requires the user must invoke the test program via a valid path
+  // that contains at least one path separator. See b/19220800.
+  if (strchr(args[0], '/') == NULL) {
+    std::string command = std::string("which ") + args[0];
+    FILE* fp = popen(command.c_str(), "r");
+    if (fp == NULL) {
+      perror("popen(which)");
+      exit(1);
+    }
+    char path[PATH_MAX];
+    if (fgets(path, sizeof(path), fp) == NULL) {
+      perror("fgets");
+      exit(1);
+    }
+    size_t len = strlen(path);
+    while (len > 0 && isspace(path[len - 1])) {
+      --len;
+    }
+    path[len] = '\0';
+    args[0] = strdup(path);
+    if (pclose(fp) == -1) {
+      perror("pclose");
+      exit(1);
+    }
+  }
+}
+
 static void AddGtestFilterSynonym(std::vector<char*>& args) {
   // Support --gtest-filter as a synonym for --gtest_filter.
   for (size_t i = 1; i < args.size(); ++i) {
@@ -858,6 +888,7 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
     }
   }
 
+  AddPathSeparatorInTestProgramPath(args);
   AddGtestFilterSynonym(args);
 
   // if --bionic-selftest argument is used, only enable self tests, otherwise remove self tests.
