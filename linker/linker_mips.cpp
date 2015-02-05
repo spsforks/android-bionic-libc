@@ -38,6 +38,10 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
+    if (rel == nullptr) {
+      return false;
+    }
+
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
 
