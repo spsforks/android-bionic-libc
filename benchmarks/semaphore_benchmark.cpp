@@ -16,7 +16,9 @@
 
 #include "benchmark.h"
 
+#include <pthread.h>
 #include <semaphore.h>
+#include <stdio.h>
 
 static void BM_semaphore_sem_getvalue(int iters) {
   StopBenchmarkTiming();
@@ -47,3 +49,57 @@ static void BM_semaphore_sem_wait_sem_post(int iters) {
   StopBenchmarkTiming();
 }
 BENCHMARK(BM_semaphore_sem_wait_sem_post);
+
+/*
+ * This test tries its best to report the underlying futex wake syscall
+ * overhead. It suffers from clock_gettime syscall overhead. Lock the CPU
+ * speed for consistent results as we may not reach >50% cpu utilization.
+ * Test still returns a result occasionally that is double.
+ */
+static void BM_semaphore_sem_post_wakeup(int iters) {
+  StopBenchmarkTiming();
+
+  sem_t semaphore;
+  sem_init(&semaphore, 0, 0);
+
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  __sem_wait_run = 1;
+  struct sched_param param = { 1, };
+  pthread_attr_setschedparam(&attr, &param);
+  pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+  pthread_t pthread;
+  pthread_create(&pthread, &attr, __sem_wait, &semaphore);
+  pthread_attr_destroy(&attr);
+
+  for (int i = 0; i < iters; ++i) {
+    int trys = 3, dummy = 0;
+    do {
+      if (__sem_wait_run < 0) {
+        fprintf(stderr, "__sem_wait died unexpectedly\n");
+        return;
+      }
+      sched_yield();
+      sem_getvalue(&semaphore, &dummy);
+      if (dummy < 0) {  // POSIX.1-2001 possibility 1
+        break;
+      }
+      if (dummy == 0) { // POSIX.1-2001 possibility 2
+        --trys;
+      }
+    } while (trys);
+    StartBenchmarkTiming();
+    sem_post(&semaphore);
+    StopBenchmarkTiming(); // Remember to subtract clock syscall overhead
+  }
+
+  if (__sem_wait_run > 0) {
+    __sem_wait_run = 0;
+  }
+  do {
+    sem_post(&semaphore);
+    sched_yield();
+  } while (!__sem_wait_run);
+}
+BENCHMARK(BM_semaphore_sem_post_wakeup);
