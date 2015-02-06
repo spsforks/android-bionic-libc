@@ -51,6 +51,12 @@ extern void*  memmove(void *, const void *, size_t);
 extern void*  memset(void *, int, size_t);
 extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
 
+static __inline void *explicit_memset(void *s, int c, size_t n) {
+    void *ptr = memset(s, c, n);
+    __asm__ __volatile__("" : : "r"(ptr) : "memory");
+    return ptr;
+}
+
 extern char*  strchr(const char *, int) __purefunc;
 extern char* __strchr_chk(const char *, int, size_t);
 
