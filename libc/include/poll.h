@@ -41,6 +41,9 @@ typedef unsigned int nfds_t;
 int poll(struct pollfd*, nfds_t, int);
 int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*);
 
+// TODO: replace with real API level when available.
+#if __ANDROID_API__ >= 10000
+
 int __poll_chk(struct pollfd*, nfds_t, int, size_t);
 int __poll_real(struct pollfd*, nfds_t, int) __RENAME(poll);
 __errordecl(__poll_too_small_error, "poll: pollfd array smaller than fd count");
@@ -83,7 +86,8 @@ int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout, c
 #endif
 }
 
-#endif
+#endif /* __BIONIC_FORTIFY */
+#endif /* __ANDROID_API__ */
 
 __END_DECLS
 
