@@ -523,7 +523,9 @@
  * See
  * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
  */
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 \
+    && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0 \
+    && __ANDROID_API__ > 21
 #define __BIONIC_FORTIFY 1
 #if _FORTIFY_SOURCE == 2
 #define __bos(s) __builtin_object_size((s), 1)
