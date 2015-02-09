@@ -118,10 +118,12 @@ kernel_known_statics = {
 # the generated files.
 #
 kernel_ignored_macros = set(
-        [ "MAXHOSTNAMELEN",  # for some reason, Linux defines it to 64
-                             # while most of the BSD code expects this to be 256
-                             # so ignore the kernel-provided definition and
-                             # define it in the Bionic headers instead
+        [ "MAXHOSTNAMELEN",  # For some reason, Linux defines it to 64
+                             # while most of the BSD code expects this to be 256.
+                             # As specified in RFC 1034 and RFC 1035, the total
+                             # length of a domain name is restricted to 255
+                             # octets or less. So ignore the kernel-provided
+                             # definition and define it in the Bionic headers instead.
         ]
     )
 
