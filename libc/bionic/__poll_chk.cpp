@@ -30,10 +30,7 @@
 #include <poll.h>
 #include "private/libc_logging.h"
 
-#include <stdio.h>
-
 extern "C" int __poll_chk(struct pollfd* fds, nfds_t fd_count, int timeout, size_t fds_size) {
-fprintf(stderr, "__poll_chk %p %i %i %i\n", fds, (int)fd_count, timeout, (int) fds_size);
   if (__predict_false(fds_size / sizeof(*fds) < fd_count)) {
     __fortify_chk_fail("poll: pollfd array smaller than fd count", 0);
   }
