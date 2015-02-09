@@ -71,6 +71,13 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.53 2012/09/26 23:13:00 christos Exp $");
 #include <stddef.h>
 #include <string.h>
 
+// Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
+// RFC 1034 and RFC 1035 is 255 octets.
+#ifdef MAXHOSTNAMELEN
+#undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 static const struct afd {
 	int		a_af;
 	socklen_t	a_addrlen;

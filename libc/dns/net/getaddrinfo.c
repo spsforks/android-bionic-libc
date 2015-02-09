@@ -112,6 +112,13 @@
 #include <sys/system_properties.h>
 #endif /* ANDROID_CHANGES */
 
+// Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
+// RFC 1034 and RFC 1035 is 255 octets.
+#ifdef MAXHOSTNAMELEN
+#undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 typedef union sockaddr_union {
     struct sockaddr     generic;
     struct sockaddr_in  in;

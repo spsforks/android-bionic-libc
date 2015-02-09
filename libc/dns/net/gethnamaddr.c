@@ -90,6 +90,13 @@
 
 #include "hostent.h"
 
+// Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
+// RFC 1034 and RFC 1035 is 255 octets.
+#ifdef MAXHOSTNAMELEN
+#undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 #define maybe_ok(res, nm, ok) (((res)->options & RES_NOCHECKNAME) != 0U || \
                                (ok)(nm) != 0)
 #define maybe_hnok(res, hn) maybe_ok((res), (hn), res_hnok)
