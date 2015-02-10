@@ -141,3 +141,80 @@ static void BM_semaphore_sem_post(int iters) {
   } while (!BM_semaphore_sem_post_running);
 }
 BENCHMARK(BM_semaphore_sem_post);
+
+/*
+ *    This test reports the overhead of sem_post to sem_wake. A circle of
+ * num_semaphore - 1 threads are run on a set of semaphores to measure the
+ * activity. One can calculate the sem_wake overhead alone by:
+ *
+ * BM_semaphore_sem_post_sem_wait - BM_semaphore_sem_post - BM_time_clock_gettime
+ *
+ * Differences will result if there are more threads than active processors,
+ * there will be delay induced when scheduling the processes. This cost is
+ * measured by trying different values of num_semaphore. The governor selected
+ * will have a major impact on the results for a large number of threads.
+ */
+static void *BM_semaphore_sem_post_sem_wait_start_thread(void *obj) {
+  sem_t *semaphore = reinterpret_cast<sem_t *>(obj);
+
+  while ((BM_semaphore_sem_post_running > 0) && !sem_wait(semaphore)) {
+    sem_post(semaphore + 1);
+  }
+  --BM_semaphore_sem_post_running;
+  return NULL;
+}
+
+static void BM_semaphore_sem_post_sem_wait_num(int iters, int num_semaphore) {
+  StopBenchmarkTiming();
+
+  sem_t semaphore[num_semaphore];
+
+  for (int i = 0; i < num_semaphore; ++i) {
+    sem_init(semaphore + i, 0, 0);
+  }
+
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  BM_semaphore_sem_post_running = 1;
+  struct sched_param param = { 0, };
+  pthread_attr_setschedparam(&attr, &param);
+  pthread_attr_setschedpolicy(&attr, SCHED_OTHER);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+  for (int i = 0; i < (num_semaphore - 1); ++i) {
+    pthread_t pthread;
+    pthread_create(&pthread, &attr, BM_semaphore_sem_post_sem_wait_start_thread, semaphore + i);
+  }
+  pthread_attr_destroy(&attr);
+  sched_yield();
+
+  StartBenchmarkTiming();
+
+  for (int i = 0; i < iters; i += num_semaphore) {
+    sem_post(semaphore);
+    sem_wait(semaphore + num_semaphore - 1);
+  }
+
+  StopBenchmarkTiming();
+
+  if (BM_semaphore_sem_post_running > 0) {
+    BM_semaphore_sem_post_running = 0;
+  }
+  for (int i = 0;
+       (i < (10 * num_semaphore)) && (BM_semaphore_sem_post_running > (1 - num_semaphore));
+       ++i) {
+    for (int j = 0; j < (num_semaphore - 1); ++j) {
+      sem_post(semaphore + j);
+    }
+    sched_yield();
+  }
+}
+
+static void BM_semaphore_sem_post_sem_wait_low(int iters) {
+    BM_semaphore_sem_post_sem_wait_num(iters, 2);
+}
+BENCHMARK(BM_semaphore_sem_post_sem_wait_low);
+
+static void BM_semaphore_sem_post_sem_wait_high(int iters) {
+    BM_semaphore_sem_post_sem_wait_num(iters, 100);
+}
+BENCHMARK(BM_semaphore_sem_post_sem_wait_high);
