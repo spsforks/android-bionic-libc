@@ -699,6 +699,71 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
+struct PthreadRwlockWakeupHelperArg {
+  pthread_rwlock_t lock;
+  volatile int progress;
+};
+
+static void pthread_rwlock_reader_wakeup_writer_helper(PthreadRwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(0, arg->progress);
+  arg->progress = 1;
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&arg->lock));
+  ASSERT_EQ(2, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+  arg->progress = 3;
+}
+
+TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
+  PthreadRwlockWakeupHelperArg wakeup_arg;
+
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
+  wakeup_arg.progress = 0;
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(1, wakeup_arg.progress);
+  wakeup_arg.progress = 2;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(3, wakeup_arg.progress);
+
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+static void pthread_rwlock_writer_wakeup_reader_helper(PthreadRwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(0, arg->progress);
+  arg->progress = 1;
+  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&arg->lock));
+  ASSERT_EQ(2, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+  arg->progress = 3;
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
+  PthreadRwlockWakeupHelperArg wakeup_arg;
+
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
+  wakeup_arg.progress = 0;
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(1, wakeup_arg.progress);
+  wakeup_arg.progress = 2;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(3, wakeup_arg.progress);
+
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
 static int g_once_fn_call_count = 0;
 static void OnceFn() {
   ++g_once_fn_call_count;
