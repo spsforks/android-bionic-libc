@@ -35,14 +35,15 @@ my_libc_crt_target_ldflags := $(libc_crt_target_ldflags_$(my_arch))
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 $(GEN): PRIVATE_CC := $($(my_2nd_arch_prefix)TARGET_CC)
 $(GEN): PRIVATE_CFLAGS := $(my_libc_crt_target_so_cflags)
-$(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
+$(GEN): $(LOCAL_PATH)/arch-common/bionic/crtbrand.S
+	@mkdir -p $(dir $@)
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
 -include $(GEN:%.o=%.P)
 
 
-GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
+GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so1.o
 $(GEN): PRIVATE_CC := $($(my_2nd_arch_prefix)TARGET_CC)
 $(GEN): PRIVATE_CFLAGS := $(my_libc_crt_target_so_cflags)
 $(GEN): $(my_libc_crt_target_crtbegin_so_file)
@@ -51,6 +52,15 @@ $(GEN): $(my_libc_crt_target_crtbegin_so_file)
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
 -include $(GEN:%.o=%.P)
+
+
+GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
+$(GEN): PRIVATE_LD := $($(my_2nd_arch_prefix)TARGET_LD)
+$(GEN): PRIVATE_LDFLAGS := $(my_libc_crt_target_ldflags)
+$(GEN): $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so1.o \
+    $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
+	@mkdir -p $(dir $@)
+	$(hide) $(PRIVATE_LD) $(PRIVATE_LDFLAGS) -r -o $@ $^
 
 
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtend_so.o
