@@ -36,16 +36,14 @@
 #include <sys/types.h>
 #include <time.h>
 
-#if defined(__LP64__)
-  #define __RESERVED_INITIALIZER , {0}
-#else
-  #define __RESERVED_INITIALIZER
-#endif
-
 typedef struct {
-  int value;
-#ifdef __LP64__
-  char __reserved[36];
+  uint16_t value;
+#if defined(__LP64__)
+  int16_t __unused_pad;
+  int32_t owner_tid;  // Support bigger range  of tid in 64-bit devices.
+  char __reserved[32];
+#else
+  int16_t owner_tid;
 #endif
 } pthread_mutex_t;
 
@@ -53,13 +51,20 @@ typedef struct {
 #define  __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE  0x4000
 #define  __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE 0x8000
 
-#define PTHREAD_MUTEX_INITIALIZER {__PTHREAD_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
+#if defined(__LP64__)
+#define __PTHREAD_MUTEX_INITIALIZER(INIT_VALUE) {INIT_VALUE, 0, 0, {0}}
+#else
+#define __PTHREAD_MUTEX_INITIALIZER(INIT_VALUE) {INIT_VALUE, 0}
+#endif
+
+#define PTHREAD_MUTEX_INITIALIZER __PTHREAD_MUTEX_INITIALIZER(__PTHREAD_MUTEX_INIT_VALUE)
+#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP  __PTHREAD_MUTEX_INITIALIZER(__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE)
+#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP __PTHREAD_MUTEX_INITIALIZER(__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE)
+
 
 /* TODO: remove this namespace pollution. */
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
 #define PTHREAD_RECURSIVE_MUTEX_INITIALIZER PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
 
 enum {
     PTHREAD_MUTEX_NORMAL = 0,
@@ -74,12 +79,16 @@ enum {
 
 typedef struct {
   unsigned int value;
-#ifdef __LP64__
+#if defined(__LP64__)
   char __reserved[44];
 #endif
 } pthread_cond_t;
 
-#define PTHREAD_COND_INITIALIZER  {0 __RESERVED_INITIALIZER}
+#if defined(__LP64__)
+#define PTHREAD_COND_INITIALIZER  {0, {0}}
+#else
+#define PTHREAD_COND_INITIALIZER  {0}
+#endif
 
 typedef long pthread_mutexattr_t;
 typedef long pthread_condattr_t;
