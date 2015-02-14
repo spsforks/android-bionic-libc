@@ -106,6 +106,9 @@ typedef struct {
 #define STB_LOPROC    13
 #define STB_HIPROC    15
 
+#define SHT_LOOS    0x60000000  /* Start OS-specific.  */
+#define SHT_HIOS    0x6fffffff  /* End OS-specific.  */
+
 #define STT_GNU_IFUNC 10
 #define STT_LOOS      10
 #define STT_HIOS      12
