@@ -15,7 +15,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := libm
 
-LOCAL_SRC_FILES := \
+libm_common_src_files := \
     upstream-freebsd/lib/msun/bsdsrc/b_exp.c \
     upstream-freebsd/lib/msun/bsdsrc/b_log.c \
     upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c \
@@ -187,10 +187,10 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
-LOCAL_SRC_FILES_32 += \
+libm_32_src_files  := \
     fake_long_double.c \
 
-LOCAL_SRC_FILES_64 := \
+libm_64_src_files := \
     upstream-freebsd/lib/msun/src/e_acosl.c \
     upstream-freebsd/lib/msun/src/e_acoshl.c \
     upstream-freebsd/lib/msun/src/e_asinl.c \
@@ -234,7 +234,7 @@ LOCAL_SRC_FILES_64 := \
     upstream-freebsd/lib/msun/src/s_tanl.c \
     upstream-freebsd/lib/msun/src/s_truncl.c \
 
-LOCAL_SRC_FILES_64 += \
+libm_64_src_files += \
     upstream-freebsd/lib/msun/ld128/invtrig.c \
     upstream-freebsd/lib/msun/ld128/e_lgammal_r.c \
     upstream-freebsd/lib/msun/ld128/k_cosl.c \
@@ -249,17 +249,19 @@ LOCAL_SRC_FILES_64 += \
 # TODO: this comes from from upstream's libc, not libm, but it's an
 # implementation detail that should have hidden visibility, so it needs
 # to be in whatever library the math code is in.
-LOCAL_SRC_FILES += \
+libm_common_src_files += \
     digittoint.c  \
 
 # Functionality not in the BSDs.
-LOCAL_SRC_FILES += \
+libm_common_src_files += \
     significandl.c \
     sincos.c \
 
 # Modified versions of BSD code.
-LOCAL_SRC_FILES += \
+libm_common_src_files += \
     signbit.c \
+
+include $(LOCAL_PATH)/arch/$(TARGET_ARCH)/$(TARGET_ARCH).mk
 
 LOCAL_SRC_FILES_arm += \
     arm/fenv.c \
@@ -285,7 +287,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
 LOCAL_CLANG := $(libm_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk $(LOCAL_PATH)/arch/$(TARGET_ARCH)/$(TARGET_ARCH).mk
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS := \
     -DFLT_EVAL_METHOD=0 \
