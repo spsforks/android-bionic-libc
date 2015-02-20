@@ -99,9 +99,11 @@ static soinfo* somain; // main process, always the one after libdl_info
 
 static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
+  "/oem/lib64",
   "/vendor/lib64",
   "/system/lib64",
 #else
+  "/oem/lib",
   "/vendor/lib",
   "/system/lib",
 #endif
@@ -1228,7 +1230,7 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // See b/17302493 for further details.
   // Once the above bug is fixed, this code can be modified to use
   // snprintf again.
-  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
+  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + strlen(kDefaultLdPaths[2]) + 3;
   if (buffer_size < required_len) {
     __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: buffer len %zu, required len %zu",
                  buffer_size, required_len);
@@ -1236,6 +1238,8 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   char* end = stpcpy(buffer, kDefaultLdPaths[0]);
   *end = ':';
   strcpy(end + 1, kDefaultLdPaths[1]);
+  *end = ':';
+  strcpy(end + 1, kDefaultLdPaths[2]);
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
