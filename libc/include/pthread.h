@@ -110,7 +110,7 @@ typedef struct {
   #define PTHREAD_RWLOCK_INITIALIZER  { PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER, 0, 0, 0, 0, 0, { 0 } }
 #endif
 
-typedef int pthread_key_t;
+typedef unsigned int pthread_key_t;
 
 typedef int pthread_once_t;
 
