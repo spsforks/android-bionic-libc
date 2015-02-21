@@ -34,16 +34,14 @@ public:
 
   virtual std::string Name() = 0;
 
-  virtual void RunAll() = 0;
-
-  bool ShouldRun(std::vector<regex_t*>&);
+  virtual size_t RunAllArgs(std::vector<regex_t*>&) = 0;
 
   void SetBenchmarkBytesProcessed(uint64_t bytes) { bytes_processed_ += bytes; }
   void StopBenchmarkTiming();
   void StartBenchmarkTiming();
 
   // Run all of the benchmarks that have registered.
-  static bool RunAll(std::vector<regex_t*>&);
+  static size_t RunAll(std::vector<regex_t*>&);
 
   static std::vector<Benchmark*>& List();
 
@@ -55,6 +53,10 @@ protected:
   uint64_t bytes_processed_;
   uint64_t total_time_ns_;
   uint64_t start_time_ns_;
+
+  static bool header_printed_;
+
+  static void PrintHeader();
 };
 
 template <typename T>
@@ -64,6 +66,7 @@ public:
   virtual ~BenchmarkT() {}
 
 protected:
+  bool ShouldRun(std::vector<regex_t*>&, T arg);
   void RunWithArg(T arg);
   virtual void RunIterations(int, T) = 0;
   virtual std::string GetNameStr(T) = 0;
@@ -75,8 +78,14 @@ public:
   virtual ~BenchmarkWithoutArg() {}
 
 protected:
-  virtual void RunAll() override {
-    RunWithArg(nullptr);
+  virtual size_t RunAllArgs(std::vector<regex_t*>& regs) override {
+    size_t benchmarks_run = 0;
+    if (BenchmarkT<void*>::ShouldRun(regs, nullptr)) {
+      PrintHeader();
+      RunWithArg(nullptr);
+      benchmarks_run++;
+    }
+    return benchmarks_run;
   }
 
   virtual void RunIterations(int iters, void*) override {
@@ -114,10 +123,16 @@ protected:
 
   std::string GetNameStr(T arg) override;
 
-  virtual void RunAll() override {
+  virtual size_t RunAllArgs(std::vector<regex_t*>& regs) override {
+    size_t benchmarks_run = 0;
     for (T arg : args_) {
-      BenchmarkT<T>::RunWithArg(arg);
+      if (BenchmarkT<T>::ShouldRun(regs, arg)) {
+        Benchmark::PrintHeader();
+        BenchmarkT<T>::RunWithArg(arg);
+        benchmarks_run++;
+      }
     }
+    return benchmarks_run;
   }
 
   virtual void RunIterations(int iters, T arg) override {
