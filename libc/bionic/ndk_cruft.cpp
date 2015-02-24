@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-// This file perpetuates the mistakes of the past, but only for 32-bit targets.
-#if !defined(__LP64__)
+// This file perpetuates the mistakes of the past.
 
 #include <ctype.h>
 #include <dirent.h>
@@ -44,6 +43,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <wchar.h>
+
+#include "private/libc_logging.h"
+
+// The part is only for 32-bit targets.
+#if !defined(__LP64__)
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
@@ -341,4 +345,28 @@ extern "C" void* dlmalloc(size_t size) {
   return malloc(size);
 }
 
-#endif
+#endif // !defined(__LP64__)
+
+static void unimplemented_stub(const char* function) {
+  const char* fmt = "%s(3) is not implemented on Android\n";
+  __libc_format_log(ANDROID_LOG_WARN, "libc", fmt, function);
+  fprintf(stderr, fmt, function);
+}
+
+#define UNIMPLEMENTED unimplemented_stub(__PRETTY_FUNCTION__)
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" char* getusershell() {
+  UNIMPLEMENTED;
+  return NULL;
+}
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" void setusershell() {
+  UNIMPLEMENTED;
+}
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" void endusershell() {
+  UNIMPLEMENTED;
+}
