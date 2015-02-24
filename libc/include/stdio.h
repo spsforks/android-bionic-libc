@@ -275,7 +275,7 @@ int vsprintf(char* __restrict, const char* __restrict, __va_list)
     __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
 #if __XPG_VISIBLE
 char* tempnam(const char*, const char*)
-    __warnattr("tempnam possibly used unsafely; consider using mkstemp");
+    __attribute__((deprecated("tempnam possibly used unsafely; consider using mkstemp")));
 #endif
 #endif
 
