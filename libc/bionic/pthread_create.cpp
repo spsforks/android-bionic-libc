@@ -209,7 +209,13 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   if (attr == NULL) {
     pthread_attr_init(&thread_attr);
   } else {
+#if defined(__clang__) && defined(__i386__)
+    // b/19535422, clang/llvm incorrectly uses movaps instruction,
+    // which could fail when attr is not an aligned address.
+    memcpy(&thread_attr, attr, sizeof(thread_attr));
+#else
     thread_attr = *attr;
+#endif
     attr = NULL; // Prevent misuse below.
   }
 
