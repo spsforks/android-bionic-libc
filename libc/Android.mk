@@ -568,6 +568,13 @@ ifeq ($(use_clang),)
   use_clang := false
 endif
 
+ifeq ($(use_clang),true)
+# b/19234330, Clang's tail call optimization failed bionic/__*_chk.o.
+ifeq ($(TARGET_ARCH),x86)
+  libc_common_cflags += -fno-optimize-sibling-calls
+endif
+endif
+
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
 libc_common_cflags += \
     -Werror=pointer-to-int-cast \
