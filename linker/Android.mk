@@ -40,6 +40,15 @@ LOCAL_CPPFLAGS += \
     -std=gnu++11 \
     -Wold-style-cast \
 
+# b/19234330 Clang compiled linker does not boot up on x86 device.
+# At least debugger.cpp and linker.cpp have problems.
+# Disabling built-in functions with -fno-builtin can fix problems
+# in debugger.cpp but not in linker.cpp.
+#
+# Disabling all optimization, -O0, works for linker.cpp.
+# Disabling FORTIFY functions also works for linker.cpp.
+LOCAL_CLANG_CFLAGS_x86 += -U_FORTIFY_SOURCE
+
 ifeq ($(TARGET_IS_64_BIT),true)
 LOCAL_CPPFLAGS += -DTARGET_IS_64_BIT
 endif

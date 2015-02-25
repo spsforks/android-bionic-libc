@@ -198,6 +198,11 @@ static void* __do_nothing(void*) {
   return NULL;
 }
 
+#if defined(__clang__) && defined(__i386__)
+// Clang's optimization of (thread_attr = *attr) inside this function
+// does not work on fugu (x86) devices.
+__attribute__((optnone))
+#endif
 int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;
