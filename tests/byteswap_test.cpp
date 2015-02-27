@@ -40,4 +40,3 @@ TEST(byteswap, bswap_64) {
   EXPECT_EQ(le64, bswap_64(be64));
   EXPECT_EQ(be64, bswap_64(le64));
 }
-
