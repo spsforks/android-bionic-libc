@@ -15,6 +15,14 @@
  */
 
 #include <sys/resource.h>
+#include <errno.h>
+
+static const
+int resources[] = { RLIMIT_AS      , RLIMIT_CORE       , RLIMIT_CPU   ,
+                    RLIMIT_DATA    , RLIMIT_FSIZE      , RLIMIT_LOCKS ,
+                    RLIMIT_MEMLOCK , RLIMIT_MSGQUEUE   , RLIMIT_NICE  ,
+                    RLIMIT_NOFILE  , RLIMIT_NPROC      , RLIMIT_RSS   ,
+                    RLIMIT_RTPRIO  , RLIMIT_SIGPENDING , RLIMIT_STACK , };
 
 #include <gtest/gtest.h>
 
@@ -97,4 +105,119 @@ TEST_F(SysResourceTest, prlimit64) {
 
 TEST_F(SysResourceTest, prlimit) {
   // prlimit is prlimit64 on LP64 and unimplemented on 32-bit. So we only test prlimit64.
+}
+
+TEST(sys_resource, priority) {
+  int prio_def_process;
+  int prio_def_pgrp;
+  int prio_def_user;
+
+  { SCOPED_TRACE("getpriority() defaults");
+
+    errno = 0;
+    prio_def_process = getpriority (PRIO_PROCESS, 0);
+    ASSERT_FALSE(errno);
+
+    prio_def_pgrp = getpriority (PRIO_PGRP, 0);
+    ASSERT_FALSE(errno);
+
+    prio_def_user = getpriority (PRIO_USER, 0);
+    ASSERT_FALSE(errno);
+  }
+
+  { SCOPED_TRACE("setpriority() iterate");
+
+    for (int prio = PRIO_MIN; prio < PRIO_MAX; ++prio)
+      {
+	errno = 0;
+	// Process priority
+	ASSERT_EQ( 0, setpriority (PRIO_PROCESS, 0, prio) );
+	ASSERT_EQ( prio, getpriority (PRIO_PROCESS, 0) );
+	ASSERT_FALSE(errno);
+	// Process group priority
+	ASSERT_EQ( 0, setpriority (PRIO_PGRP, 0, prio) );
+	ASSERT_EQ( prio, getpriority (PRIO_PGRP, 0) );
+	ASSERT_FALSE(errno);
+	// User priority
+	ASSERT_EQ( 0, setpriority (PRIO_USER, 0, prio));
+	ASSERT_EQ( prio, getpriority (PRIO_USER, 0));
+	ASSERT_FALSE(errno);
+      }
+  }
+
+  { SCOPED_TRACE("setpriority() restore");
+
+    errno = 0;
+    ASSERT_EQ( 0, setpriority (PRIO_PROCESS, 0, prio_def_process)  );
+    ASSERT_FALSE(errno);
+    ASSERT_EQ( 0, setpriority (PRIO_PGRP, 0, prio_def_pgrp) );
+    ASSERT_FALSE(errno);
+    ASSERT_EQ( 0, setpriority (PRIO_USER, 0, prio_def_user) );
+    ASSERT_FALSE(errno);
+  }
+}
+
+TEST(sys_resource, rlimit)
+{
+    struct rlimit limit;
+    int rlim_cur, rlim_max;
+    int rlim_test = 10000;
+
+    for (unsigned int j = 0; j < (sizeof(resources) / sizeof(int)); ++j)
+    {
+	// Backup
+	ASSERT_EQ(0, getrlimit(resources[j], &limit));
+	rlim_cur = limit.rlim_cur;
+	rlim_max = limit.rlim_max;
+
+	// Amend
+	limit.rlim_cur = rlim_test;
+	limit.rlim_max = rlim_test;
+	ASSERT_EQ( 0, setrlimit(resources[j], &limit) );
+
+	// Check
+	ASSERT_EQ( 0, getrlimit(resources[j], &limit) );
+	EXPECT_EQ(rlim_test, (int)(limit.rlim_cur));
+	EXPECT_EQ(rlim_test, (int)(limit.rlim_max));
+
+	// Restore
+	limit.rlim_cur = rlim_cur;
+	limit.rlim_max = rlim_max;
+	ASSERT_EQ( 0, setrlimit(resources[j], &limit) );
+
+	// Check
+	ASSERT_EQ( 0, getrlimit(resources[j], &limit) );
+	EXPECT_EQ(rlim_cur, (int)(limit.rlim_cur));
+	EXPECT_EQ(rlim_max, (int)(limit.rlim_max));
+    }
+}
+
+TEST(sys_resource, rusage)
+{
+  struct rusage usage;
+
+  { SCOPED_TRACE("getrusage()");
+    ASSERT_EQ( 0, getrusage(RUSAGE_SELF, &usage) );
+  }
+  { SCOPED_TRACE("getrusage() check_result");
+    // Checking struct fields
+    EXPECT_LE(0, usage.ru_utime.tv_sec);
+    EXPECT_LE(0, usage.ru_utime.tv_usec);
+    EXPECT_LE(0, usage.ru_stime.tv_sec);
+    EXPECT_LE(0, usage.ru_stime.tv_usec);
+    EXPECT_LE(0, usage.ru_maxrss);
+    EXPECT_LE(0, usage.ru_ixrss);
+    EXPECT_LE(0, usage.ru_idrss);
+    EXPECT_LE(0, usage.ru_isrss);
+    EXPECT_LE(0, usage.ru_minflt);
+    EXPECT_LE(0, usage.ru_majflt);
+    EXPECT_LE(0, usage.ru_nswap);
+    EXPECT_LE(0, usage.ru_inblock);
+    EXPECT_LE(0, usage.ru_oublock);
+    EXPECT_LE(0, usage.ru_msgsnd);
+    EXPECT_LE(0, usage.ru_msgrcv);
+    EXPECT_LE(0, usage.ru_nsignals);
+    EXPECT_LE(0, usage.ru_nvcsw);
+    EXPECT_LE(0, usage.ru_nivcsw);
+  }
 }

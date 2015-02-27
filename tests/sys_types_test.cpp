@@ -41,3 +41,42 @@ TEST(sys_types, type_sizes) {
   ASSERT_EQ(8U, sizeof(loff_t));
   ASSERT_EQ(8U, sizeof(off64_t));
 }
+
+TEST(sys_types, makedev)
+{
+  dev_t dev;
+
+  { SCOPED_TRACE("makedev() loop");
+    dev = makedev(7, 0);
+    EXPECT_EQ(7, (int)(major(dev)));
+    EXPECT_EQ(0, (int)(minor(dev)));
+
+    dev = makedev(7, 8);
+    EXPECT_EQ(7, (int)(major(dev)));
+    EXPECT_EQ(8, (int)(minor(dev)));
+
+    dev = makedev(7, 42);
+    EXPECT_EQ(7, (int)(major(dev)));
+    EXPECT_EQ(42, (int)(minor(dev)));
+  }
+
+  { SCOPED_TRACE("makedev() ram");
+    dev = makedev(1, 0);
+    EXPECT_EQ(1, (int)(major(dev)));
+    EXPECT_EQ(0, (int)(minor(dev)));
+
+    dev = makedev(1, 5);
+    EXPECT_EQ(1, (int)(major(dev)));
+    EXPECT_EQ(5, (int)(minor(dev)));
+  }
+
+  { SCOPED_TRACE("makedev() tty");
+    dev = makedev(5, 255);
+    EXPECT_EQ(5, (int)(major(dev)));
+    EXPECT_EQ(255, (int)(minor(dev)));
+
+    dev = makedev(5, 4000);
+    EXPECT_EQ(5, (int)(major(dev)));
+    EXPECT_EQ(4000, (int)(minor(dev)));
+  }
+}
