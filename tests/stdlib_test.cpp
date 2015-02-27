@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,6 +136,61 @@ TEST(stdlib, mrand48) {
   srand48(0x01020304);
   EXPECT_EQ(-1476639856, mrand48());
   EXPECT_EQ(795539493, mrand48());
+}
+
+TEST(stdlib, jrand48) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  unsigned short xsubi[3];
+  int bits[32] = {};
+
+  for (int iter = 0; iter < iterates; ++iter) {
+    long rand_val = jrand48(xsubi);
+    for (int bit = 0; bit < 32; ++bit)
+    bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+  }
+
+  // Check that bit probability is uniform
+  for (int bit = 0; bit < 32; ++bit) {
+    EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
+TEST(stdlib, mrand48_2) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  int bits[32] = {};
+
+  for (int iter = 0; iter < iterates; ++iter) {
+    long rand_val = mrand48();
+    for (int bit = 0; bit < 32; ++bit)
+    bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+  }
+
+  // Check that bit probability is uniform
+  for (int bit = 0; bit < 32; ++bit) {
+    EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
+TEST(stdlib, srand48_same) {
+  srand48(3463564);
+  long rand_a = mrand48();
+  srand48(3463564);
+  long rand_b = mrand48();
+  ASSERT_EQ(rand_a, rand_b);
+}
+
+TEST(stdlib, srand48_not_same) {
+  srand48(3463564);
+  long rand_a = mrand48();
+  srand48(3468743);
+  long rand_b = mrand48();
+  ASSERT_NE(rand_a, rand_b);
 }
 
 TEST(stdlib, posix_memalign_sweep) {
