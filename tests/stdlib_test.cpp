@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 #include "BionicDeathTest.h"
 #include "TemporaryFile.h"
+#include "CrashCatch.h"
 
 #include <errno.h>
 #include <libgen.h>
@@ -133,6 +134,69 @@ TEST(stdlib, mrand48) {
   EXPECT_EQ(-1476639856, mrand48());
   EXPECT_EQ(795539493, mrand48());
 }
+
+TEST(stdlib, jrand48) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  unsigned short xsubi[3];
+  int bits[32];
+
+  for (int bit = 0; bit < 32; ++bit)
+    bits[bit] = 0;
+
+
+  for (int iter = 0; iter < iterates; ++iter)
+  {
+    long rand_val = jrand48(xsubi);
+    for (int bit = 0; bit < 32; ++bit)
+    bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+  }
+
+  // Check that bit probability is uniform
+  for (int bit = 0; bit < 32; ++bit)
+  EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+}
+
+TEST(stdlib, mrand48_2) {
+  const int iterates   = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  int bits[32];
+
+  for (int bit = 0; bit < 32; ++bit)
+    bits[bit] = 0;
+
+  for (int iter = 0; iter < iterates; ++iter)
+  {
+    long rand_val = mrand48();
+    for (int bit = 0; bit < 32; ++bit)
+    bits[bit] += ((unsigned long) rand_val >> bit) & 0x01;
+  }
+
+  // Check that bit probability is uniform
+   for (int bit = 0; bit < 32; ++bit)
+   EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+}
+
+TEST(stdlib, srand48_same) {
+  srand48(3463564);
+  long rand_a = mrand48();
+  srand48(3463564);
+  long rand_b = mrand48();
+  ASSERT_EQ(rand_a, rand_b);
+}
+
+TEST(stdlib, srand48_not_same) {
+  srand48(3463564);
+  long rand_a = mrand48();
+  srand48(3468743);
+  long rand_b = mrand48();
+  ASSERT_NE(rand_a, rand_b);
+}
+
 
 TEST(stdlib, posix_memalign) {
   void* p;
@@ -268,6 +332,24 @@ TEST(stdlib, mkstemp) {
   TemporaryFile tf;
   struct stat sb;
   ASSERT_EQ(0, fstat(tf.fd, &sb));
+  
+  TemporaryDir td;
+  char *filename, buffer[1024];
+
+  { SCOPED_TRACE("mkstemp()");
+    snprintf(buffer, sizeof(buffer), "%s/dummy.spamXXXXXX", td.dirname);
+    filename = &(buffer[0]);
+    int fd = mkstemp(filename);
+	perror(""); 
+    ASSERT_NE(-1, fd);
+	
+  }
+
+  { SCOPED_TRACE("mkstemp() remove");
+    ASSERT_NE(-1, access(filename, 0));
+    remove(filename);
+    ASSERT_EQ(-1, access(filename, 0));
+  }
 }
 
 TEST(stdlib, system) {
@@ -280,6 +362,17 @@ TEST(stdlib, system) {
   status = system("exit 1");
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(1, WEXITSTATUS(status));
+
+  const std::string cmd = "/system/bin/ls > /dev/null";
+  status = system(cmd.c_str());
+  ASSERT_EQ(0, WEXITSTATUS(status));
+}
+
+TEST(stdlib, system_fail) {
+  int status;
+  const std::string cmd = "/system/bin/betterthanls >/dev/null 2>/dev/null";
+  status = system(cmd.c_str());
+  ASSERT_NE(0, WEXITSTATUS(status));
 }
 
 TEST(stdlib, atof) {
