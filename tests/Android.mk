@@ -91,7 +91,12 @@ libBionicStandardTests_src_files := \
     stubs_test.cpp \
     sstream_test.cpp \
     sys_epoll_test.cpp \
+    sys_ioctl_test.cpp \
+    sys_klog_test.cpp \
     sys_mman_test.cpp \
+    sys_prctl_test.cpp \
+    sys_ptrace_test.cpp \
+    sys_queue_test.cpp \
     sys_personality_test.cpp \
     sys_resource_test.cpp \
     sys_select_test.cpp \
@@ -103,6 +108,8 @@ libBionicStandardTests_src_files := \
     sys_sysinfo_test.cpp \
     sys_time_test.cpp \
     sys_types_test.cpp \
+    sys_uio_test.cpp \
+    sys_utsname_test.cpp \
     sys_vfs_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \

@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "TemporaryFile.h"
 
 #include <sys/vfs.h>
 
@@ -51,6 +52,26 @@ TEST(sys_vfs, fstatfs) {
   ASSERT_EQ(0, fstatfs(fd, &sb));
   close(fd);
   Check(sb);
+
+  TemporaryFile tf;
+  //We don't have any available blocks in /proc
+  FILE *tmpfile = fopen(tf.filename, "w");
+  fprintf(tmpfile, "%s\n", "Quantum physics is not applicable for cats. That's terrible.");
+  fclose(tmpfile);
+  fd = open(tf.filename, O_RDWR);
+
+  ASSERT_GE( fstatfs(fd, &sb), 0 );
+  EXPECT_GT(static_cast<int>(sb.f_type), 0);
+  EXPECT_GT(static_cast<int>(sb.f_bsize), 0);
+  EXPECT_GT(static_cast<int>(sb.f_blocks), 0);
+  EXPECT_GT(static_cast<int>(sb.f_bfree), 0);
+  EXPECT_GT(static_cast<int>(sb.f_bavail), 0);
+  EXPECT_GT(static_cast<int>(sb.f_files), 0);
+  EXPECT_GT(static_cast<int>(sb.f_ffree), 0);
+  EXPECT_GT(static_cast<int>(sb.f_namelen), 0);
+  // Check(sb) is wrong here
+
+  close(fd);
 }
 TEST(sys_vfs, fstatfs64) {
   struct statfs64 sb;

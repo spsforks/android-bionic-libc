@@ -31,3 +31,33 @@ TEST(sys_sysinfo, smoke) {
   long phys_pages = get_phys_pages();
   ASSERT_GE(phys_pages, avail_phys_pages);
 }
+
+TEST(sys_sysinfo, sysinfo)
+{
+  struct sysinfo si;
+
+  sysinfo(&si);
+
+  EXPECT_LT(0, si.uptime);
+  EXPECT_LE(0, (int)si.loads[0]);
+  EXPECT_LE(0, (int)(si.loads[1]));
+  EXPECT_LE(0, (int)(si.loads[2]));
+
+  EXPECT_LT(0, (int)(si.totalram));
+  EXPECT_LE(0, (int)(si.freeram));
+  EXPECT_LE(si.freeram, si.totalram);
+  EXPECT_LE(0, (int)(si.sharedram));
+  EXPECT_LE(0, (int)(si.bufferram));
+
+  EXPECT_LE(0, (int)(si.totalhigh));
+  EXPECT_LE(0, (int)(si.freehigh));
+  EXPECT_LE(si.freehigh, si.totalhigh);
+
+  EXPECT_LE(0, (int)(si.totalswap));
+  EXPECT_LE(0, (int)(si.freeswap));
+  EXPECT_LE(si.freeswap, si.totalswap);
+
+  EXPECT_LT(0, (int)(si.mem_unit));
+
+  EXPECT_LT(0, si.procs);
+}
