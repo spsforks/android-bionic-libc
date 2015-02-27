@@ -1,0 +1,9 @@
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+1: Serban Constantinescu <serban.constantinescu@arm.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Christopher Ferris <cferris@google.com>
+Submitted-by: Christopher Ferris <cferris@google.com>
+Submitted-at: Fri, 27 Feb 2015 20:23:15 +0000
+Reviewed-on: https://android-review.googlesource.com/102490
+Project: platform/bionic
+Branch: refs/heads/master
