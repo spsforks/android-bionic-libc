@@ -50,15 +50,20 @@ test_cppflags = \
     -std=gnu++11 \
 
 libBionicStandardTests_src_files := \
+    alloca_test.cpp \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
+    byteswap_test.cpp \
     complex_test.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
+    errno_test.cpp \
     error_test.cpp \
     eventfd_test.cpp \
     fcntl_test.cpp \
     fenv_test.cpp \
+    fnmatch_test.cpp \
+    fsutils_test.cpp \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
@@ -70,7 +75,9 @@ libBionicStandardTests_src_files := \
     math_test.cpp \
     mntent_test.cpp \
     netdb_test.cpp \
+    poll_test.cpp \
     pthread_test.cpp \
+    pwd_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
     sched_test.cpp \
@@ -78,6 +85,7 @@ libBionicStandardTests_src_files := \
     semaphore_test.cpp \
     setjmp_test.cpp \
     signal_test.cpp \
+    sstream_test.cpp \
     stack_protector_test.cpp \
     stack_unwinding_test.cpp \
     stdatomic_test.cpp \
