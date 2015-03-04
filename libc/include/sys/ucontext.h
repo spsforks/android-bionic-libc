@@ -59,6 +59,7 @@ enum {
 
 typedef int greg_t;
 typedef greg_t gregset_t[NGREG];
+typedef struct user_fpregs fpregset_t;
 
 #include <asm/sigcontext.h>
 typedef struct sigcontext mcontext_t;
