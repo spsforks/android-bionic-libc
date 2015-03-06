@@ -57,8 +57,12 @@ static inline bool SeqOfKeyInUse(uintptr_t seq) {
   return seq & (1 << SEQ_KEY_IN_USE_BIT);
 }
 
+#define KEY_VALID_FLAG (1 << 31)
+
 static inline bool KeyInValidRange(pthread_key_t key) {
-  return key >= 0 && key < BIONIC_PTHREAD_KEY_COUNT;
+  // key < 0 means bit 31 is set.
+  // Then key < (2^31 | BIONIC_PTHREAD_KEY_COUNT) means the index part of key < BIONIC_PTHREAD_KEY_COUNT.
+  return (key < (KEY_VALID_FLAG | BIONIC_PTHREAD_KEY_COUNT));
 }
 
 // Called from pthread_exit() to remove all pthread keys. This must call the destructor of
@@ -114,7 +118,7 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
     while (!SeqOfKeyInUse(seq)) {
       if (atomic_compare_exchange_weak(&key_map[i].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
         atomic_store(&key_map[i].key_destructor, reinterpret_cast<uintptr_t>(key_destructor));
-        *key = i;
+        *key = i | KEY_VALID_FLAG;
         return 0;
       }
     }
@@ -130,10 +134,11 @@ int pthread_key_delete(pthread_key_t key) {
   if (!KeyInValidRange(key)) {
     return EINVAL;
   }
+  int index = key & ~KEY_VALID_FLAG;
   // Increase seq to invalidate values in all threads.
-  uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
+  uintptr_t seq = atomic_load_explicit(&key_map[index].seq, memory_order_relaxed);
   if (SeqOfKeyInUse(seq)) {
-    if (atomic_compare_exchange_strong(&key_map[key].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
+    if (atomic_compare_exchange_strong(&key_map[index].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
       return 0;
     }
   }
@@ -141,27 +146,31 @@ int pthread_key_delete(pthread_key_t key) {
 }
 
 void* pthread_getspecific(pthread_key_t key) {
-  if (!KeyInValidRange(key)) {
+  if (__predict_false(!KeyInValidRange(key))) {
     return NULL;
   }
-  uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
-  pthread_key_data_t* data = &(__get_thread()->key_data[key]);
+  int index = key & ~KEY_VALID_FLAG;
+  uintptr_t seq = atomic_load_explicit(&key_map[index].seq, memory_order_relaxed);
+  pthread_key_data_t* data = &(__get_thread()->key_data[index]);
   // It is user's responsibility to synchornize between the creation and use of pthread keys,
   // so we use memory_order_relaxed when checking the sequence number.
-  if (__predict_true(SeqOfKeyInUse(seq) && data->seq == seq)) {
-    return data->data;
+  if (__predict_true(SeqOfKeyInUse(seq))) {
+    if (__predict_true(data->seq == seq)) {
+      return data->data;
+    }
   }
   data->data = NULL;
   return NULL;
 }
 
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
-  if (!KeyInValidRange(key)) {
+  if (__predict_false(!KeyInValidRange(key))) {
     return EINVAL;
   }
-  uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
-  if (SeqOfKeyInUse(seq)) {
-    pthread_key_data_t* data = &(__get_thread()->key_data[key]);
+  int index =  key & ~KEY_VALID_FLAG;
+  uintptr_t seq = atomic_load_explicit(&key_map[index].seq, memory_order_relaxed);
+  if (__predict_true(SeqOfKeyInUse(seq))) {
+    pthread_key_data_t* data = &(__get_thread()->key_data[index]);
     data->seq = seq;
     data->data = const_cast<void*>(ptr);
     return 0;
