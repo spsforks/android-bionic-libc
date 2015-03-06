@@ -181,6 +181,18 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(0, pthread_key_delete(key));
 }
 
+TEST(pthread, pthread_key_used_before_creation) {
+  // See http://b/19625804.
+#if defined(__BIONIC__)
+  static pthread_key_t key;
+  ASSERT_EQ(nullptr, pthread_getspecific(key));
+  ASSERT_EQ(EINVAL, pthread_setspecific(key, nullptr));
+  ASSERT_EQ(EINVAL, pthread_key_delete(key));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic pthread key implementation detail.\n";
+#endif
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }
