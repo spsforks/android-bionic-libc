@@ -31,6 +31,7 @@
 #include <stdatomic.h>
 
 #include "private/bionic_tls.h"
+#include "private/libc_logging.h"
 #include "pthread_internal.h"
 
 typedef void (*key_destructor_t)(void*);
@@ -57,8 +58,16 @@ static inline bool SeqOfKeyInUse(uintptr_t seq) {
   return seq & (1 << SEQ_KEY_IN_USE_BIT);
 }
 
+#define START_OF_VALID_KEY_RANGE 1
 static inline bool KeyInValidRange(pthread_key_t key) {
-  return key >= 0 && key < BIONIC_PTHREAD_KEY_COUNT;
+  if (__predict_true(key >= START_OF_VALID_KEY_RANGE &&
+                     key < (BIONIC_PTHREAD_KEY_COUNT + START_OF_VALID_KEY_RANGE))) {
+    return true;
+  }
+  if (key == 0) {
+    __libc_fatal("Detection of possibly using static-allocated uninitialized pthread key.\n");
+  }
+  return false;
 }
 
 // Called from pthread_exit() to remove all pthread keys. This must call the destructor of
@@ -114,7 +123,7 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
     while (!SeqOfKeyInUse(seq)) {
       if (atomic_compare_exchange_weak(&key_map[i].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
         atomic_store(&key_map[i].key_destructor, reinterpret_cast<uintptr_t>(key_destructor));
-        *key = i;
+        *key = i + START_OF_VALID_KEY_RANGE;
         return 0;
       }
     }
@@ -130,6 +139,7 @@ int pthread_key_delete(pthread_key_t key) {
   if (!KeyInValidRange(key)) {
     return EINVAL;
   }
+  key -= START_OF_VALID_KEY_RANGE;
   // Increase seq to invalidate values in all threads.
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   if (SeqOfKeyInUse(seq)) {
@@ -144,6 +154,7 @@ void* pthread_getspecific(pthread_key_t key) {
   if (!KeyInValidRange(key)) {
     return NULL;
   }
+  key -= START_OF_VALID_KEY_RANGE;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   pthread_key_data_t* data = &(__get_thread()->key_data[key]);
   // It is user's responsibility to synchornize between the creation and use of pthread keys,
@@ -159,6 +170,7 @@ int pthread_setspecific(pthread_key_t key, const void* ptr) {
   if (!KeyInValidRange(key)) {
     return EINVAL;
   }
+  key -= START_OF_VALID_KEY_RANGE;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   if (SeqOfKeyInUse(seq)) {
     pthread_key_data_t* data = &(__get_thread()->key_data[key]);

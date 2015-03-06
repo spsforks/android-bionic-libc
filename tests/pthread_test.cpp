@@ -175,6 +175,21 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(0, pthread_key_delete(key));
 }
 
+
+class pthread_DeathTest : public BionicDeathTest {};
+
+TEST_F(pthread_DeathTest, pthread_key_use_before_creation) {
+  // https://b2/19625804. We intend to prevent use before creation of static-allocated pthread keys.
+#if defined(__BIONIC__)
+  static pthread_key_t key;
+  ASSERT_EXIT(pthread_getspecific(key), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(pthread_setspecific(key, NULL), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_EXIT(pthread_key_delete(key), testing::KilledBySignal(SIGABRT), "");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic pthread key implementation detail.\n";
+#endif
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }
@@ -325,9 +340,6 @@ struct TestBug37410 {
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
-
-class pthread_DeathTest : public BionicDeathTest {};
-
 TEST_F(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
   ASSERT_EXIT(TestBug37410::main(), ::testing::ExitedWithCode(0), "");
