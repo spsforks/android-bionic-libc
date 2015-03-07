@@ -87,38 +87,39 @@ void pthread_exit(void* return_value) {
     thread->alternate_signal_stack = NULL;
   }
 
-  bool free_mapped_space = false;
-  pthread_mutex_lock(&g_thread_list_lock);
-  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
-    // The thread is detached, no one will use pthread_internal_t after pthread_exit.
-    // So we can free mapped space, which includes pthread_internal_t and thread stack.
-    // First make sure that the kernel does not try to clear the tid field
-    // because we'll have freed the memory before the thread actually exits.
-    __set_tid_address(NULL);
+  ThreadJoinState old_state = THREAD_NOT_JOINED;
+  while (true) {
+    if (old_state == THREAD_NOT_JOINED || old_state == THREAD_JOINED) {
+      if (atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
+        // No need to free mapped space. Either there was no space mapped, or it is left for
+        // the pthread_join caller to clean up.
+        __exit(0);
+      }
+    } else if (old_state == THREAD_DETACHED) {
+      // The thread is detached, no one will use pthread_internal_t after pthread_exit.
+      // So we can free mapped space, which includes pthread_internal_t and thread stack.
+      // First make sure that the kernel does not try to clear the tid field
+      // because we'll have freed the memory before the thread actually exits.
+      __set_tid_address(NULL);
 
-    // pthread_internal_t is freed below with stack, not here.
-    _pthread_internal_remove_locked(thread, false);
-    free_mapped_space = true;
-  } else {
-    // Mark the thread as exiting without freeing pthread_internal_t.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_ZOMBIE;
-  }
-  pthread_mutex_unlock(&g_thread_list_lock);
+      // pthread_internal_t is freed below with stack, not here.
+      pthread_mutex_lock(&g_thread_list_lock);
+      _pthread_internal_remove_locked(thread, false);
+      pthread_mutex_unlock(&g_thread_list_lock);
 
-  if (free_mapped_space && thread->mmap_size != 0) {
-    // We need to free mapped space for detached threads when they exit.
-    // That's not something we can do in C.
+      if (thread->mmap_size != 0) {
+        // We need to free mapped space for detached threads when they exit.
+        // That's not something we can do in C.
 
-    // We don't want to take a signal after we've unmapped the stack.
-    // That's one last thing we can handle in C.
-    sigset_t mask;
-    sigfillset(&mask);
-    sigprocmask(SIG_SETMASK, &mask, NULL);
+        // We don't want to take a signal after we've unmapped the stack.
+        // That's one last thing we can handle in C.
+        sigset_t mask;
+        sigfillset(&mask);
+        sigprocmask(SIG_SETMASK, &mask, NULL);
 
-    _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
-  } else {
-    // No need to free mapped space. Either there was no space mapped, or it is left for
-    // the pthread_join caller to clean up.
-    __exit(0);
+        _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
+      }
+      __exit(0);
+    }
   }
 }
