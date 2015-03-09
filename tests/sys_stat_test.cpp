@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #include "TemporaryFile.h"
@@ -201,8 +202,10 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_symlink) {
   snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
 
   ASSERT_EQ(0, symlink(tf.filename, linkname));
-  ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(ENOTSUP, errno);
+  int result = fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW);
+  // It depends on the kernel whether chmod operation on symlink is allowed.
+  ASSERT_TRUE(result == 0 || (result == -1 && errno == ENOTSUP)) << "result = " << result <<
+    ", errno = " << strerror(errno);
   unlink(linkname);
 }
 
@@ -215,8 +218,10 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_dangling_symlink) {
   snprintf(target, sizeof(target), "%s.doesnotexist", tf.filename);
 
   ASSERT_EQ(0, symlink(target, linkname));
-  ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(ENOTSUP, errno);
+  int result = fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW);
+  // It depends on the kernel whether chmod operation on symlink is allowed.
+  ASSERT_TRUE(result == 0 || (result == -1 && errno == ENOTSUP)) << "result = " << result <<
+    ", errno = " << strerror(errno);
   unlink(linkname);
 }
 
