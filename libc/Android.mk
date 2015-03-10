@@ -1325,8 +1325,11 @@ LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
+ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
+# MIPS doesn't support GNU hash style.
 LOCAL_LDFLAGS := -Wl,--hash-style=both
+endif
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
@@ -1479,8 +1482,11 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
+ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
+# MIPS doesn't support GNU hash style.
 LOCAL_LDFLAGS := -Wl,--hash-style=both
+endif
 
 LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
 LOCAL_MODULE:= libstdc++

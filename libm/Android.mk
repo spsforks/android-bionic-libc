@@ -438,8 +438,11 @@ include $(BUILD_STATIC_LIBRARY)
 # -----------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
+ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
+# MIPS doesn't support GNU hash style.
 LOCAL_LDFLAGS := -Wl,--hash-style=both
+endif
 
 LOCAL_MODULE := libm
 LOCAL_CLANG := $(libm_clang)
