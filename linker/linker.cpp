@@ -154,10 +154,7 @@ uint32_t bitmask[4096];
     { \
       __libc_fatal("ERROR: " #name " called from the dynamic linker!\n"); \
     }
-DISALLOW_ALLOCATION(void*, malloc, (size_t u __unused));
-DISALLOW_ALLOCATION(void, free, (void* u __unused));
 DISALLOW_ALLOCATION(void*, realloc, (void* u1 __unused, size_t u2 __unused));
-DISALLOW_ALLOCATION(void*, calloc, (size_t u1 __unused, size_t u2 __unused));
 
 static char __linker_dl_err_buf[768];
 
