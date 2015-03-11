@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __LINKER_ALLOCATOR_H
-#define __LINKER_ALLOCATOR_H
+#ifndef __LINKER_BLOCK_ALLOCATOR_H
+#define __LINKER_BLOCK_ALLOCATOR_H
 
 #include <stdlib.h>
 #include <limits.h>
