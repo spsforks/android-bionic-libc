@@ -1,0 +1,9 @@
+Code-Review+1: Mark Salyzyn <salyzyn@google.com>
+Verified+1: Mark Salyzyn <salyzyn@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Code-Review+1: Dmitry Shmidt <dimitrysh@google.com>
+Submitted-by: Mark Salyzyn <salyzyn@google.com>
+Submitted-at: Thu, 12 Mar 2015 20:33:25 +0000
+Reviewed-on: https://android-review.googlesource.com/141250
+Project: platform/bionic
+Branch: refs/heads/master
