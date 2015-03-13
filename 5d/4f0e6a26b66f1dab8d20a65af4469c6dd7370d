@@ -1,0 +1,8 @@
+Code-Review+1: Jingwei Zhang <jingwei.zhang@intel.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Christopher Ferris <cferris@google.com>
+Submitted-by: Christopher Ferris <cferris@google.com>
+Submitted-at: Fri, 13 Mar 2015 17:18:20 +0000
+Reviewed-on: https://android-review.googlesource.com/112700
+Project: platform/bionic
+Branch: refs/heads/master
