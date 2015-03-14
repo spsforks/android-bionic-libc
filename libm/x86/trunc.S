@@ -40,5 +40,4 @@ ENTRY(trunc)
 	ret
 END(trunc)
 
-.globl truncl;
-.equ truncl, trunc;
+DUP_SYMBOL(truncl, trunc);

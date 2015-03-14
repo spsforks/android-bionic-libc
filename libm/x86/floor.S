@@ -40,5 +40,4 @@ ENTRY(floor)
 	ret
 END(floor)
 
-.globl floorl;
-.equ floorl, floor;
+DUP_SYMBOL(floorl, floor);

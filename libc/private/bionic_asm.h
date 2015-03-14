@@ -57,4 +57,8 @@
     ENTRY(f); \
     .hidden f \
 
+#define DUP_SYMBOL(duplicate, original) \
+    .globl duplicate; \
+    .equ duplicate, original
+
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

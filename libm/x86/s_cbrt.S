@@ -225,8 +225,7 @@ END(cbrt)
 # -- End  cbrt
 
 # Start file scope ASM
-.weak cbrtl
-.equ cbrtl, cbrt
+DUP_SYMBOL(cbrtl, cbrt);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

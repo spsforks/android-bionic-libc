@@ -314,8 +314,7 @@ END(cos)
 # -- End  cos
 
 # Start file scope ASM
-.weak cosl
-.equ cosl, cos
+DUP_SYMBOL(cosl, cos);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

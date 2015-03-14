@@ -40,5 +40,4 @@ ENTRY(sqrt)
 	ret
 END(sqrt)
 
-.globl sqrtl;
-.equ sqrtl, sqrt;
+DUP_SYMBOL(sqrtl, sqrt);
