@@ -1238,3 +1238,36 @@ TEST(pthread, pthread_mutex_owner_tid_limit) {
   // Change the implementation if we need to support higher value than 65535.
   ASSERT_LE(pid_max, 65536);
 }
+
+// As we separate the interface and the implementation of pthread types(like pthread_mutex_t),
+// we need to check if the structure interface can fulfill the alignment need of implementation.
+static void CheckPthreadTypeAlignment(size_t type_size) {
+  ASSERT_TRUE(type_size % sizeof(uint32_t) == 0);
+}
+
+TEST(pthread, pthread_mutex_t_alignment) {
+  struct checked_type {
+    char a;
+    pthread_mutex_t mutex;
+  };
+  CheckPthreadTypeAlignment(sizeof(pthread_mutex_t));
+  CheckPthreadTypeAlignment(sizeof(checked_type));
+}
+
+TEST(pthread, pthread_cond_t_alignment) {
+  struct checked_type {
+    char a;
+    pthread_cond_t cond;
+  };
+  CheckPthreadTypeAlignment(sizeof(pthread_cond_t));
+  CheckPthreadTypeAlignment(sizeof(checked_type));
+}
+
+TEST(pthread, pthread_rwlock_t_alignment) {
+  struct checked_type {
+    char a;
+    pthread_rwlock_t rwlock;
+  };
+  CheckPthreadTypeAlignment(sizeof(pthread_rwlock_t));
+  CheckPthreadTypeAlignment(sizeof(checked_type));
+}
