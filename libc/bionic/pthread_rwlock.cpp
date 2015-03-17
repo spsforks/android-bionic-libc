@@ -107,9 +107,20 @@ struct pthread_rwlock_internal_t {
 #endif
 };
 
+static_assert(sizeof(pthread_rwlock_t) == sizeof(pthread_rwlock_internal_t),
+              "pthread_rwlock_t should actually be pthread_rwlock_internal_t in implementation.");
+
+struct alignment_check_type {
+  char a;
+  pthread_rwlock_t lock;
+};
+
+// For binary compatibility with old version of pthread_rwlock_t, we can't use more strict
+// alignment than 4-byte alignment.
+static_assert(sizeof(alignment_check_type) == sizeof(pthread_rwlock_t) + 4,
+             "pthread_rwlock_t should fulfill the alignment request of pthread_rwlock_internal_t.");
+
 static inline pthread_rwlock_internal_t* __get_internal_rwlock(pthread_rwlock_t* rwlock_interface) {
-  static_assert(sizeof(pthread_rwlock_t) == sizeof(pthread_rwlock_internal_t),
-                "pthread_rwlock_t should actually be pthread_rwlock_internal_t in implementation.");
   return reinterpret_cast<pthread_rwlock_internal_t*>(rwlock_interface);
 }
 
