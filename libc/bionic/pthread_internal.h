@@ -116,6 +116,11 @@ __LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
 /* Various third-party apps contain a backport of our pthread_rwlock implementation that uses this. */
 extern "C" __LIBC64_HIDDEN__ pthread_internal_t* __get_thread(void);
 
+#define __get_thread()  __get_internal_thread()
+static inline __always_inline pthread_internal_t* __get_internal_thread(void) {
+  return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
+}
+
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread, bool free_thread);
 
