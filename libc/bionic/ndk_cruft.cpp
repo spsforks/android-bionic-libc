@@ -346,6 +346,13 @@ extern "C" void* dlmalloc(size_t size) {
   return malloc(size);
 }
 
+#include "pthread_internal.h"
+#undef __get_thread
+// Various third-party apps contain a backport of our pthread_rwlock implementation that uses this.
+extern "C" pthread_internal_t* __get_thread(void) {
+  return __get_internal_thread();
+}
+
 #endif // !defined(__LP64__)
 
 // This is never implemented in bionic, only needed for ABI compatibility with the NDK.
