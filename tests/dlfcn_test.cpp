@@ -97,6 +97,41 @@ TEST(dlfcn, dlopen_noload) {
   ASSERT_EQ(0, dlclose(handle2));
 }
 
+TEST(dlfcn, dlopen_by_soname) {
+  static const char* soname = "libdlext_test_soname.so";
+  static const char* filename = "libdlext_test_different_soname.so";
+  // 1. Make sure there is no library with soname in default search path
+  void* handle = dlopen(soname, RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+
+  // 2. Load a library using filename
+  handle = dlopen(filename, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  // 3. Find library by soname
+  void* handle_soname = dlopen(soname, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle_soname != nullptr) << dlerror();
+  ASSERT_EQ(handle, handle_soname);
+
+  dlclose(handle_soname);
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_library_without_soname) {
+  static const char* filename = "libdlext_test_no_soname.so";
+  void* handle = dlopen(filename, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  // RTLD_NOLOAD should still work.
+  void* handle2 = dlopen(filename, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+
+  ASSERT_EQ(handle, handle2);
+
+  dlclose(handle2);
+  dlclose(handle);
+}
+
 // ifuncs are only supported on intel and arm64 for now
 #if defined (__aarch64__) || defined(__i386__) || defined(__x86_64__)
 TEST(dlfcn, ifunc) {
