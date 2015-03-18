@@ -78,18 +78,7 @@
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
 
-#if defined(__LP64__)
 #define SEARCH_NAME(x) x
-#else
-// Nvidia drivers are relying on the bug:
-// http://code.google.com/p/android/issues/detail?id=6670
-// so we continue to use base-name lookup for lp32
-static const char* get_base_name(const char* name) {
-  const char* bname = strrchr(name, '/');
-  return bname ? bname + 1 : name;
-}
-#define SEARCH_NAME(x) get_base_name(x)
-#endif
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
