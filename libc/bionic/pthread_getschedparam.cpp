@@ -29,13 +29,13 @@
 #include <errno.h>
 
 #include "private/ErrnoRestorer.h"
-#include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 int pthread_getschedparam(pthread_t t, int* policy, sched_param* param) {
   ErrnoRestorer errno_restorer;
 
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  if (!__is_valid_pthread_internal(thread)) {
     return ESRCH;
   }
 

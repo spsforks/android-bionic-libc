@@ -113,7 +113,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
-  _pthread_internal_add(main_thread);
+  __add_pthread_internal(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
 

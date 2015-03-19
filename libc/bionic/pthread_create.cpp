@@ -109,7 +109,7 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   thread->cleanup_stack = NULL;
 
   if (add_to_thread_list) {
-    _pthread_internal_add(thread);
+    __add_pthread_internal(thread);
   }
 
   return error;

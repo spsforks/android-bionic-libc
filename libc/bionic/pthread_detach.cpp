@@ -29,27 +29,25 @@
 #include <errno.h>
 #include <pthread.h>
 
-#include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 int pthread_detach(pthread_t t) {
-  {
-    pthread_accessor thread(t);
-    if (thread.get() == NULL) {
-      return ESRCH;
-    }
-
-    ThreadJoinState old_state = THREAD_NOT_JOINED;
-    while (old_state == THREAD_NOT_JOINED &&
-           !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_DETACHED)) {
-    }
-    switch (old_state) {
-      case THREAD_NOT_JOINED: return 0;
-      case THREAD_JOINED:     return EINVAL;
-      case THREAD_DETACHED:   return EINVAL;
-      case THREAD_EXITED_NOT_JOINED: break;  // Call pthread_join out of scope of pthread_accessor.
-    }
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  if (!__is_valid_pthread_internal(thread)) {
+    return ESRCH;
   }
 
-  // The thread is in THREAD_EXITED_NOT_JOINED, use pthread_join to clean it up.
-  return pthread_join(t, NULL);
+  ThreadJoinState old_state = THREAD_NOT_JOINED;
+  while (old_state == THREAD_NOT_JOINED &&
+         !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_DETACHED)) {
+  }
+  switch (old_state) {
+    case THREAD_NOT_JOINED: return 0;
+    case THREAD_JOINED:     return EINVAL;
+    case THREAD_DETACHED:   return EINVAL;
+    case THREAD_EXITED_NOT_JOINED: return pthread_join(t, NULL);  // Use pthread_join to clean it up.
+  }
+
+  // Unreachable.
+  return 0;
 }
