@@ -28,11 +28,11 @@
 
 #include <errno.h>
 
-#include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  if (!__is_valid_pthread_internal(thread)) {
     return ESRCH;
   }
 

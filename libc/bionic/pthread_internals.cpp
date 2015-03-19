@@ -36,29 +36,13 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
-#include "private/ScopedPthreadMutexLocker.h"
+#include "private/ScopedPthreadReadWriteLocker.h"
 
-pthread_internal_t* g_thread_list = NULL;
-pthread_mutex_t g_thread_list_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_internal_t* g_thread_list = NULL;
+static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
 
-void _pthread_internal_remove_locked(pthread_internal_t* thread, bool free_thread) {
-  if (thread->next != NULL) {
-    thread->next->prev = thread->prev;
-  }
-  if (thread->prev != NULL) {
-    thread->prev->next = thread->next;
-  } else {
-    g_thread_list = thread->next;
-  }
-
-  if (free_thread && thread->mmap_size != 0) {
-    // Free mapped space, including thread stack and pthread_internal_t.
-    munmap(thread->attr.stack_base, thread->mmap_size);
-  }
-}
-
-void _pthread_internal_add(pthread_internal_t* thread) {
-  ScopedPthreadMutexLocker locker(&g_thread_list_lock);
+void __add_pthread_internal(pthread_internal_t* thread) {
+  ScopedPthreadWriteLocker locker(&g_thread_list_lock);
 
   // We insert at the head.
   thread->next = g_thread_list;
@@ -67,4 +51,36 @@ void _pthread_internal_add(pthread_internal_t* thread) {
     thread->next->prev = thread;
   }
   g_thread_list = thread;
+}
+
+void __remove_pthread_internal(pthread_internal_t* thread) {
+  ScopedPthreadWriteLocker locker(&g_thread_list_lock);
+
+  if (thread->next != NULL) {
+    thread->next->prev = thread->prev;
+  }
+  if (thread->prev != NULL) {
+    thread->prev->next = thread->next;
+  } else {
+    g_thread_list = thread->next;
+  }
+}
+
+void __free_pthread_internal(pthread_internal_t* thread) {
+  __remove_pthread_internal(thread);
+  if (thread->mmap_size != 0) {
+    // Free mapped space, including thread stack and pthread_internal_t.
+    munmap(thread->attr.stack_base, thread->mmap_size);
+  }
+}
+
+bool __is_valid_pthread_internal(pthread_internal_t* thread) {
+  ScopedPthreadReadLocker locker(&g_thread_list_lock);
+
+  for (pthread_internal_t* t = g_thread_list; t != NULL; t = t->next) {
+    if (t == thread) {
+      return true;
+    }
+  }
+  return false;
 }
