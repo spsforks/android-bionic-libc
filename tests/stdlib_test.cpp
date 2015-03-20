@@ -521,3 +521,101 @@ TEST(stdlib, strtoull_EINVAL) {
   strtoull("123", NULL, 37);
   ASSERT_EQ(EINVAL, errno);
 }
+/*
+ * This test checks that
+ *   exit() returns correct exit status.
+ */
+TEST(stdlib, exit)
+{
+  const int exit_codes[] = { 0, 1, 0x55, 0xFF };
+
+  for (unsigned int i = 0; i < sizeof(exit_codes)/sizeof(int); ++i)
+  {
+    int pid = fork();
+    if (pid < 0)
+    { // Fork error in parent process
+      FAIL();
+    }
+    if (pid == 0)
+    { // Child process
+      exit(exit_codes[i]);
+    }
+    else
+    { // Parent process
+      int state;
+      wait(&state);
+      if (!kill(pid, SIGTERM) || errno != ESRCH)
+      {
+        FAIL() << "Child process is not killed";
+      }
+      EXPECT_EQ(exit_codes[i], WEXITSTATUS(state));
+    }
+  }
+}
+
+/*
+ * This test checks that
+ *   abort() works,
+ *   atexit-functions ignored,
+ *   termination signal is correct.
+ */
+void quick_death()
+{
+    char *a = 0;
+    a[0] = 0;
+}
+TEST(stdlib, abort)
+{
+  int pid = fork();
+  if (pid < 0)
+  { // Fork error in parent process
+    FAIL() << "Fork failure";
+  }
+  if (pid == 0)
+  { // Child process
+    atexit(quick_death); // Segfault shouldn't have been happend on abort()
+    abort();
+  }
+  else
+  { // Parent process
+    int state;
+    wait(&state);
+    if (!kill(pid, SIGTERM) || errno != ESRCH)
+    {
+      FAIL() << "Child process is not killed";
+    }
+    ASSERT_TRUE(WIFSIGNALED(state));     // Signaled termination expected
+    EXPECT_EQ(0, WEXITSTATUS(state));    // "Normal" exit status expected
+    EXPECT_EQ(SIGABRT, WTERMSIG(state));      // SIGABRT expected (as in standard)
+  }
+}
+
+TEST(stdlib, execl)
+{
+  int pid = fork();
+  if (pid < 0)
+  { // Fork error in parent process
+    FAIL() << "Fork failure";
+  }
+  if (pid == 0)
+  { // Child process
+    // Redirect IO to /dev/null
+    int fd = open("/dev/null", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    dup2(fd, 1);  // stdout
+    dup2(fd, 2);  // stderr
+    close(fd);
+    // Substitute image
+	execl("/system/bin/ls", "ls", 0, 0);
+    exit(23);
+  }
+  else
+  { // Parent process
+    int state;
+    wait(&state);
+    if (!kill(pid, SIGTERM) || errno != ESRCH)
+    {
+      FAIL() << "Child process is not killed";
+    }
+    EXPECT_NE(23, WEXITSTATUS(state));
+  }
+}
