@@ -1197,41 +1197,69 @@ static void CreateMutex(pthread_mutex_t& mutex, int mutex_type) {
   ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
 }
 
-TEST(pthread, pthread_mutex_lock_NORMAL) {
+struct PthreadMutex {
   pthread_mutex_t lock;
-  CreateMutex(lock, PTHREAD_MUTEX_NORMAL);
 
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  PthreadMutex(int mutex_type) {
+    CreateMutex(lock, mutex_type);
+  }
+
+  ~PthreadMutex() {
+    destroy();
+  }
+
+ private:
+  void destroy() {
+    ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  }
+};
+
+TEST(pthread, pthread_mutex_lock_NORMAL) {
+  PthreadMutex m(PTHREAD_MUTEX_NORMAL);
+
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
 TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
-  pthread_mutex_t lock;
-  CreateMutex(lock, PTHREAD_MUTEX_ERRORCHECK);
+  PthreadMutex m(PTHREAD_MUTEX_ERRORCHECK);
 
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(EDEADLK, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(EDEADLK, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
 }
 
 TEST(pthread, pthread_mutex_lock_RECURSIVE) {
-  pthread_mutex_t lock;
-  CreateMutex(lock, PTHREAD_MUTEX_RECURSIVE);
+  PthreadMutex m(PTHREAD_MUTEX_RECURSIVE);
 
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
+}
+
+TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
+  pthread_mutex_t lock_normal = PTHREAD_MUTEX_INITIALIZER;
+  PthreadMutex m1(PTHREAD_MUTEX_NORMAL);
+  ASSERT_EQ(0, memcmp(&lock_normal, &m1.lock, sizeof(pthread_mutex_t)));
+  pthread_mutex_destroy(&lock_normal);
+
+  pthread_mutex_t lock_errorcheck = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
+  PthreadMutex m2(PTHREAD_MUTEX_ERRORCHECK);
+  ASSERT_EQ(0, memcmp(&lock_errorcheck, &m2.lock, sizeof(pthread_mutex_t)));
+  pthread_mutex_destroy(&lock_errorcheck);
+
+  pthread_mutex_t lock_recursive = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+  PthreadMutex m3(PTHREAD_MUTEX_RECURSIVE);
+  ASSERT_EQ(0, memcmp(&lock_recursive, &m3.lock, sizeof(pthread_mutex_t)));
+  ASSERT_EQ(0, pthread_mutex_destroy(&lock_recursive));
 }
 
 class MutexWakeupHelper {
