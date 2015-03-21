@@ -43,19 +43,16 @@
 #endif
 
 typedef struct {
-  int value;
-#ifdef __LP64__
-  char __reserved[36];
+#if defined(__LP64__)
+  int32_t __private[10];
+#else
+  int32_t __private[1];
 #endif
 } pthread_mutex_t;
 
-#define  __PTHREAD_MUTEX_INIT_VALUE            0
-#define  __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE  0x4000
-#define  __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE 0x8000
-
-#define PTHREAD_MUTEX_INITIALIZER {__PTHREAD_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
+#define PTHREAD_MUTEX_INITIALIZER { { 0 } }
+#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP { { 0x4000 } }
+#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { 0x8000 } }
 
 /* TODO: remove this namespace pollution. */
 #define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
@@ -74,11 +71,11 @@ enum {
 
 typedef struct {
 #if defined(__LP64__)
-  char __private[48];
+  int32_t __private[12];
 #else
-  char __private[4];
+  int32_t __private[1];
 #endif
-} pthread_cond_t __attribute__((aligned(4)));
+} pthread_cond_t;
 
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
 
@@ -89,11 +86,11 @@ typedef long pthread_rwlockattr_t;
 
 typedef struct {
 #if defined(__LP64__)
-  char __private[56];
+  int32_t __private[14];
 #else
-  char __private[40];
+  int32_t __private[10];
 #endif
-} pthread_rwlock_t __attribute__((aligned(4)));
+} pthread_rwlock_t;
 
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 
