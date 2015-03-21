@@ -43,19 +43,16 @@
 #endif
 
 typedef struct {
-  int value;
-#ifdef __LP64__
-  char __reserved[36];
+#if defined(__LP64__)
+  char __private[40];
+#else
+  char __private[4];
 #endif
-} pthread_mutex_t;
+} pthread_mutex_t __attribute__((aligned(4)));
 
-#define  __PTHREAD_MUTEX_INIT_VALUE            0
-#define  __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE  0x4000
-#define  __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE 0x8000
-
-#define PTHREAD_MUTEX_INITIALIZER {__PTHREAD_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
+#define PTHREAD_MUTEX_INITIALIZER { { 0, '\x00' } }
+#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { 0, '\x40' } }
+#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP { { 0, '\x80' } }
 
 /* TODO: remove this namespace pollution. */
 #define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
