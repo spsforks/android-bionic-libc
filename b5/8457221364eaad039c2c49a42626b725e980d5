@@ -1,0 +1,7 @@
+Verified+1: Deckard Autoverifier <deckard@android.com>
+Code-Review+2: Dan Albert <danalbert@google.com>
+Submitted-by: Yabin Cui <yabinc@google.com>
+Submitted-at: Mon, 23 Mar 2015 23:18:27 +0000
+Reviewed-on: https://android-review.googlesource.com/142084
+Project: platform/bionic
+Branch: refs/heads/master
