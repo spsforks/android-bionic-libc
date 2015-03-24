@@ -40,6 +40,8 @@
 #include <unistd.h>
 
 #include <new>
+#include <string>
+#include <vector>
 
 // Private C library headers.
 #include "private/bionic_tls.h"
@@ -87,30 +89,22 @@ static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 
-static const char* const kDefaultLdPaths[] = {
+static std::vector<std::string> kDefaultLdPaths;
+
+static std::vector<std::string> g_ld_library_paths;
+static std::vector<std::string> g_ld_preload_names;
+
+static std::vector<soinfo*> g_ld_preloads;
+
+static void initialize_globals() {
 #if defined(__LP64__)
-  "/vendor/lib64",
-  "/system/lib64",
+  kDefaultLdPaths.push_back(std::string("/vendor/lib64"));
+  kDefaultLdPaths.push_back(std::string("/system/lib64"));
 #else
-  "/vendor/lib",
-  "/system/lib",
+  kDefaultLdPaths.push_back(std::string("/vendor/lib"));
+  kDefaultLdPaths.push_back(std::string("/system/lib"));
 #endif
-  nullptr
-};
-
-#define LDPATH_BUFSIZE (LDPATH_MAX*64)
-#define LDPATH_MAX 8
-
-#define LDPRELOAD_BUFSIZE (LDPRELOAD_MAX*64)
-#define LDPRELOAD_MAX 8
-
-static char g_ld_library_paths_buffer[LDPATH_BUFSIZE];
-static const char* g_ld_library_paths[LDPATH_MAX + 1];
-
-static char g_ld_preloads_buffer[LDPRELOAD_BUFSIZE];
-static const char* g_ld_preload_names[LDPRELOAD_MAX + 1];
-
-static soinfo* g_ld_preloads[LDPRELOAD_MAX + 1];
+}
 
 __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
@@ -295,39 +289,36 @@ static void soinfo_free(soinfo* si) {
 }
 
 static void parse_path(const char* path, const char* delimiters,
-                       const char** array, char* buf, size_t buf_size, size_t max_count) {
+                       std::vector<std::string>* paths) {
   if (path == nullptr) {
     return;
   }
 
-  size_t len = strlcpy(buf, path, buf_size);
+  paths->clear();
 
-  size_t i = 0;
-  char* buf_p = buf;
-  while (i < max_count && (array[i] = strsep(&buf_p, delimiters))) {
-    if (*array[i] != '\0') {
-      ++i;
+  for (const char *p = path; ; ++p) {
+    size_t len = strcspn(p, delimiters);
+    // skip empty tokens
+    if (len == 0) {
+      continue;
     }
-  }
 
-  // Forget the last path if we had to truncate; this occurs if the 2nd to
-  // last char isn't '\0' (i.e. wasn't originally a delimiter).
-  if (i > 0 && len >= buf_size && buf[buf_size - 2] != '\0') {
-    array[i - 1] = nullptr;
-  } else {
-    array[i] = nullptr;
+    paths->push_back(std::string(p, len));
+    p += len;
+
+    if (*p == '\0') {
+      break;
+    }
   }
 }
 
 static void parse_LD_LIBRARY_PATH(const char* path) {
-  parse_path(path, ":", g_ld_library_paths,
-             g_ld_library_paths_buffer, sizeof(g_ld_library_paths_buffer), LDPATH_MAX);
+  parse_path(path, ":", &g_ld_library_paths);
 }
 
 static void parse_LD_PRELOAD(const char* path) {
   // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-  parse_path(path, " :", g_ld_preload_names,
-             g_ld_preloads_buffer, sizeof(g_ld_preloads_buffer), LDPRELOAD_MAX);
+  parse_path(path, " :", &g_ld_preload_names);
 }
 
 #if defined(__arm__)
@@ -884,13 +875,13 @@ static int open_library_in_zipfile(const char* const path,
 }
 
 static int open_library_on_path(const char* name,
-                                const char* const paths[],
+                                const std::vector<std::string>& paths,
                                 off64_t* file_offset) {
   char buf[512];
   int fd = -1;
 
-  for (size_t i = 0; paths[i] != nullptr && fd == -1; ++i) {
-    const char* const path = paths[i];
+  for (const auto& path_str : paths) {
+    const char* const path = path_str.c_str();
     int n = __libc_format_buffer(buf, sizeof(buf), "%s/%s", path, name);
     if (n < 0 || n >= static_cast<int>(sizeof(buf))) {
       PRINT("Warning: ignoring very long library path: %s/%s", path, name);
@@ -908,6 +899,10 @@ static int open_library_on_path(const char* name,
       if (fd != -1) {
         *file_offset = 0;
       }
+    }
+
+    if (fd != -1) {
+      break;
     }
   }
 
@@ -1086,8 +1081,9 @@ static soinfo::soinfo_list_t make_global_group() {
   return global_group;
 }
 
-static bool find_libraries(soinfo* start_with, const char* const library_names[], size_t library_names_count, soinfo* soinfos[],
-    soinfo* ld_preloads[], size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
+static bool find_libraries(soinfo* start_with, const char* const library_names[],
+      size_t library_names_count, soinfo* soinfos[], std::vector<soinfo*>* ld_preloads,
+      size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
   for (size_t i = 0; i < library_names_count; ++i) {
@@ -1150,7 +1146,7 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
       // for this run because they are going to appear in the local
       // group in the correct order.
       si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
-      ld_preloads[soinfos_count] = si;
+      ld_preloads->push_back(si);
     }
 
     if (soinfos_count < library_names_count) {
@@ -1303,14 +1299,14 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // See b/17302493 for further details.
   // Once the above bug is fixed, this code can be modified to use
   // snprintf again.
-  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
+  size_t required_len = kDefaultLdPaths[0].size() + kDefaultLdPaths[1].size() + 2;
   if (buffer_size < required_len) {
     __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: buffer len %zu, required len %zu",
                  buffer_size, required_len);
   }
-  char* end = stpcpy(buffer, kDefaultLdPaths[0]);
+  char* end = stpcpy(buffer, kDefaultLdPaths[0].c_str());
   *end = ':';
-  strcpy(end + 1, kDefaultLdPaths[1]);
+  strcpy(end + 1, kDefaultLdPaths[1].c_str());
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
@@ -2674,8 +2670,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   StringLinkedList needed_library_name_list;
   size_t needed_libraries_count = 0;
   size_t ld_preloads_count = 0;
-  while (g_ld_preload_names[ld_preloads_count] != nullptr) {
-    needed_library_name_list.push_back(g_ld_preload_names[ld_preloads_count++]);
+
+  for (const auto& ld_preload_name : g_ld_preload_names) {
+    needed_library_name_list.push_back(ld_preload_name.c_str());
     ++needed_libraries_count;
   }
 
@@ -2689,7 +2686,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   memset(needed_library_names, 0, sizeof(needed_library_names));
   needed_library_name_list.copy_to_array(needed_library_names, needed_libraries_count);
 
-  if (needed_libraries_count > 0 && !find_libraries(si, needed_library_names, needed_libraries_count, nullptr, g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
+  if (needed_libraries_count > 0 &&
+      !find_libraries(si, needed_library_names, needed_libraries_count, nullptr,
+          &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
   } else if (needed_libraries_count == 0) {
@@ -2845,6 +2844,10 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // Initialize the linker's own global variables
   linker_so.call_constructors();
+
+  // Initialize globals: make sure this function runs after constructors because it
+  // uses memory allocator which is initialized during call_constructors.
+  initialize_globals();
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
