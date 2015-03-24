@@ -57,8 +57,7 @@ ENTRY(%(func)s)
 
 
 function_alias = """
-    .globl %(alias)s
-    .equ %(alias)s, %(func)s
+ALIAS_SYMBOL(%(alias)s, %(func)s)
 """
 
 
