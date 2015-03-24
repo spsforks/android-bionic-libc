@@ -14,6 +14,4 @@ ENTRY(mmap)
 1:
     ret
 END(mmap)
-
-    .globl mmap64
-    .equ mmap64, mmap
+ALIAS_SYMBOL(mmap, mmap64)

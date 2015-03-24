@@ -14,6 +14,4 @@ ENTRY(pread64)
 1:
     ret
 END(pread64)
-
-    .globl pread
-    .equ pread, pread64
+ALIAS_SYMBOL(pread64, pread)

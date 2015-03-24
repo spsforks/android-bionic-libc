@@ -23,6 +23,4 @@ ENTRY(truncate)
     move ra, t0
     .set pop
 END(truncate)
-
-    .globl truncate64
-    .equ truncate64, truncate
+ALIAS_SYMBOL(truncate, truncate64)

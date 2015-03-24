@@ -12,6 +12,4 @@ ENTRY(prlimit64)
 
     ret
 END(prlimit64)
-
-    .globl prlimit
-    .equ prlimit, prlimit64
+ALIAS_SYMBOL(prlimit64, prlimit)

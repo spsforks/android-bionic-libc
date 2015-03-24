@@ -23,6 +23,4 @@ ENTRY(sendfile)
     move ra, t0
     .set pop
 END(sendfile)
-
-    .globl sendfile64
-    .equ sendfile64, sendfile
+ALIAS_SYMBOL(sendfile, sendfile64)

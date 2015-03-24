@@ -23,6 +23,4 @@ ENTRY(fallocate)
     move ra, t0
     .set pop
 END(fallocate)
-
-    .globl fallocate64
-    .equ fallocate64, fallocate
+ALIAS_SYMBOL(fallocate, fallocate64)

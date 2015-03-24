@@ -14,6 +14,4 @@ ENTRY(fstatat64)
 1:
     ret
 END(fstatat64)
-
-    .globl fstatat
-    .equ fstatat, fstatat64
+ALIAS_SYMBOL(fstatat64, fstatat)

@@ -23,6 +23,4 @@ ENTRY(mmap)
     move ra, t0
     .set pop
 END(mmap)
-
-    .globl mmap64
-    .equ mmap64, mmap
+ALIAS_SYMBOL(mmap, mmap64)

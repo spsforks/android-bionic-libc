@@ -34,6 +34,4 @@ ENTRY(fstatat64)
     popl    %ebx
     ret
 END(fstatat64)
-
-    .globl fstatat
-    .equ fstatat, fstatat64
+ALIAS_SYMBOL(fstatat64, fstatat)

@@ -12,6 +12,4 @@ ENTRY(fallocate)
 
     ret
 END(fallocate)
-
-    .globl fallocate64
-    .equ fallocate64, fallocate
+ALIAS_SYMBOL(fallocate, fallocate64)

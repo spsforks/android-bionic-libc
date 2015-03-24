@@ -17,6 +17,4 @@ ENTRY(fstatat64)
     nop
     .set reorder
 END(fstatat64)
-
-    .globl fstatat
-    .equ fstatat, fstatat64
+ALIAS_SYMBOL(fstatat64, fstatat)

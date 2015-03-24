@@ -23,6 +23,4 @@ ENTRY(pread64)
     move ra, t0
     .set pop
 END(pread64)
-
-    .globl pread
-    .equ pread, pread64
+ALIAS_SYMBOL(pread64, pread)

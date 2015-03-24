@@ -12,6 +12,4 @@ ENTRY(lseek)
 
     ret
 END(lseek)
-
-    .globl lseek64
-    .equ lseek64, lseek
+ALIAS_SYMBOL(lseek, lseek64)

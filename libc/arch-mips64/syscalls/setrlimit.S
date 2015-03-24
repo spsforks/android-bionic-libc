@@ -23,6 +23,4 @@ ENTRY(setrlimit)
     move ra, t0
     .set pop
 END(setrlimit)
-
-    .globl setrlimit64
-    .equ setrlimit64, setrlimit
+ALIAS_SYMBOL(setrlimit, setrlimit64)

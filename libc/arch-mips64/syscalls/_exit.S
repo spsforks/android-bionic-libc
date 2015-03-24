@@ -23,6 +23,4 @@ ENTRY(_exit)
     move ra, t0
     .set pop
 END(_exit)
-
-    .globl _Exit
-    .equ _Exit, _exit
+ALIAS_SYMBOL(_exit, _Exit)

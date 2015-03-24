@@ -14,6 +14,4 @@ ENTRY(sendfile)
 1:
     ret
 END(sendfile)
-
-    .globl sendfile64
-    .equ sendfile64, sendfile
+ALIAS_SYMBOL(sendfile, sendfile64)

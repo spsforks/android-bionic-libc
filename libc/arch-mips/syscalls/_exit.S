@@ -17,6 +17,4 @@ ENTRY(_exit)
     nop
     .set reorder
 END(_exit)
-
-    .globl _Exit
-    .equ _Exit, _exit
+ALIAS_SYMBOL(_exit, _Exit)

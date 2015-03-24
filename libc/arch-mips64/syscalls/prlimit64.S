@@ -23,6 +23,4 @@ ENTRY(prlimit64)
     move ra, t0
     .set pop
 END(prlimit64)
-
-    .globl prlimit
-    .equ prlimit, prlimit64
+ALIAS_SYMBOL(prlimit64, prlimit)
