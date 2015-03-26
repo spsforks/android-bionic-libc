@@ -37,6 +37,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "private/__get_tls.h"
+
 extern int __cxa_atexit(void (*)(void*), void*, void*);
 
 // All of these are weak symbols to avoid multiple definition errors when
@@ -110,4 +112,8 @@ void __attribute__((weak)) __aeabi_memclr4(void *dest, size_t n) {
 
 void __attribute__((weak)) __aeabi_memclr(void *dest, size_t n) {
     __aeabi_memset(dest, n, 0);
+}
+
+void* __attribute__((weak)) __aeabi_read_tp() {
+  return __get_tls();
 }
