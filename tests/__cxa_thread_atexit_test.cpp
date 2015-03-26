@@ -20,6 +20,34 @@
 
 #include <string>
 
+static std::string class_with_dtor_output;
+
+class ClassWithDtor {
+ public:
+  void nop() {
+    return;
+  }
+
+  ~ClassWithDtor() {
+    class_with_dtor_output += "dtor called, ";
+  }
+};
+
+thread_local ClassWithDtor class_with_dtor;
+
+static void* thread_nop(void*) {
+  class_with_dtor.nop();
+  return nullptr;
+}
+
+TEST(thread_local, smoke) {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, thread_nop, nullptr));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+  ASSERT_EQ("dtor called, ", class_with_dtor_output);
+}
+
+
 extern "C" int __cxa_thread_atexit_impl(void (*fn)(void*), void* arg, void* dso_handle);
 
 static void thread_atexit_fn1(void* arg) {
