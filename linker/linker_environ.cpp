@@ -130,6 +130,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
       "LOCALDOMAIN",
       "LOCPATH",
       "MALLOC_CHECK_",
+      "MALLOC_CONF",
       "MALLOC_TRACE",
       "NIS_PATH",
       "NLSPATH",
