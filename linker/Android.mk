@@ -46,6 +46,11 @@ ifeq ($(TARGET_IS_64_BIT),true)
 LOCAL_CPPFLAGS += -DTARGET_IS_64_BIT
 endif
 
+ifeq ($(TARGET_BOARD_PLATFORM),tegra3)
+LOCAL_CPPFLAGS += -DWORKAROUND_BUGFIX_6670
+$(warn WORKAROUND_BUGFIX_6670 enabled)
+endif
+
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
