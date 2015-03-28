@@ -81,7 +81,24 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
 }
 
 void* dlopen(const char* filename, int flags) {
-  return dlopen_ext(filename, flags, nullptr);
+
+#ifdef WORKAROUND_BUGFIX_6670
+    // WARNING : Extremely Nasty Hack Ahead
+    // The Nvidia blobs for Grouper fails to set the correct working
+    // directory when loading the OpenGLES libraries using relative paths
+    // Accomadating this in the linker causes the incorrect behaviour
+    // described in bug 6670.
+    // https://code.google.com/p/android/issues/detail?id=6670
+
+    // Workaround the 2 calls in the nvidia blobs where this is issue.
+    // Hardcode the library names to make sure this workaround only
+    // affects what we expect
+    if ( ( strncmp(filename,"egl/libGLESv2_tegra.so",22) == 0 ) ||
+            ( strncmp(filename,"egl/libEGL_tegra.so",19) == 0 ) ){
+        chdir("/system/lib");
+    }
+#endif
+    return dlopen_ext(filename, flags, nullptr);
 }
 
 void* dlsym(void* handle, const char* symbol) {
