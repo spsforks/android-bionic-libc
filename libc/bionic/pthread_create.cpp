@@ -69,13 +69,19 @@ void __init_tls(pthread_internal_t* thread) {
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
-  stack_t ss;
-  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (ss.ss_sp != MAP_FAILED) {
+  void *p = mmap(NULL, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (p != MAP_FAILED) {
+    // Create a guard page to catch stack overflows in signal handlers.
+    if (mprotect(p, PAGE_SIZE, PROT_NONE)) {
+      munmap(p, SIGNAL_STACK_SIZE);
+      return;
+    }
+    stack_t ss;
+    ss.ss_sp = p + PAGE_SIZE;
     ss.ss_size = SIGSTKSZ;
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
-    thread->alternate_signal_stack = ss.ss_sp;
+    thread->alternate_signal_stack = p;
 
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.
