@@ -56,7 +56,7 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int*);
 /* Used by the dynamic linker to communicate with the debugger. */
 struct link_map {
   ElfW(Addr) l_addr;
-  char* l_name;
+  const char* l_name;
   ElfW(Dyn)* l_ld;
   struct link_map* l_next;
   struct link_map* l_prev;
