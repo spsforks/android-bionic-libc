@@ -699,7 +699,7 @@ TEST(dlfcn, dlsym_failures) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-TEST(dlfcn, dladdr) {
+TEST(dlfcn, dladdr_executable) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -720,13 +720,11 @@ TEST(dlfcn, dladdr) {
   rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
   ASSERT_NE(rc, -1);
   executable_path[rc] = '\0';
-  std::string executable_name(basename(executable_path));
 
   // The filename should be that of this executable.
-  // Note that we don't know whether or not we have the full path, so we want an "ends_with" test.
-  std::string dli_fname(info.dli_fname);
-  dli_fname = basename(&dli_fname[0]);
-  ASSERT_EQ(dli_fname, executable_name);
+  char dli_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(info.dli_fname, dli_realpath) != nullptr);
+  ASSERT_STREQ(executable_path, dli_realpath);
 
   // The symbol name should be the symbol we looked up.
   ASSERT_STREQ(info.dli_sname, "DlSymTestFunction");
