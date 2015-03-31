@@ -21,15 +21,26 @@
 
 #include <string.h>
 
-#define RELOCATION_GROUPED_BY_INFO_FLAG 1
-#define RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG 2
-#define RELOCATION_GROUPED_BY_ADDEND_FLAG 4
-#define RELOCATION_GROUP_HAS_ADDEND_FLAG 8
+const size_t RELOCATION_GROUPED_BY_INFO_FLAG = 1;
+const size_t RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG = 2;
+const size_t RELOCATION_GROUPED_BY_ADDEND_FLAG = 4;
+const size_t RELOCATION_GROUP_HAS_ADDEND_FLAG = 8;
 
-#define RELOCATION_GROUPED_BY_INFO(flags) (((flags) & RELOCATION_GROUPED_BY_INFO_FLAG) != 0)
-#define RELOCATION_GROUPED_BY_OFFSET_DELTA(flags) (((flags) & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) != 0)
-#define RELOCATION_GROUPED_BY_ADDEND(flags) (((flags) & RELOCATION_GROUPED_BY_ADDEND_FLAG) != 0)
-#define RELOCATION_GROUP_HAS_ADDEND(flags) (((flags) & RELOCATION_GROUP_HAS_ADDEND_FLAG) != 0)
+static inline bool is_relocation_grouped_by_info(size_t group_flags) {
+  return (group_flags & RELOCATION_GROUPED_BY_INFO_FLAG) != 0;
+}
+
+static inline bool is_relocation_grouped_by_offset_delta(size_t group_flags) {
+  return (group_flags & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) != 0;
+}
+
+static inline bool is_relocation_grouped_by_addend(size_t group_flags) {
+  return (group_flags & RELOCATION_GROUPED_BY_ADDEND_FLAG) != 0;
+}
+
+static inline bool is_relocation_group_has_addend(size_t group_flags) {
+  return (group_flags & RELOCATION_GROUP_HAS_ADDEND_FLAG) != 0;
+}
 
 class plain_reloc_iterator {
 #if defined(USE_RELA)
@@ -89,18 +100,19 @@ class packed_reloc_iterator {
       }
     }
 
-    if (RELOCATION_GROUPED_BY_OFFSET_DELTA(group_flags_)) {
+    if (is_relocation_grouped_by_offset_delta(group_flags_)) {
       reloc_.r_offset += group_r_offset_delta_;
     } else {
       reloc_.r_offset += decoder_.pop_front();
     }
 
-    if (!RELOCATION_GROUPED_BY_INFO(group_flags_)) {
+    if (!is_relocation_grouped_by_info(group_flags_)) {
       reloc_.r_info = decoder_.pop_front();
     }
 
 #if defined(USE_RELA)
-    if (RELOCATION_GROUP_HAS_ADDEND(group_flags_) && !RELOCATION_GROUPED_BY_ADDEND(group_flags_)) {
+    if (is_relocation_group_has_addend(group_flags_) &&
+        !is_relocation_grouped_by_addend(group_flags_)) {
       reloc_.r_addend += decoder_.pop_front();
     }
 #endif
@@ -115,22 +127,23 @@ class packed_reloc_iterator {
     group_size_ = decoder_.pop_front();
     group_flags_ = decoder_.pop_front();
 
-    if (RELOCATION_GROUPED_BY_OFFSET_DELTA(group_flags_)) {
+    if (is_relocation_grouped_by_offset_delta(group_flags_)) {
       group_r_offset_delta_ = decoder_.pop_front();
     }
 
-    if (RELOCATION_GROUPED_BY_INFO(group_flags_)) {
+    if (is_relocation_grouped_by_info(group_flags_)) {
       reloc_.r_info = decoder_.pop_front();
     }
 
-    if (RELOCATION_GROUP_HAS_ADDEND(group_flags_) && RELOCATION_GROUPED_BY_ADDEND(group_flags_)) {
+    if (is_relocation_group_has_addend(group_flags_) &&
+        is_relocation_grouped_by_addend(group_flags_)) {
 #if !defined(USE_RELA)
       // This platform does not support rela, and yet we have it encoded in android_rel section.
       DL_ERR("unexpected r_addend in android.rel section");
       return false;
 #else
       reloc_.r_addend += decoder_.pop_front();
-    } else if (!RELOCATION_GROUP_HAS_ADDEND(group_flags_)) {
+    } else if (!is_relocation_group_has_addend(group_flags_)) {
       reloc_.r_addend = 0;
 #endif
     }
