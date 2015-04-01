@@ -27,12 +27,23 @@ LOCAL_MODULE_TAGS := tests
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_fd
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
+# Use ARCH_MIPS_PAGE_SHIFT, if defined, to determine page size
+ifeq ($(ARCH_MIPS_PAGE_SHIFT),)
+ZIPALIGN_PAGE_SIZE := 4096
+else ifeq ($(ARCH_MIPS_PAGE_SHIFT),12)
+ZIPALIGN_PAGE_SIZE := 4096
+else ifeq ($(ARCH_MIPS_PAGE_SHIFT),14)
+ZIPALIGN_PAGE_SIZE := 16384
+else
+$(error "Unsupported ARCH_MIPS_PAGE_SHIFT value: $(ARCH_MIPS_PAGE_SHIFT)")
+endif
+
 include $(BUILD_SYSTEM)/base_rules.mk
 
 my_shared_libs := \
   $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_fd.so
 
-$(LOCAL_BUILT_MODULE): PRIVATE_ALIGNMENT := 4096 # PAGE_SIZE
+$(LOCAL_BUILT_MODULE): PRIVATE_ALIGNMENT := $(ZIPALIGN_PAGE_SIZE)
 $(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
 	@echo "Zipalign $(PRIVATE_ALIGNMENT): $@"
 	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir

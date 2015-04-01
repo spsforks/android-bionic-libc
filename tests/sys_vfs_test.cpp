@@ -20,12 +20,13 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include <fcntl.h>
 
 #include <string>
 
 template <typename StatFsT> void Check(StatFsT& sb) {
-  EXPECT_EQ(4096, static_cast<int>(sb.f_bsize));
+  EXPECT_EQ(sysconf(_SC_PAGE_SIZE), static_cast<int>(sb.f_bsize));
   EXPECT_EQ(0U, sb.f_bfree);
   EXPECT_EQ(0U, sb.f_ffree);
   EXPECT_EQ(0, sb.f_fsid.__val[0]);

@@ -83,8 +83,13 @@
 
 /* New code should use sysconf(_SC_PAGE_SIZE) instead. */
 #ifndef PAGE_SIZE
+#ifdef PAGE_SHIFT
+#define PAGE_SIZE (1 << PAGE_SHIFT)
+#else
 #define PAGE_SIZE 4096
 #endif
+#endif
+
 #ifndef PAGESIZE
 #define  PAGESIZE  PAGE_SIZE
 #endif

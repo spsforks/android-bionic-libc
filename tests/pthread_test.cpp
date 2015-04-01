@@ -608,17 +608,17 @@ TEST(pthread, pthread_attr_setguardsize) {
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(128U, guard_size);
-  ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+  ASSERT_EQ(static_cast<unsigned int>(sysconf(_SC_PAGE_SIZE)), GetActualGuardSize(attributes));
 
   // Large enough and a multiple of the page size.
-  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, PTHREAD_STACK_MIN));
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
-  ASSERT_EQ(32*1024U, guard_size);
+  ASSERT_EQ(static_cast<unsigned int>(PTHREAD_STACK_MIN), guard_size);
 
   // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
-  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024 + 1));
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, PTHREAD_STACK_MIN + 1));
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
-  ASSERT_EQ(32*1024U + 1, guard_size);
+  ASSERT_EQ(static_cast<unsigned int>(PTHREAD_STACK_MIN) + 1, guard_size);
 }
 
 TEST(pthread, pthread_attr_setstacksize) {
@@ -637,20 +637,20 @@ TEST(pthread, pthread_attr_setstacksize) {
   ASSERT_GE(GetActualStackSize(attributes), default_stack_size);
 
   // Large enough and a multiple of the page size; may be rounded up by pthread_create.
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024));
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, PTHREAD_STACK_MIN));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
-  ASSERT_EQ(32*1024U, stack_size);
-  ASSERT_GE(GetActualStackSize(attributes), 32*1024U);
+  ASSERT_EQ(static_cast<unsigned int>(PTHREAD_STACK_MIN), stack_size);
+  ASSERT_GE(GetActualStackSize(attributes), static_cast<unsigned int>(PTHREAD_STACK_MIN));
 
   // Large enough but not aligned; will be rounded up by pthread_create.
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 32*1024 + 1));
+  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, PTHREAD_STACK_MIN + 1));
   ASSERT_EQ(0, pthread_attr_getstacksize(&attributes, &stack_size));
-  ASSERT_EQ(32*1024U + 1, stack_size);
+  ASSERT_EQ(static_cast<unsigned int>(PTHREAD_STACK_MIN) + 1, stack_size);
 #if defined(__BIONIC__)
-  ASSERT_GT(GetActualStackSize(attributes), 32*1024U + 1);
+  ASSERT_GT(GetActualStackSize(attributes), static_cast<unsigned int>(PTHREAD_STACK_MIN) + 1);
 #else // __BIONIC__
   // glibc rounds down, in violation of POSIX. They document this in their BUGS section.
-  ASSERT_EQ(GetActualStackSize(attributes), 32*1024U);
+  ASSERT_EQ(GetActualStackSize(attributes), static_cast<unsigned int>(PTHREAD_STACK_MIN));
 #endif // __BIONIC__
 }
 
