@@ -2297,12 +2297,12 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_TEXTREL:
-#if defined(__LP64__)
-        DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", name);
-        return false;
-#else
+#if defined(__BIONIC_TEXTREL_EXCEPTION__)
         has_text_relocations = true;
         break;
+#else
+        DL_ERR("text relocations (DT_TEXTREL) found in the ELF file \"%s\"", name);
+        return false;
 #endif
 
       case DT_SYMBOLIC:
@@ -2315,11 +2315,11 @@ bool soinfo::prelink_image() {
 
       case DT_FLAGS:
         if (d->d_un.d_val & DF_TEXTREL) {
-#if defined(__LP64__)
-          DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", name);
-          return false;
-#else
+#if defined(__BIONIC_TEXTREL_EXCEPTION__)
           has_text_relocations = true;
+#else
+          DL_ERR("text relocations (DF_TEXTREL) found in the ELF file \"%s\"", name);
+          return false;
 #endif
         }
         if (d->d_un.d_val & DF_SYMBOLIC) {
@@ -2429,7 +2429,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     local_group_root_ = this;
   }
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_TEXTREL_EXCEPTION__)
   if (has_text_relocations) {
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied and all constructors are run.
@@ -2513,7 +2513,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 
   DEBUG("[ finished linking %s ]", name);
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_TEXTREL_EXCEPTION__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
     if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {

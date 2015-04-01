@@ -103,6 +103,11 @@ typedef void (*linker_function_t)();
 #define USE_RELA 1
 #endif
 
+#if defined(__BIONIC_TEXTREL_EXCEPTION__) && defined(__LP64__)
+#undef __BIONIC_TEXTREL_EXCEPTION__
+#warning "__BIONIC_TEXTREL_EXCEPTION__ is incompatible with lp64.. #undefining"
+#endif
+
 struct soinfo;
 
 class SoinfoListAllocator {
@@ -226,8 +231,10 @@ struct soinfo {
   // value to get the corresponding address in the process' address space.
   ElfW(Addr) load_bias;
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_TEXTREL_EXCEPTION__)
   bool has_text_relocations;
+#elif defined(__arm__)
+  uint32_t unused4; // DO NOT USE, maintained for compatibility
 #endif
   bool has_DT_SYMBOLIC;
 
