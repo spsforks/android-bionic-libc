@@ -59,8 +59,13 @@ enum {
   /* If opening a library using library_fd read it starting at library_fd_offset.
    * This flag is only valid when ANDROID_DLEXT_USE_LIBRARY_FD is set.
    */
-
   ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET    = 0x20,
+
+  /* When set, do not check if library has already been loaded by file stats.
+   * Note that this might result in duplicate libraries. It is caller's responsibility to
+   * ensure unique soname.
+   */
+  ANDROID_DLEXT_FORCE_LOAD = 0x40,
 
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
@@ -68,7 +73,8 @@ enum {
                                         ANDROID_DLEXT_WRITE_RELRO |
                                         ANDROID_DLEXT_USE_RELRO |
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
-                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET,
+                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
+                                        ANDROID_DLEXT_FORCE_LOAD,
 };
 
 typedef struct {
