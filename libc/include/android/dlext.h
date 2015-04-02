@@ -59,8 +59,14 @@ enum {
   /* If opening a library using library_fd read it starting at library_fd_offset.
    * This flag is only valid when ANDROID_DLEXT_USE_LIBRARY_FD is set.
    */
-
   ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET    = 0x20,
+
+  /* When set, do not check if library has already been loaded by file stat(2)s.
+   *
+   * This flag allows to force load of the library in the case when for some
+   * reason the name of the elf-file has to remain constant.
+   */
+  ANDROID_DLEXT_FORCE_LOAD = 0x40,
 
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
@@ -68,7 +74,8 @@ enum {
                                         ANDROID_DLEXT_WRITE_RELRO |
                                         ANDROID_DLEXT_USE_RELRO |
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
-                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET,
+                                        ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
+                                        ANDROID_DLEXT_FORCE_LOAD,
 };
 
 typedef struct {
