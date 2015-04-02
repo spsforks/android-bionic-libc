@@ -1,0 +1,9 @@
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Verified+1: Dimitry Ivanov <dimitry@google.com>
+Code-Review+1: Andre Eisenbach <eisenbach@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Submitted-by: Dimitry Ivanov <dimitry@google.com>
+Submitted-at: Thu, 02 Apr 2015 21:55:01 +0000
+Reviewed-on: https://android-review.googlesource.com/145019
+Project: platform/bionic
+Branch: refs/heads/master
