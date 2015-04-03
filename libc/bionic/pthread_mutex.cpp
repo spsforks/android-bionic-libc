@@ -392,6 +392,38 @@ static inline __always_inline int __recursive_increment(pthread_mutex_internal_t
     return 0;
 }
 
+static inline __always_inline int __recursive_or_errorcheck_mutex_wait(
+                                                      pthread_mutex_internal_t* mutex,
+                                                      uint16_t shared,
+                                                      uint16_t old_state,
+                                                      const timespec* rel_timeout) {
+// __futex_wait always waits on a 32-bit value. But state is 16-bit. For a normal mutex, the owner_tid
+// field in mutex is not used. On 64-bit devices, the __pad field in mutex is not used.
+// But when a recursive or errorcheck mutex is used on 32-bit devices, we need to add the
+// owner_tid value in the value argument for __futex_wait, otherwise we may always get EAGAIN error.
+
+#if defined(__LP64__)
+  return __futex_wait_ex(&mutex->state, shared, old_state, rel_timeout);
+
+#else
+  // This implementation works only when the layout of pthread_mutex_internal_t matches below expectation.
+  static_assert(offsetof(pthread_mutex_internal_t, state) == 0, "");
+  static_assert(offsetof(pthread_mutex_internal_t, owner_tid) == 2, "");
+
+  union {
+    struct {
+      uint16_t state;
+      uint16_t owner_tid;
+    };
+    uint32_t value;
+  } wait_value;
+
+  wait_value.state = old_state;
+  wait_value.owner_tid = atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed);
+  return __futex_wait_ex(&mutex->state, shared, wait_value.value, rel_timeout);
+#endif
+}
+
 static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
                                            const timespec* abs_timeout_or_null, clockid_t clock) {
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
@@ -469,7 +501,7 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
                 return ETIMEDOUT;
             }
         }
-        if (__futex_wait_ex(&mutex->state, shared, old_state, rel_timeout) == -ETIMEDOUT) {
+        if (__recursive_or_errorcheck_mutex_wait(mutex, shared, old_state, rel_timeout) == -ETIMEDOUT) {
             return ETIMEDOUT;
         }
         old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
