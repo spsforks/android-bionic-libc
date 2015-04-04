@@ -560,6 +560,7 @@ libc_openbsd_src_files_32 += \
 # ========================================================
 libc_common_cflags := \
     -D_LIBC=1 \
+    -D_FORTIFY_SOURCE_STRICT_MEMCPY=1 \
     -Wall -Wextra -Wunused \
 
 ifneq ($(TARGET_USES_LOGD),false)
@@ -919,6 +920,7 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
     -fvisibility=hidden \
+    -U_FORTIFY_SOURCE_STRICT_MEMCPY \
     -include openbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)

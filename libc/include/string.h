@@ -132,7 +132,11 @@ extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, si
 
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
+#ifdef _FORTIFY_SOURCE_STRICT_MEMCPY
+    return __builtin___memcpy_chk(dest, src, copy_amount, __bos(dest));
+#else
     return __builtin___memcpy_chk(dest, src, copy_amount, __bos0(dest));
+#endif
 }
 
 __BIONIC_FORTIFY_INLINE
