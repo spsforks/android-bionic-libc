@@ -134,7 +134,6 @@ libc_bionic_ndk_src_files := \
     bionic/lfs64_support.cpp \
     bionic/__libc_current_sigrtmax.cpp \
     bionic/__libc_current_sigrtmin.cpp \
-    bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
     bionic/link.cpp \
@@ -632,10 +631,14 @@ endef
 # The stack protector code needs to be compiled
 # with -fno-stack-protector, since it modifies the
 # stack canary.
+#
+# The initialization code also needs to be excluded since it runs before
+# TLS and initial guard value are set up.
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
+LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp \
+    bionic/libc_init_common.cpp
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
