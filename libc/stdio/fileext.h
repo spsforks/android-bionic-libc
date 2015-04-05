@@ -61,11 +61,7 @@ do { \
 	_UB(fp)._base = NULL; \
 	_UB(fp)._size = 0; \
 	WCIO_INIT(fp); \
-	pthread_mutexattr_t attr; \
-	pthread_mutexattr_init(&attr); \
-	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE); \
-	pthread_mutex_init(&_FLOCK(fp), &attr); \
-	pthread_mutexattr_destroy(&attr); \
+	_FLOCK(fp).value = __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE; \
 	_EXT(fp)->_stdio_handles_locking = true; \
 } while (0)
 
