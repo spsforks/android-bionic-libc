@@ -134,6 +134,8 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
+  // lib_path is relative when $ANDROID_DATA is relative
+  const std::string lib_realpath = std::string(realpath(lib_path.c_str(), nullptr));
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -158,7 +160,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   extinfo.library_fd_offset = PAGE_SIZE;
   handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic", dlerror());
+  ASSERT_EQ("dlopen failed: \"" + lib_realpath + "\" has bad ELF magic", dlerror());
 
   close(extinfo.library_fd);
 }
