@@ -1,0 +1,4 @@
+TESTLIB_NONE {
+  global:
+    get_function_version;
+};
