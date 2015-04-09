@@ -194,4 +194,6 @@ typedef struct {
 
 #define NT_GNU_BUILD_ID 3
 
+#define VER_FLG_BASE 0x1
+
 #endif /* _ELF_H */
