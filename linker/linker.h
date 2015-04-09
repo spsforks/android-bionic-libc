@@ -40,6 +40,7 @@
 #include "linked_list.h"
 
 #include <string>
+#include <vector>
 
 #define DL_ERR(fmt, x...) \
     do { \
@@ -140,6 +141,24 @@ class SymbolName {
   uint32_t gnu_hash_;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(SymbolName);
+};
+
+struct version_info {
+  version_info() : target_index(0), target_si(nullptr) {}
+
+  ElfW(Versym) target_index;
+  soinfo* target_si;
+};
+
+// Class used construct version dependency graph.
+class VersionTracker {
+ public:
+  bool init(const soinfo* si_from);
+
+  const version_info* get_version_info(ElfW(Versym) source_symver) const;
+ private:
+  void add_version_info(size_t source_index, ElfW(Versym) target_index, soinfo* target_si);
+  std::vector<version_info> version_infos;
 };
 
 struct soinfo {
@@ -260,9 +279,11 @@ struct soinfo {
   void set_dt_flags_1(uint32_t dt_flags_1);
 
   soinfo_list_t& get_children();
+  const soinfo_list_t& get_children() const;
+
   soinfo_list_t& get_parents();
 
-  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name);
+  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name, ElfW(Versym) versym);
   ElfW(Sym)* find_symbol_by_address(const void* addr);
   ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
 
@@ -292,11 +313,16 @@ struct soinfo {
 
   const char* get_soname() const;
   const char* get_realpath() const;
+  const ElfW(Versym)* get_versym(size_t n) const;
+  ElfW(Addr) get_verneed_ptr() const;
+  size_t get_verneed_cnt() const;
+
+  ElfW(Versym) find_verdef_version_index(ElfW(Word) elf_hash, const char* ver_name) const;
 
  private:
-  ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
+  ElfW(Sym)* elf_lookup(SymbolName& symbol_name, ElfW(Versym) versym);
   ElfW(Sym)* elf_addr_lookup(const void* addr);
-  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
+  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name, ElfW(Versym) versym);
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
 
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
@@ -341,11 +367,20 @@ struct soinfo {
   const char* soname_;
   std::string realpath_;
 
+  const ElfW(Versym)* versym_;
+
+  ElfW(Addr) verdef_ptr_;
+  size_t verdef_cnt_;
+
+  ElfW(Addr) verneed_ptr_;
+  size_t verneed_cnt_;
+
   friend soinfo* get_libdl_info();
 };
 
-ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
-    const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group);
+ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, ElfW(Versym) version,
+                            soinfo** si_found_in, const soinfo::soinfo_list_t& global_group,
+                            const soinfo::soinfo_list_t& local_group);
 
 enum RelocationKind {
   kRelocAbsolute = 0,

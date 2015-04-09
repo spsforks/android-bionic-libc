@@ -50,6 +50,12 @@ template <typename ElfRelIteratorT>
 bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group,
                       const soinfo_list_t& local_group) {
+  VersionTracker version_tracker;
+
+  if (!version_tracker.init(this)) {
+    return false;
+  }
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
@@ -74,7 +80,26 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
+      const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
+      ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+
+      if (sym_ver == 0 || sym_ver == 1) { // there is no version info for this one
+        s = soinfo_do_lookup(this, sym_name, 0, &lsi, global_group, local_group);
+      } else {
+        // When versym is present we can safely(?) narrow the local_group down to
+        // soinfo for the file mentioned in corresponding ElfW(Verneed).
+        const version_info* vi = version_tracker.get_version_info(sym_ver);
+
+        if (vi == nullptr) {
+          DL_ERR("cannot find verneed for version index=%d referenced by symbol \"%s\" at \"%s\"",
+              sym_ver, sym_name, get_soname());
+          return false;
+        }
+
+        s = soinfo_do_lookup(this, sym_name, vi->target_index,
+                &lsi, global_group, soinfo_list_t::make_list(vi->target_si));
+      }
+
       if (s == nullptr) {
         // mips does not support relocation with weak-undefined symbols
         DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, get_soname());
@@ -147,7 +172,7 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group,
     // This is an undefined reference... try to locate it.
     const char* sym_name = get_string(sym->st_name);
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
+    ElfW(Sym)* s = soinfo_do_lookup(this, sym_name, 0, &lsi, global_group, local_group);
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab_[g];
