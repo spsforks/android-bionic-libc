@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -379,8 +379,78 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return rv;
 }
 
-ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name) {
-  return is_gnu_hash() ? gnu_lookup(symbol_name) : elf_lookup(symbol_name);
+const ElfW(Versym)* soinfo::get_versym(size_t n) const {
+  if (has_min_version(2) && versym_ != nullptr) {
+    return versym_ + n;
+  }
+
+  return nullptr;
+}
+
+ElfW(Addr) soinfo::get_verneed_ptr() const {
+  if (has_min_version(2)) {
+    return verneed_ptr_;
+  }
+
+  return 0;
+}
+
+size_t soinfo::get_verneed_cnt() const {
+  if (has_min_version(2)) {
+    return verneed_cnt_;
+  }
+
+  return 0;
+}
+
+ElfW(Versym) soinfo::find_verdef_version_index(const version_info* vi) const {
+  if (vi == nullptr) {
+    return 0;
+  }
+
+  if (!has_min_version(2) || verdef_ptr_ == 0) {
+    return 1;
+  }
+
+  size_t offset = 0;
+
+  for (size_t i = 0; i<verdef_cnt_; ++i) {
+    const ElfW(Verdef)* verdef = reinterpret_cast<ElfW(Verdef)*>(verdef_ptr_ + offset);
+    size_t verdaux_offset = offset + verdef->vd_aux;
+    offset += verdef->vd_next;
+
+
+    if (verdef->vd_version != 1) {
+      DL_WARN("unsupported verdef[%d] vd_version: %d (expected 1)", i, verdef->vd_version);
+      return 1;
+    }
+
+    if ((verdef->vd_flags & VER_FLG_BASE) != 0) {
+      // "this is the version of the file itself.  It must not be used for
+      //  matching a symbol. It can be used to match references."
+      //
+      // http://www.akkadia.org/drepper/symbol-versioning
+      continue;
+    }
+
+    if (verdef->vd_hash != vi->elf_hash || verdef->vd_cnt == 0) {
+      continue;
+    }
+
+    const ElfW(Verdaux)* verdaux = reinterpret_cast<ElfW(Verdaux)*>(verdef_ptr_ + verdaux_offset);
+
+    if (strcmp(vi->name, get_string(verdaux->vda_name)) == 0) {
+      return verdef->vd_ndx;
+    }
+  }
+
+  return 1;
+}
+
+ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name, const version_info* vi) const {
+  uint32_t n = is_gnu_hash() ? gnu_lookup(symbol_name, vi) : elf_lookup(symbol_name, vi);
+
+  return n == 0 ? nullptr : symtab_ + n;
 }
 
 static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
@@ -395,7 +465,7 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
   return false;
 }
 
-ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
+uint32_t soinfo::gnu_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.gnu_hash();
   uint32_t h2 = hash >> gnu_shift2_;
 
@@ -411,7 +481,7 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_soname(), reinterpret_cast<void*>(base));
 
-    return nullptr;
+    return 0;
   }
 
   // bloom test says "probably yes"...
@@ -421,43 +491,67 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_soname(), reinterpret_cast<void*>(base));
 
-    return nullptr;
+    return 0;
   }
+
+  // lookup symver for the version definition in this library
+  // note the difference between "version is not requested" (vi == nullptr)
+  // and "version not found". In the first case symver is 0 which implies
+  // that the default version can be accepted; the second case results in
+  // symver = 1 and implies that we should ignore versioned symbols for this
+  // library and consider only *global* ones.
+  ElfW(Versym) symver = find_verdef_version_index(vi);
 
   do {
     ElfW(Sym)* s = symtab_ + n;
+    const ElfW(Versym)* s_ver = get_versym(n);
+    // skip hidden versions when symver == 0
+    if (s_ver != nullptr && symver == 0 && (*s_ver & 0x8000) != 0) {
+        continue;
+    }
     if (((gnu_chain_[n] ^ hash) >> 1) == 0 &&
+        (symver == 0 || s_ver == nullptr || symver == (*s_ver & 0x7FFF)) &&
         strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
         is_symbol_global_and_defined(this, s)) {
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
           symbol_name.get_name(), get_soname(), reinterpret_cast<void*>(s->st_value),
           static_cast<size_t>(s->st_size));
-      return s;
+      return n;
     }
   } while ((gnu_chain_[n++] & 1) == 0);
 
   TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
              symbol_name.get_name(), get_soname(), reinterpret_cast<void*>(base));
 
-  return nullptr;
+  return 0;
 }
 
-ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
+uint32_t soinfo::elf_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.elf_hash();
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
              symbol_name.get_name(), get_soname(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
+  ElfW(Versym) symver = find_verdef_version_index(vi);
+
   for (uint32_t n = bucket_[hash % nbucket_]; n != 0; n = chain_[n]) {
     ElfW(Sym)* s = symtab_ + n;
-    if (strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
+    const ElfW(Versym)* s_ver = get_versym(n);
+
+    // skip hidden versions when symver == 0
+    if (s_ver != nullptr && symver == 0 && (*s_ver & 0x8000) != 0) {
+        continue;
+    }
+
+    if ((symver == 0 || s_ver == nullptr || symver == (*s_ver & 0x7FFF)) &&
+        strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
         is_symbol_global_and_defined(this, s)) {
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
                  symbol_name.get_name(), get_soname(),
                  reinterpret_cast<void*>(s->st_value),
                  static_cast<size_t>(s->st_size));
-      return s;
+      return n;
     }
   }
 
@@ -465,7 +559,7 @@ ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name) {
              symbol_name.get_name(), get_soname(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  return nullptr;
+  return 0;
 }
 
 soinfo::soinfo(const char* realpath, const struct stat* file_stat,
@@ -523,8 +617,9 @@ uint32_t SymbolName::gnu_hash() {
   return gnu_hash_;
 }
 
-ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
-    const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group) {
+ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
+                            soinfo** si_found_in, const soinfo::soinfo_list_t& global_group,
+                            const soinfo::soinfo_list_t& local_group) {
   SymbolName symbol_name(name);
   ElfW(Sym)* s = nullptr;
 
@@ -541,7 +636,7 @@ ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found
    */
   if (si_from->has_DT_SYMBOLIC) {
     DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->get_soname(), name);
-    s = si_from->find_symbol_by_name(symbol_name);
+    s = si_from->find_symbol_by_name(symbol_name, vi);
     if (s != nullptr) {
       *si_found_in = si_from;
     }
@@ -552,7 +647,7 @@ ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found
     global_group.visit([&](soinfo* global_si) {
       DEBUG("%s: looking up %s in %s (from global group)",
           si_from->get_soname(), name, global_si->get_soname());
-      s = global_si->find_symbol_by_name(symbol_name);
+      s = global_si->find_symbol_by_name(symbol_name, vi);
       if (s != nullptr) {
         *si_found_in = global_si;
         return false;
@@ -572,7 +667,7 @@ ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found
 
       DEBUG("%s: looking up %s in %s (from local group)",
           si_from->get_soname(), name, local_si->get_soname());
-      s = local_si->find_symbol_by_name(symbol_name);
+      s = local_si->find_symbol_by_name(symbol_name, vi);
       if (s != nullptr) {
         *si_found_in = local_si;
         return false;
@@ -741,7 +836,7 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
 
 
   walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
-    result = current_soinfo->find_symbol_by_name(symbol_name);
+    result = current_soinfo->find_symbol_by_name(symbol_name, nullptr);
     if (result != nullptr) {
       *found = current_soinfo;
       return false;
@@ -777,7 +872,7 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller,
       continue;
     }
 
-    s = si->find_symbol_by_name(symbol_name);
+    s = si->find_symbol_by_name(symbol_name, nullptr);
     if (s != nullptr) {
       *found = si;
       break;
@@ -800,7 +895,7 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller,
         break;
       }
 
-      s = si->find_symbol_by_name(symbol_name);
+      s = si->find_symbol_by_name(symbol_name, nullptr);
       if (s != nullptr) {
         *found = si;
         break;
@@ -1444,6 +1539,77 @@ static ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   return ifunc_addr;
 }
 
+const version_info* VersionTracker::get_version_info(ElfW(Versym) source_symver) const {
+  if (source_symver < 2 ||
+      source_symver >= version_infos.size() ||
+      version_infos[source_symver].name == nullptr) {
+    return nullptr;
+  }
+
+  return &version_infos[source_symver];
+}
+
+void VersionTracker::add_version_info(size_t source_index,
+                                      ElfW(Word) elf_hash,
+                                      const char* ver_name,
+                                      soinfo* target_si) {
+  if (source_index >= version_infos.size()) {
+    version_infos.resize(source_index+1);
+  }
+
+  version_infos[source_index].elf_hash = elf_hash;
+  version_infos[source_index].name = ver_name;
+  version_infos[source_index].target_si = target_si;
+}
+
+bool VersionTracker::init(const soinfo* si_from) {
+  if (!si_from->has_min_version(2)) {
+    return true;
+  }
+
+  uintptr_t verneed_ptr = si_from->get_verneed_ptr();
+
+  if (verneed_ptr == 0) {
+    return true;
+  }
+
+  size_t verneed_cnt = si_from->get_verneed_cnt();
+
+  for (size_t i = 0, offset = 0; i<verneed_cnt; ++i) {
+    const ElfW(Verneed)* verneed = reinterpret_cast<ElfW(Verneed)*>(verneed_ptr + offset);
+    size_t vernaux_offset = offset + verneed->vn_aux;
+    offset += verneed->vn_next;
+
+    if (verneed->vn_version != 1) {
+      DL_ERR("unsupported verneed[%d] vn_version: %d (expected 1)", i, verneed->vn_version);
+    }
+    const char* target_soname = si_from->get_string(verneed->vn_file);
+    // find it in dependencies
+    soinfo* target_si = si_from->get_children().find_if([&](const soinfo* si) {
+      return strcmp(si->get_soname(), target_soname) == 0;
+    });
+
+    if (target_si == nullptr) {
+      DL_ERR("cannot find \"%s\" from verneed[%d] in DT_NEEDED list for \"%s\"",
+          target_soname, i, si_from->get_soname());
+      return false;
+    }
+
+    for (size_t j = 0; j<verneed->vn_cnt; ++j) {
+      const ElfW(Vernaux)* vernaux = reinterpret_cast<ElfW(Vernaux)*>(verneed_ptr + vernaux_offset);
+      vernaux_offset += vernaux->vna_next;
+
+      const ElfW(Word) elf_hash = vernaux->vna_hash;
+      const char* ver_name = si_from->get_string(vernaux->vna_name);
+      ElfW(Half) source_index = vernaux->vna_other;
+
+      add_version_info(source_index, elf_hash, ver_name, target_si);
+    }
+  }
+
+  return true;
+}
+
 #if !defined(__mips__)
 #if defined(USE_RELA)
 static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
@@ -1462,6 +1628,12 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
 template<typename ElfRelIteratorT>
 bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group,
                       const soinfo_list_t& local_group) {
+  VersionTracker version_tracker;
+
+  if (!version_tracker.init(this)) {
+    return false;
+  }
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -1486,7 +1658,22 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
+      const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
+      ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+
+      if (sym_ver == 0 || sym_ver == 1) { // there is no version info for this one
+        s = soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group);
+      } else {
+        const version_info* vi = version_tracker.get_version_info(sym_ver);
+
+        if (vi == nullptr) {
+          DL_ERR("cannot find verneed for version index=%d referenced by symbol \"%s\" at \"%s\"",
+              sym_ver, sym_name, get_soname());
+          return false;
+        }
+
+        s = soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group);
+      }
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab_[sym];
@@ -1977,6 +2164,14 @@ soinfo::soinfo_list_t& soinfo::get_children() {
   return g_empty_list;
 }
 
+const soinfo::soinfo_list_t& soinfo::get_children() const {
+  if (has_min_version(0)) {
+    return children_;
+  }
+
+  return g_empty_list;
+}
+
 soinfo::soinfo_list_t& soinfo::get_parents() {
   if (has_min_version(0)) {
     return parents_;
@@ -2452,12 +2647,23 @@ bool soinfo::prelink_image() {
       case DT_BIND_NOW:
         break;
 
-      // Ignore: bionic does not support symbol versioning...
       case DT_VERSYM:
+        versym_ = reinterpret_cast<ElfW(Versym)*>(load_bias + d->d_un.d_ptr);
+        break;
+
       case DT_VERDEF:
+        verdef_ptr_ = load_bias + d->d_un.d_ptr;
+        break;
       case DT_VERDEFNUM:
+        verdef_cnt_ = d->d_un.d_val;
+        break;
+
       case DT_VERNEED:
+        verneed_ptr_ = load_bias + d->d_un.d_ptr;
+        break;
+
       case DT_VERNEEDNUM:
+        verneed_cnt_ = d->d_un.d_val;
         break;
 
       default:
