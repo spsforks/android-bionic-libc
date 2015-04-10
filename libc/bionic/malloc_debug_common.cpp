@@ -39,11 +39,16 @@
 
 #include "malloc_debug_common.h"
 
+#include <errno.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
+#include "private/ThreadLocalBuffer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
 #if defined(USE_JEMALLOC)
@@ -240,14 +245,210 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
   Malloc(free)(info);
 }
 
+class Event {
+public:
+  Event(void* pointer) : pointer_(pointer), tid_(gettid()), next_(nullptr) {}
+  virtual ~Event() {}
+
+  virtual void WriteData(int fd) = 0;
+
+  pid_t tid() { return tid_; }
+
+  Event* next() { return next_; }
+  void set_next(Event* next) { next_ = next; }
+
+protected:
+  void* pointer() { return pointer_; }
+
+private:
+  void* pointer_;
+  pid_t tid_;
+
+  Event* next_;
+};
+
+class EventFree : public Event {
+public:
+  EventFree(void* pointer) : Event(pointer) {}
+  virtual ~EventFree() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: free %p\n", tid(), pointer());
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+};
+
+class EventMalloc : public Event {
+public:
+  EventMalloc(void* pointer, size_t bytes) : Event(pointer), bytes_(bytes) {}
+  virtual ~EventMalloc() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: malloc %p %zu\n", tid(), pointer(), bytes_);
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+
+  size_t bytes() { return bytes_; }
+
+private:
+  size_t bytes_;
+};
+
+class EventPvalloc : public EventMalloc {
+public:
+  EventPvalloc(void* pointer, size_t bytes) : EventMalloc(pointer, bytes) {}
+  virtual ~EventPvalloc() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: pvalloc %p %zu\n", tid(), pointer(), bytes());
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+};
+
+class EventValloc : public EventMalloc {
+public:
+  EventValloc(void* pointer, size_t bytes) : EventMalloc(pointer, bytes) {}
+  virtual ~EventValloc() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: valloc %p %zu\n", tid(), pointer(), bytes());
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+};
+
+class EventRealloc : public EventMalloc {
+public:
+  EventRealloc(void* pointer, size_t bytes, void* old_pointer) : EventMalloc(pointer, bytes), old_pointer_(old_pointer) {}
+  virtual ~EventRealloc() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: realloc %p %p %zu\n", tid(), pointer(), old_pointer_, bytes());
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+
+private:
+  void* old_pointer_;
+};
+
+class EventCalloc : public Event {
+public:
+  EventCalloc(void* pointer, size_t n_elements, size_t elem_size) : Event(pointer), n_elements_(n_elements), elem_size_(elem_size) {}
+  virtual ~EventCalloc() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: calloc %p %zu %zu\n", tid(), pointer(), n_elements_, elem_size_);
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+
+private:
+  size_t n_elements_;
+  size_t elem_size_;
+};
+
+class EventMemalign : public EventMalloc {
+public:
+  EventMemalign(void* pointer, size_t bytes, size_t align) : EventMalloc(pointer, bytes), align_(align) {}
+  virtual ~EventMemalign() {}
+
+  virtual void WriteData(int fd) {
+    char buf[1024];
+    int num = snprintf(buf, sizeof(buf), "%d: memalign %p %zu %zu\n", tid(), pointer(), align_, bytes());
+    TEMP_FAILURE_RETRY(write(fd, buf, num));
+  }
+
+private:
+  size_t align_;
+};
+
+static Event* g_events = nullptr;
+static Event* g_last_event = nullptr;
+static pthread_mutex_t g_event_lock = PTHREAD_MUTEX_INITIALIZER;
+
+void add_event(Event* event) {
+  pthread_mutex_lock(&g_event_lock);
+  if (g_events == nullptr) {
+    g_events = event;
+  } else {
+    g_last_event->set_next(event);
+  }
+  g_last_event = event;
+  pthread_mutex_unlock(&g_event_lock);
+}
+
+void dump_events(int fd) {
+  pthread_mutex_lock(&g_event_lock);
+  Event* event = g_events;
+  while (event) {
+    event->WriteData(fd);
+    event = event->next();
+  }
+  pthread_mutex_unlock(&g_event_lock);
+}
+
+void dump_signal(int) {
+  char buf[1024];
+  snprintf(buf, sizeof(buf), "/data/local/tmp/dump_%d.txt", getpid());
+  int fd = open(buf, O_CREAT | O_TRUNC | O_RDWR, 0644);
+  if (fd == -1) {
+    return;
+  }
+  dump_events(fd);
+  close(fd);
+}
+
+static volatile bool g_log_events = true;
+
+class LocalBuffer {
+public:
+  LocalBuffer() {
+    pthread_key_create(&key_, __libc_malloc_dispatch->free);
+  }
+
+  bool* get() {
+    bool* result = reinterpret_cast<bool*>(pthread_getspecific(key_));
+    if (result == nullptr) {
+      result = reinterpret_cast<bool*>(__libc_malloc_dispatch->calloc(1, sizeof(bool)));
+      pthread_setspecific(key_, result);
+    }
+    return result;
+  }
+private:
+  pthread_key_t key_;
+};
+
+static LocalBuffer g_allocating;
+
 // =============================================================================
 // Allocation functions
 // =============================================================================
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
-  return __libc_malloc_dispatch->calloc(n_elements, elem_size);
+  void* value = __libc_malloc_dispatch->calloc(n_elements, elem_size);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventCalloc(value, n_elements, elem_size));
+    *allocating = false;
+  }
+}
+  return value;
 }
 
 extern "C" void free(void* mem) {
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventFree(mem));
+    *allocating = false;
+  }
+}
   __libc_malloc_dispatch->free(mem);
 }
 
@@ -256,7 +457,16 @@ extern "C" struct mallinfo mallinfo() {
 }
 
 extern "C" void* malloc(size_t bytes) {
-  return __libc_malloc_dispatch->malloc(bytes);
+  void* value = __libc_malloc_dispatch->malloc(bytes);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventMalloc(value, bytes));
+    *allocating = false;
+  }
+}
+  return value;
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
@@ -264,26 +474,71 @@ extern "C" size_t malloc_usable_size(const void* mem) {
 }
 
 extern "C" void* memalign(size_t alignment, size_t bytes) {
-  return __libc_malloc_dispatch->memalign(alignment, bytes);
+  void* value = __libc_malloc_dispatch->memalign(alignment, bytes);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventMemalign(value, bytes, alignment));
+    *allocating = false;
+  }
+}
+  return value;
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
-  return __libc_malloc_dispatch->posix_memalign(memptr, alignment, size);
+  int value = __libc_malloc_dispatch->posix_memalign(memptr, alignment, size);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventMemalign(*memptr, size, alignment));
+    *allocating = false;
+  }
+}
+  return value;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
-  return __libc_malloc_dispatch->pvalloc(bytes);
+  void* value = __libc_malloc_dispatch->pvalloc(bytes);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventPvalloc(value, bytes));
+    *allocating = false;
+  }
+}
+  return value;
 }
 #endif
 
 extern "C" void* realloc(void* oldMem, size_t bytes) {
-  return __libc_malloc_dispatch->realloc(oldMem, bytes);
+  void* value = __libc_malloc_dispatch->realloc(oldMem, bytes);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventRealloc(value, bytes, oldMem));
+    *allocating = false;
+  }
+}
+  return value;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* valloc(size_t bytes) {
-  return __libc_malloc_dispatch->valloc(bytes);
+  void* value = __libc_malloc_dispatch->valloc(bytes);
+if (g_log_events) {
+  bool* allocating = g_allocating.get();
+  if (!*allocating) {
+    *allocating = true;
+    add_event(new EventPvalloc(value, bytes));
+    *allocating = false;
+  }
+}
+  return value;
 }
 #endif
 
@@ -354,6 +609,8 @@ static void malloc_init_impl() {
   if (g_malloc_debug_level == 0 && __system_property_get("libc.debug.malloc", env)) {
     g_malloc_debug_level = atoi(env);
   }
+
+  signal(SIGRTMIN + 5, dump_signal);
 
   // Debug level 0 means that we should use default allocation routines.
   if (g_malloc_debug_level == 0) {
