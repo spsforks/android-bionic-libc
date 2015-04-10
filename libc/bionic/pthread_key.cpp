@@ -61,12 +61,17 @@ static inline bool KeyInValidRange(pthread_key_t key) {
   return key >= 0 && key < BIONIC_PTHREAD_KEY_COUNT;
 }
 
+class Event;
+extern Event* free_last_event(void*);
+extern void add_event(Event*);
+
 // Called from pthread_exit() to remove all pthread keys. This must call the destructor of
 // all keys that have a non-NULL data value and a non-NULL destructor.
 __LIBC_HIDDEN__ void pthread_key_clean_all() {
   // Because destructors can do funky things like deleting/creating other keys,
   // we need to implement this in a loop.
   pthread_key_data_t* key_data = __get_thread()->key_data;
+  Event* event = nullptr;
   for (size_t rounds = PTHREAD_DESTRUCTOR_ITERATIONS; rounds > 0; --rounds) {
     size_t called_destructor_count = 0;
     for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
@@ -96,13 +101,20 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
         void* data = key_data[i].data;
         key_data[i].data = NULL;
 
-        (*key_destructor)(data);
+        if (reinterpret_cast<uintptr_t>(key_destructor) == 0x12345678) {
+          event = free_last_event(data);
+        } else {
+          (*key_destructor)(data);
+        }
         ++called_destructor_count;
       }
     }
 
     // If we didn't call any destructors, there is no need to check the pthread keys again.
     if (called_destructor_count == 0) {
+      if (event != nullptr) {
+        add_event(event);
+      }
       break;
     }
   }
