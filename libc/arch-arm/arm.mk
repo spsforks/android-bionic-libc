@@ -51,10 +51,21 @@ libc_arch_dynamic_src_files_arm := arch-arm/bionic/exidx_dynamic.c
 ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
   $(warning TARGET_$(my_2nd_arch_prefix)ARCH is arm, but TARGET_$(my_2nd_arch_prefix)CPU_VARIANT is not defined)
 endif
+
 cpu_variant_mk := $(LOCAL_PATH)/arch-arm/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT).mk
+
 ifeq ($(wildcard $(cpu_variant_mk)),)
-$(error "TARGET_$(my_2nd_arch_prefix)CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a7, cortex-a8, cortex-a9, cortex-a15, krait, denver. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+  # We default to cortex-a15.
+  cpu_variant_mk := $(LOCAL_PATH)/arch-arm/cortex-a15/cortex-a15.mk
+  $(info "Using cortex-a15 optimisations for $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)")
 endif
+
+ifeq ($(strip $(TARGET_ARCH)),arm64)
+  ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),generic)
+    cpu_variant_mk := $(LOCAL_PATH)/arch-arm/cortex-a15/cortex-a15.mk
+  endif
+endif
+
 include $(cpu_variant_mk)
 libc_common_additional_dependencies += $(cpu_variant_mk)
 

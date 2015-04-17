@@ -52,14 +52,13 @@ libc_crt_target_crtbegin_file_arm64 := \
 libc_crt_target_crtbegin_so_file_arm64 := \
     $(LOCAL_PATH)/arch-common/bionic/crtbegin_so.c
 
-## CPU variant specific source files
-ifeq ($(strip $(TARGET_CPU_VARIANT)),)
-  $(warning TARGET_ARCH is arm64, but TARGET_CPU_VARIANT is not defined)
-endif
 cpu_variant_mk := $(LOCAL_PATH)/arch-arm64/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
+
 ifeq ($(wildcard $(cpu_variant_mk)),)
-$(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are generic, denver64. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+  cpu_variant_mk := $(LOCAL_PATH)/arch-arm64/generic/generic.mk
+  $(info "Using generic optimisations for $(TARGET_CPU_VARIANT)")
 endif
+
 include $(cpu_variant_mk)
 libc_common_additional_dependencies += $(cpu_variant_mk)
 
