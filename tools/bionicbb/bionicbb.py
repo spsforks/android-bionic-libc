@@ -16,11 +16,14 @@
 #
 import json
 import logging
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request
 import requests
 
 import gerrit
+import tasks
 
-from flask import Flask, request
 app = Flask(__name__)
 
 
@@ -115,4 +118,8 @@ def drop_rejection():
 
 
 if __name__ == "__main__":
+    scheduler = BackgroundScheduler()
+    scheduler.start()
+    scheduler.add_interval_job(tasks.get_and_process_jobs, minutes=5)
+
     app.run(host='0.0.0.0', debug=True)
