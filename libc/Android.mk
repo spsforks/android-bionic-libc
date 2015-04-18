@@ -76,6 +76,7 @@ libc_common_src_files += \
     bionic/__read_chk.cpp \
     bionic/__readlink_chk.cpp \
     bionic/__readlinkat_chk.cpp \
+    bionic/__realpath_chk_fail.cpp \
     bionic/__recvfrom_chk.cpp \
     bionic/__stpcpy_chk.cpp \
     bionic/__stpncpy_chk.cpp \
