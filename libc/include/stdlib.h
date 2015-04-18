@@ -176,6 +176,36 @@ extern size_t __ctype_get_mb_cur_max(void);
 #include <android/legacy_stdlib_inlines.h>
 #endif
 
+extern __noreturn void __realpath_chk_fail(void);
+__errordecl(__realpath_size_error, "realpath output parameter must be NULL or a >= PATH_MAX bytes buffer");
+extern char* __realpath_real(const char*, char*) __RENAME(realpath);
+
+#if defined(__BIONIC_FORTIFY)
+
+__BIONIC_FORTIFY_INLINE
+char* realpath(const char* path, char* resolved) {
+    size_t bos = __bos(resolved);
+
+#if defined(__clang__)
+    /* Clang gives 0 as the object size for NULL: https://llvm.org/bugs/show_bug.cgi?id=23277 */
+    if (bos == 0) {
+        return __realpath_real(path, resolved);
+    }
+#endif
+
+    /* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
+    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE && bos < 4096) {
+#if !defined(__clang__)
+        __realpath_size_error();
+#endif
+        __realpath_chk_fail();
+    }
+
+    return __realpath_real(path, resolved);
+}
+
+#endif /* defined(__BIONIC_FORTIFY) */
+
 __END_DECLS
 
 #endif /* _STDLIB_H */
