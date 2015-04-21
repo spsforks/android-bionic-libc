@@ -360,7 +360,7 @@ static void parse_LD_PRELOAD(const char* path) {
 
 static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
-  snprintf(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
+  __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
     PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
