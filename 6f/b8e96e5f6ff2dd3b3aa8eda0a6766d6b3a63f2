@@ -1,0 +1,9 @@
+Code-Review+1: Chih-hung Hsieh <chh@google.com>
+Verified+1: Chih-hung Hsieh <chh@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Chih-hung Hsieh <chh@google.com>
+Submitted-at: Tue, 21 Apr 2015 23:44:58 +0000
+Reviewed-on: https://android-review.googlesource.com/142261
+Project: platform/bionic
+Branch: refs/heads/master
