@@ -41,11 +41,6 @@ template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
     const soinfo_list_t& global_group,
     const soinfo_list_t& local_group);
 
-template bool soinfo::relocate<packed_reloc_iterator<leb128_decoder>>(
-    packed_reloc_iterator<leb128_decoder>&& rel_iterator,
-    const soinfo_list_t& global_group,
-    const soinfo_list_t& local_group);
-
 template <typename ElfRelIteratorT>
 bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group,

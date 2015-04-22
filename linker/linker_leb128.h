@@ -22,34 +22,6 @@
 // Helper classes for decoding LEB128, used in packed relocation data.
 // http://en.wikipedia.org/wiki/LEB128
 
-class leb128_decoder {
- public:
-  leb128_decoder(const uint8_t* buffer, size_t count)
-      : current_(buffer), end_(buffer + count) { }
-
-  size_t pop_front() {
-    size_t value = 0;
-
-    size_t shift = 0;
-    uint8_t byte;
-
-    do {
-      if (current_ >= end_) {
-        __libc_fatal("leb128_decoder ran out of bounds");
-      }
-      byte = *current_++;
-      value |= static_cast<size_t>(byte & 127) << shift;
-      shift += 7;
-    } while (byte & 128);
-
-    return value;
-  }
-
- private:
-  const uint8_t* current_;
-  const uint8_t* const end_;
-};
-
 class sleb128_decoder {
  public:
   sleb128_decoder(const uint8_t* buffer, size_t count)
