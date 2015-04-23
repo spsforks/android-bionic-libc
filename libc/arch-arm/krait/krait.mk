@@ -17,3 +17,6 @@ libc_bionic_src_files_arm += \
 
 libc_bionic_src_files_arm += \
     arch-arm/denver/bionic/memmove.S \
+
+libc_openbsd_src_files_arm += \
+    upstream-openbsd/lib/libc/string/memchr.c \
