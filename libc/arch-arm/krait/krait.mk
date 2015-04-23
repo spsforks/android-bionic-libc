@@ -14,6 +14,7 @@ libc_bionic_src_files_arm += \
 
 libc_bionic_src_files_arm += \
     arch-arm/generic/bionic/memcmp.S \
+    arch-arm/bionic/memchr.v7a.S \
 
 libc_bionic_src_files_arm += \
     arch-arm/denver/bionic/memmove.S \
