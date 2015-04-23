@@ -44,7 +44,10 @@ public:
 
     void reset(int new_fd = -1) {
       if (fd != -1) {
-          TEMP_FAILURE_RETRY(close(fd));
+          // Even if close(2) fails with EINTR, the fd will have been closed.
+          // Using TEMP_FAILURE_RETRY will either lead to EBADF or closing someone else's fd.
+          // http://lkml.indiana.edu/hypermail/linux/kernel/0509.1/0877.html
+          (void)close(fd);
       }
       fd = new_fd;
     }
