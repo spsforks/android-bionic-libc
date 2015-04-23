@@ -47,7 +47,6 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
-#include "private/ScopedFd.h"
 #include "private/ScopeGuard.h"
 #include "private/UniquePtr.h"
 
@@ -1214,9 +1213,9 @@ static soinfo* load_library(LoadTaskList& load_tasks,
                             const char* name, int rtld_flags,
                             const android_dlextinfo* extinfo) {
   int fd = -1;
-  off64_t file_offset = 0;
-  ScopedFd file_guard(-1);
+  auto file_guard = make_scope_guard([&]() { if (fd != -1) close(fd); });
 
+  off64_t file_offset = 0;
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
     fd = extinfo->library_fd;
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
@@ -1229,8 +1228,6 @@ static soinfo* load_library(LoadTaskList& load_tasks,
       DL_ERR("library \"%s\" not found", name);
       return nullptr;
     }
-
-    file_guard.reset(fd);
   }
 
   if ((file_offset % PAGE_SIZE) != 0) {
