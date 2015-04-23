@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(close)
+ENTRY(__close)
     .set noreorder
     .cpload t9
     li v0, __NR_close
@@ -16,4 +16,4 @@ ENTRY(close)
     j t9
     nop
     .set reorder
-END(close)
+END(__close)
