@@ -98,6 +98,12 @@ int __system_property_set_filename(const char *filename);
 */
 int __system_property_area_init();
 
+/* Read the global serial number of the system properties
+**
+** Returns the serial number on success, -1 on error.
+*/
+unsigned int __system_property_area_serial();
+
 /* Add a new system property.  Can only be done by a single
 ** process that has write access to the property area, and
 ** that process must handle sequencing to ensure the property
