@@ -107,8 +107,6 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/s_exp2.c \
     upstream-freebsd/lib/msun/src/s_exp2f.c \
     upstream-freebsd/lib/msun/src/s_expm1f.c \
-    upstream-freebsd/lib/msun/src/s_fabs.c \
-    upstream-freebsd/lib/msun/src/s_fabsf.c \
     upstream-freebsd/lib/msun/src/s_fdim.c \
     upstream-freebsd/lib/msun/src/s_finite.c \
     upstream-freebsd/lib/msun/src/s_finitef.c \
@@ -234,6 +232,8 @@ LOCAL_SRC_FILES += \
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_arm += \
     arm/fenv.c \
+    arm/fabs.S \
+    arm/fabsf.S \
     upstream-freebsd/lib/msun/src/e_acos.c \
     upstream-freebsd/lib/msun/src/e_asin.c \
     upstream-freebsd/lib/msun/src/e_atan2.c \
@@ -293,6 +293,7 @@ endif
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_arm64 += \
     arm64/ceil.S \
+    arm64/fabs.S \
     arm64/fenv.c \
     arm64/fma.S \
     arm64/floor.S \
@@ -341,6 +342,8 @@ libm_mips_arch_files := \
     upstream-freebsd/lib/msun/src/s_ceil.c \
     upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_cos.c \
+    upstream-freebsd/lib/msun/src/s_fabs.c \
+    upstream-freebsd/lib/msun/src/s_fabsf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_floor.c \
@@ -367,6 +370,8 @@ LOCAL_SRC_FILES_mips64 += $(libm_mips_arch_files)
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_x86 += \
     i387/fenv.c \
+    upstream-freebsd/lib/msun/src/s_fabs.c \
+    upstream-freebsd/lib/msun/src/s_fabsf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
@@ -424,6 +429,8 @@ endif
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_x86_64 += \
     amd64/fenv.c \
+    upstream-freebsd/lib/msun/src/s_fabs.c \
+    upstream-freebsd/lib/msun/src/s_fabsf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
