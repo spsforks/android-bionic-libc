@@ -63,7 +63,6 @@
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
- * Do NOT use malloc() and friends or pthread_*() code here.
  * Don't use printf() either; it's caused mysterious memory
  * corruption in the past.
  * The linker runs before we bring up libc and it's easiest
