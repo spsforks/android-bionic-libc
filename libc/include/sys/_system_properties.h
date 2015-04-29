@@ -110,7 +110,11 @@ int __system_property_area_init();
 ** Called at the beginning of a cache cycle to signal _any_ possible
 ** changes have occurred since last. If there is, check each individual
 ** __system_property_serial to confirm dirty, or __system_property_find
-** to check if the property now exists.
+** to check if the property now exists. If a call to __system_property_add
+** or __system_property_update has completed between two calls to
+** __system_property_area_serial then the second call will return a larger
+** value than the first call. A change may be discovered in a following
+** cache cycle.
 **
 ** Returns the serial number on success, -1 on error.
 */
