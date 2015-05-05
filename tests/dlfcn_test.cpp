@@ -981,3 +981,69 @@ extern "C" int version_zero_function() {
 extern "C" int version_zero_function2() {
   return 0;
 }
+
+static int g_atfork_prepare_calls = 0;
+static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 1; }
+static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 2; }
+static void AtForkPrepare3() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 3; }
+static void AtForkPrepare4() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 4; }
+
+static int g_atfork_parent_calls = 0;
+static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 1; }
+static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 2; }
+static void AtForkParent3() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 3; }
+static void AtForkParent4() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 4; }
+
+static int g_atfork_child_calls = 0;
+static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 1; }
+static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 2; }
+static void AtForkChild3() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 3; }
+static void AtForkChild4() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 4; }
+
+TEST(pthread, pthread_atfork_with_dlclose) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+
+  void* handle = dlopen("libtest_pthread_atfork.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)(void (*)(void), void (*)(void), void (*)(void));
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "proxy_pthread_atfork"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  // the library registers 2 additional atfork handlers in a constructor
+  ASSERT_EQ(0, fn(AtForkPrepare2, AtForkParent2, AtForkChild2));
+  ASSERT_EQ(0, fn(AtForkPrepare3, AtForkParent3, AtForkChild3));
+
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare4, AtForkParent4, AtForkChild4));
+
+  int pid = fork();
+
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    ASSERT_EQ(1234, g_atfork_child_calls);
+    _exit(0);
+  }
+
+  ASSERT_EQ(1234, g_atfork_parent_calls);
+  ASSERT_EQ(4321, g_atfork_prepare_calls);
+
+  EXPECT_EQ(0, dlclose(handle));
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+
+  pid = fork();
+
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    ASSERT_EQ(14, g_atfork_child_calls);
+    _exit(0);
+  }
+
+  ASSERT_EQ(14, g_atfork_parent_calls);
+  ASSERT_EQ(41, g_atfork_prepare_calls);
+
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+}
+
