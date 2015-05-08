@@ -1,0 +1,7 @@
+Code-Review+2: Andres Morales <anmorales@google.com>
+Verified+1: Colin Cross <ccross@google.com>
+Submitted-by: Colin Cross <ccross@google.com>
+Submitted-at: Fri, 08 May 2015 00:06:31 +0000
+Reviewed-on: https://android-review.googlesource.com/149817
+Project: platform/bionic
+Branch: refs/heads/master-soong
