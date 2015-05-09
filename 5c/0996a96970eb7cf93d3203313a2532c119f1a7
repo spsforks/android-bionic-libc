@@ -1,0 +1,7 @@
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Yabin Cui <yabinc@google.com>
+Submitted-by: Yabin Cui <yabinc@google.com>
+Submitted-at: Sat, 09 May 2015 00:07:45 +0000
+Reviewed-on: https://android-review.googlesource.com/149960
+Project: platform/bionic
+Branch: refs/heads/lollipop-mr1-cts-dev
