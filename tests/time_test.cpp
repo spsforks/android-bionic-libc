@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdatomic.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -231,7 +232,11 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
 
 struct Counter {
  private:
+<<<<<<< HEAD   (75f2df Merge "remove rootdir build.prop")
   std::atomic<int> value;
+=======
+  atomic_int value;
+>>>>>>> BRANCH (473d96 Merge "Fix timer flaky test in lollipop-mr1-cts-dev." into l)
   timer_t timer_id;
   sigevent_t se;
   bool timer_valid;
@@ -240,6 +245,15 @@ struct Counter {
     ASSERT_FALSE(timer_valid);
     ASSERT_EQ(0, timer_create(CLOCK_REALTIME, &se, &timer_id));
     timer_valid = true;
+  }
+
+ public:
+  Counter(void (*fn)(sigval_t)) : value(ATOMIC_VAR_INIT(0)), timer_valid(false) {
+    memset(&se, 0, sizeof(se));
+    se.sigev_notify = SIGEV_THREAD;
+    se.sigev_notify_function = fn;
+    se.sigev_value.sival_ptr = this;
+    Create();
   }
 
  public:
@@ -262,8 +276,13 @@ struct Counter {
     }
   }
 
+<<<<<<< HEAD   (75f2df Merge "remove rootdir build.prop")
   int Value() const {
     return value;
+=======
+  int Value() {
+    return atomic_load(&value);
+>>>>>>> BRANCH (473d96 Merge "Fix timer flaky test in lollipop-mr1-cts-dev." into l)
   }
 
   void SetTime(time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
@@ -271,21 +290,25 @@ struct Counter {
   }
 
   bool ValueUpdated() {
+<<<<<<< HEAD   (75f2df Merge "remove rootdir build.prop")
     int current_value = value;
+=======
+    int current_value = atomic_load(&value);
+>>>>>>> BRANCH (473d96 Merge "Fix timer flaky test in lollipop-mr1-cts-dev." into l)
     time_t start = time(NULL);
-    while (current_value == value && (time(NULL) - start) < 5) {
+    while (current_value == atomic_load(&value) && (time(NULL) - start) < 5) {
     }
-    return current_value != value;
+    return current_value != atomic_load(&value);
   }
 
   static void CountNotifyFunction(sigval_t value) {
     Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
-    ++cd->value;
+    atomic_fetch_add(&cd->value, 1);
   }
 
   static void CountAndDisarmNotifyFunction(sigval_t value) {
     Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
-    ++cd->value;
+    atomic_fetch_add(&cd->value, 1);
 
     // Setting the initial expiration time to 0 disarms the timer.
     cd->SetTime(0, 0, 1, 0);
@@ -493,6 +516,7 @@ TEST(time, clock_gettime) {
   // Should be less than (a very generous, to try to avoid flakiness) 1000000ns.
   ASSERT_EQ(0, ts2.tv_sec);
   ASSERT_LT(ts2.tv_nsec, 1000000);
+<<<<<<< HEAD   (75f2df Merge "remove rootdir build.prop")
 }
 
 TEST(time, clock) {
@@ -542,4 +566,6 @@ TEST(time, clock_nanosleep) {
   timespec in;
   timespec out;
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
+=======
+>>>>>>> BRANCH (473d96 Merge "Fix timer flaky test in lollipop-mr1-cts-dev." into l)
 }
