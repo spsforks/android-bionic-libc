@@ -16,11 +16,33 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
-int test_dlsym_symbol = 42;
+extern int test_dlsym_symbol;
+
+int test_dlsym_symbol = -1;
 
 extern "C" int* lookup_dlsym_symbol_using_RTLD_DEFAULT() {
   dlerror();
   int* result = static_cast<int*>(dlsym(RTLD_DEFAULT, "test_dlsym_symbol"));
+  // TODO: remove this once b/20049306 is fixed
+  if (result == nullptr) {
+    printf("Cannot find the answer\n");
+  }
+  return result;
+}
+
+extern "C" int* lookup_dlsym_symbol2_using_RTLD_DEFAULT() {
+  dlerror();
+  int* result = static_cast<int*>(dlsym(RTLD_DEFAULT, "test_dlsym_symbol2"));
+  // TODO: remove this once b/20049306 is fixed
+  if (result == nullptr) {
+    printf("Cannot find the answer\n");
+  }
+  return result;
+}
+
+extern "C" int* lookup_dlsym_symbol_using_RTLD_NEXT() {
+  dlerror();
+  int* result = static_cast<int*>(dlsym(RTLD_NEXT, "test_dlsym_symbol"));
   // TODO: remove this once b/20049306 is fixed
   if (result == nullptr) {
     printf("Cannot find the answer\n");
