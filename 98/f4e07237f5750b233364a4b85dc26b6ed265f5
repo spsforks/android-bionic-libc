@@ -1,0 +1,7 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Colin Cross <ccross@google.com>
+Submitted-by: Colin Cross <ccross@google.com>
+Submitted-at: Tue, 12 May 2015 19:31:12 +0000
+Reviewed-on: https://android-review.googlesource.com/150365
+Project: platform/bionic
+Branch: refs/heads/master-soong
