@@ -1334,6 +1334,7 @@ LIBC {
 
 LIBC_N {
   global:
+    __getcwd_chk;
     getgrgid_r;
     getgrnam_r;
 } LIBC;
