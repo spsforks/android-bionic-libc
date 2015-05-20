@@ -176,6 +176,18 @@ TEST(unistd, ftruncate64) {
   ASSERT_EQ(123, sb.st_size);
 }
 
+TEST(unistd, ftruncate_tmpfile) {
+  FILE* fp = tmpfile();
+  ASSERT_NE(fp, nullptr);
+  ASSERT_NE(-1, fileno(fp));
+  errno = 0;
+  int rc = ftruncate(fileno(fp), -123);
+  int err = errno;
+  ASSERT_EQ(-1, rc);
+  ASSERT_EQ(EINVAL, err);
+  fclose(fp);
+}
+
 static bool g_pause_test_flag = false;
 static void PauseTestSignalHandler(int) {
   g_pause_test_flag = true;
