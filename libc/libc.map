@@ -1334,8 +1334,10 @@ LIBC {
 
 LIBC_N {
   global:
+<<<<<<< 1923d4c03a68c89f304b601545f5e8db026b9be0
     __fread_chk;
     __fwrite_chk;
+    __getcwd_chk;
     getgrgid_r;
     getgrnam_r;
 } LIBC;
