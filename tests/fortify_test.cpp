@@ -623,6 +623,14 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   ASSERT_FORTIFY(FD_ISSET(0, set));
 }
 
+#ifndef __clang__
+TEST_F(DEATHTEST, getcwd_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  ASSERT_FORTIFY(getcwd(buf, ct));
+}
+#endif
+
 TEST_F(DEATHTEST, pread_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
