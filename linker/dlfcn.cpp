@@ -157,6 +157,27 @@ int dlclose(void* handle) {
   return 0;
 }
 
+bool _dl_android_set_application_api_levels(uint32_t target, uint32_t min, uint32_t max) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  return set_application_api_levels(target, min, max);
+}
+
+uint32_t _dl_android_get_application_target_api_level() {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  return get_application_target_api_level();
+}
+
+uint32_t _dl_android_get_application_min_api_level() {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  return get_application_min_api_level();
+}
+
+uint32_t _dl_android_get_application_max_api_level() {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  return get_application_max_api_level();
+}
+
+
 // name_offset: starting index of the name in libdl_info.strtab
 #define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
@@ -176,19 +197,21 @@ int dlclose(void* handle) {
       /* st_size */ 0, \
     }
 
+static const char ANDROID_LIBDL_STRTAB[] =
+  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 99999
+  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 56789
+    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_it"
+  // 00000000001 1111111112222222222 333333333344444444445555555555666666666 6777777777788888888889999999999
+  // 01234567890 1234567890123456789 012345678901234567890123456789012345678 9012345678901234567890123456789
+    "erate_phdr\0android_dlopen_ext\0_dl_android_set_application_api_levels\0_dl_andorid_get_application_tar"
+  // 00000000001111 111111222222222233333333334444444444555555 555566666666667777777777888888888899999999 99
+  // 01234567890123 456789012345678901234567890123456789012345 678901234567890123456789012345678901234567 89
+    "get_api_level\0_dl_andorid_get_application_min_api_level\0_dl_andorid_get_application_max_api_level\0"
 #if defined(__arm__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222 333333333344444444445
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789 012345678901234567890
-#  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0dl_unwind_find_exidx\0"
-#elif defined(__aarch64__) || defined(__i386__) || defined(__mips__) || defined(__x86_64__)
-  // 0000000 00011111 111112 22222222 2333333 3333444444444455555555556666666 6667777777777888888888899999 9999900000000001 1111111112222222222
-  // 0123456 78901234 567890 12345678 9012345 6789012345678901234567890123456 7890123456789012345678901234 5678901234567890 1234567890123456789
-#  define ANDROID_LIBDL_STRTAB \
-    "dlopen\0dlclose\0dlsym\0dlerror\0dladdr\0android_update_LD_LIBRARY_PATH\0android_get_LD_LIBRARY_PATH\0dl_iterate_phdr\0android_dlopen_ext\0"
-#else
-#  error Unsupported architecture. Only arm, arm64, mips, mips64, x86 and x86_64 are presently supported.
+  // 298
+    "dl_unwind_find_exidx\0"
 #endif
+    ;
 
 static ElfW(Sym) g_libdl_symtab[] = {
   // Total length of libdl_info.strtab, including trailing 0.
@@ -205,8 +228,12 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)( 67, &android_get_LD_LIBRARY_PATH, 1),
   ELFW(SYM_INITIALIZER)( 95, &dl_iterate_phdr, 1),
   ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
+  ELFW(SYM_INITIALIZER)(130, &_dl_android_set_application_api_levels, 1),
+  ELFW(SYM_INITIALIZER)(169, &_dl_android_get_application_target_api_level, 1),
+  ELFW(SYM_INITIALIZER)(214, &_dl_android_get_application_min_api_level, 1),
+  ELFW(SYM_INITIALIZER)(256, &_dl_android_get_application_max_api_level, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(130, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(298, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -223,9 +250,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
