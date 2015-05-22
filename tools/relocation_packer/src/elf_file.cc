@@ -38,6 +38,7 @@ static constexpr uint32_t SHT_ANDROID_REL = SHT_LOOS + 1;
 static constexpr uint32_t SHT_ANDROID_RELA = SHT_LOOS + 2;
 
 static const size_t kPageSize = 4096;
+static const size_t k64kbProgramHeaderAlignment = 65536;
 
 // Alignment to preserve, in bytes.  This must be at least as large as the
 // largest d_align and sh_addralign values found in the loaded file.
@@ -302,13 +303,52 @@ static void AdjustSectionHeadersForHole(Elf* elf,
   }
 }
 
-// Helper for ResizeSection().  Adjust the offsets of any program headers
-// that have offsets currently beyond the hole start.
+// Helper for ResizeSection().  ARM64 and MIPS32 executables use a 64kb
+// segment alignment, and if we leave this unchanged it can cause strip
+// to unnecessarily readjust p_vaddr if later run on a packed file.  For
+// these architectures then, reduce p_vaddr to kPageSize on packing, and
+// restore it on unpacking.  No-op for other architectures.
 template <typename ELF>
-static void AdjustProgramHeaderOffsets(typename ELF::Phdr* program_headers,
-                                       size_t count,
-                                       typename ELF::Off hole_start,
-                                       ssize_t hole_size) {
+static void AdjustProgramHeaderAlignment(Elf* elf,
+                                         typename ELF::Phdr* program_header,
+                                         ssize_t hole_size) {
+  const typename ELF::Ehdr* elf_header = ELF::getehdr(elf);
+  CHECK(elf_header);
+
+  // No-op if this is not an ARM64 or MIPS32 executable.
+  if (!(elf_header->e_machine == EM_AARCH64 ||
+        elf_header->e_machine == EM_MIPS)) {
+    LOG_IF(FATAL, program_header->p_align > kPageSize)
+        << "Large alignment found for machine: " << elf_header->e_machine;
+    return;
+  }
+
+  // If packing, reduce p_align to page size.
+  if (hole_size < 0) {
+    if (program_header->p_align > kPageSize) {
+      LOG_IF(FATAL, program_header->p_align != k64kbProgramHeaderAlignment)
+          << "Unexpected program header alignment: " << program_header->p_align;
+      program_header->p_align = kPageSize;
+    }
+  }
+
+  // If unpacking, restore p_align to its previous value.
+  if (hole_size > 0) {
+    if (program_header->p_align == kPageSize) {
+      program_header->p_align = k64kbProgramHeaderAlignment;
+    }
+  }
+}
+
+// Helper for ResizeSection().  Adjust the offsets of any program headers
+// that have offsets currently beyond the hole start, and adjust the
+// virtual and physical addrs (and perhaps alignment) of the others.
+template <typename ELF>
+static void AdjustProgramHeaderFields(Elf* elf,
+                                      typename ELF::Phdr* program_headers,
+                                      size_t count,
+                                      typename ELF::Off hole_start,
+                                      ssize_t hole_size) {
   for (size_t i = 0; i < count; ++i) {
     typename ELF::Phdr* program_header = &program_headers[i];
 
@@ -327,9 +367,9 @@ static void AdjustProgramHeaderOffsets(typename ELF::Phdr* program_headers,
     } else {
       program_header->p_vaddr -= hole_size;
       program_header->p_paddr -= hole_size;
-      if (program_header->p_align > kPageSize) {
-        program_header->p_align = kPageSize;
-      }
+
+      AdjustProgramHeaderAlignment<ELF>(elf, program_header, hole_size);
+
       VLOG(1) << "phdr[" << i
               << "] p_vaddr adjusted to "<< program_header->p_vaddr
               << "; p_paddr adjusted to "<< program_header->p_paddr
@@ -383,10 +423,11 @@ static void RewriteProgramHeadersForHole(Elf* elf,
   target_load_header->p_memsz += hole_size;
 
   // Adjust the offsets and p_vaddrs
-  AdjustProgramHeaderOffsets<ELF>(elf_program_header,
-                                  program_header_count,
-                                  hole_start,
-                                  hole_size);
+  AdjustProgramHeaderFields<ELF>(elf,
+                                 elf_program_header,
+                                 program_header_count,
+                                 hole_start,
+                                 hole_size);
 }
 
 // Helper for ResizeSection().  Locate and return the dynamic section.
