@@ -244,6 +244,9 @@ libc_bionic_src_files += bionic/getentropy_linux.c
 libc_bionic_src_files += bionic/sysconf.cpp
 libc_bionic_src_files += bionic/vdso.cpp
 
+# This is implementation of android/appsdk.h functions
+libc_bionic_src_files += bionic/android_app_sdk_version.cpp
+
 libc_cxa_src_files := \
     bionic/__cxa_guard.cpp \
     bionic/__cxa_pure_virtual.cpp \
