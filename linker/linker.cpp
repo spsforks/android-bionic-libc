@@ -1200,11 +1200,24 @@ static int open_library(const char* name, off64_t* file_offset) {
   return fd;
 }
 
+#if !defined(__LP64__)
+const char* fix_dt_needed(const char* dt_needed) {
+  uint32_t target_sdk_version = get_application_target_sdk_version();
+  return (target_sdk_version != 0 && target_sdk_version <= 22) ? basename(dt_needed) : dt_needed;
+}
+#else
+const char* fix_dt_needed(const char* dt_needed) {
+  // As Is for lp64
+  return dt_needed;
+}
+#endif
+
 template<typename F>
 static void for_each_dt_needed(const soinfo* si, F action) {
   for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
-      action(si->get_string(d->d_un.d_val));
+      const char* dt_needed_str = fix_dt_needed(si->get_string(d->d_un.d_val));
+      action(dt_needed_str);
     }
   }
 }
