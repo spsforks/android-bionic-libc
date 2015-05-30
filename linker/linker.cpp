@@ -948,6 +948,18 @@ static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
 // This is used by dlsym(3).  It performs symbol lookup only within the
 // specified soinfo object and its dependencies in breadth first order.
 const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/dlopen.html
+  // "RTLD_GLOBAL - ... In addition, symbol lookup using dlopen(NULL, mode) and
+  // an associated dlsym() allows executable object files loaded with this mode to
+  // be searched."
+  //
+  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
+  // libraries and they are loaded in breath-first (correct) order we can just execute
+  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
+  if (si == somain) {
+    return dlsym_linear_lookup(name, found, nullptr, RTLD_DEFAULT);
+  }
+
   SymbolName symbol_name(name);
   return dlsym_handle_lookup(si, nullptr, found, symbol_name);
 }
