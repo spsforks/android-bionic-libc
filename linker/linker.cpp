@@ -948,6 +948,18 @@ static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
 // This is used by dlsym(3).  It performs symbol lookup only within the
 // specified soinfo object and its dependencies in breadth first order.
 const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+  // "If  filename  is  a NULL pointer, then the returned handle is for the main program.
+  // When given to dlsym(), this handle causes a search for a symbol in the main program,
+  // followed by all shared libraries loaded at program startup, and then all shared libraries
+  // loaded by dlopen() with the flag RTLD_GLOBAL."
+  //
+  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
+  // libraries and they are loaded in breath-first (correct) order we can just execute
+  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
+  if (si == somain) {
+    return dlsym_linear_lookup(name, found, nullptr, RTLD_DEFAULT);
+  }
+
   SymbolName symbol_name(name);
   return dlsym_handle_lookup(si, nullptr, found, symbol_name);
 }
