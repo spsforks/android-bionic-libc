@@ -26,8 +26,20 @@
  * SUCH DAMAGE.
  */
 
+#if !defined(__LP64__) && __mips_isa_rev >= 5
+#include <sys/prctl.h>
+#if defined(PR_SET_FP_MODE)
+#error "remove following defs when avail in Android's kernel headers"
+#endif
+#define PR_SET_FP_MODE 45
+#define PR_GET_FP_MODE 46
+#define PR_FP_MODE_FR  (1 << 0)
+#define PR_FP_MODE_FRE (1 << 1)
+#endif
+
 #include "linker.h"
 #include "linker_debug.h"
+#include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
@@ -198,3 +210,90 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
   return true;
 }
 
+#if !defined(__LP64__)
+
+#if __mips_isa_rev >= 5
+static bool mips_fre_mode_on = false;  // have set FRE=1 mode for process
+#endif
+
+bool soinfo::mips_check_and_adjust_fp_modes() {
+  Elf_MIPS_ABIFlags_v0* abiflags;
+  int mips_fpabi;
+
+  // FP ABI-variant compatibility checks for MIPS o32 ABI
+  if (!phdr_table_get_mips_abiflags(phdr, phnum, load_bias, &abiflags)) {
+    DL_ERR("Corrupt PT_MIPS_ABIFLAGS header found \"%s\"", get_soname());
+    return false;
+  }
+  if (abiflags == nullptr) {
+    // Old compiles lack the new abiflags section.
+    // These compilers used -mfp32 -mdouble-float -modd-spreg defaults,
+    //   ie FP32 aka DOUBLE, using odd-numbered single-prec regs
+    mips_fpabi = Val_GNU_MIPS_ABI_FP_DOUBLE;
+  } else {
+    mips_fpabi = abiflags->fp_abi;
+    if ( (abiflags->flags1 & MIPS_AFL_FLAGS1_ODDSPREG)
+         && (mips_fpabi == Val_GNU_MIPS_ABI_FP_XX ||
+             mips_fpabi == Val_GNU_MIPS_ABI_FP_64A   ) ) {
+      // Android supports fewer cases than Linux
+      DL_ERR("Unsupported odd-single-prec FloatPt reg uses in \"%s\"", get_soname());
+      return false;
+    }
+  }
+  if (!(mips_fpabi == Val_GNU_MIPS_ABI_FP_DOUBLE ||
+#if __mips_isa_rev >= 5
+        mips_fpabi == Val_GNU_MIPS_ABI_FP_64A    ||
+#endif
+        mips_fpabi == Val_GNU_MIPS_ABI_FP_XX       )) {
+    DL_ERR("Unsupported MIPS32 FloatPt ABI %d found in \"%s\"",
+           mips_fpabi, get_soname());
+    return false;
+  }
+
+#if __mips_isa_rev >= 5
+  // Adjust process's FR Emulation mode, if needed
+  //
+  // On Mips R5 & R6, Android runs continuously in FR=1 64bit-fpreg mode.
+  // NDK mips32 apps compiled with old compilers generate FP32 code
+  //   which expects FR=0 32-bit fp registers.
+  // NDK mips32 apps compiled with newer compilers generate modeless
+  //   FPXX code which runs on both FR=0 and FR=1 modes.
+  // Android itself is compiled in FP64A which requires FR=1 mode.
+  // FP32, FPXX, and FP64A all interlink okay, without dynamic FR mode
+  //   changes during calls.  For details, see
+  //   http://dmz-portal.mips.com/wiki/MIPS_O32_ABI_-_FR0_and_FR1_Interlinking
+  // Processes containing FR32 FR=0 code are run via kernel software assist,
+  //   which maps all odd-numbered single-precision reg refs onto the
+  //   upper half of the paired even-numbered double-precision reg.
+  // FRE=1 triggers traps to the kernel's emulator on every single-precision
+  //   fp op (for both odd and even-numbered registers).
+  // Turning on FRE=1 traps is done at most once per process, simultanously
+  //   for all threads of that process, when dlopen discovers FP32 code.
+  // The kernel repacks threads' registers when FRE mode is turn on or off.
+  //   These asynchronous adjustments are wrong if any thread was executing
+  //   FPXX code using odd-numbered single-precision regs.
+  // Current Android compilers default to the -mno-oddspreg option,
+  //   and this requirement is checked by Android's dlopen.
+  //   So FRE can always be safely turned on for FP32, anytime.
+  // Deferred enhancement: Allow loading of odd-spreg FPXX modules.
+
+  if (mips_fpabi == Val_GNU_MIPS_ABI_FP_DOUBLE && !mips_fre_mode_on) {
+    // Turn on FRE mode, which emulates mode-sensitive FR=0 code on FR=1
+    //   register files, by trapping to kernel on refs to single-precision regs
+    if (prctl(PR_SET_FP_MODE, PR_FP_MODE_FR|PR_FP_MODE_FRE)) {
+      DL_ERR("Kernel or cpu failed to set FRE mode required for running \"%s\"", get_soname());
+      return false;
+    }
+    DL_WARN("Using FRE=1 mode to run \"%s\"", get_soname());
+    mips_fre_mode_on = true;  // Avoid future redundant mode-switch calls
+    // FRE mode is never turned back off.
+    // Deferred enhancement:
+    //   Reset FRE mode when dlclose() removes all FP32 modules
+  }
+#else
+  // Android runs continuously in FR=0 32bit-fpreg mode.
+#endif  // __mips_isa_rev
+  return true;
+}
+
+#endif  // __LP64___
