@@ -103,6 +103,11 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias,
                              ElfW(Addr)** arm_exidx, size_t* arm_exidix_count);
 #endif
+#if defined(__mips__) && !defined(__LP64__)
+bool phdr_table_get_mips_abiflags(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias,
+                                  Elf_MIPS_ABIFlags_v0** mips_abiflags);
+#endif
 
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                     ElfW(Addr) load_bias, ElfW(Dyn)** dynamic,

@@ -687,6 +687,47 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
   return 0;
 }
 
+#if defined(__mips__) && !defined(__LP64__)
+
+#  ifndef PT_MIPS_ABIFLAGS
+#    define PT_MIPS_ABIFLAGS    0x70000003      /* .MIPS.abiflags segment */
+#  endif
+
+/* Return the address of the .MIPS.abiflags section in memory, if present.
+ *
+ * Input:
+ *   phdr_table  -> program header table
+ *   phdr_count  -> number of entries in tables
+ *   load_bias   -> load bias
+ * Output:
+ *   mips_abiflags -> Address of structure in memory (null if missing)
+ * Return:
+ *   true when no malformed PT_MIPS_ABIFLAGS header was found
+ */
+bool phdr_table_get_mips_abiflags(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias,
+                                  Elf_MIPS_ABIFlags_v0** mips_abiflags) {
+  const ElfW(Phdr)* phdr = phdr_table;
+  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
+    if (phdr->p_type != PT_MIPS_ABIFLAGS) {
+      continue;
+    }
+
+    // perform size checks etc
+    if (phdr->p_filesz < sizeof (Elf_MIPS_ABIFlags_v0)) {
+      *mips_abiflags = nullptr;
+      return false;
+    }
+
+    *mips_abiflags = reinterpret_cast<Elf_MIPS_ABIFlags_v0*>(load_bias + phdr->p_vaddr);
+    return true;
+  }
+  *mips_abiflags = nullptr;
+  return true;
+}
+#endif
 
 #if defined(__arm__)
 
