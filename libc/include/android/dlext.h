@@ -73,6 +73,14 @@ enum {
    */
   ANDROID_DLEXT_FORCE_LOAD = 0x40,
 
+  /* When set, linker will try to map the library with non-zero min(p_vaddr) for
+   * PT_LOAD segments at the fixed address.
+   *
+   * If not sure do not use this flag. It is only used for non-standard position-dependent
+   * elf-files.
+   */
+  ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -80,7 +88,8 @@ enum {
                                         ANDROID_DLEXT_USE_RELRO |
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
-                                        ANDROID_DLEXT_FORCE_LOAD,
+                                        ANDROID_DLEXT_FORCE_LOAD |
+                                        ANDROID_DLEXT_FORCE_FIXED_VADDR,
 };
 
 typedef struct {
