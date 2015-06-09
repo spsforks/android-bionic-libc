@@ -35,6 +35,7 @@
 __BEGIN_DECLS
 
 extern ElfW(auxv_t)* __libc_auxv;
+extern bool __libc_AT_SECURE;
 
 __END_DECLS
 

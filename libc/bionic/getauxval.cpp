@@ -34,8 +34,10 @@
 #include <errno.h>
 
 __LIBC_HIDDEN__ ElfW(auxv_t)* __libc_auxv = NULL;
+__LIBC_HIDDEN__ bool __libc_AT_SECURE = false;
 
 extern "C" unsigned long int getauxval(unsigned long int type) {
+  if (type == AT_SECURE) return __libc_AT_SECURE ? 1 : 0;
   for (ElfW(auxv_t)* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == type) {
       return v->a_un.a_val;
