@@ -366,10 +366,8 @@ LOCAL_SRC_FILES_x86 += \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
     upstream-freebsd/lib/msun/src/s_llrintf.c \
-    upstream-freebsd/lib/msun/src/s_lrint.c \
-    upstream-freebsd/lib/msun/src/s_lrintf.c \
-    upstream-freebsd/lib/msun/src/s_rint.c \
-    upstream-freebsd/lib/msun/src/s_rintf.c \
+    x86/lrint.S \
+    x86/lrintf.S \
     x86/sqrt.S \
     x86/sqrtf.S \
     x86/e_acos.S \
@@ -402,6 +400,8 @@ LOCAL_SRC_FILES_x86 += \
     x86/floorf.S \
     x86/trunc.S \
     x86/truncf.S \
+    x86/rint.S \
+    x86/rintf.S \
 
 else
 LOCAL_SRC_FILES_x86 += \
@@ -411,6 +411,8 @@ LOCAL_SRC_FILES_x86 += \
     upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_trunc.c \
     upstream-freebsd/lib/msun/src/s_truncf.c \
+    upstream-freebsd/lib/msun/src/s_rint.c \
+    upstream-freebsd/lib/msun/src/s_rintf.c \
 
 endif
 
@@ -421,12 +423,8 @@ LOCAL_SRC_FILES_x86_64 += \
     amd64/fenv.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
-    upstream-freebsd/lib/msun/src/s_llrint.c \
-    upstream-freebsd/lib/msun/src/s_llrintf.c \
-    upstream-freebsd/lib/msun/src/s_lrint.c \
-    upstream-freebsd/lib/msun/src/s_lrintf.c \
-    upstream-freebsd/lib/msun/src/s_rint.c \
-    upstream-freebsd/lib/msun/src/s_rintf.c \
+    x86_64/lrint.S \
+    x86_64/lrintf.S \
     x86_64/sqrt.S \
     x86_64/sqrtf.S \
     x86_64/e_acos.S \
@@ -456,6 +454,8 @@ LOCAL_SRC_FILES_x86_64 += \
     x86_64/floorf.S \
     x86_64/trunc.S \
     x86_64/truncf.S \
+    x86_64/rint.S \
+    x86_64/rintf.S \    
 
 else
 LOCAL_SRC_FILES_x86_64 += \
@@ -465,6 +465,8 @@ LOCAL_SRC_FILES_x86_64 += \
     upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_trunc.c \
     upstream-freebsd/lib/msun/src/s_truncf.c \
+    upstream-freebsd/lib/msun/src/s_rint.c \
+    upstream-freebsd/lib/msun/src/s_rintf.c \
 
 endif
 
