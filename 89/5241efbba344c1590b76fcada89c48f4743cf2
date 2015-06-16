@@ -1,0 +1,7 @@
+Code-Review+2: Dan Albert <danalbert@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 16 Jun 2015 23:58:30 +0000
+Reviewed-on: https://android-review.googlesource.com/155038
+Project: platform/bionic
+Branch: refs/heads/master
