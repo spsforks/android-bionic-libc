@@ -1,0 +1,9 @@
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+1: Unsuk Jung <unsuk@google.com>
+Code-Review+1: Christopher Ferris <cferris@google.com>
+Code-Review+2: Daniel Xie <dxie@google.com>
+Submitted-by: Yabin Cui <yabinc@google.com>
+Submitted-at: Fri, 19 Jun 2015 18:00:52 +0000
+Reviewed-on: https://android-review.googlesource.com/155641
+Project: platform/bionic
+Branch: refs/heads/lollipop-mr1-cts-dev
