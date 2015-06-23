@@ -768,7 +768,7 @@ TEST(dlfcn, dlsym_failures) {
   // glibc marks this parameter non-null and SEGVs if you cheat.
   sym = dlsym(self, NULL);
   ASSERT_TRUE(sym == NULL);
-  ASSERT_SUBSTR("", dlerror());
+  ASSERT_STREQ("dlsym symbol name is null", dlerror());
 #endif
 
   // Symbol that doesn't exist.
@@ -934,7 +934,7 @@ TEST(dlfcn, dlopen_bad_flags) {
   // glibc actually allows you to choose both RTLD_NOW and RTLD_LAZY at the same time, and so do we.
   handle = dlopen(NULL, RTLD_NOW|RTLD_LAZY);
   ASSERT_TRUE(handle != NULL);
-  ASSERT_SUBSTR(NULL, dlerror());
+  ASSERT_TRUE(dlerror() == nullptr);
 }
 
 TEST(dlfcn, rtld_default_unknown_symbol) {
@@ -1021,6 +1021,19 @@ TEST(dlfcn, symbol_versioning_use_v2) {
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(2, fn());
   dlclose(handle);
+}
+
+TEST(dlfcn, symbol_versioning_use_unversioned) {
+  void* handle = dlopen("libtest_versioned_uselibnv1.so", RTLD_NOW);
+  // linking against versioned library and then replacing it with unversioned
+  // at the runtime should result in fatal error.
+  ASSERT_TRUE(handle == nullptr);
+#if !defined(__BIONIC__)
+  const char* error_msg = dlerror();
+  ASSERT_TRUE(strstr(error_msg, "version `TESTLIB_V1' not found") != nullptr ||
+              strstr(error_msg, "version `TESTLIB_V0' not found") != nullptr)
+              << "dlerror: \"" << error_msg << "\"";
+#endif
 }
 
 TEST(dlfcn, symbol_versioning_use_other_v2) {

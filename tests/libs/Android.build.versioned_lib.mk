@@ -58,6 +58,25 @@ libtest_versioned_uselibv3_other_shared_libraries := \
 module := libtest_versioned_uselibv3_other
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
+# =============================================================================
+libtest_versioned_uselibnv1_src_files := versioned_uselib.cpp
+
+libtest_versioned_uselibnv1_shared_libraries := \
+    libtest_versioned_libnv1
+
+module := libtest_versioned_uselibnv1
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+#libtest_versioned_uselibvnone_src_files := \
+#    versioned_uselib.cpp
+#
+#libtest_versioned_uselibvnone_shared_libraries := \
+#    libtest_versioned_libnv
+#
+#module := libtest_versioned_uselibvnone
+#include $(LOCAL_PATH)/Android.build.testlib.mk
+
 # -----------------------------------------------------------------------------
 # lib v1 - this one used during static linking but never used at runtime
 # which forces libtest_versioned_uselibv1 to use function v1 from
@@ -118,3 +137,24 @@ libtest_versioned_otherlib_ldflags := \
 
 module := libtest_versioned_otherlib
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# These emulate a situation when linking against versioned library
+# but running against unversioned one.
+# -----------------------------------------------------------------------------
+libtest_versioned_libnv1_src_files := \
+    versioned_lib_v1.cpp
+
+libtest_versioned_libnv1_ldflags := \
+    -Wl,--version-script,$(LOCAL_PATH)/versioned_lib_v1.map \
+    -Wl,-soname,libtest_versioned_libnv.so
+
+module := libtest_versioned_libnv1
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+libtest_versioned_libnv_src_files := versioned_lib_v_none.cpp
+
+module := libtest_versioned_libnv
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
