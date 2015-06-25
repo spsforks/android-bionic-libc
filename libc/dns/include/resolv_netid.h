@@ -53,10 +53,35 @@ struct addrinfo;
 
 #define __used_in_netd __attribute__((visibility ("default")))
 
+/*
+ * A struct to capture elements relevant to network operations.
+ *
+ * DNS and application netid/marks can differ from one another under certain
+ * circumstances, notably when a VPN applies to the user's traffic but the VPN
+ * network does not have separate DNS servers explicitly provisioned.
+ *
+ * The introduction of per-UID routing means the uid is an essential part of
+ * the context.
+ */
+struct network_context {
+    unsigned dns_netid;
+    unsigned dns_mark;
+    unsigned app_netid;
+    unsigned app_mark;
+    uid_t uid;
+};
+
+#define NETWORK_CONTEXT_UNSET  \
+    ((struct network_context){ NETID_UNSET, MARK_UNSET, NETID_UNSET, MARK_UNSET, (uid_t) -1 })
+
+// __used_in_netd;
+
 struct hostent *android_gethostbyaddrfornet(const void *, socklen_t, int, unsigned, unsigned) __used_in_netd;
 struct hostent *android_gethostbynamefornet(const char *, int, unsigned, unsigned) __used_in_netd;
 int android_getaddrinfofornet(const char *, const char *, const struct addrinfo *, unsigned,
 		unsigned, struct addrinfo **) __used_in_netd;
+int android_getaddrinfofornetworkcontext(const char *, const char *, const struct addrinfo *,
+		const struct network_context *, struct addrinfo **) __used_in_netd;
 
 /* set name servers for a network */
 extern void _resolv_set_nameservers_for_net(unsigned netid,

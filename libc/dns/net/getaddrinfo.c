@@ -365,11 +365,13 @@ str2number(const char *p)
  * the destination (e.g., no IPv4 address, no IPv6 default route, ...).
  */
 static int
-_test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
+_test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark, uid_t uid) {
 	int s = socket(pf, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
 	if (s < 0)
 		return 0;
 	if (mark != MARK_UNSET && setsockopt(s, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
+		return 0;
+	if (uid > 0 && fchown(s, uid, (gid_t)-1) < 0)
 		return 0;
 	int ret;
 	do {
@@ -392,24 +394,24 @@ _test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
  * so checking for connectivity is the next best thing.
  */
 static int
-_have_ipv6(unsigned mark) {
+_have_ipv6(unsigned mark, uid_t uid) {
 	static const struct sockaddr_in6 sin6_test = {
 		.sin6_family = AF_INET6,
 		.sin6_addr.s6_addr = {  // 2000::
 			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 		};
 	sockaddr_union addr = { .in6 = sin6_test };
-	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6), mark);
+	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6), mark, uid);
 }
 
 static int
-_have_ipv4(unsigned mark) {
+_have_ipv4(unsigned mark, uid_t uid) {
 	static const struct sockaddr_in sin_test = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
 	};
 	sockaddr_union addr = { .in = sin_test };
-	return _test_connect(PF_INET, &addr.generic, sizeof(addr.in), mark);
+	return _test_connect(PF_INET, &addr.generic, sizeof(addr.in), mark, uid);
 }
 
 bool readBE32(FILE* fp, int32_t* result) {
@@ -583,6 +585,16 @@ getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
 {
 	return android_getaddrinfofornet(hostname, servname, hints, NETID_UNSET, MARK_UNSET, res);
+}
+
+int
+android_getaddrinfofornetworkcontext(const char *hostname, const char *servname,
+    const struct addrinfo *hints, const struct network_context *netcontext, struct addrinfo **res)
+{
+	return android_getaddrinfofornet(hostname, servname, hints,
+		(netcontext ? netcontext->dns_netid : NETID_UNSET),
+		(netcontext ? netcontext->dns_mark : MARK_UNSET),
+		res);
 }
 
 int
@@ -1880,6 +1892,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct res_target q, q2;
 	res_state res;
 	unsigned netid, mark;
+	struct network_context netcontext = NETWORK_CONTEXT_UNSET;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
@@ -1913,8 +1926,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.anslen = sizeof(buf->buf);
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
-			query_ipv6 = _have_ipv6(mark);
-			query_ipv4 = _have_ipv4(mark);
+			query_ipv6 = _have_ipv6(mark, netcontext.uid);
+			query_ipv4 = _have_ipv4(mark, netcontext.uid);
 		}
 		if (query_ipv6) {
 			q.qtype = T_AAAA;
