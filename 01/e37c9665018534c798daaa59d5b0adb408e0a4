@@ -1,0 +1,8 @@
+Verified+1: Erik Kline <ek@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Erik Kline <ek@google.com>
+Submitted-at: Tue, 30 Jun 2015 02:21:00 +0000
+Reviewed-on: https://android-review.googlesource.com/156610
+Project: platform/bionic
+Branch: refs/heads/master
