@@ -31,6 +31,8 @@
 #include "private/bionic_futex.h"
 #include "pthread_internal.h"
 
+#include "bionic_internal_symbols.h"
+
 int pthread_join(pthread_t t, void** return_value) {
   if (t == pthread_self()) {
     return EDEADLK;
@@ -68,3 +70,6 @@ int pthread_join(pthread_t t, void** return_value) {
   __pthread_internal_remove_and_free(thread);
   return 0;
 }
+
+#define PTHREAD_JOIN_EXTERNALS
+#include "bionic_external_symbols.h"

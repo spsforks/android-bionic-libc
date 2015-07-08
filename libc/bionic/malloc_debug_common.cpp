@@ -243,46 +243,46 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
 // =============================================================================
 // Allocation functions
 // =============================================================================
-extern "C" void* calloc(size_t n_elements, size_t elem_size) {
+extern "C" void* INTERNAL(calloc)(size_t n_elements, size_t elem_size) {
   return __libc_malloc_dispatch->calloc(n_elements, elem_size);
 }
 
-extern "C" void free(void* mem) {
+extern "C" void INTERNAL(free)(void* mem) {
   __libc_malloc_dispatch->free(mem);
 }
 
-extern "C" struct mallinfo mallinfo() {
+extern "C" struct mallinfo INTERNAL(mallinfo)() {
   return __libc_malloc_dispatch->mallinfo();
 }
 
-extern "C" void* malloc(size_t bytes) {
+extern "C" void* INTERNAL(malloc)(size_t bytes) {
   return __libc_malloc_dispatch->malloc(bytes);
 }
 
-extern "C" size_t malloc_usable_size(const void* mem) {
+extern "C" size_t INTERNAL(malloc_usable_size)(const void* mem) {
   return __libc_malloc_dispatch->malloc_usable_size(mem);
 }
 
-extern "C" void* memalign(size_t alignment, size_t bytes) {
+extern "C" void* INTERNAL(memalign)(size_t alignment, size_t bytes) {
   return __libc_malloc_dispatch->memalign(alignment, bytes);
 }
 
-extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
+extern "C" int INTERNAL(posix_memalign)(void** memptr, size_t alignment, size_t size) {
   return __libc_malloc_dispatch->posix_memalign(memptr, alignment, size);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-extern "C" void* pvalloc(size_t bytes) {
+extern "C" void* INTERNAL(pvalloc)(size_t bytes) {
   return __libc_malloc_dispatch->pvalloc(bytes);
 }
 #endif
 
-extern "C" void* realloc(void* oldMem, size_t bytes) {
+extern "C" void* INTERNAL(realloc)(void* oldMem, size_t bytes) {
   return __libc_malloc_dispatch->realloc(oldMem, bytes);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-extern "C" void* valloc(size_t bytes) {
+extern "C" void* INTERNAL(valloc)(size_t bytes) {
   return __libc_malloc_dispatch->valloc(bytes);
 }
 #endif
@@ -525,3 +525,6 @@ extern "C" __LIBC_HIDDEN__ void malloc_debug_fini() {
   }
 #endif  // !LIBC_STATIC
 }
+
+#define MALLOC_DEBUG_COMMON
+#include "bionic_external_symbols.h"

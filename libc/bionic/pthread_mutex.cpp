@@ -44,6 +44,8 @@
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
 
+#include "bionic_internal_symbols.h"
+
 /* a mutex attribute holds the following fields
  *
  * bits:     name       description
@@ -53,7 +55,7 @@
 #define  MUTEXATTR_TYPE_MASK   0x000f
 #define  MUTEXATTR_SHARED_MASK 0x0010
 
-int pthread_mutexattr_init(pthread_mutexattr_t *attr)
+extern "C"  int pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
     *attr = PTHREAD_MUTEX_DEFAULT;
     return 0;
@@ -632,3 +634,5 @@ int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     }
     return 0;
 }
+#define PTHREAD_MUTEX_EXTERNALS 1
+#include "bionic_external_symbols.h"
