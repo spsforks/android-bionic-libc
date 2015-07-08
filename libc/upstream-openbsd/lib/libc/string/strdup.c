@@ -47,3 +47,6 @@ strdup(const char *str)
 	(void)memcpy(copy, str, siz);
 	return(copy);
 }
+
+#define STRDUP_C
+#include "bionic_external_symbols.h"

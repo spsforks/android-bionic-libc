@@ -34,15 +34,18 @@ LOCAL_CFLAGS += \
     -Wstrict-overflow=5 \
     -fvisibility=hidden \
     -Wall -Wextra -Wunused -Werror \
+    $(BIONIC_INTERNAL) \
 
 LOCAL_CFLAGS_arm += -D__work_around_b_19059885__
 LOCAL_CFLAGS_x86 += -D__work_around_b_19059885__
 
 LOCAL_CONLYFLAGS += \
     -std=gnu99 \
+    $(BIONIC_INTERNAL) \
 
 LOCAL_CPPFLAGS += \
     -Wold-style-cast \
+    $(BIONIC_INTERNAL) \
 
 ifeq ($(TARGET_IS_64_BIT),true)
 LOCAL_CPPFLAGS += -DTARGET_IS_64_BIT

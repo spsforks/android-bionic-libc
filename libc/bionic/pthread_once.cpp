@@ -83,3 +83,6 @@ int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
     old_value = atomic_load_explicit(once_control_ptr, memory_order_acquire);
   }
 }
+
+#define PTHREAD_ONCE_CPP
+#include "bionic_external_symbols.h"

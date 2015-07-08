@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define DELAY_JEMALLOC_REDEFINE
+
 #include <sys/param.h>
 #include <unistd.h>
 

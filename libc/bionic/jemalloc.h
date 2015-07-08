@@ -17,7 +17,9 @@
 #ifndef LIBC_BIONIC_JEMALLOC_H_
 #define LIBC_BIONIC_JEMALLOC_H_
 
+#define DELAY_JEMALLOC_REDEFINE
 #include <jemalloc/jemalloc.h>
+
 #include <malloc.h>  // For struct mallinfo.
 
 // Need to wrap memalign since je_memalign fails on non-power of 2 alignments.
@@ -30,5 +32,15 @@ void* je_memalign_round_up_boundary(size_t, size_t);
 void* je_pvalloc(size_t);
 
 __END_DECLS
+//CC
+// for jemalloc,
+#include "bionic_internal_symbols.h"
+
+#if defined(__BIONIC_INTERNAL__)
+#define malloc INTERNAL(malloc)
+#define calloc INTERNAL(calloc)
+#define realloc INTERNAL(realloc)
+#define free INTERNAL(free)
+#endif // __BIONIC_INTERNAL__
 
 #endif  // LIBC_BIONIC_DLMALLOC_H_

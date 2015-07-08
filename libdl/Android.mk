@@ -44,7 +44,7 @@ include $(BUILD_SHARED_LIBRARY)
 # returns 0, as would happen if the user iterated over every phdr).
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= libdl.c
-LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror
+LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror  $(BIONIC_INTERNAL)
 LOCAL_CXX_STL := none
 
 LOCAL_MODULE := libdl

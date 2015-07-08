@@ -31,3 +31,6 @@
 void* mempcpy(void* dst, const void* src, size_t n) {
   return reinterpret_cast<char*>(memcpy(dst, src, n)) + n;
 }
+
+#define MEMPCPY_CPP
+#include "bionic_external_symbols.h"

@@ -116,3 +116,7 @@ pid_t tcgetpgrp(int fd) {
 int tcsetpgrp(int fd, pid_t pid) {
   return ioctl(fd, TIOCSPGRP, &pid);
 }
+
+
+#define TERMIOS_CPP
+#include "bionic_external_symbols.h"

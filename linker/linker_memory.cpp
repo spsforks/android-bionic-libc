@@ -36,3 +36,5 @@ void free(void* ptr) {
   g_linker_allocator.free(ptr);
 }
 
+#define MALLOC_DEBUG_COMMON_CPP
+#include "bionic_external_symbols.h"

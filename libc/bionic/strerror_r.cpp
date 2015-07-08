@@ -90,3 +90,6 @@ extern "C" __LIBC_HIDDEN__ const char* __strsignal(int signal_number, char* buf,
   }
   return buf;
 }
+
+// #define STRERROR_R_CPP
+// #include "bionic_external_symbols.h"
