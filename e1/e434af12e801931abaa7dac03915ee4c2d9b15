@@ -1,0 +1,9 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Verified+1: Christopher Ferris <cferris@google.com>
+Submitted-by: Christopher Ferris <cferris@google.com>
+Submitted-at: Wed, 08 Jul 2015 19:15:37 +0000
+Reviewed-on: https://android-review.googlesource.com/158492
+Project: platform/bionic
+Branch: refs/heads/master
