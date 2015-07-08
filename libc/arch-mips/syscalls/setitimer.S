@@ -17,3 +17,5 @@ ENTRY(setitimer)
     nop
     .set reorder
 END(setitimer)
+
+GEN_INTERNAL_ALIAS(setitimer)

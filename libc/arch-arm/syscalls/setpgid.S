@@ -12,3 +12,5 @@ ENTRY(setpgid)
     neg     r0, r0
     b       __set_errno_internal
 END(setpgid)
+
+GEN_INTERNAL_ALIAS(setpgid)

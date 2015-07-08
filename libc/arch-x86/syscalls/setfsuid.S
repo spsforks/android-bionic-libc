@@ -19,3 +19,5 @@ ENTRY(setfsuid)
     popl    %ebx
     ret
 END(setfsuid)
+
+GEN_INTERNAL_ALIAS(setfsuid)

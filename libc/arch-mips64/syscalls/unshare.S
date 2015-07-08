@@ -23,3 +23,5 @@ ENTRY(unshare)
     move ra, t0
     .set pop
 END(unshare)
+
+GEN_INTERNAL_ALIAS(unshare)

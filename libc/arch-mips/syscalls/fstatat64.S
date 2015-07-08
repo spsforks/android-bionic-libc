@@ -18,4 +18,8 @@ ENTRY(fstatat64)
     .set reorder
 END(fstatat64)
 
+GEN_INTERNAL_ALIAS(fstatat64)
+
 ALIAS_SYMBOL(fstatat, fstatat64)
+
+WEAK_ALIAS(__bionic_fstatat, fstatat64)

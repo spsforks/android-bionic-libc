@@ -24,3 +24,5 @@ ENTRY(mlock)
     popl    %ebx
     ret
 END(mlock)
+
+GEN_INTERNAL_ALIAS(mlock)

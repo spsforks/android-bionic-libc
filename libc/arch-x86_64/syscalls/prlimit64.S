@@ -15,4 +15,8 @@ ENTRY(prlimit64)
     ret
 END(prlimit64)
 
+GEN_INTERNAL_ALIAS(prlimit64)
+
 ALIAS_SYMBOL(prlimit, prlimit64)
+
+WEAK_ALIAS(__bionic_prlimit, prlimit64)

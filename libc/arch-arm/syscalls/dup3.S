@@ -12,3 +12,5 @@ ENTRY(dup3)
     neg     r0, r0
     b       __set_errno_internal
 END(dup3)
+
+GEN_INTERNAL_ALIAS(dup3)

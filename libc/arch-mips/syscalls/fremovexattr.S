@@ -17,3 +17,5 @@ ENTRY(fremovexattr)
     nop
     .set reorder
 END(fremovexattr)
+
+GEN_INTERNAL_ALIAS(fremovexattr)

@@ -20,3 +20,5 @@ ENTRY(fallocate64)
     neg     r0, r0
     b       __set_errno_internal
 END(fallocate64)
+
+GEN_INTERNAL_ALIAS(fallocate64)

@@ -17,3 +17,5 @@ ENTRY(ftruncate)
     nop
     .set reorder
 END(ftruncate)
+
+GEN_INTERNAL_ALIAS(ftruncate)

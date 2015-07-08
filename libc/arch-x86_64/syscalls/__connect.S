@@ -13,4 +13,6 @@ ENTRY(__connect)
 1:
     ret
 END(__connect)
+
+GEN_INTERNAL_ALIAS(__connect)
 .hidden __connect

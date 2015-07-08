@@ -17,3 +17,5 @@ ENTRY(inotify_add_watch)
     nop
     .set reorder
 END(inotify_add_watch)
+
+GEN_INTERNAL_ALIAS(inotify_add_watch)

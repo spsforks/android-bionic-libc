@@ -29,3 +29,5 @@ ENTRY(read)
     popl    %ebx
     ret
 END(read)
+
+GEN_INTERNAL_ALIAS(read)

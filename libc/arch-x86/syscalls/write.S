@@ -29,3 +29,5 @@ ENTRY(write)
     popl    %ebx
     ret
 END(write)
+
+GEN_INTERNAL_ALIAS(write)

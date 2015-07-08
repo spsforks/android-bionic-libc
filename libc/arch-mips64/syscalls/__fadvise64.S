@@ -23,4 +23,6 @@ ENTRY(__fadvise64)
     move ra, t0
     .set pop
 END(__fadvise64)
+
+GEN_INTERNAL_ALIAS(__fadvise64)
 .hidden __fadvise64

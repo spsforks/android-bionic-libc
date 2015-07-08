@@ -13,3 +13,5 @@ ENTRY(swapon)
 1:
     ret
 END(swapon)
+
+GEN_INTERNAL_ALIAS(swapon)

@@ -23,4 +23,6 @@ ENTRY(__epoll_pwait)
     move ra, t0
     .set pop
 END(__epoll_pwait)
+
+GEN_INTERNAL_ALIAS(__epoll_pwait)
 .hidden __epoll_pwait

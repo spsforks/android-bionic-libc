@@ -17,3 +17,5 @@ ENTRY(__ioctl)
     nop
     .set reorder
 END(__ioctl)
+
+GEN_INTERNAL_ALIAS(__ioctl)

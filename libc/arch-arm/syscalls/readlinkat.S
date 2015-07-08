@@ -12,3 +12,5 @@ ENTRY(readlinkat)
     neg     r0, r0
     b       __set_errno_internal
 END(readlinkat)
+
+GEN_INTERNAL_ALIAS(readlinkat)

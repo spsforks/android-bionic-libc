@@ -13,4 +13,6 @@ ENTRY(__timer_create)
 1:
     ret
 END(__timer_create)
+
+GEN_INTERNAL_ALIAS(__timer_create)
 .hidden __timer_create

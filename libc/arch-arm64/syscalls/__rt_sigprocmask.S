@@ -12,4 +12,6 @@ ENTRY(__rt_sigprocmask)
 
     ret
 END(__rt_sigprocmask)
+
+GEN_INTERNAL_ALIAS(__rt_sigprocmask)
 .hidden __rt_sigprocmask

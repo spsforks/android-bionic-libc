@@ -19,3 +19,5 @@ ENTRY(swapoff)
     popl    %ebx
     ret
 END(swapoff)
+
+GEN_INTERNAL_ALIAS(swapoff)

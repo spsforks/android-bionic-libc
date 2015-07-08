@@ -25,3 +25,5 @@ ENTRY(recvmsg)
     popl    %ebx
     ret
 END(recvmsg)
+
+GEN_INTERNAL_ALIAS(recvmsg)

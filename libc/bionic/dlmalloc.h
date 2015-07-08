@@ -50,6 +50,8 @@ int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;
 void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void*) __LIBC_ABI_PUBLIC__;
 __END_DECLS
 
+#include "bionic_internal_symbols.h"
+
 /* Include the proper definitions. */
 #include "../upstream-dlmalloc/malloc.h"
 

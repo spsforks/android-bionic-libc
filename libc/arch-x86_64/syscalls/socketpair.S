@@ -14,3 +14,5 @@ ENTRY(socketpair)
 1:
     ret
 END(socketpair)
+
+GEN_INTERNAL_ALIAS(socketpair)

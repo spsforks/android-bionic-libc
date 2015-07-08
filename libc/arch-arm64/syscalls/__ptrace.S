@@ -12,4 +12,6 @@ ENTRY(__ptrace)
 
     ret
 END(__ptrace)
+
+GEN_INTERNAL_ALIAS(__ptrace)
 .hidden __ptrace

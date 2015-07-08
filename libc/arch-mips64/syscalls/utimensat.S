@@ -23,3 +23,5 @@ ENTRY(utimensat)
     move ra, t0
     .set pop
 END(utimensat)
+
+GEN_INTERNAL_ALIAS(utimensat)

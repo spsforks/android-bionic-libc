@@ -23,3 +23,5 @@ ENTRY(times)
     move ra, t0
     .set pop
 END(times)
+
+GEN_INTERNAL_ALIAS(times)

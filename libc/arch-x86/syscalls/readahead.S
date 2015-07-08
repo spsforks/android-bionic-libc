@@ -34,3 +34,5 @@ ENTRY(readahead)
     popl    %ebx
     ret
 END(readahead)
+
+GEN_INTERNAL_ALIAS(readahead)

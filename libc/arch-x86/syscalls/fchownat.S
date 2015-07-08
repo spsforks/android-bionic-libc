@@ -39,3 +39,5 @@ ENTRY(fchownat)
     popl    %ebx
     ret
 END(fchownat)
+
+GEN_INTERNAL_ALIAS(fchownat)

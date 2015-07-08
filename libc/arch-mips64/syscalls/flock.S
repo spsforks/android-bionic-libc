@@ -23,3 +23,5 @@ ENTRY(flock)
     move ra, t0
     .set pop
 END(flock)
+
+GEN_INTERNAL_ALIAS(flock)

@@ -23,4 +23,6 @@ ENTRY(__rt_sigtimedwait)
     move ra, t0
     .set pop
 END(__rt_sigtimedwait)
+
+GEN_INTERNAL_ALIAS(__rt_sigtimedwait)
 .hidden __rt_sigtimedwait

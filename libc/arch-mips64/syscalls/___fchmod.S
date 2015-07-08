@@ -23,4 +23,6 @@ ENTRY(___fchmod)
     move ra, t0
     .set pop
 END(___fchmod)
+
+GEN_INTERNAL_ALIAS(___fchmod)
 .hidden ___fchmod

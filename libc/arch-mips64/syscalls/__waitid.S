@@ -23,4 +23,6 @@ ENTRY(__waitid)
     move ra, t0
     .set pop
 END(__waitid)
+
+GEN_INTERNAL_ALIAS(__waitid)
 .hidden __waitid

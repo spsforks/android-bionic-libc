@@ -12,4 +12,6 @@ ENTRY(__accept4)
 
     ret
 END(__accept4)
+
+GEN_INTERNAL_ALIAS(__accept4)
 .hidden __accept4

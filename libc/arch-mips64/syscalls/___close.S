@@ -23,4 +23,6 @@ ENTRY(___close)
     move ra, t0
     .set pop
 END(___close)
+
+GEN_INTERNAL_ALIAS(___close)
 .hidden ___close

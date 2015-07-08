@@ -13,3 +13,5 @@ ENTRY(klogctl)
 1:
     ret
 END(klogctl)
+
+GEN_INTERNAL_ALIAS(klogctl)

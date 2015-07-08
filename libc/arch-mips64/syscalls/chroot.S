@@ -23,3 +23,5 @@ ENTRY(chroot)
     move ra, t0
     .set pop
 END(chroot)
+
+GEN_INTERNAL_ALIAS(chroot)

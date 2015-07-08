@@ -14,3 +14,5 @@ ENTRY(wait4)
 1:
     ret
 END(wait4)
+
+GEN_INTERNAL_ALIAS(wait4)

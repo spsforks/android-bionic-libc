@@ -23,3 +23,5 @@ ENTRY(unlinkat)
     move ra, t0
     .set pop
 END(unlinkat)
+
+GEN_INTERNAL_ALIAS(unlinkat)

@@ -17,4 +17,6 @@ ENTRY(___fchmod)
     nop
     .set reorder
 END(___fchmod)
+
+GEN_INTERNAL_ALIAS(___fchmod)
 .hidden ___fchmod

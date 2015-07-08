@@ -15,4 +15,8 @@ ENTRY(pwrite64)
     ret
 END(pwrite64)
 
+GEN_INTERNAL_ALIAS(pwrite64)
+
 ALIAS_SYMBOL(pwrite, pwrite64)
+
+WEAK_ALIAS(__bionic_pwrite, pwrite64)

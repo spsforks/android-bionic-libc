@@ -17,3 +17,5 @@ ENTRY(sendmsg)
     nop
     .set reorder
 END(sendmsg)
+
+GEN_INTERNAL_ALIAS(sendmsg)

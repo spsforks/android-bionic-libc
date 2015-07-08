@@ -23,3 +23,5 @@ ENTRY(msync)
     move ra, t0
     .set pop
 END(msync)
+
+GEN_INTERNAL_ALIAS(msync)

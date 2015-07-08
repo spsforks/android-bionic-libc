@@ -17,3 +17,5 @@ ENTRY(linkat)
     nop
     .set reorder
 END(linkat)
+
+GEN_INTERNAL_ALIAS(linkat)

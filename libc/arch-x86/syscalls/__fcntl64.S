@@ -29,3 +29,5 @@ ENTRY(__fcntl64)
     popl    %ebx
     ret
 END(__fcntl64)
+
+GEN_INTERNAL_ALIAS(__fcntl64)

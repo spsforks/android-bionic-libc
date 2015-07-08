@@ -29,3 +29,5 @@ ENTRY(madvise)
     popl    %ebx
     ret
 END(madvise)
+
+GEN_INTERNAL_ALIAS(madvise)

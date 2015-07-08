@@ -25,3 +25,5 @@ ENTRY(setsockopt)
     popl    %ebx
     ret
 END(setsockopt)
+
+GEN_INTERNAL_ALIAS(setsockopt)

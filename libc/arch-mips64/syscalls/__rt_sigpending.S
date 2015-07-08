@@ -23,4 +23,6 @@ ENTRY(__rt_sigpending)
     move ra, t0
     .set pop
 END(__rt_sigpending)
+
+GEN_INTERNAL_ALIAS(__rt_sigpending)
 .hidden __rt_sigpending

@@ -19,3 +19,5 @@ ENTRY(uname)
     popl    %ebx
     ret
 END(uname)
+
+GEN_INTERNAL_ALIAS(uname)

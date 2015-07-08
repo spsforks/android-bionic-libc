@@ -12,4 +12,6 @@ ENTRY(__rt_sigsuspend)
 
     ret
 END(__rt_sigsuspend)
+
+GEN_INTERNAL_ALIAS(__rt_sigsuspend)
 .hidden __rt_sigsuspend

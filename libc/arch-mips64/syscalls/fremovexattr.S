@@ -23,3 +23,5 @@ ENTRY(fremovexattr)
     move ra, t0
     .set pop
 END(fremovexattr)
+
+GEN_INTERNAL_ALIAS(fremovexattr)

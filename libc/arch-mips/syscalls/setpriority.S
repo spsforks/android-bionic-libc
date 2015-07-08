@@ -17,3 +17,5 @@ ENTRY(setpriority)
     nop
     .set reorder
 END(setpriority)
+
+GEN_INTERNAL_ALIAS(setpriority)

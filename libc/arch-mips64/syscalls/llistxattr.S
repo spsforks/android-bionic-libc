@@ -23,3 +23,5 @@ ENTRY(llistxattr)
     move ra, t0
     .set pop
 END(llistxattr)
+
+GEN_INTERNAL_ALIAS(llistxattr)

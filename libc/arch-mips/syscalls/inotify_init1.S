@@ -17,3 +17,5 @@ ENTRY(inotify_init1)
     nop
     .set reorder
 END(inotify_init1)
+
+GEN_INTERNAL_ALIAS(inotify_init1)

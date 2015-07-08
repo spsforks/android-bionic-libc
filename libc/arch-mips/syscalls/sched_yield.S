@@ -17,3 +17,5 @@ ENTRY(sched_yield)
     nop
     .set reorder
 END(sched_yield)
+
+GEN_INTERNAL_ALIAS(sched_yield)

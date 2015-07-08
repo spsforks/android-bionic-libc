@@ -25,3 +25,5 @@ ENTRY(sendmsg)
     popl    %ebx
     ret
 END(sendmsg)
+
+GEN_INTERNAL_ALIAS(sendmsg)

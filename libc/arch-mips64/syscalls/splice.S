@@ -23,3 +23,5 @@ ENTRY(splice)
     move ra, t0
     .set pop
 END(splice)
+
+GEN_INTERNAL_ALIAS(splice)

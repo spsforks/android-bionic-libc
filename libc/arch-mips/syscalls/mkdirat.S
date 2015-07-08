@@ -17,3 +17,5 @@ ENTRY(mkdirat)
     nop
     .set reorder
 END(mkdirat)
+
+GEN_INTERNAL_ALIAS(mkdirat)

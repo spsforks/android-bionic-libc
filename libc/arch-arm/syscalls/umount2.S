@@ -12,3 +12,5 @@ ENTRY(umount2)
     neg     r0, r0
     b       __set_errno_internal
 END(umount2)
+
+GEN_INTERNAL_ALIAS(umount2)

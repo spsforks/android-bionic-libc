@@ -12,3 +12,5 @@ ENTRY(shutdown)
 
     ret
 END(shutdown)
+
+GEN_INTERNAL_ALIAS(shutdown)

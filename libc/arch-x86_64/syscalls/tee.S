@@ -14,3 +14,5 @@ ENTRY(tee)
 1:
     ret
 END(tee)
+
+GEN_INTERNAL_ALIAS(tee)

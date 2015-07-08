@@ -13,3 +13,5 @@ ENTRY(fremovexattr)
 1:
     ret
 END(fremovexattr)
+
+GEN_INTERNAL_ALIAS(fremovexattr)

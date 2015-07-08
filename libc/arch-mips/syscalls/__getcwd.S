@@ -17,3 +17,5 @@ ENTRY(__getcwd)
     nop
     .set reorder
 END(__getcwd)
+
+GEN_INTERNAL_ALIAS(__getcwd)

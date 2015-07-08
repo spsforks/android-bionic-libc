@@ -17,3 +17,5 @@ ENTRY(__statfs64)
     nop
     .set reorder
 END(__statfs64)
+
+GEN_INTERNAL_ALIAS(__statfs64)

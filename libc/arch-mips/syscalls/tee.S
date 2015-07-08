@@ -17,3 +17,5 @@ ENTRY(tee)
     nop
     .set reorder
 END(tee)
+
+GEN_INTERNAL_ALIAS(tee)

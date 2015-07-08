@@ -34,3 +34,5 @@ ENTRY(__timer_settime)
     popl    %ebx
     ret
 END(__timer_settime)
+
+GEN_INTERNAL_ALIAS(__timer_settime)

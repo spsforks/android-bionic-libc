@@ -12,3 +12,5 @@ ENTRY(__signalfd4)
     neg     r0, r0
     b       __set_errno_internal
 END(__signalfd4)
+
+GEN_INTERNAL_ALIAS(__signalfd4)

@@ -13,4 +13,6 @@ ENTRY(___fchmodat)
 1:
     ret
 END(___fchmodat)
+
+GEN_INTERNAL_ALIAS(___fchmodat)
 .hidden ___fchmodat

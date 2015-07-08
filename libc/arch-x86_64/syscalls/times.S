@@ -13,3 +13,5 @@ ENTRY(times)
 1:
     ret
 END(times)
+
+GEN_INTERNAL_ALIAS(times)

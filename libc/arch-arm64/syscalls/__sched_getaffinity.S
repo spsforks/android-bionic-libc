@@ -12,4 +12,6 @@ ENTRY(__sched_getaffinity)
 
     ret
 END(__sched_getaffinity)
+
+GEN_INTERNAL_ALIAS(__sched_getaffinity)
 .hidden __sched_getaffinity

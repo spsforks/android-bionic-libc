@@ -39,3 +39,5 @@ ENTRY(__ppoll)
     popl    %ebx
     ret
 END(__ppoll)
+
+GEN_INTERNAL_ALIAS(__ppoll)

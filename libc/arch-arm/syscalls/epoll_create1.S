@@ -12,3 +12,5 @@ ENTRY(epoll_create1)
     neg     r0, r0
     b       __set_errno_internal
 END(epoll_create1)
+
+GEN_INTERNAL_ALIAS(epoll_create1)

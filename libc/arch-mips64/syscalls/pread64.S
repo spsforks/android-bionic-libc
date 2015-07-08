@@ -24,4 +24,8 @@ ENTRY(pread64)
     .set pop
 END(pread64)
 
+GEN_INTERNAL_ALIAS(pread64)
+
 ALIAS_SYMBOL(pread, pread64)
+
+WEAK_ALIAS(__bionic_pread, pread64)

@@ -262,6 +262,9 @@ ENTRY(memset)
 	ret
 END(memset)
 
+GEN_INTERNAL_ALIAS(memset)
+
+
 #ifdef MAYBE_VIRT
 	.bss
 	.p2align 2

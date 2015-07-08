@@ -17,3 +17,5 @@ ENTRY(getsockname)
     nop
     .set reorder
 END(getsockname)
+
+GEN_INTERNAL_ALIAS(getsockname)

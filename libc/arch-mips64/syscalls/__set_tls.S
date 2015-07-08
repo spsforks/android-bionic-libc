@@ -23,4 +23,6 @@ ENTRY(__set_tls)
     move ra, t0
     .set pop
 END(__set_tls)
+
+GEN_INTERNAL_ALIAS(__set_tls)
 .hidden __set_tls

@@ -13,3 +13,5 @@ ENTRY(setfsgid)
 1:
     ret
 END(setfsgid)
+
+GEN_INTERNAL_ALIAS(setfsgid)

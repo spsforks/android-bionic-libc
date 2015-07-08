@@ -17,3 +17,5 @@ ENTRY(mprotect)
     nop
     .set reorder
 END(mprotect)
+
+GEN_INTERNAL_ALIAS(mprotect)

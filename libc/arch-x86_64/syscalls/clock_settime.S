@@ -13,3 +13,5 @@ ENTRY(clock_settime)
 1:
     ret
 END(clock_settime)
+
+GEN_INTERNAL_ALIAS(clock_settime)

@@ -23,3 +23,5 @@ ENTRY(eventfd)
     move ra, t0
     .set pop
 END(eventfd)
+
+GEN_INTERNAL_ALIAS(eventfd)

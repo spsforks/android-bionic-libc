@@ -12,3 +12,5 @@ ENTRY(sendmsg)
     neg     r0, r0
     b       __set_errno_internal
 END(sendmsg)
+
+GEN_INTERNAL_ALIAS(sendmsg)

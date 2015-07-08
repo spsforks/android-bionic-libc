@@ -334,8 +334,17 @@ ENTRY(memmove)
 	ret
 #ifdef BCOPY
 END(bcopy)
+
+GEN_INTERNAL_ALIAS(bcopy)
+
 #elif defined(WMEMMOVE)
 END(wmemmove)
+
+GEN_INTERNAL_ALIAS(wmemmove)
+
 #else
 END(memmove)
+
+GEN_INTERNAL_ALIAS(memmove)
+
 #endif

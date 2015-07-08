@@ -24,3 +24,5 @@ ENTRY(setreuid)
     popl    %ebx
     ret
 END(setreuid)
+
+GEN_INTERNAL_ALIAS(setreuid)

@@ -34,3 +34,5 @@ ENTRY(mremap)
     popl    %ebx
     ret
 END(mremap)
+
+GEN_INTERNAL_ALIAS(mremap)

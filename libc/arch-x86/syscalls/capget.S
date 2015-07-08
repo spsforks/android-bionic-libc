@@ -24,3 +24,5 @@ ENTRY(capget)
     popl    %ebx
     ret
 END(capget)
+
+GEN_INTERNAL_ALIAS(capget)

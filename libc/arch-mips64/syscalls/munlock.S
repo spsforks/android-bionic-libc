@@ -23,3 +23,5 @@ ENTRY(munlock)
     move ra, t0
     .set pop
 END(munlock)
+
+GEN_INTERNAL_ALIAS(munlock)

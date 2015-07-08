@@ -13,3 +13,5 @@ ENTRY(setgroups)
 1:
     ret
 END(setgroups)
+
+GEN_INTERNAL_ALIAS(setgroups)

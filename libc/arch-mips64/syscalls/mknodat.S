@@ -23,3 +23,5 @@ ENTRY(mknodat)
     move ra, t0
     .set pop
 END(mknodat)
+
+GEN_INTERNAL_ALIAS(mknodat)

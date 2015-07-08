@@ -20,3 +20,5 @@ ENTRY(pwrite64)
     neg     r0, r0
     b       __set_errno_internal
 END(pwrite64)
+
+GEN_INTERNAL_ALIAS(pwrite64)

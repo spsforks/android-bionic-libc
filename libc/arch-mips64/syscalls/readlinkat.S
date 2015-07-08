@@ -23,3 +23,5 @@ ENTRY(readlinkat)
     move ra, t0
     .set pop
 END(readlinkat)
+
+GEN_INTERNAL_ALIAS(readlinkat)

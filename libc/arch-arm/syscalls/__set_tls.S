@@ -12,3 +12,5 @@ ENTRY(__set_tls)
     neg     r0, r0
     b       __set_errno_internal
 END(__set_tls)
+
+GEN_INTERNAL_ALIAS(__set_tls)

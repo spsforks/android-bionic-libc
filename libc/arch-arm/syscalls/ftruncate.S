@@ -12,3 +12,5 @@ ENTRY(ftruncate)
     neg     r0, r0
     b       __set_errno_internal
 END(ftruncate)
+
+GEN_INTERNAL_ALIAS(ftruncate)

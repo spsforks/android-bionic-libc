@@ -23,3 +23,5 @@ ENTRY(settimeofday)
     move ra, t0
     .set pop
 END(settimeofday)
+
+GEN_INTERNAL_ALIAS(settimeofday)

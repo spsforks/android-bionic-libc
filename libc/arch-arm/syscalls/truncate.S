@@ -12,3 +12,5 @@ ENTRY(truncate)
     neg     r0, r0
     b       __set_errno_internal
 END(truncate)
+
+GEN_INTERNAL_ALIAS(truncate)

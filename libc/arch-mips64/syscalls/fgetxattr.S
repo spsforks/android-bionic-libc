@@ -23,3 +23,5 @@ ENTRY(fgetxattr)
     move ra, t0
     .set pop
 END(fgetxattr)
+
+GEN_INTERNAL_ALIAS(fgetxattr)

@@ -12,3 +12,5 @@ ENTRY(__timer_settime)
     neg     r0, r0
     b       __set_errno_internal
 END(__timer_settime)
+
+GEN_INTERNAL_ALIAS(__timer_settime)

@@ -17,3 +17,5 @@ ENTRY(readlinkat)
     nop
     .set reorder
 END(readlinkat)
+
+GEN_INTERNAL_ALIAS(readlinkat)

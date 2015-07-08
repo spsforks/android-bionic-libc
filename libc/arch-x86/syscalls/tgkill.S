@@ -29,3 +29,5 @@ ENTRY(tgkill)
     popl    %ebx
     ret
 END(tgkill)
+
+GEN_INTERNAL_ALIAS(tgkill)

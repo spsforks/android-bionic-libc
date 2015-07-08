@@ -17,3 +17,5 @@ ENTRY(getuid)
     nop
     .set reorder
 END(getuid)
+
+GEN_INTERNAL_ALIAS(getuid)

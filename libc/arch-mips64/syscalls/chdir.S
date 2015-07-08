@@ -23,3 +23,5 @@ ENTRY(chdir)
     move ra, t0
     .set pop
 END(chdir)
+
+GEN_INTERNAL_ALIAS(chdir)

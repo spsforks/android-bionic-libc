@@ -341,3 +341,6 @@ ENTRY(memcmp)
 		ldmfd		sp!, {r5, r6, r7}
         b           8b
 END(memcmp)
+
+GEN_INTERNAL_ALIAS(memcmp)
+

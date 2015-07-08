@@ -23,3 +23,5 @@ ENTRY(getsockname)
     move ra, t0
     .set pop
 END(getsockname)
+
+GEN_INTERNAL_ALIAS(getsockname)

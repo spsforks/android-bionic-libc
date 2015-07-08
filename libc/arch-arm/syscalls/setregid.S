@@ -12,3 +12,5 @@ ENTRY(setregid)
     neg     r0, r0
     b       __set_errno_internal
 END(setregid)
+
+GEN_INTERNAL_ALIAS(setregid)

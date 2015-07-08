@@ -13,3 +13,5 @@ ENTRY(sched_getparam)
 1:
     ret
 END(sched_getparam)
+
+GEN_INTERNAL_ALIAS(sched_getparam)

@@ -56,3 +56,6 @@ strcspn(const char *s1, const char *s2)
 	}
 	/* NOTREACHED */
 }
+
+#define STRCSPN_C
+#include "bionic_external_symbols.h"

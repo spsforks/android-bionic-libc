@@ -34,3 +34,5 @@ ENTRY(readlinkat)
     popl    %ebx
     ret
 END(readlinkat)
+
+GEN_INTERNAL_ALIAS(readlinkat)

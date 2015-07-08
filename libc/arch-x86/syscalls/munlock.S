@@ -24,3 +24,5 @@ ENTRY(munlock)
     popl    %ebx
     ret
 END(munlock)
+
+GEN_INTERNAL_ALIAS(munlock)

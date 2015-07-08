@@ -12,3 +12,5 @@ ENTRY(lseek)
     neg     r0, r0
     b       __set_errno_internal
 END(lseek)
+
+GEN_INTERNAL_ALIAS(lseek)

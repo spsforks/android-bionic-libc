@@ -34,3 +34,5 @@ ENTRY(mknodat)
     popl    %ebx
     ret
 END(mknodat)
+
+GEN_INTERNAL_ALIAS(mknodat)

@@ -12,3 +12,5 @@ ENTRY(sched_getscheduler)
     neg     r0, r0
     b       __set_errno_internal
 END(sched_getscheduler)
+
+GEN_INTERNAL_ALIAS(sched_getscheduler)

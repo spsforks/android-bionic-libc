@@ -14,3 +14,5 @@ ENTRY(vmsplice)
 1:
     ret
 END(vmsplice)
+
+GEN_INTERNAL_ALIAS(vmsplice)

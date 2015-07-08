@@ -29,3 +29,5 @@ ENTRY(symlinkat)
     popl    %ebx
     ret
 END(symlinkat)
+
+GEN_INTERNAL_ALIAS(symlinkat)

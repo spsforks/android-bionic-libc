@@ -23,4 +23,6 @@ ENTRY(__getcpu)
     move ra, t0
     .set pop
 END(__getcpu)
+
+GEN_INTERNAL_ALIAS(__getcpu)
 .hidden __getcpu

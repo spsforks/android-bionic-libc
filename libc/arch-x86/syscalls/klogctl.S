@@ -29,3 +29,5 @@ ENTRY(klogctl)
     popl    %ebx
     ret
 END(klogctl)
+
+GEN_INTERNAL_ALIAS(klogctl)

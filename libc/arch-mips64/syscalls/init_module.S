@@ -23,3 +23,5 @@ ENTRY(init_module)
     move ra, t0
     .set pop
 END(init_module)
+
+GEN_INTERNAL_ALIAS(init_module)

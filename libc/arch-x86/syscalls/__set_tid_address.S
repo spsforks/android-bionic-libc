@@ -19,3 +19,5 @@ ENTRY(__set_tid_address)
     popl    %ebx
     ret
 END(__set_tid_address)
+
+GEN_INTERNAL_ALIAS(__set_tid_address)

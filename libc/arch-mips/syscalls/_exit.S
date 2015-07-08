@@ -18,4 +18,8 @@ ENTRY(_exit)
     .set reorder
 END(_exit)
 
+GEN_INTERNAL_ALIAS(_exit)
+
 ALIAS_SYMBOL(_Exit, _exit)
+
+WEAK_ALIAS(__bionic__Exit, _exit)

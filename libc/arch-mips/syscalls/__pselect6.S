@@ -17,3 +17,5 @@ ENTRY(__pselect6)
     nop
     .set reorder
 END(__pselect6)
+
+GEN_INTERNAL_ALIAS(__pselect6)

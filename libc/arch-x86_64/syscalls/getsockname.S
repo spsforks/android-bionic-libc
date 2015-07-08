@@ -13,3 +13,5 @@ ENTRY(getsockname)
 1:
     ret
 END(getsockname)
+
+GEN_INTERNAL_ALIAS(getsockname)

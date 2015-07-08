@@ -25,3 +25,5 @@ ENTRY(__accept4)
     popl    %ebx
     ret
 END(__accept4)
+
+GEN_INTERNAL_ALIAS(__accept4)

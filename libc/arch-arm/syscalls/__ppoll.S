@@ -20,3 +20,5 @@ ENTRY(__ppoll)
     neg     r0, r0
     b       __set_errno_internal
 END(__ppoll)
+
+GEN_INTERNAL_ALIAS(__ppoll)

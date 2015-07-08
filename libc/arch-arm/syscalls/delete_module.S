@@ -12,3 +12,5 @@ ENTRY(delete_module)
     neg     r0, r0
     b       __set_errno_internal
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

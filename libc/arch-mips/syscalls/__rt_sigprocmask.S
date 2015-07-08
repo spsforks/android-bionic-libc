@@ -17,3 +17,5 @@ ENTRY(__rt_sigprocmask)
     nop
     .set reorder
 END(__rt_sigprocmask)
+
+GEN_INTERNAL_ALIAS(__rt_sigprocmask)

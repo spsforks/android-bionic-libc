@@ -13,4 +13,6 @@ ENTRY(__arch_prctl)
 1:
     ret
 END(__arch_prctl)
+
+GEN_INTERNAL_ALIAS(__arch_prctl)
 .hidden __arch_prctl

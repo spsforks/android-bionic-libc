@@ -12,3 +12,5 @@ ENTRY(sync)
 
     ret
 END(sync)
+
+GEN_INTERNAL_ALIAS(sync)

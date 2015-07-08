@@ -29,3 +29,5 @@ ENTRY(writev)
     popl    %ebx
     ret
 END(writev)
+
+GEN_INTERNAL_ALIAS(writev)

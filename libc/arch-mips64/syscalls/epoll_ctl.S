@@ -23,3 +23,5 @@ ENTRY(epoll_ctl)
     move ra, t0
     .set pop
 END(epoll_ctl)
+
+GEN_INTERNAL_ALIAS(epoll_ctl)

@@ -29,3 +29,5 @@ ENTRY(mprotect)
     popl    %ebx
     ret
 END(mprotect)
+
+GEN_INTERNAL_ALIAS(mprotect)

@@ -12,3 +12,5 @@ ENTRY(fremovexattr)
     neg     r0, r0
     b       __set_errno_internal
 END(fremovexattr)
+
+GEN_INTERNAL_ALIAS(fremovexattr)

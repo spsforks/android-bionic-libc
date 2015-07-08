@@ -17,3 +17,5 @@ ENTRY(getresgid)
     nop
     .set reorder
 END(getresgid)
+
+GEN_INTERNAL_ALIAS(getresgid)

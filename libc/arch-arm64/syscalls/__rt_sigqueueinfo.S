@@ -12,4 +12,6 @@ ENTRY(__rt_sigqueueinfo)
 
     ret
 END(__rt_sigqueueinfo)
+
+GEN_INTERNAL_ALIAS(__rt_sigqueueinfo)
 .hidden __rt_sigqueueinfo

@@ -38,9 +38,15 @@ ENTRY(__memcpy_chk)
   // Fall through to memcpy...
 END(__memcpy_chk)
 
+GEN_INTERNAL_ALIAS(__memcpy_chk)
+
+
 ENTRY(memcpy)
   #include "memcpy_base.S"
 END(memcpy)
+
+GEN_INTERNAL_ALIAS(memcpy)
+
 
 ENTRY_PRIVATE(__memcpy_chk_fail)
   // Preserve for accurate backtrace.
@@ -56,6 +62,9 @@ ENTRY_PRIVATE(__memcpy_chk_fail)
 error_code:
   .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 END(__memcpy_chk_fail)
+
+GEN_INTERNAL_ALIAS(__memcpy_chk_fail)
+
 
   .data
   .align 2

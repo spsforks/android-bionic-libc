@@ -17,3 +17,5 @@ ENTRY(_flush_cache)
     nop
     .set reorder
 END(_flush_cache)
+
+GEN_INTERNAL_ALIAS(_flush_cache)

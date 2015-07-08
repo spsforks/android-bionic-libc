@@ -13,3 +13,5 @@ ENTRY(umask)
 1:
     ret
 END(umask)
+
+GEN_INTERNAL_ALIAS(umask)

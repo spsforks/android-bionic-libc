@@ -44,3 +44,5 @@ ENTRY(__mmap2)
     popl    %ebx
     ret
 END(__mmap2)
+
+GEN_INTERNAL_ALIAS(__mmap2)

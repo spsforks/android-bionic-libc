@@ -12,3 +12,5 @@ ENTRY(fdatasync)
 
     ret
 END(fdatasync)
+
+GEN_INTERNAL_ALIAS(fdatasync)

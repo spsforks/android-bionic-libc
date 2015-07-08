@@ -17,3 +17,5 @@ ENTRY(mincore)
     nop
     .set reorder
 END(mincore)
+
+GEN_INTERNAL_ALIAS(mincore)

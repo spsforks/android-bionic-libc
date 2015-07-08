@@ -17,3 +17,5 @@ ENTRY(writev)
     nop
     .set reorder
 END(writev)
+
+GEN_INTERNAL_ALIAS(writev)

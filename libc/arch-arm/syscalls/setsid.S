@@ -12,3 +12,5 @@ ENTRY(setsid)
     neg     r0, r0
     b       __set_errno_internal
 END(setsid)
+
+GEN_INTERNAL_ALIAS(setsid)

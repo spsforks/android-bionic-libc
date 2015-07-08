@@ -13,4 +13,6 @@ ENTRY(___faccessat)
 1:
     ret
 END(___faccessat)
+
+GEN_INTERNAL_ALIAS(___faccessat)
 .hidden ___faccessat

@@ -19,3 +19,5 @@ ENTRY(sched_yield)
     popl    %ebx
     ret
 END(sched_yield)
+
+GEN_INTERNAL_ALIAS(sched_yield)

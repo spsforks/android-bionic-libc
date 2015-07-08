@@ -12,3 +12,5 @@ ENTRY(getrusage)
 
     ret
 END(getrusage)
+
+GEN_INTERNAL_ALIAS(getrusage)

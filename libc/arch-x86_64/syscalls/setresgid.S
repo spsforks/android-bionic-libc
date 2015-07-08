@@ -13,3 +13,5 @@ ENTRY(setresgid)
 1:
     ret
 END(setresgid)
+
+GEN_INTERNAL_ALIAS(setresgid)

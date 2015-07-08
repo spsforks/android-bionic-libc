@@ -12,3 +12,5 @@ ENTRY(sched_get_priority_min)
     neg     r0, r0
     b       __set_errno_internal
 END(sched_get_priority_min)
+
+GEN_INTERNAL_ALIAS(sched_get_priority_min)

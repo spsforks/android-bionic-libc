@@ -29,3 +29,5 @@ ENTRY(sched_setaffinity)
     popl    %ebx
     ret
 END(sched_setaffinity)
+
+GEN_INTERNAL_ALIAS(sched_setaffinity)

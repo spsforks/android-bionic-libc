@@ -44,3 +44,5 @@ ENTRY(fallocate64)
     popl    %ebx
     ret
 END(fallocate64)
+
+GEN_INTERNAL_ALIAS(fallocate64)

@@ -24,3 +24,5 @@ ENTRY(__rt_sigpending)
     popl    %ebx
     ret
 END(__rt_sigpending)
+
+GEN_INTERNAL_ALIAS(__rt_sigpending)

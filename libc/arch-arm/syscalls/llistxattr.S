@@ -12,3 +12,5 @@ ENTRY(llistxattr)
     neg     r0, r0
     b       __set_errno_internal
 END(llistxattr)
+
+GEN_INTERNAL_ALIAS(llistxattr)

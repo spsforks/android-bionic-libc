@@ -17,3 +17,5 @@ ENTRY(__set_tls)
     nop
     .set reorder
 END(__set_tls)
+
+GEN_INTERNAL_ALIAS(__set_tls)

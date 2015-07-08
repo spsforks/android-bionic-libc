@@ -19,3 +19,5 @@ ENTRY(setuid)
     popl    %ebx
     ret
 END(setuid)
+
+GEN_INTERNAL_ALIAS(setuid)

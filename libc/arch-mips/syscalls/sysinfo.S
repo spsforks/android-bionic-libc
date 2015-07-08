@@ -17,3 +17,5 @@ ENTRY(sysinfo)
     nop
     .set reorder
 END(sysinfo)
+
+GEN_INTERNAL_ALIAS(sysinfo)

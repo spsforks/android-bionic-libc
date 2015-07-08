@@ -17,3 +17,5 @@ ENTRY(capset)
     nop
     .set reorder
 END(capset)
+
+GEN_INTERNAL_ALIAS(capset)

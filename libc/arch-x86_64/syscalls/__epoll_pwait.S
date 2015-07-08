@@ -14,4 +14,6 @@ ENTRY(__epoll_pwait)
 1:
     ret
 END(__epoll_pwait)
+
+GEN_INTERNAL_ALIAS(__epoll_pwait)
 .hidden __epoll_pwait

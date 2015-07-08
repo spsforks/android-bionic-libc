@@ -34,3 +34,5 @@ ENTRY(tee)
     popl    %ebx
     ret
 END(tee)
+
+GEN_INTERNAL_ALIAS(tee)

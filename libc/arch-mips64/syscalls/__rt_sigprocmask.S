@@ -23,4 +23,6 @@ ENTRY(__rt_sigprocmask)
     move ra, t0
     .set pop
 END(__rt_sigprocmask)
+
+GEN_INTERNAL_ALIAS(__rt_sigprocmask)
 .hidden __rt_sigprocmask

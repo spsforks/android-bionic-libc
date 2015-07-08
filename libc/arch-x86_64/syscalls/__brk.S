@@ -13,4 +13,6 @@ ENTRY(__brk)
 1:
     ret
 END(__brk)
+
+GEN_INTERNAL_ALIAS(__brk)
 .hidden __brk

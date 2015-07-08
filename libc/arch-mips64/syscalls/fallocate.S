@@ -24,4 +24,8 @@ ENTRY(fallocate)
     .set pop
 END(fallocate)
 
+GEN_INTERNAL_ALIAS(fallocate)
+
 ALIAS_SYMBOL(fallocate64, fallocate)
+
+WEAK_ALIAS(__bionic_fallocate64, fallocate)

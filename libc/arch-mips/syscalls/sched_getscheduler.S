@@ -17,3 +17,5 @@ ENTRY(sched_getscheduler)
     nop
     .set reorder
 END(sched_getscheduler)
+
+GEN_INTERNAL_ALIAS(sched_getscheduler)

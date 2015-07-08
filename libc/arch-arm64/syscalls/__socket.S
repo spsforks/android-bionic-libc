@@ -12,4 +12,6 @@ ENTRY(__socket)
 
     ret
 END(__socket)
+
+GEN_INTERNAL_ALIAS(__socket)
 .hidden __socket

@@ -24,3 +24,5 @@ ENTRY(removexattr)
     popl    %ebx
     ret
 END(removexattr)
+
+GEN_INTERNAL_ALIAS(removexattr)

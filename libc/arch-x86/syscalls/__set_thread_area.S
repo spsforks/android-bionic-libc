@@ -19,3 +19,5 @@ ENTRY(__set_thread_area)
     popl    %ebx
     ret
 END(__set_thread_area)
+
+GEN_INTERNAL_ALIAS(__set_thread_area)

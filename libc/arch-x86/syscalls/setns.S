@@ -24,3 +24,5 @@ ENTRY(setns)
     popl    %ebx
     ret
 END(setns)
+
+GEN_INTERNAL_ALIAS(setns)

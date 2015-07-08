@@ -17,3 +17,5 @@ ENTRY(lseek)
     nop
     .set reorder
 END(lseek)
+
+GEN_INTERNAL_ALIAS(lseek)

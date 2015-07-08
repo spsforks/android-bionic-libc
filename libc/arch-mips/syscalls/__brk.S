@@ -17,3 +17,5 @@ ENTRY(__brk)
     nop
     .set reorder
 END(__brk)
+
+GEN_INTERNAL_ALIAS(__brk)

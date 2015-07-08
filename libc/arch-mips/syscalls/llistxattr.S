@@ -17,3 +17,5 @@ ENTRY(llistxattr)
     nop
     .set reorder
 END(llistxattr)
+
+GEN_INTERNAL_ALIAS(llistxattr)

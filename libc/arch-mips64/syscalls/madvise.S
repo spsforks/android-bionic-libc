@@ -23,3 +23,5 @@ ENTRY(madvise)
     move ra, t0
     .set pop
 END(madvise)
+
+GEN_INTERNAL_ALIAS(madvise)

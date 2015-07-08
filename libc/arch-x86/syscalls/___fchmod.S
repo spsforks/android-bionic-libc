@@ -24,4 +24,6 @@ ENTRY(___fchmod)
     popl    %ebx
     ret
 END(___fchmod)
+
+GEN_INTERNAL_ALIAS(___fchmod)
 .hidden ___fchmod

@@ -13,4 +13,8 @@ ENTRY(fstatat64)
     b       __set_errno_internal
 END(fstatat64)
 
+GEN_INTERNAL_ALIAS(fstatat64)
+
 ALIAS_SYMBOL(fstatat, fstatat64)
+
+WEAK_ALIAS(__bionic_fstatat, fstatat64)

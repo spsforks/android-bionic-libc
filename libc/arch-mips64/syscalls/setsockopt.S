@@ -23,3 +23,5 @@ ENTRY(setsockopt)
     move ra, t0
     .set pop
 END(setsockopt)
+
+GEN_INTERNAL_ALIAS(setsockopt)

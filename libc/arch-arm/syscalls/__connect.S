@@ -12,3 +12,5 @@ ENTRY(__connect)
     neg     r0, r0
     b       __set_errno_internal
 END(__connect)
+
+GEN_INTERNAL_ALIAS(__connect)

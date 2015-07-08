@@ -30,15 +30,18 @@ LOCAL_LDFLAGS := \
     -Wl,--exclude-libs,ALL \
 
 LOCAL_CFLAGS += \
+    -D__IN_BIONIC_LINKER__=1 \
     -fno-stack-protector \
     -Wstrict-overflow=5 \
     -fvisibility=hidden \
     -Wall -Wextra -Wunused -Werror \
 
 LOCAL_CONLYFLAGS += \
+    -D__IN_BIONIC_LINKER__=1 \
     -std=gnu99 \
 
 LOCAL_CPPFLAGS += \
+    -D__IN_BIONIC_LINKER__=1 \
     -std=gnu++11 \
     -Wold-style-cast \
 

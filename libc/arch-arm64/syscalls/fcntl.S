@@ -12,3 +12,5 @@ ENTRY(fcntl)
 
     ret
 END(fcntl)
+
+GEN_INTERNAL_ALIAS(fcntl)

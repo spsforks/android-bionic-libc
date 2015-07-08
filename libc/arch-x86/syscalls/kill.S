@@ -24,3 +24,5 @@ ENTRY(kill)
     popl    %ebx
     ret
 END(kill)
+
+GEN_INTERNAL_ALIAS(kill)

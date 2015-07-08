@@ -34,3 +34,5 @@ ENTRY(prlimit64)
     popl    %ebx
     ret
 END(prlimit64)
+
+GEN_INTERNAL_ALIAS(prlimit64)

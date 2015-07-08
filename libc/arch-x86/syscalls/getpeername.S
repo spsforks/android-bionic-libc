@@ -25,3 +25,5 @@ ENTRY(getpeername)
     popl    %ebx
     ret
 END(getpeername)
+
+GEN_INTERNAL_ALIAS(getpeername)

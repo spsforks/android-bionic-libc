@@ -17,3 +17,5 @@ ENTRY(pread64)
     nop
     .set reorder
 END(pread64)
+
+GEN_INTERNAL_ALIAS(pread64)

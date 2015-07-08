@@ -12,3 +12,5 @@ ENTRY(mincore)
     neg     r0, r0
     b       __set_errno_internal
 END(mincore)
+
+GEN_INTERNAL_ALIAS(mincore)

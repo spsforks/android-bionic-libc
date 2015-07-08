@@ -19,3 +19,5 @@ ENTRY(sched_getscheduler)
     popl    %ebx
     ret
 END(sched_getscheduler)
+
+GEN_INTERNAL_ALIAS(sched_getscheduler)

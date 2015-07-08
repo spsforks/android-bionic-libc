@@ -17,3 +17,5 @@ ENTRY(eventfd)
     nop
     .set reorder
 END(eventfd)
+
+GEN_INTERNAL_ALIAS(eventfd)

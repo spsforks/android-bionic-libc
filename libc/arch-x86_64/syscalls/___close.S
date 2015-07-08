@@ -13,4 +13,6 @@ ENTRY(___close)
 1:
     ret
 END(___close)
+
+GEN_INTERNAL_ALIAS(___close)
 .hidden ___close

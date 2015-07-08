@@ -23,3 +23,5 @@ ENTRY(getgroups)
     move ra, t0
     .set pop
 END(getgroups)
+
+GEN_INTERNAL_ALIAS(getgroups)

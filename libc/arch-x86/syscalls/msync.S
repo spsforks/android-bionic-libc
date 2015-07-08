@@ -29,3 +29,5 @@ ENTRY(msync)
     popl    %ebx
     ret
 END(msync)
+
+GEN_INTERNAL_ALIAS(msync)

@@ -23,3 +23,5 @@ ENTRY(fsync)
     move ra, t0
     .set pop
 END(fsync)
+
+GEN_INTERNAL_ALIAS(fsync)

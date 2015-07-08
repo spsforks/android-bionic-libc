@@ -23,3 +23,5 @@ ENTRY(sigaltstack)
     move ra, t0
     .set pop
 END(sigaltstack)
+
+GEN_INTERNAL_ALIAS(sigaltstack)

@@ -23,3 +23,5 @@ ENTRY(listen)
     move ra, t0
     .set pop
 END(listen)
+
+GEN_INTERNAL_ALIAS(listen)

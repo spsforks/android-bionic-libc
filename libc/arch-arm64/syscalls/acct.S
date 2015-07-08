@@ -12,3 +12,5 @@ ENTRY(acct)
 
     ret
 END(acct)
+
+GEN_INTERNAL_ALIAS(acct)

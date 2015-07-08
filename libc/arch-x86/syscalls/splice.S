@@ -44,3 +44,5 @@ ENTRY(splice)
     popl    %ebx
     ret
 END(splice)
+
+GEN_INTERNAL_ALIAS(splice)

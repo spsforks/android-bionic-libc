@@ -12,4 +12,6 @@ ENTRY(___close)
     neg     r0, r0
     b       __set_errno_internal
 END(___close)
+
+GEN_INTERNAL_ALIAS(___close)
 .hidden ___close

@@ -39,3 +39,5 @@ ENTRY(__llseek)
     popl    %ebx
     ret
 END(__llseek)
+
+GEN_INTERNAL_ALIAS(__llseek)

@@ -34,3 +34,5 @@ ENTRY(__rt_sigprocmask)
     popl    %ebx
     ret
 END(__rt_sigprocmask)
+
+GEN_INTERNAL_ALIAS(__rt_sigprocmask)

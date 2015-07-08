@@ -23,3 +23,5 @@ ENTRY(fcntl)
     move ra, t0
     .set pop
 END(fcntl)
+
+GEN_INTERNAL_ALIAS(fcntl)

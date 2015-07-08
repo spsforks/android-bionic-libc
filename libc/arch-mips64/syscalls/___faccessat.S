@@ -23,4 +23,6 @@ ENTRY(___faccessat)
     move ra, t0
     .set pop
 END(___faccessat)
+
+GEN_INTERNAL_ALIAS(___faccessat)
 .hidden ___faccessat

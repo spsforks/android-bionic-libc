@@ -12,3 +12,5 @@ ENTRY(eventfd)
     neg     r0, r0
     b       __set_errno_internal
 END(eventfd)
+
+GEN_INTERNAL_ALIAS(eventfd)

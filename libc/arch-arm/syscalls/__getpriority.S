@@ -12,3 +12,5 @@ ENTRY(__getpriority)
     neg     r0, r0
     b       __set_errno_internal
 END(__getpriority)
+
+GEN_INTERNAL_ALIAS(__getpriority)

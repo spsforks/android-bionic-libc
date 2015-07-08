@@ -34,3 +34,5 @@ ENTRY(__ptrace)
     popl    %ebx
     ret
 END(__ptrace)
+
+GEN_INTERNAL_ALIAS(__ptrace)

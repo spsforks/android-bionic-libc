@@ -24,3 +24,5 @@ ENTRY(getgroups)
     popl    %ebx
     ret
 END(getgroups)
+
+GEN_INTERNAL_ALIAS(getgroups)

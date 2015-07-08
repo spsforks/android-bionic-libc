@@ -17,3 +17,5 @@ ENTRY(mremap)
     nop
     .set reorder
 END(mremap)
+
+GEN_INTERNAL_ALIAS(mremap)

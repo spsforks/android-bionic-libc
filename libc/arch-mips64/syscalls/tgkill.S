@@ -23,3 +23,5 @@ ENTRY(tgkill)
     move ra, t0
     .set pop
 END(tgkill)
+
+GEN_INTERNAL_ALIAS(tgkill)

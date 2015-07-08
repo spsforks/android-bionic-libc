@@ -12,4 +12,6 @@ ENTRY(__getcpu)
 
     ret
 END(__getcpu)
+
+GEN_INTERNAL_ALIAS(__getcpu)
 .hidden __getcpu

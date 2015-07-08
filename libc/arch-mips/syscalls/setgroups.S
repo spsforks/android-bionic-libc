@@ -17,3 +17,5 @@ ENTRY(setgroups)
     nop
     .set reorder
 END(setgroups)
+
+GEN_INTERNAL_ALIAS(setgroups)

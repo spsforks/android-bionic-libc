@@ -23,4 +23,6 @@ ENTRY(__getpriority)
     move ra, t0
     .set pop
 END(__getpriority)
+
+GEN_INTERNAL_ALIAS(__getpriority)
 .hidden __getpriority

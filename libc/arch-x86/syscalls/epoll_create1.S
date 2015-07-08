@@ -19,3 +19,5 @@ ENTRY(epoll_create1)
     popl    %ebx
     ret
 END(epoll_create1)
+
+GEN_INTERNAL_ALIAS(epoll_create1)

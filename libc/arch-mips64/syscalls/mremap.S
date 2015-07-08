@@ -23,3 +23,5 @@ ENTRY(mremap)
     move ra, t0
     .set pop
 END(mremap)
+
+GEN_INTERNAL_ALIAS(mremap)

@@ -20,3 +20,5 @@ ENTRY(lsetxattr)
     neg     r0, r0
     b       __set_errno_internal
 END(lsetxattr)
+
+GEN_INTERNAL_ALIAS(lsetxattr)

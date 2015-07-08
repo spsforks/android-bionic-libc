@@ -24,3 +24,5 @@ ENTRY(flock)
     popl    %ebx
     ret
 END(flock)
+
+GEN_INTERNAL_ALIAS(flock)

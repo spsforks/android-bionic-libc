@@ -23,3 +23,5 @@ ENTRY(sysinfo)
     move ra, t0
     .set pop
 END(sysinfo)
+
+GEN_INTERNAL_ALIAS(sysinfo)

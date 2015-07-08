@@ -61,4 +61,11 @@
     .globl alias; \
     .equ alias, original
 
+#define WEAK_ALIAS(alias, original) \
+  .weak alias; \
+  .equ alias, original
+
+#define GEN_INTERNAL_ALIAS(original) \
+  WEAK_ALIAS(__bionic_##original, original)
+
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

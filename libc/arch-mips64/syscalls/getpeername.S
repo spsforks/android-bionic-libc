@@ -23,3 +23,5 @@ ENTRY(getpeername)
     move ra, t0
     .set pop
 END(getpeername)
+
+GEN_INTERNAL_ALIAS(getpeername)

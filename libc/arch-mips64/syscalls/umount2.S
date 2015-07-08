@@ -23,3 +23,5 @@ ENTRY(umount2)
     move ra, t0
     .set pop
 END(umount2)
+
+GEN_INTERNAL_ALIAS(umount2)

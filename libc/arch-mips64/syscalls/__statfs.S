@@ -23,4 +23,6 @@ ENTRY(__statfs)
     move ra, t0
     .set pop
 END(__statfs)
+
+GEN_INTERNAL_ALIAS(__statfs)
 .hidden __statfs

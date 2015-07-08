@@ -25,3 +25,5 @@ ENTRY(socketpair)
     popl    %ebx
     ret
 END(socketpair)
+
+GEN_INTERNAL_ALIAS(socketpair)

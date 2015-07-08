@@ -484,3 +484,6 @@ ENTRY(strcmp)
 
 	bx	lr
 END(strcmp)
+
+GEN_INTERNAL_ALIAS(strcmp)
+

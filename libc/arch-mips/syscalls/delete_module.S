@@ -17,3 +17,5 @@ ENTRY(delete_module)
     nop
     .set reorder
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

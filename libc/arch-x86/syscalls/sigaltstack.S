@@ -24,3 +24,5 @@ ENTRY(sigaltstack)
     popl    %ebx
     ret
 END(sigaltstack)
+
+GEN_INTERNAL_ALIAS(sigaltstack)

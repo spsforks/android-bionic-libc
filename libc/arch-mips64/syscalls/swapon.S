@@ -23,3 +23,5 @@ ENTRY(swapon)
     move ra, t0
     .set pop
 END(swapon)
+
+GEN_INTERNAL_ALIAS(swapon)

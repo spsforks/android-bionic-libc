@@ -165,3 +165,6 @@ done:
     sub     r0, r0, #1
     bx      lr
 END(strlen)
+
+GEN_INTERNAL_ALIAS(strlen)
+

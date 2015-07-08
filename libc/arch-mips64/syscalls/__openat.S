@@ -23,4 +23,6 @@ ENTRY(__openat)
     move ra, t0
     .set pop
 END(__openat)
+
+GEN_INTERNAL_ALIAS(__openat)
 .hidden __openat

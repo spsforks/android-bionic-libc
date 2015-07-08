@@ -12,4 +12,6 @@ ENTRY(__clock_nanosleep)
 
     ret
 END(__clock_nanosleep)
+
+GEN_INTERNAL_ALIAS(__clock_nanosleep)
 .hidden __clock_nanosleep

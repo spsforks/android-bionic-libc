@@ -23,4 +23,6 @@ ENTRY(__connect)
     move ra, t0
     .set pop
 END(__connect)
+
+GEN_INTERNAL_ALIAS(__connect)
 .hidden __connect

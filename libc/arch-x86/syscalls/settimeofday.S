@@ -24,3 +24,5 @@ ENTRY(settimeofday)
     popl    %ebx
     ret
 END(settimeofday)
+
+GEN_INTERNAL_ALIAS(settimeofday)

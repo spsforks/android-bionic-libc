@@ -12,3 +12,5 @@ ENTRY(listen)
 
     ret
 END(listen)
+
+GEN_INTERNAL_ALIAS(listen)

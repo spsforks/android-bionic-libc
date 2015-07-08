@@ -12,3 +12,5 @@ ENTRY(execve)
 
     ret
 END(execve)
+
+GEN_INTERNAL_ALIAS(execve)

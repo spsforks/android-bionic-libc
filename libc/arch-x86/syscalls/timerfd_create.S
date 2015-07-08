@@ -24,3 +24,5 @@ ENTRY(timerfd_create)
     popl    %ebx
     ret
 END(timerfd_create)
+
+GEN_INTERNAL_ALIAS(timerfd_create)

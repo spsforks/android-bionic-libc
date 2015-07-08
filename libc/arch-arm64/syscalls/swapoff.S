@@ -12,3 +12,5 @@ ENTRY(swapoff)
 
     ret
 END(swapoff)
+
+GEN_INTERNAL_ALIAS(swapoff)

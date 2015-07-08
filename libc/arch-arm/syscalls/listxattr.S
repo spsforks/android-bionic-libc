@@ -12,3 +12,5 @@ ENTRY(listxattr)
     neg     r0, r0
     b       __set_errno_internal
 END(listxattr)
+
+GEN_INTERNAL_ALIAS(listxattr)

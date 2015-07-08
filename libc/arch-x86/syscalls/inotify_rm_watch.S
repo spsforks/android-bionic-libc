@@ -24,3 +24,5 @@ ENTRY(inotify_rm_watch)
     popl    %ebx
     ret
 END(inotify_rm_watch)
+
+GEN_INTERNAL_ALIAS(inotify_rm_watch)

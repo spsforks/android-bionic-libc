@@ -14,4 +14,6 @@ ENTRY(__rt_sigaction)
 1:
     ret
 END(__rt_sigaction)
+
+GEN_INTERNAL_ALIAS(__rt_sigaction)
 .hidden __rt_sigaction

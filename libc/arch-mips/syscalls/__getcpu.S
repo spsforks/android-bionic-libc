@@ -17,3 +17,5 @@ ENTRY(__getcpu)
     nop
     .set reorder
 END(__getcpu)
+
+GEN_INTERNAL_ALIAS(__getcpu)

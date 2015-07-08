@@ -235,8 +235,14 @@ ENTRY(memset)
 	ret
 #ifdef BZERO
 END(bzero)
+
+GEN_INTERNAL_ALIAS(bzero)
+
 #else
 END(memset)
+
+GEN_INTERNAL_ALIAS(memset)
+
 #endif
 
 #ifdef MAYBE_VIRT

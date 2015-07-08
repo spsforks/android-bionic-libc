@@ -23,4 +23,6 @@ ENTRY(__signalfd4)
     move ra, t0
     .set pop
 END(__signalfd4)
+
+GEN_INTERNAL_ALIAS(__signalfd4)
 .hidden __signalfd4

@@ -23,3 +23,5 @@ ENTRY(lremovexattr)
     move ra, t0
     .set pop
 END(lremovexattr)
+
+GEN_INTERNAL_ALIAS(lremovexattr)

@@ -29,3 +29,5 @@ ENTRY(flistxattr)
     popl    %ebx
     ret
 END(flistxattr)
+
+GEN_INTERNAL_ALIAS(flistxattr)

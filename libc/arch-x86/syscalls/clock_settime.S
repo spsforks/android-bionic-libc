@@ -24,3 +24,5 @@ ENTRY(clock_settime)
     popl    %ebx
     ret
 END(clock_settime)
+
+GEN_INTERNAL_ALIAS(clock_settime)

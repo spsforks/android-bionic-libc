@@ -23,3 +23,5 @@ ENTRY(inotify_add_watch)
     move ra, t0
     .set pop
 END(inotify_add_watch)
+
+GEN_INTERNAL_ALIAS(inotify_add_watch)

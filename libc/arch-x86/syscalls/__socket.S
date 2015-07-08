@@ -25,3 +25,5 @@ ENTRY(__socket)
     popl    %ebx
     ret
 END(__socket)
+
+GEN_INTERNAL_ALIAS(__socket)

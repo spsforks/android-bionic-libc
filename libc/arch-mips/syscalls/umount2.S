@@ -17,3 +17,5 @@ ENTRY(umount2)
     nop
     .set reorder
 END(umount2)
+
+GEN_INTERNAL_ALIAS(umount2)

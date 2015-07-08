@@ -12,3 +12,5 @@ ENTRY(fsetxattr)
 
     ret
 END(fsetxattr)
+
+GEN_INTERNAL_ALIAS(fsetxattr)

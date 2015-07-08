@@ -13,4 +13,6 @@ ENTRY(__exit)
 1:
     ret
 END(__exit)
+
+GEN_INTERNAL_ALIAS(__exit)
 .hidden __exit

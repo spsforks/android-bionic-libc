@@ -12,3 +12,5 @@ ENTRY(vfork)
     neg     r0, r0
     b       __set_errno_internal
 END(vfork)
+
+GEN_INTERNAL_ALIAS(vfork)

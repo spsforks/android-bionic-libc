@@ -12,3 +12,5 @@ ENTRY(swapoff)
     neg     r0, r0
     b       __set_errno_internal
 END(swapoff)
+
+GEN_INTERNAL_ALIAS(swapoff)

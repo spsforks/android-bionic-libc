@@ -17,3 +17,5 @@ ENTRY(__rt_sigaction)
     nop
     .set reorder
 END(__rt_sigaction)
+
+GEN_INTERNAL_ALIAS(__rt_sigaction)
