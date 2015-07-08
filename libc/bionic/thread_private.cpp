@@ -28,7 +28,7 @@
 
 #include <pthread.h>
 #include "private/thread_private.h"
-
+#include "bionic_internal_symbols.h"
 // Some simple glue used to make BSD code thread-safe.
 
 static pthread_mutex_t g_atexit_lock = PTHREAD_MUTEX_INITIALIZER;

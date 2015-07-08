@@ -251,10 +251,22 @@ char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
     return __builtin___strncat_chk(dest, src, n, __bos(dest));
 }
 
+// Undefine here temporarily so that we can define memset specially
+#undef memset
+#undef INTERNAL
+#define INTERNAL(x) __bionic_##x
+
+__BIONIC_FORTIFY_INLINE
+void* __bionic_memset(void *s, int c, size_t n) {
+    return __builtin___memset_chk(s, c, n, __bos0(s));
+}
+
 __BIONIC_FORTIFY_INLINE
 void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
+
+#define memset INTERNAL(memset)
 
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {

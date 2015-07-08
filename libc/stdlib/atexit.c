@@ -37,6 +37,7 @@
 #include "atexit.h"
 #include "private/thread_private.h"
 
+
 struct atexit *__atexit;
 static int restartloop;
 
@@ -210,3 +211,6 @@ __atexit_register_cleanup(void (*func)(void))
 unlock:
 	_ATEXIT_UNLOCK();
 }
+
+#define MISC_MISSING_MMAP
+#include "bionic_external_symbols.h"

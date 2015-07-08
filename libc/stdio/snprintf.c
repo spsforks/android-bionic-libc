@@ -38,6 +38,8 @@
 #include <stdarg.h>
 #include "local.h"
 
+#include "bionic_internal_symbols.h"
+
 int
 snprintf(char *str, size_t n, const char *fmt, ...)
 {
@@ -66,3 +68,12 @@ snprintf(char *str, size_t n, const char *fmt, ...)
 	*f._p = '\0';
 	return (ret);
 }
+
+// This is just a place to define a copies of memset that are not inlines
+
+void* __bionic_memset(void *s, int c, size_t n) {
+    return __builtin___memset_chk(s, c, n, __BIONIC_FORTIFY_UNKNOWN_SIZE);
+}
+
+#define MEMSET_C_DEFS
+#include "bionic_external_symbols.h"
