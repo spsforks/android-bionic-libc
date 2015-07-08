@@ -17,3 +17,5 @@ ENTRY(fallocate64)
     nop
     .set reorder
 END(fallocate64)
+
+GEN_INTERNAL_ALIAS(fallocate64)

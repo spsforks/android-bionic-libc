@@ -19,3 +19,5 @@ ENTRY(sysinfo)
     popl    %ebx
     ret
 END(sysinfo)
+
+GEN_INTERNAL_ALIAS(sysinfo)

@@ -12,3 +12,5 @@ ENTRY(setxattr)
 
     ret
 END(setxattr)
+
+GEN_INTERNAL_ALIAS(setxattr)

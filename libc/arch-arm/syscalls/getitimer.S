@@ -12,3 +12,5 @@ ENTRY(getitimer)
     neg     r0, r0
     b       __set_errno_internal
 END(getitimer)
+
+GEN_INTERNAL_ALIAS(getitimer)

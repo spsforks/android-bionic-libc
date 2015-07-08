@@ -12,3 +12,5 @@ ENTRY(sendfile64)
     neg     r0, r0
     b       __set_errno_internal
 END(sendfile64)
+
+GEN_INTERNAL_ALIAS(sendfile64)

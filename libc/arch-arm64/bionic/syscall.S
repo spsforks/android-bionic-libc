@@ -47,3 +47,5 @@ ENTRY(syscall)
 
     ret
 END(syscall)
+
+GEN_INTERNAL_ALIAS(syscall)

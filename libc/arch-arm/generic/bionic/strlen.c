@@ -134,3 +134,6 @@ size_t strlen(const char *s)
 done:
     return l;
 }
+
+#define STRLEN_C
+#include "bionic_external_symbols.h"

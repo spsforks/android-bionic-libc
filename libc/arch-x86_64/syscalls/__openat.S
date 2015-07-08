@@ -14,4 +14,6 @@ ENTRY(__openat)
 1:
     ret
 END(__openat)
+
+GEN_INTERNAL_ALIAS(__openat)
 .hidden __openat

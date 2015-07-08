@@ -12,3 +12,5 @@ ENTRY(execve)
     neg     r0, r0
     b       __set_errno_internal
 END(execve)
+
+GEN_INTERNAL_ALIAS(execve)

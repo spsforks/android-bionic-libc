@@ -20,3 +20,5 @@ ENTRY(pread64)
     neg     r0, r0
     b       __set_errno_internal
 END(pread64)
+
+GEN_INTERNAL_ALIAS(pread64)

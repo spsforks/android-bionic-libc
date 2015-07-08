@@ -12,3 +12,5 @@ ENTRY(sched_rr_get_interval)
     neg     r0, r0
     b       __set_errno_internal
 END(sched_rr_get_interval)
+
+GEN_INTERNAL_ALIAS(sched_rr_get_interval)

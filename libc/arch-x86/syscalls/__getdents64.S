@@ -29,3 +29,5 @@ ENTRY(__getdents64)
     popl    %ebx
     ret
 END(__getdents64)
+
+GEN_INTERNAL_ALIAS(__getdents64)

@@ -17,3 +17,5 @@ ENTRY(__getpid)
     nop
     .set reorder
 END(__getpid)
+
+GEN_INTERNAL_ALIAS(__getpid)

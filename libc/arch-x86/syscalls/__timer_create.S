@@ -29,3 +29,5 @@ ENTRY(__timer_create)
     popl    %ebx
     ret
 END(__timer_create)
+
+GEN_INTERNAL_ALIAS(__timer_create)

@@ -24,3 +24,5 @@ ENTRY(capset)
     popl    %ebx
     ret
 END(capset)
+
+GEN_INTERNAL_ALIAS(capset)

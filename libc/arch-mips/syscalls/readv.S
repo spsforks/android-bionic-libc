@@ -17,3 +17,5 @@ ENTRY(readv)
     nop
     .set reorder
 END(readv)
+
+GEN_INTERNAL_ALIAS(readv)

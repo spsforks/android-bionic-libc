@@ -17,3 +17,5 @@ ENTRY(__exit)
     nop
     .set reorder
 END(__exit)
+
+GEN_INTERNAL_ALIAS(__exit)

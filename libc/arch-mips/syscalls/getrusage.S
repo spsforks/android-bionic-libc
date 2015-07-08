@@ -17,3 +17,5 @@ ENTRY(getrusage)
     nop
     .set reorder
 END(getrusage)
+
+GEN_INTERNAL_ALIAS(getrusage)

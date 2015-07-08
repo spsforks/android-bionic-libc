@@ -24,3 +24,5 @@ ENTRY(eventfd)
     popl    %ebx
     ret
 END(eventfd)
+
+GEN_INTERNAL_ALIAS(eventfd)

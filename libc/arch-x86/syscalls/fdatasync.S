@@ -19,3 +19,5 @@ ENTRY(fdatasync)
     popl    %ebx
     ret
 END(fdatasync)
+
+GEN_INTERNAL_ALIAS(fdatasync)

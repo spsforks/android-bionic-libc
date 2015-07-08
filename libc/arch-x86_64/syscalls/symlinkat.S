@@ -13,3 +13,5 @@ ENTRY(symlinkat)
 1:
     ret
 END(symlinkat)
+
+GEN_INTERNAL_ALIAS(symlinkat)

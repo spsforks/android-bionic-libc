@@ -34,3 +34,5 @@ ENTRY(utimensat)
     popl    %ebx
     ret
 END(utimensat)
+
+GEN_INTERNAL_ALIAS(utimensat)

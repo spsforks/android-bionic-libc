@@ -15,4 +15,8 @@ ENTRY(sendfile)
     ret
 END(sendfile)
 
+GEN_INTERNAL_ALIAS(sendfile)
+
 ALIAS_SYMBOL(sendfile64, sendfile)
+
+WEAK_ALIAS(__bionic_sendfile64, sendfile)

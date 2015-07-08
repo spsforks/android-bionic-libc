@@ -12,3 +12,5 @@ ENTRY(epoll_ctl)
     neg     r0, r0
     b       __set_errno_internal
 END(epoll_ctl)
+
+GEN_INTERNAL_ALIAS(epoll_ctl)

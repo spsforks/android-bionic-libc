@@ -12,3 +12,5 @@ ENTRY(__statfs64)
     neg     r0, r0
     b       __set_errno_internal
 END(__statfs64)
+
+GEN_INTERNAL_ALIAS(__statfs64)

@@ -13,3 +13,5 @@ ENTRY(writev)
 1:
     ret
 END(writev)
+
+GEN_INTERNAL_ALIAS(writev)

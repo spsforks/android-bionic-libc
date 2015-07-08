@@ -17,3 +17,5 @@ ENTRY(__mmap2)
     nop
     .set reorder
 END(__mmap2)
+
+GEN_INTERNAL_ALIAS(__mmap2)

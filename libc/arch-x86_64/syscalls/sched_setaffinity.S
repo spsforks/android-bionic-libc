@@ -13,3 +13,5 @@ ENTRY(sched_setaffinity)
 1:
     ret
 END(sched_setaffinity)
+
+GEN_INTERNAL_ALIAS(sched_setaffinity)

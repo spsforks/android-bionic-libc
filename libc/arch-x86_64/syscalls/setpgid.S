@@ -13,3 +13,5 @@ ENTRY(setpgid)
 1:
     ret
 END(setpgid)
+
+GEN_INTERNAL_ALIAS(setpgid)

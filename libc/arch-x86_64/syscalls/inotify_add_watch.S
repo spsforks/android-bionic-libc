@@ -13,3 +13,5 @@ ENTRY(inotify_add_watch)
 1:
     ret
 END(inotify_add_watch)
+
+GEN_INTERNAL_ALIAS(inotify_add_watch)

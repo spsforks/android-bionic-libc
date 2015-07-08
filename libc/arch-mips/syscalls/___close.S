@@ -17,4 +17,6 @@ ENTRY(___close)
     nop
     .set reorder
 END(___close)
+
+GEN_INTERNAL_ALIAS(___close)
 .hidden ___close

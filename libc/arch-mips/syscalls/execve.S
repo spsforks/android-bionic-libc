@@ -17,3 +17,5 @@ ENTRY(execve)
     nop
     .set reorder
 END(execve)
+
+GEN_INTERNAL_ALIAS(execve)

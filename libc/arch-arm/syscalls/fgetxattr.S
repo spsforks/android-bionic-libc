@@ -12,3 +12,5 @@ ENTRY(fgetxattr)
     neg     r0, r0
     b       __set_errno_internal
 END(fgetxattr)
+
+GEN_INTERNAL_ALIAS(fgetxattr)

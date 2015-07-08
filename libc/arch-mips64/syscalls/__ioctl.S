@@ -23,4 +23,6 @@ ENTRY(__ioctl)
     move ra, t0
     .set pop
 END(__ioctl)
+
+GEN_INTERNAL_ALIAS(__ioctl)
 .hidden __ioctl

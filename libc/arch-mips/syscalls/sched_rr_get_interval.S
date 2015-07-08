@@ -17,3 +17,5 @@ ENTRY(sched_rr_get_interval)
     nop
     .set reorder
 END(sched_rr_get_interval)
+
+GEN_INTERNAL_ALIAS(sched_rr_get_interval)

@@ -34,3 +34,5 @@ ENTRY(__openat)
     popl    %ebx
     ret
 END(__openat)
+
+GEN_INTERNAL_ALIAS(__openat)

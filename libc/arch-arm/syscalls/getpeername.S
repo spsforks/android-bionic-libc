@@ -12,3 +12,5 @@ ENTRY(getpeername)
     neg     r0, r0
     b       __set_errno_internal
 END(getpeername)
+
+GEN_INTERNAL_ALIAS(getpeername)

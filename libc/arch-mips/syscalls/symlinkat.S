@@ -17,3 +17,5 @@ ENTRY(symlinkat)
     nop
     .set reorder
 END(symlinkat)
+
+GEN_INTERNAL_ALIAS(symlinkat)

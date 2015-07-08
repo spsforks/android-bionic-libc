@@ -20,3 +20,5 @@ ENTRY(linkat)
     neg     r0, r0
     b       __set_errno_internal
 END(linkat)
+
+GEN_INTERNAL_ALIAS(linkat)

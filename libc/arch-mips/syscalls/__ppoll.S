@@ -17,3 +17,5 @@ ENTRY(__ppoll)
     nop
     .set reorder
 END(__ppoll)
+
+GEN_INTERNAL_ALIAS(__ppoll)

@@ -23,3 +23,5 @@ ENTRY(vmsplice)
     move ra, t0
     .set pop
 END(vmsplice)
+
+GEN_INTERNAL_ALIAS(vmsplice)

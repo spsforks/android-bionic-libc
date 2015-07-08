@@ -23,3 +23,5 @@ ENTRY(lsetxattr)
     move ra, t0
     .set pop
 END(lsetxattr)
+
+GEN_INTERNAL_ALIAS(lsetxattr)

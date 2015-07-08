@@ -14,3 +14,5 @@ ENTRY(utimensat)
 1:
     ret
 END(utimensat)
+
+GEN_INTERNAL_ALIAS(utimensat)

@@ -13,4 +13,6 @@ ENTRY(__timer_getoverrun)
 1:
     ret
 END(__timer_getoverrun)
+
+GEN_INTERNAL_ALIAS(__timer_getoverrun)
 .hidden __timer_getoverrun

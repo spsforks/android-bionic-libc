@@ -24,3 +24,5 @@ ENTRY(__getpriority)
     popl    %ebx
     ret
 END(__getpriority)
+
+GEN_INTERNAL_ALIAS(__getpriority)

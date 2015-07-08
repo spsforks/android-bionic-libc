@@ -29,3 +29,5 @@ ENTRY(mincore)
     popl    %ebx
     ret
 END(mincore)
+
+GEN_INTERNAL_ALIAS(mincore)

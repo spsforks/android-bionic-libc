@@ -17,3 +17,5 @@ ENTRY(__set_tid_address)
     nop
     .set reorder
 END(__set_tid_address)
+
+GEN_INTERNAL_ALIAS(__set_tid_address)

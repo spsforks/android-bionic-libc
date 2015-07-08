@@ -23,3 +23,5 @@ ENTRY(getuid)
     move ra, t0
     .set pop
 END(getuid)
+
+GEN_INTERNAL_ALIAS(getuid)

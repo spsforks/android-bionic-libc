@@ -39,3 +39,5 @@ ENTRY(setxattr)
     popl    %ebx
     ret
 END(setxattr)
+
+GEN_INTERNAL_ALIAS(setxattr)

@@ -17,3 +17,5 @@ ENTRY(wait4)
     nop
     .set reorder
 END(wait4)
+
+GEN_INTERNAL_ALIAS(wait4)

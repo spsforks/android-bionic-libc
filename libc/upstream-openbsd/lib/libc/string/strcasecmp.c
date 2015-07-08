@@ -103,3 +103,6 @@ strncasecmp(const char *s1, const char *s2, size_t n)
 	}
 	return (0);
 }
+
+#define STRCASECMP_C
+#include "bionic_external_symbols.h"

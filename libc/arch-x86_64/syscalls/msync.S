@@ -13,3 +13,5 @@ ENTRY(msync)
 1:
     ret
 END(msync)
+
+GEN_INTERNAL_ALIAS(msync)

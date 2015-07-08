@@ -23,4 +23,6 @@ ENTRY(__timer_create)
     move ra, t0
     .set pop
 END(__timer_create)
+
+GEN_INTERNAL_ALIAS(__timer_create)
 .hidden __timer_create

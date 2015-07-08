@@ -12,3 +12,5 @@ ENTRY(munmap)
 
     ret
 END(munmap)
+
+GEN_INTERNAL_ALIAS(munmap)

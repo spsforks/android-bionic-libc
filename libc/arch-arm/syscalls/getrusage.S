@@ -12,3 +12,5 @@ ENTRY(getrusage)
     neg     r0, r0
     b       __set_errno_internal
 END(getrusage)
+
+GEN_INTERNAL_ALIAS(getrusage)

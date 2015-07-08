@@ -17,3 +17,5 @@ ENTRY(dup)
     nop
     .set reorder
 END(dup)
+
+GEN_INTERNAL_ALIAS(dup)

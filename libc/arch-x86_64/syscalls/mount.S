@@ -14,3 +14,5 @@ ENTRY(mount)
 1:
     ret
 END(mount)
+
+GEN_INTERNAL_ALIAS(mount)

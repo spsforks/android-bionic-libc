@@ -17,3 +17,5 @@ ENTRY(flock)
     nop
     .set reorder
 END(flock)
+
+GEN_INTERNAL_ALIAS(flock)

@@ -19,3 +19,5 @@ ENTRY(umask)
     popl    %ebx
     ret
 END(umask)
+
+GEN_INTERNAL_ALIAS(umask)

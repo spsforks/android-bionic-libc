@@ -12,3 +12,5 @@ ENTRY(getxattr)
 
     ret
 END(getxattr)
+
+GEN_INTERNAL_ALIAS(getxattr)

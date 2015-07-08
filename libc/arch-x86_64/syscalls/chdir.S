@@ -13,3 +13,5 @@ ENTRY(chdir)
 1:
     ret
 END(chdir)
+
+GEN_INTERNAL_ALIAS(chdir)

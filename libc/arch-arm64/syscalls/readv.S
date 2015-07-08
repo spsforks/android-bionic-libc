@@ -12,3 +12,5 @@ ENTRY(readv)
 
     ret
 END(readv)
+
+GEN_INTERNAL_ALIAS(readv)

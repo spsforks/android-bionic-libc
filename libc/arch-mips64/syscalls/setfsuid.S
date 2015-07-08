@@ -23,3 +23,5 @@ ENTRY(setfsuid)
     move ra, t0
     .set pop
 END(setfsuid)
+
+GEN_INTERNAL_ALIAS(setfsuid)

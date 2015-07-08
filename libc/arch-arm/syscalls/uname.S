@@ -12,3 +12,5 @@ ENTRY(uname)
     neg     r0, r0
     b       __set_errno_internal
 END(uname)
+
+GEN_INTERNAL_ALIAS(uname)

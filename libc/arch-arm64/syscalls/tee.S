@@ -12,3 +12,5 @@ ENTRY(tee)
 
     ret
 END(tee)
+
+GEN_INTERNAL_ALIAS(tee)

@@ -23,3 +23,5 @@ ENTRY(munmap)
     move ra, t0
     .set pop
 END(munmap)
+
+GEN_INTERNAL_ALIAS(munmap)

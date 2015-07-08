@@ -23,3 +23,5 @@ ENTRY(getpgid)
     move ra, t0
     .set pop
 END(getpgid)
+
+GEN_INTERNAL_ALIAS(getpgid)

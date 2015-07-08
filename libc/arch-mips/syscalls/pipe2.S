@@ -17,3 +17,5 @@ ENTRY(pipe2)
     nop
     .set reorder
 END(pipe2)
+
+GEN_INTERNAL_ALIAS(pipe2)

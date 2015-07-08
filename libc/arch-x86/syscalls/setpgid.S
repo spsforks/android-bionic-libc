@@ -24,3 +24,5 @@ ENTRY(setpgid)
     popl    %ebx
     ret
 END(setpgid)
+
+GEN_INTERNAL_ALIAS(setpgid)

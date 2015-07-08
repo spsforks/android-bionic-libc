@@ -17,4 +17,6 @@ ENTRY(___faccessat)
     nop
     .set reorder
 END(___faccessat)
+
+GEN_INTERNAL_ALIAS(___faccessat)
 .hidden ___faccessat

@@ -160,3 +160,6 @@ ENTRY(strcmp)
 	sub	result, data1, data2
 	ret
 END(strcmp)
+
+GEN_INTERNAL_ALIAS(strcmp)
+

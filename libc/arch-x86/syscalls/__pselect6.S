@@ -44,3 +44,5 @@ ENTRY(__pselect6)
     popl    %ebx
     ret
 END(__pselect6)
+
+GEN_INTERNAL_ALIAS(__pselect6)

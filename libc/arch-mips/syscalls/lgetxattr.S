@@ -17,3 +17,5 @@ ENTRY(lgetxattr)
     nop
     .set reorder
 END(lgetxattr)
+
+GEN_INTERNAL_ALIAS(lgetxattr)

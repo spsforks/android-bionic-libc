@@ -23,3 +23,5 @@ ENTRY(setpriority)
     move ra, t0
     .set pop
 END(setpriority)
+
+GEN_INTERNAL_ALIAS(setpriority)

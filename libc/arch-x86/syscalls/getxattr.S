@@ -34,3 +34,5 @@ ENTRY(getxattr)
     popl    %ebx
     ret
 END(getxattr)
+
+GEN_INTERNAL_ALIAS(getxattr)

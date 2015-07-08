@@ -12,3 +12,5 @@ ENTRY(inotify_init1)
 
     ret
 END(inotify_init1)
+
+GEN_INTERNAL_ALIAS(inotify_init1)

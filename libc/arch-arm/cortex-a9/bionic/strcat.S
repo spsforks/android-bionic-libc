@@ -546,3 +546,6 @@ strcat_r0_update:
     sub     r0, r0, #1
     b strcat_r0_scan_done
 END(strcat)
+
+GEN_INTERNAL_ALIAS(strcat)
+

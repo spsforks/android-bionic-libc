@@ -20,3 +20,5 @@ ENTRY(fsetxattr)
     neg     r0, r0
     b       __set_errno_internal
 END(fsetxattr)
+
+GEN_INTERNAL_ALIAS(fsetxattr)

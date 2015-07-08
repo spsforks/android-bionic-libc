@@ -13,3 +13,5 @@ ENTRY(llistxattr)
 1:
     ret
 END(llistxattr)
+
+GEN_INTERNAL_ALIAS(llistxattr)

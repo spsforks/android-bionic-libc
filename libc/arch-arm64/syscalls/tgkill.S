@@ -12,3 +12,5 @@ ENTRY(tgkill)
 
     ret
 END(tgkill)
+
+GEN_INTERNAL_ALIAS(tgkill)

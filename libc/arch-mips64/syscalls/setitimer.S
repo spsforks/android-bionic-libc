@@ -23,3 +23,5 @@ ENTRY(setitimer)
     move ra, t0
     .set pop
 END(setitimer)
+
+GEN_INTERNAL_ALIAS(setitimer)

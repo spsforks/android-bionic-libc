@@ -17,3 +17,5 @@ ENTRY(mlock)
     nop
     .set reorder
 END(mlock)
+
+GEN_INTERNAL_ALIAS(mlock)

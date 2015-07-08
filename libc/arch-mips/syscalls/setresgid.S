@@ -17,3 +17,5 @@ ENTRY(setresgid)
     nop
     .set reorder
 END(setresgid)
+
+GEN_INTERNAL_ALIAS(setresgid)

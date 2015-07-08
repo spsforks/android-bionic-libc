@@ -29,3 +29,5 @@ ENTRY(__sigaction)
     popl    %ebx
     ret
 END(__sigaction)
+
+GEN_INTERNAL_ALIAS(__sigaction)

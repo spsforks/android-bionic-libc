@@ -17,3 +17,5 @@ ENTRY(getpeername)
     nop
     .set reorder
 END(getpeername)
+
+GEN_INTERNAL_ALIAS(getpeername)

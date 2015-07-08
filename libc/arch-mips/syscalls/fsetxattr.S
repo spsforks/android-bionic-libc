@@ -17,3 +17,5 @@ ENTRY(fsetxattr)
     nop
     .set reorder
 END(fsetxattr)
+
+GEN_INTERNAL_ALIAS(fsetxattr)

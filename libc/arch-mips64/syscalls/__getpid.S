@@ -23,4 +23,6 @@ ENTRY(__getpid)
     move ra, t0
     .set pop
 END(__getpid)
+
+GEN_INTERNAL_ALIAS(__getpid)
 .hidden __getpid

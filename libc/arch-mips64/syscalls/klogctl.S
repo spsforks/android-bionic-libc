@@ -23,3 +23,5 @@ ENTRY(klogctl)
     move ra, t0
     .set pop
 END(klogctl)
+
+GEN_INTERNAL_ALIAS(klogctl)

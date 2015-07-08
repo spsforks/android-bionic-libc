@@ -34,3 +34,5 @@ ENTRY(__rt_sigtimedwait)
     popl    %ebx
     ret
 END(__rt_sigtimedwait)
+
+GEN_INTERNAL_ALIAS(__rt_sigtimedwait)

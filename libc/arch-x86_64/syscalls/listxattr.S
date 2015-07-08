@@ -13,3 +13,5 @@ ENTRY(listxattr)
 1:
     ret
 END(listxattr)
+
+GEN_INTERNAL_ALIAS(listxattr)

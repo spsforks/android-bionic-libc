@@ -13,3 +13,5 @@ ENTRY(sched_yield)
 1:
     ret
 END(sched_yield)
+
+GEN_INTERNAL_ALIAS(sched_yield)

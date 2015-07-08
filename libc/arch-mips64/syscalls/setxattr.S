@@ -23,3 +23,5 @@ ENTRY(setxattr)
     move ra, t0
     .set pop
 END(setxattr)
+
+GEN_INTERNAL_ALIAS(setxattr)

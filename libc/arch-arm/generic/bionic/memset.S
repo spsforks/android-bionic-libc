@@ -51,6 +51,9 @@ error_message:
 
 END(__memset_chk)
 
+GEN_INTERNAL_ALIAS(__memset_chk)
+
+
 ENTRY(bzero)
         mov     r2, r1
         mov     r1, #0
@@ -58,6 +61,9 @@ ENTRY(bzero)
 done:
         // Fall through to memset...
 END(bzero)
+
+GEN_INTERNAL_ALIAS(bzero)
+
 
 ENTRY(memset)
         /* compute the offset to align the destination
@@ -127,6 +133,9 @@ ENTRY(memset)
         ldmfd       sp!, {r0, r4-r7, lr}
         bx          lr
 END(memset)
+
+GEN_INTERNAL_ALIAS(memset)
+
 
         .data
 error_string:

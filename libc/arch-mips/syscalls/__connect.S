@@ -17,3 +17,5 @@ ENTRY(__connect)
     nop
     .set reorder
 END(__connect)
+
+GEN_INTERNAL_ALIAS(__connect)

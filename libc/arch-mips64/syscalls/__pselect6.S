@@ -23,4 +23,6 @@ ENTRY(__pselect6)
     move ra, t0
     .set pop
 END(__pselect6)
+
+GEN_INTERNAL_ALIAS(__pselect6)
 .hidden __pselect6

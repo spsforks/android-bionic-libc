@@ -23,3 +23,5 @@ ENTRY(mlockall)
     move ra, t0
     .set pop
 END(mlockall)
+
+GEN_INTERNAL_ALIAS(mlockall)

@@ -17,3 +17,5 @@ ENTRY(getpgid)
     nop
     .set reorder
 END(getpgid)
+
+GEN_INTERNAL_ALIAS(getpgid)

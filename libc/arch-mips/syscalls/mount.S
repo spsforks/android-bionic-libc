@@ -17,3 +17,5 @@ ENTRY(mount)
     nop
     .set reorder
 END(mount)
+
+GEN_INTERNAL_ALIAS(mount)

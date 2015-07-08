@@ -17,3 +17,5 @@ ENTRY(shutdown)
     nop
     .set reorder
 END(shutdown)
+
+GEN_INTERNAL_ALIAS(shutdown)

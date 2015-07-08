@@ -12,4 +12,6 @@ ENTRY(__timer_delete)
 
     ret
 END(__timer_delete)
+
+GEN_INTERNAL_ALIAS(__timer_delete)
 .hidden __timer_delete

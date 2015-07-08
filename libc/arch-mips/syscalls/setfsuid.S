@@ -17,3 +17,5 @@ ENTRY(setfsuid)
     nop
     .set reorder
 END(setfsuid)
+
+GEN_INTERNAL_ALIAS(setfsuid)

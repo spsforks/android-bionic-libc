@@ -12,3 +12,5 @@ ENTRY(wait4)
     neg     r0, r0
     b       __set_errno_internal
 END(wait4)
+
+GEN_INTERNAL_ALIAS(wait4)

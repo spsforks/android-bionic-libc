@@ -20,3 +20,5 @@ ENTRY(__arm_fadvise64_64)
     neg     r0, r0
     b       __set_errno_internal
 END(__arm_fadvise64_64)
+
+GEN_INTERNAL_ALIAS(__arm_fadvise64_64)

@@ -49,3 +49,6 @@ cont:
 			goto cont;
 	return (p - 1 - s1);
 }
+
+#define STRSPN_C
+#include "bionic_external_symbols.h"

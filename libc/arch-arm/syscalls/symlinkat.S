@@ -12,3 +12,5 @@ ENTRY(symlinkat)
     neg     r0, r0
     b       __set_errno_internal
 END(symlinkat)
+
+GEN_INTERNAL_ALIAS(symlinkat)

@@ -12,3 +12,5 @@ ENTRY(sethostname)
 
     ret
 END(sethostname)
+
+GEN_INTERNAL_ALIAS(sethostname)

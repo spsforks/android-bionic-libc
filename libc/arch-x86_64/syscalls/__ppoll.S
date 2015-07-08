@@ -14,4 +14,6 @@ ENTRY(__ppoll)
 1:
     ret
 END(__ppoll)
+
+GEN_INTERNAL_ALIAS(__ppoll)
 .hidden __ppoll

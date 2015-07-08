@@ -17,3 +17,5 @@ ENTRY(__epoll_pwait)
     nop
     .set reorder
 END(__epoll_pwait)
+
+GEN_INTERNAL_ALIAS(__epoll_pwait)

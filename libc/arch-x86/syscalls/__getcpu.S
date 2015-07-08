@@ -29,3 +29,5 @@ ENTRY(__getcpu)
     popl    %ebx
     ret
 END(__getcpu)
+
+GEN_INTERNAL_ALIAS(__getcpu)

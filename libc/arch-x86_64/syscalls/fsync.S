@@ -13,3 +13,5 @@ ENTRY(fsync)
 1:
     ret
 END(fsync)
+
+GEN_INTERNAL_ALIAS(fsync)

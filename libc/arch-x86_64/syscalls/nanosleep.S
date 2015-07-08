@@ -13,3 +13,5 @@ ENTRY(nanosleep)
 1:
     ret
 END(nanosleep)
+
+GEN_INTERNAL_ALIAS(nanosleep)

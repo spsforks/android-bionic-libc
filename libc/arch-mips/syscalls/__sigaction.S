@@ -17,3 +17,5 @@ ENTRY(__sigaction)
     nop
     .set reorder
 END(__sigaction)
+
+GEN_INTERNAL_ALIAS(__sigaction)

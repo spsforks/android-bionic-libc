@@ -12,3 +12,5 @@ ENTRY(msync)
     neg     r0, r0
     b       __set_errno_internal
 END(msync)
+
+GEN_INTERNAL_ALIAS(msync)

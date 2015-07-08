@@ -23,3 +23,5 @@ ENTRY(symlinkat)
     move ra, t0
     .set pop
 END(symlinkat)
+
+GEN_INTERNAL_ALIAS(symlinkat)

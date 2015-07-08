@@ -29,3 +29,5 @@ ENTRY(__statfs64)
     popl    %ebx
     ret
 END(__statfs64)
+
+GEN_INTERNAL_ALIAS(__statfs64)

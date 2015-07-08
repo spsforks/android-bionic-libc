@@ -24,3 +24,5 @@ ENTRY(swapon)
     popl    %ebx
     ret
 END(swapon)
+
+GEN_INTERNAL_ALIAS(swapon)

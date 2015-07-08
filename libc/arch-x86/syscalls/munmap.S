@@ -24,3 +24,5 @@ ENTRY(munmap)
     popl    %ebx
     ret
 END(munmap)
+
+GEN_INTERNAL_ALIAS(munmap)

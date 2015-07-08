@@ -17,3 +17,5 @@ ENTRY(__signalfd4)
     nop
     .set reorder
 END(__signalfd4)
+
+GEN_INTERNAL_ALIAS(__signalfd4)

@@ -13,3 +13,5 @@ ENTRY(setregid)
 1:
     ret
 END(setregid)
+
+GEN_INTERNAL_ALIAS(setregid)

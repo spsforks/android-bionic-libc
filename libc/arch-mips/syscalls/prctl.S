@@ -17,3 +17,5 @@ ENTRY(prctl)
     nop
     .set reorder
 END(prctl)
+
+GEN_INTERNAL_ALIAS(prctl)

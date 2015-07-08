@@ -59,12 +59,18 @@ error_message:
         .word       error_string-(1b+8)
 END(__memset_chk)
 
+GEN_INTERNAL_ALIAS(__memset_chk)
+
+
 ENTRY(bzero)
         mov         r2, r1
         mov         r1, #0
 .L_done:
         // Fall through to memset...
 END(bzero)
+
+GEN_INTERNAL_ALIAS(bzero)
+
 
 ENTRY(memset)
         stmfd       sp!, {r0}
@@ -185,6 +191,9 @@ ENTRY(memset)
         ldmfd       sp!, {r0}
         bx          lr
 END(memset)
+
+GEN_INTERNAL_ALIAS(memset)
+
 
         .data
 error_string:

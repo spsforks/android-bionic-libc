@@ -23,3 +23,5 @@ ENTRY(sched_setaffinity)
     move ra, t0
     .set pop
 END(sched_setaffinity)
+
+GEN_INTERNAL_ALIAS(sched_setaffinity)

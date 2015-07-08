@@ -12,3 +12,5 @@ ENTRY(lremovexattr)
     neg     r0, r0
     b       __set_errno_internal
 END(lremovexattr)
+
+GEN_INTERNAL_ALIAS(lremovexattr)

@@ -17,3 +17,5 @@ ENTRY(pwrite64)
     nop
     .set reorder
 END(pwrite64)
+
+GEN_INTERNAL_ALIAS(pwrite64)

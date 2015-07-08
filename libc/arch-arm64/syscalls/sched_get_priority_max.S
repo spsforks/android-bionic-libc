@@ -12,3 +12,5 @@ ENTRY(sched_get_priority_max)
 
     ret
 END(sched_get_priority_max)
+
+GEN_INTERNAL_ALIAS(sched_get_priority_max)

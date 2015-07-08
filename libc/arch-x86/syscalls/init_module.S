@@ -29,3 +29,5 @@ ENTRY(init_module)
     popl    %ebx
     ret
 END(init_module)
+
+GEN_INTERNAL_ALIAS(init_module)

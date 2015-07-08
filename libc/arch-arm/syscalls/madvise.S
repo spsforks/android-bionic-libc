@@ -12,3 +12,5 @@ ENTRY(madvise)
     neg     r0, r0
     b       __set_errno_internal
 END(madvise)
+
+GEN_INTERNAL_ALIAS(madvise)

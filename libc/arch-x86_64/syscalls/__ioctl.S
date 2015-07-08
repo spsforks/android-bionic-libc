@@ -13,4 +13,6 @@ ENTRY(__ioctl)
 1:
     ret
 END(__ioctl)
+
+GEN_INTERNAL_ALIAS(__ioctl)
 .hidden __ioctl

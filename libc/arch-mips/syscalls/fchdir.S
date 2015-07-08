@@ -17,3 +17,5 @@ ENTRY(fchdir)
     nop
     .set reorder
 END(fchdir)
+
+GEN_INTERNAL_ALIAS(fchdir)

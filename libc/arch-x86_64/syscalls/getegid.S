@@ -13,3 +13,5 @@ ENTRY(getegid)
 1:
     ret
 END(getegid)
+
+GEN_INTERNAL_ALIAS(getegid)

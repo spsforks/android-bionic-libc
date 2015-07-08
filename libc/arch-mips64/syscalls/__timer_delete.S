@@ -23,4 +23,6 @@ ENTRY(__timer_delete)
     move ra, t0
     .set pop
 END(__timer_delete)
+
+GEN_INTERNAL_ALIAS(__timer_delete)
 .hidden __timer_delete

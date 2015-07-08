@@ -23,3 +23,5 @@ ENTRY(umask)
     move ra, t0
     .set pop
 END(umask)
+
+GEN_INTERNAL_ALIAS(umask)

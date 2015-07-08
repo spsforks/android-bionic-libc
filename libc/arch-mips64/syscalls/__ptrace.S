@@ -23,4 +23,6 @@ ENTRY(__ptrace)
     move ra, t0
     .set pop
 END(__ptrace)
+
+GEN_INTERNAL_ALIAS(__ptrace)
 .hidden __ptrace

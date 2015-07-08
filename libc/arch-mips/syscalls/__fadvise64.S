@@ -17,3 +17,5 @@ ENTRY(__fadvise64)
     nop
     .set reorder
 END(__fadvise64)
+
+GEN_INTERNAL_ALIAS(__fadvise64)

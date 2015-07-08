@@ -17,3 +17,5 @@ ENTRY(mknodat)
     nop
     .set reorder
 END(mknodat)
+
+GEN_INTERNAL_ALIAS(mknodat)

@@ -29,3 +29,5 @@ ENTRY(mkdirat)
     popl    %ebx
     ret
 END(mkdirat)
+
+GEN_INTERNAL_ALIAS(mkdirat)

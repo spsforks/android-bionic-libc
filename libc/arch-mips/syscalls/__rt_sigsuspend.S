@@ -17,3 +17,5 @@ ENTRY(__rt_sigsuspend)
     nop
     .set reorder
 END(__rt_sigsuspend)
+
+GEN_INTERNAL_ALIAS(__rt_sigsuspend)

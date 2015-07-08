@@ -13,3 +13,5 @@ ENTRY(eventfd)
 1:
     ret
 END(eventfd)
+
+GEN_INTERNAL_ALIAS(eventfd)

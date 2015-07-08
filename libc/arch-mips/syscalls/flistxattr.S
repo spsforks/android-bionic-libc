@@ -17,3 +17,5 @@ ENTRY(flistxattr)
     nop
     .set reorder
 END(flistxattr)
+
+GEN_INTERNAL_ALIAS(flistxattr)

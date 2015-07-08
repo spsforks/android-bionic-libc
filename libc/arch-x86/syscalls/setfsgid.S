@@ -19,3 +19,5 @@ ENTRY(setfsgid)
     popl    %ebx
     ret
 END(setfsgid)
+
+GEN_INTERNAL_ALIAS(setfsgid)

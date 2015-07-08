@@ -39,3 +39,5 @@ ENTRY(prctl)
     popl    %ebx
     ret
 END(prctl)
+
+GEN_INTERNAL_ALIAS(prctl)

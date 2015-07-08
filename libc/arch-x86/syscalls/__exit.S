@@ -19,3 +19,5 @@ ENTRY(__exit)
     popl    %ebx
     ret
 END(__exit)
+
+GEN_INTERNAL_ALIAS(__exit)

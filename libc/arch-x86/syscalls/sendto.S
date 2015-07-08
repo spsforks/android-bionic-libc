@@ -25,3 +25,5 @@ ENTRY(sendto)
     popl    %ebx
     ret
 END(sendto)
+
+GEN_INTERNAL_ALIAS(sendto)

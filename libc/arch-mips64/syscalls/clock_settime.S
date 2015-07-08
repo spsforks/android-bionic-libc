@@ -23,3 +23,5 @@ ENTRY(clock_settime)
     move ra, t0
     .set pop
 END(clock_settime)
+
+GEN_INTERNAL_ALIAS(clock_settime)

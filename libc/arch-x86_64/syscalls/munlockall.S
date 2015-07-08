@@ -13,3 +13,5 @@ ENTRY(munlockall)
 1:
     ret
 END(munlockall)
+
+GEN_INTERNAL_ALIAS(munlockall)

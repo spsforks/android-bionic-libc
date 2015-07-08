@@ -91,3 +91,6 @@ int __openat_2(int fd, const char* pathname, int flags) {
 
   return __openat(fd, pathname, force_O_LARGEFILE(flags), 0);
 }
+
+#define OPEN_CPP
+#include "bionic_external_symbols.h"

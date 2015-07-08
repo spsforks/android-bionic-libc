@@ -23,3 +23,5 @@ ENTRY(mkdirat)
     move ra, t0
     .set pop
 END(mkdirat)
+
+GEN_INTERNAL_ALIAS(mkdirat)

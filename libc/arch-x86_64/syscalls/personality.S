@@ -13,3 +13,5 @@ ENTRY(personality)
 1:
     ret
 END(personality)
+
+GEN_INTERNAL_ALIAS(personality)

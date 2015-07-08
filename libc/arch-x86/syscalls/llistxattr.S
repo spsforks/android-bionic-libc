@@ -29,3 +29,5 @@ ENTRY(llistxattr)
     popl    %ebx
     ret
 END(llistxattr)
+
+GEN_INTERNAL_ALIAS(llistxattr)

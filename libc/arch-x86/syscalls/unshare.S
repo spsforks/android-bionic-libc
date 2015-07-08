@@ -19,3 +19,5 @@ ENTRY(unshare)
     popl    %ebx
     ret
 END(unshare)
+
+GEN_INTERNAL_ALIAS(unshare)

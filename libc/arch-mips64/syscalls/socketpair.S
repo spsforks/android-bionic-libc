@@ -23,3 +23,5 @@ ENTRY(socketpair)
     move ra, t0
     .set pop
 END(socketpair)
+
+GEN_INTERNAL_ALIAS(socketpair)

@@ -12,3 +12,5 @@ ENTRY(splice)
 
     ret
 END(splice)
+
+GEN_INTERNAL_ALIAS(splice)

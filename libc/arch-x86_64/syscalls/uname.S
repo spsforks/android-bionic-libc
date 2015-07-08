@@ -13,3 +13,5 @@ ENTRY(uname)
 1:
     ret
 END(uname)
+
+GEN_INTERNAL_ALIAS(uname)

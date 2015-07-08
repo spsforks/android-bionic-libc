@@ -25,3 +25,5 @@ ENTRY(__connect)
     popl    %ebx
     ret
 END(__connect)
+
+GEN_INTERNAL_ALIAS(__connect)

@@ -17,3 +17,5 @@ ENTRY(__clock_nanosleep)
     nop
     .set reorder
 END(__clock_nanosleep)
+
+GEN_INTERNAL_ALIAS(__clock_nanosleep)

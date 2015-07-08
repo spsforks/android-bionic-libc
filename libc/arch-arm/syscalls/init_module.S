@@ -12,3 +12,5 @@ ENTRY(init_module)
     neg     r0, r0
     b       __set_errno_internal
 END(init_module)
+
+GEN_INTERNAL_ALIAS(init_module)

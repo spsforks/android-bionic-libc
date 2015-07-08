@@ -17,3 +17,5 @@ ENTRY(renameat)
     nop
     .set reorder
 END(renameat)
+
+GEN_INTERNAL_ALIAS(renameat)

@@ -39,3 +39,5 @@ ENTRY(pread64)
     popl    %ebx
     ret
 END(pread64)
+
+GEN_INTERNAL_ALIAS(pread64)

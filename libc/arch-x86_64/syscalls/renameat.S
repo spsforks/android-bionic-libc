@@ -14,3 +14,5 @@ ENTRY(renameat)
 1:
     ret
 END(renameat)
+
+GEN_INTERNAL_ALIAS(renameat)

@@ -17,3 +17,5 @@ ENTRY(personality)
     nop
     .set reorder
 END(personality)
+
+GEN_INTERNAL_ALIAS(personality)

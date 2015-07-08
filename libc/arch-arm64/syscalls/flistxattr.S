@@ -12,3 +12,5 @@ ENTRY(flistxattr)
 
     ret
 END(flistxattr)
+
+GEN_INTERNAL_ALIAS(flistxattr)

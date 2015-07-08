@@ -12,3 +12,5 @@ ENTRY(lremovexattr)
 
     ret
 END(lremovexattr)
+
+GEN_INTERNAL_ALIAS(lremovexattr)

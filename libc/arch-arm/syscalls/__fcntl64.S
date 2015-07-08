@@ -12,3 +12,5 @@ ENTRY(__fcntl64)
     neg     r0, r0
     b       __set_errno_internal
 END(__fcntl64)
+
+GEN_INTERNAL_ALIAS(__fcntl64)

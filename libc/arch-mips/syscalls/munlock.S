@@ -17,3 +17,5 @@ ENTRY(munlock)
     nop
     .set reorder
 END(munlock)
+
+GEN_INTERNAL_ALIAS(munlock)

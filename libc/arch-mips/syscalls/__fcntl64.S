@@ -17,3 +17,5 @@ ENTRY(__fcntl64)
     nop
     .set reorder
 END(__fcntl64)
+
+GEN_INTERNAL_ALIAS(__fcntl64)

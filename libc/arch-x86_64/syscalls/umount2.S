@@ -13,3 +13,5 @@ ENTRY(umount2)
 1:
     ret
 END(umount2)
+
+GEN_INTERNAL_ALIAS(umount2)

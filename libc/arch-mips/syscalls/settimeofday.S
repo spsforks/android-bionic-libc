@@ -17,3 +17,5 @@ ENTRY(settimeofday)
     nop
     .set reorder
 END(settimeofday)
+
+GEN_INTERNAL_ALIAS(settimeofday)

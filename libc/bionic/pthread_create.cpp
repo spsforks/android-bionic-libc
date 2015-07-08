@@ -49,6 +49,8 @@
 extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
 #endif
 
+#include "bionic_internal_symbols.h"
+
 extern "C" int __isthreaded;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
@@ -286,3 +288,6 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 
   return 0;
 }
+
+#define PTHREAD_CREATE_EXTERNALS 1
+#include "bionic_external_symbols.h"

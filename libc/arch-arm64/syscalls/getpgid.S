@@ -12,3 +12,5 @@ ENTRY(getpgid)
 
     ret
 END(getpgid)
+
+GEN_INTERNAL_ALIAS(getpgid)

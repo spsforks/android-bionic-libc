@@ -17,3 +17,5 @@ ENTRY(setxattr)
     nop
     .set reorder
 END(setxattr)
+
+GEN_INTERNAL_ALIAS(setxattr)

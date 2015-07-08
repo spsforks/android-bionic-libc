@@ -14,3 +14,5 @@ ENTRY(timerfd_settime)
 1:
     ret
 END(timerfd_settime)
+
+GEN_INTERNAL_ALIAS(timerfd_settime)

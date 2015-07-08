@@ -17,3 +17,5 @@ ENTRY(sendto)
     nop
     .set reorder
 END(sendto)
+
+GEN_INTERNAL_ALIAS(sendto)

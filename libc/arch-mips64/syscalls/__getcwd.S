@@ -23,4 +23,6 @@ ENTRY(__getcwd)
     move ra, t0
     .set pop
 END(__getcwd)
+
+GEN_INTERNAL_ALIAS(__getcwd)
 .hidden __getcwd

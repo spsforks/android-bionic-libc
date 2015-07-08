@@ -17,3 +17,5 @@ ENTRY(__timer_settime)
     nop
     .set reorder
 END(__timer_settime)
+
+GEN_INTERNAL_ALIAS(__timer_settime)

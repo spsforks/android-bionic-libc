@@ -12,3 +12,5 @@ ENTRY(kill)
     neg     r0, r0
     b       __set_errno_internal
 END(kill)
+
+GEN_INTERNAL_ALIAS(kill)

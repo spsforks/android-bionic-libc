@@ -14,3 +14,5 @@ ENTRY(lgetxattr)
 1:
     ret
 END(lgetxattr)
+
+GEN_INTERNAL_ALIAS(lgetxattr)

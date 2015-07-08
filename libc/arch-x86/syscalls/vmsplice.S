@@ -34,3 +34,5 @@ ENTRY(vmsplice)
     popl    %ebx
     ret
 END(vmsplice)
+
+GEN_INTERNAL_ALIAS(vmsplice)

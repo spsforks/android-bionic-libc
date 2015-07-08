@@ -23,3 +23,5 @@ ENTRY(timerfd_gettime)
     move ra, t0
     .set pop
 END(timerfd_gettime)
+
+GEN_INTERNAL_ALIAS(timerfd_gettime)

@@ -20,3 +20,5 @@ ENTRY(__epoll_pwait)
     neg     r0, r0
     b       __set_errno_internal
 END(__epoll_pwait)
+
+GEN_INTERNAL_ALIAS(__epoll_pwait)

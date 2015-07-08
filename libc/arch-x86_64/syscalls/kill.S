@@ -13,3 +13,5 @@ ENTRY(kill)
 1:
     ret
 END(kill)
+
+GEN_INTERNAL_ALIAS(kill)

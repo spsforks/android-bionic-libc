@@ -13,4 +13,6 @@ ENTRY(__getpriority)
 1:
     ret
 END(__getpriority)
+
+GEN_INTERNAL_ALIAS(__getpriority)
 .hidden __getpriority

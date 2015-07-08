@@ -17,3 +17,5 @@ ENTRY(capget)
     nop
     .set reorder
 END(capget)
+
+GEN_INTERNAL_ALIAS(capget)

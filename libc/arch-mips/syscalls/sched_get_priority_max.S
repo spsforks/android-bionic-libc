@@ -17,3 +17,5 @@ ENTRY(sched_get_priority_max)
     nop
     .set reorder
 END(sched_get_priority_max)
+
+GEN_INTERNAL_ALIAS(sched_get_priority_max)

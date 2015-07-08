@@ -13,4 +13,8 @@ ENTRY(setrlimit)
     ret
 END(setrlimit)
 
+GEN_INTERNAL_ALIAS(setrlimit)
+
 ALIAS_SYMBOL(setrlimit64, setrlimit)
+
+WEAK_ALIAS(__bionic_setrlimit64, setrlimit)

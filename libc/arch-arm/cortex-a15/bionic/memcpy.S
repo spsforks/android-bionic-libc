@@ -69,6 +69,9 @@ ENTRY(__memcpy_chk)
         // Fall through to memcpy...
 END(__memcpy_chk)
 
+GEN_INTERNAL_ALIAS(__memcpy_chk)
+
+
 ENTRY(memcpy)
         pld     [r1, #64]
         push    {r0, lr}
@@ -76,6 +79,9 @@ ENTRY(memcpy)
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
 END(memcpy)
+
+GEN_INTERNAL_ALIAS(memcpy)
+
 
 #define MEMCPY_BASE         __memcpy_base
 #define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
@@ -97,6 +103,9 @@ error_code:
 error_message:
         .word   error_string-(1b+8)
 END(__memcpy_chk_fail)
+
+GEN_INTERNAL_ALIAS(__memcpy_chk_fail)
+
 
         .data
 error_string:

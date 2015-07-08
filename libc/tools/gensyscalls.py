@@ -274,11 +274,14 @@ def make__NR_name(name):
         return "__NR_%s" % (name)
 
 
-def add_footer(pointer_length, stub, syscall):
+def add_footer(pointer_length, stub, syscall, ):
     # Add any aliases for this syscall.
     aliases = syscall["aliases"]
+
+    stub += "\nGEN_INTERNAL_ALIAS(%s)\n" % (syscall["func"])
     for alias in aliases:
         stub += "\nALIAS_SYMBOL(%s, %s)\n" % (alias, syscall["func"])
+        stub += "\nWEAK_ALIAS(__bionic_%s, %s)\n" % (alias, syscall["func"])
 
     # Use hidden visibility on LP64 for any functions beginning with underscores.
     # Force hidden visibility for any functions which begin with 3 underscores

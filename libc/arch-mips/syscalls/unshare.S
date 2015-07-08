@@ -17,3 +17,5 @@ ENTRY(unshare)
     nop
     .set reorder
 END(unshare)
+
+GEN_INTERNAL_ALIAS(unshare)

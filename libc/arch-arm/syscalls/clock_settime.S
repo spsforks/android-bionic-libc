@@ -12,3 +12,5 @@ ENTRY(clock_settime)
     neg     r0, r0
     b       __set_errno_internal
 END(clock_settime)
+
+GEN_INTERNAL_ALIAS(clock_settime)

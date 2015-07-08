@@ -13,3 +13,5 @@ ENTRY(bind)
 1:
     ret
 END(bind)
+
+GEN_INTERNAL_ALIAS(bind)

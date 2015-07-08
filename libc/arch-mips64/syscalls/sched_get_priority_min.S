@@ -23,3 +23,5 @@ ENTRY(sched_get_priority_min)
     move ra, t0
     .set pop
 END(sched_get_priority_min)
+
+GEN_INTERNAL_ALIAS(sched_get_priority_min)

@@ -131,3 +131,6 @@ ENTRY(strcpy)
 	bne	4b
 	bx	lr
 END(strcpy)
+
+GEN_INTERNAL_ALIAS(strcpy)
+

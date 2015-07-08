@@ -23,3 +23,5 @@ ENTRY(kill)
     move ra, t0
     .set pop
 END(kill)
+
+GEN_INTERNAL_ALIAS(kill)

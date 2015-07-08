@@ -13,3 +13,5 @@ ENTRY(mlock)
 1:
     ret
 END(mlock)
+
+GEN_INTERNAL_ALIAS(mlock)

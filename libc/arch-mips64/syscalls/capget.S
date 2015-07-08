@@ -23,3 +23,5 @@ ENTRY(capget)
     move ra, t0
     .set pop
 END(capget)
+
+GEN_INTERNAL_ALIAS(capget)

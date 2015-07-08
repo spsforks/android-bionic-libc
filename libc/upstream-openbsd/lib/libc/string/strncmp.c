@@ -45,3 +45,6 @@ strncmp(const char *s1, const char *s2, size_t n)
 	} while (--n != 0);
 	return (0);
 }
+
+#define STRNCMP_C
+#include "bionic_external_symbols.h"

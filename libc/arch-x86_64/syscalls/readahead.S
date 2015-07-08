@@ -13,3 +13,5 @@ ENTRY(readahead)
 1:
     ret
 END(readahead)
+
+GEN_INTERNAL_ALIAS(readahead)

@@ -34,3 +34,5 @@ ENTRY(__clock_nanosleep)
     popl    %ebx
     ret
 END(__clock_nanosleep)
+
+GEN_INTERNAL_ALIAS(__clock_nanosleep)

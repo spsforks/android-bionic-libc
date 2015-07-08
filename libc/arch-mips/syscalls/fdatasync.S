@@ -17,3 +17,5 @@ ENTRY(fdatasync)
     nop
     .set reorder
 END(fdatasync)
+
+GEN_INTERNAL_ALIAS(fdatasync)

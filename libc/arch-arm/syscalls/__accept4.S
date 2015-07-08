@@ -12,3 +12,5 @@ ENTRY(__accept4)
     neg     r0, r0
     b       __set_errno_internal
 END(__accept4)
+
+GEN_INTERNAL_ALIAS(__accept4)

@@ -23,3 +23,5 @@ ENTRY(sendmsg)
     move ra, t0
     .set pop
 END(sendmsg)
+
+GEN_INTERNAL_ALIAS(sendmsg)

@@ -172,3 +172,6 @@ ENTRY(strnlen)
 	csel	data2, data2, data2a, le
 	b	.Lrealigned
 END(strnlen)
+
+GEN_INTERNAL_ALIAS(strnlen)
+

@@ -29,3 +29,5 @@ ENTRY(truncate64)
     popl    %ebx
     ret
 END(truncate64)
+
+GEN_INTERNAL_ALIAS(truncate64)

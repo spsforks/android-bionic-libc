@@ -530,6 +530,12 @@ ENTRY(strcpy)
     m_ret   inst=pop
 #if defined(STPCPY)
 END(stpcpy)
+
+GEN_INTERNAL_ALIAS(stpcpy)
+
 #else
 END(strcpy)
+
+GEN_INTERNAL_ALIAS(strcpy)
+
 #endif

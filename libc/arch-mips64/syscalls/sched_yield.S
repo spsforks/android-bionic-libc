@@ -23,3 +23,5 @@ ENTRY(sched_yield)
     move ra, t0
     .set pop
 END(sched_yield)
+
+GEN_INTERNAL_ALIAS(sched_yield)

@@ -12,3 +12,5 @@ ENTRY(listen)
     neg     r0, r0
     b       __set_errno_internal
 END(listen)
+
+GEN_INTERNAL_ALIAS(listen)

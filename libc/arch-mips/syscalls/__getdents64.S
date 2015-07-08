@@ -17,3 +17,5 @@ ENTRY(__getdents64)
     nop
     .set reorder
 END(__getdents64)
+
+GEN_INTERNAL_ALIAS(__getdents64)

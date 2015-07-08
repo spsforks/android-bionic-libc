@@ -12,3 +12,5 @@ ENTRY(pipe2)
     neg     r0, r0
     b       __set_errno_internal
 END(pipe2)
+
+GEN_INTERNAL_ALIAS(pipe2)

@@ -23,4 +23,6 @@ ENTRY(___fchmodat)
     move ra, t0
     .set pop
 END(___fchmodat)
+
+GEN_INTERNAL_ALIAS(___fchmodat)
 .hidden ___fchmodat

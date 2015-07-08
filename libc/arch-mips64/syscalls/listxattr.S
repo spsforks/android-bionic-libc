@@ -23,3 +23,5 @@ ENTRY(listxattr)
     move ra, t0
     .set pop
 END(listxattr)
+
+GEN_INTERNAL_ALIAS(listxattr)

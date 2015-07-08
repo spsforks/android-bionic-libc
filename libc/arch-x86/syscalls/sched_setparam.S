@@ -24,3 +24,5 @@ ENTRY(sched_setparam)
     popl    %ebx
     ret
 END(sched_setparam)
+
+GEN_INTERNAL_ALIAS(sched_setparam)

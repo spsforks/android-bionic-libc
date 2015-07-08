@@ -25,3 +25,5 @@ ENTRY(getsockname)
     popl    %ebx
     ret
 END(getsockname)
+
+GEN_INTERNAL_ALIAS(getsockname)

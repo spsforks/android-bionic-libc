@@ -19,3 +19,5 @@ ENTRY(mlockall)
     popl    %ebx
     ret
 END(mlockall)
+
+GEN_INTERNAL_ALIAS(mlockall)

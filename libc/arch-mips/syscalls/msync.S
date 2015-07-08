@@ -17,3 +17,5 @@ ENTRY(msync)
     nop
     .set reorder
 END(msync)
+
+GEN_INTERNAL_ALIAS(msync)

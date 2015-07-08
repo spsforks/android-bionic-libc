@@ -12,3 +12,5 @@ ENTRY(__getcwd)
     neg     r0, r0
     b       __set_errno_internal
 END(__getcwd)
+
+GEN_INTERNAL_ALIAS(__getcwd)

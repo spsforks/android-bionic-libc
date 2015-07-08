@@ -17,3 +17,5 @@ ENTRY(kill)
     nop
     .set reorder
 END(kill)
+
+GEN_INTERNAL_ALIAS(kill)

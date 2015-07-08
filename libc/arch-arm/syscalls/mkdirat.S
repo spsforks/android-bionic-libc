@@ -12,3 +12,5 @@ ENTRY(mkdirat)
     neg     r0, r0
     b       __set_errno_internal
 END(mkdirat)
+
+GEN_INTERNAL_ALIAS(mkdirat)

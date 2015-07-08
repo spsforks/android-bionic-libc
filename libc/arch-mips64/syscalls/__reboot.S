@@ -23,4 +23,6 @@ ENTRY(__reboot)
     move ra, t0
     .set pop
 END(__reboot)
+
+GEN_INTERNAL_ALIAS(__reboot)
 .hidden __reboot

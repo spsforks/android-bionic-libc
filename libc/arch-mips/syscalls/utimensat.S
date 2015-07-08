@@ -17,3 +17,5 @@ ENTRY(utimensat)
     nop
     .set reorder
 END(utimensat)
+
+GEN_INTERNAL_ALIAS(utimensat)

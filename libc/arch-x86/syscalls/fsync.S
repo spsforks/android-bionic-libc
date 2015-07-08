@@ -19,3 +19,5 @@ ENTRY(fsync)
     popl    %ebx
     ret
 END(fsync)
+
+GEN_INTERNAL_ALIAS(fsync)

@@ -17,3 +17,5 @@ ENTRY(removexattr)
     nop
     .set reorder
 END(removexattr)
+
+GEN_INTERNAL_ALIAS(removexattr)

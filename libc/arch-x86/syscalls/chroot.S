@@ -19,3 +19,5 @@ ENTRY(chroot)
     popl    %ebx
     ret
 END(chroot)
+
+GEN_INTERNAL_ALIAS(chroot)

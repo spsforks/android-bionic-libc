@@ -12,3 +12,5 @@ ENTRY(cacheflush)
     neg     r0, r0
     b       __set_errno_internal
 END(cacheflush)
+
+GEN_INTERNAL_ALIAS(cacheflush)

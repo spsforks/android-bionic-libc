@@ -13,3 +13,5 @@ ENTRY(mkdirat)
 1:
     ret
 END(mkdirat)
+
+GEN_INTERNAL_ALIAS(mkdirat)

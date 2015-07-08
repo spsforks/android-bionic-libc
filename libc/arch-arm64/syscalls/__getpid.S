@@ -12,4 +12,6 @@ ENTRY(__getpid)
 
     ret
 END(__getpid)
+
+GEN_INTERNAL_ALIAS(__getpid)
 .hidden __getpid

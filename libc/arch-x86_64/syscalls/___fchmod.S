@@ -13,4 +13,6 @@ ENTRY(___fchmod)
 1:
     ret
 END(___fchmod)
+
+GEN_INTERNAL_ALIAS(___fchmod)
 .hidden ___fchmod

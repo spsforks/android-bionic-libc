@@ -163,3 +163,6 @@ ENTRY(memchr)
 	mov	result, xzr
 	ret
 END(memchr)
+
+GEN_INTERNAL_ALIAS(memchr)
+

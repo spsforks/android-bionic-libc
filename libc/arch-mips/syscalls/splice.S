@@ -17,3 +17,5 @@ ENTRY(splice)
     nop
     .set reorder
 END(splice)
+
+GEN_INTERNAL_ALIAS(splice)

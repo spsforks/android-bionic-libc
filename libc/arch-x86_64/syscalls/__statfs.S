@@ -13,4 +13,6 @@ ENTRY(__statfs)
 1:
     ret
 END(__statfs)
+
+GEN_INTERNAL_ALIAS(__statfs)
 .hidden __statfs

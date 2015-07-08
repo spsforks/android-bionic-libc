@@ -23,3 +23,5 @@ ENTRY(getrusage)
     move ra, t0
     .set pop
 END(getrusage)
+
+GEN_INTERNAL_ALIAS(getrusage)

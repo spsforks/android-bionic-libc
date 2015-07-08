@@ -29,3 +29,5 @@ ENTRY(dup3)
     popl    %ebx
     ret
 END(dup3)
+
+GEN_INTERNAL_ALIAS(dup3)

@@ -23,3 +23,5 @@ ENTRY(shutdown)
     move ra, t0
     .set pop
 END(shutdown)
+
+GEN_INTERNAL_ALIAS(shutdown)
