@@ -602,6 +602,43 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
         "upstream-openbsd/lib/libc/string/wcsstr.c",
         "upstream-openbsd/lib/libc/string/wcswidth.c",
+    ],
+
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-Wno-unused-parameter",
+        "-include openbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "private",
+        "stdio",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/lib/libc/gdtoa/",
+    ],
+
+    stl: "none",
+    system_shared_libs: [],
+    asan: false,
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_openbsd.a - upstream OpenBSD C library code
+// ========================================================
+//
+// These files are built with the openbsd-compat.h header file
+// automatically included.
+cc_library_static {
+    srcs: [
+        // These two depend on getentropy_linux.cpp, which isn't in libc_ndk.a.
+        "upstream-openbsd/lib/libc/crypt/arc4random.c",
+        "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
 
         // May be overriden by per-arch optimized versions
         "upstream-openbsd/lib/libc/string/memchr.c",
@@ -618,13 +655,12 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strncmp.c",
         "upstream-openbsd/lib/libc/string/strncpy.c",
     ],
-
-    cflags: libc_common_cflags + [
-        "-Wno-sign-compare",
-        "-Wno-uninitialized",
-        "-Wno-unused-parameter",
-        "-include openbsd-compat.h",
-    ],
+    multilib: {
+        lib32: {
+            // LP32 cruft
+            srcs: ["upstream-openbsd/lib/libc/stdio/putw.c"],
+        },
+    },
 
     arch: {
         arm: {
@@ -723,42 +759,6 @@ cc_library_static {
                  "upstream-openbsd/lib/libc/string/strncmp.c",
                  "upstream-openbsd/lib/libc/string/strncpy.c",
              ],
-        },
-    },
-
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
-    local_include_dirs: [
-        "private",
-        "stdio",
-        "upstream-openbsd/android/include",
-        "upstream-openbsd/lib/libc/include",
-        "upstream-openbsd/lib/libc/gdtoa/",
-    ],
-
-    stl: "none",
-    system_shared_libs: [],
-    asan: false,
-    native_coverage: bionic_coverage,
-}
-
-// ========================================================
-// libc_openbsd.a - upstream OpenBSD C library code
-// ========================================================
-//
-// These files are built with the openbsd-compat.h header file
-// automatically included.
-cc_library_static {
-    srcs: [
-        // These two depend on getentropy_linux.cpp, which isn't in libc_ndk.a.
-        "upstream-openbsd/lib/libc/crypt/arc4random.c",
-        "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
-    ],
-    multilib: {
-        lib32: {
-            // LP32 cruft
-            srcs: ["upstream-openbsd/lib/libc/stdio/putw.c"],
         },
     },
 
