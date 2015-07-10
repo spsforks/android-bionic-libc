@@ -1,0 +1,7 @@
+Code-Review+2: Dan Willemsen <dwillemsen@google.com>
+Verified+1: Colin Cross <ccross@google.com>
+Submitted-by: Colin Cross <ccross@google.com>
+Submitted-at: Fri, 10 Jul 2015 01:03:43 +0000
+Reviewed-on: https://android-review.googlesource.com/158292
+Project: platform/bionic
+Branch: refs/heads/master-soong
