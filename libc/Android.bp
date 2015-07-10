@@ -115,18 +115,6 @@ libc_common_conlyflags = ["-std=gnu99"]
 libc_common_cppflags = ["-std=gnu++11"]
 
 // ========================================================
-// Add in the arch-specific flags.
-// Must be called with $(eval).
-// $(1): the LOCAL_ variable name
-// $(2): the bionic variable name to pull in
-// ANDROIDMK TRANSLATION ERROR: unsupported directive
-// define  patch-up-arch-specific-flags
-//$(1)_$(TARGET_ARCH) += $($(2)_$(TARGET_ARCH))
-//$(1)_32 += $($(2)_32)
-//ifdef TARGET_2ND_ARCH
-//$(1)_$(TARGET_2ND_ARCH) += $($(2)_$(TARGET_2ND_ARCH))
-//endif
-// ========================================================
 // libc_stack_protector.a - stack protector code
 // ========================================================
 //
@@ -1976,10 +1964,6 @@ cc_library {
     native_coverage: bionic_coverage,
 }
 
-// ========================================================
-// ANDROIDMK TRANSLATION ERROR: unsupported include
-// include $(call all-makefiles-under,$(LOCAL_PATH))
-
 crt_arch_flags = {
     arm: {
         local_include_dirs: ["arch-arm/include"],
@@ -2040,6 +2024,8 @@ crt_arch_so_flags = crt_arch_flags + {
 // include $(LOCAL_PATH)/crt.mk
 // my_2nd_arch_prefix :=
 // endif
+//
+// include $(call all-makefiles-under,$(LOCAL_PATH))
 // Android.mk:end
 cc_object {
     name: "crtbrand",
