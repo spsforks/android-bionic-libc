@@ -75,12 +75,26 @@ static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 
 static const char* const kDefaultLdPaths[] = {
+#if defined(ADDRESS_SANITIZER_LINKER)
+#if defined(__LP64__)
+  "/data/vendor/lib64",
+  "/vendor/lib64",
+  "/data/lib64",
+  "/system/lib64",
+#else
+  "/data/vendor/lib",
+  "/vendor/lib",
+  "/data/lib",
+  "/system/lib",
+#endif
+#else
 #if defined(__LP64__)
   "/vendor/lib64",
   "/system/lib64",
 #else
   "/vendor/lib",
   "/system/lib",
+#endif
 #endif
   nullptr
 };
@@ -1706,14 +1720,21 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // See b/17302493 for further details.
   // Once the above bug is fixed, this code can be modified to use
   // snprintf again.
-  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
+  // -1 for nullptr in the last kDefaultLdPaths element.
+  const size_t count = sizeof(kDefaultLdPaths) / sizeof(kDefaultLdPaths[0]) - 1;
+  size_t required_len = count;
+  for (size_t i = 0; i < count; ++i) {
+    required_len += strlen(kDefaultLdPaths[i]);
+  }
   if (buffer_size < required_len) {
     __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
                  "buffer len %zu, required len %zu", buffer_size, required_len);
   }
-  char* end = stpcpy(buffer, kDefaultLdPaths[0]);
-  *end = ':';
-  strcpy(end + 1, kDefaultLdPaths[1]);
+  char* end = buffer;
+  for (size_t i = 0; i < count; ++i) {
+    end = stpcpy(end, kDefaultLdPaths[i]);
+    if (i < count - 1) *end++ = ':';
+  }
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
