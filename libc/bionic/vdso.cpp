@@ -30,7 +30,12 @@
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
 #endif
 
+#include <errno.h>
+#include <limits.h>
+#include <sys/mman.h>
 #include <time.h>
+
+#include "private/libc_logging.h"
 
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
@@ -46,24 +51,27 @@ enum {
   VDSO_END
 };
 
-static vdso_entry vdso_entries[] = {
+static union {
+  vdso_entry entries[VDSO_END];
+  char pad[PAGE_SIZE];
+} vdso_entries __attribute__((aligned(PAGE_SIZE))) = {{
   [VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, reinterpret_cast<void*>(__clock_gettime) },
   [VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday) },
-};
+}};
 
 int clock_gettime(int clock_id, timespec* tp) {
-  static int (*vdso_clock_gettime)(int, timespec*) =
+  int (*vdso_clock_gettime)(int, timespec*) =
       reinterpret_cast<int (*)(int, timespec*)>(vdso_entries[VDSO_CLOCK_GETTIME].fn);
   return vdso_clock_gettime(clock_id, tp);
 }
 
 int gettimeofday(timeval* tv, struct timezone* tz) {
-  static int (*vdso_gettimeofday)(timeval*, struct timezone*) =
+  int (*vdso_gettimeofday)(timeval*, struct timezone*) =
       reinterpret_cast<int (*)(timeval*, struct timezone*)>(vdso_entries[VDSO_GETTIMEOFDAY].fn);
   return vdso_gettimeofday(tv, tz);
 }
 
-void __libc_init_vdso() {
+static void __libc_init_vdso_write() {
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
   ElfW(Ehdr)* vdso_ehdr = reinterpret_cast<ElfW(Ehdr)*>(vdso_ehdr_addr);
@@ -115,10 +123,20 @@ void __libc_init_vdso() {
   // Are there any symbols we want?
   for (size_t i = 0; i < symbol_count; ++i) {
     for (size_t j = 0; j < VDSO_END; ++j) {
-      if (strcmp(vdso_entries[j].name, strtab + symtab[i].st_name) == 0) {
-        vdso_entries[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
+      if (strcmp(vdso_entries.entries[j].name, strtab + symtab[i].st_name) == 0) {
+        vdso_entries.entries[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
       }
     }
+  }
+
+}
+
+void __libc_init_vdso() {
+  __libc_init_vdso_write();
+  if (mprotect(&vdso_entries, PAGE_SIZE, PROT_READ) == -1) {
+    __libc_format_log(ANDROID_LOG_WARN, "libc",
+                      "failed to mprotect PROT_NONE vdso function pointer table: %s",
+                      strerror(errno));
   }
 }
 
