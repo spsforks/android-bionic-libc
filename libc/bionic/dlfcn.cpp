@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,23 @@
  * SUCH DAMAGE.
  */
 
-extern void __cxa_finalize(void *);
-extern void *__dso_handle;
+#include <android/dlext.h>
 
-__attribute__((visibility("hidden"),destructor))
-void __on_dlclose() {
-  __cxa_finalize(&__dso_handle);
+// These are implemented in libdl.so
+extern "C" void* __android_dlopen_ext_impl(const char* filename, int flags,
+                                           const android_dlextinfo* extinfo, void* dso);
+extern "C" void* __android_dlopen_impl(const char* filename, int flags, void* dso);
+extern "C" void* __android_dlsym_impl(void* handle, const char* symbol, void* dso);
+
+extern "C" void* __android_dlopen_ext(const char* filename, int flags,
+                                      const android_dlextinfo* extinfo, void* dso) {
+  return __android_dlopen_ext_impl(filename, flags, extinfo, dso);
 }
 
-/* CRT_LEGACY_WORKAROUND should only be defined when building
- * this file as part of the platform's C library.
- *
- * The C library already defines a function named 'atexit()'
- * for backwards compatibility with older NDK-generated binaries.
- *
- * For newer ones, 'atexit' is actually embedded in the C
- * runtime objects that are linked into the final ELF
- * binary (shared library or executable), and will call
- * __cxa_atexit() in order to un-register any atexit()
- * handler when a library is unloaded.
- *
- * This function must be global *and* hidden. Only the
- * code inside the same ELF binary should be able to access it.
- */
+extern "C" void* __android_dlopen(const char* filename, int flags, void* dso) {
+  return __android_dlopen_impl(filename, flags, dso);
+}
 
-#ifdef CRT_LEGACY_WORKAROUND
-# include "__dso_handle.h"
-#else
-# include "__dso_handle_so.h"
-# include "atexit.h"
-#endif
-#include "dlfcn_crt.h"
-#include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif
+extern "C" void* __android_dlsym(void* handle, const char* symbol, void* dso) {
+  return __android_dlsym_impl(handle, symbol, dso);
+}

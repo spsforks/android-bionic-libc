@@ -1332,6 +1332,13 @@ LIBC {
     *;
 };
 
+LIBC_N {
+  global:
+    __android_dlopen;
+    __android_dlopen_ext;
+    __android_dlsym;
+} LIBC;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
@@ -1453,4 +1460,4 @@ LIBC_PRIVATE {
     SHA1Init; # arm x86 mips
     SHA1Transform; # arm x86 mips
     SHA1Update; # arm x86 mips
-} LIBC;
+} LIBC_N;
