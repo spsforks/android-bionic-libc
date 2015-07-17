@@ -30,7 +30,13 @@
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
 #endif
 
+#include <errno.h>
+#include <limits.h>
+#include <sys/mman.h>
 #include <time.h>
+
+#include "private/bionic_prctl.h"
+#include "private/libc_logging.h"
 
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
@@ -46,24 +52,26 @@ enum {
   VDSO_END
 };
 
-static vdso_entry vdso_entries[] = {
+static const vdso_entry vdso_entries_init[] = {
   [VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, reinterpret_cast<void*>(__clock_gettime) },
   [VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday) },
 };
 
+static vdso_entry* vdso_entries;
+
 int clock_gettime(int clock_id, timespec* tp) {
-  static int (*vdso_clock_gettime)(int, timespec*) =
+  int (*vdso_clock_gettime)(int, timespec*) =
       reinterpret_cast<int (*)(int, timespec*)>(vdso_entries[VDSO_CLOCK_GETTIME].fn);
   return vdso_clock_gettime(clock_id, tp);
 }
 
 int gettimeofday(timeval* tv, struct timezone* tz) {
-  static int (*vdso_gettimeofday)(timeval*, struct timezone*) =
+  int (*vdso_gettimeofday)(timeval*, struct timezone*) =
       reinterpret_cast<int (*)(timeval*, struct timezone*)>(vdso_entries[VDSO_GETTIMEOFDAY].fn);
   return vdso_gettimeofday(tv, tz);
 }
 
-void __libc_init_vdso() {
+static void __libc_init_vdso_write() {
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
   ElfW(Ehdr)* vdso_ehdr = reinterpret_cast<ElfW(Ehdr)*>(vdso_ehdr_addr);
@@ -120,6 +128,20 @@ void __libc_init_vdso() {
       }
     }
   }
+}
+
+void __libc_init_vdso() {
+  static_assert(PAGE_SIZE > sizeof(vdso_entries_init), "vdso_entries_init too large");
+  vdso_entries = (vdso_entry *)mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+  if (vdso_entries == MAP_FAILED) {
+    __libc_fatal("failed to allocate vdso function pointer table: %s", strerror(errno));
+  }
+  memcpy(vdso_entries, vdso_entries_init, sizeof(vdso_entries_init));
+  __libc_init_vdso_write();
+  if (mprotect(vdso_entries, PAGE_SIZE, PROT_READ) == -1) {
+    __libc_fatal("failed to mprotect PROT_NONE vdso function pointer table: %s", strerror(errno));
+  }
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, vdso_entries, PAGE_SIZE, "vdso_fn_table");
 }
 
 #else
