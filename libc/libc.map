@@ -1334,6 +1334,9 @@ LIBC {
 
 LIBC_N {
   global:
+    __android_dlopen;
+    __android_dlopen_ext;
+    __android_dlsym;
     __fread_chk;
     __fwrite_chk;
     __getcwd_chk;

@@ -23,9 +23,37 @@
 // These are stubs for functions that are actually defined
 // in the dynamic linker and hijacked at runtime.
 
-void* dlopen(const char* filename __unused, int flag __unused) { return 0; }
-const char* dlerror(void) { return 0; }
-void* dlsym(void* handle __unused, const char* symbol __unused) { return 0; }
+void* __android_dlopen_ext_impl(const char* filename __unused, int flag __unused,
+                                const android_dlextinfo* extinfo __unused, void* dso __unused) {
+  return 0;
+}
+
+__LIBC_HIDDEN__ void* __android_dlopen_ext(const char* filename, int flag,
+                                           const android_dlextinfo* extinfo, void* dso) {
+  return __android_dlopen_ext_impl(filename, flag, extinfo, dso);
+}
+
+void* __android_dlopen_impl(const char* filename __unused, int flag __unused, void* dso __unused) {
+  return 0;
+}
+
+__LIBC_HIDDEN__ void* __android_dlopen(const char* filename, int flag, void* dso) {
+  return __android_dlopen_impl(filename, flag, dso);
+}
+
+const char* dlerror(void) {
+  return 0;
+}
+
+void* __android_dlsym_impl(void* handle __unused, const char* symbol __unused, void* dso __unused) {
+  return 0;
+}
+
+__LIBC_HIDDEN__ void* __android_dlsym(void* handle, const char* symbol, void* dso) {
+  return __android_dlsym_impl(handle, symbol, dso);
+}
+
+
 int dladdr(const void* addr __unused, Dl_info* info __unused) { return 0; }
 int dlclose(void* handle __unused) { return 0; }
 
@@ -37,8 +65,6 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
 
 void android_get_LD_LIBRARY_PATH(char* buffer __unused, size_t buffer_size __unused) { }
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path __unused) { }
-
-void* android_dlopen_ext(const char* filename __unused, int flag __unused, const android_dlextinfo* extinfo __unused) { return 0; }
 
 void android_set_application_target_sdk_version(uint32_t target __unused) { }
 uint32_t android_get_application_target_sdk_version() { return 0; }
