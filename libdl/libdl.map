@@ -30,10 +30,17 @@ LIBC {
     *;
 };
 
+LIBC_N {
+  global:
+    __android_dlopen_ext_impl;
+    __android_dlopen_impl;
+    __android_dlsym_impl;
+} LIBC;
+
 LIBC_PRIVATE {
   global:
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;
-} LIBC;
+} LIBC_N;
