@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <android/dlext.h>
 #include <android/api-level.h>
+#include <android/dlext.h>
 
 #include <bionic/pthread_internal.h>
 #include "private/bionic_tls.h"
@@ -57,12 +57,12 @@ const char* dlerror() {
   return old_value;
 }
 
-void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
+static void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   do_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
 }
 
-void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
+static void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
@@ -89,7 +89,11 @@ void* dlopen(const char* filename, int flags) {
   return dlopen_ext(filename, flags, nullptr, caller_addr);
 }
 
-void* dlsym(void* handle, const char* symbol) {
+static void* __android_dlopen_impl(const char* filename, int flags, void* dso) {
+  return dlopen_ext(filename, flags, nullptr, dso);
+}
+
+static void* __android_dlsym_impl(void* handle, const char* symbol, void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
 #if !defined(__LP64__)
@@ -106,7 +110,6 @@ void* dlsym(void* handle, const char* symbol) {
 
   soinfo* found = nullptr;
   const ElfW(Sym)* sym = nullptr;
-  void* caller_addr = __builtin_return_address(0);
   soinfo* caller = find_containing_library(caller_addr);
 
   if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
@@ -128,6 +131,11 @@ void* dlsym(void* handle, const char* symbol) {
     __bionic_format_dlerror("undefined symbol", symbol);
     return nullptr;
   }
+}
+
+void* dlsym(void* handle, const char* symbol) {
+  void* caller_addr = __builtin_return_address(0);
+  return __android_dlsym_impl(handle, symbol, caller_addr);
 }
 
 int dladdr(const void* addr, Dl_info* info) {
@@ -203,11 +211,11 @@ static const char ANDROID_LIBDL_STRTAB[] =
   // 00000000001 1111111112222222222 3333333333444444444455555555556666666666777 777777788888888889999999999
   // 01234567890 1234567890123456789 0123456789012345678901234567890123456789012 345678901234567890123456789
     "erate_phdr\0android_dlopen_ext\0android_set_application_target_sdk_version\0android_get_application_tar"
-  // 0000000000111111
-  // 0123456789012345
-    "get_sdk_version\0"
+  // 0000000000111111 11112222222222333333333344 4444444455555555556666 666666777777777788888
+  // 0123456789012345 67890123456789012345678901 2345678901234567890123 456789012345678901234
+    "get_sdk_version\0__android_dlopen_ext_impl\0__android_dlopen_impl\0__android_dlsym_impl\0"
 #if defined(__arm__)
-  // 216
+  // 285
     "dl_unwind_find_exidx\0"
 #endif
     ;
@@ -229,8 +237,11 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
   ELFW(SYM_INITIALIZER)(130, &android_set_application_target_sdk_version, 1),
   ELFW(SYM_INITIALIZER)(173, &android_get_application_target_sdk_version, 1),
+  ELFW(SYM_INITIALIZER)(216, &dlopen_ext, 1),
+  ELFW(SYM_INITIALIZER)(242, &__android_dlopen_impl, 1),
+  ELFW(SYM_INITIALIZER)(264, &__android_dlsym_impl, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(216, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(285, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -247,9 +258,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));

@@ -1334,6 +1334,9 @@ LIBC {
 
 LIBC_N {
   global:
+    __android_dlopen;
+    __android_dlopen_ext;
+    __android_dlsym;
     getgrgid_r;
     getgrnam_r;
 } LIBC;
