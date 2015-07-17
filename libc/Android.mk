@@ -23,15 +23,20 @@ endif
 
 # crt obj files
 # ========================================================
-# crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+# crtbegin needs android/dlext.h and co for __android_dlopen_ext
+# implementation.
 libc_crt_target_cflags := \
     -I$(LOCAL_PATH)/include \
+    -I$(KERNEL_HEADERS_COMMON) \
     -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+
+libc_crt_target_cflags_$(TARGET_ARCH) += -I$(KERNEL_HEADERS_ARCH)
 
 my_2nd_arch_prefix :=
 include $(LOCAL_PATH)/crt.mk
 ifdef TARGET_2ND_ARCH
 my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+libc_crt_target_cflags_$(TARGET_$(my_2nd_arch_prefix)ARCH) += -I$(KERNEL_HEADERS_ARCH)
 include $(LOCAL_PATH)/crt.mk
 my_2nd_arch_prefix :=
 endif
@@ -40,6 +45,7 @@ endif
 # =========================================================
 libc_common_src_files := \
     bionic/bindresvport.c \
+    bionic/dlfcn.cpp \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
     bionic/fts.c \

@@ -21,12 +21,19 @@ LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a -Wl,--version-script=$(LOCAL_PATH)/
 LOCAL_LDFLAGS_x86 := -Wl,--exclude-libs=libgcc_eh.a
 LOCAL_LDFLAGS_x86_64 := $(LOCAL_LDFLAGS_x86)
 
-LOCAL_SRC_FILES:= libdl.c
-LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror
+LOCAL_SRC_FILES := \
+    ../libc/arch-common/bionic/crtbegin_so.c \
+    ../libc/arch-common/bionic/crtbrand.S \
+    libdl.c \
+    ../libc/arch-common/bionic/crtend_so.S
+
+LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror -D_LIBDL=1
 LOCAL_CXX_STL := none
 
 LOCAL_MODULE := libdl
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+
+LOCAL_NO_CRT := true
+LOCAL_ASFLAGS := -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
 
 # NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
 # few symbols from libc. Using --no-undefined here results in having to link
