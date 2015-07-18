@@ -37,6 +37,8 @@
 #ifndef	_SYS_CDEFS_H_
 #define	_SYS_CDEFS_H_
 
+#include <stddef.h>
+
 /*
  * Testing against Clang-specific extensions.
  */
@@ -577,5 +579,19 @@
 #else
 #define _BIONIC_NOT_BEFORE_21(x)
 #endif /* __ANDROID_API__ >= 21 */
+
+#if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
+#if __LP64__
+#define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
+#else
+#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
+#endif
+#else
+static __inline__ __always_inline int __size_mul_overflow(size_t a, size_t b, size_t *result) {
+    *result = a * b;
+    static const size_t mul_no_overflow = 1UL << (sizeof(size_t) * 4);
+    return (a >= mul_no_overflow || b >= mul_no_overflow) && a > 0 && (size_t)-1 / a < b;
+}
+#endif
 
 #endif /* !_SYS_CDEFS_H_ */
