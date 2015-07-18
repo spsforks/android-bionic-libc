@@ -55,11 +55,13 @@ LIBC {
     __fpclassifyl;
     __fpending;
     __fpurge;
+    __fread_chk;
     __freadable;
     __fsetlocking;
     __fstatfs64; # arm x86 mips
     __futex_wait; # arm x86 mips
     __futex_wake; # arm x86 mips
+    __fwrite_chk;
     __fwritable;
     __gedf2; # arm
     __get_h_errno;
