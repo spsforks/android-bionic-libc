@@ -29,3 +29,5 @@ ENTRY(__ioctl)
     popl    %ebx
     ret
 END(__ioctl)
+
+GEN_INTERNAL_ALIAS(__ioctl)

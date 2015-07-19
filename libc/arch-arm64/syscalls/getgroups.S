@@ -12,3 +12,5 @@ ENTRY(getgroups)
 
     ret
 END(getgroups)
+
+GEN_INTERNAL_ALIAS(getgroups)

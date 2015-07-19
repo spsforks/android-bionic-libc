@@ -12,3 +12,5 @@ ENTRY(mprotect)
 
     ret
 END(mprotect)
+
+GEN_INTERNAL_ALIAS(mprotect)

@@ -17,3 +17,5 @@ ENTRY(klogctl)
     nop
     .set reorder
 END(klogctl)
+
+GEN_INTERNAL_ALIAS(klogctl)

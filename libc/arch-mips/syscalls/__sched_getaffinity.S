@@ -17,3 +17,5 @@ ENTRY(__sched_getaffinity)
     nop
     .set reorder
 END(__sched_getaffinity)
+
+GEN_INTERNAL_ALIAS(__sched_getaffinity)

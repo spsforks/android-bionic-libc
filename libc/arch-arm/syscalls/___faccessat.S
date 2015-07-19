@@ -12,4 +12,6 @@ ENTRY(___faccessat)
     neg     r0, r0
     b       __set_errno_internal
 END(___faccessat)
+
+GEN_INTERNAL_ALIAS(___faccessat)
 .hidden ___faccessat

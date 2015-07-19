@@ -12,3 +12,5 @@ ENTRY(delete_module)
 
     ret
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

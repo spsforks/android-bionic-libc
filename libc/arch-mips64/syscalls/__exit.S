@@ -23,4 +23,6 @@ ENTRY(__exit)
     move ra, t0
     .set pop
 END(__exit)
+
+GEN_INTERNAL_ALIAS(__exit)
 .hidden __exit

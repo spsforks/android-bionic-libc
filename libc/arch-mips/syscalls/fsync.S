@@ -17,3 +17,5 @@ ENTRY(fsync)
     nop
     .set reorder
 END(fsync)
+
+GEN_INTERNAL_ALIAS(fsync)

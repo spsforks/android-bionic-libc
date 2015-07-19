@@ -23,3 +23,5 @@ ENTRY(clock_getres)
     move ra, t0
     .set pop
 END(clock_getres)
+
+GEN_INTERNAL_ALIAS(clock_getres)

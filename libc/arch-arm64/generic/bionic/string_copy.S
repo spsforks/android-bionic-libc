@@ -240,6 +240,12 @@ ENTRY(strcpy)
     b       .Lloop
 #if defined(STPCPY)
 END(stpcpy)
+
+GEN_INTERNAL_ALIAS(stpcpy)
+
 #elif defined(STRCPY)
 END(strcpy)
+
+GEN_INTERNAL_ALIAS(strcpy)
+
 #endif

@@ -12,3 +12,5 @@ ENTRY(lsetxattr)
 
     ret
 END(lsetxattr)
+
+GEN_INTERNAL_ALIAS(lsetxattr)

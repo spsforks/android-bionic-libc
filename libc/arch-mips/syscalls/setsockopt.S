@@ -17,3 +17,5 @@ ENTRY(setsockopt)
     nop
     .set reorder
 END(setsockopt)
+
+GEN_INTERNAL_ALIAS(setsockopt)

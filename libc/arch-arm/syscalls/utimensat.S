@@ -12,3 +12,5 @@ ENTRY(utimensat)
     neg     r0, r0
     b       __set_errno_internal
 END(utimensat)
+
+GEN_INTERNAL_ALIAS(utimensat)

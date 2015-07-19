@@ -23,3 +23,5 @@ ENTRY(personality)
     move ra, t0
     .set pop
 END(personality)
+
+GEN_INTERNAL_ALIAS(personality)

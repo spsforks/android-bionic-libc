@@ -12,3 +12,5 @@ ENTRY(flock)
 
     ret
 END(flock)
+
+GEN_INTERNAL_ALIAS(flock)

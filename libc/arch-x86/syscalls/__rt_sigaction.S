@@ -34,3 +34,5 @@ ENTRY(__rt_sigaction)
     popl    %ebx
     ret
 END(__rt_sigaction)
+
+GEN_INTERNAL_ALIAS(__rt_sigaction)

@@ -19,3 +19,5 @@ ENTRY(dup)
     popl    %ebx
     ret
 END(dup)
+
+GEN_INTERNAL_ALIAS(dup)

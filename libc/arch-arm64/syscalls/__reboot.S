@@ -12,4 +12,6 @@ ENTRY(__reboot)
 
     ret
 END(__reboot)
+
+GEN_INTERNAL_ALIAS(__reboot)
 .hidden __reboot

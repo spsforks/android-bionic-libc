@@ -19,3 +19,5 @@ ENTRY(sync)
     popl    %ebx
     ret
 END(sync)
+
+GEN_INTERNAL_ALIAS(sync)

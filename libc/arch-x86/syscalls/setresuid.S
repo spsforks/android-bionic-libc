@@ -29,3 +29,5 @@ ENTRY(setresuid)
     popl    %ebx
     ret
 END(setresuid)
+
+GEN_INTERNAL_ALIAS(setresuid)

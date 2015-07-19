@@ -44,3 +44,5 @@ ENTRY(__epoll_pwait)
     popl    %ebx
     ret
 END(__epoll_pwait)
+
+GEN_INTERNAL_ALIAS(__epoll_pwait)

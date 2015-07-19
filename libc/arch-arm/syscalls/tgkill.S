@@ -12,3 +12,5 @@ ENTRY(tgkill)
     neg     r0, r0
     b       __set_errno_internal
 END(tgkill)
+
+GEN_INTERNAL_ALIAS(tgkill)

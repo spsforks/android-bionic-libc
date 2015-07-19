@@ -23,3 +23,5 @@ ENTRY(wait4)
     move ra, t0
     .set pop
 END(wait4)
+
+GEN_INTERNAL_ALIAS(wait4)

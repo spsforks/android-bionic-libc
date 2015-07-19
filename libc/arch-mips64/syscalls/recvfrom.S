@@ -23,3 +23,5 @@ ENTRY(recvfrom)
     move ra, t0
     .set pop
 END(recvfrom)
+
+GEN_INTERNAL_ALIAS(recvfrom)

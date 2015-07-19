@@ -23,3 +23,5 @@ ENTRY(renameat)
     move ra, t0
     .set pop
 END(renameat)
+
+GEN_INTERNAL_ALIAS(renameat)

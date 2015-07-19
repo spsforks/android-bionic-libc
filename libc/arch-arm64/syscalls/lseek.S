@@ -13,4 +13,8 @@ ENTRY(lseek)
     ret
 END(lseek)
 
+GEN_INTERNAL_ALIAS(lseek)
+
 ALIAS_SYMBOL(lseek64, lseek)
+
+WEAK_ALIAS(__bionic_lseek64, lseek)

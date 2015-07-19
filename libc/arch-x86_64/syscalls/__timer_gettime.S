@@ -13,4 +13,6 @@ ENTRY(__timer_gettime)
 1:
     ret
 END(__timer_gettime)
+
+GEN_INTERNAL_ALIAS(__timer_gettime)
 .hidden __timer_gettime

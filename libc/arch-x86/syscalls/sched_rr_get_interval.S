@@ -24,3 +24,5 @@ ENTRY(sched_rr_get_interval)
     popl    %ebx
     ret
 END(sched_rr_get_interval)
+
+GEN_INTERNAL_ALIAS(sched_rr_get_interval)

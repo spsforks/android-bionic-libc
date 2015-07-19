@@ -39,3 +39,5 @@ ENTRY(fsetxattr)
     popl    %ebx
     ret
 END(fsetxattr)
+
+GEN_INTERNAL_ALIAS(fsetxattr)

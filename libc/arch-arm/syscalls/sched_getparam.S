@@ -12,3 +12,5 @@ ENTRY(sched_getparam)
     neg     r0, r0
     b       __set_errno_internal
 END(sched_getparam)
+
+GEN_INTERNAL_ALIAS(sched_getparam)

@@ -14,3 +14,5 @@ ENTRY(mknodat)
 1:
     ret
 END(mknodat)
+
+GEN_INTERNAL_ALIAS(mknodat)

@@ -23,3 +23,5 @@ ENTRY(readahead)
     move ra, t0
     .set pop
 END(readahead)
+
+GEN_INTERNAL_ALIAS(readahead)

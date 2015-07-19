@@ -17,3 +17,5 @@ ENTRY(__waitid)
     nop
     .set reorder
 END(__waitid)
+
+GEN_INTERNAL_ALIAS(__waitid)

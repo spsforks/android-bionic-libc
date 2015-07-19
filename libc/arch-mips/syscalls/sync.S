@@ -17,3 +17,5 @@ ENTRY(sync)
     nop
     .set reorder
 END(sync)
+
+GEN_INTERNAL_ALIAS(sync)

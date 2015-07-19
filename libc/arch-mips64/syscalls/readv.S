@@ -23,3 +23,5 @@ ENTRY(readv)
     move ra, t0
     .set pop
 END(readv)
+
+GEN_INTERNAL_ALIAS(readv)

@@ -29,4 +29,6 @@ ENTRY(___faccessat)
     popl    %ebx
     ret
 END(___faccessat)
+
+GEN_INTERNAL_ALIAS(___faccessat)
 .hidden ___faccessat

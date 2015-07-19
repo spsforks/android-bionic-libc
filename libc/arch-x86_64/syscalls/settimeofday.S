@@ -13,3 +13,5 @@ ENTRY(settimeofday)
 1:
     ret
 END(settimeofday)
+
+GEN_INTERNAL_ALIAS(settimeofday)

@@ -39,3 +39,5 @@ ENTRY(__waitid)
     popl    %ebx
     ret
 END(__waitid)
+
+GEN_INTERNAL_ALIAS(__waitid)

@@ -17,3 +17,5 @@ ENTRY(__ptrace)
     nop
     .set reorder
 END(__ptrace)
+
+GEN_INTERNAL_ALIAS(__ptrace)

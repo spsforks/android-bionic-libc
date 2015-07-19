@@ -17,3 +17,5 @@ ENTRY(__fstatfs64)
     nop
     .set reorder
 END(__fstatfs64)
+
+GEN_INTERNAL_ALIAS(__fstatfs64)

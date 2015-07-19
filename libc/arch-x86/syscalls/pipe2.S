@@ -24,3 +24,5 @@ ENTRY(pipe2)
     popl    %ebx
     ret
 END(pipe2)
+
+GEN_INTERNAL_ALIAS(pipe2)

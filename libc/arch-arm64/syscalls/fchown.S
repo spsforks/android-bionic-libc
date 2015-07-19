@@ -12,3 +12,5 @@ ENTRY(fchown)
 
     ret
 END(fchown)
+
+GEN_INTERNAL_ALIAS(fchown)

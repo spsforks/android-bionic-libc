@@ -19,3 +19,5 @@ ENTRY(__timer_delete)
     popl    %ebx
     ret
 END(__timer_delete)
+
+GEN_INTERNAL_ALIAS(__timer_delete)

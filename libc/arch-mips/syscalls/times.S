@@ -17,3 +17,5 @@ ENTRY(times)
     nop
     .set reorder
 END(times)
+
+GEN_INTERNAL_ALIAS(times)

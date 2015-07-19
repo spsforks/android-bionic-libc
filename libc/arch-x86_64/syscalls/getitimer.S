@@ -13,3 +13,5 @@ ENTRY(getitimer)
 1:
     ret
 END(getitimer)
+
+GEN_INTERNAL_ALIAS(getitimer)

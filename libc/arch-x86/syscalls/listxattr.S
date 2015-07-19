@@ -29,3 +29,5 @@ ENTRY(listxattr)
     popl    %ebx
     ret
 END(listxattr)
+
+GEN_INTERNAL_ALIAS(listxattr)

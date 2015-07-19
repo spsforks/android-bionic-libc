@@ -12,4 +12,6 @@ ENTRY(__fadvise64)
 
     ret
 END(__fadvise64)
+
+GEN_INTERNAL_ALIAS(__fadvise64)
 .hidden __fadvise64

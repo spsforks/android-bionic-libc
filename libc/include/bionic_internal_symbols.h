@@ -20,9 +20,6 @@
 // DEFINE_EXTERNAL(foo)(..) aliases foo() to __bionic_foo(),
 // but since foo has already been #defined to __bionic_foo, we first have
 // to undefine foo, and then declare foo() as an alias to __bionic_foo().
-// No amount of token manipulation (e.g. f#oo) helps here.
-// As soon as a token foo materializes, it is #defined to become __bionic_foo.
-// So the best way is to #undef foo.
 // Refer to bionic_external_symbols.h
 
 // This is somewhat convoluted, but I believe this is better than
@@ -30,7 +27,7 @@
 // explicitly reference __bionic_foo().
 
 // The patch impact are two new #includes per .cpp file and two
-// wholly separate files
+// wholly separate files that are included.
 
 #undef INTERNAL
 #undef DEFINE_EXTERNAL
@@ -73,7 +70,6 @@
 #define pthread_join INTERNAL(pthread_join)
 
 // MISC_BIONIC_ROUTINES
-#define memset INTERNAL(memset)
 #define open INTERNAL(open)
 #define openat INTERNAL(openat)
 
@@ -81,7 +77,7 @@
 #define mmap64 INTERNAL(mmap64)
 #define munmap INTERNAL(munmap)
 #define mprotect INTERNAL(mprotect)
-#if 0
+//#if 0
 #define msync INTERNAL(msync)
 #define mremap INTERNAL(mremap)
 #define mlockall INTERNAL(mlockall)
@@ -90,7 +86,7 @@
 #define munlock INTERNAL(munlock)
 #define madvise INTERNAL(madvise)
 #define mincore INTERNAL(mincore)
-#endif
+//#endif
 #define posix_madvise INTERNAL(posix_madvise)
 
 // These are the calls with internal symbol duplicates
@@ -130,9 +126,15 @@ DECLARE_INTERNAL(int, openat, int, const char*, int, ...);
 // get memset in here
 // memset is conditionally declared as an inline function
 // in bionic/include/string.h
-#ifndef __BIONIC_FORTIFY_INLINE
 DECLARE_INTERNAL(void *, memset, void *s, int c, size_t n);
-#endif
+DECLARE_INTERNAL(size_t, strlen, const char *s);
+DECLARE_INTERNAL(size_t, strlen_real, const char *s);
+
+#define strchr INTERNAL(strchr)
+#define strrchr INTERNAL(strrchr)
+DECLARE_INTERNAL(char*,  strchr, const char *, int);
+DECLARE_INTERNAL(char*,  strrchr, const char *, int);
+
 
 // MMAP_CPP
 #ifdef _SYS_MMAN_H_
@@ -153,8 +155,9 @@ DECLARE_INTERNAL(int, mincore, void*, size_t, unsigned char*);
 DECLARE_INTERNAL(int, posix_madvise, void*, size_t, int);
 #endif
 
-#if 0
+#define prctl INTERNAL(prctl)
+#ifdef _SYS_PRCTL_H
+DECLARE_INTERNAL(int, prctl, int option, ...);
 #endif
-
 
 #endif // _BIONIC_INTERNAL_SYMBOLS_H_

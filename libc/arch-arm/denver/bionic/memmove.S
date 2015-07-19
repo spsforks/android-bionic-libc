@@ -279,3 +279,6 @@ ENTRY(memmove)
         pop         {r0, pc}
 
 END(memmove)
+
+GEN_INTERNAL_ALIAS(memmove)
+

@@ -14,3 +14,5 @@ ENTRY(recvfrom)
 1:
     ret
 END(recvfrom)
+
+GEN_INTERNAL_ALIAS(recvfrom)

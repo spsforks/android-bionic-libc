@@ -12,3 +12,5 @@ ENTRY(init_module)
 
     ret
 END(init_module)
+
+GEN_INTERNAL_ALIAS(init_module)

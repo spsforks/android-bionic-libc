@@ -12,3 +12,5 @@ ENTRY(__clock_nanosleep)
     neg     r0, r0
     b       __set_errno_internal
 END(__clock_nanosleep)
+
+GEN_INTERNAL_ALIAS(__clock_nanosleep)

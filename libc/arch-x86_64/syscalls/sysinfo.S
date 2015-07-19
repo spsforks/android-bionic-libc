@@ -13,3 +13,5 @@ ENTRY(sysinfo)
 1:
     ret
 END(sysinfo)
+
+GEN_INTERNAL_ALIAS(sysinfo)

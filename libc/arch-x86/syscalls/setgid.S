@@ -19,3 +19,5 @@ ENTRY(setgid)
     popl    %ebx
     ret
 END(setgid)
+
+GEN_INTERNAL_ALIAS(setgid)

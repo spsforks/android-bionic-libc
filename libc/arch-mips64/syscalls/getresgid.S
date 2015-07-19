@@ -23,3 +23,5 @@ ENTRY(getresgid)
     move ra, t0
     .set pop
 END(getresgid)
+
+GEN_INTERNAL_ALIAS(getresgid)

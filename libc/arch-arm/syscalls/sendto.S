@@ -20,3 +20,5 @@ ENTRY(sendto)
     neg     r0, r0
     b       __set_errno_internal
 END(sendto)
+
+GEN_INTERNAL_ALIAS(sendto)

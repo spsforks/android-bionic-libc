@@ -17,3 +17,5 @@ ENTRY(chroot)
     nop
     .set reorder
 END(chroot)
+
+GEN_INTERNAL_ALIAS(chroot)

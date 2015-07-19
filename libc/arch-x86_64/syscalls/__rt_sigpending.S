@@ -13,4 +13,6 @@ ENTRY(__rt_sigpending)
 1:
     ret
 END(__rt_sigpending)
+
+GEN_INTERNAL_ALIAS(__rt_sigpending)
 .hidden __rt_sigpending

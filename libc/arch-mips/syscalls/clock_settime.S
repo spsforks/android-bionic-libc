@@ -17,3 +17,5 @@ ENTRY(clock_settime)
     nop
     .set reorder
 END(clock_settime)
+
+GEN_INTERNAL_ALIAS(clock_settime)

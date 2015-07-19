@@ -17,3 +17,5 @@ ENTRY(read)
     nop
     .set reorder
 END(read)
+
+GEN_INTERNAL_ALIAS(read)

@@ -12,3 +12,5 @@ ENTRY(getsockopt)
 
     ret
 END(getsockopt)
+
+GEN_INTERNAL_ALIAS(getsockopt)

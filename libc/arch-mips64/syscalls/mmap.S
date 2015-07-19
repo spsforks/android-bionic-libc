@@ -24,4 +24,8 @@ ENTRY(mmap)
     .set pop
 END(mmap)
 
+GEN_INTERNAL_ALIAS(mmap)
+
 ALIAS_SYMBOL(mmap64, mmap)
+
+WEAK_ALIAS(__bionic_mmap64, mmap)

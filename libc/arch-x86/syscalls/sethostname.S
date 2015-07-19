@@ -24,3 +24,5 @@ ENTRY(sethostname)
     popl    %ebx
     ret
 END(sethostname)
+
+GEN_INTERNAL_ALIAS(sethostname)

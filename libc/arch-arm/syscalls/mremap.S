@@ -12,3 +12,5 @@ ENTRY(mremap)
     neg     r0, r0
     b       __set_errno_internal
 END(mremap)
+
+GEN_INTERNAL_ALIAS(mremap)

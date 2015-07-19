@@ -13,3 +13,5 @@ ENTRY(sched_setscheduler)
 1:
     ret
 END(sched_setscheduler)
+
+GEN_INTERNAL_ALIAS(sched_setscheduler)

@@ -17,3 +17,5 @@ ENTRY(recvfrom)
     nop
     .set reorder
 END(recvfrom)
+
+GEN_INTERNAL_ALIAS(recvfrom)

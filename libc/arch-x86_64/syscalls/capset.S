@@ -13,3 +13,5 @@ ENTRY(capset)
 1:
     ret
 END(capset)
+
+GEN_INTERNAL_ALIAS(capset)

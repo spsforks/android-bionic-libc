@@ -17,3 +17,5 @@ ENTRY(setrlimit)
     nop
     .set reorder
 END(setrlimit)
+
+GEN_INTERNAL_ALIAS(setrlimit)

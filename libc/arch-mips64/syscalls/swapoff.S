@@ -23,3 +23,5 @@ ENTRY(swapoff)
     move ra, t0
     .set pop
 END(swapoff)
+
+GEN_INTERNAL_ALIAS(swapoff)

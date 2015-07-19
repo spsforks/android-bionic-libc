@@ -17,3 +17,5 @@ ENTRY(listen)
     nop
     .set reorder
 END(listen)
+
+GEN_INTERNAL_ALIAS(listen)

@@ -24,4 +24,8 @@ ENTRY(getrlimit)
     .set pop
 END(getrlimit)
 
+GEN_INTERNAL_ALIAS(getrlimit)
+
 ALIAS_SYMBOL(getrlimit64, getrlimit)
+
+WEAK_ALIAS(__bionic_getrlimit64, getrlimit)

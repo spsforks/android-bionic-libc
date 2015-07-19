@@ -23,3 +23,5 @@ ENTRY(delete_module)
     move ra, t0
     .set pop
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

@@ -23,3 +23,5 @@ ENTRY(sched_getparam)
     move ra, t0
     .set pop
 END(sched_getparam)
+
+GEN_INTERNAL_ALIAS(sched_getparam)

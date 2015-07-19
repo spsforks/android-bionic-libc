@@ -17,3 +17,5 @@ ENTRY(sigaltstack)
     nop
     .set reorder
 END(sigaltstack)
+
+GEN_INTERNAL_ALIAS(sigaltstack)

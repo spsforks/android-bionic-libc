@@ -13,3 +13,5 @@ ENTRY(dup3)
 1:
     ret
 END(dup3)
+
+GEN_INTERNAL_ALIAS(dup3)

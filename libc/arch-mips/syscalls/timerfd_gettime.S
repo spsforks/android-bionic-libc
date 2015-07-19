@@ -17,3 +17,5 @@ ENTRY(timerfd_gettime)
     nop
     .set reorder
 END(timerfd_gettime)
+
+GEN_INTERNAL_ALIAS(timerfd_gettime)

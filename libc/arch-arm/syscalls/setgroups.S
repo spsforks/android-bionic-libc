@@ -12,3 +12,5 @@ ENTRY(setgroups)
     neg     r0, r0
     b       __set_errno_internal
 END(setgroups)
+
+GEN_INTERNAL_ALIAS(setgroups)

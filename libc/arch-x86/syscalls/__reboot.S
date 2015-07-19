@@ -34,3 +34,5 @@ ENTRY(__reboot)
     popl    %ebx
     ret
 END(__reboot)
+
+GEN_INTERNAL_ALIAS(__reboot)

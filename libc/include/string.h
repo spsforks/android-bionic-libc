@@ -39,6 +39,8 @@ __BEGIN_DECLS
 #include <strings.h>
 #endif
 
+#include "bionic_internal_symbols.h"
+
 extern void*  memccpy(void* __restrict, const void* __restrict, int, size_t);
 extern void*  memchr(const void *, int, size_t) __purefunc;
 extern void*  memrchr(const void *, int, size_t) __purefunc;
@@ -251,16 +253,7 @@ char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
     return __builtin___strncat_chk(dest, src, n, __bos(dest));
 }
 
-// Undefine here temporarily so that we can define memset specially
-#undef memset
-#undef INTERNAL
-#define INTERNAL(x) __bionic_##x
-
-__BIONIC_FORTIFY_INLINE
-void* __bionic_memset(void *s, int c, size_t n) {
-    return __builtin___memset_chk(s, c, n, __bos0(s));
-}
-
+// we need to deal with memset specially, because it is an inlined function.
 __BIONIC_FORTIFY_INLINE
 void* memset(void *s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __bos0(s));
@@ -312,40 +305,21 @@ size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
     size_t bos = __bos(s);
-
 #if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlen_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin_strlen(s);
+        return __bionic_strlen(s);
     }
 
-    size_t slen = __builtin_strlen(s);
+    size_t slen = __bionic_strlen(s);
     if (__builtin_constant_p(slen)) {
         return slen;
     }
 #endif /* !defined(__clang__) */
-
     return __strlen_chk(s, bos);
 }
 
-__BIONIC_FORTIFY_INLINE
-char* strchr(const char *s, int c) {
-    size_t bos = __bos(s);
-
-#if !defined(__clang__)
-    // Compiler doesn't know destination size. Don't call __strchr_chk
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin_strchr(s, c);
-    }
-
-    size_t slen = __builtin_strlen(s);
-    if (__builtin_constant_p(slen) && (slen < bos)) {
-        return __builtin_strchr(s, c);
-    }
-#endif /* !defined(__clang__) */
-
-    return __strchr_chk(s, c, bos);
-}
+#define strlen INTERNAL(strlen)
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char *s, int c) {
@@ -354,12 +328,12 @@ char* strrchr(const char *s, int c) {
 #if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strrchr_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin_strrchr(s, c);
+        return __bionic_strrchr(s, c);
     }
 
-    size_t slen = __builtin_strlen(s);
+    size_t slen = __bionic_strlen(s);
     if (__builtin_constant_p(slen) && (slen < bos)) {
-        return __builtin_strrchr(s, c);
+        return __bionic_strrchr(s, c);
     }
 #endif /* !defined(__clang__) */
 

@@ -12,4 +12,6 @@ ENTRY(__fstatfs)
 
     ret
 END(__fstatfs)
+
+GEN_INTERNAL_ALIAS(__fstatfs)
 .hidden __fstatfs

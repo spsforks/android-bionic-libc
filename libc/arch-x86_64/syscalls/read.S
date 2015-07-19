@@ -13,3 +13,5 @@ ENTRY(read)
 1:
     ret
 END(read)
+
+GEN_INTERNAL_ALIAS(read)

@@ -34,3 +34,5 @@ ENTRY(fgetxattr)
     popl    %ebx
     ret
 END(fgetxattr)
+
+GEN_INTERNAL_ALIAS(fgetxattr)

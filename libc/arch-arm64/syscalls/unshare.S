@@ -12,3 +12,5 @@ ENTRY(unshare)
 
     ret
 END(unshare)
+
+GEN_INTERNAL_ALIAS(unshare)

@@ -23,4 +23,6 @@ ENTRY(__ppoll)
     move ra, t0
     .set pop
 END(__ppoll)
+
+GEN_INTERNAL_ALIAS(__ppoll)
 .hidden __ppoll

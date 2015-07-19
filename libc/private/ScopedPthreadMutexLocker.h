@@ -21,7 +21,6 @@
 
 #include "bionic_macros.h"
 
-#include "bionic_internal_symbols.h"
 class ScopedPthreadMutexLocker {
  public:
   explicit ScopedPthreadMutexLocker(pthread_mutex_t* mu) : mu_(mu) {

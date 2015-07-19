@@ -12,4 +12,6 @@ ENTRY(__getcwd)
 
     ret
 END(__getcwd)
+
+GEN_INTERNAL_ALIAS(__getcwd)
 .hidden __getcwd

@@ -23,3 +23,5 @@ ENTRY(flistxattr)
     move ra, t0
     .set pop
 END(flistxattr)
+
+GEN_INTERNAL_ALIAS(flistxattr)

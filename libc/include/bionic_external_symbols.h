@@ -75,9 +75,9 @@ DEFINE_EXTERNAL(void*, valloc, size_t bytes);
 #undef open
 #undef openat
 
-#ifdef MEMSET_C_DEFS
-DEFINE_EXTERNAL(void*, memset, void *s, int c, size_t n);
-#endif
+// #ifdef MEMSET_C_DEFS
+// DEFINE_EXTERNAL(void*, memset, void *s, int c, size_t n);
+// #endif
 
 #ifdef OPEN_CPP
 DEFINE_EXTERNAL(int, open, const char *pathname, int flags, ...);
@@ -130,64 +130,17 @@ DEFINE_EXTERNAL(void*, mmap, void* addr, size_t size, int prot, int flags, int f
 DEFINE_EXTERNAL(void*, mmap64, void* addr, size_t size, int prot, int flags, int fd, off64_t offset);
 #endif
 
-#if defined(MISC_MISSING_MMAP)
-
-#include <sys/syscall.h>
-// DEFINE_SYSCALL_EXTERNAL(void*, mmap, void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-//   MYSYSCALL(void*, mmap, addr, size, prot, flags, fd, offset);
-// };
-// DEFINE_SYSCALL_EXTERNAL(void*, mmap64, void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-//   MYSYSCALL(void*, mmap, addr, size, prot, flags, fd, offset);
-// };
-
-DEFINE_SYSCALL_EXTERNAL(int, munmap, void* A, size_t B) {
-  MYSYSCALL(int, munmap, A, B);
-}
-DEFINE_SYSCALL_EXTERNAL(int, mprotect, const void* A , size_t B, int C) {
-  MYSYSCALL(int, mprotect, A, B, C);
-};
-DEFINE_SYSCALL_EXTERNAL(int, msync, const void* A, size_t B, int C) {
-  MYSYSCALL(int, msync, A, B, C);
-};
-
-DEFINE_SYSCALL_EXTERNAL(void*, mremap, void*A, size_t B, size_t C, unsigned long D) {
-  MYSYSCALL(void*, mremap, A, B, C, D);
-};
-DEFINE_SYSCALL_EXTERNAL(int, mlockall, int A) {
-  MYSYSCALL(int, mlockall, A);
-};
-DEFINE_SYSCALL_EXTERNAL(int, munlockall, void) {
-  MYSYSCALL(int, munlockall, 0);
-};
-DEFINE_SYSCALL_EXTERNAL(int, madvise, void* A, size_t B, int C) {
-  MYSYSCALL(int, madvise, A, B, C);
-};
-DEFINE_SYSCALL_EXTERNAL(int, mlock, const void* A, size_t B) {
-  MYSYSCALL(int, mlock, A, B);
-};
-DEFINE_SYSCALL_EXTERNAL(int, munlock, const void*A, size_t B) {
-  MYSYSCALL(int, munlock, A, B);
-};
-DEFINE_SYSCALL_EXTERNAL(int, mincore, void* A, size_t B, unsigned char*C) {
-  MYSYSCALL(int, mincore, A, B, C);
-};
-
-// DEFINE_EXTERNAL(void*, mmap, void* addr, size_t size, int prot, int flags, int fd, off_t offset);
-// DEFINE_EXTERNAL(void*, mmap64, void* addr, size_t size, int prot, int flags, int fd, off64_t offset);
-DEFINE_EXTERNAL(int, munmap, void* A, size_t B);
-DEFINE_EXTERNAL(int, mprotect, const void* A , size_t B, int C);;
-DEFINE_EXTERNAL(int, msync, const void* A, size_t B, int C);;
-
-DEFINE_EXTERNAL(void*, mremap, void*A, size_t B, size_t C, unsigned long D);;
-DEFINE_EXTERNAL(int, mlockall, int A);;
-DEFINE_EXTERNAL(int, munlockall, void);;
-DEFINE_EXTERNAL(int, madvise, void* A, size_t B, int C);;
-DEFINE_EXTERNAL(int, mlock, const void* A, size_t B);;
-DEFINE_EXTERNAL(int, munlock, const void*A, size_t B);;
-DEFINE_EXTERNAL(int, mincore, void* A, size_t B, unsigned char*C);;
-
-#endif
-
 #ifdef POSIX_MADVISE_CPP
 DEFINE_EXTERNAL(int, posix_madvise, void*, size_t, int);
+#endif
+
+#undef strchr
+#undef strrchr
+
+#ifdef STRCHR_CPP
+DEFINE_EXTERNAL(char*,  strchr, const char *, int);
+#endif
+
+#ifdef STRRCHR_CPP
+DEFINE_EXTERNAL(char*,  strrchr, const char *, int);
 #endif

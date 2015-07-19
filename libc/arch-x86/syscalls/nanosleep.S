@@ -24,3 +24,5 @@ ENTRY(nanosleep)
     popl    %ebx
     ret
 END(nanosleep)
+
+GEN_INTERNAL_ALIAS(nanosleep)

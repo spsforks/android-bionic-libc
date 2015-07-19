@@ -14,3 +14,5 @@ ENTRY(linkat)
 1:
     ret
 END(linkat)
+
+GEN_INTERNAL_ALIAS(linkat)

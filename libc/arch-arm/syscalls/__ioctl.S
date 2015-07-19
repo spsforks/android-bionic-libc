@@ -12,3 +12,5 @@ ENTRY(__ioctl)
     neg     r0, r0
     b       __set_errno_internal
 END(__ioctl)
+
+GEN_INTERNAL_ALIAS(__ioctl)

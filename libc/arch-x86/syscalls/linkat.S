@@ -39,3 +39,5 @@ ENTRY(linkat)
     popl    %ebx
     ret
 END(linkat)
+
+GEN_INTERNAL_ALIAS(linkat)

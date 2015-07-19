@@ -23,3 +23,5 @@ ENTRY(prctl)
     move ra, t0
     .set pop
 END(prctl)
+
+GEN_INTERNAL_ALIAS(prctl)

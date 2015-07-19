@@ -17,3 +17,5 @@ ENTRY(socketpair)
     nop
     .set reorder
 END(socketpair)
+
+GEN_INTERNAL_ALIAS(socketpair)

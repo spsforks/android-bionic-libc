@@ -17,3 +17,5 @@ ENTRY(readahead)
     nop
     .set reorder
 END(readahead)
+
+GEN_INTERNAL_ALIAS(readahead)

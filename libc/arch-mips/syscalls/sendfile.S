@@ -17,3 +17,5 @@ ENTRY(sendfile)
     nop
     .set reorder
 END(sendfile)
+
+GEN_INTERNAL_ALIAS(sendfile)

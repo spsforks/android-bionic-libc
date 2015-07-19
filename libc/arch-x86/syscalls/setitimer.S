@@ -29,3 +29,5 @@ ENTRY(setitimer)
     popl    %ebx
     ret
 END(setitimer)
+
+GEN_INTERNAL_ALIAS(setitimer)

@@ -19,3 +19,5 @@ ENTRY(getsid)
     popl    %ebx
     ret
 END(getsid)
+
+GEN_INTERNAL_ALIAS(getsid)

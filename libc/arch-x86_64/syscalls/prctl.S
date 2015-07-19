@@ -14,3 +14,5 @@ ENTRY(prctl)
 1:
     ret
 END(prctl)
+
+GEN_INTERNAL_ALIAS(prctl)

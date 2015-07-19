@@ -23,3 +23,5 @@ ENTRY(inotify_init1)
     move ra, t0
     .set pop
 END(inotify_init1)
+
+GEN_INTERNAL_ALIAS(inotify_init1)

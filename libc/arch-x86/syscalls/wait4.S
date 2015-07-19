@@ -34,3 +34,5 @@ ENTRY(wait4)
     popl    %ebx
     ret
 END(wait4)
+
+GEN_INTERNAL_ALIAS(wait4)

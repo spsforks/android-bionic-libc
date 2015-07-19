@@ -17,3 +17,5 @@ ENTRY(truncate)
     nop
     .set reorder
 END(truncate)
+
+GEN_INTERNAL_ALIAS(truncate)

@@ -17,3 +17,5 @@ ENTRY(epoll_ctl)
     nop
     .set reorder
 END(epoll_ctl)
+
+GEN_INTERNAL_ALIAS(epoll_ctl)

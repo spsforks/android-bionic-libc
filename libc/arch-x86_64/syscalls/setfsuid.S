@@ -13,3 +13,5 @@ ENTRY(setfsuid)
 1:
     ret
 END(setfsuid)
+
+GEN_INTERNAL_ALIAS(setfsuid)

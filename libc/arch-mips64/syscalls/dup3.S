@@ -23,3 +23,5 @@ ENTRY(dup3)
     move ra, t0
     .set pop
 END(dup3)
+
+GEN_INTERNAL_ALIAS(dup3)

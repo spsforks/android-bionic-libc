@@ -23,3 +23,5 @@ ENTRY(recvmmsg)
     move ra, t0
     .set pop
 END(recvmmsg)
+
+GEN_INTERNAL_ALIAS(recvmmsg)

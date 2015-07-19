@@ -13,3 +13,5 @@ ENTRY(mincore)
 1:
     ret
 END(mincore)
+
+GEN_INTERNAL_ALIAS(mincore)

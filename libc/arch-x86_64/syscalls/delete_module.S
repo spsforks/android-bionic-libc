@@ -13,3 +13,5 @@ ENTRY(delete_module)
 1:
     ret
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

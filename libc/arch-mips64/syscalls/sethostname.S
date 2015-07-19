@@ -23,3 +23,5 @@ ENTRY(sethostname)
     move ra, t0
     .set pop
 END(sethostname)
+
+GEN_INTERNAL_ALIAS(sethostname)

@@ -12,3 +12,5 @@ ENTRY(recvmmsg)
 
     ret
 END(recvmmsg)
+
+GEN_INTERNAL_ALIAS(recvmmsg)

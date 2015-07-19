@@ -17,3 +17,5 @@ ENTRY(tgkill)
     nop
     .set reorder
 END(tgkill)
+
+GEN_INTERNAL_ALIAS(tgkill)

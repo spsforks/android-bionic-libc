@@ -13,3 +13,5 @@ ENTRY(sched_rr_get_interval)
 1:
     ret
 END(sched_rr_get_interval)
+
+GEN_INTERNAL_ALIAS(sched_rr_get_interval)

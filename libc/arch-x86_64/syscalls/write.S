@@ -13,3 +13,5 @@ ENTRY(write)
 1:
     ret
 END(write)
+
+GEN_INTERNAL_ALIAS(write)

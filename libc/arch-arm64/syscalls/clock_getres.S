@@ -12,3 +12,5 @@ ENTRY(clock_getres)
 
     ret
 END(clock_getres)
+
+GEN_INTERNAL_ALIAS(clock_getres)

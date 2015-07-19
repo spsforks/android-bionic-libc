@@ -24,3 +24,5 @@ ENTRY(__getcwd)
     popl    %ebx
     ret
 END(__getcwd)
+
+GEN_INTERNAL_ALIAS(__getcwd)

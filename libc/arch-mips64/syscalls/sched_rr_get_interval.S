@@ -23,3 +23,5 @@ ENTRY(sched_rr_get_interval)
     move ra, t0
     .set pop
 END(sched_rr_get_interval)
+
+GEN_INTERNAL_ALIAS(sched_rr_get_interval)

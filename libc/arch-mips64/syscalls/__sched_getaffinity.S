@@ -23,4 +23,6 @@ ENTRY(__sched_getaffinity)
     move ra, t0
     .set pop
 END(__sched_getaffinity)
+
+GEN_INTERNAL_ALIAS(__sched_getaffinity)
 .hidden __sched_getaffinity

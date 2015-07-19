@@ -23,3 +23,5 @@ ENTRY(fchownat)
     move ra, t0
     .set pop
 END(fchownat)
+
+GEN_INTERNAL_ALIAS(fchownat)

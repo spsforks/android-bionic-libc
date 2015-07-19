@@ -24,3 +24,5 @@ ENTRY(truncate)
     popl    %ebx
     ret
 END(truncate)
+
+GEN_INTERNAL_ALIAS(truncate)

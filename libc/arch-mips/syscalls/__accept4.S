@@ -17,3 +17,5 @@ ENTRY(__accept4)
     nop
     .set reorder
 END(__accept4)
+
+GEN_INTERNAL_ALIAS(__accept4)

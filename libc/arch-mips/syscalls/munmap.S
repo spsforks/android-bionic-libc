@@ -17,3 +17,5 @@ ENTRY(munmap)
     nop
     .set reorder
 END(munmap)
+
+GEN_INTERNAL_ALIAS(munmap)

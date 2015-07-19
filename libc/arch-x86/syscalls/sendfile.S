@@ -34,3 +34,5 @@ ENTRY(sendfile)
     popl    %ebx
     ret
 END(sendfile)
+
+GEN_INTERNAL_ALIAS(sendfile)

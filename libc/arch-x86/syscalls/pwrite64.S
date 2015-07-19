@@ -39,3 +39,5 @@ ENTRY(pwrite64)
     popl    %ebx
     ret
 END(pwrite64)
+
+GEN_INTERNAL_ALIAS(pwrite64)

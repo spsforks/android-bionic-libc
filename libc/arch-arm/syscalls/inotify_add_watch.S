@@ -12,3 +12,5 @@ ENTRY(inotify_add_watch)
     neg     r0, r0
     b       __set_errno_internal
 END(inotify_add_watch)
+
+GEN_INTERNAL_ALIAS(inotify_add_watch)

@@ -12,3 +12,5 @@ ENTRY(sigaltstack)
 
     ret
 END(sigaltstack)
+
+GEN_INTERNAL_ALIAS(sigaltstack)

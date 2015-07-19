@@ -12,3 +12,5 @@ ENTRY(setns)
 
     ret
 END(setns)
+
+GEN_INTERNAL_ALIAS(setns)

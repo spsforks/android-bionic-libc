@@ -39,3 +39,5 @@ ENTRY(mount)
     popl    %ebx
     ret
 END(mount)
+
+GEN_INTERNAL_ALIAS(mount)

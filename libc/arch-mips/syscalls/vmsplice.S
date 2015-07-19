@@ -17,3 +17,5 @@ ENTRY(vmsplice)
     nop
     .set reorder
 END(vmsplice)
+
+GEN_INTERNAL_ALIAS(vmsplice)

@@ -13,3 +13,5 @@ ENTRY(madvise)
 1:
     ret
 END(madvise)
+
+GEN_INTERNAL_ALIAS(madvise)

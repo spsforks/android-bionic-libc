@@ -12,3 +12,5 @@ ENTRY(__set_tid_address)
     neg     r0, r0
     b       __set_errno_internal
 END(__set_tid_address)
+
+GEN_INTERNAL_ALIAS(__set_tid_address)

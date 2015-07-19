@@ -19,3 +19,5 @@ ENTRY(sched_get_priority_min)
     popl    %ebx
     ret
 END(sched_get_priority_min)
+
+GEN_INTERNAL_ALIAS(sched_get_priority_min)

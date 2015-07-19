@@ -19,3 +19,5 @@ ENTRY(times)
     popl    %ebx
     ret
 END(times)
+
+GEN_INTERNAL_ALIAS(times)

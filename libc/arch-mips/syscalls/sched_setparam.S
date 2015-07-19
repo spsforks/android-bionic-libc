@@ -17,3 +17,5 @@ ENTRY(sched_setparam)
     nop
     .set reorder
 END(sched_setparam)
+
+GEN_INTERNAL_ALIAS(sched_setparam)

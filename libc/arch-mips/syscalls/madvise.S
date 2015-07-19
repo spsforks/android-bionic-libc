@@ -17,3 +17,5 @@ ENTRY(madvise)
     nop
     .set reorder
 END(madvise)
+
+GEN_INTERNAL_ALIAS(madvise)

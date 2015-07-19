@@ -23,3 +23,5 @@ ENTRY(setns)
     move ra, t0
     .set pop
 END(setns)
+
+GEN_INTERNAL_ALIAS(setns)

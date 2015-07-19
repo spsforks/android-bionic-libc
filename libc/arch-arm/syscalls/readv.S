@@ -12,3 +12,5 @@ ENTRY(readv)
     neg     r0, r0
     b       __set_errno_internal
 END(readv)
+
+GEN_INTERNAL_ALIAS(readv)

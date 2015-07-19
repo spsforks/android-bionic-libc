@@ -23,3 +23,5 @@ ENTRY(mprotect)
     move ra, t0
     .set pop
 END(mprotect)
+
+GEN_INTERNAL_ALIAS(mprotect)

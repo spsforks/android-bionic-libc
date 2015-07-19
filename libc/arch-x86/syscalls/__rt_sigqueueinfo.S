@@ -29,3 +29,5 @@ ENTRY(__rt_sigqueueinfo)
     popl    %ebx
     ret
 END(__rt_sigqueueinfo)
+
+GEN_INTERNAL_ALIAS(__rt_sigqueueinfo)

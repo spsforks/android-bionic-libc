@@ -12,3 +12,5 @@ ENTRY(epoll_create1)
 
     ret
 END(epoll_create1)
+
+GEN_INTERNAL_ALIAS(epoll_create1)

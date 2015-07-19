@@ -19,3 +19,5 @@ ENTRY(chdir)
     popl    %ebx
     ret
 END(chdir)
+
+GEN_INTERNAL_ALIAS(chdir)

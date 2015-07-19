@@ -13,3 +13,5 @@ ENTRY(capget)
 1:
     ret
 END(capget)
+
+GEN_INTERNAL_ALIAS(capget)

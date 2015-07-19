@@ -44,3 +44,5 @@ ENTRY(__fadvise64)
     popl    %ebx
     ret
 END(__fadvise64)
+
+GEN_INTERNAL_ALIAS(__fadvise64)

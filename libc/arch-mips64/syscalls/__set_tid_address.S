@@ -23,4 +23,6 @@ ENTRY(__set_tid_address)
     move ra, t0
     .set pop
 END(__set_tid_address)
+
+GEN_INTERNAL_ALIAS(__set_tid_address)
 .hidden __set_tid_address

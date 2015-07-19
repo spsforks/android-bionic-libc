@@ -12,4 +12,6 @@ ENTRY(__gettimeofday)
 
     ret
 END(__gettimeofday)
+
+GEN_INTERNAL_ALIAS(__gettimeofday)
 .hidden __gettimeofday

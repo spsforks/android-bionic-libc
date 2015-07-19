@@ -29,3 +29,5 @@ ENTRY(getresuid)
     popl    %ebx
     ret
 END(getresuid)
+
+GEN_INTERNAL_ALIAS(getresuid)

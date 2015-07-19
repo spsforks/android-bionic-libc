@@ -24,3 +24,5 @@ ENTRY(__timer_gettime)
     popl    %ebx
     ret
 END(__timer_gettime)
+
+GEN_INTERNAL_ALIAS(__timer_gettime)

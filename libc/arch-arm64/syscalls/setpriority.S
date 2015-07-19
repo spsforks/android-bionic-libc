@@ -12,3 +12,5 @@ ENTRY(setpriority)
 
     ret
 END(setpriority)
+
+GEN_INTERNAL_ALIAS(setpriority)

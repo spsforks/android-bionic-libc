@@ -23,3 +23,5 @@ ENTRY(writev)
     move ra, t0
     .set pop
 END(writev)
+
+GEN_INTERNAL_ALIAS(writev)

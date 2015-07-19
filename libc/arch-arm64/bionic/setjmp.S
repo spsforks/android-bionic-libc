@@ -57,10 +57,16 @@ ENTRY(setjmp)
   b sigsetjmp
 END(setjmp)
 
+GEN_INTERNAL_ALIAS(setjmp)
+
+
 ENTRY(_setjmp)
   mov w1, #0
   b sigsetjmp
 END(_setjmp)
+
+GEN_INTERNAL_ALIAS(_setjmp)
+
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
@@ -98,6 +104,9 @@ ENTRY(sigsetjmp)
   mov w0, #0
   ret
 END(sigsetjmp)
+
+GEN_INTERNAL_ALIAS(sigsetjmp)
+
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
@@ -145,6 +154,9 @@ ENTRY(siglongjmp)
   csinc w0, w1, wzr, ne
   ret
 END(siglongjmp)
+
+GEN_INTERNAL_ALIAS(siglongjmp)
+
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
 ALIAS_SYMBOL(_longjmp, siglongjmp)

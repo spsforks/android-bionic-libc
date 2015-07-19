@@ -12,3 +12,5 @@ ENTRY(__fstatfs64)
     neg     r0, r0
     b       __set_errno_internal
 END(__fstatfs64)
+
+GEN_INTERNAL_ALIAS(__fstatfs64)

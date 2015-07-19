@@ -153,3 +153,6 @@ ENTRY(memcmp)
 	sub	result, data1, data2
 	ret
 END(memcmp)
+
+GEN_INTERNAL_ALIAS(memcmp)
+

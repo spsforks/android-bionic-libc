@@ -14,3 +14,5 @@ ENTRY(sendto)
 1:
     ret
 END(sendto)
+
+GEN_INTERNAL_ALIAS(sendto)

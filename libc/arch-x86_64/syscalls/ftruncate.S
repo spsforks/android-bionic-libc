@@ -14,4 +14,8 @@ ENTRY(ftruncate)
     ret
 END(ftruncate)
 
+GEN_INTERNAL_ALIAS(ftruncate)
+
 ALIAS_SYMBOL(ftruncate64, ftruncate)
+
+WEAK_ALIAS(__bionic_ftruncate64, ftruncate)

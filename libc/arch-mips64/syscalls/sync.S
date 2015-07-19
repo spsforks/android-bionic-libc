@@ -23,3 +23,5 @@ ENTRY(sync)
     move ra, t0
     .set pop
 END(sync)
+
+GEN_INTERNAL_ALIAS(sync)

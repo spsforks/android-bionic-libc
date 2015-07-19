@@ -17,3 +17,5 @@ ENTRY(prlimit64)
     nop
     .set reorder
 END(prlimit64)
+
+GEN_INTERNAL_ALIAS(prlimit64)

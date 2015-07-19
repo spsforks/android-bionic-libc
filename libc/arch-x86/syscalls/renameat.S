@@ -34,3 +34,5 @@ ENTRY(renameat)
     popl    %ebx
     ret
 END(renameat)
+
+GEN_INTERNAL_ALIAS(renameat)

@@ -17,3 +17,5 @@ ENTRY(getppid)
     nop
     .set reorder
 END(getppid)
+
+GEN_INTERNAL_ALIAS(getppid)

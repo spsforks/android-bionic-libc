@@ -23,4 +23,6 @@ ENTRY(__rt_sigqueueinfo)
     move ra, t0
     .set pop
 END(__rt_sigqueueinfo)
+
+GEN_INTERNAL_ALIAS(__rt_sigqueueinfo)
 .hidden __rt_sigqueueinfo

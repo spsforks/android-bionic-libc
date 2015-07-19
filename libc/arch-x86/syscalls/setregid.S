@@ -24,3 +24,5 @@ ENTRY(setregid)
     popl    %ebx
     ret
 END(setregid)
+
+GEN_INTERNAL_ALIAS(setregid)

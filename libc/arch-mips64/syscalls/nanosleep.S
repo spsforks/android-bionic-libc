@@ -23,3 +23,5 @@ ENTRY(nanosleep)
     move ra, t0
     .set pop
 END(nanosleep)
+
+GEN_INTERNAL_ALIAS(nanosleep)

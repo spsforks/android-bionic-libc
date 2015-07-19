@@ -17,3 +17,5 @@ ENTRY(swapon)
     nop
     .set reorder
 END(swapon)
+
+GEN_INTERNAL_ALIAS(swapon)

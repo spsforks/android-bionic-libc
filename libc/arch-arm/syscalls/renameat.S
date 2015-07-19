@@ -12,3 +12,5 @@ ENTRY(renameat)
     neg     r0, r0
     b       __set_errno_internal
 END(renameat)
+
+GEN_INTERNAL_ALIAS(renameat)

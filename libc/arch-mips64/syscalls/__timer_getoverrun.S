@@ -23,4 +23,6 @@ ENTRY(__timer_getoverrun)
     move ra, t0
     .set pop
 END(__timer_getoverrun)
+
+GEN_INTERNAL_ALIAS(__timer_getoverrun)
 .hidden __timer_getoverrun

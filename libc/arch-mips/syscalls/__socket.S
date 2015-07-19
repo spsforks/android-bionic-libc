@@ -17,3 +17,5 @@ ENTRY(__socket)
     nop
     .set reorder
 END(__socket)
+
+GEN_INTERNAL_ALIAS(__socket)

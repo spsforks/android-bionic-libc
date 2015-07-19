@@ -17,3 +17,5 @@ ENTRY(sched_setaffinity)
     nop
     .set reorder
 END(sched_setaffinity)
+
+GEN_INTERNAL_ALIAS(sched_setaffinity)

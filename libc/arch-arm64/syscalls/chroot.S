@@ -12,3 +12,5 @@ ENTRY(chroot)
 
     ret
 END(chroot)
+
+GEN_INTERNAL_ALIAS(chroot)

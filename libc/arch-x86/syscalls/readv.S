@@ -29,3 +29,5 @@ ENTRY(readv)
     popl    %ebx
     ret
 END(readv)
+
+GEN_INTERNAL_ALIAS(readv)

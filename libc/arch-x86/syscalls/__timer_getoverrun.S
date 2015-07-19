@@ -19,3 +19,5 @@ ENTRY(__timer_getoverrun)
     popl    %ebx
     ret
 END(__timer_getoverrun)
+
+GEN_INTERNAL_ALIAS(__timer_getoverrun)

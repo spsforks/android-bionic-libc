@@ -44,6 +44,9 @@ ENTRY(__memcpy_chk)
         // Fall through to memcpy...
 END(__memcpy_chk)
 
+GEN_INTERNAL_ALIAS(__memcpy_chk)
+
+
 ENTRY(memcpy)
         /* The stack must always be 64-bits aligned to be compliant with the
          * ARM ABI. Since we have to save R0, we might as well save R4
@@ -387,6 +390,9 @@ ENTRY(memcpy)
         bx          lr
 END(memcpy)
 
+GEN_INTERNAL_ALIAS(memcpy)
+
+
         // Only reached when the __memcpy_chk check fails.
 ENTRY_PRIVATE(__memcpy_chk_fail)
         // Preserve lr for backtrace.
@@ -404,6 +410,9 @@ error_code:
 error_message:
         .word   error_string-(1b+8)
 END(__memcpy_chk_fail)
+
+GEN_INTERNAL_ALIAS(__memcpy_chk_fail)
+
 
         .data
 error_string:

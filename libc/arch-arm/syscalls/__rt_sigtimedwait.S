@@ -12,3 +12,5 @@ ENTRY(__rt_sigtimedwait)
     neg     r0, r0
     b       __set_errno_internal
 END(__rt_sigtimedwait)
+
+GEN_INTERNAL_ALIAS(__rt_sigtimedwait)

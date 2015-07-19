@@ -24,3 +24,5 @@ ENTRY(ftruncate)
     popl    %ebx
     ret
 END(ftruncate)
+
+GEN_INTERNAL_ALIAS(ftruncate)

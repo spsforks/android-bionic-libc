@@ -23,3 +23,5 @@ ENTRY(mincore)
     move ra, t0
     .set pop
 END(mincore)
+
+GEN_INTERNAL_ALIAS(mincore)

@@ -17,3 +17,5 @@ ENTRY(__rt_sigqueueinfo)
     nop
     .set reorder
 END(__rt_sigqueueinfo)
+
+GEN_INTERNAL_ALIAS(__rt_sigqueueinfo)

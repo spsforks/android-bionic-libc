@@ -25,3 +25,5 @@ ENTRY(bind)
     popl    %ebx
     ret
 END(bind)
+
+GEN_INTERNAL_ALIAS(bind)

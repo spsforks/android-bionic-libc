@@ -17,3 +17,5 @@ ENTRY(getgroups)
     nop
     .set reorder
 END(getgroups)
+
+GEN_INTERNAL_ALIAS(getgroups)

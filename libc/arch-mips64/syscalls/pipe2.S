@@ -23,3 +23,5 @@ ENTRY(pipe2)
     move ra, t0
     .set pop
 END(pipe2)
+
+GEN_INTERNAL_ALIAS(pipe2)

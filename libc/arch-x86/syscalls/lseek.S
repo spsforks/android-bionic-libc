@@ -29,3 +29,5 @@ ENTRY(lseek)
     popl    %ebx
     ret
 END(lseek)
+
+GEN_INTERNAL_ALIAS(lseek)

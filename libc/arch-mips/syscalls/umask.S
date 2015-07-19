@@ -17,3 +17,5 @@ ENTRY(umask)
     nop
     .set reorder
 END(umask)
+
+GEN_INTERNAL_ALIAS(umask)

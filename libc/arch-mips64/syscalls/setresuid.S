@@ -23,3 +23,5 @@ ENTRY(setresuid)
     move ra, t0
     .set pop
 END(setresuid)
+
+GEN_INTERNAL_ALIAS(setresuid)

@@ -29,3 +29,5 @@ ENTRY(getresgid)
     popl    %ebx
     ret
 END(getresgid)
+
+GEN_INTERNAL_ALIAS(getresgid)

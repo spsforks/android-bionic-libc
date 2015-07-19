@@ -13,3 +13,5 @@ ENTRY(fchdir)
 1:
     ret
 END(fchdir)
+
+GEN_INTERNAL_ALIAS(fchdir)

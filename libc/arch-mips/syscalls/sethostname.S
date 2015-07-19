@@ -17,3 +17,5 @@ ENTRY(sethostname)
     nop
     .set reorder
 END(sethostname)
+
+GEN_INTERNAL_ALIAS(sethostname)

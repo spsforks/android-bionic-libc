@@ -12,3 +12,5 @@ ENTRY(mlockall)
 
     ret
 END(mlockall)
+
+GEN_INTERNAL_ALIAS(mlockall)

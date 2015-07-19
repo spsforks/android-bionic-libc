@@ -23,3 +23,5 @@ ENTRY(capset)
     move ra, t0
     .set pop
 END(capset)
+
+GEN_INTERNAL_ALIAS(capset)

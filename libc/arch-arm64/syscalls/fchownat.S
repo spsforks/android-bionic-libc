@@ -12,3 +12,5 @@ ENTRY(fchownat)
 
     ret
 END(fchownat)
+
+GEN_INTERNAL_ALIAS(fchownat)

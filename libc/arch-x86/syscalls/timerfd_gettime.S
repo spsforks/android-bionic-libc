@@ -24,3 +24,5 @@ ENTRY(timerfd_gettime)
     popl    %ebx
     ret
 END(timerfd_gettime)
+
+GEN_INTERNAL_ALIAS(timerfd_gettime)

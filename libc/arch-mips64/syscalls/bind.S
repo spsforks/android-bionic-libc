@@ -23,3 +23,5 @@ ENTRY(bind)
     move ra, t0
     .set pop
 END(bind)
+
+GEN_INTERNAL_ALIAS(bind)

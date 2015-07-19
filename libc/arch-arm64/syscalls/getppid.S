@@ -12,3 +12,5 @@ ENTRY(getppid)
 
     ret
 END(getppid)
+
+GEN_INTERNAL_ALIAS(getppid)

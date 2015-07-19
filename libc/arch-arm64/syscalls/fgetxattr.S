@@ -12,3 +12,5 @@ ENTRY(fgetxattr)
 
     ret
 END(fgetxattr)
+
+GEN_INTERNAL_ALIAS(fgetxattr)

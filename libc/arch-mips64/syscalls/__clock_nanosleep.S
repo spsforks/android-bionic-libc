@@ -23,4 +23,6 @@ ENTRY(__clock_nanosleep)
     move ra, t0
     .set pop
 END(__clock_nanosleep)
+
+GEN_INTERNAL_ALIAS(__clock_nanosleep)
 .hidden __clock_nanosleep

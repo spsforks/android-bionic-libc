@@ -163,3 +163,6 @@ sub2_and_return:
     sub     r0, r0, #2
     bx      lr
 END(strlen)
+
+GEN_INTERNAL_ALIAS(strlen)
+

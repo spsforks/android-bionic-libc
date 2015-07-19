@@ -14,4 +14,6 @@ ENTRY(__waitid)
 1:
     ret
 END(__waitid)
+
+GEN_INTERNAL_ALIAS(__waitid)
 .hidden __waitid

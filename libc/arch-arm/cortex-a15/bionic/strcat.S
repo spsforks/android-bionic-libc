@@ -566,3 +566,6 @@ strcat_sub2:
     sub     r0, r0, #2
     b       strcat_r0_scan_done
 END(strcat)
+
+GEN_INTERNAL_ALIAS(strcat)
+

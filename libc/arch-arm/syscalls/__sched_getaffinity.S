@@ -12,3 +12,5 @@ ENTRY(__sched_getaffinity)
     neg     r0, r0
     b       __set_errno_internal
 END(__sched_getaffinity)
+
+GEN_INTERNAL_ALIAS(__sched_getaffinity)

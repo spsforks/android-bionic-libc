@@ -17,3 +17,5 @@ ENTRY(swapoff)
     nop
     .set reorder
 END(swapoff)
+
+GEN_INTERNAL_ALIAS(swapoff)

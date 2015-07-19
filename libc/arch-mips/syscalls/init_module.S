@@ -17,3 +17,5 @@ ENTRY(init_module)
     nop
     .set reorder
 END(init_module)
+
+GEN_INTERNAL_ALIAS(init_module)

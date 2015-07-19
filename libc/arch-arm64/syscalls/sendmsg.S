@@ -12,3 +12,5 @@ ENTRY(sendmsg)
 
     ret
 END(sendmsg)
+
+GEN_INTERNAL_ALIAS(sendmsg)

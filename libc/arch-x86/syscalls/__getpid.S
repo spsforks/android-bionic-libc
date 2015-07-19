@@ -14,3 +14,5 @@ ENTRY(__getpid)
 1:
     ret
 END(__getpid)
+
+GEN_INTERNAL_ALIAS(__getpid)

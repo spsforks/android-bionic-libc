@@ -14,3 +14,5 @@ ENTRY(readlinkat)
 1:
     ret
 END(readlinkat)
+
+GEN_INTERNAL_ALIAS(readlinkat)

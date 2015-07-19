@@ -12,4 +12,6 @@ ENTRY(__getdents64)
 
     ret
 END(__getdents64)
+
+GEN_INTERNAL_ALIAS(__getdents64)
 .hidden __getdents64

@@ -24,3 +24,5 @@ ENTRY(delete_module)
     popl    %ebx
     ret
 END(delete_module)
+
+GEN_INTERNAL_ALIAS(delete_module)

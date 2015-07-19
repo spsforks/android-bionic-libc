@@ -23,4 +23,6 @@ ENTRY(__socket)
     move ra, t0
     .set pop
 END(__socket)
+
+GEN_INTERNAL_ALIAS(__socket)
 .hidden __socket

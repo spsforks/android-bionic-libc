@@ -24,3 +24,5 @@ ENTRY(setrlimit)
     popl    %ebx
     ret
 END(setrlimit)
+
+GEN_INTERNAL_ALIAS(setrlimit)

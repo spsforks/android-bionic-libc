@@ -14,4 +14,8 @@ ENTRY(truncate)
     ret
 END(truncate)
 
+GEN_INTERNAL_ALIAS(truncate)
+
 ALIAS_SYMBOL(truncate64, truncate)
+
+WEAK_ALIAS(__bionic_truncate64, truncate)

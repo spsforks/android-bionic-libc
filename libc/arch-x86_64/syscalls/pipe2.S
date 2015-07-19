@@ -13,3 +13,5 @@ ENTRY(pipe2)
 1:
     ret
 END(pipe2)
+
+GEN_INTERNAL_ALIAS(pipe2)

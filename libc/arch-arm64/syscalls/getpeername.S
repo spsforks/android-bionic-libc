@@ -12,3 +12,5 @@ ENTRY(getpeername)
 
     ret
 END(getpeername)
+
+GEN_INTERNAL_ALIAS(getpeername)

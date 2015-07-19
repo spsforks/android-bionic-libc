@@ -17,3 +17,5 @@ ENTRY(setfsgid)
     nop
     .set reorder
 END(setfsgid)
+
+GEN_INTERNAL_ALIAS(setfsgid)

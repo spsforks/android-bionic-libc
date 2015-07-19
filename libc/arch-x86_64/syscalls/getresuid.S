@@ -13,3 +13,5 @@ ENTRY(getresuid)
 1:
     ret
 END(getresuid)
+
+GEN_INTERNAL_ALIAS(getresuid)

@@ -17,3 +17,5 @@ ENTRY(__rt_sigpending)
     nop
     .set reorder
 END(__rt_sigpending)
+
+GEN_INTERNAL_ALIAS(__rt_sigpending)

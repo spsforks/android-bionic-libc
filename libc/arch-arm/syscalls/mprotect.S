@@ -12,3 +12,5 @@ ENTRY(mprotect)
     neg     r0, r0
     b       __set_errno_internal
 END(mprotect)
+
+GEN_INTERNAL_ALIAS(mprotect)

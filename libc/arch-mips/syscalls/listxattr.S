@@ -17,3 +17,5 @@ ENTRY(listxattr)
     nop
     .set reorder
 END(listxattr)
+
+GEN_INTERNAL_ALIAS(listxattr)

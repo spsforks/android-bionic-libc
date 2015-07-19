@@ -315,3 +315,6 @@ ENTRY(strcmp)
 	ldr	r5, [sp], #4
 	bx	lr
 END(strcmp)
+
+GEN_INTERNAL_ALIAS(strcmp)
+

@@ -29,3 +29,5 @@ ENTRY(setresgid)
     popl    %ebx
     ret
 END(setresgid)
+
+GEN_INTERNAL_ALIAS(setresgid)

@@ -12,3 +12,5 @@ ENTRY(setitimer)
 
     ret
 END(setitimer)
+
+GEN_INTERNAL_ALIAS(setitimer)

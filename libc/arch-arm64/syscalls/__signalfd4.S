@@ -12,4 +12,6 @@ ENTRY(__signalfd4)
 
     ret
 END(__signalfd4)
+
+GEN_INTERNAL_ALIAS(__signalfd4)
 .hidden __signalfd4

@@ -17,3 +17,5 @@ ENTRY(__openat)
     nop
     .set reorder
 END(__openat)
+
+GEN_INTERNAL_ALIAS(__openat)

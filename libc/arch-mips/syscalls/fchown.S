@@ -17,3 +17,5 @@ ENTRY(fchown)
     nop
     .set reorder
 END(fchown)
+
+GEN_INTERNAL_ALIAS(fchown)

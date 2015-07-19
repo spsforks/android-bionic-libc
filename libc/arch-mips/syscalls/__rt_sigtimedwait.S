@@ -17,3 +17,5 @@ ENTRY(__rt_sigtimedwait)
     nop
     .set reorder
 END(__rt_sigtimedwait)
+
+GEN_INTERNAL_ALIAS(__rt_sigtimedwait)

@@ -12,3 +12,5 @@ ENTRY(unlinkat)
 
     ret
 END(unlinkat)
+
+GEN_INTERNAL_ALIAS(unlinkat)

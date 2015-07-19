@@ -20,3 +20,5 @@ ENTRY(recvmmsg)
     neg     r0, r0
     b       __set_errno_internal
 END(recvmmsg)
+
+GEN_INTERNAL_ALIAS(recvmmsg)

@@ -152,3 +152,6 @@ ENTRY(strchr)
 	csel	result, result, xzr, eq
 	ret
 END(strchr)
+
+GEN_INTERNAL_ALIAS(strchr)
+

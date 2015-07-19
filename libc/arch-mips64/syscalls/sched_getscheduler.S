@@ -23,3 +23,5 @@ ENTRY(sched_getscheduler)
     move ra, t0
     .set pop
 END(sched_getscheduler)
+
+GEN_INTERNAL_ALIAS(sched_getscheduler)

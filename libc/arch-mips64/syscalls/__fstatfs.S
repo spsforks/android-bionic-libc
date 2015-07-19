@@ -23,4 +23,6 @@ ENTRY(__fstatfs)
     move ra, t0
     .set pop
 END(__fstatfs)
+
+GEN_INTERNAL_ALIAS(__fstatfs)
 .hidden __fstatfs

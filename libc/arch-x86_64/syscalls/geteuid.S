@@ -13,3 +13,5 @@ ENTRY(geteuid)
 1:
     ret
 END(geteuid)
+
+GEN_INTERNAL_ALIAS(geteuid)

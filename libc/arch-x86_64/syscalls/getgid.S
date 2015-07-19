@@ -13,3 +13,5 @@ ENTRY(getgid)
 1:
     ret
 END(getgid)
+
+GEN_INTERNAL_ALIAS(getgid)

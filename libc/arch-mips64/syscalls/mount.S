@@ -23,3 +23,5 @@ ENTRY(mount)
     move ra, t0
     .set pop
 END(mount)
+
+GEN_INTERNAL_ALIAS(mount)

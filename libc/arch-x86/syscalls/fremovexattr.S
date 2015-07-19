@@ -24,3 +24,5 @@ ENTRY(fremovexattr)
     popl    %ebx
     ret
 END(fremovexattr)
+
+GEN_INTERNAL_ALIAS(fremovexattr)

@@ -12,3 +12,5 @@ ENTRY(setresuid)
 
     ret
 END(setresuid)
+
+GEN_INTERNAL_ALIAS(setresuid)

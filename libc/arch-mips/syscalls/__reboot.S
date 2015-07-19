@@ -17,3 +17,5 @@ ENTRY(__reboot)
     nop
     .set reorder
 END(__reboot)
+
+GEN_INTERNAL_ALIAS(__reboot)

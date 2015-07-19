@@ -124,3 +124,6 @@ ENTRY(strlen)
 	b	.Lrealigned
 
 END(strlen)
+
+GEN_INTERNAL_ALIAS(strlen)
+

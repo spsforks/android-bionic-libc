@@ -12,3 +12,5 @@ ENTRY(mremap)
 
     ret
 END(mremap)
+
+GEN_INTERNAL_ALIAS(mremap)

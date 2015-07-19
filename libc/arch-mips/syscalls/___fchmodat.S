@@ -17,4 +17,6 @@ ENTRY(___fchmodat)
     nop
     .set reorder
 END(___fchmodat)
+
+GEN_INTERNAL_ALIAS(___fchmodat)
 .hidden ___fchmodat
