@@ -343,6 +343,7 @@
 #endif
 
 #define __errordecl(name, msg) extern void name(void) __errorattr(msg)
+#define __warndecl(name, msg) extern void name(void) __warnattr(msg)
 
 /*
  * Some BSD source needs these macros.
