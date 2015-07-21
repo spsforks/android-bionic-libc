@@ -39,6 +39,7 @@
 #include <unistd.h>
 
 #include "private/android_filesystem_config.h"
+#include "private/bionic_macros.h"
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
 #include "private/ThreadLocalBuffer.h"
@@ -66,11 +67,15 @@ struct passwd_state_t {
 static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
 static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
 
+static void init_group_state(group_state_t* state) {
+  memset(state, 0, sizeof(group_state_t));
+  state->group_.gr_mem = state->group_members_;
+}
+
 static group_state_t* __group_state() {
   group_state_t* result = g_group_tls_buffer.get();
   if (result != nullptr) {
-    memset(result, 0, sizeof(group_state_t));
-    result->group_.gr_mem = result->group_members_;
+    init_group_state(result);
   }
   return result;
 }
@@ -397,17 +402,47 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+static group* getgrgid_internal(gid_t gid, group_state_t* state) {
+  group* grp = android_id_to_group(state, gid);
+  if (grp != NULL) {
+    return grp;
+  }
+  return app_id_to_group(gid, state);
+}
+
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
   group_state_t* state = __group_state();
   if (state == NULL) {
     return NULL;
   }
+  return getgrgid_internal(gid, state);
+}
 
-  group* gr = android_id_to_group(state, gid);
-  if (gr != NULL) {
-    return gr;
+int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct group** result) {
+  ErrnoRestorer errno_restorer;
+  *result = NULL;
+  char* p = reinterpret_cast<char*>(
+      BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
+  if (p + sizeof(group_state_t) > buf + buflen) {
+    return ERANGE;
   }
-  return app_id_to_group(gid, state);
+  group_state_t* state = reinterpret_cast<group_state_t*>(p);
+  init_group_state(state);
+  group* retval = getgrgid_internal(gid, state);
+  if (retval != NULL) {
+    *grp = *retval;
+    *result = grp;
+    return 0;
+  }
+  return errno;
+}
+
+static group* getgrnam_internal(const char* name, group_state_t* state) {
+  group* grp = android_name_to_group(state, name);
+  if (grp != NULL) {
+    return grp;
+  }
+  return app_id_to_group(app_id_from_name(name, true), state);
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
@@ -415,11 +450,27 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
   if (state == NULL) {
     return NULL;
   }
+  return getgrnam_internal(name, state);
+}
 
-  if (android_name_to_group(state, name) != 0) {
-    return &state->group_;
+int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
+                struct group **result) {
+  ErrnoRestorer errno_restorer;
+  *result = NULL;
+  char* p = reinterpret_cast<char*>(
+      BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
+  if (p + sizeof(group_state_t) > buf + buflen) {
+    return ERANGE;
   }
-  return app_id_to_group(app_id_from_name(name, true), state);
+  group_state_t* state = reinterpret_cast<group_state_t*>(p);
+  init_group_state(state);
+  group* retval = getgrnam_internal(name, state);
+  if (retval != NULL) {
+    *grp = *retval;
+    *result = grp;
+    return 0;
+  }
+  return errno;
 }
 
 // We don't have an /etc/networks, so all inputs return NULL.

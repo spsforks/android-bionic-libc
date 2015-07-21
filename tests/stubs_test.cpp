@@ -190,9 +190,37 @@ static void check_getgrnam(const char* group_name, gid_t gid) {
   check_group(grp, group_name, gid);
 }
 
+static void check_getgrgid_r(const char* group_name, gid_t gid) {
+  group grp_storage;
+  char buf[512];
+  group* grp;
+
+  errno = 0;
+  int result = getgrgid_r(gid, &grp_storage, buf, sizeof(buf), &grp);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrgid_r");
+  check_group(grp, group_name, gid);
+}
+
+static void check_getgrnam_r(const char* group_name, gid_t gid) {
+  group grp_storage;
+  char buf[512];
+  group* grp;
+
+  errno = 0;
+  int result = getgrnam_r(group_name, &grp_storage, buf, sizeof(buf), &grp);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrnam_r");
+  check_group(grp, group_name, gid);
+}
+
 static void check_get_group(const char* group_name, gid_t gid) {
   check_getgrgid(group_name, gid);
   check_getgrnam(group_name, gid);
+  check_getgrgid_r(group_name, gid);
+  check_getgrnam_r(group_name, gid);
 }
 
 #else // !defined(__BIONIC__)
