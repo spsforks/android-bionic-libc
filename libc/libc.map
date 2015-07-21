@@ -1454,3 +1454,9 @@ LIBC_PRIVATE {
     SHA1Transform; # arm x86 mips
     SHA1Update; # arm x86 mips
 } LIBC;
+
+LIBC_V1.1 {
+  global:
+    getgrgid_r;
+    getgrnam_r;
+} LIBC;
