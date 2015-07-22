@@ -54,21 +54,27 @@ DEFINE_EXTERNAL(int, pthread_create, pthread_t* thread_out, pthread_attr_t const
 DEFINE_EXTERNAL(int, pthread_join, pthread_t t, void** return_value);
 #endif
 
-#ifdef MALLOC_DEBUG_COMMON
-DEFINE_EXTERNAL(void*, calloc, size_t n_elements, size_t elem_size);
-DEFINE_EXTERNAL(void, free, void* mem);
-DEFINE_EXTERNAL(struct mallinfo, mallinfo);
+#ifdef MALLOC_DEBUG_COMMON_CPP
+#undef calloc
+#undef malloc
+#undef free
+#undef mallinfo
+#undef realloc
+
 DEFINE_EXTERNAL(void*, malloc, size_t bytes);
-DEFINE_EXTERNAL(size_t, malloc_usable_size, const void* mem);
-DEFINE_EXTERNAL(void*, memalign, size_t alignment, size_t bytes);
-DEFINE_EXTERNAL(int, posix_memalign, void** memptr, size_t alignment, size_t size);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-DEFINE_EXTERNAL(void*, pvalloc, size_t bytes);
-#endif
+DEFINE_EXTERNAL(void*, calloc, size_t n_elements, size_t elem_size);
 DEFINE_EXTERNAL(void*, realloc, void* oldMem, size_t bytes);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-DEFINE_EXTERNAL(void*, valloc, size_t bytes);
-#endif
+DEFINE_EXTERNAL(void, free, void* mem);
+//DEFINE_EXTERNAL(struct INTERNAL(mallinfo), mallinfo);
+//DEFINE_EXTERNAL(size_t, malloc_usable_size, const void* mem);
+//DEFINE_EXTERNAL(void*, memalign, size_t alignment, size_t bytes);
+//DEFINE_EXTERNAL(int, posix_memalign, void** memptr, size_t alignment, size_t size);
+// #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+// DEFINE_EXTERNAL(void*, pvalloc, size_t bytes);
+// #endif
+// #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+// DEFINE_EXTERNAL(void*, valloc, size_t bytes);
+// #endif
 #endif
 
 #undef memset

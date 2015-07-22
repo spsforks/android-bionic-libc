@@ -48,17 +48,6 @@
 #define DECLARE_INTERNAL(RTNTYPE, FNAME, ...) \
    EXTERN_C_DECL __attribute__((visibility("default"))) RTNTYPE __bionic_##FNAME(__VA_ARGS__)
 
-
-
-
-
-
-
-
-
-
-
-
 #endif // _BIONIC_INTERNAL_SYMBOLS_H_
 // Yes thats right. _BIONIC_INTERNAL_SYMBOLS_H_ ends here!!
 // The rest of this file can get included multiple times
@@ -317,3 +306,37 @@ DECLARE_INTERNAL(int, posix_madvise, void*, size_t, int);
 
 DECLARE_INTERNAL(int, prctl, int option, ...);
 #endif
+
+
+#if defined(LIBC_INCLUDE_MALLOC_H_)||defined(LIBC_BIONIC_DLMALLOC_H_)
+//  && !defined(__IN_BIONIC_LINKER__) && \
+//  !defined(DLMALLOC_VERSION)&&!defined(MALLOC_280_H) &&!defined(LIBC_BIONIC_DLMALLOC_H_)
+
+// #define memalign INTERNAL(memalign)
+// #define malloc_usable_size INTERNAL(malloc_usable_size)
+// #define mallinfo INTERNAL(mallinfo)
+//ignore malloc_info for now
+//#define malloc_info INTERNAL(malloc_info)
+
+
+DECLARE_INTERNAL(void*, malloc, size_t byte_count) /*__mallocfunc __wur __attribute__((alloc_size(1)))*/;
+DECLARE_INTERNAL(void*, calloc, size_t item_count, size_t item_size) /*__mallocfunc __wur __attribute__((alloc_size(1,2)))*/;
+DECLARE_INTERNAL(void*, realloc, void* p, size_t byte_count) /*__wur __attribute__((alloc_size(2)))*/;
+DECLARE_INTERNAL(void, free, void* p);
+
+#define malloc INTERNAL(malloc)
+#define calloc INTERNAL(calloc)
+#define realloc INTERNAL(realloc)
+#define free INTERNAL(free)
+
+// DECLARE_INTERNAL(void*, memalign, size_t alignment, size_t byte_count) /*__mallocfunc __wur __attribute__((alloc_size(2)))*/;
+// DECLARE_INTERNAL(size_t, malloc_usable_size, const void* p);
+// DECLARE_INTERNAL(struct mallinfo, mallinfo, void);
+//DECLARE_INTERNAL(int, malloc_info, int, FILE *);
+
+#endif
+
+// #if defined(MALLOC_280_H) && !defined(__LINKER_ALLOCATOR_H)
+// #define mallinfo INTERNAL(mallinfo)
+// #endif
+

@@ -26,6 +26,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "bionic_internal_symbols.h"
 __BEGIN_DECLS
 
 extern void* malloc(size_t byte_count) __mallocfunc __wur __attribute__((alloc_size(1)));

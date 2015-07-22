@@ -525,3 +525,7 @@ extern "C" __LIBC_HIDDEN__ void malloc_debug_fini() {
   }
 #endif  // !LIBC_STATIC
 }
+
+#define MALLOC_DEBUG_COMMON_CPP
+#include "bionic_external_symbols.h"
+
