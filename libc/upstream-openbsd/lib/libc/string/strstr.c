@@ -54,3 +54,6 @@ strstr(const char *s, const char *find)
 	}
 	return ((char *)s);
 }
+
+#define STRSTR_C
+#include "bionic_external_symbols.h"

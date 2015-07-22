@@ -49,6 +49,27 @@
    EXTERN_C_DECL __attribute__((visibility("default"))) RTNTYPE __bionic_##FNAME(__VA_ARGS__)
 
 
+
+
+
+
+
+
+
+
+
+
+#endif // _BIONIC_INTERNAL_SYMBOLS_H_
+// Yes thats right. _BIONIC_INTERNAL_SYMBOLS_H_ ends here!!
+// The rest of this file can get included multiple times
+// from the various .h files that declare the routines below.
+// Note that they use the same guards as the header files
+// that originally declared the routines.
+
+// These are the calls with internal symbol duplicates
+
+// pthread_mutex.cpp
+#ifdef _PTHREAD_H_
 // PTHREAD_MUTEX
 #define pthread_mutexattr_init INTERNAL(pthread_mutexattr_init)
 #define pthread_mutexattr_destroy INTERNAL(pthread_mutexattr_destroy)
@@ -69,30 +90,7 @@
 // PTHREAD_JOIN
 #define pthread_join INTERNAL(pthread_join)
 
-// MISC_BIONIC_ROUTINES
-#define open INTERNAL(open)
-#define openat INTERNAL(openat)
 
-#define mmap INTERNAL(mmap)
-#define mmap64 INTERNAL(mmap64)
-#define munmap INTERNAL(munmap)
-#define mprotect INTERNAL(mprotect)
-//#if 0
-#define msync INTERNAL(msync)
-#define mremap INTERNAL(mremap)
-#define mlockall INTERNAL(mlockall)
-#define munlockall INTERNAL(munlockall)
-#define mlock INTERNAL(mlock)
-#define munlock INTERNAL(munlock)
-#define madvise INTERNAL(madvise)
-#define mincore INTERNAL(mincore)
-//#endif
-#define posix_madvise INTERNAL(posix_madvise)
-
-// These are the calls with internal symbol duplicates
-
-// pthread_mutex.cpp
-#ifdef _PTHREAD_H_
 DECLARE_INTERNAL(int, pthread_mutexattr_init, pthread_mutexattr_t *attr);
 DECLARE_INTERNAL(int, pthread_mutexattr_destroy, pthread_mutexattr_t *attr);
 DECLARE_INTERNAL(int, pthread_mutexattr_gettype, const pthread_mutexattr_t *attr, int *type_p);
@@ -120,24 +118,183 @@ DECLARE_INTERNAL(int, pthread_join, pthread_t t, void** return_value);
 // call sites to use INTERNAL(malloc/free/...)
 // Note that malloc_debug_common.cpp still #includes bionic_external_symbols.h
 
+#if defined(_FCNTL_H)
+#define open INTERNAL(open)
+#define openat INTERNAL(openat)
+
 DECLARE_INTERNAL(int, open, const char*, int, ...);
 DECLARE_INTERNAL(int, openat, int, const char*, int, ...);
+#endif
 
-// get memset in here
-// memset is conditionally declared as an inline function
-// in bionic/include/string.h
-DECLARE_INTERNAL(void *, memset, void *s, int c, size_t n);
-DECLARE_INTERNAL(size_t, strlen, const char *s);
-DECLARE_INTERNAL(size_t, strlen_real, const char *s);
+
+#if defined(_STRING_H)
+// string.h --
+// get memset and friends in here
+// Note that we don't #define memset here.
+// memset and a few others are conditionally declared as an inline function
+// in bionic/include/string.h, so we do it there
+#define memccpy INTERNAL(memccpy)
+#define memcmp INTERNAL(memcmp)
+#if defined(__USE_GNU)
+#define mempcpy INTERNAL(mempcpy)
+#endif
+
+#define memmem INTERNAL(memmem)
 
 #define strchr INTERNAL(strchr)
-#define strrchr INTERNAL(strrchr)
-DECLARE_INTERNAL(char*,  strchr, const char *, int);
-DECLARE_INTERNAL(char*,  strrchr, const char *, int);
 
+#ifndef __BIONIC_FORTIFY
+#define memchr INTERNAL(memchr)
+#define memrchr INTERNAL(memrchr)
+
+#define memcpy INTERNAL(memcpy)
+#define memmove INTERNAL(memmove)
+
+#define stpcpy INTERNAL(stpcpy)
+#define strcpy INTERNAL(strcpy)
+#define stpncpy INTERNAL(stpncpy)
+#define strncpy INTERNAL(strncpy)
+#define strcat INTERNAL(strcat)
+#define strncat INTERNAL(strncat)
+#define memset INTERNAL(memset)
+
+#define strlcpy INTERNAL(strlcpy)
+#define strlcat INTERNAL(strlcat)
+
+#define strlen INTERNAL(strlen)
+#define strrchr INTERNAL(strrchr)
+#endif
+
+#define strcmp INTERNAL(strcmp)
+
+#define strcasecmp INTERNAL(strcasecmp)
+#define strcasecmp_l INTERNAL(strcasecmp_l)
+#define strncasecmp INTERNAL(strncasecmp)
+#define strncasecmp_l INTERNAL(strncasecmp_l)
+
+#define strdup INTERNAL(strdup)
+
+#define strstr INTERNAL(strstr)
+#define strcasestr INTERNAL(strcasestr)
+#define strtok INTERNAL(strtok)
+#define strtok_r INTERNAL(strtok_r)
+
+#define strerror INTERNAL(strerror)
+#define strerror_l INTERNAL(strerror_l)
+//#define strerror_r INTERNAL(strerror_r)
+
+#define strnlen INTERNAL(strnlen)
+#define strndup INTERNAL(strndup)
+#define strncmp INTERNAL(strncmp)
+
+#define strcspn INTERNAL(strcspn)
+#define strpbrk INTERNAL(strpbrk)
+#define strsep INTERNAL(strsep)
+#define strspn INTERNAL(strspn)
+#define strsignal INTERNAL(strsignal)
+#define strcoll INTERNAL(strcoll)
+#define strxfrm INTERNAL(strxfrm)
+
+#define strcoll_l INTERNAL(strcoll_l)
+#define strxfrm_l INTERNAL(strxfrm_l)
+
+DECLARE_INTERNAL(void*,  memccpy, void* __restrict, const void* __restrict, int, size_t);
+DECLARE_INTERNAL(void*,  memchr, const void *, int, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(void*,  memrchr, const void *, int, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(int,    memcmp, const void *, const void *, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(void*,  memcpy, void* __restrict, const void* __restrict, size_t);
+#if defined(__USE_GNU)
+DECLARE_INTERNAL(void*,  mempcpy, void* __restrict, const void* __restrict, size_t);
+#endif
+DECLARE_INTERNAL(void*,  memmove, void *, const void *, size_t);
+DECLARE_INTERNAL(void*,  memset, void *, int, size_t);
+DECLARE_INTERNAL(void*,  memmem, const void *, size_t, const void *, size_t) /*__purefunc*/;
+
+DECLARE_INTERNAL(char*,  strchr, const char *, int) /*__purefunc*/;
+
+DECLARE_INTERNAL(char*,  strrchr, const char *, int) /*__purefunc*/;
+
+DECLARE_INTERNAL(size_t, strlen, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(int,    strcmp, const char *, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  stpcpy, char* __restrict, const char* __restrict);
+DECLARE_INTERNAL(char*,  strcpy, char* __restrict, const char* __restrict);
+DECLARE_INTERNAL(char*,  strcat, char* __restrict, const char* __restrict);
+
+DECLARE_INTERNAL(int, strcasecmp, const char*, const char*) /*__purefunc*/;
+DECLARE_INTERNAL(int, strcasecmp_l, const char*, const char*, locale_t) /*__purefunc*/;
+DECLARE_INTERNAL(int, strncasecmp, const char*, const char*, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(int, strncasecmp_l, const char*, const char*, size_t, locale_t) /*__purefunc*/;
+
+DECLARE_INTERNAL(char*,  strdup, const char *);
+
+DECLARE_INTERNAL(char*,  strstr, const char *, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  strcasestr, const char *haystack, const char *needle) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  strtok, char* __restrict, const char* __restrict);
+DECLARE_INTERNAL(char*,  strtok_r, char* __restrict, const char* __restrict, char** __restrict);
+
+DECLARE_INTERNAL(char*, strerror, int);
+DECLARE_INTERNAL(char*, strerror_l, int, locale_t);
+// #if defined(__USE_GNU)
+// DECLARE_INTERNAL(char*, strerror_r, int, char*, size_t) __RENAME(__gnu_strerror_r);
+// #else /* POSIX */
+// DECLARE_INTERNAL(int, strerror_r, int, char*, size_t);
+// #endif
+
+DECLARE_INTERNAL(size_t, strnlen, const char *, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  strncat, char* __restrict, const char* __restrict, size_t);
+DECLARE_INTERNAL(char*,  strndup, const char *, size_t);
+DECLARE_INTERNAL(int,    strncmp, const char *, const char *, size_t) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  stpncpy, char* __restrict, const char* __restrict, size_t);
+DECLARE_INTERNAL(char*,  strncpy, char* __restrict, const char* __restrict, size_t);
+
+DECLARE_INTERNAL(size_t, strlcat, char* __restrict, const char* __restrict, size_t);
+DECLARE_INTERNAL(size_t, strlcpy, char* __restrict, const char* __restrict, size_t);
+
+DECLARE_INTERNAL(size_t, strcspn, const char *, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  strpbrk, const char *, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(char*,  strsep, char** __restrict, const char* __restrict);
+DECLARE_INTERNAL(size_t, strspn, const char *, const char *);
+
+DECLARE_INTERNAL(char*,  strsignal, int  sig);
+
+DECLARE_INTERNAL(int,    strcoll, const char *, const char *) /*__purefunc*/;
+DECLARE_INTERNAL(size_t, strxfrm, char* __restrict, const char* __restrict, size_t);
+
+DECLARE_INTERNAL(int,    strcoll_l, const char *, const char *, locale_t) /*__purefunc*/;
+DECLARE_INTERNAL(size_t, strxfrm_l, char* __restrict, const char* __restrict, size_t, locale_t);
+
+#if 0
+#if defined(__USE_GNU) && !defined(__bionic_using_posix_basename)
+/*
+ * glibc has a basename in <string.h> that's different to the POSIX one in <libgen.h>.
+ * It doesn't modify its argument, and in C++ it's const-correct.
+ */
+#if defined(__cplusplus)
+extern "C++" char* basename(char*) __RENAME(__gnu_basename) __nonnull((1));
+extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+#else
+extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+#endif
+#endif
+#endif
+#endif
 
 // MMAP_CPP
 #ifdef _SYS_MMAN_H_
+#define mmap INTERNAL(mmap)
+#define mmap64 INTERNAL(mmap64)
+#define munmap INTERNAL(munmap)
+#define mprotect INTERNAL(mprotect)
+#define msync INTERNAL(msync)
+#define mremap INTERNAL(mremap)
+#define mlockall INTERNAL(mlockall)
+#define munlockall INTERNAL(munlockall)
+#define mlock INTERNAL(mlock)
+#define munlock INTERNAL(munlock)
+#define madvise INTERNAL(madvise)
+#define mincore INTERNAL(mincore)
+#define posix_madvise INTERNAL(posix_madvise)
+
 DECLARE_INTERNAL(void*, mmap, void* addr, size_t size, int prot, int flags, int fd, off_t offset);
 DECLARE_INTERNAL(void*, mmap64, void* addr, size_t size, int prot, int flags, int fd, off64_t offset);
 DECLARE_INTERNAL(int, munmap, void*, size_t);
@@ -155,9 +312,8 @@ DECLARE_INTERNAL(int, mincore, void*, size_t, unsigned char*);
 DECLARE_INTERNAL(int, posix_madvise, void*, size_t, int);
 #endif
 
-#define prctl INTERNAL(prctl)
 #ifdef _SYS_PRCTL_H
+#define prctl INTERNAL(prctl)
+
 DECLARE_INTERNAL(int, prctl, int option, ...);
 #endif
-
-#endif // _BIONIC_INTERNAL_SYMBOLS_H_

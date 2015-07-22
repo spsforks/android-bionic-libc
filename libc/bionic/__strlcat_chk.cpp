@@ -50,5 +50,5 @@ extern "C" size_t __strlcat_chk(char* dest, const char* src,
     __fortify_chk_fail("strlcat: prevented write past end of buffer", 0);
   }
 
-  return strlcat(dest, src, supplied_size);
+  return INTERNAL(strlcat)(dest, src, supplied_size);
 }

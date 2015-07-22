@@ -50,7 +50,7 @@ extern "C" char* __strncpy_chk(char* __restrict dest, const char* __restrict src
                        BIONIC_EVENT_STRNCPY_BUFFER_OVERFLOW);
   }
 
-  return strncpy(dest, src, len);
+  return INTERNAL(strncpy)(dest, src, len);
 }
 
 /*

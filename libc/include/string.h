@@ -145,7 +145,7 @@ void* memchr(const void *s, int c, size_t n) {
 
 #if !defined(__clang__)
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin_memchr(s, c, n);
+        return __bionic_memchr(s, c, n);
     }
 
     if (__builtin_constant_p(n) && (n > bos)) {
@@ -153,12 +153,13 @@ void* memchr(const void *s, int c, size_t n) {
     }
 
     if (__builtin_constant_p(n) && (n <= bos)) {
-        return __builtin_memchr(s, c, n);
+        return __bionic_memchr(s, c, n);
     }
 #endif
 
     return __memchr_chk(s, c, n, bos);
 }
+#define memchr INTERNAL(memchr)
 
 __BIONIC_FORTIFY_INLINE
 void* memrchr(const void *s, int c, size_t n) {
@@ -180,26 +181,31 @@ void* memrchr(const void *s, int c, size_t n) {
 
     return __memrchr_chk(s, c, n, bos);
 }
+#define memrchr INTERNAL(memrchr)
 
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     return __builtin___memcpy_chk(dest, src, copy_amount, __bos0(dest));
 }
+#define memcpy INTERNAL(memcpy)
 
 __BIONIC_FORTIFY_INLINE
 void* memmove(void *dest, const void *src, size_t len) {
     return __builtin___memmove_chk(dest, src, len, __bos0(dest));
 }
+#define memmove INTERNAL(memmove)
 
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___stpcpy_chk(dest, src, __bos(dest));
 }
+#define stpcpy INTERNAL(stpcpy)
 
 __BIONIC_FORTIFY_INLINE
 char* strcpy(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcpy_chk(dest, src, __bos(dest));
 }
+#define strcpy INTERNAL(strcpy)
 
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
@@ -221,6 +227,7 @@ char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
 
     return __stpncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
+#define stpncpy INTERNAL(stpncpy)
 
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
@@ -242,16 +249,20 @@ char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
 
     return __strncpy_chk2(dest, src, n, bos_dest, bos_src);
 }
+#define strncpy INTERNAL(strncpy)
 
 __BIONIC_FORTIFY_INLINE
 char* strcat(char* __restrict dest, const char* __restrict src) {
     return __builtin___strcat_chk(dest, src, __bos(dest));
 }
 
+#define strcat INTERNAL(strcat)
+
 __BIONIC_FORTIFY_INLINE
 char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
     return __builtin___strncat_chk(dest, src, n, __bos(dest));
 }
+#define strncat INTERNAL(strncat)
 
 // we need to deal with memset specially, because it is an inlined function.
 __BIONIC_FORTIFY_INLINE
@@ -280,7 +291,7 @@ size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
 
     return __strlcpy_chk(dest, src, size, bos);
 }
-
+#define strlcpy INTERNAL(strlcpy)
 
 __BIONIC_FORTIFY_INLINE
 size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
@@ -301,6 +312,7 @@ size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
 
     return __strlcat_chk(dest, src, size, bos);
 }
+#define strlcat INTERNAL(strlcat)
 
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char *s) {
@@ -318,7 +330,6 @@ size_t strlen(const char *s) {
 #endif /* !defined(__clang__) */
     return __strlen_chk(s, bos);
 }
-
 #define strlen INTERNAL(strlen)
 
 __BIONIC_FORTIFY_INLINE
@@ -339,7 +350,7 @@ char* strrchr(const char *s, int c) {
 
     return __strrchr_chk(s, c, bos);
 }
-
+#define strrchr INTERNAL(strrchr)
 
 #endif /* defined(__BIONIC_FORTIFY) */
 

@@ -59,3 +59,5 @@ ENTRY(syscall)
     nop
     .set reorder
 END(syscall)
+
+GEN_INTERNAL_ALIAS(syscall)

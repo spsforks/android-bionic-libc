@@ -44,3 +44,6 @@ char* strerror(int error_number) {
   strerror_r(error_number, result, g_strerror_tls_buffer.size());
   return result;
 }
+
+#define STRERROR_CPP
+#include "bionic_external_symbols.h"
