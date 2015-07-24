@@ -334,3 +334,38 @@ DEFINE_EXTERNAL(int,    strcoll, const char *, const char *) /*__purefunc*/;
 #if defined(STRXFRM_C)
 DEFINE_EXTERNAL(size_t, strxfrm, char* __restrict, const char* __restrict, size_t);
 #endif
+
+// IOCTL
+#if defined(IOCTL_C)
+#undef ioctl
+#undef __ioctl
+DEFINE_EXTERNAL(int, ioctl, int, int, ...);
+#endif
+
+
+#if defined(TERMIOS_CPP)
+// TERMIOS
+#undef cfmakeraw
+#undef cfsetispeed
+#undef cfsetospeed
+#undef cfsetspeed
+#undef tcdrain
+#undef tcflow
+#undef tcflush
+#undef tcgetattr
+//#undef tcgetsid
+#undef tcsendbreak
+#undef tcsetattr
+DEFINE_EXTERNAL(void , cfmakeraw,   struct termios*);
+DEFINE_EXTERNAL(int ,  cfsetispeed, struct termios*, speed_t);
+DEFINE_EXTERNAL(int ,  cfsetospeed, struct termios*, speed_t);
+DEFINE_EXTERNAL(int ,  cfsetspeed,  struct termios*, speed_t);
+DEFINE_EXTERNAL(int ,  tcdrain,     int);
+DEFINE_EXTERNAL(int ,  tcflow,      int, int);
+DEFINE_EXTERNAL(int ,  tcflush,     int, int);
+DEFINE_EXTERNAL(int ,  tcgetattr,   int, struct termios*);
+//DEFINE_EXTERNAL(pid_t, tcgetsid,    int);
+DEFINE_EXTERNAL(int ,  tcsendbreak, int, int);
+DEFINE_EXTERNAL(int ,  tcsetattr,   int, int, const struct termios*);
+
+#endif

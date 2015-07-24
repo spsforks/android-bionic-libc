@@ -340,3 +340,38 @@ DECLARE_INTERNAL(void, free, void* p);
 // #define mallinfo INTERNAL(mallinfo)
 // #endif
 
+#ifdef _SYS_IOCTL_H_
+#define ioctl INTERNAL(ioctl)
+#define __ioctl INTERNAL(__ioctl)
+DECLARE_INTERNAL(int, ioctl, int, int, ...);
+DECLARE_INTERNAL(int, __ioctl, int, int, void *);
+#endif
+
+#ifdef _TERMIOS_H_
+#if __ANDROID_API__ >= 21
+DECLARE_INTERNAL(void , cfmakeraw,   struct termios*);
+DECLARE_INTERNAL(int ,  cfsetispeed, struct termios*, speed_t);
+DECLARE_INTERNAL(int ,  cfsetospeed, struct termios*, speed_t);
+DECLARE_INTERNAL(int ,  cfsetspeed,  struct termios*, speed_t);
+DECLARE_INTERNAL(int ,  tcdrain,     int);
+DECLARE_INTERNAL(int ,  tcflow,      int, int);
+DECLARE_INTERNAL(int ,  tcflush,     int, int);
+DECLARE_INTERNAL(int ,  tcgetattr,   int, struct termios*);
+//DECLARE_INTERNAL(pid_t, tcgetsid,    int);
+DECLARE_INTERNAL(int ,  tcsendbreak, int, int);
+DECLARE_INTERNAL(int ,  tcsetattr,   int, int, const struct termios*);
+
+#define cfmakeraw INTERNAL(cfmakeraw)
+#define cfsetispeed INTERNAL(cfsetispeed)
+#define cfsetospeed INTERNAL(cfsetospeed)
+#define cfsetspeed INTERNAL(cfsetspeed)
+#define tcdrain INTERNAL(tcdrain)
+#define tcflow INTERNAL(tcflow)
+#define tcflush INTERNAL(tcflush)
+#define tcgetattr INTERNAL(tcgetattr)
+//#define tcgetsid INTERNAL(tcgetsid)
+#define tcsendbreak INTERNAL(tcsendbreak)
+#define tcsetattr INTERNAL(tcsetattr)
+
+#endif
+#endif
