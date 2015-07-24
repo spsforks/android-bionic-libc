@@ -51,8 +51,20 @@ ifeq ($(strip $(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)),)
   $(warning TARGET_$(my_2nd_arch_prefix)ARCH is arm, but TARGET_$(my_2nd_arch_prefix)CPU_VARIANT is not defined)
 endif
 cpu_variant_mk := $(LOCAL_PATH)/arch-arm/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT)/$(TARGET_$(my_2nd_arch_prefix)CPU_VARIANT).mk
+
+ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)), generic)
+  # For generic arm64 targets we build default to cortex-a15.
+  ifneq (,$(filter $(TARGET_ARCH) $(TARGET_2ND_ARCH), arm64))
+    cpu_variant_mk := $(LOCAL_PATH)/arch-arm/cortex-a15/cortex-a15.mk
+  endif
+endif
 ifeq ($(wildcard $(cpu_variant_mk)),)
-$(error "TARGET_$(my_2nd_arch_prefix)CPU_VARIANT not set or set to an unknown value. Possible values are cortex-a7, cortex-a8, cortex-a9, cortex-a15, krait, denver. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
+  ifneq (,$(filter $(TARGET_ARCH) $(TARGET_2ND_ARCH), arm64))
+    SUPPORTED_CPU_VARIANTS := $(SUPPORTED_ARMV8_CPU_VARIANTS)
+  else
+    SUPPORTED_CPU_VARIANTS := $(SUPPORTED_ARMV7_CPU_VARIANTS)
+  endif
+$(error "TARGET_$(my_2nd_arch_prefix)CPU_VARIANT not set or set to an unknown value. Possible values are: $(SUPPORTED_CPU_VARIANTS) Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
 endif
 include $(cpu_variant_mk)
 libc_common_additional_dependencies += $(cpu_variant_mk)
