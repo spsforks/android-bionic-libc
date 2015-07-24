@@ -16,7 +16,7 @@ ENTRY(execve)
     mov     20(%esp), %ecx
     mov     24(%esp), %edx
     movl    $__NR_execve, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

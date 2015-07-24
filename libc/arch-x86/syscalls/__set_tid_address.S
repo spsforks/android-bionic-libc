@@ -8,7 +8,7 @@ ENTRY(__set_tid_address)
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_set_tid_address, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

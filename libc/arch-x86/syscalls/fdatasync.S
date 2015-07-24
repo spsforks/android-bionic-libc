@@ -8,7 +8,7 @@ ENTRY(fdatasync)
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_fdatasync, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

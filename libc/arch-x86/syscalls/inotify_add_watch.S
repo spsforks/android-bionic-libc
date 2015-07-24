@@ -16,7 +16,7 @@ ENTRY(inotify_add_watch)
     mov     20(%esp), %ecx
     mov     24(%esp), %edx
     movl    $__NR_inotify_add_watch, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

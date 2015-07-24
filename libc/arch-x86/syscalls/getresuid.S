@@ -16,7 +16,7 @@ ENTRY(getresuid)
     mov     20(%esp), %ecx
     mov     24(%esp), %edx
     movl    $__NR_getresuid32, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

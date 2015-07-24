@@ -8,7 +8,7 @@ ENTRY(inotify_init1)
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_inotify_init1, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

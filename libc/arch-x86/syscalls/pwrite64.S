@@ -24,7 +24,7 @@ ENTRY(pwrite64)
     mov     36(%esp), %esi
     mov     40(%esp), %edi
     movl    $__NR_pwrite64, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

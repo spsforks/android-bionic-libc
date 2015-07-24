@@ -20,7 +20,7 @@ ENTRY(mknodat)
     mov     28(%esp), %edx
     mov     32(%esp), %esi
     movl    $__NR_mknodat, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

@@ -28,7 +28,7 @@ ENTRY(process_vm_writev)
     mov     44(%esp), %edi
     mov     48(%esp), %ebp
     movl    $__NR_process_vm_writev, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

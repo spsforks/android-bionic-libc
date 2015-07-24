@@ -12,7 +12,7 @@ ENTRY(swapon)
     mov     12(%esp), %ebx
     mov     16(%esp), %ecx
     movl    $__NR_swapon, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

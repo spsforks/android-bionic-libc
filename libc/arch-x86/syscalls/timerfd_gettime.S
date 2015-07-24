@@ -12,7 +12,7 @@ ENTRY(timerfd_gettime)
     mov     12(%esp), %ebx
     mov     16(%esp), %ecx
     movl    $__NR_timerfd_gettime, %eax
-    int     $0x80
+    call    __sysenter
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax
