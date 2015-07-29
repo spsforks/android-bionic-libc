@@ -308,24 +308,19 @@ static void soinfo_free(soinfo* si) {
 
 static void parse_path(const char* path, const char* delimiters,
                        std::vector<std::string>* paths) {
+  paths->clear();
+
   if (path == nullptr) {
     return;
   }
 
-  paths->clear();
-
-  for (const char *p = path; ; ++p) {
+  for (const char* p = path; *p != '\0'; ++p) {
     size_t len = strcspn(p, delimiters);
-    // skip empty tokens
     if (len == 0) {
-      continue;
-    }
-
-    paths->push_back(std::string(p, len));
-    p += len;
-
-    if (*p == '\0') {
-      break;
+      // Skip empty tokens.
+    } else {
+      paths->push_back(std::string(p, len));
+      p += len;
     }
   }
 }
