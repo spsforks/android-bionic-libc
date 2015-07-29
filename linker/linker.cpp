@@ -308,7 +308,7 @@ static void soinfo_free(soinfo* si) {
 
 static void parse_path(const char* path, const char* delimiters,
                        std::vector<std::string>* paths) {
-  if (path == nullptr) {
+  if (path == nullptr || *path == '\0') {
     return;
   }
 
