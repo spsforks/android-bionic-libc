@@ -55,7 +55,6 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/e_powf.c \
     upstream-freebsd/lib/msun/src/e_remainder.c \
     upstream-freebsd/lib/msun/src/e_remainderf.c \
-    upstream-freebsd/lib/msun/src/e_rem_pio2.c \
     upstream-freebsd/lib/msun/src/e_rem_pio2f.c \
     upstream-freebsd/lib/msun/src/e_scalb.c \
     upstream-freebsd/lib/msun/src/e_scalbf.c \
@@ -294,11 +293,13 @@ endif
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_arm64 += \
     arm64/ceil.S \
+    arm64/cos.c \
     arm64/fenv.c \
     arm64/fma.S \
     arm64/floor.S \
     arm64/lrint.S \
     arm64/rint.S \
+    arm64/sin.c \
     arm64/sqrt.S \
     arm64/trunc.S \
     upstream-freebsd/lib/msun/src/e_acos.c \
@@ -313,10 +314,8 @@ LOCAL_SRC_FILES_arm64 += \
     upstream-freebsd/lib/msun/src/e_sinh.c \
     upstream-freebsd/lib/msun/src/s_atan.c \
     upstream-freebsd/lib/msun/src/s_cbrt.c \
-    upstream-freebsd/lib/msun/src/s_cos.c \
     upstream-freebsd/lib/msun/src/s_expm1.c \
     upstream-freebsd/lib/msun/src/s_log1p.c \
-    upstream-freebsd/lib/msun/src/s_sin.c \
     upstream-freebsd/lib/msun/src/s_tan.c \
     upstream-freebsd/lib/msun/src/s_tanh.c \
 

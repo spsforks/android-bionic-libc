@@ -188,6 +188,34 @@ void BM_math_sin_fast::Run(int iters) {
   StopBenchmarkTiming();
 }
 
+BENCHMARK_NO_ARG(BM_math_sin_big);
+void BM_math_sin_big::Run(int iters) {
+  StartBenchmarkTiming();
+
+  // input bigger than 1.647099E6 (which is about 2^20*1.57) will trigger
+  // optimization in arm64. 1.647099E7 is randomly picked here.
+  d = 1.647099e7;
+  for (int i = 0; i < iters; ++i) {
+    d += sin(d);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_NO_ARG(BM_math_cos_big);
+void BM_math_cos_big::Run(int iters) {
+  StartBenchmarkTiming();
+
+  // input bigger than 1.647099e6 (which is about 2^20*1.57) will trigger
+  // optimization in arm64. 1.647099E7 is randomly picked here.
+  d = 1.647099e7;
+  for (int i = 0; i < iters; ++i) {
+    d += cos(d);
+  }
+
+  StopBenchmarkTiming();
+}
+
 BENCHMARK_NO_ARG(BM_math_sin_feupdateenv);
 void BM_math_sin_feupdateenv::Run(int iters) {
   StartBenchmarkTiming();
