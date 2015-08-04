@@ -40,6 +40,23 @@
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
 
+#if defined(__i386__)
+
+#include "private/KernelArgumentBlock.h"
+#include "pthread_internal.h"
+
+extern "C" int __default_syscall(int, ...);
+
+void __preinit_vsyscall(pthread_internal_t* thread, KernelArgumentBlock& args) {
+  uintptr_t vsyscall_addr = args.getauxval(AT_SYSINFO);
+  if (vsyscall_addr){
+     thread->tls[TLS_SLOT_VSYSCALL] = reinterpret_cast<void*>(vsyscall_addr);
+  } else {
+     thread->tls[TLS_SLOT_VSYSCALL] = reinterpret_cast<void*>(__default_syscall);
+  }
+}
+#endif
+
 struct vdso_entry {
   const char* name;
   void* fn;

@@ -65,6 +65,9 @@ void __init_tls(pthread_internal_t* thread) {
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
+  // Using guard_size as the main thread inidcator. Child thread inherit the parent vsyscall enter pointer.
+  if (thread->attr.guard_size != 0)
+    thread->tls[TLS_SLOT_VSYSCALL] = __get_tls()[TLS_SLOT_VSYSCALL];
 }
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
