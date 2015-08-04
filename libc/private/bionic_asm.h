@@ -32,6 +32,16 @@
 #include <asm/unistd.h> /* For system call numbers. */
 #define MAX_ERRNO 4095  /* For recognizing system call error returns. */
 
+#if defined(__LP64__)
+  #define PTR_SIZE 		8
+#else
+  #define PTR_SIZE 		4
+#endif
+
+#define TLS_SLOT_VSYSCALL    	7  /* This number align with TLS_SLOT_VSYSCALL in bionic_tls.h. */
+#define VSYSCALL_OFFSET 	(TLS_SLOT_VSYSCALL * PTR_SIZE)
+#define ENTER_KERNEL 		call *%gs:VSYSCALL_OFFSET
+
 #define __bionic_asm_custom_entry(f)
 #define __bionic_asm_custom_end(f)
 #define __bionic_asm_function_type @function

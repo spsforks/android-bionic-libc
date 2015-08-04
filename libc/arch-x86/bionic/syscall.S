@@ -38,8 +38,16 @@ ENTRY(syscall)
     mov     44(%esp),%ebp
 
     # Make the system call.
+    movl    %gs, %eax
+    cmpl    $0x0, %eax
+    jne     vsyscall
+    mov     20(%esp),%eax
     int     $0x80
-
+    jmp     common
+vsyscall:
+    mov     20(%esp),%eax
+    ENTER_KERNEL
+common:
     # Error?
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
@@ -64,3 +72,8 @@ ENTRY(syscall)
     .cfi_restore ebx
     ret
 END(syscall)
+
+ENTRY(__default_syscall)
+    int     $0x80
+    ret
+END(__default_syscall)

@@ -53,6 +53,7 @@ extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
 
+__LIBC_HIDDEN__ void __preinit_vsyscall(pthread_internal_t*, KernelArgumentBlock&);
 __LIBC_HIDDEN__ void __libc_init_vdso();
 
 // Not public, but well-known in the BSDs.
@@ -95,6 +96,9 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   __init_thread(&main_thread);
   __init_tls(&main_thread);
+#if defined(__i386__)
+  __preinit_vsyscall(&main_thread, args);
+#endif
   __set_tls(main_thread.tls);
 
   // Store a pointer to the kernel argument block in a TLS slot to be

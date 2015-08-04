@@ -66,6 +66,7 @@ enum {
 
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
+  TLS_SLOT_VSYSCALL = 7, // __kernel_vsyscall requires this specific slot for x86.
 
   BIONIC_TLS_SLOTS // Must come last!
 };
