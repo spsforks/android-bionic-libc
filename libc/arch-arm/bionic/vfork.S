@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,27 +27,21 @@
  */
 
 #include <private/bionic_asm.h>
-#include <asm/signal.h>
-#include <linux/sched.h>
 
 ENTRY(vfork)
+    mov     ip, r7
+
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-    mrs     x0, tpidr_el0
-    ldr     x0, [x0, #8]
-    str     wzr, [x0, #20]
+    mrc     p15, 0, r3, c13, c0, 3
+    ldr     r3, [r3, #4]
+    mov     r7, #0
+    str     r7, [r3, #12]
 
-    mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
-    mov     x1, xzr
-    mov     x2, xzr
-    mov     x3, xzr
-    mov     x4, xzr
-
-    mov     x8, __NR_clone
-    svc     #0
-
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno_internal
-
-    ret
+    ldr     r7, =__NR_vfork
+    swi     #0
+    mov     r7, ip
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno_internal
 END(vfork)
