@@ -1,0 +1,7 @@
+Code-Review+2: Daniel Xie <dxie@google.com>
+Verified+1: Yabin Cui <yabinc@google.com>
+Submitted-by: Yabin Cui <yabinc@google.com>
+Submitted-at: Tue, 11 Aug 2015 18:41:19 +0000
+Reviewed-on: https://android-review.googlesource.com/166240
+Project: platform/bionic
+Branch: refs/heads/lollipop-mr1-cts-dev
