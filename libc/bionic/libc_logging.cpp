@@ -583,6 +583,10 @@ void __fortify_chk_fail(const char* msg, uint32_t tag) {
   __libc_fatal("FORTIFY: %s", msg);
 }
 
+void __fsanitize_chk_fail() {
+  __libc_fatal("Compiler inserted fsanitize assertion failed");
+}
+
 static void __libc_fatal(const char* format, va_list args) {
   char msg[1024];
   BufferOutputStream os(msg, sizeof(msg));
