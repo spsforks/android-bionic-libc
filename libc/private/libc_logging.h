@@ -109,6 +109,7 @@ __LIBC_HIDDEN__ void __libc_android_log_event_int(int32_t tag, int value);
 __LIBC_HIDDEN__ void __libc_android_log_event_uid(int32_t tag);
 
 __LIBC_HIDDEN__ __noreturn void __fortify_chk_fail(const char* msg, uint32_t event_tag);
+__noreturn void __fsanitize_chk_fail();
 
 __END_DECLS
 
