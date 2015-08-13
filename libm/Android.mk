@@ -250,8 +250,6 @@ LOCAL_SRC_FILES_arm += \
     upstream-freebsd/lib/msun/src/s_ceil.c \
     upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_cos.c \
-    upstream-freebsd/lib/msun/src/s_fma.c \
-    upstream-freebsd/lib/msun/src/s_fmaf.c \
     upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_expm1.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
@@ -280,11 +278,14 @@ LOCAL_SRC_FILES_arm += \
     upstream-freebsd/lib/msun/src/e_sqrt.c \
     upstream-freebsd/lib/msun/src/e_sqrtf.c \
     upstream-freebsd/lib/msun/src/s_floor.c \
+    upstream-freebsd/lib/msun/src/s_fma.c \
+    upstream-freebsd/lib/msun/src/s_fmaf.c \
 
 else
 LOCAL_SRC_FILES_arm += \
     arm/sqrt.S \
     arm/floor.S \
+    arm/fma.S \
 
 endif
 
