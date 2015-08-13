@@ -115,10 +115,10 @@ _BIONIC_NOT_BEFORE_21(extern int sigemptyset(sigset_t*);)
 _BIONIC_NOT_BEFORE_21(extern int sigfillset(sigset_t*);)
 _BIONIC_NOT_BEFORE_21(extern int sigismember(const sigset_t*, int);)
 
-extern int sigpending(sigset_t*) __nonnull((1));
+extern int sigpending(sigset_t* _Nonnull);
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
-extern int sigsuspend(const sigset_t*) __nonnull((1));
-extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
+extern int sigsuspend(const sigset_t* _Nonnull);
+extern int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
 extern int raise(int);
 extern int kill(pid_t, int);
