@@ -159,11 +159,10 @@ struct find_nth_cookie {
 };
 
 static char property_filename[PATH_MAX] = PROP_FILENAME;
-static bool compat_mode = false;
 static size_t pa_data_size;
 static size_t pa_size;
 
-// NOTE: This isn't static because system_properties_compat.c
+// NOTE: This isn't static because of system properties tests
 // requires it.
 prop_area *__system_property_area__ = NULL;
 
@@ -207,7 +206,6 @@ static int map_prop_area_rw()
 
     pa_size = PA_SIZE;
     pa_data_size = pa_size - sizeof(prop_area);
-    compat_mode = false;
 
     void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (memory_area == MAP_FAILED) {
@@ -246,14 +244,9 @@ static int map_fd_ro(const int fd) {
     }
 
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
-    if ((pa->magic != PROP_AREA_MAGIC) || (pa->version != PROP_AREA_VERSION &&
-                pa->version != PROP_AREA_VERSION_COMPAT)) {
+    if (pa->magic != PROP_AREA_MAGIC || pa->version != PROP_AREA_VERSION) {
         munmap(pa, pa_size);
         return -1;
-    }
-
-    if (pa->version == PROP_AREA_VERSION_COMPAT) {
-        compat_mode = true;
     }
 
     __system_property_area__ = pa;
@@ -610,9 +603,6 @@ unsigned int __system_property_area_serial()
 
 const prop_info *__system_property_find(const char *name)
 {
-    if (__predict_false(compat_mode)) {
-        return __system_property_find_compat(name);
-    }
     return find_property(root_node(), name, strlen(name), NULL, 0, false);
 }
 
@@ -626,10 +616,6 @@ static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
 {
-    if (__predict_false(compat_mode)) {
-        return __system_property_read_compat(pi, name, value);
-    }
-
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
         size_t len = SERIAL_VALUE_LEN(serial);
@@ -784,9 +770,5 @@ const prop_info *__system_property_find_nth(unsigned n)
 int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
-    if (__predict_false(compat_mode)) {
-        return __system_property_foreach_compat(propfn, cookie);
-    }
-
     return foreach_property(root_node(), propfn, cookie);
 }
