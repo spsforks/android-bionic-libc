@@ -166,21 +166,6 @@ static size_t pa_size;
 // requires it.
 prop_area *__system_property_area__ = NULL;
 
-static int get_fd_from_env(void)
-{
-    // This environment variable consistes of two decimal integer
-    // values separated by a ",". The first value is a file descriptor
-    // and the second is the size of the system properties area. The
-    // size is currently unused.
-    char *env = getenv("ANDROID_PROPERTY_WORKSPACE");
-
-    if (!env) {
-        return -1;
-    }
-
-    return atoi(env);
-}
-
 static int map_prop_area_rw()
 {
     /* dev is a tmpfs that we can use to carve a shared workspace
@@ -256,30 +241,13 @@ static int map_fd_ro(const int fd) {
 static int map_prop_area()
 {
     int fd = open(property_filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
-    bool close_fd = true;
-    if (fd == -1 && errno == ENOENT) {
-        /*
-         * For backwards compatibility, if the file doesn't
-         * exist, we use the environment to get the file descriptor.
-         * For security reasons, we only use this backup if the kernel
-         * returns ENOENT. We don't want to use the backup if the kernel
-         * returns other errors such as ENOMEM or ENFILE, since it
-         * might be possible for an external program to trigger this
-         * condition.
-         */
-        fd = get_fd_from_env();
-        close_fd = false;
-    }
-
     if (fd < 0) {
         return -1;
     }
 
     const int map_result = map_fd_ro(fd);
-    if (close_fd) {
-        close(fd);
-    }
 
+    close(fd);
     return map_result;
 }
 
