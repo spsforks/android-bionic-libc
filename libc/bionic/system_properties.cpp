@@ -102,7 +102,7 @@ struct prop_bt {
 
     char name[0];
 
-    prop_bt(const char *name, const uint8_t name_length) {
+    prop_bt(const char* name, const uint8_t name_length) {
         this->namelen = name_length;
         memcpy(this->name, name, name_length);
         this->name[name_length] = '\0';
@@ -112,66 +112,130 @@ private:
     DISALLOW_COPY_AND_ASSIGN(prop_bt);
 };
 
-struct prop_area {
-    uint32_t bytes_used;
-    atomic_uint_least32_t serial;
-    uint32_t magic;
-    uint32_t version;
-    uint32_t reserved[28];
-    char data[0];
+class prop_area {
+public:
+    static prop_area* MapPropAreaRW(char* filename);
+    static prop_area* MapPropArea(char* filename);
 
-    prop_area(const uint32_t magic, const uint32_t version) :
-        magic(magic), version(version) {
-        atomic_init(&serial, 0);
-        memset(reserved, 0, sizeof(reserved));
-        // Allocate enough space for the root node.
-        bytes_used = sizeof(prop_bt);
-    }
+    unsigned int GetSerial() const;
+    void IncrementSerial();
+    unsigned int WaitSerial(unsigned int wait_serial);
+
+    const prop_info* PropertyFind(const char* name);
+    int PropertyAdd(const char* name, unsigned int namelen,
+                    const char* value, unsigned int valuelen);
+
+    int PropertyForEach(void (*propfn)(const prop_info* pi, void* cookie),
+                        void* cookie);
 
 private:
+    prop_area(const uint32_t magic, const uint32_t version);
+
+    static int ComparePropName(const char* one, uint8_t one_len,
+                               const char* two, uint8_t two_len);
+
+    void* AllocateObject(const size_t size, uint_least32_t* const off);
+    prop_bt* NewPropBt(const char* name, uint8_t namelen, uint_least32_t* const off);
+    prop_info* NewPropInfo(const char* name, uint8_t namelen,
+                           const char* value, uint8_t valuelen,
+                           uint_least32_t* const off);
+    void* ToPropObject(uint_least32_t off);
+    prop_bt* ToPropBt(atomic_uint_least32_t* off_p);
+    prop_info* ToPropInfo(atomic_uint_least32_t* off_p);
+
+    prop_bt* RootNode();
+
+    prop_bt* FindPropBt(prop_bt* const bt, const char* name,
+                        uint8_t namelen, bool alloc_if_needed);
+
+    prop_info* FindProperty(prop_bt* const trie, const char* name,
+                            uint8_t namelen, const char* value,
+                            uint8_t valuelen, bool alloc_if_needed);
+
+    int ForEachProperty(prop_bt* const trie,
+                        void (*propfn)(const prop_info* pi, void* cookie),
+                        void* cookie);
+
+    uint32_t magic() const { return magic_; }
+    uint32_t version() const { return version_; }
+
+    uint32_t bytes_used_;
+    atomic_uint_least32_t serial_;
+    uint32_t magic_;
+    uint32_t version_;
+    uint32_t reserved_[28];
+    char data_[0];
+
     DISALLOW_COPY_AND_ASSIGN(prop_area);
 };
 
-struct prop_info {
-    atomic_uint_least32_t serial;
-    char value[PROP_VALUE_MAX];
-    char name[0];
-
-    prop_info(const char *name, const uint8_t namelen, const char *value,
+class prop_info {
+public:
+    prop_info(const char* name, const uint8_t namelen, const char* value,
               const uint8_t valuelen) {
-        memcpy(this->name, name, namelen);
-        this->name[namelen] = '\0';
-        atomic_init(&this->serial, valuelen << 24);
-        memcpy(this->value, value, valuelen);
-        this->value[valuelen] = '\0';
+        memcpy(name_, name, namelen);
+        name_[namelen] = '\0';
+        atomic_init(&serial_, valuelen << 24);
+        memcpy(value_, value, valuelen);
+        value_[valuelen] = '\0';
     }
+
+    unsigned int GetSerial() const;
+    int Read(char* name, char* value) const;
+    int Update(const char* value, unsigned int len);
+
 private:
+    static inline uint_least32_t LoadConstAtomic(const atomic_uint_least32_t* s,
+                                                 memory_order mo);
+
+    atomic_uint_least32_t serial_;
+    char value_[PROP_VALUE_MAX];
+    char name_[0];
+
     DISALLOW_COPY_AND_ASSIGN(prop_info);
 };
 
-struct find_nth_cookie {
-    uint32_t count;
-    const uint32_t n;
-    const prop_info *pi;
-
-    find_nth_cookie(uint32_t n) : count(0), n(n), pi(NULL) {
-    }
-};
-
 static char property_filename[PATH_MAX] = PROP_FILENAME;
-static size_t pa_data_size;
+static size_t pa_data_size; // All property files have the same data size
 static size_t pa_size;
+static prop_area* __system_property_area__ = nullptr;
 
-// NOTE: This isn't static because of system properties tests
-// requires it.
-prop_area *__system_property_area__ = NULL;
+prop_area::prop_area(const uint32_t magic, const uint32_t version)
+    : magic_(magic), version_(version) {
+    atomic_init(&serial_, 0);
+    memset(reserved_, 0, sizeof(reserved_));
+    // Allocate enough space for the root node.
+    bytes_used_ = sizeof(prop_bt);
+}
 
-static int map_prop_area_rw()
-{
+unsigned int prop_area::GetSerial() const {
+    // Make sure this read fulfilled before __system_property_serial
+    return atomic_load_explicit(&serial_, memory_order_acquire);
+}
+
+void prop_area::IncrementSerial() {
+    atomic_store_explicit(&serial_,
+                          atomic_load_explicit(&serial_, memory_order_relaxed) + 1,
+                          memory_order_release);
+    __futex_wake(&serial_, INT32_MAX);
+}
+
+unsigned int prop_area::WaitSerial(unsigned int wait_serial) {
+    uint32_t my_serial;
+
+    do {
+        __futex_wait(&serial_, wait_serial, nullptr);
+        my_serial = atomic_load_explicit(&serial_, memory_order_acquire);
+    } while (my_serial == wait_serial);
+
+    return my_serial;
+}
+
+prop_area* prop_area::MapPropAreaRW(char* filename) {
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
      */
-    const int fd = open(property_filename,
+    const int fd = open(filename,
                         O_RDWR | O_CREAT | O_NOFOLLOW | O_CLOEXEC | O_EXCL, 0444);
 
     if (fd < 0) {
@@ -181,144 +245,132 @@ static int map_prop_area_rw()
              */
             abort();
         }
-        return -1;
+        return nullptr;
     }
 
     if (ftruncate(fd, PA_SIZE) < 0) {
         close(fd);
-        return -1;
+        return nullptr;
     }
 
     pa_size = PA_SIZE;
     pa_data_size = pa_size - sizeof(prop_area);
 
-    void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    void* const memory_area =
+        mmap(nullptr, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
     if (memory_area == MAP_FAILED) {
         close(fd);
-        return -1;
+        return nullptr;
     }
 
-    prop_area *pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
-
-    /* plug into the lib property services */
-    __system_property_area__ = pa;
+    prop_area* pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
 
     close(fd);
-    return 0;
+    return pa;
 }
 
-static int map_fd_ro(const int fd) {
-    struct stat fd_stat;
-    if (fstat(fd, &fd_stat) < 0) {
-        return -1;
+prop_area* prop_area::MapPropArea(char* filename) {
+    int fd = open(filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
+    if (fd < 0) {
+        return nullptr;
     }
 
-    if ((fd_stat.st_uid != 0)
-            || (fd_stat.st_gid != 0)
-            || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
-            || (fd_stat.st_size < static_cast<off_t>(sizeof(prop_area))) ) {
-        return -1;
+    struct stat fd_stat;
+    if (fstat(fd, &fd_stat) < 0) {
+        close(fd);
+        return nullptr;
+    }
+
+    if ((fd_stat.st_uid != 0) ||
+        (fd_stat.st_gid != 0) ||
+        ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0) ||
+        (fd_stat.st_size < static_cast<off_t>(sizeof(prop_area)))) {
+        close(fd);
+        return nullptr;
     }
 
     pa_size = fd_stat.st_size;
     pa_data_size = pa_size - sizeof(prop_area);
 
-    void* const map_result = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
+    void* const map_result = mmap(nullptr, pa_size, PROT_READ, MAP_SHARED, fd, 0);
     if (map_result == MAP_FAILED) {
-        return -1;
+        close(fd);
+        return nullptr;
     }
 
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
-    if (pa->magic != PROP_AREA_MAGIC || pa->version != PROP_AREA_VERSION) {
+    if (pa->magic() != PROP_AREA_MAGIC || pa->version() != PROP_AREA_VERSION) {
         munmap(pa, pa_size);
-        return -1;
+        close(fd);
+        return nullptr;
     }
-
-    __system_property_area__ = pa;
-    return 0;
-}
-
-static int map_prop_area()
-{
-    int fd = open(property_filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
-    if (fd < 0) {
-        return -1;
-    }
-
-    const int map_result = map_fd_ro(fd);
 
     close(fd);
-    return map_result;
+    return pa;
 }
 
-static void *allocate_obj(const size_t size, uint_least32_t *const off)
-{
-    prop_area *pa = __system_property_area__;
+void* prop_area::AllocateObject(const size_t size, uint_least32_t* const off) {
     const size_t aligned = BIONIC_ALIGN(size, sizeof(uint_least32_t));
-    if (pa->bytes_used + aligned > pa_data_size) {
-        return NULL;
+    if (bytes_used_ + aligned > pa_data_size) {
+        return nullptr;
     }
 
-    *off = pa->bytes_used;
-    pa->bytes_used += aligned;
-    return pa->data + *off;
+    *off = bytes_used_;
+    bytes_used_ += aligned;
+    return data_ + *off;
 }
 
-static prop_bt *new_prop_bt(const char *name, uint8_t namelen, uint_least32_t *const off)
-{
+prop_bt* prop_area::NewPropBt(const char* name, uint8_t namelen,
+                              uint_least32_t* const off) {
     uint_least32_t new_offset;
-    void *const p = allocate_obj(sizeof(prop_bt) + namelen + 1, &new_offset);
-    if (p != NULL) {
+    void* const p = AllocateObject(sizeof(prop_bt) + namelen + 1, &new_offset);
+    if (p) {
         prop_bt* bt = new(p) prop_bt(name, namelen);
         *off = new_offset;
         return bt;
     }
 
-    return NULL;
+    return nullptr;
 }
 
-static prop_info *new_prop_info(const char *name, uint8_t namelen,
-        const char *value, uint8_t valuelen, uint_least32_t *const off)
-{
+prop_info* prop_area::NewPropInfo(const char* name, uint8_t namelen,
+                                  const char* value, uint8_t valuelen,
+                                  uint_least32_t* const off) {
     uint_least32_t new_offset;
-    void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
-    if (p != NULL) {
+    void* const p = AllocateObject(sizeof(prop_info) + namelen + 1, &new_offset);
+    if (p) {
         prop_info* info = new(p) prop_info(name, namelen, value, valuelen);
         *off = new_offset;
         return info;
     }
 
-    return NULL;
+    return nullptr;
 }
 
-static void *to_prop_obj(uint_least32_t off)
-{
+void* prop_area::ToPropObject(uint_least32_t off) {
     if (off > pa_data_size)
-        return NULL;
-    if (!__system_property_area__)
-        return NULL;
+        return nullptr;
 
-    return (__system_property_area__->data + off);
+    return (data_ + off);
 }
 
-static inline prop_bt *to_prop_bt(atomic_uint_least32_t* off_p) {
+inline prop_bt* prop_area::ToPropBt(atomic_uint_least32_t* off_p) {
   uint_least32_t off = atomic_load_explicit(off_p, memory_order_consume);
-  return reinterpret_cast<prop_bt*>(to_prop_obj(off));
+  return reinterpret_cast<prop_bt*>(ToPropObject(off));
 }
 
-static inline prop_info *to_prop_info(atomic_uint_least32_t* off_p) {
+inline prop_info* prop_area::ToPropInfo(atomic_uint_least32_t* off_p) {
   uint_least32_t off = atomic_load_explicit(off_p, memory_order_consume);
-  return reinterpret_cast<prop_info*>(to_prop_obj(off));
+  return reinterpret_cast<prop_info*>(ToPropObject(off));
 }
 
-static inline prop_bt *root_node()
-{
-    return reinterpret_cast<prop_bt*>(to_prop_obj(0));
+inline prop_bt* prop_area::RootNode() {
+    return reinterpret_cast<prop_bt*>(ToPropObject(0));
 }
 
-static int cmp_prop_name(const char *one, uint8_t one_len, const char *two,
-        uint8_t two_len)
-{
+int prop_area::ComparePropName(const char* one, uint8_t one_len,
+                               const char* two, uint8_t two_len) {
     if (one_len < two_len)
         return -1;
     else if (one_len > two_len)
@@ -327,48 +379,49 @@ static int cmp_prop_name(const char *one, uint8_t one_len, const char *two,
         return strncmp(one, two, one_len);
 }
 
-static prop_bt *find_prop_bt(prop_bt *const bt, const char *name,
-                             uint8_t namelen, bool alloc_if_needed)
-{
-
+prop_bt* prop_area::FindPropBt(prop_bt* const bt, const char* name,
+                               uint8_t namelen, bool alloc_if_needed) {
     prop_bt* current = bt;
     while (true) {
         if (!current) {
-            return NULL;
+            return nullptr;
         }
 
-        const int ret = cmp_prop_name(name, namelen, current->name, current->namelen);
+        const int ret = ComparePropName(name, namelen, current->name, current->namelen);
         if (ret == 0) {
             return current;
         }
 
         if (ret < 0) {
-            uint_least32_t left_offset = atomic_load_explicit(&current->left, memory_order_relaxed);
+            uint_least32_t left_offset =
+                atomic_load_explicit(&current->left, memory_order_relaxed);
+
             if (left_offset != 0) {
-                current = to_prop_bt(&current->left);
+                current = ToPropBt(&current->left);
             } else {
                 if (!alloc_if_needed) {
-                   return NULL;
+                   return nullptr;
                 }
 
                 uint_least32_t new_offset;
-                prop_bt* new_bt = new_prop_bt(name, namelen, &new_offset);
+                prop_bt* new_bt = NewPropBt(name, namelen, &new_offset);
                 if (new_bt) {
                     atomic_store_explicit(&current->left, new_offset, memory_order_release);
                 }
                 return new_bt;
             }
         } else {
-            uint_least32_t right_offset = atomic_load_explicit(&current->right, memory_order_relaxed);
+            uint_least32_t right_offset =
+                atomic_load_explicit(&current->right, memory_order_relaxed);
             if (right_offset != 0) {
-                current = to_prop_bt(&current->right);
+                current = ToPropBt(&current->right);
             } else {
                 if (!alloc_if_needed) {
-                   return NULL;
+                   return nullptr;
                 }
 
                 uint_least32_t new_offset;
-                prop_bt* new_bt = new_prop_bt(name, namelen, &new_offset);
+                prop_bt* new_bt = NewPropBt(name, namelen, &new_offset);
                 if (new_bt) {
                     atomic_store_explicit(&current->right, new_offset, memory_order_release);
                 }
@@ -378,43 +431,46 @@ static prop_bt *find_prop_bt(prop_bt *const bt, const char *name,
     }
 }
 
-static const prop_info *find_property(prop_bt *const trie, const char *name,
-        uint8_t namelen, const char *value, uint8_t valuelen,
-        bool alloc_if_needed)
-{
-    if (!trie) return NULL;
+prop_info* prop_area::FindProperty(prop_bt* const trie, const char* name,
+                                   uint8_t namelen, const char* value,
+                                   uint8_t valuelen, bool alloc_if_needed) {
+    if (!trie) {
+        return nullptr;
+    }
 
-    const char *remaining_name = name;
+    const char* remaining_name = name;
     prop_bt* current = trie;
     while (true) {
-        const char *sep = strchr(remaining_name, '.');
-        const bool want_subtree = (sep != NULL);
+        const char* sep = strchr(remaining_name, '.');
+        const bool want_subtree = (sep != nullptr);
         const uint8_t substr_size = (want_subtree) ?
             sep - remaining_name : strlen(remaining_name);
 
         if (!substr_size) {
-            return NULL;
+            return nullptr;
         }
 
-        prop_bt* root = NULL;
-        uint_least32_t children_offset = atomic_load_explicit(&current->children, memory_order_relaxed);
+        prop_bt* root = nullptr;
+        uint_least32_t children_offset =
+            atomic_load_explicit(&current->children, memory_order_relaxed);
+
         if (children_offset != 0) {
-            root = to_prop_bt(&current->children);
+            root = ToPropBt(&current->children);
         } else if (alloc_if_needed) {
             uint_least32_t new_offset;
-            root = new_prop_bt(remaining_name, substr_size, &new_offset);
+            root = NewPropBt(remaining_name, substr_size, &new_offset);
             if (root) {
                 atomic_store_explicit(&current->children, new_offset, memory_order_release);
             }
         }
 
         if (!root) {
-            return NULL;
+            return nullptr;
         }
 
-        current = find_prop_bt(root, remaining_name, substr_size, alloc_if_needed);
+        current = FindPropBt(root, remaining_name, substr_size, alloc_if_needed);
         if (!current) {
-            return NULL;
+            return nullptr;
         }
 
         if (!want_subtree)
@@ -425,22 +481,21 @@ static const prop_info *find_property(prop_bt *const trie, const char *name,
 
     uint_least32_t prop_offset = atomic_load_explicit(&current->prop, memory_order_relaxed);
     if (prop_offset != 0) {
-        return to_prop_info(&current->prop);
+        return ToPropInfo(&current->prop);
     } else if (alloc_if_needed) {
         uint_least32_t new_offset;
-        prop_info* new_info = new_prop_info(name, namelen, value, valuelen, &new_offset);
+        prop_info* new_info = NewPropInfo(name, namelen, value, valuelen, &new_offset);
         if (new_info) {
             atomic_store_explicit(&current->prop, new_offset, memory_order_release);
         }
 
         return new_info;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
-static int send_prop_msg(const prop_msg *msg)
-{
+static int SendPropMsg(const prop_msg* msg) {
     const int fd = socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
     if (fd == -1) {
         return -1;
@@ -494,100 +549,92 @@ static int send_prop_msg(const prop_msg *msg)
     return result;
 }
 
-static void find_nth_fn(const prop_info *pi, void *ptr)
-{
-    find_nth_cookie *cookie = reinterpret_cast<find_nth_cookie*>(ptr);
-
-    if (cookie->n == cookie->count)
-        cookie->pi = pi;
-
-    cookie->count++;
-}
-
-static int foreach_property(prop_bt *const trie,
-        void (*propfn)(const prop_info *pi, void *cookie), void *cookie)
-{
-    if (!trie)
+int prop_area::ForEachProperty(prop_bt* const trie,
+                               void (*propfn)(const prop_info* pi, void* cookie),
+                               void* cookie) {
+    if (!trie) {
         return -1;
+    }
 
     uint_least32_t left_offset = atomic_load_explicit(&trie->left, memory_order_relaxed);
     if (left_offset != 0) {
-        const int err = foreach_property(to_prop_bt(&trie->left), propfn, cookie);
-        if (err < 0)
+        const int err = ForEachProperty(ToPropBt(&trie->left), propfn, cookie);
+        if (err < 0) {
             return -1;
+        }
     }
     uint_least32_t prop_offset = atomic_load_explicit(&trie->prop, memory_order_relaxed);
     if (prop_offset != 0) {
-        prop_info *info = to_prop_info(&trie->prop);
-        if (!info)
+        prop_info* info = ToPropInfo(&trie->prop);
+        if (!info) {
             return -1;
+        }
         propfn(info, cookie);
     }
-    uint_least32_t children_offset = atomic_load_explicit(&trie->children, memory_order_relaxed);
+    uint_least32_t children_offset =
+        atomic_load_explicit(&trie->children, memory_order_relaxed);
+
     if (children_offset != 0) {
-        const int err = foreach_property(to_prop_bt(&trie->children), propfn, cookie);
-        if (err < 0)
+        const int err = ForEachProperty(ToPropBt(&trie->children), propfn, cookie);
+        if (err < 0) {
             return -1;
+        }
     }
     uint_least32_t right_offset = atomic_load_explicit(&trie->right, memory_order_relaxed);
     if (right_offset != 0) {
-        const int err = foreach_property(to_prop_bt(&trie->right), propfn, cookie);
-        if (err < 0)
+        const int err = ForEachProperty(ToPropBt(&trie->right), propfn, cookie);
+        if (err < 0) {
             return -1;
+        }
     }
 
     return 0;
 }
 
-int __system_properties_init()
-{
-    return map_prop_area();
+const prop_info* prop_area::PropertyFind(const char* name) {
+    return FindProperty(RootNode(), name, strlen(name), nullptr, 0, false);
 }
 
-int __system_property_set_filename(const char *filename)
-{
-    size_t len = strlen(filename);
-    if (len >= sizeof(property_filename))
+int prop_area::PropertyAdd(const char* name, unsigned int namelen,
+                           const char* value, unsigned int valuelen) {
+    const prop_info* pi;
+
+    if (namelen >= PROP_NAME_MAX)
+        return -1;
+    if (valuelen >= PROP_VALUE_MAX)
+        return -1;
+    if (namelen < 1)
         return -1;
 
-    strcpy(property_filename, filename);
+    pi = FindProperty(RootNode(), name, namelen, value, valuelen, true);
+    if (!pi)
+        return -1;
+
     return 0;
 }
 
-int __system_property_area_init()
-{
-    return map_prop_area_rw();
+int prop_area::PropertyForEach(void (*propfn)(const prop_info* pi, void* cookie),
+                               void* cookie) {
+    return ForEachProperty(RootNode(), propfn, cookie);
 }
 
-unsigned int __system_property_area_serial()
-{
-    prop_area *pa = __system_property_area__;
-    if (!pa) {
-        return -1;
+// Wait for non-locked serial, and retrieve it with acquire semantics.
+unsigned int prop_info::GetSerial() const {
+    uint32_t serial = LoadConstAtomic(&serial_, memory_order_acquire);
+    while (SERIAL_DIRTY(serial)) {
+        __futex_wait(const_cast<volatile void*>(
+                         reinterpret_cast<const void*>(&serial_)),
+                     serial, nullptr);
+        serial = LoadConstAtomic(&serial_, memory_order_acquire);
     }
-    // Make sure this read fulfilled before __system_property_serial
-    return atomic_load_explicit(&(pa->serial), memory_order_acquire);
+    return serial;
 }
 
-const prop_info *__system_property_find(const char *name)
-{
-    return find_property(root_node(), name, strlen(name), NULL, 0, false);
-}
-
-// The C11 standard doesn't allow atomic loads from const fields,
-// though C++11 does.  Fudge it until standards get straightened out.
-static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
-                                               memory_order mo) {
-    atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
-    return atomic_load_explicit(non_const_s, mo);
-}
-
-int __system_property_read(const prop_info *pi, char *name, char *value)
-{
+int prop_info::Read(char* name, char* value) const {
     while (true) {
-        uint32_t serial = __system_property_serial(pi); // acquire semantics
+        uint32_t serial = GetSerial(); // acquire semantics
         size_t len = SERIAL_VALUE_LEN(serial);
-        memcpy(value, pi->value, len + 1);
+        memcpy(value, value_, len + 1);
         // TODO: Fix the synchronization scheme here.
         // There is no fully supported way to implement this kind
         // of synchronization in C++11, since the memcpy races with
@@ -597,34 +644,102 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         // In practice it seems unlikely that the generated code would
         // would be any different, so this should be OK.
         atomic_thread_fence(memory_order_acquire);
-        if (serial ==
-                load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-            if (name != 0) {
-                strcpy(name, pi->name);
+        if (serial == LoadConstAtomic(&serial_, memory_order_relaxed)) {
+            if (name) {
+                strcpy(name, name_);
             }
             return len;
         }
     }
 }
 
-int __system_property_get(const char *name, char *value)
-{
-    const prop_info *pi = __system_property_find(name);
+int prop_info::Update(const char* value, unsigned int len) {
+    if (len >= PROP_VALUE_MAX)
+        return -1;
 
-    if (pi != 0) {
-        return __system_property_read(pi, 0, value);
+    uint32_t serial = atomic_load_explicit(&serial_, memory_order_relaxed);
+    serial |= 1;
+    atomic_store_explicit(&serial_, serial, memory_order_relaxed);
+    // The memcpy call here also races.  Again pretend it
+    // used memory_order_relaxed atomics, and use the analogous
+    // counterintuitive fence.
+    atomic_thread_fence(memory_order_release);
+    memcpy(value_, value, len + 1);
+    atomic_store_explicit(
+        &serial_,
+        (len << 24) | ((serial + 1) & 0xffffff),
+        memory_order_release);
+    __futex_wake(&serial_, INT32_MAX);
+    return 0;
+}
+
+// The C11 standard doesn't allow atomic loads from const fields,
+// though C++11 does.  Fudge it until standards get straightened out.
+inline uint_least32_t prop_info::LoadConstAtomic(const atomic_uint_least32_t* s,
+                                                 memory_order mo) {
+    atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
+    return atomic_load_explicit(non_const_s, mo);
+}
+
+int __system_properties_init() {
+    __system_property_area__ = prop_area::MapPropArea(property_filename);
+    return 0;
+}
+
+int __system_property_area_init() {
+    __system_property_area__ = prop_area::MapPropAreaRW(property_filename);
+    return 0;
+}
+
+int __system_property_set_filename(const char* filename) {
+    size_t len = strlen(filename);
+    if (len >= sizeof(property_filename))
+        return -1;
+
+    strcpy(property_filename, filename);
+    return 0;
+}
+
+unsigned int __system_property_area_serial() {
+    return __system_property_area__->GetSerial();
+}
+
+unsigned int __system_property_serial(const prop_info* pi) {
+    return pi->GetSerial();
+}
+
+const prop_info* __system_property_find(const char* name) {
+    return __system_property_area__->PropertyFind(name);
+}
+
+int __system_property_read(const prop_info* pi, char* name, char* value) {
+    return pi->Read(name, value);
+}
+
+int __system_property_get(const char* name, char* value) {
+    const prop_info* pi = __system_property_find(name);
+
+    if (pi) {
+        return pi->Read(0, value);
     } else {
-        value[0] = 0;
+        value[0] = '\0';
         return 0;
     }
 }
 
-int __system_property_set(const char *key, const char *value)
-{
-    if (key == 0) return -1;
-    if (value == 0) value = "";
-    if (strlen(key) >= PROP_NAME_MAX) return -1;
-    if (strlen(value) >= PROP_VALUE_MAX) return -1;
+int __system_property_set(const char* key, const char* value) {
+    if (key == 0) {
+        return -1;
+    }
+    if (value == 0) {
+        value = "";
+    }
+    if (strlen(key) >= PROP_NAME_MAX) {
+        return -1;
+    }
+    if (strlen(value) >= PROP_VALUE_MAX) {
+        return -1;
+    }
 
     prop_msg msg;
     memset(&msg, 0, sizeof msg);
@@ -632,111 +747,68 @@ int __system_property_set(const char *key, const char *value)
     strlcpy(msg.name, key, sizeof msg.name);
     strlcpy(msg.value, value, sizeof msg.value);
 
-    const int err = send_prop_msg(&msg);
+    const int err = SendPropMsg(&msg);
     if (err < 0) {
         return err;
     }
-
     return 0;
 }
 
-int __system_property_update(prop_info *pi, const char *value, unsigned int len)
-{
-    prop_area *pa = __system_property_area__;
-
-    if (len >= PROP_VALUE_MAX)
-        return -1;
-
-    uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_relaxed);
-    serial |= 1;
-    atomic_store_explicit(&pi->serial, serial, memory_order_relaxed);
-    // The memcpy call here also races.  Again pretend it
-    // used memory_order_relaxed atomics, and use the analogous
-    // counterintuitive fence.
-    atomic_thread_fence(memory_order_release);
-    memcpy(pi->value, value, len + 1);
-    atomic_store_explicit(
-        &pi->serial,
-        (len << 24) | ((serial + 1) & 0xffffff),
-        memory_order_release);
-    __futex_wake(&pi->serial, INT32_MAX);
-
-    atomic_store_explicit(
-        &pa->serial,
-        atomic_load_explicit(&pa->serial, memory_order_relaxed) + 1,
-        memory_order_release);
-    __futex_wake(&pa->serial, INT32_MAX);
-
-    return 0;
+int __system_property_update(prop_info* pi, const char* value, unsigned int len) {
+    auto ret = pi->Update(value, len);
+    if (!ret) {
+        __system_property_area__->IncrementSerial();
+    }
+    return ret;
 }
 
-int __system_property_add(const char *name, unsigned int namelen,
-            const char *value, unsigned int valuelen)
-{
-    prop_area *pa = __system_property_area__;
-    const prop_info *pi;
-
-    if (namelen >= PROP_NAME_MAX)
-        return -1;
-    if (valuelen >= PROP_VALUE_MAX)
-        return -1;
-    if (namelen < 1)
-        return -1;
-
-    pi = find_property(root_node(), name, namelen, value, valuelen, true);
-    if (!pi)
-        return -1;
+int __system_property_add(const char* name, unsigned int namelen,
+                          const char* value, unsigned int valuelen) {
+    auto ret = __system_property_area__->PropertyAdd(name, namelen, value, valuelen);
+    if (ret) {
+        return ret;
+    }
 
     // There is only a single mutator, but we want to make sure that
     // updates are visible to a reader waiting for the update.
-    atomic_store_explicit(
-        &pa->serial,
-        atomic_load_explicit(&pa->serial, memory_order_relaxed) + 1,
-        memory_order_release);
-    __futex_wake(&pa->serial, INT32_MAX);
+    __system_property_area__->IncrementSerial();
     return 0;
 }
 
-// Wait for non-locked serial, and retrieve it with acquire semantics.
-unsigned int __system_property_serial(const prop_info *pi)
-{
-    uint32_t serial = load_const_atomic(&pi->serial, memory_order_acquire);
-    while (SERIAL_DIRTY(serial)) {
-        __futex_wait(const_cast<volatile void *>(
-                        reinterpret_cast<const void *>(&pi->serial)),
-                     serial, NULL);
-        serial = load_const_atomic(&pi->serial, memory_order_acquire);
-    }
-    return serial;
+unsigned int __system_property_wait_any(unsigned int serial) {
+    return __system_property_area__->WaitSerial(serial);
 }
 
-unsigned int __system_property_wait_any(unsigned int serial)
-{
-    prop_area *pa = __system_property_area__;
-    uint32_t my_serial;
+const prop_info* __system_property_find_nth(unsigned n) {
+    struct find_nth_cookie {
+        uint32_t count;
+        const uint32_t n;
+        const prop_info* pi;
 
-    do {
-        __futex_wait(&pa->serial, serial, NULL);
-        my_serial = atomic_load_explicit(&pa->serial, memory_order_acquire);
-    } while (my_serial == serial);
+        find_nth_cookie(uint32_t n) : count(0), n(n), pi(nullptr) {
+        }
+    };
 
-    return my_serial;
-}
-
-const prop_info *__system_property_find_nth(unsigned n)
-{
     find_nth_cookie cookie(n);
+
+    auto find_nth_fn = [](const prop_info* pi, void* ptr) {
+        find_nth_cookie* cookie = reinterpret_cast<find_nth_cookie*>(ptr);
+
+        if (cookie->n == cookie->count)
+            cookie->pi = pi;
+
+        cookie->count++;
+    };
 
     const int err = __system_property_foreach(find_nth_fn, &cookie);
     if (err < 0) {
-        return NULL;
+        return nullptr;
     }
 
     return cookie.pi;
 }
 
-int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie)
-{
-    return foreach_property(root_node(), propfn, cookie);
+int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie),
+                              void* cookie) {
+    return __system_property_area__->PropertyForEach(propfn, cookie);
 }

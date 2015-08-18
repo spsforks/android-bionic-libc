@@ -27,8 +27,6 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-extern void *__system_property_area__;
-
 struct LocalPropertyTestState {
     LocalPropertyTestState() : valid(false) {
         const char* ANDROID_DATA = getenv("ANDROID_DATA");
@@ -40,9 +38,6 @@ struct LocalPropertyTestState {
                     dir_template, strerror(errno));
             return;
         }
-
-        old_pa = __system_property_area__;
-        __system_property_area__ = NULL;
 
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
@@ -57,9 +52,8 @@ struct LocalPropertyTestState {
             return;
         }
 
-        __system_property_area__ = old_pa;
-
         __system_property_set_filename(PROP_FILENAME);
+        __system_properties_init();
         unlink(pa_filename.c_str());
         rmdir(pa_dirname.c_str());
     }
