@@ -13,54 +13,71 @@
 #include <private/bionic_asm.h>
 
 ENTRY(syscall)
-    # Push the callee save registers.
-    push    %ebx
+    .cfi_def_cfa_offset 4
+
+    pushl    %ebx
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ebx, 0
-    push    %esi
+    movl     12(%esp), %ebx
+
+    pushl    %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
+    movl     20(%esp), %ecx
+
+    pushl    %edx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset edx, 0
+    movl     28(%esp), %edx
+
+    pushl    %esi
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset esi, 0
-    push    %edi
+    movl     36(%esp), %esi
+
+    pushl    %edi
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edi, 0
-    push    %ebp
+    movl     44(%esp), %edi
+
+    pushl    %ebp
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ebp, 0
+    movl     52(%esp), %ebp
 
-    # Load all the arguments from the calling frame.
-    # (Not all will be valid, depending on the syscall.)
-    mov     20(%esp),%eax
-    mov     24(%esp),%ebx
-    mov     28(%esp),%ecx
-    mov     32(%esp),%edx
-    mov     36(%esp),%esi
-    mov     40(%esp),%edi
-    mov     44(%esp),%ebp
+    movl     28(%esp), %eax
+    call    __x86.get_pc_thunk.bx
+    addl    $_GLOBAL_OFFSET_TABLE_, %ebx
+    movl    trampoline_rawsyscall@GOT(%ebx), %ebx
+    call    *(%ebx)
 
-    # Make the system call.
-    int     $0x80
-
-    # Error?
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
-    # Yes, so set errno.
+
     negl    %eax
     pushl   %eax
+    .cfi_adjust_cfa_offset 4
     call    __set_errno_internal
     addl    $4, %esp
+    .cfi_adjust_cfa_offset -4
 1:
-    # Restore the callee save registers.
-    pop    %ebp
+
+    popl    %ebp
     .cfi_adjust_cfa_offset -4
-    .cfi_restore ebp
-    pop    %edi
+
+    popl    %edi
     .cfi_adjust_cfa_offset -4
-    .cfi_restore edi
-    pop    %esi
+
+    popl    %esi
     .cfi_adjust_cfa_offset -4
-    .cfi_restore esi
-    pop    %ebx
+
+    popl    %edx
     .cfi_adjust_cfa_offset -4
-    .cfi_restore ebx
+
+    popl    %ecx
+    .cfi_adjust_cfa_offset -4
+
+    popl    %ebx
+    .cfi_adjust_cfa_offset -4
     ret
 END(syscall)

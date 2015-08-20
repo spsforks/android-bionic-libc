@@ -166,21 +166,55 @@ END(%(func)s)
 
 x86_registers = [ "ebx", "ecx", "edx", "esi", "edi", "ebp" ]
 
-x86_call = """\
-    movl    $%(__NR_name)s, %%eax
-    int     $0x80
+x86_save_reg = """
+    pushl    %%%(reg)s
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset %(reg)s, 0
+    movl     %(stack_bias)d(%%esp), %%%(reg)s
+"""
+x86_call = """
+    call    __x86.get_pc_thunk.bx
+    addl    $_GLOBAL_OFFSET_TABLE_, %%ebx
+    movl    trampoline_syscall%(numparams)d@GOT(%%ebx), %%ebx
+    movl    $%(syscall_number)s, %%eax
+    call    *(%%ebx)
     cmpl    $-MAX_ERRNO, %%eax
     jb      1f
+
     negl    %%eax
     pushl   %%eax
+    .cfi_adjust_cfa_offset 4
     call    __set_errno_internal
     addl    $4, %%esp
+    .cfi_adjust_cfa_offset -4
 1:
 """
-
+x86_restore_reg = """
+    popl    %%%(reg)s
+    .cfi_adjust_cfa_offset -4
+"""
 x86_return = """\
     ret
 END(%(func)s)
+"""
+
+x86_socketcall = """
+    call    __x86.get_pc_thunk.bx
+    addl    $_GLOBAL_OFFSET_TABLE_, %%ebx
+    movl    trampoline_socketcall@GOT(%%ebx), %%ebx
+    mov     $%(socketcall_id)d, %%ecx
+    movl    $%(syscall_number)s, %%eax
+    call    *(%%ebx)
+    cmpl    $-MAX_ERRNO, %%eax
+    jb      1f
+
+    negl    %%eax
+    pushl   %%eax
+    .cfi_adjust_cfa_offset 4
+    call    __set_errno_internal
+    addl    $4, %%esp
+    .cfi_adjust_cfa_offset -4
+1:
 """
 
 
@@ -306,36 +340,22 @@ def mips_genstub(syscall):
 def mips64_genstub(syscall):
     return mips64_call % syscall
 
-
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
+    numparams  = count_generic_param_registers(syscall["params"])
 
-    numparams = count_generic_param_registers(syscall["params"])
-    stack_bias = numparams*4 + 4
-    offset = 0
-    mov_result = ""
-    first_push = True
-    for register in x86_registers[:numparams]:
-        result     += "    pushl   %%%s\n" % register
-        if first_push:
-          result   += "    .cfi_def_cfa_offset 8\n"
-          result   += "    .cfi_rel_offset %s, 0\n" % register
-          first_push = False
-        else:
-          result   += "    .cfi_adjust_cfa_offset 4\n"
-          result   += "    .cfi_rel_offset %s, 0\n" % register
-        mov_result += "    mov     %d(%%esp), %%%s\n" % (stack_bias+offset, register)
-        offset += 4
+    result += "    .cfi_def_cfa_offset 4\n"
+    for i in xrange(0, max(1, numparams)):
+        reg = x86_registers[i]
+        result += x86_save_reg % { 'reg': reg, 'stack_bias': 8 + 8 * i }
+    result += x86_call % { 'syscall_number': syscall['__NR_name'], 'numparams': numparams }
 
-    result += mov_result
-    result += x86_call % syscall
+    for i in reversed(xrange(0, max(1, numparams))):
+        reg = x86_registers[i]
+        result += x86_restore_reg % { 'reg': reg }
 
-    for register in reversed(x86_registers[:numparams]):
-        result += "    popl    %%%s\n" % register
-
-    result += x86_return % syscall
+    result += x86_return % { 'func': syscall['func'] }
     return result
-
 
 def x86_genstub_socketcall(syscall):
     #   %ebx <--- Argument 1 - The call id of the needed vectored
@@ -344,34 +364,20 @@ def x86_genstub_socketcall(syscall):
     #                          from the original function called (socket())
 
     result = syscall_stub_header % syscall
+    numparams = 2
 
-    # save the regs we need
-    result += "    pushl   %ebx\n"
-    result += "    .cfi_def_cfa_offset 8\n"
-    result += "    .cfi_rel_offset ebx, 0\n"
-    result += "    pushl   %ecx\n"
-    result += "    .cfi_adjust_cfa_offset 4\n"
-    result += "    .cfi_rel_offset ecx, 0\n"
-    stack_bias = 12
+    result += "    .cfi_def_cfa_offset 4\n"
+    for i in xrange(0, max(1, numparams)):
+        reg = x86_registers[i]
+        result += x86_save_reg % { 'reg': reg, 'stack_bias': 8 + 8 * i }
+    result += x86_socketcall % { 'syscall_number': syscall['__NR_name'], 'socketcall_id': syscall['socketcall_id']}
 
-    # set the call id (%ebx)
-    result += "    mov     $%d, %%ebx\n" % syscall["socketcall_id"]
+    for i in reversed(xrange(0, max(1, numparams))):
+        reg = x86_registers[i]
+        result += x86_restore_reg % { 'reg': reg }
 
-    # set the pointer to the rest of the args into %ecx
-    result += "    mov     %esp, %ecx\n"
-    result += "    addl    $%d, %%ecx\n" % (stack_bias)
-
-    # now do the syscall code itself
-    result += x86_call % syscall
-
-    # now restore the saved regs
-    result += "    popl    %ecx\n"
-    result += "    popl    %ebx\n"
-
-    # epilog
-    result += x86_return % syscall
+    result += x86_return % { 'func': syscall['func'] }
     return result
-
 
 def x86_64_genstub(syscall):
     result = syscall_stub_header % syscall
