@@ -33,6 +33,7 @@
 #include <stdarg.h>
 #include <sys/resource.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <sys/vfs.h>
 #include <unistd.h>
 
@@ -72,9 +73,19 @@ ssize_t pread(int fd, void* buf, size_t byte_count, off_t offset) {
   return pread64(fd, buf, byte_count, static_cast<off64_t>(offset));
 }
 
+// There is no preadv for 32-bit off_t, so we need to widen and call preadv64.
+ssize_t preadv(int fd, const struct iovec* ios, int count, off_t offset) {
+    return preadv64(fd, ios, count, static_cast<off64_t>(offset));
+}
+
 // There is no pwrite for 32-bit off_t, so we need to widen and call pwrite64.
 ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
+}
+
+// There is no pwritev for 32-bit off_t, so we need to widen and call pwritev64.
+ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset) {
+    return pwritev64(fd, ios, count, static_cast<off64_t>(offset));
 }
 
 // There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
