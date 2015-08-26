@@ -28,10 +28,6 @@
 #ifndef _NETINET_UDP_H
 #define _NETINET_UDP_H
 
-/*
- * We would include linux/udp.h, but it brings in too much other stuff
- */
-
 #ifdef __FAVOR_BSD
 
 struct udphdr {
@@ -43,12 +39,7 @@ struct udphdr {
 
 #else
 
-struct udphdr {
-    __u16  source;
-    __u16  dest;
-    __u16  len;
-    __u16  check;
-};
+#include <linux/udp.h>
 
 #endif /* __FAVOR_BSD */
 
