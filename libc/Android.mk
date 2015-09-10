@@ -255,6 +255,8 @@ libc_bionic_src_files += bionic/getentropy_linux.c
 libc_bionic_src_files += bionic/sysconf.cpp
 libc_bionic_src_files += bionic/vdso.cpp
 
+libc_bionic_src_files += bionic/setjmp_cookie.cpp
+
 libc_cxa_src_files := \
     bionic/__cxa_guard.cpp \
     bionic/__cxa_pure_virtual.cpp \
@@ -351,7 +353,7 @@ libc_upstream_openbsd_gdtoa_src_files_64 := \
     $(libc_upstream_openbsd_gdtoa_src_files) \
     upstream-openbsd/lib/libc/gdtoa/strtorQ.c \
 
-# These two depend on getentropy_linux.cpp, which isn't in libc_ndk.a.
+# These two depend on getentropy_linux.c, which isn't in libc_ndk.a.
 libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/crypt/arc4random.c \
     upstream-openbsd/lib/libc/crypt/arc4random_uniform.c \
