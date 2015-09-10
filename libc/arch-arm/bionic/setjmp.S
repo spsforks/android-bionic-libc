@@ -51,13 +51,13 @@
 // The internal structure of a jmp_buf is totally private.
 // Current layout (may change in the future):
 //
-// word   name         description
-// 0      magic        magic number
-// 1      sigmask      signal mask (not used with _setjmp / _longjmp)
-// 2      float_base   base of float registers (d8 to d15)
-// 18     float_state  floating-point status and control register
-// 19     core_base    base of core registers (r4 to r14)
-// 30     reserved     reserved entries (room to grow)
+// word   name            description
+// 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 1      sigmask         signal mask (not used with _setjmp / _longjmp)
+// 2      float_base      base of float registers (d8 to d15)
+// 18     float_state     floating-point status and control register
+// 19     core_base       base of core registers (r4 to r14)
+// 30     reserved        reserved entries (room to grow)
 // 64
 //
 // NOTE: float_base must be at an even word index, since the
@@ -80,33 +80,79 @@ ENTRY(_setjmp)
   b sigsetjmp
 END(_setjmp)
 
+#define MANGLE_REGISTERS 1
+.macro m_mangle_registers reg
+#if MANGLE_REGISTERS
+  eor r4, r4, \reg
+  eor r5, r5, \reg
+  eor r6, r6, \reg
+  eor r7, r7, \reg
+  eor r8, r8, \reg
+  eor r9, r9, \reg
+  eor r10, r10, \reg
+  eor r11, r11, \reg
+  eor r12, r12, \reg
+  eor r13, r13, \reg
+  eor r14, r14, \reg
+#endif
+.endm
+
+.macro m_unmangle_registers reg
+  m_mangle_registers \reg
+.endm
+
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
-  // Record whether or not we're saving the signal mask.
+  stmfd sp!, {r0, lr}
+  .cfi_def_cfa_offset 8
+  .cfi_rel_offset r0, 0
+  .cfi_rel_offset lr, 4
+
+  mov r0, r1
+  bl __bionic_setjmp_cookie_get
+  mov r1, r0
+
+  ldmfd sp, {r0}
+
+  // Save the setjmp cookie for later.
+  bic r2, r1, #1
+  stmfd sp!, {r2}
+  .cfi_adjust_cfa_offset 4
+
+  // Record the setjmp cookie and whether or not we're saving the signal mask.
   str r1, [r0, #(_JB_SIGFLAG * 4)]
 
   // Do we need to save the signal mask?
-  teq r1, #0
+  tst r1, #1
   beq 1f
 
-  // Get current signal mask.
-  stmfd sp!, {r0, r14}
-  .cfi_def_cfa_offset 8
-  .cfi_rel_offset r0, 0
-  .cfi_rel_offset r14, 4
-  mov r0, #0
-  bl sigblock
-  mov r1, r0
-  ldmfd sp!, {r0, r14}
-  .cfi_def_cfa_offset 0
+  // Align the stack.
+  sub sp, #4
+  .cfi_adjust_cfa_offset 4
 
-  // Save the signal mask.
-  str r1, [r0, #(_JB_SIGMASK * 4)]
+  // Save the current signal mask.
+  add r2, r0, #(_JB_SIGMASK * 4)
+  mov r0, #2 // SIG_SETMASK
+  mov r1, #0
+  bl sigprocmask
+
+  // Unalign the stack.
+  add sp, #4
+  .cfi_adjust_cfa_offset -4
 
 1:
+  ldmfd sp!, {r2}
+  .cfi_adjust_cfa_offset -4
+  ldmfd sp!, {r0, lr}
+  .cfi_adjust_cfa_offset -8
+  .cfi_restore r0
+  .cfi_restore lr
+
   // Save core registers.
   add r1, r0, #(_JB_CORE_BASE * 4)
+  m_mangle_registers r2
   stmia r1, {r4-r14}
+  m_unmangle_registers r2
 
   // Save floating-point registers.
   add r1, r0, #(_JB_FLOAT_BASE * 4)
@@ -122,29 +168,48 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+  // Load the signal flag/setjmp cookie.
+  stmfd sp!, {r4}
+  .cfi_def_cfa_offset 4
+  .cfi_rel_offset r4, 0
+
+  stmfd sp!, {r0, r1, lr}
+  .cfi_adjust_cfa_offset 12
+  .cfi_rel_offset r0, 0
+  .cfi_rel_offset r1, 4
+  .cfi_rel_offset lr, 8
+
+  ldr r0, [r0, #(_JB_SIGFLAG * 4)]
+
+  // Move the setjmp cookie into r4 for later.
+  bic r4, r0, #1
+
+  // Check the setjmp cookie.
+  bl __bionic_setjmp_cookie_check
+  mov r2, r0
+
   // Do we need to restore the signal mask?
-  ldr r2, [r0, #(_JB_SIGFLAG * 4)]
   teq r2, #0
   beq 1f
 
   // Restore the signal mask.
-  stmfd sp!, {r0, r1, r14}
-  .cfi_def_cfa_offset 12
-  .cfi_rel_offset r0, 0
-  .cfi_rel_offset r1, 4
-  .cfi_rel_offset r14, 8
-  sub sp, sp, #4 // Align the stack.
-  .cfi_adjust_cfa_offset 4
-
+  ldr r0, [sp, #0]
   ldr r0, [r0, #(_JB_SIGMASK * 4)]
   bl sigsetmask
 
-  add sp, sp, #4 // Unalign the stack.
-  .cfi_adjust_cfa_offset -4
-  ldmfd sp!, {r0, r1, r14}
-  .cfi_def_cfa_offset 0
-
 1:
+  ldmfd sp!, {r0, r1, lr}
+  .cfi_adjust_cfa_offset -12
+  .cfi_restore r0
+  .cfi_restore r1
+  .cfi_restore lr
+
+  // Restore the original r4, while saving the setjmp cookie.
+  mov r3, r4
+  ldmfd sp!, {r4}
+  .cfi_adjust_cfa_offset -4
+  .cfi_restore r4
+
   // Restore floating-point registers.
   add r2, r0, #(_JB_FLOAT_BASE * 4)
   vldmia r2, {d8-d15}
@@ -156,10 +221,11 @@ ENTRY(siglongjmp)
   // Restore core registers.
   add r2, r0, #(_JB_CORE_BASE * 4)
   ldmia r2, {r4-r14}
+  m_unmangle_registers r3
 
-  // Validate sp and r14.
+  // Validate sp and lr.
   teq sp, #0
-  teqne r14, #0
+  teqne lr, #0
   bleq longjmperror
 
   // Set return value.
