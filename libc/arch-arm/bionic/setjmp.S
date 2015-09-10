@@ -51,13 +51,13 @@
 // The internal structure of a jmp_buf is totally private.
 // Current layout (may change in the future):
 //
-// word   name         description
-// 0      magic        magic number
-// 1      sigmask      signal mask (not used with _setjmp / _longjmp)
-// 2      float_base   base of float registers (d8 to d15)
-// 18     float_state  floating-point status and control register
-// 19     core_base    base of core registers (r4 to r14)
-// 30     reserved     reserved entries (room to grow)
+// word   name            description
+// 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 1      sigmask         signal mask (not used with _setjmp / _longjmp)
+// 2      float_base      base of float registers (d8 to d15)
+// 18     float_state     floating-point status and control register
+// 19     core_base       base of core registers (r4 to r14)
+// 30     reserved        reserved entries (room to grow)
 // 64
 //
 // NOTE: float_base must be at an even word index, since the
@@ -82,11 +82,17 @@ END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
-  // Record whether or not we're saving the signal mask.
+  push {r0, lr}
+  mov r0, r1
+  bl __bionic_setjmp_cookie_get
+  mov r1, r0
+  pop {r0, lr}
+
+  // Record the setjmp cookie and whether or not we're saving the signal mask.
   str r1, [r0, #(_JB_SIGFLAG * 4)]
 
   // Do we need to save the signal mask?
-  teq r1, #0
+  ands r1, r1, #1
   beq 1f
 
   // Get current signal mask.
@@ -122,8 +128,16 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+  // Load the signal flag/setjmp cookie
+  push {r0, r1, lr}
+  ldr r0, [r0, #(_JB_SIGFLAG * 4)]
+
+  // Check the setjmp cookie
+  bl __bionic_setjmp_cookie_check
+  mov r2, r0
+  pop {r0, r1, lr}
+
   // Do we need to restore the signal mask?
-  ldr r2, [r0, #(_JB_SIGFLAG * 4)]
   teq r2, #0
   beq 1f
 

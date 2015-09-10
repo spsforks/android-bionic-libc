@@ -212,3 +212,32 @@ TEST(setjmp, setjmp_fp_registers) {
     CHECK_FREGS;
   }
 }
+
+#if defined(__arm__)
+#define __JB_SIGFLAG 0
+#elif defined(__aarch64__)
+#define __JB_SIGFLAG 0
+#elif defined(__i386__)
+#define __JB_SIGFLAG 7
+#elif defined(__x86_64)
+#define __JB_SIGFLAG 8
+#endif
+
+#ifndef __mips__
+TEST(setjmp, setjmp_cookie) {
+  int value;
+  jmp_buf jb;
+  if ((value = setjmp(jb)) == 0) {
+    long *sigflag = (long *)jb + __JB_SIGFLAG;
+
+    // Make sure there's actually a cookie
+    EXPECT_NE(0, *sigflag & ~1);
+
+    // Wipe it out
+    *sigflag &= 1;
+    EXPECT_DEATH(longjmp(jb, 0), "");
+  } else {
+    FAIL(); // Should be unreachable
+  }
+}
+#endif
