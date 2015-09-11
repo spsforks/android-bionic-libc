@@ -64,21 +64,34 @@ END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
-  // Record whether or not we're saving the signal mask.
-  str w1, [x0, #(_JB_SIGFLAG * 8)]
+  stp x0, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x0, 0
+  .cfi_rel_offset x30, 8
+
+  // Get the cookie and store it along with the signal flag
+  mov x0, x1
+  bl __bionic_setjmp_cookie_get
+  mov x1, x0
+  ldp x0, x30, [sp, #0]
+  str x1, [x0, #(_JB_SIGFLAG * 8)]
 
   // Do we need to save the signal mask?
-  cbz w1, 1f
+  tbnz w1, #1, 1f
 
   // Save current signal mask.
-  stp x0, x30, [sp, #-16]!
   // The 'how' argument is ignored if new_mask is NULL.
   mov x1, #0 // NULL.
   add x2, x0, #(_JB_SIGMASK * 8) // old_mask.
   bl sigprocmask
-  ldp x0, x30, [sp], #16
 
 1:
+  // Restore original x0 and lr
+  ldp x0, x30, [sp], #16
+  .cfi_adjust_cfa_offset -16
+  .cfi_restore x0
+  .cfi_restore x30
+
   // Save core registers.
   mov x10, sp
   stp x30, x10, [x0, #(_JB_X30_SP  * 8)]
@@ -101,22 +114,44 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+  stp x0, x30, [sp, #-16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x0, 0
+  .cfi_rel_offset x30, 8
+
   // Do we need to restore the signal mask?
-  ldr w9, [x0, #(_JB_SIGFLAG * 8)]
-  cbz w9, 1f
+  stp x0, x1, [sp, #-16]!
+  .cfi_adjust_cfa_offset 16
+  .cfi_rel_offset x1, 8
+
+  ldr x0, [x0, #(_JB_SIGFLAG * 8)]
+  bl __bionic_setjmp_cookie_check
+  mov x9, x0
+  ldp x0, x1, [sp], #16
+  .cfi_adjust_cfa_offset -16
+  .cfi_restore x1
+  cbz x9, 1f
 
   // Restore signal mask.
-  stp x0, x30, [sp, #-16]!
   mov x19, x1 // Save 'value'.
+  .cfi_register x1, x19
+  .cfi_undefined x19
+
   mov x2, x0
   mov x0, #2 // SIG_SETMASK
   add x1, x2, #(_JB_SIGMASK * 8) // new_mask.
   mov x2, #0 // NULL.
   bl sigprocmask
   mov x1, x19 // Restore 'value'.
-  ldp x0, x30, [sp], #16
+  .cfi_restore x1
 
 1:
+  // Restore original x0 and lr
+  ldp x0, x30, [sp], #16
+  .cfi_adjust_cfa_offset -16
+  .cfi_restore x0
+  .cfi_restore x30
+
   // Restore core registers.
   ldp x30, x10, [x0, #(_JB_X30_SP  * 8)]
   mov sp, x10
