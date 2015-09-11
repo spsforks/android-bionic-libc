@@ -127,28 +127,39 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
 
-  // It shouldn't matter which thread we are because we're just looking for "[stack]", but
-  // valgrind seems to mess with the stack enough that the kernel will report "[stack:pid]"
-  // instead if you look in /proc/self/maps, so we need to look in /proc/pid/task/pid/maps.
-  char path[64];
-  snprintf(path, sizeof(path), "/proc/self/task/%d/maps", getpid());
-  FILE* fp = fopen(path, "re");
-  if (fp == NULL) {
+  const char* statpath = "/proc/self/stat";
+  FILE* fpstat = fopen(statpath, "re");
+  if (fpstat == NULL) {
+    return errno;
+  }
+  for (int i = 0; i < 27; ++i) {
+    // asterisk in scanf will discard the contents of the conversion specification.
+    fscanf(fpstat, "%*s ");
+  }
+  uintptr_t in_stack = 0;
+  if (fscanf(fpstat, "%" SCNuPTR, &in_stack) != 1) {
+    __libc_fatal("stack_start not found in \"%s\"!", statpath);
+  }
+  fclose(fpstat);
+
+  const char* mapspath = "/proc/self/maps";
+  FILE* fpmaps = fopen(mapspath, "re");
+  if (fpmaps == NULL) {
     return errno;
   }
   char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != NULL) {
-    if (ends_with(line, " [stack]\n")) {
-      uintptr_t lo, hi;
-      if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+  while (fgets(line, sizeof(line), fpmaps) != NULL) {
+    uintptr_t lo, hi;
+    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
+      if (lo < in_stack && in_stack < hi) {
         *stack_size = stack_limit.rlim_cur;
         *stack_base = reinterpret_cast<void*>(hi - *stack_size);
-        fclose(fp);
+        fclose(fpmaps);
         return 0;
       }
     }
   }
-  __libc_fatal("No [stack] line found in \"%s\"!", path);
+  __libc_fatal("Stack line not found in \"%s\"!", mapspath);
 }
 
 int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
