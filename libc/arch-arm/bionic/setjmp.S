@@ -142,6 +142,9 @@ ENTRY(siglongjmp)
   mov r2, r0
   ldmfd sp!, {r0, r1, lr}
   .cfi_def_cfa_offset 0
+  .cfi_restore r0
+  .cfi_restore r1
+  .cfi_restore lr
 
   // Do we need to restore the signal mask?
   teq r2, #0
@@ -163,6 +166,9 @@ ENTRY(siglongjmp)
   .cfi_adjust_cfa_offset -4
   ldmfd sp!, {r0, r1, lr}
   .cfi_def_cfa_offset 0
+  .cfi_restore r0
+  .cfi_restore r1
+  .cfi_restore lr
 
 1:
   // Restore floating-point registers.
