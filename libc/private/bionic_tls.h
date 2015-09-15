@@ -71,8 +71,12 @@ enum {
   TLS_SLOT_ART_THREAD_SELF,
 
   // Lets TSAN avoid using pthread_getspecific for finding the current thread
-  // state.
-  TLS_SLOT_TSAN,
+  // state. This slot is accessed directly from the compiled code. Don't move.
+  TLS_SLOT_TSAN = 8,
+
+  // Unsafe stack pointer. See http://clang.llvm.org/docs/SafeStack.html.
+  // This slot is accessed directly from the compiled code. Don't move.
+  TLS_SLOT_SAFESTACK = 9,
 
   BIONIC_TLS_SLOTS // Must come last!
 };

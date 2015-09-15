@@ -117,6 +117,11 @@ void pthread_exit(void* return_value) {
       sigfillset(&mask);
       sigprocmask(SIG_SETMASK, &mask, NULL);
 
+      // This works as long as nothing touches the unsafe stack after unsafe_stack_free.
+      // There is no reason to, but with compilers you never know.
+      // FIXME: move this into _exit_with_stack_teardown.
+      thread->unsafe_stack_free();
+
       _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
     }
   }

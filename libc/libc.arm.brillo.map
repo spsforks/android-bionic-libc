@@ -1269,6 +1269,7 @@ LIBC_N {
 
 LIBC_O {
   global:
+    __safestack_pointer_address;
     catclose;
     catgets;
     catopen;
