@@ -34,6 +34,7 @@
 #include <sys/mman.h>
 
 #include "private/bionic_futex.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -76,6 +77,7 @@ static void __pthread_internal_free(pthread_internal_t* thread) {
 
 void __pthread_internal_remove_and_free(pthread_internal_t* thread) {
   __pthread_internal_remove(thread);
+  __unsafe_stack_free(thread);
   __pthread_internal_free(thread);
 }
 
