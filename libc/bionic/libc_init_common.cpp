@@ -42,6 +42,7 @@
 #include <unistd.h>
 
 #include "private/bionic_auxv.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -120,6 +121,8 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
+
+  __unsafe_stack_main_thread_init(main_thread);
 
   __libc_init_vdso();
 }
