@@ -50,6 +50,7 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_page.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
@@ -87,6 +88,10 @@ __noreturn void __libc_init(void* raw_args,
   __libc_init_main_thread(args);
   __libc_init_AT_SECURE(args);
   __libc_init_common(args);
+
+  // Unsafe stack initialization needs system properties, set up in
+  // __libc_init_common.
+  __unsafe_stack_main_thread_init();
 
   apply_gnu_relro();
 

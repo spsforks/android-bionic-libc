@@ -123,6 +123,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __system_properties_init(); // Requires 'environ'.
 
   __bionic_setjmp_cookie_init();
+
   __libc_init_vdso();
 }
 
