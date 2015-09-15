@@ -30,6 +30,7 @@
 
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
+#include "private/bionic_safestack.h"
 #include "private/KernelArgumentBlock.h"
 #include "pthread_internal.h"
 
@@ -88,5 +89,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // picked up by the libc constructor.
   main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
-  __init_alternate_signal_stack(&main_thread);
+  __unsafe_stack_main_thread_init();
+
+  __init_alternate_signal_stack(&main_thread, nullptr, 0);
 }

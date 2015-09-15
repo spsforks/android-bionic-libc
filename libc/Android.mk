@@ -558,6 +558,7 @@ libc_pthread_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/pthread_spinlock.cpp \
+    bionic/safestack.cpp \
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
@@ -603,6 +604,11 @@ endif
 
 libc_malloc_src := bionic/jemalloc_wrapper.cpp
 libc_common_c_includes += external/jemalloc/include
+
+ifeq ($(strip $(USE_SAFESTACK)),true)
+  libc_common_cflags += -DBIONIC_SAFESTACK
+  libc_common_cflags_32 += -UBIONIC_SAFESTACK
+endif
 
 # Define some common conlyflags
 libc_common_conlyflags := \
