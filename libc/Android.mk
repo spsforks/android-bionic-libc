@@ -551,6 +551,9 @@ libc_pthread_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
 
+libc_safestack_src_files := \
+    bionic/safestack.cpp \
+
 libc_thread_atexit_impl_src_files := \
     bionic/__cxa_thread_atexit_impl.cpp \
 
@@ -1042,6 +1045,11 @@ LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+ifeq ($(USE_SAFE_STACK), true)
+  LOCAL_SRC_FILES += $(libc_safestack_src_files)
+  LOCAL_CPPFLAGS += -DBIONIC_SAFE_STACK
+endif
 
 include $(BUILD_STATIC_LIBRARY)
 
