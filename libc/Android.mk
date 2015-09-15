@@ -623,6 +623,11 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
 endif
 
+ifeq ($(strip $(USE_SAFESTACK)),true)
+  libc_common_cflags += -DBIONIC_SAFESTACK
+  libc_pthread_src_files += bionic/safestack.cpp
+endif
+
 # Define some common conlyflags
 libc_common_conlyflags := \
     -std=gnu99

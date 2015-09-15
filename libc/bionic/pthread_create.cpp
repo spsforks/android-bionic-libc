@@ -37,6 +37,7 @@
 
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
@@ -197,6 +198,7 @@ static int __pthread_start(void* arg) {
   pthread_mutex_destroy(&thread->startup_handshake_mutex);
 
   __init_alternate_signal_stack(thread);
+  __unsafe_stack_alloc(thread, thread->attr.stack_size, PAGE_SIZE);
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
