@@ -65,6 +65,12 @@ class pthread_internal_t {
  private:
   pid_t cached_pid_;
 
+#ifdef BIONIC_SAFESTACK
+  void* unsafe_stack_start;
+  size_t unsafe_stack_size;
+  size_t unsafe_stack_gap_size;
+#endif
+
  public:
   pid_t invalidate_cached_pid() {
     pid_t old_value;
@@ -81,6 +87,11 @@ class pthread_internal_t {
     *cached_pid = cached_pid_;
     return (*cached_pid != 0);
   }
+
+  int unsafe_stack_alloc(size_t stack_size, size_t stack_guard_size, void** stack_top_ptr);
+  void unsafe_stack_free();
+  void unsafe_stack_set_vma_name(size_t guard, char* buf, size_t buf_size);
+  void unsafe_stack_get(void **start, size_t *size);
 
   pthread_attr_t attr;
 
@@ -115,7 +126,7 @@ class pthread_internal_t {
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*, char*, size_t);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
