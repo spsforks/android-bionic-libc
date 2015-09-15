@@ -74,6 +74,8 @@ enum {
   // state.
   TLS_SLOT_TSAN,
 
+  TLS_SLOT_SAFESTACK,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
 

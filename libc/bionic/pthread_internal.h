@@ -103,6 +103,9 @@ struct pthread_internal_t {
    */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
+
+  void *unsafe_stack_start;
+  size_t unsafe_stack_size;
 };
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);

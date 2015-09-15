@@ -1,5 +1,6 @@
 LIBC {
   global:
+    __safestack_unsafe_stack_ptr_addr;
     __assert;
     __assert2;
     __atomic_cmpxchg; # arm
