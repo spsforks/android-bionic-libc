@@ -1336,6 +1336,7 @@ LIBC_N {
     __getcwd_chk;
     __pwrite_chk;
     __pwrite64_chk;
+    __safestack_pointer_address;
     __write_chk;
     getgrgid_r;
     getgrnam_r;

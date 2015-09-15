@@ -46,6 +46,10 @@ else
 test_cflags += -DUSE_JEMALLOC
 endif
 
+ifeq ($(strip $(USE_SAFESTACK)),true)
+test_cflags += -DBIONIC_SAFESTACK
+endif
+
 test_cppflags := \
 
 libBionicStandardTests_src_files := \
@@ -74,6 +78,7 @@ libBionicStandardTests_src_files := \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
+    safestack_test.cpp \
     sched_test.cpp \
     search_test.cpp \
     semaphore_test.cpp \

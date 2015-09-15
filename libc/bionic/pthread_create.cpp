@@ -29,6 +29,7 @@
 #include <pthread.h>
 
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -37,6 +38,7 @@
 
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
@@ -67,7 +69,8 @@ void __init_tls(pthread_internal_t* thread) {
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
 }
 
-void __init_alternate_signal_stack(pthread_internal_t* thread) {
+void __init_alternate_signal_stack(pthread_internal_t* thread, char* buf,
+                                   size_t buf_size) {
   // Create and set an alternate signal stack.
   void* stack_base = mmap(NULL, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
@@ -84,9 +87,19 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     sigaltstack(&ss, NULL);
     thread->alternate_signal_stack = stack_base;
 
+    const char *name;
+    if (buf) {
+      snprintf(buf, buf_size, "thread signal stack:%d",
+               static_cast<int>(thread->tid));
+      name = buf;
+    } else {
+      // Main thread.
+      name = "thread signal stack";
+    }
+
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, name);
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PAGE_SIZE, "thread signal stack guard page");
   }
 }
@@ -181,6 +194,14 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   thread->attr = *attr;
   __init_tls(thread);
 
+  int rc = __unsafe_stack_alloc(thread, attr->stack_size, PAGE_SIZE);
+  if (rc != 0) {
+    if (thread->mmap_size != 0) {
+      munmap(attr->stack_base, thread->mmap_size);
+    }
+    return rc;
+  }
+
   *threadp = thread;
   *child_stack = stack_top;
   return 0;
@@ -195,7 +216,18 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
-  __init_alternate_signal_stack(thread);
+  // Persistent buffer for the alternate signal stack vma name (found in
+  // /proc/$PID/maps).
+  char alternate_signal_stack_vma_name[27];
+  __init_alternate_signal_stack(thread, alternate_signal_stack_vma_name,
+                                sizeof(alternate_signal_stack_vma_name));
+
+#ifdef BIONIC_SAFESTACK
+  // Persistent buffer for the unsafe stack vma name.
+  char unsafe_stack_vma_name[20];
+  __unsafe_stack_set_vma_name(thread, PAGE_SIZE, unsafe_stack_vma_name,
+                              sizeof(unsafe_stack_vma_name));
+#endif
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);

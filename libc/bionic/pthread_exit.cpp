@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
+#include "private/bionic_safestack.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -116,6 +117,7 @@ void pthread_exit(void* return_value) {
       sigfillset(&mask);
       sigprocmask(SIG_SETMASK, &mask, NULL);
 
+      __unsafe_stack_free(thread);
       _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
     }
   }
