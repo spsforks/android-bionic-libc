@@ -89,6 +89,9 @@ struct pthread_internal_t {
 
   void* alternate_signal_stack;
 
+  void* unsafe_stack_start;
+  size_t unsafe_stack_size;
+
   pthread_mutex_t startup_handshake_mutex;
 
   size_t mmap_size;
