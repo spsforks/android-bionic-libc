@@ -1294,6 +1294,9 @@ LIBC_N {
 
 LIBC_O {
   global:
+    __get_unsafe_stack_start;
+    __get_unsafe_stack_ptr;
+    __safestack_pointer_address;
     catclose;
     catgets;
     catopen;

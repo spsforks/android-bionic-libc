@@ -541,7 +541,7 @@ LOCAL_CFLAGS += \
     -fno-builtin-rintl \
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 include $(BUILD_STATIC_LIBRARY)
 
 # -----------------------------------------------------------------------------
@@ -574,7 +574,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
 
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 
 LOCAL_CXX_STL := none
 

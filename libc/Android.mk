@@ -558,6 +558,7 @@ libc_pthread_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
     bionic/pthread_spinlock.cpp \
+    bionic/safestack.cpp \
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
@@ -607,6 +608,11 @@ libc_common_c_includes += external/jemalloc/include
 # Define some common conlyflags
 libc_common_conlyflags := \
     -std=gnu99
+
+ifeq ($(strip $(USE_SAFESTACK)),true)
+  libc_common_cflags += -DBIONIC_SAFESTACK
+  libc_common_cflags_32 += -UBIONIC_SAFESTACK
+endif
 
 # Define some common cppflags
 libc_common_cppflags := \
@@ -682,7 +688,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -728,7 +734,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -767,7 +773,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -800,7 +806,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -837,7 +843,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -878,7 +884,7 @@ LOCAL_MODULE := libc_openbsd_ndk
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -916,7 +922,7 @@ LOCAL_MODULE := libc_openbsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -955,7 +961,7 @@ LOCAL_MODULE := libc_gdtoa
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -980,7 +986,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1009,7 +1015,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1039,11 +1045,11 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
-
 
 # ========================================================
 # libc_cxa.a - Things traditionally in libstdc++
@@ -1063,7 +1069,7 @@ LOCAL_CLANG := true # GCC refuses to hide new/delete
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 # b/17574078: Need to disable coverage until we have a prebuilt libprofile_rt.
 # Since this is a static library built with clang, it needs to link
 # libprofile_rt when it is linked into the final binary. Since the final binary
@@ -1073,6 +1079,7 @@ LOCAL_SANITIZE := never
 # would make sure libprofile_rt is built.
 LOCAL_NATIVE_COVERAGE := false
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -1091,7 +1098,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 include $(BUILD_STATIC_LIBRARY)
@@ -1113,9 +1120,10 @@ LOCAL_CFLAGS := $(libc_common_cflags) -fno-builtin
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
@@ -1139,7 +1147,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CFLAGS := $(libc_common_cflags) -fvisibility=hidden -O0
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
@@ -1219,7 +1227,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # TODO: split out the asflags.
 LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1256,7 +1264,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common libc_init_static
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1279,9 +1287,11 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_malloc
 LOCAL_CLANG := $(use_clang)
 LOCAL_CXX_STL := none
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -1308,7 +1318,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := libc_common libc_init_static libjemalloc
 
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1405,9 +1415,10 @@ LOCAL_CFLAGS_arm += -DCRT_LEGACY_WORKAROUND
 LOCAL_SRC_FILES_arm += \
     arch-arm/bionic/atexit_legacy.c
 
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_SHARED_LIBRARY)
 
 # ========================================================
@@ -1429,7 +1440,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
@@ -1458,8 +1469,10 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_STATIC_LIBRARIES := libc_logging
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_SHARED_LIBRARY)
 
 # ========================================================
@@ -1474,8 +1487,10 @@ LOCAL_MODULE:= libstdc++
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 include $(BUILD_STATIC_LIBRARY)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))

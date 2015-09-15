@@ -59,7 +59,14 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   // The -fstack-protector implementation uses TLS, so make sure that's
   // set up before we call any function that might get a stack check inserted.
+#ifdef BIONIC_SAFESTACK
+  // Preserve the unsafe stack pointer.
+  void* unsafe = __get_tls()[TLS_SLOT_SAFESTACK];
   __set_tls(main_thread.tls);
+  main_thread.tls[TLS_SLOT_SAFESTACK] = unsafe;
+#else
+  __set_tls(main_thread.tls);
+#endif
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
@@ -88,5 +95,5 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // picked up by the libc constructor.
   main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
-  __init_alternate_signal_stack(&main_thread);
+  __init_alternate_signal_stack(&main_thread, nullptr, 0);
 }

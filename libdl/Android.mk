@@ -49,7 +49,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk \
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 include $(BUILD_SHARED_LIBRARY)
 
 # A dummy libdl.a. Need for static executables using the LLVM unwinder. Most
@@ -62,5 +62,5 @@ LOCAL_CXX_STL := none
 
 LOCAL_MODULE := libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 include $(BUILD_STATIC_LIBRARY)

@@ -40,10 +40,13 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_page.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_tls.h"
+#include "private/libc_logging.h"
 #include "private/KernelArgumentBlock.h"
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
+extern "C" int __set_tls(void* ptr);
 
 static void call_array(void(**list)()) {
   // First element is -1, list is null-terminated
@@ -77,13 +80,15 @@ static void apply_gnu_relro() {
 // The 'structors' parameter contains pointers to various initializer
 // arrays that must be run before the program's 'main' routine is launched.
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+static void __real_libc_init_0(void* raw_args) {
   KernelArgumentBlock args(raw_args);
   __libc_init_main_thread(args);
+}
 
+static __noreturn void __real_libc_init(void* raw_args, void (*onexit)(void) __unused,
+                                        int (*slingshot)(int, char**, char**),
+                                        structors_array_t const* const structors) {
+  KernelArgumentBlock args(raw_args);
   // Initializing the globals requires TLS to be available for errno.
   __libc_init_globals(args);
 
@@ -102,11 +107,44 @@ __noreturn void __libc_init(void* raw_args,
   // so we need to ensure that these are called when the program exits
   // normally.
   if (structors->fini_array != NULL) {
-    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+    __cxa_atexit(__libc_fini, structors->fini_array, NULL);
   }
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
+
+#ifdef BIONIC_SAFESTACK
+__attribute__((optnone, no_sanitize("safe-stack")))
+__noreturn void __libc_init(void* raw_args,
+                            void (*onexit)(void),
+                            int (*slingshot)(int, char**, char**),
+                            structors_array_t const * const structors) {
+  // Bootstrap SafeStack by providing a small buffer on the system stack to be used as unsafe stack
+  // until libc is sufficiently initialized.
+  static const size_t kInitialUnsafeStackSize = 0x4000;
+  char unsafe_stack[kInitialUnsafeStackSize];
+  void* tls[BIONIC_TLS_SLOTS] = {};
+  tls[TLS_SLOT_SAFESTACK] = &unsafe_stack[0] + kInitialUnsafeStackSize;
+  __set_tls(&tls);
+
+  __real_libc_init_0(raw_args);
+
+  // At this point the real TLS is installed (see __libc_init_main_thread) for the main thread. The
+  // temporary unsafe stack is entirely out of scope and ready to be replaced with the properly
+  // randomized allocation.
+  __get_tls()[TLS_SLOT_SAFESTACK] = __init_main_thread_unsafe_stack();
+
+  __real_libc_init(raw_args, onexit, slingshot, structors);
+}
+#else
+__noreturn void __libc_init(void* raw_args,
+                            void (*onexit)(void),
+                            int (*slingshot)(int, char**, char**),
+                            structors_array_t const * const structors) {
+  __real_libc_init_0(raw_args);
+  __real_libc_init(raw_args, onexit, slingshot, structors);
+}
+#endif
 
 uint32_t bionic_get_application_target_sdk_version() {
   return __ANDROID_API__;
