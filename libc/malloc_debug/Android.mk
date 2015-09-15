@@ -30,7 +30,7 @@ LOCAL_STATIC_LIBRARIES += \
 LOCAL_C_INCLUDES += bionic/libc
 LOCAL_EXPORT_C_INCLUDE_DIRS += $(LOCAL_PATH)
 
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := false
 
 # -Wno-error=format-zero-length needed for gcc to compile.
@@ -66,7 +66,7 @@ LOCAL_LDFLAGS_64 := -Wl,--version-script,$(LOCAL_PATH)/exported64.map
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_C_INCLUDES += bionic/libc
 
-LOCAL_SANITIZE := never
+LOCAL_NOSANITIZE := address thread
 LOCAL_NATIVE_COVERAGE := false
 
 # -Wno-error=format-zero-length needed for gcc to compile.

@@ -67,6 +67,10 @@ endif
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
 
+ifeq ($(strip $(USE_SAFESTACK)),true)
+  LOCAL_CFLAGS_64 += -DBIONIC_SAFESTACK
+endif
+
 # we don't want crtbegin.o (because we have begin.o), so unset it
 # just for this module
 LOCAL_NO_CRT := true
