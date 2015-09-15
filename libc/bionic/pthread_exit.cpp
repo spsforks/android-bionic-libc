@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
+#include "private/bionic_safestack.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -90,6 +91,8 @@ void pthread_exit(void* return_value) {
     munmap(thread->alternate_signal_stack, SIGNAL_STACK_SIZE);
     thread->alternate_signal_stack = NULL;
   }
+
+  __unsafe_stack_free(thread);
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
   while (old_state == THREAD_NOT_JOINED &&
