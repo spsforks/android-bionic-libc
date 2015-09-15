@@ -50,6 +50,25 @@
 #define _JB_SIGMASK 9
 #define _JB_SIGMASK_RT 10 // sigprocmask will write here too.
 
+#define MANGLE_REGISTERS 1
+.macro m_mangle_registers reg
+#if MANGLE_REGISTERS
+  xorq \reg, %rbx
+  xorq \reg, %rbp
+  xorq \reg, %r12
+  xorq \reg, %r13
+  xorq \reg, %r14
+  xorq \reg, %r15
+  xorq \reg, %rsp
+  xorq \reg, %r11
+#endif
+.endm
+
+.macro m_unmangle_registers reg
+  m_mangle_registers \reg
+.endm
+
+
 ENTRY(setjmp)
   movl $1,%esi
   jmp PIC_PLT(sigsetjmp)
@@ -62,11 +81,18 @@ END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
-  // Record whether or not we're saving the signal mask.
-  movl %esi,(_JB_SIGFLAG * 8)(%rdi)
+  pushq %rdi
+  movq %rsi, %rdi
+  call PIC_PLT(__bionic_setjmp_cookie_get)
+  popq %rdi
+
+  // Record setjmp cookie and whether or not we're saving the signal mask.
+  movq %rax,(_JB_SIGFLAG * 8)(%rdi)
+  pushq %rax
+  andq $1, %rax
 
   // Do we need to save the signal mask?
-  testl %esi,%esi
+  testq %rax,%rax
   jz 2f
 
   // Save current signal mask.
@@ -79,7 +105,10 @@ ENTRY(sigsetjmp)
 
 2:
   // Save the callee-save registers.
+  popq %rax
+  andq $-2, %rax
   movq (%rsp),%r11
+  m_mangle_registers %rax
   movq %rbx,(_JB_RBX * 8)(%rdi)
   movq %rbp,(_JB_RBP * 8)(%rdi)
   movq %r12,(_JB_R12 * 8)(%rdi)
@@ -88,6 +117,7 @@ ENTRY(sigsetjmp)
   movq %r15,(_JB_R15 * 8)(%rdi)
   movq %rsp,(_JB_RSP * 8)(%rdi)
   movq %r11,(_JB_PC  * 8)(%rdi)
+  m_unmangle_registers %rax
 
   xorl %eax,%eax
   ret
@@ -99,7 +129,11 @@ ENTRY(siglongjmp)
   pushq %rsi // Push 'value'.
 
   // Do we need to restore the signal mask?
-  cmpl $0,(_JB_SIGFLAG * 8)(%rdi)
+  movq (_JB_SIGFLAG * 8)(%rdi), %rdi
+  pushq %rdi // Push cookie.
+  call PIC_PLT(__bionic_setjmp_cookie_check)
+
+  cmpq $0,%rax
   jz 2f
 
   // Restore the signal mask.
@@ -109,6 +143,10 @@ ENTRY(siglongjmp)
   call PIC_PLT(sigprocmask)
 
 2:
+  // Fetch the setjmp cookie and clear the signal flag bit.
+  popq %rcx
+  andq $-2, %rcx
+
   popq %rax // Pop 'value'.
 
   // Restore the callee-save registers.
@@ -120,6 +158,7 @@ ENTRY(siglongjmp)
   movq (_JB_RSP * 8)(%r12),%rsp
   movq (_JB_PC  * 8)(%r12),%r11
   movq (_JB_R12 * 8)(%r12),%r12
+  m_unmangle_registers %rcx
 
   testl %eax,%eax
   jnz 1f
