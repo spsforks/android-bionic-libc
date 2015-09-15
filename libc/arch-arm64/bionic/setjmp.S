@@ -99,13 +99,12 @@ ENTRY(sigsetjmp)
   ldr x0, [sp, #0]
   str x1, [x0, #(_JB_SIGFLAG * 8)]
 
+  // Do we need to save the signal mask?
+  tbz w1, #0, 1f
+
   // Save the cookie for later.
-  bic x1, x1, #1
   stp x1, xzr, [sp, #-16]!
   .cfi_adjust_cfa_offset 16
-
-  // Do we need to save the signal mask?
-  tbnz w1, #0, 1f
 
   // Save current signal mask.
   // The 'how' argument is ignored if new_mask is NULL.
@@ -113,15 +112,18 @@ ENTRY(sigsetjmp)
   add x2, x0, #(_JB_SIGMASK * 8) // old_mask.
   bl sigprocmask
 
-1:
   ldp x1, xzr, [sp], #16
   .cfi_adjust_cfa_offset -16
 
+1:
   // Restore original x0 and lr.
   ldp x0, x30, [sp], #16
   .cfi_adjust_cfa_offset -16
   .cfi_restore x0
   .cfi_restore x30
+
+  // Mask off the signal flag bit.
+  bic x1, x1, #1
 
   // Save core registers.
   mov x10, sp
@@ -147,27 +149,14 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+  // Do we need to restore the signal mask?
+  ldr x2, [x0, #(_JB_SIGFLAG * 8)]
+  tbz w2, #0, 1f
+
   stp x0, x30, [sp, #-16]!
   .cfi_def_cfa_offset 16
   .cfi_rel_offset x0, 0
   .cfi_rel_offset x30, 8
-
-  // Do we need to restore the signal mask?
-  stp x0, x1, [sp, #-16]!
-  .cfi_adjust_cfa_offset 16
-  .cfi_rel_offset x1, 8
-
-  ldr x0, [x0, #(_JB_SIGFLAG * 8)]
-
-  // Save the cookie for later in x20.
-  bic x20, x0, #1
-
-  bl __bionic_setjmp_cookie_check
-  mov x9, x0
-  ldp x0, x1, [sp], #16
-  .cfi_adjust_cfa_offset -16
-  .cfi_restore x1
-  cbz x9, 1f
 
   // Restore signal mask.
   mov x19, x1 // Save 'value'.
@@ -182,18 +171,16 @@ ENTRY(siglongjmp)
   mov x1, x19 // Restore 'value'.
   .cfi_restore x1
 
-1:
   // Restore original x0 and lr.
   ldp x0, x30, [sp], #16
   .cfi_adjust_cfa_offset -16
   .cfi_restore x0
   .cfi_restore x30
 
-  // Move the cookie that was stored previously to a register that's not about
-  // to be trashed.
-  mov x2, x20
-
+  ldr x2, [x0, #(_JB_SIGFLAG * 8)]
+1:
   // Restore core registers.
+  bic x2, x2, #1
   ldp x30, x10, [x0, #(_JB_X30_SP  * 8)]
   ldp x28, x29, [x0, #(_JB_X28_X29 * 8)]
   ldp x26, x27, [x0, #(_JB_X26_X27 * 8)]
@@ -203,6 +190,13 @@ ENTRY(siglongjmp)
   ldr x19,      [x0, #(_JB_X19     * 8)]
   m_unmangle_registers x2, sp_reg=x10
   mov sp, x10
+
+  stp x0, x1, [sp, #-16]!
+  stp x30, xzr, [sp, #-16]!
+  ldr x0, [x0, #(_JB_SIGFLAG * 8)]
+  bl __bionic_setjmp_cookie_check
+  ldp x30, xzr, [sp], #16
+  ldp x0, x1, [sp], #16
 
   // Restore floating point registers.
   ldp d14, d15, [x0, #(_JB_D14_D15 * 8)]
