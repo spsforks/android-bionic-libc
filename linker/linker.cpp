@@ -44,6 +44,7 @@
 #include <vector>
 
 // Private C library headers.
+#include "private/bionic_safestack.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -3243,6 +3244,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
+
+  // Unsafe stack initialization needs system properties.
+  __unsafe_stack_main_thread_init();
 
   debuggerd_init();
 
