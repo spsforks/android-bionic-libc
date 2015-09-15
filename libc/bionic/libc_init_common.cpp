@@ -42,6 +42,7 @@
 #include <unistd.h>
 
 #include "private/bionic_auxv.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -101,6 +102,8 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // Store a pointer to the kernel argument block in a TLS slot to be
   // picked up by the libc constructor.
   main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
+
+  __unsafe_stack_main_thread_init();
 
   __init_alternate_signal_stack(&main_thread);
 }

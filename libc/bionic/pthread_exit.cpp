@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
+#include "private/bionic_safestack.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -119,6 +120,8 @@ void pthread_exit(void* return_value) {
       _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
     }
   }
+
+  __unsafe_stack_free(thread);
 
   // No need to free mapped space. Either there was no space mapped, or it is left for
   // the pthread_join caller to clean up.
