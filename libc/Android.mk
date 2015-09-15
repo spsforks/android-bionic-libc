@@ -552,6 +552,7 @@ libc_pthread_src_files := \
     bionic/pthread_setname_np.cpp \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
+    bionic/safestack.cpp \
 
 libc_thread_atexit_impl_src_files := \
     bionic/__cxa_thread_atexit_impl.cpp \
@@ -621,6 +622,10 @@ endif
 #
 ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
+endif
+
+ifeq ($(strip $(USE_SAFESTACK)),true)
+  libc_common_cflags += -DBIONIC_SAFESTACK
 endif
 
 # Define some common conlyflags

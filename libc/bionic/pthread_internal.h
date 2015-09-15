@@ -89,6 +89,9 @@ struct pthread_internal_t {
 
   void* alternate_signal_stack;
 
+  void* unsafe_stack_start;
+  size_t unsafe_stack_size;
+
   pthread_mutex_t startup_handshake_mutex;
 
   size_t mmap_size;
@@ -107,7 +110,8 @@ struct pthread_internal_t {
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*, char*,
+                                                   size_t);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
