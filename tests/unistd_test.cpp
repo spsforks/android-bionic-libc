@@ -837,3 +837,24 @@ TEST(unistd, dup2_same) {
   ASSERT_EQ(-1, dup2(fd, fd));
   ASSERT_EQ(EBADF, errno);
 }
+
+TEST(unistd, lockf) {
+  int fd, ret;
+  TemporaryFile tf;
+  ASSERT_EQ(0, close(tf.fd));
+  fd = open(tf.filename, O_RDWR); // not support |O_CREAT, why?
+  ret = lockf(fd, F_TEST, 0);
+  ASSERT_EQ(ret, 0);
+  ret = lockf(fd, F_TEST, 0);
+  ASSERT_EQ(ret, 0);
+  ret = lockf(fd, F_LOCK, 0);
+  ASSERT_TRUE(ret == 0);
+  ret = lockf(fd, F_TEST, 0);
+  ASSERT_EQ(ret, 0);
+  ret = lockf(fd, F_ULOCK, 0);
+  ASSERT_EQ(ret, 0);
+  ret = lockf(fd, F_TEST, 0);
+  ASSERT_EQ(ret, 0);
+  ASSERT_TRUE(0); // Houcheng intentionlly made it worng
+  close(fd);
+}

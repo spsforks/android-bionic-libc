@@ -73,6 +73,11 @@ __BEGIN_DECLS
 #define _PC_PRIO_IO 18
 #define _PC_SYNC_IO 19
 
+#define F_ULOCK 0
+#define F_LOCK  1
+#define F_TLOCK 2
+#define F_TEST  3
+
 extern char** environ;
 
 extern __noreturn void _exit(int __status);
@@ -172,6 +177,16 @@ extern off_t lseek(int __fd, off_t __offset, int __whence);
 #endif
 
 extern off64_t lseek64(int __fd, off64_t __offset, int __whence);
+
+#if defined(__USE_FILE_OFFSET64)
+extern int lockf (int fd, int cmd, off_t len) __RENAME(lockf64);
+#else
+extern int lockf (int fd, int cmd, off_t len);
+#endif
+
+extern int lockf64(int fd, int cmd, off64_t len);
+
+
 
 #if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= 21
 extern int truncate(const char* __path, off_t __length) __RENAME(truncate64);

@@ -707,6 +707,8 @@ LIBC {
     localtime64; # arm x86 mips
     localtime64_r; # arm x86 mips
     localtime_r;
+    lockf;
+    lockf64;
     login_tty;
     longjmp;
     lrand48;
