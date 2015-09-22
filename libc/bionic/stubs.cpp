@@ -206,7 +206,7 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
 // u0_a1234 -> 0 * AID_USER + AID_APP + 1234
 // u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
 // u1_system -> 1 * AID_USER + android_ids['system']
-// returns 0 and sets errno to ENOENT in case of error
+// returns 0 and sets errno to ENOENT in case of error.
 static id_t app_id_from_name(const char* name, bool is_group) {
   char* end;
   unsigned long userid;
@@ -312,6 +312,64 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+// Translate an OEM name to the corresponding user/group id.
+// oem_XXX -> AID_OEM_RESERVED_2_START + XXX, iff XXX is within range.
+static id_t oem_id_from_name(const char* name) {
+  if (!(name[0] == 'o' && name[1] == 'e' && name[2] == 'm' && name[3] == '_')) {
+    return 0;
+  }
+
+  char* end = const_cast<char*>(name + 4);
+  if (*end == '\0') {
+    // There are no digits after "oem_".
+    return 0;
+  }
+  id_t id = strtoul(end, &end, 10);
+  if (*end != '\0') {
+    // There are extra non-digit characteres at the end of the string.
+    return 0;
+  }
+  // Check OEM id is within range.
+  if (id > (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START)) {
+    return 0;
+  }
+  return AID_OEM_RESERVED_2_START + id;
+}
+
+static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
+  if (uid < AID_OEM_RESERVED_2_START || uid > AID_OEM_RESERVED_2_END) {
+    return NULL;
+  }
+
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%d",
+           uid - AID_OEM_RESERVED_2_START);
+  snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+
+  passwd* pw = &state->passwd_;
+  pw->pw_name  = state->name_buffer_;
+  pw->pw_dir   = state->dir_buffer_;
+  pw->pw_shell = state->sh_buffer_;
+  pw->pw_uid   = uid;
+  pw->pw_gid   = uid;
+  return pw;
+}
+
+static group* oem_id_to_group(gid_t gid, group_state_t* state) {
+  if (gid < AID_OEM_RESERVED_2_START || gid > AID_OEM_RESERVED_2_END) {
+    return NULL;
+  }
+
+  snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
+           "oem_%d", gid - AID_OEM_RESERVED_2_START);
+
+  group* gr = &state->group_;
+  gr->gr_name   = state->group_name_buffer_;
+  gr->gr_gid    = gid;
+  gr->gr_mem[0] = gr->gr_name;
+  return gr;
+}
+
 // Translate a uid into the corresponding name.
 // 0 to AID_APP-1                   -> "system", "radio", etc.
 // AID_APP to AID_ISOLATED_START-1  -> u0_a1234
@@ -371,6 +429,11 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
+  // Handle OEM range.
+  pw = oem_id_to_passwd(uid, state);
+  if (pw != NULL) {
+    return pw;
+  }
   return app_id_to_passwd(uid, state);
 }
 
@@ -381,6 +444,11 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   }
 
   passwd* pw = android_name_to_passwd(state, login);
+  if (pw != NULL) {
+    return pw;
+  }
+  // Handle OEM range.
+  pw = oem_id_to_passwd(oem_id_from_name(login), state);
   if (pw != NULL) {
     return pw;
   }
@@ -407,6 +475,11 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   if (grp != NULL) {
     return grp;
   }
+  // Handle OEM range.
+  grp = oem_id_to_group(gid, state);
+  if (grp != NULL) {
+    return grp;
+  }
   return app_id_to_group(gid, state);
 }
 
@@ -420,6 +493,11 @@ group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
 
 static group* getgrnam_internal(const char* name, group_state_t* state) {
   group* grp = android_name_to_group(state, name);
+  if (grp != NULL) {
+    return grp;
+  }
+  // Handle OEM range.
+  grp = oem_id_to_group(oem_id_from_name(name), state);
   if (grp != NULL) {
     return grp;
   }
