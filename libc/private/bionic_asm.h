@@ -38,27 +38,59 @@
 
 #include <machine/asm.h>
 
+#define INTERNAL(FNAME) __bionic_##FNAME
+#define WEAK_ALIAS(alias, original) \
+  .weak alias; \
+  .equ alias, original
+
+
 #define ENTRY(f) \
     .text; \
-    .globl f; \
+    .globl INTERNAL(f);        \
     .align __bionic_asm_align; \
-    .type f, __bionic_asm_function_type; \
-    f: \
-    __bionic_asm_custom_entry(f); \
+    .type INTERNAL(f), __bionic_asm_function_type;      \
+    INTERNAL(f):                                        \
+    __bionic_asm_custom_entry(INTERNAL(f));             \
     .cfi_startproc \
 
 #define END(f) \
     .cfi_endproc; \
-    .size f, .-f; \
-    __bionic_asm_custom_end(f) \
+    .size INTERNAL(f), .-INTERNAL(f);           \
+    __bionic_asm_custom_end(INTERNAL(f));       \
+    WEAK_ALIAS(f, INTERNAL(f))
 
 /* Like ENTRY, but with hidden visibility. */
 #define ENTRY_PRIVATE(f) \
     ENTRY(f); \
-    .hidden f \
+    .hidden INTERNAL(f)                         \
 
-#define ALIAS_SYMBOL(alias, original) \
-    .globl alias; \
-    .equ alias, original
+#define ENTRY_NOINTERNAL(f) \
+    .text; \
+    .globl f;        \
+    .align __bionic_asm_align; \
+    .type f, __bionic_asm_function_type;      \
+    f:                                        \
+    __bionic_asm_custom_entry(f);             \
+    .cfi_startproc \
+
+#define END_NOINTERNAL(f) \
+    .cfi_endproc; \
+    .size f, .-f;           \
+    __bionic_asm_custom_end(f);       \
+
+/* Like ENTRY, but with hidden visibility. */
+#define ENTRY_PRIVATE(f) \
+    ENTRY(f); \
+    .hidden INTERNAL(f)                         \
+
+
+/* This is somewhat more convoluted, but the C API
+   defines __bionic_foo() and generates a weak alias foo that points back to
+   __bionic_foo(). We mirror that here*/
+
+#define ALIAS_SYMBOL(alias, original)  \
+  .globl INTERNAL(alias);               \
+  .equ INTERNAL(alias), original;       \
+  WEAK_ALIAS(alias, INTERNAL(alias))
 
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

@@ -46,3 +46,6 @@ memchr(const void *s, int c, size_t n)
 	}
 	return (NULL);
 }
+
+#define MEMCHR_C
+#include "bionic_external_symbols.h"

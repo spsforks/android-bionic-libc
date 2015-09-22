@@ -59,3 +59,6 @@ memccpy(void *t, const void *f, int c, size_t n)
 	}
 	return (0);
 }
+
+#define MEMCCPY_C
+#include "bionic_external_symbols.h"

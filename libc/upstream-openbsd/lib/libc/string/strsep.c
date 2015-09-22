@@ -68,3 +68,6 @@ strsep(char **stringp, const char *delim)
 	}
 	/* NOTREACHED */
 }
+
+#define STRSEP_C
+#include "bionic_external_symbols.h"

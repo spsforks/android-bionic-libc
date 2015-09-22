@@ -331,14 +331,14 @@ static inline void add_to_backlog(hdr_t* hdr) {
     while (backlog_num > g_malloc_debug_backlog) {
         hdr_t* gone = backlog_tail;
         del_from_backlog_locked(gone);
-        g_malloc_dispatch->free(gone->base);
+        g_malloc_dispatch->_free(gone->base);
     }
 }
 
 extern "C" void* chk_malloc(size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->malloc(bytes);
+        return g_malloc_dispatch->_malloc(bytes);
     }
 
     size_t size = sizeof(hdr_t) + bytes + sizeof(ftr_t);
@@ -346,7 +346,7 @@ extern "C" void* chk_malloc(size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->malloc(size));
+    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->_malloc(size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = GET_BACKTRACE(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -358,7 +358,7 @@ extern "C" void* chk_malloc(size_t bytes) {
 
 extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->memalign(alignment, bytes);
+        return g_malloc_dispatch->_memalign(alignment, bytes);
     }
 
     if (alignment <= MALLOC_ALIGNMENT) {
@@ -378,7 +378,7 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
         return NULL;
     }
 
-    void* base = g_malloc_dispatch->malloc(sizeof(hdr_t) + size + sizeof(ftr_t));
+    void* base = g_malloc_dispatch->_malloc(sizeof(hdr_t) + size + sizeof(ftr_t));
     if (base != NULL) {
         // Check that the actual pointer that will be returned is aligned
         // properly.
@@ -400,7 +400,7 @@ extern "C" void* chk_memalign(size_t alignment, size_t bytes) {
 extern "C" void chk_free(void* ptr) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->free(ptr);
+        return g_malloc_dispatch->_free(ptr);
     }
 
     if (!ptr) /* ignore free(NULL) */
@@ -442,7 +442,7 @@ extern "C" void chk_free(void* ptr) {
 extern "C" void* chk_realloc(void* ptr, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->realloc(ptr, bytes);
+        return g_malloc_dispatch->_realloc(ptr, bytes);
     }
 
     if (!ptr) {
@@ -489,7 +489,7 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
                 log_backtrace(bt, depth);
             }
             // just get a whole new allocation and leak the old one
-            return g_malloc_dispatch->realloc(0, bytes);
+            return g_malloc_dispatch->_realloc(0, bytes);
             // return realloc(user(hdr), bytes); // assuming it was allocated externally
         }
     }
@@ -502,15 +502,15 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
     if (hdr->base != hdr) {
         // An allocation from memalign, so create another allocation and
         // copy the data out.
-        void* newMem = g_malloc_dispatch->malloc(size);
+        void* newMem = g_malloc_dispatch->_malloc(size);
         if (newMem == NULL) {
             return NULL;
         }
         memcpy(newMem, hdr, sizeof(hdr_t) + hdr->size);
-        g_malloc_dispatch->free(hdr->base);
+        g_malloc_dispatch->_free(hdr->base);
         hdr = static_cast<hdr_t*>(newMem);
     } else {
-        hdr = static_cast<hdr_t*>(g_malloc_dispatch->realloc(hdr, size));
+        hdr = static_cast<hdr_t*>(g_malloc_dispatch->_realloc(hdr, size));
     }
     if (hdr) {
         hdr->base = hdr;
@@ -524,7 +524,7 @@ extern "C" void* chk_realloc(void* ptr, size_t bytes) {
 extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
 //  log_message("%s: %s\n", __FILE__, __FUNCTION__);
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->calloc(nmemb, bytes);
+        return g_malloc_dispatch->_calloc(nmemb, bytes);
     }
 
     size_t total_bytes = nmemb * bytes;
@@ -533,7 +533,7 @@ extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
         errno = ENOMEM;
         return NULL;
     }
-    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->calloc(1, size));
+    hdr_t* hdr = static_cast<hdr_t*>(g_malloc_dispatch->_calloc(1, size));
     if (hdr) {
         hdr->base = hdr;
         hdr->bt_depth = GET_BACKTRACE(hdr->bt, MAX_BACKTRACE_DEPTH);
@@ -545,7 +545,7 @@ extern "C" void* chk_calloc(size_t nmemb, size_t bytes) {
 
 extern "C" size_t chk_malloc_usable_size(const void* ptr) {
     if (DebugCallsDisabled()) {
-        return g_malloc_dispatch->malloc_usable_size(ptr);
+        return g_malloc_dispatch->_malloc_usable_size(ptr);
     }
 
     // malloc_usable_size returns 0 for NULL and unknown blocks.
@@ -560,12 +560,12 @@ extern "C" size_t chk_malloc_usable_size(const void* ptr) {
 }
 
 extern "C" struct mallinfo chk_mallinfo() {
-  return g_malloc_dispatch->mallinfo();
+  return g_malloc_dispatch->_mallinfo();
 }
 
 extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) {
   if (DebugCallsDisabled()) {
-    return g_malloc_dispatch->posix_memalign(memptr, alignment, size);
+    return g_malloc_dispatch->_posix_memalign(memptr, alignment, size);
   }
 
   if (!powerof2(alignment)) {
@@ -580,7 +580,7 @@ extern "C" int chk_posix_memalign(void** memptr, size_t alignment, size_t size) 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* chk_pvalloc(size_t bytes) {
   if (DebugCallsDisabled()) {
-    return g_malloc_dispatch->pvalloc(bytes);
+    return g_malloc_dispatch->_pvalloc(bytes);
   }
 
   size_t pagesize = getpagesize();
@@ -593,7 +593,7 @@ extern "C" void* chk_pvalloc(size_t bytes) {
 
 extern "C" void* chk_valloc(size_t size) {
   if (DebugCallsDisabled()) {
-    return g_malloc_dispatch->valloc(size);
+    return g_malloc_dispatch->_valloc(size);
   }
   return chk_memalign(getpagesize(), size);
 }
