@@ -33,6 +33,7 @@
 
 #include <linux/prctl.h>
 
+#include "bionic_internal_symbols.h"
 __BEGIN_DECLS
 
 extern int prctl(int option, ...);

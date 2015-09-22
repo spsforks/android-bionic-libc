@@ -40,3 +40,5 @@ int posix_madvise(void* addr, size_t len, int advice) {
   }
   return (madvise(addr, len, advice) == 0 ? 0 : errno);
 }
+#define POSIX_MADVISE_CPP
+#include "bionic_external_symbols.h"

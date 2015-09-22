@@ -55,3 +55,6 @@ strncat(char *dst, const char *src, size_t n)
 	}
 	return (dst);
 }
+
+#define STRNCAT_C
+#include "bionic_external_symbols.h"

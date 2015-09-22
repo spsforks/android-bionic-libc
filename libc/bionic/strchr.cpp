@@ -33,3 +33,6 @@
 char* strchr(const char* p, int ch) {
   return __strchr_chk(p, ch, __BIONIC_FORTIFY_UNKNOWN_SIZE);
 }
+
+#define STRCHR_CPP
+#include "bionic_external_symbols.h"

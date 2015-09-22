@@ -26,7 +26,8 @@
  * SUCH DAMAGE.
  */
 #include <stdarg.h>
-
+#define _SYS_IOCTL_H_
+#include "bionic_internal_symbols.h"
 extern int __ioctl(int, int, void *);
 
 int ioctl(int fd, int request, ...)
@@ -41,3 +42,6 @@ int ioctl(int fd, int request, ...)
     return __ioctl(fd, request, arg);
 }
 
+
+#define IOCTL_C
+#include "bionic_external_symbols.h"

@@ -67,3 +67,6 @@ strcasestr(const char *s, const char *find)
 	}
 	return __UNCONST(s);
 }
+
+#define STRCASESTR_C
+#include "bionic_external_symbols.h"

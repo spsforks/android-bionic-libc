@@ -44,3 +44,6 @@ strcpy(char *to, const char *from)
 	for (; (*to = *from) != '\0'; ++from, ++to);
 	return(save);
 }
+
+#define STRCPY_C
+#include "bionic_external_symbols.h"
