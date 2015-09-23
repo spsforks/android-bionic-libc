@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include <string>
 
+#include <selinux/selinux.h>
+
 #if defined(__BIONIC__)
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
@@ -41,9 +43,6 @@ struct LocalPropertyTestState {
             return;
         }
 
-        old_pa = __system_property_area__;
-        __system_property_area__ = NULL;
-
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
 
@@ -57,9 +56,8 @@ struct LocalPropertyTestState {
             return;
         }
 
-        __system_property_area__ = old_pa;
-
         __system_property_set_filename(PROP_FILENAME);
+        __system_properties_init();
         unlink(pa_filename.c_str());
         rmdir(pa_dirname.c_str());
     }
@@ -68,7 +66,6 @@ public:
 private:
     std::string pa_dirname;
     std::string pa_filename;
-    void *old_pa;
 };
 
 static void foreach_test_callback(const prop_info *pi, void* cookie) {
@@ -136,6 +133,63 @@ TEST(properties, add) {
 
     ASSERT_EQ(6, __system_property_get("property_other", propvalue));
     ASSERT_STREQ(propvalue, "value3");
+#else // __BIONIC__
+    GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
+
+#if defined(__BIONIC__)
+template <typename T>
+int fork_then_run(T tester) {
+    pid_t pid;
+    pid = fork();
+    if (pid > 0) {
+        int status;
+        int wp_ret = TEMP_FAILURE_RETRY(waitpid(pid, &status, 0));
+        if (wp_ret < 0) {
+            /* Unexpected error code. We will continue anyway. */
+        }
+
+        if (WIFEXITED(status)) {
+            return WEXITSTATUS(status);
+        } else {
+            return -1;
+        }
+    } else if (pid == 0) {
+        if (setcon("u:r:bionic_sub_test:s0") < 0) {
+            _exit(-1);
+        }
+        if (__system_properties_init() < 0) {
+            _exit(-1);
+        }
+        _exit(tester());
+    } else {
+        return -1;
+    }
+}
+#endif
+
+TEST(properties, read_secured) {
+#if defined(__BIONIC__)
+    LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
+
+    ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
+    ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
+    ASSERT_EQ(0, __system_property_add("sys.system_property", 14, "value3", 6));
+    ASSERT_EQ(0, __system_property_add("selinux.security_prop", 14, "value4", 6));
+
+    auto tester = [](const std::string& property, const std::string& expected) {
+        char propvalue[PROP_VALUE_MAX];
+        int ret = __system_property_get(property.c_str(), propvalue);
+        return (ret == static_cast<int>(expected.length()) && expected == propvalue) ? 1 : 0;
+    };
+
+    ASSERT_EQ(1, fork_then_run(std::bind(tester, "property", "value1")));
+    ASSERT_EQ(1, fork_then_run(std::bind(tester, "other_property", "value2")));
+    ASSERT_EQ(0, fork_then_run(std::bind(tester, "sys.system_property", "value3")));
+    ASSERT_EQ(0, fork_then_run(std::bind(tester, "selinux.security_prop", "value4")));
+
 #else // __BIONIC__
     GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
