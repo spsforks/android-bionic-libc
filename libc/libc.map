@@ -1365,6 +1365,7 @@ LIBC_PRIVATE {
     __aeabi_cdrcmple; # arm
     __aeabi_d2f; # arm
     __aeabi_d2iz; # arm
+    __aeabi_d2ulz; # arm
     __aeabi_dadd; # arm
     __aeabi_dcmpeq; # arm
     __aeabi_dcmpge; # arm
