@@ -281,6 +281,7 @@ bionic-unit-tests_static_libraries := \
     libtinyxml2 \
     liblog \
     libbase \
+    libselinux \
 
 # TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
 bionic-unit-tests_src_files := \
@@ -338,6 +339,7 @@ bionic-unit-tests-static_static_libraries := \
     libtinyxml2 \
     liblog \
     libbase \
+    libselinux \
 
 bionic-unit-tests-static_force_static_executable := true
 
