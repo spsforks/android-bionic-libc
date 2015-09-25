@@ -251,7 +251,7 @@ endif
 # -----------------------------------------------------------------------------
 libBionicCtsGtestMain_src_files := gtest_main.cpp
 
-libBionicCtsGtestMain_cflags := $(test_cflags)
+libBionicCtsGtestMain_cflags := $(test_cflags) -DJOB_COUNT_FIXED=1
 
 libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT
 
