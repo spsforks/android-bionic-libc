@@ -877,9 +877,11 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   return all_tests_passed;
 }
 
+#if !defined(JOB_COUNT_FIXED)
 static size_t GetProcessorCount() {
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
+#endif
 
 static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
   // To run DeathTest in threadsafe mode, gtest requires that the user must invoke the
@@ -988,7 +990,11 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
   }
 
   // Init default isolation test options.
+#if defined(JOB_COUNT_FIXED)
+  options.job_count = JOB_COUNT_FIXED;
+#else
   options.job_count = GetProcessorCount();
+#endif
   options.test_deadline_ms = DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS;
   options.test_warnline_ms = DEFAULT_GLOBAL_TEST_RUN_WARNLINE_MS;
   options.gtest_color = testing::GTEST_FLAG(color);
