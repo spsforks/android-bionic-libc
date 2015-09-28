@@ -115,6 +115,7 @@ libBionicStandardTests_src_files := \
     unistd_test.cpp \
     utmp_test.cpp \
     wchar_test.cpp \
+    wpvector_test.cpp \
 
 libBionicStandardTests_cflags := \
     $(test_cflags) \
