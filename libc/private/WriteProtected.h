@@ -43,7 +43,7 @@ template <typename T>
 class WriteProtected {
   static_assert(sizeof(T) < PAGE_SIZE,
                 "WriteProtected only supports contents up to PAGE_SIZE");
-  static_assert(__is_pod(T), "WriteProtected only supports POD contents");
+  static_assert(__is_trivial(T), "WriteProtected only supports trivial contents");
 
   WriteProtectedContents<T> contents;
 
