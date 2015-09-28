@@ -28,7 +28,7 @@ libc_common_src_files = [
     "stdio/sprintf.c",
     "stdio/stdio.c",
     "stdio/stdio_ext.cpp",
-    "stdlib/atexit.c",
+    "stdlib/atexit.cpp",
     "stdlib/exit.c",
 
     // Fortify implementations of libc functions.

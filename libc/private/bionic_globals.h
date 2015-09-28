@@ -29,14 +29,26 @@
 #define _PRIVATE_BIONIC_GLOBALS_H
 
 #include <sys/cdefs.h>
+#include <pthread.h>
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
 #include "private/WriteProtected.h"
+
+template <typename T>
+class WPVector;
+
+struct atexit_fn {
+  void (*fn_ptr)(void*);
+  void* fn_arg; /* argument for CXA callback */
+  void* fn_dso; /* shared module handle */
+};
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   MallocDebug malloc_dispatch;
+
+  WPVector<atexit_fn>* atexit;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
@@ -47,4 +59,5 @@ __LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals,
 __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
                                                KernelArgumentBlock& args);
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
+__LIBC_HIDDEN__ void __libc_init_atexit(libc_globals* globals);
 #endif
