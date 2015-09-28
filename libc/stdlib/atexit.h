@@ -30,5 +30,13 @@
  *
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int	__cxa_atexit(void (*)(void *), void *, void *);
 void	__cxa_finalize(void *);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
