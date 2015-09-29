@@ -28,8 +28,10 @@
 
 #include <sys/sysinfo.h>
 
+#include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -61,26 +63,35 @@ int get_nprocs_conf() {
 }
 
 int get_nprocs() {
-  FILE* fp = fopen("/proc/stat", "re");
+  FILE* fp = fopen("/sys/devices/system/cpu/online", "re");
   if (fp == NULL) {
     return 1;
   }
-
-  int result = 0;
+  int cpu_count = 0;
   char buf[256];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    // Extract just the first word from the line.
-    // 'cpu0 7976751 1364388 3116842 469770388 8629405 0 49047 0 0 0'
-    char* p = strchr(buf, ' ');
-    if (p != NULL) {
-      *p = 0;
-    }
-    if (__matches_cpuN(buf)) {
-      ++result;
+  if (fgets(buf, sizeof(buf), fp) != NULL) {
+    // Parse a line like: 0, 2-4, 6.
+    char* p = buf;
+    int last_cpu = -1;
+    while (*p != '\0') {
+      if (isdigit(*p)) {
+        int cpu = static_cast<int>(strtol(p, &p, 10));
+        if (last_cpu != -1) {
+          cpu_count += cpu - last_cpu;
+        } else {
+          cpu_count++;
+        }
+        last_cpu = cpu;
+      } else {
+        if (*p == ',') {
+          last_cpu = -1;
+        }
+        p++;
+      }
     }
   }
   fclose(fp);
-  return result;
+  return cpu_count;
 }
 
 static int __get_meminfo_page_count(const char* pattern) {
