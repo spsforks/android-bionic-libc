@@ -63,7 +63,7 @@ size_t __ctype_get_mb_cur_max() {
   if (l == LC_GLOBAL_LOCALE) {
     return __bionic_current_locale_is_utf8 ? 4 : 1;
   } else {
-    return l->mb_cur_max;
+    return l->mb_cur_max > 0 ? l->mb_cur_max : 1;
   }
 }
 
