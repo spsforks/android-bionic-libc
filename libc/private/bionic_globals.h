@@ -36,10 +36,12 @@
 
 typedef struct {
   vdso_entry vdso[VDSO_END];
+  long setjmp_cookie;
 } libc_globals_t;
 
 __LIBC_HIDDEN__ extern wp<libc_globals_t> __libc_globals;
 
+__LIBC_HIDDEN__ void __bionic_setjmp_cookie_init(wp_mutator<libc_globals_t>& globals);
 __LIBC_HIDDEN__ void __libc_init_vdso(wp_mutator<libc_globals_t>& globals);
 
 #endif  // defined(__cplusplus)
