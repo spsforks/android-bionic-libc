@@ -42,10 +42,12 @@
 #include <unistd.h>
 
 #include "private/bionic_auxv.h"
+#include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/libc_logging.h"
+#include "private/wp.h"
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
@@ -54,7 +56,7 @@ extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
 
-__LIBC_HIDDEN__ void __libc_init_vdso();
+__LIBC_HIDDEN__ wp<libc_globals_t> __libc_globals;
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -122,8 +124,9 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   __system_properties_init(); // Requires 'environ'.
 
+  auto&& globals = __libc_globals.mutate();
   __bionic_setjmp_cookie_init();
-  __libc_init_vdso();
+  __libc_init_vdso(globals);
 }
 
 __noreturn static void __early_abort(int line) {
