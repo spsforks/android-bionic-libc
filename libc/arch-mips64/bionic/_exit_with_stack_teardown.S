@@ -38,4 +38,4 @@ ENTRY_PRIVATE(_exit_with_stack_teardown)
   li	v0, __NR_exit
   syscall
   // The exit syscall does not return.
-END(_exit_with_stack_teardown)
+END_PRIVATE(_exit_with_stack_teardown)

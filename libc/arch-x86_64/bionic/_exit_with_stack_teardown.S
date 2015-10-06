@@ -38,4 +38,4 @@ ENTRY_PRIVATE(_exit_with_stack_teardown)
   mov $__NR_exit, %eax
   syscall
   // The exit syscall does not return.
-END(_exit_with_stack_teardown)
+END_PRIVATE(_exit_with_stack_teardown)
