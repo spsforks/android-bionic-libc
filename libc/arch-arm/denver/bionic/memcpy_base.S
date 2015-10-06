@@ -231,4 +231,4 @@ ENTRY_PRIVATE(MEMCPY_BASE)
 
 .L_memcpy_done:
         pop         {r0, pc}
-END(MEMCPY_BASE)
+END_PRIVATE(MEMCPY_BASE)

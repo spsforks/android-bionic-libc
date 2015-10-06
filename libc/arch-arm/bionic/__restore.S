@@ -50,7 +50,7 @@ ENTRY_PRIVATE_NO_DWARF(__restore)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_sigreturn
   swi #0
-END_NO_DWARF(__restore)
+END_PRIVATE_NO_DWARF(__restore)
 
   .fnstart
   .save {r0-r15}
@@ -60,4 +60,4 @@ ENTRY_PRIVATE_NO_DWARF(__restore_rt)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_rt_sigreturn
   swi #0
-END_NO_DWARF(__restore_rt)
+END_PRIVATE_NO_DWARF(__restore_rt)
