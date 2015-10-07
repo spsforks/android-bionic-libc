@@ -120,7 +120,7 @@ ENTRY_PRIVATE(__restore_rt)
   mov $__NR_rt_sigreturn, %rax
   syscall
 .L__restore_rt_END:
-END(__restore_rt)
+END_PRIVATE(__restore_rt)
 cfi_signal_frame_start(__restore_rt)
   cfi_def_cfa(OFFSET_RSP)
   cfi_offset(DW_x86_64_R8, OFFSET_R8)
