@@ -80,6 +80,14 @@ enum {
    */
   ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80,
 
+  /* Instructs dlopen to load library at the address specified by reserved_addr.
+   * Note that this flag is ignored when ANDROID_DLEXT_FORCE_FIXED_VADDR is set and
+   * load_bias is not 0 (load_bias is min(p_vaddr) of PT_LOAD segments)
+   *
+   * Cannot be used with ANDROID_DLEXT_RESERVED_ADDRESS or ANDROID_DLEXT_RESERVED_ADDRESS_HINT.
+   */
+  ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -88,7 +96,8 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
-                                        ANDROID_DLEXT_FORCE_FIXED_VADDR,
+                                        ANDROID_DLEXT_FORCE_FIXED_VADDR |
+                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS,
 };
 
 typedef struct {
