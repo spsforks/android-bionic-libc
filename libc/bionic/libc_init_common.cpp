@@ -51,7 +51,6 @@
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
-extern "C" void __bionic_setjmp_cookie_init(void);
 extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
@@ -118,6 +117,7 @@ void __libc_init_globals(KernelArgumentBlock& args) {
   __libc_globals = WriteProtected<libc_globals>::allocate("libc globals");
   __libc_globals->mutate([&args](libc_globals* globals) {
     __libc_init_vdso(globals, args);
+    __libc_init_setjmp_cookie(globals, args);
   });
 }
 
@@ -137,7 +137,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
-  __bionic_setjmp_cookie_init();
 }
 
 __noreturn static void __early_abort(int line) {
