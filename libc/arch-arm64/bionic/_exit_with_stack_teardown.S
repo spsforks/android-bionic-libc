@@ -38,4 +38,4 @@ ENTRY_PRIVATE(_exit_with_stack_teardown)
   mov w8, __NR_exit
   svc #0
   // The exit syscall does not return.
-END(_exit_with_stack_teardown)
+END_PRIVATE(_exit_with_stack_teardown)
