@@ -38,38 +38,77 @@
 
 #include <machine/asm.h>
 
-#define ENTRY_NO_DWARF(f) \
+#undef INTERNAL
+#define INTERNAL(FNAME) __bionic_##FNAME
+
+#define WEAK_ALIAS(alias, original) \
+  .weak alias; \
+  .equ alias, original
+
+/* This is the new "basic!!!" asm entry macro */
+#define ENTRY_BASIC(f) \
     .text; \
     .globl f; \
     .align __bionic_asm_align; \
     .type f, __bionic_asm_function_type; \
     f: \
-    __bionic_asm_custom_entry(f); \
+    __bionic_asm_custom_entry(f) \
+
+#define ENTRY_NO_DWARF(f) \
+  ENTRY_BASIC(f)
 
 #define ENTRY(f) \
-    ENTRY_NO_DWARF(f) \
+    ENTRY_BASIC(INTERNAL(f)); \
     .cfi_startproc \
 
-#define END_NO_DWARF(f) \
+#define END_BASIC(f) \
     .size f, .-f; \
     __bionic_asm_custom_end(f) \
 
+
+#define END_NO_DWARF(f) \
+    END_BASIC(f)
+
 #define END(f) \
     .cfi_endproc; \
-    END_NO_DWARF(f) \
+    END_BASIC(INTERNAL(f)); \
+    WEAK_ALIAS(f, INTERNAL(f))
 
 /* Like ENTRY, but with hidden visibility. */
+/* Unlike ENTRY, we do not need to declare __bionic_foo() */
 #define ENTRY_PRIVATE(f) \
-    ENTRY(f); \
-    .hidden f \
+    ENTRY_BASIC(f); \
+    .cfi_startproc; \
+    .hidden f
+
+#define END_PRIVATE(f) \
+    .cfi_endproc; \
+    END_BASIC(f)
+
 
 /* Like ENTRY_NO_DWARF, but with hidden visibility. */
+/* Unlike ENTRY, we do not need to declare __bionic_foo() */
 #define ENTRY_PRIVATE_NO_DWARF(f) \
-    ENTRY_NO_DWARF(f); \
+    ENTRY_BASIC(f); \
     .hidden f \
 
+#define END_PRIVATE_NO_DWARF(f) \
+    END_BASIC(f)
+
+#define ENTRY_NOINTERNAL(f) \
+    ENTRY_BASIC(f); \
+    .cfi_startproc
+
+#define END_NOINTERNAL(f) \
+    END_PRIVATE(f)
+
+/* This is somewhat more convoluted, but the C API
+   defines __bionic_foo() and generates a weak alias foo that points back to
+   __bionic_foo(). We mirror that here*/
+
 #define ALIAS_SYMBOL(alias, original) \
-    .globl alias; \
-    .equ alias, original
+    .globl INTERNAL(alias); \
+    .equ INTERNAL(alias), original; \
+    WEAK_ALIAS(alias, INTERNAL(alias))
 
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

@@ -75,7 +75,7 @@ error_code:
         .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 error_message:
         .word   error_string-(1b+4)
-END(__memcpy_chk_fail)
+END_PRIVATE(__memcpy_chk_fail)
 
         .data
 error_string:
