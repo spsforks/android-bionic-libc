@@ -29,7 +29,7 @@
 #include <private/bionic_asm.h>
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-ENTRY(__bionic_clone)
+ENTRY_NOINTERNAL(__bionic_clone)
     mov     ip, sp
     # save registers to parent stack
     stmfd   sp!, {r4, r5, r6, r7}
@@ -66,5 +66,5 @@ ENTRY(__bionic_clone)
     # Call __start_thread with the 'fn' and 'arg' we stored on the child stack.
     pop    {r0, r1}
     b      __start_thread
-END(__bionic_clone)
+END_NOINTERNAL(__bionic_clone)
 .hidden __bionic_clone

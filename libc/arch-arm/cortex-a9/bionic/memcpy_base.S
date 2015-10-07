@@ -134,7 +134,7 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         strbcs      lr, [r0], #1
 
         ldmfd       sp!, {r0, pc}
-END(MEMCPY_BASE)
+END_PRIVATE(MEMCPY_BASE)
 
 ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)
         .cfi_def_cfa_offset 8
