@@ -12,7 +12,7 @@ ENTRY(setrlimit)
     mov     12(%esp), %ebx
     mov     16(%esp), %ecx
     movl    $__NR_setrlimit, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

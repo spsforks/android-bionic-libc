@@ -8,7 +8,7 @@ ENTRY(getpgid)
     .cfi_rel_offset ebx, 0
     mov     8(%esp), %ebx
     movl    $__NR_getpgid, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

@@ -28,7 +28,7 @@ ENTRY(__fadvise64)
     mov     44(%esp), %edi
     mov     48(%esp), %ebp
     movl    $__NR_fadvise64_64, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

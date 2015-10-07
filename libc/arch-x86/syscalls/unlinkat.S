@@ -16,7 +16,7 @@ ENTRY(unlinkat)
     mov     20(%esp), %ecx
     mov     24(%esp), %edx
     movl    $__NR_unlinkat, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

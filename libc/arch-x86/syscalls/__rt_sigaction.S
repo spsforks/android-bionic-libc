@@ -20,7 +20,7 @@ ENTRY(__rt_sigaction)
     mov     28(%esp), %edx
     mov     32(%esp), %esi
     movl    $__NR_rt_sigaction, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

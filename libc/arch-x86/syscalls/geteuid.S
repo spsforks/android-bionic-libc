@@ -4,7 +4,7 @@
 
 ENTRY(geteuid)
     movl    $__NR_geteuid32, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

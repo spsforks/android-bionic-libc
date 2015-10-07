@@ -24,7 +24,7 @@ ENTRY(__pwritev64)
     mov     36(%esp), %esi
     mov     40(%esp), %edi
     movl    $__NR_pwritev, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

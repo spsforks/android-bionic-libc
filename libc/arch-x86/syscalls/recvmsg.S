@@ -13,7 +13,7 @@ ENTRY(recvmsg)
     mov     %esp, %ecx
     addl    $12, %ecx
     movl    $__NR_socketcall, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

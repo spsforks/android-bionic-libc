@@ -4,7 +4,7 @@
 
 ENTRY(getegid)
     movl    $__NR_getegid32, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

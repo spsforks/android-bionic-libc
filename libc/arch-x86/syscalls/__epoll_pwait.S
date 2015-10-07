@@ -28,7 +28,7 @@ ENTRY(__epoll_pwait)
     mov     44(%esp), %edi
     mov     48(%esp), %ebp
     movl    $__NR_epoll_pwait, %eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax
