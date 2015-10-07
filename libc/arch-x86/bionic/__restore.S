@@ -103,7 +103,7 @@ ENTRY_PRIVATE(__restore)
   movl $__NR_sigreturn, %eax
   int $0x80
 .L__restore_END:
-END(__restore)
+END_PRIVATE(__restore)
 cfi_signal_frame_start(__restore)
   cfi_def_cfa(OFFSET_ESP + 4)
   cfi_offset(DW_x86_REG_EDI, OFFSET_EDI + 4)
@@ -121,7 +121,7 @@ ENTRY_PRIVATE(__restore_rt)
   movl $__NR_rt_sigreturn, %eax
   int $0x80
 .L__restore_rt_END:
-END(__restore_rt)
+END_PRIVATE(__restore_rt)
 cfi_signal_frame_start(__restore_rt)
   cfi_def_cfa(OFFSET_ESP + 160)
   cfi_offset(DW_x86_REG_EDI, OFFSET_EDI + 160)

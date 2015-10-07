@@ -55,7 +55,7 @@ ENTRY_PRIVATE(__memcpy_chk_fail)
   bl    __fortify_chk_fail
 error_code:
   .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
-END(__memcpy_chk_fail)
+END_PRIVATE(__memcpy_chk_fail)
 
   .data
   .align 2
