@@ -688,6 +688,7 @@ LOCAL_SRC_FILES += upstream-openbsd/lib/libc/time/wcsftime.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -fvisibility=hidden \
+    -Wno-unused-parameter \
 
 # Don't use ridiculous amounts of stack.
 LOCAL_CFLAGS += -DALL_STATE
