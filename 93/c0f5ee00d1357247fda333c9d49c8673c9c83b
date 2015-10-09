@@ -1,0 +1,7 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Submitted-by: Josh Gao <jmgao@google.com>
+Submitted-at: Fri, 09 Oct 2015 23:26:54 +0000
+Reviewed-on: https://android-review.googlesource.com/174914
+Project: platform/bionic
+Branch: refs/heads/master
