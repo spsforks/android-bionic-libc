@@ -1,0 +1,7 @@
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Mike Frysinger <vapier@google.com>
+Submitted-at: Fri, 09 Oct 2015 23:33:39 +0000
+Reviewed-on: https://android-review.googlesource.com/175186
+Project: platform/bionic
+Branch: refs/heads/master
