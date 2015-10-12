@@ -35,6 +35,8 @@
 #include <pthread.h>
 #include <stdbool.h>
 
+#include "local.h"
+
 __BEGIN_DECLS
 
 /*
