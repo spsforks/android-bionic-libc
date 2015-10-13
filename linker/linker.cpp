@@ -1313,6 +1313,8 @@ static int open_library(ZipArchiveCache* zip_archive_cache,
       if (fd != -1) {
         return fd;
       }
+    } else {
+      *realpath = name;
     }
 
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
