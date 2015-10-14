@@ -653,6 +653,14 @@ ifneq ($(BOARD_MALLOC_ALIGNMENT),)
   libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
 endif
 
+ifneq ($(BOARD_SHARED_CACHE_SIZE),)
+  libc_common_cflags += -DARCH_SHARED_CACHE_SIZE=$(BOARD_SHARED_CACHE_SIZE)
+endif
+
+ifneq ($(BOARD_DATA_CACHE_SIZE),)
+  libc_common_cflags += -DARCH_DATA_CACHE_SIZE=$(BOARD_DATA_CACHE_SIZE)
+endif
+
 # Define some common conlyflags
 libc_common_conlyflags := \
     -std=gnu99
