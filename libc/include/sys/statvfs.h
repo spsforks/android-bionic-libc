@@ -23,7 +23,7 @@
 
 __BEGIN_DECLS
 
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
 #define __STATVFS64_RESERVED uint32_t __f_reserved[6];
 #else
 #define __STATVFS64_RESERVED

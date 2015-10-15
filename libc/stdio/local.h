@@ -49,7 +49,7 @@ __BEGIN_DECLS
 
 struct __sbuf {
   unsigned char* _base;
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   size_t _size;
 #else
   int _size;
@@ -60,7 +60,7 @@ struct __sFILE {
 	unsigned char *_p;	/* current position in (some) buffer */
 	int	_r;		/* read space left for getc() */
 	int	_w;		/* write space left for putc() */
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
 	int	_flags;		/* flags, below; this FILE is free if 0 */
 	int	_file;		/* fileno, if Unix descriptor, else -1 */
 #else

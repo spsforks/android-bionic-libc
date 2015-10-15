@@ -28,7 +28,7 @@
 
 #include <signal.h>
 
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
 static
 #else
 __LIBC_HIDDEN__

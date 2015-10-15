@@ -518,7 +518,7 @@ typedef enum __ns_cert_types {
 	(cp) += NS_INT32SZ; \
 } while (/*CONSTCOND*/0)
 
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
 /* Annoyingly, LP32 shipped with __ names. */
 #define	ns_msg_getflag		__ns_msg_getflag
 #define ns_get16		__ns_get16

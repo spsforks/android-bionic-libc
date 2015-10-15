@@ -174,7 +174,7 @@ struct pthread_rwlock_internal_t {
   uint32_t pending_reader_wakeup_serial;  // Pending reader threads wait on this address by futex_wait.
   uint32_t pending_writer_wakeup_serial;  // Pending writer threads wait on this address by futex_wait.
 
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   char __reserved[20];
 #else
   char __reserved[4];

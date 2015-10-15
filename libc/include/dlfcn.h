@@ -50,7 +50,7 @@ extern void*        dlsym(void*  handle, const char*  symbol);
 extern int          dladdr(const void* addr, Dl_info *info);
 
 enum {
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   RTLD_NOW  = 2,
 #else
   RTLD_NOW  = 0,
@@ -58,7 +58,7 @@ enum {
   RTLD_LAZY = 1,
 
   RTLD_LOCAL  = 0,
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   RTLD_GLOBAL = 0x00100,
 #else
   RTLD_GLOBAL = 2,
@@ -67,7 +67,7 @@ enum {
   RTLD_NODELETE = 0x01000,
 };
 
-#if defined (__LP64__)
+#if defined (__LP64__) || defined(__BRILLO__)
 #define RTLD_DEFAULT  ((void*) 0)
 #define RTLD_NEXT     ((void*) -1L)
 #else

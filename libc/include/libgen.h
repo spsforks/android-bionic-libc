@@ -48,7 +48,7 @@ extern char* basename(const char*);
 /* This has the wrong argument cv-qualifiers, but doesn't modify its input and uses thread-local storage for the result if necessary. */
 extern char* dirname(const char*);
 
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
 /* These non-standard functions are not needed on Android; basename and dirname use thread-local storage. */
 extern int dirname_r(const char*, char*, size_t);
 extern int basename_r(const char*, char*, size_t);

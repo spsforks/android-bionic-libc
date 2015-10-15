@@ -57,7 +57,7 @@ extern int unshare(int);
 extern int sched_getcpu(void);
 extern int setns(int, int);
 
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
 #define CPU_SETSIZE 1024
 #else
 #define CPU_SETSIZE 32

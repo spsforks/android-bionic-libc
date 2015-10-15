@@ -34,7 +34,7 @@
 
 #define malloc_getpagesize getpagesize()
 
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO)
 /* dlmalloc_usable_size and dlmalloc were exposed in the NDK and some
  * apps actually used them. Rename these functions out of the way
  * for 32 bit architectures so that ndk_cruft.cpp can expose

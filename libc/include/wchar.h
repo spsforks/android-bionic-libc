@@ -43,7 +43,7 @@ __BEGIN_DECLS
 typedef __WINT_TYPE__  wint_t;
 typedef struct {
   uint8_t __seq[4];
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
   char __reserved[4];
 #endif
 } mbstate_t;

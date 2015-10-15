@@ -1348,7 +1348,7 @@ static int open_library(ZipArchiveCache* zip_archive_cache,
 }
 
 static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
   if (get_application_target_sdk_version() <= 22) {
     const char* bname = basename(dt_needed);
@@ -2079,7 +2079,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
             return false;
         }
       } else { // We got a definition.
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
         // When relocating dso with text_relocation .text segment is
         // not executable. We need to restore elf flags before resolving
         // STT_GNU_IFUNC symbol.
@@ -2095,7 +2095,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         }
 #endif
         sym_addr = lsi->resolve_symbol_address(s);
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
         if (protect_segments) {
           if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
             DL_ERR("can't unprotect loadable segments for \"%s\": %s",
@@ -2141,7 +2141,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                     reinterpret_cast<void*>(reloc),
                     reinterpret_cast<void*>(load_bias + addend));
         {
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
           // When relocating dso with text_relocation .text segment is
           // not executable. We need to restore elf flags for this
           // particular call.
@@ -2154,7 +2154,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
 #endif
           ElfW(Addr) ifunc_addr = call_ifunc_resolver(load_bias + addend);
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
           // Unprotect it afterwards...
           if (has_text_relocations) {
             if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {

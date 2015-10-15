@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 /* See http://code.google.com/p/y2038 for this code's origin */
 
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
 #error This cruft should be LP32 only!
 #endif
 
