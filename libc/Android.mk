@@ -613,6 +613,7 @@ libc_openbsd_src_files_32 += \
 libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
+    $(BIONIC_INTERNAL) \
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
@@ -655,10 +656,12 @@ endif
 
 # Define some common conlyflags
 libc_common_conlyflags := \
-    -std=gnu99
+    -std=gnu99 \
+    $(BIONIC_INTERNAL) \
 
 # Define some common cppflags
 libc_common_cppflags := \
+  $(BIONIC_INTERNAL) \
 
 # Define some common includes
 # ========================================================

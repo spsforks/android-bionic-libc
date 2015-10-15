@@ -110,3 +110,6 @@ memmove(void *dst0, const void *src0, size_t length)
 done:
 	return (dst0);
 }
+
+#define MEMMOVE_C
+#include "bionic_external_symbols.h"

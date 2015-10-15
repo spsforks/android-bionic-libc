@@ -37,6 +37,12 @@
 // defined / implemented here and exported to all, leak detection code and
 // other components via dynamic (libc.so), or static (libc.a) linking.
 
+// We need this to delay the definition of #define malloc INTERNAL(malloc)
+// to avoid clash with __attribute__(malloc)
+#ifdef USE_JEMALLOC
+#define DELAY_JEMALLOC_REDEFINE
+#endif
+
 #include "malloc_debug_common.h"
 
 #include <pthread.h>
@@ -47,33 +53,60 @@
 #include "private/bionic_globals.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
+// Instead of using the old Malloc() macro, we instead use these
+// to explicitly refer to either the jemalloc or the dlmalloc implementations.
+// Thats because we need to have a bionic-wide #define malloc INTERNAL(malloc)
+// to swizzle out calls to malloc() with calls to __bionic_malloc
 #if defined(USE_JEMALLOC)
 #include "jemalloc.h"
-#define Malloc(function)  je_ ## function
+#define  calloc_impl je_calloc
+#define  free_impl  je_free
+#define  mallinfo_impl   je_mallinfo
+#define  malloc_impl je_malloc
+#define  malloc_usable_size_impl je_malloc_usable_size
+#define  memalign_impl  je_memalign
+#define  posix_memalign_impl je_posix_memalign
+#define  pvalloc_impl  je_pvalloc
+#define  realloc_impl je_realloc
+#define  valloc_impl  je_valloc
+
+
 #elif defined(USE_DLMALLOC)
 #include "dlmalloc.h"
-#define Malloc(function)  dl ## function
+#define  calloc_impl dlcalloc
+#define  free_impl  dlfree
+#define  mallinfo_impl   dlmallinfo
+#define  malloc_impl dlmalloc
+#define  malloc_usable_size_impl dlmalloc_usable_size
+#define  memalign_impl  dlmemalign
+#define  posix_memalign_impl dlposix_memalign
+#define  pvalloc_impl  dlpvalloc
+#define  realloc_impl dlrealloc
+#define  valloc_impl  dlvalloc
+
 #else
 #error "Either one of USE_DLMALLOC or USE_JEMALLOC must be defined."
 #endif
 
-static constexpr MallocDebug __libc_malloc_default_dispatch
+// Support for malloc debugging.
+// Table for dispatching malloc calls, initialized with default dispatchers.
+static const MallocDebug __libc_malloc_default_dispatch
   __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    Malloc(malloc),
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
+    calloc_impl,
+    free_impl,
+    mallinfo_impl,
+    malloc_impl,
+    malloc_usable_size_impl,
+    memalign_impl,
+    posix_memalign_impl,
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
+    pvalloc_impl,
 #endif
-    Malloc(realloc),
+    realloc_impl,
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
+    valloc_impl,
 #endif
-  };
+};
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
 int gMallocLeakZygoteChild = 0;
@@ -82,7 +115,7 @@ static HashTable g_hash_table;
 
 // Handle to shared library where actual memory allocation is implemented.
 // This library is loaded and memory allocation calls are redirected there
-// when libc.debug.malloc environment variable contains value other than
+// when libc.debug._malloc environment variable contains value other than
 // zero:
 // 1  - For memory leak detections.
 // 5  - For filling allocated / freed memory with patterns defined by
@@ -90,11 +123,11 @@ static HashTable g_hash_table;
 // 10 - For adding pre-, and post- allocation stubs in order to detect
 //      buffer overruns.
 // Note that emulator's memory allocation instrumentation is not controlled by
-// libc.debug.malloc value, but rather by emulator, started with -memcheck
+// libc.debug._malloc value, but rather by emulator, started with -memcheck
 // option. Note also, that if emulator has started with -memcheck option,
 // emulator's instrumented memory allocation will take over value saved in
-// libc.debug.malloc. In other words, if emulator has started with -memcheck
-// option, libc.debug.malloc value is ignored.
+// libc.debug._malloc. In other words, if emulator has started with -memcheck
+// option, libc.debug._malloc value is ignored.
 // Actual functionality for debug levels 1-10 is implemented in
 // libc_malloc_debug_leak.so, while functionality for emulator's instrumented
 // allocations is implemented in libc_malloc_debug_qemu.so and can be run inside
@@ -104,7 +137,7 @@ static void* libc_malloc_impl_handle = NULL;
 #endif
 
 
-// The value of libc.debug.malloc.
+// The value of libc.debug._malloc.
 #if !defined(LIBC_STATIC)
 static int g_malloc_debug_level = 0;
 #endif
@@ -185,7 +218,7 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     return;
   }
 
-  HashEntry** list = static_cast<HashEntry**>(Malloc(malloc)(sizeof(void*) * g_hash_table.count));
+  HashEntry** list = static_cast<HashEntry**>(malloc_impl(sizeof(void*) * g_hash_table.count));
 
   // Get the entries into an array to be sorted.
   size_t index = 0;
@@ -205,10 +238,10 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
   *backtraceSize = BACKTRACE_SIZE;
 
   // now get a byte array big enough for this
-  *info = static_cast<uint8_t*>(Malloc(malloc)(*overallSize));
+  *info = static_cast<uint8_t*>(malloc_impl(*overallSize));
   if (*info == NULL) {
     *overallSize = 0;
-    Malloc(free)(list);
+    free_impl(list);
     return;
   }
 
@@ -230,98 +263,98 @@ extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overallSize,
     head += *infoSize;
   }
 
-  Malloc(free)(list);
+  free_impl(list);
 }
 
 extern "C" void free_malloc_leak_info(uint8_t* info) {
-  Malloc(free)(info);
+  free_impl(info);
 }
 
 // =============================================================================
 // Allocation functions
 // =============================================================================
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
-  auto _calloc = __libc_globals->malloc_dispatch.calloc;
+  auto _calloc = __libc_globals->malloc_dispatch._calloc;
   if (__predict_false(_calloc != nullptr)) {
     return _calloc(n_elements, elem_size);
   }
-  return Malloc(calloc)(n_elements, elem_size);
+  return calloc_impl(n_elements, elem_size);
 }
 
 extern "C" void free(void* mem) {
-  auto _free = __libc_globals->malloc_dispatch.free;
+  auto _free = __libc_globals->malloc_dispatch._free;
   if (__predict_false(_free != nullptr)) {
     _free(mem);
   } else {
-    Malloc(free)(mem);
+    free_impl(mem);
   }
 }
 
 extern "C" struct mallinfo mallinfo() {
-  auto _mallinfo = __libc_globals->malloc_dispatch.mallinfo;
+  auto _mallinfo = __libc_globals->malloc_dispatch._mallinfo;
   if (__predict_false(_mallinfo != nullptr)) {
     return _mallinfo();
   }
-  return Malloc(mallinfo)();
+  return mallinfo_impl();
 }
 
 extern "C" void* malloc(size_t bytes) {
-  auto _malloc = __libc_globals->malloc_dispatch.malloc;
+  auto _malloc = __libc_globals->malloc_dispatch._malloc;
   if (__predict_false(_malloc != nullptr)) {
     return _malloc(bytes);
   }
-  return Malloc(malloc)(bytes);
+  return malloc_impl(bytes);
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
-  auto _malloc_usable_size = __libc_globals->malloc_dispatch.malloc_usable_size;
+  auto _malloc_usable_size = __libc_globals->malloc_dispatch._malloc_usable_size;
   if (__predict_false(_malloc_usable_size != nullptr)) {
     return _malloc_usable_size(mem);
   }
-  return Malloc(malloc_usable_size)(mem);
+  return malloc_usable_size_impl(mem);
 }
 
 extern "C" void* memalign(size_t alignment, size_t bytes) {
-  auto _memalign = __libc_globals->malloc_dispatch.memalign;
+  auto _memalign = __libc_globals->malloc_dispatch._memalign;
   if (__predict_false(_memalign != nullptr)) {
     return _memalign(alignment, bytes);
   }
-  return Malloc(memalign)(alignment, bytes);
+  return memalign_impl(alignment, bytes);
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
-  auto _posix_memalign = __libc_globals->malloc_dispatch.posix_memalign;
+  auto _posix_memalign = __libc_globals->malloc_dispatch._posix_memalign;
   if (__predict_false(_posix_memalign != nullptr)) {
     return _posix_memalign(memptr, alignment, size);
   }
-  return Malloc(posix_memalign)(memptr, alignment, size);
+  return posix_memalign_impl(memptr, alignment, size);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
-  auto _pvalloc = __libc_globals->malloc_dispatch.pvalloc;
+  auto _pvalloc = __libc_globals->malloc_dispatch._pvalloc;
   if (__predict_false(_pvalloc != nullptr)) {
     return _pvalloc(bytes);
   }
-  return Malloc(pvalloc)(bytes);
+  return pvalloc_impl(bytes);
 }
 #endif
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
-  auto _realloc = __libc_globals->malloc_dispatch.realloc;
+  auto _realloc = __libc_globals->malloc_dispatch._realloc;
   if (__predict_false(_realloc != nullptr)) {
     return _realloc(old_mem, bytes);
   }
-  return Malloc(realloc)(old_mem, bytes);
+  return realloc_impl(old_mem, bytes);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* valloc(size_t bytes) {
-  auto _valloc = __libc_globals->malloc_dispatch.valloc;
+  auto _valloc = __libc_globals->malloc_dispatch._valloc;
   if (__predict_false(_valloc != nullptr)) {
     return _valloc(bytes);
   }
-  return Malloc(valloc)(bytes);
+  return valloc_impl(bytes);
 }
 #endif
 
@@ -347,19 +380,19 @@ static void InitMalloc(void* malloc_impl_handler, MallocDebug* table, const char
   __libc_format_log(ANDROID_LOG_INFO, "libc", "%s: using libc.debug.malloc %d (%s)\n",
                     getprogname(), g_malloc_debug_level, prefix);
 
-  InitMallocFunction<MallocDebugCalloc>(malloc_impl_handler, &table->calloc, prefix, "calloc");
-  InitMallocFunction<MallocDebugFree>(malloc_impl_handler, &table->free, prefix, "free");
-  InitMallocFunction<MallocDebugMallinfo>(malloc_impl_handler, &table->mallinfo, prefix, "mallinfo");
-  InitMallocFunction<MallocDebugMalloc>(malloc_impl_handler, &table->malloc, prefix, "malloc");
-  InitMallocFunction<MallocDebugMallocUsableSize>(malloc_impl_handler, &table->malloc_usable_size, prefix, "malloc_usable_size");
-  InitMallocFunction<MallocDebugMemalign>(malloc_impl_handler, &table->memalign, prefix, "memalign");
-  InitMallocFunction<MallocDebugPosixMemalign>(malloc_impl_handler, &table->posix_memalign, prefix, "posix_memalign");
+  InitMallocFunction<MallocDebugCalloc>(malloc_impl_handler, &table->_calloc, prefix, "calloc");
+  InitMallocFunction<MallocDebugFree>(malloc_impl_handler, &table->_free, prefix, "free");
+  InitMallocFunction<MallocDebugMallinfo>(malloc_impl_handler, &table->_mallinfo, prefix, "mallinfo");
+  InitMallocFunction<MallocDebugMalloc>(malloc_impl_handler, &table->_malloc, prefix, "malloc");
+  InitMallocFunction<MallocDebugMallocUsableSize>(malloc_impl_handler, &table->_malloc_usable_size, prefix, "malloc_usable_size");
+  InitMallocFunction<MallocDebugMemalign>(malloc_impl_handler, &table->_memalign, prefix, "memalign");
+  InitMallocFunction<MallocDebugPosixMemalign>(malloc_impl_handler, &table->_posix_memalign, prefix, "posix_memalign");
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  InitMallocFunction<MallocDebugPvalloc>(malloc_impl_handler, &table->pvalloc, prefix, "pvalloc");
+  InitMallocFunction<MallocDebugPvalloc>(malloc_impl_handler, &table->_pvalloc, prefix, "pvalloc");
 #endif
-  InitMallocFunction<MallocDebugRealloc>(malloc_impl_handler, &table->realloc, prefix, "realloc");
+  InitMallocFunction<MallocDebugRealloc>(malloc_impl_handler, &table->_realloc, prefix, "realloc");
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  InitMallocFunction<MallocDebugValloc>(malloc_impl_handler, &table->valloc, prefix, "valloc");
+  InitMallocFunction<MallocDebugValloc>(malloc_impl_handler, &table->_valloc, prefix, "valloc");
 #endif
 }
 
@@ -499,19 +532,19 @@ static void malloc_init_impl(libc_globals* globals) {
   }
 
   // Make sure dispatch table is initialized
-  if ((malloc_dispatch_table.calloc == NULL) ||
-      (malloc_dispatch_table.free == NULL) ||
-      (malloc_dispatch_table.mallinfo == NULL) ||
-      (malloc_dispatch_table.malloc == NULL) ||
-      (malloc_dispatch_table.malloc_usable_size == NULL) ||
-      (malloc_dispatch_table.memalign == NULL) ||
-      (malloc_dispatch_table.posix_memalign == NULL) ||
+  if ((malloc_dispatch_table._calloc == NULL) ||
+      (malloc_dispatch_table._free == NULL) ||
+      (malloc_dispatch_table._mallinfo == NULL) ||
+      (malloc_dispatch_table._malloc == NULL) ||
+      (malloc_dispatch_table._malloc_usable_size == NULL) ||
+      (malloc_dispatch_table._memalign == NULL) ||
+      (malloc_dispatch_table._posix_memalign == NULL) ||
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-      (malloc_dispatch_table.pvalloc == NULL) ||
+      (malloc_dispatch_table._pvalloc == NULL) ||
 #endif
-      (malloc_dispatch_table.realloc == NULL)
+      (malloc_dispatch_table._realloc == NULL)
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-      || (malloc_dispatch_table.valloc == NULL)
+      || (malloc_dispatch_table._valloc == NULL)
 #endif
       ) {
     error_log("%s: some symbols for libc.debug.malloc level %d were not found (see above)",
@@ -561,3 +594,7 @@ extern "C" __LIBC_HIDDEN__ void malloc_debug_fini() {
   }
 #endif  // !LIBC_STATIC
 }
+
+#define MALLOC_DEBUG_COMMON_CPP
+#include "bionic_external_symbols.h"
+

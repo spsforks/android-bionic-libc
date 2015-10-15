@@ -56,3 +56,6 @@ strncpy(char *dst, const char *src, size_t n)
 	}
 	return (dst);
 }
+
+#define STRNCPY_C
+#include "bionic_external_symbols.h"

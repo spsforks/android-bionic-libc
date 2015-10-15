@@ -37,3 +37,6 @@ strndup(const char *str, size_t maxlen)
 
 	return copy;
 }
+
+#define STRNDUP_C
+#include "bionic_external_symbols.h"

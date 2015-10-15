@@ -68,3 +68,6 @@ strxfrm(char *dst, const char *src, size_t n)
 	}
 	return (srclen);
 }
+
+#define STRXFRM_C
+#include "bionic_external_symbols.h"

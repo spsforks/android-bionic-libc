@@ -46,3 +46,6 @@ strpbrk(const char *s1, const char *s2)
 	}
 	return (NULL);
 }
+
+#define STRPBRK_C
+#include "bionic_external_symbols.h"

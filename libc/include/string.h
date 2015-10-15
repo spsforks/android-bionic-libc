@@ -39,6 +39,8 @@ __BEGIN_DECLS
 #include <strings.h>
 #endif
 
+#include "bionic_internal_symbols.h"
+
 extern void*  memccpy(void* __restrict, const void* __restrict, int, size_t);
 extern void*  memchr(const void *, int, size_t) __purefunc;
 extern void*  memrchr(const void *, int, size_t) __purefunc;
@@ -144,6 +146,13 @@ extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) _
 extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 #if defined(__BIONIC_FORTIFY)
+
+#if defined(__BIONIC_INTERNAL__)
+#define __builtin_strchr  INTERNAL(strchr)
+#define __builtin_strrchr  INTERNAL(strrchr)
+#define __builtin_memchr INTERNAL(memchr)
+#define __builtin_strlen INTERNAL(strlen)
+#endif /* defined(__BIONIC_INTERNAL__)*/
 
 __BIONIC_FORTIFY_INLINE
 void* memchr(const void *s, int c, size_t n) {
@@ -362,8 +371,30 @@ char* strrchr(const char *s, int c) {
     return __strrchr_chk(s, c, bos);
 }
 
+// Now undefine these guys to reduce confusion elsewhere.
+#undef __builtin_strrchr
+#undef __builtin_memchr
+#undef __builtin_strlen
 
 #endif /* defined(__BIONIC_FORTIFY) */
+
+#if defined(__BIONIC_INTERNAL__)
+#define memchr INTERNAL(memchr)
+#define memrchr INTERNAL(memrchr)
+#define memcpy INTERNAL(memcpy)
+#define memmove INTERNAL(memmove)
+#define stpcpy INTERNAL(stpcpy)
+#define strcpy INTERNAL(strcpy)
+#define stpncpy INTERNAL(stpncpy)
+#define strncpy INTERNAL(strncpy)
+#define strcat INTERNAL(strcat)
+#define strncat INTERNAL(strncat)
+#define memset INTERNAL(memset)
+#define strlcpy INTERNAL(strlcpy)
+#define strlcat INTERNAL(strlcat)
+#define strlen INTERNAL(strlen)
+#define strrchr INTERNAL(strrchr)
+#endif
 
 __END_DECLS
 

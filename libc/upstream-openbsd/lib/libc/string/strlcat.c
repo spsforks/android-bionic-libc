@@ -53,3 +53,6 @@ strlcat(char *dst, const char *src, size_t siz)
 
 	return(dlen + (s - src));	/* count does not include NUL */
 }
+
+#define STRLCAT_C
+#include "bionic_external_symbols.h"

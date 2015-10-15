@@ -44,3 +44,6 @@ char* strsignal(int signal_number) {
   return const_cast<char*>(__strsignal(signal_number, g_strsignal_tls_buffer.get(),
                                        g_strsignal_tls_buffer.size()));
 }
+
+#define STRSIGNAL_CPP
+#include "bionic_external_symbols.h"

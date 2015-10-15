@@ -52,6 +52,8 @@
 #define dlmalloc_inspect_all dlmalloc_inspect_all_real
 #define dlmalloc_trim dlmalloc_trim_real
 
+#include "bionic_internal_symbols.h"
+
 /* Include the proper definitions. */
 #include "../upstream-dlmalloc/malloc.h"
 
