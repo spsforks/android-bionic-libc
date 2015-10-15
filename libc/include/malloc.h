@@ -26,6 +26,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "bionic_internal_symbols.h"
 __BEGIN_DECLS
 
 extern void* malloc(size_t byte_count) __mallocfunc __wur __attribute__((alloc_size(1)));
@@ -76,5 +77,12 @@ extern struct mallinfo mallinfo(void);
 extern int malloc_info(int, FILE *);
 
 __END_DECLS
+
+#if defined(__BIONIC_INTERNAL__) && !defined(DELAY_JEMALLOC_REDEFINE)
+#define malloc INTERNAL(malloc)
+#define calloc INTERNAL(calloc)
+#define realloc INTERNAL(realloc)
+#define free INTERNAL(free)
+#endif  // __BIONIC_INTERNAL__
 
 #endif  /* LIBC_INCLUDE_MALLOC_H_ */

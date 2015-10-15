@@ -35,6 +35,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <time.h>
+#include <machine/timespec.h>
 
 typedef struct {
 #if defined(__LP64__)
@@ -260,5 +261,8 @@ int pthread_mutex_lock_timeout_np(pthread_mutex_t*, unsigned) __attribute__((dep
 #endif /* !defined(__LP64__) */
 
 __END_DECLS
+
+// swizzle internal symbols
+#include "bionic_internal_symbols.h"
 
 #endif /* _PTHREAD_H_ */

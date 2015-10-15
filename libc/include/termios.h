@@ -55,4 +55,6 @@ int tcsetattr(int, int, const struct termios*);
 
 __END_DECLS
 
+#include "bionic_internal_symbols.h"
+
 #endif /* _TERMIOS_H_ */

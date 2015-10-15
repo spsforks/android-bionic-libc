@@ -50,5 +50,5 @@ extern "C" size_t __strlcpy_chk(char* dest, const char* src,
     __fortify_chk_fail("strlcpy: prevented write past end of buffer", 0);
   }
 
-  return strlcpy(dest, src, supplied_size);
+  return INTERNAL(strlcpy)(dest, src, supplied_size);
 }

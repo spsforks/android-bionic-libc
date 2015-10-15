@@ -16,4 +16,11 @@
 
 LOCAL_PATH := $(call my-dir)
 
+# Use this flag to distinguish between building bionic and users of bionic.
+# This is so that the override file bionic_internal_symbols.h will
+# only activate INSIDE bionic, and not elsewhere.
+# Other packages that use bionic are free to use the external API (e.g. malloc())
+# instead of the internal symbol (e.g. __bionic_malloc())
+BIONIC_INTERNAL:=-D__BIONIC_INTERNAL__=1
+
 include $(call all-subdir-makefiles)

@@ -492,6 +492,7 @@ LOCAL_CFLAGS := \
     -Wno-uninitialized \
     -Wno-unknown-pragmas \
     -fvisibility=hidden \
+    $(BIONIC_INTERNAL) \
 
 LOCAL_ASFLAGS := \
     -Ibionic/libc \

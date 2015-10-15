@@ -46,4 +46,6 @@ extern int ioctl(int, int, ...);
 
 __END_DECLS
 
+#include "bionic_internal_symbols.h"
+
 #endif /* _SYS_IOCTL_H_ */

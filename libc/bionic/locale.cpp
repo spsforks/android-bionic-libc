@@ -223,3 +223,6 @@ int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
 int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
   return wcsncasecmp(ws1, ws2, n);
 }
+
+#define LOCALE_CPP
+#include "bionic_external_symbols.h"

@@ -36,6 +36,8 @@
 #include <linux/stat.h>
 #include <linux/uio.h>
 
+#include "bionic_internal_symbols.h"
+
 __BEGIN_DECLS
 
 #ifdef __LP64__
@@ -83,9 +85,9 @@ extern int posix_fadvise64(int, off64_t, off64_t, int);
 extern int posix_fallocate64(int, off64_t, off64_t);
 
 extern int __open_2(const char*, int);
-extern int __open_real(const char*, int, ...) __RENAME(open);
+extern int __open_real(const char*, int, ...) __RENAME(__bionic_open);
 extern int __openat_2(int, const char*, int);
-extern int __openat_real(int, const char*, int, ...) __RENAME(openat);
+extern int __openat_real(int, const char*, int, ...) __RENAME(__bionic_openat);
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");
 
@@ -130,6 +132,54 @@ int openat(int dirfd, const char* pathname, int flags, ...) {
 
     return __openat_real(dirfd, pathname, flags, __builtin_va_arg_pack());
 }
+
+
+#ifdef __BIONIC_INTERNAL__
+#undef open
+#undef openat
+
+__BIONIC_FORTIFY_INLINE
+int open(const char* pathname, int flags, ...) {
+    if (__builtin_constant_p(flags)) {
+        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+            __creat_missing_mode();  // compile time error
+        }
+    }
+
+    if (__builtin_va_arg_pack_len() > 1) {
+        __creat_too_many_args();  // compile time error
+    }
+
+    if ((__builtin_va_arg_pack_len() == 0) && !__builtin_constant_p(flags)) {
+        return __open_2(pathname, flags);
+    }
+
+    return __open_real(pathname, flags, __builtin_va_arg_pack());
+}
+
+__BIONIC_FORTIFY_INLINE
+int openat(int dirfd, const char* pathname, int flags, ...) {
+    if (__builtin_constant_p(flags)) {
+        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+            __creat_missing_mode();  // compile time error
+        }
+    }
+
+    if (__builtin_va_arg_pack_len() > 1) {
+        __creat_too_many_args();  // compile time error
+    }
+
+    if ((__builtin_va_arg_pack_len() == 0) && !__builtin_constant_p(flags)) {
+        return __openat_2(dirfd, pathname, flags);
+    }
+
+    return __openat_real(dirfd, pathname, flags, __builtin_va_arg_pack());
+}
+
+
+#define open INTERNAL(open)
+#define openat INTERNAL(openat)
+#endif /* __BIONIC_INTERNAL__ */
 
 #endif /* !defined(__clang__) */
 

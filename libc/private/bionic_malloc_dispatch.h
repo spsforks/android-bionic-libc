@@ -49,19 +49,19 @@ typedef void* (*MallocDebugValloc)(size_t);
 #endif
 
 struct MallocDebug {
-  MallocDebugCalloc calloc;
-  MallocDebugFree free;
-  MallocDebugMallinfo mallinfo;
-  MallocDebugMalloc malloc;
-  MallocDebugMallocUsableSize malloc_usable_size;
-  MallocDebugMemalign memalign;
-  MallocDebugPosixMemalign posix_memalign;
+  MallocDebugCalloc _calloc;
+  MallocDebugFree _free;
+  MallocDebugMallinfo _mallinfo;
+  MallocDebugMalloc _malloc;
+  MallocDebugMallocUsableSize _malloc_usable_size;
+  MallocDebugMemalign _memalign;
+  MallocDebugPosixMemalign _posix_memalign;
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocDebugPvalloc pvalloc;
+  MallocDebugPvalloc _pvalloc;
 #endif
-  MallocDebugRealloc realloc;
+  MallocDebugRealloc _realloc;
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocDebugValloc valloc;
+  MallocDebugValloc _valloc;
 #endif
 } __attribute__((aligned(32)));
 

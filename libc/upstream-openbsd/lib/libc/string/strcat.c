@@ -45,3 +45,6 @@ strcat(char *s, const char *append)
 	while ((*s++ = *append++) != '\0');
 	return(save);
 }
+
+#define STRCAT_C
+#include "bionic_external_symbols.h"

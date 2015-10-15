@@ -36,3 +36,6 @@ size_t  strnlen(const char*  str, size_t  maxlen)
     else
         return (p - str);
 }
+
+#define STRNLEN_C
+#include "bionic_external_symbols.h"

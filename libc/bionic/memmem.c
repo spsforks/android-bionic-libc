@@ -62,3 +62,6 @@ void *memmem(const void *haystack, size_t n, const void *needle, size_t m)
     }
     return NULL;
 }
+
+#define MEMMEM_C
+#include "bionic_external_symbols.h"

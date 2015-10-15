@@ -84,3 +84,6 @@ cont:
 	}
 	/* NOTREACHED */
 }
+
+#define STRTOK_C
+#include "bionic_external_symbols.h"
