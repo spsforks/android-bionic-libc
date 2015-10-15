@@ -36,14 +36,14 @@
 #define _PATH_WTMP      "/var/log/wtmp"
 #define _PATH_LASTLOG   "/var/log/lastlog"
 
-#ifdef __LP64__
-#define UT_NAMESIZE 32
-#define UT_LINESIZE 32
-#define UT_HOSTSIZE 256
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 #define UT_NAMESIZE 8
 #define UT_LINESIZE 8
 #define UT_HOSTSIZE 16
+#else
+#define UT_NAMESIZE 32
+#define UT_LINESIZE 32
+#define UT_HOSTSIZE 256
 #endif
 
 #define EMPTY         0

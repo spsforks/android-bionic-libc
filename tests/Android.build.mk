@@ -57,6 +57,11 @@ LOCAL_CFLAGS := \
     $($(module)_cflags) \
     $($(module)_cflags_$(build_type)) \
 
+LOCAL_CFLAGS_32 := \
+    $(common_cflags_32) \
+    $($(module)_cflags_32) \
+    $($(module)_cflags_$(build_type)_32) \
+
 LOCAL_CONLYFLAGS += \
     $(common_conlyflags) \
     $($(module)_conlyflags) \

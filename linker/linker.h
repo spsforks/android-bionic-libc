@@ -197,7 +197,7 @@ struct soinfo {
   uint32_t* bucket_;
   uint32_t* chain_;
 
-#if defined(__mips__) || !defined(__LP64__)
+#if defined(__mips__) || defined(__work_around_b_24465209__)
   // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
   ElfW(Addr)** plt_got_;

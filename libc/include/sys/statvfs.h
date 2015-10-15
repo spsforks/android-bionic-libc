@@ -23,10 +23,10 @@
 
 __BEGIN_DECLS
 
-#ifdef __LP64__
-#define __STATVFS64_RESERVED uint32_t __f_reserved[6];
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 #define __STATVFS64_RESERVED
+#else
+#define __STATVFS64_RESERVED uint32_t __f_reserved[6];
 #endif
 
 #define __STATVFS64_BODY \

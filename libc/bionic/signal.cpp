@@ -28,10 +28,10 @@
 
 #include <signal.h>
 
-#ifdef __LP64__
-static
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 __LIBC_HIDDEN__
+#else
+static
 #endif
 sighandler_t _signal(int signum, sighandler_t handler, int flags) {
   struct sigaction sa;

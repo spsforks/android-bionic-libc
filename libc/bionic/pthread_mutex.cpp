@@ -214,12 +214,12 @@ int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared) 
 
 struct pthread_mutex_internal_t {
   _Atomic(uint16_t) state;
-#if defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
+  _Atomic(uint16_t) owner_tid;
+#else
   uint16_t __pad;
   atomic_int owner_tid;
   char __reserved[32];
-#else
-  _Atomic(uint16_t) owner_tid;
 #endif
 } __attribute__((aligned(4)));
 
@@ -402,9 +402,8 @@ static inline __always_inline int __recursive_or_errorcheck_mutex_wait(
 // But when a recursive or errorcheck mutex is used on 32-bit devices, we need to add the
 // owner_tid value in the value argument for __futex_wait, otherwise we may always get EAGAIN error.
 
-#if defined(__LP64__)
+#if !defined(__BIONIC_LIBC32_LEGACY__)
   return __futex_wait_ex(&mutex->state, shared, old_state, rel_timeout);
-
 #else
   // This implementation works only when the layout of pthread_mutex_internal_t matches below expectation.
   // And it is based on the assumption that Android is always in little-endian devices.
@@ -501,7 +500,7 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
 }
 
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
     if (mutex_interface == NULL) {
         return EINVAL;
     }
@@ -522,7 +521,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 }
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
     if (mutex_interface == NULL) {
         return EINVAL;
     }
@@ -611,7 +610,7 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
     return EBUSY;
 }
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
 extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex_interface, unsigned ms) {
     timespec abs_timeout;
     clock_gettime(CLOCK_MONOTONIC, &abs_timeout);
