@@ -37,7 +37,7 @@ struct timespec;
 
 typedef struct {
   unsigned int count;
-#ifdef __LP64__
+#if !defined(__BIONIC_LIBC32_LEGACY__)
   int __reserved[3];
 #endif
 } sem_t;

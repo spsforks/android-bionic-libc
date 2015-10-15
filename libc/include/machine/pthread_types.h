@@ -40,7 +40,7 @@ typedef struct {
   size_t guard_size;
   int32_t sched_policy;
   int32_t sched_priority;
-#ifdef __LP64__
+#if !defined(__BIONIC_LIBC32_LEGACY__)
   char __reserved[16];
 #endif
 } pthread_attr_t;

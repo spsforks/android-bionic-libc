@@ -92,7 +92,7 @@ void* dlopen(const char* filename, int flags) {
 void* dlsym(void* handle, const char* symbol) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
   if (handle == nullptr) {
     __bionic_format_dlerror("dlsym library handle is null", nullptr);
     return nullptr;

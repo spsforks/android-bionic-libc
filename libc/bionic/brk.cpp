@@ -29,10 +29,10 @@
 #include <errno.h>
 #include <unistd.h>
 
-#if __LP64__
-static void* __bionic_brk;
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 void* __bionic_brk; // Accidentally exported by the NDK.
+#else
+static void* __bionic_brk;
 #endif
 
 int brk(void* end_data) {

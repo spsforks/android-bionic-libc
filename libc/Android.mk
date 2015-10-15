@@ -560,8 +560,12 @@ libc_arch_static_src_files := \
 
 # Various kinds of cruft.
 # ========================================================
+# Brillo doesn't need to support ndk cruft.
+ifndef BRILLO
 libc_common_src_files += \
     bionic/ndk_cruft.cpp \
+
+endif
 
 libc_bionic_ndk_src_files_32 += \
     bionic/mmap.cpp \

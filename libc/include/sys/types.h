@@ -79,7 +79,7 @@ typedef __suseconds_t suseconds_t;
 typedef uint32_t __useconds_t;
 typedef __useconds_t useconds_t;
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
 /* This historical accident means that we had a 32-bit dev_t on 32-bit architectures. */
 typedef uint32_t dev_t;
 #else
@@ -90,7 +90,7 @@ typedef uint64_t dev_t;
 typedef __kernel_time_t __time_t;
 typedef __time_t time_t;
 
-#if defined(__USE_FILE_OFFSET64) || defined(__LP64__)
+#if defined(__USE_FILE_OFFSET64) || !defined(__BIONIC_LIBC32_LEGACY__)
 typedef int64_t off_t;
 typedef off_t loff_t;
 typedef loff_t off64_t;
@@ -115,7 +115,7 @@ typedef  .... pthread_rwlock_attr_t;
 typedef  .... pthread_t;
 #endif
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
 /* This historical accident means that we had a signed socklen_t on 32-bit architectures. */
 typedef int32_t __socklen_t;
 #else

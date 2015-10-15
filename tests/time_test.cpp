@@ -105,7 +105,7 @@ TEST(time, mktime_10310929) {
   t.tm_mday = 10;
 
 #if !defined(__LP64__)
-  // 32-bit bionic stupidly had a signed 32-bit time_t.
+  // 32-bit has a signed 32-bit time_t.
   ASSERT_EQ(-1, mktime(&t));
 #else
   // Everyone else should be using a signed 64-bit time_t.

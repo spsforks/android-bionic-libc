@@ -49,10 +49,10 @@ __BEGIN_DECLS
 
 struct __sbuf {
   unsigned char* _base;
-#if defined(__LP64__)
-  size_t _size;
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
   int _size;
+#else
+  size_t _size;
 #endif
 };
 
@@ -60,12 +60,12 @@ struct __sFILE {
 	unsigned char *_p;	/* current position in (some) buffer */
 	int	_r;		/* read space left for getc() */
 	int	_w;		/* write space left for putc() */
-#if defined(__LP64__)
-	int	_flags;		/* flags, below; this FILE is free if 0 */
-	int	_file;		/* fileno, if Unix descriptor, else -1 */
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 	short	_flags;		/* flags, below; this FILE is free if 0 */
 	short	_file;		/* fileno, if Unix descriptor, else -1 */
+#else
+	int	_flags;		/* flags, below; this FILE is free if 0 */
+	int	_file;		/* fileno, if Unix descriptor, else -1 */
 #endif
 	struct	__sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
 	int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
@@ -145,27 +145,27 @@ do { \
  * to __srget/__swbuf, so those symbols need to be public for LP32
  * but can be hidden for LP64.
  */
-__LIBC64_HIDDEN__ int __srget(FILE*);
-__LIBC64_HIDDEN__ int __swbuf(int, FILE*);
-__LIBC64_HIDDEN__ int __srefill(FILE*);
+__LIBC32_LEGACY_PUBLIC__ int __srget(FILE*);
+__LIBC32_LEGACY_PUBLIC__ int __swbuf(int, FILE*);
+__LIBC32_LEGACY_PUBLIC__ int __srefill(FILE*);
 
 /* This was referenced by the apportable middleware for LP32. */
-__LIBC64_HIDDEN__ int __swsetup(FILE*);
+__LIBC32_LEGACY_PUBLIC__ int __swsetup(FILE*);
 
 /* These were referenced by a couple of different pieces of middleware and the Crystax NDK. */
-__LIBC64_HIDDEN__ extern int __sdidinit;
-__LIBC64_HIDDEN__ int __sflags(const char*, int*);
-__LIBC64_HIDDEN__ FILE* __sfp(void);
-__LIBC64_HIDDEN__ void __sinit(void);
-__LIBC64_HIDDEN__ void __smakebuf(FILE*);
+__LIBC32_LEGACY_PUBLIC__ extern int __sdidinit;
+__LIBC32_LEGACY_PUBLIC__ int __sflags(const char*, int*);
+__LIBC32_LEGACY_PUBLIC__ FILE* __sfp(void);
+__LIBC32_LEGACY_PUBLIC__ void __sinit(void);
+__LIBC32_LEGACY_PUBLIC__ void __smakebuf(FILE*);
 
 /* These are referenced by the Greed for Glory franchise. */
-__LIBC64_HIDDEN__ int __sflush(FILE *);
-__LIBC64_HIDDEN__ int __sread(void *, char *, int);
-__LIBC64_HIDDEN__ int __swrite(void *, const char *, int);
-__LIBC64_HIDDEN__ fpos_t __sseek(void *, fpos_t, int);
-__LIBC64_HIDDEN__ int __sclose(void *);
-__LIBC64_HIDDEN__ int _fwalk(int (*)(FILE *));
+__LIBC32_LEGACY_PUBLIC__ int __sflush(FILE *);
+__LIBC32_LEGACY_PUBLIC__ int __sread(void *, char *, int);
+__LIBC32_LEGACY_PUBLIC__ int __swrite(void *, const char *, int);
+__LIBC32_LEGACY_PUBLIC__ fpos_t __sseek(void *, fpos_t, int);
+__LIBC32_LEGACY_PUBLIC__ int __sclose(void *);
+__LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE *));
 
 #pragma GCC visibility push(hidden)
 

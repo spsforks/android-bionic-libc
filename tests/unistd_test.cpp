@@ -71,7 +71,7 @@ TEST(unistd, brk_ENOMEM) {
 #endif
 
 TEST(unistd, sbrk_ENOMEM) {
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
   // There is no way to guarantee that all overflow conditions can be tested
   // without manipulating the underlying values of the current break.
   extern void* __bionic_brk;

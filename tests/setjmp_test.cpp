@@ -72,7 +72,7 @@ struct SigSets {
     sigset_t ss;
     sigemptyset(&ss);
     sigaddset(&ss, SIGUSR1 + offset);
-#if defined(__LP64__)
+#if !defined(__LP64_)
     // For arm and x86, sigset_t was too small for the RT signals.
     // For mips, sigset_t was large enough but jmp_buf wasn't.
     sigaddset(&ss, SIGRTMIN + offset);

@@ -38,8 +38,10 @@ LOCAL_CFLAGS += \
     -fvisibility=hidden \
     -Wall -Wextra -Wunused -Werror \
 
+ifndef BRILLO
 LOCAL_CFLAGS_arm += -D__work_around_b_24465209__
 LOCAL_CFLAGS_x86 += -D__work_around_b_24465209__
+endif
 
 LOCAL_CONLYFLAGS += \
     -std=gnu99 \

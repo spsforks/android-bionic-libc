@@ -197,7 +197,7 @@ struct soinfo {
   uint32_t* bucket_;
   uint32_t* chain_;
 
-#if defined(__mips__) || !defined(__LP64__)
+#if defined(__mips__) || defined(__work_around_b_24465209__)
   // This is only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
   ElfW(Addr)** plt_got_;
@@ -255,7 +255,7 @@ struct soinfo {
   // value to get the corresponding address in the process' address space.
   ElfW(Addr) load_bias;
 
-#if !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
   bool has_text_relocations;
 #endif
   bool has_DT_SYMBOLIC;

@@ -755,7 +755,7 @@ TEST(dlfcn, dlsym_failures) {
 
   void* sym;
 
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
   // RTLD_DEFAULT in lp32 bionic is not (void*)0
   // so it can be distinguished from the NULL handle.
   sym = dlsym(nullptr, "test");
