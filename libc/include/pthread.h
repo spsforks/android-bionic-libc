@@ -37,7 +37,7 @@
 #include <time.h>
 
 typedef struct {
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   int32_t __private[10];
 #else
   int32_t __private[1];
@@ -62,7 +62,7 @@ enum {
 #define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_ERRORCHECK & 3) << 14) } }
 
 typedef struct {
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   int32_t __private[12];
 #else
   int32_t __private[1];
@@ -74,7 +74,7 @@ typedef long pthread_condattr_t;
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
 
 typedef struct {
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
   int32_t __private[14];
 #else
   int32_t __private[10];
@@ -176,14 +176,14 @@ int pthread_mutexattr_settype(pthread_mutexattr_t*, int) __nonnull((1));
 
 int pthread_mutex_destroy(pthread_mutex_t*) __nonnull((1));
 int pthread_mutex_init(pthread_mutex_t*, const pthread_mutexattr_t*) __nonnull((1));
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
 int pthread_mutex_lock(pthread_mutex_t*) /* __nonnull((1)) */;
 #else
 int pthread_mutex_lock(pthread_mutex_t*) __nonnull((1));
 #endif
 int pthread_mutex_timedlock(pthread_mutex_t*, const struct timespec*) __nonnull((1, 2));
 int pthread_mutex_trylock(pthread_mutex_t*) __nonnull((1));
-#if !defined(__LP4__)
+#if !defined(__LP4__) && !defined(__BRILLO__)
 int pthread_mutex_unlock(pthread_mutex_t*) /* __nonnull((1)) */;
 #else
 int pthread_mutex_unlock(pthread_mutex_t*) __nonnull((1));
@@ -243,7 +243,7 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
     } while (0);                                       \
 
 
-#if !defined(__LP64__)
+#if !defined(__LP64__) && !defined(__BRILLO__)
 
 // Bionic additions that are deprecated even in the 32-bit ABI.
 //

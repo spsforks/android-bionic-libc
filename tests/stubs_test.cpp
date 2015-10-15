@@ -39,7 +39,7 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   ASSERT_EQ(uid, pwd->pw_uid);
   ASSERT_EQ(uid, pwd->pw_gid);
   ASSERT_EQ(NULL, pwd->pw_passwd);
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
   ASSERT_EQ(NULL, pwd->pw_gecos);
 #endif
 

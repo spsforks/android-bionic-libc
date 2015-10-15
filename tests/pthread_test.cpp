@@ -1527,7 +1527,7 @@ TEST(pthread, pthread_mutex_RECURSIVE_wakeup) {
 }
 
 TEST(pthread, pthread_mutex_owner_tid_limit) {
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC__) && !defined(__LP64__) && !defined(__BRILLO__)
   FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
   ASSERT_TRUE(fp != NULL);
   long pid_max;
@@ -1598,7 +1598,7 @@ TEST(pthread, pthread_types_allow_four_bytes_alignment) {
 }
 
 TEST(pthread, pthread_mutex_lock_null_32) {
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC__) && !defined(__LP64__) && !defined(__BRILLO__)
   ASSERT_EQ(EINVAL, pthread_mutex_lock(NULL));
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
@@ -1606,7 +1606,7 @@ TEST(pthread, pthread_mutex_lock_null_32) {
 }
 
 TEST(pthread, pthread_mutex_unlock_null_32) {
-#if defined(__BIONIC__) && !defined(__LP64__)
+#if defined(__BIONIC__) && !defined(__LP64__) && !defined(__BRILLO__)
   ASSERT_EQ(EINVAL, pthread_mutex_unlock(NULL));
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
@@ -1614,7 +1614,7 @@ TEST(pthread, pthread_mutex_unlock_null_32) {
 }
 
 TEST_F(pthread_DeathTest, pthread_mutex_lock_null_64) {
-#if defined(__BIONIC__) && defined(__LP64__)
+#if defined(__BIONIC__) && defined(__LP64__) && !defined(__BRILLO__)
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EXIT(pthread_mutex_lock(null_value), testing::KilledBySignal(SIGSEGV), "");
 #else
@@ -1623,7 +1623,7 @@ TEST_F(pthread_DeathTest, pthread_mutex_lock_null_64) {
 }
 
 TEST_F(pthread_DeathTest, pthread_mutex_unlock_null_64) {
-#if defined(__BIONIC__) && defined(__LP64__)
+#if defined(__BIONIC__) && defined(__LP64__) && !defined(__BRILLO__)
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EXIT(pthread_mutex_unlock(null_value), testing::KilledBySignal(SIGSEGV), "");
 #else

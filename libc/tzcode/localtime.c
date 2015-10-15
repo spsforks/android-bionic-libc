@@ -338,7 +338,8 @@ differ_by_repeat(const time_t t1, const time_t t0)
 {
     if (TYPE_BIT(time_t) - TYPE_SIGNED(time_t) < SECSPERREPEAT_BITS)
         return 0;
-#if defined(__LP64__) // 32-bit Android only has a signed 32-bit time_t; 64-bit Android is fixed.
+    // 32-bit Android only has a signed 32-bit time_t; 64-bit Android and BRILLO is fixed.
+#if defined(__LP64__) || defined(__BRILLO__)
     return t1 - t0 == SECSPERREPEAT;
 #endif
 }

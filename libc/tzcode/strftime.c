@@ -31,7 +31,7 @@
 #if __ANDROID__
 
 /* LP32 had a 32-bit time_t, so we need to work around that here. */
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(__BRILLO__)
 #define time64_t time_t
 #define mktime64 mktime
 #else

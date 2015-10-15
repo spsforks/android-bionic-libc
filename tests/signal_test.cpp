@@ -29,7 +29,7 @@ static size_t SIGNAL_MIN() {
 static size_t SIGNAL_MAX() {
   size_t result = SIGRTMAX;
 
-#if defined(__BIONIC__) && !defined(__mips__) && !defined(__LP64__)
+#if defined(__BIONIC__) && !defined(__mips__) && !defined(__LP64__) && !defined(__BRILLO__)
   // 32-bit bionic's sigset_t is too small for ARM and x86: 32 bits instead of 64.
   // This means you can't refer to any of the real-time signals.
   // See http://b/3038348 and http://b/5828899.

@@ -36,7 +36,7 @@
 #define _PATH_WTMP      "/var/log/wtmp"
 #define _PATH_LASTLOG   "/var/log/lastlog"
 
-#ifdef __LP64__
+#if defined(__LP64__) || defined(__BRILLO__)
 #define UT_NAMESIZE 32
 #define UT_LINESIZE 32
 #define UT_HOSTSIZE 256

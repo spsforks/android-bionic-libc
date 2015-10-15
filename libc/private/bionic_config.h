@@ -18,8 +18,8 @@
 #define _BIONIC_CONFIG_H_
 
 // valloc(3) and pvalloc(3) were removed from POSIX 2004. We do not include them
-// for LP64, but the symbols remain in LP32 for binary compatibility.
-#if !defined(__LP64__)
+// for LP64 or BRILLO, but the symbols remain in LP32 for binary compatibility.
+#if !defined(__LP64__) && !defined(__BRILLO__)
 #define HAVE_DEPRECATED_MALLOC_FUNCS 1
 #endif
 

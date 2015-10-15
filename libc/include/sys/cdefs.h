@@ -431,10 +431,10 @@
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
 
 /* Like __LIBC_HIDDEN__, but preserves binary compatibility for LP32. */
-#ifdef __LP64__
-#define __LIBC64_HIDDEN__ __LIBC_HIDDEN__
+#if defined(__LP64__) || defined(__BRILLO__)
+#define __LIBC32_LEGACY_PUBLIC__ __LIBC_HIDDEN__
 #else
-#define __LIBC64_HIDDEN__ __LIBC_ABI_PUBLIC__
+#define __LIBC32_LEGACY_PUBLIC__ __LIBC_ABI_PUBLIC__
 #endif
 
 /* Used to tag non-static symbols that are public and exposed by the shared library. */
