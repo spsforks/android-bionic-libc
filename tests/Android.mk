@@ -46,6 +46,8 @@ else
 test_cflags += -DUSE_JEMALLOC
 endif
 
+test_cflags_32 := -D__BIONIC_LIB32_LEGACY__
+
 test_cppflags := \
 
 libBionicStandardTests_src_files := \
@@ -119,6 +121,8 @@ libBionicStandardTests_src_files := \
 libBionicStandardTests_cflags := \
     $(test_cflags) \
 
+libBioncStandardTests_cflags_32 := $(test_cflags_32)
+
 ifeq ($(MALLOC_IMPL),dlmalloc)
   libBionicStandardTests_cflags += -DUSE_DLMALLOC
 else
@@ -162,6 +166,8 @@ $(foreach compiler,gcc clang, \
       -U_FORTIFY_SOURCE \
       -D_FORTIFY_SOURCE=$(test) \
       -DTEST_NAME=Fortify$(test)_$(compiler)); \
+    $(eval fortify$(test)-tests-$(compiler)_cflags_32 := \
+      $(test_cflags_32)); \
     $(eval fortify$(test)-tests-$(compiler)_src_files := \
       fortify_test.cpp); \
     $(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
@@ -228,6 +234,7 @@ include $(LOCAL_PATH)/Android.build.mk
 libBionicGtestMain_src_files := gtest_main.cpp
 
 libBionicGtestMain_cflags := $(test_cflags)
+libBionicGtestMain_cflags_32 := $(test_cflags_32)
 
 libBionicGtestMain_cppflags := $(test_cppflags)
 
@@ -252,6 +259,7 @@ endif
 libBionicCtsGtestMain_src_files := gtest_main.cpp
 
 libBionicCtsGtestMain_cflags := $(test_cflags)
+libBionicCtsGtestMain_cflags_32 := $(test_cflags_32)
 
 libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT \
 
@@ -289,6 +297,7 @@ bionic-unit-tests_src_files := \
     thread_local_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
+bionic-unit-tests_cflags_32 := $(test_cflags_32)
 
 bionic-unit-tests_conlyflags := \
     -fexceptions \
@@ -388,6 +397,7 @@ bionic-unit-tests-glibc_c_includes := \
     bionic/libc \
 
 bionic-unit-tests-glibc_cflags := $(test_cflags)
+bionic-unit-tests-glibc_cflags_32 := $(test_cflags_32)
 bionic-unit-tests-glibc_cppflags := $(test_cppflags)
 bionic-unit-tests-glibc_ldflags := -Wl,--export-dynamic
 

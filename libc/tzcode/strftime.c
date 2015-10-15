@@ -31,11 +31,11 @@
 #if __ANDROID__
 
 /* LP32 had a 32-bit time_t, so we need to work around that here. */
-#if defined(__LP64__)
+#if defined(__BIONIC_LIBC32_LEGACY__)
+#include <time64.h>
+#else
 #define time64_t time_t
 #define mktime64 mktime
-#else
-#include <time64.h>
 #endif
 
 #include <ctype.h>

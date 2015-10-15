@@ -28,12 +28,15 @@ TEST(sys_types, type_sizes) {
 
   // Some types were too small on 32-bit Android by mistake,
   // but are correct on 64-bit Android.
-#if defined(__LP64__)
+#if defined(__BIONIC__) && defined(__BIONIC_LIBC32_LEGACY__)
+  ASSERT_EQ(4U, sizeof(dev_t));
+#else
   ASSERT_EQ(8U, sizeof(dev_t));
+#endif
+#if defined(__LP64__)
   ASSERT_EQ(8U, sizeof(off_t));
   ASSERT_EQ(8U, sizeof(time_t));
 #else
-  ASSERT_EQ(4U, sizeof(dev_t));
   ASSERT_EQ(4U, sizeof(off_t));
   ASSERT_EQ(4U, sizeof(time_t));
 #endif

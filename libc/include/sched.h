@@ -57,10 +57,10 @@ extern int unshare(int);
 extern int sched_getcpu(void);
 extern int setns(int, int);
 
-#ifdef __LP64__
-#define CPU_SETSIZE 1024
-#else
+#if defined(__BIONIC_LIBC32_LEGACY__)
 #define CPU_SETSIZE 32
+#else
+#define CPU_SETSIZE 1024
 #endif
 
 #define __CPU_BITTYPE  unsigned long int  /* mandated by the kernel  */

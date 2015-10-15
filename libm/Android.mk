@@ -481,6 +481,11 @@ LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
 LOCAL_CLANG := $(libm_clang)
 LOCAL_ARM_MODE := arm
+
+ifndef BRILLO
+LOCAL_CFLAGS_32 += -D__BIONIC_LIBC32_LEGACY__
+endif
+
 LOCAL_CFLAGS := \
     -D__BIONIC_NO_MATH_INLINES \
     -DFLT_EVAL_METHOD=0 \
