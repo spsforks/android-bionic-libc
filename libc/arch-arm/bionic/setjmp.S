@@ -151,7 +151,11 @@ ENTRY(sigsetjmp)
   // Save core registers.
   add r1, r0, #(_JB_CORE_BASE * 4)
   m_mangle_registers r2
-  stmia r1, {r4-r14}
+
+  // ARM deprecates using sp in the register list for stmia.
+  stmia r1, {r4-r12}
+  str sp, [r1, #((12 - 4 + 1) * 4)]
+  str lr, [r1, #((12 - 4 + 1 + 1) * 4)]
   m_unmangle_registers r2
 
   // Save floating-point registers.
@@ -204,7 +208,11 @@ ENTRY(siglongjmp)
   ldr r3, [r0, #(_JB_SIGFLAG * 4)]
   bic r3, r3, #1
   add r2, r0, #(_JB_CORE_BASE * 4)
-  ldmia r2, {r4-r14}
+
+  // ARM deprecates using sp in the register list for ldmia.
+  ldmia r2, {r4-r12}
+  ldr sp, [r2, #((12 - 4 + 1) * 4)]
+  ldr lr, [r2, #((12 - 4 + 1 + 1) * 4)]
   m_unmangle_registers r3
 
   // Save the return value/address and check the setjmp cookie.
