@@ -35,12 +35,12 @@
  * structures (e.g. the exact layout of struct soinfo).
  */
 
+#include "linker_map.h"
 #include "linker.h"
 
 class ElfReader {
  public:
   ElfReader(const char* name, int fd, off64_t file_offset, off64_t file_size);
-  ~ElfReader();
 
   bool Load(const android_dlextinfo* extinfo);
 
@@ -67,9 +67,8 @@ class ElfReader {
   ElfW(Ehdr) header_;
   size_t phdr_num_;
 
-  void* phdr_mmap_;
-  ElfW(Phdr)* phdr_table_;
-  ElfW(Addr) phdr_size_;
+  MappedFileFragment phdr_fragment_;
+  const ElfW(Phdr)* phdr_table_;
 
   // First page of reserved address space.
   void* load_start_;
