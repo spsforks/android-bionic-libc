@@ -43,12 +43,24 @@ struct atexit_fn {
   void* fn_dso; /* shared module handle */
 };
 
+struct atfork_t {
+  atfork_t* next;
+  atfork_t* prev;
+
+  void (*prepare)(void);
+  void (*child)(void);
+  void (*parent)(void);
+
+  void* dso_handle;
+};
+
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   MallocDebug malloc_dispatch;
 
   WPVector<atexit_fn>* atexit;
+  WPVector<atfork_t>* atfork;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
@@ -60,4 +72,5 @@ __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
                                                KernelArgumentBlock& args);
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_atexit(libc_globals* globals);
+__LIBC_HIDDEN__ void __libc_init_atfork(libc_globals* globals);
 #endif
