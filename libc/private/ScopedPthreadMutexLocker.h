@@ -20,19 +20,39 @@
 #include <pthread.h>
 
 #include "bionic_macros.h"
+#include "libc_logging.h"
 
 class ScopedPthreadMutexLocker {
  public:
   explicit ScopedPthreadMutexLocker(pthread_mutex_t* mu) : mu_(mu) {
-    pthread_mutex_lock(mu_);
+    lock();
   }
 
   ~ScopedPthreadMutexLocker() {
+    if (locked_) {
+      unlock();
+    }
+  }
+
+  void lock() {
+    if (__predict_false(locked_)) {
+      __libc_fatal("ScopedPthreadMutexLocker locked while already locked");
+    }
+    pthread_mutex_lock(mu_);
+    locked_ = true;
+  }
+
+  void unlock() {
+    if (__predict_false(!locked_)) {
+      __libc_fatal("ScopedPthreadMutexLocker unlocked while already unlocked");
+    }
+    locked_ = false;
     pthread_mutex_unlock(mu_);
   }
 
  private:
   pthread_mutex_t* mu_;
+  bool locked_ = false;
 
   DISALLOW_COPY_AND_ASSIGN(ScopedPthreadMutexLocker);
 };
