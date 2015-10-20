@@ -66,6 +66,7 @@ libc_common_src_files := \
     stdio/stdio_ext.cpp \
     stdlib/atexit.cpp \
     stdlib/exit.c \
+    stdlib/quick_exit.cpp \
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
@@ -269,7 +270,6 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/usleep.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
     upstream-freebsd/lib/libc/stdlib/qsort.c \
-    upstream-freebsd/lib/libc/stdlib/quick_exit.c \
     upstream-freebsd/lib/libc/stdlib/realpath.c \
     upstream-freebsd/lib/libc/string/wcpcpy.c \
     upstream-freebsd/lib/libc/string/wcpncpy.c \

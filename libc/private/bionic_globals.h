@@ -54,6 +54,8 @@ struct atfork_t {
   void* dso_handle;
 };
 
+using at_quick_exit_t = void (*)(void);
+
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
@@ -61,6 +63,7 @@ struct libc_globals {
 
   WPVector<atexit_fn>* atexit;
   WPVector<atfork_t>* atfork;
+  WPVector<at_quick_exit_t>* at_quick_exit;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
@@ -73,4 +76,5 @@ __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_atexit(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_atfork(libc_globals* globals);
+__LIBC_HIDDEN__ void __libc_init_at_quick_exit(libc_globals* globals);
 #endif
