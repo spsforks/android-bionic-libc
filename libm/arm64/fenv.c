@@ -26,6 +26,7 @@
  * $FreeBSD: libm/aarch64/fenv.c $
  */
 
+#include <stdint.h>
 #include <fenv.h>
 
 #define FPCR_EXCEPT_SHIFT 8
@@ -35,8 +36,8 @@
 
 const fenv_t __fe_dfl_env = { 0 /* control */, 0 /* status */};
 
-typedef __uint32_t fpu_control_t;   // FPCR, Floating-point Control Register.
-typedef __uint32_t fpu_status_t;    // FPSR, Floating-point Status Register.
+typedef uint64_t fpu_control_t;   // FPCR, Floating-point Control Register.
+typedef uint64_t fpu_status_t;    // FPSR, Floating-point Status Register.
 
 #define __get_fpcr(__fpcr) __asm__ __volatile__("mrs %0,fpcr" : "=r" (__fpcr))
 #define __get_fpsr(__fpsr) __asm__ __volatile__("mrs %0,fpsr" : "=r" (__fpsr))
@@ -44,8 +45,11 @@ typedef __uint32_t fpu_status_t;    // FPSR, Floating-point Status Register.
 #define __set_fpsr(__fpsr) __asm__ __volatile__("msr fpsr,%0" : :"ri" (__fpsr))
 
 int fegetenv(fenv_t* envp) {
-  __get_fpcr(envp->__control);
-  __get_fpsr(envp->__status);
+  uint64_t value;
+  __get_fpcr(value);
+  envp->__control = (__uint32_t)value;
+  __get_fpsr(value);
+  envp->__status = (__uint32_t)value;
   return 0;
 }
 
@@ -53,10 +57,13 @@ int fesetenv(const fenv_t* envp) {
   fpu_control_t fpcr;
 
   __get_fpcr(fpcr);
+  uint64_t value;
   if (envp->__control != fpcr) {
-    __set_fpcr(envp->__control);
+    value = envp->__control;
+    __set_fpcr(value);
   }
-  __set_fpsr(envp->__status);
+  value = envp->__status;
+  __set_fpsr(value);
   return 0;
 }
 
@@ -155,7 +162,8 @@ int feupdateenv(const fenv_t* envp) {
   // Set FPU Control register.
   __get_fpcr(fpcr);
   if (envp->__control != fpcr) {
-    __set_fpcr(envp->__control);
+    uint64_t value = envp->__control;
+    __set_fpcr(value);
   }
 
   // Set FPU Status register to status | currently raised exceptions.
