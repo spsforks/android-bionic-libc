@@ -152,12 +152,12 @@ void BM_property_get::Run(int iters, int nprops) {
 
   srandom(iters * nprops);
 
-  StartBenchmarkTiming();
 
   for (int i = 0; i < iters; i++) {
+  	StartBenchmarkTiming();
     __system_property_get(pa.names[random() % nprops], value);
+  	StopBenchmarkTimingWithStd();
   }
-  StopBenchmarkTiming();
 }
 
 BENCHMARK_WITH_ARG(BM_property_find, int)->TEST_NUM_PROPS;
@@ -171,12 +171,12 @@ void BM_property_find::Run(int iters, int nprops) {
 
   srandom(iters * nprops);
 
-  StartBenchmarkTiming();
 
   for (int i = 0; i < iters; i++) {
+  	StartBenchmarkTiming();
     __system_property_find(pa.names[random() % nprops]);
+  	StopBenchmarkTimingWithStd();
   }
-  StopBenchmarkTiming();
 }
 
 BENCHMARK_WITH_ARG(BM_property_read, int)->TEST_NUM_PROPS;
@@ -196,11 +196,11 @@ void BM_property_read::Run(int iters, int nprops) {
     pinfo[i] = __system_property_find(pa.names[random() % nprops]);
   }
 
-  StartBenchmarkTiming();
   for (int i = 0; i < iters; i++) {
+  	StartBenchmarkTiming();
     __system_property_read(pinfo[i], 0, propvalue);
+  	StopBenchmarkTimingWithStd();
   }
-  StopBenchmarkTiming();
 
   delete[] pinfo;
 }
@@ -221,11 +221,11 @@ void BM_property_serial::Run(int iters, int nprops) {
     pinfo[i] = __system_property_find(pa.names[random() % nprops]);
   }
 
-  StartBenchmarkTiming();
   for (int i = 0; i < iters; i++) {
+  	StartBenchmarkTiming();
     __system_property_serial(pinfo[i]);
+  	StopBenchmarkTimingWithStd();
   }
-  StopBenchmarkTiming();
 
   delete[] pinfo;
 }
