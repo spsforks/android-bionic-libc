@@ -52,14 +52,14 @@ typedef int (*fn)(void);
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define LIBPATH_PREFIX "/nativetest64/"
+#define NATIVE_TESTS_PATH "/nativetest64"
 #else
-#define LIBPATH_PREFIX "/nativetest/"
+#define NATIVE_TESTS_PATH "/nativetest"
 #endif
 
-#define LIBPATH LIBPATH_PREFIX "libdlext_test_fd/libdlext_test_fd.so"
-#define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
-#define LIBZIPPATH_WITH_RUNPATH LIBPATH_PREFIX "libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
+#define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
+#define LIBZIPPATH NATIVE_TESTS_PATH "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
+#define LIBZIPPATH_WITH_RUNPATH NATIVE_TESTS_PATH "/libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
 
 #define LIBZIP_OFFSET PAGE_SIZE
 
@@ -596,4 +596,111 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
     ASSERT_TRUE(WIFEXITED(status));
     ASSERT_EQ(0, WEXITSTATUS(status));
   }
+}
+
+// Testing namespaces
+TEST(dlext, ns_smoke) {
+#if !defined(__LP64__)
+  static const std::string kLibDir = "/system/lib";
+#else
+  static const std::string kLibDir = "/system/lib64";
+#endif
+  static const char* root_lib = "libnstest_root.so";
+  static const char* public_lib = "libnstest_public.so";
+  std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + public_lib;
+
+  ASSERT_FALSE(android_init_public_namespace(path.c_str()));
+  ASSERT_STREQ("android_init_public_namespace failed: Error initializing public namespace: "
+               "\"libnstest_public.so\" was not found in the default namespace", dlerror());
+
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
+
+  void* handle_public = dlopen((lib_path + "/public_namespace_libs/libnstest_public.so").c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle_public != nullptr) << dlerror();
+
+  ASSERT_TRUE(android_init_public_namespace(path.c_str())) << dlerror();
+
+  // Check that libraries added to public namespace are NODELETE
+  dlclose(handle_public);
+  handle_public = dlopen((lib_path + "/public_namespace_libs/libnstest_public.so").c_str(), RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle_public != nullptr) << dlerror();
+
+  android_namespace_t ns1 = android_create_namespace("private1", nullptr, (lib_path + "/private_namespace_libs").c_str(), false);
+  ASSERT_TRUE(ns1 != nullptr) << dlerror();
+  android_namespace_t ns2 = android_create_namespace("private2", nullptr, (lib_path + "/private_namespace_libs").c_str(), true);
+  ASSERT_TRUE(ns2 != nullptr) << dlerror();
+
+  // This should not have affect search path for default namespace:
+  ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
+  void* handle = dlopen(public_lib, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns1;
+
+  void* handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle1 != nullptr) << dlerror();
+
+  extinfo.library_namespace = ns2;
+  void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+
+  ASSERT_TRUE(handle1 != handle2);
+
+  typedef const char* (*fn_t)();
+
+  fn_t ns_get_local_string1 = reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_local_string"));
+  ASSERT_TRUE(ns_get_local_string1 != nullptr) << dlerror();
+  fn_t ns_get_local_string2 = reinterpret_cast<fn_t>(dlsym(handle2, "ns_get_local_string"));
+  ASSERT_TRUE(ns_get_local_string2 != nullptr) << dlerror();
+
+  EXPECT_STREQ("This string is local to root library", ns_get_local_string1());
+  EXPECT_STREQ("This string is local to root library", ns_get_local_string2());
+
+  ASSERT_TRUE(ns_get_local_string1() != ns_get_local_string2());
+
+  fn_t ns_get_private_extern_string1 =
+          reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_private_extern_string"));
+  ASSERT_TRUE(ns_get_private_extern_string1 != nullptr) << dlerror();
+  fn_t ns_get_private_extern_string2 =
+          reinterpret_cast<fn_t>(dlsym(handle2, "ns_get_private_extern_string"));
+  ASSERT_TRUE(ns_get_private_extern_string2 != nullptr) << dlerror();
+
+  EXPECT_STREQ("This string is from private namespace", ns_get_private_extern_string1());
+  EXPECT_STREQ("This string is from private namespace", ns_get_private_extern_string2());
+
+  ASSERT_TRUE(ns_get_private_extern_string1() != ns_get_private_extern_string2());
+
+  fn_t ns_get_public_extern_string1 =
+          reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_public_extern_string"));
+  ASSERT_TRUE(ns_get_public_extern_string1 != nullptr) << dlerror();
+  fn_t ns_get_public_extern_string2 =
+          reinterpret_cast<fn_t>(dlsym(handle2, "ns_get_public_extern_string"));
+  ASSERT_TRUE(ns_get_public_extern_string2 != nullptr) << dlerror();
+
+  EXPECT_STREQ("This string is from public namespace", ns_get_public_extern_string1());
+  ASSERT_TRUE(ns_get_public_extern_string1() == ns_get_public_extern_string2());
+
+  // and now check that dlopen() does the right thing in terms of preserving namespace
+  fn_t ns_get_dlopened_string1 = reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_dlopened_string"));
+  ASSERT_TRUE(ns_get_dlopened_string1 != nullptr) << dlerror();
+  fn_t ns_get_dlopened_string2 = reinterpret_cast<fn_t>(dlsym(handle2, "ns_get_dlopened_string"));
+  ASSERT_TRUE(ns_get_dlopened_string2 != nullptr) << dlerror();
+
+  EXPECT_STREQ("This string is from private namespace (dlopened library)", ns_get_dlopened_string1());
+  EXPECT_STREQ("This string is from private namespace (dlopened library)", ns_get_dlopened_string2());
+
+  ASSERT_TRUE(ns_get_dlopened_string1() != ns_get_dlopened_string2());
+
+  dlclose(handle1);
+
+  // Check if handle2 is still alive (and well)
+  ASSERT_STREQ("This string is local to root library", ns_get_local_string2());
+  ASSERT_STREQ("This string is from private namespace", ns_get_private_extern_string2());
+  ASSERT_STREQ("This string is from public namespace", ns_get_public_extern_string2());
+  ASSERT_STREQ("This string is from private namespace (dlopened library)", ns_get_dlopened_string2());
+
+  dlclose(handle2);
 }

@@ -20,7 +20,7 @@
 bool normalize_path(const char* path, std::string* normalized_path) {
   // Input should be an absolute path
   if (path[0] != '/') {
-    PRINT("canonize_path - invalid input: '%s', the input path should be absolute", path);
+    PRINT("normalize_path - invalid input: '%s', the input path should be absolute", path);
     return false;
   }
 
