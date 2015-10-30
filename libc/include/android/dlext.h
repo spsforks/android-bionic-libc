@@ -98,6 +98,11 @@ enum {
    */
   ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100,
 
+  /* This flag used to load library to different namespace. The namespace is
+   * specified in library_namespace.
+   */
+  ANDROID_DLEXT_USE_NAMESPACE = 0x200,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -107,8 +112,12 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
                                         ANDROID_DLEXT_FORCE_FIXED_VADDR |
-                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS,
+                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS |
+                                        ANDROID_DLEXT_USE_NAMESPACE,
 };
+
+struct __android_namespace_t;
+typedef struct __android_namespace_t* android_namespace_t;
 
 typedef struct {
   uint64_t flags;
@@ -117,9 +126,16 @@ typedef struct {
   int     relro_fd;
   int     library_fd;
   off64_t library_fd_offset;
+  android_namespace_t library_namespace;
 } android_dlextinfo;
 
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+extern bool android_init_public_namespace(const char* path);
+
+extern android_namespace_t android_create_namespace(const char* name,
+                                                    const char* ld_library_path,
+                                                    const char* default_library_path,
+                                                    bool is_isolated);
 
 __END_DECLS
 
