@@ -1,77 +1,80 @@
 // Define the common source files for all the libc instances
 // =========================================================
-libc_common_src_files = [
-    "bionic/bindresvport.c",
-    "bionic/ether_aton.c",
-    "bionic/ether_ntoa.c",
-    "bionic/fts.c",
-    "bionic/getpriority.c",
-    "bionic/if_indextoname.c",
-    "bionic/if_nametoindex.c",
-    "bionic/initgroups.c",
-    "bionic/ioctl.c",
-    "bionic/isatty.c",
-    "bionic/memmem.c",
-    "bionic/pututline.c",
-    "bionic/sched_cpualloc.c",
-    "bionic/sched_cpucount.c",
-    "bionic/sigblock.c",
-    "bionic/siginterrupt.c",
-    "bionic/sigsetmask.c",
-    "bionic/system_properties_compat.c",
-    "stdio/findfp.c",
-    "stdio/fread.c",
-    "stdio/refill.c",
-    "stdio/snprintf.c",
-    "stdio/sprintf.c",
-    "stdio/stdio.c",
-    "stdio/stdio_ext.cpp",
-    "stdlib/atexit.c",
-    "stdlib/exit.c",
+cc_defaults {
+    name: "libc_src_defaults",
+    srcs: [
+        "bionic/bindresvport.c",
+        "bionic/ether_aton.c",
+        "bionic/ether_ntoa.c",
+        "bionic/fts.c",
+        "bionic/getpriority.c",
+        "bionic/if_indextoname.c",
+        "bionic/if_nametoindex.c",
+        "bionic/initgroups.c",
+        "bionic/ioctl.c",
+        "bionic/isatty.c",
+        "bionic/memmem.c",
+        "bionic/pututline.c",
+        "bionic/sched_cpualloc.c",
+        "bionic/sched_cpucount.c",
+        "bionic/sigblock.c",
+        "bionic/siginterrupt.c",
+        "bionic/sigsetmask.c",
+        "bionic/system_properties_compat.c",
+        "stdio/findfp.c",
+        "stdio/fread.c",
+        "stdio/refill.c",
+        "stdio/snprintf.c",
+        "stdio/sprintf.c",
+        "stdio/stdio.c",
+        "stdio/stdio_ext.cpp",
+        "stdlib/atexit.c",
+        "stdlib/exit.c",
 
-    // Fortify implementations of libc functions.
-    "bionic/__FD_chk.cpp",
-    "bionic/__fgets_chk.cpp",
-    "bionic/__fread_chk.cpp",
-    "bionic/__fwrite_chk.cpp",
-    "bionic/__getcwd_chk.cpp",
-    "bionic/__memchr_chk.cpp",
-    "bionic/__memmove_chk.cpp",
-    "bionic/__memrchr_chk.cpp",
-    "bionic/__poll_chk.cpp",
-    "bionic/__pread64_chk.cpp",
-    "bionic/__pread_chk.cpp",
-    "bionic/__pwrite64_chk.cpp",
-    "bionic/__pwrite_chk.cpp",
-    "bionic/__read_chk.cpp",
-    "bionic/__readlink_chk.cpp",
-    "bionic/__readlinkat_chk.cpp",
-    "bionic/__recvfrom_chk.cpp",
-    "bionic/__stpcpy_chk.cpp",
-    "bionic/__stpncpy_chk.cpp",
-    "bionic/__strchr_chk.cpp",
-    "bionic/__strlcat_chk.cpp",
-    "bionic/__strlcpy_chk.cpp",
-    "bionic/__strlen_chk.cpp",
-    "bionic/__strncat_chk.cpp",
-    "bionic/__strncpy_chk.cpp",
-    "bionic/__strrchr_chk.cpp",
-    "bionic/__umask_chk.cpp",
-    "bionic/__vsnprintf_chk.cpp",
-    "bionic/__vsprintf_chk.cpp",
-    "bionic/__write_chk.cpp",
-]
+        // Fortify implementations of libc functions.
+        "bionic/__FD_chk.cpp",
+        "bionic/__fgets_chk.cpp",
+        "bionic/__fread_chk.cpp",
+        "bionic/__fwrite_chk.cpp",
+        "bionic/__getcwd_chk.cpp",
+        "bionic/__memchr_chk.cpp",
+        "bionic/__memmove_chk.cpp",
+        "bionic/__memrchr_chk.cpp",
+        "bionic/__poll_chk.cpp",
+        "bionic/__pread64_chk.cpp",
+        "bionic/__pread_chk.cpp",
+        "bionic/__pwrite64_chk.cpp",
+        "bionic/__pwrite_chk.cpp",
+        "bionic/__read_chk.cpp",
+        "bionic/__readlink_chk.cpp",
+        "bionic/__readlinkat_chk.cpp",
+        "bionic/__recvfrom_chk.cpp",
+        "bionic/__stpcpy_chk.cpp",
+        "bionic/__stpncpy_chk.cpp",
+        "bionic/__strchr_chk.cpp",
+        "bionic/__strlcat_chk.cpp",
+        "bionic/__strlcpy_chk.cpp",
+        "bionic/__strlen_chk.cpp",
+        "bionic/__strncat_chk.cpp",
+        "bionic/__strncpy_chk.cpp",
+        "bionic/__strrchr_chk.cpp",
+        "bionic/__umask_chk.cpp",
+        "bionic/__vsnprintf_chk.cpp",
+        "bionic/__vsprintf_chk.cpp",
+        "bionic/__write_chk.cpp",
 
-// Various kinds of cruft.
-// ========================================================
-libc_common_src_files += [
-    "bionic/ndk_cruft.cpp",
-]
-
-libc_common_src_files_32 = [
-    "bionic/legacy_32_bit_support.cpp",
-    "bionic/time64.c",
-]
+        // Various kinds of cruft.
+        "bionic/ndk_cruft.cpp",
+    ],
+    multilib: {
+        lib32: {
+            srcs: [
+                "bionic/legacy_32_bit_support.cpp",
+                "bionic/time64.c",
+            ],
+        },
+    },
+}
 
 // Define some common cflags
 // ========================================================
@@ -1590,13 +1593,8 @@ cc_library_static {
 
 cc_library_static {
     name: "libc_ndk",
-    defaults: ["libc_defaults"],
-    srcs: libc_common_src_files + ["bionic/malloc_debug_common.cpp"],
-    multilib: {
-        lib32: {
-            srcs: libc_common_src_files_32,
-        },
-    },
+    defaults: ["libc_defaults", "libc_src_defaults"],
+    srcs: ["bionic/malloc_debug_common.cpp"],
     arch: {
         arm: {
             srcs: [
@@ -1634,13 +1632,7 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: libc_common_src_files,
-    multilib: {
-        lib32: {
-            srcs: libc_common_src_files_32,
-        },
-    },
+    defaults: ["libc_defaults", "libc_src_defaults"],
     name: "libc_common",
 
     whole_static_libs: [
