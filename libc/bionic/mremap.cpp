@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,19 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
+#include <sys/mman.h>
 #include <stdarg.h>
 
-extern int __ioctl(int, int, void *);
+extern "C" void* ___mremap(void*, size_t, size_t, int, void*);
 
-int ioctl(int fd, int request, ...)
-{
-    va_list ap;
-    void * arg;
-
-    va_start(ap, request);
-    arg = va_arg(ap, void *);
-    va_end(ap);
-
-    return __ioctl(fd, request, arg);
+void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
+  va_list ap;
+  va_start(ap, flags);
+  void* new_address = va_arg(ap, void*);
+  va_end(ap);
+  return ___mremap(old_address, old_size, new_size, flags, new_address);
 }
-
