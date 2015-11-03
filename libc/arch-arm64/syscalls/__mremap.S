@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(mremap)
+ENTRY(__mremap)
     mov     x8, __NR_mremap
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(mremap)
     b.hi    __set_errno_internal
 
     ret
-END(mremap)
+END(__mremap)
+.hidden __mremap

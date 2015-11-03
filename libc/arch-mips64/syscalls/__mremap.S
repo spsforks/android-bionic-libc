@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(mremap)
+ENTRY(__mremap)
     .set push
     .set noreorder
     li v0, __NR_mremap
@@ -22,4 +22,5 @@ ENTRY(mremap)
     j t9
     move ra, t0
     .set pop
-END(mremap)
+END(__mremap)
+.hidden __mremap
