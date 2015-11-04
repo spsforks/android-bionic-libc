@@ -120,13 +120,15 @@ extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale
  * glibc has a basename in <string.h> that's different to the POSIX one in <libgen.h>.
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
+
+#define basename __basename
+
 #if defined(__cplusplus)
-extern "C++" char* basename(char*) __RENAME(__gnu_basename) __nonnull((1));
-extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+extern "C++" char* __basename(char*) __RENAME(__gnu_basename) __nonnull((1));
+extern "C++" const char* __basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
 #else
-extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+extern char* __basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
 #endif
-#define __bionic_using_gnu_basename
 #endif
 
 extern void* __memchr_chk(const void*, int, size_t, size_t);
