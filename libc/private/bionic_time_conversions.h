@@ -41,6 +41,7 @@ __LIBC_HIDDEN__ void timeval_from_timespec(timeval& tv, const timespec& ts);
 
 __LIBC_HIDDEN__ bool timespec_from_absolute_timespec(timespec& ts, const timespec& abs_ts, clockid_t clock);
 
+__LIBC_HIDDEN__ void timespec_to_absolute_timespec(const timespec& ts, timespec& abs_ts, clockid_t clock);
 __END_DECLS
 
 #endif
