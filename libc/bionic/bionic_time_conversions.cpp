@@ -67,3 +67,13 @@ bool timespec_from_absolute_timespec(timespec& ts, const timespec& abs_ts, clock
   }
   return true;
 }
+
+void absolute_timespec_from_timespec(timespec& abs_ts, const timespec& ts, clockid_t clock) {
+  clock_gettime(clock, &abs_ts);
+  abs_ts.tv_sec += ts.tv_sec;
+  abs_ts.tv_nsec += ts.tv_nsec;
+  if (abs_ts.tv_nsec >= NS_PER_S) {
+    abs_ts.tv_nsec -= NS_PER_S;
+    abs_ts.tv_sec++;
+  }
+}

@@ -41,7 +41,6 @@
 
 #include "private/bionic_constants.h"
 #include "private/bionic_futex.h"
-#include "private/bionic_time_conversions.h"
 
 // In this implementation, a semaphore contains a
 // 31-bit signed value and a 1-bit 'shared' flag
@@ -220,7 +219,7 @@ int sem_wait(sem_t* sem) {
       return 0;
     }
 
-    __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, NULL);
+    __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
   }
 }
 
@@ -243,20 +242,13 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
   unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
 
   while (true) {
-    // POSIX mandates CLOCK_REALTIME here.
-    timespec ts;
-    if (!timespec_from_absolute_timespec(ts, *abs_timeout, CLOCK_REALTIME)) {
-      errno = ETIMEDOUT;
-      return -1;
-    }
-
     // Try to grab the semaphore. If the value was 0, this will also change it to -1.
     if (__sem_dec(sem_count_ptr) > 0) {
-      break;
+      return 0;
     }
 
     // Contention detected. Wait for a wakeup event.
-    int ret = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, &ts);
+    int ret = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, true, abs_timeout);
 
     // Return in case of timeout or interrupt.
     if (ret == -ETIMEDOUT || ret == -EINTR) {
@@ -264,7 +256,6 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
       return -1;
     }
   }
-  return 0;
 }
 
 int sem_post(sem_t* sem) {
