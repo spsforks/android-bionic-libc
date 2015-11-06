@@ -1315,6 +1315,9 @@ LIBC_N {
     preadv;
     preadv64;
     prlimit; # arm mips x86
+    pthread_barrier_destroy;
+    pthread_barrier_init;
+    pthread_barrier_wait;
     pwritev;
     pwritev64;
     scandirat;
