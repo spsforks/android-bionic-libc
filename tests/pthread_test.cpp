@@ -721,11 +721,11 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
-static void WaitUntilThreadSleep(std::atomic<pid_t>& pid) {
-  while (pid == 0) {
+static void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
+  while (tid == 0) {
     usleep(1000);
   }
-  std::string filename = android::base::StringPrintf("/proc/%d/stat", pid.load());
+  std::string filename = android::base::StringPrintf("/proc/%d/stat", tid.load());
   std::regex regex {R"(\s+S\s+)"};
 
   while (true) {
@@ -1652,4 +1652,39 @@ TEST(pthread, big_enough_signal_stack_for_64bit_arch) {
   ScopedSignalHandler handler(SIGUSR1, SignalHandlerOnAltStack, SA_SIGINFO | SA_ONSTACK);
   kill(getpid(), SIGUSR1);
   ASSERT_TRUE(signal_handler_on_altstack_done);
+}
+
+struct BarrierTestHelperArg {
+  std::atomic<pid_t> tid;
+  pthread_barrier_t* barrier;
+};
+
+static void BarrierTestHelper(BarrierTestHelperArg* arg) {
+  arg->tid = gettid();
+  ASSERT_EQ(0, pthread_barrier_wait(arg->barrier));
+}
+
+TEST(pthread, pthread_barrier_smoke) {
+  const size_t BARRIER_ITERATION_COUNT = 10;
+  const size_t BARRIER_THREAD_COUNT = 10;
+  pthread_barrier_t barrier;
+  ASSERT_EQ(0, pthread_barrier_init(&barrier, nullptr, BARRIER_THREAD_COUNT + 1));
+  for (size_t iteration = 0; iteration < BARRIER_ITERATION_COUNT; ++iteration) {
+    std::vector<pthread_t> threads(BARRIER_THREAD_COUNT);
+    std::vector<BarrierTestHelperArg> args(threads.size());
+    for (size_t i = 0; i < threads.size(); ++i) {
+      args[i].tid = 0;
+      args[i].barrier = &barrier;
+      ASSERT_EQ(0, pthread_create(&threads[i], nullptr,
+                                  reinterpret_cast<void* (*)(void*)>(BarrierTestHelper), &args[i]));
+    }
+    for (size_t i = 0; i < threads.size(); ++i) {
+      WaitUntilThreadSleep(args[i].tid);
+    }
+    ASSERT_EQ(PTHREAD_BARRIER_SERIAL_THREAD, pthread_barrier_wait(&barrier));
+    for (size_t i = 0; i < threads.size(); ++i) {
+      ASSERT_EQ(0, pthread_join(threads[i], nullptr));
+    }
+  }
+  ASSERT_EQ(0, pthread_barrier_destroy(&barrier));
 }
