@@ -216,6 +216,8 @@ int pthread_setschedparam(pthread_t, int, const struct sched_param*) __nonnull((
 
 int pthread_setspecific(pthread_key_t, const void*);
 
+int pthread_yield();
+
 typedef void (*__pthread_cleanup_func_t)(void*);
 
 typedef struct __pthread_cleanup_t {
