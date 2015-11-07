@@ -1342,6 +1342,7 @@ LIBC_N {
     preadv;
     preadv64;
     prlimit; # arm mips x86
+    pthread_yield;
     pwritev;
     pwritev64;
     scandirat;

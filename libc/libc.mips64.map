@@ -1160,6 +1160,7 @@ LIBC_N {
     getgrnam_r;
     preadv;
     preadv64;
+    pthread_yield;
     pwritev;
     pwritev64;
     scandirat;
