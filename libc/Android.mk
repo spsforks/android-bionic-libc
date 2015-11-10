@@ -1039,13 +1039,13 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_thread_atexit_impl_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) -Wframe-larger-than=2048
 
+# b/25642296, __cxa_thread_atexit_impl.o: unsupported reloc 311 against local symbol
+LOCAL_CLANG_arm64 := false
+
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_thread_atexit_impl
-# TODO: Clang tries to use __tls_get_addr which is not supported yet
-# remove after it is implemented.
-LOCAL_CLANG := false
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=

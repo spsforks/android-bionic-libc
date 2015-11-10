@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
 // Gcc has a bug with -O -fdata-section for the arm target: http://b/22772147.
 // Until that bug is fixed, disable optimization since
 // it is not essential for this test.
