@@ -4120,6 +4120,12 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
 extern "C" int __set_tls(void*);
 extern "C" void _start();
 
+extern __LIBC_HIDDEN__ void* __libc_sysinfo;
+
+static void __linker_cannot_link(KernelArgumentBlock& args) {
+  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+}
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -4131,9 +4137,6 @@ extern "C" void _start();
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
-
-  void* tls[BIONIC_TLS_SLOTS];
-  __set_tls(tls);
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
@@ -4163,15 +4166,25 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.set_linker_flag();
 
+  // Prelink the linker so we can access linker globals.
+  if (!linker_so.prelink_image()) __linker_cannot_link(args);
+
+#if defined(__i386__)
+  // On x86, we can't make system calls before this point.
+  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+#endif
+
+  // Set up the TLS.
+  void* tls[BIONIC_TLS_SLOTS];
+  __set_tls(tls);
+
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because
   // linker is built with DT_SYMBOLIC and therefore relocates its symbols against
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!(linker_so.prelink_image() && linker_so.link_image(g_empty_list, g_empty_list, nullptr))) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
-  }
+  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args);
 
   __libc_init_main_thread(args);
 
