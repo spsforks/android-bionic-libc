@@ -167,8 +167,17 @@ END(%(func)s)
 x86_registers = [ "ebx", "ecx", "edx", "esi", "edi", "ebp" ]
 
 x86_call = """\
+    pushl   %%ecx
+    pushl   %%edx
+    call    __kernel_syscall
+    pushl   %%eax
+    movl    4(%%esp), %%edx
+    movl    8(%%esp), %%ecx
+
     movl    $%(__NR_name)s, %%eax
-    int     $0x80
+    call    *(%%esp)
+    addl    $12, %%esp
+
     cmpl    $-MAX_ERRNO, %%eax
     jb      1f
     negl    %%eax
