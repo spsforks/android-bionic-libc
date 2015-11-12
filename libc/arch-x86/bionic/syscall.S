@@ -38,7 +38,7 @@ ENTRY(syscall)
     mov     44(%esp),%ebp
 
     # Make the system call.
-    int     $0x80
+    call    __syscall
 
     # Error?
     cmpl    $-MAX_ERRNO, %eax

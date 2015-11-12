@@ -168,7 +168,7 @@ x86_registers = [ "ebx", "ecx", "edx", "esi", "edi", "ebp" ]
 
 x86_call = """\
     movl    $%(__NR_name)s, %%eax
-    int     $0x80
+    call    __syscall
     cmpl    $-MAX_ERRNO, %%eax
     jb      1f
     negl    %%eax
