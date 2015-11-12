@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _PRIVATE_BIONIC_GLOBALS_H
 #define _PRIVATE_BIONIC_GLOBALS_H
 
@@ -42,9 +43,13 @@ struct libc_globals {
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
 class KernelArgumentBlock;
-__LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals,
-                                      KernelArgumentBlock& args);
-__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
-                                               KernelArgumentBlock& args);
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
+__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args);
+__LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args);
+
+#if defined(__i386__)
+__LIBC_HIDDEN__ extern void* __libc_sysinfo;
+__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args);
+#endif
+
 #endif
