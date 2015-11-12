@@ -64,11 +64,22 @@ char** environ;
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
+#if defined(__i386__)
+static void* __libc_sysinfo = nullptr;
+extern "C" __LIBC_HIDDEN__ void __int80_syscall();
+extern "C" __LIBC_HIDDEN__ void* __kernel_syscall() {
+  return (__libc_sysinfo != nullptr) ? __libc_sysinfo : reinterpret_cast<void*>(__int80_syscall);
+}
+#endif
+
 void __libc_init_globals(KernelArgumentBlock& args) {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
   __libc_auxv = args.auxv;
+#if defined(__i386__)
+  __libc_sysinfo = reinterpret_cast<void*>(getauxval(AT_SYSINFO));
+#endif
   __libc_globals.initialize();
   __libc_globals.mutate([&args](libc_globals* globals) {
     __libc_init_vdso(globals, args);
