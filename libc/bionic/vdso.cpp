@@ -46,12 +46,26 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
   return __gettimeofday(tv, tz);
 }
 
+#if defined(__i386__)
+void* __kernel_syscall() {
+  if (__libc_globals->vdso[VDSO_KERNEL_VSYSCALL].fn) {
+    return __libc_globals->vdso[VDSO_KERNEL_VSYSCALL].fn;
+  } else {
+    return reinterpret_cast<void*>(__legacy_syscall);
+  }
+}
+#endif
+
 void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
   auto&& vdso = globals->vdso;
   vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL,
                                reinterpret_cast<void*>(__clock_gettime) };
   vdso[VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL,
                               reinterpret_cast<void*>(__gettimeofday) };
+#if defined(__i386__)
+  vdso[VDSO_KERNEL_VSYSCALL] = { VDSO_KERNEL_VSYSCALL_SYMBOL,
+                              reinterpret_cast<void*>(__legacy_syscall) };
+#endif
 
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = args.getauxval(AT_SYSINFO_EHDR);
