@@ -36,10 +36,18 @@
 #elif defined(__x86_64__) || defined(__i386__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
+#if defined(__i386__)
+#define VDSO_KERNEL_VSYSCALL_SYMBOL "__kernel_vsyscall"
+#endif
 #endif
 
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
+
+#if defined(__i386__)
+extern "C" __LIBC_HIDDEN__ void* __kernel_syscall();
+extern "C" __LIBC_HIDDEN__ void  __legacy_syscall();
+#endif
 
 struct vdso_entry {
   const char* name;
@@ -49,6 +57,9 @@ struct vdso_entry {
 enum {
   VDSO_CLOCK_GETTIME = 0,
   VDSO_GETTIMEOFDAY,
+#if defined(__i386__)
+  VDSO_KERNEL_VSYSCALL,
+#endif
   VDSO_END
 };
 
