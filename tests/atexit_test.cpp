@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
+// To work around b/25643775, we disable clang optimization so that
+//   VTT for std::__1::basic_stringstream<char, std::__1::char_traits<char>,
+//   std::__1::allocator<char> >
+// will be correctly kept for other module's references.
+#if __clang__ && (__arm__ || __aarch64__)
+#pragma clang optimize off
+#endif
 #include <gtest/gtest.h>
+#if __clang__ && (__arm__ || __aarch64__)
+#pragma clang optimize on
+#endif
 
 #include <dlfcn.h>
 #include <libgen.h>
