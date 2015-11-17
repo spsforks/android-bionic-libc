@@ -26,41 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef DEBUG_MALLOC_TRACKDATA_H
+#define DEBUG_MALLOC_TRACKDATA_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <stdint.h>
+#include <pthread.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+#include <vector>
+#include <unordered_set>
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+#include <private/bionic_macros.h>
 
-#endif
+// Forward declarations.
+struct Header;
+struct Config;
+class DebugData;
+
+class TrackData {
+ public:
+  TrackData() = default;
+  virtual ~TrackData() = default;
+
+  void GetList(std::vector<Header*>* list);
+
+  void Add(Header* header, bool backtrace_found);
+
+  void Remove(Header* header, bool backtrace_found);
+
+  void GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
+               size_t* info_size, size_t* total_memory, size_t* backtrace_size);
+
+  void DisplayLeaks(DebugData& debug);
+
+ private:
+  pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
+  std::unordered_set<Header*> headers_;
+  size_t total_backtrace_allocs_ = 0;
+
+  DISALLOW_COPY_AND_ASSIGN(TrackData);
+};
+
+#endif // DEBUG_MALLOC_TRACKDATA_H

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MAPINFO_H
-#define DEBUG_MAPINFO_H
+/*
+ * Contains declarations of types and constants used by malloc leak
+ * detection code in both, libc and libc_malloc_debug libraries.
+ */
+#ifndef _PRIVATE_BIONIC_MALLOC_DEBUG_H_
+#define _PRIVATE_BIONIC_MALLOC_DEBUG_H_
 
-#include <sys/cdefs.h>
+#include <private/libc_logging.h>
 
-struct mapinfo_t {
-  struct mapinfo_t* next;
-  uintptr_t start;
-  uintptr_t end;
-  uintptr_t offset;
-  uintptr_t load_base;
-  bool load_base_read;
-  char name[];
-};
+// =============================================================================
+// log functions
+// =============================================================================
+#define debug_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__ )
+#define error_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__ )
+#define info_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__ )
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid);
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc);
-
-#endif /* DEBUG_MAPINFO_H */
+#endif  // _PRIVATE_BIONIC_MALLOC_DEBUG_H_
