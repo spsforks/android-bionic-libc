@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_BACKTRACE_H
-#define DEBUG_BACKTRACE_H
+#ifndef DEBUG_MALLOC_TRACKDATA_H
+#define DEBUG_MALLOC_TRACKDATA_H
 
 #include <stdint.h>
-#include <sys/cdefs.h>
+#include <pthread.h>
 
-__LIBC_HIDDEN__ void backtrace_startup();
-__LIBC_HIDDEN__ void backtrace_shutdown();
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
+#include <vector>
+#include <unordered_set>
 
-#endif /* DEBUG_BACKTRACE_H */
+#include <private/bionic_macros.h>
+
+// Forward declarations.
+struct Header;
+struct Config;
+class DebugData;
+
+class TrackData {
+ public:
+  TrackData() = default;
+  virtual ~TrackData() = default;
+
+  void GetList(std::vector<Header*>* list);
+
+  void Add(Header* header, bool backtrace_found);
+
+  void Remove(Header* header, bool backtrace_found);
+
+  void GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
+               size_t* info_size, size_t* total_memory, size_t* backtrace_size);
+
+  void DisplayLeaks(DebugData& debug);
+
+ private:
+  pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
+  std::unordered_set<Header*> headers_;
+  size_t total_backtrace_allocs_ = 0;
+
+  DISALLOW_COPY_AND_ASSIGN(TrackData);
+};
+
+#endif // DEBUG_MALLOC_TRACKDATA_H

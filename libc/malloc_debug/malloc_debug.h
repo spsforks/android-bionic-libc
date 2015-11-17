@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_DISABLE_H
-#define MALLOC_DEBUG_DISABLE_H
+#ifndef MALLOC_DEBUG_H
+#define MALLOC_DEBUG_H
 
-#include <pthread.h>
+#include <stdint.h>
 
-#include "private/bionic_macros.h"
+#include <private/bionic_malloc_dispatch.h>
 
-// =============================================================================
-// Used to disable the debug allocation calls.
-// =============================================================================
-extern pthread_key_t g_debug_calls_disabled;
+struct Header {
+  uint32_t tag;
+  void* orig_pointer;
+  size_t size;
+  size_t usable_size;
+  size_t real_size() const { return size & ~(1U << 31); }
+  void set_zygote() { size |= 1U << 31; }
+  static size_t max_size() { return (1U << 31) - 1; }
+} __attribute__((packed));
 
-static inline bool DebugCallsDisabled() {
-  return pthread_getspecific(g_debug_calls_disabled) != NULL;
-}
+struct TrackHeader {
+  Header* prev = nullptr;
+  Header* next = nullptr;
+} __attribute__((packed));
 
-class ScopedDisableDebugCalls {
- public:
-  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
-    }
-  }
-  ~ScopedDisableDebugCalls() {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, NULL);
-    }
-  }
+struct BacktraceHeader {
+  size_t num_frames;
+  uintptr_t frames[0];
+} __attribute__((packed));
 
- private:
-  bool disabled_;
+constexpr uint32_t DEBUG_TAG = 0x1ee7d00d;
+constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***";
+constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
-};
+extern const MallocDispatch* g_dispatch;
 
-#endif  // MALLOC_DEBUG_DISABLE_H
+#endif // MALLOC_DEBUG_H
