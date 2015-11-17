@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_DISABLE_H
-#define MALLOC_DEBUG_DISABLE_H
+#ifndef DEBUG_MALLOC_BACKTRACEDATA_H
+#define DEBUG_MALLOC_BACKTRACEDATA_H
 
-#include <pthread.h>
+#include <stdint.h>
 
-#include "private/bionic_macros.h"
+#include <private/bionic_macros.h>
 
-// =============================================================================
-// Used to disable the debug allocation calls.
-// =============================================================================
-extern pthread_key_t g_debug_calls_disabled;
+// Forward declarations.
+struct Config;
 
-static inline bool DebugCallsDisabled() {
-  return pthread_getspecific(g_debug_calls_disabled) != NULL;
-}
-
-class ScopedDisableDebugCalls {
+class BacktraceData {
  public:
-  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
-    }
-  }
-  ~ScopedDisableDebugCalls() {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, NULL);
-    }
-  }
+  BacktraceData(const Config& config, size_t* offset);
+  virtual ~BacktraceData() = default;
+
+  bool Initialize(const Config& config);
+
+  inline size_t alloc_offset() { return alloc_offset_; }
+  inline size_t free_offset() { return free_offset_; }
+
+  bool enabled() { return enabled_; }
+  void set_enabled(bool enabled) { enabled_ = enabled; }
 
  private:
-  bool disabled_;
+  size_t alloc_offset_ = 0;
+  size_t free_offset_ = 0;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
+  volatile bool enabled_ = false;
+
+  DISALLOW_COPY_AND_ASSIGN(BacktraceData);
 };
 
-#endif  // MALLOC_DEBUG_DISABLE_H
+#endif // DEBUG_MALLOC_BACKTRACEDATA_H
