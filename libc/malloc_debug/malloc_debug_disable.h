@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef MALLOC_DEBUG_DISABLE_H
+#define MALLOC_DEBUG_DISABLE_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <pthread.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+#include <private/bionic_macros.h>
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+// =============================================================================
+// Used to disable the debug allocation calls.
+// =============================================================================
+extern pthread_key_t g_debug_calls_disabled;
 
-#endif
+static inline bool DebugCallsDisabled() {
+  return pthread_getspecific(g_debug_calls_disabled) != nullptr;
+}
+
+class ScopedDisableDebugCalls {
+ public:
+  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
+    }
+  }
+  ~ScopedDisableDebugCalls() {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, nullptr);
+    }
+  }
+
+ private:
+  bool disabled_;
+
+  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
+};
+
+#endif  // MALLOC_DEBUG_DISABLE_H
