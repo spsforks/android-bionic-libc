@@ -26,41 +26,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef MALLOC_DEBUG_CONFIG_H
+#define MALLOC_DEBUG_CONFIG_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <stdint.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+constexpr uint64_t FRONT_GUARD = 0x1;
+constexpr uint64_t REAR_GUARD = 0x2;
+constexpr uint64_t BACKTRACE = 0x4;
+constexpr uint64_t FILL_ON_ALLOC = 0x8;
+constexpr uint64_t FILL_ON_FREE = 0x10;
+constexpr uint64_t EXPAND_ALLOC = 0x20;
+constexpr uint64_t FREE_TRACK = 0x40;
+constexpr uint64_t TRACK_ALLOCS = 0x80;
+constexpr uint64_t LEAK_TRACK = 0x100;
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+// If only these options are set, then no special header is needed.
+constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
 
-#endif
+struct Config {
+  bool SetFromProperties();
+
+  size_t front_guard_bytes = 0;
+  size_t rear_guard_bytes = 0;
+
+  bool backtrace_enable_on_signal = false;
+  int backtrace_signal = 0;
+  bool backtrace_enabled = false;
+  size_t backtrace_frames = 0;
+
+  size_t fill_on_alloc_bytes = 0;
+  size_t fill_on_free_bytes = 0;
+
+  size_t expand_alloc_bytes = 0;
+
+  size_t free_track_allocations = 0;
+
+  uint64_t options = 0;
+  uint8_t fill_alloc_value;
+  uint8_t fill_free_value;
+  uint8_t front_guard_value;
+  uint8_t rear_guard_value;
+};
+
+#endif  // MALLOC_DEBUG_CONFIG_H
