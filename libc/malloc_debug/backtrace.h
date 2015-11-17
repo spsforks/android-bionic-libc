@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,12 @@
 #ifndef MALLOC_DEBUG_BACKTRACE_H
 #define MALLOC_DEBUG_BACKTRACE_H
 
-extern bool g_backtrace_enabled;
+#include <stdint.h>
+#include <sys/cdefs.h>
 
-#define GET_BACKTRACE(bt, depth) \
-  (g_backtrace_enabled ? get_backtrace(bt, depth) : 0)
+__LIBC_HIDDEN__ void backtrace_startup();
+__LIBC_HIDDEN__ void backtrace_shutdown();
+__LIBC_HIDDEN__ size_t backtrace_get(uintptr_t* frames, size_t frame_count);
+__LIBC_HIDDEN__ void backtrace_log(uintptr_t* frames, size_t frame_count);
 
-#endif  // MALLOC_DEBUG_BACKTRACE_H
+#endif // MALLOC_DEBUG_BACKTRACE_H

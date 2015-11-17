@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2009 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_DISABLE_H
-#define MALLOC_DEBUG_DISABLE_H
+/*
+ * Contains declarations of types and constants used by malloc leak
+ * detection code in both, libc and libc_malloc_debug libraries.
+ */
+#ifndef _PRIVATE_BIONIC_MALLOC_DEBUG_H_
+#define _PRIVATE_BIONIC_MALLOC_DEBUG_H_
 
-#include <pthread.h>
-
-#include "private/bionic_macros.h"
+#include <private/libc_logging.h>
 
 // =============================================================================
-// Used to disable the debug allocation calls.
+// log functions
 // =============================================================================
-extern pthread_key_t g_debug_calls_disabled;
+#define debug_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__ )
+#define error_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__ )
+#define info_log(format, ...)  \
+    __libc_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__ )
 
-static inline bool DebugCallsDisabled() {
-  return pthread_getspecific(g_debug_calls_disabled) != NULL;
-}
-
-class ScopedDisableDebugCalls {
- public:
-  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
-    }
-  }
-  ~ScopedDisableDebugCalls() {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, NULL);
-    }
-  }
-
- private:
-  bool disabled_;
-
-  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
-};
-
-#endif  // MALLOC_DEBUG_DISABLE_H
+#endif  // _PRIVATE_BIONIC_MALLOC_DEBUG_H_
