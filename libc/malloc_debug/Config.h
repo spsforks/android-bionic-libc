@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MAPINFO_H
-#define DEBUG_MAPINFO_H
+#ifndef MALLOC_DEBUG_CONFIG_H
+#define MALLOC_DEBUG_CONFIG_H
 
-#include <sys/cdefs.h>
+#include <stdint.h>
 
-struct mapinfo_t {
-  struct mapinfo_t* next;
-  uintptr_t start;
-  uintptr_t end;
-  uintptr_t offset;
-  uintptr_t load_base;
-  bool load_base_read;
-  char name[];
+constexpr uint64_t FRONT_GUARD = 0x1;
+constexpr uint64_t REAR_GUARD = 0x2;
+constexpr uint64_t BACKTRACE = 0x4;
+constexpr uint64_t FILL_ON_ALLOC = 0x8;
+constexpr uint64_t FILL_ON_FREE = 0x10;
+constexpr uint64_t EXPAND_ALLOC = 0x20;
+constexpr uint64_t FREE_TRACK = 0x40;
+constexpr uint64_t TRACK_ALLOCS = 0x80;
+constexpr uint64_t LEAK_TRACK = 0x100;
+
+// If only one or more of these options is set, then no special header is needed.
+constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
+
+struct Config {
+  bool SetFromProperties();
+
+  size_t front_guard_bytes = 0;
+  size_t rear_guard_bytes = 0;
+
+  bool backtrace_enable_on_signal = false;
+  int backtrace_signal = 0;
+  bool backtrace_enabled = false;
+  size_t backtrace_frames = 0;
+
+  size_t fill_on_alloc_bytes = 0;
+  size_t fill_on_free_bytes = 0;
+
+  size_t expand_alloc_bytes = 0;
+
+  size_t free_track_allocations = 0;
+
+  uint64_t options = 0;
+  uint8_t fill_alloc_value;
+  uint8_t fill_free_value;
+  uint8_t front_guard_value;
+  uint8_t rear_guard_value;
 };
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid);
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc);
-
-#endif /* DEBUG_MAPINFO_H */
+#endif  // MALLOC_DEBUG_CONFIG_H
