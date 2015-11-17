@@ -33,8 +33,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "debug_mapinfo.h"
 #include "malloc_debug_disable.h"
+#include "mapinfo.h"
 
 #if defined(__LP64__)
 #define Elf_W(x) Elf64_##x
@@ -52,7 +52,7 @@ static mapinfo_t* parse_maps_line(char* line) {
   int name_pos;
   if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start,
              &end, permissions, &offset, &name_pos) < 2) {
-    return NULL;
+    return nullptr;
   }
 
   const char* name = line + name_pos;
@@ -82,12 +82,12 @@ static mapinfo_t* parse_maps_line(char* line) {
 __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
   ScopedDisableDebugCalls disable;
 
-  struct mapinfo_t* milist = NULL;
+  struct mapinfo_t* milist = nullptr;
   char data[1024]; // Used to read lines as well as to construct the filename.
   snprintf(data, sizeof(data), "/proc/%d/maps", pid);
   FILE* fp = fopen(data, "re");
-  if (fp != NULL) {
-    while (fgets(data, sizeof(data), fp) != NULL) {
+  if (fp != nullptr) {
+    while (fgets(data, sizeof(data), fp) != nullptr) {
       mapinfo_t* mi = parse_maps_line(data);
       if (mi) {
         mi->next = milist;
@@ -102,7 +102,7 @@ __LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid) {
 __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
   ScopedDisableDebugCalls disable;
 
-  while (mi != NULL) {
+  while (mi != nullptr) {
     mapinfo_t* del = mi;
     mi = mi->next;
     free(del);
@@ -122,7 +122,7 @@ static inline bool get_val(mapinfo_t* mi, uintptr_t addr, T* store) {
   return true;
 }
 
-__LIBC_HIDDEN__ void mapinfo_read_loadbase(mapinfo_t* mi) {
+static void mapinfo_read_loadbase(mapinfo_t* mi) {
   mi->load_base = 0;
   mi->load_base_read = true;
   uintptr_t addr = mi->start;
@@ -155,7 +155,7 @@ __LIBC_HIDDEN__ void mapinfo_read_loadbase(mapinfo_t* mi) {
 
 // Find the containing map info for the PC.
 __LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc) {
-  for (; mi != NULL; mi = mi->next) {
+  for (; mi != nullptr; mi = mi->next) {
     if ((pc >= mi->start) && (pc < mi->end)) {
       if (!mi->load_base_read) {
         mapinfo_read_loadbase(mi);
@@ -165,5 +165,5 @@ __LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintp
     }
   }
   *rel_pc = pc;
-  return NULL;
+  return nullptr;
 }

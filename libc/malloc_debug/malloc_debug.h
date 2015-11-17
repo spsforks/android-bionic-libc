@@ -26,41 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef MALLOC_DEBUG_H
+#define MALLOC_DEBUG_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <stdint.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+struct Header {
+  uint32_t tag;
+  void* orig_pointer;
+  size_t size;
+  size_t usable_size;
+} __attribute__((packed));
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+struct TrackHeader {
+  Header* prev = nullptr;
+  Header* next = nullptr;
+} __attribute__((packed));
 
-#endif
+struct BacktraceHeader {
+  size_t num_frames;
+  uintptr_t frames[0];
+} __attribute__((packed));
+
+constexpr uint32_t DEBUG_TAG = 0x1ee7d00d;
+constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***";
+constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
+
+#endif // MALLOC_DEBUG_H

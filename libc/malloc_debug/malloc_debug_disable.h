@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_BACKTRACE_H
-#define DEBUG_BACKTRACE_H
+#ifndef MALLOC_DEBUG_DISABLE_H
+#define MALLOC_DEBUG_DISABLE_H
 
-#include <stdint.h>
-#include <sys/cdefs.h>
+#include <pthread.h>
 
-__LIBC_HIDDEN__ void backtrace_startup();
-__LIBC_HIDDEN__ void backtrace_shutdown();
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
+#include <private/bionic_macros.h>
 
-#endif /* DEBUG_BACKTRACE_H */
+// =============================================================================
+// Used to disable the debug allocation calls.
+// =============================================================================
+extern pthread_key_t g_debug_calls_disabled;
+
+static inline bool DebugCallsDisabled() {
+  return pthread_getspecific(g_debug_calls_disabled) != nullptr;
+}
+
+class ScopedDisableDebugCalls {
+ public:
+  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
+    }
+  }
+  ~ScopedDisableDebugCalls() {
+    if (!disabled_) {
+      pthread_setspecific(g_debug_calls_disabled, nullptr);
+    }
+  }
+
+ private:
+  bool disabled_;
+
+  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
+};
+
+#endif  // MALLOC_DEBUG_DISABLE_H
