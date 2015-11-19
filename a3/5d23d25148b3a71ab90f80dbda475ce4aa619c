@@ -1,0 +1,7 @@
+Code-Review+2: Dan Willemsen <dwillemsen@google.com>
+Verified+1: Colin Cross <ccross@android.com>
+Submitted-by: Colin Cross <ccross@android.com>
+Submitted-at: Thu, 19 Nov 2015 22:48:35 +0000
+Reviewed-on: https://android-review.googlesource.com/183330
+Project: platform/bionic
+Branch: refs/heads/master
