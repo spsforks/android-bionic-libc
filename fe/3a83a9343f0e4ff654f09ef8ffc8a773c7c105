@@ -1,0 +1,7 @@
+Code-Review+2: Hans Boehm <hboehm@google.com>
+Verified+1: Yabin Cui <yabinc@google.com>
+Submitted-by: Yabin Cui <yabinc@google.com>
+Submitted-at: Thu, 19 Nov 2015 01:55:38 +0000
+Reviewed-on: https://android-review.googlesource.com/182864
+Project: platform/bionic
+Branch: refs/heads/master
