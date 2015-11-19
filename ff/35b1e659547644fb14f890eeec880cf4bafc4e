@@ -1,0 +1,8 @@
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Verified+1: Junichi Uekawa <uekawa@google.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Submitted-by: Junichi Uekawa <uekawa@google.com>
+Submitted-at: Thu, 19 Nov 2015 12:44:22 +0000
+Reviewed-on: https://android-review.googlesource.com/182272
+Project: platform/bionic
+Branch: refs/heads/master
