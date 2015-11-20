@@ -474,6 +474,14 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   return true;
 }
 
+static bool linker_safe_add(ElfW(Addr) a, ElfW(Addr) b, ElfW(Addr)* out) {
+#if defined(__LP64__)
+  return !__builtin_uaddll_overflow(a, b, out);
+#else
+  return !__builtin_uadd_overflow(a, b, out);
+#endif
+}
+
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -483,19 +491,24 @@ bool ElfReader::LoadSegments() {
     }
 
     // Segment addresses in memory.
-    ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
-    ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
+    ElfW(Addr) seg_start;
+    CHECK(linker_safe_add(phdr->p_vaddr, load_bias_, &seg_start));
+    ElfW(Addr) seg_end;
+    CHECK(linker_safe_add(seg_start, phdr->p_memsz, &seg_end));
 
     ElfW(Addr) seg_page_start = PAGE_START(seg_start);
     ElfW(Addr) seg_page_end   = PAGE_END(seg_end);
 
-    ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
+    ElfW(Addr) seg_file_end;
+    CHECK(linker_safe_add(seg_start, phdr->p_filesz, &seg_file_end));
 
     // File offsets.
     ElfW(Addr) file_start = phdr->p_offset;
-    ElfW(Addr) file_end   = file_start + phdr->p_filesz;
+    ElfW(Addr) file_end;
+    CHECK(linker_safe_add(file_start, phdr->p_filesz, &file_end));
 
     ElfW(Addr) file_page_start = PAGE_START(file_start);
+    CHECK(file_end >= file_page_start);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {
@@ -513,12 +526,14 @@ bool ElfReader::LoadSegments() {
     }
 
     if (file_length != 0) {
+      off64_t offset;
+      CHECK(safe_add(&offset, file_offset_, file_page_start));
       void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
                             file_length,
                             PFLAGS_TO_PROT(phdr->p_flags),
                             MAP_FIXED|MAP_PRIVATE,
                             fd_,
-                            file_offset_ + file_page_start);
+                            offset);
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
