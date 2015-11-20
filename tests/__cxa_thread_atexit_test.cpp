@@ -35,7 +35,12 @@ class ClassWithDtor {
   std::string message;
 };
 
+#if defined(__clang__) && defined(__aarch64__)
+// b/25642296, aarch64 clang compiled "thread_local" does not link.
+static ClassWithDtor class_with_dtor;
+#else
 static thread_local ClassWithDtor class_with_dtor;
+#endif
 
 static void* thread_nop(void* arg) {
   class_with_dtor.set_message(*static_cast<std::string*>(arg));
@@ -47,7 +52,12 @@ TEST(thread_local, smoke) {
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, nullptr, thread_nop, &msg));
   ASSERT_EQ(0, pthread_join(t, nullptr));
+#if defined(__clang__) && defined(__aarch64__)
+  GTEST_LOG_(INFO) <<
+      "Skipping test, thread_local does not work with aarch64 clang/llvm.";
+#else
   ASSERT_EQ("dtor called.", class_with_dtor_output);
+#endif
 }
 
 class ClassWithDtorForMainThread {
