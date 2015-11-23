@@ -1961,15 +1961,18 @@ cc_defaults {
         },
         x86: {
             cflags: ["-m32"],
+            asflags: ["-m32"],
             ldflags: ["-melf_i386"],
             local_include_dirs: ["arch-x86/include"],
         },
         x86_64: {
             cflags: ["-m64"],
+            asflags: ["-m64"],
             ldflags: ["-melf_x86_64"],
             local_include_dirs: ["arch-x86_64/include"],
         },
     },
+    clang: false,
 }
 
 cc_defaults {
