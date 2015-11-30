@@ -1461,13 +1461,6 @@ cc_library_static {
     cflags: ["-Wframe-larger-than=2048"],
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
-
-    arch: {
-        arm64: {
-            // b/25662915, clang compiled __cxa_thread_atexit_impl.cpp still failed.
-            clang: false,
-        },
-    },
 }
 
 // ========================================================
