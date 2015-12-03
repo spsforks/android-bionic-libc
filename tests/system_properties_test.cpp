@@ -69,7 +69,7 @@ private:
 static void foreach_test_callback(const prop_info *pi, void* cookie) {
     size_t *count = static_cast<size_t *>(cookie);
 
-    ASSERT_NE((prop_info *)NULL, pi);
+    ASSERT_TRUE(pi != nullptr);
     (*count)++;
 }
 
@@ -123,6 +123,16 @@ TEST(properties, add) {
     ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
     ASSERT_EQ(0, __system_property_add("property_other", 14, "value3", 6));
 
+    // check that there is no limit on property name length
+    char name[PROP_NAME_MAX + 11];
+    name[0] = 'p';
+    for (size_t i = 1; i < sizeof(name); i++) {
+      name[i] = 'x';
+    }
+
+    name[sizeof(name)-1] = '\0';
+    ASSERT_EQ(0, __system_property_add(name, strlen(name), "value", 5));
+
     ASSERT_EQ(6, __system_property_get("property", propvalue));
     ASSERT_STREQ(propvalue, "value1");
 
@@ -131,6 +141,9 @@ TEST(properties, add) {
 
     ASSERT_EQ(6, __system_property_get("property_other", propvalue));
     ASSERT_STREQ(propvalue, "value3");
+
+    ASSERT_EQ(5, __system_property_get(name, propvalue));
+    ASSERT_STREQ(propvalue, "value");
 #else // __BIONIC__
     GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -323,7 +336,6 @@ TEST(properties, errors) {
     ASSERT_EQ(0, __system_property_find("property1"));
     ASSERT_EQ(0, __system_property_get("property1", prop_value));
 
-    ASSERT_EQ(-1, __system_property_add("name", PROP_NAME_MAX, "value", 5));
     ASSERT_EQ(-1, __system_property_add("name", 4, "value", PROP_VALUE_MAX));
     ASSERT_EQ(-1, __system_property_update(NULL, "value", PROP_VALUE_MAX));
 #else // __BIONIC__
