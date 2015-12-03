@@ -48,7 +48,6 @@ typedef struct prop_msg prop_msg;
 
 #define PA_SIZE         (128 * 1024)
 
-#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
 
 __BEGIN_DECLS
@@ -61,6 +60,9 @@ struct prop_msg
 };
 
 #define PROP_MSG_SETPROP 1
+
+#define PROP_MSG_HELLO    0x00020001
+#define PROP_MSG_SETPROP2 0x00020002
 
 /*
 ** Rules:
@@ -78,7 +80,7 @@ struct prop_msg
 ** - writing a value requires the following steps
 **   1. pi->serial = pi->serial | 1
 **   2. memcpy(pi->value, local_value, value_len)
-**   3. pi->serial = (value_len << 24) | ((pi->serial + 1) & 0xffffff)
+**   3. pi->serial = (value_len << 24) | ((pi->serial + 1) & 0x7fffff)
 */
 
 #define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"
