@@ -46,9 +46,8 @@ typedef struct prop_msg prop_msg;
 #define PROP_FILENAME_MAX 1024
 #define PROP_FILENAME "/dev/__properties__"
 
-#define PA_SIZE         (128 * 1024)
+#define PA_SIZE         (1024 * 1024)
 
-#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
 
 __BEGIN_DECLS
@@ -72,13 +71,13 @@ struct prop_msg
 ** - reading a value requires the following steps
 **   1. serial = pi->serial
 **   2. if SERIAL_DIRTY(serial), wait*, then goto 1
-**   3. memcpy(local, pi->value, SERIAL_VALUE_LEN(serial) + 1)
+**   3. memcpy(local, pi->value, valuelen + 1)
 **   4. if pi->serial != serial, goto 2
 **
 ** - writing a value requires the following steps
 **   1. pi->serial = pi->serial | 1
 **   2. memcpy(pi->value, local_value, value_len)
-**   3. pi->serial = (value_len << 24) | ((pi->serial + 1) & 0xffffff)
+**   3. pi->serial = 0x800000 | ((pi->serial + 1) & 0x7fffff)
 */
 
 #define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"

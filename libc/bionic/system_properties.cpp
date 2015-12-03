@@ -58,8 +58,12 @@
 #include "private/bionic_macros.h"
 #include "private/libc_logging.h"
 
-static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
+static constexpr uint_least32_t kDefaultSerial = 0x00800000;
+static constexpr uint_least32_t kPropertyValueBufferSize = 1024;
+
+static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
 /*
  * Properties are stored in a hybrid trie/binary tree structure.
@@ -80,8 +84,7 @@ static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
 // Represents a node in the trie.
 struct prop_bt {
-    uint8_t namelen;
-    uint8_t reserved[3];
+    uint32_t namelen;
 
     // The property trie is updated only by the init process (single threaded) which provides
     // property service. And it can be read by multiple threads at the same time.
@@ -106,7 +109,7 @@ struct prop_bt {
 
     char name[0];
 
-    prop_bt(const char *name, const uint8_t name_length) {
+    prop_bt(const char *name, const uint32_t name_length) {
         this->namelen = name_length;
         memcpy(this->name, name, name_length);
         this->name[name_length] = '\0';
@@ -172,19 +175,42 @@ private:
 
 struct prop_info {
     atomic_uint_least32_t serial;
-    char value[PROP_VALUE_MAX];
+    // we need to keep this buffer around because the property
+    // value can be modified whereas name is constant.
+    union {
+      char old_value[PROP_VALUE_MAX];
+      struct {
+        uint32_t reserved;
+        atomic_uint_least32_t valuelen;
+        uint32_t valueoffset;
+      } info;
+    };
     char name[0];
 
-    prop_info(const char *name, const uint8_t namelen, const char *value,
-              const uint8_t valuelen) {
+    prop_info(const char *name, uint32_t namelen, const char *value, uint32_t valuelen) {
+        // TODO (dimitry): This part seems to be single-threaded so it should be safe to
+        // use strlcpy instead of memcpy
         memcpy(this->name, name, namelen);
         this->name[namelen] = '\0';
-        atomic_init(&this->serial, valuelen << 24);
-        memcpy(this->value, value, valuelen);
-        this->value[valuelen] = '\0';
+        atomic_init(&this->serial, kDefaultSerial);
+
+        this->info.reserved = 0;
+        this->info.valueoffset = sizeof(*this) + namelen + 1;
+
+        memcpy(this->value_ptr(), value, valuelen);
+        this->value_ptr()[valuelen] = '\0';
+        atomic_init(&this->info.valuelen, valuelen);
     }
-private:
-    DISALLOW_COPY_AND_ASSIGN(prop_info);
+
+    char* value_ptr() {
+      return reinterpret_cast<char*>(this) + info.valueoffset;
+    }
+
+    const char* value_ptr() const {
+      return reinterpret_cast<const char*>(this) + info.valueoffset;
+    }
+  private:
+    DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
 
 struct find_nth_cookie {
@@ -374,7 +400,7 @@ prop_info *prop_area::new_prop_info(const char *name, uint8_t namelen,
         const char *value, uint8_t valuelen, uint_least32_t *const off)
 {
     uint_least32_t new_offset;
-    void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
+    void* const p = allocate_obj(sizeof(prop_info) + namelen + 1 + kPropertyValueBufferSize, &new_offset);
     if (p != NULL) {
         prop_info* info = new(p) prop_info(name, namelen, value, valuelen);
         *off = new_offset;
@@ -1110,8 +1136,27 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
 
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
-        size_t len = SERIAL_VALUE_LEN(serial);
-        memcpy(value, pi->value, len + 1);
+        size_t len = 0;
+        const char* value_ptr = nullptr;
+        // This function uses memcpy because of lock-free nature of the code;
+        // property_service could be modifying pi->info.value concurrently.
+        if ((serial & kDefaultSerial) == 0) {
+          // read old value and set old length
+          len = SERIAL_VALUE_LEN(serial);
+          value_ptr = &pi->old_value[0];
+        } else {
+          // For default serial the value length is stored in info structure
+          len = pi->info.valuelen;
+          if (len >= PROP_VALUE_MAX) {
+            __libc_fatal("The property value length for \"%s\" is >= %d;"
+                         " please use __system_property_read_callback/__system_property_lget"
+                         " to read this property.", pi->name, PROP_VALUE_MAX - 1);
+          }
+          value_ptr = pi->value_ptr();
+        }
+
+
+        memcpy(value, value_ptr, len + 1);
         // TODO: Fix the synchronization scheme here.
         // There is no fully supported way to implement this kind
         // of synchronization in C++11, since the memcpy races with
@@ -1123,12 +1168,56 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         atomic_thread_fence(memory_order_acquire);
         if (serial ==
                 load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-            if (name != 0) {
-                strcpy(name, pi->name);
+            if (name != nullptr) {
+                size_t namelen = strlcpy(name, pi->name, PROP_NAME_MAX);
+                if(namelen >= PROP_NAME_MAX) {
+                  __libc_fatal("The property name length for \"%s\" is >= %d;"
+                               " please use __system_property_read_callback"
+                               " to read this property.", pi->name, PROP_NAME_MAX - 1);
+                }
             }
             return len;
         }
     }
+}
+
+void __system_property_read_callback(const prop_info* pi,
+                                     void (*callback)(void* cookie, const char* name, const char* value),
+                                     void* cookie) {
+  // TODO (dimitry): do we need compat mode for this function?
+  if (__predict_false(compat_mode)) {
+    char value_buf[PROP_VALUE_MAX];
+    __system_property_read_compat(pi, nullptr, value_buf);
+    callback(cookie, pi->name, value_buf);
+    return;
+  }
+
+  while (true) {
+    uint32_t serial = __system_property_serial(pi); // acquire semantics
+    size_t len = 0;
+    const char* value_ptr = nullptr;
+    if ((serial & kDefaultSerial) == 0) {
+      len = SERIAL_VALUE_LEN(serial);
+      value_ptr = &pi->old_value[0];
+    } else {
+      len = pi->info.valuelen;
+      value_ptr = pi->value_ptr();
+    }
+
+    char* value_buf = new char[len+1];
+
+    memcpy(value_buf, value_ptr, len);
+    value_buf[len] = '\0';
+
+    // TODO: see todo in __system_property_read function
+    atomic_thread_fence(memory_order_acquire);
+    if (serial == load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+      callback(cookie, pi->name, value_buf);
+      delete[] value_buf;
+      return;
+    }
+    delete[] value_buf;
+  }
 }
 
 int __system_property_get(const char *name, char *value)
@@ -1136,11 +1225,43 @@ int __system_property_get(const char *name, char *value)
     const prop_info *pi = __system_property_find(name);
 
     if (pi != 0) {
-        return __system_property_read(pi, 0, value);
+        return __system_property_read(pi, nullptr, value);
     } else {
         value[0] = 0;
         return 0;
     }
+}
+
+size_t __system_property_lget(const char* name, char* value, size_t value_size) {
+  if (value_size == 0) {
+    return 0;
+  }
+
+  struct value_cookie_t {
+    char* value;
+    size_t size;
+    size_t actual_size;
+  };
+
+  value_cookie_t value_cookie;
+
+  value_cookie.value = value;
+  value_cookie.size = value_size;
+  value_cookie.actual_size = 0;
+
+  const prop_info* pi = __system_property_find(name);
+
+  if (pi != nullptr) {
+    __system_property_read_callback(pi, [](void* cookie, const char* /* name */, const char* value) {
+      value_cookie_t* value_cookie_ptr = static_cast<value_cookie_t*>(cookie);
+      value_cookie_ptr->actual_size = strlcpy(value_cookie_ptr->value, value, value_cookie_ptr->size);
+    }, &value_cookie);
+
+    return value_cookie.actual_size;
+  } else {
+    value[0] = 0;
+    return 0;
+  }
 }
 
 int __system_property_set(const char *key, const char *value)
@@ -1166,7 +1287,7 @@ int __system_property_set(const char *key, const char *value)
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    if (len >= PROP_VALUE_MAX)
+    if (len >= kPropertyValueBufferSize - 1)
         return -1;
 
     prop_area* pa = __system_property_area__;
@@ -1182,10 +1303,12 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
     // used memory_order_relaxed atomics, and use the analogous
     // counterintuitive fence.
     atomic_thread_fence(memory_order_release);
-    memcpy(pi->value, value, len + 1);
+    strlcpy(pi->value_ptr(), value, len + 1);
+    pi->info.valuelen = len;
+
     atomic_store_explicit(
         &pi->serial,
-        (len << 24) | ((serial + 1) & 0xffffff),
+        kDefaultSerial | ((serial + 1) & 0x7fffff),
         memory_order_release);
     __futex_wake(&pi->serial, INT32_MAX);
 

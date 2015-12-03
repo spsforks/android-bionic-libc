@@ -30,6 +30,7 @@
 #define _INCLUDE_SYS_SYSTEM_PROPERTIES_H
 
 #include <sys/cdefs.h>
+#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -38,13 +39,15 @@ typedef struct prop_info prop_info;
 #define PROP_NAME_MAX   32
 #define PROP_VALUE_MAX  92
 
-/* Look up a system property by name, copying its value and a
-** \0 terminator to the provided pointer.  The total bytes
-** copied will be no greater than PROP_VALUE_MAX.  Returns
-** the string length of the value.  A property that is not
-** defined is identical to a property with a length 0 value.
+/* Look up a system property by name, copying its value and a \0 terminator
+** to the provided pointer.  The total bytes copied will be no greater than
+** value_size for __system_property_lget and 92 for __system_property_get.
+** Returns the string length of the value. A property that is not defined
+** is identical to a property with a length 0 value.
 */
 int __system_property_get(const char *name, char *value);
+size_t __system_property_lget(const char* name, char* value, size_t value_size)
+    __INTRODUCED_IN_FUTURE;
 
 /* Set a system property by name.
 **/
@@ -64,13 +67,18 @@ const prop_info *__system_property_find(const char *name);
 /* Read the value of a system property.  Returns the length
 ** of the value.  Copies the value and \0 terminator into
 ** the provided value pointer.  Total length (including
-** terminator) will be no greater that PROP_VALUE_MAX.
+** terminator) will be no greater that 92 for
+** __system_property_read and value_size for
+** __system_property_nread.
 **
 ** If name is nonzero, up to PROP_NAME_MAX bytes will be
 ** copied into the provided name pointer.  The name will
 ** be \0 terminated.
 */
 int __system_property_read(const prop_info *pi, char *name, char *value);
+void __system_property_read_callback(const prop_info *pi,
+                                     void (*)(void* cookie, const char *name, const char *value),
+                                     void* cookie) __INTRODUCED_IN_FUTURE;
 
 /* Return a prop_info for the nth system property, or NULL if 
 ** there is no nth property.  Use __system_property_read() to
