@@ -1336,6 +1336,8 @@ LIBC_N {
     __getcwd_chk;
     __pwrite_chk;
     __pwrite64_chk;
+    __system_property_nget;
+    __system_property_nread;
     __write_chk;
     fileno_unlocked;
     getgrgid_r;

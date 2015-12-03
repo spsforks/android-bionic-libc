@@ -53,9 +53,11 @@
 
 #include "private/bionic_futex.h"
 #include "private/bionic_macros.h"
+#include "private/libc_logging.h"
+
+#define SERIAL_VALUE_LEN(serial) ((serial) >> 16)
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
-
 
 /*
  * Properties are stored in a hybrid trie/binary tree structure.
@@ -168,6 +170,8 @@ private:
 
 struct prop_info {
     atomic_uint_least32_t serial;
+    // we need to keep this buffer around because the property
+    // value can be modified whereas name is constant.
     char value[PROP_VALUE_MAX];
     char name[0];
 
@@ -175,12 +179,12 @@ struct prop_info {
               const uint8_t valuelen) {
         memcpy(this->name, name, namelen);
         this->name[namelen] = '\0';
-        atomic_init(&this->serial, valuelen << 24);
+        atomic_init(&this->serial, valuelen << 16);
         memcpy(this->value, value, valuelen);
         this->value[valuelen] = '\0';
     }
 private:
-    DISALLOW_COPY_AND_ASSIGN(prop_info);
+    DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
 
 struct find_nth_cookie {
@@ -683,6 +687,14 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
         size_t len = SERIAL_VALUE_LEN(serial);
+        if (len + 1 >= LEGACY_PROP_VALUE_MAX) {
+          __libc_fatal("The property value length for \"%s\" is >= %d;"
+                       " please use __system_property_nread/__system_property_nget"
+                       " to read this property.", pi->name, LEGACY_PROP_VALUE_MAX - 1);
+        }
+
+        // This is memcpy because of "lock-free" nature of this code
+        // someone could be modifying pi->value in some other thread.
         memcpy(value, pi->value, len + 1);
         // TODO: Fix the synchronization scheme here.
         // There is no fully supported way to implement this kind
@@ -695,7 +707,7 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         atomic_thread_fence(memory_order_acquire);
         if (serial ==
                 load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-            if (name != 0) {
+            if (name != nullptr) {
                 strcpy(name, pi->name);
             }
             return len;
@@ -703,16 +715,62 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
     }
 }
 
+size_t __system_property_nread(const prop_info* pi, char* name, char* value, size_t value_size) {
+  if (value_size == 0) {
+    return 0;
+  }
+
+  // TODO (dimitry): do we need compat mode for this function?
+  if (__predict_false(compat_mode)) {
+    char buf[LEGACY_PROP_VALUE_MAX];
+    __system_property_read_compat(pi, name, buf);
+    return strlcpy(value, buf, value_size);
+  }
+
+  while (true) {
+    uint32_t serial = __system_property_serial(pi); // acquire semantics
+    size_t len = SERIAL_VALUE_LEN(serial);
+    if (value_size >= len) {
+      len = value_size - 1;
+    }
+    memcpy(value, pi->value, len);
+    value[len] = '\0';
+    // TODO: see todo in __system_property_read function
+    atomic_thread_fence(memory_order_acquire);
+    if (serial == load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+      if (name != nullptr) {
+        strcpy(name, pi->name);
+      }
+      return len;
+    }
+  }
+}
+
 int __system_property_get(const char *name, char *value)
 {
     const prop_info *pi = __system_property_find(name);
 
     if (pi != 0) {
-        return __system_property_read(pi, 0, value);
+        return __system_property_read(pi, nullptr, value);
     } else {
         value[0] = 0;
         return 0;
     }
+}
+
+size_t __system_property_nget(const char* name, char* value, size_t value_size) {
+  if (value_size == 0) {
+    return 0;
+  }
+
+  const prop_info* pi = __system_property_find(name);
+
+  if (pi != nullptr) {
+    return __system_property_nread(pi, nullptr, value, value_size);
+  } else {
+    value[0] = 0;
+    return 0;
+  }
 }
 
 int __system_property_set(const char *key, const char *value)
@@ -753,7 +811,7 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
     memcpy(pi->value, value, len + 1);
     atomic_store_explicit(
         &pi->serial,
-        (len << 24) | ((serial + 1) & 0xffffff),
+        (len << 16) | ((serial + 1) & 0xffff),
         memory_order_release);
     __futex_wake(&pi->serial, INT32_MAX);
 

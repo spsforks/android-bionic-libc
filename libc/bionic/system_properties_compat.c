@@ -43,6 +43,7 @@
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
 #define TOC_TO_INFO(area, toc)  ((prop_info_compat*) (((char*) area) + ((toc) & 0xFFFFFF)))
+#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
 struct prop_area_compat {
     unsigned volatile count;
@@ -61,7 +62,7 @@ typedef struct prop_area prop_area;
 struct prop_info_compat {
     char name[PROP_NAME_MAX];
     unsigned volatile serial;
-    char value[PROP_VALUE_MAX];
+    char value[LEGACY_PROP_VALUE_MAX];
 };
 
 typedef struct prop_info_compat prop_info_compat;
