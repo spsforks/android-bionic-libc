@@ -69,7 +69,7 @@ private:
 static void foreach_test_callback(const prop_info *pi, void* cookie) {
     size_t *count = static_cast<size_t *>(cookie);
 
-    ASSERT_NE((prop_info *)NULL, pi);
+    ASSERT_TRUE(pi != nullptr);
     (*count)++;
 }
 
