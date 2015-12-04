@@ -1006,6 +1006,10 @@ unsigned int __system_property_area_serial()
 
 const prop_info *__system_property_find(const char *name)
 {
+    if (!__system_property_area__) {
+        return nullptr;
+    }
+
     if (__predict_false(compat_mode)) {
         return __system_property_find_compat(name);
     }
@@ -1129,6 +1133,10 @@ int __system_property_add(const char *name, unsigned int namelen,
     if (namelen < 1)
         return -1;
 
+    if (!__system_property_area__) {
+        return -1;
+    }
+
     prop_area* pa = get_prop_area_for_name(name);
 
     if (!pa) {
@@ -1191,6 +1199,10 @@ const prop_info *__system_property_find_nth(unsigned n)
 int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
+    if (!__system_property_area__) {
+        return -1;
+    }
+
     if (__predict_false(compat_mode)) {
         return __system_property_foreach_compat(propfn, cookie);
     }
