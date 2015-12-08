@@ -153,15 +153,17 @@ extern bool android_init_namespaces(const char* public_ns_sonames,
  * 3. deault_library_path (This of this as namespace-local default library path)
  *
  * When is_isolated is true the resulted namespace requires all of the libraries
- * to be on the search path; the search_path is ld_library_path:default_library_path.
+ * to be on the search path or under the isolation_path; the search_path is
+ * ld_library_path:default_library_path.
  *
- * If a library or any of its dependencies are outside of the search path and not
+ * If a library or any of its dependencies are outside of the isolation_path and not
  * part of the public namespace dlopen will fail.
  */
 extern struct android_namespace_t* android_create_namespace(const char* name,
                                                             const char* ld_library_path,
                                                             const char* default_library_path,
-                                                            bool is_isolated);
+                                                            bool is_isolated,
+                                                            const char* isolation_path);
 
 __END_DECLS
 
