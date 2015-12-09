@@ -650,6 +650,9 @@ struct context_node {
     ~context_node() {
         if (pa) {
             munmap(pa, pa_size);
+            if (pa == __system_property_area__) {
+                __system_property_area__ = nullptr;
+            }
         }
         free(context);
     }
@@ -892,9 +895,6 @@ static int read_spec_entries(char *line_buf, int num_args, ...)
 }
 
 static bool initialize_properties() {
-    list_free(&prefixes);
-    list_free(&contexts);
-
     FILE* file = fopen("/property_contexts", "re");
 
     if (!file) {
@@ -951,15 +951,24 @@ static bool is_dir(const char* pathname) {
     return S_ISDIR(info.st_mode);
 }
 
+static void free_and_unmap_contexts() {
+    list_free(&prefixes);
+    list_free(&contexts);
+    if (__system_property_area__) {
+        munmap(__system_property_area__, pa_size);
+        __system_property_area__ = nullptr;
+    }
+}
+
 int __system_properties_init()
 {
+    free_and_unmap_contexts();
     if (is_dir(property_filename)) {
         if (!initialize_properties()) {
             return -1;
         }
         if (!map_system_property_area(false, nullptr)) {
-            list_free(&prefixes);
-            list_free(&contexts);
+            free_and_unmap_contexts();
             return -1;
         }
     } else {
@@ -985,6 +994,7 @@ int __system_property_set_filename(const char *filename)
 
 int __system_property_area_init()
 {
+    free_and_unmap_contexts();
     mkdir(property_filename, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
     if (!initialize_properties()) {
         return -1;
@@ -997,8 +1007,7 @@ int __system_property_area_init()
         }
     });
     if (open_prop_file_failed || !map_system_property_area(true, &fsetxattr_failed)) {
-        list_free(&prefixes);
-        list_free(&contexts);
+        free_and_unmap_contexts();
         return -1;
     }
     return fsetxattr_failed ? -2 : 0;
