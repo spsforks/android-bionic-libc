@@ -40,6 +40,10 @@ test_cflags = \
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
+ifeq ($(TARGET_2ND_ARCH),mips)
+test_cflags += -DMIPS_2ND_ARCH
+endif
+
 ifeq ($(MALLOC_IMPL),dlmalloc)
 test_cflags += -DUSE_DLMALLOC
 else

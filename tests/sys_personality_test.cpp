@@ -21,7 +21,7 @@
 TEST(sys_personality, current_persona) {
   int persona = personality(0xffffffff) & PER_MASK;
 #if defined(__BIONIC__)
-#if defined(__LP64__)
+#if defined(__LP64__) || defined(MIPS_2ND_ARCH)
   ASSERT_EQ(PER_LINUX, persona);
 #else
   ASSERT_EQ(PER_LINUX32, persona);
