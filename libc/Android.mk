@@ -1428,8 +1428,11 @@ LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
 ifdef BRILLO
 # TODO: b/26164862 provide alternate version scripts instead of disabling verification.
 LOCAL_LDFLAGS_arm += -Wl,--undefined-version
+LOCAL_LDFLAGS_arm64 += -Wl,--undefined-version
 LOCAL_LDFLAGS_mips += -Wl,--undefined-version
+LOCAL_LDFLAGS_mips64 += -Wl,--undefined-version
 LOCAL_LDFLAGS_x86 += -Wl,--undefined-version
+LOCAL_LDFLAGS_x86_64 += -Wl,--undefined-version
 endif
 
 # We'd really like to do this for all architectures, but since this wasn't done
