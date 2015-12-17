@@ -118,9 +118,9 @@ private:
 
 class prop_area {
 public:
-
-    prop_area(const uint32_t magic, const uint32_t version) :
-        magic_(magic), version_(version) {
+    prop_area(const uint32_t magic, const uint32_t version, uint32_t pa_size) :
+        magic_(magic), version_(version), pa_data_size_(pa_size - sizeof(prop_area)),
+        pa_size_(pa_size) {
         atomic_init(&serial_, 0);
         memset(reserved_, 0, sizeof(reserved_));
         // Allocate enough space for the root node.
@@ -136,6 +136,7 @@ public:
     atomic_uint_least32_t *serial() { return &serial_; }
     uint32_t magic() const { return magic_; }
     uint32_t version() const { return version_; }
+    uint32_t pa_size() const { return pa_size_; }
 
 private:
     void *allocate_obj(const size_t size, uint_least32_t *const off);
@@ -164,7 +165,9 @@ private:
     atomic_uint_least32_t serial_;
     uint32_t magic_;
     uint32_t version_;
-    uint32_t reserved_[28];
+    uint32_t pa_data_size_;
+    uint32_t pa_size_;
+    uint32_t reserved_[26];
     char data_[0];
 
     DISALLOW_COPY_AND_ASSIGN(prop_area);
@@ -198,8 +201,6 @@ struct find_nth_cookie {
 
 static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
 static bool compat_mode = false;
-static size_t pa_data_size;
-static size_t pa_size;
 static bool initialized = false;
 
 // NOTE: This isn't static because system_properties_compat.c
@@ -222,7 +223,7 @@ static int get_fd_from_env(void)
 }
 
 static prop_area* map_prop_area_rw(const char* filename, const char* context,
-                                   bool* fsetxattr_failed) {
+                                   bool* fsetxattr_failed, uint32_t pa_size) {
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
      */
@@ -257,13 +258,11 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
         }
     }
 
-    if (ftruncate(fd, PA_SIZE) < 0) {
+    if (ftruncate(fd, pa_size) < 0) {
         close(fd);
         return nullptr;
     }
 
-    pa_size = PA_SIZE;
-    pa_data_size = pa_size - sizeof(prop_area);
     compat_mode = false;
 
     void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
@@ -272,7 +271,7 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
         return nullptr;
     }
 
-    prop_area *pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
+    prop_area* pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION, pa_size);
 
     close(fd);
     return pa;
@@ -291,8 +290,7 @@ static prop_area* map_fd_ro(const int fd) {
         return nullptr;
     }
 
-    pa_size = fd_stat.st_size;
-    pa_data_size = pa_size - sizeof(prop_area);
+    size_t pa_size = fd_stat.st_size;
 
     void* const map_result = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
     if (map_result == MAP_FAILED) {
@@ -348,7 +346,7 @@ static prop_area* map_prop_area(const char* filename, bool is_legacy) {
 void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off)
 {
     const size_t aligned = BIONIC_ALIGN(size, sizeof(uint_least32_t));
-    if (bytes_used_ + aligned > pa_data_size) {
+    if (bytes_used_ + aligned > pa_data_size_) {
         return NULL;
     }
 
@@ -386,7 +384,7 @@ prop_info *prop_area::new_prop_info(const char *name, uint8_t namelen,
 
 void *prop_area::to_prop_obj(uint_least32_t off)
 {
-    if (off > pa_data_size)
+    if (off > pa_data_size_)
         return NULL;
 
     return (data_ + off);
@@ -760,7 +758,7 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
     }
 
     if (access_rw) {
-        pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed);
+        pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed, PA_SIZE);
     } else {
         pa_ = map_prop_area(filename, false);
     }
@@ -801,7 +799,7 @@ void context_node::unmap() {
         return;
     }
 
-    munmap(pa_, pa_size);
+    munmap(pa_, pa_->pa_size());
     if (pa_ == __system_property_area__) {
         __system_property_area__ = nullptr;
     }
@@ -818,7 +816,7 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
 
     if (access_rw) {
         __system_property_area__ =
-            map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
+            map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed, sizeof(prop_area));
     } else {
         __system_property_area__ = map_prop_area(filename, false);
     }
@@ -999,7 +997,7 @@ static void free_and_unmap_contexts() {
     list_free(&prefixes);
     list_free(&contexts);
     if (__system_property_area__) {
-        munmap(__system_property_area__, pa_size);
+        munmap(__system_property_area__, __system_property_area__->pa_size());
         __system_property_area__ = nullptr;
     }
 }
