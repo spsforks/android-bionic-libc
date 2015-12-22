@@ -608,9 +608,10 @@ size_t mspace_footprint(mspace msp);
 size_t mspace_max_footprint(mspace msp);
 size_t mspace_footprint_limit(mspace msp);
 size_t mspace_set_footprint_limit(mspace msp, size_t bytes);
-void mspace_inspect_all(mspace msp, 
+void mspace_inspect_all(mspace msp,
                         void(*handler)(void *, void *, size_t, void*),
                         void* arg);
+bool mspace_meta_chunk_mem(mspace msp, void* addr);
 #endif  /* MSPACES */
 
 #ifdef __cplusplus

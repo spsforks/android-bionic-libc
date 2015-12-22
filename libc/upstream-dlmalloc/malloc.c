@@ -5901,6 +5901,23 @@ void mspace_inspect_all(mspace msp,
     USAGE_ERROR_ACTION(ms,ms);
   }
 }
+
+// Check whether the given address points to meta chunk.
+// Meta chunk in dlmalloc contains info describe the mspace and msegment.
+bool mspace_meta_chunk_mem(mspace msp, void* addr) {
+  if (addr == NULL || msp == NULL) return false;
+  // The msp is mstate in the first chunk of dlmalloc. see init_user_mstate().
+  if (msp == addr) return true;
+  // If addr is msegmentptr, it contains meta info of the segment holding it.
+  mstate ms = (mstate)msp;
+  msegmentptr sp = segment_holding(ms, (char*)addr);
+  assert(sp != 0);
+  // The base addr should be equal.
+  if (sp->base == ((msegmentptr)addr)->base) {
+    return true;
+  }
+  return false;
+}
 #endif /* MALLOC_INSPECT_ALL */
 
 int mspace_trim(mspace msp, size_t pad) {
