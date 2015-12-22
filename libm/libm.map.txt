@@ -271,8 +271,8 @@ LIBC {
     *;
 };
 
-LIBC_PRIVATE { # arm mips
-  global: # arm mips
+LIBC_PRIVATE { # arm
+  global: # arm
     ___Unwind_Backtrace; # arm
     ___Unwind_ForcedUnwind; # arm
     ___Unwind_RaiseException; # arm
@@ -319,11 +319,11 @@ LIBC_PRIVATE { # arm mips
     __eqdf2; # arm
     __eqsf2; # arm
     __extendsfdf2; # arm
-    __fixdfdi; # arm mips
-    __fixsfdi; # arm mips
-    __fixunsdfdi; # arm mips
+    __fixdfdi; # arm
+    __fixsfdi; # arm
+    __fixunsdfdi; # arm
     __fixunsdfsi; # arm
-    __fixunssfdi; # arm mips
+    __fixunssfdi; # arm
     __floatdidf; # arm
     __floatsidf; # arm
     __floatundidf; # arm
@@ -374,4 +374,4 @@ LIBC_PRIVATE { # arm mips
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
     restore_core_regs; # arm
-} LIBC; # arm mips
+} LIBC; # arm
