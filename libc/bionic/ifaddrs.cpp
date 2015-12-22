@@ -29,6 +29,7 @@
 #include <ifaddrs.h>
 
 #include <errno.h>
+#include <linux/if_packet.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
@@ -103,6 +104,9 @@ struct ifaddrs_storage {
     } else if (family == AF_INET6) {
       sockaddr_in6* ss6 = reinterpret_cast<sockaddr_in6*>(ss);
       return reinterpret_cast<uint8_t*>(&ss6->sin6_addr);
+    } else if (family == AF_PACKET) {
+      sockaddr_ll* sll = reinterpret_cast<sockaddr_ll*>(ss);
+      return reinterpret_cast<uint8_t*>(&sll->sll_addr);
     }
     return nullptr;
   }
@@ -125,6 +129,10 @@ static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
         if (RTA_PAYLOAD(rta) < sizeof(new_addr->name)) {
           memcpy(new_addr->name, RTA_DATA(rta), RTA_PAYLOAD(rta));
           new_addr->ifa.ifa_name = new_addr->name;
+        }
+      } else if (rta->rta_type == IFLA_ADDRESS || rta->rta_type == IFLA_BROADCAST) {
+        if (RTA_PAYLOAD(rta) < sizeof(new_addr->addr)) {
+          new_addr->SetAddress(AF_PACKET, RTA_DATA(rta), RTA_PAYLOAD(rta));
         }
       }
       rta = RTA_NEXT(rta, rta_len);
