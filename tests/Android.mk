@@ -104,4 +104,22 @@ include $(BUILD_STATIC_LIBRARY)
 
 endif # linux-x86
 
+# -----------------------------------------------------------------------------
+# Additional executable needed by the dl.ld_library_path test
+# -----------------------------------------------------------------------------
+module := bionic_internal_test_ld_library_path
+
+bionic_internal_test_ld_library_path_src_files := \
+    empty_program.cpp
+
+bionic_internal_test_ld_library_path_shared_libraries := \
+    libdl_test_ld_library_path
+
+module_tag := optional
+build_target := NATIVE_TEST
+build_type := target
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
+
 include $(call first-makefiles-under,$(LOCAL_PATH))
