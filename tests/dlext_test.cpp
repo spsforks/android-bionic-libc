@@ -43,9 +43,6 @@
 #define ASSERT_NOERROR(i) \
     ASSERT_NE(-1, i) << "errno: " << strerror(errno)
 
-#define ASSERT_SUBSTR(needle, haystack) \
-    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
-
 
 typedef int (*fn)(void);
 #define LIBNAME "libdlext_test.so"
