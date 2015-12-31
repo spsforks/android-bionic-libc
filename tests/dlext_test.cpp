@@ -58,7 +58,8 @@ typedef int (*fn)(void);
 #define NATIVE_TESTS_PATH "/nativetest"
 #endif
 
-#define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
+#define LIB_NON_DEFAULT "libdlext_test_non_default"
+#define LIBPATH_NON_DEFAULT NATIVE_TESTS_PATH "/" LIB_NON_DEFAULT "/" LIB_NON_DEFAULT ".so"
 #define LIBZIPPATH NATIVE_TESTS_PATH "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
 #define LIBZIPPATH_WITH_RUNPATH NATIVE_TESTS_PATH "/libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
 
@@ -105,7 +106,7 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFd) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBPATH;
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBPATH_NON_DEFAULT;
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD;
@@ -220,6 +221,56 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 
   dlclose(handle2);
   dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_ld_library_path) {
+  const std::string data_root = std::string(getenv("ANDROID_DATA"));
+  const std::string lib_dir_this_arch = data_root + NATIVE_TESTS_PATH "/" LIB_NON_DEFAULT;
+  const std::string lib_dir_other_arch = data_root +
+#ifdef __LP64__
+    // Remove "64" suffix.
+    std::string(NATIVE_TESTS_PATH, sizeof(NATIVE_TESTS_PATH) - 3) +
+#else
+    // Add "64" suffix.
+    NATIVE_TESTS_PATH "64" +
+#endif
+    "/" LIB_NON_DEFAULT;
+
+  std::vector<std::string> lib_dir_list_failure_expected = {
+    "",
+    lib_dir_other_arch
+  };
+  std::vector<std::string> lib_dir_list_success_expected = {
+    lib_dir_this_arch,
+    lib_dir_this_arch + ":" + lib_dir_other_arch,
+    lib_dir_other_arch + ":" + lib_dir_this_arch,
+  };
+
+  typedef void (*fn_t)(const char*);
+  fn_t android_update_LD_LIBRARY_PATH =
+      reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "android_update_LD_LIBRARY_PATH"));
+  ASSERT_TRUE(android_update_LD_LIBRARY_PATH != nullptr) << dlerror();
+
+  for (const auto& lib_dir : lib_dir_list_failure_expected) {
+    android_update_LD_LIBRARY_PATH(lib_dir.c_str());
+
+    void* handle = dlopen(LIB_NON_DEFAULT ".so", RTLD_NOW);
+    ASSERT_TRUE(handle == nullptr);
+  }
+
+  for (const auto& lib_dir : lib_dir_list_success_expected) {
+    android_update_LD_LIBRARY_PATH(lib_dir.c_str());
+
+    void* handle = dlopen(LIB_NON_DEFAULT ".so", RTLD_NOW);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+
+    int (*fn)(void);
+    fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
+    ASSERT_TRUE(fn != nullptr);
+    EXPECT_EQ(4, fn());
+
+    dlclose(handle);
+  }
 }
 
 TEST(dlfcn, dlopen_from_zip_absolute_path) {

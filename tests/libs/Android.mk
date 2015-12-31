@@ -115,13 +115,13 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - different name non-default location
 # -----------------------------------------------------------------------------
-libdlext_test_fd_src_files := \
+libdlext_test_non_default_src_files := \
     dlext_test_library.cpp \
 
-libdlext_test_fd_shared_libraries := libtest_simple
+libdlext_test_non_default_shared_libraries := libtest_simple
 
-libdlext_test_fd_install_to_out_data := true
-module := libdlext_test_fd
+libdlext_test_non_default_install_to_out_data := true
+module := libdlext_test_non_default
 module_tag := optional
 build_type := target
 build_target := SHARED_LIBRARY
