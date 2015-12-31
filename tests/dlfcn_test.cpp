@@ -28,9 +28,6 @@
 
 #include "utils.h"
 
-#define ASSERT_SUBSTR(needle, haystack) \
-    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
-
 
 static bool g_called = false;
 extern "C" void DlSymTestFunction() {
