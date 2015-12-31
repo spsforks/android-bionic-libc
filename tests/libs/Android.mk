@@ -112,6 +112,18 @@ ifneq ($(TARGET_2ND_ARCH),)
 endif
 
 # -----------------------------------------------------------------------------
+# Library used by the dl.ld_library_path test
+# -----------------------------------------------------------------------------
+module := libdl_test_ld_library_path
+
+libdl_test_ld_library_path_src_files := \
+    dlopen_testlib_simple.cpp
+
+libdl_test_ld_library_path_relative_install_path := $(module)
+module_tag := optional
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
 # Build test helper libraries for linker namespaces
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.linker_namespaces.mk

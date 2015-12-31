@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_TESTS_GTEST_GLOBALS_H
-#define _BIONIC_TESTS_GTEST_GLOBALS_H
-
-#include <string>
-
-constexpr const char* kPrebuiltElfDir = "prebuilt-elf-files";
-
-const std::string& get_data_root();
-const std::string& get_testlib_root();
-
-#endif  // _BIONIC_TESTS_GTEST_GLOBALS_H
+int main() {
+  return 0;
+}

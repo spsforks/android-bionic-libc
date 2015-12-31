@@ -47,9 +47,6 @@
 #define ASSERT_NOERROR(i) \
     ASSERT_NE(-1, i) << "errno: " << strerror(errno)
 
-#define ASSERT_SUBSTR(needle, haystack) \
-    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
-
 
 typedef int (*fn)(void);
 constexpr const char* kLibName = "libdlext_test.so";
@@ -67,7 +64,7 @@ protected:
     h = dlopen(kLibNameNoRelro, RTLD_NOW | RTLD_NOLOAD);
     ASSERT_TRUE(h == nullptr);
     // call dlerror() to swallow the error, and check it was the one we wanted
-    ASSERT_EQ(std::string("dlopen failed: library \"") + kLibNameNoRelro + "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+    ASSERT_SUBSTR(std::string(kLibNameNoRelro) + "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
   }
 
   virtual void TearDown() {
@@ -151,23 +148,23 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
 
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
+  ASSERT_SUBSTR("file offset for the library \"" + lib_path + "\" is not page-aligned: 17", dlerror());
 
   // Test an address above 2^44, for http://b/18178121 .
   extinfo.library_fd_offset = (5LL<<48) + PAGE_SIZE;
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" >= file size", dlerror());
+  ASSERT_SUBSTR("file offset for the library \"" + lib_path + "\" >= file size", dlerror());
 
   extinfo.library_fd_offset = 0LL - PAGE_SIZE;
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" is negative", dlerror());
+  ASSERT_SUBSTR("file offset for the library \"" + lib_path + "\" is negative", dlerror());
 
   extinfo.library_fd_offset = 0;
   handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic", dlerror());
+  ASSERT_SUBSTR("\"" + lib_path + "\" has bad ELF magic", dlerror());
 
   // Check if dlsym works after unsuccessful dlopen().
   // Supply non-exiting one to make linker visit every soinfo.
@@ -776,7 +773,7 @@ TEST(dlext, ns_isolated) {
   ASSERT_TRUE(ns_isolated2 != nullptr) << dlerror();
 
   ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_root_not_isolated.so\" not found", dlerror());
+  ASSERT_SUBSTR("\"libnstest_root_not_isolated.so\" not found", dlerror());
 
   std::string lib_private_external_path =
       get_testlib_root() + "/private_namespace_libs_external/libnstest_private_external.so";
@@ -797,14 +794,16 @@ TEST(dlext, ns_isolated) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_SUBSTR("library \"" + lib_private_external_path + "\" needed"
+                " or dlopened by \"" + get_testlib_root() + "/private_namespace_libs/" + root_lib +
+                "\" is not accessible for the namespace \"private_isolated1\"", dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" needed"
-            " or dlopened by \"" + get_executable_path() +  "\" is not accessible"
-            " for the namespace \"private_isolated1\"", dlerror());
+  ASSERT_SUBSTR("library \"" + lib_private_external_path + "\" needed"
+                " or dlopened by \"" + get_executable_path() +  "\" is not accessible"
+                " for the namespace \"private_isolated1\"", dlerror());
 
   extinfo.library_namespace = ns_isolated2;
 
@@ -877,7 +876,7 @@ TEST(dlext, ns_shared) {
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
 
   ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_root_not_isolated.so\" not found", dlerror());
+  ASSERT_SUBSTR("library \"libnstest_root_not_isolated.so\" not found", dlerror());
 
   std::string lib_private_external_path =
       get_testlib_root() + "/private_namespace_libs_external/libnstest_private_external.so";
@@ -898,14 +897,16 @@ TEST(dlext, ns_shared) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_SUBSTR("library \"" + lib_private_external_path + "\" needed"
+                " or dlopened by \"" + get_testlib_root() + "/private_namespace_libs/" + root_lib +
+                "\" is not accessible for the namespace \"private_isolated_shared\"", dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" needed"
-            " or dlopened by \"" + get_executable_path() + "\" is not accessible"
-            " for the namespace \"private_isolated_shared\"", dlerror());
+  ASSERT_SUBSTR("library \"" + lib_private_external_path + "\" needed"
+                " or dlopened by \"" + get_executable_path() + "\" is not accessible"
+                " for the namespace \"private_isolated_shared\"", dlerror());
 
   // load libnstest_root.so to shared namespace in order to check that everything is different
   // except shared libnstest_dlopened.so

@@ -17,6 +17,8 @@
 #ifndef __TEST_UTILS_H
 #define __TEST_UTILS_H
 
+#include <gtest/gtest.h>
+
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -31,6 +33,9 @@
 #include <android-base/stringprintf.h>
 
 #include "private/ScopeGuard.h"
+
+#define ASSERT_SUBSTR(needle, haystack) \
+    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
 #if defined(__linux__)
 

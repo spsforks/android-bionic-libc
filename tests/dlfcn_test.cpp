@@ -31,9 +31,6 @@
 #include "dlfcn_symlink_support.h"
 #include "utils.h"
 
-#define ASSERT_SUBSTR(needle, haystack) \
-    ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
-
 
 static bool g_called = false;
 extern "C" void DlSymTestFunction() {
@@ -386,7 +383,7 @@ TEST(dlfcn, dlopen_check_order_reloc_siblings) {
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_SUBSTR("libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #endif
 
   handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
@@ -451,7 +448,7 @@ TEST(dlfcn, dlopen_check_order_reloc_grandchild) {
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_SUBSTR("libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #endif
 
   handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
@@ -497,7 +494,7 @@ TEST(dlfcn, dlopen_check_order_reloc_nephew) {
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_SUBSTR("libtest_check_order_reloc_siblings.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #endif
 
   handle = dlopen("libtest_check_order_reloc_siblings.so", RTLD_NOW | RTLD_LOCAL);
@@ -572,7 +569,7 @@ TEST(dlfcn, dlopen_check_order_reloc_main_executable) {
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
-  ASSERT_STREQ("dlopen failed: library \"libtest_check_order_reloc_root.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_SUBSTR("libtest_check_order_reloc_root.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #endif
 
   handle = dlopen("libtest_check_order_reloc_root.so", RTLD_NOW | RTLD_LOCAL);
@@ -651,7 +648,7 @@ TEST(dlfcn, dlopen_check_loop) {
   handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
-  ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+  ASSERT_SUBSTR("libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 #else
   // TODO: glibc returns nullptr on dlerror() here. Is it bug?
   ASSERT_TRUE(dlerror() == nullptr);
@@ -749,7 +746,7 @@ TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
   ASSERT_TRUE(self == nullptr);
 #if defined(__BIONIC__)
-  ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found", dlerror());
+  ASSERT_SUBSTR("\"/does/not/exist\" not found", dlerror());
 #else
   ASSERT_STREQ("/does/not/exist: cannot open shared object file: No such file or directory", dlerror());
 #endif
@@ -1195,8 +1192,7 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
                               "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\": W + E load segments are not allowed";
-  ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\": W + E load segments are not allowed", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
@@ -1206,8 +1202,7 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: ";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has invalid shdr offset/size: ", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shentsize) {
@@ -1217,8 +1212,7 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has unsupported e_shentsize: 0x0 (expected 0x";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has unsupported e_shentsize: 0x0 (expected 0x", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
@@ -1228,8 +1222,7 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid e_shstrndx";
-  ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has invalid e_shstrndx", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
@@ -1239,8 +1232,7 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has no section headers";
-  ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has no section headers", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
@@ -1250,8 +1242,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: 0/";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has invalid shdr offset/size: 0/", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
@@ -1261,8 +1252,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" .dynamic section header was not found";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" .dynamic section header was not found", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_textrels) {
@@ -1272,8 +1262,7 @@ TEST(dlfcn, dlopen_invalid_textrels) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has text relocations", dlerror());
 }
 
 TEST(dlfcn, dlopen_invalid_textrels2) {
@@ -1283,8 +1272,7 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
-  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+  ASSERT_SUBSTR("\"" + libpath + "\" has text relocations", dlerror());
 }
 
 #endif

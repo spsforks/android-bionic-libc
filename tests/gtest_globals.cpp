@@ -21,41 +21,47 @@
 
 #include <string>
 
-static std::string init_testlib_root() {
-  std::string out_path;
-  const char* data_dir = getenv("ANDROID_DATA");
-  if (data_dir == nullptr) {
-    // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
-    std::string path = get_executable_path();
-
-    path = get_dirname(path.c_str());
-    path += "/../..";
-
-    if (!get_realpath(path.c_str(), &out_path)) {
-      printf("Failed to get realpath for \"%s\"", path.c_str());
-      abort();
-    }
-  } else {
-    out_path = data_dir;
-  }
-
-  out_path = out_path + "/nativetest";
-#if defined(__LP64__)
-  out_path += "64";
-#endif
-  out_path += "/bionic-loader-test-libs";
-
+static std::string get_realpath_or_fail(const std::string& path) {
   std::string real_path;
-  if (!get_realpath(out_path, &real_path)) {
-    printf("\"%s\": does not exists", out_path.c_str());
+
+  if (!get_realpath(path.c_str(), &real_path)) {
+    printf("Failed to get realpath for \"%s\"", path.c_str());
     abort();
   }
 
   return real_path;
 }
 
+static std::string init_data_root() {
+  const char* android_data = getenv("ANDROID_DATA");
+  std::string path;
+
+  if (android_data == nullptr) {
+    // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
+    path = get_dirname(get_executable_path().c_str()) + "/../..";
+  } else {
+    path = android_data;
+  }
+
+  return get_realpath_or_fail(path);
+}
+
+static std::string init_testlib_root() {
+  std::string path = get_data_root() + "/nativetest";
+#if defined(__LP64__)
+  path += "64";
+#endif
+  path += "/bionic-loader-test-libs";
+
+  return get_realpath_or_fail(path);
+}
+
+const std::string& get_data_root() {
+  static const std::string data_root = init_data_root();
+  return data_root;
+}
+
 const std::string& get_testlib_root() {
   static const std::string testlib_root = init_testlib_root();
   return testlib_root;
 }
-
