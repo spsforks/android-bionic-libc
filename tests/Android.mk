@@ -77,6 +77,7 @@ libBionicStandardTests_src_files := \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
+    rtc_test.cpp \
     sched_test.cpp \
     search_test.cpp \
     semaphore_test.cpp \
