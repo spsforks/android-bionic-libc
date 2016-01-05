@@ -3963,7 +3963,13 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     ldpreload_env = getenv("LD_PRELOAD");
   }
 
-  INFO("[ android linker & debugger ]");
+  INFO("[ android dynamic linker (%d-bit) ]",
+#if defined(__LP64__)
+       64
+#else
+       32
+#endif
+  );
 
   soinfo* si = soinfo_alloc(&g_default_namespace, args.argv[0], nullptr, 0, RTLD_GLOBAL);
   if (si == nullptr) {
