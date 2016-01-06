@@ -51,63 +51,83 @@ extern int __cxa_atexit(void (*)(void*), void*, void*);
  */
 
 int __attribute__((weak))
-__aeabi_atexit(void *object, void (*destructor) (void *), void *dso_handle) {
+__aeabi_atexit_libc(void *object, void (*destructor) (void *), void *dso_handle) {
     return __cxa_atexit(destructor, object, dso_handle);
 }
 
-
-void __attribute__((weak))
-__aeabi_memcpy8(void *dest, const void *src, size_t n) {
-    memcpy(dest, src, n);
+int __attribute__((weak))
+__aeabi_atexit_private(void *object, void (*destructor) (void *), void *dso_handle) {
+    return __cxa_atexit(destructor, object, dso_handle);
 }
 
-void __attribute__((weak)) __aeabi_memcpy4(void *dest, const void *src, size_t n) {
-    memcpy(dest, src, n);
-}
+__asm__(".symver __aeabi_atexit_libc, __aeabi_atexit@@LIBC");
+__asm__(".symver __aeabi_atexit_private, __aeabi_atexit@LIBC_PRIVATE");
 
-void __attribute__((weak)) __aeabi_memcpy(void *dest, const void *src, size_t n) {
-    memcpy(dest, src, n);
-}
+#define __AEABI_PROXY_TO_MEMFN(aeabi_fn_name, mem_fn_name) \
+void __attribute__((weak)) \
+aeabi_fn_name ## _libc(void *dest, const void *src, size_t n) { \
+  mem_fn_name(dest, src, n); \
+} \
+\
+void __attribute__((weak)) \
+aeabi_fn_name ## _private(void *dest, const void *src, size_t n) { \
+  mem_fn_name(dest, src, n); \
+} \
+\
+__asm__(".symver " #aeabi_fn_name "_libc, " #aeabi_fn_name "@@LIBC"); \
+__asm__(".symver " #aeabi_fn_name "_private , " #aeabi_fn_name "@LIBC_PRIVATE")
 
+__AEABI_PROXY_TO_MEMFN(__aeabi_memcpy8, memcpy);
+__AEABI_PROXY_TO_MEMFN(__aeabi_memcpy4, memcpy);
+__AEABI_PROXY_TO_MEMFN(__aeabi_memcpy, memcpy);
+__AEABI_PROXY_TO_MEMFN(__aeabi_memmove8, memmove);
+__AEABI_PROXY_TO_MEMFN(__aeabi_memmove4, memmove);
+__AEABI_PROXY_TO_MEMFN(__aeabi_memmove, memmove);
 
-void __attribute__((weak)) __aeabi_memmove8(void *dest, const void *src, size_t n) {
-    memmove(dest, src, n);
-}
+#undef __AEABI_PROXY_TO_MEMFN
 
-void __attribute__((weak)) __aeabi_memmove4(void *dest, const void *src, size_t n) {
-    memmove(dest, src, n);
-}
-
-void __attribute__((weak)) __aeabi_memmove(void *dest, const void *src, size_t n) {
-    memmove(dest, src, n);
-}
 
 /*
  * __aeabi_memset has the order of its second and third arguments reversed.
  *  This allows __aeabi_memclr to tail-call __aeabi_memset
  */
 
-void __attribute__((weak)) __aeabi_memset8(void *dest, size_t n, int c) {
-    memset(dest, c, n);
-}
+#define __AEABI_PROXY_TO_MEMSET(aeabi_fn_name) \
+void __attribute__((weak)) \
+aeabi_fn_name ## _libc(void *dest, size_t n, int c) { \
+  memset(dest, c, n); \
+} \
+\
+void __attribute__((weak)) \
+aeabi_fn_name ## _private(void *dest, size_t n, int c) { \
+  memset(dest, c, n); \
+} \
+\
+__asm__(".symver " #aeabi_fn_name "_libc, " #aeabi_fn_name "@@LIBC"); \
+__asm__(".symver " #aeabi_fn_name "_private , " #aeabi_fn_name "@LIBC_PRIVATE")
 
-void __attribute__((weak)) __aeabi_memset4(void *dest, size_t n, int c) {
-    memset(dest, c, n);
-}
+__AEABI_PROXY_TO_MEMSET(__aeabi_memset8);
+__AEABI_PROXY_TO_MEMSET(__aeabi_memset4);
+__AEABI_PROXY_TO_MEMSET(__aeabi_memset);
 
-void __attribute__((weak)) __aeabi_memset(void *dest, size_t n, int c) {
-    memset(dest, c, n);
-}
+#undef __AEABI_PROXY_TO_MEMSET
 
+#define __AEABI_PROXY_TO_MEMCLR(aeabi_fn_name) \
+void __attribute__((weak)) \
+aeabi_fn_name ## _libc(void *dest, size_t n) { \
+  memset(dest, 0, n); \
+} \
+\
+void __attribute__((weak)) \
+aeabi_fn_name ## _private(void *dest, size_t n) { \
+  memset(dest, 0, n); \
+} \
+\
+__asm__(".symver " #aeabi_fn_name "_libc, " #aeabi_fn_name "@@LIBC"); \
+__asm__(".symver " #aeabi_fn_name "_private , " #aeabi_fn_name "@LIBC_PRIVATE")
 
-void __attribute__((weak)) __aeabi_memclr8(void *dest, size_t n) {
-    __aeabi_memset8(dest, n, 0);
-}
+__AEABI_PROXY_TO_MEMCLR(__aeabi_memclr8);
+__AEABI_PROXY_TO_MEMCLR(__aeabi_memclr4);
+__AEABI_PROXY_TO_MEMCLR(__aeabi_memclr);
 
-void __attribute__((weak)) __aeabi_memclr4(void *dest, size_t n) {
-    __aeabi_memset4(dest, n, 0);
-}
-
-void __attribute__((weak)) __aeabi_memclr(void *dest, size_t n) {
-    __aeabi_memset(dest, n, 0);
-}
+#undef __AEABI_PROXY_TO_MEMCLR
