@@ -18,8 +18,8 @@
 #define LIBC_INCLUDE_MALLOC_H_
 
 /*
- * Declaration of malloc routines. Bionic uses dlmalloc (see
- * upstream-dlmalloc) but doesn't directly include it here to keep the
+ * Declaration of malloc routines. Bionic uses jemalloc (see
+ * external/jemalloc) but doesn't directly include it here to keep the
  * defined malloc.h interface small.
  */
 #include <sys/cdefs.h>
