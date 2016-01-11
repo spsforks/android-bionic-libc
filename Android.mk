@@ -16,4 +16,4 @@
 
 LOCAL_PATH := $(call my-dir)
 
-include $(call all-subdir-makefiles)
+include $(call all-subdir-makefiles) $(call all-named-subdir-makefiles,libc/zoneinfo)
