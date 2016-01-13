@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <ifaddrs.h>
+#include <dirent.h>
 
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
@@ -24,11 +25,14 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
+#include <vector>
+#include <algorithm>
+
 TEST(ifaddrs, freeifaddrs_null) {
   freeifaddrs(nullptr);
 }
 
-TEST(ifaddrs, getifaddrs_smoke) {
+TEST(ifaddrs, getifaddrs_lo) {
   ifaddrs* addrs = nullptr;
 
   ASSERT_EQ(0, getifaddrs(&addrs));
@@ -63,6 +67,82 @@ TEST(ifaddrs, getifaddrs_smoke) {
   ASSERT_EQ(6, sa_ll->sll_halen);
 
   freeifaddrs(addrs);
+}
+
+// Check that getifaddrs sees the same list of interfaces as /sys/class/net.
+TEST(ifaddrs, getifaddrs_interfaces) {
+  std::vector<std::string> ifaddrs_socks;
+  {
+    ifaddrs* addrs;
+    getifaddrs(&addrs);
+
+    for (ifaddrs* addr = addrs; addr != nullptr; addr = addr->ifa_next) {
+      int family = addr->ifa_addr ? addr->ifa_addr->sa_family :
+                                    addr->ifa_broadaddr ? addr->ifa_broadaddr->sa_family :
+                                    AF_UNSPEC;
+
+      if (family == AF_PACKET || family == AF_UNSPEC)
+        ifaddrs_socks.push_back(std::string(addr->ifa_name));
+    }
+
+    freeifaddrs(addrs);
+  }
+
+  std::vector<std::string> SYS_CLASS_NET;
+  {
+    DIR *d = opendir("/sys/class/net");
+
+    if (d) {
+      dirent *dir;
+      while ((dir = readdir(d)) != nullptr)
+        if (dir->d_type == DT_LNK)
+          SYS_CLASS_NET.push_back(std::string(dir->d_name));
+
+      closedir(d);
+    }
+  }
+
+  ASSERT_TRUE(std::is_permutation(ifaddrs_socks.begin(), ifaddrs_socks.end(),
+                                  SYS_CLASS_NET.begin()));
+}
+
+TEST(ifaddrs, getifaddrs_INet) {
+  ifaddrs* addrs;
+  getifaddrs(&addrs);
+
+  int fd;
+  fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  for (ifaddrs* addr = addrs; addr != nullptr; addr = addr->ifa_next) {
+    // Check that IPv4 addresses we get from getifaddrs agrees with SIOCGIFADDR.
+    if (addr->ifa_addr && addr->ifa_addr->sa_family == AF_INET) {
+      ifreq ifr;
+      ifr.ifr_addr.sa_family = AF_INET;
+      strncpy(ifr.ifr_name, addr->ifa_name, IFNAMSIZ-1);
+      ioctl(fd, SIOCGIFADDR, &ifr);
+
+      sockaddr_in* sock_in_ioctl = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
+      sockaddr_in* sock_in_ifaddrs = reinterpret_cast<sockaddr_in*>(addr->ifa_addr);
+      ASSERT_EQ(sock_in_ioctl->sin_addr.s_addr,
+                sock_in_ifaddrs->sin_addr.s_addr);
+    }
+
+    // Do the same for IPv4 broadcast addresses.
+    if (addr->ifa_broadaddr && addr->ifa_broadaddr->sa_family == AF_INET) {
+      ifreq ifr;
+      ifr.ifr_addr.sa_family = AF_INET;
+      strncpy(ifr.ifr_name, addr->ifa_name, IFNAMSIZ-1);
+      ioctl(fd, SIOCGIFBRDADDR, &ifr);
+
+      sockaddr_in* sock_in_ioctl = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
+      sockaddr_in* sock_in_ifaddrs = reinterpret_cast<sockaddr_in*>(addr->ifa_broadaddr);
+      ASSERT_EQ(sock_in_ioctl->sin_addr.s_addr,
+                sock_in_ifaddrs->sin_addr.s_addr);
+    }
+  }
+
+  freeifaddrs(addrs);
+  close(fd);
 }
 
 static void print_sockaddr_ll(const char* what, const sockaddr* p) {
