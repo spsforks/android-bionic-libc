@@ -1245,6 +1245,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_stack_protector \
     libc_syscalls \
     libc_tzcode \
+    libmemleak \
 
 LOCAL_WHOLE_STATIC_LIBRARIES_arm := libc_aeabi
 
