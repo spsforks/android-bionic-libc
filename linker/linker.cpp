@@ -356,7 +356,13 @@ static void soinfo_free(soinfo* si) {
   }
 
   if (si->base != 0 && si->size != 0) {
-    munmap(reinterpret_cast<void*>(si->base), si->size);
+    if (!si->is_reserved_map()) {
+      munmap(reinterpret_cast<void*>(si->base), si->size);
+    } else {
+      // remap the region as PROT_NONE, MAP_ANONYMOUS | MAP_NORESERVE
+      mmap(reinterpret_cast<void*>(si->base), si->size, PROT_NONE,
+           MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+    }
   }
 
   soinfo *prev = nullptr, *trav;
@@ -1160,6 +1166,7 @@ class LoadTask {
 
     si_->base = elf_reader.load_start();
     si_->size = elf_reader.load_size();
+    si_->set_reserved_map(elf_reader.is_reserved_map());
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
@@ -3246,6 +3253,19 @@ size_t soinfo::decrement_ref_count() {
 
 soinfo* soinfo::get_local_group_root() const {
   return local_group_root_;
+}
+
+
+void soinfo::set_reserved_map(bool reserved_map) {
+  if (reserved_map) {
+    flags_ |= FLAG_RESERVED_MAP;
+  } else {
+    flags_ &= ~FLAG_RESERVED_MAP;
+  }
+}
+
+bool soinfo::is_reserved_map() const {
+  return (flags_ & FLAG_RESERVED_MAP) != 0;
 }
 
 // This function returns api-level at the time of
