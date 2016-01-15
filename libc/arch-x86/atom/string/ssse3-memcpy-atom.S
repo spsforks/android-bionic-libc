@@ -2604,7 +2604,7 @@ L(large_page_less_64bytes):
 L(large_page_less_32bytes):
 	add	%ecx, %edx
 	add	%ecx, %eax
-	sfence
+	lock    addl $0,0(%esp)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
 	.p2align 4

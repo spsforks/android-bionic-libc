@@ -143,7 +143,7 @@ L(128bytesmore_nt):
 	leaq	64(%rcx), %rcx
 	cmpq	%rcx, %rdx
 	jne	L(128bytesmore_nt)
-	sfence
+	lock 	add $0,0(%rsp)
 	ret
 
 END(memset)

@@ -487,7 +487,7 @@ L(mm_large_page_loop_forward):
 	lea 	64(%r8), %r8
 	cmp	%r8, %rbx
 	ja	L(mm_large_page_loop_forward)
-	sfence
+	lock    add $0,0(%rsp)
 	jmp	L(mm_copy_remaining_forward)
 
 /* Big length copy backward part.  */
@@ -504,7 +504,7 @@ L(mm_large_page_loop_backward):
 	lea 	-64(%r9), %r9
 	cmp	%r9, %rbx
 	jb	L(mm_large_page_loop_backward)
-	sfence
+	lock    add $0,0(%rsp)
 	jmp	L(mm_recalc_len)
 
 END (MEMMOVE)

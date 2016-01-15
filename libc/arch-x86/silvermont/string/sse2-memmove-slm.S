@@ -514,7 +514,7 @@ L(mm_large_page_loop_forward):
 	leal	64(%edi), %edi
 	cmp	%edi, %ebx
 	ja	L(mm_large_page_loop_forward)
-	sfence
+	lock	addl $0,0(%esp)
 	jmp	L(mm_copy_remaining_forward)
 
 /* Big length copy backward part.  */
@@ -531,7 +531,7 @@ L(mm_large_page_loop_backward):
 	leal	-64(%edi), %edi
 	cmp	%edi, %ebx
 	jb	L(mm_large_page_loop_backward)
-	sfence
+	lock	addl $0,0(%esp)
 	POP (%edi)
 	POP (%esi)
 	jmp	L(mm_recalc_len)

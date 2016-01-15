@@ -267,7 +267,7 @@ L(main_loop_large_page):
 	lea	128(%ebx), %ebx
 	cmpl	%ebx, %ecx
 	jne	L(main_loop_large_page)
-	sfence
+	lock	addl $0,0(%esp)
 	jmp	L(return)
 
 L(len_0_16_bytes):

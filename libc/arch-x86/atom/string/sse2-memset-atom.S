@@ -364,7 +364,7 @@ L(128bytesormore_nt):
 	add	$0x80, %edx
 	cmp	$0x80, %ecx
 	jae	L(128bytesormore_nt)
-	sfence
+	lock    addl $0,0(%esp)
 L(shared_cache_loop_end):
 	POP(%ebx)
 	BRANCH_TO_JMPTBL_ENTRY(L(table_16_128bytes))

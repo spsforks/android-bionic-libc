@@ -258,7 +258,7 @@ L(main_loop_large_page):
 	lea	128(%r8), %r8
 	cmp	%r8, %rdx
 	jne	L(main_loop_large_page)
-	sfence
+	lock    add $0,0(%rsp)
 	jmp	L(return)
 
 L(len_0_16_bytes):
