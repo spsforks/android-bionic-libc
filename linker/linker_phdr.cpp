@@ -467,6 +467,7 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
     }
   } else {
     start = extinfo->reserved_addr;
+    load_size_ = reserved_size;
   }
 
   load_start_ = start;
