@@ -40,6 +40,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "private/ErrnoRestorer.h"
+
 // The public ifaddrs struct is full of pointers. Rather than track several
 // different allocations, we use a maximally-sized structure with the public
 // part at offset 0, and pointers into its hidden tail.
@@ -244,12 +246,9 @@ int getifaddrs(ifaddrs** out) {
     // Ensure that callers crash if they forget to check for success.
     *out = nullptr;
   }
-  {
-    int saved_errno = errno;
-    close(fd);
-    delete[] buf;
-    errno = saved_errno;
-  }
+  ErrnoRestorer errno_restorer;
+  close(fd);
+  delete[] buf;
   return okay ? 0 : -1;
 }
 
