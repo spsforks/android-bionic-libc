@@ -34,3 +34,27 @@ TEST(net_if, if_nametoindex_fail) {
   unsigned index = if_nametoindex("this-interface-does-not-exist");
   ASSERT_EQ(0U, index);
 }
+
+TEST(net_if, if_nameindex) {
+  struct if_nameindex* list = if_nameindex();
+  ASSERT_TRUE(list != nullptr);
+
+  ASSERT_TRUE(list->if_index != 0);
+
+  char buf[IF_NAMESIZE] = {};
+  bool saw_lo = false;
+  for (struct if_nameindex* i = list; i->if_index != 0; ++i) {
+    fprintf(stderr, "\t%d\t%s\n", i->if_index, i->if_name);
+    EXPECT_EQ(i->if_index, if_nametoindex(i->if_name));
+    EXPECT_STREQ(i->if_name, if_indextoname(i->if_index, buf));
+    if (strcmp(i->if_name, "lo") == 0) saw_lo = true;
+  }
+  ASSERT_TRUE(saw_lo);
+  if_freenameindex(list);
+}
+
+TEST(net_if, if_freenameindex_nullptr) {
+#if defined(__BIONIC__)
+  if_freenameindex(nullptr);
+#endif
+}
