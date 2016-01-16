@@ -44,8 +44,6 @@ libc_common_src_files := \
     bionic/ether_ntoa.c \
     bionic/fts.c \
     bionic/getpriority.c \
-    bionic/if_indextoname.c \
-    bionic/if_nametoindex.c \
     bionic/initgroups.c \
     bionic/isatty.c \
     bionic/memmem.c \
@@ -173,6 +171,7 @@ libc_bionic_ndk_src_files := \
     bionic/mntent.cpp \
     bionic/mremap.cpp \
     bionic/NetdClientDispatch.cpp \
+    bionic/net_if.cpp \
     bionic/open.cpp \
     bionic/pathconf.cpp \
     bionic/pause.cpp \
