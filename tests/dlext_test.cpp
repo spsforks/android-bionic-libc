@@ -30,6 +30,7 @@
 #include <sys/wait.h>
 
 #include <pagemap/pagemap.h>
+#include <ziparchive/zip_archive.h>
 
 #include "TemporaryFile.h"
 #include "utils.h"
@@ -61,8 +62,7 @@ typedef int (*fn)(void);
 #define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
 #define LIBZIPPATH NATIVE_TESTS_PATH "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
 #define LIBZIPPATH_WITH_RUNPATH NATIVE_TESTS_PATH "/libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
-
-#define LIBZIP_OFFSET PAGE_SIZE
+#define LIBZIP_SIMPLE_ZIP "libdir/libatest_simple_zip.so"
 
 class DlExtTest : public ::testing::Test {
 protected:
@@ -128,7 +128,16 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
   extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path.c_str(), O_RDONLY | O_CLOEXEC));
-  extinfo.library_fd_offset = LIBZIP_OFFSET;
+
+  ZipArchiveHandle handle;
+  ASSERT_EQ(0, OpenArchive(lib_path.c_str(), &handle));
+  ZipEntry zip_entry;
+  ZipString zip_name;
+  zip_name.name = reinterpret_cast<const uint8_t*>(LIBZIP_SIMPLE_ZIP);
+  zip_name.name_length = sizeof(LIBZIP_SIMPLE_ZIP) - 1;
+  ASSERT_EQ(0, FindEntry(handle, zip_name, &zip_entry));
+  extinfo.library_fd_offset = zip_entry.offset;
+  CloseArchive(handle);
 
   handle_ = android_dlopen_ext(lib_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
@@ -181,7 +190,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
 TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
-  extinfo.library_fd_offset = LIBZIP_OFFSET;
+  extinfo.library_fd_offset = 0;
 
   handle_ = android_dlopen_ext("/some/lib/that/does_not_exist", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
