@@ -24,7 +24,7 @@
 
 struct LinkerBlockAllocatorPage {
   LinkerBlockAllocatorPage* next;
-  uint8_t bytes[PAGE_SIZE-sizeof(LinkerBlockAllocatorPage*)];
+  uint8_t bytes[PAGE_SIZE-sizeof(LinkerBlockAllocatorPage*)] __attribute__((aligned(16)));
 };
 
 struct FreeBlockInfo {
@@ -32,8 +32,14 @@ struct FreeBlockInfo {
   size_t num_free_blocks;
 };
 
+static constexpr size_t round_up_mul_16(size_t size) {
+  size_t mod = size % 16;
+  return (mod == 0) ? size : size + (16 - mod);
+}
+
 LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
-  : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
+  : block_size_(
+      round_up_mul_16(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size)),
     page_list_(nullptr),
     free_block_list_(nullptr)
 {}
