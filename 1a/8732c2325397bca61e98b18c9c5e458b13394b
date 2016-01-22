@@ -1,0 +1,8 @@
+Presubmit-Ready+1: Treehugger Robot <android-build-prod@system.gserviceaccount.com>
+Verified+1: Bionic Buildbot <bionicbb@android.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Dimitry Ivanov <dimitry@google.com>
+Submitted-at: Fri, 22 Jan 2016 01:41:28 +0000
+Reviewed-on: https://android-review.googlesource.com/197685
+Project: platform/bionic
+Branch: refs/heads/master
