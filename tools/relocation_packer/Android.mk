@@ -30,8 +30,8 @@ LOCAL_SRC_FILES := \
   src/packer.cc \
   src/sleb128.cc \
 
-LOCAL_STATIC_LIBRARIES := libelf
-LOCAL_C_INCLUDES := external/elfutils/src/libelf
+LOCAL_STATIC_LIBRARIES := libelf libz
+LOCAL_C_INCLUDES := external/elfutils/src/libelf external/zlib
 LOCAL_MODULE := lib_relocation_packer
 
 LOCAL_CPPFLAGS := $(common_cppflags)
@@ -45,11 +45,14 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := src/main.cc
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf
+LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
 
 # Statically linking libc++ to make it work from prebuilts
 LOCAL_CXX_STL := libc++_static
-LOCAL_C_INCLUDES := external/elfutils/src/libelf libnativehelper/include
+LOCAL_C_INCLUDES := \
+  external/elfutils/src/libelf \
+  libnativehelper/include \
+  external/zlib \
 
 LOCAL_MODULE := relocation_packer
 
@@ -70,8 +73,8 @@ LOCAL_SRC_FILES := \
   src/sleb128_unittest.cc \
   src/packer_unittest.cc \
 
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf
-LOCAL_C_INCLUDES := external/elfutils/src/libelf
+LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
+LOCAL_C_INCLUDES := external/elfutils/src/libelf external/zlib
 
 LOCAL_CPPFLAGS := $(common_cppflags)
 
