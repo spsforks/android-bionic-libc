@@ -106,3 +106,7 @@ __noreturn void __libc_init(void* raw_args,
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
+
+uint32_t bionic_get_application_target_sdk_version() {
+  return -1;
+}

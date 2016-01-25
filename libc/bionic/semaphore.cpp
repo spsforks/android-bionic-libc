@@ -211,6 +211,8 @@ static int __sem_inc(atomic_uint* sem_count_ptr) {
   return SEMCOUNT_TO_VALUE(old_value);
 }
 
+extern uint32_t bionic_get_application_target_sdk_version();
+
 int sem_wait(sem_t* sem) {
   atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
   unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
@@ -220,7 +222,13 @@ int sem_wait(sem_t* sem) {
       return 0;
     }
 
-    __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
+    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
+    if (bionic_get_application_target_sdk_version() > 23) {
+      if (result ==-EINTR) {
+        errno = EINTR;
+        return -1;
+      }
+    }
   }
 }
 
