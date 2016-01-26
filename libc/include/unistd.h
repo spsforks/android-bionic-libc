@@ -48,6 +48,11 @@ __BEGIN_DECLS
 #define W_OK 2
 #define R_OK 4
 
+#define F_ULOCK 0
+#define F_LOCK 1
+#define F_TLOCK 2
+#define F_TEST 3
+
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
@@ -97,6 +102,13 @@ extern int execve(const char* __file, char* const* __argv, char* const* __envp);
 extern int execl(const char* __path, const char* __arg0, ...);
 extern int execlp(const char* __file, const char* __arg0, ...);
 extern int execle(const char* __path, const char* __arg0, ...);
+
+#if defined(__USE_FILE_OFFSET64)
+int lockf(int, int, off_t) __RENAME(lockf64);
+#else
+int lockf(int, int, off_t);
+#endif
+int lockf64(int, int, off64_t);
 
 extern int nice(int __incr);
 
