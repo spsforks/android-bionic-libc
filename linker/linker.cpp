@@ -2410,6 +2410,9 @@ android_namespace_t* create_namespace(const void* caller_addr,
     return nullptr;
   }
 
+  PRINT("create namespace [name=%s; ld_library_path=%s; default_library_path=%s; permitted_when_isolated_path=%s; type=0x%" PRIx64 "]",
+        name, ld_library_path, default_library_path, permitted_when_isolated_path, type);
+
   soinfo* caller_soinfo = find_containing_library(caller_addr);
 
   android_namespace_t* caller_ns = caller_soinfo != nullptr ?
