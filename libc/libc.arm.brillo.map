@@ -234,10 +234,10 @@ LIBC {
     alarm;
     alphasort;
     alphasort64;
-    android_getaddrinfofornet;
-    android_getaddrinfofornetcontext;
-    android_gethostbyaddrfornet;
-    android_gethostbynamefornet;
+    android_getaddrinfofornet; # arm x86 mips
+    android_getaddrinfofornetcontext; # arm x86 mips
+    android_gethostbyaddrfornet; # arm x86 mips
+    android_gethostbynamefornet; # arm x86 mips
     android_set_abort_message;
     arc4random;
     arc4random_buf;
