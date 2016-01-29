@@ -215,6 +215,7 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
   }
   g_debug_free_malloc_leak_info_func(info);
 }
+
 // =============================================================================
 
 template<typename FunctionType>
@@ -385,3 +386,37 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
 #endif  // !LIBC_STATIC
+
+// =============================================================================
+// Exported for use by libmemleak.
+// =============================================================================
+
+static bool malloc_disabled_tcache;
+
+// Calls callback for every allocation in the anonymous heap mapping
+// [base, base+size).  Must be called between malloc_disable and malloc_enable.
+extern "C" int malloc_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  return je_iterate(base, size, callback, arg);
+}
+
+// Disable calls to malloc so malloc_iterate gets a consistent view of
+// allocated memory.  Returns a key to be passed to the matching call
+// to malloc_enable.
+extern "C" void malloc_disable() {
+  bool new_tcache = false;
+  size_t old_len = sizeof(malloc_disabled_tcache);
+  je_mallctl("thread.tcache.enabled",
+      &malloc_disabled_tcache, &old_len,
+      &new_tcache, sizeof(new_tcache));
+  je_jemalloc_prefork();
+}
+
+// Re-enable calls to malloc after a previous call to malloc_disable.
+extern "C" void malloc_enable() {
+  je_jemalloc_postfork_parent();
+  if (malloc_disabled_tcache) {
+    je_mallctl("thread.tcache.enabled", NULL, NULL,
+        &malloc_disabled_tcache, sizeof(malloc_disabled_tcache));
+  }
+}
