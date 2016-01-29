@@ -40,6 +40,8 @@
 //   free_malloc_leak_info: Frees the data allocated by the call to
 //                          get_malloc_leak_info.
 
+#include <pthread.h>
+
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -63,6 +65,7 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
     Malloc(valloc),
 #endif
+    Malloc(iterate),
   };
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
@@ -159,7 +162,6 @@ extern "C" void* valloc(size_t bytes) {
 #if !defined(LIBC_STATIC)
 
 #include <dlfcn.h>
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -215,6 +217,7 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
   }
   g_debug_free_malloc_leak_info_func(info);
 }
+
 // =============================================================================
 
 template<typename FunctionType>
@@ -260,6 +263,10 @@ static bool InitMalloc(void* malloc_impl_handler, MallocDispatch* table, const c
   }
   if (!InitMallocFunction<MallocRealloc>(malloc_impl_handler, &table->realloc,
                                          prefix, "realloc")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocIterate>(malloc_impl_handler, &table->iterate,
+                                         prefix, "iterate")) {
     return false;
   }
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
@@ -385,3 +392,55 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
 #endif  // !LIBC_STATIC
+
+// =============================================================================
+// Exported for use by libmemunreachable.
+// =============================================================================
+
+static pthread_mutex_t malloc_disabled_lock = PTHREAD_MUTEX_INITIALIZER;
+static bool malloc_disabled_tcache;
+static pthread_once_t malloc_disable_init = PTHREAD_ONCE_INIT;
+
+// Calls callback for every allocation in the anonymous heap mapping
+// [base, base+size).  Must be called between malloc_disable and malloc_enable.
+extern "C" int malloc_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  auto _iterate = __libc_globals->malloc_dispatch.iterate;
+  if (__predict_false(_iterate != nullptr)) {
+    return _iterate(base, size, callback, arg);
+  }
+  return Malloc(iterate)(base, size, callback, arg);
+}
+
+// Disable calls to malloc so malloc_iterate gets a consistent view of
+// allocated memory.
+extern "C" void malloc_disable() {
+  pthread_once(&malloc_disable_init, [](){
+    pthread_atfork(
+        // prepare
+        [](){ pthread_mutex_lock(&malloc_disabled_lock); },
+        // parent
+        [](){ pthread_mutex_unlock(&malloc_disabled_lock); },
+        // child
+        [](){ pthread_mutex_init(&malloc_disabled_lock, NULL); }
+      );
+  });
+
+  pthread_mutex_lock(&malloc_disabled_lock);
+  bool new_tcache = false;
+  size_t old_len = sizeof(malloc_disabled_tcache);
+  je_mallctl("thread.tcache.enabled",
+      &malloc_disabled_tcache, &old_len,
+      &new_tcache, sizeof(new_tcache));
+  je_jemalloc_prefork();
+}
+
+// Re-enable calls to malloc after a previous call to malloc_disable.
+extern "C" void malloc_enable() {
+  je_jemalloc_postfork_parent();
+  if (malloc_disabled_tcache) {
+    je_mallctl("thread.tcache.enabled", NULL, NULL,
+        &malloc_disabled_tcache, sizeof(malloc_disabled_tcache));
+  }
+  pthread_mutex_unlock(&malloc_disabled_lock);
+}

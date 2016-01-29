@@ -75,6 +75,8 @@ void* debug_realloc(void* pointer, size_t bytes);
 void* debug_calloc(size_t nmemb, size_t bytes);
 struct mallinfo debug_mallinfo();
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
+int debug_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* debug_pvalloc(size_t bytes);
@@ -539,6 +541,35 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
   *memptr = debug_memalign(alignment, size);
   errno = saved_errno;
   return (*memptr != nullptr) ? 0 : ENOMEM;
+}
+
+int debug_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  // Can't allocate, malloc is disabled
+  // Manual capture of the arguments to pass to the lambda below as void* arg
+  struct iterate_ctx {
+    decltype(callback) callback;
+    decltype(arg) arg;
+  } ctx = { callback, arg };
+
+  return g_dispatch->iterate(base, size,
+      [](uintptr_t base, size_t size, void* arg) {
+        const iterate_ctx* ctx = reinterpret_cast<iterate_ctx*>(arg);
+        const void* pointer = reinterpret_cast<void*>(base);
+        if (g_debug->need_header()) {
+          const Header* header = reinterpret_cast<const Header*>(pointer);
+          if (g_debug->config().options & TRACK_ALLOCS) {
+            if (g_debug->track->Contains(header)) {
+              // Return just the body of the allocation if we're sure the header exists
+              ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
+                  header->real_size(), ctx->arg);
+              return;
+            }
+          }
+        }
+        // Fall back to returning the whole allocation
+        ctx->callback(base, size, ctx->arg);
+      }, &ctx);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
