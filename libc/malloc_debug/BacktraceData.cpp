@@ -35,6 +35,7 @@
 
 #include <private/bionic_macros.h>
 
+#include "backtrace.h"
 #include "BacktraceData.h"
 #include "Config.h"
 #include "DebugData.h"
@@ -42,10 +43,8 @@
 #include "malloc_debug.h"
 
 BacktraceData::BacktraceData(const Config& config, size_t* offset) {
-  size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames - 1;
+  size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames;
   alloc_offset_ = *offset;
-  *offset += BIONIC_ALIGN(hdr_len, sizeof(uintptr_t));
-  free_offset_ = *offset;
   *offset += BIONIC_ALIGN(hdr_len, sizeof(uintptr_t));
 }
 

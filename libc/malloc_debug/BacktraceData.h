@@ -35,6 +35,7 @@
 
 // Forward declarations.
 struct Config;
+struct BacktraceHeader;
 
 class BacktraceData {
  public:
@@ -44,14 +45,12 @@ class BacktraceData {
   bool Initialize(const Config& config);
 
   inline size_t alloc_offset() { return alloc_offset_; }
-  inline size_t free_offset() { return free_offset_; }
 
   bool enabled() { return enabled_; }
   void set_enabled(bool enabled) { enabled_ = enabled; }
 
  private:
   size_t alloc_offset_ = 0;
-  size_t free_offset_ = 0;
 
   volatile bool enabled_ = false;
 
