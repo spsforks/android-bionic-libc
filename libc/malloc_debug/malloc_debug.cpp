@@ -66,6 +66,7 @@ void debug_finalize();
 void debug_get_malloc_leak_info(
     uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
     size_t* backtrace_size);
+ssize_t debug_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
 void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
 void* debug_malloc(size_t size);
@@ -570,6 +571,32 @@ int debug_iterate(uintptr_t base, size_t size,
         // Fall back to returning the whole allocation
         ctx->callback(base, size, ctx->arg);
       }, &ctx);
+}
+
+ssize_t debug_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
+  if (DebugCallsDisabled() || pointer == nullptr) {
+    return 0;
+  }
+
+  if (g_debug->need_header()) {
+    Header* header = g_debug->GetHeader(pointer);
+    if (header->tag != DEBUG_TAG) {
+      LogTagError(header, pointer, "backtrace");
+      return -1;
+    }
+    if (g_debug->config().options & BACKTRACE) {
+      BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
+      if (back_header->num_frames > 0) {
+        if (frame_count > back_header->num_frames) {
+          frame_count = back_header->num_frames;
+        }
+        memcpy(frames, &back_header->frames[0], frame_count * sizeof(uintptr_t));
+        return frame_count;
+      }
+    }
+  }
+
+  return 0;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
