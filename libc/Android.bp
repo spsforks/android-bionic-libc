@@ -1,3 +1,5 @@
+subdirs = ["malloc_debug"]
+
 // Define the common source files for all the libc instances
 // =========================================================
 libc_common_src_files = [

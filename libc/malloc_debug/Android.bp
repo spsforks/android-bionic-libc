@@ -1,0 +1,85 @@
+libc_malloc_debug_src_files = [
+    "BacktraceData.cpp",
+    "Config.cpp",
+    "DebugData.cpp",
+    "debug_disable.cpp",
+    "FreeTrackData.cpp",
+    "GuardData.cpp",
+    "malloc_debug.cpp",
+    "TrackData.cpp",
+]
+
+// ==============================================================
+// libc_malloc_debug.so
+// ==============================================================
+cc_library_shared {
+    name: "libc_malloc_debug",
+    srcs: libc_malloc_debug_src_files + [
+        "backtrace.cpp",
+        "MapData.cpp",
+    ],
+    stl: "none",
+    sanitize: ["never"],
+    native_coverage: false,
+
+    // -Wno-error=format-zero-length needed for gcc to compile.
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-fno-stack-protector",
+        "-Wno-error=format-zero-length",
+    ],
+    include_dirs: ["bionic/libc"],
+
+    static_libs: [
+        "libc++abi",
+        "libc++_static",
+        "libc_logging",
+    ],
+
+    multilib: {
+        lib32: {
+            version_script: "exported32.map",
+        },
+        lib64: {
+            version_script: "exported64.map",
+        },
+    },
+
+    // TODO: LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
+
+    arch: {
+        arm: {
+            // Only need this for arm since libc++ uses its own unwind code that
+            // doesn't mix with the other default unwind code.
+            static_libs: ["libunwind_llvm"],
+        },
+    },
+}
+
+// ==============================================================
+// Unit Tests
+// ==============================================================
+cc_test {
+    name: "malloc_debug_unit_tests",
+
+    srcs: [
+        "tests/backtrace_fake.cpp",
+        "tests/log_fake.cpp",
+        "tests/libc_fake.cpp",
+        "tests/property_fake.cpp",
+        "tests/malloc_debug_config_tests.cpp",
+        "tests/malloc_debug_unit_tests.cpp",
+    ] + libc_malloc_debug_src_files,
+
+    local_include_dirs: ["tests"],
+    include_dirs: ["bionic/libc"],
+
+    shared_libs: ["libbase"],
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-error=format-zero-length",
+    ],
+}
