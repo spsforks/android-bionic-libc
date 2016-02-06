@@ -96,4 +96,5 @@ struct vt_setactivate {
 };
 #define VT_SETACTIVATE 0x560F
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define vt_get_kmsg_redirect() vt_kmsg_redirect(- 1)
 #endif

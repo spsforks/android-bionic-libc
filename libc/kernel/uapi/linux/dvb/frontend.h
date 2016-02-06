@@ -19,15 +19,15 @@
 #ifndef _DVBFRONTEND_H_
 #define _DVBFRONTEND_H_
 #include <linux/types.h>
-enum fe_type {
+typedef enum fe_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FE_QPSK,
   FE_QAM,
   FE_OFDM,
   FE_ATSC
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_caps {
+} fe_type_t;
+typedef enum fe_caps {
   FE_IS_STUPID = 0,
   FE_CAN_INVERSION_AUTO = 0x1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -67,11 +67,11 @@ enum fe_caps {
   FE_CAN_RECOVER = 0x40000000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FE_CAN_MUTE_TS = 0x80000000
-};
+} fe_caps_t;
 struct dvb_frontend_info {
   char name[128];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  enum fe_type type;
+  fe_type_t type;
   __u32 frequency_min;
   __u32 frequency_max;
   __u32 frequency_stepsize;
@@ -82,7 +82,7 @@ struct dvb_frontend_info {
   __u32 symbol_rate_tolerance;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 notifier_delay;
-  enum fe_caps caps;
+  fe_caps_t caps;
 };
 struct dvb_diseqc_master_cmd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -96,23 +96,23 @@ struct dvb_diseqc_slave_reply {
   int timeout;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-enum fe_sec_voltage {
+typedef enum fe_sec_voltage {
   SEC_VOLTAGE_13,
   SEC_VOLTAGE_18,
   SEC_VOLTAGE_OFF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_sec_tone_mode {
+} fe_sec_voltage_t;
+typedef enum fe_sec_tone_mode {
   SEC_TONE_ON,
   SEC_TONE_OFF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_sec_mini_cmd {
+} fe_sec_tone_mode_t;
+typedef enum fe_sec_mini_cmd {
   SEC_MINI_A,
   SEC_MINI_B
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_status {
+} fe_sec_mini_cmd_t;
+typedef enum fe_status {
   FE_HAS_SIGNAL = 0x01,
   FE_HAS_CARRIER = 0x02,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -122,14 +122,14 @@ enum fe_status {
   FE_TIMEDOUT = 0x20,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FE_REINIT = 0x40,
-};
-enum fe_spectral_inversion {
+} fe_status_t;
+typedef enum fe_spectral_inversion {
   INVERSION_OFF,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   INVERSION_ON,
   INVERSION_AUTO
-};
-enum fe_code_rate {
+} fe_spectral_inversion_t;
+typedef enum fe_code_rate {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FEC_NONE = 0,
   FEC_1_2,
@@ -147,8 +147,8 @@ enum fe_code_rate {
   FEC_9_10,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FEC_2_5,
-};
-enum fe_modulation {
+} fe_code_rate_t;
+typedef enum fe_modulation {
   QPSK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   QAM_16,
@@ -167,8 +167,8 @@ enum fe_modulation {
   DQPSK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   QAM_4_NR,
-};
-enum fe_transmit_mode {
+} fe_modulation_t;
+typedef enum fe_transmit_mode {
   TRANSMISSION_MODE_2K,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   TRANSMISSION_MODE_8K,
@@ -181,38 +181,93 @@ enum fe_transmit_mode {
   TRANSMISSION_MODE_C1,
   TRANSMISSION_MODE_C3780,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_guard_interval {
-  GUARD_INTERVAL_1_32,
-  GUARD_INTERVAL_1_16,
+} fe_transmit_mode_t;
+typedef enum fe_bandwidth {
+  BANDWIDTH_8_MHZ,
+  BANDWIDTH_7_MHZ,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BANDWIDTH_6_MHZ,
+  BANDWIDTH_AUTO,
+  BANDWIDTH_5_MHZ,
+  BANDWIDTH_10_MHZ,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BANDWIDTH_1_712_MHZ,
+} fe_bandwidth_t;
+typedef enum fe_guard_interval {
+  GUARD_INTERVAL_1_32,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  GUARD_INTERVAL_1_16,
   GUARD_INTERVAL_1_8,
   GUARD_INTERVAL_1_4,
   GUARD_INTERVAL_AUTO,
-  GUARD_INTERVAL_1_128,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  GUARD_INTERVAL_1_128,
   GUARD_INTERVAL_19_128,
   GUARD_INTERVAL_19_256,
   GUARD_INTERVAL_PN420,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   GUARD_INTERVAL_PN595,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   GUARD_INTERVAL_PN945,
-};
-enum fe_hierarchy {
-  HIERARCHY_NONE,
+} fe_guard_interval_t;
+typedef enum fe_hierarchy {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  HIERARCHY_NONE,
   HIERARCHY_1,
   HIERARCHY_2,
   HIERARCHY_4,
-  HIERARCHY_AUTO
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
+  HIERARCHY_AUTO
+} fe_hierarchy_t;
 enum fe_interleaving {
   INTERLEAVING_NONE,
-  INTERLEAVING_AUTO,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  INTERLEAVING_AUTO,
   INTERLEAVING_240,
   INTERLEAVING_720,
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct dvb_qpsk_parameters {
+  __u32 symbol_rate;
+  fe_code_rate_t fec_inner;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct dvb_qam_parameters {
+  __u32 symbol_rate;
+  fe_code_rate_t fec_inner;
+  fe_modulation_t modulation;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct dvb_vsb_parameters {
+  fe_modulation_t modulation;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct dvb_ofdm_parameters {
+  fe_bandwidth_t bandwidth;
+  fe_code_rate_t code_rate_HP;
+  fe_code_rate_t code_rate_LP;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  fe_modulation_t constellation;
+  fe_transmit_mode_t transmission_mode;
+  fe_guard_interval_t guard_interval;
+  fe_hierarchy_t hierarchy_information;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct dvb_frontend_parameters {
+  __u32 frequency;
+  fe_spectral_inversion_t inversion;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  union {
+    struct dvb_qpsk_parameters qpsk;
+    struct dvb_qam_parameters qam;
+    struct dvb_ofdm_parameters ofdm;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct dvb_vsb_parameters vsb;
+  } u;
+};
+struct dvb_frontend_event {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  fe_status_t status;
+  struct dvb_frontend_parameters parameters;
 };
 #define DTV_UNDEFINED 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -304,21 +359,21 @@ enum fe_interleaving {
 #define DTV_STAT_ERROR_BLOCK_COUNT 68
 #define DTV_STAT_TOTAL_BLOCK_COUNT 69
 #define DTV_MAX_COMMAND DTV_STAT_TOTAL_BLOCK_COUNT
-enum fe_pilot {
+typedef enum fe_pilot {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   PILOT_ON,
   PILOT_OFF,
   PILOT_AUTO,
-};
+} fe_pilot_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-enum fe_rolloff {
+typedef enum fe_rolloff {
   ROLLOFF_35,
   ROLLOFF_20,
   ROLLOFF_25,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   ROLLOFF_AUTO,
-};
-enum fe_delivery_system {
+} fe_rolloff_t;
+typedef enum fe_delivery_system {
   SYS_UNDEFINED,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   SYS_DVBC_ANNEX_A,
@@ -343,7 +398,7 @@ enum fe_delivery_system {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   SYS_TURBO,
   SYS_DVBC_ANNEX_C,
-};
+} fe_delivery_system_t;
 #define SYS_DVBC_ANNEX_AC SYS_DVBC_ANNEX_A
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYS_DMBTH SYS_DTMB
@@ -435,81 +490,6 @@ struct dtv_property {
 struct dtv_properties {
   __u32 num;
   struct dtv_property * props;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-enum fe_bandwidth {
-  BANDWIDTH_8_MHZ,
-  BANDWIDTH_7_MHZ,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  BANDWIDTH_6_MHZ,
-  BANDWIDTH_AUTO,
-  BANDWIDTH_5_MHZ,
-  BANDWIDTH_10_MHZ,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  BANDWIDTH_1_712_MHZ,
-};
-typedef enum fe_sec_voltage fe_sec_voltage_t;
-typedef enum fe_caps fe_caps_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef enum fe_type fe_type_t;
-typedef enum fe_sec_tone_mode fe_sec_tone_mode_t;
-typedef enum fe_sec_mini_cmd fe_sec_mini_cmd_t;
-typedef enum fe_status fe_status_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef enum fe_spectral_inversion fe_spectral_inversion_t;
-typedef enum fe_code_rate fe_code_rate_t;
-typedef enum fe_modulation fe_modulation_t;
-typedef enum fe_transmit_mode fe_transmit_mode_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef enum fe_bandwidth fe_bandwidth_t;
-typedef enum fe_guard_interval fe_guard_interval_t;
-typedef enum fe_hierarchy fe_hierarchy_t;
-typedef enum fe_pilot fe_pilot_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef enum fe_rolloff fe_rolloff_t;
-typedef enum fe_delivery_system fe_delivery_system_t;
-struct dvb_qpsk_parameters {
-  __u32 symbol_rate;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  fe_code_rate_t fec_inner;
-};
-struct dvb_qam_parameters {
-  __u32 symbol_rate;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  fe_code_rate_t fec_inner;
-  fe_modulation_t modulation;
-};
-struct dvb_vsb_parameters {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  fe_modulation_t modulation;
-};
-struct dvb_ofdm_parameters {
-  fe_bandwidth_t bandwidth;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  fe_code_rate_t code_rate_HP;
-  fe_code_rate_t code_rate_LP;
-  fe_modulation_t constellation;
-  fe_transmit_mode_t transmission_mode;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  fe_guard_interval_t guard_interval;
-  fe_hierarchy_t hierarchy_information;
-};
-struct dvb_frontend_parameters {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u32 frequency;
-  fe_spectral_inversion_t inversion;
-  union {
-    struct dvb_qpsk_parameters qpsk;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-    struct dvb_qam_parameters qam;
-    struct dvb_ofdm_parameters ofdm;
-    struct dvb_vsb_parameters vsb;
-  } u;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-struct dvb_frontend_event {
-  fe_status_t status;
-  struct dvb_frontend_parameters parameters;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define FE_SET_PROPERTY _IOW('o', 82, struct dtv_properties)
