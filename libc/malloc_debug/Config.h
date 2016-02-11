@@ -41,6 +41,11 @@ constexpr uint64_t FREE_TRACK = 0x40;
 constexpr uint64_t TRACK_ALLOCS = 0x80;
 constexpr uint64_t LEAK_TRACK = 0x100;
 
+// Device drivers assume at least a minimum alignment of 8 bytes.
+// If this value ever changes, it cannot be set to anything less
+// than sizeof(uintptr_t).
+constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
+
 // If only one or more of these options is set, then no special header is needed.
 constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
 
