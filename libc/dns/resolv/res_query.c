@@ -131,6 +131,7 @@ res_nquery(res_state statp,
 	   u_char *answer,	/* buffer to put answer */
 	   int anslen)		/* size of answer buffer */
 {
+
 	u_char buf[MAXPACKET];
 	HEADER *hp = (HEADER *)(void *)answer;
 	int n;
