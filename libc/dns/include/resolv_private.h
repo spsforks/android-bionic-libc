@@ -58,7 +58,9 @@
 
 #include <resolv.h>
 #include "resolv_static.h"
+#include "resolv_params.h"
 #include <net/if.h>
+#include <time.h>
 
 /* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
 #pragma GCC visibility push(default)
@@ -136,7 +138,6 @@ struct res_sym {
 /*
  * Global defines and variables for resolver stub.
  */
-#define	MAXNS			3	/* max # name servers we'll track */
 #define	MAXDFLSRCH		3	/* # default domain levels to try */
 #define	MAXDNSRCH		6	/* max # domains in search path */
 #define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
@@ -204,6 +205,52 @@ struct __res_state {
 };
 
 typedef struct __res_state *res_state;
+
+/*
+ * Resolver reachability statistics and run-time parameters.
+ */
+
+typedef enum __res_sample_state {
+    /* Operation was successful, even if the resolution failed
+     *  (e.g. non-existing domain lookup).
+     */
+    SAMPLE_STATE_SUCCESS,
+    /* Server returned SERVFAIL, etc. */
+    SAMPLE_STATE_ERROR,
+    /* No response from the server. */
+    SAMPLE_STATE_TIMEOUT
+} res_sample_state;
+
+struct __res_sample {
+    long			at;  // time in s at which the sample was recorded
+    unsigned char		rcode; // the DNS rcode, or 1: timeout, or 2: internal error
+    unsigned short		rtt;  // round-trip time in ms
+};
+
+struct __res_stats {
+    // Stats of the last <sample_count> queries.
+    struct __res_sample		samples[MAXNSSAMPLES];
+    // The number of samples stored.
+    int				sample_count;
+    // The next sample to modify.
+    int				sample_next;
+};
+
+/* Retrieve a local copy of the stats for the given netid. The buffer must have space for
+ * MAXNS __resolver_stats. Returns the revision id of the resolvers used.
+ */
+__LIBC_HIDDEN__
+extern int
+_resolv_cache_get_resolver_stats( unsigned netid, struct __res_params* params, struct __res_stats stats[MAXNS]);
+
+/* Store a local copy of the stats in the shared struct for the given netid, provided that the revision_id
+ * of the stored servers has not changed.
+ */
+__LIBC_HIDDEN__
+extern void
+_resolv_cache_set_resolver_stats( unsigned netid, int revision_id, const struct __res_stats stats[MAXNS]);
+
+/* End of stats related definitions */
 
 union res_sockaddr_union {
 	struct sockaddr_in	sin;
