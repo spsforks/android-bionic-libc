@@ -147,7 +147,8 @@ static int		send_vc(res_state, const u_char *, int,
 				u_char *, int, int *, int);
 static int		send_dg(res_state, const u_char *, int,
 				u_char *, int, int *, int,
-				int *, int *);
+				int *, int *,
+                                int *, struct timespec*);
 static void		Aerror(const res_state, FILE *, const char *, int,
 			       const struct sockaddr *, int);
 static void		Perror(const res_state, FILE *, const char *, int);
@@ -359,6 +360,149 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	return (1);
 }
 
+/* Adds a sample to the circular buffer used for calculating server reachability statistics. */
+static void
+_res_stats_add_sample( struct __res_stats* stats, int rcode, const struct timespec *rtt)
+{
+    enum __res_sample_state state;
+    switch (rcode) {
+    case -1: // Special code to report timeout
+        state = SAMPLE_STATE_TIMEOUT;
+        break;
+    case NOERROR:  // OK
+    case FORMERR:  // format error
+    case NXDOMAIN: // non-existent name
+    case NOTAUTH:  // not authoritive
+        state = SAMPLE_STATE_SUCCESS;
+        break;
+    case SERVFAIL: // server failure
+    case NOTIMP:   // unimplemented
+    case REFUSED:  // refused
+    default:
+        state = SAMPLE_STATE_ERROR;
+    }
+    if (DBG) {
+        __libc_format_log(ANDROID_LOG_INFO, "libc",
+                "rcode = %d, state = %d, sec = %ld, nsec = %ld", rcode, state, rtt->tv_sec, rtt->tv_nsec);
+    }
+    struct __res_sample* sample = &stats->samples[stats->sample_cur];
+    sample->at = evNowTime();
+    sample->state = state;
+    sample->rtt = *rtt;
+    if (stats->sample_count < MAXNSSAMPLES) {
+        ++stats->sample_count;
+    }
+    if (++stats->sample_cur >= MAXNSSAMPLES) {
+        stats->sample_cur = 0;
+    }
+}
+
+/* Clears all stored samples for the given server. */
+static void
+_res_stats_clear_samples( struct __res_stats* stats) {
+    stats->sample_count = stats->sample_cur = 0;
+}
+
+/* Aggregates the reachability statistics for the given server based on on the stored samples. */
+static void
+_res_stats_aggregate( struct __res_stats* stats,
+        int* successes, int* errors, int* timeouts, double* rtt_avg, struct timespec* last_sample_time)
+{
+    int s = 0;
+    int e = 0;
+    int t = 0;
+    struct timespec rtt_sum = { 0, 0 };
+    struct timespec last = { 0, 0 };
+    int rtt_count = 0;
+    for (int i = 0 ; i < stats->sample_count ; ++i) {
+        switch (stats->samples[i].state) {
+        case SAMPLE_STATE_SUCCESS:
+            ++s;
+            rtt_sum = evAddTime(rtt_sum, stats->samples[i].rtt);
+            ++rtt_count;
+            break;
+        case SAMPLE_STATE_ERROR:
+            ++e;
+            break;
+        case SAMPLE_STATE_TIMEOUT:
+            ++t;
+            break;
+        }
+    }
+    *successes = s;
+    *errors = e;
+    *timeouts = t;
+    if (rtt_count) {
+        double val = rtt_sum.tv_sec + rtt_sum.tv_nsec*0.000000001;
+        *rtt_avg = val / rtt_count;
+    } else {
+        *rtt_avg = -1.0;
+    }
+    if (stats->sample_count > 0) {
+        if (stats->sample_cur > 0) {
+            last = stats->samples[stats->sample_cur - 1].at;
+        } else {
+            last = stats->samples[stats->sample_count - 1].at;
+        }
+    }
+    *last_sample_time = last;
+}
+
+
+static int
+_res_stats_valid_server(struct __res_stats* stats, const struct sockaddr *nsap, int nsaplen) {
+    int successes = -1;
+    int errors = -1;
+    int timeouts = -1;
+    double rtt_avg = -1.0;
+    struct timespec last_sample_time = { 0, 0 };
+    _res_stats_aggregate(stats, &successes, &errors, &timeouts, &rtt_avg,
+            &last_sample_time);
+    if (successes >= 0 && errors >= 0 && timeouts >= 0) {
+        int total = successes + errors + timeouts;
+        char host[NI_MAXHOST] = { 0 };
+        if (getnameinfo(nsap, nsaplen, host, sizeof(host), NULL, 0,
+                NI_NUMERICHOST)) {
+            host[0] = 0;
+        }
+        if (DBG) {
+            char str[512] = { 0 };
+            snprintf(str, sizeof(str),
+                    "NS stats for %s: S %d + E %d + T %d = %d, rtt = %E\n",
+                    host, successes, errors, timeouts, total, rtt_avg);
+            __libc_format_log(ANDROID_LOG_DEBUG, "libc", "%s", str);
+        }
+        double success_rate = 1.0;
+        if (total >= 5 && (errors > 0 || timeouts > 0)) {
+            success_rate = ((double)successes)/total;
+        }
+        if (DBG) {
+            char str[512] = { 0 };
+            snprintf(str, sizeof(str), "success_rate for %s: %E\n",
+                    host, success_rate);
+            __libc_format_log(ANDROID_LOG_DEBUG, "libc", "%s", str);
+        }
+        if (success_rate < 0.25) {
+            struct timespec now = evNowTime();
+            if (now.tv_sec - last_sample_time.tv_sec > NSSAMPLE_VALIDITY) {
+                if (DBG) {
+                    __libc_format_log(ANDROID_LOG_INFO, "libc",
+                            "samples stale, retrying server %s\n",
+                            host);
+                }
+                _res_stats_clear_samples(stats);
+            } else {
+                if (DBG) {
+                    __libc_format_log(ANDROID_LOG_INFO, "libc",
+                            "too many resolution errors, ignoring server %s\n",
+                            host);
+                }
+                return -1;
+            }
+        }
+    }
+    return 0;
+}
 
 int
 res_nsend(res_state statp,
@@ -393,12 +537,16 @@ res_nsend(res_state statp,
 			statp->netid, buf, buflen,
 			ans, anssiz, &anslen);
 
+        struct __res_stats stats[MAXNS];
+        memset(stats, 0, sizeof(stats));
+
 	if (cache_status == RESOLV_CACHE_FOUND) {
 		return anslen;
 	} else if (cache_status != RESOLV_CACHE_UNSUPPORTED) {
 		// had a cache miss for a known network, so populate the thread private
 		// data so the normal resolve path can do its thing
 		_resolv_populate_res_for_net(statp);
+                _resolv_cache_get_resolver_stats(statp->netid, stats);
 	}
 
 	if (statp->nscount == 0) {
@@ -505,10 +653,16 @@ res_nsend(res_state statp,
 	    for (ns = 0; ns < statp->nscount; ns++) {
 		struct sockaddr *nsap;
 		int nsaplen;
+                int rcode = -1;
+                struct timespec delay = {0, 0};
 		nsap = get_nsaddr(statp, (size_t)ns);
 		nsaplen = get_salen(nsap);
 		statp->_flags &= ~RES_F_LASTMASK;
 		statp->_flags |= (ns << RES_F_LASTSHIFT);
+
+#if USE_RESOLV_CACHE
+                if (_res_stats_valid_server(&stats[ns], nsap, nsaplen)) continue;
+#endif
  same_ns:
 		if (statp->qhook) {
 			int done = 0, loops = 0;
@@ -526,6 +680,9 @@ res_nsend(res_state statp,
 					res_nclose(statp);
 					goto next_ns;
 				case res_done:
+#if USE_RESOLV_CACHE
+                                        _resolv_cache_set_resolver_stats(statp->netid, stats);
+#endif
 					return (resplen);
 				case res_modified:
 					/* give the hook another try */
@@ -571,7 +728,10 @@ res_nsend(res_state statp,
 			}
 
 			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
-				    ns, &v_circuit, &gotsomewhere);
+				    ns, &v_circuit, &gotsomewhere, &rcode, &delay);
+#if USE_RESOLV_CACHE
+                        _res_stats_add_sample(&stats[ns], rcode, &delay);
+#endif
 			if (DBG) {
 				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "used send_dg %d\n",n);
 			}
@@ -643,6 +803,9 @@ res_nsend(res_state statp,
 			} while (!done);
 
 		}
+#if USE_RESOLV_CACHE
+                _resolv_cache_set_resolver_stats(statp->netid, stats);
+#endif
 		return (resplen);
  next_ns: ;
 	   } /*foreach ns*/
@@ -657,12 +820,14 @@ res_nsend(res_state statp,
 		errno = terrno;
 
 #if USE_RESOLV_CACHE
+        _resolv_cache_set_resolver_stats(statp->netid, stats);
         _resolv_cache_query_failed(statp->netid, buf, buflen);
 #endif
 
 	return (-1);
  fail:
 #if USE_RESOLV_CACHE
+        _resolv_cache_set_resolver_stats(statp->netid, stats);
 	_resolv_cache_query_failed(statp->netid, buf, buflen);
 #endif
 	res_nclose(statp);
@@ -1042,17 +1207,26 @@ retry:
 	return n;
 }
 
-
 static int
 send_dg(res_state statp,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
-	int *terrno, int ns, int *v_circuit, int *gotsomewhere)
+	int *terrno, int ns, int *v_circuit, int *gotsomewhere,
+        int *rcode, struct timespec* delay)
 {
+        // rcode:
+        // -1: error
+        // -2: timeout
+        // positive: DNS rcode value
+        // delay:
+        // (0,0) is considered invalid
+        *rcode = -1;
+        delay->tv_sec = 0;
+        delay->tv_nsec = 0;
 	const HEADER *hp = (const HEADER *)(const void *)buf;
 	HEADER *anhp = (HEADER *)(void *)ans;
 	const struct sockaddr *nsap;
 	int nsaplen;
-	struct timespec now, timeout, finish;
+	struct timespec now, timeout, finish, done;
 	fd_set dsmask;
 	struct sockaddr_storage from;
 	socklen_t fromlen;
@@ -1145,6 +1319,7 @@ retry:
 	n = retrying_select(s, &dsmask, NULL, &finish);
 
 	if (n == 0) {
+                *rcode = -2;
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
 		*gotsomewhere = 1;
 		return (0);
@@ -1158,6 +1333,9 @@ retry:
 	fromlen = sizeof(from);
 	resplen = recvfrom(s, (char*)ans, (size_t)anssiz,0,
 			   (struct sockaddr *)(void *)&from, &fromlen);
+        done = evNowTime();
+        *delay = evSubTime(done, now);
+
 	if (resplen <= 0) {
 		Perror(statp, stderr, "recvfrom", errno);
 		res_nclose(statp);
@@ -1200,6 +1378,7 @@ retry:
 			ans, (resplen > anssiz) ? anssiz : resplen);
 		goto retry;
 	}
+        *rcode = anhp->rcode;
 #ifdef RES_USE_EDNS0
 	if (anhp->rcode == FORMERR && (statp->options & RES_USE_EDNS0) != 0U) {
 		/*
