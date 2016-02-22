@@ -59,6 +59,7 @@
 #include <resolv.h>
 #include "resolv_static.h"
 #include <net/if.h>
+#include <time.h>
 
 /* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
 #pragma GCC visibility push(default)
@@ -139,6 +140,7 @@ struct res_sym {
 #define	MAXNS			3	/* max # name servers we'll track */
 #define	MAXDFLSRCH		3	/* # default domain levels to try */
 #define	MAXDNSRCH		6	/* max # domains in search path */
+#define	MAXNSSAMPLES		5	/* max # samples to store per server */
 #define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
 
 #define	RES_TIMEOUT		5	/* min. seconds between retries */
@@ -204,6 +206,47 @@ struct __res_state {
 };
 
 typedef struct __res_state *res_state;
+
+/*
+ * Resolver reachability tatistics.
+ */
+
+typedef enum __res_sample_state {
+    /* Operation was successful, even if the resolution failed
+     *  (e.g. non-existing domain lookup).
+     */
+    SAMPLE_STATE_SUCCESS,
+    /* Server returned SERVFAIL, etc. */
+    SAMPLE_STATE_ERROR,
+    /* No response from the server. */
+    SAMPLE_STATE_TIMEOUT
+} res_sample_state;
+
+struct __res_sample {
+    res_sample_state state;
+    struct timespec  rtt;
+};
+
+struct __res_stats {
+    struct __res_sample         samples[MAXNSSAMPLES];
+    int                         sample_count;
+    int                         sample_cur;
+};
+
+/* Retrieve a local copy of the stats for the given netid. The buffer must have space for
+ * MAXNS __resolver_stats.
+ */
+__LIBC_HIDDEN__
+extern void
+_resolv_cache_get_resolver_stats( unsigned netid, struct __res_stats stats[MAXNS]);
+
+/* Store a local copy of the stats in the shared struct for the given netid.
+ */
+__LIBC_HIDDEN__
+extern void
+_resolv_cache_set_resolver_stats( unsigned netid, const struct __res_stats stats[MAXNS]);
+
+/* End of stats related definitions */
 
 union res_sockaddr_union {
 	struct sockaddr_in	sin;

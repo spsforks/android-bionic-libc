@@ -101,6 +101,8 @@ __RCSID("$NetBSD: res_query.c,v 1.7 2006/01/24 17:41:25 christos Exp $");
 #include <unistd.h>
 #include <string.h>
 
+#include "private/libc_logging.h"
+
 #define DISABLE_HOST_ALIAS 1
 
 /* Options.  Leave them on. */
@@ -131,6 +133,8 @@ res_nquery(res_state statp,
 	   u_char *answer,	/* buffer to put answer */
 	   int anslen)		/* size of answer buffer */
 {
+
+        __libc_format_log(ANDROID_LOG_WARN, "libc", "sending query for %s, class %d, type %d", name, class, type);
 	u_char buf[MAXPACKET];
 	HEADER *hp = (HEADER *)(void *)answer;
 	int n;

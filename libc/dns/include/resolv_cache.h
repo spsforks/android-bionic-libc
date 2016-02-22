@@ -30,8 +30,11 @@
 
 #include <stddef.h>
 #include <sys/cdefs.h>
+#include <sys/socket.h>
 
 struct __res_state;
+
+struct __res_stats;
 
 /* sets the name server addresses to the provided res_state structure. The
  * name servers are retrieved from the cache which is associated

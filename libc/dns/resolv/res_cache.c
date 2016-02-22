@@ -43,6 +43,7 @@
 #include <linux/if.h>
 
 #include <arpa/inet.h>
+#include <isc/eventlib.h>
 #include "resolv_private.h"
 #include "resolv_netid.h"
 #include "res_private.h"
@@ -1234,6 +1235,7 @@ struct resolv_cache_info {
     struct resolv_cache_info*   next;
     char*                       nameservers[MAXNS +1];
     struct addrinfo*            nsaddrinfo[MAXNS + 1];
+    struct __res_stats          nsstats[MAXNS];
     char                        defdname[256];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
@@ -1360,6 +1362,8 @@ _resolv_cache_query_failed( unsigned    netid,
 
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
+
+static struct resolv_cache_info* _find_cache_info_locked(unsigned netid);
 
 static void
 _cache_flush_locked( Cache*  cache )
@@ -1854,6 +1858,14 @@ _flush_cache_for_net_locked(unsigned netid)
     if (cache) {
         _cache_flush_locked(cache);
     }
+
+    // Also clear the NS statistics.
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+    if (info) {
+        for (int i = 0 ; i < MAXNS ; ++i) {
+            info->nsstats->sample_count = info->nsstats->sample_cur = 0;
+        }
+    }
 }
 
 void _resolv_delete_cache_for_net(unsigned netid)
@@ -1972,6 +1984,7 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numser
         strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
         if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
             *cp = '\0';
+
         cp = cache_info->defdname;
         offset = cache_info->dnsrch_offset;
         while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
@@ -2103,3 +2116,36 @@ _resolv_populate_res_for_net(res_state statp)
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
+
+/* Resolver reachability statistics. */
+
+#define sizeofmember(a, b) sizeof(((const a*)0)->b)
+
+void
+_resolv_cache_get_resolver_stats( unsigned netid, struct __res_stats stats[MAXNS]) {
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+    if (info) {
+        memcpy(stats, info->nsstats, sizeofmember(struct resolv_cache_info, nsstats));
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
+void
+_resolv_cache_set_resolver_stats( unsigned netid, const struct __res_stats stats[MAXNS]) {
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+
+    if (info)
+    {
+        memcpy(info->nsstats, stats, sizeofmember(struct resolv_cache_info, nsstats));
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
