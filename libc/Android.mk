@@ -610,11 +610,6 @@ libc_common_cflags := \
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
-# b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-  use_clang := false
-endif
-
 ifeq ($(use_clang),)
   use_clang := true
 endif
