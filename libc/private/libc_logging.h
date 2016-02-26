@@ -110,6 +110,10 @@ __LIBC_HIDDEN__ int __libc_write_log(int priority, const char* tag, const char* 
 __LIBC_HIDDEN__ void __libc_android_log_event_int(int32_t tag, int value);
 __LIBC_HIDDEN__ void __libc_android_log_event_uid(int32_t tag);
 
+// General-purpose FORTIFY logging API.
+__LIBC_HIDDEN__ __noreturn void __fortify_fatal(uint32_t event_tag, const char* fmt, ...)
+    __printflike(2, 3);
+// Historical API still useful from assembler.
 __LIBC_HIDDEN__ __noreturn void __fortify_chk_fail(const char* msg, uint32_t event_tag);
 
 __END_DECLS
