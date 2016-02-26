@@ -52,8 +52,7 @@ extern "C" char* __strcat_chk(char* __restrict dest, const char* __restrict src,
   while ((*dest++ = *src++) != '\0') {
     dest_buf_size--;
     if (__predict_false(dest_buf_size == 0)) {
-      __fortify_chk_fail("strcat: prevented write past end of buffer",
-                         BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
+      __fortify_fatal("strcat: prevented write past end of buffer");
     }
   }
 
