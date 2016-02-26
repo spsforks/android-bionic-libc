@@ -1,0 +1,49 @@
+
+timer_deadlock creates timers, then infinitely loops: fork, wait, fork, wait,
+fork wait... The child tries to delete all the inherited timers, then exits.
+timer_deadlock takes no arguments.
+
+
+timer_depletion creates a timer, forks, exits. The child creates a timer, forks,
+exits. The grandchild creates a timer, forks, exits. And so on. timer_depletion
+takes the following arguments:
+    del     -- makes the child call timer_delete() with its inherited
+               timer id (success is expected by default)
+    faildel -- makes the child call timer_delete() with its inherited
+               timer id, and expect failure
+
+
+timer_depletion2 creates a timer, deletes it, forks, exits. The child creates a
+timer, deletes is, forks, exits. The grandchild creates a timer, deletes it,
+forks exits. And so on. timer_depletion2 takes no arguments.
+
+
+
+$ timer_depletion
+    expected: runs forever
+    current:  runs out of timer slots at child 32
+    patched:  runs forever (but gradually slows down, we're guessing because of
+              pthread leftovers)
+
+$ timer_depletion del
+    expected: POSIX violation; should get -1 from timer_delete() or run forever
+    current:  runs out of timer slots at child 32
+    patched:  timer_delete() fails, so we exit
+
+$ timer_depletion faildel
+    expected: POSIX violation; should get -1 from timer_delete() and run forever
+    current:  timer_delete() succeeds, so we exit
+    patched:  runs forever (but gradually slows down, we're guessing because of
+              pthread leftovers)
+
+$ timer_depletion2
+    expected: runs forever
+    current:  runs out of timer slots at some point (timer thread may not have
+              time to call thr_timer_table_free before the fork), or deadlocks
+              even earlier (in pthread_create(), far down in the lib)
+    patched:  runs forever (patch set 2) or deadlocks (patch set 1)
+
+$ timer_deadlock
+    expected: runs forever
+    current:  runs forever... until a child deadlocks in timer_delete().
+    patched:  runs forever

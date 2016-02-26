@@ -630,24 +630,20 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   return result;
 }
 
-void __libc_android_log_event_int(int32_t tag, int value) {
-  __libc_android_log_event(tag, EVENT_TYPE_INT, &value, sizeof(value));
-}
-
 void __libc_android_log_event_uid(int32_t tag) {
-  __libc_android_log_event_int(tag, getuid());
+  int uid = getuid();
+  __libc_android_log_event(tag, EVENT_TYPE_INT, &uid, sizeof(uid));
 }
 
-void __fortify_chk_fail(const char* msg, uint32_t tag) {
-  if (tag != 0) {
-    __libc_android_log_event_uid(tag);
-  }
-  __libc_fatal("FORTIFY: %s", msg);
-}
-
-static void __libc_fatal(const char* format, va_list args) {
+static void __libc_fatal(const char* prefix, const char* format, va_list args) {
   char msg[1024];
   BufferOutputStream os(msg, sizeof(msg));
+
+  if (prefix) {
+    os.Send(prefix, strlen(prefix));
+    os.Send(": ", 2);
+  }
+
   out_vformat(os, format, args);
 
   // Log to stderr for the benefit of "adb shell" users.
@@ -673,7 +669,20 @@ void __libc_fatal_no_abort(const char* format, ...) {
 void __libc_fatal(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  __libc_fatal(format, args);
+  __libc_fatal(nullptr, format, args);
+  va_end(args);
+  abort();
+}
+
+// Historical public API, less general than __fortify_fatal.
+void __fortify_chk_fail(const char* msg) {
+  __fortify_fatal("%s", msg);
+}
+
+void __fortify_fatal(const char* fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  __libc_fatal("FORTIFY", fmt, args);
   va_end(args);
   abort();
 }
