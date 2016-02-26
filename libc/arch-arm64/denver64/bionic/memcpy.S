@@ -51,10 +51,7 @@ ENTRY_PRIVATE(__memcpy_chk_fail)
 
   adrp  x0, error_string
   add   x0, x0, :lo12:error_string
-  ldr   x1, error_code
   bl    __fortify_chk_fail
-error_code:
-  .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 END(__memcpy_chk_fail)
 
   .data
