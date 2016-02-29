@@ -37,6 +37,7 @@ test_cflags = \
     -Wall -Wextra -Wunused \
     -Werror \
     -fno-builtin \
+    -Wno-deprecated-declarations
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
