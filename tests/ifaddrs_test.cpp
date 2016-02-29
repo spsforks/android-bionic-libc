@@ -129,7 +129,7 @@ TEST(ifaddrs, getifaddrs_INET) {
   // Check that the addresses returned by the SIOCGIFADDR and SIOCGIFBRDADDR ioctls
   // are in our collections.
   auto check_inet_agrees = [&](std::multimap<std::string, in_addr_t> addrs, int request)->void {
-    for (auto it = addrs.begin(); it != addrs.end(); ) {
+    for (auto it = addrs.begin(); it != addrs.end(); ++it) {
       std::string if_name(it->first);
 
       ifreq ifr;
