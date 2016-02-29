@@ -1300,6 +1300,11 @@ LIBC_N {
 LIBC_O {
   global:
     pthread_getname_np;
+    sighold;
+    sigignore;
+    sigpause;
+    sigrelse;
+    sigset;
 } LIBC_N;
 
 LIBC_PRIVATE {
