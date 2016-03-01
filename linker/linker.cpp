@@ -222,6 +222,9 @@ static void notify_gdb_of_load(soinfo* info) {
   map->l_name = const_cast<char*>(info->get_realpath());
   map->l_ld = info->dynamic;
 
+  CHECK(map->l_name != nullptr);
+  CHECK(map->l_name[0] != '\0');
+
   notify_gdb_of_load(map);
 }
 
@@ -3809,7 +3812,9 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 
-  notify_gdb_of_load(this);
+  if ((flags_ & FLAG_LINKER) == 0) {
+    notify_gdb_of_load(this);
+  }
   return true;
 }
 
