@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdint.h>
+#include <sys/capability.h>
 #include <sys/param.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
@@ -985,4 +986,31 @@ TEST(UNISTD_TEST, lockf_partial_with_child) {
   // when the process exited, so check it can be locked now.
   ASSERT_EQ(file_size/2, lseek64(tf.fd, file_size/2, SEEK_SET));
   ASSERT_EQ(0, lockf64(tf.fd, F_TLOCK, file_size/2));
+}
+
+TEST(UNISTD_TEST, getdomainname) {
+  struct utsname u;
+  ASSERT_EQ(0, uname(&u));
+
+  char buf[sizeof(u.domainname)];
+  ASSERT_EQ(0, getdomainname(buf, sizeof(buf)));
+  EXPECT_STREQ(u.domainname, buf);
+}
+
+TEST(UNISTD_TEST, setdomainname) {
+  __user_cap_header_struct header;
+  memset(&header, 0, sizeof(header));
+  header.version = _LINUX_CAPABILITY_VERSION_3;
+
+  __user_cap_data_struct caps[_LINUX_CAPABILITY_U32S_3];
+  ASSERT_EQ(0, capget(&header, &caps[0]));
+
+  if (caps[CAP_TO_INDEX(CAP_SYS_ADMIN)].effective & CAP_TO_MASK(CAP_SYS_ADMIN)) {
+    GTEST_LOG_(WARNING) << "test skipped; re-run without admin privileges" << std::endl;
+    return;
+  }
+
+  const char *name = "newdomainname";
+  ASSERT_EQ(-1, setdomainname(name, strlen(name)));
+  ASSERT_EQ(EPERM, errno);
 }
