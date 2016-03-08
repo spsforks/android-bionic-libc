@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <signal.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <gtest/gtest.h>
-
-#include <errno.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -375,3 +377,29 @@ TEST(signal, sigtimedwait_timeout) {
 
   ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
 }
+
+#if defined(__BIONIC__)
+TEST(signal, rt_tgsigqueueinfo) {
+  // Test whether rt_tgsigqueueinfo allows sending arbitrary si_code values to self.
+  // If this fails, your kernel needs commit 66dd34a to be backported.
+  static siginfo received;
+
+  struct sigaction handler = {};
+  handler.sa_sigaction = [](int, siginfo_t* siginfo, void*) { received = *siginfo; };
+  handler.sa_flags = SA_SIGINFO;
+
+  ASSERT_EQ(0, sigaction(SIGUSR1, &handler, nullptr));
+
+  siginfo sent = {};
+
+  sent.si_code = SI_TKILL;
+  ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
+    << "rt_tgsigqueueinfo failed: " << strerror(errno);
+  ASSERT_EQ(sent.si_code, received.si_code);
+
+  sent.si_code = 0;
+  ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
+    << "rt_tgsigqueueinfo failed: " << strerror(errno);
+  ASSERT_EQ(sent.si_code, received.si_code);
+}
+#endif
