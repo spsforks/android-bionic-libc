@@ -105,5 +105,6 @@ LOCAL_CFLAGS := \
     -Wall \
     -Werror \
     -Wno-error=format-zero-length \
+	-O0 -g
 
 include $(BUILD_NATIVE_TEST)
