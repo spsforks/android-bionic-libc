@@ -150,7 +150,6 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/s_modf.c \
     upstream-freebsd/lib/msun/src/s_modff.c \
     upstream-freebsd/lib/msun/src/s_nan.c \
-    upstream-freebsd/lib/msun/src/s_nearbyint.c \
     upstream-freebsd/lib/msun/src/s_nextafter.c \
     upstream-freebsd/lib/msun/src/s_nextafterf.c \
     upstream-freebsd/lib/msun/src/s_remquo.c \
@@ -281,6 +280,7 @@ LOCAL_SRC_FILES += \
 # Home-grown stuff.
 LOCAL_SRC_FILES += \
     fabs.cpp \
+    nearbyint.cpp \
 
 # Arch specific optimizations.
 
