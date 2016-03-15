@@ -150,7 +150,6 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/s_modf.c \
     upstream-freebsd/lib/msun/src/s_modff.c \
     upstream-freebsd/lib/msun/src/s_nan.c \
-    upstream-freebsd/lib/msun/src/s_nearbyint.c \
     upstream-freebsd/lib/msun/src/s_nextafter.c \
     upstream-freebsd/lib/msun/src/s_nextafterf.c \
     upstream-freebsd/lib/msun/src/s_remquo.c \
@@ -281,6 +280,7 @@ LOCAL_SRC_FILES += \
 # Home-grown stuff.
 LOCAL_SRC_FILES += \
     fabs.cpp \
+    nearbyint.cpp \
 
 # Arch specific optimizations.
 
@@ -317,9 +317,13 @@ LOCAL_SRC_FILES_arm64 += \
     arm64/ceil.S \
     arm64/fenv.c \
     arm64/fma.S \
+    arm64/fmax.S \
+    arm64/fmin.S \
     arm64/floor.S \
     arm64/lrint.S \
+    arm64/lround.S \
     arm64/rint.S \
+    arm64/round.S \
     arm64/sqrt.S \
     arm64/trunc.S \
 
@@ -330,14 +334,22 @@ LOCAL_SRC_FILES_EXCLUDE_arm64 += \
     upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
     upstream-freebsd/lib/msun/src/s_fmaf.c \
+    upstream-freebsd/lib/msun/src/s_fmxa.c \
+    upstream-freebsd/lib/msun/src/s_fmaxf.c \
+    upstream-freebsd/lib/msun/src/s_fmin.c \
+    upstream-freebsd/lib/msun/src/s_fminf.c \
     upstream-freebsd/lib/msun/src/s_floor.c \
     upstream-freebsd/lib/msun/src/s_floorf.c \
     upstream-freebsd/lib/msun/src/s_llrint.c \
     upstream-freebsd/lib/msun/src/s_llrintf.c \
     upstream-freebsd/lib/msun/src/s_lrint.c \
     upstream-freebsd/lib/msun/src/s_lrintf.c \
+    upstream-freebsd/lib/msun/src/s_lround.c \
+    upstream-freebsd/lib/msun/src/s_lroundf.c \
     upstream-freebsd/lib/msun/src/s_rint.c \
     upstream-freebsd/lib/msun/src/s_rintf.c \
+    upstream-freebsd/lib/msun/src/s_round.c \
+    upstream-freebsd/lib/msun/src/s_roundf.c \
     upstream-freebsd/lib/msun/src/s_trunc.c \
     upstream-freebsd/lib/msun/src/s_truncf.c \
 
