@@ -122,6 +122,6 @@
 
 #define PTHREAD_DESTRUCTOR_ITERATIONS 4     // >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS
 #define PTHREAD_KEYS_MAX              128   // >= _POSIX_THREAD_KEYS_MAX
-#define PTHREAD_THREADS_MAX           2048  // bionic has no specific limit
+#undef PTHREAD_THREADS_MAX  // bionic has no specific limit
 
 #endif
