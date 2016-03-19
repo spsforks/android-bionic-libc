@@ -36,17 +36,17 @@
 
 TEST(getauxval, expected_values) {
 #if defined(GETAUXVAL_CAN_COMPILE)
-  ASSERT_EQ((unsigned long int) 0, getauxval(AT_SECURE));
+  ASSERT_EQ(0UL, getauxval(AT_SECURE));
   ASSERT_EQ(getuid(), getauxval(AT_UID));
   ASSERT_EQ(geteuid(), getauxval(AT_EUID));
   ASSERT_EQ(getgid(), getauxval(AT_GID));
   ASSERT_EQ(getegid(), getauxval(AT_EGID));
-  ASSERT_EQ((unsigned long int) getpagesize(), getauxval(AT_PAGESZ));
+  ASSERT_EQ(static_cast<unsigned long>(getpagesize()), getauxval(AT_PAGESZ));
 
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PHDR));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PHNUM));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_ENTRY));
-  ASSERT_NE((unsigned long int) 0, getauxval(AT_PAGESZ));
+  ASSERT_NE(0UL, getauxval(AT_PHDR));
+  ASSERT_NE(0UL, getauxval(AT_PHNUM));
+  ASSERT_NE(0UL, getauxval(AT_ENTRY));
+  ASSERT_NE(0UL, getauxval(AT_PAGESZ));
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif
@@ -55,9 +55,19 @@ TEST(getauxval, expected_values) {
 TEST(getauxval, unexpected_values) {
 #if defined(GETAUXVAL_CAN_COMPILE)
   errno = 0;
-  ASSERT_EQ((unsigned long int) 0, getauxval(0xdeadbeef));
+  ASSERT_EQ(0UL, getauxval(0xdeadbeef));
   ASSERT_EQ(ENOENT, errno);
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif
+}
+
+TEST(getauxval, arm_has_AT_HWCAP2) {
+#if defined(__arm__)
+  // If this test fails, you'll have really bad performance on some benchmarks
+  // because code that uses getauxval to decide at runtime whether crypto
+  // hardware is available will fail.
+  // Ensure that you've enabled COMPAT_BINFMT_ELF in your kernel configuration.
+  ASSERT_NE(0UL, getauxval(AT_HWCAP2)) << "kernel not reporting AT_HWCAP2 to 32-bit ARM process";
 #endif
 }
