@@ -39,6 +39,7 @@
 #include <unistd.h>
 
 #include <new>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -60,7 +61,7 @@
 #include "linker_utils.h"
 
 #include "android-base/strings.h"
-#include "ziparchive/zip_archive.h"
+#include "ziparchive/zip_archive_holder.h"
 
 extern void __libc_init_globals(KernelArgumentBlock&);
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
@@ -378,9 +379,11 @@ static void resolve_paths(std::vector<std::string>& paths,
           continue;
         }
 
-        ZipArchiveHandle handle = nullptr;
-        if (OpenArchive(resolved_path, &handle) != 0) {
-          DL_WARN("Warning: unable to open zip archive: %s", resolved_path);
+        std::string err_msg;
+        std::unique_ptr<ZipArchiveHolder> zip = ZipArchiveHolder::Open(resolved_path, &err_msg);
+        if (zip == nullptr) {
+          DL_WARN("Warning: unable to open zip archive \"%s\": %s", resolved_path,
+                  err_msg.c_str());
           continue;
         }
 
@@ -394,24 +397,18 @@ static void resolve_paths(std::vector<std::string>& paths,
 
         int32_t error_code;
 
-        if ((error_code = StartIteration(handle, &cookie, &prefix, nullptr)) != 0) {
+        if ((error_code = StartIteration(zip->handle(), &cookie, &prefix, nullptr)) != 0) {
           DL_WARN("Unable to iterate over zip-archive entries \"%s\";"
                   " error code: %d", zip_path.c_str(), error_code);
           continue;
         }
+        std::unique_ptr<void, decltype(&EndIteration)> zip_guard(cookie, EndIteration);
 
         if (Next(cookie, &out_data, &out_name) != 0) {
           DL_WARN("Unable to find entries starting with \"%s\" in \"%s\"",
                   prefix_str.c_str(), zip_path.c_str());
           continue;
         }
-
-        auto zip_guard = make_scope_guard([&]() {
-          if (cookie != nullptr) {
-            EndIteration(cookie);
-          }
-          CloseArchive(handle);
-        });
 
         resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
       }
@@ -1357,13 +1354,12 @@ ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
 class ZipArchiveCache {
  public:
   ZipArchiveCache() {}
-  ~ZipArchiveCache();
 
   bool get_or_open(const char* zip_path, ZipArchiveHandle* handle);
  private:
   DISALLOW_COPY_AND_ASSIGN(ZipArchiveCache);
 
-  std::unordered_map<std::string, ZipArchiveHandle> cache_;
+  std::unordered_map<std::string, std::unique_ptr<ZipArchiveHolder>> cache_;
 };
 
 bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle) {
@@ -1371,29 +1367,17 @@ bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle
 
   auto it = cache_.find(key);
   if (it != cache_.end()) {
-    *handle = it->second;
+    *handle = it->second->handle();
     return true;
   }
 
-  int fd = TEMP_FAILURE_RETRY(open(zip_path, O_RDONLY | O_CLOEXEC));
-  if (fd == -1) {
+  std::string err_msg;
+  std::unique_ptr<ZipArchiveHolder> zip = ZipArchiveHolder::Open(zip_path, &err_msg);
+  if (zip == nullptr) {
     return false;
   }
-
-  if (OpenArchiveFd(fd, "", handle) != 0) {
-    // invalid zip-file (?)
-    close(fd);
-    return false;
-  }
-
-  cache_[key] = *handle;
+  cache_[key] = std::move(zip);
   return true;
-}
-
-ZipArchiveCache::~ZipArchiveCache() {
-  for (const auto& it : cache_) {
-    CloseArchive(it.second);
-  }
 }
 
 static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
