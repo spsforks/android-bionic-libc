@@ -19,10 +19,11 @@
 #include <stdlib.h>
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include <ziparchive/zip_archive.h>
+#include <ziparchive/zip_archive_holder.h>
 #include <ziparchive/zip_archive_stream_entry.h>
 #include <ziparchive/zip_writer.h>
 
@@ -63,7 +64,7 @@ static bool GetEntries(ZipArchiveHandle handle, std::vector<ZipData>* entries) {
   return return_value == -1;
 }
 
-static bool CreateAlignedZip(ZipArchiveHandle& handle, FILE* zip_dst, uint32_t alignment) {
+static bool CreateAlignedZip(ZipArchiveHandle handle, FILE* zip_dst, uint32_t alignment) {
   std::vector<ZipData> entries;
   // We will not free the memory created in entries since the program
   // terminates right after this function is called.
@@ -134,11 +135,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  ZipArchiveHandle handle;
-
-  int32_t return_value = OpenArchive(argv[2], &handle);
-  if (return_value != 0) {
-    fprintf(stderr, "Unable to open '%s': %s\n", argv[2], ErrorCodeString(return_value));
+  std::string err_msg;
+  std::unique_ptr<ZipArchiveHolder> zip = ZipArchiveHolder::Open(argv[2], &err_msg);
+  if (zip == nullptr) {
+    fprintf(stderr, "Unable to open '%s': %s\n", argv[2], err_msg.c_str());
     return false;
   }
 
@@ -148,9 +148,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  bool success = CreateAlignedZip(handle, zip_dst, static_cast<uint32_t>(alignment));
+  bool success = CreateAlignedZip(zip->handle(), zip_dst, static_cast<uint32_t>(alignment));
 
-  CloseArchive(handle);
   fclose(zip_dst);
 
   return success ? 0 : 1;
