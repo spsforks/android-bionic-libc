@@ -33,8 +33,6 @@
 #include <algorithm>
 #include <vector>
 
-#include <private/ScopedPthreadMutexLocker.h>
-
 #include "backtrace.h"
 #include "BacktraceData.h"
 #include "Config.h"
@@ -45,8 +43,6 @@
 #include "TrackData.h"
 
 void TrackData::GetList(std::vector<const Header*>* list) {
-  ScopedDisableDebugCalls disable;
-
   for (const auto& header : headers_) {
     list->push_back(header);
   }
@@ -59,8 +55,6 @@ void TrackData::GetList(std::vector<const Header*>* list) {
 }
 
 void TrackData::Add(const Header* header, bool backtrace_found) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   if (backtrace_found) {
     total_backtrace_allocs_++;
@@ -70,8 +64,6 @@ void TrackData::Add(const Header* header, bool backtrace_found) {
 }
 
 void TrackData::Remove(const Header* header, bool backtrace_found) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   headers_.erase(header);
   if (backtrace_found) {
@@ -81,8 +73,6 @@ void TrackData::Remove(const Header* header, bool backtrace_found) {
 }
 
 bool TrackData::Contains(const Header* header) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   bool found = headers_.count(header);
   pthread_mutex_unlock(&mutex_);
@@ -90,8 +80,6 @@ bool TrackData::Contains(const Header* header) {
 }
 
 void TrackData::DisplayLeaks(DebugData& debug) {
-  ScopedDisableDebugCalls disable;
-
   std::vector<const Header*> list;
   GetList(&list);
 
@@ -112,8 +100,6 @@ void TrackData::DisplayLeaks(DebugData& debug) {
 
 void TrackData::GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
                         size_t* info_size, size_t* total_memory, size_t* backtrace_size) {
-  ScopedPthreadMutexLocker scoped(&mutex_);
-
   if (headers_.size() == 0 || total_backtrace_allocs_ == 0) {
     return;
   }

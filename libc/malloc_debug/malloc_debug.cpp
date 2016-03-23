@@ -114,8 +114,6 @@ static void InitAtfork() {
 }
 
 static void LogTagError(const Header* header, const void* pointer, const char* name) {
-  ScopedDisableDebugCalls disable;
-
   error_log(LOG_DIVIDER);
   if (header->tag == DEBUG_FREE_TAG) {
     error_log("+++ ALLOCATION %p USED AFTER FREE (%s)", pointer, name);
@@ -165,7 +163,6 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   if (g_debug->config().options & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
     if (g_debug->backtrace->enabled()) {
-      ScopedDisableDebugCalls disable;
       back_header->num_frames = backtrace_get(
           &back_header->frames[0], g_debug->config().backtrace_frames);
       backtrace_found = back_header->num_frames > 0;
@@ -268,6 +265,7 @@ size_t debug_malloc_usable_size(void* pointer) {
   if (DebugCallsDisabled() || !g_debug->need_header() || pointer == nullptr) {
     return g_dispatch->malloc_usable_size(pointer);
   }
+  ScopedDisableDebugCalls disable;
 
   Header* header = g_debug->GetHeader(pointer);
   if (header->tag != DEBUG_TAG) {
@@ -282,6 +280,7 @@ void* debug_malloc(size_t size) {
   if (DebugCallsDisabled()) {
     return g_dispatch->malloc(size);
   }
+  ScopedDisableDebugCalls disable;
 
   if (size == 0) {
     size = 1;
@@ -317,12 +316,22 @@ void* debug_malloc(size_t size) {
     bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
     memset(pointer, g_debug->config().fill_alloc_value, bytes);
   }
+
+  if (g_debug->config().options & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(new MallocEntry(pointer, size));
+  }
+
   return pointer;
 }
 
 void debug_free(void* pointer) {
   if (DebugCallsDisabled() || pointer == nullptr) {
     return g_dispatch->free(pointer);
+  }
+  ScopedDisableDebugCalls disable;
+
+  if (g_debug->config().options & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(new FreeEntry(pointer));
   }
 
   void* free_pointer = pointer;
@@ -384,6 +393,7 @@ void* debug_memalign(size_t alignment, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->memalign(alignment, bytes);
   }
+  ScopedDisableDebugCalls disable;
 
   if (bytes == 0) {
     bytes = 1;
@@ -443,6 +453,11 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
     memset(pointer, g_debug->config().fill_alloc_value, bytes);
   }
+
+  if (g_debug->config().options & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment));
+  }
+
   return pointer;
 }
 
@@ -459,6 +474,8 @@ void* debug_realloc(void* pointer, size_t bytes) {
     debug_free(pointer);
     return nullptr;
   }
+
+  ScopedDisableDebugCalls disable;
 
   size_t real_size = bytes;
   if (g_debug->config().options & EXPAND_ALLOC) {
@@ -486,6 +503,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
 
     // Same size, do nothing.
     if (real_size == header->real_size()) {
+      // Do not bother recording, this is essentially a nop.
       return pointer;
     }
 
@@ -502,6 +520,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
         memset(g_debug->GetRearGuard(header), g_debug->config().rear_guard_value,
                g_debug->config().rear_guard_bytes);
       }
+      // Do not bother recording, this is essentially a nop.
       return pointer;
     }
 
@@ -534,6 +553,10 @@ void* debug_realloc(void* pointer, size_t bytes) {
     }
   }
 
+  if (g_debug->config().options & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(new ReallocEntry(new_pointer, bytes, pointer));
+  }
+
   return new_pointer;
 }
 
@@ -549,6 +572,8 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return nullptr;
   }
 
+  ScopedDisableDebugCalls disable;
+
   if (size == 0) {
     size = 1;
   }
@@ -560,6 +585,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return nullptr;
   }
 
+  void* pointer;
   if (g_debug->need_header()) {
     // The above check will guarantee the multiply will not overflow.
     if (size > Header::max_size()) {
@@ -574,10 +600,14 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
       return nullptr;
     }
     memset(header, 0, g_dispatch->malloc_usable_size(header));
-    return InitHeader(header, header, size);
+    pointer = InitHeader(header, header, size);
   } else {
-    return g_dispatch->calloc(1, real_size);
+    pointer = g_dispatch->calloc(1, real_size);
   }
+  if (g_debug->config().options & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(new CallocEntry(pointer, bytes, nmemb));
+  }
+  return pointer;
 }
 
 struct mallinfo debug_mallinfo() {

@@ -46,8 +46,6 @@ GuardData::GuardData(int init_value, size_t num_bytes) {
 }
 
 void GuardData::LogFailure(const Header* header, const void* pointer, const void* data) {
-  ScopedDisableDebugCalls disable;
-
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p SIZE %zu HAS A CORRUPTED %s GUARD", pointer,
             header->real_size(), GetTypeName());

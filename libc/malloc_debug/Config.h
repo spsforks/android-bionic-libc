@@ -40,6 +40,7 @@ constexpr uint64_t EXPAND_ALLOC = 0x20;
 constexpr uint64_t FREE_TRACK = 0x40;
 constexpr uint64_t TRACK_ALLOCS = 0x80;
 constexpr uint64_t LEAK_TRACK = 0x100;
+constexpr uint64_t RECORD_ALLOCS = 0x200;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
@@ -50,7 +51,7 @@ constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
 #endif
 
 // If only one or more of these options is set, then no special header is needed.
-constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
+constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC | RECORD_ALLOCS;
 
 struct Config {
   bool SetFromProperties();
@@ -70,6 +71,9 @@ struct Config {
 
   size_t free_track_allocations = 0;
   size_t free_track_backtrace_num_frames = 0;
+
+  int record_allocs_signal = 0;
+  size_t record_allocs_num_entries = 0;
 
   uint64_t options = 0;
   uint8_t fill_alloc_value;

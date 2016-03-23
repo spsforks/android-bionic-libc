@@ -448,6 +448,19 @@ TEST_F(MallocDebugConfigTest, leak_track_fail) {
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugConfigTest, record_allocs) {
+  ASSERT_TRUE(InitConfig("record_allocs=1234"));
+  ASSERT_EQ(RECORD_ALLOCS, config->options);
+  ASSERT_EQ(1234U, config->record_allocs_num_entries);
+
+  ASSERT_TRUE(InitConfig("record_allocs"));
+  ASSERT_EQ(RECORD_ALLOCS, config->options);
+  ASSERT_EQ(8000000U, config->record_allocs_num_entries);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugConfigTest, guard_min_error) {
   ASSERT_FALSE(InitConfig("guard=0"));
 
@@ -624,5 +637,25 @@ TEST_F(MallocDebugConfigTest, free_track_backtrace_num_frames_max_error) {
   std::string log_msg(
       "6 malloc_debug malloc_testing: bad value for option 'free_track_backtrace_num_frames', "
       "value must be <= 256: 400\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, record_alloc_min_error) {
+  ASSERT_FALSE(InitConfig("record_allocs=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'record_allocs', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, record_allocs_max_error) {
+  ASSERT_FALSE(InitConfig("record_allocs=100000000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'record_allocs', "
+      "value must be <= 50000000: 100000000\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }

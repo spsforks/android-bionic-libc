@@ -64,6 +64,9 @@ static constexpr size_t MAX_EXPAND_BYTES = 16384;
 static constexpr size_t DEFAULT_FREE_TRACK_ALLOCATIONS = 100;
 static constexpr size_t MAX_FREE_TRACK_ALLOCATIONS = 16384;
 
+static constexpr size_t DEFAULT_RECORD_ALLOCS = 8000000;
+static constexpr size_t MAX_RECORD_ALLOCS = 50000000;
+
 struct Feature {
   Feature(std::string name, size_t default_value, size_t min_value, size_t max_value,
           uint64_t option, size_t* value, bool* config, bool combo_option)
@@ -274,6 +277,7 @@ bool Config::SetFromProperties() {
   front_guard_value = DEFAULT_FRONT_GUARD_VALUE;
   rear_guard_value = DEFAULT_REAR_GUARD_VALUE;
   backtrace_signal = SIGRTMIN + 10;
+  record_allocs_signal = SIGRTMIN + 11;
   free_track_backtrace_num_frames = 16;
 
   // Parse the options are of the format:
@@ -326,6 +330,8 @@ bool Config::SetFromProperties() {
 
     // Enable printing leaked allocations.
     Feature("leak_track", 0, 0, 0, LEAK_TRACK | TRACK_ALLOCS, nullptr, nullptr, false),
+
+    Feature("record_allocs", DEFAULT_RECORD_ALLOCS, 1, MAX_RECORD_ALLOCS, RECORD_ALLOCS, &this->record_allocs_num_entries, nullptr, false),
   };
 
   // Process each property name we can find.

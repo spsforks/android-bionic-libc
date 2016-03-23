@@ -44,8 +44,6 @@ FreeTrackData::FreeTrackData(const Config& config)
 
 void FreeTrackData::LogFreeError(DebugData& debug, const Header* header,
                                  const uint8_t* pointer) {
-  ScopedDisableDebugCalls disable;
-
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p USED AFTER FREE", pointer);
   uint8_t fill_free_value = debug.config().fill_free_value;
@@ -65,8 +63,6 @@ void FreeTrackData::LogFreeError(DebugData& debug, const Header* header,
 
 void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
                                   const void* pointer) {
-  ScopedDisableDebugCalls disable;
-
   if (header->tag != DEBUG_FREE_TAG) {
     error_log(LOG_DIVIDER);
     error_log("+++ ALLOCATION %p HAS CORRUPTED HEADER TAG 0x%x AFTER FREE", pointer, header->tag);
@@ -95,9 +91,6 @@ void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
 }
 
 void FreeTrackData::Add(DebugData& debug, const Header* header) {
-  // Make sure the stl calls below don't call the debug_XXX functions.
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   if (list_.size() == debug.config().free_track_allocations) {
     const Header* old_header = list_.back();
@@ -119,9 +112,6 @@ void FreeTrackData::Add(DebugData& debug, const Header* header) {
 }
 
 void FreeTrackData::VerifyAll(DebugData& debug) {
-  // Make sure the stl calls below don't call the debug_XXX functions.
-  ScopedDisableDebugCalls disable;
-
   for (const auto& header : list_) {
     VerifyAndFree(debug, header, debug.GetPointer(header));
   }
@@ -129,8 +119,6 @@ void FreeTrackData::VerifyAll(DebugData& debug) {
 }
 
 void FreeTrackData::LogBacktrace(const Header* header) {
-  ScopedDisableDebugCalls disable;
-
   auto back_iter = backtraces_.find(header);
   if (back_iter == backtraces_.end()) {
     return;
