@@ -8,6 +8,7 @@ libc_malloc_debug_src_files := \
     FreeTrackData.cpp \
     GuardData.cpp \
     malloc_debug.cpp \
+    RecordData.cpp \
     TrackData.cpp \
 
 # ==============================================================
@@ -58,6 +59,7 @@ LOCAL_CXX_STL := libc++_static
 LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm
 
 LOCAL_STATIC_LIBRARIES += \
+    libbase \
     libc_malloc_debug_backtrace \
     libc_logging \
 
@@ -105,5 +107,6 @@ LOCAL_CFLAGS := \
     -Wall \
     -Werror \
     -Wno-error=format-zero-length \
+	-g -O0
 
 include $(BUILD_NATIVE_TEST)
