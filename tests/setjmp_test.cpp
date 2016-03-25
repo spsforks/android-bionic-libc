@@ -249,6 +249,9 @@ TEST(setjmp, setjmp_cookie) {
 }
 
 TEST(setjmp, setjmp_cookie_checksum) {
+#if defined(__i386__) || defined(__x86_64__)
+  GTEST_LOG_(INFO) << "x86/x86_64 have not implemented the checksum logic yet.";
+#else
   jmp_buf jb;
   int value = setjmp(jb);
 
@@ -260,4 +263,5 @@ TEST(setjmp, setjmp_cookie_checksum) {
   } else {
     fprintf(stderr, "setjmp_cookie_checksum: longjmp succeeded?");
   }
+#endif
 }
