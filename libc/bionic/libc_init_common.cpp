@@ -83,12 +83,41 @@ void __libc_init_globals(KernelArgumentBlock& args) {
   });
 }
 
+#if !defined(__LP64__)
+static void __check_max_thread_id() {
+  int fd = open("/proc/sys/kernel/pid_max", O_RDONLY);
+  if (fd == -1) {
+    __libc_fatal("error opening /proc/sys/kernel/pid_max: %s", strerror(errno));
+  }
+  char buf[40];
+  ssize_t read_bytes = read(fd, buf, sizeof(buf) - 1);
+  if (read_bytes <= 0) {
+    __libc_fatal("error reading /proc/sys/kernel/pid_max: %zd, %s", read_bytes, strerror(errno));
+  }
+  close(fd);
+  buf[read_bytes] = '\0';
+  errno = 0;
+  unsigned long long pid_max = strtoull(buf, nullptr, 10);
+  if (errno == ERANGE) {
+    __libc_fatal("error parsing /proc/sys/kernel/pid_max, content: %s", buf);
+  }
+  if (pid_max == 0 || pid_max > 65535) {
+    __libc_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
+                 "pid_max 65535, but the limit in /proc/sys/kernel/pid_max is %s", buf);
+  }
+}
+#endif
+
 void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
   environ = args.envp;
   errno = 0;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
   __abort_message_ptr = args.abort_message_ptr;
+
+#if !defined(__LP64__)
+  __check_max_thread_id();
+#endif
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
