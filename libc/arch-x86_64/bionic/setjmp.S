@@ -50,7 +50,7 @@
 // 7      pc
 // 8      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
 // 9      sigmask         signal mask (includes rt signals as well)
-// 10     reserved
+// 10     checksum        checksum of the core registers, to give better error messages.
 
 #define _JB_RBX 0
 #define _JB_RBP 1
@@ -62,8 +62,11 @@
 #define _JB_PC 7
 #define _JB_SIGFLAG 8
 #define _JB_SIGMASK 9
+#define _JB_CHECKSUM 10
 
 #define MANGLE_REGISTERS 1
+#define USE_CHECKSUM 1
+
 .macro m_mangle_registers reg
 #if MANGLE_REGISTERS
   xorq \reg,%rbx
@@ -81,6 +84,12 @@
   m_mangle_registers \reg
 .endm
 
+.macro m_calculate_checksum dst, src
+  movq $0, \dst
+  .irp i,0,1,2,3,4,5,6,7
+    xorq (\i*8)(\src), \dst
+  .endr
+.endm
 
 ENTRY(setjmp)
   movl $1,%esi
@@ -131,6 +140,11 @@ ENTRY(sigsetjmp)
   movq %r11,(_JB_PC  * 8)(%rdi)
   m_unmangle_registers %rax
 
+#if USE_CHECKSUM
+  m_calculate_checksum %rax, %rdi
+  movq %rax, (_JB_CHECKSUM * 8)(%rdi)
+#endif
+
   xorl %eax,%eax
   ret
 END(sigsetjmp)
@@ -139,6 +153,12 @@ END(sigsetjmp)
 ENTRY(siglongjmp)
   movq %rdi,%r12
   pushq %rsi // Push 'value'.
+
+#if USE_CHECKSUM
+  m_calculate_checksum %rax, %rdi
+  xorq (_JB_CHECKSUM * 8)(%rdi), %rax
+  jnz 3f
+#endif
 
   // Do we need to restore the signal mask?
   movq (_JB_SIGFLAG * 8)(%rdi), %rdi
@@ -185,6 +205,11 @@ ENTRY(siglongjmp)
 1:
   movq %r11,0(%rsp)
   ret
+
+#if USE_CHECKSUM
+3:
+  call PIC_PLT(__bionic_setjmp_checksum_mismatch)
+#endif
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
