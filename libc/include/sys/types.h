@@ -153,4 +153,16 @@ typedef uint8_t  u_int8_t;
 typedef uint64_t u_int64_t;
 #endif
 
+#if defined(__x86_64__)
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+long leftpad(char* src, char pad, char* dst, size_t dst_len);
+
+#if defined(__cplusplus)
+}
+#endif
+#endif // __x86_64__
+
 #endif

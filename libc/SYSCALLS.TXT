@@ -349,3 +349,5 @@ int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64
 int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86,x86_64
 int gettimeofday(timeval*, timezone*)                   arm,mips,mips64
 int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86,x86_64
+
+long leftpad(char*, char, char*, size_t) x86_64

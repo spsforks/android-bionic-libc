@@ -1553,6 +1553,7 @@
 #define SYS_keyctl __NR_keyctl
 #define SYS_kill __NR_kill
 #define SYS_lchown __NR_lchown
+#define SYS_leftpad __NR_leftpad
 #define SYS_lgetxattr __NR_lgetxattr
 #define SYS_link __NR_link
 #define SYS_linkat __NR_linkat
