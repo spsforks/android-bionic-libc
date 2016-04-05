@@ -491,7 +491,7 @@ res_nsend(res_state statp,
 	    struct __res_stats stats[MAXNS];
 	    struct __res_params params;
 	    int revision_id = _resolv_cache_get_resolver_stats(statp->netid, &params, stats);
-	    bool usable_servers[MAXNS];
+	    bool usable_servers[MAXNS + 1];
 	    _res_stats_get_usable_servers(&params, stats, statp->nscount, usable_servers);
 
 	    for (ns = 0; ns < statp->nscount; ns++) {
