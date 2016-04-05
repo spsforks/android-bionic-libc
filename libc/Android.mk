@@ -113,6 +113,7 @@ libc_bionic_ndk_src_files := \
     bionic/gethostname.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
+    bionic/getpwnam.cpp \
     bionic/gettid.cpp \
     bionic/__gnu_basename.cpp \
     bionic/ifaddrs.cpp \
