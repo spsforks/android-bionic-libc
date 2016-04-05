@@ -313,7 +313,10 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
 }
 
 // Translate an OEM name to the corresponding user/group id.
+//  Assumption: AID_OEM_RESERVED_2 range is 1000, AID_OEM_RESERVED range is 100
 // oem_XXX -> AID_OEM_RESERVED_2_START + XXX, iff XXX is within range.
+// oem_1XXX -> AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1 +
+//            AID_OEM_RESERVED_START + XXX, iff XXX is within range.
 static id_t oem_id_from_name(const char* name) {
   unsigned int id;
   if (sscanf(name, "oem_%u", &id) != 1) {
@@ -321,18 +324,29 @@ static id_t oem_id_from_name(const char* name) {
   }
   // Check OEM id is within range.
   if (id > (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START)) {
+    if (id <= (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1 +
+               AID_OEM_RESERVED_END - AID_OEM_RESERVED_START)) {
+      return AID_OEM_RESERVED_START + static_cast<id_t>(id) -
+             (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1);
+    }
     return 0;
   }
   return AID_OEM_RESERVED_2_START + static_cast<id_t>(id);
 }
 
 static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_OEM_RESERVED_2_START || uid > AID_OEM_RESERVED_2_END) {
+  unsigned int id;
+
+  if (uid >= AID_OEM_RESERVED_START && uid <= AID_OEM_RESERVED_END) {
+    id = uid - AID_OEM_RESERVED_START +
+               (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1);
+  } else if (uid >= AID_OEM_RESERVED_2_START && uid <= AID_OEM_RESERVED_2_END) {
+    id = uid - AID_OEM_RESERVED_2_START;
+  } else {
     return NULL;
   }
 
-  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u",
-           uid - AID_OEM_RESERVED_2_START);
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", id);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
@@ -346,12 +360,19 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
 }
 
 static group* oem_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_OEM_RESERVED_2_START || gid > AID_OEM_RESERVED_2_END) {
+  unsigned int id;
+
+  if (gid >= AID_OEM_RESERVED_START && gid <= AID_OEM_RESERVED_END) {
+    id = gid - AID_OEM_RESERVED_START +
+               (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1);
+  } else if (gid >= AID_OEM_RESERVED_2_START && gid <= AID_OEM_RESERVED_2_END) {
+    id = gid - AID_OEM_RESERVED_2_START;
+  } else {
     return NULL;
   }
 
   snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
-           "oem_%u", gid - AID_OEM_RESERVED_2_START);
+           "oem_%u", id);
 
   group* gr = &state->group_;
   gr->gr_name   = state->group_name_buffer_;
