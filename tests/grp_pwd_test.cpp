@@ -130,6 +130,14 @@ TEST(getpwnam, oem_id_999) {
   check_get_passwd("oem_999", 5999, TYPE_SYSTEM);
 }
 
+TEST(getpwnam, oem_id_1000) {
+  check_get_passwd("oem_1000", 2900, TYPE_SYSTEM);
+}
+
+TEST(getpwnam, oem_id_1099) {
+  check_get_passwd("oem_1099", 2999, TYPE_SYSTEM);
+}
+
 TEST(getpwnam, app_id_nobody) {
   check_get_passwd("nobody", 9999, TYPE_SYSTEM);
 }
@@ -261,6 +269,14 @@ TEST(getgrnam, oem_id_0) {
 
 TEST(getgrnam, oem_id_999) {
   check_get_group("oem_999", 5999);
+}
+
+TEST(getgrnam, oem_id_1000) {
+  check_get_group("oem_1000", 2900);
+}
+
+TEST(getgrnam, oem_id_1099) {
+  check_get_group("oem_1099", 2999);
 }
 
 TEST(getgrnam, app_id_nobody) {
