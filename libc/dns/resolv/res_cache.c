@@ -1232,11 +1232,11 @@ struct resolv_cache_info {
     unsigned                    netid;
     Cache*                      cache;
     struct resolv_cache_info*   next;
-    char*                       nameservers[MAXNS +1];
+    char*                       nameservers[MAXNS + 1];
     struct addrinfo*            nsaddrinfo[MAXNS + 1];
     int                         revision_id; // # times the nameservers have been replaced
     struct __res_params         params;
-    struct __res_stats          nsstats[MAXNS];
+    struct __res_stats          nsstats[MAXNS + 1];
     char                        defdname[256];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
