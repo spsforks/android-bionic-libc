@@ -2090,6 +2090,8 @@ _free_nameservers_locked(struct resolv_cache_info* cache_info)
             freeaddrinfo(cache_info->nsaddrinfo[i]);
             cache_info->nsaddrinfo[i] = NULL;
         }
+    }
+    for (i = 0; i < MAXNS; ++i) {
         cache_info->nsstats[i].sample_count =
             cache_info->nsstats[i].sample_next = 0;
     }
