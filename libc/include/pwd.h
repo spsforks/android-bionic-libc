@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1989, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *    The Regents of the University of California.  All rights reserved.
  * (c) UNIX System Laboratories, Inc.
  * All or some portions of this file are derived from material licensed
  * to the University of California by American Telephone and Telegraph
@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)pwd.h	8.2 (Berkeley) 1/21/94
+ *    @(#)pwd.h  8.2 (Berkeley) 1/21/94
  */
 
 /*-
@@ -116,11 +116,17 @@ struct passwd
 
 __BEGIN_DECLS
 
-struct passwd* getpwnam(const char*);
-struct passwd* getpwuid(uid_t);
+struct passwd* getpwnam(const char*) __LIBC_ABI_PUBLIC__;
+struct passwd* getpwuid(uid_t) __LIBC_ABI_PUBLIC__;
+struct passwd* getpwent(void) __attribute__((warning("getpwent is inefficient on Android"))) __LIBC_ABI_PUBLIC__;
+void setpwent(void) __LIBC_ABI_PUBLIC__;
+// This was never fully implemented in bionic until now.
+// Needed for ABI compatibility with the NDK.
+// In the M time frame, over 1000 apps have a reference to this!
+void endpwent(void) __LIBC_ABI_PUBLIC__;
 
-int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**);
-int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**);
+int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __LIBC_ABI_PUBLIC__;
+int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __LIBC_ABI_PUBLIC__;
 
 __END_DECLS
 

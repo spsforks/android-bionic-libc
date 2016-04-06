@@ -54,6 +54,8 @@ struct group_state_t {
   group group_;
   char* group_members_[2];
   char group_name_buffer_[32];
+  // Must be last so init_group_state can run a simple memset for the above
+  ssize_t getgrent_id;
 };
 
 struct passwd_state_t {
@@ -61,13 +63,14 @@ struct passwd_state_t {
   char name_buffer_[32];
   char dir_buffer_[32];
   char sh_buffer_[32];
+  ssize_t getpwent_id;
 };
 
 static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
 static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
 
 static void init_group_state(group_state_t* state) {
-  memset(state, 0, sizeof(group_state_t));
+  memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_id));
   state->group_.gr_mem = state->group_members_;
 }
 
@@ -467,6 +470,44 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+void setpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state) {
+    state->getpwent_id = 0;
+  }
+}
+
+void endpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state) {
+    state->getpwent_id = -1;
+  }
+}
+
+// defined in pwd.h to fire usage warning getpwent is inefficient on Android
+passwd* getpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if ((state->getpwent_id < 0) || (state->getpwent_id >= AID_USER)) {
+    return NULL;
+  }
+
+  // Inefficient and KISS linear search allowing getpwuid implementation
+  // details to be expanded without future impact here. Iterates over the
+  // large base set of android ids in about 1/4 second.
+  passwd* pwd;
+  while ((pwd = getpwuid(state->getpwent_id)) == NULL) {
+    if (state->getpwent_id >= (AID_USER - 1)) {
+      break;
+    }
+    state->getpwent_id++;
+  }
+  state->getpwent_id++;
+  return pwd;
+}
+
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   group* grp = android_id_to_group(state, gid);
   if (grp != NULL) {
@@ -536,4 +577,42 @@ int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct gr
 int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
                struct group **result) {
   return getgroup_r(true, name, 0, grp, buf, buflen, result);
+}
+
+void setgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state) {
+    state->getgrent_id = 0;
+  }
+}
+
+void endgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state) {
+    state->getgrent_id = -1;
+  }
+}
+
+// defined in grp.h to fire usage warning getgrent is inefficient on Android
+group* getgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if ((state->getgrent_id < 0) || (state->getgrent_id >= AID_USER)) {
+    return NULL;
+  }
+
+  // Inefficient and KISS linear search allowing getgruid implementation
+  // details to be expanded without future impact here. Iterates over the
+  // large base set of android ids in about 1/8 second.
+  group* grp;
+  while ((grp = getgrgid(state->getgrent_id)) == NULL) {
+    if (state->getgrent_id >= (AID_USER - 1)) {
+      break;
+    }
+    state->getgrent_id++;
+  }
+  state->getgrent_id++;
+  return grp;
 }

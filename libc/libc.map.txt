@@ -474,6 +474,7 @@ LIBC {
     getprotobyname;
     getprotobynumber;
     getpt;
+    getpwent;
     getpwnam;
     getpwnam_r;
     getpwuid;
@@ -1256,6 +1257,8 @@ LIBC_N {
     __write_chk;
     adjtimex;
     clock_adjtime;
+    endgrent;
+    endpwent;
     fgetpos64;
     fileno_unlocked;
     fopen64;
@@ -1265,6 +1268,7 @@ LIBC_N {
     fsetpos64;
     ftello64;
     funopen64;
+    getgrent;
     getgrgid_r;
     getgrnam_r;
     getifaddrs;
@@ -1293,6 +1297,8 @@ LIBC_N {
     pwritev64;
     scandirat;
     scandirat64;
+    setgrent;
+    setpwent;
     strchrnul;
     tmpfile64;
 } LIBC;
@@ -1507,7 +1513,6 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips nobrillo
     dlmalloc_trim; # arm x86 mips nobrillo
     dlmalloc_usable_size; # arm x86 mips nobrillo
-    endpwent; # arm x86 mips nobrillo
     fdprintf; # arm x86 mips nobrillo
     free_malloc_leak_info;
     ftime; # arm x86 mips nobrillo
