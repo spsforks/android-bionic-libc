@@ -54,6 +54,8 @@ struct group_state_t {
   group group_;
   char* group_members_[2];
   char group_name_buffer_[32];
+  // Must be last
+  ssize_t getgrent_id;
 };
 
 struct passwd_state_t {
@@ -61,13 +63,14 @@ struct passwd_state_t {
   char name_buffer_[32];
   char dir_buffer_[32];
   char sh_buffer_[32];
+  ssize_t getpwent_id;
 };
 
 static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
 static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
 
 static void init_group_state(group_state_t* state) {
-  memset(state, 0, sizeof(group_state_t));
+  memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_id));
   state->group_.gr_mem = state->group_members_;
 }
 
@@ -467,6 +470,44 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+void setpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state) {
+    state->getpwent_id = 0;
+  }
+}
+
+void endpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state) {
+    state->getpwent_id = -1;
+  }
+}
+
+// Inefficient and KISS since it is difficult to support this anyways given
+// Android's large set of reserved id ranges. To iterate over _all_ possible
+// android ids will take 1/4 second which is a price one pays to use this
+// nonsensical function in this environment.
+passwd *getpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if ((state->getpwent_id < 0) || (state->getpwent_id >= AID_USER)) {
+    return NULL;
+  }
+
+  passwd *grp;
+  while (!(grp = getpwuid(state->getpwent_id))) {
+    if (state->getpwent_id >= (AID_USER - 1)) {
+      break;
+    }
+    state->getpwent_id++;
+  }
+  state->getpwent_id++;
+  return grp;
+}
+
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   group* grp = android_id_to_group(state, gid);
   if (grp != NULL) {
@@ -536,4 +577,42 @@ int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct gr
 int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
                struct group **result) {
   return getgroup_r(true, name, 0, grp, buf, buflen, result);
+}
+
+void setgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state) {
+    state->getgrent_id = 0;
+  }
+}
+
+void endgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state) {
+    state->getgrent_id = -1;
+  }
+}
+
+// Inefficient and KISS since it is difficult to support this anyways given
+// Android's large set of reserved id ranges. To iterate over _all_ possible
+// android ids will take 1/8 second which is a price one pays to use this
+// nonsensical function in this environment.
+group *getgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if ((state->getgrent_id < 0) || (state->getgrent_id >= AID_USER)) {
+    return NULL;
+  }
+
+  group *grp;
+  while (!(grp = getgrgid(state->getgrent_id))) {
+    if (state->getgrent_id >= (AID_USER - 1)) {
+      break;
+    }
+    state->getgrent_id++;
+  }
+  state->getgrent_id++;
+  return grp;
 }

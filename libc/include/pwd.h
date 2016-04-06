@@ -118,6 +118,12 @@ __BEGIN_DECLS
 
 struct passwd* getpwnam(const char*);
 struct passwd* getpwuid(uid_t);
+struct passwd* getpwent(void) __attribute__((deprecated("getpwent is meaningless on Android")));
+void setpwent(void) __attribute__((deprecated("setpwent is meaningless on Android")));
+// This was never implemented in bionic until O in a simple and inefficent form
+// Needed for ABI compatibility with the NDK.
+// In the M time frame, over 1000 apps have a reference to this!
+void endpwent(void) __attribute__((deprecated("endpwent is meaningless on Android")));
 
 int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**);
 int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**);

@@ -26,6 +26,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <private/android_filesystem_config.h>
+
 enum uid_type_t {
   TYPE_SYSTEM,
   TYPE_APP
@@ -177,6 +179,53 @@ TEST(getpwnam, app_id_u1_a40000) {
 
 TEST(getpwnam, app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
+}
+
+TEST(getpwent, iterate) {
+  struct passwd *pwd;
+  uint64_t exist[(10000 + (sizeof(uint64_t) * 8) - 1) / sizeof(uint64_t) / 8];
+  bool application = false;
+
+  memset(exist, 0, sizeof(exist));
+
+  setpwent();
+  while ((pwd = getpwent())) {
+    if (pwd->pw_uid < (sizeof(exist) * 8)) {
+      uint64_t mask = 1ULL << (pwd->pw_uid % (sizeof(exist[0]) * 8));
+      ASSERT_FALSE(exist[pwd->pw_uid / sizeof(exist[0]) / 8] & mask);
+      exist[pwd->pw_uid / sizeof(exist[0]) / 8] |= mask;
+    }
+    ASSERT_TRUE(NULL != pwd->pw_name);
+    ASSERT_EQ(pwd->pw_gid, pwd->pw_uid);
+    ASSERT_EQ(NULL, pwd->pw_passwd);
+#ifdef __LP64__
+    ASSERT_TRUE(NULL == pwd->pw_gecos);
+#endif
+
+    if (pwd->pw_uid >= 10000) {
+      application = true;
+      ASSERT_STREQ("/data", pwd->pw_dir);
+    } else {
+      ASSERT_STREQ("/", pwd->pw_dir);
+    }
+    ASSERT_STREQ("/system/bin/sh", pwd->pw_shell);
+  }
+  endpwent();
+
+  /* Required content */
+  for (size_t n = 0; n < android_id_count; ++n) {
+    uint64_t mask = 1ULL << (android_ids[n].aid % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[android_ids[n].aid / sizeof(exist[0]) / 8] & mask);
+  }
+  for (size_t n = 2900; n < 2999; ++n) {
+    uint64_t mask = 1ULL << (n % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[n / sizeof(exist[0]) / 8] & mask);
+  }
+  for (size_t n = 5000; n < 5999; ++n) {
+    uint64_t mask = 1ULL << (n % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[n / sizeof(exist[0]) / 8] & mask);
+  }
+  ASSERT_TRUE(application);
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
@@ -372,4 +421,44 @@ TEST(getgrnam_r, large_enough_suggested_buffer_size) {
   group* grp;
   ASSERT_EQ(0, getgrnam_r("root", &grp_storage, buf, size, &grp));
   check_group(grp, "root", 0);
+}
+
+TEST(getgrent, iterate) {
+  struct group *grp;
+  uint64_t exist[(10000 + (sizeof(uint64_t) * 8) - 1) / sizeof(uint64_t) / 8];
+  bool application = false;
+
+  memset(exist, 0, sizeof(exist));
+
+  setgrent();
+  while ((grp = getgrent())) {
+    if (grp->gr_gid < (sizeof(exist) * 8)) {
+      uint64_t mask = 1ULL << (grp->gr_gid % (sizeof(exist[0]) * 8));
+      ASSERT_FALSE(exist[grp->gr_gid / sizeof(exist[0]) / 8] & mask);
+      exist[grp->gr_gid / sizeof(exist[0]) / 8] |= mask;
+    }
+    ASSERT_TRUE(grp->gr_name != NULL);
+    ASSERT_TRUE(grp->gr_mem != NULL);
+    ASSERT_STREQ(grp->gr_name, grp->gr_mem[0]);
+    ASSERT_TRUE(grp->gr_mem[1] == NULL);
+    if (grp->gr_gid >= 10000) {
+      application = true;
+    }
+  }
+  endgrent();
+
+  /* Required content */
+  for (size_t n = 0; n < android_id_count; ++n) {
+    uint64_t mask = 1ULL << (android_ids[n].aid % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[android_ids[n].aid / sizeof(exist[0]) / 8] & mask);
+  }
+  for (size_t n = 2900; n < 2999; ++n) {
+    uint64_t mask = 1ULL << (n % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[n / sizeof(exist[0]) / 8] & mask);
+  }
+  for (size_t n = 5000; n < 5999; ++n) {
+    uint64_t mask = 1ULL << (n % (sizeof(exist[0]) * 8));
+    ASSERT_TRUE(exist[n / sizeof(exist[0]) / 8] & mask);
+  }
+  ASSERT_TRUE(application);
 }
