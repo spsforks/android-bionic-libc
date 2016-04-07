@@ -25,8 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_SYSCONF_H_
-#define _SYS_SYSCONF_H_
+
+#ifndef _BITS_SYSCONF_H_
+#define _BITS_SYSCONF_H_
 
 #include <sys/cdefs.h>
 
@@ -187,8 +188,6 @@ __BEGIN_DECLS
 #define _SC_LEVEL4_CACHE_SIZE       0x009b
 #define _SC_LEVEL4_CACHE_ASSOC      0x009c
 #define _SC_LEVEL4_CACHE_LINESIZE   0x009d
-
-long sysconf(int);
 
 __END_DECLS
 
