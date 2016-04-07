@@ -82,7 +82,9 @@ cc_defaults {
 
     stl: "none",
     system_shared_libs: [],
-    sanitize: ["never"],
+    sanitize: {
+        never: true,
+    },
     native_coverage: false,
 }
 
@@ -1497,6 +1499,10 @@ cc_library_static {
         },
     },
     name: "libc_syscalls",
+    sanitize: {
+        never: true,
+    },
+    stl: "none",
 }
 
 // ========================================================
