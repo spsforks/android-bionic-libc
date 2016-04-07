@@ -33,13 +33,13 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/select.h>
-#include <sys/sysconf.h>
 
 #include <bits/fcntl.h>
 #include <bits/getopt.h>
 #include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
+#include <bits/sysconf.h>
 
 __BEGIN_DECLS
 
