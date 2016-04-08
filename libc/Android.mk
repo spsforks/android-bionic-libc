@@ -1015,6 +1015,21 @@ LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_MODULE_CLASS := STATIC_LIBRARIES
+
+system_android_filesystem_config := system/core/include/private/android_filesystem_config.h
+tool := build/tools/fs_config/fs_config_generator.py
+gen := $(local-generated-sources-dir)/generated_android_ids.h
+$(gen): PRIVATE_TOOL := $(tool)
+$(gen): PRIVATE_ANDROID_FS_HDR := $(system_android_filesystem_config)
+$(gen): PRIVATE_CUSTOM_TOOL = $(PRIVATE_TOOL) aidarray $(PRIVATE_ANDROID_FS_HDR) > $@
+$(gen): $(tool) $(system_android_filesystem_config)
+	$(transform-generated-source)
+
+LOCAL_GENERATED_SOURCES := $(gen)
+system_android_filesystem_config :=
+tool :=
+gen :=
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_ndk_src_files))
