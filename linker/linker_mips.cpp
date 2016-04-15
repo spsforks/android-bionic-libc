@@ -165,7 +165,7 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
     soinfo* lsi = nullptr;
     const ElfW(Sym)* s = nullptr;
 
-    ElfW(Word) st_visibility = (local_sym->st_other & 0x3);
+    ElfW(Word) st_visibility = ELF_ST_VISIBILITY(local_sym->st_other);
 
     if (st_visibility == STV_DEFAULT) {
       const version_info* vi = nullptr;
