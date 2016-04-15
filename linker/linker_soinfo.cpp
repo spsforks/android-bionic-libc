@@ -168,8 +168,18 @@ bool soinfo::find_symbol_by_name(SymbolName& symbol_name,
 static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
   if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
       ELF_ST_BIND(s->st_info) == STB_WEAK) {
-    return s->st_shndx != SHN_UNDEF;
-  } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
+    // Treat global hidden symbols as local. These might get created by older binutils:
+    // http://patchwork.sourceware.org/patch/11622
+    if (__predict_false((ELF_ST_VISIBILITY(s->st_other) ==  STV_INTERNAL ||
+                         ELF_ST_VISIBILITY(s->st_other) ==  STV_HIDDEN))) {
+      DL_ERR("unexpected ST_BIND (%d) + ST_VISIBILITY (%d) combination. for '%s' in '%s'",
+          ELF_ST_BIND(s->st_info), ELF_ST_VISIBILITY(s->st_other), si->get_string(s->st_name),
+          si->get_realpath());
+      return false;
+    } else {
+      return s->st_shndx != SHN_UNDEF;
+    }
+  } else if (__predict_false(ELF_ST_BIND(s->st_info) != STB_LOCAL)) {
     DL_WARN("unexpected ST_BIND value: %d for \"%s\" in \"%s\"",
             ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
   }

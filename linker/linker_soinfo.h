@@ -45,6 +45,8 @@
 
 #define SOINFO_VERSION 3
 
+#define ELF_ST_VISIBILITY(v) ((v) & 0x3)
+
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
 
