@@ -87,7 +87,7 @@ int android_getaddrinfofornetcontext(const char *, const char *, const struct ad
     const struct android_net_context *, struct addrinfo **) __used_in_netd;
 
 /* set name servers for a network */
-extern void _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numservers,
+extern int _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numservers,
 	const char *domains, const struct __res_params* params) __used_in_netd;
 
 /* flush the cache associated with a certain network */
