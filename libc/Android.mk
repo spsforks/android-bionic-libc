@@ -608,6 +608,9 @@ endif
 libc_malloc_src := bionic/jemalloc_wrapper.cpp
 libc_common_c_includes += external/jemalloc/include
 
+# grp_pwd.cpp requires
+libc_common_c_includes += system/core/libpackagelistparser/include
+
 # Define some common conlyflags
 libc_common_conlyflags := \
     -std=gnu99
