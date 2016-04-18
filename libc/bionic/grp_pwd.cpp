@@ -44,6 +44,14 @@
 #include "private/grp_pwd.h"
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
+#include "private/packagelistparser.h"
+
+struct packagelistparser_state_t {
+  packagelistparser_state_t *next;
+  id_t id;
+  size_t home_idx;
+  char name[];
+};
 
 // Generated android_ids array
 #include "generated_android_ids.h"
@@ -64,7 +72,7 @@ static passwd_state_t* get_passwd_tls_buffer() {
 }
 
 static void init_group_state(group_state_t* state) {
-  memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_idx));
+  memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_idx) - sizeof(state->head));
   state->group_.gr_mem = state->group_members_;
 }
 
@@ -635,6 +643,178 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
   return gr;
 }
 
+static bool packagelistparser_avail() {
+  // check if libpackageparserlist.so is present and we have perms to access.
+  return access("/data/system/packages.list", R_OK) == 0;
+}
+
+static void free_packagelistparser_state(packagelistparser_state_t **head) {
+  if (*head == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return;
+  }
+
+  for (packagelistparser_state_t* next = *head; next; next = *head) {
+    *head = next->next;
+    free(next);
+  }
+}
+
+static packagelistparser_state_t* packagelistparser_from_info(pkg_info *info) {
+
+  size_t home_idx = info->name ? strlen(info->name) + 1 : 1;
+  size_t home_len = info->data_dir ? strlen(info->data_dir) + 1 : 1;
+
+  packagelistparser_state_t* next;
+
+  next = reinterpret_cast<packagelistparser_state_t *>(calloc(1, sizeof(*next) +
+                                                              home_idx +
+                                                              home_len));
+  if (next != NULL) {
+    next->id = info->uid;
+    strcpy(next->name, info->name ?: "");
+    next->home_idx = home_idx;
+    strcpy(next->name + home_idx, info->data_dir ?: "");
+  }
+  packagelist_free(info);
+  return next;
+}
+
+static bool aid_callback_name(pkg_info *info, void *userdata) {
+  if (info == NULL) {
+    return true;
+  }
+  if (info->uid < AID_APP) {
+    packagelist_free(info);
+    return true;
+  }
+
+  packagelistparser_state_t **head = reinterpret_cast<packagelistparser_state_t **>(userdata);
+  packagelistparser_state_t* next = *head;
+
+  if (next == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return true;
+  }
+
+  if ((next == NULL) || (info->name == NULL) || (strcmp(next->name, info->name) != 0)) {
+    packagelist_free(info);
+    return true;
+  }
+
+  next = packagelistparser_from_info(info);
+  if (next != NULL) {
+    free(*head);
+    *head = next;
+  }
+  return false;
+}
+
+static bool aid_callback_aid(pkg_info *info, void *userdata) {
+  packagelistparser_state_t **head = reinterpret_cast<packagelistparser_state_t **>(userdata);
+  packagelistparser_state_t* next = *head;
+
+  if (next == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return true;
+  }
+
+  if ((next == NULL) || (info->uid != next->id)) {
+    id_t id = next->id;
+    id_t userId = id % AID_USER;
+    if ((info->uid == userId) ||
+        ((userId > (AID_SHARED_GID_START - AID_APP)) &&
+          (next->name[0] == '\0') &&
+          (info->uid == (userId - (AID_SHARED_GID_START - AID_APP))))) {
+      next = packagelistparser_from_info(info);
+      if (next != NULL) {
+        next->id = id; // liar!
+        free(*head);
+        *head = next;
+      }
+      return true;
+    }
+    packagelist_free(info);
+    return true;
+  }
+
+  next = packagelistparser_from_info(info);
+  if (next != NULL) {
+    free(*head);
+    *head = next;
+  }
+  return false;
+}
+
+static packagelistparser_state_t* packagelistparser_prep(
+    packagelistparser_state_t **head, id_t id, const char* name) {
+
+  // previous failure to access?
+  if (*head == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return NULL;
+  }
+
+  if (!packagelistparser_avail()) {
+    free_packagelistparser_state(head);
+    *head = reinterpret_cast<packagelistparser_state_t*>(-EPERM);
+    return NULL;
+  }
+
+  if (id) { // mutually exclusive
+    name = NULL;
+  }
+
+  size_t home_idx = name ? strlen(name) : 0;
+  packagelistparser_state_t* next =
+      reinterpret_cast<packagelistparser_state_t *>(calloc(1, sizeof(*next) +
+                                                           home_idx + 1));
+  if (next == NULL) {
+    return NULL;
+  }
+
+  free_packagelistparser_state(head);
+  next->id = id;
+  strcpy(next->name, name ?: "");
+  next->home_idx = home_idx;
+  *head = next;
+
+  if (!packagelist_parse(name ? aid_callback_name : aid_callback_aid, head)) {
+    free_packagelistparser_state(head);
+    return NULL;
+  }
+
+  next = *head;
+  if (next == NULL) {
+    return NULL;
+  }
+
+  if (name ? (next->id == 0) : (next->name[0] == '\0')) {
+    return NULL;
+  }
+
+  *head = NULL;
+  return next;
+}
+
+static passwd* packagelistparser_to_passwd(packagelistparser_state_t *next,
+                                           passwd_state_t* state) {
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "%s",
+           next->name);
+  snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "%s",
+           next->name + next->home_idx);
+  const uid_t uid = next->id;
+
+  free(next);
+
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+
+  passwd* pw = &state->passwd_;
+  pw->pw_name  = state->name_buffer_;
+  pw->pw_dir   = state->dir_buffer_;
+  pw->pw_shell = state->sh_buffer_;
+  pw->pw_uid   = uid;
+  pw->pw_gid   = uid;
+
+  return pw;
+}
+
 passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
   passwd_state_t* state = get_passwd_tls_buffer();
   if (state == NULL) {
@@ -650,6 +830,13 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
+
+  // Handle package parser
+  packagelistparser_state_t *next = packagelistparser_prep(&state->head, uid, NULL);
+  if (next != NULL) {
+    return packagelistparser_to_passwd(next, state);
+  }
+
   return app_id_to_passwd(uid, state);
 }
 
@@ -668,7 +855,14 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
-  return app_id_to_passwd(app_id_from_name(login, false), state);
+
+  id_t id = app_id_from_name(login, false);
+  packagelistparser_state_t *next = packagelistparser_prep(&state->head, id, login);
+  if (next != NULL) {
+    return packagelistparser_to_passwd(next, state);
+  }
+
+  return app_id_to_passwd(id, state);
 }
 
 // All users are in just one group, the one passed in.
@@ -686,10 +880,54 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+static bool aid_callback(pkg_info *info, void *userdata) {
+  packagelistparser_state_t **head = reinterpret_cast<packagelistparser_state_t **>(userdata);
+  packagelistparser_state_t* next;
+
+  if (*head == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return true;
+  }
+
+  for (next = *head; next != NULL; next = next->next) {
+    if ((info->uid < AID_APP) ||
+        (next->id == info->uid) || // duplicate entry?
+        (strcmp(next->name, info->name) == 0)) {
+      break;
+    }
+  }
+  if (next != NULL) {
+    packagelist_free(info);
+    return true;
+  }
+
+  next = packagelistparser_from_info(info);
+  if (next != NULL) {
+    next->next = *head;
+    *head = next;
+  }
+  return true;
+}
+
+static packagelistparser_state_t* fill_packagelistparser_state(packagelistparser_state_t **head) {
+  if (*head == reinterpret_cast<packagelistparser_state_t*>(-EPERM)) {
+    return NULL;
+  }
+
+  if ((*head == NULL) && packagelistparser_avail()) {
+    packagelist_parse(aid_callback, head);
+  }
+  packagelistparser_state_t* next = *head;
+  if (next != NULL) {
+    *head = next->next;
+  }
+  return next;
+}
+
 void setpwent() {
   passwd_state_t* state = get_passwd_tls_buffer();
   if (state) {
     state->getpwent_idx = 0;
+    free_packagelistparser_state(&state->head);
   }
 }
 
@@ -703,6 +941,7 @@ passwd* getpwent() {
     return NULL;
   }
   if (state->getpwent_idx < 0) {
+    free_packagelistparser_state(&state->head);
     return NULL;
   }
 
@@ -728,6 +967,24 @@ passwd* getpwent() {
         state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, NULL, state);
   }
 
+  packagelistparser_state_t *next;
+  if (state->getpwent_idx == end) {
+    next = fill_packagelistparser_state(&state->head);
+    if (next != NULL) {
+      state->getpwent_idx++;
+      return packagelistparser_to_passwd(next, state);
+    }
+  } else {
+    next = state->head;
+    if ((next != reinterpret_cast<packagelistparser_state_t*>(-EPERM)) && (next != NULL)) {
+      state->head = next->next;
+      if (state->head == NULL) {
+        state->getpwent_idx = -1;
+      }
+      return packagelistparser_to_passwd(next, state);
+    }
+  }
+
   start = end;
   end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher users
 
@@ -740,6 +997,24 @@ passwd* getpwent() {
   return NULL;
 }
 
+static group* packagelistparser_to_group(packagelistparser_state_t* next,
+                                         group_state_t* state) {
+  init_group_state(state);
+
+  snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_), "%s",
+           next->name);
+  const gid_t gid = next->id;
+
+  free(next);
+
+  group* gr = &state->group_;
+  gr->gr_name   = state->group_name_buffer_;
+  gr->gr_gid    = gid;
+  gr->gr_mem[0] = gr->gr_name;
+
+  return gr;
+}
+
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   group* grp = android_id_to_group(state, gid);
   if (grp != NULL) {
@@ -750,6 +1025,13 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   if (grp != NULL) {
     return grp;
   }
+
+  // Handle package parser
+  packagelistparser_state_t *next = packagelistparser_prep(&state->head, gid, NULL);
+  if (next != NULL) {
+    return packagelistparser_to_group(next, state);
+  }
+
   return app_id_to_group(gid, state);
 }
 
@@ -771,7 +1053,14 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
   if (grp != NULL) {
     return grp;
   }
-  return app_id_to_group(app_id_from_name(name, true), state);
+
+  id_t id = app_id_from_name(name, true);
+  packagelistparser_state_t *next = packagelistparser_prep(&state->head, id, name);
+  if (next != NULL) {
+    return packagelistparser_to_group(next, state);
+  }
+
+  return app_id_to_group(id, state);
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
@@ -815,6 +1104,7 @@ void setgrent() {
   group_state_t* state = get_group_tls_buffer();
   if (state) {
     state->getgrent_idx = 0;
+    free_packagelistparser_state(&state->head);
   }
 }
 
@@ -828,6 +1118,7 @@ group* getgrent() {
     return NULL;
   }
   if (state->getgrent_idx < 0) {
+    free_packagelistparser_state(&state->head);
     return NULL;
   }
 
@@ -854,6 +1145,24 @@ group* getgrent() {
     init_group_state(state);
     return oem_id_to_group(
         state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, NULL, state);
+  }
+
+  packagelistparser_state_t *next;
+  if (state->getgrent_idx == end) {
+    next = fill_packagelistparser_state(&state->head);
+    if (next != NULL) {
+      state->getgrent_idx++;
+      return packagelistparser_to_group(next, state);
+    }
+  } else {
+    next = state->head;
+    if ((next != reinterpret_cast<packagelistparser_state_t*>(-EPERM)) && (next != NULL)) {
+      state->head = next->next;
+      if (state->head == NULL) {
+        state->getgrent_idx = -1;
+      }
+      return packagelistparser_to_group(next, state);
+    }
   }
 
   start = end;

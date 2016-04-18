@@ -31,9 +31,11 @@
 #include <grp.h>
 #include <pwd.h>
 
+struct packagelistparser_state_t;
+
 #define __GROUP_MEMBERS_MAX 2
-#define __LOGIN_NAME_MAX 32
-#define __DIR_NAME_MAX 32
+#define __LOGIN_NAME_MAX 64
+#define __DIR_NAME_MAX 64
 #define __INTERPRETER_MAX 32
 
 struct group_state_t {
@@ -42,12 +44,16 @@ struct group_state_t {
   char group_name_buffer_[__LOGIN_NAME_MAX];
   // Must be last so init_group_state can run a simple memset for the above
   ssize_t getgrent_idx;
+  packagelistparser_state_t *head;
 };
 
 struct passwd_state_t {
   passwd passwd_;
+  // e.g. com.google.android.printservice.recommendation
   char name_buffer_[__LOGIN_NAME_MAX];
+  // e.g. /data/user/0/com.google.android.printservice.recommendation
   char dir_buffer_[__DIR_NAME_MAX];
   char sh_buffer_[__INTERPRETER_MAX];
   ssize_t getpwent_idx;
+  packagelistparser_state_t *head;
 };
