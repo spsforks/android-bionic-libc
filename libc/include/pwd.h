@@ -119,8 +119,8 @@ __BEGIN_DECLS
 struct passwd* getpwnam(const char*);
 struct passwd* getpwuid(uid_t);
 
-int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**);
-int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**);
+int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(21);
+int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(21);
 
 __END_DECLS
 

@@ -18,7 +18,11 @@
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
 // have to be naughty.
+#if defined(__BIONIC__)
 #include <../libc/include/complex.h>
+#else
+#include </usr/include/complex.h>
+#endif
 
 // (libc++ also seems to have really bad implementations of its own that ignore
 // the intricacies of floating point math.)

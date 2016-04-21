@@ -202,7 +202,7 @@ extern unsigned int sleep(unsigned int __seconds);
 extern int usleep(useconds_t __usec);
 
 int gethostname(char* __name, size_t __len);
-int sethostname(const char* __name, size_t __len);
+int sethostname(const char* __name, size_t __len) __INTRODUCED_IN(23);
 
 extern void* __brk(void* __addr);
 extern int brk(void* __addr);
@@ -247,12 +247,12 @@ extern char* __getcwd_chk(char*, size_t, size_t);
 __errordecl(__getcwd_dest_size_error, "getcwd called with size bigger than destination");
 extern char* __getcwd_real(char*, size_t) __RENAME(getcwd);
 
-extern ssize_t __pread_chk(int, void*, size_t, off_t, size_t);
+extern ssize_t __pread_chk(int, void*, size_t, off_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__pread_dest_size_error, "pread called with size bigger than destination");
 __errordecl(__pread_count_toobig_error, "pread called with count > SSIZE_MAX");
 extern ssize_t __pread_real(int, void*, size_t, off_t) __RENAME(pread);
 
-extern ssize_t __pread64_chk(int, void*, size_t, off64_t, size_t);
+extern ssize_t __pread64_chk(int, void*, size_t, off64_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__pread64_dest_size_error, "pread64 called with size bigger than destination");
 __errordecl(__pread64_count_toobig_error, "pread64 called with count > SSIZE_MAX");
 extern ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64);
@@ -267,7 +267,7 @@ __errordecl(__pwrite64_dest_size_error, "pwrite64 called with size bigger than d
 __errordecl(__pwrite64_count_toobig_error, "pwrite64 called with count > SSIZE_MAX");
 extern ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64);
 
-extern ssize_t __read_chk(int, void*, size_t, size_t);
+extern ssize_t __read_chk(int, void*, size_t, size_t) __INTRODUCED_IN(21);
 __errordecl(__read_dest_size_error, "read called with size bigger than destination");
 __errordecl(__read_count_toobig_error, "read called with count > SSIZE_MAX");
 extern ssize_t __read_real(int, void*, size_t) __RENAME(read);
@@ -277,12 +277,12 @@ __errordecl(__write_dest_size_error, "write called with size bigger than destina
 __errordecl(__write_count_toobig_error, "write called with count > SSIZE_MAX");
 extern ssize_t __write_real(int, const void*, size_t) __RENAME(write);
 
-extern ssize_t __readlink_chk(const char*, char*, size_t, size_t);
+extern ssize_t __readlink_chk(const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__readlink_dest_size_error, "readlink called with size bigger than destination");
 __errordecl(__readlink_size_toobig_error, "readlink called with size > SSIZE_MAX");
 extern ssize_t __readlink_real(const char*, char*, size_t) __RENAME(readlink);
 
-extern ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t);
+extern ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger than destination");
 __errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
 extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat);

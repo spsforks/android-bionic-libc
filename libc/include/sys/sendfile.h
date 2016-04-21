@@ -39,7 +39,7 @@ extern ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) __RE
 #else
 extern ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count);
 #endif
-extern ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count);
+extern ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) __INTRODUCED_IN(21);
 
 __END_DECLS
 
