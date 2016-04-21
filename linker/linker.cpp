@@ -2373,6 +2373,12 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
 
   std::vector<std::string> sonames = android::base::Split(public_ns_sonames, ":");
 
+  // Split on the empty string returns vector of 1 empty string
+  if (sonames.empty() || sonames[0].empty()) {
+    DL_ERR("error initializing public namespace: the list of public libraries is empty.");
+    return false;
+  }
+
   ProtectedDataGuard guard;
 
   auto failure_guard = make_scope_guard([&]() {
