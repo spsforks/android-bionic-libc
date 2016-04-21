@@ -50,8 +50,10 @@ ssize_t pwritev64(int, const struct iovec*, int, off64_t);
 #endif
 
 #if defined(__USE_GNU)
-ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long);
-ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long);
+ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*,
+                         unsigned long, unsigned long) __INTRODUCED_IN(23);
+ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*,
+                          unsigned long, unsigned long) __INTRODUCED_IN(23);
 #endif
 
 __END_DECLS

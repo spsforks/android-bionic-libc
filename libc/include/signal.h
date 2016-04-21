@@ -72,8 +72,8 @@ typedef int sig_atomic_t;
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
-extern int __libc_current_sigrtmin(void);
-extern int __libc_current_sigrtmax(void);
+extern int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
+extern int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 
 extern const char* const sys_siglist[];
 extern const char* const sys_signame[]; /* BSD compatibility. */
@@ -137,15 +137,15 @@ extern int killpg(int, int);
 
 extern int sigaltstack(const stack_t*, stack_t*);
 
-extern void psiginfo(const siginfo_t*, const char*);
-extern void psignal(int, const char*);
+extern void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(21);
+extern void psignal(int, const char*) __INTRODUCED_IN(21);
 
 extern int pthread_kill(pthread_t, int);
 extern int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
-extern int sigqueue(pid_t, int, const union sigval);
-extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*);
-extern int sigwaitinfo(const sigset_t*, siginfo_t*);
+extern int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
+extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
+extern int sigwaitinfo(const sigset_t*, siginfo_t*) __INTRODUCED_IN(23);
 
 __END_DECLS
 

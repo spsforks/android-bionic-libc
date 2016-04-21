@@ -206,11 +206,13 @@ void endprotoent(void);
 void endservent(void);
 void freehostent(struct hostent *);
 struct hostent	*gethostbyaddr(const void *, socklen_t, int);
-int gethostbyaddr_r(const void *, socklen_t, int, struct hostent *, char *, size_t, struct hostent **, int *);
+int gethostbyaddr_r(const void*, socklen_t, int, struct hostent*, char*, size_t, struct hostent**,
+                    int*) __INTRODUCED_IN(23);
 struct hostent	*gethostbyname(const char *);
 int gethostbyname_r(const char *, struct hostent *, char *, size_t, struct hostent **, int *);
 struct hostent	*gethostbyname2(const char *, int);
-int gethostbyname2_r(const char *, int, struct hostent *, char *, size_t, struct hostent **, int *);
+int gethostbyname2_r(const char*, int, struct hostent*, char*, size_t, struct hostent**, int*)
+  __INTRODUCED_IN(23);
 struct hostent	*gethostent(void);
 int gethostent_r(struct hostent *, char *, size_t, struct hostent **, int *);
 struct hostent	*getipnodebyaddr(const void *, size_t, int, int *);

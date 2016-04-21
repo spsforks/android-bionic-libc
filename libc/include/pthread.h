@@ -133,7 +133,7 @@ typedef struct {
 
 __BEGIN_DECLS
 
-int pthread_atfork(void (*)(void), void (*)(void), void(*)(void));
+int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(21);
 
 int pthread_attr_destroy(pthread_attr_t*) __nonnull((1));
 int pthread_attr_getdetachstate(const pthread_attr_t*, int*) __nonnull((1, 2));
@@ -153,10 +153,11 @@ int pthread_attr_setstack(pthread_attr_t*, void*, size_t) __nonnull((1));
 int pthread_attr_setstacksize(pthread_attr_t*, size_t) __nonnull((1));
 
 int pthread_condattr_destroy(pthread_condattr_t*) __nonnull((1));
-int pthread_condattr_getclock(const pthread_condattr_t*, clockid_t*) __nonnull((1, 2));
+int pthread_condattr_getclock(const pthread_condattr_t*, clockid_t*) __nonnull((1, 2))
+  __INTRODUCED_IN(21);
 int pthread_condattr_getpshared(const pthread_condattr_t*, int*) __nonnull((1, 2));
 int pthread_condattr_init(pthread_condattr_t*) __nonnull((1));
-int pthread_condattr_setclock(pthread_condattr_t*, clockid_t) __nonnull((1));
+int pthread_condattr_setclock(pthread_condattr_t*, clockid_t) __nonnull((1)) __INTRODUCED_IN(21);
 int pthread_condattr_setpshared(pthread_condattr_t*, int) __nonnull((1));
 
 int pthread_cond_broadcast(pthread_cond_t*) __nonnull((1));
@@ -180,7 +181,7 @@ int pthread_getschedparam(pthread_t, int*, struct sched_param*) __nonnull((2, 3)
 
 void* pthread_getspecific(pthread_key_t);
 
-pid_t pthread_gettid_np(pthread_t);
+pid_t pthread_gettid_np(pthread_t) __INTRODUCED_IN(21);
 
 int pthread_join(pthread_t, void**);
 
@@ -201,7 +202,8 @@ int pthread_mutex_lock(pthread_mutex_t*) /* __nonnull((1)) */;
 #else
 int pthread_mutex_lock(pthread_mutex_t*) __nonnull((1));
 #endif
-int pthread_mutex_timedlock(pthread_mutex_t*, const struct timespec*) __nonnull((1, 2));
+int pthread_mutex_timedlock(pthread_mutex_t*, const struct timespec*) __nonnull((1, 2))
+  __INTRODUCED_IN(21);
 int pthread_mutex_trylock(pthread_mutex_t*) __nonnull((1));
 #if !defined(__LP4__)
 int pthread_mutex_unlock(pthread_mutex_t*) /* __nonnull((1)) */;
@@ -215,8 +217,9 @@ int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t*, int) __nonnull((1));
-int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
-int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t*, int) __nonnull((1));
+int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t*, int*) __nonnull((1, 2))
+  __INTRODUCED_IN(23);
+int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t*, int) __nonnull((1)) __INTRODUCED_IN(23);
 
 int pthread_rwlock_destroy(pthread_rwlock_t*) __nonnull((1));
 int pthread_rwlock_init(pthread_rwlock_t*, const pthread_rwlockattr_t*) __nonnull((1));
