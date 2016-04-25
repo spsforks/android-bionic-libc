@@ -53,17 +53,19 @@
 // functions to share state, but <grp.h> functions can't clobber <passwd.h>
 // functions' state and vice versa.
 
+#define LOGIN_NAME_MAX 32
+
 struct group_state_t {
   group group_;
   char* group_members_[2];
-  char group_name_buffer_[32];
+  char group_name_buffer_[LOGIN_NAME_MAX];
   // Must be last so init_group_state can run a simple memset for the above
   ssize_t getgrent_idx;
 };
 
 struct passwd_state_t {
   passwd passwd_;
-  char name_buffer_[32];
+  char name_buffer_[LOGIN_NAME_MAX];
   char dir_buffer_[32];
   char sh_buffer_[32];
   ssize_t getpwent_idx;
@@ -340,12 +342,130 @@ static id_t oem_id_from_name(const char* name) {
   return static_cast<id_t>(id);
 }
 
-static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (!is_oem_id(uid)) {
+// Splits a string of fields on delim, including empty fields, storing each field into the token
+// array.
+static int split(char *line, char delim, const char **tokens, size_t ntokens) {
+  char *field;
+  size_t i = 0;
+  char *cur = line;
+
+  while ((field = strchr(cur, delim)) && (i < ntokens)) {
+    *field = '\0';
+    tokens[i] = cur;
+    cur = ++field;
+    i++;
+  }
+
+  tokens[i] = cur;
+  return ++i == ntokens;
+}
+
+// caller must free(const_cast<char *>(tokens[0])) after use (return values > 0)
+// if id is non-zero, find match to id, else find match to name and return to id
+static ssize_t _parse_tokens(const char *filename, id_t &id,
+                             const char **tokens, size_t ntokens, char *name) {
+  if (ntokens == 0) {
+    return -EINVAL;
+  }
+
+  FILE* fp = fopen(filename, "re");
+  if (fp == NULL) {
+    ssize_t ret = -errno;
+    errno = 0;
+    return ret;
+  }
+
+  char *line;
+  size_t len;
+  for (line = NULL; getline(&line, &len, fp) >= 0; free(line), line = NULL) {
+
+    // Skip comment lines.
+    if (line[0] == '#') {
+      continue;
+    }
+
+    // If split fails it means it did not find the appropriate number of tokens on
+    // on the line, just keep trying to match it.
+    if(!split(line, ':', tokens, ntokens)) {
+      continue;
+    }
+
+    char *end;
+    unsigned long id_entry = strtoul(tokens[2], &end, 0);
+    if ((end == tokens[2]) || (*end != '\0')) {
+      continue;
+    }
+
+    if (!is_oem_id(id_entry)) {
+      continue;
+    }
+
+    int found = id ? (id_entry == id) : (strcmp(name, tokens[0]) == 0);
+    if (!found) {
+      continue;
+    }
+
+    fclose(fp);
+
+    if (id) {
+      snprintf(name, LOGIN_NAME_MAX, "%s", tokens[0]);
+    } else {
+      id = id_entry;
+    }
+
+    // caller must free(const_cache<char *>(token[0])) after use
+    return ntokens;
+  }
+  fclose(fp);
+  free(line);
+  return 0;
+}
+
+static ssize_t parse_tokens(const char *basename, id_t &id,
+                            const char **tokens, size_t ntokens, char *name) {
+  static const char system_path[] = "/system/etc/";
+  static const char vendor_path[] = "/vendor/etc/";
+  char filename[sizeof(system_path) + strlen(basename)];
+
+  memset(tokens, 0, sizeof(*tokens) * ntokens);
+
+  memcpy(filename, system_path, sizeof(system_path) - 1);
+  strcpy(filename + sizeof(system_path) - 1, basename);
+  ssize_t ret = _parse_tokens(filename, id, tokens, ntokens, name);
+  if (ret > 0) {
+    return ret;
+  }
+
+  memcpy(filename, vendor_path, sizeof(vendor_path) - 1);
+  if (sizeof(system_path) != sizeof(vendor_path)) {
+    strcpy(filename + sizeof(vendor_path) - 1, basename);
+  }
+  return _parse_tokens(filename, id, tokens, ntokens, name);
+}
+
+static passwd* oem_id_to_passwd(uid_t uid, const char *name, passwd_state_t* state) {
+
+  if (is_oem_id(uid)) {
+    snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
+    // FALLTHRU (find uid)
+  } else if (name && !uid) {
+    snprintf(state->name_buffer_, sizeof(state->name_buffer_), "%s", name);
+    // FALLTHRU (find name, set uid by reference)
+  } else {
     return NULL;
   }
 
-  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
+  const char *tokens[7];
+  ssize_t i = parse_tokens("passwd", uid,
+                           tokens, sizeof(tokens) / sizeof(tokens[0]),
+                           state->name_buffer_);
+  if (!is_oem_id(uid)) {
+    if (i > 0) {
+      free(const_cast<char *>(tokens[0]));
+    }
+    return NULL;
+  }
+
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
@@ -355,21 +475,59 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
   pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
+
+  if (i > 0) {
+    if (tokens[5] && tokens[5][0]) {
+      snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "%s", tokens[5]);
+    }
+    if (tokens[6] && tokens[6][0]) {
+      snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "%s", tokens[6]);
+    }
+
+    if (tokens[3] && tokens[3][0]) {
+      char *end;
+      id_t id = strtoul(tokens[3], &end, 10);
+      if (id && (end != tokens[3]) && (*end == '\0')) {
+        pw->pw_gid = id;
+      }
+    }
+
+    free(const_cast<char *>(tokens[0]));
+  }
+
   return pw;
 }
 
-static group* oem_id_to_group(gid_t gid, group_state_t* state) {
-  if (!is_oem_id(gid)) {
+static group* oem_id_to_group(gid_t gid, const char *name, group_state_t* state) {
+  if (is_oem_id(gid)) {
+    snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
+             "oem_%u", gid);
+    // FALLTHRU (find gid)
+  } else if (name && !gid) {
+    snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
+             "%s", name);
+    // FALLTHRU (find name, set gid by reference)
+  } else {
     return NULL;
   }
 
-  snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
-           "oem_%u", gid);
+  const char *tokens[4];
+  ssize_t i = parse_tokens("group", gid,
+                           tokens, sizeof(tokens) / sizeof(tokens[0]),
+                           state->group_name_buffer_);
+  if (i > 0) {
+    free(const_cast<char *>(tokens[0]));
+  }
+  if (!is_oem_id(gid)) {
+    return NULL;
+  }
 
   group* gr = &state->group_;
   gr->gr_name   = state->group_name_buffer_;
   gr->gr_gid    = gid;
   gr->gr_mem[0] = gr->gr_name;
+  // TBD, fill in all the additional supplemental group names from groups file
+
   return gr;
 }
 
@@ -433,7 +591,7 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
     return pw;
   }
   // Handle OEM range.
-  pw = oem_id_to_passwd(uid, state);
+  pw = oem_id_to_passwd(uid, NULL, state);
   if (pw != NULL) {
     return pw;
   }
@@ -451,7 +609,7 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
     return pw;
   }
   // Handle OEM range.
-  pw = oem_id_to_passwd(oem_id_from_name(login), state);
+  pw = oem_id_to_passwd(oem_id_from_name(login), login, state);
   if (pw != NULL) {
     return pw;
   }
@@ -504,7 +662,7 @@ passwd* getpwent() {
 
   if (state->getpwent_idx < end) {
     return oem_id_to_passwd(
-        state->getpwent_idx++ - start + AID_OEM_RESERVED_START, state);
+        state->getpwent_idx++ - start + AID_OEM_RESERVED_START, NULL, state);
   }
 
   start = end;
@@ -512,7 +670,7 @@ passwd* getpwent() {
 
   if (state->getpwent_idx < end) {
     return oem_id_to_passwd(
-        state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
+        state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, NULL, state);
   }
 
   start = end;
@@ -533,7 +691,7 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
     return grp;
   }
   // Handle OEM range.
-  grp = oem_id_to_group(gid, state);
+  grp = oem_id_to_group(gid, NULL, state);
   if (grp != NULL) {
     return grp;
   }
@@ -554,7 +712,7 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
     return grp;
   }
   // Handle OEM range.
-  grp = oem_id_to_group(oem_id_from_name(name), state);
+  grp = oem_id_to_group(oem_id_from_name(name), name, state);
   if (grp != NULL) {
     return grp;
   }
@@ -631,7 +789,7 @@ group* getgrent() {
   if (state->getgrent_idx < end) {
     init_group_state(state);
     return oem_id_to_group(
-        state->getgrent_idx++ - start + AID_OEM_RESERVED_START, state);
+        state->getgrent_idx++ - start + AID_OEM_RESERVED_START, NULL, state);
   }
 
   start = end;
@@ -640,7 +798,7 @@ group* getgrent() {
   if (state->getgrent_idx < end) {
     init_group_state(state);
     return oem_id_to_group(
-        state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, state);
+        state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, NULL, state);
   }
 
   start = end;
