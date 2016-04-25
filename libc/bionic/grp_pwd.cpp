@@ -461,10 +461,10 @@ static bool token_parse(const char *filename, id_t &id,
 
 static bool token_search(enum data_source source, id_t &id,
     char *tokens[], size_t ntokens, char *name) {
-  static const size_t number_of_default_dirs = 1; // /system/etc /vendor/etc? ..
+  static const size_t number_of_default_dirs = 2; // /system/etc /vendor/etc ..
   static const char *files[SOURCE_LEN][number_of_default_dirs] = {
-    { "/system/etc/passwd" },
-    { "/system/etc/group" },
+    { "/system/etc/passwd", "/vendor/etc/passwd" },
+    { "/system/etc/group", "/vendor/etc/group" },
   };
 
   if (source < 0 || source >= SOURCE_LEN) {
