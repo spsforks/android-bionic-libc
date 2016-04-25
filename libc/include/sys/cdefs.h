@@ -247,8 +247,13 @@
 
 #define __wur __attribute__((__warn_unused_result__))
 
+#ifdef __clang__
+#define __errorattr(msg) __attribute__((unavailable(msg)))
+#define __warnattr(msg) __attribute__((deprecated(msg)))
+#else
 #define __errorattr(msg) __attribute__((__error__(msg)))
 #define __warnattr(msg) __attribute__((__warning__(msg)))
+#endif
 
 #define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 
