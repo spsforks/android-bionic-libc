@@ -2230,7 +2230,7 @@ android_net_res_stats_get_info_for_net(unsigned netid, int* nscount,
             stats[i] = info->nsstats[i];
         }
         for (i = 0; i < MAXDNSRCH; i++) {
-            if (info->dnsrch_offset[i] == -1) {
+            if (info->dnsrch_offset[i] == -1 || !*(info->defdname+info->dnsrch_offset[i])) {
                 break;
             }
             strlcpy(domains[i], info->defdname + info->dnsrch_offset[i], MAXDNSRCHPATH);
