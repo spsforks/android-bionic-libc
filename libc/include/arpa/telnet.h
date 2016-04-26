@@ -32,6 +32,8 @@
 #ifndef _ARPA_TELNET_H
 #define	_ARPA_TELNET_H 1
 
+#include <sys/cdefs.h>
+
 /*
  * Definitions for the TELNET protocol.
  */
@@ -65,7 +67,7 @@ char *telcmds[] = {
 	"EL", "GA", "SB", "WILL", "WONT", "DO", "DONT", "IAC", 0,
 };
 #else
-extern char *telcmds[];
+extern char* telcmds[] __UNAVAILABLE;
 #endif
 
 #define	TELCMD_FIRST	xEOF
@@ -207,7 +209,7 @@ const char *slc_names[] = {
 	SLC_NAMELIST
 };
 #else
-extern char *slc_names[];
+extern char* slc_names[] __UNAVAILABLE;
 #define	SLC_NAMES SLC_NAMELIST
 #endif
 
@@ -267,7 +269,7 @@ const char *authtype_names[] = {
 	"NULL", "KERBEROS_V4", "KERBEROS_V5", "SPX", "MINK", 0,
 };
 #else
-extern char *authtype_names[];
+extern char* authtype_names[] __UNAVAILABLE;
 #endif
 
 #define	AUTHTYPE_NAME_OK(x)	((unsigned int)(x) < AUTHTYPE_CNT)
@@ -302,8 +304,8 @@ const char *enctype_names[] = {
 	"ANY", "DES_CFB64",  "DES_OFB64",  0,
 };
 #else
-extern const char *encrypt_names[];
-extern const char *enctype_names[];
+extern const char* encrypt_names[] __UNAVAILABLE;
+extern const char* enctype_names[] __UNAVAILABLE;
 #endif
 
 
