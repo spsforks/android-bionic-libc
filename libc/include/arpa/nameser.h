@@ -582,8 +582,6 @@ int		ns_sprintrrf(const u_char *, size_t, const char *,
 				  size_t, const char *, const char *,
 				  char *, size_t) __LIBC_ABI_PUBLIC__;
 int		ns_format_ttl(u_long, char *, size_t) __LIBC_ABI_PUBLIC__;
-int		ns_parse_ttl(const char *, u_long *) __LIBC_ABI_PUBLIC__;
-uint32_t	ns_datetosecs(const char *cp, int *errp) __LIBC_ABI_PUBLIC__;
 int		ns_name_ntol(const u_char *, u_char *, size_t) __LIBC_ABI_PUBLIC__;
 int		ns_name_ntop(const u_char *, char *, size_t) __LIBC_ABI_PUBLIC__;
 int		ns_name_pton(const char *, u_char *, size_t) __LIBC_ABI_PUBLIC__;
@@ -602,32 +600,12 @@ int		ns_name_compress(const char *, u_char *, size_t,
 int		ns_name_skip(const u_char **, const u_char *) __LIBC_ABI_PUBLIC__;
 void		ns_name_rollback(const u_char *, const u_char **,
 				      const u_char **) __LIBC_ABI_PUBLIC__;
-int		ns_sign(u_char *, int *, int, int, void *,
-			     const u_char *, int, u_char *, int *, time_t) __LIBC_ABI_PUBLIC__;
-int		ns_sign2(u_char *, int *, int, int, void *,
-			      const u_char *, int, u_char *, int *, time_t,
-			      u_char **, u_char **) __LIBC_ABI_PUBLIC__;
 ssize_t		ns_name_length(ns_nname_ct, size_t) __LIBC_HIDDEN__;
 int		ns_name_eq(ns_nname_ct, size_t, ns_nname_ct, size_t) __LIBC_HIDDEN__;
 int		ns_name_owned(ns_namemap_ct, int, ns_namemap_ct, int) __LIBC_HIDDEN__;
 int		ns_name_map(ns_nname_ct, size_t, ns_namemap_t, int) __LIBC_HIDDEN__;
 int		ns_name_labels(ns_nname_ct, size_t) __LIBC_HIDDEN__;
-int		ns_sign_tcp(u_char *, int *, int, int,
-				 ns_tcp_tsig_state *, int) __LIBC_ABI_PUBLIC__;
-int		ns_sign_tcp2(u_char *, int *, int, int,
-				  ns_tcp_tsig_state *, int,
-				  u_char **, u_char **) __LIBC_ABI_PUBLIC__;
-int		ns_sign_tcp_init(void *, const u_char *, int,
-					ns_tcp_tsig_state *) __LIBC_ABI_PUBLIC__;
-u_char		*ns_find_tsig(u_char *, u_char *) __LIBC_ABI_PUBLIC__;
-int		ns_verify(u_char *, int *, void *,
-			       const u_char *, int, u_char *, int *,
-			       time_t *, int) __LIBC_ABI_PUBLIC__;
-int		ns_verify_tcp(u_char *, int *, ns_tcp_tsig_state *, int);
-int		ns_verify_tcp_init(void *, const u_char *, int,
-					ns_tcp_tsig_state *) __LIBC_ABI_PUBLIC__;
-int		ns_samedomain(const char *, const char *) __LIBC_ABI_PUBLIC__;
-int		ns_subdomain(const char *, const char *) __LIBC_ABI_PUBLIC__;
+
 int		ns_makecanon(const char *, char *, size_t) __LIBC_ABI_PUBLIC__;
 int		ns_samename(const char *, const char *) __LIBC_ABI_PUBLIC__;
 __END_DECLS
