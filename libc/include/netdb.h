@@ -199,12 +199,12 @@ __BEGIN_DECLS
 #define  h_errno   (*__get_h_errno())
 int*  __get_h_errno(void);
 /* BIONIC-END */
-void endhostent(void);
-void endnetent(void);
-void endnetgrent(void);
-void endprotoent(void);
+void endhostent(void) __UNAVAILABLE;
+void endnetent(void) __UNAVAILABLE;
+void endnetgrent(void) __UNAVAILABLE;
+void endprotoent(void) __UNAVAILABLE;
 void endservent(void);
-void freehostent(struct hostent *);
+void freehostent(struct hostent*) __UNAVAILABLE;
 struct hostent	*gethostbyaddr(const void *, socklen_t, int);
 int gethostbyaddr_r(const void *, socklen_t, int, struct hostent *, char *, size_t, struct hostent **, int *);
 struct hostent	*gethostbyname(const char *);
@@ -212,36 +212,37 @@ int gethostbyname_r(const char *, struct hostent *, char *, size_t, struct hoste
 struct hostent	*gethostbyname2(const char *, int);
 int gethostbyname2_r(const char *, int, struct hostent *, char *, size_t, struct hostent **, int *);
 struct hostent	*gethostent(void);
-int gethostent_r(struct hostent *, char *, size_t, struct hostent **, int *);
-struct hostent	*getipnodebyaddr(const void *, size_t, int, int *);
-struct hostent	*getipnodebyname(const char *, int, int, int *);
+int gethostent_r(struct hostent*, char*, size_t, struct hostent**, int*) __UNAVAILABLE;
+struct hostent* getipnodebyaddr(const void*, size_t, int, int*) __UNAVAILABLE;
+struct hostent* getipnodebyname(const char*, int, int, int*) __UNAVAILABLE;
 struct netent	*getnetbyaddr(uint32_t, int);
-int getnetbyaddr_r(uint32_t, int, struct netent *, char *, size_t, struct netent**, int *);
+int getnetbyaddr_r(uint32_t, int, struct netent*, char*, size_t, struct netent**,
+                   int*) __UNAVAILABLE;
 struct netent	*getnetbyname(const char *);
-int getnetbyname_r(const char *, struct netent *, char *, size_t, struct netent **, int *);
-struct netent	*getnetent(void);
-int getnetent_r(struct netent *, char *, size_t, struct netent **, int *);
-int getnetgrent(char **, char **, char **);
+int getnetbyname_r(const char*, struct netent*, char*, size_t, struct netent**, int*) __UNAVAILABLE;
+struct netent* getnetent(void) __UNAVAILABLE;
+int getnetent_r(struct netent*, char*, size_t, struct netent**, int*) __UNAVAILABLE;
+int getnetgrent(char**, char**, char**) __UNAVAILABLE;
 struct protoent	*getprotobyname(const char *);
-int getprotobyname_r(const char *, struct protoent *, char *, size_t, struct protoent **);
+int getprotobyname_r(const char*, struct protoent*, char*, size_t, struct protoent**) __UNAVAILABLE;
 struct protoent	*getprotobynumber(int);
-int getprotobynumber_r(int, struct protoent *, char *, size_t, struct protoent **);
-struct protoent	*getprotoent(void);
-int getprotoent_r(struct protoent *, char *, size_t, struct protoent **);
+int getprotobynumber_r(int, struct protoent*, char*, size_t, struct protoent**) __UNAVAILABLE;
+struct protoent* getprotoent(void) __UNAVAILABLE;
+int getprotoent_r(struct protoent*, char*, size_t, struct protoent**) __UNAVAILABLE;
 struct servent	*getservbyname(const char *, const char *);
 struct servent	*getservbyport(int, const char *);
 struct servent	*getservent(void);
 void herror(const char *);
 const char	*hstrerror(int);
-int innetgr(const char *, const char *, const char *, const char *);
-void sethostent(int);
-void setnetent(int);
-void setprotoent(int);
+int innetgr(const char*, const char*, const char*, const char*) __UNAVAILABLE;
+void sethostent(int) __UNAVAILABLE;
+void setnetent(int) __UNAVAILABLE;
+void setprotoent(int) __UNAVAILABLE;
 int getaddrinfo(const char *, const char *, const struct addrinfo *, struct addrinfo **);
 int getnameinfo(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t, int);
 void freeaddrinfo(struct addrinfo *);
 const char	*gai_strerror(int);
-void setnetgrent(const char *);
+void setnetgrent(const char*) __UNAVAILABLE;
 void setservent(int);
 
 #pragma GCC visibility pop
