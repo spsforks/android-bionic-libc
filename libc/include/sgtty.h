@@ -41,8 +41,8 @@
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-int gtty(int, struct sgttyb *);
-int stty(int, struct sgttyb *);
+int gtty(int, struct sgttyb*) __UNAVAILABLE;
+int stty(int, struct sgttyb*) __UNAVAILABLE;
 __END_DECLS
 
 #endif /* _SGTTY_H_ */
