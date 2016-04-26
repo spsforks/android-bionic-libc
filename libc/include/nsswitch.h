@@ -147,14 +147,13 @@ typedef struct {
  * Default sourcelists (if nsswitch.conf is missing, corrupt,
  * or the requested database doesn't have an entry)
  */
-extern const ns_src __nsdefaultsrc[];
-extern const ns_src __nsdefaultcompat[];
-extern const ns_src __nsdefaultcompat_forceall[];
-extern const ns_src __nsdefaultfiles[];
-extern const ns_src __nsdefaultfiles_forceall[];
-extern const ns_src __nsdefaultnis[];
-extern const ns_src __nsdefaultnis_forceall[];
-
+extern const ns_src __nsdefaultsrc[] __UNAVAILABLE;
+extern const ns_src __nsdefaultcompat[] __UNAVAILABLE;
+extern const ns_src __nsdefaultcompat_forceall[] __UNAVAILABLE;
+extern const ns_src __nsdefaultfiles[] __UNAVAILABLE;
+extern const ns_src __nsdefaultfiles_forceall[] __UNAVAILABLE;
+extern const ns_src __nsdefaultnis[] __UNAVAILABLE;
+extern const ns_src __nsdefaultnis_forceall[] __UNAVAILABLE;
 
 /*
  * ns_mtab - `nsswitch method table'
