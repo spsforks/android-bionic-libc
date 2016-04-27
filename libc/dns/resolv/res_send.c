@@ -741,7 +741,7 @@ send_vc(res_state statp,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
 	int *terrno, int ns, time_t* at, int* rcode, int* delay)
 {
-	*at = 0;
+	*at = time(NULL);
 	*rcode = RCODE_INTERNAL_ERROR;
 	*delay = 0;
 	const HEADER *hp = (const HEADER *)(const void *)buf;
@@ -919,9 +919,6 @@ send_vc(res_state statp,
 		return (0);
 	}
 
-	struct timespec done = evNowTime();
-	*at = done.tv_sec;
-
 	if (truncating) {
 		/*
 		 * Flush rest of answer so connection stays in synch.
@@ -959,6 +956,7 @@ send_vc(res_state statp,
 	 * next nameserver ought not be tried.
 	 */
 	if (resplen > 0) {
+	    struct timespec done = evNowTime();
 	    *delay = _res_stats_calculate_rtt(&done, &now);
 	    *rcode = anhp->rcode;
 	}
@@ -1074,7 +1072,7 @@ send_dg(res_state statp,
 	int *terrno, int ns, int *v_circuit, int *gotsomewhere,
 	time_t *at, int *rcode, int* delay)
 {
-	*at = 0;
+	*at = time(NULL);
 	*rcode = RCODE_INTERNAL_ERROR;
 	*delay = 0;
 	const HEADER *hp = (const HEADER *)(const void *)buf;
@@ -1261,7 +1259,6 @@ retry:
 		goto retry;;
 	}
 	done = evNowTime();
-	*at = done.tv_sec;
 	*delay = _res_stats_calculate_rtt(&done, &now);
 	if (anhp->rcode == SERVFAIL ||
 	    anhp->rcode == NOTIMP ||
