@@ -66,16 +66,17 @@ android_net_res_stats_aggregate(struct __res_stats* stats, int* successes, int* 
     int rtt_count = 0;
     for (int i = 0 ; i < stats->sample_count ; ++i) {
         // Treat everything as an error that the code in send_dg() already considers a
-        // rejection by the server, i.e. SERVFAIL, NOTIMP and REFUSED. Assume that NXDOMAIN
-        // and NOTAUTH can actually occur for user queries. NOERROR with empty answer section
-        // is not treated as an error here either. FORMERR seems to sometimes be returned by
-        // some versions of BIND in response to DNSSEC or EDNS0. Whether to treat such responses
-        // as an indication of a broken server is unclear, though. For now treat such responses,
-        // as well as unknown codes as errors.
+        // rejection by the server, i.e. NOTIMP and REFUSED, but ignore SRVFAIL as it might happen
+        // often in practice. Assume that NXDOMAIN and NOTAUTH can actually occur for user queries.
+        // NOERROR with empty answer section is not treated as an error here either. FORMERR seems
+        // to sometimes be returned by some versions of BIND in response to DNSSEC or EDNS0. Whether
+        // to treat such responses as an indication of a broken server is unclear, though. For now
+        // treat such responses,// as well as unknown codes as errors.
         switch (stats->samples[i].rcode) {
         case NOERROR:
         case NOTAUTH:
         case NXDOMAIN:
+        case SERVFAIL:
             ++s;
             rtt_sum += stats->samples[i].rtt;
             ++rtt_count;
@@ -86,7 +87,6 @@ android_net_res_stats_aggregate(struct __res_stats* stats, int* successes, int* 
         case RCODE_INTERNAL_ERROR:
             ++ie;
             break;
-        case SERVFAIL:
         case NOTIMP:
         case REFUSED:
         default:
