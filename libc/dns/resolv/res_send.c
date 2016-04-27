@@ -766,6 +766,7 @@ send_vc(res_state statp,
 	truncating = 0;
 
 	struct timespec now = evNowTime();
+	*at = now.tv_sec;
 
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
@@ -919,9 +920,6 @@ send_vc(res_state statp,
 		return (0);
 	}
 
-	struct timespec done = evNowTime();
-	*at = done.tv_sec;
-
 	if (truncating) {
 		/*
 		 * Flush rest of answer so connection stays in synch.
@@ -959,6 +957,7 @@ send_vc(res_state statp,
 	 * next nameserver ought not be tried.
 	 */
 	if (resplen > 0) {
+	    struct timespec done = evNowTime();
 	    *delay = _res_stats_calculate_rtt(&done, &now);
 	    *rcode = anhp->rcode;
 	}
@@ -1168,6 +1167,7 @@ send_dg(res_state statp,
 	 */
 	seconds = get_timeout(statp, ns);
 	now = evNowTime();
+	*at = now.tv_sec;
 	timeout = evConsTime((long)seconds, 0L);
 	finish = evAddTime(now, timeout);
 retry:
@@ -1261,7 +1261,6 @@ retry:
 		goto retry;;
 	}
 	done = evNowTime();
-	*at = done.tv_sec;
 	*delay = _res_stats_calculate_rtt(&done, &now);
 	if (anhp->rcode == SERVFAIL ||
 	    anhp->rcode == NOTIMP ||
