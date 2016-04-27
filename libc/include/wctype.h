@@ -33,23 +33,23 @@
 
 __BEGIN_DECLS
 
-extern int iswalnum_l(wint_t, locale_t);
-extern int iswalpha_l(wint_t, locale_t);
-extern int iswblank_l(wint_t, locale_t);
-extern int iswcntrl_l(wint_t, locale_t);
-extern int iswdigit_l(wint_t, locale_t);
-extern int iswgraph_l(wint_t, locale_t);
-extern int iswlower_l(wint_t, locale_t);
-extern int iswprint_l(wint_t, locale_t);
-extern int iswpunct_l(wint_t, locale_t);
-extern int iswspace_l(wint_t, locale_t);
-extern int iswupper_l(wint_t, locale_t);
-extern int iswxdigit_l(wint_t, locale_t);
-extern int towlower_l(int, locale_t);
-extern int towupper_l(int, locale_t);
+extern int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswcntrl_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswgraph_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswprint_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswpunct_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
+extern int towlower_l(int, locale_t) __INTRODUCED_IN(21);
+extern int towupper_l(int, locale_t) __INTRODUCED_IN(21);
 
-extern int iswctype_l(wint_t, wctype_t, locale_t);
-extern wctype_t wctype_l(const char*, locale_t);
+extern int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
+extern wctype_t wctype_l(const char*, locale_t) __INTRODUCED_IN(21);
 
 __END_DECLS
 
