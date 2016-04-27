@@ -129,7 +129,8 @@ typedef struct {
   struct android_namespace_t* library_namespace;
 } android_dlextinfo;
 
-extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo)
+  __INTRODUCED_IN(21);
 
 /*
  * Initializes public and anonymous namespaces. The public_ns_sonames is the list of sonames
@@ -140,9 +141,8 @@ extern void* android_dlopen_ext(const char* filename, int flag, const android_dl
  * is used in the case when linker cannot identify the caller of dlopen/dlsym. This happens
  * for the code not loaded by dynamic linker; for example calls from the mono-compiled code.
  */
-extern bool android_init_namespaces(const char* public_ns_sonames,
-                                    const char* anon_ns_library_path);
-
+extern bool android_init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path)
+  __INTRODUCED_IN(24);
 
 enum {
   /* A regular namespace is the namespace with a custom search path that does
@@ -189,11 +189,9 @@ enum {
  * If a library or any of its dependencies are outside of the permitted_when_isolated_path
  * and search_path, and it is not part of the public namespace dlopen will fail.
  */
-extern struct android_namespace_t* android_create_namespace(const char* name,
-                                                            const char* ld_library_path,
-                                                            const char* default_library_path,
-                                                            uint64_t type,
-                                                            const char* permitted_when_isolated_path);
+extern struct android_namespace_t* android_create_namespace(
+  const char* name, const char* ld_library_path, const char* default_library_path, uint64_t type,
+  const char* permitted_when_isolated_path) __INTRODUCED_IN(24);
 
 __END_DECLS
 

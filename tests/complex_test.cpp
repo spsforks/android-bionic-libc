@@ -17,7 +17,12 @@
 #include <gtest/gtest.h>
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
-// have to be naughty.
+// have to be naughty. This file is compiled against both glibc and bionic, and
+// our complex.h depends on bionic-specific macros, so hack around that.
+#include <sys/cdefs.h>
+#if !defined(__INTRODUCED_IN)
+#define __INTRODUCED_IN(x)
+#endif
 #include <../libc/include/complex.h>
 
 // (libc++ also seems to have really bad implementations of its own that ignore
