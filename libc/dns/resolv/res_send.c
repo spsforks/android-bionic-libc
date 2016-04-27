@@ -766,6 +766,7 @@ send_vc(res_state statp,
 	truncating = 0;
 
 	struct timespec now = evNowTime();
+	*at = now.tv_sec;
 
 	/* Are we still talking to whom we want to talk to? */
 	if (statp->_vcsock >= 0 && (statp->_flags & RES_F_VC) != 0) {
@@ -1168,6 +1169,7 @@ send_dg(res_state statp,
 	 */
 	seconds = get_timeout(statp, ns);
 	now = evNowTime();
+	*at = now.tv_sec;
 	timeout = evConsTime((long)seconds, 0L);
 	finish = evAddTime(now, timeout);
 retry:
