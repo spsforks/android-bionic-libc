@@ -124,7 +124,7 @@ long double complex clogl(long double complex) __INTRODUCED_IN(25);
 /* 7.3.8.1 The cabs functions */
 double cabs(double complex) __INTRODUCED_IN(23);
 float cabsf(float complex) __INTRODUCED_IN(23);
-long double cabsl(long double complex) __INTRODUCED_IN(21);
+long double cabsl(long double complex) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23);
 /* 7.3.8.2 The cpow functions */
 double complex cpow(double complex, double complex) __INTRODUCED_IN(25);
 float complex cpowf(float complex, float complex) __INTRODUCED_IN(25);
@@ -132,7 +132,7 @@ long double complex cpowl(long double complex, long double complex) __INTRODUCED
 /* 7.3.8.3 The csqrt functions */
 double complex csqrt(double complex) __INTRODUCED_IN(23);
 float complex csqrtf(float complex) __INTRODUCED_IN(23);
-long double complex csqrtl(long double complex) __INTRODUCED_IN(21);
+long double complex csqrtl(long double complex) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23);
 
 /* 7.3.9 Manipulation functions */
 /* 7.3.9.1 The carg functions */
@@ -150,7 +150,7 @@ long double complex conjl(long double complex) __INTRODUCED_IN(23);
 /* 7.3.9.4 The cproj functions */
 double complex cproj(double complex) __INTRODUCED_IN(23);
 float complex cprojf(float complex) __INTRODUCED_IN(23);
-long double complex cprojl(long double complex) __INTRODUCED_IN(21);
+long double complex cprojl(long double complex) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23);
 /* 7.3.9.5 The creal functions */
 double creal(double complex) __INTRODUCED_IN(23);
 float crealf(float complex) __INTRODUCED_IN(23);

@@ -463,6 +463,14 @@
 #define __UNAVAILABLE __attribute__((__error__("unavailable")))
 #endif // __clang__
 
+#if __LP64__
+#define __INTRODUCED_IN_32(api_level)
+#define __INTRODUCED_IN_64 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_32 __INTRODUCED_IN
+#define __INTRODUCED_IN_64(api_level)
+#endif
+
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__
 #define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
