@@ -463,6 +463,8 @@
 #define __UNAVAILABLE __attribute__((__error__("unavailable")))
 #endif // __clang__
 
+#define __INTRODUCED_IN_FUTURE __INTRODUCED_IN(10000)
+
 #if __LP64__
 #define __INTRODUCED_IN_32(api_level)
 #define __INTRODUCED_IN_64 __INTRODUCED_IN
