@@ -451,17 +451,23 @@
 
 #ifdef __clang__
 #define __AVAILABILITY(...) __attribute__((availability(android,__VA_ARGS__)))
-#define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
-#define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
-#define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
 #define __UNAVAILABLE __attribute__((unavailable))
 #else
 #define __AVAILABILITY(...)
-#define __INTRODUCED_IN(api_level)
-#define __DEPRECATED_IN(api_level)
-#define __REMOVED_IN(api_level)
 #define __UNAVAILABLE __attribute__((__error__("unavailable")))
 #endif // __clang__
+
+#define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
+#define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
+#define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
+
+#if __LP64__
+#define __INTRODUCED_IN_32(api_level)
+#define __INTRODUCED_IN_64 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_32 __INTRODUCED_IN
+#define __INTRODUCED_IN_64(api_level)
+#endif
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__
