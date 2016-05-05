@@ -20,11 +20,11 @@
 #include <unistd.h>
 #include <string>
 
-#include "debug.h"
 #include "elf_file.h"
 #include "elf_traits.h"
 #include "libelf.h"
 
+#include <android-base/logging.h>
 #include <android-base/unique_fd.h>
 
 static void PrintUsage(const char* argv0) {
@@ -80,8 +80,7 @@ int main(int argc, char* argv[]) {
         has_options = false;
         break;
       default:
-        NOTREACHED();
-        return 1;
+        LOG(FATAL) << "NOTREACHED hit";
     }
   }
   if (optind != argc - 1) {
@@ -100,8 +99,9 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  if (is_verbose)
-    relocation_packer::Logger::SetVerbose(1);
+  if (is_verbose) {
+    new android::base::ScopedLogSeverity(android::base::LogSeverity::VERBOSE);
+  }
 
   // We need to detect elf class in order to create
   // correct implementation

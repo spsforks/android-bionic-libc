@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "debug.h"
+#include <android-base/logging.h>
 
 static constexpr uint32_t RELOCATION_GROUPED_BY_INFO_FLAG = 1;
 static constexpr uint32_t RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG = 2;

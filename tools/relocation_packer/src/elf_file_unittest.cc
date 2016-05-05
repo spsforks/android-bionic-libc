@@ -9,9 +9,11 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
-#include "debug.h"
+
 #include "elf_traits.h"
-#include "gtest/gtest.h"
+
+#include <android-base/logging.h>
+#include <gtest/gtest.h>
 
 namespace {
 

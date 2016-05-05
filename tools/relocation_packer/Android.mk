@@ -24,13 +24,12 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := \
-  src/debug.cc \
   src/delta_encoder.cc \
   src/elf_file.cc \
   src/packer.cc \
   src/sleb128.cc \
 
-LOCAL_STATIC_LIBRARIES := libelf libz
+LOCAL_STATIC_LIBRARIES := libelf libz libbase
 LOCAL_MODULE := lib_relocation_packer
 
 LOCAL_CPPFLAGS := $(common_cppflags)
@@ -58,13 +57,12 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := \
-  src/debug_unittest.cc \
   src/delta_encoder_unittest.cc \
   src/elf_file_unittest.cc \
   src/sleb128_unittest.cc \
   src/packer_unittest.cc \
 
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
+LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz libbase
 
 LOCAL_CPPFLAGS := $(common_cppflags)
 

@@ -6,10 +6,11 @@
 
 #include <vector>
 
-#include "debug.h"
 #include "delta_encoder.h"
 #include "elf_traits.h"
 #include "sleb128.h"
+
+#include <android-base/logging.h>
 
 namespace relocation_packer {
 
