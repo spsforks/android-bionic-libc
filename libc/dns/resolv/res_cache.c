@@ -1999,6 +1999,8 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             _resolv_set_default_params(&cache_info->params);
         }
 
+        bool changed = false;
+
         if (!_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
             // free current before adding new
             _free_nameservers_locked(cache_info);
@@ -2010,46 +2012,75 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
-            // code moved from res_init.c, load_domain_search_list
-            strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
-            if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
-                *cp = '\0';
+            // Ensure that the cache is flushed when nameservers change.
+            changed = true;
+        }
 
-            cp = cache_info->defdname;
-            offset = cache_info->dnsrch_offset;
-            while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
-                while (*cp == ' ' || *cp == '\t') /* skip leading white space */
-                    cp++;
-                if (*cp == '\0') /* stop if nothing more to do */
+        // Keep a copy of the old domain search path, since a direct string comparison is not
+        // possible due to the zero-padding.
+        // TODO: Replace the domain search path storage in cache_info with a less complex
+        // approach.
+        char old_dnames[MAXDNSRCH + 1][sizeof(cache_info->defdname)];
+        int dcount = 0;
+        while (dcount < MAXDNSRCH && cache_info->dnsrch_offset[dcount] >= 0) {
+           const char* cur_domain = cache_info->defdname + cache_info->dnsrch_offset[dcount];
+           if (!cur_domain[0])
+               break;
+           strlcpy(old_dnames[dcount], cur_domain, sizeof(old_dnames[dcount]));
+           dcount++;
+        }
+
+        // code moved from res_init.c, load_domain_search_list
+        strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
+        if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
+            *cp = '\0';
+
+        cp = cache_info->defdname;
+        offset = cache_info->dnsrch_offset;
+        while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
+            while (*cp == ' ' || *cp == '\t') /* skip leading white space */
+                cp++;
+            if (*cp == '\0') /* stop if nothing more to do */
+                break;
+            *offset++ = cp - cache_info->defdname; /* record this search domain */
+            while (*cp) { /* zero-terminate it */
+                if (*cp == ' '|| *cp == '\t') {
+                    *cp++ = '\0';
                     break;
-                *offset++ = cp - cache_info->defdname; /* record this search domain */
-                while (*cp) { /* zero-terminate it */
-                    if (*cp == ' '|| *cp == '\t') {
-                        *cp++ = '\0';
-                        break;
-                    }
-                    cp++;
                 }
+                cp++;
             }
-            *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
+        }
+        *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
 
+        // Ensure that the cache is flushed when the search paths change. Note that
+        // reordering is not taken into account and still results in a cache flush, in
+        // the same way as changing the server order does.
+        for (int i = 0; i < dcount; i++) {
+            if (strcmp(cache_info->defdname + cache_info->dnsrch_offset[i], old_dnames[i]) != 0) {
+                changed = true;
+                break;
+            }
+        }
+
+        if (changed) {
             // Flush the cache and reset the stats.
             _flush_cache_for_net_locked(netid);
 
-            // increment the revision id to ensure that sample state is not written back if the
+            // Increment the revision id to ensure that sample state is not written back if the
             // servers change; in theory it would suffice to do so only if the servers or
             // max_samples actually change, in practice the overhead of checking is higher than the
-            // cost, and overflows are unlikely
+            // cost, and overflows are unlikely.
             ++cache_info->revision_id;
-       } else if (cache_info->params.max_samples != old_max_samples) {
-           // If the maximum number of samples changes, the overhead of keeping the most recent
-           // samples around is not considered worth the effort, so they are cleared instead. All
-           // other parameters do not affect shared state: Changing these parameters does not
-           // invalidate the samples, as they only affect aggregation and the conditions under which
-           // servers are considered usable.
-           _res_cache_clear_stats_locked(cache_info);
-           ++cache_info->revision_id;
-       }
+        } else if (cache_info->params.max_samples != old_max_samples) {
+            // If the maximum number of samples changes, the overhead of keeping the most recent
+            // samples around is not considered worth the effort, so they are cleared instead. All
+            // other parameters do not affect shared state: Changing these parameters does not
+            // invalidate the samples, as they only affect aggregation and the conditions under which
+            // servers are considered usable.
+            _res_cache_clear_stats_locked(cache_info);
+            ++cache_info->revision_id;
+        }
     }
 
     pthread_mutex_unlock(&_res_cache_list_lock);
