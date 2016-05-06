@@ -2010,29 +2010,6 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
-            // code moved from res_init.c, load_domain_search_list
-            strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
-            if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
-                *cp = '\0';
-
-            cp = cache_info->defdname;
-            offset = cache_info->dnsrch_offset;
-            while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
-                while (*cp == ' ' || *cp == '\t') /* skip leading white space */
-                    cp++;
-                if (*cp == '\0') /* stop if nothing more to do */
-                    break;
-                *offset++ = cp - cache_info->defdname; /* record this search domain */
-                while (*cp) { /* zero-terminate it */
-                    if (*cp == ' '|| *cp == '\t') {
-                        *cp++ = '\0';
-                        break;
-                    }
-                    cp++;
-                }
-            }
-            *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
-
             // Flush the cache and reset the stats.
             _flush_cache_for_net_locked(netid);
 
@@ -2051,6 +2028,33 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
            ++cache_info->revision_id;
        }
     }
+
+    // Always update the search paths, since determining whether they actually changed is complex
+    // due to the zero-padding, and probably not worth the effort. Cache-flushing however is not
+    // necessary, since the stored cache entries do contain the domain, not just the host name.
+
+    // code moved from res_init.c, load_domain_search_list
+    strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
+    if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
+        *cp = '\0';
+
+    cp = cache_info->defdname;
+    offset = cache_info->dnsrch_offset;
+    while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
+        while (*cp == ' ' || *cp == '\t') /* skip leading white space */
+            cp++;
+        if (*cp == '\0') /* stop if nothing more to do */
+            break;
+        *offset++ = cp - cache_info->defdname; /* record this search domain */
+        while (*cp) { /* zero-terminate it */
+            if (*cp == ' '|| *cp == '\t') {
+                *cp++ = '\0';
+                break;
+            }
+            cp++;
+        }
+    }
+    *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
 
     pthread_mutex_unlock(&_res_cache_list_lock);
     return 0;
