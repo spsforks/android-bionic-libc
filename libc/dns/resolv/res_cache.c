@@ -1999,6 +1999,13 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             _resolv_set_default_params(&cache_info->params);
         }
 
+        // If the maximum number of samples changes, the overhead of keeping the most recent
+        // samples around is not considered worth the effort, so they are cleared instead. All
+        // other parameters do not affect shared state: Changing these parameters does not
+        // invalidate the samples, as they only affect aggregation and the conditions under which
+        // servers are considered usable.
+        bool changed = (cache_info->params.max_samples != old_max_samples);
+
         if (!_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
             // free current before adding new
             _free_nameservers_locked(cache_info);
@@ -2010,6 +2017,11 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
+            // Ensure that the cache is flushed when nameservers change.
+            changed = true;
+        }
+
+        if (strncmp(cache_info->defdname, domains, sizeof(cache_info->defdname)) != 0) {
             // code moved from res_init.c, load_domain_search_list
             strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
             if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
@@ -2033,23 +2045,15 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
 
+            // Ensure that the cache is flushed when the search paths change.
+            changed = true;
+        }
+
+        if (changed) {
             // Flush the cache and reset the stats.
             _flush_cache_for_net_locked(netid);
-
-            // increment the revision id to ensure that sample state is not written back if the
-            // servers change; in theory it would suffice to do so only if the servers or
-            // max_samples actually change, in practice the overhead of checking is higher than the
-            // cost, and overflows are unlikely
             ++cache_info->revision_id;
-       } else if (cache_info->params.max_samples != old_max_samples) {
-           // If the maximum number of samples changes, the overhead of keeping the most recent
-           // samples around is not considered worth the effort, so they are cleared instead. All
-           // other parameters do not affect shared state: Changing these parameters does not
-           // invalidate the samples, as they only affect aggregation and the conditions under which
-           // servers are considered usable.
-           _res_cache_clear_stats_locked(cache_info);
-           ++cache_info->revision_id;
-       }
+        }
     }
 
     pthread_mutex_unlock(&_res_cache_list_lock);
