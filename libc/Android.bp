@@ -84,7 +84,7 @@ cc_defaults {
     system_shared_libs: [],
     sanitize: {
         // FIXME: no_address: true, no_thread: true,
-        never: true,
+//        never: true,
     },
     native_coverage: false,
 }
