@@ -41,9 +41,9 @@
 #endif
 
 #define KB 1024
-#define SMALL 1*KB
-#define MEDIUM 4*KB
-#define LARGE 64*KB
+#define SMALL (1*KB)
+#define MEDIUM (4*KB)
+#define LARGE (64*KB)
 
 static int signum(int i) {
   if (i < 0) {

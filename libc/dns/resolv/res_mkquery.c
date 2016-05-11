@@ -102,7 +102,7 @@ __RCSID("$NetBSD: res_mkquery.c,v 1.6 2006/01/24 17:40:32 christos Exp $");
 #endif
 
 #ifndef lint
-#define UNUSED(a)	(void)&a
+#define UNUSED(a)	((void)&a)
 #else
 #define UNUSED(a)	a = a
 #endif

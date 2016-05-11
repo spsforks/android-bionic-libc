@@ -53,8 +53,8 @@
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define std(flags, file) \
-    {0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,nullptr,__swrite, \
-    {(unsigned char *)(__sFext+file), 0},nullptr,0,{0},{0},{0,0},0,0}
+    {0,0,0,flags,file,{0,0},0,__sF+(file),__sclose,__sread,nullptr,__swrite, \
+    {(unsigned char *)(__sFext+(file)), 0},nullptr,0,{0},{0},{0,0},0,0}
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 

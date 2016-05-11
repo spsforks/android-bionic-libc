@@ -43,15 +43,16 @@ typedef int		 cmp_t(const void *, const void *);
 static inline char	*med3(char *, char *, char *, cmp_t *, void *);
 static inline void	 swapfunc(char *, char *, int, int);
 
-#define min(a, b)	(a) < (b) ? a : b
+#define min(a, b)	((a) < (b) ? (a) : (b))
 
 /*
  * Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".
+ * NOLINT added to suppress wrong warnings from clang-tidy.
  */
 #define swapcode(TYPE, parmi, parmj, n) { 		\
 	long i = (n) / sizeof (TYPE); 			\
-	TYPE *pi = (TYPE *) (parmi); 		\
-	TYPE *pj = (TYPE *) (parmj); 		\
+	TYPE *pi = (TYPE *) (parmi); 	/* NOLINT */    \
+	TYPE *pj = (TYPE *) (parmj); 	/* NOLINT */    \
 	do { 						\
 		TYPE	t = *pi;		\
 		*pi++ = *pj;				\
@@ -59,8 +60,8 @@ static inline void	 swapfunc(char *, char *, int, int);
         } while (--i > 0);				\
 }
 
-#define SWAPINIT(a, es) swaptype = ((char *)a - (char *)0) % sizeof(long) || \
-	es % sizeof(long) ? 2 : es == sizeof(long)? 0 : 1;
+#define SWAPINIT(a, es) swaptype = ((char *)(a) - (char *)0) % sizeof(long) || \
+	(es) % sizeof(long) ? 2 : (es) == sizeof(long)? 0 : 1;
 
 static inline void
 swapfunc(a, b, n, swaptype)

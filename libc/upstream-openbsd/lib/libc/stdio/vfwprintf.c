@@ -428,11 +428,11 @@ __vfwprintf(FILE * __restrict fp, const wchar_t * __restrict fmt0, __va_list ap)
 			__find_arguments(fmt0, orgap, &argtable, &argtablesiz); \
 		} \
 		nextarg = n2; \
-		val = GETARG(int); \
+		(val) = GETARG(int); \
 		nextarg = hold; \
 		fmt = ++cp; \
 	} else { \
-		val = GETARG(int); \
+		(val) = GETARG(int); \
 	}
 
 /*
@@ -1127,7 +1127,7 @@ __find_arguments(const wchar_t *fmt0, va_list ap, union arg **argtable,
 	((nextarg >= tablesize) ? \
 		__grow_type_table(&typetable, &tablesize) : 0, \
 	(nextarg > tablemax) ? tablemax = nextarg : 0, \
-	typetable[nextarg++] = type)
+	typetable[nextarg++] = (type))
 
 #define	ADDSARG() \
         ((flags&MAXINT) ? ADDTYPE(T_MAXINT) : \
