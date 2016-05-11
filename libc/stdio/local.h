@@ -148,7 +148,7 @@ struct __sfileext {
 #define __SOPT 0
 
 #if defined(__cplusplus)
-#define _EXT(fp) reinterpret_cast<__sfileext*>((fp)->_ext._base)
+#define _EXT(fp) ((reinterpret_cast<__sfileext*>((fp)->_ext._base)))
 #else
 #define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
 #endif

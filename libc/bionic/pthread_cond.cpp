@@ -62,7 +62,7 @@
 
 #define COND_IS_SHARED(c) (((c) & COND_SHARED_MASK) != 0)
 #define COND_GET_CLOCK(c) (((c) & COND_CLOCK_MASK) >> 1)
-#define COND_SET_CLOCK(attr, c) ((attr) | (c << 1))
+#define COND_SET_CLOCK(attr, c) ((attr) | ((c) << 1))
 
 int pthread_condattr_init(pthread_condattr_t* attr) {
   *attr = 0;

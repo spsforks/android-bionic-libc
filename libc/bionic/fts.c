@@ -56,7 +56,7 @@ static int	 fts_safe_changedir(FTS *, FTSENT *, int, char *);
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 void* reallocarray(void*, size_t, size_t);
 
-#define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+#define	ISDOT(a)	((a)[0] == '.' && (!(a)[1] || ((a)[1] == '.' && !(a)[2])))
 
 #define	CLR(opt)	(sp->fts_options &= ~(opt))
 #define	ISSET(opt)	(sp->fts_options & (opt))
@@ -250,8 +250,8 @@ fts_close(FTS *sp)
  * appended which would cause paths to be written as "....//foo".
  */
 #define	NAPPEND(p)							\
-	(p->fts_path[p->fts_pathlen - 1] == '/'				\
-	    ? p->fts_pathlen - 1 : p->fts_pathlen)
+	((p)->fts_path[(p)->fts_pathlen - 1] == '/'				\
+	    ? (p)->fts_pathlen - 1 : (p)->fts_pathlen)
 
 FTSENT *
 fts_read(FTS *sp)

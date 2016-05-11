@@ -66,22 +66,22 @@ int _yp_gethtbyname(void *, void *, va_list);
 
 #define HENT_ARRAY(dst, anum, ptr, len) \
 	do { \
-		size_t _len = (anum + 1) * sizeof(*dst); \
-		if (_len > len) \
+		size_t _len = ((anum) + 1) * sizeof(*(dst)); \
+		if (_len > (len)) \
 			goto nospc; \
-		dst = (void *)ptr; \
-		ptr += _len; \
-		len -= _len; \
+		(dst) = (void *)(ptr); \
+		(ptr) += _len; \
+		(len) -= _len; \
 	} while (/*CONSTCOND*/0)
 
 #define HENT_COPY(dst, src, slen, ptr, len) \
 	do { \
-		if ((size_t)slen > len) \
+		if ((size_t)(slen) > (len)) \
 			goto nospc; \
-		memcpy(ptr, src, (size_t)slen); \
-		dst = ptr; \
-		ptr += slen; \
-		len -= slen; \
+		memcpy(ptr, src, (size_t)(slen)); \
+		(dst) = ptr; \
+		(ptr) += (slen); \
+		(len) -= (slen); \
 	} while (/* CONSTCOND */0)
 
 #define HENT_SCOPY(dst, src, ptr, len) \

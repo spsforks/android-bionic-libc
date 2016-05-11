@@ -168,7 +168,7 @@ __weak_alias(regexec,_regexec)
     else \
 	(m)->vn = 0
 
-#define	STATETEARDOWN(m)	{ free((m)->space); m->space = NULL; }
+#define	STATETEARDOWN(m)	{ free((m)->space); (m)->space = NULL; }
 #define	SETUP(v)	((v) = &m->space[(size_t)(m->vn++ * m->g->nstates)])
 #define	onestate	int
 #define	INIT(o, n)	((o) = (int)(n))

@@ -96,20 +96,20 @@
 #define maybe_dnok(res, dn) maybe_ok((res), (dn), res_dnok)
 
 #define addalias(d, s, arr, siz) do {			\
-	if (d >= &arr[siz]) {				\
-		char **xptr = realloc(arr, (siz + 10) * sizeof(*arr)); \
+	if ((d) >= &(arr)[siz]) {			\
+		char **xptr = realloc(arr, ((siz) + 10) * sizeof(*(arr))); \
 		if (xptr == NULL)			\
 			goto nospc;			\
-		d = xptr + (d - arr);			\
-		arr = xptr;				\
-		siz += 10;				\
+		(d) = xptr + ((d) - (arr));		\
+		(arr) = xptr;				\
+		(siz) += 10;				\
 	}						\
-	*d++ = s;					\
+	*(d)++ = s;					\
 } while (/*CONSTCOND*/0)
 
 #define setup(arr, siz) do {				\
-	arr = malloc((siz = 10) * sizeof(*arr)); 	\
-	if (arr == NULL)				\
+	(arr) = malloc(((siz) = 10) * sizeof(*(arr))); 	\
+	if ((arr) == NULL)				\
 		goto nospc;				\
 } while (/*CONSTCOND*/0)
 

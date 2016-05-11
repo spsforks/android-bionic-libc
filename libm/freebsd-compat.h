@@ -24,7 +24,7 @@
     __asm__(".equ "  #alias ", " #sym)
 
 #define __strong_reference(sym,aliassym) \
-    extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
+    extern __typeof (sym) (aliassym) __attribute__ ((__alias__ (#sym)))
 
 #define __warn_references(sym,msg) /* ignored */
 

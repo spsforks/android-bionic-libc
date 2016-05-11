@@ -29,6 +29,6 @@
 #include <signal.h>
 
 const char* const sys_siglist[NSIG] = {
-#define __BIONIC_SIGDEF(signal_number, signal_description) [ signal_number ] = signal_description,
+#define __BIONIC_SIGDEF(signal_number, signal_description) [ signal_number ] = (signal_description),
 #include "private/bionic_sigdefs.h"
 };
