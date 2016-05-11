@@ -32,10 +32,10 @@ __FBSDID("$FreeBSD$");
 #ifdef LDBL_IMPLICIT_NBIT
 #define	MANH_SIZE	(LDBL_MANH_SIZE + 1)
 #define	INC_MANH(u, c)	do {					\
-	uint64_t o = u.bits.manh;				\
-	u.bits.manh += (c);					\
-	if (u.bits.manh < o)					\
-		u.bits.exp++;					\
+	uint64_t o = (u).bits.manh;				\
+	(u).bits.manh += (c);					\
+	if ((u).bits.manh < o)					\
+		(u).bits.exp++;					\
 } while (0)
 #else
 #define	MANH_SIZE	LDBL_MANH_SIZE

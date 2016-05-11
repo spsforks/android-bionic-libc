@@ -30,7 +30,7 @@ __FBSDID("$FreeBSD: head/lib/msun/src/s_scalbln.c 278339 2015-02-07 00:38:18Z ka
 #include <math.h>
 
 #define	NMAX	65536
-#define	NMIN	-65536
+#define	NMIN	(-65536)
 
 double
 scalbln(double x, long n)

@@ -136,7 +136,7 @@
  * * Upping by another 5x for the centralized nature
  * *****************************************
  */
-#define  CONFIG_MAX_ENTRIES    64 * 2 * 5
+#define  CONFIG_MAX_ENTRIES    (64 * 2 * 5)
 /* name of the system property that can be used to set the cache size */
 
 /****************************************************************************/

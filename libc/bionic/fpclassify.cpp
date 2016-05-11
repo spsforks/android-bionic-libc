@@ -122,7 +122,7 @@ union long_double_u {
   ieee_ext bits;
 };
 
-#define zero_frac(b) ((b.ext_fracl | b.ext_fraclm | b.ext_frachm | b.ext_frach) == 0)
+#define zero_frac(b) (((b).ext_fracl | (b).ext_fraclm | (b).ext_frachm | (b).ext_frach) == 0)
 
 int __fpclassifyl(long double ld) {
   long_double_u u;

@@ -199,7 +199,7 @@ static char nuls[10];		/* place to point scanner in event of error */
 #define	EMIT(op, sopnd)	doemit(p, (sop)(op), sopnd)
 #define	INSERT(op, pos)	doinsert(p, (sop)(op), HERE()-(pos)+1, pos)
 #define	AHEAD(pos)		dofwd(p, pos, HERE()-(pos))
-#define	ASTERN(sop, pos)	EMIT(sop, HERE()-pos)
+#define	ASTERN(sop, pos)	EMIT(sop, HERE()-(pos))
 #define	HERE()		(p->slen)
 #define	THERE()		(p->slen - 1)
 #define	THERETHERE()	(p->slen - 2)

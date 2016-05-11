@@ -44,7 +44,7 @@ inet_ntoa(struct in_addr in)
 	char *p;
 
 	p = (char *)&in;
-#define	UC(b)	(((int)b)&0xff)
+#define	UC(b)	(((int)(b))&0xff)
 	(void)snprintf(b, sizeof(b),
 	    "%u.%u.%u.%u", UC(p[0]), UC(p[1]), UC(p[2]), UC(p[3]));
 	return (b);

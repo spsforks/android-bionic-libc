@@ -25,8 +25,8 @@ __FBSDID("$FreeBSD$");
 	union IEEEl2bits uv;		\
 					\
 	uv.e = v;			\
-	h = uv.bits.manh;		\
-	l = uv.bits.manl;		\
+	(h) = uv.bits.manh;		\
+	(l) = uv.bits.manl;		\
 } while (0)
 
 #undef GET_HIGH_WORD

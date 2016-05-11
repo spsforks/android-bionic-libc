@@ -34,8 +34,8 @@ struct __thread_private_tag_t {
 	pthread_mutex_unlock( &__THREAD_NAME(name)._private_lock )
 
 /* Note that these aren't compatible with the usual OpenBSD ones which lazy-initialize! */
-#define _MUTEX_LOCK(l) pthread_mutex_lock((pthread_mutex_t*) l)
-#define _MUTEX_UNLOCK(l) pthread_mutex_unlock((pthread_mutex_t*) l)
+#define _MUTEX_LOCK(l) pthread_mutex_lock((pthread_mutex_t*) (l))
+#define _MUTEX_UNLOCK(l) pthread_mutex_unlock((pthread_mutex_t*) (l))
 
 __LIBC_HIDDEN__ void  _thread_atexit_lock(void);
 __LIBC_HIDDEN__ void  _thread_atexit_unlock(void);

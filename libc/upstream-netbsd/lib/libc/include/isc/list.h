@@ -21,11 +21,11 @@
 #define LIST_H 1
 #include <isc/assertions.h>
 
-#define LIST(type) struct { type *head, *tail; }
+#define LIST(type) struct { type *head, *tail; } /* NOLINT */
 #define INIT_LIST(list) \
 	do { (list).head = NULL; (list).tail = NULL; } while (/*CONSTCOND*/0)
 
-#define LINK(type) struct { type *prev, *next; }
+#define LINK(type) struct { type *prev, *next; } /* NOLINT */
 #define INIT_LINK_TYPE(elt, link, type) \
 	do { \
 		(elt)->link.prev = (type *)(-1); \

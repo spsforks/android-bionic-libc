@@ -42,7 +42,7 @@ typedef __uint32_t fpu_status_t;    // FPSR, Floating-point Status Register.
 #define __get(REGISTER, __value) { \
   uint64_t __value64; \
   __asm__ __volatile__("mrs %0," REGISTER : "=r" (__value64)); \
-  __value = (__uint32_t) __value64; \
+  (__value) = (__uint32_t) __value64; \
 }
 #define __get_fpcr(__fpcr) __get("fpcr", __fpcr)
 #define __get_fpsr(__fpsr) __get("fpsr", __fpsr)
