@@ -38,7 +38,7 @@ __FBSDID("$FreeBSD$");
 #define	EXP_TINY	-34
 #elif LDBL_MANT_DIG == 113
 #define	EXP_LARGE	58
-#define	EXP_TINY	-58
+#define	EXP_TINY	(-58)
 #else
 #error "Unsupported long double format"
 #endif

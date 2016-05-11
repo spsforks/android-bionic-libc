@@ -42,7 +42,7 @@
 #include <sys/_system_properties.h>
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
-#define TOC_TO_INFO(area, toc)  ((prop_info_compat*) (((char*) area) + ((toc) & 0xFFFFFF)))
+#define TOC_TO_INFO(area, toc)  ((prop_info_compat*) (((char*) (area)) + ((toc) & 0xFFFFFF)))
 
 struct prop_area_compat {
     unsigned volatile count;

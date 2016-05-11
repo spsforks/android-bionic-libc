@@ -128,7 +128,7 @@ static uint32_t net_mask(struct in_addr);
 #endif
 
 #if !defined(isascii)	/* XXX - could be a function */
-# define isascii(c) (!(c & 0200))
+# define isascii(c) (!((c) & 0200))
 #endif
 
 /*
