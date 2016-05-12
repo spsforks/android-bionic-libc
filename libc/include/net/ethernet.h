@@ -32,4 +32,15 @@
 #include <linux/if_ether.h>
 #include <net/if_ether.h>
 
+#define ETHERTYPE_IP 0x0800
+#define ETHERTYPE_ARP 0x0806
+#define ETHERTYPE_REVARP 0x8035
+#define ETHERTYPE_VLAN 0x8100
+#define ETHERTYPE_IPX 0x8137
+#define ETHERTYPE_IPV6 0x86dd
+#define ETHERTYPE_LOOPBACK 0x9000
+
+#define ETHERTYPE_TRAIL 0x1000
+#define ETHERTYPE_NTRAILER 16
+
 #endif
