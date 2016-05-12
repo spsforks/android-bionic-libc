@@ -1513,6 +1513,8 @@ LIBC_PRIVATE {
     index; # arm x86 mips
     issetugid; # arm x86 mips
     memswap; # arm x86 mips
+    packagelist_free;
+    packagelist_parse;
     pthread_attr_getstackaddr; # arm x86 mips
     pthread_attr_setstackaddr; # arm x86 mips
     restore_core_regs; # arm
