@@ -149,6 +149,7 @@ libc_bionic_ndk_src_files := \
     bionic/netinet_in.cpp \
     bionic/nl_types.cpp \
     bionic/open.cpp \
+    bionic/packagelistparser.cpp \
     bionic/pathconf.cpp \
     bionic/pause.cpp \
     bionic/pipe.cpp \
