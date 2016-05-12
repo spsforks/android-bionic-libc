@@ -1250,6 +1250,8 @@ LIBC_PRIVATE {
     free_malloc_leak_info;
     get_malloc_leak_info;
     gMallocLeakZygoteChild;
+    packagelist_free;
+    packagelist_parse;
 } LIBC_O;
 
 LIBC_PLATFORM {
