@@ -2000,3 +2000,13 @@ TEST(pthread, pthread_spinlock_smoke) {
   ASSERT_EQ(0, pthread_spin_unlock(&lock));
   ASSERT_EQ(0, pthread_spin_destroy(&lock));
 }
+
+// On LP32, pthread_mutex is broken if PIDs don't fit in a short.
+TEST(pthread, pid_max) {
+  FILE* file = fopen("/proc/sys/kernel/pid_max", "r");
+  ASSERT_TRUE(file) << strerror(errno);
+  uint64_t pid_max;
+  ASSERT_EQ(1, fscanf(file, "%" PRIu64, &pid_max));
+  ASSERT_LE(pid_max, 65536ULL);
+  fclose(file);
+}
