@@ -73,13 +73,20 @@ class ChildGuard {
 
 static bool are_watchpoints_supported(pid_t child) {
 #if defined(__arm__)
-  long capabilities;
+  struct {
+    uint8_t num_bp, num_wp, wp_len, debug_arch;
+  } capabilities;
   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
   if (result == -1) {
-    EXPECT_EQ(EIO, errno);
+    // EIO means kernel was compiled without hardware breakpoint support.
+    // We get ENOSYS on arm binaries running on i386 devices.
+    EXPECT_TRUE(errno == EIO || errno == ENOSYS) << strerror(errno);
     return false;
   }
-  return ((capabilities >> 8) & 0xff) > 0;
+  // We support watchpoints if kernel reports having at least one watchpoint of non-zero size.
+  // Zero size is reported when the debug functionality has been disabled in the hardware. Not a
+  // particularly pretty interface, but nothing about ptrace is pretty...
+  return capabilities.num_wp > 0 && capabilities.wp_len > 0;
 #elif defined(__aarch64__)
   user_hwdebug_state dreg_state;
   iovec iov;
@@ -191,7 +198,7 @@ static void run_watchpoint_test(unsigned cpu) {
 // Test watchpoint API. The test is considered successful if our watchpoints get hit OR the
 // system reports that watchpoint support is not present. We run the test for different
 // watchpoint sizes, while pinning the process to each cpu in turn, for better coverage.
-TEST(ptrace, watchpoint_stress) {
+TEST(sys_ptrace, watchpoint_stress) {
   cpu_set_t available_cpus;
   ASSERT_EQ(0, sched_getaffinity(0, sizeof available_cpus, &available_cpus));
 
