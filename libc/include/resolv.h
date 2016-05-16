@@ -41,12 +41,19 @@ __BEGIN_DECLS
 
 #define b64_ntop __b64_ntop
 #define b64_pton __b64_pton
-extern int b64_ntop(u_char const*, size_t, char*, size_t);
-extern int b64_pton(char const*, u_char*, size_t);
+int b64_ntop(u_char const*, size_t, char*, size_t);
+int b64_pton(char const*, u_char*, size_t);
 
 #define dn_comp __dn_comp
-extern int dn_comp(const char*, u_char*, int, u_char**, u_char**);
-extern int dn_expand(const u_char*, const u_char*, const u_char*, char*, int);
+int dn_comp(const char*, u_char*, int, u_char**, u_char**);
+int dn_expand(const u_char*, const u_char*, const u_char*, char*, int);
+
+int res_init(void);
+
+#define p_class __p_class
+const char* p_class(int);
+#define p_type __p_type
+const char* p_type(int);
 
 #pragma GCC visibility pop
 __END_DECLS
