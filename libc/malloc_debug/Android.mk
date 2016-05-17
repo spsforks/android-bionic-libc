@@ -107,3 +107,26 @@ LOCAL_CFLAGS := \
     -Wno-error=format-zero-length \
 
 include $(BUILD_NATIVE_TEST)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := malloc_debug_backtrace_unit_tests
+LOCAL_MODULE_STEM_32 := $(LOCAL_MODULE)32
+LOCAL_MODULE_STEM_64 := $(LOCAL_MODULE)64
+
+LOCAL_SRC_FILES := \
+    backtrace.cpp \
+	MapData.cpp \
+    tests/log_fake.cpp \
+	tests/malloc_debug_backtrace_tests.cpp \
+
+LOCAL_SHARED_LIBRARIES := libbase
+
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/tests
+LOCAL_C_INCLUDES += bionic/libc
+
+LOCAL_CFLAGS := \
+    -Wall \
+    -Werror \
+
+include $(BUILD_NATIVE_TEST)
