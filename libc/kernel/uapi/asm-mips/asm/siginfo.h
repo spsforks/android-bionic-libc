@@ -32,7 +32,7 @@
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __ARCH_SIGSYS
-#include <asm-generic/siginfo.h>
+#include <uapi/asm-generic/siginfo.h>
 typedef struct siginfo {
   int si_signo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
