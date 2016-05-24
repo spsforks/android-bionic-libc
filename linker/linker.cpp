@@ -472,7 +472,7 @@ void soinfo::set_dt_runpath(const char* path) {
 
 static void parse_LD_PRELOAD(const char* path) {
   g_ld_preload_names.clear();
-  if (path != nullptr) {
+  if (path != nullptr && path[0] != '\0') {
     // We have historically supported ':' as well as ' ' in LD_PRELOAD.
     g_ld_preload_names = android::base::Split(path, " :");
   }
