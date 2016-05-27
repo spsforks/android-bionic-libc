@@ -38,7 +38,7 @@
 
 __BEGIN_DECLS
 
-extern sighandler_t bsd_signal(int signum, sighandler_t handler);
+extern sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
 
 static __inline int sigismember(const sigset_t *set, int signum) {
   /* Signal numbers start at 1, but bit positions start at 0. */
