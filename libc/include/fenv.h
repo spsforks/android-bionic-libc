@@ -36,23 +36,24 @@
 __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
-int feclearexcept(int) __INTRODUCED_IN(21);
-int fegetexceptflag(fexcept_t*, int) __INTRODUCED_IN(21);
-int feraiseexcept(int) __INTRODUCED_IN(21);
-int fesetexceptflag(const fexcept_t*, int) __INTRODUCED_IN(21);
-int fetestexcept(int) __INTRODUCED_IN(21);
+// fenv was always available on x86.
+int feclearexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fegetexceptflag(fexcept_t*, int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int feraiseexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fesetexceptflag(const fexcept_t*, int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fetestexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
 
-int fegetround(void) __INTRODUCED_IN(21);
-int fesetround(int) __INTRODUCED_IN(21);
+int fegetround(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fesetround(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
 
-int fegetenv(fenv_t*) __INTRODUCED_IN(21);
-int feholdexcept(fenv_t*) __INTRODUCED_IN(21);
-int fesetenv(const fenv_t*) __INTRODUCED_IN(21);
-int feupdateenv(const fenv_t*) __INTRODUCED_IN(21);
+int fegetenv(fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int feholdexcept(fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fesetenv(const fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int feupdateenv(const fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
 
-int feenableexcept(int) __INTRODUCED_IN(21);
-int fedisableexcept(int) __INTRODUCED_IN(21);
-int fegetexcept(void) __INTRODUCED_IN(21);
+int feenableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fedisableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
+int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21);
 
 /*
  * The following constant represents the default floating-point environment
