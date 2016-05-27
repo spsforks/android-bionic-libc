@@ -55,7 +55,7 @@ __BEGIN_DECLS
 #endif
 
 #if defined(__i386__)
-int ffs(int) __INTRODUCED_IN(21);
+int ffs(int) __INTRODUCED_IN(18);
 #else
 int ffs(int);
 #endif

@@ -501,6 +501,15 @@
 #define __INTRODUCED_IN_64(api_level)
 #endif
 
+// The availability of math functions in ARM and x86 was different until roughly ICS.
+#if defined(__i386__)
+#define __INTRODUCED_IN_NON_X86(x)
+#define __INTRODUCED_IN_X86 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_NON_X86 __INTRODUCED_IN
+#define __INTRODUCED_IN_X86(x)
+#endif
+
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__
 #define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
