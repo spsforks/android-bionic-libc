@@ -496,9 +496,11 @@
 #if __LP64__
 #define __INTRODUCED_IN_32(api_level)
 #define __INTRODUCED_IN_64 __INTRODUCED_IN
+#define __REMOVED_IN_64 __AVAILABILITY(obsoleted=21)
 #else
 #define __INTRODUCED_IN_32 __INTRODUCED_IN
 #define __INTRODUCED_IN_64(api_level)
+#define __REMOVED_IN_64
 #endif
 
 // The availability of math functions in ARM and x86 was different until roughly ICS.
