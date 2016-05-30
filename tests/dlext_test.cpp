@@ -626,7 +626,7 @@ TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  ASSERT_FALSE(android_init_namespaces(path.c_str(), nullptr));
+  ASSERT_FALSE(android_init_namespaces(path.c_str(), nullptr, nullptr, nullptr));
   ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
                "\"libnstest_public.so\" was not found in the default namespace", dlerror());
 
@@ -640,7 +640,7 @@ TEST(dlext, ns_smoke) {
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr, nullptr, nullptr)) << dlerror();
 
   // Check that libraries added to public namespace are NODELETE
   dlclose(handle_public);
@@ -755,7 +755,7 @@ TEST(dlext, ns_isolated) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr, nullptr, nullptr)) << dlerror();
 
   android_namespace_t* ns_not_isolated =
           android_create_namespace("private", nullptr,
@@ -862,7 +862,7 @@ TEST(dlext, ns_shared) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr, nullptr, nullptr)) << dlerror();
 
   // preload this library to the default namespace to check if it
   // is shared later on.
@@ -975,7 +975,7 @@ TEST(dlext, ns_shared_dlclose) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr, nullptr, nullptr)) << dlerror();
 
   // preload this library to the default namespace to check if it
   // is shared later on.
@@ -1115,7 +1115,7 @@ TEST(dlext, ns_anonymous) {
 
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), (lib_path + "/private_namespace_libs").c_str()))
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), (lib_path + "/private_namespace_libs").c_str(), nullptr, nullptr))
       << dlerror();
 
   android_namespace_t* ns = android_create_namespace(

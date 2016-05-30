@@ -2378,7 +2378,8 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
-bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path) {
+bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path,
+                     android_namespace_t** default_ns, android_namespace_t** anonymous_ns) {
   if (g_public_namespace_initialized) {
     DL_ERR("public namespace has already been initialized.");
     return false;
@@ -2427,6 +2428,12 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
     return false;
   }
   g_anonymous_namespace = anon_ns;
+  if (default_ns != nullptr) {
+      *default_ns = &g_default_namespace;
+  }
+  if (anonymous_ns != nullptr) {
+      *anonymous_ns = g_anonymous_namespace;
+  }
   failure_guard.disable();
   return true;
 }

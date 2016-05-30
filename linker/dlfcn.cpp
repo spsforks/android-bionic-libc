@@ -137,9 +137,12 @@ uint32_t android_get_application_target_sdk_version() {
 }
 
 bool android_init_namespaces(const char* public_ns_sonames,
-                             const char* anon_ns_library_path) {
+                             const char* anon_ns_library_path,
+                             android_namespace_t** ns_default,
+                             android_namespace_t** ns_anonymous) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  bool success = init_namespaces(public_ns_sonames, anon_ns_library_path);
+  bool success = init_namespaces(public_ns_sonames, anon_ns_library_path,
+                                 ns_default, ns_anonymous);
   if (!success) {
     __bionic_format_dlerror("android_init_namespaces failed", linker_get_error_buffer());
   }

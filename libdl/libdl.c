@@ -58,7 +58,9 @@ void android_set_application_target_sdk_version(uint32_t target __unused) { }
 uint32_t android_get_application_target_sdk_version() { return 0; }
 
 bool android_init_namespaces(const char* public_ns_sonames __unused,
-                             const char* anon_ns_library_path __unused) {
+                             const char* anon_ns_library_path __unused,
+                             struct android_namespace_t** ns_default __unused,
+                             struct android_namespace_t** ns_anonymous __unused) {
   return false;
 }
 

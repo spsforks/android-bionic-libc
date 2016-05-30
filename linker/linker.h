@@ -496,7 +496,8 @@ enum {
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,
 };
 
-bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);
+bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path,
+                     android_namespace_t** ns_default, android_namespace_t** ns_anonymous);
 android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* name,
                                       const char* ld_library_path,
