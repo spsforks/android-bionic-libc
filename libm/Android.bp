@@ -521,7 +521,6 @@ cc_library {
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-Wno-unknown-pragmas",
-        "-fvisibility=hidden",
 
         // Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
         // self recursions for lrint, lrintf, and lrintl.

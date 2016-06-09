@@ -37,7 +37,6 @@
 
 #include <sys/cdefs.h>
 
-#if __XPG_VISIBLE
 #define PASS_MAX		128	/* _PASSWORD_LEN from <pwd.h> */
 
 #define NL_ARGMAX		9
@@ -48,7 +47,6 @@
 #define NL_TEXTMAX		255
 
 #define TMP_MAX                 308915776
-#endif /* __XPG_VISIBLE */
 
 #include <sys/limits.h>
 
@@ -69,9 +67,9 @@
 #endif
 
 /* BSD compatibility definitions. */
-#if __BSD_VISIBLE
+#if defined(__USE_BSD)
 #define SIZE_T_MAX ULONG_MAX
-#endif /* __BSD_VISIBLE */
+#endif
 
 #define SSIZE_MAX LONG_MAX
 
