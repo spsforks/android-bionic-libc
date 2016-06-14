@@ -530,4 +530,12 @@ cc_library {
         never: true,
     },
     stl: "none",
+
+    // We only support Linux
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
 }
