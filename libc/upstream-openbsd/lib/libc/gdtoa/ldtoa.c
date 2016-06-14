@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include "gdtoaimp.h"
 
-#if (LDBL_MANT_DIG > DBL_MANT_DIG)
+#if (LDBL_MANT_DIG > DBL_MANT_DIG) && (LDBL_MANT_DIG > 97) && defined(__LP64__)
 
 /*
  * ldtoa() is a wrapper for gdtoa() that makes it smell like dtoa(),

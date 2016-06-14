@@ -211,7 +211,7 @@ __hdtoa(double d, const char *xdigs, int ndigits, int *decpt, int *sign,
 	return (s0);
 }
 
-#if (LDBL_MANT_DIG > DBL_MANT_DIG)
+#if (LDBL_MANT_DIG > DBL_MANT_DIG) && defined(__LP64__)
 
 /*
  * This is the long double version of __hdtoa().

@@ -166,9 +166,9 @@ res_ninit(res_state statp) {
 /* This function has to be reachable by res_data.c but not publicly. */
 int
 __res_vinit(res_state statp, int preinit) {
-#if !defined(__ANDROID__)
-	register FILE *fp;
-#endif
+//#if !defined(__ANDROID__)
+//	register FILE *fp;
+//#endif
 	register char *cp, **pp;
 #if !defined(__ANDROID__)
 	register int n;
@@ -182,9 +182,9 @@ __res_vinit(res_state statp, int preinit) {
 #ifdef RESOLVSORT
 	int nsort = 0;
 #endif
-#if !defined(__ANDROID__)
-	char *net;
-#endif
+//#if !defined(__ANDROID__)
+//	char *net;
+//#endif
 	int dots;
 	union res_sockaddr_union u[2];
 

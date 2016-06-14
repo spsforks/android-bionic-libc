@@ -28,7 +28,7 @@
 #include "fcntl.h"
 #include "locale.h"
 
-#if __ANDROID__
+//#if __ANDROID__
 
 /* LP32 had a 32-bit time_t, so we need to work around that here. */
 #if defined(__LP64__)
@@ -40,7 +40,7 @@
 
 #include <ctype.h>
 
-#endif
+//#endif
 
 struct lc_time_T {
     const char *    mon[MONSPERYEAR];

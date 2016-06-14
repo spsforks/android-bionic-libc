@@ -368,7 +368,9 @@ union local_storage {
   } u;
 };
 
+#if defined(__ANDROID__)
 static int __bionic_open_tzdata(const char*);
+#endif
 
 /* Load tz data from the file named NAME into *SP.  Read extended
    format if DOEXTEND.  Use *LSP for temporary storage.  Return 0 on
@@ -2323,6 +2325,7 @@ time(time_t *p)
 #include <stdint.h>
 #include <arpa/inet.h> // For ntohl(3).
 
+#if defined(__ANDROID__)
 static int __bionic_open_tzdata_path(const char* path_prefix_variable, const char* path_suffix,
                                      const char* olson_id) {
   const char* path_prefix = getenv(path_prefix_variable);
@@ -2461,5 +2464,6 @@ static int __bionic_open_tzdata(const char* olson_id) {
   }
   return fd;
 }
+#endif
 
 // END android-added
