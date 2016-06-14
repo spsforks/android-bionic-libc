@@ -59,4 +59,12 @@ cc_library {
     sanitize: {
         never: true,
     },
+
+    // We only support Linux
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
 }

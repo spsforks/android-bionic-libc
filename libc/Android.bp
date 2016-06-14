@@ -77,6 +77,14 @@ cc_defaults {
     },
     native_coverage: false,
     clang: true,
+
+    // We only support Linux
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
@@ -1808,6 +1816,13 @@ cc_defaults {
         },
     },
     clang: false,
+
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
 }
 
 cc_defaults {
