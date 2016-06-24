@@ -76,9 +76,7 @@
 int	getentropy(void *buf, size_t len);
 
 static int gotdata(char *buf, size_t len);
-#ifdef SYS__getrandom
 static int getentropy_getrandom(void *buf, size_t len);
-#endif
 static int getentropy_urandom(void *buf, size_t len);
 #ifdef SYS__sysctl
 static int getentropy_sysctl(void *buf, size_t len);
@@ -98,14 +96,12 @@ getentropy(void *buf, size_t len)
 		return -1;
 	}
 
-#ifdef SYS__getrandom
 	/*
 	 * Try descriptor-less getrandom()
 	 */
 	ret = getentropy_getrandom(buf, len);
 	if (ret != -1)
 		return (ret);
-#endif
 
 	/*
 	 * Try to get entropy with /dev/urandom
@@ -194,35 +190,12 @@ gotdata(char *buf, size_t len)
 	return 0;
 }
 
-#ifdef SYS__getrandom
+int getrandom(void*, size_t, unsigned int);
 static int
 getentropy_getrandom(void *buf, size_t len)
 {
-#if 0
-
-/* Hand-definitions until the API becomes commonplace */
-#ifndef SYS__getrandom
-#ifdef __LP64__
-#define SYS__getrandom 317
-#else
-#define SYS__getrandom 354
-#endif
-#endif
-	struct __getrandom_args args = {
-		.buf = buf;
-		.len = len;
-		.flags = 0;
-	};
-
-	if (len > 256)
-		return (-1);
-	ret = syscall(SYS__getrandom, &args);
-	if (ret == len)
-		return (0);
-#endif
-	return -1;
+  return (size_t)getrandom(buf, len, 0) == len ? 0 : -1;
 }
-#endif
 
 static int
 getentropy_urandom(void *buf, size_t len)
