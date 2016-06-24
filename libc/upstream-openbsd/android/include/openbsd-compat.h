@@ -66,7 +66,7 @@
 #define _PATH_TMP "/data/local/tmp/"
 
 /* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
-__LIBC_HIDDEN__ extern int getentropy(void*, size_t);
+extern int getentropy(void*, size_t);
 
 /* OpenBSD has this as API, but we just use it internally. */
 __LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
