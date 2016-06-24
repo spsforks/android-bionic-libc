@@ -1337,6 +1337,7 @@ LIBC_PRIVATE {
     get_malloc_leak_info;
     getdents; # arm x86 mips
     getdtablesize; # arm x86 mips
+    getentropy;
     gMallocLeakZygoteChild;
     index; # arm x86 mips
     issetugid; # arm x86 mips

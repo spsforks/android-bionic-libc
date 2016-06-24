@@ -354,3 +354,6 @@ int clock_gettime(clockid_t, timespec*)                 mips,mips64
 int __clock_gettime:clock_gettime(clockid_t, timespec*) arm,arm64,x86,x86_64
 int gettimeofday(timeval*, timezone*)                   mips,mips64
 int __gettimeofday:gettimeofday(timeval*, timezone*)    arm,arm64,x86,x86_64
+
+# getrandom
+int getrandom(void* buf, size_t buflen, unsigned int flags)  all
