@@ -1261,6 +1261,7 @@ LIBC_O {
     futimes;
     futimesat;
     getdomainname;
+    getentropy;
     getgrent;
     getpwent;
     getsubopt;

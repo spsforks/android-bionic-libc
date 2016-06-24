@@ -290,6 +290,8 @@ extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME
 extern int getdomainname(char*, size_t) __INTRODUCED_IN_FUTURE;
 extern int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;
 
+int getentropy(void*, size_t) __INTRODUCED_IN_FUTURE;
+
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
