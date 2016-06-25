@@ -1058,6 +1058,7 @@ cc_library_static {
         },
 
         mips: {
+            asflags: ["-fno-integrated-as"],
             srcs: [
                 "arch-mips/string/memcmp.c",
                 "arch-mips/string/memcpy.S",
@@ -1458,6 +1459,7 @@ cc_library_static {
         },
         mips: {
             srcs: ["arch-mips/syscalls/**/*.S"],
+            asflags: ["-fno-integrated-as"],
         },
         mips64: {
             srcs: ["arch-mips64/syscalls/**/*.S"],
