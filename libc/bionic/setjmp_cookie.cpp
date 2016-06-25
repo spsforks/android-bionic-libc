@@ -34,14 +34,17 @@
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 
+#include "private/arc4random_try.h"
 #include "private/bionic_globals.h"
 #include "private/libc_logging.h"
 #include "private/KernelArgumentBlock.h"
 
-void __libc_init_setjmp_cookie(libc_globals* globals,
-                               KernelArgumentBlock& args) {
-  char* random_data = reinterpret_cast<char*>(args.getauxval(AT_RANDOM));
-  long value = *reinterpret_cast<long*>(random_data + 8);
+void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
+  long value;
+  if (arc4random_try_buf(&value, sizeof(value)) == -1) {
+    char* random_data = reinterpret_cast<char*>(args.getauxval(AT_RANDOM));
+    value = *reinterpret_cast<long*>(random_data + 8);
+  }
 
   // Mask off the last bit to store the signal flag.
   globals->setjmp_cookie = value & ~1;
