@@ -29,6 +29,7 @@
 #include "libc_init_common.h"
 
 #include "private/KernelArgumentBlock.h"
+#include "private/arc4random_try.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
@@ -41,9 +42,12 @@ extern "C" int __set_tid_address(int* tid_address);
 uintptr_t __stack_chk_guard = 0;
 
 void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
-  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
-  // Take the first 4/8 for the -fstack-protector implementation.
-  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+  // Try arc4random, and fall back to AT_RANDOM.
+  if (arc4random_try_buf(&__stack_chk_guard, sizeof(__stack_chk_guard)) == -1) {
+    // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
+    // Take the first 4/8 for the -fstack-protector implementation.
+    __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+  }
 }
 
 // Setup for the main thread. For dynamic executables, this is called by the
