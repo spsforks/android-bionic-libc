@@ -43,6 +43,7 @@
 
 #include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
+#include "private/arc4random_try.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
@@ -66,9 +67,12 @@ char** environ;
 uintptr_t __stack_chk_guard = 0;
 
 void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
-  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
-  // Take the first 4/8 for the -fstack-protector implementation.
-  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+  // Try arc4random, and fall back to AT_RANDOM.
+  if (arc4random_try_buf(&__stack_chk_guard, sizeof(__stack_chk_guard)) == -1) {
+    // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
+    // Take the first 4/8 for the -fstack-protector implementation.
+    __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+  }
 }
 
 #if defined(__i386__)
