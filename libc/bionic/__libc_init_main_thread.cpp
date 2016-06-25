@@ -79,7 +79,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS.
-  __libc_init_global_stack_chk_guard(args);
+  __libc_init_global_stack_chk_guard();
 
   __init_thread(&main_thread);
   __init_tls(&main_thread);
