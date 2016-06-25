@@ -36,15 +36,12 @@
 
 #include "private/bionic_globals.h"
 #include "private/libc_logging.h"
-#include "private/KernelArgumentBlock.h"
 
-void __libc_init_setjmp_cookie(libc_globals* globals,
-                               KernelArgumentBlock& args) {
-  char* random_data = reinterpret_cast<char*>(args.getauxval(AT_RANDOM));
-  long value = *reinterpret_cast<long*>(random_data + 8);
+void __libc_init_setjmp_cookie(libc_globals* globals) {
+  arc4random_buf(&globals->setjmp_cookie, sizeof(globals->setjmp_cookie));
 
   // Mask off the last bit to store the signal flag.
-  globals->setjmp_cookie = value & ~1;
+  globals->setjmp_cookie &= ~1;
 }
 
 extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_get(long sigflag) {

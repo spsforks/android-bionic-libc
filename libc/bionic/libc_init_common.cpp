@@ -65,10 +65,8 @@ char** environ;
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
-void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
-  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
-  // Take the first 4/8 for the -fstack-protector implementation.
-  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+void __libc_init_global_stack_chk_guard() {
+  arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
 }
 
 #if defined(__i386__)
@@ -91,12 +89,12 @@ void __libc_init_globals(KernelArgumentBlock& args) {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
-  __libc_init_global_stack_chk_guard(args);
+  __libc_init_global_stack_chk_guard();
   __libc_auxv = args.auxv;
   __libc_globals.initialize();
   __libc_globals.mutate([&args](libc_globals* globals) {
     __libc_init_vdso(globals, args);
-    __libc_init_setjmp_cookie(globals, args);
+    __libc_init_setjmp_cookie(globals);
   });
 }
 
