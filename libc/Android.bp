@@ -2010,3 +2010,17 @@ cc_object {
 
     defaults: ["crt_defaults"],
 }
+
+ndk_headers {
+    name: "common_libc",
+    from: "include",
+    to: "",
+    srcs: ["include/**/*.h"],
+}
+
+ndk_library {
+    name: "ndk_libc.current",
+    libname: "libc",
+    symbol_file: "libc.map.txt",
+    first_version: "9",
+}
