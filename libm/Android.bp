@@ -531,3 +531,10 @@ cc_library {
     },
     stl: "none",
 }
+
+ndk_library {
+    name: "libm.ndk",
+    libname: "libm",
+    symbol_file: "libm.map.txt",
+    first_version: "9",
+}
