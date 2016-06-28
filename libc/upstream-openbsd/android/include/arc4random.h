@@ -27,6 +27,7 @@
 #include <pthread.h>
 #include <signal.h>
 
+#include "private/arc4random_try.h"
 #include "private/bionic_prctl.h"
 
 // Android gets these from "thread_private.h".

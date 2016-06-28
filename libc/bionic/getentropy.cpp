@@ -63,31 +63,8 @@ int getentropy(void* buf, size_t len) {
     return ret;
   }
 
-  /*
-   * Entropy collection via /dev/urandom and sysctl have failed.
-   *
-   * No other API exists for collecting entropy.  See the large
-   * comment block above.
-   *
-   * We have very few options:
-   *     - Even syslog_r is unsafe to call at this low level, so
-   *	 there is no way to alert the user or program.
-   *     - Cannot call abort() because some systems have unsafe
-   *	 corefiles.
-   *     - Could raise(SIGKILL) resulting in silent program termination.
-   *     - Return EIO, to hint that arc4random's stir function
-   *       should raise(SIGKILL)
-   *     - Do the best under the circumstances....
-   *
-   * This code path exists to bring light to the issue that Linux
-   * does not provide a failsafe API for entropy collection.
-   *
-   * We hope this demonstrates that Linux should either retain their
-   * sysctl ABI, or consider providing a new failsafe API which
-   * works in a chroot or when file descriptors are exhausted.
-   */
-  raise(SIGKILL);
-  __builtin_trap();
+  errno = EIO;
+  return -1;
 }
 
 /*

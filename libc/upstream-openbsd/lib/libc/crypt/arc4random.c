@@ -81,13 +81,18 @@ _rs_init(u_char *buf, size_t n)
 	chacha_ivsetup(&rsx->rs_chacha, buf + KEYSZ);
 }
 
-static void
-_rs_stir(void)
+static int
+_rs_stir(int try)
 {
 	u_char rnd[KEYSZ + IVSZ];
 
-	if (getentropy(rnd, sizeof rnd) == -1)
-		_getentropy_fail();
+	if (getentropy(rnd, sizeof rnd) == -1) {
+		if (try) {
+			return -1;
+		} else {
+			_getentropy_fail();
+		}
+	}
 
 	if (!rs)
 		_rs_init(rnd, sizeof(rnd));
@@ -100,18 +105,23 @@ _rs_stir(void)
 	memset(rsx->rs_buf, 0, sizeof(rsx->rs_buf));
 
 	rs->rs_count = 1600000;
+	return 0;
 }
 
-static inline void
-_rs_stir_if_needed(size_t len)
+static inline int
+_rs_stir_if_needed(size_t len, int try)
 {
 	_rs_forkdetect();
-	if (!rs || rs->rs_count <= len)
-		_rs_stir();
+	if (!rs || rs->rs_count <= len) {
+		if (_rs_stir(try) == -1) {
+			return -1;
+		}
+	}
 	if (rs->rs_count <= len)
 		rs->rs_count = 0;
 	else
 		rs->rs_count -= len;
+	return 0;
 }
 
 static inline void
@@ -137,14 +147,15 @@ _rs_rekey(u_char *dat, size_t datlen)
 	rs->rs_have = sizeof(rsx->rs_buf) - KEYSZ - IVSZ;
 }
 
-static inline void
-_rs_random_buf(void *_buf, size_t n)
+static inline int
+_rs_random_buf(void *_buf, size_t n, int try)
 {
 	u_char *buf = (u_char *)_buf;
 	u_char *keystream;
 	size_t m;
 
-	_rs_stir_if_needed(n);
+	if (_rs_stir_if_needed(n, try) == -1)
+		return -1;
 	while (n > 0) {
 		if (rs->rs_have > 0) {
 			m = min(n, rs->rs_have);
@@ -159,6 +170,7 @@ _rs_random_buf(void *_buf, size_t n)
 		if (rs->rs_have == 0)
 			_rs_rekey(NULL, 0);
 	}
+	return 0;
 }
 
 static inline void
@@ -166,7 +178,7 @@ _rs_random_u32(uint32_t *val)
 {
 	u_char *keystream;
 
-	_rs_stir_if_needed(sizeof(*val));
+	_rs_stir_if_needed(sizeof(*val), 0);
 	if (rs->rs_have < sizeof(*val))
 		_rs_rekey(NULL, 0);
 	keystream = rsx->rs_buf + sizeof(rsx->rs_buf) - rs->rs_have;
@@ -190,6 +202,19 @@ void
 arc4random_buf(void *buf, size_t n)
 {
 	_ARC4_LOCK();
-	_rs_random_buf(buf, n);
+	_rs_random_buf(buf, n, 0);
 	_ARC4_UNLOCK();
+}
+
+int
+arc4random_try_buf(void *buf, size_t n)
+{
+	int result = n;
+
+	_ARC4_LOCK();
+	if (_rs_random_buf(buf, n, 1) == -1) {
+		result = -1;
+	}
+	_ARC4_UNLOCK();
+	return n;
 }
