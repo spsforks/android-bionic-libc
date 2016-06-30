@@ -156,10 +156,8 @@
 #define _Nonnull
 #endif
 
-#define __nonnull(args) __attribute__((__nonnull__ args))
-
-#define __printflike(x, y) __attribute__((__format__(printf, x, y))) __nonnull((x))
-#define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
+#define __printflike(x, y) __attribute__((__format__(printf, x, y)))
+#define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
 
 /*
  * GNU C version 2.96 added explicit branch prediction so that
