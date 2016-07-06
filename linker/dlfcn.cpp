@@ -225,11 +225,11 @@ static const char ANDROID_LIBDL_STRTAB[] =
   // 012345678901234 567890123456789012345678901234567 8901234567890123456789012345678901 2345678901234567 89
     "et_sdk_version\0__loader_android_init_namespaces\0__loader_android_create_namespace\0__loader_dlvsym\0__"
   // 4*
-  // 0000000000111111111122222 2222233333333334444444 4445555555555666666666677777777778 8888888889999999 999
-  // 0123456789012345678901234 5678901234567890123456 7890123456789012345678901234567890 1234567890123456 789
-    "loader_android_dlwarning\0"
+  // 0000000000111111111122222 2222233333333334444444 444555555555566666666667777 77777788888888889999999999
+  // 0123456789012345678901234 5678901234567890123456 789012345678901234567890123 45678901234567890123456789
+    "loader_android_dlwarning\0__loader_cfi_slowpath\0__loader_cfi_slowpath_diag\0"
 #if defined(__arm__)
-  // 425
+  // 474
     "__loader_dl_unwind_find_exidx\0"
 #endif
     ;
@@ -255,8 +255,10 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)(348, &__android_create_namespace, 1),
   ELFW(SYM_INITIALIZER)(382, &__dlvsym, 1),
   ELFW(SYM_INITIALIZER)(398, &__android_dlwarning, 1),
+  ELFW(SYM_INITIALIZER)(425, &___cfi_slowpath, 1),
+  ELFW(SYM_INITIALIZER)(447, &___cfi_slowpath_diag, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(425, &__dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(474, &__dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -273,9 +275,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
