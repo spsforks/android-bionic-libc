@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include "linker_debug.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -338,6 +339,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
 
+  // Report the main executable to CFI.
+  get_cfi_shadow()->AfterLoad(&somain, 1, solist);
+
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
   size_t ld_preloads_count = 0;
@@ -367,6 +371,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   }
 
   add_vdso(args);
+
+  get_cfi_shadow()->InitialLinkDone(solist);
 
   {
     ProtectedDataGuard guard;
