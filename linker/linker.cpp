@@ -52,6 +52,7 @@
 
 #include "linker.h"
 #include "linker_block_allocator.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_debug.h"
 #include "linker_sleb128.h"
@@ -154,6 +155,8 @@ static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_lis
 static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
+
+static CFIShadow g_cfi_shadow;
 
 static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
@@ -2049,6 +2052,8 @@ static bool find_libraries(android_namespace_t* ns,
     local_group.front()->increment_ref_count();
   }
 
+  g_cfi_shadow.AfterLoad(soinfos, soinfos_count, solist);
+
   return linked;
 }
 
@@ -2179,6 +2184,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
 
   while ((si = local_unload_list.pop_front()) != nullptr) {
     notify_gdb_of_unload(si);
+    g_cfi_shadow.BeforeUnload(si);
     soinfo_free(si);
   }
 
@@ -2310,6 +2316,32 @@ static soinfo* soinfo_from_handle(void* handle) {
   }
 
   return static_cast<soinfo*>(handle);
+}
+
+void __cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr) {
+  uint16_t v = g_cfi_shadow.Load(Ptr);
+  switch (v) {
+    case CFIShadow::kInvalidShadow:
+      CFIShadow::CfiFail(CallSiteTypeId, Ptr, nullptr, __builtin_return_address(0));
+      break;
+    case CFIShadow::kUncheckedShadow:
+      break;
+    default:
+      g_cfi_shadow.CallCfiCheck(v, CallSiteTypeId, Ptr, nullptr);
+  }
+}
+
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData) {
+  uint16_t v = g_cfi_shadow.Load(Ptr);
+  switch (v) {
+    case CFIShadow::kInvalidShadow:
+      CFIShadow::CfiFail(CallSiteTypeId, Ptr, DiagData, __builtin_return_address(0));
+      break;
+    case CFIShadow::kUncheckedShadow:
+      break;
+    default:
+      g_cfi_shadow.CallCfiCheck(v, CallSiteTypeId, Ptr, DiagData);
+  }
 }
 
 bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
