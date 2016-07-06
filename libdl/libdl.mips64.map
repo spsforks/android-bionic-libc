@@ -18,6 +18,12 @@ LIBC_N {
     dlvsym;
 } LIBC;
 
+LIBC_O {
+  global:
+    __cfi_slowpath;
+    __cfi_slowpath_diag;
+} LIBC_N;
+
 LIBC_PLATFORM {
   global:
     android_get_application_target_sdk_version;
@@ -26,4 +32,4 @@ LIBC_PLATFORM {
     android_update_LD_LIBRARY_PATH;
     android_init_namespaces;
     android_create_namespace;
-} LIBC_N;
+} LIBC_O;
