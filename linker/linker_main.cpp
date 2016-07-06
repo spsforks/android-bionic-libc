@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include "linker_debug.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -61,6 +62,12 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
+
+static CFIShadow g_cfi_shadow;
+
+CFIShadow* get_cfi_shadow() {
+  return &g_cfi_shadow;
+}
 
 void solist_add_soinfo(soinfo* si) {
   sonext->next = si;
@@ -324,6 +331,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
+
+  // Report the main executable to CFI.
+  g_cfi_shadow.AfterLoad(&somain, 1, solist);
 
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
