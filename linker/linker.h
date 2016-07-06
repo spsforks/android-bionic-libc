@@ -103,6 +103,8 @@ void count_relocation(RelocationKind kind);
 
 soinfo* get_libdl_info();
 
+soinfo* find_containing_library(const void* p);
+
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, void* caller_addr);
@@ -114,6 +116,9 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
               void* caller_addr, void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
+
+void __cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr);
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData);
 
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
