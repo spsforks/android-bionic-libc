@@ -85,6 +85,12 @@ struct android_namespace_t* __loader_android_create_namespace(
                                 struct android_namespace_t* parent,
                                 const void* caller_addr);
 
+__attribute__((__weak__, visibility("default")))
+void __loader_cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr, void *Ret);
+
+__attribute__((__weak__, visibility("default")))
+void __loader_cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
+
 // Proxy calls to bionic loader
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
@@ -165,3 +171,11 @@ struct android_namespace_t* android_create_namespace(const char* name,
 }
 
 void android_dlwarning(void* obj, void (*f)(void*, const char*)) { f(obj, 0); }
+
+void __cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr) {
+  __loader_cfi_slowpath(CallSiteTypeId, Ptr, __builtin_return_address(0));
+}
+
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData) {
+  __loader_cfi_slowpath_diag(CallSiteTypeId, Ptr, DiagData, __builtin_return_address(0));
+}
