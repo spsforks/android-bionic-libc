@@ -48,6 +48,7 @@
 
 #include "linker.h"
 #include "linker_block_allocator.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_debug.h"
@@ -104,6 +105,12 @@ static const char* const kAsanDefaultLdPaths[] = {
 
 // Is ASAN enabled?
 static bool g_is_asan = false;
+
+static CFIShadowWriter g_cfi_shadow;
+
+CFIShadowWriter* get_cfi_shadow() {
+  return &g_cfi_shadow;
+}
 
 static bool is_system_library(const std::string& realpath) {
   for (const auto& dir : g_default_namespace.get_default_library_paths()) {
@@ -1226,7 +1233,7 @@ static bool load_library(android_namespace_t* ns,
 //    target_sdk_version (*candidate != nullptr)
 // 2. The library was not found by soname (*candidate is nullptr)
 static bool find_loaded_library_by_soname(android_namespace_t* ns,
-                                          const char* name, soinfo** candidate) {
+                                         const char* name, soinfo** candidate) {
   *candidate = nullptr;
 
   // Ignore filename with path.
@@ -1526,6 +1533,14 @@ bool find_libraries(android_namespace_t* ns,
     local_group.front()->increment_ref_count();
   }
 
+  // Update CFI data for the freshly loaded libraries.
+  std::vector<soinfo*> new_soinfos;
+  new_soinfos.reserve(load_list.size());
+  for (const auto& task : load_list) {
+    new_soinfos.push_back(task->get_soinfo());
+  }
+  get_cfi_shadow()->AfterLoad(&new_soinfos[0], new_soinfos.size(), solist_get_head());
+
   return linked;
 }
 
@@ -1656,6 +1671,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
 
   while ((si = local_unload_list.pop_front()) != nullptr) {
     notify_gdb_of_unload(si);
+    get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
 
