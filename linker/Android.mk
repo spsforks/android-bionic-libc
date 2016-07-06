@@ -22,6 +22,7 @@ LOCAL_SRC_FILES := \
     dlfcn.cpp \
     linker.cpp \
     linker_block_allocator.cpp \
+    linker_cfi.cpp \
     linker_gdb_support.cpp \
     linker_libc_support.c \
     linker_mapped_file_fragment.cpp \

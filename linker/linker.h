@@ -461,6 +461,9 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
 
 int do_dladdr(const void* addr, Dl_info* info);
 
+void __cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr);
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData);
+
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
 

@@ -28,6 +28,7 @@
 #ifndef __DLFCN_H__
 #define __DLFCN_H__
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
@@ -50,6 +51,9 @@ extern void* dlsym(void* handle, const char* _Nonnull symbol);
 extern void* dlvsym(void* handle, const char* _Nonnull symbol, const char* _Nonnull version)
   __INTRODUCED_IN(24);
 extern int dladdr(const void* addr, Dl_info *info);
+
+extern void __cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr);
+extern void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData);
 
 enum {
 #if defined(__LP64__)
