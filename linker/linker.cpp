@@ -50,6 +50,7 @@
 
 #include "linker.h"
 #include "linker_block_allocator.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_debug.h"
@@ -1534,6 +1535,8 @@ bool find_libraries(android_namespace_t* ns,
     local_group.front()->increment_ref_count();
   }
 
+  get_cfi_shadow()->AfterLoad(soinfos, soinfos_count, solist_get_head());
+
   return linked;
 }
 
@@ -1664,6 +1667,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
 
   while ((si = local_unload_list.pop_front()) != nullptr) {
     notify_gdb_of_unload(si);
+    get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
 
@@ -1856,6 +1860,32 @@ static soinfo* soinfo_from_handle(void* handle) {
   }
 
   return static_cast<soinfo*>(handle);
+}
+
+void __cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr) {
+  uint16_t v = get_cfi_shadow()->Load(Ptr);
+  switch (v) {
+    case CFIShadow::kInvalidShadow:
+      CFIShadow::CfiFail(CallSiteTypeId, Ptr, nullptr, __builtin_return_address(0));
+      break;
+    case CFIShadow::kUncheckedShadow:
+      break;
+    default:
+      get_cfi_shadow()->CallCfiCheck(v, CallSiteTypeId, Ptr, nullptr);
+  }
+}
+
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData) {
+  uint16_t v = get_cfi_shadow()->Load(Ptr);
+  switch (v) {
+    case CFIShadow::kInvalidShadow:
+      CFIShadow::CfiFail(CallSiteTypeId, Ptr, DiagData, __builtin_return_address(0));
+      break;
+    case CFIShadow::kUncheckedShadow:
+      break;
+    default:
+      get_cfi_shadow()->CallCfiCheck(v, CallSiteTypeId, Ptr, DiagData);
+  }
 }
 
 bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
@@ -3222,4 +3252,3 @@ void init_default_namespace() {
 
   g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
 };
-

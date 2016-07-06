@@ -37,6 +37,12 @@ int dladdr(const void* addr __unused, Dl_info* info __unused) { return 0; }
 
 int dlclose(void* handle __unused) { return 0; }
 
+void __cfi_slowpath(uint64_t CallSiteTypeId __unused, void* Ptr __unused) {
+}
+void __cfi_slowpath_diag(uint64_t CallSiteTypeId __unused, void* Ptr __unused,
+                         void* DiagData __unused) {
+}
+
 #if defined(__arm__)
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc __unused, int* pcount __unused) { return 0; }
 #endif

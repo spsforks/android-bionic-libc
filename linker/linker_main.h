@@ -31,6 +31,7 @@
 
 #include <android/dlext.h>
 
+#include "linker_cfi.h"
 #include "linker_namespaces.h"
 #include "linker_soinfo.h"
 
@@ -64,5 +65,7 @@ void solist_add_soinfo(soinfo* si);
 bool solist_remove_soinfo(soinfo* si);
 soinfo* solist_get_head();
 soinfo* solist_get_somain();
+
+CFIShadow* get_cfi_shadow();
 
 #endif
