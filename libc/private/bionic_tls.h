@@ -74,6 +74,11 @@ enum {
   // state.
   TLS_SLOT_TSAN,
 
+  // Different from OPENGL dedicated slots used by framework, these two are
+  // provided to be used by vendor graphic HAL.
+  TLS_SLOT_GFX_API = 9,
+  TLS_SLOT_GFX = 10,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
 
