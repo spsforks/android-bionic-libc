@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Dan Willemsen <dwillemsen@google.com>
+Autosubmit+1: Colin Cross <ccross@android.com>
+Verified+1: Colin Cross <ccross@android.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Thu, 14 Jul 2016 21:05:27 +0000
+Reviewed-on: https://android-review.googlesource.com/247620
+Project: platform/bionic
+Branch: refs/heads/master
