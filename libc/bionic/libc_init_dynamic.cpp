@@ -44,10 +44,12 @@
  *   initialized.
  */
 
+#include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <elf.h>
 #include "libc_init_common.h"
 
@@ -82,6 +84,10 @@ __attribute__((constructor)) static void __libc_preinit() {
   netdClientInit();
 }
 
+#if defined(__LP64__) && defined(__ANDROID__)
+void __dump_memcpy();
+#endif
+
 // This function is called from the executable's _start entry point
 // (see arch-$ARCH/bionic/crtbegin_dynamic.S), which is itself
 // called by the dynamic linker after it has loaded all shared
@@ -95,6 +101,14 @@ __noreturn void __libc_init(void* raw_args,
                             structors_array_t const * const structors) {
 
   KernelArgumentBlock args(raw_args);
+
+#if defined(__LP64__) && defined(__ANDROID__)
+  signal(SIGALRM, (void (*)(int))__dump_memcpy);
+
+  alarm(10);
+
+  __cxa_atexit((void(*)(void*))__dump_memcpy, NULL, NULL);
+#endif
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.

@@ -43,6 +43,12 @@ ENTRY(__memcpy_chk)
   bl __memcpy_chk_fail
 END(__memcpy_chk)
 
+#if 0
 ENTRY(memcpy)
   #include "memcpy_base.S"
 END(memcpy)
+#else
+ENTRY(__memcpy)
+  #include "memcpy_base.S"
+END(__memcpy)
+#endif

@@ -1037,6 +1037,7 @@ cc_library_static {
                 "arch-arm64/bionic/setjmp.S",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
+                "bionic/memcpy.cpp",
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
