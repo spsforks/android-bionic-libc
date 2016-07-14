@@ -188,10 +188,12 @@ void* memrchr(const void *s, int c, size_t n) {
     return __memrchr_chk(s, c, n, bos);
 }
 
+#if !defined(__LP64__)
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
     return __builtin___memcpy_chk(dest, src, copy_amount, __bos0(dest));
 }
+#endif
 
 __BIONIC_FORTIFY_INLINE
 void* memmove(void *dest, const void *src, size_t len) {

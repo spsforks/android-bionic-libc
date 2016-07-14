@@ -29,12 +29,14 @@
 #include <android/api-level.h>
 #include <elf.h>
 #include <errno.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "libc_init_common.h"
 #include "pthread_internal.h"
@@ -69,6 +71,10 @@ static void apply_gnu_relro() {
   }
 }
 
+#if defined(__LP64__) && defined(__ANDROID__)
+void __dump_memcpy();
+#endif
+
 // The program startup function __libc_init() defined here is
 // used for static executables only (i.e. those that don't depend
 // on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
@@ -97,6 +103,14 @@ __noreturn void __libc_init(void* raw_args,
 
   call_array(structors->preinit_array);
   call_array(structors->init_array);
+
+#if defined(__LP64__) && defined(__ANDROID__)
+  signal(SIGALRM, (void (*)(int))__dump_memcpy);
+
+  alarm(10);
+
+  __cxa_atexit((void(*)(void*))__dump_memcpy, NULL, NULL);
+#endif
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
