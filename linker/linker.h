@@ -502,4 +502,6 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace);
 
+constexpr size_t kLibraryAlignment = 1UL << 18;
+
 #endif
