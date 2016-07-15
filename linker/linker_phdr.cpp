@@ -415,6 +415,73 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
+template <typename T>
+T* align_down(T* p, size_t align) {
+  return reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(p) & ~(align - 1));
+}
+
+template <typename T>
+T* align_up(T* p, size_t align) {
+  return reinterpret_cast<T*>((reinterpret_cast<uintptr_t>(p) + align - 1) & ~(align - 1));
+}
+
+uintptr_t align_down(uintptr_t p, size_t align) {
+  return p & ~(align - 1);
+}
+
+uintptr_t align_up(uintptr_t p, size_t align) {
+  return (p + align - 1) & ~(align - 1);
+}
+
+// Reserve a virtual address range such that if it's limits were extended to the next 2**align
+// boundary, it would not overlap with any existing mappings.
+static void* ReserveAligned(void* hint, size_t size, size_t align) {
+  int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
+  if (align == PAGE_SIZE) {
+    void* mmap_ptr = mmap(hint, size, PROT_NONE, mmap_flags, -1, 0);
+    if (mmap_ptr == MAP_FAILED) {
+      return nullptr;
+    }
+    return mmap_ptr;
+  }
+
+  uint8_t* addr_hint = reinterpret_cast<uint8_t*>(hint);
+  uint8_t* mmap_hint;
+  size_t mmap_size;
+  // Allocate enough space so that the end of the desired region aligned up is still inside the
+  // mapping.
+  if (addr_hint == nullptr) {
+    mmap_hint = nullptr;
+    mmap_size = align_up(size, align) + align - PAGE_SIZE;
+  } else {
+    mmap_hint = align_down(addr_hint, align);
+    mmap_size = align_up(size + (addr_hint - mmap_hint), align) + align - PAGE_SIZE;
+  }
+
+  uint8_t* mmap_ptr =
+      reinterpret_cast<uint8_t*>(mmap(mmap_hint, mmap_size, PROT_NONE, mmap_flags, -1, 0));
+  if (mmap_ptr == MAP_FAILED) {
+    return nullptr;
+  }
+  uint8_t* start;
+  if (mmap_hint == mmap_ptr) {
+    start = addr_hint;
+  } else {
+    uint8_t* first = align_up(mmap_ptr, align);
+    uint8_t* last = align_down(mmap_ptr + mmap_size, align) - size;
+    size_t n = arc4random_uniform((last - first) / PAGE_SIZE + 1);
+    start = first + n * PAGE_SIZE;
+  }
+
+  CHECK(align_down(start, align) >= mmap_ptr);
+  CHECK(align_up(start + size, align) <= mmap_ptr + mmap_size);
+#if !defined(__LP64__)
+  munmap(mmap_ptr, start - mmap_ptr);
+  munmap(start + size, mmap_ptr + mmap_size - (start + size));
+#endif
+  return start;
+}
+
 // Reserve a virtual address range big enough to hold all loadable
 // segments of a program header table. This is done by creating a
 // private anonymous mmap() with PROT_NONE.
@@ -456,9 +523,8 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
              reserved_size - load_size_, load_size_, name_.c_str());
       return false;
     }
-    int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-    start = mmap(mmap_hint, load_size_, PROT_NONE, mmap_flags, -1, 0);
-    if (start == MAP_FAILED) {
+    start = ReserveAligned(mmap_hint, load_size_, kLibraryAlignment);
+    if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
     }
