@@ -55,6 +55,8 @@
 // functions' state and vice versa.
 
 #define LOGIN_NAME_MAX 32
+#define DIR_NAME_MAX 32
+#define INTERPRETER_MAX 32
 
 struct group_state_t {
   group group_;
@@ -67,8 +69,8 @@ struct group_state_t {
 struct passwd_state_t {
   passwd passwd_;
   char name_buffer_[LOGIN_NAME_MAX];
-  char dir_buffer_[32];
-  char sh_buffer_[32];
+  char dir_buffer_[DIR_NAME_MAX];
+  char sh_buffer_[INTERPRETER_MAX];
   ssize_t getpwent_idx;
 };
 
@@ -343,9 +345,46 @@ static id_t oem_id_from_name(const char* name) {
   return static_cast<id_t>(id);
 }
 
+#define FILE_ARRAY_LEN 2
+
+#define LEN(x) (sizeof(x)/sizeof(x[0]))
+
+// For each file passwd and group, token 2 is always the AID
+#define TOKEN_AID_INDEX 2
+
+enum data_source {
+  SOURCE_PASSWD,
+  SOURCE_GROUP,
+};
+
+union group_fields {
+  struct {
+#define GROUP_TOKEN_CNT 4
+  char *group_name;
+  char *password;
+  char *gid;
+  char *user_list;
+  };
+  char *tokens[GROUP_TOKEN_CNT];
+};
+
+union passwd_fields {
+  struct {
+#define PASSWD_TOKEN_CNT 7
+  char *login_name;
+  char *password;
+  char *uid;
+  char *gid;
+  char *user_name;
+  char *homedir;
+  char *interpreter;
+  };
+  char *tokens[PASSWD_TOKEN_CNT];
+};
+
 // Splits a string of fields on delim, including empty fields, storing each field into the token
 // array. Returns true on success, false on error.
-static bool split(char *line, char delim, const char **tokens, size_t ntokens) {
+static bool split(char *line, char delim, char **tokens, size_t ntokens) {
   char *field;
   size_t i = 0;
   char *cur = line;
@@ -368,7 +407,7 @@ static bool split(char *line, char delim, const char **tokens, size_t ntokens) {
 // caller must free(const_cast<char *>(tokens[0])) after use (return values > 0)
 // if id is non-zero, find match to id, else find match to name and return to id
 static ssize_t _parse_tokens(const char *filename, id_t &id,
-                             const char **tokens, size_t ntokens, char *name) {
+                             char **tokens, size_t ntokens, char *name) {
   if (ntokens < 3) {
     return -EINVAL;
   }
@@ -396,8 +435,9 @@ static ssize_t _parse_tokens(const char *filename, id_t &id,
     }
 
     char *end;
-    unsigned long id_entry = strtoul(tokens[2], &end, 0);
-    if ((end == tokens[2]) || (*end != '\0')) {
+    char *aid = tokens[TOKEN_AID_INDEX];
+    unsigned long id_entry = strtoul(aid, &end, 0);
+    if ((end == aid) || (*end != '\0')) {
       continue;
     }
 
@@ -426,26 +466,60 @@ static ssize_t _parse_tokens(const char *filename, id_t &id,
   return 0;
 }
 
-static ssize_t parse_tokens(const char *basename, id_t &id,
-                            const char **tokens, size_t ntokens, char *name) {
-  static const char system_path[] = "/system/etc/";
-  static const char vendor_path[] = "/vendor/etc/";
-  char filename[sizeof(system_path) + strlen(basename)];
+static ssize_t _search(enum data_source source, id_t &id,
+    char *tokens[], size_t ntokens, char *name) {
+  ssize_t ret;
+  static const char *files[][FILE_ARRAY_LEN] = {
+    { "/system/etc/passwd", "/vendor/etc/passwd" },
+    { "/system/etc/group", "/vendor/etc/group" },
+  };
 
-  memset(tokens, 0, sizeof(*tokens) * ntokens);
-
-  memcpy(filename, system_path, sizeof(system_path) - 1);
-  strcpy(filename + sizeof(system_path) - 1, basename);
-  ssize_t ret = _parse_tokens(filename, id, tokens, ntokens, name);
-  if (ret > 0) {
-    return ret;
+  for(unsigned i=0; i < FILE_ARRAY_LEN; i++) {
+    ret = _parse_tokens(files[source][i], id, tokens, ntokens, name);
+    if (ret > 0) {
+      break;
+    }
   }
 
-  memcpy(filename, vendor_path, sizeof(vendor_path) - 1);
-  if (sizeof(system_path) != sizeof(vendor_path)) {
-    strcpy(filename + sizeof(vendor_path) - 1, basename);
-  }
-  return _parse_tokens(filename, id, tokens, ntokens, name);
+  return ret;
+}
+
+static inline void passwd_field_free(passwd_fields *fields) {
+  free(const_cast<char *>(fields->tokens[0]));
+}
+
+static inline void group_field_free(group_fields *fields) {
+  free(const_cast<char *>(fields->tokens[0]));
+}
+
+static inline void passwd_fields_copy_to_passwd(passwd_fields *fields, passwd* pwd) {
+    if (fields->homedir) {
+      snprintf(pwd->pw_dir, DIR_NAME_MAX, "%s", fields->homedir);
+    }
+
+    if (fields->interpreter) {
+      snprintf(pwd->pw_shell, INTERPRETER_MAX, "%s", fields->interpreter);
+    }
+
+    if (fields->gid) {
+      char *end;
+      id_t id = strtoul(fields->gid, &end, 10);
+      if (id && (end != fields->gid) && (*end == '\0')) {
+        pwd->pw_gid = id;
+      }
+    }
+}
+
+static inline bool search_passwd(id_t &uid, passwd_fields *fields, char *name) {
+  char **tokens = fields->tokens;
+  size_t ntokens = LEN(fields->tokens);
+  return _search(SOURCE_PASSWD, uid, tokens, ntokens, name) > 0;
+}
+
+static inline bool search_group(id_t &uid, group_fields *fields, char *name) {
+  char **tokens = fields->tokens;
+  size_t ntokens = LEN(fields->tokens);
+  return _search(SOURCE_GROUP, uid, tokens, ntokens, name) > 0;
 }
 
 static passwd* oem_id_to_passwd(uid_t uid, const char *name, passwd_state_t* state) {
@@ -460,13 +534,14 @@ static passwd* oem_id_to_passwd(uid_t uid, const char *name, passwd_state_t* sta
     return NULL;
   }
 
-  const char *tokens[7];
-  ssize_t i = parse_tokens("passwd", uid,
-                           tokens, sizeof(tokens) / sizeof(tokens[0]),
-                           state->name_buffer_);
+  passwd_fields fields = {
+  .tokens = { 0 },
+  };
+
+  bool hit = search_passwd(uid, &fields, state->name_buffer_);
   if (!is_oem_id(uid)) {
-    if (i > 0) {
-      free(const_cast<char *>(tokens[0]));
+    if (hit) {
+      passwd_field_free(&fields);
     }
     return NULL;
   }
@@ -481,23 +556,9 @@ static passwd* oem_id_to_passwd(uid_t uid, const char *name, passwd_state_t* sta
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
 
-  if (i > 0) {
-    if (tokens[5] && tokens[5][0]) {
-      snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "%s", tokens[5]);
-    }
-    if (tokens[6] && tokens[6][0]) {
-      snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "%s", tokens[6]);
-    }
-
-    if (tokens[3] && tokens[3][0]) {
-      char *end;
-      id_t id = strtoul(tokens[3], &end, 10);
-      if (id && (end != tokens[3]) && (*end == '\0')) {
-        pw->pw_gid = id;
-      }
-    }
-
-    free(const_cast<char *>(tokens[0]));
+  if (hit) {
+    passwd_fields_copy_to_passwd(&fields, pw);
+    passwd_field_free(&fields);
   }
 
   return pw;
@@ -516,12 +577,12 @@ static group* oem_id_to_group(gid_t gid, const char *name, group_state_t* state)
     return NULL;
   }
 
-  const char *tokens[3];
-  ssize_t i = parse_tokens("group", gid,
-                           tokens, sizeof(tokens) / sizeof(tokens[0]),
-                           state->group_name_buffer_);
-  if (i > 0) {
-    free(const_cast<char *>(tokens[0]));
+  group_fields fields = {
+  .tokens = { 0 },
+  };
+  bool hit = search_group(gid, &fields, state->group_name_buffer_);
+  if (hit) {
+    group_field_free(&fields);
   }
   if (!is_oem_id(gid)) {
     return NULL;
