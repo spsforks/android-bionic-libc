@@ -177,7 +177,11 @@ mode_t umask(mode_t mode) {
 }
 #endif /* defined(__BIONIC_FORTIFY) */
 
-__BIONIC_LEGACY_INLINE int mkfifo(const char*, mode_t);
+#if __ANDROID_API__ > 21
+// Implemented as a static inline before 21.
+int mkfifo(const char*, mode_t);
+#endif
+
 extern int mkfifoat(int, const char*, mode_t) __INTRODUCED_IN(23);
 
 extern int fchmodat(int, const char*, mode_t, int);

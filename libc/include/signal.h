@@ -110,15 +110,18 @@ struct sigaction {
 
 extern int sigaction(int, const struct sigaction*, struct sigaction*);
 
-__BIONIC_LEGACY_INLINE sighandler_t signal(int, sighandler_t);
-
 extern int siginterrupt(int, int);
 
-__BIONIC_LEGACY_INLINE int sigaddset(sigset_t*, int);
-__BIONIC_LEGACY_INLINE int sigdelset(sigset_t*, int);
-__BIONIC_LEGACY_INLINE int sigemptyset(sigset_t*);
-__BIONIC_LEGACY_INLINE int sigfillset(sigset_t*);
-__BIONIC_LEGACY_INLINE int sigismember(const sigset_t*, int);
+#if __ANDROID_API__ >= 21
+// Implemented as static inlines before 21.
+sighandler_t signal(int, sighandler_t);
+
+int sigaddset(sigset_t*, int);
+int sigdelset(sigset_t*, int);
+int sigemptyset(sigset_t*);
+int sigfillset(sigset_t*);
+int sigismember(const sigset_t*, int);
+#endif
 
 extern int sigpending(sigset_t* _Nonnull);
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
