@@ -47,7 +47,7 @@ extern int __register_atfork(void (*)(void), void(*)(void), void (*)(void), void
 static inline void
 _getentropy_fail(void)
 {
-	__libc_fatal("getentropy failed");
+      //	__libc_fatal("getentropy failed");
 }
 
 volatile sig_atomic_t _rs_forked;
