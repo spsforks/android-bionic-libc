@@ -46,7 +46,7 @@ extern int __register_atfork(void (*)(void), void(*)(void), void (*)(void), void
 static inline void
 _getentropy_fail(void)
 {
-	raise(SIGKILL);
+//	raise(SIGKILL);
 }
 
 volatile sig_atomic_t _rs_forked;
