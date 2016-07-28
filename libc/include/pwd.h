@@ -122,8 +122,16 @@ struct passwd* getpwent(void) __INTRODUCED_IN_FUTURE;
 void setpwent(void) __INTRODUCED_IN_FUTURE;
 void endpwent(void) __INTRODUCED_IN_FUTURE;
 
+
+#if __ANDROID_API__ >= 12
 int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+#if __ANDROID_API__ >= 12
 int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 __END_DECLS
 

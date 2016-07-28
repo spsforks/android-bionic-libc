@@ -35,24 +35,72 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 16
 int fsetxattr(int fd, const char* name, const void* value, size_t size, int flags)
   __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 int setxattr(const char* path, const char* name, const void* value, size_t size, int flags)
   __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 int lsetxattr(const char* path, const char* name, const void* value, size_t size, int flags)
   __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
 
+
+
+#if __ANDROID_API__ >= 16
 ssize_t fgetxattr(int fd, const char* name, void* value, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 ssize_t getxattr(const char* path, const char* name, void* value, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 ssize_t lgetxattr(const char* path, const char* name, void* value, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
 
+
+
+#if __ANDROID_API__ >= 16
 ssize_t listxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(16);
-ssize_t llistxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(16);
-ssize_t flistxattr(int fd, char* list, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
 
+
+#if __ANDROID_API__ >= 16
+ssize_t llistxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
+ssize_t flistxattr(int fd, char* list, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+
+#if __ANDROID_API__ >= 16
 int removexattr(const char* path, const char* name) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 int lremovexattr(const char* path, const char* name) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
+
+#if __ANDROID_API__ >= 16
 int fremovexattr(int fd, const char* name) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
 
 __END_DECLS
 

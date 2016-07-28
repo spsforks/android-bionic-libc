@@ -46,8 +46,16 @@ struct if_nameindex {
 
 char* if_indextoname(unsigned, char*);
 unsigned if_nametoindex(const char*);
+
+#if __ANDROID_API__ >= 24
 struct if_nameindex* if_nameindex(void) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
+
+#if __ANDROID_API__ >= 24
 void if_freenameindex(struct if_nameindex*) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 
 __END_DECLS
 

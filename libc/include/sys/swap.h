@@ -38,8 +38,16 @@ __BEGIN_DECLS
 #define SWAP_FLAG_PRIO_MASK 0x7fff
 #define SWAP_FLAG_PRIO_SHIFT 0
 
+
+#if __ANDROID_API__ >= 19
 int swapon(const char* _Nonnull, int) __INTRODUCED_IN(19);
+#endif /* __ANDROID_API__ >= 19 */
+
+
+#if __ANDROID_API__ >= 19
 int swapoff(const char* _Nonnull) __INTRODUCED_IN(19);
+#endif /* __ANDROID_API__ >= 19 */
+
 
 __END_DECLS
 

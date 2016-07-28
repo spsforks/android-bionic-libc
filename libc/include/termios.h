@@ -50,8 +50,16 @@ int tcsendbreak(int, int) __INTRODUCED_IN(21);
 int tcsetattr(int, int, const struct termios*) __INTRODUCED_IN(21);
 #endif
 
+
+#if __ANDROID_API__ >= 21
 int cfsetspeed(struct termios*, speed_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 int tcdrain(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

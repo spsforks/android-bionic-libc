@@ -74,10 +74,18 @@ __packed
 ;
 
 int epoll_create(int);
+
+#if __ANDROID_API__ >= 21
 int epoll_create1(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int epoll_ctl(int, int, int, struct epoll_event*);
 int epoll_wait(int, struct epoll_event*, int, int);
+
+#if __ANDROID_API__ >= 21
 int epoll_pwait(int, struct epoll_event*, int, int, const sigset_t*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

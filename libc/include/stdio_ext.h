@@ -38,14 +38,46 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 23
 size_t __fbufsize(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int __freadable(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int __fwritable(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int __flbf(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 void __fpurge(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 size_t __fpending(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 void _flushlbf(void) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int __fsetlocking(FILE*, int) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 __END_DECLS
 

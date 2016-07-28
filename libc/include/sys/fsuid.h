@@ -34,8 +34,16 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 21
 int setfsuid(uid_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 int setfsgid(gid_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

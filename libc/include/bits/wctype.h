@@ -39,7 +39,11 @@ typedef __WINT_TYPE__ wint_t;
 
 int iswalnum(wint_t);
 int iswalpha(wint_t);
+
+#if __ANDROID_API__ >= 21
 int iswblank(wint_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int iswcntrl(wint_t);
 int iswdigit(wint_t);
 int iswgraph(wint_t);

@@ -33,7 +33,11 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 21
 void android_set_abort_message(const char* msg) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

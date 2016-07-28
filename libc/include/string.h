@@ -52,30 +52,54 @@ void* memrchr(const void* _Nonnull, int, size_t) __purefunc;
 int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __purefunc;
 void* memcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t);
 #if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= 23
 void* mempcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #endif
 void* memmove(void* _Nonnull, const void* _Nonnull, size_t);
 void* memset(void* _Nonnull, int, size_t);
 void* memmem(const void* _Nonnull, size_t, const void* _Nonnull, size_t) __purefunc;
 
 char* strchr(const char* _Nonnull, int) __purefunc;
+
+#if __ANDROID_API__ >= 18
 char* __strchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
 extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
 extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
 #else
+
+#if __ANDROID_API__ >= 24
 char* strchrnul(const char* _Nonnull, int) __purefunc __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #endif
 #endif
 
 char* strrchr(const char* _Nonnull, int) __purefunc;
+
+#if __ANDROID_API__ >= 18
 char* __strrchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 
 size_t strlen(const char* _Nonnull) __purefunc;
+
+#if __ANDROID_API__ >= 17
 size_t __strlen_chk(const char* _Nonnull, size_t) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 int strcmp(const char* _Nonnull, const char* _Nonnull) __purefunc;
+
+#if __ANDROID_API__ >= 21
 char* stpcpy(char* _Nonnull __restrict, const char* _Nonnull__restrict) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 char* strcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict);
 char* strcat(char* _Nonnull __restrict, const char* _Nonnull __restrict);
 
@@ -87,9 +111,17 @@ char* strtok(char* __restrict, const char* _Nonnull __restrict);
 char* strtok_r(char* __restrict, const char* _Nonnull __restrict, char** _Nonnull __restrict);
 
 char* strerror(int);
+
+#if __ANDROID_API__ >= 23
 char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= 23
 char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #else /* POSIX */
 int strerror_r(int, char*, size_t);
 #endif
@@ -98,7 +130,11 @@ size_t strnlen(const char* _Nonnull, size_t) __purefunc;
 char* strncat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 char* strndup(const char* _Nonnull, size_t);
 int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __purefunc;
+
+#if __ANDROID_API__ >= 21
 char* stpncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 char* strncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 
 size_t strlcat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
@@ -114,8 +150,16 @@ char* strsignal(int);
 int strcoll(const char* _Nonnull, const char* _Nonnull) __purefunc;
 size_t strxfrm(char* __restrict, const char* _Nonnull __restrict, size_t);
 
+
+#if __ANDROID_API__ >= 21
 int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __purefunc __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if defined(__USE_GNU) && !defined(basename)
 /*
@@ -126,25 +170,53 @@ size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, loca
 extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename);
 extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename);
 #else
+
+#if __ANDROID_API__ >= 23
 char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #endif
 #endif
 
+
+#if __ANDROID_API__ >= 23
 void* __memchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__memchr_buf_size_error, "memchr called with size bigger than buffer");
 
+
+#if __ANDROID_API__ >= 23
 void* __memrchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__memrchr_buf_size_error, "memrchr called with size bigger than buffer");
 void* __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
 
+
+#if __ANDROID_API__ >= 21
 char* __stpncpy_chk2(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t, size_t)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 char* __strncpy_chk2(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t, size_t)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 size_t __strlcpy_real(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __RENAME(strlcpy);
+
+#if __ANDROID_API__ >= 17
 size_t __strlcpy_chk(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 size_t __strlcat_real(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __RENAME(strlcat);
+
+#if __ANDROID_API__ >= 17
 size_t __strlcat_chk(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 
 #if defined(__BIONIC_FORTIFY)
 

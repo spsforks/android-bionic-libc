@@ -40,7 +40,11 @@ ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) __RENAME(se
 #else
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count);
 #endif
+
+#if __ANDROID_API__ >= 21
 ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 
