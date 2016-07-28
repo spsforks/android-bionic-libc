@@ -41,7 +41,11 @@ __BEGIN_DECLS
 #define IN_NONBLOCK O_NONBLOCK
 
 int inotify_init(void);
+
+#if __ANDROID_API__ >= 21
 int inotify_init1(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int inotify_add_watch(int, const char*, uint32_t);
 int inotify_rm_watch(int, uint32_t);
 

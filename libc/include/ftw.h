@@ -55,12 +55,28 @@ struct FTW {
 };
 
 __BEGIN_DECLS
+
+#if __ANDROID_API__ >= 17
 int ftw(const char*, int (*)(const char*, const struct stat*, int), int) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
+
+#if __ANDROID_API__ >= 17
 int nftw(const char*, int (*)(const char*, const struct stat*, int, struct FTW*), int, int)
   __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
+
+#if __ANDROID_API__ >= 21
 int ftw64(const char*, int (*)(const char*, const struct stat64*, int), int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 int nftw64(const char*, int (*)(const char*, const struct stat64*, int, struct FTW*), int, int)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 __END_DECLS
 
 #endif	/* !_FTW_H */

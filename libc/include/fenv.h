@@ -36,26 +36,82 @@
 __BEGIN_DECLS
 
 // fenv was always available on x86.
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int feclearexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fegetexceptflag(fexcept_t*, int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21)
     __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int feraiseexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fesetexceptflag(const fexcept_t*, int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21)
     __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fetestexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
 
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fegetround(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
-int fesetround(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
 
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
+int fesetround(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fegetenv(fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int feholdexcept(fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fesetenv(const fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int feupdateenv(const fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21)
     __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
 
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int feenableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fedisableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
 
 /*
  * The following constant represents the default floating-point environment

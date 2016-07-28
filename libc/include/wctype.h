@@ -35,27 +35,91 @@
 
 __BEGIN_DECLS
 
-int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswcntrl_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswgraph_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswprint_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswpunct_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
 
+#if __ANDROID_API__ >= 21
+int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswcntrl_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswgraph_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswprint_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswpunct_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+
+#if __ANDROID_API__ >= 21
 wint_t towlower_l(int, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 wint_t towupper_l(int, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN_FUTURE;
 wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN_FUTURE;
 
+
+#if __ANDROID_API__ >= 21
 wctype_t wctype_l(const char*, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

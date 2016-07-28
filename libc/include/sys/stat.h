@@ -146,18 +146,38 @@ int fchmod(int, mode_t);
 int mkdir(const char*, mode_t);
 
 int fstat(int, struct stat*);
+
+#if __ANDROID_API__ >= 21
 int fstat64(int, struct stat64*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int fstatat(int, const char*, struct stat*, int);
+
+#if __ANDROID_API__ >= 21
 int fstatat64(int, const char*, struct stat64*, int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int lstat(const char*, struct stat*);
+
+#if __ANDROID_API__ >= 21
 int lstat64(const char*, struct stat64*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int stat(const char*, struct stat*);
+
+#if __ANDROID_API__ >= 21
 int stat64(const char*, struct stat64*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int mknod(const char*, mode_t, dev_t);
 mode_t umask(mode_t);
 
+
+#if __ANDROID_API__ >= 18
 mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 mode_t __umask_real(mode_t) __RENAME(umask);
 __errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
@@ -183,17 +203,33 @@ int mkfifo(const char*, mode_t) __INTRODUCED_IN(21);
 // Implemented as a static inline before 21.
 #endif
 
+
+#if __ANDROID_API__ >= 23
 int mkfifoat(int, const char*, mode_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 int fchmodat(int, const char*, mode_t, int);
 int mkdirat(int, const char*, mode_t);
+
+#if __ANDROID_API__ >= 21
 int mknodat(int, const char*, mode_t, dev_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #define UTIME_NOW  ((1L << 30) - 1L)
 #define UTIME_OMIT ((1L << 30) - 2L)
+
+#if __ANDROID_API__ >= 12
 int utimensat(int fd, const char* path, const struct timespec times[2], int flags)
   __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+#if __ANDROID_API__ >= 19
 int futimens(int fd, const struct timespec times[2]) __INTRODUCED_IN(19);
+#endif /* __ANDROID_API__ >= 19 */
+
 
 __END_DECLS
 

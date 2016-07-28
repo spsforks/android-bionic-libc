@@ -77,8 +77,16 @@ typedef int sig_atomic_t;
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
+
+#if __ANDROID_API__ >= 21
 int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 extern const char* const sys_siglist[_NSIG];
 extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
@@ -152,15 +160,35 @@ int killpg(int, int);
 
 int sigaltstack(const stack_t*, stack_t*);
 
+
+#if __ANDROID_API__ >= 17
 void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
+
+#if __ANDROID_API__ >= 17
 void psignal(int, const char*) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 
 int pthread_kill(pthread_t, int);
 int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
+
+#if __ANDROID_API__ >= 23
 int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 23
 int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

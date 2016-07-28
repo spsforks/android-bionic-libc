@@ -57,10 +57,22 @@ struct mntent {
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 21
 int endmntent(FILE*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 struct mntent* getmntent(FILE*);
+
+#if __ANDROID_API__ >= 21
 struct mntent* getmntent_r(FILE*, struct mntent*, char*, int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 FILE* setmntent(const char*, const char*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 char* hasmntopt(const struct mntent*, const char*) __INTRODUCED_IN_FUTURE;
 
 __END_DECLS

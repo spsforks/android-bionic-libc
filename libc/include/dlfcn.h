@@ -53,7 +53,11 @@ void* dlopen(const char* filename, int flag);
 int dlclose(void* _Nonnull handle);
 const char* dlerror(void);
 void* dlsym(void* handle, const char* _Nonnull symbol);
+
+#if __ANDROID_API__ >= 24
 void* dlvsym(void* handle, const char* _Nonnull symbol, const char* _Nonnull version) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 int dladdr(const void* addr, Dl_info* _Nonnull info);
 
 enum {

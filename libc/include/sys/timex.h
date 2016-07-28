@@ -35,8 +35,16 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 24
 int adjtimex(struct timex*) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
+
+#if __ANDROID_API__ >= 24
 int clock_adjtime(clockid_t, struct timex*) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 
 __END_DECLS
 

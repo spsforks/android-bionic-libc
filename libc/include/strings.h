@@ -54,7 +54,11 @@ __BEGIN_DECLS
 #define bzero(b, len) (void)(__builtin_memset((b), '\0', (len)))
 #endif
 
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__))
 int ffs(int) __INTRODUCED_IN_X86(18);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__)) */
+
 
 __END_DECLS
 

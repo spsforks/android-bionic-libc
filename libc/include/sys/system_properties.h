@@ -48,7 +48,11 @@ int __system_property_get(const char *name, char *value);
 
 /* Set a system property by name.
 **/
+
+#if __ANDROID_API__ >= 12
 int __system_property_set(const char* key, const char* value) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 /* Return a pointer to the system property named name, if it
 ** exists, or NULL if there is no such property.  Use 
@@ -93,8 +97,12 @@ const prop_info *__system_property_find_nth(unsigned n);
 ** Order of results may change from call to call.  This is
 ** not a bug.
 */
+
+#if __ANDROID_API__ >= 19
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
   __INTRODUCED_IN(19);
+#endif /* __ANDROID_API__ >= 19 */
+
 
 __END_DECLS
 

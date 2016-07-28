@@ -36,9 +36,17 @@
 __BEGIN_DECLS
 
 int strcasecmp(const char*, const char*) __purefunc;
+
+#if __ANDROID_API__ >= 23
 int strcasecmp_l(const char*, const char*, locale_t) __purefunc __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 int strncasecmp(const char*, const char*, size_t) __purefunc;
+
+#if __ANDROID_API__ >= 23
 int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 __END_DECLS
 

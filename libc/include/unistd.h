@@ -90,12 +90,20 @@ int    setpgid(pid_t __pid, pid_t __pgid);
 pid_t  getppid(void);
 pid_t  getpgrp(void);
 int    setpgrp(void);
+
+#if __ANDROID_API__ >= 17
 pid_t  getsid(pid_t __pid) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 pid_t  setsid(void);
 
 int execv(const char* __path, char* const* __argv);
 int execvp(const char* __file, char* const* __argv);
+
+#if __ANDROID_API__ >= 21
 int execvpe(const char* __file, char* const* __argv, char* const* __envp) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int execve(const char* __file, char* const* __argv, char* const* __envp);
 int execl(const char* __path, const char* __arg0, ...);
 int execlp(const char* __file, const char* __arg0, ...);
@@ -125,10 +133,18 @@ long fpathconf(int __fd, int __name);
 long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
+
+#if __ANDROID_API__ >= 16
 int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
 int link(const char* __oldpath, const char* __newpath);
+
+#if __ANDROID_API__ >= 21
 int linkat(int __olddirfd, const char* __oldpath, int __newdirfd,
            const char* __newpath, int __flags) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int unlink(const char* __path);
 int unlinkat(int __dirfd, const char* __path, int __flags);
 int chdir(const char* __path);
@@ -140,10 +156,18 @@ int pipe2(int* __pipefd, int __flags) __INTRODUCED_IN(9);
 #endif
 int chroot(const char* __path);
 int symlink(const char* __oldpath, const char* __newpath);
+
+#if __ANDROID_API__ >= 21
 int symlinkat(const char* __oldpath, int __newdirfd, const char* __newpath) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 ssize_t readlink(const char* __path, char* __buf, size_t __bufsiz);
+
+#if __ANDROID_API__ >= 21
 ssize_t readlinkat(int __dirfd, const char* __path, char* __buf,
                    size_t __bufsiz) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int chown(const char* __path, uid_t __owner, gid_t __group);
 int fchown(int __fd, uid_t __owner, gid_t __group);
 int fchownat(int __dirfd, const char* __path, uid_t __owner, gid_t __group, int __flags);
@@ -159,7 +183,11 @@ ssize_t write(int __fd, const void* __buf, size_t __count);
 
 int dup(int __oldfd);
 int dup2(int __oldfd, int __newfd);
+
+#if __ANDROID_API__ >= 21
 int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int fsync(int __fd);
 int fdatasync(int __fd) __INTRODUCED_IN(9);
 
@@ -185,11 +213,27 @@ ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset);
 int ftruncate(int __fd, off_t __length);
 #endif
 
+
+#if __ANDROID_API__ >= 21
 int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 12
 ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+#if __ANDROID_API__ >= 12
 ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset)
   __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+#if __ANDROID_API__ >= 12
 int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 int pause(void);
 unsigned int alarm(unsigned int __seconds);
@@ -197,7 +241,11 @@ unsigned int sleep(unsigned int __seconds);
 int usleep(useconds_t __usec);
 
 int gethostname(char* __name, size_t __len);
+
+#if __ANDROID_API__ >= 23
 int sethostname(const char* __name, size_t __len) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 int brk(void* __addr);
 void* sbrk(ptrdiff_t __increment);
@@ -237,49 +285,97 @@ int tcsetpgrp(int __fd, pid_t __pid);
     _rc; })
 
 /* TODO(unified-headers): Factor out all the FORTIFY features. */
+
+#if __ANDROID_API__ >= 24
 char* __getcwd_chk(char*, size_t, size_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 __errordecl(__getcwd_dest_size_error, "getcwd called with size bigger than destination");
 char* __getcwd_real(char*, size_t) __RENAME(getcwd);
 
+
+#if __ANDROID_API__ >= 23
 ssize_t __pread_chk(int, void*, size_t, off_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__pread_dest_size_error, "pread called with size bigger than destination");
 __errordecl(__pread_count_toobig_error, "pread called with count > SSIZE_MAX");
 ssize_t __pread_real(int, void*, size_t, off_t) __RENAME(pread);
 
+
+#if __ANDROID_API__ >= 23
 ssize_t __pread64_chk(int, void*, size_t, off64_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__pread64_dest_size_error, "pread64 called with size bigger than destination");
 __errordecl(__pread64_count_toobig_error, "pread64 called with count > SSIZE_MAX");
-ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64) __INTRODUCED_IN(12);
 
+#if __ANDROID_API__ >= 12
+ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+
+#if __ANDROID_API__ >= 24
 ssize_t __pwrite_chk(int, const void*, size_t, off_t, size_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 __errordecl(__pwrite_dest_size_error, "pwrite called with size bigger than destination");
 __errordecl(__pwrite_count_toobig_error, "pwrite called with count > SSIZE_MAX");
 ssize_t __pwrite_real(int, const void*, size_t, off_t) __RENAME(pwrite);
 
+
+#if __ANDROID_API__ >= 24
 ssize_t __pwrite64_chk(int, const void*, size_t, off64_t, size_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 __errordecl(__pwrite64_dest_size_error, "pwrite64 called with size bigger than destination");
 __errordecl(__pwrite64_count_toobig_error, "pwrite64 called with count > SSIZE_MAX");
-ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64) __INTRODUCED_IN(12);
 
+#if __ANDROID_API__ >= 12
+ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+
+#if __ANDROID_API__ >= 21
 ssize_t __read_chk(int, void*, size_t, size_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 __errordecl(__read_dest_size_error, "read called with size bigger than destination");
 __errordecl(__read_count_toobig_error, "read called with count > SSIZE_MAX");
 ssize_t __read_real(int, void*, size_t) __RENAME(read);
 
+
+#if __ANDROID_API__ >= 24
 ssize_t __write_chk(int, const void*, size_t, size_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 __errordecl(__write_dest_size_error, "write called with size bigger than destination");
 __errordecl(__write_count_toobig_error, "write called with count > SSIZE_MAX");
 ssize_t __write_real(int, const void*, size_t) __RENAME(write);
 
+
+#if __ANDROID_API__ >= 23
 ssize_t __readlink_chk(const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__readlink_dest_size_error, "readlink called with size bigger than destination");
 __errordecl(__readlink_size_toobig_error, "readlink called with size > SSIZE_MAX");
 ssize_t __readlink_real(const char*, char*, size_t) __RENAME(readlink);
 
+
+#if __ANDROID_API__ >= 23
 ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 __errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger than destination");
 __errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
+
+#if __ANDROID_API__ >= 21
 ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int getdomainname(char*, size_t) __INTRODUCED_IN_FUTURE;
 int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;

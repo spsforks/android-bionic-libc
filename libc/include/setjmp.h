@@ -54,10 +54,18 @@ void    _longjmp(jmp_buf, int);
 int     setjmp(jmp_buf);
 void    longjmp(jmp_buf, int);
 
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 12) || (defined(__x86_64__))
 int sigsetjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
     __INTRODUCED_IN_X86(12);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 12) || (defined(__x86_64__)) */
+
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 12) || (defined(__x86_64__))
 void siglongjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
     __INTRODUCED_IN_X86(12);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 12) || (defined(__x86_64__)) */
+
 
 __END_DECLS
 

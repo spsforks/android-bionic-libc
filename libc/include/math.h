@@ -95,7 +95,11 @@ int __isfinite(double) __pure2;
 int __isfinitel(long double) __pure2;
 int __isinff(float) __pure2;
 int __isinfl(long double) __pure2;
+
+#if __ANDROID_API__ >= 21
 int __isnanf(float) __pure2 __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int __isnanl(long double) __pure2;
 int __isnormalf(float) __pure2;
 int __isnormal(double) __pure2;
@@ -142,19 +146,31 @@ double	expm1(double);
 double	fma(double, double, double);
 double	hypot(double, double);
 int	ilogb(double) __pure2;
+
+#if __ANDROID_API__ >= 21
 int(isinf)(double) __pure2 __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int	(isnan)(double) __pure2;
 double	lgamma(double);
 long long llrint(double);
 long long llround(double);
 double	log1p(double);
+
+#if __ANDROID_API__ >= 18
 double log2(double) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 double	logb(double);
 long	lrint(double);
 long	lround(double);
 
+
+#if (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 double nan(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
     __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
 
 double	nextafter(double, double);
 double	remainder(double, double);
@@ -167,7 +183,11 @@ double	fmax(double, double) __pure2;
 double	fmin(double, double) __pure2;
 double	nearbyint(double);
 double	round(double);
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__))
 double scalbln(double, long) __INTRODUCED_IN_X86(18);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__)) */
+
 double scalbn(double, int);
 double	tgamma(double);
 double	trunc(double);
@@ -192,7 +212,11 @@ int	ilogbf(float) __pure2;
 float	ldexpf(float, int);
 float	log10f(float);
 float	log1pf(float);
+
+#if __ANDROID_API__ >= 18
 float log2f(float) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 float	logf(float);
 float	modff(float, float *);	/* fundamentally !__pure2 */
 
@@ -209,7 +233,11 @@ float	erff(float);
 float	erfcf(float);
 float	hypotf(float, float);
 float	lgammaf(float);
+
+#if (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 float tgammaf(float) __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
 
 float	acoshf(float);
 float	asinhf(float);
@@ -221,14 +249,22 @@ long long llrintf(float);
 long long llroundf(float);
 long	lrintf(float);
 long	lroundf(float);
+
+#if (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__))
 float nanf(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
     __INTRODUCED_IN_X86(9);
+#endif /* (defined(__arm__) && __ANDROID_API__ >= 13) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 13) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 9) || (defined(__x86_64__)) */
+
 float	nearbyintf(float);
 float	nextafterf(float, float);
 float	remainderf(float, float);
 float	remquof(float, float, int *);
 float	rintf(float);
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__))
 float	scalblnf(float, long) __INTRODUCED_IN_X86(18);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__)) */
+
 float scalbnf(float, int);
 float	truncf(float);
 
@@ -237,64 +273,240 @@ float	fmaf(float, float, float);
 float	fmaxf(float, float) __pure2;
 float	fminf(float, float) __pure2;
 
+
+#if __ANDROID_API__ >= 21
 long double acoshl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double acosl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double asinhl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double asinl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double atan2l(long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double atanhl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double atanl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double cbrtl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long double ceill(long double);
 long double copysignl(long double, long double) __pure2;
+
+#if __ANDROID_API__ >= 21
 long double coshl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double cosl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double erfcl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double erfl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double exp2l(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double expl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double expm1l(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long double fabsl(long double) __pure2;
 long double fdiml(long double, long double);
 long double floorl(long double);
+
+#if __ANDROID_API__ >= 21
 long double fmal(long double, long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long double fmaxl(long double, long double) __pure2;
 long double fminl(long double, long double) __pure2;
+
+#if __ANDROID_API__ >= 21
 long double fmodl(long double, long double) __INTRODUCED_IN(21);
-long double frexpl(long double value, int*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
+long double frexpl(long double value, int*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+ /* fundamentally !__pure2 */
+
+#if __ANDROID_API__ >= 21
 long double hypotl(long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int ilogbl(long double) __pure2;
 long double ldexpl(long double, int);
+
+#if __ANDROID_API__ >= 21
 long double lgammal(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long long llrintl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long long llroundl(long double);
+
+#if __ANDROID_API__ >= 21
 long double log10l(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double log1pl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 18
 long double log2l(long double) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
+
+#if __ANDROID_API__ >= 18
 long double logbl(long double) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
+
+#if __ANDROID_API__ >= 21
 long double logl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long lrintl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long lroundl(long double);
-long double modfl(long double, long double*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
+
+#if __ANDROID_API__ >= 21
+long double modfl(long double, long double*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+ /* fundamentally !__pure2 */
+
+#if __ANDROID_API__ >= 13
 long double nanl(const char*) __pure2 __INTRODUCED_IN(13);
+#endif /* __ANDROID_API__ >= 13 */
+
+
+#if __ANDROID_API__ >= 21
 long double nearbyintl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double nextafterl(long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 18
 double nexttoward(double, long double) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 float nexttowardf(float, long double);
+
+#if __ANDROID_API__ >= 18
 long double nexttowardl(long double, long double) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
+
+#if __ANDROID_API__ >= 21
 long double powl(long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double remainderl(long double, long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double remquol(long double, long double, int*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double rintl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long double roundl(long double);
+
+#if (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__))
 long double scalblnl(long double, long) __INTRODUCED_IN_X86(18);
+#endif /* (defined(__arm__)) || (defined(__aarch64__)) || (defined(__mips__) && !defined(__LP64__)) || (defined(__mips__) && defined(__LP64__)) || (defined(__i386__) && __ANDROID_API__ >= 18) || (defined(__x86_64__)) */
+
 long double scalbnl(long double, int);
+
+#if __ANDROID_API__ >= 21
 long double sinhl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double sinl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double sqrtl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double tanhl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double tanl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
+
+#if __ANDROID_API__ >= 21
 long double tgammal(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 long double truncl(long double);
 
 #define M_E		2.7182818284590452354	/* e */
@@ -329,8 +541,16 @@ int isnanf(float) __pure2;
 double gamma_r(double, int*);
 double lgamma_r(double, int*);
 double significand(double);
+
+#if __ANDROID_API__ >= 23
 long double lgammal_r(long double, int*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 21
 long double significandl(long double) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 float dremf(float, float);
 int finitef(float) __pure2;
 float gammaf(float);
