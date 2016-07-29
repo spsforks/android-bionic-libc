@@ -221,7 +221,11 @@ void LinkerSmallObjectAllocator::alloc_page() {
 }
 
 
-LinkerMemoryAllocator::LinkerMemoryAllocator() {
+void LinkerMemoryAllocator::initialize_allocators() {
+  if (allocators_[0].get_block_size() != 0) {
+    return;
+  }
+
   for (size_t i = 0; i < kSmallObjectAllocatorsCount; ++i) {
     uint32_t type = i + kSmallObjectMinSizeLog2;
     allocators_[i].init(type, 1 << type);
@@ -336,5 +340,6 @@ LinkerSmallObjectAllocator* LinkerMemoryAllocator::get_small_object_allocator(ui
     __libc_fatal("invalid type: %u", type);
   }
 
+  initialize_allocators();
   return &allocators_[type - kSmallObjectMinSizeLog2];
 }
