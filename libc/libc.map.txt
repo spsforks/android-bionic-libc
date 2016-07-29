@@ -1291,7 +1291,7 @@ LIBC_N {
     tmpfile64;
 } LIBC;
 
-LIBC_O {
+LIBC_O { # future
   global:
     catclose;
     catgets;
