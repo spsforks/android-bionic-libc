@@ -49,10 +49,14 @@
 
 /* glibc compatibility. */
 __BEGIN_DECLS
+
+#if __ANDROID_API__ >= 21
 uint32_t htonl(uint32_t) __pure2 __INTRODUCED_IN(21);
 uint16_t htons(uint16_t) __pure2 __INTRODUCED_IN(21);
 uint32_t ntohl(uint32_t) __pure2 __INTRODUCED_IN(21);
 uint16_t ntohs(uint16_t) __pure2 __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 __END_DECLS
 
 #define htonl(x) __swap32(x)

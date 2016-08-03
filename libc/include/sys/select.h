@@ -57,9 +57,13 @@ typedef struct {
     } \
   } while (0)
 
+
+#if __ANDROID_API__ >= 21
 void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if defined(__BIONIC_FORTIFY)
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))

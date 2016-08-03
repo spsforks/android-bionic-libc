@@ -42,18 +42,30 @@ int writev(int, const struct iovec*, int);
 ssize_t preadv(int, const struct iovec*, int, off_t) __RENAME(preadv64);
 ssize_t pwritev(int, const struct iovec*, int, off_t) __RENAME(pwritev64);
 #else
+
+#if __ANDROID_API__ >= 24
 ssize_t preadv(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
 ssize_t pwritev(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #endif
+
+#if __ANDROID_API__ >= 24
 ssize_t preadv64(int, const struct iovec*, int, off64_t) __INTRODUCED_IN(24);
 ssize_t pwritev64(int, const struct iovec*, int, off64_t) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #endif
 
 #if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= 23
 ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*,
                          unsigned long, unsigned long) __INTRODUCED_IN(23);
 ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*,
                           unsigned long, unsigned long) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #endif
 
 __END_DECLS

@@ -76,6 +76,8 @@ int isxdigit(int);
 int tolower(int);
 int toupper(int);
 
+
+#if __ANDROID_API__ >= 21
 int isalnum_l(int, locale_t) __INTRODUCED_IN(21);
 int isalpha_l(int, locale_t) __INTRODUCED_IN(21);
 int isblank_l(int, locale_t) __INTRODUCED_IN(21);
@@ -90,10 +92,16 @@ int isupper_l(int, locale_t) __INTRODUCED_IN(21);
 int isxdigit_l(int, locale_t) __INTRODUCED_IN(21);
 int tolower_l(int, locale_t) __INTRODUCED_IN(21);
 int toupper_l(int, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int isascii(int);
 int toascii(int);
+
+#if __ANDROID_API__ >= 21
 int _tolower(int) __INTRODUCED_IN(21);
 int _toupper(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

@@ -39,9 +39,13 @@ __BEGIN_DECLS
 typedef void* nl_catd;
 typedef int nl_item;
 
+
+#if 0
 nl_catd catopen(const char*, int) __INTRODUCED_IN_FUTURE;
 char* catgets(nl_catd, int, int, const char*) __INTRODUCED_IN_FUTURE;
 int catclose(nl_catd) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 
 __END_DECLS
 

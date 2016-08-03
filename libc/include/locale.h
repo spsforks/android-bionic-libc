@@ -93,13 +93,21 @@ struct lconv {
   char int_n_sign_posn;
 };
 
+
+#if __ANDROID_API__ >= 21
 struct lconv* localeconv(void) __INTRODUCED_IN(21);
 
 locale_t duplocale(locale_t) __INTRODUCED_IN(21);
 void freelocale(locale_t) __INTRODUCED_IN(21);
 locale_t newlocale(int, const char*, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 char* setlocale(int, const char*);
+
+#if __ANDROID_API__ >= 21
 locale_t uselocale(locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #define LC_GLOBAL_LOCALE __BIONIC_CAST(reinterpret_cast, locale_t, -1L)
 

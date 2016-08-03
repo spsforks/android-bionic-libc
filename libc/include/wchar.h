@@ -73,23 +73,43 @@ int               mbsinit(const mbstate_t *);
 size_t            mbrlen(const char *, size_t, mbstate_t *);
 size_t            mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
 size_t mbsrtowcs(wchar_t*, const char**, size_t, mbstate_t*);
+
+#if __ANDROID_API__ >= 21
 size_t mbsnrtowcs(wchar_t*, const char**, size_t, size_t, mbstate_t*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 wint_t            putwc(wchar_t, FILE *);
 wint_t            putwchar(wchar_t);
 int               swprintf(wchar_t *, size_t, const wchar_t *, ...);
 int               swscanf(const wchar_t *, const wchar_t *, ...);
 wint_t            ungetwc(wint_t, FILE *);
 int vfwprintf(FILE*, const wchar_t*, va_list);
+
+#if __ANDROID_API__ >= 21
 int vfwscanf(FILE*, const wchar_t*, va_list) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
+
+#if __ANDROID_API__ >= 21
 int vswscanf(const wchar_t*, const wchar_t*, va_list) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int vwprintf(const wchar_t*, va_list);
+
+#if __ANDROID_API__ >= 21
 int vwscanf(const wchar_t*, va_list) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 wchar_t* wcpcpy (wchar_t*, const wchar_t *);
 wchar_t* wcpncpy (wchar_t*, const wchar_t *, size_t);
 size_t            wcrtomb(char *, wchar_t, mbstate_t *);
 int               wcscasecmp(const wchar_t *, const wchar_t *);
+
+#if __ANDROID_API__ >= 23
 int wcscasecmp_l(const wchar_t*, const wchar_t*, locale_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 wchar_t          *wcscat(wchar_t *, const wchar_t *);
 wchar_t          *wcschr(const wchar_t *, wchar_t);
 int               wcscmp(const wchar_t *, const wchar_t *);
@@ -99,24 +119,44 @@ size_t            wcscspn(const wchar_t *, const wchar_t *);
 size_t            wcsftime(wchar_t *, size_t, const wchar_t *, const struct tm *);
 size_t            wcslen(const wchar_t *);
 int               wcsncasecmp(const wchar_t *, const wchar_t *, size_t);
+
+#if __ANDROID_API__ >= 23
 int wcsncasecmp_l(const wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 wchar_t          *wcsncat(wchar_t *, const wchar_t *, size_t);
 int               wcsncmp(const wchar_t *, const wchar_t *, size_t);
 wchar_t          *wcsncpy(wchar_t *, const wchar_t *, size_t);
+
+#if __ANDROID_API__ >= 21
 size_t wcsnrtombs(char*, const wchar_t**, size_t, size_t, mbstate_t*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 wchar_t          *wcspbrk(const wchar_t *, const wchar_t *);
 wchar_t          *wcsrchr(const wchar_t *, wchar_t);
 size_t wcsrtombs(char*, const wchar_t**, size_t, mbstate_t*);
 size_t            wcsspn(const wchar_t *, const wchar_t *);
 wchar_t          *wcsstr(const wchar_t *, const wchar_t *);
 double wcstod(const wchar_t*, wchar_t**);
+
+#if __ANDROID_API__ >= 21
 float wcstof(const wchar_t*, wchar_t**) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 wchar_t* wcstok(wchar_t*, const wchar_t*, wchar_t**);
 long wcstol(const wchar_t*, wchar_t**, int);
+
+#if __ANDROID_API__ >= 21
 long long wcstoll(const wchar_t*, wchar_t**, int) __INTRODUCED_IN(21);
 long double wcstold(const wchar_t*, wchar_t**) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 unsigned long wcstoul(const wchar_t*, wchar_t**, int);
+
+#if __ANDROID_API__ >= 21
 unsigned long long wcstoull(const wchar_t*, wchar_t**, int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int               wcswidth(const wchar_t *, size_t);
 size_t            wcsxfrm(wchar_t *, const wchar_t *, size_t);
 int               wctob(wint_t);
@@ -125,24 +165,36 @@ wchar_t          *wmemchr(const wchar_t *, wchar_t, size_t);
 int               wmemcmp(const wchar_t *, const wchar_t *, size_t);
 wchar_t          *wmemcpy(wchar_t *, const wchar_t *, size_t);
 #if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= 23
 wchar_t* wmempcpy(wchar_t*, const wchar_t*, size_t) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 #endif
 wchar_t          *wmemmove(wchar_t *, const wchar_t *, size_t);
 wchar_t          *wmemset(wchar_t *, wchar_t, size_t);
 int               wprintf(const wchar_t *, ...);
 int               wscanf(const wchar_t *, ...);
 
+
+#if __ANDROID_API__ >= 21
 long long wcstoll_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 unsigned long long wcstoull_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);
 
 int wcscoll_l(const wchar_t*, const wchar_t*, locale_t) __INTRODUCED_IN(21);
 size_t wcsxfrm_l(wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 size_t wcslcat(wchar_t*, const wchar_t*, size_t);
 size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
 
+
+#if __ANDROID_API__ >= 23
 FILE* open_wmemstream(wchar_t**, size_t*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 wchar_t* wcsdup(const wchar_t*);
 size_t wcsnlen(const wchar_t*, size_t);
 

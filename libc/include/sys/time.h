@@ -47,12 +47,20 @@ int setitimer(int, const struct itimerval*, struct itimerval*);
 int utimes(const char*, const struct timeval*);
 
 #if defined(__USE_BSD)
+
+#if 0
 int futimes(int, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
 int lutimes(const char*, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 #endif
 
 #if defined(__USE_GNU)
+
+#if 0
 int futimesat(int, const char*, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 #endif
 
 #define timerclear(a)   \

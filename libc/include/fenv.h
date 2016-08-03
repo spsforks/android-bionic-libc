@@ -36,6 +36,8 @@
 __BEGIN_DECLS
 
 // fenv was always available on x86.
+
+#if (defined(__LP64__)) || (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__i386__) && __ANDROID_API__ >= 9)
 int feclearexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
 int fegetexceptflag(fexcept_t*, int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21)
     __INTRODUCED_IN_X86(9);
@@ -56,6 +58,8 @@ int feupdateenv(const fenv_t*) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21)
 int feenableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
 int fedisableexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
 int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
+#endif /* (defined(__LP64__)) || (defined(__arm__) && __ANDROID_API__ >= 21) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__i386__) && __ANDROID_API__ >= 9) */
+
 
 /*
  * The following constant represents the default floating-point environment

@@ -591,6 +591,8 @@ int ns_samename(const char*, const char*);
 /* The names of these symbols were accidentally prefixed with __ in L. */
 /* The duplication here is intentional to avoid declaring different symbols with the same
  * declaration. */
+
+#if (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 23)
 int ns_msg_getflag(ns_msg, int) __INTRODUCED_IN_64(23);
 uint16_t ns_get16(const u_char*) __INTRODUCED_IN_64(23);
 uint32_t ns_get32(const u_char*) __INTRODUCED_IN_64(23);
@@ -619,6 +621,8 @@ void ns_name_rollback(const u_char*, const u_char**, const u_char**) __INTRODUCE
 
 int ns_makecanon(const char*, char*, size_t) __INTRODUCED_IN_64(23);
 int ns_samename(const char*, const char*) __INTRODUCED_IN_64(23);
+#endif /* (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 23) */
+
 #endif /* !defined(__LP64__) */
 
 __END_DECLS

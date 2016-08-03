@@ -51,12 +51,20 @@ struct group* getgrgid(gid_t);
 struct group* getgrnam(const char*);
 
 /* Note: Android has thousands and thousands of ids to iterate through. */
+
+#if 0
 struct group* getgrent(void) __INTRODUCED_IN_FUTURE;
 
 void setgrent(void) __INTRODUCED_IN_FUTURE;
 void endgrent(void) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
+
+#if __ANDROID_API__ >= 24
 int getgrgid_r(gid_t, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
 int getgrnam_r(const char*, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 int getgrouplist (const char*, gid_t, gid_t*, int*);
 int initgroups (const char*, gid_t);
 

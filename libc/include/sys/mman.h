@@ -54,22 +54,34 @@ void* mmap(void*, size_t, int, int, int, off_t) __RENAME(mmap64) __INTRODUCED_IN
 #else
 void* mmap(void*, size_t, int, int, int, off_t);
 #endif
+
+#if __ANDROID_API__ >= 21
 void* mmap64(void*, size_t, int, int, int, off64_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int munmap(void*, size_t);
 int msync(const void*, size_t, int);
 int mprotect(const void*, size_t, int);
 void* mremap(void*, size_t, size_t, int, ...);
 
+
+#if __ANDROID_API__ >= 17
 int mlockall(int) __INTRODUCED_IN(17);
 int munlockall(void) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 int mlock(const void*, size_t);
 int munlock(const void*, size_t);
 
 int mincore(void*, size_t, unsigned char*);
 
 int madvise(void*, size_t, int);
+
+#if __ANDROID_API__ >= 23
 int posix_madvise(void*, size_t, int) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 __END_DECLS
 

@@ -138,7 +138,11 @@ typedef struct {
 #define PTHREAD_SCOPE_SYSTEM     0
 #define PTHREAD_SCOPE_PROCESS    1
 
+
+#if __ANDROID_API__ >= 12
 int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 int pthread_attr_destroy(pthread_attr_t* _Nonnull);
 int pthread_attr_getdetachstate(const pthread_attr_t* _Nonnull, int* _Nonnull);
@@ -158,11 +162,19 @@ int pthread_attr_setstack(pthread_attr_t* _Nonnull, void*, size_t);
 int pthread_attr_setstacksize(pthread_attr_t* _Nonnull, size_t);
 
 int pthread_condattr_destroy(pthread_condattr_t* _Nonnull);
+
+#if __ANDROID_API__ >= 21
 int pthread_condattr_getclock(const pthread_condattr_t* _Nonnull, clockid_t* _Nonnull)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int pthread_condattr_getpshared(const pthread_condattr_t* _Nonnull, int* _Nonnull);
 int pthread_condattr_init(pthread_condattr_t* _Nonnull);
+
+#if __ANDROID_API__ >= 21
 int pthread_condattr_setclock(pthread_condattr_t* _Nonnull, clockid_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int pthread_condattr_setpshared(pthread_condattr_t* _Nonnull, int);
 
 int pthread_cond_broadcast(pthread_cond_t* _Nonnull);
@@ -188,7 +200,11 @@ int pthread_getschedparam(pthread_t, int* _Nonnull, struct sched_param* _Nonnull
 
 void* pthread_getspecific(pthread_key_t);
 
+
+#if __ANDROID_API__ >= 21
 pid_t pthread_gettid_np(pthread_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int pthread_join(pthread_t, void**);
 
@@ -205,8 +221,12 @@ int pthread_mutexattr_settype(pthread_mutexattr_t* _Nonnull, int);
 int pthread_mutex_destroy(pthread_mutex_t* _Nonnull);
 int pthread_mutex_init(pthread_mutex_t* _Nonnull, const pthread_mutexattr_t*);
 int pthread_mutex_lock(pthread_mutex_t* _Nonnull);
+
+#if __ANDROID_API__ >= 21
 int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull, const struct timespec* _Nonnull)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int pthread_mutex_trylock(pthread_mutex_t* _Nonnull);
 int pthread_mutex_unlock(pthread_mutex_t* _Nonnull);
 
@@ -216,9 +236,13 @@ int pthread_rwlockattr_init(pthread_rwlockattr_t* _Nonnull);
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t* _Nonnull);
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t* _Nonnull, int* _Nonnull);
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t* _Nonnull, int);
+
+#if __ANDROID_API__ >= 23
 int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t* _Nonnull, int* _Nonnull)
   __INTRODUCED_IN(23);
 int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t* _Nonnull, int) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 int pthread_rwlock_destroy(pthread_rwlock_t* _Nonnull);
 int pthread_rwlock_init(pthread_rwlock_t* _Nonnull, const pthread_rwlockattr_t*);
@@ -230,6 +254,8 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t* _Nonnull);
 int pthread_rwlock_unlock(pthread_rwlock_t* _Nonnull);
 int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull);
 
+
+#if __ANDROID_API__ >= 24
 int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_getpshared(pthread_barrierattr_t* _Nonnull attr, int* _Nonnull pshared)
@@ -247,11 +273,17 @@ int pthread_spin_init(pthread_spinlock_t* _Nonnull, int) __INTRODUCED_IN(24);
 int pthread_spin_lock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
 int pthread_spin_trylock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
 int pthread_spin_unlock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 
 pthread_t pthread_self(void) __pure2;
 
 #if defined(__USE_GNU)
+
+#if 0
 int pthread_getname_np(pthread_t, char* _Nonnull, size_t) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 #endif
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t, const char* _Nonnull);

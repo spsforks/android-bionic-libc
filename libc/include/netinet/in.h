@@ -49,8 +49,12 @@ typedef uint32_t in_addr_t;
 
 int bindresvport(int, struct sockaddr_in*);
 
+
+#if __ANDROID_API__ >= 24
 extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
 extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 
 __END_DECLS
 

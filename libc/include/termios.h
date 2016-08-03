@@ -37,6 +37,8 @@ __BEGIN_DECLS
 
 #if __ANDROID_API__ >= 21
 // Implemented as static inlines before 21.
+
+#if __ANDROID_API__ >= 21
 speed_t cfgetispeed(const struct termios*) __INTRODUCED_IN(21);
 speed_t cfgetospeed(const struct termios*) __INTRODUCED_IN(21);
 void cfmakeraw(struct termios*) __INTRODUCED_IN(21);
@@ -48,10 +50,16 @@ int tcgetattr(int, struct termios*) __INTRODUCED_IN(21);
 pid_t tcgetsid(int) __INTRODUCED_IN(21);
 int tcsendbreak(int, int) __INTRODUCED_IN(21);
 int tcsetattr(int, int, const struct termios*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 #endif
 
+
+#if __ANDROID_API__ >= 21
 int cfsetspeed(struct termios*, speed_t) __INTRODUCED_IN(21);
 int tcdrain(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

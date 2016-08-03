@@ -129,8 +129,12 @@ typedef struct {
   struct android_namespace_t* library_namespace;
 } android_dlextinfo;
 
+
+#if __ANDROID_API__ >= 21
 void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo)
   __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

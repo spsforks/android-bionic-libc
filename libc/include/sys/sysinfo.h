@@ -35,6 +35,8 @@ __BEGIN_DECLS
 
 int sysinfo(struct sysinfo* info);
 
+
+#if __ANDROID_API__ >= 23
 int get_nprocs_conf(void) __INTRODUCED_IN(23);
 
 int get_nprocs(void) __INTRODUCED_IN(23);
@@ -42,6 +44,8 @@ int get_nprocs(void) __INTRODUCED_IN(23);
 long get_phys_pages(void) __INTRODUCED_IN(23);
 
 long get_avphys_pages(void) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 __END_DECLS
 

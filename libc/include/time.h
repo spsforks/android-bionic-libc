@@ -76,7 +76,11 @@ struct tm* gmtime_r(const time_t*, struct tm*);
 
 char* strptime(const char*, const char*, struct tm*);
 size_t strftime(char*, size_t, const char*, const struct tm*);
+
+#if __ANDROID_API__ >= 21
 size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 char* ctime(const time_t*);
 char* ctime_r(const time_t*, char*);
@@ -85,7 +89,11 @@ void tzset(void);
 
 clock_t clock(void);
 
+
+#if __ANDROID_API__ >= 23
 int clock_getcpuclockid(pid_t, clockid_t*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 int clock_getres(clockid_t, struct timespec*);
 int clock_gettime(clockid_t, struct timespec*);
@@ -99,8 +107,12 @@ int timer_gettime(timer_t, struct itimerspec*);
 int timer_getoverrun(timer_t);
 
 /* Non-standard extensions that are in the BSDs and glibc. */
+
+#if __ANDROID_API__ >= 12
 time_t timelocal(struct tm*) __INTRODUCED_IN(12);
 time_t timegm(struct tm*) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 __END_DECLS
 

@@ -45,17 +45,29 @@ typedef unsigned long rlim_t;
 int getrlimit(int, struct rlimit*);
 int setrlimit(int, const struct rlimit*);
 
+
+#if __ANDROID_API__ >= 21
 int getrlimit64(int, struct rlimit64*) __INTRODUCED_IN(21);
 int setrlimit64(int, const struct rlimit64*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int getpriority(int, int);
 int setpriority(int, int, int);
 
 int getrusage(int, struct rusage*);
 
+
+#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
 int prlimit(pid_t, int, const struct rlimit*, struct rlimit*) __INTRODUCED_IN_32(24)
   __INTRODUCED_IN_64(21);
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
+
+
+#if __ANDROID_API__ >= 21
 int prlimit64(pid_t, int, const struct rlimit64*, struct rlimit64*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 __END_DECLS
 

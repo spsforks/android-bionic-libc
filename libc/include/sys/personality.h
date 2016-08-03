@@ -34,7 +34,11 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 15
 int personality(unsigned int persona) __INTRODUCED_IN(15);
+#endif /* __ANDROID_API__ >= 15 */
+
 
 __END_DECLS
 

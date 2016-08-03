@@ -43,11 +43,19 @@ __BEGIN_DECLS
 
 __noreturn void abort(void);
 __noreturn void exit(int);
+
+#if __ANDROID_API__ >= 21
 __noreturn void _Exit(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int atexit(void (*)(void));
 
+
+#if __ANDROID_API__ >= 21
 int at_quick_exit(void (*)(void)) __INTRODUCED_IN(21);
 void quick_exit(int) __noreturn __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 char* getenv(const char*);
 int putenv(char*);
@@ -58,13 +66,25 @@ int clearenv(void);
 char* mkdtemp(char*);
 char* mktemp(char*) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
+
+#if __ANDROID_API__ >= 23
 int mkostemp64(char*, int) __INTRODUCED_IN(23);
 int mkostemp(char*, int) __INTRODUCED_IN(23);
 int mkostemps64(char*, int, int) __INTRODUCED_IN(23);
 int mkostemps(char*, int, int) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 21
 int mkstemp64(char*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 int mkstemp(char*);
+
+#if __ANDROID_API__ >= 23
 int mkstemps64(char*, int) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 int mkstemps(char*, int);
 
 long strtol(const char *, char **, int);
@@ -72,14 +92,22 @@ long long strtoll(const char *, char **, int);
 unsigned long strtoul(const char *, char **, int);
 unsigned long long strtoull(const char *, char **, int);
 
+
+#if __ANDROID_API__ >= 16
 int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN(16);
+#endif /* __ANDROID_API__ >= 16 */
+
 
 double strtod(const char*, char**);
+
+#if __ANDROID_API__ >= 21
 long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
 long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
 long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int atoi(const char*) __purefunc;
 long atol(const char*) __purefunc;
@@ -99,28 +127,48 @@ void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
 
+
+#if __ANDROID_API__ >= 21
 int rand_r(unsigned int*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 double drand48(void);
 double erand48(unsigned short[3]);
 long jrand48(unsigned short[3]);
+
+#if __ANDROID_API__ >= 23
 void lcong48(unsigned short[7]) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 long lrand48(void);
 long mrand48(void);
 long nrand48(unsigned short[3]);
 unsigned short* seed48(unsigned short[3]);
 void srand48(long);
 
+
+#if __ANDROID_API__ >= 21
 char* initstate(unsigned int, char*, size_t) __INTRODUCED_IN(21);
 char* setstate(char*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 int getpt(void);
+
+#if __ANDROID_API__ >= 21
 int posix_openpt(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 char* ptsname(int);
 int ptsname_r(int, char*, size_t);
 int unlockpt(int);
 
+
+#if 0
 int getsubopt(char**, char* const*, char**) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 
 typedef struct {
     int  quot;
@@ -144,16 +192,32 @@ typedef struct {
 lldiv_t lldiv(long long, long long) __pure2;
 
 /* BSD compatibility. */
+
+#if __ANDROID_API__ >= 21
 const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char*) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
 
+
+
+#if 0
 int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 size_t mbstowcs(wchar_t*, const char*, size_t);
+
+#if __ANDROID_API__ >= 21
 int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21);
 int wctomb(char*, wchar_t) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 size_t wcstombs(char*, const wchar_t*, size_t);
 
+
+#if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 
 #if defined(__BIONIC_FORTIFY)
@@ -178,6 +242,8 @@ char* realpath(const char* path, char* resolved) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 #if __ANDROID_API__ >= 21
+
+#if __ANDROID_API__ >= 21
 float strtof(const char*, char**) __INTRODUCED_IN(21);
 double atof(const char*) __INTRODUCED_IN(21);
 int abs(int) __pure2 __INTRODUCED_IN(21);
@@ -188,6 +254,8 @@ void srand(unsigned int) __INTRODUCED_IN(21);
 long random(void) __INTRODUCED_IN(21);
 void srandom(unsigned int) __INTRODUCED_IN(21);
 int grantpt(int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 #else
 // Implemented as static inlines before 21.
 #endif

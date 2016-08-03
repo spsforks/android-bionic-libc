@@ -77,8 +77,12 @@ typedef int sig_atomic_t;
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
+
+#if __ANDROID_API__ >= 21
 int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
 int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 extern const char* const sys_siglist[_NSIG];
 extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
@@ -118,12 +122,16 @@ int sigaction(int, const struct sigaction*, struct sigaction*);
 int siginterrupt(int, int);
 
 #if __ANDROID_API__ >= 21
+
+#if __ANDROID_API__ >= 21
 sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
 int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
 int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
 int sigemptyset(sigset_t*) __INTRODUCED_IN(21);
 int sigfillset(sigset_t*) __INTRODUCED_IN(21);
 int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 #else
 // Implemented as static inlines before 21.
 #endif
@@ -133,6 +141,8 @@ int sigprocmask(int, const sigset_t*, sigset_t*);
 int sigsuspend(const sigset_t* _Nonnull);
 int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
+
+#if 0
 int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN_FUTURE;
@@ -145,6 +155,8 @@ int sigrelse(int)
   __INTRODUCED_IN_FUTURE;
 sighandler_t sigset(int, sighandler_t)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 
 int raise(int);
 int kill(pid_t, int);
@@ -152,15 +164,23 @@ int killpg(int, int);
 
 int sigaltstack(const stack_t*, stack_t*);
 
+
+#if __ANDROID_API__ >= 17
 void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
 void psignal(int, const char*) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 
 int pthread_kill(pthread_t, int);
 int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
+
+#if __ANDROID_API__ >= 23
 int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
 int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
 int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

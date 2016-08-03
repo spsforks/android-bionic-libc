@@ -35,7 +35,11 @@ void* realloc(void* p, size_t byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 void free(void* p);
 
 void* memalign(size_t alignment, size_t byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+
+#if __ANDROID_API__ >= 17
 size_t malloc_usable_size(const void* p) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
@@ -74,7 +78,11 @@ struct mallinfo mallinfo(void);
  *   <!-- more heaps -->
  * </malloc>
  */
+
+#if __ANDROID_API__ >= 23
 int malloc_info(int, FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 __END_DECLS
 

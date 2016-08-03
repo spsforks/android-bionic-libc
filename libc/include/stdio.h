@@ -61,9 +61,13 @@ struct __sFILE;
 typedef struct __sFILE FILE;
 
 #if __ANDROID_API__ >= 23
+
+#if __ANDROID_API__ >= 23
 extern FILE* stdin __INTRODUCED_IN(23);
 extern FILE* stdout __INTRODUCED_IN(23);
 extern FILE* stderr __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 /* C99 and earlier plus current C++ standards say these must be macros. */
 #define stdin stdin
@@ -128,8 +132,12 @@ int	 fscanf(FILE * __restrict, const char * __restrict _Nonnull, ...) __scanflik
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
+
+#if __ANDROID_API__ >= 18
 ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(18);
 ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
 
 void	 perror(const char *);
 int	 printf(const char * __restrict _Nonnull, ...) __printflike(1, 2);
@@ -146,8 +154,12 @@ int	 ungetc(int, FILE *);
 int	 vfprintf(FILE * __restrict, const char * __restrict _Nonnull, __va_list) __printflike(2, 0);
 int	 vprintf(const char * __restrict _Nonnull, __va_list) __printflike(1, 0);
 
+
+#if __ANDROID_API__ >= 21
 int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
 int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
@@ -191,22 +203,42 @@ FILE* funopen(const void*,
               int (*)(void*));
 #  endif
 #endif
+
+#if __ANDROID_API__ >= 24
 int fgetpos64(FILE*, fpos64_t*) __INTRODUCED_IN(24);
 int fsetpos64(FILE*, const fpos64_t*) __INTRODUCED_IN(24);
 int fseeko64(FILE*, off64_t, int) __INTRODUCED_IN(24);
 off64_t ftello64(FILE*) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #if defined(__USE_BSD)
+
+#if __ANDROID_API__ >= 24
 FILE* funopen64(const void*, int (*)(void*, char*, int), int (*)(void*, const char*, int),
                 fpos64_t (*)(void*, fpos64_t, int), int (*)(void*)) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #endif
 
 FILE* fopen(const char* __restrict, const char* __restrict);
+
+#if __ANDROID_API__ >= 24
 FILE* fopen64(const char* __restrict, const char* __restrict) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 FILE* freopen(const char* __restrict, const char* __restrict, FILE* __restrict);
+
+#if __ANDROID_API__ >= 24
 FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict)
   __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 FILE* tmpfile(void);
+
+#if __ANDROID_API__ >= 24
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 
 int snprintf(char* __restrict, size_t, const char* __restrict _Nonnull, ...) __printflike(3, 4);
 int vfscanf(FILE* __restrict, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
@@ -215,7 +247,11 @@ int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_li
 int vsscanf(const char* __restrict _Nonnull, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
+
+#if 0
 char* ctermid(char*) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 
 FILE* fdopen(int, const char*);
 int fileno(FILE*);
@@ -229,8 +265,12 @@ int getchar_unlocked(void);
 int putc_unlocked(int, FILE*);
 int putchar_unlocked(int);
 
+
+#if __ANDROID_API__ >= 23
 FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
 FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 int  asprintf(char** __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
@@ -239,27 +279,47 @@ int fpurge(FILE*);
 void setbuffer(FILE*, char*, int);
 int setlinebuf(FILE*);
 int vasprintf(char** __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0);
+
+#if __ANDROID_API__ >= 23
 void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
 int feof_unlocked(FILE*) __INTRODUCED_IN(23);
 int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
+#endif /* __ANDROID_API__ >= 23 */
+
+
+#if __ANDROID_API__ >= 24
 int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __USE_BSD */
 
+
+#if __ANDROID_API__ >= 17
 char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
 char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
+
+#if __ANDROID_API__ >= 24
 size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
   __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
 __errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
 __errordecl(__fread_overflow, "fread called with overflowing size * count");
 
+
+#if __ANDROID_API__ >= 24
 size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
   __INTRODUCED_IN(24);
+#endif /* __ANDROID_API__ >= 24 */
+
 size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
 __errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
 __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");

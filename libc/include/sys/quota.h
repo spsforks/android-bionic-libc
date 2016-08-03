@@ -40,7 +40,11 @@
 
 __BEGIN_DECLS
 
+
+#if 0
 int quotactl(int, const char*, int, char*) __INTRODUCED_IN_FUTURE;
+#endif /* 0 */
+
 
 __END_DECLS
 

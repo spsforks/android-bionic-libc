@@ -52,11 +52,27 @@ int sched_rr_get_interval(pid_t, struct timespec*);
 
 #if defined(__USE_GNU)
 
+
+#if (defined(__LP64__)) || (defined(__arm__) && __ANDROID_API__ >= 9) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__i386__) && __ANDROID_API__ >= 17)
 int clone(int (*)(void*), void*, int, void*, ...) __INTRODUCED_IN_ARM(9)
     __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
+#endif /* (defined(__LP64__)) || (defined(__arm__) && __ANDROID_API__ >= 9) || (defined(__mips__) && !defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__i386__) && __ANDROID_API__ >= 17) */
+
+
+#if __ANDROID_API__ >= 17
 int unshare(int) __INTRODUCED_IN(17);
+#endif /* __ANDROID_API__ >= 17 */
+
+
+#if __ANDROID_API__ >= 12
 int sched_getcpu(void) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
+
+#if __ANDROID_API__ >= 21
 int setns(int, int) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #ifdef __LP64__
 #define CPU_SETSIZE 1024
@@ -73,8 +89,12 @@ typedef struct {
   __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
 } cpu_set_t;
 
+
+#if __ANDROID_API__ >= 12
 int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) __INTRODUCED_IN(12);
 int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 #define CPU_ZERO(set)          CPU_ZERO_S(sizeof(cpu_set_t), set)
 #define CPU_SET(cpu, set)      CPU_SET_S(cpu, sizeof(cpu_set_t), set)
@@ -97,8 +117,12 @@ int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN
 #define CPU_ALLOC(count)  __sched_cpualloc((count))
 #define CPU_FREE(set)     __sched_cpufree((set))
 
+
+#if __ANDROID_API__ >= 12
 cpu_set_t* __sched_cpualloc(size_t count) __INTRODUCED_IN(12);
 void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 #define CPU_ZERO_S(setsize, set)  __builtin_memset(set, 0, setsize)
 
@@ -142,7 +166,11 @@ void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(12);
 
 #define CPU_COUNT_S(setsize, set)  __sched_cpucount((setsize), (set))
 
+
+#if __ANDROID_API__ >= 12
 int __sched_cpucount(size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
+#endif /* __ANDROID_API__ >= 12 */
+
 
 #endif /* __USE_GNU */
 
