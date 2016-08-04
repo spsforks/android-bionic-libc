@@ -42,6 +42,7 @@ cc_defaults {
 cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
+    compile_multilib: "both",
 }
 
 // We don't build a static benchmark executable because it's not usually
