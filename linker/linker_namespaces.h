@@ -19,6 +19,7 @@
 
 #include "linker_common_types.h"
 
+#include <string>
 #include <vector>
 
 struct android_namespace_t {
