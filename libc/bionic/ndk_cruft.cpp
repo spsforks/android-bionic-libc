@@ -210,6 +210,11 @@ int vfdprintf(int fd, const char* fmt, va_list ap) {
   return vdprintf(fd, fmt, ap);
 }
 
+// LP32's <stdio.h> had putw (but not getw).
+int putw(int value, FILE* fp) {
+  return fwrite(&value, sizeof(value), 1, fp) == 1 ? 0 : EOF;
+}
+
 #define __futex_wake __real_futex_wake
 #define __futex_wait __real_futex_wait
 #include "private/bionic_futex.h"
