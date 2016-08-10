@@ -46,6 +46,7 @@
 
 #include "local.h"
 #include "glue.h"
+#include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
 
@@ -800,6 +801,32 @@ int vprintf(const char* fmt, va_list ap) {
 
 int vscanf(const char* fmt, va_list ap) {
   return vfscanf(stdin, fmt, ap);
+}
+
+int vsnprintf(char* s, size_t n, const char* fmt, va_list ap) {
+  // stdio internals use int rather than size_t.
+  static_assert(INT_MAX <= SSIZE_MAX, "SSIZE_MAX too large to fit in int");
+
+  __check_count("vsnprintf", "size", n);
+
+  // Stdio internals do not deal correctly with zero length buffer.
+  char dummy;
+  if (n == 0) {
+    s = &dummy;
+    n = 1;
+  }
+
+  FILE f;
+  __sfileext fext;
+  _FILEEXT_SETUP(&f, &fext);
+  f._file = -1;
+  f._flags = __SWR | __SSTR;
+  f._bf._base = f._p = reinterpret_cast<unsigned char*>(s);
+  f._bf._size = f._w = n - 1;
+
+  int result = __vfprintf(&f, fmt, ap);
+  *f._p = '\0';
+  return result;
 }
 
 int vsprintf(char* s, const char* fmt, va_list ap) {
