@@ -76,6 +76,14 @@ struct mallinfo mallinfo(void);
  */
 int malloc_info(int, FILE*) __INTRODUCED_IN(23);
 
+/*
+ * Memory Allocation Hooks
+ */
+extern void* (*__malloc_hook)(size_t, const void*);
+extern void* (*__realloc_hook)(void*, size_t, const void*);
+extern void (*__free_hook)(void*, const void*);
+extern void* (*__memalign_hook)(size_t, size_t, const void*);
+
 __END_DECLS
 
 #endif  /* LIBC_INCLUDE_MALLOC_H_ */

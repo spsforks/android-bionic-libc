@@ -1221,6 +1221,11 @@ LIBC_O {
     towctrans_l; # future
     wctrans; # future
     wctrans_l; # future
+
+    __malloc_hook;
+    __free_hook;
+    __realloc_hook;
+    __memalign_hook;
 } LIBC_N;
 
 LIBC_PRIVATE {

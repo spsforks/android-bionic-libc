@@ -40,10 +40,14 @@
 //   free_malloc_leak_info: Frees the data allocated by the call to
 //                          get_malloc_leak_info.
 
+#include <malloc.h>
 #include <pthread.h>
+#include <sys/param.h>
+#include <unistd.h>
 
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
+#include <private/bionic_macros.h>
 #include <private/bionic_malloc_dispatch.h>
 
 #include "jemalloc.h"
@@ -73,6 +77,27 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
 // In a VM process, this is set to 1 after fork()ing out of zygote.
 int gMallocLeakZygoteChild = 0;
 
+static void* orig_malloc_hook(size_t size, const void*) {
+  return Malloc(malloc)(size);
+}
+
+static void* orig_realloc_hook(void* ptr, size_t size, const void*) {
+  return Malloc(realloc)(ptr, size);
+}
+
+static void orig_free_hook(void* ptr, const void*) {
+  Malloc(free)(ptr);
+}
+
+static void* orig_memalign_hook(size_t alignment, size_t size, const void*) {
+  return Malloc(memalign)(alignment, size);
+}
+
+void* (*__malloc_hook)(size_t, const void*) = orig_malloc_hook;
+void* (*__realloc_hook)(void*, size_t, const void*) = orig_realloc_hook;
+void (*__free_hook)(void*, const void*) = orig_free_hook;
+void* (*__memalign_hook)(size_t, size_t, const void*) = orig_memalign_hook;
+
 // =============================================================================
 // Allocation functions
 // =============================================================================
@@ -80,6 +105,16 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
   auto _calloc = __libc_globals->malloc_dispatch.calloc;
   if (__predict_false(_calloc != nullptr)) {
     return _calloc(n_elements, elem_size);
+  } else if (__predict_false(__malloc_hook != orig_malloc_hook)) {
+    size_t size;
+    if (__builtin_mul_overflow(n_elements, elem_size, &size)) {
+      return nullptr;
+    }
+    void* ptr = __malloc_hook(size, __builtin_return_address(0));
+    if (ptr != nullptr) {
+      memset(ptr, 0, size);
+    }
+    return ptr;
   }
   return Malloc(calloc)(n_elements, elem_size);
 }
@@ -88,6 +123,8 @@ extern "C" void free(void* mem) {
   auto _free = __libc_globals->malloc_dispatch.free;
   if (__predict_false(_free != nullptr)) {
     _free(mem);
+  } else if (__predict_false(__free_hook != orig_free_hook)) {
+    __free_hook(mem, __builtin_return_address(0));
   } else {
     Malloc(free)(mem);
   }
@@ -105,6 +142,8 @@ extern "C" void* malloc(size_t bytes) {
   auto _malloc = __libc_globals->malloc_dispatch.malloc;
   if (__predict_false(_malloc != nullptr)) {
     return _malloc(bytes);
+  } else if (__predict_false(__malloc_hook != orig_malloc_hook)) {
+    return __malloc_hook(bytes, __builtin_return_address(0));
   }
   return Malloc(malloc)(bytes);
 }
@@ -121,6 +160,8 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
   auto _memalign = __libc_globals->malloc_dispatch.memalign;
   if (__predict_false(_memalign != nullptr)) {
     return _memalign(alignment, bytes);
+  } else if (__predict_false(__memalign_hook != orig_memalign_hook)) {
+    return __memalign_hook(alignment, bytes, __builtin_return_address(0));
   }
   return Malloc(memalign)(alignment, bytes);
 }
@@ -129,6 +170,15 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
   auto _posix_memalign = __libc_globals->malloc_dispatch.posix_memalign;
   if (__predict_false(_posix_memalign != nullptr)) {
     return _posix_memalign(memptr, alignment, size);
+  } else if (__predict_false(__memalign_hook != orig_memalign_hook)) {
+    if (!powerof2(alignment)) {
+      return EINVAL;
+    }
+    *memptr = __memalign_hook(alignment, size, __builtin_return_address(0));
+    if (*memptr == nullptr) {
+      return ENOMEM;
+    }
+    return 0;
   }
   return Malloc(posix_memalign)(memptr, alignment, size);
 }
@@ -137,6 +187,8 @@ extern "C" void* realloc(void* old_mem, size_t bytes) {
   auto _realloc = __libc_globals->malloc_dispatch.realloc;
   if (__predict_false(_realloc != nullptr)) {
     return _realloc(old_mem, bytes);
+  } else if (__predict_false(__realloc_hook != orig_realloc_hook)) {
+    return __realloc_hook(old_mem, bytes, __builtin_return_address(0));
   }
   return Malloc(realloc)(old_mem, bytes);
 }
@@ -146,6 +198,13 @@ extern "C" void* pvalloc(size_t bytes) {
   auto _pvalloc = __libc_globals->malloc_dispatch.pvalloc;
   if (__predict_false(_pvalloc != nullptr)) {
     return _pvalloc(bytes);
+  } else if (__predict_false(__memalign_hook != orig_memalign_hook)) {
+    size_t pagesize = getpagesize();
+    size_t size = BIONIC_ALIGN(bytes, pagesize);
+    if (size < bytes) {
+      return nullptr;
+    }
+    return __memalign_hook(pagesize, size, __builtin_return_address(0));
   }
   return Malloc(pvalloc)(bytes);
 }
@@ -154,7 +213,10 @@ extern "C" void* valloc(size_t bytes) {
   auto _valloc = __libc_globals->malloc_dispatch.valloc;
   if (__predict_false(_valloc != nullptr)) {
     return _valloc(bytes);
+  } else if (__predict_false(__memalign_hook != orig_memalign_hook)) {
+    return __memalign_hook(getpagesize(), bytes, __builtin_return_address(0));
   }
+
   return Malloc(valloc)(bytes);
 }
 #endif

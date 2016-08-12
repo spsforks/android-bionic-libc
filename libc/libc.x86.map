@@ -1355,6 +1355,11 @@ LIBC_PRIVATE {
     vfdprintf; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
+
+    __malloc_hook;
+    __free_hook;
+    __realloc_hook;
+    __memalign_hook;
 } LIBC_O;
 
 LIBC_PLATFORM {

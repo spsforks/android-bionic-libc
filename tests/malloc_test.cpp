@@ -500,3 +500,155 @@ TEST(malloc, verify_alignment) {
   delete[] values_64;
   delete[] values_ldouble;
 }
+
+#if defined(__BIONIC__)
+static void* (*old_malloc_hook)(size_t, const void*);
+static void (*old_free_hook)(void*, const void*);
+static void* (*old_realloc_hook)(void*, size_t, const void*);
+static void* (*old_memalign_hook)(size_t, size_t, const void*);
+
+static bool malloc_called = false;
+static bool free_called = false;
+static bool realloc_called = false;
+static bool memalign_called = false;
+
+static void* test_malloc_hook(size_t size, const void* caller) {
+  malloc_called = true;
+  return old_malloc_hook(size, caller);
+}
+
+static void* test_realloc_hook(void* ptr, size_t size, const void* caller) {
+  realloc_called = true;
+  return old_realloc_hook(ptr, size, caller);
+}
+
+static void* test_memalign_hook(size_t alignment, size_t size, const void* caller) {
+  memalign_called = true;
+  return old_memalign_hook(alignment, size, caller);
+}
+
+static void test_free_hook(void* ptr, const void* caller) {
+  free_called = true;
+  old_free_hook(ptr, caller);
+}
+#endif
+
+TEST(malloc, malloc_hook) {
+#if defined(__BIONIC__)
+  old_malloc_hook = __malloc_hook;
+  __malloc_hook = test_malloc_hook;
+
+  void* ptr = malloc(1024);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(malloc_called) << "The malloc hook was not called.";
+  free(ptr);
+#endif
+}
+
+TEST(malloc, free_hook) {
+#if defined(__BIONIC__)
+  old_free_hook = __free_hook;
+  __free_hook = test_free_hook;
+
+  void* ptr = malloc(1024);
+  ASSERT_TRUE(ptr != nullptr);
+  free(ptr);
+
+  ASSERT_TRUE(free_called) << "The free hook was not called.";
+#endif
+}
+
+TEST(malloc, realloc_hook) {
+#if defined(__BIONIC__)
+  old_realloc_hook = __realloc_hook;
+  __realloc_hook = test_realloc_hook;
+
+  void* ptr = malloc(1024);
+  ASSERT_TRUE(ptr != nullptr);
+
+  // Same size realloc.
+  ptr = realloc(ptr, 1024);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(realloc_called) << "The realloc hook was not called for same size.";
+  realloc_called = false;
+
+  // Smaller size realloc.
+  ptr = realloc(ptr, 100);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(realloc_called) << "The realloc hook was not called for smaller size.";
+  realloc_called = false;
+
+  // Larger size realloc.
+  ptr = realloc(ptr, 2048);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(realloc_called) << "The realloc hook was not called for larger size.";
+  free(ptr);
+#endif
+}
+
+TEST(malloc, memalign_hook) {
+#if defined(__BIONIC__)
+  old_memalign_hook = __memalign_hook;
+  __memalign_hook = test_memalign_hook;
+
+  void* ptr = memalign(8, 1024);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(memalign_called) << "The memalign hook was not called.";
+  free(ptr);
+#endif
+}
+
+TEST(malloc, memalign_hook_posix_memalign) {
+#if defined(__BIONIC__)
+  old_memalign_hook = __memalign_hook;
+  __memalign_hook = test_memalign_hook;
+
+  void* ptr;
+  ASSERT_EQ(0, posix_memalign(&ptr, 8, 1024));
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(memalign_called) << "The memalign hook was not called for posix_memalign.";
+  free(ptr);
+#endif
+}
+
+TEST(malloc, memalign_hook_posix_memalign_errors) {
+#if defined(__BIONIC__)
+  old_memalign_hook = __memalign_hook;
+  __memalign_hook = test_memalign_hook;
+
+  void* ptr;
+  ASSERT_EQ(EINVAL, posix_memalign(&ptr, 11, 1024));
+  //ASSERT_EQ(ENOMEM, posix_memalign(&ptr, SIZE_MAX, 1024));
+#endif
+}
+
+#if !defined(__LP64__)
+TEST(malloc, memalign_hook_pvalloc) {
+#if defined(__BIONIC__)
+  old_memalign_hook = __memalign_hook;
+  __memalign_hook = test_memalign_hook;
+
+  size_t pagesize = sysconf(_SC_PAGE_SIZE);
+  void* ptr = pvalloc(pagesize/2);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_LE(pagesize, malloc_usable_size(ptr));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % pagesize);
+  ASSERT_TRUE(memalign_called) << "The memalign hook was not called for pvalloc.";
+  free(ptr);
+#endif
+}
+
+TEST(malloc, memalign_hook_valloc) {
+#if defined(__BIONIC__)
+  old_memalign_hook = __memalign_hook;
+  __memalign_hook = test_memalign_hook;
+
+  size_t pagesize = sysconf(_SC_PAGE_SIZE);
+  void* ptr = valloc(8);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % pagesize);
+  ASSERT_TRUE(memalign_called) << "The memalign hook was not called for valloc.";
+  free(ptr);
+#endif
+}
+#endif
