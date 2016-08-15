@@ -1455,3 +1455,14 @@ TEST(STRING_TEST, memcpy_src_dst_same) {
   }
   RunSingleBufferAlignTest(MEDIUM, DoMemcpySameTest);
 }
+
+TEST(STRING_TEST, memmem_strstr_empty_needle) {
+  const char* some_haystack = "haystack";
+  const char* empty_haystack = "";
+
+  ASSERT_EQ(some_haystack, memmem(some_haystack, 8, "", 0));
+  ASSERT_EQ(empty_haystack, memmem(empty_haystack, 0, "", 0));
+
+  ASSERT_EQ(some_haystack, strstr(some_haystack, ""));
+  ASSERT_EQ(empty_haystack, strstr(empty_haystack, ""));
+}
