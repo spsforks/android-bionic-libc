@@ -107,6 +107,7 @@ cc_test_library {
         "sstream_test.cpp",
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
+        "sys_msg_test.cpp",
         "sys_personality_test.cpp",
         "sys_prctl_test.cpp",
         "sys_procfs_test.cpp",

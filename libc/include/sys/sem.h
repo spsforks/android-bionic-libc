@@ -30,6 +30,9 @@
 #define _SYS_SEM_H_
 
 #include <sys/cdefs.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+
 #include <linux/sem.h>
 
 #endif /* _SYS_SEM_H_ */
