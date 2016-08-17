@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <gtest/gtest.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <errno.h>
+#include <sys/msg.h>
 
-#include <linux/msg.h>
-
-#define msqid_ds msqid64_ds
-#define ipc_perm ipc64_perm
-
-__BEGIN_DECLS
-
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
-
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
-
-__END_DECLS
-
-#endif /* _SYS_MSG_H_ */
+TEST(sys_msg, smoke) {
+  ASSERT_EQ(-1, msgctl(1, 2, nullptr));
+  ASSERT_EQ(-1, msgget(ftok("/", 1), 2));
+  ASSERT_EQ(-1, msgrcv(1, nullptr, 0, 2, 3));
+  ASSERT_EQ(-1, msgsnd(1, nullptr, 0, 2));
+}

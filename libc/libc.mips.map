@@ -1268,6 +1268,10 @@ LIBC_O {
     hasmntopt; # future
     lutimes; # future
     mblen; # future
+    msgctl; # future
+    msgget; # future
+    msgrcv; # future
+    msgsnd; # future
     pthread_getname_np; # future
     quotactl; # future
     setdomainname; # future
