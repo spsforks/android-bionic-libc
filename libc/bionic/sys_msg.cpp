@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,43 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <sys/msg.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
-#include <linux/msg.h>
+int msgctl(int id, int cmd, msqid_ds* buf) {
+#if !defined(__LP64__)
+  // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
+  cmd |= IPC_64;
+#endif
+#if __i386__
+  return syscall(SYS_ipc, MSGCTL, id, cmd, 0, buf, 0);
+#else
+  return syscall(SYS_msgctl, id, cmd, buf);
+#endif
+}
 
-#define msqid_ds msqid64_ds
+int msgget(key_t key, int flags) {
+#if __i386__
+  return syscall(SYS_ipc, MSGGET, key, flags, 0, 0, 0);
+#else
+  return syscall(SYS_msgget, key, flags);
+#endif
+}
 
-__BEGIN_DECLS
+ssize_t msgrcv(int id, void* msg, size_t n, long type, int flags) {
+#if __i386__
+  return syscall(SYS_ipc, IPCCALL(1, MSGRCV), id, n, flags, msg, type);
+#else
+  return syscall(SYS_msgrcv, id, msg, n, type, flags);
+#endif
+}
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
-
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
-
-__END_DECLS
-
-#endif /* _SYS_MSG_H_ */
+int msgsnd(int id, const void* msg, size_t n, int flags) {
+#if __i386__
+  return syscall(SYS_ipc, MSGSND, id, n, flags, msg, 0);
+#else
+  return syscall(SYS_msgsnd, id, msg, n, flags);
+#endif
+}

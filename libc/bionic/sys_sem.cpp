@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <sys/sem.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <stdarg.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
-#include <linux/msg.h>
+int semctl(int id, int num, int cmd, ...) {
+#if !defined(__LP64__)
+  // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
+  cmd |= IPC_64;
+#endif
+  va_list ap;
+  va_start(ap, cmd);
+  semun arg = va_arg(ap, semun);
+  va_end(ap);
+#if __i386__
+  return syscall(SYS_ipc, SEMCTL, id, num, cmd, &arg, 0);
+#else
+  return syscall(SYS_semctl, id, num, cmd, arg);
+#endif
+}
 
-#define msqid_ds msqid64_ds
+int semget(key_t key, int n, int flags) {
+#if __i386__
+  return syscall(SYS_ipc, SEMGET, key, n, flags, 0, 0);
+#else
+  return syscall(SYS_semget, key, n, flags);
+#endif
+}
 
-__BEGIN_DECLS
+int semop(int id, sembuf* ops, size_t op_count) {
+  return semtimedop(id, ops, op_count, nullptr);
+}
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
-
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
-
-__END_DECLS
-
-#endif /* _SYS_MSG_H_ */
+int semtimedop(int id, sembuf* ops, size_t op_count, const timespec* ts) {
+#if __i386__
+  return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
+#else
+  return syscall(SYS_semtimedop, id, ops, op_count, ts);
+#endif
+}

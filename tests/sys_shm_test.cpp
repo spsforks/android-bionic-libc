@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,57 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <gtest/gtest.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <errno.h>
+#include <sys/shm.h>
 
-#include <linux/msg.h>
+#include "TemporaryFile.h"
 
-#define msqid_ds msqid64_ds
+TEST(sys_shm, smoke) {
+  // Create a segment.
+  TemporaryDir dir;
+  key_t key = ftok(dir.dirname, 1);
+  int id = shmget(key, 1234, IPC_CREAT|0666);
+  ASSERT_NE(id, -1);
 
-__BEGIN_DECLS
+  // Check segment info.
+  shmid_ds ds;
+  memset(&ds, 0, sizeof(ds));
+  ASSERT_EQ(0, shmctl(id, IPC_STAT, &ds));
+  ASSERT_EQ(1234U, ds.shm_segsz);
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
+  // Attach.
+  void* p = shmat(id, 0, SHM_RDONLY);
+  ASSERT_NE(p, nullptr);
 
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
+  // Detach.
+  ASSERT_EQ(0, shmdt(p));
 
-__END_DECLS
+  // Destroy the segment.
+  ASSERT_EQ(0, shmctl(id, IPC_RMID, 0));
+}
 
-#endif /* _SYS_MSG_H_ */
+TEST(sys_shm, shmat_failure) {
+  errno = 0;
+  ASSERT_EQ(reinterpret_cast<void*>(-1), shmat(-1, 0, SHM_RDONLY));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sys_shm, shmctl_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, shmctl(-1, IPC_STAT, nullptr));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sys_shm, shmdt_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, shmdt(nullptr));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sys_shm, shmget_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, shmget(-1, 1234, 0));
+  ASSERT_EQ(ENOENT, errno);
+}
