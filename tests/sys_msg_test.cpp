@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <gtest/gtest.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <errno.h>
+#include <sys/msg.h>
 
-#include <linux/msg.h>
+#include "TemporaryFile.h"
 
-#define msqid_ds msqid64_ds
+TEST(sys_msg, smoke) {
+  // Create a queue.
+  TemporaryDir dir;
+  key_t key = ftok(dir.dirname, 1);
+  int id = msgget(key, IPC_CREAT|0666);
+  ASSERT_NE(id, -1);
 
-__BEGIN_DECLS
+  // Queue should be empty.
+  msqid_ds ds;
+  memset(&ds, 0, sizeof(ds));
+  ASSERT_EQ(0, msgctl(id, IPC_STAT, &ds));
+  ASSERT_EQ(0U, ds.msg_qnum);
+  ASSERT_EQ(0U, ds.msg_cbytes);
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
+  // Send a message.
+  struct {
+    long type;
+    char data[32];
+  } msg = { 1, "hello world" };
+  ASSERT_EQ(0, msgsnd(id, &msg, sizeof(msg), 0));
 
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
+  // Queue should be non-empty.
+  ASSERT_EQ(0, msgctl(id, IPC_STAT, &ds));
+  ASSERT_EQ(1U, ds.msg_qnum);
+  ASSERT_EQ(sizeof(msg), ds.msg_cbytes);
 
-__END_DECLS
+  // Read the message.
+  memset(&msg, 0, sizeof(msg));
+  ASSERT_EQ(static_cast<ssize_t>(sizeof(msg)), msgrcv(id, &msg, sizeof(msg), 0, 0));
+  ASSERT_STREQ("hello world", msg.data);
 
-#endif /* _SYS_MSG_H_ */
+  // Destroy the queue.
+  ASSERT_EQ(0, msgctl(id, IPC_RMID, 0));
+}

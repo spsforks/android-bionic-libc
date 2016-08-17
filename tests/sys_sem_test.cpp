@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#include <gtest/gtest.h>
 
-#include <sys/cdefs.h>
-#include <sys/ipc.h>
+#include <errno.h>
+#include <sys/sem.h>
 
-#include <linux/msg.h>
+#include "TemporaryFile.h"
 
-#define msqid_ds msqid64_ds
+TEST(sys_sem, smoke) {
+  // Create a semaphore.
+  TemporaryDir dir;
+  key_t key = ftok(dir.dirname, 1);
+  int id = semget(key, 1, IPC_CREAT|0666);
+  ASSERT_NE(id, -1);
 
-__BEGIN_DECLS
+  // Check semaphore info.
+  semid_ds ds;
+  memset(&ds, 0, sizeof(ds));
+  ASSERT_EQ(0, semctl(id, 0, IPC_STAT, &ds));
+  ASSERT_EQ(1U, ds.sem_nsems);
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
+  ASSERT_EQ(0, semctl(id, 0, GETVAL));
 
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
+  // Increment.
+  sembuf ops[] = {{ .sem_num = 0, .sem_op = 1, .sem_flg = 0 }};
+  ASSERT_EQ(0, semop(id, ops, 1));
+  ASSERT_EQ(1, semctl(id, 0, GETVAL));
 
-__END_DECLS
+  // Decrement.
+  ops[0] = { .sem_num = 0, .sem_op = -1, .sem_flg = 0 };
+  ASSERT_EQ(0, semop(id, ops, 1));
+  ASSERT_EQ(0, semctl(id, 0, GETVAL));
 
-#endif /* _SYS_MSG_H_ */
+  // Destroy the semaphore.
+  ASSERT_EQ(0, semctl(id, 0, IPC_RMID));
+}

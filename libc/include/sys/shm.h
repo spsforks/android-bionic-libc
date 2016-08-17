@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MSG_H_
-#define _SYS_MSG_H_
+#ifndef _SYS_SHM_H_
+#define _SYS_SHM_H_
 
 #include <sys/cdefs.h>
 #include <sys/ipc.h>
+#include <sys/types.h>
 
-#include <linux/msg.h>
+#include <linux/shm.h>
 
-#define msqid_ds msqid64_ds
+#define shmid_ds shmid64_ds
+#define SHMLBA 4096
 
 __BEGIN_DECLS
 
-typedef __kernel_ulong_t msgqnum_t;
-typedef __kernel_ulong_t msglen_t;
+typedef unsigned long shmatt_t;
 
-int msgctl(int, int, struct msqid_ds*);
-int msgget(key_t, int);
-ssize_t msgrcv(int, void*, size_t, long, int);
-int msgsnd(int, const void*, size_t, int);
+void* shmat(int, const void*, int);
+int shmctl(int, int, struct shmid_ds*);
+int shmdt(const void*);
+int shmget(key_t, size_t, int);
 
 __END_DECLS
 
-#endif /* _SYS_MSG_H_ */
+#endif
