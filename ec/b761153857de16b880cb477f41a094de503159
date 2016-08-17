@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Autosubmit+1: Elliott Hughes <enh@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Wed, 17 Aug 2016 00:17:24 +0000
+Reviewed-on: https://android-review.googlesource.com/257313
+Project: platform/bionic
+Branch: refs/heads/master
