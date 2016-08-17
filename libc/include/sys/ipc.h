@@ -33,6 +33,8 @@
 #include <sys/types.h>
 #include <linux/ipc.h>
 
+#define ipc_perm ipc64_perm
+
 __BEGIN_DECLS
 
 key_t ftok(const char* path, int id);

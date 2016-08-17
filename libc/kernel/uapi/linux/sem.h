@@ -33,7 +33,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SEM_INFO 19
 struct semid_ds {
-  struct ipc_perm sem_perm;
+  struct __kernel_legacy_ipc_perm sem_perm;
   __kernel_time_t sem_otime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_time_t sem_ctime;
