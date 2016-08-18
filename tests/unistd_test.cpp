@@ -1073,3 +1073,173 @@ TEST(UNISTD_TEST, setdomainname) {
     ASSERT_EQ(0, capset(&header, &old_caps[0])) << "failed to restore admin privileges";
   }
 }
+
+class ExecTestHelper {
+ public:
+  char** GetArgs() { return const_cast<char**>(args_.data()); }
+  char** GetEnv() { return const_cast<char**>(env_.data()); }
+
+  void SetArgs(const std::vector<const char*> args) { args_ = args; }
+  void SetEnv(const std::vector<const char*> env) { env_ = env; }
+
+  void Run(const std::function<void ()>& child_fn, int expected_exit_status) {
+    output_.clear();
+
+    int fds[2];
+    ASSERT_NE(pipe2(fds, 0), -1);
+
+    pid_t pid = fork();
+    ASSERT_NE(pid, -1);
+
+    if (pid == 0) {
+      // Child.
+      close(fds[0]);
+      if (fds[1] != STDOUT_FILENO) dup2(fds[1], STDOUT_FILENO);
+      if (fds[1] != STDERR_FILENO) dup2(fds[1], STDERR_FILENO);
+      close(fds[1]);
+      child_fn();
+      FAIL();
+    }
+
+    close(fds[1]);
+    char buf[BUFSIZ];
+    ssize_t bytes_read;
+    while ((bytes_read = TEMP_FAILURE_RETRY(read(fds[0], buf, sizeof(buf)))) > 0) {
+      output_.append(buf, bytes_read);
+    }
+
+    AssertChildExited(pid, expected_exit_status);
+  }
+
+  std::string Output() {
+    return output_;
+  }
+
+ private:
+  std::vector<const char*> args_;
+  std::vector<const char*> env_;
+  std::string output_;
+};
+
+#if defined(__GLIBC__)
+#define BIN_DIR "/bin/"
+#else
+#define BIN_DIR "/system/bin/"
+#endif
+
+TEST(UNISTD_TEST, execve_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execve("/", eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execve) {
+  // int execve(const char* path, char* argv[], char* envp[]);
+
+  // Test basic argument passing.
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { execve(BIN_DIR "echo", eth.GetArgs(), eth.GetEnv()); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+
+  // Test environment variable setting too.
+  eth.SetArgs({"printenv", nullptr});
+  eth.SetEnv({"A=B", nullptr});
+  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0);
+  ASSERT_EQ("A=B\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execl_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, execl("/", "/", nullptr));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execl) {
+  ExecTestHelper eth;
+  // int execl(const char* path, const char* arg, ...);
+  eth.Run([&]() { execl(BIN_DIR "echo", "echo", "hello", "world", nullptr); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execle_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execle("/", "/", nullptr, eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execle) {
+  ExecTestHelper eth;
+  eth.SetEnv({"A=B", nullptr});
+  // int execle(const char* path, const char* arg, ..., char* envp[]);
+  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0);
+  ASSERT_EQ("A=B\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execv_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execv("/", eth.GetArgs()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execv) {
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  // int execv(const char* path, char* argv[]);
+  eth.Run([&]() { execv(BIN_DIR "echo", eth.GetArgs()); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execlp_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, execlp("/", "/", nullptr));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execlp) {
+  ExecTestHelper eth;
+  // int execlp(const char* file, const char* arg, ...);
+  eth.Run([&]() { execlp("echo", "echo", "hello", "world", nullptr); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execvp_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execvp("/", eth.GetArgs()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execvp) {
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  // int execvp(const char* file, char* argv[]);
+  eth.Run([&]() { execvp("echo", eth.GetArgs()); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+}
+
+TEST(UNISTD_TEST, execvpe_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execvpe("this-does-not-exist", eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(UNISTD_TEST, execvpe) {
+  // int execvpe(const char* file, char* argv[], char* envp[]);
+
+  // Test basic argument passing.
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { execvpe("echo", eth.GetArgs(), eth.GetEnv()); }, 0);
+  ASSERT_EQ("hello world\n", eth.Output());
+
+  // Test environment variable setting too.
+  eth.SetArgs({"printenv", nullptr});
+  eth.SetEnv({"A=B", nullptr});
+  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0);
+  ASSERT_EQ("A=B\n", eth.Output());
+}
