@@ -28,6 +28,8 @@
 
 #include <stdint.h>
 
+#include <sys/system_properties.h>
+
 #include "BacktraceData.h"
 #include "Config.h"
 #include "DebugData.h"
@@ -37,8 +39,23 @@
 #include "malloc_debug.h"
 #include "TrackData.h"
 
+bool DebugData::SetConfigFromProperties() {
+  const char* options_str = getenv("LIBC_DEBUG_MALLOC_OPTIONS");
+  if (options_str != nullptr && options_str[0] != '\0') {
+    return config_.SetFromOptionsString(options_str);
+  }
+
+  char property_str[PROP_VALUE_MAX];
+  memset(property_str, 0, sizeof(property_str));
+  if (__system_property_get("libc.debug.malloc.options", property_str)) {
+    return config_.SetFromOptionsString(property_str);
+  }
+
+  return false;
+}
+
 bool DebugData::Initialize() {
-  if (!config_.SetFromProperties()) {
+  if (!SetConfigFromProperties()) {
     return false;
   }
 
