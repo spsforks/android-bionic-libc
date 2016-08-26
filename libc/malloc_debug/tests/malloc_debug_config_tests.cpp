@@ -40,8 +40,7 @@ class MallocDebugConfigTest : public ::testing::Test {
 
   bool InitConfig(const char* property_value) {
     config.reset(new Config);
-    property_set("libc.debug.malloc.options", property_value);
-    return config->SetFromProperties();
+    return config->SetFromOptionsString(property_value);
   }
 };
 

@@ -177,6 +177,7 @@ static const char* DEBUG_MALLOC_PROPERTY_OPTIONS = "libc.debug.malloc.options";
 static const char* DEBUG_MALLOC_PROPERTY_PROGRAM = "libc.debug.malloc.program";
 static const char* DEBUG_MALLOC_PROPERTY_ENV_ENABLED = "libc.debug.malloc.env_enabled";
 static const char* DEBUG_MALLOC_ENV_ENABLE = "LIBC_DEBUG_MALLOC_ENABLE";
+static const char* DEBUG_MALLOC_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
 
 static void* libc_malloc_impl_handle = nullptr;
 
@@ -306,22 +307,37 @@ static void malloc_fini_impl(void*) {
   g_debug_finalize_func();
 }
 
-// Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
+static bool debug_malloc_enabled() {
+  // If DEBUG_MALLOC_ENV_OPTIONS is set then enable debug malloc independently
+  // of the other system properties.
+  const char* env_options = getenv(DEBUG_MALLOC_ENV_OPTIONS);
+  if (env_options != nullptr && env_options[0] == '\0') {
+    return true;
+  }
+
   char value[PROP_VALUE_MAX];
   if (__system_property_get(DEBUG_MALLOC_PROPERTY_OPTIONS, value) == 0 || value[0] == '\0') {
-    return;
+    return false;
   }
 
   // Check to see if only a specific program should have debug malloc enabled.
   if (__system_property_get(DEBUG_MALLOC_PROPERTY_PROGRAM, value) != 0 &&
       strstr(getprogname(), value) == nullptr) {
-    return;
+    return false;
   }
 
   // Check for the special environment variable instead.
   if (__system_property_get(DEBUG_MALLOC_PROPERTY_ENV_ENABLED, value) != 0
       && value[0] != '\0' && getenv(DEBUG_MALLOC_ENV_ENABLE) == nullptr) {
+    return false;
+  }
+
+  return true;
+}
+
+// Initializes memory allocation framework once per process.
+static void malloc_init_impl(libc_globals* globals) {
+  if (!debug_malloc_enabled()) {
     return;
   }
 

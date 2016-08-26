@@ -95,6 +95,8 @@ class DebugData {
   std::unique_ptr<RecordData> record;
 
  private:
+  bool SetConfigFromProperties();
+
   size_t extra_bytes_ = 0;
 
   size_t pointer_offset_ = 0;
