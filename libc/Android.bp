@@ -1016,8 +1016,10 @@ cc_library_static {
                 ],
             },
             kryo: {
+                asflags: ["-DUSES_128BIT_CACHE_LINE_SIZE"],
                 srcs: [
-                    "arch-arm/krait/bionic/memcpy.S",
+                    "arch-arm/kryo/bionic/memcpy.S",
+
                     "arch-arm/krait/bionic/memset.S",
                     "arch-arm/krait/bionic/strcmp.S",
                     "arch-arm/krait/bionic/__strcat_chk.S",
