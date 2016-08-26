@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <libgen.h>
 #include <limits.h>
+#include <math.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -298,6 +299,54 @@ TEST(stdlib, strtof) {
 
 TEST(stdlib, strtold) {
   ASSERT_DOUBLE_EQ(1.23, strtold("1.23", NULL));
+}
+
+TEST(stdlib, strtod_nan) {
+  double v;
+  v = strtod("+nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+  v = strtod("nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+  v = strtod("-nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+}
+
+TEST(stdlib, strtod_inf) {
+  EXPECT_EQ(HUGE_VAL, strtod("+inf", nullptr));
+  EXPECT_EQ(HUGE_VAL, strtod("inf", nullptr));
+  EXPECT_EQ(-HUGE_VAL, strtod("-inf", nullptr));
+}
+
+TEST(stdlib, strtof_nan) {
+  float v;
+  v = strtof("+nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+  v = strtof("nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+  v = strtof("-nan", nullptr);
+  EXPECT_TRUE(isnan(v));
+}
+
+TEST(stdlib, strtof_inf) {
+  EXPECT_EQ(HUGE_VALF, strtof("+inf", nullptr));
+  EXPECT_EQ(HUGE_VALF, strtof("inf", nullptr));
+  EXPECT_EQ(-HUGE_VALF, strtof("-inf", nullptr));
+}
+
+TEST(stdlib, strtold_nan) {
+  long double v;
+  v = strtold("+nan", nullptr);
+  EXPECT_TRUE(isnan(v)) << v;
+  v = strtold("nan", nullptr);
+  EXPECT_TRUE(isnan(v)) << v;
+  v = strtold("-nan", nullptr);
+  EXPECT_TRUE(isnan(v)) << v;
+}
+
+TEST(stdlib, strtold_inf) {
+  EXPECT_EQ(HUGE_VALL, strtold("+inf", nullptr));
+  EXPECT_EQ(HUGE_VALL, strtold("inf", nullptr));
+  EXPECT_EQ(-HUGE_VALL, strtold("-inf", nullptr));
 }
 
 TEST(stdlib, strtof_2206701) {

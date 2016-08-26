@@ -403,50 +403,126 @@ TEST(STDIO_TEST, snprintf_smoke) {
 
 template <typename T>
 void CheckInfNan(int snprintf_fn(T*, size_t, const T*, ...),
+                 int sscanf_fn(const T*, const T*, ...),
                  const T* fmt, const T* fmt_plus,
                  const T* minus_inf, const T* inf_, const T* plus_inf,
                  const T* minus_nan, const T* nan_, const T* plus_nan) {
   T buf[BUFSIZ];
+  float f;
 
-  snprintf_fn(buf, sizeof(buf), fmt, nan(""));
+  // NaN.
+
+  snprintf_fn(buf, sizeof(buf), fmt, nanf(""));
   EXPECT_STREQ(nan_, buf) << fmt;
-  snprintf_fn(buf, sizeof(buf), fmt, -nan(""));
-  EXPECT_STREQ(minus_nan, buf) << fmt;
-  snprintf_fn(buf, sizeof(buf), fmt_plus, nan(""));
-  EXPECT_STREQ(plus_nan, buf) << fmt_plus;
-  snprintf_fn(buf, sizeof(buf), fmt_plus, -nan(""));
-  EXPECT_STREQ(minus_nan, buf) << fmt_plus;
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_TRUE(isnan(f));
 
-  snprintf_fn(buf, sizeof(buf), fmt, HUGE_VAL);
+  snprintf_fn(buf, sizeof(buf), fmt, -nanf(""));
+  EXPECT_STREQ(minus_nan, buf) << fmt;
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_TRUE(isnan(f));
+
+  snprintf_fn(buf, sizeof(buf), fmt_plus, nanf(""));
+  EXPECT_STREQ(plus_nan, buf) << fmt_plus;
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_TRUE(isnan(f));
+
+  snprintf_fn(buf, sizeof(buf), fmt_plus, -nanf(""));
+  EXPECT_STREQ(minus_nan, buf) << fmt_plus;
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_TRUE(isnan(f));
+
+  // Inf.
+
+  snprintf_fn(buf, sizeof(buf), fmt, HUGE_VALF);
   EXPECT_STREQ(inf_, buf) << fmt;
-  snprintf_fn(buf, sizeof(buf), fmt, -HUGE_VAL);
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_EQ(HUGE_VALF, f);
+
+  snprintf_fn(buf, sizeof(buf), fmt, -HUGE_VALF);
   EXPECT_STREQ(minus_inf, buf) << fmt;
-  snprintf_fn(buf, sizeof(buf), fmt_plus, HUGE_VAL);
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_EQ(-HUGE_VALF, f);
+
+  snprintf_fn(buf, sizeof(buf), fmt_plus, HUGE_VALF);
   EXPECT_STREQ(plus_inf, buf) << fmt_plus;
-  snprintf_fn(buf, sizeof(buf), fmt_plus, -HUGE_VAL);
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_EQ(HUGE_VALF, f);
+
+  snprintf_fn(buf, sizeof(buf), fmt_plus, -HUGE_VALF);
   EXPECT_STREQ(minus_inf, buf) << fmt_plus;
+  EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
+  EXPECT_EQ(-HUGE_VALF, f);
 }
 
-TEST(STDIO_TEST, snprintf_inf_nan) {
-  CheckInfNan(snprintf, "%a", "%+a", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
-  CheckInfNan(snprintf, "%A", "%+A", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
-  CheckInfNan(snprintf, "%e", "%+e", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
-  CheckInfNan(snprintf, "%E", "%+E", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
-  CheckInfNan(snprintf, "%f", "%+f", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
-  CheckInfNan(snprintf, "%F", "%+F", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
-  CheckInfNan(snprintf, "%g", "%+g", "-inf", "inf", "+inf", "-nan", "nan", "+nan");
-  CheckInfNan(snprintf, "%G", "%+G", "-INF", "INF", "+INF", "-NAN", "NAN", "+NAN");
+TEST(STDIO_TEST, snprintf_sscanf_inf_nan) {
+  CheckInfNan(snprintf, sscanf,
+              "[%a]", "[%+a]",
+              "[-inf]", "[inf]", "[+inf]",
+              "[-nan]", "[nan]", "[+nan]");
+  CheckInfNan(snprintf, sscanf,
+              "[%A]", "[%+A]",
+              "[-INF]", "[INF]", "[+INF]",
+              "[-NAN]", "[NAN]", "[+NAN]");
+  CheckInfNan(snprintf, sscanf,
+              "[%e]", "[%+e]",
+              "[-inf]", "[inf]", "[+inf]",
+              "[-nan]", "[nan]", "[+nan]");
+  CheckInfNan(snprintf, sscanf,
+              "[%E]", "[%+E]",
+              "[-INF]", "[INF]", "[+INF]",
+              "[-NAN]", "[NAN]", "[+NAN]");
+  CheckInfNan(snprintf, sscanf,
+              "[%f]", "[%+f]",
+              "[-inf]", "[inf]", "[+inf]",
+              "[-nan]", "[nan]", "[+nan]");
+  CheckInfNan(snprintf, sscanf,
+              "[%F]", "[%+F]",
+              "[-INF]", "[INF]", "[+INF]",
+              "[-NAN]", "[NAN]", "[+NAN]");
+  CheckInfNan(snprintf, sscanf,
+              "[%g]", "[%+g]",
+              "[-inf]", "[inf]", "[+inf]",
+              "[-nan]", "[nan]", "[+nan]");
+  CheckInfNan(snprintf, sscanf,
+              "[%G]", "[%+G]",
+              "[-INF]", "[INF]", "[+INF]",
+              "[-NAN]", "[NAN]", "[+NAN]");
 }
 
 TEST(STDIO_TEST, wsprintf_inf_nan) {
-  CheckInfNan(swprintf, L"%a", L"%+a", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
-  CheckInfNan(swprintf, L"%A", L"%+A", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
-  CheckInfNan(swprintf, L"%e", L"%+e", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
-  CheckInfNan(swprintf, L"%E", L"%+E", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
-  CheckInfNan(swprintf, L"%f", L"%+f", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
-  CheckInfNan(swprintf, L"%F", L"%+F", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
-  CheckInfNan(swprintf, L"%g", L"%+g", L"-inf", L"inf", L"+inf", L"-nan", L"nan", L"+nan");
-  CheckInfNan(swprintf, L"%G", L"%+G", L"-INF", L"INF", L"+INF", L"-NAN", L"NAN", L"+NAN");
+  CheckInfNan(swprintf, swscanf,
+              L"[%a]", L"[%+a]",
+              L"[-inf]", L"[inf]", L"[+inf]",
+              L"[-nan]", L"[nan]", L"[+nan]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%A]", L"[%+A]",
+              L"[-INF]", L"[INF]", L"[+INF]",
+              L"[-NAN]", L"[NAN]", L"[+NAN]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%e]", L"[%+e]",
+              L"[-inf]", L"[inf]", L"[+inf]",
+              L"[-nan]", L"[nan]", L"[+nan]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%E]", L"[%+E]",
+              L"[-INF]", L"[INF]", L"[+INF]",
+              L"[-NAN]", L"[NAN]", L"[+NAN]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%f]", L"[%+f]",
+              L"[-inf]", L"[inf]", L"[+inf]",
+              L"[-nan]", L"[nan]", L"[+nan]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%F]", L"[%+F]",
+              L"[-INF]", L"[INF]", L"[+INF]",
+              L"[-NAN]", L"[NAN]", L"[+NAN]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%g]", L"[%+g]",
+              L"[-inf]", L"[inf]", L"[+inf]",
+              L"[-nan]", L"[nan]", L"[+nan]");
+  CheckInfNan(swprintf, swscanf,
+              L"[%G]", L"[%+G]",
+              L"[-INF]", L"[INF]", L"[+INF]",
+              L"[-NAN]", L"[NAN]", L"[+NAN]");
 }
 
 TEST(STDIO_TEST, snprintf_d_INT_MAX) {
