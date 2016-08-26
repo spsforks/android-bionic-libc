@@ -45,7 +45,7 @@
 __BEGIN_DECLS
 
 int property_set(const char*, const char*);
-bool debug_initialize(const MallocDispatch*, int*);
+bool debug_initialize(const MallocDispatch*, int*, const char*);
 void debug_finalize();
 
 void* debug_malloc(size_t);
@@ -99,9 +99,8 @@ class MallocDebugTest : public ::testing::Test {
   }
 
   void Init(const char* property_value) {
-    property_set("libc.debug.malloc.options", property_value);
     zygote = 0;
-    ASSERT_TRUE(debug_initialize(&dispatch, &zygote));
+    ASSERT_TRUE(debug_initialize(&dispatch, &zygote, property_value));
     initialized = true;
   }
 
