@@ -200,6 +200,7 @@ static soinfo_list_t g_public_namespace;
 
 int g_ld_debug_verbosity;
 abort_msg_t* g_abort_message = nullptr; // For debuggerd.
+extern "C" abort_msg_t** __abort_message_ptr;
 
 #if STATS
 struct linker_stats_t {
@@ -3364,6 +3365,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     .post_dump = &notify_gdb_of_libraries,
   };
   debuggerd_init(&callbacks);
+  __abort_message_ptr = args.abort_message_ptr;
 
   g_linker_logger.ResetState();
 
