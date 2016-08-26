@@ -332,8 +332,14 @@ void PropertyParser::LogUsage() {
 bool Config::SetFromProperties() {
   char property_str[PROP_VALUE_MAX];
   memset(property_str, 0, sizeof(property_str));
-  if (!__system_property_get("libc.debug.malloc.options", property_str)) {
-    return false;
+
+  const char* options_str = getenv("LIBC_DEBUG_MALLOC_OPTIONS");
+  if (options_str == nullptr || options_str[0] == '\0') {
+    if (__system_property_get("libc.debug.malloc.options", property_str)) {
+      options_str = property_str;
+    } else {
+      return false;
+    }
   }
 
   // Initialize a few default values.
@@ -426,7 +432,7 @@ bool Config::SetFromProperties() {
   }
 
   // Process each property name we can find.
-  PropertyParser parser(property_str);
+  PropertyParser parser(options_str);
   bool valid = true;
   std::string property;
   std::string value;
