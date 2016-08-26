@@ -31,10 +31,14 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <setjmp.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <unwind.h>
+
+#include <atomic>
 
 #include "backtrace.h"
 #include "debug_log.h"
@@ -63,11 +67,34 @@ static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
   return _URC_END_OF_STACK;
 }
 
+static pthread_key_t g_jmpbuf_key;
+static void (*g_old_segfault_handler)(int, siginfo_t*, void*);
+static std::atomic_uint g_active_backtraces;
+static struct sigaction g_segfault_action;
+
+static void handle_segfault(int signal, siginfo_t* info, void* context) {
+  void* jmpbuf = pthread_getspecific(g_jmpbuf_key);
+  if (jmpbuf == nullptr) {
+    // This is a crash on a thread not doing a backtrace.
+    if (g_old_segfault_handler != nullptr) {
+      g_old_segfault_handler(signal, info, context);
+    }
+  }
+  siglongjmp(*reinterpret_cast<sigjmp_buf*>(jmpbuf), 1);
+}
+
 void backtrace_startup() {
+  pthread_key_create(&g_jmpbuf_key, nullptr);
+  memset(&g_segfault_action, 0, sizeof(g_segfault_action));
+  g_segfault_action.sa_sigaction = handle_segfault;
+  g_segfault_action.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  sigemptyset(&g_segfault_action.sa_mask);
+
   _Unwind_Backtrace(find_current_map, nullptr);
 }
 
 void backtrace_shutdown() {
+  pthread_key_delete(g_jmpbuf_key);
 }
 
 struct stack_crawl_state_t {
@@ -114,7 +141,6 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     // so subtract 1 to estimate where the instruction lives.
     ip--;
 #endif
-
     // Do not record the frames that fall in our own shared library.
     if (g_current_code_map && (ip >= g_current_code_map->start) && ip < g_current_code_map->end) {
       return _URC_NO_REASON;
@@ -126,11 +152,34 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
 }
 
 size_t backtrace_get(uintptr_t* frames, size_t frame_count) {
+  struct sigaction old_action;
+
+  sigaction(SIGSEGV, &g_segfault_action, &old_action);
+  if (!(old_action.sa_flags & SA_SIGINFO) || old_action.sa_sigaction != handle_segfault) {
+    g_old_segfault_handler = old_action.sa_sigaction;
+  }
+  g_active_backtraces.fetch_add(1, std::memory_order_relaxed);
+
+  sigjmp_buf jmp_data;
   stack_crawl_state_t state(frames, frame_count);
-  _Unwind_Backtrace(trace_function, &state);
+  pthread_setspecific(g_jmpbuf_key, &jmp_data);
+  bool segfault_occurred = (sigsetjmp(jmp_data, 1) != 0);
+  if (!segfault_occurred) {
+    _Unwind_Backtrace(trace_function, &state);
+  } else {
+    if (state.cur_frame < state.frame_count) {
+      // Add one frame to indicate we crashed while running.
+      state.frames[state.cur_frame++] = 0xdeaddead;
+    }
+    printf("+++ Crashed while trying to unwind.\n");
+  }
+
+  if (g_active_backtraces.fetch_sub(1, std::memory_order_release) == 1) {
+    // Last backtrace is done, reset the handler.
+    sigaction(SIGSEGV, &g_segfault_action, nullptr);
+  }
   return state.cur_frame;
 }
-
 std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
   std::string str;
 
