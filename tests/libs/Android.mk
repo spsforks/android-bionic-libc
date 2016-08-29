@@ -75,7 +75,7 @@ libdlext_test_fd_src_files := \
 
 libdlext_test_fd_shared_libraries := libtest_simple
 
-libdlext_test_fd_install_to_out_data := true
+libdlext_test_fd_install_to_out_data_dir := libdlext_test_fd
 module := libdlext_test_fd
 module_tag := optional
 build_type := target
@@ -91,7 +91,7 @@ libdlext_test_zip_src_files := \
 
 libdlext_test_zip_shared_libraries := libatest_simple_zip
 
-libdlext_test_zip_install_to_out_data := true
+libdlext_test_zip_install_to_out_data_dir := libdlext_test_zip
 module := libdlext_test_zip
 module_tag := optional
 build_type := target
@@ -101,7 +101,7 @@ include $(TEST_PATH)/Android.build.mk
 libatest_simple_zip_src_files := \
     dlopen_testlib_simple.cpp
 
-libatest_simple_zip_install_to_out_data := true
+libatest_simple_zip_install_to_out_data_dir := libatest_simple_zip
 module := libatest_simple_zip
 module_tag := optional
 build_type := target

@@ -76,7 +76,7 @@ libtest_dt_runpath_d_zip_src_files := \
 
 libtest_dt_runpath_d_zip_shared_libraries := libtest_dt_runpath_b libtest_dt_runpath_c
 libtest_dt_runpath_d_zip_ldflags := -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x -Wl,--enable-new-dtags
-libtest_dt_runpath_d_zip_install_to_out_data := true
+libtest_dt_runpath_d_zip_install_to_out_data_dir := libtest_dt_runpath_d_zip
 module := libtest_dt_runpath_d_zip
 module_tag := optional
 build_type := target
