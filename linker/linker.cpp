@@ -105,15 +105,6 @@ static const char* const kAsanDefaultLdPaths[] = {
 // Is ASAN enabled?
 static bool g_is_asan = false;
 
-static bool is_system_library(const std::string& realpath) {
-  for (const auto& dir : g_default_namespace.get_default_library_paths()) {
-    if (file_is_in_dir(realpath, dir)) {
-      return true;
-    }
-  }
-  return false;
-}
-
 // Checks if the file exists and not a directory.
 static bool file_exists(const char* path) {
   struct stat s;
@@ -124,56 +115,6 @@ static bool file_exists(const char* path) {
 
   return S_ISREG(s.st_mode);
 }
-
-// TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
-// gradually remove libraries from this list until it is gone.
-static bool is_greylisted(const char* name, const soinfo* needed_by) {
-  static const char* const kLibraryGreyList[] = {
-    "libandroid_runtime.so",
-    "libbinder.so",
-    "libcrypto.so",
-    "libcutils.so",
-    "libexpat.so",
-    "libgui.so",
-    "libmedia.so",
-    "libnativehelper.so",
-    "libskia.so",
-    "libssl.so",
-    "libstagefright.so",
-    "libsqlite.so",
-    "libui.so",
-    "libutils.so",
-    "libvorbisidec.so",
-    nullptr
-  };
-
-  // If you're targeting N, you don't get the greylist.
-  if (get_application_target_sdk_version() >= __ANDROID_API_N__) {
-    return false;
-  }
-
-  // if the library needed by a system library - implicitly assume it
-  // is greylisted
-
-  if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
-    return true;
-  }
-
-  // if this is an absolute path - make sure it points to /system/lib(64)
-  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
-    // and reduce the path to basename
-    name = basename(name);
-  }
-
-  for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
-    if (strcmp(name, kLibraryGreyList[i]) == 0) {
-      return true;
-    }
-  }
-
-  return false;
-}
-// END OF WORKAROUND
 
 static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_preload_names;
@@ -1011,14 +952,6 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (fd == -1 && ns != &g_default_namespace && is_greylisted(name, needed_by)) {
-    // try searching for it on default_namespace default_library_path
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset,
-                               g_default_namespace.get_default_library_paths(), realpath);
-  }
-  // END OF WORKAROUND
-
   return fd;
 }
 
@@ -1111,40 +1044,24 @@ static bool load_library(android_namespace_t* ns,
   }
 
   if (!ns->is_accessible(realpath)) {
-    // TODO(dimitry): workaround for http://b/26394120 - the grey-list
-    const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
-    if (is_greylisted(name, needed_by)) {
-      // print warning only if needed by non-system library
-      if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
-        const soinfo* needed_or_dlopened_by = task->get_needed_by();
-        const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
-                                                      needed_or_dlopened_by->get_realpath();
-        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
-                " - the access is temporarily granted as a workaround for http://b/26394120, note that the access"
-                " will be removed in future releases of Android.",
-                name, realpath.c_str(), sopath, ns->get_name());
-        add_dlwarning(sopath, "unauthorized access to",  name);
-      }
-    } else {
-      // do not load libraries if they are not accessible for the specified namespace.
-      const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
-                                          "(unknown)" :
-                                          task->get_needed_by()->get_realpath();
+    // do not load libraries if they are not accessible for the specified namespace.
+    const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
+                                        "(unknown)" :
+                                        task->get_needed_by()->get_realpath();
 
-      DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
-             name, needed_or_dlopened_by, ns->get_name());
+    DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
+           name, needed_or_dlopened_by, ns->get_name());
 
-      PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
-            " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-            " permitted_paths=\"%s\"]",
-            name, realpath.c_str(),
-            needed_or_dlopened_by,
-            ns->get_name(),
-            android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
-            android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-            android::base::Join(ns->get_permitted_paths(), ':').c_str());
-      return false;
-    }
+    PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+          " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+          " permitted_paths=\"%s\"]",
+          name, realpath.c_str(),
+          needed_or_dlopened_by,
+          ns->get_name(),
+          android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+          android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+          android::base::Join(ns->get_permitted_paths(), ':').c_str());
+    return false;
   }
 
   soinfo* si = soinfo_alloc(ns, realpath.c_str(), &file_stat, file_offset, rtld_flags);
