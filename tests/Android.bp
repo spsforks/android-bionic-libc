@@ -313,6 +313,10 @@ cc_defaults {
                 "libz",
                 "libutils",
             ],
+            ldflags: [
+                "-Wl,--rpath,\\$${ORIGIN}/../bionic-loader-test-libs",
+                "-Wl,--enable-new-dtags",
+            ],
         },
     }
 }

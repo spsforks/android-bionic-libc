@@ -1129,8 +1129,20 @@ TEST(dlfcn, dt_runpath_smoke) {
   dlclose(handle);
 }
 
+// Bionic specific tests
+#if defined(__BIONIC__)
+
+#if defined(__LP64__)
+#define NATIVE_TESTS_PATH "/nativetest64/bionic-loader-test-libs"
+#else
+#define NATIVE_TESTS_PATH "/nativetest/bionic-loader-test-libs"
+#endif
+
+#define PREBUILT_ELF_PATH NATIVE_TESTS_PATH "/prebuilt-elf-files"
+
 TEST(dlfcn, dt_runpath_absolute_path) {
-  void* handle = dlopen(PATH_TO_SYSTEM_LIB "libtest_dt_runpath_d.so", RTLD_NOW);
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH + "/libtest_dt_runpath_d.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   typedef void *(* dlopen_b_fn)();
@@ -1142,17 +1154,6 @@ TEST(dlfcn, dt_runpath_absolute_path) {
 
   dlclose(handle);
 }
-
-// Bionic specific tests
-#if defined(__BIONIC__)
-
-#if defined(__LP64__)
-#define NATIVE_TESTS_PATH "/nativetest64"
-#else
-#define NATIVE_TESTS_PATH "/nativetest"
-#endif
-
-#define PREBUILT_ELF_PATH NATIVE_TESTS_PATH "/prebuilt-elf-files"
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-rw_load_segment.so";
