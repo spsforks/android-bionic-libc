@@ -55,9 +55,9 @@ typedef int (*fn)(void);
 constexpr auto LIBSIZE = 1024 * 1024; // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define NATIVE_TESTS_PATH "/nativetest64"
+#define NATIVE_TESTS_PATH "/nativetest64/bionic-loader-test-libs"
 #else
-#define NATIVE_TESTS_PATH "/nativetest"
+#define NATIVE_TESTS_PATH "/nativetest/bionic-loader-test-libs"
 #endif
 
 #define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
