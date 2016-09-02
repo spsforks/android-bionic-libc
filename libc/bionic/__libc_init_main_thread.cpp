@@ -87,13 +87,14 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
   // TODO: the main thread's sched_policy and sched_priority need to be queried.
 
+  __init_thread(&main_thread);
+  __init_tls(&main_thread);
+
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
   __libc_init_global_stack_chk_guard(args);
-
-  __init_thread(&main_thread);
-  __init_tls(&main_thread);
+  __init_thread_stack_guard(&main_thread);
 
   // Store a pointer to the kernel argument block in a TLS slot to be
   // picked up by the libc constructor.
