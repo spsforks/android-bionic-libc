@@ -124,7 +124,7 @@ TEST(time, mktime_10310929) {
 TEST(time, mktime_EOVERFLOW) {
   struct tm t;
   memset(&t, 0, sizeof(tm));
-  t.tm_year = 0;
+  t.tm_year = 2016 - 1900;
   t.tm_mon = 2;
   t.tm_mday = 10;
 
