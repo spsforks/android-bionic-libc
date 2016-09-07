@@ -55,8 +55,9 @@
 #define zeroones	x10
 #define pos		x11
 
-	/* Start of performance-critical section  -- one 64B cache line.  */
+/* Start of performance-critical section  -- one 64B cache line.  */
 ENTRY(strcmp)
+.p2align  6
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
 	tst	tmp1, #7
