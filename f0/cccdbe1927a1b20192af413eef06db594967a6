@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Verified+1: Kenny Root <kroot@google.com>
+Code-Review+1: Narayan Kamath <narayan@google.com>
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Submitted-by: Kenny Root <kroot@google.com>
+Submitted-at: Thu, 15 Sep 2016 19:12:46 +0000
+Reviewed-on: https://android-review.googlesource.com/274657
+Project: platform/bionic
+Branch: refs/heads/master
