@@ -1331,6 +1331,8 @@ LIBC_O {
     sigpause; # future
     sigrelse; # future
     sigset; # future
+    strtof_l; # future
+    strtod_l; # future
     sync_file_range; # future
     towctrans; # future
     towctrans_l; # future
