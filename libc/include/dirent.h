@@ -66,6 +66,9 @@ struct dirent64 { __DIRENT64_BODY };
 
 #define d_fileno d_ino
 
+#define _D_ALLOC_NAMLEN(d) (sizeof(d->d_name))
+#define _D_EXACT_NAMLEN(d) (strnlen(d->d_name, _D_ALLOC_NAMLEN(d)))
+
 typedef struct DIR DIR;
 
 DIR* opendir(const char*);
