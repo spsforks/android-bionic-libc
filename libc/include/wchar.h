@@ -148,4 +148,6 @@ size_t wcsnlen(const wchar_t*, size_t);
 
 __END_DECLS
 
+#include <android/legacy_wchar_inlines.h>
+
 #endif /* _WCHAR_H_ */
