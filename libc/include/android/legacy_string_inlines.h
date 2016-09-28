@@ -25,7 +25,7 @@ __BEGIN_DECLS
 #if __ANDROID_API__ < 21
 
 static __inline int strcoll_l(const char* _Nonnull s1, const char* _Nonnull s2,
-                              locale_t l __unused) __purefunc {
+                              locale_t l __unused) __attribute_pure__ {
   return strcoll(s1, s2);
 }
 
