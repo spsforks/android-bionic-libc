@@ -81,7 +81,7 @@ realpath(const char * __restrict path, char * __restrict resolved)
 		resolved_len = 1;
 		left_len = strlcpy(left, path + 1, sizeof(left));
 	} else {
-		if (getcwd(resolved, PATH_MAX) == NULL) {
+		if (TEMP_FAILURE_RETRY(getcwd(resolved, PATH_MAX) == NULL)) {
 			if (m)
 				free(resolved);
 			else {
@@ -161,7 +161,7 @@ realpath(const char * __restrict path, char * __restrict resolved)
 			errno = ENAMETOOLONG;
 			return (NULL);
 		}
-		if (lstat(resolved, &sb) != 0) {
+		if (TEMP_FAILURE_RETRY(lstat(resolved, &sb)) != 0) {
 			if (m)
 				free(resolved);
 			return (NULL);
@@ -173,7 +173,7 @@ realpath(const char * __restrict path, char * __restrict resolved)
 				errno = ELOOP;
 				return (NULL);
 			}
-			slen = readlink(resolved, symlink, sizeof(symlink) - 1);
+			slen = TEMP_FAILURE_RETRY(readlink(resolved, symlink, sizeof(symlink) - 1));
 			if (slen < 0) {
 				if (m)
 					free(resolved);
