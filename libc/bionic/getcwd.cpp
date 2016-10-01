@@ -78,3 +78,10 @@ char* getcwd(char* buf, size_t size) {
 
   return buf;
 }
+
+extern "C"
+const char* __asan_default_options() {
+  return "allow_user_segv_handler=1 detect_odr_violation=0 "
+      "alloc_dealloc_mismatch=0 allocator_may_return_null=1 "
+      "detect_container_overflow=0";
+}

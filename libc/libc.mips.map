@@ -1383,4 +1383,5 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
+    __asan_default_options;
 } LIBC_O;
