@@ -1792,14 +1792,14 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
 
   const char* translated_name = name;
   if (g_is_asan) {
-    if (file_is_in_dir(name, kSystemLibDir)) {
-      asan_name_holder = std::string(kAsanSystemLibDir) + "/" + basename(name);
+    if (file_is_under_dir(name, kSystemLibDir)) {
+      asan_name_holder = std::string(kAsanSystemLibDir) + "/" + (name + strlen(kSystemLibDir) + 1);
       if (file_exists(asan_name_holder.c_str())) {
         translated_name = asan_name_holder.c_str();
         PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
       }
-    } else if (file_is_in_dir(name, kVendorLibDir)) {
-      asan_name_holder = std::string(kAsanVendorLibDir) + "/" + basename(name);
+    } else if (file_is_under_dir(name, kVendorLibDir)) {
+      asan_name_holder = std::string(kAsanVendorLibDir) + "/" + (name + strlen(kVendorLibDir) + 1);
       if (file_exists(asan_name_holder.c_str())) {
         translated_name = asan_name_holder.c_str();
         PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
@@ -3222,4 +3222,3 @@ void init_default_namespace() {
 
   g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
 };
-
