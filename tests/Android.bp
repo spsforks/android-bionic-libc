@@ -156,6 +156,22 @@ cc_test_library {
     },
 }
 
+// Library for any tests that need to test things in private bionic headers.
+cc_test_library {
+    name: "libBionicPrivateHeadersTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "struct_file_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    host_supported: false,
+    shared: {
+        enabled: false,
+    },
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -239,6 +255,13 @@ cc_test_library {
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],
+    target: {
+        android: {
+            whole_static_libs: [
+                "libBionicPrivateHeadersTests",
+            ],
+        },
+    },
     shared: {
         enabled: false,
     },
