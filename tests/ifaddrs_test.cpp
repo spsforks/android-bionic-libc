@@ -19,6 +19,7 @@
 #include <ifaddrs.h>
 
 #include <dirent.h>
+#include <fcntl.h>
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
 #include <net/if.h>
@@ -266,4 +267,45 @@ TEST(ifaddrs, inet6_scope_ids) {
   }
 
   freeifaddrs(addrs);
+}
+
+static void Call_getifaddrs() {
+  ifaddrs* addrs = nullptr;
+  ASSERT_EQ(0, getifaddrs(&addrs)) << strerror(errno);
+  freeifaddrs(addrs);
+}
+
+TEST(ifaddrs, kernel_bug_31038971) {
+  // Some kernels had a bug that would lead to an NLMSG_ERROR response,
+  // but bionic wasn't setting errno based on the value in the message.
+  // This is the test for the kernel bug, but on a device with a bad
+  // kernel this test was also useful for testing the bionic errno fix.
+  std::vector<pthread_t> threads;
+  for (size_t i = 0; i < 128; ++i) {
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* {
+        Call_getifaddrs();
+        return nullptr;
+    }, nullptr));
+    threads.push_back(thread);
+  }
+  for (pthread_t t : threads) pthread_join(t, nullptr);
+}
+
+TEST(ifaddrs, errno_EMFILE) {
+  std::vector<int> fds;
+  while (true) {
+    int fd = open("/dev/null", O_RDONLY|O_CLOEXEC);
+    if (fd == -1) {
+      ASSERT_EQ(EMFILE, errno);
+      break;
+    }
+    fds.push_back(fd);
+  }
+
+  ifaddrs* addrs;
+  EXPECT_EQ(-1, getifaddrs(&addrs));
+  EXPECT_EQ(EMFILE, errno);
+
+  for (int fd : fds) close(fd);
 }
