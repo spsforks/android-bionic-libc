@@ -1227,4 +1227,34 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_textrels) {
+  const std::string libpath = g_testlib_root +
+                              "/" + kPrebuiltElfDir +
+                              "/libtest_invalid-textrels.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+#if defined(__LP64__)
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" text relocations (DF_TEXTREL) found in 64-bit ELF file";
+#else
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
+#endif
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
+TEST(dlfcn, dlopen_invalid_textrels2) {
+  const std::string libpath = g_testlib_root +
+                              "/" + kPrebuiltElfDir +
+                              "/libtest_invalid-textrels2.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+#if defined(__LP64__)
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" text relocations (DT_TEXTREL) found in 64-bit ELF file";
+#else
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
+#endif
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
