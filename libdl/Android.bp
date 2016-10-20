@@ -61,6 +61,13 @@ cc_library {
     },
 }
 
+// Not a real header module since the libdl headers are in libc/include, but we
+// need to package the libm NOTICE file.
+ndk_headers {
+    name: "libdl_header_license",
+    license: "NOTICE",
+}
+
 ndk_library {
     name: "libdl.ndk",
     symbol_file: "libdl.map.txt",
