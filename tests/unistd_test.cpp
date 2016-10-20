@@ -421,14 +421,18 @@ TEST(UNISTD_TEST, fsync) {
 static void AssertGetPidCorrect() {
   // The loop is just to make manual testing/debugging with strace easier.
   pid_t getpid_syscall_result = syscall(__NR_getpid);
+  pid_t gettid_syscall_result = syscall(__NR_gettid);
   for (size_t i = 0; i < 128; ++i) {
     ASSERT_EQ(getpid_syscall_result, getpid());
+    ASSERT_EQ(gettid_syscall_result, gettid());
   }
 }
 
 static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   pid_t parent_pid = getpid();
+  pid_t parent_tid = gettid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
+  ASSERT_EQ(syscall(__NR_gettid), parent_tid);
 
   pid_t fork_result = fork_fn();
   ASSERT_NE(fork_result, -1);
@@ -440,6 +444,7 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   } else {
     // We're the parent.
     ASSERT_EQ(parent_pid, getpid());
+    ASSERT_EQ(parent_tid, gettid());
     AssertChildExited(fork_result, 123);
   }
 }
