@@ -421,14 +421,19 @@ TEST(UNISTD_TEST, fsync) {
 static void AssertGetPidCorrect() {
   // The loop is just to make manual testing/debugging with strace easier.
   pid_t getpid_syscall_result = syscall(__NR_getpid);
+  pid_t gettid_syscall_result = syscall(__NR_gettid);
   for (size_t i = 0; i < 128; ++i) {
     ASSERT_EQ(getpid_syscall_result, getpid());
+    ASSERT_EQ(gettid_syscall_result, gettid());
   }
 }
 
 static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
+
+  pid_t parent_tid = gettid();
+  ASSERT_EQ(syscall(__NR_gettid), parent_tid);
 
   pid_t fork_result = fork_fn();
   ASSERT_NE(fork_result, -1);
@@ -440,6 +445,7 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   } else {
     // We're the parent.
     ASSERT_EQ(parent_pid, getpid());
+    ASSERT_EQ(parent_tid, gettid());
     AssertChildExited(fork_result, 123);
   }
 }
@@ -461,6 +467,9 @@ TEST(UNISTD_TEST, getpid_caching_and_clone) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
+  pid_t parent_tid = gettid();
+  ASSERT_EQ(syscall(__NR_gettid), parent_tid);
+
   void* child_stack[1024];
   int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
   if (clone_result == -1 && errno == EPERM && getuid() != 0) {
@@ -470,6 +479,7 @@ TEST(UNISTD_TEST, getpid_caching_and_clone) {
   ASSERT_NE(clone_result, -1);
 
   ASSERT_EQ(parent_pid, getpid());
+  ASSERT_EQ(parent_tid, gettid());
 
   AssertChildExited(clone_result, 123);
 }

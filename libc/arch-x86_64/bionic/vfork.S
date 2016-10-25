@@ -33,9 +33,11 @@
 ENTRY(vfork)
   popq    %rdi  // Grab the return address.
 
+  // __get_tls()[TLS_SLOT_THREAD_ID]->tid = 0
   // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
   mov    %fs:0, %rax
   mov    8(%rax), %rax
+  movl   $0, 16(%rax)
   movl   $0, 20(%rax)
 
   movl    $__NR_vfork, %eax

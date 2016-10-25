@@ -29,10 +29,12 @@
 #include <private/bionic_asm.h>
 
 ENTRY(vfork)
+    // __get_tls()[TLS_SLOT_THREAD_ID]->tid = 0
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
     mrc     p15, 0, r3, c13, c0, 3
     ldr     r3, [r3, #4]
     mov     r0, #0
+    str     r0, [r3, #8]
     str     r0, [r3, #12]
 
     mov     ip, r7

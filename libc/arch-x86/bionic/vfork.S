@@ -35,9 +35,11 @@ ENTRY(vfork)
   .cfi_adjust_cfa_offset 4
   .cfi_rel_offset ecx, 0
 
+  // __get_tls()[TLS_SLOT_THREAD_ID]->tid = 0
   // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
   movl    %gs:0, %eax
   movl    4(%eax), %eax
+  movl    $0, 8(%eax)
   movl    $0, 12(%eax)
 
   movl    $__NR_vfork, %eax
