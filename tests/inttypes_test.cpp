@@ -20,24 +20,52 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+#define PRINTF_TYPED(FMT_SUFFIX, TYPE_SUFFIX) \
+  snprintf(buf, sizeof(buf), "%08" PRId##FMT_SUFFIX, int##TYPE_SUFFIX(0)); \
+  snprintf(buf, sizeof(buf), "%08" PRIi##FMT_SUFFIX, int##TYPE_SUFFIX(0)); \
+  snprintf(buf, sizeof(buf), "%08" PRIo##FMT_SUFFIX, int##TYPE_SUFFIX(0)); \
+  snprintf(buf, sizeof(buf), "%08" PRIu##FMT_SUFFIX, uint##TYPE_SUFFIX(0)); \
+  snprintf(buf, sizeof(buf), "%08" PRIx##FMT_SUFFIX, uint##TYPE_SUFFIX(0)); \
+  snprintf(buf, sizeof(buf), "%08" PRIX##FMT_SUFFIX, uint##TYPE_SUFFIX(0)); \
+
+#define PRINTF_SIZED(WIDTH) \
+  PRINTF_TYPED(WIDTH, WIDTH##_t) \
+  PRINTF_TYPED(FAST##WIDTH, _fast##WIDTH##_t) \
+  PRINTF_TYPED(LEAST##WIDTH, _least##WIDTH##_t) \
+
+
+#define SCANF_TYPED(FMT_SUFFIX, TYPE_SUFFIX) \
+  sscanf(buf, "%08" SCNd##FMT_SUFFIX, reinterpret_cast<int##TYPE_SUFFIX*>(dst)); \
+  sscanf(buf, "%08" SCNi##FMT_SUFFIX, reinterpret_cast<int##TYPE_SUFFIX*>(dst)); \
+  sscanf(buf, "%08" SCNo##FMT_SUFFIX, reinterpret_cast<int##TYPE_SUFFIX*>(dst)); \
+  sscanf(buf, "%08" SCNu##FMT_SUFFIX, reinterpret_cast<uint##TYPE_SUFFIX*>(dst)); \
+  sscanf(buf, "%08" SCNx##FMT_SUFFIX, reinterpret_cast<uint##TYPE_SUFFIX*>(dst)); \
+
+#define SCANF_SIZED(SIZE) \
+  SCANF_TYPED(SIZE, SIZE##_t) \
+  SCANF_TYPED(FAST##SIZE, _fast##SIZE##_t) \
+  SCANF_TYPED(LEAST##SIZE, _least##SIZE##_t) \
+
+
 TEST(inttypes, misc) {
   char buf[512];
+  char dst[512];
 
-  intptr_t i = 0;
-  uintptr_t u = 0;
+  PRINTF_SIZED(8);
+  PRINTF_SIZED(16);
+  PRINTF_SIZED(32);
+  PRINTF_SIZED(64);
 
-  snprintf(buf, sizeof(buf), "%08" PRIdPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIiPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIoPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIuPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIxPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIXPTR, u);
+  PRINTF_TYPED(MAX, max_t);
+  PRINTF_TYPED(PTR, ptr_t);
 
-  sscanf(buf, "%08" SCNdPTR, &i);
-  sscanf(buf, "%08" SCNiPTR, &i);
-  sscanf(buf, "%08" SCNoPTR, &u);
-  sscanf(buf, "%08" SCNuPTR, &u);
-  sscanf(buf, "%08" SCNxPTR, &u);
+  SCANF_SIZED(8)
+  SCANF_SIZED(16)
+  SCANF_SIZED(32)
+  SCANF_SIZED(64)
+
+  SCANF_TYPED(MAX, max_t)
+  SCANF_TYPED(PTR, ptr_t)
 }
 
 TEST(inttypes, wcstoimax) {
