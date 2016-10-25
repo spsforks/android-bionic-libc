@@ -38,6 +38,7 @@ extern "C" __noreturn void __exit(int status);
 
 // Called from the __bionic_clone assembler to call the thread function then exit.
 extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
+  __get_thread()->tid = syscall(__NR_gettid);
   int status = (*fn)(arg);
   __exit(status);
 }
@@ -87,11 +88,21 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
 #endif
   }
 
-  // We're the parent, so put our known pid back in place.
-  // We leave the child without a cached pid, but:
-  // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
-  // 2. fork makes a clone system call directly.
-  // If any other cases become important, we could use a double trampoline like __pthread_start.
-  self->set_cached_pid(parent_pid);
+  if (child_tid != &self->tid) {
+    // We're in clone() without a |fn|. Set the tid directly if the |child_tid| is not going to
+    // be set by the clone syscall. It is also set by __start_thread() above for clone() with
+    // a |fn|, fork() via the |child_tid|, and pthread_create().
+    self->tid = syscall(__NR_gettid);
+  }
+
+  if (clone_result != 0) {
+    // We're the parent, so put our known pid back in place.
+    // We leave the child without a cached pid, but:
+    // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
+    // 2. fork makes a clone system call directly.
+    // If any other cases become important, we could use a double trampoline like __pthread_start.
+    self->set_cached_pid(parent_pid);
+  }
+
   return clone_result;
 }
