@@ -40,9 +40,7 @@ __attribute__ ((section (".fini_array")))
 void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 
 __LIBC_HIDDEN__
-#ifdef __i386__
 __attribute__((force_align_arg_pointer))
-#endif
 void _start() {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;

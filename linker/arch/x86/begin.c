@@ -31,7 +31,9 @@
 
 extern unsigned __linker_init(void* raw_args);
 
-__LIBC_HIDDEN__ void _start() {
+__LIBC_HIDDEN__
+__attribute__((force_align_arg_pointer))
+void _start() {
   void (*start)(void);
 
   void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
