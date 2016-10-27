@@ -38,7 +38,7 @@
 #ifndef _AARCH64_ASM_H_
 #define _AARCH64_ASM_H_
 
-#define __bionic_asm_align 0
+#define __bionic_asm_align 16
 
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type %function

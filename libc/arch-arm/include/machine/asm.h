@@ -38,7 +38,7 @@
 #ifndef _ARM32_ASM_H_
 #define _ARM32_ASM_H_
 
-#define __bionic_asm_align 0
+#define __bionic_asm_align 16
 
 #undef __bionic_asm_custom_entry
 #undef __bionic_asm_custom_end
