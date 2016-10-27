@@ -40,7 +40,7 @@
 
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
-#include "debuggerd/client.h"
+#include "debuggerd/handler.h"
 
 #include <vector>
 
