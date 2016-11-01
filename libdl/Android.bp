@@ -58,7 +58,7 @@ cc_library {
     system_shared_libs: [],
 
     sanitize: {
-        never: true,
+        address: false,
     },
 }
 
