@@ -129,6 +129,11 @@ cc_binary {
         lib64: {
             suffix: "64",
             symlinks: ["linker_asan64"],
+            product_variables: {
+                safestack: {
+                    cflags: ["-DBIONIC_SAFESTACK=1"],
+                },
+            },
        },
     },
     target: {

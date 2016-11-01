@@ -24,7 +24,7 @@ cc_defaults {
     relative_install_path: "bionic-loader-test-libs",
     gtest: false,
     sanitize: {
-        never: true,
+        address: false,
     },
     target: {
         darwin: {

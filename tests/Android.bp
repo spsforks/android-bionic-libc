@@ -86,6 +86,7 @@ cc_test_library {
         "pty_test.cpp",
         "regex_test.cpp",
         "resolv_test.cpp",
+        "safestack_test.cpp",
         "sched_test.cpp",
         "search_test.cpp",
         "semaphore_test.cpp",
