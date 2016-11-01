@@ -61,10 +61,21 @@ cc_defaults {
     cppflags: [],
     include_dirs: ["external/jemalloc/include"],
 
+    multilib: {
+        lib64: {
+            product_variables: {
+              safestack: {
+                cflags: ["-DBIONIC_SAFESTACK=1",],
+              },
+            },
+        },
+    },
+
     stl: "none",
     system_shared_libs: [],
     sanitize: {
-        never: true,
+        address: false,
+        thread: false,
     },
     native_coverage: false,
     clang: true,
@@ -1416,6 +1427,7 @@ cc_library_static {
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_sigmask.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/safestack.cpp",
     ],
 
     cppflags: ["-Wold-style-cast"],
