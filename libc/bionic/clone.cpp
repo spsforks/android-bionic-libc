@@ -38,6 +38,11 @@ extern "C" __noreturn void __exit(int status);
 
 // Called from the __bionic_clone assembler to call the thread function then exit.
 extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
+  pthread_internal_t* self = __get_thread();
+  if (self && self->tid == -1) {
+    self->tid = syscall(__NR_gettid);
+  }
+
   int status = (*fn)(arg);
   __exit(status);
 }
