@@ -609,6 +609,23 @@ TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
   ASSERT_NE(static_cast<uint64_t>(parent_tid), reinterpret_cast<uint64_t>(result));
 }
 
+static int CloneChildExit(void*) {
+  exit(33);
+}
+
+TEST(UNISTD_TEST, clone_and_exit) {
+  void* child_stack[1024];
+
+  int clone_result = clone(&CloneChildExit, child_stack, SIGCHLD, nullptr);
+  ASSERT_NE(-1, clone_result);
+
+  int status;
+  ASSERT_NE(-1, waitpid(clone_result, &status, 0));
+
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(33, WEXITSTATUS(status));
+}
+
 class UNISTD_DEATHTEST : public BionicDeathTest {};
 
 TEST_F(UNISTD_DEATHTEST, abort) {
