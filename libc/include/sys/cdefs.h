@@ -304,4 +304,13 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
  */
 #define __NDK_FPABI__
 
+/*
+ * MIPS64 toolchains are dumb and define both __mips64__ and __mips__, meaning
+ * you have to check two defines to know if you're really MIPS32.  Create
+ * __mips32__ for simplicity.
+ */
+#if defined(__mips__) && !defined(__LP64__)
+#define __mips32__
+#endif
+
 #endif /* !_SYS_CDEFS_H_ */
