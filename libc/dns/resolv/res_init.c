@@ -119,8 +119,6 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #define DEBUG
 #endif
 
-static void res_setoptions __P((res_state, const char *, const char *));
-
 #ifdef RESOLVSORT
 static const char sort_mask[] = "/&";
 #define ISSORTMASK(ch) (strchr(sort_mask, ch) != NULL)
@@ -490,7 +488,7 @@ __res_vinit(res_state statp, int preinit) {
 	return (0);
 }
 
-static void
+void
 res_setoptions(res_state statp, const char *options, const char *source)
 {
 	const char *cp = options;

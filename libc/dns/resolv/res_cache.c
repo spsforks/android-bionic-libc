@@ -28,6 +28,7 @@
 
 #include "resolv_cache.h"
 
+#include <limits.h>
 #include <resolv.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -1241,6 +1242,7 @@ struct resolv_cache_info {
     struct __res_stats          nsstats[MAXNS];
     char                        defdname[MAXDNSRCHPATH];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
+    char                        options[_POSIX2_LINE_MAX];
 };
 
 #define  HTABLE_VALID(x)  ((x) != NULL && (x) != HTABLE_DELETED)
@@ -2155,9 +2157,24 @@ _resolv_populate_res_for_net(res_state statp)
         while (pp < statp->dnsrch + MAXDNSRCH && *p != -1) {
             *pp++ = &statp->defdname[0] + *p++;
         }
+
+        res_setoptions(statp, info->options, "cache");
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
+
+void _resolv_set_options_for_net(unsigned netid, const char* options) {
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+
+    if (info) {
+        strlcpy(info->options, options, sizeof(info->options));
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
 
 /* Resolver reachability statistics. */
 

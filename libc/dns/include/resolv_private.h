@@ -308,6 +308,8 @@ __BEGIN_DECLS
 
 __LIBC_HIDDEN__ extern struct __res_state *__res_get_state(void);
 __LIBC_HIDDEN__ extern void __res_put_state(struct __res_state *);
+__LIBC_HIDDEN__ extern void res_setoptions(res_state, const char *, const char *);
+
 
 #ifndef ANDROID_CHANGES
 /*
