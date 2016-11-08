@@ -30,6 +30,7 @@
 
 #include <resolv.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1808,6 +1809,12 @@ static void _free_nameservers_locked(struct resolv_cache_info* cache_info);
  * currently attached to the provided cache_info */
 static int _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
         const char** servers, int numservers);
+/**
+ * Returns true iff. the provided list of nameservers is a superset of the list
+ * of those currently attached to the provided cache info, false otherwise.
+ */
+static bool _resolv_are_new_nameservers_superset_locked(
+        struct resolv_cache_info* cache_info, const char** servers, int numservers);
 /* clears the stats samples contained withing the given cache_info */
 static void _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info);
 
@@ -2000,6 +2007,8 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
         }
 
         if (!_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
+            const bool is_superset = _resolv_are_new_nameservers_superset_locked(
+                    cache_info, servers, numservers);
             // free current before adding new
             _free_nameservers_locked(cache_info);
             unsigned i;
@@ -2010,8 +2019,14 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
-            // Flush the cache and reset the stats.
-            _flush_cache_for_net_locked(netid);
+            if (is_superset) {
+                // Clear the cache statistics, since the nameservers may
+                // have been reordered and the entries may no longer align.
+                _res_cache_clear_stats_locked(cache_info);
+            } else {
+                // Flush the cache and reset the stats.
+                _flush_cache_for_net_locked(netid);
+            }
 
             // increment the revision id to ensure that sample state is not written back if the
             // servers change; in theory it would suffice to do so only if the servers or
@@ -2086,6 +2101,32 @@ _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
     }
 
     return 1;
+}
+
+static bool
+_resolv_are_new_nameservers_superset_locked(
+        struct resolv_cache_info* cache_info, const char** servers, int numservers)
+{
+    if (cache_info->nscount > numservers) {
+        return false;
+    }
+
+    // Make sure every previous nameserver is listed somewhere within the new
+    // set of nameservers.
+    for (int i = 0; i < cache_info->nscount; i++) {
+        int found = 0;
+        for (int j = 0; j < numservers; j++) {
+            if (strcmp(cache_info->nameservers[i], servers[j]) == 0) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 static void
