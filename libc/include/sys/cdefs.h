@@ -101,6 +101,11 @@
 
 #endif	/* !(__STDC__ || __cplusplus) */
 
+/* Conflicts with <linux/stddef.h> */
+#ifdef __always_inline
+#undef __always_inline
+#endif
+
 #define __always_inline __attribute__((__always_inline__))
 #define __attribute_const__ __attribute__((__const__))
 #define __attribute_pure__ __attribute__((__pure__))
