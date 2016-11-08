@@ -2010,9 +2010,6 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
-            // Flush the cache and reset the stats.
-            _flush_cache_for_net_locked(netid);
-
             // increment the revision id to ensure that sample state is not written back if the
             // servers change; in theory it would suffice to do so only if the servers or
             // max_samples actually change, in practice the overhead of checking is higher than the
