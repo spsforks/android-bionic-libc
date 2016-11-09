@@ -127,15 +127,6 @@ static const std::set<Arch> supported_archs = {
   Arch::x86_64,
 };
 
-static ArchMap<std::string> arch_targets = {
-  { Arch::arm, "arm-linux-androideabi" },
-  { Arch::arm64, "aarch64-linux-android" },
-  { Arch::mips, "mipsel-linux-android" },
-  { Arch::mips64, "mips64el-linux-android" },
-  { Arch::x86, "i686-linux-android" },
-  { Arch::x86_64, "x86_64-linux-android" },
-};
-
 static const std::set<int> supported_levels = { 9, 12, 13, 14, 15, 16, 17, 18, 19, 21, 23, 24 };
 
 static const ArchMap<int> arch_min_api = {

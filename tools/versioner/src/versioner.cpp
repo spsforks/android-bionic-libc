@@ -58,6 +58,7 @@
 #include "versioner.h"
 
 using namespace std::string_literals;
+
 using namespace clang;
 using namespace tooling;
 
@@ -65,12 +66,83 @@ bool verbose;
 static bool add_include;
 static int max_thread_count = 48;
 
+static void appendTargetFlags(std::vector<std::string>& cmd, CompilationType& type) {
+  switch (type.arch) {
+    case Arch::arm:
+      cmd.push_back("-triple");
+      cmd.push_back("armv4t--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("arm7tdmi");
+      cmd.push_back("-target-abi");
+      cmd.push_back("aapcs-linux");
+      cmd.push_back("-msoft-float");
+      cmd.push_back("-mfloat-abi");
+      cmd.push_back("soft");
+      break;
+
+    case Arch::arm64:
+      cmd.push_back("-triple");
+      cmd.push_back("aarch64--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("generic");
+      cmd.push_back("-target-abi");
+      cmd.push_back("aapcs");
+      break;
+
+    case Arch::mips:
+      cmd.push_back("-triple");
+      cmd.push_back("mipsel--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("mips32");
+      cmd.push_back("-target-abi");
+      cmd.push_back("o32");
+      cmd.push_back("-mfloat-abi");
+      cmd.push_back("hard");
+      break;
+
+    case Arch::mips64:
+      cmd.push_back("-triple");
+      cmd.push_back("mips64el--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("mips64r6");
+      cmd.push_back("-target-abi");
+      cmd.push_back("n64");
+      cmd.push_back("-mfloat-abi");
+      cmd.push_back("hard");
+      break;
+
+    case Arch::x86:
+      cmd.push_back("-triple");
+      cmd.push_back("i686--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("i686");
+      break;
+
+    case Arch::x86_64:
+      cmd.push_back("-triple");
+      cmd.push_back("x86_64--linux-android");
+      cmd.push_back("-target-cpu");
+      cmd.push_back("x86-64");
+      break;
+  }
+}
+
 static std::vector<std::string> generateCompileCommand(CompilationType& type,
                                                        const std::string& filename,
-                                                       const std::string& header_dir,
                                                        const std::vector<std::string>& include_dirs) {
-  std::vector<std::string> cmd = { "versioner" };
+  std::vector<std::string> cmd;
+  cmd.push_back("-cc1");
+  appendTargetFlags(cmd, type);
+
+  cmd.push_back("-emit-llvm-only");
+  cmd.push_back("-disable-llvm-optzns");
+  cmd.push_back("-disable-llvm-verifier");
+
   cmd.push_back("-std=c11");
+  cmd.push_back("-fno-signed-char");
+
+  cmd.push_back("-x");
+  cmd.push_back("c-header");
 
   cmd.push_back("-Wall");
   cmd.push_back("-Wextra");
@@ -82,16 +154,15 @@ static std::vector<std::string> generateCompileCommand(CompilationType& type,
   cmd.push_back("-Wno-unknown-attributes");
   cmd.push_back("-Wno-pragma-once-outside-header");
 
-  cmd.push_back("-target");
-  cmd.push_back(arch_targets[type.arch]);
-
   cmd.push_back("-DANDROID");
   cmd.push_back("-D__ANDROID_API__="s + std::to_string(type.api_level));
   cmd.push_back("-D_FORTIFY_SOURCE=2");
   cmd.push_back("-D_GNU_SOURCE");
   cmd.push_back("-D_FILE_OFFSET_BITS="s + std::to_string(type.file_offset_bits));
 
-  cmd.push_back("-nostdinc");
+  cmd.push_back("-nostdsysteminc");
+  cmd.push_back("-nobuiltininc");
+
   std::string header_path;
   if (add_include) {
     const char* top = getenv("ANDROID_BUILD_TOP");
@@ -140,7 +211,7 @@ class VersionerASTAction : public clang::ASTFrontendAction {
 };
 
 static void compileHeader(HeaderDatabase* header_database, CompilationType type,
-                          const std::string& filename, const std::string& header_dir,
+                          const std::string& filename,
                           const std::vector<std::string>& include_dirs) {
   DiagnosticOptions diagnostic_options;
   auto diagnostic_printer = new TextDiagnosticPrinter(llvm::errs(), &diagnostic_options);
@@ -148,24 +219,17 @@ static void compileHeader(HeaderDatabase* header_database, CompilationType type,
   IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
   IntrusiveRefCntPtr<DiagnosticsEngine> diags(
       new DiagnosticsEngine(diagnostic_ids, &diagnostic_options, diagnostic_printer, false));
-  driver::Driver Driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags);
 
-  std::vector<std::string> cmd = generateCompileCommand(type, filename, header_dir, include_dirs);
-  llvm::SmallVector<const char*, 32> Args;
-
-  for (const std::string& str : cmd) {
-    Args.push_back(str.c_str());
+  std::vector<std::string> cmd = generateCompileCommand(type, filename, include_dirs);
+  std::vector<const char*> cc_args;
+  for (const std::string& arg : cmd) {
+    cc_args.push_back(arg.c_str());
   }
-
-  std::unique_ptr<driver::Compilation> Compilation(Driver.BuildCompilation(Args));
-
-  const driver::Command &Cmd = llvm::cast<driver::Command>(*Compilation->getJobs().begin());
-  const driver::ArgStringList &CCArgs = Cmd.getArguments();
 
   auto invocation = std::make_unique<CompilerInvocation>();
   if (!CompilerInvocation::CreateFromArgs(
-          *invocation.get(), const_cast<const char**>(CCArgs.data()),
-          const_cast<const char**>(CCArgs.data()) + CCArgs.size(), *diags)) {
+          *invocation.get(), const_cast<const char**>(cc_args.data()),
+          const_cast<const char**>(cc_args.data()) + cc_args.size(), *diags)) {
     errx(1, "failed to create CompilerInvocation");
   }
 
@@ -191,10 +255,9 @@ struct CompilationRequirements {
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
   std::vector<std::string> headers = collectFiles(header_dir);
-
-  std::vector<std::string> dependencies = { header_dir };
+  std::vector<std::string> dependencies;
   if (!dependency_dir.empty()) {
-    auto collect_children = [&dependencies](const std::string& dir_path) {
+    auto collect_children = [&dependencies, &dependency_dir](const std::string& dir_path) {
       DIR* dir = opendir(dir_path.c_str());
       if (!dir) {
         err(1, "failed to open dependency directory '%s'", dir_path.c_str());
@@ -242,6 +305,7 @@ static CompilationRequirements collectRequirements(const Arch& arch, const std::
   });
 
   headers.erase(new_end, headers.end());
+  dependencies.push_back(header_dir);
 
   CompilationRequirements result = { .headers = headers, .dependencies = dependencies };
   return result;
@@ -301,7 +365,7 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
         size_t index = i;
         while (index < jobs.size()) {
           const auto& job = jobs[index];
-          compileHeader(result.get(), job.type, job.header, header_dir, job.dependencies);
+          compileHeader(result.get(), job.type, job.header, job.dependencies);
           index += thread_count;
         }
       });
