@@ -55,11 +55,14 @@
 #include "Preprocessor.h"
 #include "SymbolDatabase.h"
 #include "Utils.h"
+#include "VFS.h"
+
 #include "versioner.h"
 
 using namespace std::string_literals;
 
 using namespace clang;
+using namespace clang::vfs;
 using namespace tooling;
 
 bool verbose;
@@ -163,12 +166,9 @@ static std::vector<std::string> generateCompileCommand(CompilationType& type,
   cmd.push_back("-nostdsysteminc");
   cmd.push_back("-nobuiltininc");
 
-  std::string header_path;
   if (add_include) {
-    const char* top = getenv("ANDROID_BUILD_TOP");
-    header_path = to_string(top) + "/bionic/libc/include/android/versioning.h";
     cmd.push_back("-include");
-    cmd.push_back(header_path);
+    cmd.push_back("android/versioning.h");
   }
 
   for (const auto& dir : include_dirs) {
@@ -210,8 +210,8 @@ class VersionerASTAction : public clang::ASTFrontendAction {
   }
 };
 
-static void compileHeader(HeaderDatabase* header_database, CompilationType type,
-                          const std::string& filename,
+static void compileHeader(IntrusiveRefCntPtr<FileSystem> vfs, HeaderDatabase* header_database,
+                          CompilationType type, const std::string& filename,
                           const std::vector<std::string>& include_dirs) {
   DiagnosticOptions diagnostic_options;
   auto diagnostic_printer = new TextDiagnosticPrinter(llvm::errs(), &diagnostic_options);
@@ -236,6 +236,7 @@ static void compileHeader(HeaderDatabase* header_database, CompilationType type,
   clang::CompilerInstance Compiler;
   Compiler.setInvocation(invocation.release());
   Compiler.setDiagnostics(diags.get());
+  Compiler.setFileManager(new FileManager(FileSystemOptions(), vfs));
 
   VersionerASTAction versioner_action(header_database, type);
   if (!Compiler.ExecuteAction(versioner_action)) {
@@ -348,6 +349,9 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     errx(1, "compileHeaders received no CompilationTypes");
   }
 
+  IntrusiveRefCntPtr<FileSystem> vfs(
+      createCommonVFS(header_dir, dependency_dir, add_include).release());
+
   size_t thread_count = max_thread_count;
   std::vector<std::thread> threads;
   std::vector<Job> jobs;
@@ -361,11 +365,11 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
   auto spawn_threads = [&]() {
     thread_count = std::min(thread_count, jobs.size());
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &result, &header_dir, thread_count, i]() {
+      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, i]() {
         size_t index = i;
         while (index < jobs.size()) {
           const auto& job = jobs[index];
-          compileHeader(result.get(), job.type, job.header, job.dependencies);
+          compileHeader(vfs, result.get(), job.type, job.header, job.dependencies);
           index += thread_count;
         }
       });
