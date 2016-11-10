@@ -22,7 +22,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <atomic>
+#if defined(__linux__)
+#include <pthread.h>
+#include <sched.h>
+#endif
+
+#include <chrono>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -48,11 +53,48 @@
 
 #include "versioner.h"
 
+using namespace std::chrono_literals;
 using namespace std::string_literals;
 
 bool add_include;
 bool verbose;
-static int max_thread_count = 48;
+
+static int getCpuCount();
+static int max_thread_count = getCpuCount();
+
+static int getCpuCount() {
+#if defined(__linux__)
+  cpu_set_t cpu_set;
+  int rc = sched_getaffinity(getpid(), sizeof(cpu_set), &cpu_set);
+  if (rc != 0) {
+    err(1, "sched_getaffinity failed");
+  }
+  size_t result = CPU_COUNT(&cpu_set);
+  if (result > 1) {
+    // HACK: This assumes that hyperthreading is always on.
+    return result / 2;
+  }
+  return result;
+#else
+  return 24;
+#endif
+}
+
+static void pinCpu(size_t id) {
+#if defined(__linux__)
+  cpu_set_t thread_set;
+  CPU_ZERO(&thread_set);
+
+  // FIXME: This assumes that CPU numbers are contiguous.
+  CPU_SET(id, &thread_set);
+
+  if (pthread_setaffinity_np(pthread_self(), sizeof(thread_set), &thread_set) != 0) {
+    err(1, "pthread_setaffinity_np failed");
+  }
+#else
+  (void)id;
+#endif
+}
 
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
@@ -173,8 +215,12 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     }
   } else {
     // Spawn threads.
+    size_t cpu_count = getCpuCount();
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, i]() {
+      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, cpu_count, i]() {
+        if (i < cpu_count) {
+          pinCpu(i % cpu_count);
+        }
         size_t index = i;
         while (index < jobs.size()) {
           const auto& job = jobs[index];
@@ -552,8 +598,15 @@ int main(int argc, char** argv) {
     symbol_database = parsePlatforms(compilation_types, platform_dir);
   }
 
+  auto start = std::chrono::high_resolution_clock::now();
   std::unique_ptr<HeaderDatabase> declaration_database =
       compileHeaders(compilation_types, header_dir, dependency_dir);
+  auto end = std::chrono::high_resolution_clock::now();
+
+  if (verbose) {
+    auto diff = (end - start) / 1.0ms;
+    printf("Compiled headers for %zu targets in %0.2LFms\n", compilation_types.size(), diff);
+  }
 
   bool failed = false;
   if (dump) {
