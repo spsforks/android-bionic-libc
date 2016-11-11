@@ -29,30 +29,29 @@
 #include "private/bionic_arc4random.h"
 
 #include <errno.h>
+#include <stdatomic.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
 #include <syscall.h>
 #include <unistd.h>
 
 #include "private/KernelArgumentBlock.h"
-#include "private/libc_logging.h"
 
-void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
+bool __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
   static bool have_getrandom = syscall(SYS_getrandom, nullptr, 0, 0) == -1 && errno != ENOSYS;
   static bool have_urandom = access("/dev/urandom", R_OK) == 0;
-  static size_t at_random_bytes_consumed = 0;
+  static atomic_size_t at_random_bytes_consumed = 0;
 
   if (have_getrandom || have_urandom) {
     arc4random_buf(buf, n);
-    return;
+    return true;
   }
 
-  if (at_random_bytes_consumed + n > 16) {
-    __libc_fatal("ran out of AT_RANDOM bytes, have %zu, requested %zu",
-                 16 - at_random_bytes_consumed, n);
+  size_t original = atomic_fetch_add(&at_random_bytes_consumed, n);
+  if (original + n > 16) {
+    return false;
   }
 
-  memcpy(buf, reinterpret_cast<char*>(args.getauxval(AT_RANDOM)) + at_random_bytes_consumed, n);
-  at_random_bytes_consumed += n;
-  return;
+  memcpy(buf, reinterpret_cast<char*>(args.getauxval(AT_RANDOM)) + original, n);
+  return true;
 }
