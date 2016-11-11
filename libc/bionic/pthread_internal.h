@@ -69,6 +69,8 @@ class pthread_internal_t {
   void* unsafe_stack_start;
   size_t unsafe_stack_size;
   size_t unsafe_stack_gap_size;
+  void* unsafe_altstack_start;
+  size_t unsafe_altstack_size;
 #endif
 
  public:
@@ -92,6 +94,8 @@ class pthread_internal_t {
   void unsafe_stack_free();
   void unsafe_stack_set_vma_name(size_t guard, char* buf, size_t buf_size);
   void unsafe_stack_get(void **start, size_t *size);
+  void unsafe_altstack_set(size_t size);
+  void unsafe_altstack_get(void **start, size_t *size);
 
   pthread_attr_t attr;
 
