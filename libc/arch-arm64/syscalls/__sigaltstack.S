@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(sigaltstack)
+ENTRY(__sigaltstack)
     mov     x8, __NR_sigaltstack
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(sigaltstack)
     b.hi    __set_errno_internal
 
     ret
-END(sigaltstack)
+END(__sigaltstack)
+.hidden __sigaltstack

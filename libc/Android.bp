@@ -1331,6 +1331,7 @@ cc_library_static {
         "bionic/setpgrp.cpp",
         "bionic/sigaction.cpp",
         "bionic/sigaddset.cpp",
+        "bionic/sigaltstack.cpp",
         "bionic/sigdelset.cpp",
         "bionic/sigemptyset.cpp",
         "bionic/sigfillset.cpp",
