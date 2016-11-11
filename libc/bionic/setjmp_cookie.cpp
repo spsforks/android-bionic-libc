@@ -41,7 +41,10 @@
 
 void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
   long value;
-  __libc_safe_arc4random_buf(&value, sizeof(value), args);
+
+  if (!__libc_safe_arc4random_buf(&value, sizeof(value), &args)) {
+    __libc_fatal("failed to fetch entropy for setjmp cookie");
+  }
 
   // Mask off the last bit to store the signal flag.
   globals->setjmp_cookie = value & ~1;
