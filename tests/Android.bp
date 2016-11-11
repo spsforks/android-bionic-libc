@@ -39,7 +39,7 @@ cc_defaults {
     ],
     stl: "libc++",
     sanitize: {
-        never: true,
+        address: false,
     },
 }
 
@@ -479,7 +479,7 @@ cc_test_host {
     ldflags: ["-Wl,--export-dynamic"],
 
     sanitize: {
-        never: false,
+        address: false,
     },
 }
 

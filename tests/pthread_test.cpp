@@ -1355,6 +1355,7 @@ struct GetStackSignalHandlerArg {
 
 static GetStackSignalHandlerArg getstack_signal_handler_arg;
 
+__attribute__((no_sanitize("safe-stack")))
 static void getstack_signal_handler(int sig) {
   ASSERT_EQ(SIGUSR1, sig);
   // Use sleep() to make current thread be switched out by the kernel to provoke the error.
@@ -1418,6 +1419,7 @@ TEST(pthread, pthread_attr_getstack_in_signal_handler) {
   ASSERT_EQ(0, munmap(sig_stack, sig_stack_size));
 }
 
+__attribute__((no_sanitize("safe-stack")))
 static void pthread_attr_getstack_18908062_helper(void*) {
   char local_variable;
   pthread_attr_t attributes;

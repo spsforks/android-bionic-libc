@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(sigaltstack)
+ENTRY(__sigaltstack)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -31,4 +31,4 @@ ENTRY(sigaltstack)
     popl    %ecx
     popl    %ebx
     ret
-END(sigaltstack)
+END(__sigaltstack)
