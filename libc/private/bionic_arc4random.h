@@ -33,13 +33,13 @@
 
 #include "private/KernelArgumentBlock.h"
 
-/*
- * arc4random aborts if it's unable to fetch entropy, which is always the case
- * for init on devices without getrandom(2), since /dev/random hasn't been
- * created yet. Provide a wrapper function that falls back to AT_RANDOM if
- * we don't have getrandom and /dev/urandom is missing.
- */
+// arc4random aborts if it's unable to fetch entropy, which is always the case
+// for init on devices without getrandom(2), since /dev/random hasn't been
+// created yet. Provide a wrapper function that can try to fall back to AT_RANDOM if
+// we don't have getrandom and /dev/urandom is missing.
 
-void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args);
+bool __libc_arc4random_unlimited_entropy();
+
+bool __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock* args = nullptr);
 
 #endif
