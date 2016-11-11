@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(sigaltstack)
+ENTRY(__sigaltstack)
     mov     ip, r7
     .cfi_register r7, ip
     ldr     r7, =__NR_sigaltstack
@@ -13,4 +13,4 @@ ENTRY(sigaltstack)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(sigaltstack)
+END(__sigaltstack)
