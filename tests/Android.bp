@@ -39,7 +39,7 @@ cc_defaults {
     ],
     stl: "libc++",
     sanitize: {
-        never: true,
+        address: false,
     },
 }
 
@@ -489,7 +489,7 @@ cc_test_host {
     ],
 
     sanitize: {
-        never: false,
+        address: false,
     },
 }
 
