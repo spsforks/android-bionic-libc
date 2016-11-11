@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(sigaltstack)
+ENTRY(__sigaltstack)
     movl    $__NR_sigaltstack, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(sigaltstack)
     call    __set_errno_internal
 1:
     ret
-END(sigaltstack)
+END(__sigaltstack)
+.hidden __sigaltstack

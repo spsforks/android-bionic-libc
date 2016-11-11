@@ -15,6 +15,7 @@
  */
 
 #include <errno.h>
+#include <pthread.h>
 #include <signal.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
@@ -526,4 +527,58 @@ TEST(signal, sigset) {
   ASSERT_EQ(SIG_DFL, sigset(SIGALRM, SIG_HOLD));
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
   EXPECT_TRUE(sigismember(&set, SIGALRM));
+}
+
+namespace {
+
+char * volatile leaked_ptr;
+
+void handler(int) {
+  char a[2048];
+  leaked_ptr = &a[0];
+  *leaked_ptr = 42;
+  leaked_ptr = &a[2000];
+  *leaked_ptr = 42;
+  const char *msg = "... SEGV\n";
+  write(2, msg, strlen(msg));
+  abort();
+}
+
+volatile bool recurse_exit = false;
+
+void recurse(void *p) {
+  void *a[1024 / sizeof(void *)];
+  // By storing the address of the array from the previous stack frame, we force it onto the unsafe
+  // stack when this code is built with SafeStack.
+  if (p)
+    a[0] = p;
+  if (recurse_exit) // never happens; suppress optimization
+    return;
+  recurse(&a);
+}
+
+void* thread_start(void *) {
+  struct sigaction sa;
+  memset(&sa, 0, sizeof(sa));
+  sa.sa_flags = SA_ONSTACK;
+  sa.sa_handler = handler;
+  sigaction(SIGSEGV, &sa, nullptr);
+
+  recurse(nullptr);
+  return nullptr;
+}
+
+void TestSigaltstack() {
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setstacksize(&attr, 64*1024);
+  pthread_t t;
+  pthread_create(&t, &attr, &thread_start, nullptr);
+  pthread_join(t, nullptr);
+}
+
+TEST(signal, sigaltstack) {
+  ASSERT_EXIT(TestSigaltstack(), testing::KilledBySignal(SIGABRT), "... SEGV");
+}
+
 }
