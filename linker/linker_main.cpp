@@ -35,6 +35,7 @@
 #include "linker_utils.h"
 
 #include "private/bionic_globals.h"
+#include "private/bionic_safestack.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
@@ -408,6 +409,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   ElfW(Addr) entry = args.getauxval(AT_ENTRY);
   TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(entry));
   return entry;
 }
 
@@ -448,9 +450,7 @@ static void __linker_cannot_link(const char* argv0) {
  * relocations, any attempt to reference an extern variable, extern
  * function, or other GOT reference will generate a segfault.
  */
-extern "C" ElfW(Addr) __linker_init(void* raw_args) {
-  KernelArgumentBlock args(raw_args);
-
+static ElfW(Addr) __linker_preinit(KernelArgumentBlock &args) {
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
@@ -527,10 +527,44 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
-
-  INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
-
-  // Return the address that the calling assembly stub should jump to.
-  return start_address;
+  return linker_addr;
 }
+
+#ifdef BIONIC_SAFESTACK
+extern "C" int __set_tls(void* ptr);
+
+__attribute__((optnone, no_sanitize("safe-stack")))
+extern "C" ElfW(Addr) __linker_init(void* raw_args) {
+  // Bootstrap SafeStack by providing a small buffer on the system stack to be used as unsafe stack
+  // until the linker is sufficiently initialized.
+  static const size_t kInitialUnsafeStackSize = 0x4000;
+  uint8_t unsafe_stack[kInitialUnsafeStackSize]; // FIXME: alignment
+  void* tls[BIONIC_TLS_SLOTS] = {};
+  tls[TLS_SLOT_SAFESTACK] = &unsafe_stack[0] + kInitialUnsafeStackSize;
+  __set_tls(&tls);
+
+  // At this point we can run safestack-instrumented code, but on a very limited and not randomized
+  // unsafe stack. Do the early linker initialization.
+  KernelArgumentBlock args(raw_args);
+  ElfW(Addr) linker_addr = __linker_preinit(args);
+
+  // At this point the real TLS is installed (see __libc_init_main_thread) for the main thread. The
+  // temporary unsafe stack is entirely out of scope and ready to be replaced with the properly
+  // randomized allocation.
+  __get_tls()[TLS_SLOT_SAFESTACK] = __init_main_thread_unsafe_stack();
+
+  // Run the rest of linker initialization, including all the global constructors.
+  ElfW(Addr) start_addr = __linker_init_post_relocation(args, linker_addr);
+  // Return the address that the calling assembly stub should jump to.
+  return start_addr;
+}
+#else
+extern "C" ElfW(Addr) __linker_init(void* raw_args) {
+  KernelArgumentBlock args(raw_args);
+  ElfW(Addr) linker_addr = __linker_preinit(args);
+  ElfW(Addr) start_addr = __linker_init_post_relocation(args, linker_addr);
+  // Return the address that the calling assembly stub should jump to.
+  return start_addr;
+
+}
+#endif
