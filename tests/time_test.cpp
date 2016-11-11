@@ -198,8 +198,13 @@ TEST(time, strftime_null_tm_zone) {
 
 #if defined(__BIONIC__) // glibc 2.19 thinks UTC DST is "UTC".
   t.tm_isdst = 1; // UTC has no DST.
+#if defined(__LP64__)
+  EXPECT_EQ(7U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<_TZif>", buf);
+#else
   EXPECT_EQ(2U, strftime(buf, sizeof(buf), "<%Z>", &t));
   EXPECT_STREQ("<>", buf);
+#endif
 #endif
 }
 
