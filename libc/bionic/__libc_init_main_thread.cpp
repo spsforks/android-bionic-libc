@@ -33,6 +33,7 @@
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
+#include "private/libc_logging.h"
 #include "pthread_internal.h"
 
 extern "C" int __set_tls(void* ptr);
@@ -42,7 +43,9 @@ extern "C" int __set_tid_address(int* tid_address);
 uintptr_t __stack_chk_guard = 0;
 
 void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
-  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
+  if (!__libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args)) {
+    __libc_fatal("failed to fetch entropy for stack protector");
+  }
 }
 
 // Setup for the main thread. For dynamic executables, this is called by the
