@@ -147,10 +147,14 @@ int pthread_internal_t::unsafe_stack_alloc(size_t stack_size, size_t stack_guard
 
 void pthread_internal_t::unsafe_stack_free() {
   munmap(unsafe_stack_start, unsafe_stack_size + unsafe_stack_gap_size);
+  if (unsafe_altstack_start && unsafe_altstack_size)
+    munmap(unsafe_altstack_start, unsafe_altstack_size);
   // Just in case...
   unsafe_stack_start = nullptr;
   unsafe_stack_size = 0;
   unsafe_stack_gap_size = 0;
+  unsafe_altstack_start = nullptr;
+  unsafe_altstack_size = 0;
 }
 
 void pthread_internal_t::unsafe_stack_set_vma_name(size_t guard, char* buf, size_t buf_size) {
@@ -175,6 +179,34 @@ void pthread_internal_t::unsafe_stack_set_vma_name(size_t guard, char* buf, size
 void pthread_internal_t::unsafe_stack_get(void **start, size_t *size) {
   *start = unsafe_stack_start;
   *size = unsafe_stack_size;
+}
+
+void pthread_internal_t::unsafe_altstack_set(size_t size) {
+  size = BIONIC_ALIGN(size, PAGE_SIZE);
+  if (size == unsafe_altstack_size) {
+    return;
+  }
+  if (unsafe_altstack_start && unsafe_altstack_size) {
+    munmap(unsafe_altstack_start, unsafe_altstack_size);
+  }
+
+  unsafe_altstack_size = size;
+  if (!size) {
+    unsafe_altstack_start = nullptr;
+    return;
+  }
+
+  unsafe_altstack_start = mmap(nullptr, size, PROT_READ | PROT_WRITE,
+                               MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+  if (unsafe_altstack_start == nullptr) {
+    __libc_fatal("Failed to allocate the unsafe altstack: %s\n", strerror(errno));
+  }
+}
+
+__attribute__((no_sanitize("safe-stack")))
+void pthread_internal_t::unsafe_altstack_get(void **start, size_t *size) {
+  *start = unsafe_altstack_start;
+  *size = unsafe_altstack_size;
 }
 
 void* __init_main_thread_unsafe_stack() {
@@ -212,6 +244,14 @@ void pthread_internal_t::unsafe_stack_set_vma_name(size_t, char*, size_t) {
 void pthread_internal_t::unsafe_stack_get(void **start, size_t *size) {
   *start = nullptr;
   *size = 0;
+}
+
+void pthread_internal_t::unsafe_altstack_get(void **start, size_t *size) {
+  *start = nullptr;
+  *size = 0;
+}
+
+void pthread_internal_t::unsafe_altstack_set(size_t) {
 }
 
 void* __init_main_thread_unsafe_stack() {
