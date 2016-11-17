@@ -755,23 +755,57 @@ TEST(dlfcn, dlopen_failure) {
 }
 
 static void* ConcurrentDlErrorFn(void*) {
-  dlopen("/child/thread", RTLD_NOW);
-  return reinterpret_cast<void*>(strdup(dlerror()));
+  if (dlerror() != nullptr) {
+    return strdup("Failure: initial value of dlerror() != nullptr");
+  }
+  void* handle = dlopen("/child/thread", RTLD_NOW);
+  if (handle != nullptr) {
+    return strdup("Failure: dlopen(\"/child/thread\", RTLD_NOW) was successful");
+  }
+
+  const char* err = dlerror();
+  if (err == nullptr) {
+    return nullptr;
+  }
+
+  return strdup(err);
 }
 
-TEST(dlfcn, dlerror_concurrent) {
-  dlopen("/main/thread", RTLD_NOW);
+TEST(dlfcn, dlerror_concurrent_buffer) {
+  void* handle = dlopen("/main/thread", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
   const char* main_thread_error = dlerror();
+  ASSERT_TRUE(main_thread_error != nullptr);
   ASSERT_SUBSTR("/main/thread", main_thread_error);
 
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentDlErrorFn, nullptr));
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
-  char* child_thread_error = static_cast<char*>(result);
-  ASSERT_SUBSTR("/child/thread", child_thread_error);
-  free(child_thread_error);
 
+  std::unique_ptr<char> child_thread_error(static_cast<char*>(result));
+  ASSERT_TRUE(child_thread_error.get() != nullptr);
+  ASSERT_SUBSTR("/child/thread", child_thread_error.get());
+
+  // Check that main thread local buffer was not modified.
+  ASSERT_SUBSTR("/main/thread", main_thread_error);
+}
+
+TEST(dlfcn, dlerror_concurrent) {
+  void* handle = dlopen("/main/thread", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentDlErrorFn, nullptr));
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
+
+  std::unique_ptr<char> child_thread_error(static_cast<char*>(result));
+  ASSERT_TRUE(child_thread_error.get() != nullptr);
+  ASSERT_SUBSTR("/child/thread", child_thread_error.get());
+
+  const char* main_thread_error = dlerror();
+  ASSERT_TRUE(main_thread_error != nullptr);
   ASSERT_SUBSTR("/main/thread", main_thread_error);
 }
 
