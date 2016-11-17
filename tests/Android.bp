@@ -387,12 +387,6 @@ cc_test {
     clang: true,
 }
 
-cc_test {
-    name: "bionic-unit-tests-gcc",
-    defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
-    clang: false,
-}
-
 // -----------------------------------------------------------------------------
 // Tests for the device linked against bionic's static library. Run with:
 //   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
