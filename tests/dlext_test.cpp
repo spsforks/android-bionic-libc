@@ -1197,3 +1197,4 @@ TEST(dlext, dlopen_handle_value_app_compat) {
           << "dlopen should return valid pointer";
   dlclose(handle);
 }
+
