@@ -273,7 +273,7 @@ cc_test_library {
 
 cc_test_library {
     name: "libBionicLoaderTests",
-    defaults: ["bionic_tests_defaults"],
+    defaults: ["bionic_tests_defaults", "llvm-defaults"],
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
@@ -283,6 +283,12 @@ cc_test_library {
     ],
     static_libs: [
         "libbase",
+        "libLLVMObject",
+        "libLLVMBitReader",
+        "libLLVMMC",
+        "libLLVMMCParser",
+        "libLLVMCore",
+        "libLLVMSupport",
     ],
     include_dirs: [
         "bionic/libc",
@@ -341,6 +347,12 @@ cc_defaults {
         "libtinyxml2",
         "liblog",
         "libbase",
+        "libLLVMObject",
+        "libLLVMBitReader",
+        "libLLVMMC",
+        "libLLVMMCParser",
+        "libLLVMCore",
+        "libLLVMSupport",
     ],
 
     srcs: [
@@ -442,7 +454,7 @@ cc_test {
 
 cc_test_host {
     name: "bionic-unit-tests-glibc",
-    defaults: ["bionic_tests_defaults"],
+    defaults: ["bionic_tests_defaults", "llvm-defaults"],
 
     srcs: [
         "atexit_test.cpp",
@@ -472,6 +484,12 @@ cc_test_host {
         "libbase",
         "liblog",
         "libcutils",
+        "libLLVMObject",
+        "libLLVMBitReader",
+        "libLLVMMC",
+        "libLLVMMCParser",
+        "libLLVMCore",
+        "libLLVMSupport",
     ],
 
     host_ldlibs: [
