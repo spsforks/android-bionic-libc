@@ -1083,3 +1083,41 @@ bool ElfReader::CheckPhdr(ElfW(Addr) loaded) {
          name_.c_str(), reinterpret_cast<void*>(loaded));
   return false;
 }
+
+static void ReadOneNote(const ElfW(Nhdr) * note, const char* name, const char* desc,
+                        bool* safestack, bool* safestack_required) {
+  if (note->n_type != 1) return;
+  if (strcmp(name, "SafeStack") != 0) return;
+  if (note->n_descsz != 4) return;
+  uint32_t v;
+  memcpy(&v, desc, 4);
+  if (v == 1) {
+    *safestack = true;
+  } else if (v == 2) {
+    *safestack_required = true;
+  }
+}
+
+void phdr_table_get_safestack_notes(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                    ElfW(Addr) load_bias, bool* safestack,
+                                    bool* safestack_required) {
+  *safestack = *safestack_required = false;
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+    if (phdr->p_type == PT_NOTE) {
+      ElfW(Addr) p = load_bias + phdr->p_vaddr;
+      ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
+      while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+        const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
+        p += sizeof(ElfW(Nhdr));
+        const char* name = reinterpret_cast<const char*>(p);
+        p += align_up(note->n_namesz, 4);
+        const char* desc = reinterpret_cast<const char*>(p);
+        p += align_up(note->n_descsz, 4);
+        if (p > note_end) break;
+        ReadOneNote(note, name, desc, safestack, safestack_required);
+      }
+    }
+  }
+}
