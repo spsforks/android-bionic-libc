@@ -1810,6 +1810,7 @@ cc_defaults {
         },
     },
     clang: false,
+    stl: "none",
 }
 
 cc_defaults {
@@ -1851,6 +1852,25 @@ cc_defaults {
 //
 // include $(call all-makefiles-under,$(LOCAL_PATH))
 // Android.mk:end
+
+cc_library_static {
+    srcs: [
+        "arch-common/bionic/crt_safestack.S",
+    ],
+
+    defaults: ["crt_defaults"],
+    name: "note_safestack",
+}
+
+cc_library_static {
+    srcs: [
+        "arch-common/bionic/crt_safestack_required.S",
+    ],
+
+    defaults: ["crt_defaults"],
+    name: "note_safestack_required",
+}
+
 cc_object {
     name: "crtbrand",
     local_include_dirs: ["include"],
