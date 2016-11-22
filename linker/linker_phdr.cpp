@@ -42,6 +42,7 @@
 #include "linker_utils.h"
 
 #include "private/bionic_prctl.h"
+#include "private/bionic_safestack.h"
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -1082,4 +1083,42 @@ bool ElfReader::CheckPhdr(ElfW(Addr) loaded) {
   DL_ERR("\"%s\" loaded phdr %p not in loadable segment",
          name_.c_str(), reinterpret_cast<void*>(loaded));
   return false;
+}
+
+static void ReadOneNote(const ElfW(Nhdr) * note, const char* name, const char* desc,
+                        bool* safestack, bool* safestack_required) {
+  if (note->n_type != 1) return;
+  if (strcmp(name, ELF_NOTE_SAFESTACK) != 0) return;
+  if (note->n_descsz != sizeof(uint32_t)) return;
+  uint32_t v;
+  memcpy(&v, desc, sizeof(v));
+  if (v == NT_SAFESTACK) {
+    *safestack = true;
+  } else if (v == NT_SAFESTACK_REQUIRED) {
+    *safestack_required = true;
+  }
+}
+
+void phdr_table_get_safestack_notes(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                    ElfW(Addr) load_bias, bool* safestack,
+                                    bool* safestack_required) {
+  *safestack = *safestack_required = false;
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+    if (phdr->p_type == PT_NOTE) {
+      ElfW(Addr) p = load_bias + phdr->p_vaddr;
+      ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
+      while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+        const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
+        p += sizeof(ElfW(Nhdr));
+        const char* name = reinterpret_cast<const char*>(p);
+        p += align_up(note->n_namesz, 4);
+        const char* desc = reinterpret_cast<const char*>(p);
+        p += align_up(note->n_descsz, 4);
+        if (p > note_end) break;
+        ReadOneNote(note, name, desc, safestack, safestack_required);
+      }
+    }
+  }
 }

@@ -30,6 +30,11 @@
 #define _PRIVATE_SAFESTACK_H
 
 __BEGIN_DECLS
+#define ELF_NOTE_SAFESTACK "SafeStack"
+enum {
+  NT_SAFESTACK = 1,
+  NT_SAFESTACK_REQUIRED = 2
+};
 __LIBC_HIDDEN__ void *__init_main_thread_unsafe_stack();
 __END_DECLS
 
