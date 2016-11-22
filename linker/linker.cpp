@@ -105,6 +105,9 @@ static const char* const kAsanDefaultLdPaths[] = {
 // Is ASAN enabled?
 static bool g_is_asan = false;
 
+static bool g_safestack_required = false;
+static bool g_non_safestack_libraries_present = false;
+
 static bool is_system_library(const std::string& realpath) {
   for (const auto& dir : g_default_namespace.get_default_library_paths()) {
     if (file_is_in_dir(realpath, dir)) {
@@ -2620,6 +2623,25 @@ bool soinfo::prelink_image() {
   } else {
     if (!relocating_linker) {
       DEBUG("dynamic = %p", dynamic);
+    }
+  }
+
+  if (!relocating_linker) {
+    bool safestack, safestack_required;
+    phdr_table_get_safestack_notes(phdr, phnum, load_bias, &safestack, &safestack_required);
+    g_non_safestack_libraries_present |= !safestack;
+    g_safestack_required |= safestack_required;
+    if (g_safestack_required && g_non_safestack_libraries_present) {
+      if (!safestack) {
+        DL_ERR("attempting to load a non-SafeStack module \"%s\" in a SafeStack-required process",
+               get_realpath());
+      } else {
+        DL_ERR(
+            "attempting to load a SafeStack-required module \"%s\" in a process with non-SafeStack "
+            "modules",
+            get_realpath());
+      }
+      return false;
     }
   }
 
