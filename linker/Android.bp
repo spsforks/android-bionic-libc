@@ -1,6 +1,5 @@
 cc_library_static {
     name: "liblinker_malloc",
-    clang: true,
 
     srcs: [
         "linker_allocator.cpp",
@@ -11,9 +10,34 @@ cc_library_static {
     include_dirs: ["bionic/libc"],
 }
 
-cc_binary {
-    clang: true,
+cc_library_static {
+    name: "libloader",
 
+    srcs: [
+        "linker.cpp",
+        "linker_block_allocator.cpp",
+        "linker_dlwarning.cpp",
+        "linker_globals.cpp",
+        "linker_namespaces.cpp",
+        "linker_logger.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_soinfo.cpp",
+        "linker_utils.cpp",
+    ],
+
+    arch: {
+        arm: {
+            cflags: ["-D__work_around_b_24465209__"],
+        },
+        x86: {
+            cflags: ["-D__work_around_b_24465209__"],
+        },
+    },
+}
+
+cc_binary {
     srcs: [
         "dlfcn.cpp",
         "linker.cpp",
@@ -96,8 +120,6 @@ cc_binary {
         "-Wunused",
         "-Werror",
     ],
-
-    conlyflags: ["-std=gnu99"],
 
     cppflags: ["-Wold-style-cast"],
 
