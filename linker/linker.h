@@ -110,6 +110,10 @@ int do_dlclose(void* handle);
 
 int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data);
 
+#if defined(__arm__)
+_Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount);
+#endif
+
 bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
               void* caller_addr, void** symbol);
 
