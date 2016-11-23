@@ -33,16 +33,24 @@
 #include <sys/auxv.h>
 #include <syscall.h>
 #include <unistd.h>
+#include <linux/random.h>
 
 #include "private/KernelArgumentBlock.h"
 #include "private/libc_logging.h"
 
 void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
-  static bool have_getrandom = syscall(SYS_getrandom, nullptr, 0, 0) != -1 || errno != ENOSYS;
+  // Need set NON_BLOCK in case SYS_getrandom not ready
+  static bool getrandom_ready = syscall(SYS_getrandom, nullptr, 0, GRND_NONBLOCK) != -1;
+  static bool have_getrandom_syscall = syscall(SYS_getrandom, nullptr, 0, GRND_NONBLOCK) != -1 || errno != ENOSYS;
   static bool have_urandom = access("/dev/urandom", R_OK) == 0;
   static size_t at_random_bytes_consumed = 0;
 
-  if (have_getrandom || have_urandom) {
+  // Redo test if getrandom not ready
+  if (have_getrandom_syscall && !getrandom_ready) {
+      getrandom_ready = syscall(SYS_getrandom, nullptr, 0, GRND_NONBLOCK) != -1;
+  }
+
+  if (getrandom_ready || have_urandom) {
     arc4random_buf(buf, n);
     return;
   }
