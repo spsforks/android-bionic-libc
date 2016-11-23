@@ -102,11 +102,12 @@ getentropy(void *buf, size_t len)
 	ret = getentropy_getrandom(buf, len);
 	if (ret != -1)
 		return (ret);
-	if (errno != ENOSYS)
+	if (errno != ENOSYS && errno != EAGAIN)
 		return (-1);
 
 	/*
 	 * Try to get entropy with /dev/urandom
+	 * in case of no getrandom or getrandom returns EAGAIN
 	 *
 	 * This can fail if the process is inside a chroot or if file
 	 * descriptors are exhausted.
@@ -192,6 +193,9 @@ gotdata(char *buf, size_t len)
 	return (0);
 }
 
+/*
+ * Set NONBLOCK to getrandom in case of not ready; will return EAGIN then.
+ */
 static int
 getentropy_getrandom(void *buf, size_t len)
 {
@@ -200,7 +204,7 @@ getentropy_getrandom(void *buf, size_t len)
 	if (len > 256)
 		return (-1);
 	do {
-		ret = syscall(SYS_getrandom, buf, len, 0);
+		ret = syscall(SYS_getrandom, buf, len, GRND_NONBLOCK);
 	} while (ret == -1 && errno == EINTR);
 
 	if ((size_t)ret != len)
