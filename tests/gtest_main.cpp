@@ -65,6 +65,18 @@ bool get_realpath(const std::string& path, std::string* real_path) {
   return true;
 }
 
+std::string get_dirname(const char* path) {
+  const char* last_slash = strrchr(path, '/');
+
+  if (last_slash == path) {
+    return "/";
+  } else if (last_slash == nullptr) {
+    return ".";
+  } else {
+    return std::string(path, last_slash - path);
+  }
+}
+
 int get_argc() {
   return g_argc;
 }
