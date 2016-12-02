@@ -456,6 +456,155 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// safestack_required test libraries and helper binaries.
+// -----------------------------------------------------------------------------
+// Three libraries: without safestack, with safestack, safestack-required
+cc_test_library {
+    name: "libtest_safestack_no",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: false },
+}
+
+cc_test_library {
+    name: "libtest_safestack_yes",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: true },
+}
+
+cc_test_library {
+    name: "libtest_safestack_req",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: true },
+    whole_static_libs: [ "note_safestack_required" ],
+}
+
+cc_defaults {
+    name: "bionic_safestack_test_defaults",
+    host_supported: false,
+    ldflags: [
+        "-Wl,--rpath,${ORIGIN}/..",
+        "-Wl,--enable-new-dtags",
+    ],
+    relative_install_path: "bionic-loader-test-libs",
+    gtest: false,
+    sanitize: {
+        address: false,
+    },
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
+}
+
+// test_safestack_(no|yes|req)_(no|yes|req)
+// The first choice is the safestack "level" of the executable,
+// the second one - the safestack "level" of the library it depends on.
+cc_test {
+    name: "test_safestack_no_no",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: false },
+    shared_libs: ["libtest_safestack_no"],
+    cflags: ["-DSAFESTACK_EXEC=0", "-DSAFESTACK_LIB=0"],
+}
+
+cc_test {
+    name: "test_safestack_no_yes",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: false },
+    shared_libs: ["libtest_safestack_yes"],
+    cflags: ["-DSAFESTACK_EXEC=0", "-DSAFESTACK_LIB=1"],
+}
+
+cc_test {
+    name: "test_safestack_yes_yes",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: true },
+    shared_libs: ["libtest_safestack_no"],
+    cflags: ["-DSAFESTACK_EXEC=1", "-DSAFESTACK_LIB=1"],
+}
+
+cc_test {
+    name: "test_safestack_no_req",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: false },
+    shared_libs: ["libtest_safestack_req"],
+    cflags: ["-DSAFESTACK_EXEC=0", "-DSAFESTACK_LIB=2"],
+}
+
+cc_test {
+    name: "test_safestack_yes_req",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: true },
+    shared_libs: ["libtest_safestack_req"],
+    cflags: ["-DSAFESTACK_EXEC=1", "-DSAFESTACK_LIB=2"],
+}
+
+cc_test {
+    name: "test_safestack_req_no",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: true },
+    shared_libs: ["libtest_safestack_no"],
+    whole_static_libs: [ "note_safestack_required" ],
+    cflags: ["-DSAFESTACK_EXEC=2", "-DSAFESTACK_LIB=0"],
+}
+
+cc_test {
+    name: "test_safestack_req_yes",
+    host_supported: false,
+    defaults: ["bionic_safestack_test_defaults"],
+    srcs: ["safestack_test_main.cpp"],
+    sanitize: { safestack: true },
+    shared_libs: ["libtest_safestack_yes"],
+    whole_static_libs: [ "note_safestack_required" ],
+    cflags: ["-DSAFESTACK_EXEC=2", "-DSAFESTACK_LIB=1"],
+}
+
+// Three (off, on, required) libraries to test dlopen() behavior.
+cc_test_library {
+    name: "libtest_safestack_dl_no",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: false },
+}
+
+cc_test_library {
+    name: "libtest_safestack_dl_yes",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: true },
+}
+
+cc_test_library {
+    name: "libtest_safestack_dl_req",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    sanitize: { safestack: true },
+    whole_static_libs: [ "note_safestack_required" ],
+}
+
+// -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
 // -----------------------------------------------------------------------------
 cc_binary_host {
