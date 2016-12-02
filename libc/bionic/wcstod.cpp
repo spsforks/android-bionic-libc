@@ -32,8 +32,13 @@
 
 #include "local.h"
 
-template <typename float_type> float_type wcstod(const wchar_t* str, wchar_t** end,
-                                                 float_type strtod_fn(const char*, char**)) {
+/// Performs wide-character string to floating point conversion.
+///
+/// Unlike wcstod<T>, str must point to the beginning of the value to convert
+/// (may not point to whitespace).
+template <typename float_type>
+float_type wcstod_no_space(const wchar_t* str, wchar_t** end,
+                           float_type strtod_fn(const char*, char**)) {
   // What's the longest span of the input that might be part of the float?
   size_t max_len = wcsspn(str, L"-+0123456789.xXeEpP()nNaAiIfFtTyY");
 
@@ -74,6 +79,24 @@ template <typename float_type> float_type wcstod(const wchar_t* str, wchar_t** e
 
   delete[] ascii_str;
   return result;
+}
+
+template <typename float_type>
+float_type wcstod(const wchar_t* str, wchar_t** end, float_type strtod_fn(const char*, char**)) {
+  const wchar_t* value_begin = str;
+  while (iswspace(*value_begin)) {
+    value_begin++;
+  }
+
+  float_type value = wcstod_no_space<float_type>(value_begin, end, strtod_fn);
+
+  // If there was an error in coverting, we need to set the end pointer back to the actually
+  // beginning of the string, not the beginning of the value that we passed to wcstod_no_space.
+  if (end != nullptr && *end == value_begin) {
+    *end = const_cast<wchar_t*>(str);
+  }
+
+  return value;
 }
 
 float wcstof(const wchar_t* s, wchar_t** end) {
