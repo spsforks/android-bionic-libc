@@ -76,6 +76,7 @@ cc_test_library {
         "malloc_test.cpp",
         "math_test.cpp",
         "mntent_test.cpp",
+        "monetary_test.cpp",
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",

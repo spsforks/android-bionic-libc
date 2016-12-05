@@ -206,6 +206,7 @@ cc_library_static {
         "upstream-freebsd/lib/libc/gen/sleep.c",
         "upstream-freebsd/lib/libc/gen/usleep.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
+        "upstream-freebsd/lib/libc/stdlib/strfmon.c",
         "upstream-freebsd/lib/libc/stdlib/qsort.c",
         "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
         "upstream-freebsd/lib/libc/string/wcpcpy.c",
