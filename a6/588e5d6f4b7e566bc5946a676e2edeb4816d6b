@@ -1,0 +1,9 @@
+Presubmit-Ready+1: Treehugger Robot <treehugger-gerrit@google.com>
+Verified+1: Dimitry Ivanov <dimitry@google.com>
+Autosubmit+1: Dimitry Ivanov <dimitry@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Submitted-by: Dimitry Ivanov <dimitry@google.com>
+Submitted-at: Mon, 12 Dec 2016 22:02:08 +0000
+Reviewed-on: https://android-review.googlesource.com/312823
+Project: platform/bionic
+Branch: refs/heads/master
