@@ -22,6 +22,7 @@
 #include <inttypes.h>
 #include <libgen.h>
 #include <limits.h>
+#include <pwd.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -1142,6 +1143,10 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
       // Remove --gtest_output=xxx from arguments, so child process will not write xml file.
       args.erase(args.begin() + i);
       --i;
+    } else if (strcmp(args[i], "--drop-root") == 0) {
+      passwd* shell = getpwnam("shell");
+      setgid(shell->pw_gid);
+      setuid(shell->pw_uid);
     }
   }
 
