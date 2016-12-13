@@ -2371,11 +2371,13 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   // int index_offset
   // int data_offset
   // int zonetab_offset
+  // int reserved_offset
   struct bionic_tzdata_header {
     char tzdata_version[12];
     int32_t index_offset;
     int32_t data_offset;
     int32_t zonetab_offset;
+    int32_t reserved_offset;
   } header;
   memset(&header, 0, sizeof(header));
   ssize_t bytes_read = TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header)));
@@ -2400,6 +2402,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   fprintf(stderr, "index_offset = %d\n", ntohl(header.index_offset));
   fprintf(stderr, "data_offset = %d\n", ntohl(header.data_offset));
   fprintf(stderr, "zonetab_offset = %d\n", ntohl(header.zonetab_offset));
+  fprintf(stderr, "reserved_offset = %d\n", ntohl(header.reserved_offset));
 #endif
 
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
