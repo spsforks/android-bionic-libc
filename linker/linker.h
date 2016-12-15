@@ -492,6 +492,8 @@ enum {
   ANDROID_NAMESPACE_TYPE_SHARED = 2,
   ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,
+
+  ANDROID_NAMESPACE_TYPE_CHILD = 4 | ANDROID_NAMESPACE_TYPE_SHARED,
 };
 
 bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);

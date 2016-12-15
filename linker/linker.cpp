@@ -2303,6 +2303,11 @@ static android_namespace_t* get_caller_namespace(soinfo* caller) {
   return caller != nullptr ? caller->get_primary_namespace() : g_anonymous_namespace;
 }
 
+static void append(std::vector<std::string>& to, const std::vector<std::string>& from) {
+  to.reserve(to.size() + from.size());
+  to.insert(to.end(), from.begin(), from.end());
+}
+
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // Use basic string manipulation calls to avoid snprintf.
   // snprintf indirectly calls pthread_getspecific to get the size of a buffer.
@@ -2561,6 +2566,12 @@ android_namespace_t* create_namespace(const void* caller_addr,
   parse_path(ld_library_path, ":", &ld_library_paths);
   parse_path(default_library_path, ":", &default_library_paths);
   parse_path(permitted_when_isolated_path, ":", &permitted_paths);
+
+  if (type & ANDROID_NAMESPACE_TYPE_CHILD) {
+    append(ld_library_paths, parent_namespace->get_ld_library_paths());
+    append(default_library_paths, parent_namespace->get_default_library_paths());
+    append(permitted_paths, parent_namespace->get_permitted_paths());
+  }
 
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
