@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/time.h>
@@ -265,9 +266,14 @@ int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
   return __getdents64(fd, dirp, count);
 }
 
-// This is a BSDism that we never implemented correctly. Used by Firefox.
+// Partial implementation of getauxval(). Covers the case where an execve(2)
+// system call had either of the setuid or setgid bits set (and extra
+// privileges were given as a result). Does not cover an untainted process
+// which changed any of its real, effective or saved user or group ID's since
+// it began execution
+// BSDism used by Firefox. Not exposed to 64 bit processes.
 int issetugid() {
-  return 0;
+  return ((getauxval(AT_SECURE) == 0) ? 0 : 1);
 }
 
 // This was removed from POSIX 2004.

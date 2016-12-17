@@ -21,6 +21,7 @@
 
 #include <sys/cdefs.h>
 #include <stddef.h> // For size_t.
+#include <sys/auxv.h> // For getauxval()
 
 /* Redirect internal C library calls to the public function. */
 #define _err err
@@ -51,8 +52,8 @@
 #define _X _CTYPE_X
 #define _B _CTYPE_B
 
-/* OpenBSD has this, but we can't really implement it correctly on Linux. */
-#define issetugid() 0
+/* OpenBSD has this. We try to use the closest equivalent on Linux. */
+#define issetugid() ((getauxval(AT_SECURE) == 0) ? 0 : 1)
 
 #define explicit_bzero(p, s) memset(p, 0, s)
 
