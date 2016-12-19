@@ -96,6 +96,11 @@ const prop_info *__system_property_find_nth(unsigned n);
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
   __INTRODUCED_IN(19);
 
+/* Wait for any system property to be updated.  Caller must pass
+** in 0 the first time, and the previous return value on each
+** successive call. */
+unsigned int __system_property_wait_any(unsigned int serial);
+
 __END_DECLS
 
 #endif
