@@ -941,9 +941,9 @@ static int read_spec_entries(char *line_buf, int num_args, ...)
     return items;
 }
 
-static bool initialize_properties() {
-    FILE* file = fopen("/property_contexts", "re");
+static bool initialize_properties_from_file(const char *filename) {
 
+    FILE* file = fopen(filename, "re");
     if (!file) {
         return false;
     }
@@ -987,6 +987,27 @@ static bool initialize_properties() {
 
     free(buffer);
     fclose(file);
+
+    return true;
+}
+
+static bool initialize_properties() {
+    // TODO: Change paths to /system/property_contexts and
+    // /vendor/property_contexts after b/27805372
+    constexpr const char* property_contexts[] = {
+        "/plat_property_contexts",
+        "/nonplat_property_contexts"
+    };
+
+    for (auto property_context : property_contexts) {
+        if (!initialize_properties_from_file(property_context)) {
+            // discard everything if we fail to load properties from any file.
+            list_free(&prefixes);
+            list_free(&contexts);
+            return false;
+        }
+    }
+
     return true;
 }
 
