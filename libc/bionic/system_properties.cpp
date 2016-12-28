@@ -942,51 +942,62 @@ static int read_spec_entries(char *line_buf, int num_args, ...)
 }
 
 static bool initialize_properties() {
-    FILE* file = fopen("/property_contexts", "re");
+    // TODO: Change paths to /system/property_contexts and
+    // /vendor/property_contexts after b/27805372
+    constexpr const char *property_contexts[] = {
+        "/plat_property_contexts",
+        "/nonplat_property_contexts"
+    };
 
-    if (!file) {
-        return false;
-    }
-
-    char* buffer = nullptr;
-    size_t line_len;
-    char* prop_prefix = nullptr;
-    char* context = nullptr;
-
-    while (getline(&buffer, &line_len, file) > 0) {
-        int items = read_spec_entries(buffer, 2, &prop_prefix, &context);
-        if (items <= 0) {
-            continue;
+    for (int i = 0; i < 2; i++) {
+        FILE* file = fopen(property_contexts[i], "re");
+        if (!file) {
+            list_free(&prefixes);
+            list_free(&contexts);
+            return false;
         }
-        if (items == 1) {
-            free(prop_prefix);
-            continue;
-        }
-        /*
-         * init uses ctl.* properties as an IPC mechanism and does not write them
-         * to a property file, therefore we do not need to create property files
-         * to store them.
-         */
-        if (!strncmp(prop_prefix, "ctl.", 4)) {
+
+        char* buffer = nullptr;
+        size_t line_len;
+        char* prop_prefix = nullptr;
+        char* context = nullptr;
+
+        while (getline(&buffer, &line_len, file) > 0) {
+            int items = read_spec_entries(buffer, 2, &prop_prefix, &context);
+            if (items <= 0) {
+                continue;
+            }
+            if (items == 1) {
+                free(prop_prefix);
+                continue;
+            }
+            /*
+             * init uses ctl.* properties as an IPC mechanism and does not write them
+             * to a property file, therefore we do not need to create property files
+             * to store them.
+             */
+            if (!strncmp(prop_prefix, "ctl.", 4)) {
+                free(prop_prefix);
+                free(context);
+                continue;
+            }
+
+            auto old_context = list_find(
+                    contexts, [context](context_node* l) { return !strcmp(l->context(), context); });
+            if (old_context) {
+                list_add_after_len(&prefixes, prop_prefix, old_context);
+            } else {
+                list_add(&contexts, context, nullptr);
+                list_add_after_len(&prefixes, prop_prefix, contexts);
+            }
             free(prop_prefix);
             free(context);
-            continue;
         }
 
-        auto old_context = list_find(
-            contexts, [context](context_node* l) { return !strcmp(l->context(), context); });
-        if (old_context) {
-            list_add_after_len(&prefixes, prop_prefix, old_context);
-        } else {
-            list_add(&contexts, context, nullptr);
-            list_add_after_len(&prefixes, prop_prefix, contexts);
-        }
-        free(prop_prefix);
-        free(context);
+        free(buffer);
+        fclose(file);
     }
 
-    free(buffer);
-    fclose(file);
     return true;
 }
 
