@@ -137,6 +137,9 @@ public:
     uint32_t magic() const { return magic_; }
     uint32_t version() const { return version_; }
 
+    // To allow allocate_obj...
+    friend int __system_property_update(prop_info *pi, const char *value, unsigned int len);
+
 private:
     void *allocate_obj(const size_t size, uint_least32_t *const off);
     prop_bt *new_prop_bt(const char *name, uint8_t namelen, uint_least32_t *const off);
@@ -170,19 +173,65 @@ private:
     DISALLOW_COPY_AND_ASSIGN(prop_area);
 };
 
+inline uint32_t pow2roundup (uint32_t n) {
+    if (n == 0) return 0;
+    --n;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    return n + 1;
+}
+
+#define min(a, b) (a) < (b) ? a : b
+#define max(a, b) (a) < (b) ? b : a
+
+// The C11 standard doesn't allow atomic loads from const fields,
+// though C++11 does.  Fudge it until standards get straightened out.
+static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
+                                               memory_order mo) {
+    atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
+    return atomic_load_explicit(non_const_s, mo);
+}
+
 struct prop_info {
     atomic_uint_least32_t serial;
-    char value[PROP_VALUE_MAX];
+    atomic_uint_least32_t valuelen;
+    atomic_uint_least32_t valueoff;
+    uint32_t buf_size;
+    uint32_t reserved;
     char name[0];
 
     prop_info(const char *name, const uint8_t namelen, const char *value,
-              const uint8_t valuelen) {
-        memcpy(this->name, name, namelen);
-        this->name[namelen] = '\0';
-        atomic_init(&this->serial, valuelen << 24);
-        memcpy(this->value, value, valuelen);
-        this->value[valuelen] = '\0';
+              const uint8_t valuelen, const uint32_t buf_size) {
+        atomic_init(&this->serial, 0);
+        atomic_init(&(this->valuelen), valuelen);
+
+        // Initially, value buffer is just after the name buffer
+        char* const valuebuf = this->name + namelen + 1;
+        uint_least32_t valueoff = valuebuf - this_();
+        atomic_init(&(this->valueoff), valueoff);
+
+        // buf_size don't need to be stored atomically; it is only accessed
+        // by init
+        this->buf_size = buf_size;
+
+        // copy in name and value
+        strlcpy(this->name, name, namelen + 1);
+        strlcpy(this->value(), value, valuelen + 1);
     }
+
+    char* value() const {
+        uint_least32_t offset = load_const_atomic(&this->valueoff, memory_order_relaxed);
+        return this_() + offset;
+    }
+
+    inline char* this_() const {
+        // const_cast needed because 'this' is const.
+        return const_cast<char*>(static_cast<const char*>(reinterpret_cast<const void *>(this)));
+    }
+
 private:
     DISALLOW_COPY_AND_ASSIGN(prop_info);
 };
@@ -352,9 +401,10 @@ void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off)
         return NULL;
     }
 
-    *off = bytes_used_;
+    uint_least32_t offset = bytes_used_;
     bytes_used_ += aligned;
-    return data_ + *off;
+    if (off) *off = offset;
+    return data_ + offset;
 }
 
 prop_bt *prop_area::new_prop_bt(const char *name, uint8_t namelen, uint_least32_t *const off)
@@ -374,9 +424,12 @@ prop_info *prop_area::new_prop_info(const char *name, uint8_t namelen,
         const char *value, uint8_t valuelen, uint_least32_t *const off)
 {
     uint_least32_t new_offset;
-    void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
+    uint32_t buf_size = pow2roundup(max(valuelen, PROP_VALUE_BUF_MINSIZE));
+    buf_size = min(buf_size, PROP_VALUE_BUF_MAXSIZE);
+    size_t size = sizeof(prop_info) + namelen + 1 + buf_size;
+    void* p = allocate_obj(size, &new_offset);
     if (p != NULL) {
-        prop_info* info = new(p) prop_info(name, namelen, value, valuelen);
+        prop_info* info = new(p) prop_info(name, namelen, value, valuelen, buf_size);
         *off = new_offset;
         return info;
     }
@@ -530,7 +583,7 @@ const prop_info *prop_area::find_property(prop_bt *const trie, const char *name,
     }
 }
 
-static int send_prop_msg(const prop_msg *msg)
+int __system_property_send_prop_msg(const void* msg, size_t size)
 {
     const int fd = socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
     if (fd == -1) {
@@ -549,10 +602,10 @@ static int send_prop_msg(const prop_msg *msg)
         return -1;
     }
 
-    const int num_bytes = TEMP_FAILURE_RETRY(send(fd, msg, sizeof(prop_msg), 0));
+    const size_t num_bytes = TEMP_FAILURE_RETRY(send(fd, msg, size, 0));
 
     int result = -1;
-    if (num_bytes == sizeof(prop_msg)) {
+    if (num_bytes == size) {
         // We successfully wrote to the property server but now we
         // wait for the property server to finish its work.  It
         // acknowledges its completion by closing the socket so we
@@ -1081,10 +1134,6 @@ const prop_info *__system_property_find(const char *name)
         return nullptr;
     }
 
-    if (__predict_false(compat_mode)) {
-        return __system_property_find_compat(name);
-    }
-
     prop_area* pa = get_prop_area_for_name(name);
     if (!pa) {
         __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
@@ -1092,14 +1141,6 @@ const prop_info *__system_property_find(const char *name)
     }
 
     return pa->find(name);
-}
-
-// The C11 standard doesn't allow atomic loads from const fields,
-// though C++11 does.  Fudge it until standards get straightened out.
-static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
-                                               memory_order mo) {
-    atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
-    return atomic_load_explicit(non_const_s, mo);
 }
 
 int __system_property_read(const prop_info *pi, char *name, char *value)
@@ -1110,9 +1151,16 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
 
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
-        size_t len = SERIAL_VALUE_LEN(serial);
-        memcpy(value, pi->value, len + 1);
-        // TODO: Fix the synchronization scheme here.
+        // TODO(jiyong): valuelen is decoupled from serial. Will it cause any
+        // synchronization problem?
+        size_t len = load_const_atomic(&(pi->valuelen), memory_order_relaxed);
+        // Do not copy more than PROP_VALUE_MAX bytes
+        strlcpy(value, pi->value(), min(len + 1, PROP_VALUE_MAX));
+        if (len + 1 > PROP_VALUE_MAX) {
+            __libc_format_log(ANDROID_LOG_WARN, "libc",
+                              "Returned value \"%s\" trucated. Use __system_property_read_value instead.", value);
+        }
+         // TODO: Fix the synchronization scheme here.
         // There is no fully supported way to implement this kind
         // of synchronization in C++11, since the memcpy races with
         // updates to pi, and the data being accessed is not atomic.
@@ -1124,7 +1172,13 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         if (serial ==
                 load_const_atomic(&(pi->serial), memory_order_relaxed)) {
             if (name != 0) {
-                strcpy(name, pi->name);
+                // Do not copy more than PROP_NAME_MAX bytes
+                strlcpy(name, pi->name, PROP_NAME_MAX);
+                if (strlen(pi->name) + 1 > PROP_NAME_MAX) {
+                    __libc_format_log(ANDROID_LOG_WARN, "libc",
+                                      "Return name \"%s\" truncated. Use __system_property_read_name instead.", name);
+
+                }
             }
             return len;
         }
@@ -1143,12 +1197,76 @@ int __system_property_get(const char *name, char *value)
     }
 }
 
+char* __system_property_read_name(const prop_info *pi)
+{
+    if (__predict_false(compat_mode)) {
+        char name[PROP_NAME_MAX];
+        if (__system_property_read_compat(pi, name, NULL) > 0) {
+            return strndup(name, PROP_NAME_MAX);
+        }
+        else {
+            return NULL;
+        }
+    }
+    // name never change once a sysprop is added.
+    // No worries on the synchronization
+    return strdup(pi->name);
+}
+
+char* __system_property_read_value(const prop_info *pi)
+{
+    if (__predict_false(compat_mode)) {
+        char value[PROP_VALUE_MAX];
+        if (__system_property_read_compat(pi, NULL, value) > 0) {
+            return strndup(value, PROP_VALUE_MAX);
+        }
+        else {
+            return NULL;
+        }
+    }
+
+    while (true) {
+        uint32_t serial = __system_property_serial(pi); // acquire semantics
+        // TODO(jiyong): valuelen is decoupled from serial. Will it cause any
+        // synchronization problem?
+        size_t len = load_const_atomic(&(pi->valuelen), memory_order_relaxed);
+        // TODO: Fix the synchronization scheme here.
+        // There is no fully supported way to implement this kind
+        // of synchronization in C++11, since the memcpy races with
+        // updates to pi, and the data being accessed is not atomic.
+        // The following fence is unintuitive, but would be the
+        // correct one if memcpy used memory_order_relaxed atomic accesses.
+        // In practice it seems unlikely that the generated code would
+        // would be any different, so this should be OK.
+        atomic_thread_fence(memory_order_acquire);
+        if (serial ==
+                load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+            return strndup(pi->value(), len);
+        }
+    }
+}
+
+char* __system_property_get_string(const char *name)
+{
+    const prop_info *pi = __system_property_find(name);
+
+    if (pi != 0) {
+        return __system_property_read_value(pi);
+    } else {
+        return NULL;
+    }
+}
+
 int __system_property_set(const char *key, const char *value)
 {
+    if (__predict_false(compat_mode)) {
+        return __system_property_set(key, value);
+    }
+
     if (key == 0) return -1;
     if (value == 0) value = "";
-    if (strlen(key) >= PROP_NAME_MAX) return -1;
-    if (strlen(value) >= PROP_VALUE_MAX) return -1;
+    if (strlen(key) >= PROP_NAME_BUF_MAXSIZE) return -1;
+    if (strlen(value) >= PROP_VALUE_BUF_MAXSIZE) return -1;
 
     prop_msg msg;
     memset(&msg, 0, sizeof msg);
@@ -1156,7 +1274,7 @@ int __system_property_set(const char *key, const char *value)
     strlcpy(msg.name, key, sizeof msg.name);
     strlcpy(msg.value, value, sizeof msg.value);
 
-    const int err = send_prop_msg(&msg);
+    const int err = __system_property_send_prop_msg(&msg, sizeof(prop_msg));
     if (err < 0) {
         return err;
     }
@@ -1166,7 +1284,7 @@ int __system_property_set(const char *key, const char *value)
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    if (len >= PROP_VALUE_MAX)
+    if (len >= PROP_VALUE_BUF_MAXSIZE)
         return -1;
 
     prop_area* pa = __system_property_area__;
@@ -1178,11 +1296,26 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
     uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_relaxed);
     serial |= 1;
     atomic_store_explicit(&pi->serial, serial, memory_order_relaxed);
+    // If the updated value (including null-terminator) cannot fit into
+    // current value buffer, allocate a bigger buffer and store the string
+    // there.
+    // Note: no need to access buf_size atomically, since it is only accessed by
+    // init
+    if ((len+1) > pi->buf_size) {
+        uint32_t new_buf_size = pow2roundup(len+1);
+        pi->buf_size = new_buf_size;
+        uint_least32_t new_offset;
+        prop_area* mypa = get_prop_area_for_name(pi->name);
+        char* valuebuf = static_cast<char*>(mypa->allocate_obj(new_buf_size, 0));
+        new_offset = valuebuf - pi->this_();
+        atomic_store_explicit(&(pi->valueoff), new_offset, memory_order_release);
+        atomic_store_explicit(&(pi->valuelen), len, memory_order_release);
+    }
     // The memcpy call here also races.  Again pretend it
     // used memory_order_relaxed atomics, and use the analogous
     // counterintuitive fence.
     atomic_thread_fence(memory_order_release);
-    memcpy(pi->value, value, len + 1);
+    memcpy(pi->value(), value, len + 1);
     atomic_store_explicit(
         &pi->serial,
         (len << 24) | ((serial + 1) & 0xffffff),
@@ -1201,9 +1334,9 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    if (namelen >= PROP_NAME_MAX)
+    if (namelen >= PROP_NAME_BUF_MAXSIZE)
         return -1;
-    if (valuelen >= PROP_VALUE_MAX)
+    if (valuelen >= PROP_VALUE_BUF_MAXSIZE)
         return -1;
     if (namelen < 1)
         return -1;
@@ -1280,10 +1413,6 @@ int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
 {
     if (!__system_property_area__) {
         return -1;
-    }
-
-    if (__predict_false(compat_mode)) {
-        return __system_property_foreach_compat(propfn, cookie);
     }
 
     list_foreach(contexts, [propfn, cookie](context_node* l) {
