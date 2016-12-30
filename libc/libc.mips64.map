@@ -139,7 +139,9 @@ LIBC {
     __system_property_find_nth;
     __system_property_foreach; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_get;
+    __system_property_get2;
     __system_property_read;
+    __system_property_read2;
     __system_property_serial; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_set; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     __system_property_set_filename; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21

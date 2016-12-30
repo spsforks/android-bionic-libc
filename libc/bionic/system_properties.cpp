@@ -170,18 +170,167 @@ private:
     DISALLOW_COPY_AND_ASSIGN(prop_area);
 };
 
-struct prop_info {
-    atomic_uint_least32_t serial;
+static bool is_v2_prop(const char *name) {
+    return name[0] == '@';
+}
+
+static bool is_v2_ro_prop(const char *name) {
+    return strncmp(name, "@ro.", 4) == 0;
+}
+
+static bool is_v2_rw_long_prop(const char *name) {
+    return strncmp(name, "@!", 2) == 0;
+}
+
+static bool check_name(const char *name, unsigned int len) {
+    return is_v2_prop(name) ? len <= PROP_NAME_MAX_V2 : len < PROP_NAME_MAX;
+}
+
+static bool check_value(const char *name, unsigned int valuelen) {
+    if (is_v2_rw_long_prop(name)) {
+        return valuelen <= PROP_RW_LONG_VALUE_MAX_V2;
+    }
+    else if (is_v2_ro_prop(name)) {
+        return valuelen <= PROP_RO_VALUE_MAX_V2;
+    }
+    else if (is_v2_prop(name)) {
+        return valuelen <= PROP_RW_VALUE_MAX_V2;
+    }
+    else {
+        return valuelen < PROP_VALUE_MAX;
+    }
+}
+
+#define PROP_INFO_FLAG_READONLY      (0x01)
+#define PROP_INFO_FLAG_EXTRALONG     (0x02)
+
+struct prop_info_header {
+    const uint8_t version;
+    const uint8_t flags;
+    uint8_t reserved[2];
+
+    prop_info_header(const uint8_t version_, const uint8_t flags_):
+        version(version_), flags(flags_) {
+    }
+
+    bool readonly() const {
+        return (flags & PROP_INFO_FLAG_READONLY) != 0;
+    }
+
+    bool extralong() const {
+        return (flags & PROP_INFO_FLAG_EXTRALONG) != 0;
+    }
+};
+
+struct prop_info_v1 {
     char value[PROP_VALUE_MAX];
     char name[0];
+};
+
+struct prop_info_v2_ro {
+    uint16_t namelen;
+    uint16_t valuelen;
+    char data[0]; // name and then data. both null-terminated.
+};
+
+struct prop_info_v2_rw {
+    char value[PROP_RW_VALUE_MAX_V2 + 1]; // null-terminated
+    char name[0];
+};
+
+struct prop_info_v2_rw_long {
+    char value[PROP_RW_LONG_VALUE_MAX_V2 + 1]; // null-terminated
+    char name[0];
+};
+
+struct prop_info {
+    atomic_uint_least32_t serial;
+    union {
+        struct prop_info_v1 v1;
+        struct prop_info_v2_ro v2_ro;
+        struct prop_info_v2_rw v2_rw;
+        struct prop_info_v2_rw_long v2_rw_long;
+    } u;
 
     prop_info(const char *name, const uint8_t namelen, const char *value,
               const uint8_t valuelen) {
-        memcpy(this->name, name, namelen);
-        this->name[namelen] = '\0';
-        atomic_init(&this->serial, valuelen << 24);
-        memcpy(this->value, value, valuelen);
-        this->value[valuelen] = '\0';
+        if (!is_v2_ro_prop(name)) {
+            atomic_init(&this->serial, valuelen << 24);
+        }
+
+        if (is_v2_prop(name)) {
+            if (is_v2_rw_long_prop(name)) {
+                memcpy(this->u.v2_rw_long.name, name, namelen);
+                this->u.v2_rw_long.name[namelen] = '\0';
+                memcpy(this->u.v2_rw_long.value, value, valuelen);
+                this->u.v2_rw_long.value[valuelen] = '\0';
+            }
+            else if (is_v2_ro_prop(name)) {
+                this->u.v2_ro.namelen = namelen;
+                this->u.v2_ro.valuelen = valuelen;
+                memcpy(this->u.v2_ro.data, name, namelen+1);
+                this->u.v2_ro.data[namelen] = '\0';
+                memcpy(this->u.v2_ro.data + namelen + 1, value, valuelen+1);
+                this->u.v2_ro.data[namelen+valuelen+1] = '\0';
+            }
+            else {
+                memcpy(this->u.v2_rw.name, name, namelen);
+                this->u.v2_rw.name[namelen] = '\0';
+                memcpy(this->u.v2_rw.value, value, valuelen);
+                this->u.v2_rw.value[valuelen] = '\0';
+            }
+        }
+        else {
+            memcpy(this->u.v1.name, name, namelen);
+            this->u.v1.name[namelen] = '\0';
+            memcpy(this->u.v1.value, value, valuelen);
+            this->u.v1.value[valuelen] = '\0';
+        }
+    }
+
+    prop_info_header* header() const {
+        char* this_ = static_cast<char*>(const_cast<void*>(reinterpret_cast<const void *>(this)));
+        return reinterpret_cast<prop_info_header*>(this_ - sizeof(prop_info_header));
+    }
+
+    char* value() const {
+        prop_info_header& h = *header();
+        const char* ret = NULL;
+        if (h.version == 1) {
+            ret = u.v1.value;
+        }
+        else if (h.version == 2) {
+            if (h.readonly()) {
+                ret = u.v2_ro.data + u.v2_ro.namelen + 1;
+            }
+            else if(h.extralong()) {
+                ret = u.v2_rw_long.value;
+            }
+            else {
+                ret = u.v2_rw.value;
+            }
+        }
+        return const_cast<char*>(ret);
+    }
+
+    char* name() const {
+        prop_info_header& h = *header();
+        const char* ret = NULL;
+        if (h.version == 1) {
+            ret = u.v1.name;
+        }
+        else if (h.version == 2) {
+            if (h.readonly()) {
+                ret = u.v2_ro.data;
+            }
+            else if (h.extralong()) {
+                ret = u.v2_rw_long.name;
+            }
+            else {
+                ret = u.v2_rw.name;
+            }
+        }
+        return const_cast<char*>(ret);
     }
 private:
     DISALLOW_COPY_AND_ASSIGN(prop_info);
@@ -222,7 +371,7 @@ static int get_fd_from_env(void)
 }
 
 static prop_area* map_prop_area_rw(const char* filename, const char* context,
-                                   bool* fsetxattr_failed) {
+                                   bool* fsetxattr_failed, const bool is_v2) {
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
      */
@@ -272,7 +421,8 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
         return nullptr;
     }
 
-    prop_area *pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
+    const uint32_t version = is_v2 ? PROP_AREA_VERSION2 : PROP_AREA_VERSION;
+    prop_area *pa = new(memory_area) prop_area(PROP_AREA_MAGIC, version);
 
     close(fd);
     return pa;
@@ -302,6 +452,7 @@ static prop_area* map_fd_ro(const int fd) {
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
     if ((pa->magic() != PROP_AREA_MAGIC) ||
         (pa->version() != PROP_AREA_VERSION &&
+         pa->version() != PROP_AREA_VERSION2 &&
          pa->version() != PROP_AREA_VERSION_COMPAT)) {
         munmap(pa, pa_size);
         return nullptr;
@@ -374,10 +525,35 @@ prop_info *prop_area::new_prop_info(const char *name, uint8_t namelen,
         const char *value, uint8_t valuelen, uint_least32_t *const off)
 {
     uint_least32_t new_offset;
-    void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
+    size_t size = sizeof(prop_info_header) + sizeof(atomic_uint_least32_t);
+    uint8_t version;
+    uint8_t flags;
+    if (is_v2_rw_long_prop(name)) {
+        size += sizeof(prop_info_v2_rw_long) + namelen + 1;
+        version = 2;
+        flags = PROP_INFO_FLAG_EXTRALONG;
+    }
+    else if (is_v2_ro_prop(name)) {
+        size += sizeof(prop_info_v2_ro) + namelen + 1 + valuelen + 1;
+        version = 2;
+        flags = PROP_INFO_FLAG_READONLY;
+    }
+    else if (is_v2_prop(name)) {
+        size += sizeof(prop_info_v2_rw) + namelen + 1;
+        version = 2;
+        flags = 0;
+    }
+    else {
+        size += sizeof(prop_info_v1) + namelen + 1;
+        version = 1;
+        flags = 0;
+    }
+    size += sizeof(prop_info) + namelen + 1;
+    char* const p = static_cast<char*>(allocate_obj(size, &new_offset));
     if (p != NULL) {
-        prop_info* info = new(p) prop_info(name, namelen, value, valuelen);
-        *off = new_offset;
+        new(p) prop_info_header(version, flags);
+        prop_info* info = new(p + sizeof(prop_info_header)) prop_info(name, namelen, value, valuelen);
+        *off = new_offset + sizeof(prop_info_header);
         return info;
     }
 
@@ -645,8 +821,8 @@ bool prop_area::foreach(void (*propfn)(const prop_info* pi, void* cookie), void*
 
 class context_node {
 public:
-    context_node(context_node* next, const char* context, prop_area* pa)
-        : next(next), context_(strdup(context)), pa_(pa), no_access_(false) {
+    context_node(context_node* next, const char* context, prop_area* pa, const bool v2)
+        : next(next), context_(strdup(context)), pa_(pa), no_access_(false), v2_(v2) {
         lock_.init(false);
     }
     ~context_node() {
@@ -659,6 +835,7 @@ public:
 
     const char* context() const { return context_; }
     prop_area* pa() { return pa_; }
+    bool is_v2() { return v2_; }
 
     context_node* next;
 
@@ -670,6 +847,7 @@ private:
     char* context_;
     prop_area* pa_;
     bool no_access_;
+    const bool v2_;
 };
 
 struct prefix_node {
@@ -761,7 +939,7 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
     }
 
     if (access_rw) {
-        pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed);
+        pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed, is_v2());
     } else {
         pa_ = map_prop_area(filename, false);
     }
@@ -821,7 +999,7 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
 
     if (access_rw) {
         __system_property_area__ =
-            map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
+            map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed, false);
     } else {
         __system_property_area__ = map_prop_area(filename, false);
     }
@@ -952,6 +1130,7 @@ static bool initialize_properties() {
     size_t line_len;
     char* prop_prefix = nullptr;
     char* context = nullptr;
+    bool is_v2_prop;
 
     while (getline(&buffer, &line_len, file) > 0) {
         int items = read_spec_entries(buffer, 2, &prop_prefix, &context);
@@ -973,12 +1152,16 @@ static bool initialize_properties() {
             continue;
         }
 
+        is_v2_prop = prop_prefix[0] == '@';
+
         auto old_context = list_find(
             contexts, [context](context_node* l) { return !strcmp(l->context(), context); });
         if (old_context) {
-            list_add_after_len(&prefixes, prop_prefix, old_context);
+            if (is_v2_prop == old_context->is_v2()) {
+                list_add_after_len(&prefixes, prop_prefix, old_context);
+            }
         } else {
-            list_add(&contexts, context, nullptr);
+            list_add(&contexts, context, nullptr, is_v2_prop);
             list_add_after_len(&prefixes, prop_prefix, contexts);
         }
         free(prop_prefix);
@@ -1026,7 +1209,7 @@ int __system_properties_init()
         if (!__system_property_area__) {
             return -1;
         }
-        list_add(&contexts, "legacy_system_prop_area", __system_property_area__);
+        list_add(&contexts, "legacy_system_prop_area", __system_property_area__, false);
         list_add_after_len(&prefixes, "*", contexts);
     }
     initialized = true;
@@ -1108,26 +1291,33 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         return __system_property_read_compat(pi, name, value);
     }
 
-    while (true) {
-        uint32_t serial = __system_property_serial(pi); // acquire semantics
-        size_t len = SERIAL_VALUE_LEN(serial);
-        memcpy(value, pi->value, len + 1);
-        // TODO: Fix the synchronization scheme here.
-        // There is no fully supported way to implement this kind
-        // of synchronization in C++11, since the memcpy races with
-        // updates to pi, and the data being accessed is not atomic.
-        // The following fence is unintuitive, but would be the
-        // correct one if memcpy used memory_order_relaxed atomic accesses.
-        // In practice it seems unlikely that the generated code would
-        // would be any different, so this should be OK.
-        atomic_thread_fence(memory_order_acquire);
-        if (serial ==
-                load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-            if (name != 0) {
-                strcpy(name, pi->name);
-            }
-            return len;
-        }
+    const prop_info_header* header = pi->header();
+    if (header->version != 1) {
+        // This API can only handle version 1 prop_info
+        return 0;
+    }
+    else {
+       while (true) {
+           uint32_t serial = __system_property_serial(pi); // acquire semantics
+           size_t len = SERIAL_VALUE_LEN(serial);
+           memcpy(value, pi->value(), len + 1);
+           // TODO: Fix the synchronization scheme here.
+           // There is no fully supported way to implement this kind
+           // of synchronization in C++11, since the memcpy races with
+           // updates to pi, and the data being accessed is not atomic.
+           // The following fence is unintuitive, but would be the
+           // correct one if memcpy used memory_order_relaxed atomic accesses.
+           // In practice it seems unlikely that the generated code would
+           // would be any different, so this should be OK.
+           atomic_thread_fence(memory_order_acquire);
+           if (serial ==
+                   load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+               if (name != 0) {
+                   strcpy(name, pi->name());
+               }
+               return len;
+           }
+       }
     }
 }
 
@@ -1143,18 +1333,82 @@ int __system_property_get(const char *name, char *value)
     }
 }
 
+int __system_property_read2(const prop_info *pi, char **outname, char **outvalue)
+{
+    if (__predict_false(compat_mode)) {
+        char name[PROP_NAME_MAX];
+        char value[PROP_VALUE_MAX];
+        if (__system_property_read_compat(pi, name, value) > 0) {
+            if (outname) *outname = strndup(name, PROP_NAME_MAX);
+            if (outvalue) *outvalue = strndup(value, PROP_VALUE_MAX);
+            return 0;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    const prop_info_header* header = pi->header();
+    if (header->version == 2 && header->readonly()) {
+        if (outvalue) *outvalue = strdup(pi->value());
+        if (outname) *outname = strdup(pi->name());
+        return 0;
+    }
+    else {
+       while (true) {
+           uint32_t serial = __system_property_serial(pi); // acquire semantics
+           size_t len = SERIAL_VALUE_LEN(serial);
+           if (outvalue) *outvalue = strndup(pi->value(), len);
+           // TODO: Fix the synchronization scheme here.
+           // There is no fully supported way to implement this kind
+           // of synchronization in C++11, since the memcpy races with
+           // updates to pi, and the data being accessed is not atomic.
+           // The following fence is unintuitive, but would be the
+           // correct one if memcpy used memory_order_relaxed atomic accesses.
+           // In practice it seems unlikely that the generated code would
+           // would be any different, so this should be OK.
+           atomic_thread_fence(memory_order_acquire);
+           if (serial ==
+                   load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+               if (outname) *outname = strdup(pi->name());
+               return 0;
+           }
+       }
+    }
+}
+
+int __system_property_get2(const char *name, char **outvalue)
+{
+    const prop_info *pi = __system_property_find(name);
+
+    if (pi != 0) {
+        return __system_property_read2(pi, 0, outvalue);
+    } else {
+        return -1;
+    }
+}
+
 int __system_property_set(const char *key, const char *value)
 {
     if (key == 0) return -1;
     if (value == 0) value = "";
-    if (strlen(key) >= PROP_NAME_MAX) return -1;
-    if (strlen(value) >= PROP_VALUE_MAX) return -1;
+    const unsigned int keylen = strlen(key);
+    const unsigned int valuelen = strlen(value);
+    if (!check_name(key, keylen)) return -1;
+    if (!check_value(key, valuelen)) return -1;
 
     prop_msg msg;
     memset(&msg, 0, sizeof msg);
     msg.cmd = PROP_MSG_SETPROP;
-    strlcpy(msg.name, key, sizeof msg.name);
-    strlcpy(msg.value, value, sizeof msg.value);
+    if (is_v2_prop(key)) {
+        msg.cmd |= 0x80000000;
+        strlcpy(msg.data.v2.name, key, sizeof msg.data.v2.name);
+        strlcpy(msg.data.v2.value, value, sizeof msg.data.v2.value);
+    }
+    else {
+        strlcpy(msg.data.v1.name, key, sizeof msg.data.v1.name);
+        strlcpy(msg.data.v1.value, value, sizeof msg.data.v1.value);
+    }
 
     const int err = send_prop_msg(&msg);
     if (err < 0) {
@@ -1175,6 +1429,10 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
         return -1;
     }
 
+    if (pi->header()->readonly()) {
+        return -1;
+    }
+
     uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_relaxed);
     serial |= 1;
     atomic_store_explicit(&pi->serial, serial, memory_order_relaxed);
@@ -1182,7 +1440,7 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
     // used memory_order_relaxed atomics, and use the analogous
     // counterintuitive fence.
     atomic_thread_fence(memory_order_release);
-    memcpy(pi->value, value, len + 1);
+    memcpy(pi->value(), value, len + 1);
     atomic_store_explicit(
         &pi->serial,
         (len << 24) | ((serial + 1) & 0xffffff),
@@ -1201,12 +1459,9 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    if (namelen >= PROP_NAME_MAX)
-        return -1;
-    if (valuelen >= PROP_VALUE_MAX)
-        return -1;
-    if (namelen < 1)
-        return -1;
+    if (!check_name(name, namelen)) return -1;
+    if (!check_value(name, valuelen)) return -1;
+    if (namelen < 1) return -1;
 
     if (!__system_property_area__) {
         return -1;
