@@ -38,8 +38,15 @@
 
 typedef struct prop_msg prop_msg;
 
+#define PROP_NAME_MAX_V2 ((1<<9) - 1)
+#define PROP_SEGMENT_MAX_V2 (1<<8)
+#define PROP_RO_VALUE_MAX_V2 ((1<<9) - 1)
+#define PROP_RW_VALUE_MAX_V2 ((1<<5) - 1)
+#define PROP_RW_LONG_VALUE_MAX_V2 ((1<<8) - 1)
+
 #define PROP_AREA_MAGIC   0x504f5250
 #define PROP_AREA_VERSION 0xfc6ed0ab
+#define PROP_AREA_VERSION2 (PROP_AREA_VERSION + 1)
 #define PROP_AREA_VERSION_COMPAT 0x45434f76
 
 #define PROP_SERVICE_NAME "property_service"
@@ -56,8 +63,16 @@ __BEGIN_DECLS
 struct prop_msg
 {
     unsigned cmd;
-    char name[PROP_NAME_MAX];
-    char value[PROP_VALUE_MAX];
+    union {
+        struct {
+            char name[PROP_NAME_MAX];
+            char value[PROP_VALUE_MAX];
+        } v1;
+        struct {
+            char name[PROP_NAME_MAX_V2 + 1];
+            char value[PROP_RO_VALUE_MAX_V2 + 1];
+        } v2;
+    } data;
 };
 
 #define PROP_MSG_SETPROP 1
