@@ -38,9 +38,21 @@
 
 typedef struct prop_msg prop_msg;
 
+// Min and max size of the buffer that holds a value string, including
+// null-terminator.
+// The sizes of the buffer should be 2^n.
+#define PROP_VALUE_BUF_MINSIZE (1<<4)
+#define PROP_VALUE_BUF_MAXSIZE (1<<9)
+
+// Maximum size of the buffer that holds a name string, including
+// null-terminator.
+#define PROP_NAME_BUF_MAXSIZE (1<<9)
+
 #define PROP_AREA_MAGIC   0x504f5250
-#define PROP_AREA_VERSION 0xfc6ed0ab
-#define PROP_AREA_VERSION_COMPAT 0x45434f76
+// Used from K to N
+#define PROP_AREA_VERSION_COMPAT 0xfc6ed0ab
+// Used from O
+#define PROP_AREA_VERSION 0xfc6ed0ac
 
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME_MAX 1024
@@ -56,8 +68,11 @@ __BEGIN_DECLS
 struct prop_msg
 {
     unsigned cmd;
-    char name[PROP_NAME_MAX];
-    char value[PROP_VALUE_MAX];
+    // name, value are null-terminated.
+    // TODO(jiyong): optimize so that we don't need to always send the
+    // this big data. Add length fields.
+    char name[PROP_NAME_BUF_MAXSIZE];
+    char value[PROP_VALUE_BUF_MAXSIZE];
 };
 
 #define PROP_MSG_SETPROP 1
@@ -157,14 +172,14 @@ unsigned int __system_property_serial(const prop_info *pi);
 ** successive call. */
 unsigned int __system_property_wait_any(unsigned int serial);
 
+/* Send the prop message to the init process. */
+int __system_property_send_prop_msg(const void* msg, size_t size);
+
 /*  Compatibility functions to support using an old init with a new libc,
  ** mostly for the OTA updater binary.  These can be deleted once OTAs from
- ** a pre-K release no longer needed to be supported. */
-const prop_info *__system_property_find_compat(const char *name);
+ ** a pre-O release no longer needed to be supported. */
 int __system_property_read_compat(const prop_info *pi, char *name, char *value);
-int __system_property_foreach_compat(
-        void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie);
+int __system_property_set_compat(const char* name, const char* value);
 
 /* Initialize the system properties area in read only mode.
  * Should be done by all processes that need to read system

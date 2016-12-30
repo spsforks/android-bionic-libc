@@ -96,6 +96,21 @@ const prop_info *__system_property_find_nth(unsigned n);
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
   __INTRODUCED_IN(19);
 
+/* TODO(jiyong): add detailed description.
+ * returned char buffer is allocated by the callee. Must be freed by the caller.
+ */
+char* __system_property_get_string(const char *name);
+
+/* TODO(jiyong): add detailed description.
+ * returned char buffer is allocated by the callee. Must be freed by the caller.
+ */
+char* __system_property_read_name(const prop_info *pi);
+
+/* TODO(jiyong): add detailed description.
+ * returned char buffer is allocated by the callee. Must be freed by the caller.
+ */
+char* __system_property_read_value(const prop_info *pi);
+
 __END_DECLS
 
 #endif
