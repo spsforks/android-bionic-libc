@@ -112,15 +112,12 @@ class pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t*);
+__LIBC_HIDDEN__ void __free_thread(pthread_internal_t*);
 
-__LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
-__LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
-__LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {
