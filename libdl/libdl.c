@@ -91,6 +91,7 @@ void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 // Proxy calls to bionic loader
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
+  printf("__loader_dlopen=%p", __loader_dlopen);
   return __loader_dlopen(filename, flag, caller_addr);
 }
 
