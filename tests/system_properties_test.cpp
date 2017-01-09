@@ -235,30 +235,6 @@ TEST(properties, foreach) {
 #endif // __BIONIC__
 }
 
-TEST(properties, find_nth) {
-#if defined(__BIONIC__)
-    LocalPropertyTestState pa;
-    ASSERT_TRUE(pa.valid);
-
-    ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
-    ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
-    ASSERT_EQ(0, __system_property_add("property_other", 14, "value3", 6));
-
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(0));
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(1));
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(2));
-
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(3));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(4));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(5));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(100));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(200));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(247));
-#else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
-}
-
 TEST(properties, fill_hierarchical) {
 #if defined(__BIONIC__)
     LocalPropertyTestState pa;
