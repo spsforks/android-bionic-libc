@@ -320,6 +320,9 @@ cc_test_library {
         "gtest_main.cpp",
         "gtest_globals_cts.cpp",
     ],
+    static_libs: [
+        "libbase",
+    ],
     cppflags: ["-DUSING_GTEST_OUTPUT_FORMAT"],
     shared: {
         enabled: false,
