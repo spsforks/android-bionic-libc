@@ -674,3 +674,22 @@ TEST(time, bug_31938693) {
   ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
   EXPECT_EQ(9, tm.tm_hour);
 }
+
+TEST(time, bug_31339449) {
+  time_t t = 1475619727;
+
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm* tm_p = localtime(&t);
+  EXPECT_EQ(15, tm_p->tm_hour);
+
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm tm = {};
+  localtime_r(&t, &tm);
+  EXPECT_EQ(15, tm.tm_hour);
+}
