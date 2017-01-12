@@ -101,7 +101,7 @@ int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp 
 
 int nice(int __incr);
 
-int setuid(uid_t __uid);
+int setuid(uid_t __uid) __wur;
 uid_t getuid(void);
 int seteuid(uid_t __uid);
 uid_t geteuid(void);
@@ -113,7 +113,7 @@ int getgroups(int __size, gid_t* __list);
 int setgroups(size_t __size, const gid_t* __list);
 int setreuid(uid_t __ruid, uid_t __euid);
 int setregid(gid_t __rgid, gid_t __egid);
-int setresuid(uid_t __ruid, uid_t __euid, uid_t __suid);
+int setresuid(uid_t __ruid, uid_t __euid, uid_t __suid) __wur;
 int setresgid(gid_t __rgid, gid_t __egid, gid_t __sgid);
 int getresuid(uid_t* __ruid, uid_t* __euid, uid_t* __suid);
 int getresgid(gid_t* __rgid, gid_t* __egid, gid_t* __sgid);
