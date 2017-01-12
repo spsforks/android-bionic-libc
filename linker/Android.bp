@@ -35,8 +35,14 @@ cc_binary {
     arch: {
         arm: {
             srcs: ["arch/arm/begin.S"],
-
             cflags: ["-D__work_around_b_24465209__"],
+
+            armv7_a: {
+                asflags: ["-DARCH_ARM_HAVE_ARMV7A"],
+            },
+            armv7_a_neon: {
+                asflags: ["-DARCH_ARM_HAVE_ARMV7A"],
+            },
         },
         arm64: {
             srcs: ["arch/arm64/begin.S"],
