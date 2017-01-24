@@ -126,3 +126,26 @@ TEST(properties, smoke) {
 #endif // __BIONIC__
 }
 
+TEST(properties, empty_value) {
+#if defined(__BIONIC__)
+    char propvalue[PROP_VALUE_MAX];
+
+    std::stringstream ss;
+    ss << "debug.test." << getpid() << "." << NanoTime() << ".";
+    const std::string property_prefix = ss.str();
+
+    for (size_t i=0; i<1000; ++i) {
+      std::stringstream ss_name(property_prefix);
+      ss_name << property_prefix << "property_empty" << i;
+      const std::string property_name = ss_name.str();
+
+      // Set brand new property
+      ASSERT_EQ(0, __system_property_set(property_name.c_str(), ""));
+      ASSERT_EQ(0, __system_property_get(property_name.c_str(), propvalue));
+      ASSERT_STREQ("", propvalue);
+    }
+
+#else // __BIONIC__
+    GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
