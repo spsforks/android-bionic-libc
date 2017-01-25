@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Verified+1: Victor Khimenko <khim@google.com>
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Submitted-by: Victor Khimenko <khim@google.com>
+Submitted-at: Wed, 25 Jan 2017 10:05:40 +0000
+Reviewed-on: https://android-review.googlesource.com/327478
+Project: platform/bionic
+Branch: refs/heads/master
