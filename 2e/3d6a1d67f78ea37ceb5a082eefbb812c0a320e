@@ -1,0 +1,10 @@
+Code-Review+2: Dan Albert <danalbert@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Code-Review+1: Dave Weinstein <olorin@google.com>
+Verified+1: Max Spector <mspector@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Max Spector <mspector@google.com>
+Submitted-at: Thu, 26 Jan 2017 18:43:39 +0000
+Reviewed-on: https://android-review.googlesource.com/327295
+Project: platform/bionic
+Branch: refs/heads/master
