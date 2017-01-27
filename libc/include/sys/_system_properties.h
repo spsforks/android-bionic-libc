@@ -40,7 +40,6 @@ typedef struct prop_msg prop_msg;
 
 #define PROP_AREA_MAGIC   0x504f5250
 #define PROP_AREA_VERSION 0xfc6ed0ab
-#define PROP_AREA_VERSION_COMPAT 0x45434f76
 
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_FILENAME_MAX 1024

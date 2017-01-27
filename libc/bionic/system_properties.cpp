@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -199,30 +200,14 @@ struct find_nth_cookie {
     }
 };
 
+// This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
+// It's also used in a libnativehelper test.
+prop_area* __system_property_area__ = nullptr;
+
 static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
-static bool compat_mode = false;
 static size_t pa_data_size;
 static size_t pa_size;
 static bool initialized = false;
-
-// NOTE: This isn't static because system_properties_compat.c
-// requires it.
-prop_area *__system_property_area__ = NULL;
-
-static int get_fd_from_env(void)
-{
-    // This environment variable consistes of two decimal integer
-    // values separated by a ",". The first value is a file descriptor
-    // and the second is the size of the system properties area. The
-    // size is currently unused.
-    char *env = getenv("ANDROID_PROPERTY_WORKSPACE");
-
-    if (!env) {
-        return -1;
-    }
-
-    return atoi(env);
-}
 
 static prop_area* map_prop_area_rw(const char* filename, const char* context,
                                    bool* fsetxattr_failed) {
@@ -267,7 +252,6 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
 
     pa_size = PA_SIZE;
     pa_data_size = pa_size - sizeof(prop_area);
-    compat_mode = false;
 
     void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (memory_area == MAP_FAILED) {
@@ -303,53 +287,25 @@ static prop_area* map_fd_ro(const int fd) {
     }
 
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
-    if ((pa->magic() != PROP_AREA_MAGIC) ||
-        (pa->version() != PROP_AREA_VERSION &&
-         pa->version() != PROP_AREA_VERSION_COMPAT)) {
+    if ((pa->magic() != PROP_AREA_MAGIC) || (pa->version() != PROP_AREA_VERSION)) {
         munmap(pa, pa_size);
         return nullptr;
-    }
-
-    if (pa->version() == PROP_AREA_VERSION_COMPAT) {
-        compat_mode = true;
     }
 
     return pa;
 }
 
-static prop_area* map_prop_area(const char* filename, bool is_legacy) {
+static prop_area* map_prop_area(const char* filename) {
     int fd = open(filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
-    bool close_fd = true;
-    if (fd == -1 && errno == ENOENT && is_legacy) {
-        /*
-         * For backwards compatibility, if the file doesn't
-         * exist, we use the environment to get the file descriptor.
-         * For security reasons, we only use this backup if the kernel
-         * returns ENOENT. We don't want to use the backup if the kernel
-         * returns other errors such as ENOMEM or ENFILE, since it
-         * might be possible for an external program to trigger this
-         * condition.
-         * Only do this for the legacy prop file, secured prop files
-         * do not have a backup
-         */
-        fd = get_fd_from_env();
-        close_fd = false;
-    }
-
-    if (fd < 0) {
-        return nullptr;
-    }
+    if (fd == -1) return nullptr;
 
     prop_area* map_result = map_fd_ro(fd);
-    if (close_fd) {
-        close(fd);
-    }
+    close(fd);
 
     return map_result;
 }
 
-void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off)
-{
+void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off) {
     const size_t aligned = BIONIC_ALIGN(size, sizeof(uint_least32_t));
     if (bytes_used_ + aligned > pa_data_size) {
         return NULL;
@@ -360,8 +316,7 @@ void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off)
     return data_ + *off;
 }
 
-prop_bt *prop_area::new_prop_bt(const char *name, uint32_t namelen, uint_least32_t *const off)
-{
+prop_bt *prop_area::new_prop_bt(const char *name, uint32_t namelen, uint_least32_t *const off) {
     uint_least32_t new_offset;
     void *const p = allocate_obj(sizeof(prop_bt) + namelen + 1, &new_offset);
     if (p != NULL) {
@@ -373,9 +328,9 @@ prop_bt *prop_area::new_prop_bt(const char *name, uint32_t namelen, uint_least32
     return NULL;
 }
 
-prop_info *prop_area::new_prop_info(const char *name, uint32_t namelen,
-        const char *value, uint32_t valuelen, uint_least32_t *const off)
-{
+prop_info* prop_area::new_prop_info(const char* name, uint32_t namelen,
+                                    const char* value, uint32_t valuelen,
+                                    uint_least32_t* const off) {
     uint_least32_t new_offset;
     void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
     if (p != NULL) {
@@ -387,8 +342,7 @@ prop_info *prop_area::new_prop_info(const char *name, uint32_t namelen,
     return NULL;
 }
 
-void *prop_area::to_prop_obj(uint_least32_t off)
-{
+void *prop_area::to_prop_obj(uint_least32_t off) {
     if (off > pa_data_size)
         return NULL;
 
@@ -405,14 +359,11 @@ inline prop_info *prop_area::to_prop_info(atomic_uint_least32_t* off_p) {
   return reinterpret_cast<prop_info*>(to_prop_obj(off));
 }
 
-inline prop_bt *prop_area::root_node()
-{
+inline prop_bt *prop_area::root_node() {
     return reinterpret_cast<prop_bt*>(to_prop_obj(0));
 }
 
-static int cmp_prop_name(const char *one, uint32_t one_len, const char *two,
-        uint32_t two_len)
-{
+static int cmp_prop_name(const char *one, uint32_t one_len, const char *two, uint32_t two_len) {
     if (one_len < two_len)
         return -1;
     else if (one_len > two_len)
@@ -421,9 +372,8 @@ static int cmp_prop_name(const char *one, uint32_t one_len, const char *two,
         return strncmp(one, two, one_len);
 }
 
-prop_bt *prop_area::find_prop_bt(prop_bt *const bt, const char *name,
-                                 uint32_t namelen, bool alloc_if_needed)
-{
+prop_bt* prop_area::find_prop_bt(prop_bt* const bt, const char* name, uint32_t namelen,
+                                 bool alloc_if_needed) {
 
     prop_bt* current = bt;
     while (true) {
@@ -472,10 +422,10 @@ prop_bt *prop_area::find_prop_bt(prop_bt *const bt, const char *name,
     }
 }
 
-const prop_info *prop_area::find_property(prop_bt *const trie, const char *name,
-        uint32_t namelen, const char *value, uint32_t valuelen,
-        bool alloc_if_needed)
-{
+const prop_info* prop_area::find_property(prop_bt* const trie,
+                                          const char* name, uint32_t namelen,
+                                          const char* value, uint32_t valuelen,
+                                          bool alloc_if_needed) {
     if (!trie) return NULL;
 
     const char *remaining_name = name;
@@ -661,8 +611,7 @@ static int send_prop_msg(const prop_msg* msg) {
     return result;
 }
 
-static void find_nth_fn(const prop_info *pi, void *ptr)
-{
+static void find_nth_fn(const prop_info *pi, void *ptr) {
     find_nth_cookie *cookie = reinterpret_cast<find_nth_cookie*>(ptr);
 
     if (cookie->n == cookie->count)
@@ -672,8 +621,7 @@ static void find_nth_fn(const prop_info *pi, void *ptr)
 }
 
 bool prop_area::foreach_property(prop_bt *const trie,
-        void (*propfn)(const prop_info *pi, void *cookie), void *cookie)
-{
+                                 void (*propfn)(const prop_info *pi, void *cookie), void *cookie) {
     if (!trie)
         return false;
 
@@ -839,7 +787,7 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
     if (access_rw) {
         pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed);
     } else {
-        pa_ = map_prop_area(filename, false);
+        pa_ = map_prop_area(filename);
     }
     lock_.unlock();
     return pa_;
@@ -899,7 +847,7 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
         __system_property_area__ =
             map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
     } else {
-        __system_property_area__ = map_prop_area(filename, false);
+        __system_property_area__ = map_prop_area(filename);
     }
     return __system_property_area__;
 }
@@ -937,8 +885,7 @@ static prop_area* get_prop_area_for_name(const char* name) {
  */
 
 /* Read an entry from a spec file (e.g. file_contexts) */
-static inline int read_spec_entry(char **entry, char **ptr, int *len)
-{
+static inline int read_spec_entry(char **entry, char **ptr, int *len) {
     *entry = NULL;
     char *tmp_buf = NULL;
 
@@ -970,8 +917,7 @@ static inline int read_spec_entry(char **entry, char **ptr, int *len)
  *
  * This function calls read_spec_entry() to do the actual string processing.
  */
-static int read_spec_entries(char *line_buf, int num_args, ...)
-{
+static int read_spec_entries(char *line_buf, int num_args, ...) {
     char **spec_entry, *buf_p;
     int len, rc, items, entry_len = 0;
     va_list ap;
@@ -1083,8 +1029,7 @@ static void free_and_unmap_contexts() {
     }
 }
 
-int __system_properties_init()
-{
+int __system_properties_init() {
     if (initialized) {
         list_foreach(contexts, [](context_node* l) { l->reset_access(); });
         return 0;
@@ -1098,7 +1043,7 @@ int __system_properties_init()
             return -1;
         }
     } else {
-        __system_property_area__ = map_prop_area(property_filename, true);
+        __system_property_area__ = map_prop_area(property_filename);
         if (!__system_property_area__) {
             return -1;
         }
@@ -1109,8 +1054,7 @@ int __system_properties_init()
     return 0;
 }
 
-int __system_property_set_filename(const char *filename)
-{
+int __system_property_set_filename(const char *filename) {
     size_t len = strlen(filename);
     if (len >= sizeof(property_filename))
         return -1;
@@ -1119,8 +1063,7 @@ int __system_property_set_filename(const char *filename)
     return 0;
 }
 
-int __system_property_area_init()
-{
+int __system_property_area_init() {
     free_and_unmap_contexts();
     mkdir(property_filename, S_IRWXU | S_IXGRP | S_IXOTH);
     if (!initialize_properties()) {
@@ -1141,8 +1084,7 @@ int __system_property_area_init()
     return fsetxattr_failed ? -2 : 0;
 }
 
-unsigned int __system_property_area_serial()
-{
+unsigned int __system_property_area_serial() {
     prop_area *pa = __system_property_area__;
     if (!pa) {
         return -1;
@@ -1151,14 +1093,9 @@ unsigned int __system_property_area_serial()
     return atomic_load_explicit(pa->serial(), memory_order_acquire);
 }
 
-const prop_info *__system_property_find(const char *name)
-{
+const prop_info *__system_property_find(const char *name) {
     if (!__system_property_area__) {
         return nullptr;
-    }
-
-    if (__predict_false(compat_mode)) {
-        return __system_property_find_compat(name);
     }
 
     prop_area* pa = get_prop_area_for_name(name);
@@ -1172,18 +1109,12 @@ const prop_info *__system_property_find(const char *name)
 
 // The C11 standard doesn't allow atomic loads from const fields,
 // though C++11 does.  Fudge it until standards get straightened out.
-static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
-                                               memory_order mo) {
+static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s, memory_order mo) {
     atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
     return atomic_load_explicit(non_const_s, mo);
 }
 
-int __system_property_read(const prop_info *pi, char *name, char *value)
-{
-    if (__predict_false(compat_mode)) {
-        return __system_property_read_compat(pi, name, value);
-    }
-
+int __system_property_read(const prop_info *pi, char *name, char *value) {
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
         size_t len = SERIAL_VALUE_LEN(serial);
@@ -1217,14 +1148,6 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
 void __system_property_read_callback(const prop_info* pi,
                                      void (*callback)(void* cookie, const char* name, const char* value),
                                      void* cookie) {
-  // TODO (dimitry): do we need compat mode for this function?
-  if (__predict_false(compat_mode)) {
-    char value_buf[PROP_VALUE_MAX];
-    __system_property_read_compat(pi, nullptr, value_buf);
-    callback(cookie, pi->name, value_buf);
-    return;
-  }
-
   while (true) {
     uint32_t serial = __system_property_serial(pi); // acquire semantics
     size_t len = SERIAL_VALUE_LEN(serial);
@@ -1242,8 +1165,7 @@ void __system_property_read_callback(const prop_info* pi,
   }
 }
 
-int __system_property_get(const char *name, char *value)
-{
+int __system_property_get(const char *name, char *value) {
     const prop_info *pi = __system_property_find(name);
 
     if (pi != 0) {
@@ -1324,8 +1246,7 @@ int __system_property_set(const char* key, const char* value) {
     return result != 0 ? -1 : 0;
 }
 
-int __system_property_update(prop_info *pi, const char *value, unsigned int len)
-{
+int __system_property_update(prop_info *pi, const char *value, unsigned int len) {
     if (len >= PROP_VALUE_MAX) {
         return -1;
     }
@@ -1361,8 +1282,7 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 }
 
 int __system_property_add(const char *name, unsigned int namelen,
-            const char *value, unsigned int valuelen)
-{
+                          const char *value, unsigned int valuelen) {
     if (valuelen >= PROP_VALUE_MAX) {
         return -1;
     }
@@ -1398,8 +1318,7 @@ int __system_property_add(const char *name, unsigned int namelen,
 }
 
 // Wait for non-locked serial, and retrieve it with acquire semantics.
-unsigned int __system_property_serial(const prop_info *pi)
-{
+unsigned int __system_property_serial(const prop_info *pi) {
     uint32_t serial = load_const_atomic(&pi->serial, memory_order_acquire);
     while (SERIAL_DIRTY(serial)) {
         __futex_wait(const_cast<volatile void *>(
@@ -1410,8 +1329,7 @@ unsigned int __system_property_serial(const prop_info *pi)
     return serial;
 }
 
-unsigned int __system_property_wait_any(unsigned int serial)
-{
+unsigned int __system_property_wait_any(unsigned int serial) {
     prop_area *pa = __system_property_area__;
     uint32_t my_serial;
 
@@ -1427,8 +1345,7 @@ unsigned int __system_property_wait_any(unsigned int serial)
     return my_serial;
 }
 
-const prop_info *__system_property_find_nth(unsigned n)
-{
+const prop_info *__system_property_find_nth(unsigned n) {
     if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
       __libc_fatal("__system_property_find_nth is not supported since Android O,"
                    " please use __system_property_foreach instead.");
@@ -1444,15 +1361,9 @@ const prop_info *__system_property_find_nth(unsigned n)
     return cookie.pi;
 }
 
-int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie)
-{
+int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie), void *cookie) {
     if (!__system_property_area__) {
         return -1;
-    }
-
-    if (__predict_false(compat_mode)) {
-        return __system_property_foreach_compat(propfn, cookie);
     }
 
     list_foreach(contexts, [propfn, cookie](context_node* l) {
