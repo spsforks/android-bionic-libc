@@ -1,7 +1,9 @@
-#include <gtest/gtest.h>
 #include <dlfcn.h>
+#include <gtest/gtest.h>
+#include <libgen.h>
 
 #include "BionicDeathTest.h"
+#include "utils.h"
 
 // Private libdl interface.
 extern "C" {
@@ -91,4 +93,33 @@ TEST(cfi_test, invalid) {
 
   handle = dlopen("libcfi-test-bad.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_FALSE(handle != nullptr) << dlerror();
+}
+
+// cfi_test_helper exports __cfi_check, which triggers CFI initialization at startup.
+TEST(cfi_test, early_init) {
+#if defined(__BIONIC__)
+  extern const char *__progname;
+  char* progname = strdup(__progname);
+  char* here = dirname(progname);
+  std::string helper =
+      std::string(here) + "/../bionic-loader-test-libs/cfi_test_helper/cfi_test_helper";
+  ExecTestHelper eth;
+  eth.SetArgs({ helper.c_str(), nullptr });
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+#endif
+}
+
+// cfi_test_helper2 depends on a library that exports __cfi_check, which triggers CFI initialization
+// at startup.
+TEST(cfi_test, early_init2) {
+#if defined(__BIONIC__)
+  extern const char *__progname;
+  char* progname = strdup(__progname);
+  char* here = dirname(progname);
+  std::string helper =
+      std::string(here) + "/../bionic-loader-test-libs/cfi_test_helper2/cfi_test_helper2";
+  ExecTestHelper eth;
+  eth.SetArgs({ helper.c_str(), nullptr });
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+#endif
 }
