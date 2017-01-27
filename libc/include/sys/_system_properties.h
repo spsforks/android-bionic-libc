@@ -33,31 +33,22 @@
 
 #ifndef _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #error you should #include <sys/system_properties.h> instead
-#else
+#endif
+
 #include <sys/system_properties.h>
-
-typedef struct prop_msg prop_msg;
-
-#define PROP_AREA_MAGIC   0x504f5250
-#define PROP_AREA_VERSION 0xfc6ed0ab
-#define PROP_AREA_VERSION_COMPAT 0x45434f76
-
-#define PROP_SERVICE_NAME "property_service"
-#define PROP_FILENAME_MAX 1024
-#define PROP_FILENAME "/dev/__properties__"
-
-#define PA_SIZE         (128 * 1024)
-
-#define SERIAL_DIRTY(serial) ((serial) & 1)
 
 __BEGIN_DECLS
 
-struct prop_msg
-{
+struct prop_msg {
     unsigned cmd;
     char name[PROP_NAME_MAX];
     char value[PROP_VALUE_MAX];
 };
+
+typedef struct prop_msg prop_msg;
+
+#define PROP_SERVICE_NAME "property_service"
+#define PROP_FILENAME "/dev/__properties__"
 
 #define PROP_MSG_SETPROP 1
 #define PROP_MSG_SETPROP2 0x00020001
@@ -146,8 +137,7 @@ unsigned int __system_property_area_serial();
 **
 ** Returns 0 on success, -1 if the property area is full.
 */
-int __system_property_add(const char *name, unsigned int namelen,
-			const char *value, unsigned int valuelen);
+int __system_property_add(const char *name, unsigned int namelen, const char *value, unsigned int valuelen);
 
 /* Update the value of a system property returned by
 ** __system_property_find.  Can only be done by a single process
@@ -171,15 +161,6 @@ unsigned int __system_property_serial(const prop_info *pi);
 ** successive call. */
 unsigned int __system_property_wait_any(unsigned int serial);
 
-/*  Compatibility functions to support using an old init with a new libc,
- ** mostly for the OTA updater binary.  These can be deleted once OTAs from
- ** a pre-K release no longer needed to be supported. */
-const prop_info *__system_property_find_compat(const char *name);
-int __system_property_read_compat(const prop_info *pi, char *name, char *value);
-int __system_property_foreach_compat(
-        void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie);
-
 /* Initialize the system properties area in read only mode.
  * Should be done by all processes that need to read system
  * properties.
@@ -190,5 +171,4 @@ int __system_properties_init();
 
 __END_DECLS
 
-#endif
 #endif
