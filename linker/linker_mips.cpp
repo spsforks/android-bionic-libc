@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#if !defined(__LP64__) && __mips_isa_rev >= 5
+#if !defined(__LP64__) && __mips_fpr == 64
 #include <sys/prctl.h>
 #endif
 
@@ -235,7 +235,7 @@ struct mips_elf_abiflags_v0 {
 #define MIPS_ABI_FP_XX     5  // -mfpxx
 #define MIPS_ABI_FP_64A    7  // -mips32r* -mfp64 -mno-odd-spreg
 
-#if __mips_isa_rev >= 5
+#if __mips_fpr == 64
 static bool mips_fre_mode_on = false;  // have set FRE=1 mode for process
 #endif
 
@@ -274,7 +274,7 @@ bool soinfo::mips_check_and_adjust_fp_modes() {
     }
   }
   if (!(mips_fpabi == MIPS_ABI_FP_DOUBLE ||
-#if __mips_isa_rev >= 5
+#if __mips_fpr == 64
         mips_fpabi == MIPS_ABI_FP_64A    ||
 #endif
         mips_fpabi == MIPS_ABI_FP_XX       )) {
@@ -283,7 +283,7 @@ bool soinfo::mips_check_and_adjust_fp_modes() {
     return false;
   }
 
-#if __mips_isa_rev >= 5
+#if __mips_fpr == 64
   // Adjust process's FR Emulation mode, if needed
   //
   // On Mips R5 & R6, Android runs continuously in FR=1 64bit-fpreg mode.
@@ -326,7 +326,7 @@ bool soinfo::mips_check_and_adjust_fp_modes() {
   }
 #else
   // Android runs continuously in FR=0 32bit-fpreg mode.
-#endif  // __mips_isa_rev
+#endif  // __mips_fpr
   return true;
 }
 
