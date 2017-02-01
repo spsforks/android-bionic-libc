@@ -1241,30 +1241,11 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
     return false;
   }
 
-  uint32_t target_sdk_version = get_application_target_sdk_version();
-
   return !ns->soinfo_list().visit([&](soinfo* si) {
     const char* soname = si->get_soname();
     if (soname != nullptr && (strcmp(name, soname) == 0)) {
-      // If the library was opened under different target sdk version
-      // skip this step and try to reopen it. The exceptions are
-      // "libdl.so" and global group. There is no point in skipping
-      // them because relocation process is going to use them
-      // in any case.
-
-      // TODO (dimitry): remove this once linker stops imposing as libdl.so
-      bool is_libdl = (si == solist_get_head());
-
-      if (is_libdl || (si->get_dt_flags_1() & DF_1_GLOBAL) != 0 ||
-          !si->is_linked() || si->get_target_sdk_version() == target_sdk_version ||
-          ns != &g_default_namespace) {
-        *candidate = si;
-        return false;
-      } else if (*candidate == nullptr) {
-        // for the different sdk version in the default namespace
-        // remember the first library.
-        *candidate = si;
-      }
+      *candidate = si;
+      return false;
     }
 
     return true;
