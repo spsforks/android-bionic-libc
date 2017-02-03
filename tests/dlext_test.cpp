@@ -621,15 +621,15 @@ TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  ASSERT_FALSE(android_init_namespaces("", nullptr));
-  ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
-               "the list of public libraries is empty.", dlerror());
+  ASSERT_FALSE(android_init_anonymous_namespace("", nullptr));
+  ASSERT_STREQ("android_init_anonymous_namespace failed: error initializing namespace \"(anonymous)\": "
+               "the list of shared libraries is empty.", dlerror());
 
   const std::string lib_public_path = get_testlib_root() + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_anonymous_namespace(path.c_str(), nullptr)) << dlerror();
 
   // Check that libraries added to public namespace are not NODELETE
   dlclose(handle_public);
@@ -642,15 +642,25 @@ TEST(dlext, ns_smoke) {
   handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
 
   android_namespace_t* ns1 =
-          android_create_namespace("private", nullptr,
+          android_create_namespace("private",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                   ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns1 != nullptr) << dlerror();
 
   android_namespace_t* ns2 =
-          android_create_namespace("private_isolated", nullptr,
+          android_create_namespace("private_isolated",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                   ANDROID_NAMESPACE_TYPE_ISOLATED, nullptr, nullptr);
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns2 != nullptr) << dlerror();
 
   // This should not have affect search path for default namespace:
@@ -746,12 +756,17 @@ TEST(dlext, ns_isolated) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_anonymous_namespace(path.c_str(), nullptr)) << dlerror();
 
   android_namespace_t* ns_not_isolated =
-          android_create_namespace("private", nullptr,
+          android_create_namespace("private",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                   ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated =
@@ -760,6 +775,8 @@ TEST(dlext, ns_isolated) {
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    nullptr,
+                                   nullptr,
+                                   path.c_str(),
                                    nullptr);
   ASSERT_TRUE(ns_isolated != nullptr) << dlerror();
 
@@ -769,6 +786,8 @@ TEST(dlext, ns_isolated) {
                                    nullptr,
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    get_testlib_root().c_str(),
+                                   nullptr,
+                                   path.c_str(),
                                    nullptr);
   ASSERT_TRUE(ns_isolated2 != nullptr) << dlerror();
 
@@ -852,7 +871,7 @@ TEST(dlext, ns_shared) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_anonymous_namespace(path.c_str(), nullptr)) << dlerror();
 
   // preload this library to the default namespace to check if it
   // is shared later on.
@@ -861,16 +880,25 @@ TEST(dlext, ns_shared) {
   ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
 
   android_namespace_t* ns_not_isolated =
-          android_create_namespace("private", nullptr,
+          android_create_namespace("private",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                   ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated_shared =
-          android_create_namespace("private_isolated_shared", nullptr,
+          android_create_namespace("private_isolated_shared",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
-                                   nullptr, nullptr);
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
 
   ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
@@ -963,7 +991,7 @@ TEST(dlext, ns_shared_dlclose) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+  ASSERT_TRUE(android_init_anonymous_namespace(path.c_str(), nullptr)) << dlerror();
 
   // preload this library to the default namespace to check if it
   // is shared later on.
@@ -972,10 +1000,14 @@ TEST(dlext, ns_shared_dlclose) {
   ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated_shared =
-          android_create_namespace("private_isolated_shared", nullptr,
+          android_create_namespace("private_isolated_shared",
+                                   nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
-                                   nullptr, nullptr);
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
 
   // Check if "libnstest_dlopened.so" is loaded (and the same)
@@ -1024,7 +1056,7 @@ TEST(dlext, ns_isolated_rtld_global) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = "libc.so:libc++.so:libdl.so:libm.so";
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr));
+  ASSERT_TRUE(android_init_anonymous_namespace(path.c_str(), nullptr));
 
   const std::string lib_public_path = get_testlib_root() + "/public_namespace_libs";
 
@@ -1034,6 +1066,8 @@ TEST(dlext, ns_isolated_rtld_global) {
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    lib_public_path.c_str(),
+                                   nullptr,
+                                   path.c_str(),
                                    nullptr);
   ASSERT_TRUE(ns1 != nullptr) << dlerror();
 
@@ -1043,6 +1077,8 @@ TEST(dlext, ns_isolated_rtld_global) {
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    lib_public_path.c_str(),
+                                   nullptr,
+                                   path.c_str(),
                                    nullptr);
   ASSERT_TRUE(ns2 != nullptr) << dlerror();
 
@@ -1057,12 +1093,14 @@ TEST(dlext, ns_isolated_rtld_global) {
   ASSERT_TRUE(handle_global != nullptr) << dlerror();
 
   android_namespace_t* ns1_child =
-        android_create_namespace("isolated1_child",
-                                 nullptr,
-                                 (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                 ANDROID_NAMESPACE_TYPE_ISOLATED,
-                                 nullptr,
-                                 ns1);
+          android_create_namespace("isolated1_child",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   ns1);
 
   // Now - only ns1 and ns1 child should be able to dlopen root_lib
   // attempt to use ns2 should result in dlerror()
@@ -1099,13 +1137,20 @@ TEST(dlext, ns_anonymous) {
 
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), (get_testlib_root() + "/private_namespace_libs").c_str()))
-      << dlerror();
+  ASSERT_TRUE(
+          android_init_anonymous_namespace(path.c_str(),
+                                           (get_testlib_root() + "/private_namespace_libs").c_str())
+      ) << dlerror();
 
-  android_namespace_t* ns = android_create_namespace(
-                                "private", nullptr,
-                                (get_testlib_root() + "/private_namespace_libs").c_str(),
-                                ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
+  android_namespace_t* ns =
+          android_create_namespace("private",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr,
+                                   path.c_str(),
+                                   nullptr);
 
   ASSERT_TRUE(ns != nullptr) << dlerror();
 

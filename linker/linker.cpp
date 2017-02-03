@@ -185,10 +185,7 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
 static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_preload_names;
 
-static bool g_public_namespace_initialized;
-
-// TODO (dimitry): Remove once interface between libnativeloader and the linker is updated
-static std::unordered_set<std::string> g_public_namespace_sonames;
+static bool g_anonymous_namespace_initialized;
 
 #if STATS
 struct linker_stats_t {
@@ -1988,39 +1985,39 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
-bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path) {
-  if (g_public_namespace_initialized) {
-    DL_ERR("public namespace has already been initialized.");
+bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
+  if (g_anonymous_namespace_initialized) {
+    DL_ERR("anonymous namespace has already been initialized.");
     return false;
   }
-
-  if (public_ns_sonames == nullptr || public_ns_sonames[0] == '\0') {
-    DL_ERR("error initializing public namespace: the list of public libraries is empty.");
-    return false;
-  }
-
-  auto sonames = android::base::Split(public_ns_sonames, ":");
 
   ProtectedDataGuard guard;
 
-  g_public_namespace_sonames = std::unordered_set<std::string>(sonames.begin(), sonames.end());
-
-  g_public_namespace_initialized = true;
+  g_anonymous_namespace_initialized = true;
 
   // create anonymous namespace
   // When the caller is nullptr - create_namespace will take global group
   // from the anonymous namespace, which is fine because anonymous namespace
   // is still pointing to the default one.
   android_namespace_t* anon_ns =
-      create_namespace(nullptr, "(anonymous)", nullptr, anon_ns_library_path,
-                       ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, &g_default_namespace);
+      create_namespace(nullptr,
+                       "(anonymous)",
+                       nullptr,
+                       library_search_path,
+                       // TODO (dimitry): change to isolated eventually.
+                       ANDROID_NAMESPACE_TYPE_REGULAR,
+                       nullptr,
+                       &g_default_namespace,
+                       shared_lib_sonames,
+                       &g_default_namespace);
 
   if (anon_ns == nullptr) {
-    g_public_namespace_initialized = false;
+    g_anonymous_namespace_initialized = false;
     return false;
   }
 
   g_anonymous_namespace = anon_ns;
+
   return true;
 }
 
@@ -2037,9 +2034,16 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* default_library_path,
                                       uint64_t type,
                                       const char* permitted_when_isolated_path,
+                                      android_namespace_t* linked_namespace,
+                                      const char* shared_lib_sonames,
                                       android_namespace_t* parent_namespace) {
-  if (!g_public_namespace_initialized) {
-    DL_ERR("cannot create namespace: public namespace is not initialized.");
+  if (!g_anonymous_namespace_initialized) {
+    DL_ERR("cannot create namespace: anonymous namespace is not initialized.");
+    return nullptr;
+  }
+
+  if (shared_lib_sonames == nullptr || shared_lib_sonames[0] == '\0') {
+    DL_ERR("error initializing namespace \"%s\": the list of shared libraries is empty.", name);
     return nullptr;
   }
 
@@ -2050,6 +2054,10 @@ android_namespace_t* create_namespace(const void* caller_addr,
     parent_namespace = caller_soinfo != nullptr ?
                        caller_soinfo->get_primary_namespace() :
                        g_anonymous_namespace;
+  }
+
+  if (linked_namespace == nullptr) {
+    linked_namespace = &g_default_namespace;
   }
 
   ProtectedDataGuard guard;
@@ -2076,9 +2084,11 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(get_shared_group(parent_namespace), ns);
   }
 
-  // link it to default namespace
-  // TODO (dimitry): replace this with user-supplied link once interface is updated
-  ns->add_linked_namespace(&g_default_namespace, g_public_namespace_sonames);
+  // linked namespaces
+  auto sonames = android::base::Split(shared_lib_sonames, ":");
+  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
+
+  ns->add_linked_namespace(linked_namespace, sonames_set);
 
   return ns;
 }
