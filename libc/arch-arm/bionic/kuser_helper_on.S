@@ -25,7 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.section	.note.android.kuser_helper_off,"a",%note
+	.section	.note.android.kuser_helper_on,"a",%note
 	.align	2
 	.type	abitag, %object
 abitag:
