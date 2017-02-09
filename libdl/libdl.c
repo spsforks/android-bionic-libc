@@ -88,6 +88,9 @@ struct android_namespace_t* __loader_android_create_namespace(
 __attribute__((__weak__, visibility("default")))
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 
+__attribute__((__weak__, visibility("default")))
+void __loader_android_use_fallback_allocator();
+
 // Proxy calls to bionic loader
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
@@ -169,4 +172,8 @@ struct android_namespace_t* android_create_namespace(const char* name,
 
 void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
   __loader_android_dlwarning(obj, f);
+}
+
+void android_use_fallback_allocator() {
+  __loader_android_use_fallback_allocator();
 }

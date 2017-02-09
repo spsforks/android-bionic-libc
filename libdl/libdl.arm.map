@@ -46,4 +46,5 @@ LIBC_PLATFORM {
     android_update_LD_LIBRARY_PATH;
     android_init_namespaces;
     android_create_namespace;
+    android_use_fallback_allocator;
 } LIBC_N;

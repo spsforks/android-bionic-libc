@@ -17,22 +17,39 @@
 #include "linker_allocator.h"
 
 #include <stdlib.h>
+#include <sys/cdefs.h>
+
+#include "linker.h"
 
 static LinkerMemoryAllocator g_linker_allocator;
+thread_local bool use_fallback = false;
+
+static LinkerMemoryAllocator& get_fallback_allocator() {
+  static LinkerMemoryAllocator fallback_allocator;
+  return fallback_allocator;
+}
+
+static LinkerMemoryAllocator& get_allocator() {
+  return __predict_false(use_fallback) ? get_fallback_allocator() : g_linker_allocator;
+}
+
+void __android_use_fallback_allocator() {
+  use_fallback = true;
+}
 
 void* malloc(size_t byte_count) {
-  return g_linker_allocator.alloc(byte_count);
+  return get_allocator().alloc(byte_count);
 }
 
 void* calloc(size_t item_count, size_t item_size) {
-  return g_linker_allocator.alloc(item_count*item_size);
+  return get_allocator().alloc(item_count*item_size);
 }
 
 void* realloc(void* p, size_t byte_count) {
-  return g_linker_allocator.realloc(p, byte_count);
+  return get_allocator().realloc(p, byte_count);
 }
 
 void free(void* ptr) {
-  g_linker_allocator.free(ptr);
+  get_allocator().free(ptr);
 }
 

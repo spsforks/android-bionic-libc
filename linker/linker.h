@@ -169,4 +169,6 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace);
 
+void __android_use_fallback_allocator();
+
 #endif
