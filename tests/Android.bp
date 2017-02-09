@@ -410,7 +410,12 @@ cc_test {
         "libtinyxml2",
         "liblog",
         "libbase",
+
         "libdebuggerd_handler",
+        "libbacktrace",
+        "libunwind",
+        "liblzma",
+        "libcutils",
     ],
 
     static_executable: true,
