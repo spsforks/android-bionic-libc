@@ -1163,8 +1163,10 @@ int __system_property_read(const prop_info* pi, char* name, char* value) {
 }
 
 void __system_property_read_callback(const prop_info* pi,
-                                     void (*callback)(void* cookie, const char* name,
-                                                      const char* value),
+                                     void (*callback)(void* cookie,
+                                                      const char* name,
+                                                      const char* value,
+                                                      unsigned serial),
                                      void* cookie) {
   while (true) {
     uint32_t serial = __system_property_serial(pi);  // acquire semantics
@@ -1177,7 +1179,7 @@ void __system_property_read_callback(const prop_info* pi,
     // TODO: see todo in __system_property_read function
     atomic_thread_fence(memory_order_acquire);
     if (serial == load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-      callback(cookie, pi->name, value_buf);
+      callback(cookie, pi->name, value_buf, serial);
       return;
     }
   }
@@ -1339,20 +1341,26 @@ unsigned int __system_property_serial(const prop_info* pi) {
   return serial;
 }
 
-unsigned int __system_property_wait_any(unsigned int serial) {
+unsigned int __system_property_wait_any(unsigned int old_serial) {
   prop_area* pa = __system_property_area__;
-  uint32_t my_serial;
+  if (!pa) return 0;
 
-  if (!pa) {
-    return 0;
-  }
-
+  uint32_t new_serial;
   do {
-    __futex_wait(pa->serial(), serial, nullptr);
-    my_serial = atomic_load_explicit(pa->serial(), memory_order_acquire);
-  } while (my_serial == serial);
+    __futex_wait(pa->serial(), old_serial, nullptr);
+    new_serial = atomic_load_explicit(pa->serial(), memory_order_acquire);
+  } while (new_serial == old_serial);
+  return new_serial;
+}
 
-  return my_serial;
+unsigned int __system_property_wait(const prop_info* pi, unsigned int old_serial) {
+  uint32_t new_serial;
+  do {
+    __futex_wait(const_cast<volatile void*>(reinterpret_cast<const void*>(&pi->serial)), old_serial,
+                 nullptr);
+    new_serial = load_const_atomic(&pi->serial, memory_order_acquire);
+  } while (new_serial == old_serial);
+  return new_serial;
 }
 
 const prop_info* __system_property_find_nth(unsigned n) {

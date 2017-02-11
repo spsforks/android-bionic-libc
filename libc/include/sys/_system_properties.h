@@ -120,10 +120,20 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 */
 unsigned int __system_property_serial(const prop_info *pi);
 
-/* Wait for any system property to be updated.  Caller must pass
-** in 0 the first time, and the previous return value on each
-** successive call. */
-unsigned int __system_property_wait_any(unsigned int serial);
+/*
+ * Waits for any system property to be updated past `old_serial`.
+ * If you don't know the current global serial number, use 0.
+ * Returns the new global serial number.
+ */
+unsigned int __system_property_wait_any(unsigned int old_serial);
+
+/*
+ * Waits for the specific system property identified by `pi` to be updated past `old_serial`.
+ * If you don't know the current serial, use 0.
+ * Returns the serial number for `pi` that caused the wake.
+ */
+unsigned int __system_property_wait(const prop_info* pi, unsigned int old_serial)
+    __INTRODUCED_IN_FUTURE;
 
 /* Initialize the system properties area in read only mode.
  * Should be done by all processes that need to read system
