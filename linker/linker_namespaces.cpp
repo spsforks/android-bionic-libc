@@ -59,13 +59,7 @@ bool android_namespace_t::is_accessible(const std::string& file) {
 }
 
 bool android_namespace_t::is_accessible(soinfo* s) {
-  std::vector<soinfo*> soinfos;
-  soinfos.push_back(s);
-  s->get_parents().for_each([&](soinfo* parent_si) {
-    soinfos.push_back(parent_si);
-  });
-
-  return std::find_if(soinfos.begin(), soinfos.end(), [this](soinfo* si) {
+  auto is_accessible_ftor = [this] (soinfo* si) {
     if (si->get_primary_namespace() == this) {
       return true;
     }
@@ -76,5 +70,13 @@ bool android_namespace_t::is_accessible(soinfo* s) {
     }
 
     return false;
-  }) != soinfos.end();
+  };
+
+  if (is_accessible_ftor(s)) {
+    return true;
+  }
+
+  return !s->get_parents().visit([&](soinfo* si) {
+    return !is_accessible_ftor(si);
+  });
 }
