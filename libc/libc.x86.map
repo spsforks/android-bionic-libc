@@ -155,6 +155,7 @@ LIBC {
     __sched_cpualloc; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     __sched_cpucount; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     __sched_cpufree; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    __sendto_chk;
     __sched_getaffinity; # arm x86 mips introduced=12
     __set_thread_area; # x86
     __set_tid_address; # arm x86 mips introduced=21
