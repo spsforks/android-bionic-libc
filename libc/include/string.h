@@ -287,9 +287,7 @@ char* stpncpy(char* __restrict const _Nonnull dst __pass_object_size,
 
     return __stpncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict const _Nonnull dst __pass_object_size,
         const char* __restrict const _Nonnull src __pass_object_size,
@@ -304,7 +302,9 @@ char* strncpy(char* __restrict const _Nonnull dst __pass_object_size,
 
     return __strncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* const _Nonnull __restrict dst __pass_object_size,
         const char *_Nonnull __restrict src, size_t size) __overloadable {
