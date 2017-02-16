@@ -68,6 +68,14 @@ void __system_property_read_callback(const prop_info *pi,
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
   __INTRODUCED_IN(19);
 
+/*
+ * Waits for the specific system property identified by `pi` to be updated past `old_serial`.
+ * If you don't know the current serial, use 0.
+ * Returns the serial number for `pi` that caused the wake.
+ */
+uint32_t __system_property_wait(const prop_info* pi, uint32_t old_serial)
+    __INTRODUCED_IN_FUTURE;
+
 /* Deprecated. In Android O and above, there's no limit on property name length. */
 #define PROP_NAME_MAX   32
 /* Deprecated. Use __system_property_read_callback instead. */
