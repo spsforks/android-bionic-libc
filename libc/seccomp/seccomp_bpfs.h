@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef SECCOMP_POLICY_H
-#define SECCOMP_POLICY_H
+#ifndef SECCOMP_BPFS_H
+#define SECCOMP_BPFS_H
 
-#include <stdbool.h>
+#include <stddef.h>
+#include <linux/seccomp.h>
 
-bool set_seccomp_filter();
+extern const struct sock_filter arm_filter[];
+extern const size_t arm_filter_size;
+extern const struct sock_filter arm64_filter[];
+extern const size_t arm64_filter_size;
 
 #endif

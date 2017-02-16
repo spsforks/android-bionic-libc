@@ -148,7 +148,7 @@ def convert_bpf_to_output(bpf, architecture):
     #include <linux/filter.h>
     #include <errno.h>
 
-    #include "seccomp_policy.h"
+    #include "seccomp_bpfs.h"
     const struct sock_filter {architecture}_filter[] = {{
     """).format(architecture=architecture)
 
