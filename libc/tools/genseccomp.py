@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+import collections
 import os
-from subprocess import Popen, PIPE
 import textwrap
 from gensyscalls import SysCallsTxtParser
+from subprocess import Popen, PIPE
 
 
 BPF_JGE = "BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, {0}, {1}, {2})"
@@ -36,15 +37,31 @@ def get_names(syscall_files, architecture):
   syscalls = [x for x in syscalls if architecture in x and x[architecture]]
 
   # We only want the name
-  return [x["name"] for x in syscalls]
+  names = [x["name"] for x in syscalls]
+
+  # Check for duplicates
+  dups = [name for name, count in collections.Counter(names).items() if count > 1]
+
+  # x86 has duplicate socketcall entries, so hard code for this
+  if architecture == "x86":
+    dups.remove("socketcall")
+
+  if len(dups) > 0:
+    print "Duplicate entries found - aborting ", dups
+    exit(-1)
+
+  # Remove remaining duplicates
+  return list(set(names))
 
 
-def convert_names_to_NRs(names, header_dir):
+def convert_names_to_NRs(names, header_dir, extra_switches):
   # Run preprocessor over the __NR_syscall symbols, including unistd.h,
   # to get the actual numbers
   prefix = "__SECCOMP_"  # prefix to ensure no name collisions
   cpp = Popen(["../../prebuilts/clang/host/linux-x86/clang-stable/bin/clang",
-               "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/", "-"],
+               "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/"]
+               + extra_switches
+               + ["-"],
               stdin=PIPE, stdout=PIPE)
   cpp.stdin.write("#include <asm/unistd.h>\n")
   for name in names:
@@ -161,25 +178,23 @@ def convert_bpf_to_output(bpf, architecture):
   return header + "\n".join(bpf) + footer
 
 
-def construct_bpf(syscall_files, architecture, header_dir):
+def construct_bpf(syscall_files, architecture, header_dir, extra_switches):
   names = get_names(syscall_files, architecture)
-  syscalls = convert_names_to_NRs(names, header_dir)
+  syscalls = convert_names_to_NRs(names, header_dir, extra_switches)
   ranges = convert_NRs_to_ranges(syscalls)
   bpf = convert_ranges_to_bpf(ranges)
   return convert_bpf_to_output(bpf, architecture)
 
 
-android_syscall_files = ["SYSCALLS.TXT", "SECCOMP_WHITELIST.TXT"]
-arm_headers = "kernel/uapi/asm-arm"
-arm64_headers = "kernel/uapi/asm-arm64"
-arm_architecture = "arm"
-arm64_architecture = "arm64"
-
-
 ANDROID_SYSCALL_FILES = ["SYSCALLS.TXT", "SECCOMP_WHITELIST.TXT"]
 
-POLICY_CONFIGS = [("arm", "kernel/uapi/asm-arm"),
-                  ("arm64", "kernel/uapi/asm-arm64")]
+
+POLICY_CONFIGS = [("arm", "kernel/uapi/asm-arm", []),
+                  ("arm64", "kernel/uapi/asm-arm64", []),
+                  ("x86", "kernel/uapi/asm-x86", ["-D__i386__"]),
+                  ("x86_64", "kernel/uapi/asm-x86", []),
+                  ("mips", "kernel/uapi/asm-mips", ["-D_MIPS_SIM=_MIPS_SIM_ABI32"]),
+                  ("mips64", "kernel/uapi/asm-mips", ["-D_MIPS_SIM=_MIPS_SIM_ABI64"])]
 
 
 def set_dir():
@@ -189,9 +204,9 @@ def set_dir():
 
 def main():
   set_dir()
-  for arch, header_path in POLICY_CONFIGS:
+  for arch, header_path, switches in POLICY_CONFIGS:
     output = construct_bpf([open(filename) for filename in ANDROID_SYSCALL_FILES],
-                           arch, header_path)
+                           arch, header_path, switches)
     # And output policy
     existing = ""
     output_path = "seccomp/{}_policy.c".format(arch)
@@ -203,7 +218,6 @@ def main():
       with open(output_path, "w") as output_file:
         output_file.write(output)
       print "Generated file " + output_path
-
 
 if __name__ == "__main__":
   main()
