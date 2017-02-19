@@ -101,4 +101,37 @@ include $(BUILD_STATIC_LIBRARY)
 
 endif # linux-x86
 
+# -----------------------------------------------------------------------------
+# Ndk-compatible-library tests.
+include $(CLEAR_VARS)
+LOCAL_CLANG := true
+LOCAL_MODULE := ndk_compatible_test
+LOCAL_CPPFLAGS := -g -Wall -Wextra -Wunused -Werror -Wno-deprecated-declarations -Wall
+LOCAL_SRC_FILES := __cxa_thread_atexit_test.cpp thread_local_test.cpp
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+	libBionicTests \
+	libBionicGtestMain
+
+LOCAL_STATIC_LIBRARIES := \
+  libndk_compatible \
+	libbase \
+	liblog \
+	libpagemap \
+	libziparchive \
+	libz \
+	libutils \
+	libtinyxml2 \
+	libLLVMObject \
+	libLLVMBitReader \
+	libLLVMMC \
+	libLLVMMCParser \
+	libLLVMCore \
+	libLLVMSupport
+
+#LOCAL_SHARED_LIBRARIES := libc_v24 libm_v24
+#LOCAL_CXX_STL := libc++_static
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc_v24 libm_v24
+LOCAL_MULTILIB := 64
+include $(BUILD_NATIVE_TEST)
+
 include $(call first-makefiles-under,$(LOCAL_PATH))

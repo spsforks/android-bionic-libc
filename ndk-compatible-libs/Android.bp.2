@@ -1,0 +1,49 @@
+cc_prebuilt_shared_library {
+    name: "libc_v24",
+    host_supported: false,
+    arch: {
+        arm: {
+            srcs: [ "android-24/arch-arm/usr/lib/libc.so", ],
+        },
+        arm64: {
+            srcs: [ "android-24/arch-arm64/usr/lib/libc.so", ],
+        },
+        x86: {
+            srcs: [ "android-24/arch-x86/usr/lib/libc.so", ],
+        },
+        x86_64: {
+            srcs: [ "android-24/arch-x86_64/usr/lib/libc.so", ],
+        },
+        mips: {
+            srcs: [ "android-24/arch-mips/usr/lib/libc.so", ],
+        },
+        mips64: {
+            srcs: [ "android-24/arch-mips64/usr/lib/libc.so", ],
+        },
+    },
+}
+
+cc_prebuilt_shared_library {
+    name: "libm_v24",
+    host_supported: false,
+    arch: {
+        arm: {
+            srcs: [ "android-24/arch-arm/usr/lib/libm.so", ],
+        },
+        arm64: {
+            srcs: [ "android-24/arch-arm64/usr/lib/libm.so", ],
+        },
+        x86: {
+            srcs: [ "android-24/arch-x86/usr/lib/libm.so", ],
+        },
+        x86_64: {
+            srcs: [ "android-24/arch-x86_64/usr/lib/libm.so", ],
+        },
+        mips: {
+            srcs: [ "android-24/arch-mips/usr/lib/libm.so", ],
+        },
+        mips64: {
+            srcs: [ "android-24/arch-mips64/usr/lib/libm.so", ],
+        },
+    },
+}

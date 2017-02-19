@@ -92,7 +92,9 @@ int pthread_setname_np(pthread_t t, const char* thread_name) {
 
   // We have to set another thread's name.
   int fd = __open_task_comm_fd(t, O_WRONLY);
-  if (fd == -1) return errno;
+  if (fd == -1) {
+    return errno;
+  }
 
   ssize_t n = TEMP_FAILURE_RETRY(write(fd, thread_name, thread_name_len));
   close(fd);
