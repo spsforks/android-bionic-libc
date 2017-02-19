@@ -479,4 +479,33 @@ cc_test_host {
     },
 }
 
+ndk_compatible_cc_test {
+    name: "ndk-compatible-tests",
+    defaults: ["bionic_tests_defaults"],
+    clang: true,
+
+    whole_static_libs: [
+        "libBionicTests",
+        "libBionicGtestMain",
+    ],
+
+    static_libs: [
+        "libndk_compatible",
+        "libdl",
+        "libtinyxml2",
+        "liblog",
+        "libbase",
+        "libdebuggerd_handler",
+    ],
+
+    stl: "libc++_static",
+
+    system_shared_libs: [
+      "libc.ndk.24", "libm.ndk.24"
+    ],
+
+    // libndk_compatible and libc++ both define std::nothrow.
+    ldflags: ["-Wl,--allow-multiple-definition"],
+}
+
 subdirs = ["libs"]
