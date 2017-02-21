@@ -31,12 +31,6 @@
 #if defined(__NR_arch_specific_syscall)
   #define SYS_arch_specific_syscall __NR_arch_specific_syscall
 #endif
-#if defined(__NR_arm_fadvise64_64)
-  #define SYS_arm_fadvise64_64 __NR_arm_fadvise64_64
-#endif
-#if defined(__NR_arm_sync_file_range)
-  #define SYS_arm_sync_file_range __NR_arm_sync_file_range
-#endif
 #if defined(__NR_bdflush)
   #define SYS_bdflush __NR_bdflush
 #endif
@@ -645,15 +639,6 @@
 #endif
 #if defined(__NR_pause)
   #define SYS_pause __NR_pause
-#endif
-#if defined(__NR_pciconfig_iobase)
-  #define SYS_pciconfig_iobase __NR_pciconfig_iobase
-#endif
-#if defined(__NR_pciconfig_read)
-  #define SYS_pciconfig_read __NR_pciconfig_read
-#endif
-#if defined(__NR_pciconfig_write)
-  #define SYS_pciconfig_write __NR_pciconfig_write
 #endif
 #if defined(__NR_perf_event_open)
   #define SYS_perf_event_open __NR_perf_event_open
