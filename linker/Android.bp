@@ -109,6 +109,7 @@ cc_binary {
                 "arch/mips/begin.S",
                 "linker_mips.cpp",
             ],
+            cflags: ["-D__work_around_b_24465209__"],
             version_script: "linker.generic.map",
         },
         mips64: {
