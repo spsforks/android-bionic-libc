@@ -27,7 +27,9 @@
 #include <unistd.h>
 #include <set>
 
-#include "private/bionic_tls.h"
+#include "private/__get_tls.h"
+
+#define TLS_SLOT_STACK_GUARD 5
 
 extern "C" pid_t gettid(); // glibc defines this but doesn't declare it anywhere.
 
