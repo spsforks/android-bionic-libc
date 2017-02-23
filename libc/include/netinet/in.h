@@ -34,9 +34,15 @@
 #include <sys/cdefs.h>
 #include <sys/socket.h>
 
-#include <linux/in.h>
 #include <linux/in6.h>
 #include <linux/ipv6.h>
+
+/* uapi uses __be32 in these structs but we want struct in_addr. */
+#define ip_mreq_source __kernel_ip_mreq_source
+#define ip_msfilter __kernel_msfilter
+#include <linux/in.h>
+#undef ip_mreq_source
+#undef ip_msfilter
 
 __BEGIN_DECLS
 
@@ -44,6 +50,20 @@ __BEGIN_DECLS
 
 typedef uint16_t in_port_t;
 typedef uint32_t in_addr_t;
+
+struct ip_mreq_source {
+  struct in_addr imr_multiaddr;
+  struct in_addr imr_interface;
+  struct in_addr imr_sourceaddr;
+};
+
+struct ip_msfilter {
+  struct in_addr imsf_multiaddr;
+  struct in_addr imsf_interface;
+  uint32_t imsf_fmode;
+  uint32_t imsf_numsrc;
+  struct in_addr imsf_slist[1];
+};
 
 int bindresvport(int, struct sockaddr_in*);
 
