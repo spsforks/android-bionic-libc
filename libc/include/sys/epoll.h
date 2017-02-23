@@ -34,6 +34,10 @@
 #include <fcntl.h> /* For O_CLOEXEC. */
 #include <signal.h> /* For sigset_t. */
 
+#define epoll_event __kernel_epoll_event
+#include <linux/eventpoll.h>
+#undef epoll_event
+
 __BEGIN_DECLS
 
 #define EPOLLIN          0x00000001
@@ -47,15 +51,6 @@ __BEGIN_DECLS
 #define EPOLLWRBAND      0x00000200
 #define EPOLLMSG         0x00000400
 #define EPOLLRDHUP       0x00002000
-#define EPOLLWAKEUP      0x20000000
-#define EPOLLONESHOT     0x40000000
-#define EPOLLET          0x80000000
-
-#define EPOLL_CTL_ADD    1
-#define EPOLL_CTL_DEL    2
-#define EPOLL_CTL_MOD    3
-
-#define EPOLL_CLOEXEC O_CLOEXEC
 
 typedef union epoll_data {
   void* ptr;
