@@ -31,8 +31,15 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <fcntl.h> /* For O_CLOEXEC. */
 #include <signal.h> /* For sigset_t. */
+
+#define epoll_event __kernel_epoll_event
+#include <linux/eventpoll.h>
+#undef epoll_event
+/* These are all (1 << x) rather than (1U << x) in uapi. */
+#undef EPOLLWAKEUP
+#undef EPOLLONESHOT
+#undef EPOLLET
 
 __BEGIN_DECLS
 
@@ -50,12 +57,6 @@ __BEGIN_DECLS
 #define EPOLLWAKEUP      0x20000000
 #define EPOLLONESHOT     0x40000000
 #define EPOLLET          0x80000000
-
-#define EPOLL_CTL_ADD    1
-#define EPOLL_CTL_DEL    2
-#define EPOLL_CTL_MOD    3
-
-#define EPOLL_CLOEXEC O_CLOEXEC
 
 typedef union epoll_data {
   void* ptr;
