@@ -22,7 +22,7 @@
 #include <asm/byteorder.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/socket.h>
-struct tcphdr {
+struct __kernel_uapi_tcphdr {
   __be16 source;
   __be16 dest;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -43,7 +43,7 @@ struct tcphdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 union tcp_word_hdr {
-  struct tcphdr hdr;
+  struct __kernel_uapi_tcphdr hdr;
   __be32 words[5];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };

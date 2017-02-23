@@ -71,7 +71,7 @@ struct xt_osf_nlmsg {
   struct xt_osf_user_finger f;
   struct iphdr ip;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  struct tcphdr tcp;
+  struct __kernel_uapi_tcphdr tcp;
 };
 enum iana_options {
   OSFOPT_EOL = 0,

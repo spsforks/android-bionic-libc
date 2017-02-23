@@ -178,13 +178,13 @@ struct ip_mreqn {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int imr_ifindex;
 };
-struct ip_mreq_source {
+struct __kernel_uapi_ip_mreq_source {
   __be32 imr_multiaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __be32 imr_interface;
   __be32 imr_sourceaddr;
 };
-struct ip_msfilter {
+struct __kernel_uapi_msfilter {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __be32 imsf_multiaddr;
   __be32 imsf_interface;
@@ -193,7 +193,7 @@ struct ip_msfilter {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __be32 imsf_slist[1];
 };
-#define IP_MSFILTER_SIZE(numsrc) (sizeof(struct ip_msfilter) - sizeof(__u32) + (numsrc) * sizeof(__u32))
+#define IP_MSFILTER_SIZE(numsrc) (sizeof(struct __kernel_uapi_msfilter) - sizeof(__u32) + (numsrc) * sizeof(__u32))
 struct group_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 gr_interface;

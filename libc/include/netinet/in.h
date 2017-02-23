@@ -45,6 +45,20 @@ __BEGIN_DECLS
 typedef uint16_t in_port_t;
 typedef uint32_t in_addr_t;
 
+struct ip_mreq_source {
+  struct in_addr imr_multiaddr;
+  struct in_addr imr_interface;
+  struct in_addr imr_sourceaddr;
+};
+
+struct ip_msfilter {
+  struct in_addr imsf_multiaddr;
+  struct in_addr imsf_interface;
+  uint32_t imsf_fmode;
+  uint32_t imsf_numsrc;
+  struct in_addr imsf_slist[1];
+};
+
 int bindresvport(int, struct sockaddr_in*);
 
 #if __ANDROID_API__ >= __ANDROID_API_N__

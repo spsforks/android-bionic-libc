@@ -73,8 +73,12 @@ kernel_token_replacements = {
     # The kernel's SIGRTMIN/SIGRTMAX are absolute limits; userspace steals a few.
     "SIGRTMIN": "__SIGRTMIN",
     "SIGRTMAX": "__SIGRTMAX",
-    # We want to support both BSD and Linux member names in struct udphdr.
-    "udphdr": "__kernel_udphdr",
+    # We want to support both BSD and Linux member names in struct tcphdr/udphdr.
+    "tcphdr": "__kernel_uapi_tcphdr",
+    "udphdr": "__kernel_uapi_udphdr",
+    # The kernel uses __be32 where userspace wants struct in_addr.
+    "ip_mreq_source": "__kernel_uapi_ip_mreq_source",
+    "ip_msfilter": "__kernel_uapi_msfilter",
     }
 
 # this is the set of known static inline functions that we want to keep

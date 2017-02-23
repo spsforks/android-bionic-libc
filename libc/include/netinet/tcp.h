@@ -32,9 +32,7 @@
 #include <sys/cdefs.h>
 #include <stdint.h>
 
-#define tcphdr __kernel_tcphdr
 #include <linux/tcp.h>
-#undef tcphdr
 
 __BEGIN_DECLS
 
