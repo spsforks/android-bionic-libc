@@ -927,6 +927,12 @@ TEST(dlext, ns_greylist) {
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
+
+  android_set_application_target_sdk_version(__ANDROID_API_N__);
+  handle = android_dlopen_ext(PATH_TO_SYSTEM_LIB "libdl.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  dlclose(handle);
 }
 
 TEST(dlext, ns_cyclic_namespaces) {
