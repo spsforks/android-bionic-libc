@@ -330,7 +330,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   somain = si;
 
-  init_default_namespace();
+  init_default_namespace(executable_path);
 
   if (!si->prelink_image()) {
     __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
