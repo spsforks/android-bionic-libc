@@ -66,4 +66,8 @@ static inline T* align_up(T* p, size_t align) {
   return reinterpret_cast<T*>(align_up(reinterpret_cast<uintptr_t>(p), align));
 }
 
+template <typename... T>
+void UNUSED(const T&...) {
+}
+
 #endif // _BIONIC_MACROS_H_
