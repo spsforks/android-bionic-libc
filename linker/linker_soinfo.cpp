@@ -409,7 +409,7 @@ void soinfo::call_constructors() {
     si->call_constructors();
   });
 
-  TRACE("\"%s\": calling constructors", get_realpath());
+  ScopedTrace trace((std::string("calling constructors: ") + get_realpath()).c_str());
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   call_function("DT_INIT", init_func_, get_realpath());
