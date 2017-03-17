@@ -33,6 +33,11 @@
 #include <limits.h>
 #include "private/bionic_macros.h"
 
+#include <string>
+
+#define ATRACE_TAG ATRACE_TAG_BIONIC
+#include "cutils/trace.h"
+
 #define LD_LOG(type, x...) \
   { \
     g_linker_logger.Log(type, x); \
@@ -52,6 +57,27 @@ class LinkerLogger {
   uint32_t flags_;
 
   DISALLOW_COPY_AND_ASSIGN(LinkerLogger);
+};
+
+class ScopedTrace {
+ public:
+  explicit ScopedTrace(const std::string& name) : call_end_(true) {
+    ATRACE_BEGIN(name.c_str());
+  }
+
+  void end() {
+    if (call_end_) {
+      ATRACE_END();
+      call_end_ = false;
+    }
+  }
+
+  ~ScopedTrace() {
+    end();
+  }
+ private:
+  bool call_end_;
+  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedTrace);
 };
 
 extern LinkerLogger g_linker_logger;
