@@ -432,7 +432,8 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
 
     // Do we already own this recursive or error-check mutex?
     pid_t tid = __get_thread()->tid;
-    if (tid == atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed)) {
+    if (FIELD_FROM_BITS(tid, 0, sizeof(mutex->owner_tid) * CHAR_BIT) ==
+        atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed)) {
         if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
             return EDEADLK;
         }
@@ -548,7 +549,8 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
 
     // Do we already own this recursive or error-check mutex?
     pid_t tid = __get_thread()->tid;
-    if ( tid != atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed) ) {
+    if ( FIELD_FROM_BITS(tid, 0, sizeof(mutex->owner_tid) * CHAR_BIT) !=
+         atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed) ) {
         return EPERM;
     }
 
