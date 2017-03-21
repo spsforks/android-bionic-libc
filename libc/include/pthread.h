@@ -69,7 +69,9 @@ enum {
 
 #define PTHREAD_ONCE_INIT 0
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 #define PTHREAD_BARRIER_SERIAL_THREAD -1
+#endif
 
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
