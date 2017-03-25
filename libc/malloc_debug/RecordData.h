@@ -158,7 +158,7 @@ class RecordData {
 
   void SetToDump() { dump_ = true; }
 
-  pthread_key_t key() { return key_; }
+  pthread_key_t key() const { return key_; }
 
  private:
   void Dump();

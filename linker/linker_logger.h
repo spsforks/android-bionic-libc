@@ -48,7 +48,7 @@ class LinkerLogger {
   LinkerLogger() : flags_(0) { }
 
   void ResetState();
-  void Log(uint32_t type, const char* format, ...);
+  void Log(uint32_t type, const char* format, ...) const;
  private:
   uint32_t flags_;
 

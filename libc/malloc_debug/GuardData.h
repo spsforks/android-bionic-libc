@@ -69,7 +69,7 @@ class FrontGuardData : public GuardData {
 
   void LogFailure(const Header* header);
 
-  size_t offset() { return offset_; }
+  size_t offset() const { return offset_; }
 
  private:
   const char* GetTypeName() override { return "FRONT"; }

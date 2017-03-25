@@ -48,7 +48,7 @@ class plain_reloc_iterator {
   plain_reloc_iterator(rel_t* rel_array, size_t count)
       : begin_(rel_array), end_(begin_ + count), current_(begin_) {}
 
-  bool has_next() {
+  bool has_next() const {
     return current_ < end_;
   }
 
@@ -148,19 +148,19 @@ class packed_reloc_iterator {
     return true;
   }
 
-  bool is_relocation_grouped_by_info() {
+  bool is_relocation_grouped_by_info() const {
     return (group_flags_ & RELOCATION_GROUPED_BY_INFO_FLAG) != 0;
   }
 
-  bool is_relocation_grouped_by_offset_delta() {
+  bool is_relocation_grouped_by_offset_delta() const {
     return (group_flags_ & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) != 0;
   }
 
-  bool is_relocation_grouped_by_addend() {
+  bool is_relocation_grouped_by_addend() const {
     return (group_flags_ & RELOCATION_GROUPED_BY_ADDEND_FLAG) != 0;
   }
 
-  bool is_relocation_group_has_addend() {
+  bool is_relocation_group_has_addend() const {
     return (group_flags_ & RELOCATION_GROUP_HAS_ADDEND_FLAG) != 0;
   }
 

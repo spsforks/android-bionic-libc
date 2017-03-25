@@ -112,7 +112,7 @@ void LinkerLogger::ResetState() {
   flags_ |= ParseProperty(value);
 }
 
-void LinkerLogger::Log(uint32_t type, const char* format, ...) {
+void LinkerLogger::Log(uint32_t type, const char* format, ...) const {
   if ((flags_ & type) == 0) {
     return;
   }

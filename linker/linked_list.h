@@ -148,7 +148,7 @@ class LinkedList {
     tail_ = nullptr;
   }
 
-  bool empty() {
+  bool empty() const {
     return (head_ == nullptr);
   }
 

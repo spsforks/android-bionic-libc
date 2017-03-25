@@ -30,7 +30,7 @@
 #include "linker_soinfo.h"
 #include "linker_utils.h"
 
-bool android_namespace_t::is_accessible(const std::string& file) {
+bool android_namespace_t::is_accessible(const std::string& file) const {
   if (!is_isolated_) {
     return true;
   }

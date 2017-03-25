@@ -54,7 +54,7 @@ class SymbolName {
       : name_(name), has_elf_hash_(false), has_gnu_hash_(false),
         elf_hash_(0), gnu_hash_(0) { }
 
-  const char* get_name() {
+  const char* get_name() const {
     return name_;
   }
 

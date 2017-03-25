@@ -45,9 +45,9 @@ class BacktraceData : public OptionData {
 
   bool Initialize(const Config& config);
 
-  inline size_t alloc_offset() { return alloc_offset_; }
+  inline size_t alloc_offset() const { return alloc_offset_; }
 
-  bool enabled() { return enabled_; }
+  bool enabled() const { return enabled_; }
   void set_enabled(bool enabled) { enabled_ = enabled; }
 
  private:
