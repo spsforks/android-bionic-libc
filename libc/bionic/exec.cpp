@@ -70,21 +70,30 @@ static int __execl(const char* name, const char* argv0, ExecVariant variant, va_
 }
 
 int execl(const char* name, const char* arg, ...) {
+  int res;
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecL, ap);
+  res = __execl(name, arg, kIsExecL, ap);
+  va_end(ap);
+  return res;
 }
 
 int execle(const char* name, const char* arg, ...) {
+  int res;
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLE, ap);
+  res = __execl(name, arg, kIsExecLE, ap);
+  va_end(ap);
+  return res;
 }
 
 int execlp(const char* name, const char* arg, ...) {
+  int res;
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLP, ap);
+  res = __execl(name, arg, kIsExecLP, ap);
+  va_end(ap);
+  return res;
 }
 
 int execv(const char* name, char* const* argv) {
