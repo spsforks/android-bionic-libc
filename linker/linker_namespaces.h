@@ -122,7 +122,7 @@ struct android_namespace_t {
 
   // For isolated namespaces - checks if the file is on the search path;
   // always returns true for not isolated namespace.
-  bool is_accessible(const std::string& path);
+  bool is_accessible(const std::string& path) const;
 
   // Returns true if si is accessible from this namespace. A soinfo
   // is considered accessible when it belongs to this namespace

@@ -49,7 +49,7 @@ class TrackData : public OptionData {
   TrackData(DebugData* debug_data);
   virtual ~TrackData() = default;
 
-  void GetList(std::vector<const Header*>* list);
+  void GetList(std::vector<const Header*>* list) const;
 
   void Add(const Header* header, bool backtrace_found);
 

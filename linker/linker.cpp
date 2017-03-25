@@ -543,7 +543,7 @@ class TypeBasedAllocator {
 class LoadTask {
  public:
   struct deleter_t {
-    void operator()(LoadTask* t) {
+    void operator()(LoadTask* t) const {
       t->~LoadTask();
       TypeBasedAllocator<LoadTask>::free(t);
     }

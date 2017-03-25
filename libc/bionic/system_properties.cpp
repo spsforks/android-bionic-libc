@@ -506,11 +506,11 @@ class PropertyServiceConnection {
     }
   }
 
-  bool IsValid() {
+  bool IsValid() const {
     return socket_ != -1;
   }
 
-  int GetLastError() {
+  int GetLastError() const {
     return last_error_;
   }
 
@@ -519,7 +519,7 @@ class PropertyServiceConnection {
     return CheckSendRecvResult(result, sizeof(*value));
   }
 
-  int socket() {
+  int socket() const {
     return socket_;
   }
 

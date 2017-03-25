@@ -183,7 +183,7 @@ class PropertyParser {
 
   bool Get(std::string* property, std::string* value);
 
-  bool Done() { return done_; }
+  bool Done() const { return done_; }
 
   void LogUsage();
 

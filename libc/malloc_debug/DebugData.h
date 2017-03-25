@@ -78,10 +78,10 @@ class DebugData {
     return reinterpret_cast<uint8_t*>(value + header->real_size());
   }
 
-  const Config& config() { return config_; }
-  size_t pointer_offset() { return pointer_offset_; }
-  bool need_header() { return need_header_; }
-  size_t extra_bytes() { return extra_bytes_; }
+  const Config& config() const { return config_; }
+  size_t pointer_offset() const { return pointer_offset_; }
+  bool need_header() const { return need_header_; }
+  size_t extra_bytes() const { return extra_bytes_; }
 
   void PrepareFork();
   void PostForkParent();

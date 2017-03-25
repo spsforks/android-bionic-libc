@@ -77,7 +77,7 @@ class pthread_internal_t {
     cached_pid_ = value;
   }
 
-  bool get_cached_pid(pid_t* cached_pid) {
+  bool get_cached_pid(pid_t* cached_pid) const {
     *cached_pid = cached_pid_;
     return (*cached_pid != 0);
   }

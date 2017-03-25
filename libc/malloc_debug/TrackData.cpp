@@ -47,7 +47,7 @@
 TrackData::TrackData(DebugData* debug_data) : OptionData(debug_data) {
 }
 
-void TrackData::GetList(std::vector<const Header*>* list) {
+void TrackData::GetList(std::vector<const Header*>* list) const {
   for (const auto& header : headers_) {
     list->push_back(header);
   }
