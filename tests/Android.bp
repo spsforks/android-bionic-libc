@@ -376,6 +376,7 @@ cc_defaults {
 
 cc_test {
     name: "bionic-unit-tests",
+    test_suites: ["device-tests"],
     defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
     clang: true,
 
