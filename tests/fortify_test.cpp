@@ -58,7 +58,6 @@ struct foo {
   char b[10];
 };
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, stpncpy_fortified2) {
@@ -66,9 +65,7 @@ TEST_F(DEATHTEST, stpncpy_fortified2) {
   int copy_amt = atoi("11");
   ASSERT_FORTIFY(stpncpy(myfoo.a, "01234567890", copy_amt));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, stpncpy2_fortified2) {
@@ -77,9 +74,7 @@ TEST_F(DEATHTEST, stpncpy2_fortified2) {
   myfoo.one[0] = 'A'; // not null terminated string
   ASSERT_FORTIFY(stpncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncpy_fortified2) {
@@ -87,9 +82,7 @@ TEST_F(DEATHTEST, strncpy_fortified2) {
   int copy_amt = atoi("11");
   ASSERT_FORTIFY(strncpy(myfoo.a, "01234567890", copy_amt));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncpy2_fortified2) {
@@ -98,9 +91,7 @@ TEST_F(DEATHTEST, strncpy2_fortified2) {
   myfoo.one[0] = 'A'; // not null terminated string
   ASSERT_FORTIFY(strncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_fortified2) {
@@ -109,18 +100,14 @@ TEST_F(DEATHTEST, sprintf_fortified2) {
   memcpy(source_buf, "12345678901234", 15);
   ASSERT_FORTIFY(sprintf(myfoo.a, "%s", source_buf));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf2_fortified2) {
   foo myfoo;
   ASSERT_FORTIFY(sprintf(myfoo.a, "0123456789"));
 }
-#endif
 
-#ifndef __clang__
 // These tests are disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 static int vsprintf_helper2(const char *fmt, ...) {
@@ -141,9 +128,7 @@ TEST_F(DEATHTEST, vsprintf_fortified2) {
 TEST_F(DEATHTEST, vsprintf2_fortified2) {
   ASSERT_FORTIFY(vsprintf_helper2("0123456789"));
 }
-#endif
 
-#ifndef __clang__
 // These tests are disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 static int vsnprintf_helper2(const char *fmt, ...) {
@@ -165,9 +150,7 @@ TEST_F(DEATHTEST, vsnprintf_fortified2) {
 TEST_F(DEATHTEST, vsnprintf2_fortified2) {
   ASSERT_FORTIFY(vsnprintf_helper2("0123456789"));
 }
-#endif
 
-#ifndef __clang__
 // zero sized target with "\0" source (should fail)
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
@@ -181,9 +164,7 @@ TEST_F(DEATHTEST, stpcpy_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // zero sized target with "\0" source (should fail)
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
@@ -197,9 +178,7 @@ TEST_F(DEATHTEST, strcpy_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // zero sized target with longer source (should fail)
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
@@ -213,9 +192,7 @@ TEST_F(DEATHTEST, strcpy2_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // one byte target with longer source (should fail)
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
@@ -229,9 +206,7 @@ TEST_F(DEATHTEST, strcpy3_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strchr_fortified2) {
@@ -244,9 +219,7 @@ TEST_F(DEATHTEST, strchr_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strrchr_fortified2) {
@@ -259,9 +232,7 @@ TEST_F(DEATHTEST, strrchr_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcpy_fortified2) {
@@ -274,9 +245,7 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcat_fortified2) {
@@ -290,9 +259,7 @@ TEST_F(DEATHTEST, strlcat_fortified2) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncat_fortified2) {
@@ -301,9 +268,7 @@ TEST_F(DEATHTEST, strncat_fortified2) {
   strncpy(myfoo.a, "012345678", n);
   ASSERT_FORTIFY(strncat(myfoo.a, "9", n));
 }
-#endif
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strncat2_fortified2) {
@@ -312,7 +277,6 @@ TEST_F(DEATHTEST, strncat2_fortified2) {
   size_t n = atoi("10"); // avoid compiler optimizations
   ASSERT_FORTIFY(strncat(myfoo.a, "0123456789", n));
 }
-#endif
 
 TEST_F(DEATHTEST, strncat3_fortified2) {
   foo myfoo;
@@ -322,7 +286,6 @@ TEST_F(DEATHTEST, strncat3_fortified2) {
   ASSERT_FORTIFY(strncat(myfoo.b, myfoo.a, n));
 }
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strcat_fortified2) {
@@ -332,7 +295,6 @@ TEST_F(DEATHTEST, strcat_fortified2) {
   myfoo.a[0] = '\0';
   ASSERT_FORTIFY(strcat(myfoo.a, src));
 }
-#endif
 
 TEST_F(DEATHTEST, strcat2_fortified2) {
   foo myfoo;
@@ -467,7 +429,6 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
@@ -477,7 +438,6 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
   free(buf);
 }
-#endif
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
   char buf[5];
