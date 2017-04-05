@@ -246,6 +246,14 @@ __BIONIC_ERROR_FUNCTION_VISIBILITY
 char* strcpy(char* dst, const char* src) __overloadable
         __error_if_overflows_dst(strcpy, dst, __builtin_strlen(src), "string");
 
+/* libcxx has const-correct versions of some of these functions in C++. These
+ * don't forward __pass_object_size params, so we need to override them. */
+#if defined(__cplusplus)
+#define __prefer_this_overload __enable_if(true, "preferred overload")
+#else
+#define __prefer_this_overload
+#endif
+
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
 void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
@@ -258,6 +266,30 @@ void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
 
     return __memchr_chk(s, c, n, bos);
 }
+
+#if defined(__cplusplus)
+/* Provide const-correct versions to match libcxx's. We need these so that we
+ * can forward __pass_object_size correctly.
+ */
+extern "C++" {
+__BIONIC_FORTIFY_INLINE
+void *__bionic_memchr(const void *const _Nonnull s __pass_object_size, int c, size_t n) {
+    return memchr(s, c, n);
+}
+
+__BIONIC_FORTIFY_INLINE
+const void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
+        __overloadable __prefer_this_overload {
+    return __bionic_memchr(s, c, n);
+}
+
+__BIONIC_FORTIFY_INLINE
+void* memchr(void* const _Nonnull s __pass_object_size, int c, size_t n)
+        __overloadable __prefer_this_overload {
+    return __bionic_memchr(s, c, n);
+}
+}
+#endif
 
 __BIONIC_FORTIFY_INLINE
 void* memrchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
@@ -366,9 +398,30 @@ char* strchr(const char* const _Nonnull s __pass_object_size, int c)
         return __builtin_strchr(s, c);
     }
 
-    // return __builtin_strchr(s, c);
     return __strchr_chk(s, c, bos);
 }
+
+#if defined(__cplusplus)
+/* Match libcxx's const-correctness. */
+extern "C++" {
+__BIONIC_FORTIFY_INLINE
+char *__bionic_strchr(const char *const _Nonnull s __pass_object_size, int c) {
+    return strchr(s, c);
+}
+
+__BIONIC_FORTIFY_INLINE
+const char* strchr(const char* const _Nonnull s __pass_object_size, int c)
+        __overloadable __prefer_this_overload {
+    return __bionic_strchr(s, c);
+}
+
+__BIONIC_FORTIFY_INLINE
+char* strchr(char* const _Nonnull s __pass_object_size, int c)
+        __overloadable __prefer_this_overload {
+    return __bionic_strchr(s, c);
+}
+}
+#endif
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
@@ -381,6 +434,29 @@ char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
 
     return __strrchr_chk(s, c, bos);
 }
+
+#if defined(__cplusplus)
+/* Match libcxx's const-correctness. */
+extern "C++" {
+__BIONIC_FORTIFY_INLINE
+char *__bionic_strrchr(const char *const _Nonnull s __pass_object_size, int c) {
+    return strrchr(s, c);
+}
+
+__BIONIC_FORTIFY_INLINE
+const char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
+        __overloadable __prefer_this_overload {
+    return __bionic_strrchr(s, c);
+}
+
+__BIONIC_FORTIFY_INLINE
+char* strrchr(char* const _Nonnull s __pass_object_size, int c)
+        __overloadable __prefer_this_overload {
+    return __bionic_strrchr(s, c);
+}
+}
+#endif
+
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
