@@ -549,6 +549,7 @@ cc_library_static {
     arch: {
         arm: {
             exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memchr.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcat.c",
@@ -753,6 +754,7 @@ cc_library_static {
     arch: {
         arm: {
             srcs: [
+                "arch-arm/generic/bionic/memchr.S",
                 "arch-arm/generic/bionic/memcmp.S",
                 "arch-arm/generic/bionic/memmove.S",
                 "arch-arm/generic/bionic/memset.S",
@@ -774,6 +776,7 @@ cc_library_static {
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
 
+                "arch-arm/cortex-a15/bionic/memchr.S",
                 "arch-arm/cortex-a15/bionic/memcpy.S",
                 "arch-arm/cortex-a15/bionic/memmove.S",
                 "arch-arm/cortex-a15/bionic/memset.S",
