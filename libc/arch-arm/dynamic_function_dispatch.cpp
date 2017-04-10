@@ -158,6 +158,21 @@ static CpuVariant get_cpu_variant() {
     return cpu_variant;
 }
 
+typedef void* __memchr_func(void*, const void*, size_t);
+DEFINE_IFUNC(__memchr) {
+    switch(get_cpu_variant()) {
+        case kCortexA7:
+        case kKrait:
+        case kCortexA53:
+        case kCortexA55:
+        case kKryo:
+            RETURN_FUNC(__memchr_func, __memchr_a15);
+        case kCortexA9:
+        default:
+            RETURN_FUNC(__memchr_func, __memchr_generic);
+    }
+}
+
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
 DEFINE_IFUNC(memmove) {
     RETURN_FUNC(memmove_func, memmove_a15);
