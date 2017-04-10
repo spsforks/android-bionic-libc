@@ -33,6 +33,7 @@ ENTRY(name); \
     b impl; \
 END(name)
 
+FUNCTION_DELEGATE(memchr, memchr_generic)
 FUNCTION_DELEGATE(memmove, memmove_generic)
 FUNCTION_DELEGATE(memcpy, memmove_generic)
 FUNCTION_DELEGATE(memset, memset_generic)
