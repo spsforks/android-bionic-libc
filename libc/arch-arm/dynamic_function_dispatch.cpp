@@ -154,6 +154,11 @@ static CpuVariant get_cpu_variant() {
     return cpu_variant;
 }
 
+typedef void* __memchr_func(void*, const void*, size_t);
+DEFINE_IFUNC(__memchr) {
+    RETURN_FUNC(__memchr_func, __memchr_generic);
+}
+
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
 DEFINE_IFUNC(memmove) {
     RETURN_FUNC(memmove_func, memmove_a15);
