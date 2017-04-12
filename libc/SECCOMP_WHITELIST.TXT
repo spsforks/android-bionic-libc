@@ -1,4 +1,4 @@
-# This file is used to populate seccomp's whitelist policy in comination with SYSCALLS.txt.
+# This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT,
 #
 # Each non-blank, non-comment line has the following format:
 #
