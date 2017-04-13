@@ -25,6 +25,7 @@
 # This file is processed by a python script named gensyscalls.py.
 
 int     execve(const char*, char* const*, char* const*)  all
+int     execveat(int, const char*, char* const*, char* const*, int)  all
 
 uid_t   getuid:getuid32()         arm,x86
 uid_t   getuid:getuid()           arm64,mips,mips64,x86_64

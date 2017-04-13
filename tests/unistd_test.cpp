@@ -1372,3 +1372,22 @@ TEST(UNISTD_TEST, exec_argv0_null) {
   ASSERT_EXIT(execve("/system/bin/run-as", args, envs), testing::ExitedWithCode(1),
               "<unknown>: usage: run-as");
 }
+
+#if defined(__BIONIC__)
+TEST(UNISTD_TEST, execveat) {
+  char* args[] = {nullptr};
+  char* envs[] = {nullptr};
+
+  ASSERT_EQ(-1, execveat(-1, "bad fd", args, envs, 0));
+  if (errno == ENOSYS) {
+    printf("execveat not supported\n");
+    return;
+  }
+  ASSERT_TRUE(errno == EBADF);
+
+  int fd = open("/system/bin/run-as", O_RDONLY);
+  ASSERT_NE(-1, fd);
+  ASSERT_EXIT(execveat(fd, "", args, envs, AT_EMPTY_PATH), testing::ExitedWithCode(1),
+              "<unknown>: usage run-as");
+}
+#endif

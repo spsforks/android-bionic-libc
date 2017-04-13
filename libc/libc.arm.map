@@ -1271,6 +1271,7 @@ LIBC_O {
     ctermid; # future
     endgrent; # future
     endpwent; # future
+    execveat; # future
     futimes; # future
     futimesat; # future
     getdomainname; # future
