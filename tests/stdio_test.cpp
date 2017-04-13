@@ -1465,3 +1465,31 @@ TEST(STDIO_TEST, sprintf_30445072) {
   sprintf(&buf[0], "hello");
   ASSERT_EQ(buf, "hello");
 }
+
+#if defined(__BIONIC__)
+TEST(STDIO_TEST, renameat2) {
+  TemporaryFile tf1;
+  TemporaryFile tf2;
+
+  struct stat st1, st2;
+  ASSERT_EQ(0, stat(tf1.filename, &st1));
+  ASSERT_EQ(0, stat(tf2.filename, &st2));
+
+  ino_t orig_inode1 = st1.st_ino;
+  ino_t orig_inode2 = st2.st_ino;
+  ASSERT_NE(orig_inode1, orig_inode2);
+
+  int rc = renameat2(-1, tf1.filename, -1, tf2.filename, RENAME_EXCHANGE);
+  if (rc == -1) {
+    ASSERT_EQ(ENOSYS, errno);
+    printf("renameat2 not supported\n");
+    return;
+  }
+
+  ASSERT_EQ(0, rc);
+  ASSERT_EQ(0, stat(tf1.filename, &st1));
+  ASSERT_EQ(0, stat(tf2.filename, &st2));
+  ASSERT_EQ(orig_inode1, st2.st_ino);
+  ASSERT_EQ(orig_inode2, st1.st_ino);
+}
+#endif

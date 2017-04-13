@@ -1289,6 +1289,7 @@ LIBC_O {
     nl_langinfo_l; # future
     pthread_getname_np; # future
     quotactl; # future
+    renameat2; # future
     semctl; # future
     semget; # future
     semop; # future

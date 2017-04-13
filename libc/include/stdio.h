@@ -172,6 +172,7 @@ char* tempnam(const char*, const char*)
 
 int rename(const char*, const char*);
 int renameat(int, const char*, int, const char*);
+int renameat2(int, const char*, int, const char*, int) __INTRODUCED_IN_FUTURE;
 
 int fseek(FILE*, long, int);
 long ftell(FILE*);
