@@ -86,7 +86,7 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 300, 5, 4), //fallocate|timerfd_settime|timerfd_
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 303, 4, 3), //prlimit64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 317, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 312, 2, 1), //clock_adjtime|syncfs|sendmmsg|setns|getcpu|process_vm_readv|process_vm_writev
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 319, 1, 0), //seccomp|getrandom
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 320, 1, 0), //seccomp|getrandom|memfd_create
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
 };
 

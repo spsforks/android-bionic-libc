@@ -338,6 +338,8 @@ int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 pid_t wait4(pid_t, int*, int, struct rusage*)  all
 int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
 
+int memfd_create(const char*, unsigned int) all
+
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm

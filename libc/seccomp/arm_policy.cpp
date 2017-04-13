@@ -128,7 +128,7 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 370, 7, 6), //prlimit64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 378, 6, 5), //clock_adjtime|syncfs|sendmmsg|setns|process_vm_readv|process_vm_writev
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 983045, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 983042, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 385, 3, 2), //seccomp|getrandom
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 386, 3, 2), //seccomp|getrandom|memfd_create
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 983043, 2, 1), //__ARM_NR_cacheflush
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 983046, 1, 0), //__ARM_NR_set_tls
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),

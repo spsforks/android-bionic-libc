@@ -1262,6 +1262,7 @@ LIBC_O {
     hasmntopt; # future
     lutimes; # future
     mblen; # future
+    memfd_create; # future
     msgctl; # future
     msgget; # future
     msgrcv; # future
