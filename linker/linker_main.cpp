@@ -203,6 +203,62 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
+static const char *correct_LD_LIBRARY_PATH(const char *ld_path) {
+#if defined(__LP64__)
+  const char *src1 = "/system/lib";
+  const char *src2 = "/vendor/lib";
+  const char *dst1 = "/system/lib64";
+  const char *dst2 = "/vendor/lib64";
+#else
+  const char *src1 = "/system/lib64";
+  const char *src2 = "/vendor/lib64";
+  const char *dst1 = "/system/lib";
+  const char *dst2 = "/vendor/lib";
+#endif
+
+  int src1_len = strlen(src1);
+  int src2_len = strlen(src2);
+  int dst1_len = strlen(dst1);
+  int dst2_len = strlen(dst2);
+  char resolved_path[PATH_MAX];
+  std::vector<std::string> paths;
+
+  split_path(ld_path, ":", &paths);
+
+  int size = paths.size();
+  for (int i = 0; i < size; i++) {
+    std::string path = paths[i];
+    const char* path_str = path.c_str();
+
+    if (src1_len >= dst1_len) {
+      if (!strncmp(path_str, src1, src1_len)) {
+        strcat(resolved_path, dst1);
+      } else if (!strncmp(path_str, src2, src2_len)) {
+        strcat(resolved_path, dst2);
+      } else {
+        strcat(resolved_path, path_str);
+      }
+    } else {
+      if (!strncmp(path_str, dst1, dst1_len) || !strncmp(path_str, dst2, dst2_len)) {
+        strcat(resolved_path, path_str);
+      } else if (!strncmp(path_str, src1, src1_len)) {
+        strcat(resolved_path, dst1);
+      } else if (!strncmp(path_str, src2, src2_len)) {
+        strcat(resolved_path, dst2);
+      } else {
+        strcat(resolved_path, path_str);
+      }
+    }
+
+    if (i < size - 1) {
+      strcat(resolved_path, ":");
+    }
+  }
+
+  setenv("LD_LIBRARY_PATH", resolved_path, 1);
+  return getenv("LD_LIBRARY_PATH");
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -254,6 +310,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
+      ldpath_env = correct_LD_LIBRARY_PATH(ldpath_env);
       INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
