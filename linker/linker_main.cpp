@@ -203,6 +203,56 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
+static const char *correct_LD_LIBRARY_PATH(const char *ld_path) {
+#if defined(__LP64__)
+  const char *src1 = "/system/lib";
+  const char *src2 = "/vendor/lib";
+  const char *dst1 = "/system/lib64";
+  const char *dst2 = "/vendor/lib64";
+#else
+  const char *src1 = "/system/lib64";
+  const char *src2 = "/vendor/lib64";
+  const char *dst1 = "/system/lib";
+  const char *dst2 = "/vendor/lib";
+#endif
+
+  char resolved_path[PATH_MAX] = {0};
+  std::vector<std::string> paths;
+  split_path(ld_path, ":", &paths);
+
+  bool replaced = false;
+  int size = paths.size();
+  for (int i = 0; i < size; i++) {
+    std::string path = paths[i];
+    char cmp_str[16] = {0};
+    if (path.size() < 16) {
+      if (path[path.size() - 1] == '/') {
+        strncat(cmp_str, path.c_str(), path.size() - 1);
+      } else {
+        strcat(cmp_str, path.c_str());
+      }
+    }
+
+    if (!strcmp(cmp_str, src1)) {
+      strcat(resolved_path, dst1);
+      replaced = true;
+    } else if(!strcmp(cmp_str, src2)) {
+      strcat(resolved_path, dst2);
+      replaced = true;
+    } else {
+      strcat(resolved_path, path.c_str());
+    }
+    if (i < size - 1) {
+      strcat(resolved_path, ":");
+    }
+  }
+
+  if (replaced) {
+    setenv("LD_LIBRARY_PATH", resolved_path, 1);
+  }
+  return replaced ? getenv("LD_LIBRARY_PATH") : ld_path;
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -254,6 +304,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
+      ldpath_env = correct_LD_LIBRARY_PATH(ldpath_env);
       INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
