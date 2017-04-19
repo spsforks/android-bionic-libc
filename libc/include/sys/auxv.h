@@ -31,6 +31,13 @@
 #include <linux/auxvec.h>
 #include <sys/cdefs.h>
 
+/* Historical arch-specific cruft. */
+#define AT_FPUCW 18 /* SuperH */
+#define AT_DCACHEBSIZE 19 /* PowerPC */
+#define AT_ICACHEBSIZE 20 /* PowerPC */
+#define AT_UCACHEBSIZE 21 /* PowerPC */
+#define AT_IGNOREPPC 22 /* PowerPC */
+
 __BEGIN_DECLS
 
 unsigned long int getauxval(unsigned long int type) __INTRODUCED_IN(18);
