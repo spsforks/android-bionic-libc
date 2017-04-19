@@ -203,6 +203,45 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
+static const char *correct_LD_LIBRARY_PATH(const char *ld_path) {
+  std::string resolved_path;
+  std::vector<std::string> paths;
+  split_path(ld_path, ":", &paths);
+
+  bool replaced = false;
+  int size = paths.size();
+
+  for (int i = 0; i < size; i++) {
+    std::string path = paths[i];
+    if (path[path.size() - 1] == '/') {
+      path.erase(path.end() - 1);
+    }
+    resolved_path.append(path);
+
+#if defined(__LP64__)
+    if(path == "/system/lib" || path == "/vendor/lib") {
+      resolved_path.append("64");
+      replaced = true;
+    }
+#else
+    if(path == "/system/lib64" || path == "/vendor/lib64") {
+      resolved_path.erase(resolved_path.size() - 2, 2);
+      replaced = true;
+    }
+#endif
+
+    if (i < size - 1) {
+      resolved_path.append(":");
+    }
+  }
+
+  if (replaced && resolved_path.size() <= PATH_MAX) {
+    setenv("LD_LIBRARY_PATH", resolved_path.c_str(), 1);
+    ld_path = getenv("LD_LIBRARY_PATH");
+  }
+  return ld_path;
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -254,6 +293,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
+      ldpath_env = correct_LD_LIBRARY_PATH(ldpath_env);
       INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
