@@ -97,7 +97,7 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSyst
                                    CompilationType type,
                                    const std::vector<std::string>& include_dirs) {
   std::vector<std::string> cmd = { "versioner" };
-  cmd.push_back("-std=c11");
+  cmd.push_back("-std=gnu11");
   cmd.push_back("-x");
   cmd.push_back("c-header");
   cmd.push_back("-fsyntax-only");
