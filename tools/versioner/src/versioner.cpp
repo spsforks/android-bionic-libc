@@ -197,9 +197,8 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     }
   } else {
     // Spawn threads.
-    size_t cpu_count = getCpuCount();
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &job_index, &result, &header_dir, vfs, cpu_count, i]() {
+      threads.emplace_back([&jobs, &job_index, &result, vfs]() {
         while (true) {
           size_t idx = job_index++;
           if (idx >= jobs.size()) {
