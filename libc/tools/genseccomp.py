@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import collections
 import os
+import re
+import sys
 import textwrap
 from gensyscalls import SysCallsTxtParser
 from subprocess import Popen, PIPE
@@ -26,7 +28,7 @@ class SyscallRange(object):
     self.names.append(name)
 
 
-def get_names(syscall_files, architecture):
+def get_allowed_names(syscall_files, architecture):
   syscall_lists = []
   for syscall_file in syscall_files:
     parser = SysCallsTxtParser()
@@ -64,45 +66,90 @@ def get_names(syscall_files, architecture):
   return list(set(names))
 
 
-def convert_names_to_NRs(names, header_dir, extra_switches):
-  # Run preprocessor over the __NR_syscall symbols, including unistd.h,
-  # to get the actual numbers
-  prefix = "__SECCOMP_"  # prefix to ensure no name collisions
+def expand_defs(definitions):
+  # The __NR macro definitions take one of 3 forms:
+  #   #define __NR_foo 123
+  #   #define __NR_bar __NR_foo
+  #   #define __NR_baz (__NR_foo + 456)
+  result = dict()
+
+  for name, value in definitions.copy().items():
+    try:
+      if value.startswith("0x"):
+        result[name] = int(value, 16)
+      else:
+        result[name] = int(value)
+      del definitions[name]
+    except ValueError:
+      continue
+
+  # Do this in a loop, to incrementally resolve dependencies
+  defs_left = len(definitions)
+  identical = re.compile(r"([_a-zA-Z0-9]+)$")
+  addition = re.compile(r"\(([_a-zA-Z0-9]+) \+ (0x[0-9a-fA-F]+|\d+)\)$")
+  while defs_left != 0:
+    for name, value in definitions.copy().items():
+      ident_match = identical.match(value)
+      if ident_match:
+        other = ident_match.groups()[0]
+        if other in result:
+          result[name] = result[other]
+          del definitions[name]
+        continue
+
+      addition_match = addition.match(value)
+      if addition_match:
+        other = addition_match.groups()[0]
+        imm = addition_match.groups()[1]
+        if imm.startswith("0x"):
+          imm = int(imm, 16)
+        else:
+          imm = int(imm)
+        if other in result:
+          result[name] = result[other] + imm
+          del definitions[name]
+        continue
+
+      raise RuntimeError("unmatched definition: '{}' => '{}'".format(name, value))
+
+    if defs_left != 0 and defs_left == len(definitions):
+      raise RuntimeError("made no progress")
+
+    defs_left = len(definitions)
+
+  return result
+
+
+def get_syscalls(header_dir, extra_switches):
   cpp = Popen(["../../prebuilts/clang/host/linux-x86/clang-stable/bin/clang",
-               "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/"]
+               "-dM", "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/"]
                + extra_switches
                + ["-"],
               stdin=PIPE, stdout=PIPE)
   cpp.stdin.write("#include <asm/unistd.h>\n")
-  for name in names:
-    # In SYSCALLS.TXT, there are two arm-specific syscalls whose names start
-    # with __ARM__NR_. These we must simply write out as is.
-    if not name.startswith("__ARM_NR_"):
-      cpp.stdin.write(prefix + name + ", __NR_" + name + "\n")
-    else:
-      cpp.stdin.write(prefix + name + ", " + name + "\n")
-  content = cpp.communicate()[0].split("\n")
 
-  # The input is now the preprocessed source file. This will contain a lot
-  # of junk from the preprocessor, but our lines will be in the format:
-  #
-  #     __SECCOMP_${NAME}, (0 + value)
-
-  syscalls = []
-  for line in content:
-    if not line.startswith(prefix):
+  syscalls = dict()
+  for line in cpp.communicate()[0].split("\n"):
+    if not line.startswith("#define "):
       continue
+    (name, value) = line[len("#define "):].split(" ", 1)
 
-    # We might pick up extra whitespace during preprocessing, so best to strip.
-    name, value = [w.strip() for w in line.split(",")]
-    name = name[len(prefix):]
+    if "_NR" in name:
+      syscalls[name] = value
 
-    # Note that some of the numbers were expressed as base + offset, so we
-    # need to eval, not just int
-    value = eval(value)
-    syscalls.append((name, value))
+  return expand_defs(syscalls)
 
-  return syscalls
+
+def convert_names_to_NRs(syscalls, names):
+  result = []
+  for name in names:
+    if name in syscalls:
+      result.append((name, syscalls[name]))
+    elif ("__NR_" + name) in syscalls:
+      result.append((name, syscalls["__NR_" + name]))
+    else:
+      raise RuntimeError("unknown name '{}'".format(name))
+  return result
 
 
 def convert_NRs_to_ranges(syscalls):
@@ -141,6 +188,24 @@ def convert_to_intermediate_bpf(ranges):
     second = convert_to_intermediate_bpf(ranges[half:])
     jump = [BPF_JGE.format(ranges[half].begin, len(first), 0) + ","]
     return jump + first + second
+
+
+def get_blocked_syscalls(syscalls, ranges):
+  # syscalls is name => number, invert the map.
+  syscall_nr_map = {v: k for k, v in syscalls.iteritems()}
+  last_range = SyscallRange("placeholder", -1)
+  result = []
+  for current_range in ranges:
+    blocked_start = last_range.end
+    blocked_end = current_range.begin
+
+    for i in xrange(blocked_start, blocked_end):
+      if i in syscall_nr_map:
+        result.append(syscall_nr_map[i])
+
+    last_range = current_range
+
+  return result
 
 
 def convert_ranges_to_bpf(ranges):
@@ -190,10 +255,13 @@ def convert_bpf_to_output(bpf, architecture):
   return header + "\n".join(bpf) + footer
 
 
-def construct_bpf(syscall_files, architecture, header_dir, extra_switches):
-  names = get_names(syscall_files, architecture)
-  syscalls = convert_names_to_NRs(names, header_dir, extra_switches)
-  ranges = convert_NRs_to_ranges(syscalls)
+def get_allowed_syscall_ranges(syscalls, syscall_files, architecture):
+  allowed_names = get_allowed_names(syscall_files, architecture)
+  allowed_syscalls = convert_names_to_NRs(syscalls, allowed_names)
+  return convert_NRs_to_ranges(allowed_syscalls)
+
+
+def construct_bpf(syscalls, architecture, ranges):
   bpf = convert_ranges_to_bpf(ranges)
   return convert_bpf_to_output(bpf, architecture)
 
@@ -220,7 +288,17 @@ def main():
   set_dir()
   for arch, header_path, switches in POLICY_CONFIGS:
     files = [open(filename) for filename in ANDROID_SYSCALL_FILES]
-    output = construct_bpf(files, arch, header_path, switches)
+
+    syscalls = get_syscalls(header_path, switches)
+    ranges = get_allowed_syscall_ranges(syscalls, files, arch)
+
+    if sys.argv[-1] == "-v":
+      blocked = get_blocked_syscalls(syscalls, ranges)
+      print("Blocked syscalls on {}:".format(arch))
+      for blocked_syscall in blocked:
+        print("    {}".format(blocked_syscall))
+
+    output = construct_bpf(syscalls, arch, ranges)
 
     # And output policy
     existing = ""
