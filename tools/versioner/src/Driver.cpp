@@ -237,8 +237,8 @@ void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
   }
 
   clang::CompilerInstance Compiler;
-  Compiler.setInvocation(invocation.release());
-  Compiler.setDiagnostics(diags.get());
+  Compiler.setInvocation(std::move(invocation));
+Compiler.setDiagnostics(diags.get());
   Compiler.setVirtualFileSystem(vfs);
 
   VersionerASTAction versioner_action(header_database, type);
