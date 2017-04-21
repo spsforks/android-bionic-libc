@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Verified+1: Yi Kong <yikong@google.com>
+Submitted-by: Yi Kong <yikong@google.com>
+Submitted-at: Fri, 21 Apr 2017 19:48:56 +0000
+Reviewed-on: https://android-review.googlesource.com/376992
+Project: platform/bionic
+Branch: refs/heads/master
