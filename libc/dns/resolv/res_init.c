@@ -782,4 +782,11 @@ void res_setmark(res_state statp, unsigned mark)
 	}
 }
 
+void res_setqhook(res_state statp, res_send_qhook qhook)
+{
+	if (statp != NULL) {
+		statp->qhook = qhook;
+	}
+}
+
 #endif /* ANDROID_CHANGES */

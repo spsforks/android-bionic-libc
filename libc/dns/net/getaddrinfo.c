@@ -1983,6 +1983,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	 */
 	res_setnetid(res, netcontext->dns_netid);
 	res_setmark(res, netcontext->dns_mark);
+	res_setqhook(res, netcontext->qhook);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
 		free(buf);
