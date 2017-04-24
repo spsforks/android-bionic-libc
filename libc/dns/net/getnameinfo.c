@@ -300,7 +300,8 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 			break;
 		}
 	} else {
-		hp = android_gethostbyaddrfornet_proxy(addr, afd->a_addrlen, afd->a_af, netid, mark);
+		const struct android_net_context netcontext = { .dns_netid = netid, .dns_mark = mark };
+		hp = android_gethostbyaddrfornetcontext_proxy(addr, afd->a_addrlen, afd->a_af, &netcontext);
 		if (hp) {
 #if 0
 			/*
