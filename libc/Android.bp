@@ -1803,6 +1803,8 @@ cc_library_static {
     ],
 
     name: "libc_logging",
+
+		export_include_dirs: ["private"],
 }
 
 // ========================================================

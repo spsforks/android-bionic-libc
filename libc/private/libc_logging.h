@@ -62,45 +62,8 @@ enum {
   LOG_ID_MAX
 };
 
-// Formats a message to the log (priority 'fatal'), then aborts.
-__noreturn void __libc_fatal(const char* _Nonnull, ...) __printflike(1, 2);
-
-// Formats a message to the log (priority 'fatal'), prefixed by "FORTIFY: ", then aborts.
-__noreturn void __fortify_fatal(const char* _Nonnull, ...) __printflike(1, 2);
-
-//
-// Formatting routines for the C library's internal debugging.
-// Unlike the usual alternatives, these don't allocate, and they don't drag in all of stdio.
-// These are async signal safe, so they can be called from signal handlers.
-//
-
-int __libc_format_buffer(char* _Nonnull buf, size_t size, const char* _Nonnull fmt, ...) __printflike(3, 4);
-
-#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
-int __libc_format_buffer_va_list(char* _Nonnull buffer, size_t buffer_size,
-                                 const char* _Nonnull format, va_list args);
-#else // defined(__mips__) || defined(__i386__)
-int __libc_format_buffer_va_list(char* _Nonnull buffer, size_t buffer_size,
-                                 const char* _Nonnull format, va_list _Nonnull args);
-#endif
-
-int __libc_format_fd(int fd, const char* _Nonnull format , ...) __printflike(2, 3);
-int __libc_format_log(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, ...) __printflike(3, 4);
-#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
-int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, va_list ap);
-#else // defined(__mips__) || defined(__i386__)
-int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, va_list _Nonnull ap);
-#endif
-int __libc_write_log(int pri, const char* _Nonnull tag, const char* _Nonnull msg);
-
-#define CHECK(predicate) \
-  do { \
-    if (!(predicate)) { \
-      __libc_fatal("%s:%d: %s CHECK '" #predicate "' failed", \
-          __FILE__, __LINE__, __FUNCTION__); \
-    } \
-  } while(0)
-
 __END_DECLS
+
+#include "libc_log/logging.h"
 
 #endif
