@@ -35,9 +35,10 @@
 #include <string>
 #include <vector>
 
+#include <async_safe_log.h>
+
 #include "android-base/strings.h"
 #include "private/CachedProperty.h"
-#include "private/libc_logging.h"
 
 LinkerLogger g_linker_logger;
 bool g_greylist_disabled = false;
@@ -59,7 +60,7 @@ static uint32_t ParseProperty(const std::string& value) {
     } else if (o == "dlsym") {
       flags |= kLogDlsym;
     } else {
-      __libc_format_log(ANDROID_LOG_WARN, "linker", "Ignoring unknown debug.ld option \"%s\"",
+      __safe_format_log(ANDROID_LOG_WARN, "linker", "Ignoring unknown debug.ld option \"%s\"",
                         o.c_str());
     }
   }
@@ -95,7 +96,7 @@ void LinkerLogger::ResetState() {
   bool old_value = g_greylist_disabled;
   g_greylist_disabled = (strcmp(greylist_disabled.Get(), "true") == 0);
   if (g_greylist_disabled != old_value) {
-    __libc_format_log(ANDROID_LOG_INFO, "linker", "%s greylist",
+    __safe_format_log(ANDROID_LOG_INFO, "linker", "%s greylist",
                       g_greylist_disabled ? "Disabling" : "Enabling");
   }
 
@@ -124,6 +125,6 @@ void LinkerLogger::Log(uint32_t type, const char* format, ...) {
 
   va_list ap;
   va_start(ap, format);
-  __libc_format_log_va_list(ANDROID_LOG_DEBUG, "linker", format, ap);
+  __safe_format_log_va_list(ANDROID_LOG_DEBUG, "linker", format, ap);
   va_end(ap);
 }

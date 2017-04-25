@@ -35,8 +35,9 @@
 #include <syscall.h>
 #include <unistd.h>
 
+#include <async_safe_log.h>
+
 #include "private/KernelArgumentBlock.h"
-#include "private/libc_logging.h"
 
 bool __libc_arc4random_has_unlimited_entropy() {
   static bool have_urandom = access("/dev/urandom", R_OK) == 0;
@@ -53,7 +54,7 @@ void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) 
 
   static size_t at_random_bytes_consumed = 0;
   if (at_random_bytes_consumed + n > 16) {
-    __libc_fatal("ran out of AT_RANDOM bytes, have %zu, requested %zu",
+    __safe_fatal("ran out of AT_RANDOM bytes, have %zu, requested %zu",
                  16 - at_random_bytes_consumed, n);
   }
 

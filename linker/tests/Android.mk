@@ -51,9 +51,6 @@ LOCAL_SRC_FILES := \
   ../linker_config.cpp \
   ../linker_utils.cpp \
 
-# for __libc_fatal
-LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
-
-LOCAL_STATIC_LIBRARIES += libbase
+LOCAL_STATIC_LIBRARIES += libbase libasync_safe_log
 
 include $(BUILD_NATIVE_TEST)

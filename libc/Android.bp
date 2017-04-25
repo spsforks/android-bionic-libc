@@ -102,6 +102,8 @@ cc_library_static {
         },
     },
 
+    static_libs: ["libasync_safe_log"],
+
     defaults: ["libc_defaults"],
     cflags: ["-fno-stack-protector"],
     name: "libc_stack_protector",
@@ -117,6 +119,7 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_static.cpp"],
     cflags: ["-fno-stack-protector"],
+    static_libs: ["libasync_safe_log"],
 }
 
 
@@ -188,6 +191,8 @@ cc_library_static {
         "upstream-netbsd/lib/libc/include",
         "upstream-netbsd/android/include",
     ],
+
+    static_libs: ["libasync_safe_log"],
 
     name: "libc_dns",
 }
@@ -704,6 +709,8 @@ cc_library_static {
         "private",
         "upstream-openbsd/android/include",
     ],
+
+    static_libs: ["libasync_safe_log"],
 
     name: "libc_openbsd",
 }
@@ -1258,6 +1265,8 @@ cc_library_static {
         },
     },
 
+    static_libs: ["libasync_safe_log"],
+
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",
@@ -1346,7 +1355,6 @@ cc_library_static {
         "bionic/__libc_current_sigrtmax.cpp",
         "bionic/__libc_current_sigrtmin.cpp",
         "bionic/libc_init_common.cpp",
-        "bionic/libc_logging.cpp",
         "bionic/libgen.cpp",
         "bionic/link.cpp",
         "bionic/locale.cpp",
@@ -1455,6 +1463,8 @@ cc_library_static {
         },
     },
 
+    static_libs: ["libasync_safe_log"],
+
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
@@ -1501,6 +1511,8 @@ cc_library_static {
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_pthread",
+
+    static_libs: ["libasync_safe_log"],
 }
 
 // ========================================================
@@ -1589,6 +1601,7 @@ cc_library_static {
     ],
 
     whole_static_libs: [
+        "libasync_safe_log",
         "libc_bionic_ndk",
         "libc_freebsd",
         "libc_freebsd_large_stack",
@@ -1621,6 +1634,7 @@ cc_library_static {
     name: "libc_common",
 
     whole_static_libs: [
+        "libasync_safe_log",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_dns",
@@ -1705,7 +1719,7 @@ cc_library {
             "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
-        whole_static_libs: ["libc_init_static", "libjemalloc"],
+        whole_static_libs: ["libc_init_static"],
     },
     shared: {
         srcs: [
@@ -1717,7 +1731,6 @@ cc_library {
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
-        whole_static_libs: ["libjemalloc"],
     },
 
     required: ["tzdata"],
@@ -1740,7 +1753,8 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common"],
+    static_libs: ["libasync_safe_log"],
+    whole_static_libs: ["libc_common", "libjemalloc"],
 
     nocrt: true,
 
@@ -1793,19 +1807,6 @@ cc_library {
 }
 
 // ========================================================
-// libc_logging.a
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-
-    srcs: [
-        "bionic/libc_logging.cpp",
-    ],
-
-    name: "libc_logging",
-}
-
-// ========================================================
 // libstdc++.so + libstdc++.a
 // ========================================================
 cc_library {
@@ -1818,9 +1819,7 @@ cc_library {
     ],
     name: "libstdc++",
     system_shared_libs: ["libc"],
-    shared: {
-        static_libs: ["libc_logging"],
-    },
+    static_libs: ["libasync_safe_log"],
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
