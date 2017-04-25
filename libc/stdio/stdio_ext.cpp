@@ -31,8 +31,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include "libc_log/log.h"
 #include "local.h"
-#include "private/libc_logging.h"
 
 size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;

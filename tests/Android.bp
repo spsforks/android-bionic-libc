@@ -71,7 +71,7 @@ cc_test_library {
         "inttypes_test.cpp",
         "langinfo_test.cpp",
         "leak_test.cpp",
-        "libc_logging_test.cpp",
+        "libc_log_test.cpp",
         "libgen_basename_test.cpp",
         "libgen_test.cpp",
         "linux_swab_test.cpp",

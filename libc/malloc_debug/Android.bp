@@ -13,9 +13,8 @@ cc_library_static {
 
     stl: "libc++_static",
 
-    static_libs: ["libc_logging"],
+    whole_static_libs: ["libc_log"],
 
-    include_dirs: ["bionic/libc"],
     export_include_dirs: ["."],
 
     sanitize: {
@@ -63,7 +62,7 @@ cc_library {
     static_libs: [
         "libbase",
         "libc_malloc_debug_backtrace",
-        "libc_logging",
+        "libc_log",
     ],
 
     multilib: {

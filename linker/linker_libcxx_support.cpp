@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 void* __find_icu_symbol(const char* symbol_name __attribute__((__unused__))) {
   __libc_fatal("__find_icu_symbol should not be called in the linker");

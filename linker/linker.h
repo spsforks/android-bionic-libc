@@ -38,7 +38,7 @@
 #include <unistd.h>
 
 #include "private/bionic_page.h"
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 #include "linked_list.h"
 #include "linker_common_types.h"
 #include "linker_logger.h"

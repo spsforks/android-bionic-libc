@@ -29,7 +29,7 @@
 #ifndef MALLOC_DEBUG_LOG_H
 #define MALLOC_DEBUG_LOG_H
 
-#include <private/libc_logging.h>
+#include <libc_log/log.h>
 
 // =============================================================================
 // log functions

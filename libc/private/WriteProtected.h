@@ -23,9 +23,9 @@
 #include <sys/mman.h>
 #include <sys/user.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
 
 template <typename T>
 union WriteProtectedContents {

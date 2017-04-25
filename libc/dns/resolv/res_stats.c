@@ -18,9 +18,9 @@
 #include <arpa/nameser.h>
 #include <string.h>
 
-#include "resolv_stats.h"
-#include "private/libc_logging.h"
 #include "isc/eventlib.h"
+#include "libc_log/log.h"
+#include "resolv_stats.h"
 
 #define DBG 0
 

@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <sys/cachectl.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 // Linux historically defines a cacheflush(3) routine for MIPS
 // with this signature:

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <private/libc_logging.h>
+#include <libc_log/log.h>
 
 extern "C" void __cxa_pure_virtual() {
   __libc_fatal("Pure virtual function called. Are you calling virtual methods from a destructor?");

@@ -33,7 +33,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 // Allowed icu4c version numbers are in the range [44, 999].
 // Gingerbread's icu4c 4.4 is the minimum supported ICU version.

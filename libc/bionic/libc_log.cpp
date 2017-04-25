@@ -27,8 +27,8 @@
  */
 
 // Relative paths so we can #include this .cpp file for testing.
+#include "../libc_log/log.h"
 #include "../private/CachedProperty.h"
-#include "../private/libc_logging.h"
 #include "../private/ScopedPthreadMutexLocker.h"
 
 #include <android/set_abort_message.h>

@@ -33,10 +33,10 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_sdk_version.h"
 #include "private/bionic_tls.h"
-#include "private/libc_logging.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
 static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;

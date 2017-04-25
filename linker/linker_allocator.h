@@ -37,8 +37,8 @@
 
 #include <vector>
 
+#include "libc_log/log.h"
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;

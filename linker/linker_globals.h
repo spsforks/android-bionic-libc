@@ -34,7 +34,7 @@
 
 #include <unordered_map>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 #define DL_ERR(fmt, x...) \
     do { \

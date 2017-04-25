@@ -54,7 +54,7 @@
  * To enable/disable specific debug options, change the defines above
  *********************************************************************/
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 #include <unistd.h>
 
 __LIBC_HIDDEN__ extern int g_ld_debug_verbosity;

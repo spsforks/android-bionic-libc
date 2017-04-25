@@ -18,7 +18,7 @@
 #error NetdClient.cpp should NOT be included in static libc builds.
 #endif
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 #include "private/NetdClientDispatch.h"
 
 #include <dlfcn.h>

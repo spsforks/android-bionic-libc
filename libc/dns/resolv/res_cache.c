@@ -47,7 +47,7 @@
 #include "resolv_netid.h"
 #include "res_private.h"
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 /* This code implements a small and *simple* DNS resolver cache.
  *

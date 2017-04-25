@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 extern "C" int __openat(int, const char*, int, int);
 

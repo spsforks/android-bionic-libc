@@ -17,7 +17,7 @@
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
-#include "../libc/bionic/libc_logging.cpp"
+#include "../libc/bionic/libc_log.cpp"
 extern int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...);
 #endif // __BIONIC__
 

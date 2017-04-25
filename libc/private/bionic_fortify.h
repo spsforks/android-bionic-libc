@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 #include <poll.h> // For struct pollfd.
 #include <sys/select.h> // For struct fd_set.

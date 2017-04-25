@@ -34,9 +34,9 @@
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_globals.h"
-#include "private/libc_logging.h"
 #include "private/KernelArgumentBlock.h"
 
 void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {

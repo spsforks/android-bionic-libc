@@ -45,8 +45,8 @@
 #include <unistd.h>
 #include <wchar.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_macros.h"
-#include "private/libc_logging.h"
 
 extern "C" {
 

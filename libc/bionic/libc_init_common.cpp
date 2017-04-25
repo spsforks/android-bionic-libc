@@ -41,12 +41,12 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "libc_log/log.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
-#include "private/libc_logging.h"
 #include "private/thread_private.h"
 #include "pthread_internal.h"
 

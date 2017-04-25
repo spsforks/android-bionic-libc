@@ -28,7 +28,7 @@
 #include <signal.h>
 
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 // Android gets these from "thread_private.h".
 #include "thread_private.h"

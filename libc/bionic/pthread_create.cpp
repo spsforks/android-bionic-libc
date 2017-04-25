@@ -35,11 +35,11 @@
 
 #include "pthread_internal.h"
 
+#include "libc_log/log.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
-#include "private/libc_logging.h"
 #include "private/ErrnoRestorer.h"
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.

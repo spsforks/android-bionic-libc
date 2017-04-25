@@ -35,8 +35,8 @@
 #include <syscall.h>
 #include <unistd.h>
 
+#include "libc_log/log.h"
 #include "private/KernelArgumentBlock.h"
-#include "private/libc_logging.h"
 
 bool __libc_arc4random_has_unlimited_entropy() {
   static bool have_urandom = access("/dev/urandom", R_OK) == 0;

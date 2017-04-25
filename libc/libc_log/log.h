@@ -26,13 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LIBC_LOGGING_H
-#define _LIBC_LOGGING_H
+#ifndef _LIBC_LOG_LOGGING_H
+#define _LIBC_LOG_LOGGING_H
 
 #include <sys/cdefs.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+
+// These functions do not allocate memory to send data to the log.
 
 __BEGIN_DECLS
 

@@ -32,7 +32,7 @@
 #include <sys/cdefs.h>
 #include <unistd.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 static LinkerMemoryAllocator g_linker_allocator;
 static pid_t fallback_tid = 0;

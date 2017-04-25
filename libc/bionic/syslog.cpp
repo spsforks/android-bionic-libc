@@ -19,7 +19,7 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 static const char* syslog_log_tag = NULL;
 static int syslog_priority_mask = 0xff;

@@ -33,9 +33,9 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
-#include "private/libc_logging.h"
 #include "pthread_internal.h"
 
 int pthread_attr_init(pthread_attr_t* attr) {

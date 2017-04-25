@@ -36,8 +36,8 @@
 #include <vector>
 
 #include "android-base/strings.h"
+#include "libc_log/log.h"
 #include "private/CachedProperty.h"
-#include "private/libc_logging.h"
 
 LinkerLogger g_linker_logger;
 bool g_greylist_disabled = false;

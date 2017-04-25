@@ -30,7 +30,7 @@
 
 #include <assert.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 void __assert(const char* file, int line, const char* failed_expression) {
   __libc_fatal("%s:%d: assertion \"%s\" failed", file, line, failed_expression);

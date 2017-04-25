@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 const std::nothrow_t std::nothrow = {};
 

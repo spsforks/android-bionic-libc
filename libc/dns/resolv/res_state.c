@@ -41,7 +41,7 @@
 #define DEBUG 0
 
 #if DEBUG
-#  include "private/libc_logging.h"
+#  include "libc_log/log.h"
 #  include <unistd.h>  /* for gettid() */
 #  define D(...) __libc_format_log(ANDROID_LOG_DEBUG,"libc", __VA_ARGS__)
 #else

@@ -28,8 +28,8 @@
 
 #include <stdlib.h>
 
+#include "libc_log/log.h"
 #include "private/bionic_ssp.h"
-#include "private/libc_logging.h"
 
 void __stack_chk_fail() {
   __libc_fatal("stack corruption detected (-fstack-protector)");

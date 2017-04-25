@@ -54,12 +54,12 @@
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
+#include "libc_log/log.h"
 #include "private/ErrnoRestorer.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_sdk_version.h"
-#include "private/libc_logging.h"
 
 static constexpr int PROP_FILENAME_MAX = 1024;
 

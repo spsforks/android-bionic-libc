@@ -1346,7 +1346,7 @@ cc_library_static {
         "bionic/__libc_current_sigrtmax.cpp",
         "bionic/__libc_current_sigrtmin.cpp",
         "bionic/libc_init_common.cpp",
-        "bionic/libc_logging.cpp",
+        "bionic/libc_log.cpp",
         "bionic/libgen.cpp",
         "bionic/link.cpp",
         "bionic/locale.cpp",
@@ -1793,16 +1793,18 @@ cc_library {
 }
 
 // ========================================================
-// libc_logging.a
+// libc_log.a
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
 
     srcs: [
-        "bionic/libc_logging.cpp",
+        "bionic/libc_log.cpp",
     ],
 
-    name: "libc_logging",
+    name: "libc_log",
+
+    export_include_dirs: ["."],
 }
 
 // ========================================================
@@ -1819,7 +1821,7 @@ cc_library {
     name: "libstdc++",
     system_shared_libs: ["libc"],
     shared: {
-        static_libs: ["libc_logging"],
+        static_libs: ["libc_log"],
     },
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed

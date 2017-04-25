@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "private/libc_logging.h"
+#include "libc_log/log.h"
 
 /*
  * This source file should only be included by libc.so, its purpose is

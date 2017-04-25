@@ -12,8 +12,8 @@
 #include <signal.h>
 #include <stdio.h>
 
+#include "libc_log/log.h"
 #include "private/ErrnoRestorer.h"
-#include "private/libc_logging.h"
 
 struct Pair {
   int code;
