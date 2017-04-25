@@ -26,6 +26,7 @@
 #include <unistd.h>
 
 #include <android/dlext.h>
+#include <android-base/strings.h>
 
 #include <linux/memfd.h>
 #include <sys/mman.h>
@@ -512,11 +513,14 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   size_t without_sharing, with_sharing;
   ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, false, &without_sharing));
   ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, true, &with_sharing));
+  ASSERT_LT(with_sharing, without_sharing);
 
-  // We expect the sharing to save at least 10% of the total PSS. In practice
-  // it saves 40%+ for this test.
-  size_t expected_size = without_sharing - (without_sharing/10);
-  EXPECT_LT(with_sharing, expected_size);
+  // We expect the sharing to save at least 50% of the library's total PSS.
+  // In practice it saves 80%+ for this library in the test.
+  size_t pss_saved = without_sharing - with_sharing;
+  size_t expected_min_saved = without_sharing / 2;
+
+  EXPECT_LT(expected_min_saved, pss_saved);
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
@@ -533,13 +537,32 @@ void getPss(pid_t pid, size_t* pss_out) {
   size_t num_maps;
   ASSERT_EQ(0, pm_process_maps(process, &maps, &num_maps));
 
-  size_t total_pss = 0;
+  // find the range of tested library in maps
+  // assume that, in maps, relro section is in the middle of tested library
+  size_t maps_lib_first = 0;
+  size_t maps_lib_last = 0;
   for (size_t i = 0; i < num_maps; i++) {
+    if (android::base::EndsWith(maps[i]->name, kLibName)) {
+      maps_lib_first = i;
+      break;
+    }
+  }
+  for (size_t i = num_maps - 1; i > 0 /* ok to use "> 0" here */; i--) {
+    if (android::base::EndsWith(maps[i]->name, kLibName)) {
+      maps_lib_last = i;
+      break;
+    }
+  }
+  ASSERT_GT(maps_lib_last, maps_lib_first);
+
+  // calculate total Pss of the library
+  size_t total_pss_of_lib = 0;
+  for (size_t i = maps_lib_first; i <= maps_lib_last; i++) {
     pm_memusage_t usage;
     ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
-    total_pss += usage.pss;
+    total_pss_of_lib += usage.pss;
   }
-  *pss_out = total_pss;
+  *pss_out = total_pss_of_lib;
 
   free(maps);
   pm_process_destroy(process);
@@ -600,7 +623,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
     childpipe[i] = parent_done_pipe[1];
   }
 
-  // Sum the PSS of all the children
+  // Sum the PSS of tested library of all the children
   size_t total_pss = 0;
   for (int i=0; i<CHILDREN; ++i) {
     size_t child_pss;
