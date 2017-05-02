@@ -214,8 +214,8 @@ bool __android_link_namespaces(android_namespace_t* namespace_from,
   return success;
 }
 
-android_namespace_t* __android_get_exported_namespace(const char* name) {
-  return get_exported_namespace(name);
+android_namespace_t* __android_get_exported_namespace(const char* name, const void* caller_addr) {
+  return get_exported_namespace(name, caller_addr);
 }
 
 void __cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *CallerPc) {

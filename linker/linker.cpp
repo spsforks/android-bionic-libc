@@ -3501,8 +3501,16 @@ void init_default_namespace(const char* executable_path) {
 
 // This function finds a namespace exported in ld.config.txt by its name.
 // A namespace can be exported by setting .visible property to true.
-android_namespace_t* get_exported_namespace(const char* name) {
+android_namespace_t* get_exported_namespace(const char* name, const void* caller_addr) {
   if (name == nullptr) {
+    return nullptr;
+  }
+  // Only libs/bins in the same partition as ld.config.txt (which is /system)
+  // are allowed to use this function. This is because the namespace names in
+  // the txt file is subject to change after system-only upgrade.
+  soinfo* const caller = find_containing_library(caller_addr);
+  if (!android::base::StartsWith(caller->get_realpath(), "/system")) {
+    DL_WARN("android_get_exported_namespace cannot be called from \"%s\"", caller->get_realpath());
     return nullptr;
   }
   auto it = g_exported_namespaces.find(std::string(name));

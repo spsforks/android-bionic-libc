@@ -173,6 +173,6 @@ bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
                      const char* shared_lib_sonames);
 
-android_namespace_t* get_exported_namespace(const char* name);
+android_namespace_t* get_exported_namespace(const char* name, const void* caller_addr);
 
 #endif

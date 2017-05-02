@@ -95,7 +95,8 @@ __attribute__((__weak__, visibility("default")))
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 
 __attribute__((__weak__, visibility("default")))
-struct android_namespace_t* __loader_android_get_exported_namespace(const char* name);
+struct android_namespace_t* __loader_android_get_exported_namespace(const char* name,
+                                                                    const void* caller_addr);
 
 // Proxy calls to bionic loader
 void* dlopen(const char* filename, int flag) {
@@ -192,5 +193,6 @@ void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
 }
 
 struct android_namespace_t* android_get_exported_namespace(const char* name) {
-  return __loader_android_get_exported_namespace(name);
+  const void* caller_addr = __builtin_return_address(0);
+  return __loader_android_get_exported_namespace(name, caller_addr);
 }
