@@ -28,6 +28,7 @@ cc_defaults {
         "atomic_benchmark.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
+        "ptrace_benchmark.cpp",
         "pthread_benchmark.cpp",
         "semaphore_benchmark.cpp",
         "stdio_benchmark.cpp",
