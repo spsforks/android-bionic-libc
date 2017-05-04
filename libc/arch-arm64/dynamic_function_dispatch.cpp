@@ -96,4 +96,13 @@ DEFINE_IFUNC_FOR(strnlen) {
     }
 }
 
+typedef char* strrchr_func(const char*, int);
+DEFINE_IFUNC_FOR(strrchr) {
+    if (supports_mte(arg->_hwcap2)) {
+        RETURN_FUNC(strrchr_func, strrchr_mte);
+    } else {
+        RETURN_FUNC(strrchr_func, strrchr_default);
+    }
+}
+
 }  // extern "C"
