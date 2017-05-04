@@ -875,6 +875,7 @@ cc_library_static {
                 "arch-arm64/default/bionic/strlen.S",
                 "arch-arm64/default/bionic/strncmp.S",
                 "arch-arm64/default/bionic/strnlen.S",
+                "arch-arm64/default/bionic/strrchr.S",
 
                 "arch-arm64/mte/bionic/memchr.c",
                 "arch-arm64/mte/bionic/strchr.cpp",
@@ -882,6 +883,7 @@ cc_library_static {
                 "arch-arm64/mte/bionic/strlen.c",
                 "arch-arm64/mte/bionic/strncmp.c",
                 "arch-arm64/mte/bionic/strnlen.c",
+                "arch-arm64/mte/bionic/strrchr.cpp",
 
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -893,6 +895,7 @@ cc_library_static {
                 "bionic/__memcpy_chk.cpp",
                 "bionic/strchr.cpp",
                 "bionic/strnlen.c",
+                "bionic/strrchr.cpp",
             ],
         },
 
