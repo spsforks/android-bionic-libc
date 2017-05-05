@@ -39,7 +39,7 @@ void abort() {
   sigdelset(&mask, SIGABRT);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  raise(SIGABRT);
 
   // If SIGABRT ignored, or caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
@@ -50,7 +50,7 @@ void abort() {
   sigaction(SIGABRT, &sa, &sa);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  raise(SIGABRT);
 
   // If we get this far, just exit.
   _exit(127);
