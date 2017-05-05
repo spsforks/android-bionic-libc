@@ -29,17 +29,20 @@
 
 #include <signal.h>
 #include <stdlib.h>
+#include <sys/syscall.h>
 #include <unistd.h>
 
 void abort() {
   // Don't block SIGABRT to give any signal handler a chance; we ignore
   // any errors -- X311J doesn't allow abort to return anyway.
+  pid_t pid = syscall(__NR_getpid);
+  pid_t tid = syscall(__NR_gettid);
   sigset_t mask;
   sigfillset(&mask);
   sigdelset(&mask, SIGABRT);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  tgkill(pid, tid, SIGABRT);
 
   // If SIGABRT ignored, or caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
@@ -50,7 +53,7 @@ void abort() {
   sigaction(SIGABRT, &sa, &sa);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  tgkill(pid, tid, SIGABRT);
 
   // If we get this far, just exit.
   _exit(127);
