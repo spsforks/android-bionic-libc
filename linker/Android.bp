@@ -121,7 +121,7 @@ cc_binary {
         "libbase",
         "libz",
 
-        "libdebuggerd_handler_fallback",
+        "libasync_safe",
 
         "liblog",
         "libc++_static",
@@ -141,7 +141,7 @@ cc_binary {
     },
     target: {
         android: {
-            static_libs: ["libdebuggerd_client"],
+            static_libs: ["libdebuggerd_handler_fallback"],
         },
         android64: {
             cflags: ["-DTARGET_IS_64_BIT"],
