@@ -1215,6 +1215,34 @@ LIBC {
     write;
     writev;
     wscanf;
+    __gnu_Unwind_Find_exidx_impl; # arm
+    __gnu_Unwind_Find_exidx_impl2; # arm
+    __aeabi_atexit_impl; # arm
+    __aeabi_atexit_impl2; # arm
+    __aeabi_memclr_impl; # arm
+    __aeabi_memclr_impl2; # arm
+    __aeabi_memclr4_impl; # arm
+    __aeabi_memclr4_impl2; # arm
+    __aeabi_memclr8_impl; # arm
+    __aeabi_memclr8_impl2; # arm
+    __aeabi_memcpy_impl; # arm
+    __aeabi_memcpy_impl2; # arm
+    __aeabi_memcpy4_impl; # arm
+    __aeabi_memcpy4_impl2; # arm
+    __aeabi_memcpy8_impl; # arm
+    __aeabi_memcpy8_impl2; # arm
+    __aeabi_memmove_impl; # arm
+    __aeabi_memmove_impl2; # arm
+    __aeabi_memmove4_impl; # arm
+    __aeabi_memmove4_impl2; # arm
+    __aeabi_memmove8_impl; # arm
+    __aeabi_memmove8_impl2; # arm
+    __aeabi_memset_impl; # arm
+    __aeabi_memset_impl2; # arm
+    __aeabi_memset4_impl; # arm
+    __aeabi_memset4_impl2; # arm
+    __aeabi_memset8_impl; # arm
+    __aeabi_memset8_impl2; # arm
   local:
     *;
 };
