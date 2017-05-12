@@ -78,23 +78,57 @@ LEAK_TEST(pthread_leak, join) {
   }
 }
 
-// http://b/36045112
-LEAK_TEST(pthread_leak, detach) {
-  pthread_barrier_t barrier;
+static size_t GetMappingSizeAfterDetach() {
   constexpr int thread_count = 100;
-  ASSERT_EQ(0, pthread_barrier_init(&barrier, nullptr, thread_count + 1));
+  static pthread_barrier_t barrier;
+  EXPECT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
+
+  // Start child threads.
+  pid_t tids[thread_count];
   for (int i = 0; i < thread_count; ++i) {
     pthread_t thread;
-    const auto thread_function = +[](void* barrier) -> void* {
-      pthread_barrier_wait(static_cast<pthread_barrier_t*>(barrier));
+    const auto thread_function = +[](void* tid) -> void* {
+      *(static_cast<pid_t*>(tid)) = gettid();
+      pthread_barrier_wait(&barrier);
       return nullptr;
     };
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, &barrier));
-    ASSERT_EQ(0, pthread_detach(thread));
+    EXPECT_EQ(pthread_create(&thread, nullptr, thread_function, &tids[i]), 0);
+    EXPECT_EQ(pthread_detach(thread), 0);
   }
 
   pthread_barrier_wait(&barrier);
 
-  // Give the threads some time to exit.
-  std::this_thread::sleep_for(100ms);
+  // Wait until all children have exited.
+  bool alive = true;
+  while (alive) {
+    alive = false;
+    for (int i = 0; i < thread_count; ++i) {
+      if (tids[i] != 0) {
+        if (kill(tids[i], 0) == 0) {
+          alive = true;
+        } else {
+          EXPECT_EQ(errno, ESRCH);
+          tids[i] = 0;  // Skip in next loop.
+        }
+      }
+    }
+  }
+
+  EXPECT_EQ(pthread_barrier_destroy(&barrier), 0);
+
+  return GetMappingSize();
 }
+
+
+// http://b/36045112
+TEST(pthread_leak, detach) {
+  auto first_size = GetMappingSizeAfterDetach();
+  ASSERT_NE(first_size, 0U);
+  auto second_size = GetMappingSizeAfterDetach();
+  ASSERT_NE(second_size, 0U);
+  if (first_size < second_size) {
+    FAIL() << "mismatched process map size: " << first_size << " -> " << second_size;
+  }
+}
+
+
