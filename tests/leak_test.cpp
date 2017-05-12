@@ -49,6 +49,24 @@ static size_t GetMappingSize() {
   return result;
 }
 
+static void WaitUntilAllExited(pid_t* pids, size_t pid_count) {
+  // Wait until all children have exited.
+  bool alive = true;
+  while (alive) {
+    alive = false;
+    for (size_t i = 0; i < pid_count; ++i) {
+      if (pids[i] != 0) {
+        if (kill(pids[i], 0) == 0) {
+          alive = true;
+        } else {
+          EXPECT_EQ(errno, ESRCH);
+          pids[i] = 0;  // Skip in next loop.
+        }
+      }
+    }
+  }
+}
+
 #define LEAK_TEST(test_case_name, test_name)                                                 \
   static void __leak_test__##test_case_name##__##test_name();                                \
   TEST(test_case_name, test_name) {                                                          \
@@ -80,21 +98,25 @@ LEAK_TEST(pthread_leak, join) {
 
 // http://b/36045112
 LEAK_TEST(pthread_leak, detach) {
-  pthread_barrier_t barrier;
   constexpr int thread_count = 100;
-  ASSERT_EQ(0, pthread_barrier_init(&barrier, nullptr, thread_count + 1));
+  static pthread_barrier_t barrier;
+  EXPECT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
+
+  // Start child threads.
+  pid_t tids[thread_count];
   for (int i = 0; i < thread_count; ++i) {
     pthread_t thread;
-    const auto thread_function = +[](void* barrier) -> void* {
-      pthread_barrier_wait(static_cast<pthread_barrier_t*>(barrier));
+    const auto thread_function = +[](void* tid) -> void* {
+      *(static_cast<pid_t*>(tid)) = gettid();
+      pthread_barrier_wait(&barrier);
       return nullptr;
     };
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, &barrier));
-    ASSERT_EQ(0, pthread_detach(thread));
+    EXPECT_EQ(pthread_create(&thread, nullptr, thread_function, &tids[i]), 0);
+    EXPECT_EQ(pthread_detach(thread), 0);
   }
 
   pthread_barrier_wait(&barrier);
+  EXPECT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-  // Give the threads some time to exit.
-  std::this_thread::sleep_for(100ms);
+  WaitUntilAllExited(tids, arraysize(tids));
 }
