@@ -20,6 +20,8 @@
 #include "jemalloc.h"
 #include "private/bionic_macros.h"
 
+//int je_mallctl(const char* name, void* oldp, size_t* oldlenp, void* newp, size_t newlen);
+
 void* je_pvalloc(size_t bytes) {
   size_t pagesize = getpagesize();
   size_t size = BIONIC_ALIGN(bytes, pagesize);
@@ -45,4 +47,39 @@ void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
     boundary = 1;
   }
   return je_memalign(boundary, size);
+}
+
+int je_mallopt(int param, int value) {
+  // The only parameter we currently understand is M_DECAY_TIMER.
+  if (param == M_DECAY_TIME) {
+    // Only support setting the value to 1 or 0.
+    ssize_t decay_time;
+    if (value) {
+      decay_time = 1;
+    } else {
+      decay_time = 0;
+    }
+    // First get the total number of arenas.
+    unsigned narenas;
+    size_t sz = sizeof(unsigned);
+    if (je_mallctl("arenas.narenas", &narenas, &sz, nullptr, 0) != 0) {
+      return 0;
+    }
+
+    // Set the decay time for any arenas that will be created in the future.
+    if (je_mallctl("arenas.decay_time", nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
+      return 0;
+    }
+
+    // Change the decay on the already existing arenas.
+    char buffer[100];
+    for (unsigned i = 0; i < narenas; i++) {
+      snprintf(buffer, sizeof(buffer), "arena.%d.decay_time", i);
+      if (je_mallctl(buffer, nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
+        break;
+      }
+    }
+    return 1;
+  }
+  return 0;
 }
