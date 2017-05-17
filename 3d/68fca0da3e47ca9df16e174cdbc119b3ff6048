@@ -1,0 +1,9 @@
+Verified+1: Dan Willemsen <dwillemsen@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Submitted-by: Dan Willemsen <dwillemsen@google.com>
+Submitted-at: Wed, 17 May 2017 19:50:53 +0000
+Reviewed-on: https://android-review.googlesource.com/398009
+Project: platform/bionic
+Branch: refs/heads/master
