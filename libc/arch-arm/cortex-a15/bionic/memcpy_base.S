@@ -145,6 +145,7 @@
         itt         ne
         ldrbne      lr, [r1], #1
         strbne      lr, [r0], #1
+        // expected-warning@-3 {{deprecated}}
         itttt       cs
         ldrbcs      ip, [r1], #1
         ldrbcs      lr, [r1]
