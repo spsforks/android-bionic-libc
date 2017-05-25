@@ -396,22 +396,26 @@ Enable multiple options (backtrace and guards):
     adb shell setprop libc.debug.malloc.options "\"backtrace guards\""
     adb shell start
 
-Enable malloc debug when multiple processes have the same name. This method
-can be used to enable malloc debug for only a very specific process if
-multiple processes have the same name.
-
-Note: The double quotes in the adb shell command are necessary. Otherwise,
+Note: The double quotes in the adb shell command is necessary. Otherwise,
 the setprop command will fail since the backtrace guards options will look
 like two arguments instead of one.
 
+Enable malloc debug using an environment variable (Pre-O Android release):
+
     adb shell
-    # setprop libc.debug.malloc.env_enabled
+    # setprop libc.debug.malloc.env_enabled 1
     # setprop libc.debug.malloc.options backtrace
-    # export LIBC_DEBUG_MALLOC_ENABLE 1
+    # export LIBC_DEBUG_MALLOC_ENABLE=1
     # ls
 
-Enable malloc debug and dump the native allocation with backtraces to
-a file. This only works for zygote based java processes.
+Enable malloc debug using an environment variable (Android O or later):
+
+    adb shell
+    # export LIBC_DEBUG_MALLOC_OPTIONS=backtrace
+    # ls
+
+Any process spawned from this shell will have run with malloc debug enabled
+using the backtrace option.
 
     adb shell stop
     adb shell setprop libc.debug.malloc.options backtrace
@@ -421,3 +425,27 @@ a file. This only works for zygote based java processes.
 It is possible to use the backtrace\_enable\_on\_signal option as well,
 but it must be enabled through the signal before the file will contain
 any data.
+
+To analyze the data produced by the dumpheap command, run this script:
+
+    development/scripts/native_heapdump_viewer.py
+
+In order for the script to properly symbolize the stacks in the file,
+make sure the script is executed from the tree that built the image.
+Below is an example executing the script from the dump created by the
+above command:
+
+    adb shell pull /data/local/tmp/heap.txt .
+    development/scripts/native_heapdump_viewer.py heap.txt > heap_info.txt
+
+Enable malloc debug for a specific program/application (Android O or later):
+
+    adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
+
+For example, to enable malloc debug for the google search box (Android O or later):
+
+    adb shell setprop wrap.com.google.android.googlequicksearchbox '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
+    adb shell am force-stop com.google.android.googlequicksearchbox
+
+NOTE: On O, property names can be longer than on previous versions of the OS.
+It is not necessary to truncate the property name.
