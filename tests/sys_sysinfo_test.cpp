@@ -30,7 +30,6 @@ TEST(sys_sysinfo, smoke) {
 
   long avail_phys_pages = get_avphys_pages();
   ASSERT_GT(avail_phys_pages, 0);
-  ASSERT_EQ(sysconf(_SC_AVPHYS_PAGES), avail_phys_pages);
 
   long phys_pages = get_phys_pages();
   ASSERT_GE(phys_pages, avail_phys_pages);
