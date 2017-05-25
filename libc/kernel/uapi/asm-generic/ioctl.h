@@ -49,7 +49,7 @@
 #ifndef _IOC_READ
 #define _IOC_READ 2U
 #endif
-#define _IOC(dir,type,nr,size) (((dir) << _IOC_DIRSHIFT) | ((type) << _IOC_TYPESHIFT) | ((nr) << _IOC_NRSHIFT) | ((size) << _IOC_SIZESHIFT))
+#define _IOC(dir,type,nr,size) __BIONIC_CAST(static_cast, int, ((dir) << _IOC_DIRSHIFT) | ((type) << _IOC_TYPESHIFT) | ((nr) << _IOC_NRSHIFT) | ((size) << _IOC_SIZESHIFT))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define _IOC_TYPECHECK(t) (sizeof(t))
 #define _IO(type,nr) _IOC(_IOC_NONE, (type), (nr), 0)

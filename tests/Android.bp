@@ -111,6 +111,7 @@ cc_test_library {
         "strings_test.cpp",
         "sstream_test.cpp",
         "sys_epoll_test.cpp",
+        "sys_ioctl_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
         "sys_personality_test.cpp",
