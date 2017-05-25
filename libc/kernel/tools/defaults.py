@@ -145,14 +145,12 @@ kernel_known_statics = {
         "x86" : kernel_known_x86_statics,
     }
 
-# this is a list of macros which we want to specifically exclude from
-# the generated files.
+# these are macros where we don't want the kernel's definition and just want
+# to substitute our own.
 #
-kernel_ignored_macros = set(
-        [
-
-        ]
-    )
+overridden_macros = {
+    "_IOC(dir,type,nr,size)": "#define _IOC(dir,type,nr,size) __BIONIC_CAST(static_cast,int,((dir)<<_IOC_DIRSHIFT) | ((type)<<_IOC_TYPESHIFT) | ((nr)<<_IOC_NRSHIFT) | ((size)<<_IOC_SIZESHIFT))",
+    }
 
 # this is the standard disclaimer
 #

@@ -1215,9 +1215,9 @@ class BlockList(object):
             if b.isIf():
                 b.expr.optimize(macros)
 
-    def removeMacroDefines(self, macros):
-        """Remove known macro definitions from a BlockList."""
-        self.blocks = remove_macro_defines(self.blocks, macros)
+    def replaceOverriddenMacros(self, macros):
+        """Replace macro definitions with our preferred implementations."""
+        self.blocks = replace_overridden_macros(self.blocks, macros)
 
     def optimizeAll(self, macros):
         self.optimizeMacros(macros)
@@ -1620,16 +1620,20 @@ def test_BlockParser():
 ################################################################################
 
 
-def remove_macro_defines(blocks, excludedMacros=None):
-    """Remove macro definitions like #define <macroName>  ...."""
-    if excludedMacros is None:
-        excludedMacros = set()
+def replace_overridden_macros(blocks, rewrites):
+    """Replace macro definitions in `blocks` using the given rewrites."""
     result = []
     for b in blocks:
         macroName = b.isDefine()
-        if macroName is None or macroName not in excludedMacros:
+        if macroName is None:
             result.append(b)
-
+        else:
+            rewrite = rewrites.get(macroName, None)
+            if rewrite is None:
+                result.append(b)
+            else:
+                b = BlockParser().parse(CppStringTokenizer(rewrite))
+                result.extend(b.blocks)
     return result
 
 

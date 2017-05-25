@@ -118,7 +118,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs(statics)
     blocks.replaceTokens(kernel_token_replacements)
-    blocks.removeMacroDefines(kernel_ignored_macros)
+    blocks.replaceOverriddenMacros(overridden_macros)
 
     out = StringOutput()
     out.write(kernel_disclaimer)
