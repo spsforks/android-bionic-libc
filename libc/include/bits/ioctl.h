@@ -33,7 +33,12 @@
 
 __BEGIN_DECLS
 
+#if __clang__
+int ioctl(int, int, ...) __overloadable __RENAME(ioctl);
+int ioctl(int, unsigned, ...) __overloadable;
+#else
 int ioctl(int, int, ...);
+#endif
 
 __END_DECLS
 

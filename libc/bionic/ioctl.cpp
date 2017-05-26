@@ -31,7 +31,7 @@
 
 extern "C" int __ioctl(int, int, void *);
 
-int ioctl(int fd, int request, ...) {
+int ioctl(int fd, int request, ...) __overloadable {
   va_list ap;
   va_start(ap, request);
   void* arg = va_arg(ap, void*);
