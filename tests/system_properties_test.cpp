@@ -44,6 +44,7 @@ struct LocalPropertyTestState {
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
 
+        __system_property_store_property_areas();
         __system_property_set_filename(pa_filename.c_str());
         __system_property_area_init();
         valid = true;
@@ -54,8 +55,7 @@ struct LocalPropertyTestState {
             return;
         }
 
-        __system_property_set_filename(PROP_FILENAME);
-        __system_properties_init();
+        __system_property_restore_property_areas();
         unlink(pa_filename.c_str());
         rmdir(pa_dirname.c_str());
     }
@@ -423,6 +423,39 @@ TEST(properties, __system_property_wait) {
 #else // __BIONIC__
     GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
+}
+
+TEST(properties, properties_persist_across_tests) {
+#if defined(__BIONIC__)
+  const prop_info* pi = __system_property_find("ro.hardware");
+  ASSERT_TRUE(pi != nullptr);
+
+  std::string hardware;
+  __system_property_read_callback(pi,
+                                  [](void* cookie, const char*, const char* value, uint32_t) {
+                                    std::string* hardware = reinterpret_cast<std::string*>(cookie);
+                                    *hardware = value;
+                                  },
+                                  &hardware);
+  ASSERT_FALSE(hardware.empty());
+
+  {
+    LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
+  }
+
+  std::string hardware2;
+  __system_property_read_callback(pi,
+                                  [](void* cookie, const char*, const char* value, uint32_t) {
+                                    std::string* hardware = reinterpret_cast<std::string*>(cookie);
+                                    *hardware = value;
+                                  },
+                                  &hardware2);
+  ASSERT_EQ(hardware, hardware2);
+
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
 }
 
 class KilledByFault {
