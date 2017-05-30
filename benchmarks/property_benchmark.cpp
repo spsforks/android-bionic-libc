@@ -54,6 +54,7 @@ struct LocalPropertyTestState {
     pa_dirname = dirname;
     pa_filename = pa_dirname + "/__properties__";
 
+    __system_property_store_property_areas();
     __system_property_set_filename(pa_filename.c_str());
     __system_property_area_init();
 
@@ -106,8 +107,7 @@ struct LocalPropertyTestState {
     if (!valid)
       return;
 
-    __system_property_set_filename(PROP_FILENAME);
-    __system_property_area_init();
+    __system_property_restore_property_areas();
     unlink(pa_filename.c_str());
     rmdir(pa_dirname.c_str());
 
