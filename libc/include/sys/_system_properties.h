@@ -64,6 +64,14 @@ __BEGIN_DECLS
 int __system_property_set_filename(const char *filename);
 
 /*
+** Store/restore the initialized property areas to/from a static location.  These is only one static
+** location, so store will abort if there is already a set of stored property areas.  These methods
+** are for testing only.
+*/
+void __system_property_store_property_areas();
+void __system_property_restore_property_areas();
+
+/*
 ** Initialize the area to be used to store properties.  Can
 ** only be done by a single process that has write access to
 ** the property area.

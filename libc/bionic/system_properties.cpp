@@ -1470,3 +1470,60 @@ int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie),
   });
   return 0;
 }
+
+static prefix_node* stored_prefixes = nullptr;
+static context_node* stored_contexts = nullptr;
+static prop_area* stored__system_property_area__ = nullptr;
+
+static char stored_property_filename[PROP_FILENAME_MAX] = "";
+static size_t stored_pa_data_size = 0;
+static size_t stored_pa_size = 0;
+static bool stored_initialized = false;
+
+void __system_property_store_property_areas() {
+  if (stored_prefixes != nullptr ||
+      stored_contexts != nullptr ||
+      stored__system_property_area__ != nullptr ||
+      stored_property_filename[0] != '\0' ||
+      stored_pa_data_size != 0 ||
+      stored_pa_size != 0 ||
+      stored_initialized != false) {
+
+    async_safe_fatal("__system_property_store_property_areas() called when there was already a stored property area");
+  }
+
+  stored_prefixes = prefixes;
+  stored_contexts = contexts;
+  stored__system_property_area__ = __system_property_area__;
+  strcpy(stored_property_filename, property_filename);
+  stored_pa_data_size = 0;
+  stored_pa_size = 0;
+  stored_initialized = initialized;
+
+  prefixes = nullptr;
+  contexts = nullptr;
+  __system_property_area__ = nullptr;
+  property_filename[0] = '\0';
+  pa_size = 0;
+  pa_data_size = 0;
+  initialized = false;
+}
+
+void __system_property_restore_property_areas() {
+  free_and_unmap_contexts();
+  prefixes = stored_prefixes;
+  contexts = stored_contexts;
+  __system_property_area__ = stored__system_property_area__;
+  strcpy(property_filename, stored_property_filename);
+  pa_data_size = stored_pa_data_size;
+  pa_size = stored_pa_size;
+  initialized = stored_initialized;
+
+  stored_prefixes = nullptr;
+  stored_contexts = nullptr;
+  stored__system_property_area__ = nullptr;
+  stored_property_filename[0] = '\0';
+  stored_pa_data_size = 0;
+  stored_pa_size = 0;
+  stored_initialized = false;
+}
