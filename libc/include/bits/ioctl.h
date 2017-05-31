@@ -33,7 +33,17 @@
 
 __BEGIN_DECLS
 
+#if defined(__clang__)
+int ioctl(int, int, ...) __overloadable __attribute__((enable_if(1, ""))) __RENAME(ioctl);
+
+/*
+ * Workaround so we can ignore unsigned -> signed conversion warnings when
+ * working with common constants.
+ */
+int ioctl(int, unsigned, ...) __overloadable __RENAME(ioctl);
+#else
 int ioctl(int, int, ...);
+#endif
 
 __END_DECLS
 
