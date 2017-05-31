@@ -118,3 +118,6 @@ ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int 
 
 # b/37769298
 int dup2(int oldfd, int newfd)	arm,x86,mips
+
+# b/38341617
+pid_t waitpid(pid_t pid, int *status, int options)	x86
