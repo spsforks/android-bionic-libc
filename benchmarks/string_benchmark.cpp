@@ -58,7 +58,22 @@ static void BM_string_memcpy(benchmark::State& state) {
 }
 BENCHMARK(BM_string_memcpy)->AT_COMMON_SIZES;
 
-static void BM_string_memmove(benchmark::State& state) {
+static void BM_string_memmove_forward(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  char* src = new char[nbytes]; char* dst = new char[nbytes];
+  memset(src, 'x', nbytes);
+
+  while (state.KeepRunning()) {
+    memmove(dst, src, nbytes);
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+  delete[] src;
+  delete[] dst;
+}
+BENCHMARK(BM_string_memmove_forward)->AT_COMMON_SIZES;
+
+static void BM_string_memmove_backward(benchmark::State& state) {
   const size_t nbytes = state.range(0);
   char* buf = new char[nbytes + 64];
   memset(buf, 'x', nbytes + 64);
@@ -70,7 +85,7 @@ static void BM_string_memmove(benchmark::State& state) {
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
   delete[] buf;
 }
-BENCHMARK(BM_string_memmove)->AT_COMMON_SIZES;
+BENCHMARK(BM_string_memmove_backward)->AT_COMMON_SIZES;
 
 static void BM_string_memset(benchmark::State& state) {
   const size_t nbytes = state.range(0);
