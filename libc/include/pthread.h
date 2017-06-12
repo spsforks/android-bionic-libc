@@ -160,6 +160,15 @@ int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull, const struct timespec* _N
 int pthread_mutex_trylock(pthread_mutex_t* _Nonnull);
 int pthread_mutex_unlock(pthread_mutex_t* _Nonnull);
 
+#if defined(__LP32__) && __ANDROID_API__ < 21
+/*
+ * Same as pthread_mutex_lock(), but will wait up to `msecs` milli-seconds
+ * before returning. Returns EBUSY if the lock could not be acquired after the
+ * timeout expired.
+ */
+int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned msecs);
+#endif
+
 int pthread_once(pthread_once_t* _Nonnull, void (* _Nonnull init_routine)(void));
 
 int pthread_rwlockattr_init(pthread_rwlockattr_t* _Nonnull);
