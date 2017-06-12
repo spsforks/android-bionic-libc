@@ -123,3 +123,33 @@ static void BM_string_strlen(benchmark::State& state) {
   delete[] s;
 }
 BENCHMARK(BM_string_strlen)->AT_COMMON_SIZES;
+
+static void BM_string_strcat_copy(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(nbytes, 'x');
+  std::vector<char> dst(nbytes);
+  src[nbytes - 1] = '\0';
+  dst[0] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst.data(), src.data());
+    dst[0] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcat_copy)->AT_COMMON_SIZES;
+
+static void BM_string_strcat_seek(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(1, '\0');
+  std::vector<char> dst(nbytes, 'x');
+  dst[nbytes - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst.data(), src.data());
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcat_seek)->AT_COMMON_SIZES;
