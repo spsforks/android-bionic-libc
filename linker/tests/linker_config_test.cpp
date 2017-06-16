@@ -72,6 +72,7 @@ static bool write_version(const std::string& path, uint32_t version) {
 
 static void run_linker_config_smoke_test(bool is_asan) {
 #if defined(__LP64__)
+#if defined(USES_VENDOR_IMAGE)
   const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/vendor/lib64"}) :
         std::vector<std::string>({ "/vendor/lib64" });
@@ -79,6 +80,15 @@ static void run_linker_config_smoke_test(bool is_asan) {
   const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
         std::vector<std::string>({ "/data", "/vendor" }) :
         std::vector<std::string>({ "/vendor/lib64" });
+#else
+  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
+        std::vector<std::string>({ "/data", "/system/vendor/lib64"}) :
+        std::vector<std::string>({ "/system/vendor/lib64" });
+
+  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
+        std::vector<std::string>({ "/data", "/system/vendor" }) :
+        std::vector<std::string>({ "/system/vendor/lib64" });
+#endif  // defined(USES_VENDOR_IMAGE)
 
   const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/system/lib64" }) :
@@ -88,6 +98,7 @@ static void run_linker_config_smoke_test(bool is_asan) {
         std::vector<std::string>({ "/data", "/system" }) :
         std::vector<std::string>({ "/system/lib64" });
 #else
+#if defined(USES_VENDOR_IMAGE)
   const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/vendor/lib"}) :
         std::vector<std::string>({ "/vendor/lib" });
@@ -95,6 +106,15 @@ static void run_linker_config_smoke_test(bool is_asan) {
   const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
         std::vector<std::string>({ "/data", "/vendor" }) :
         std::vector<std::string>({ "/vendor/lib" });
+#else
+  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
+        std::vector<std::string>({ "/data", "/system/vendor/lib"}) :
+        std::vector<std::string>({ "/system/vendor/lib" });
+
+  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
+        std::vector<std::string>({ "/data", "/system/vendor" }) :
+        std::vector<std::string>({ "/system/vendor/lib" });
+#endif  // defined(USES_VENDOR_IMAGE)
 
   const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/system/lib" }) :
@@ -103,7 +123,7 @@ static void run_linker_config_smoke_test(bool is_asan) {
   const std::vector<std::string> kExpectedSystemPermittedPath = is_asan ?
         std::vector<std::string>({ "/data", "/system" }) :
         std::vector<std::string>({ "/system/lib" });
-#endif
+#endif  // defined(__LP64__)
 
   TemporaryFile tmp_file;
   close(tmp_file.fd);
