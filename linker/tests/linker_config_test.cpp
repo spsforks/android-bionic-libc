@@ -33,6 +33,7 @@
 #include <gtest/gtest.h>
 
 #include "../linker_config.h"
+#include "../linker_utils.h"
 
 #include <unistd.h>
 
@@ -70,15 +71,21 @@ static bool write_version(const std::string& path, uint32_t version) {
   return android::base::WriteStringToFile(content, path);
 }
 
+static std::vector<std::string> resolve_paths(std::vector<std::string> paths) {
+  std::vector<std::string> resolved_paths;
+  resolve_paths(paths, &resolved_paths);
+  return resolved_paths;
+}
+
 static void run_linker_config_smoke_test(bool is_asan) {
 #if defined(__LP64__)
-  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor/lib64"}) :
-        std::vector<std::string>({ "/vendor/lib64" });
+  const std::vector<std::string> kExpectedDefaultSearchPath =
+      resolve_paths((is_asan ? std::vector<std::string>({ "/data", "/vendor/lib64"}) :
+                               std::vector<std::string>({ "/vendor/lib64" })));
 
-  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor" }) :
-        std::vector<std::string>({ "/vendor/lib64" });
+  const std::vector<std::string> kExpectedDefaultPermittedPath =
+      resolve_paths((is_asan ? std::vector<std::string>({ "/data", "/vendor" }) :
+                               std::vector<std::string>({ "/vendor/lib64" })));
 
   const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/system/lib64" }) :
@@ -88,13 +95,13 @@ static void run_linker_config_smoke_test(bool is_asan) {
         std::vector<std::string>({ "/data", "/system" }) :
         std::vector<std::string>({ "/system/lib64" });
 #else
-  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor/lib"}) :
-        std::vector<std::string>({ "/vendor/lib" });
+  const std::vector<std::string> kExpectedDefaultSearchPath =
+      resolve_paths((is_asan ? std::vector<std::string>({ "/data", "/vendor/lib"}) :
+                               std::vector<std::string>({ "/vendor/lib" })));
 
-  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor" }) :
-        std::vector<std::string>({ "/vendor/lib" });
+  const std::vector<std::string> kExpectedDefaultPermittedPath =
+      resolve_paths((is_asan ? std::vector<std::string>({ "/data", "/vendor" }) :
+                               std::vector<std::string>({ "/vendor/lib" })));
 
   const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
         std::vector<std::string>({ "/data", "/system/lib" }) :
