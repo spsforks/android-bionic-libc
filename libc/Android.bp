@@ -1304,7 +1304,6 @@ cc_library_static {
     },
 
     cppflags: ["-Wold-style-cast"],
-    include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",
 }
 
@@ -1501,7 +1500,7 @@ cc_library_static {
 
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
-    include_dirs: ["bionic/libstdc++/include"],
+    include_dirs: ["bionic/libc/private"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
 }
@@ -1543,7 +1542,6 @@ cc_library_static {
     ],
 
     cppflags: ["-Wold-style-cast"],
-    include_dirs: ["bionic/libstdc++/include"],
     name: "libc_pthread",
 }
 
@@ -1840,7 +1838,7 @@ cc_library {
 // ========================================================
 cc_library {
     defaults: ["libc_defaults"],
-    include_dirs: ["bionic/libstdc++/include"],
+    include_dirs: ["bionic/libc/private"],
     srcs: [
         "bionic/__cxa_guard.cpp",
         "bionic/__cxa_pure_virtual.cpp",
@@ -1848,7 +1846,7 @@ cc_library {
     ],
     name: "libstdc++",
     system_shared_libs: ["libc"],
-		static_libs: ["libasync_safe"],
+    static_libs: ["libasync_safe"],
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
