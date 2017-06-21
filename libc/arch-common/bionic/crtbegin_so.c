@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-extern void __cxa_finalize(void *);
+extern void __attribute__((weak)) __cxa_finalize(void *);
 extern void *__dso_handle;
 
 __attribute__((visibility("hidden"),destructor))

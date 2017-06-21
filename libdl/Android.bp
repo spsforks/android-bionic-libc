@@ -15,7 +15,10 @@ cc_library {
     //
     // DO NOT REMOVE --exclude-libs!
 
-    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
+    ldflags: [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,-z,nodelete",
+    ],
 
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {

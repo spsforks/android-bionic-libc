@@ -131,6 +131,7 @@ unlock:
  * object owning 'dso'.
  * Note: if 'dso' is NULL, then all remaining handlers are called.
  */
+__attribute__((weak))
 void
 __cxa_finalize(void *dso)
 {
