@@ -170,6 +170,12 @@ int pthread_mutex_unlock(pthread_mutex_t* _Nonnull);
  * https://github.com/android-ndk/ndk/issues/420
  */
 int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned msecs);
+
+/*
+ * Ditto for pthread_cond_timedwait_monotonic_np.
+ * https://stackoverflow.com/q/44580542/632035
+ */
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
 #endif
 
 int pthread_once(pthread_once_t* _Nonnull, void (* _Nonnull init_routine)(void));
