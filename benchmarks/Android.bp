@@ -63,3 +63,10 @@ cc_benchmark_host {
         },
     },
 }
+
+cc_library_static {
+    name: "libBionicBenchmarksUtils",
+    srcs: ["util.cpp"],
+    host_supported: true,
+    export_include_dirs: ["."],
+}
