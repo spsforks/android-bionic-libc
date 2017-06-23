@@ -54,6 +54,7 @@ cc_test_library {
         "arpa_inet_test.cpp",
         "async_safe_test.cpp",
         "assert_test.cpp",
+        "benchmark_test.cpp",
         "buffer_tests.cpp",
         "bug_26110743_test.cpp",
         "complex_test.cpp",
@@ -151,6 +152,7 @@ cc_test_library {
 
     include_dirs: [
         "bionic/libc",
+        "bionic/benchmarks",
         "external/tinyxml2",
     ],
 
@@ -159,6 +161,10 @@ cc_test_library {
             whole_static_libs: ["libasync_safe"],
         },
     },
+
+    whole_static_libs: [
+        "libgoogle-benchmark",
+    ],
 
     static_libs: [
         "libtinyxml2",
