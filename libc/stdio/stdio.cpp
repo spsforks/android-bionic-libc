@@ -49,18 +49,12 @@
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
+#include "printf_impl.h"
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
-
-#define PRINTF_IMPL(expr) \
-    va_list ap; \
-    va_start(ap, fmt); \
-    int result = (expr); \
-    va_end(ap); \
-    return result;
 
 #define std(flags, file) \
     {0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,nullptr,__swrite, \
@@ -95,7 +89,6 @@ FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
 
-struct glue __sglue = { NULL, 3, __sF };
 static struct glue* lastglue = &__sglue;
 
 class ScopedFileLock {
@@ -673,10 +666,6 @@ int fscanf(FILE* fp, const char* fmt, ...) {
   PRINTF_IMPL(vfscanf(fp, fmt, ap));
 }
 
-int fwprintf(FILE* fp, const wchar_t* fmt, ...) {
-  PRINTF_IMPL(vfwprintf(fp, fmt, ap));
-}
-
 int fwscanf(FILE* fp, const wchar_t* fmt, ...) {
   PRINTF_IMPL(vfwscanf(fp, fmt, ap));
 }
@@ -787,10 +776,6 @@ int sscanf(const char* s, const char* fmt, ...) {
   PRINTF_IMPL(vsscanf(s, fmt, ap));
 }
 
-int swprintf(wchar_t* s, size_t n, const wchar_t* fmt, ...) {
-  PRINTF_IMPL(vswprintf(s, n, fmt, ap));
-}
-
 int swscanf(const wchar_t* s, const wchar_t* fmt, ...) {
   PRINTF_IMPL(vswscanf(s, fmt, ap));
 }
@@ -833,16 +818,8 @@ int vsprintf(char* s, const char* fmt, va_list ap) {
   return vsnprintf(s, SSIZE_MAX, fmt, ap);
 }
 
-int vwprintf(const wchar_t* fmt, va_list ap) {
-  return vfwprintf(stdout, fmt, ap);
-}
-
 int vwscanf(const wchar_t* fmt, va_list ap) {
   return vfwscanf(stdin, fmt, ap);
-}
-
-int wprintf(const wchar_t* fmt, ...) {
-  PRINTF_IMPL(vfwprintf(stdout, fmt, ap));
 }
 
 int wscanf(const wchar_t* fmt, ...) {

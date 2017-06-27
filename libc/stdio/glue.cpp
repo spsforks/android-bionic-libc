@@ -1,5 +1,4 @@
-/*	$OpenBSD: glue.h,v 1.4 2004/01/11 21:39:51 millert Exp $	*/
-
+/*	$OpenBSD: findfp.c,v 1.15 2013/12/17 16:33:27 deraadt Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -31,23 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#include "glue.h"
 
-#include <stdio.h>
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-/*
- * The first few FILEs are statically allocated; others are dynamically
- * allocated and linked in via this glue structure.
- */
-struct glue {
-	struct	glue *next;
-	int	niobs;
-	FILE	*iobs;
-};
-
-/* This was referenced by a couple of different pieces of middleware and the Crystax NDK. */
-__LIBC32_LEGACY_PUBLIC__ extern struct glue __sglue;
-
-__END_DECLS
+extern FILE __sF[3];
+struct glue __sglue = { NULL, 3, __sF };
