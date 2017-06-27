@@ -15,6 +15,7 @@
  */
 
 #include <pthread.h>
+#include <memory>
 
 #include <benchmark/benchmark.h>
 
@@ -56,11 +57,13 @@ static void DummyPthreadOnceInitFunction() {
 }
 
 static void BM_pthread_once(benchmark::State& state) {
-  pthread_once_t once = PTHREAD_ONCE_INIT;
-  pthread_once(&once, DummyPthreadOnceInitFunction);
+  // Use a unique_ptr so the static analyzer doesn't complain about a local
+  // `once`.
+  auto once = std::make_unique<pthread_once_t>(PTHREAD_ONCE_INIT);
+  pthread_once(once.get(), DummyPthreadOnceInitFunction);
 
   while (state.KeepRunning()) {
-    pthread_once(&once, DummyPthreadOnceInitFunction);
+    pthread_once(once.get(), DummyPthreadOnceInitFunction);
   }
 }
 BENCHMARK(BM_pthread_once);
