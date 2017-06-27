@@ -47,11 +47,9 @@
 #define __need_NULL
 #include <stddef.h>
 
+#include <bits/fpos_t.h>
 #include <bits/seek_constants.h>
-
-#if __ANDROID_API__ < __ANDROID_API_N__
 #include <bits/struct_file.h>
-#endif
 
 __BEGIN_DECLS
 
@@ -59,9 +57,6 @@ __BEGIN_DECLS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #endif
-
-typedef off_t fpos_t;
-typedef off64_t fpos64_t;
 
 struct __sFILE;
 typedef struct __sFILE FILE;
