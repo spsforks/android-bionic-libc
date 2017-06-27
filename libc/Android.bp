@@ -1853,6 +1853,7 @@ cc_library {
         "bionic/new.cpp",
     ],
     name: "libstdc++",
+    vendor_available: true,
     system_shared_libs: ["libc"],
 		static_libs: ["libasync_safe"],
 
