@@ -1232,13 +1232,14 @@ static bool load_library(android_namespace_t* ns,
       if (!maybe_accessible_via_namespace_links(ns, name)) {
         PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
               " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-              " permitted_paths=\"%s\"]",
+              " permitted_paths=\"%s\", forbidden_paths=\"%s\"]",
               name, realpath.c_str(),
               needed_or_dlopened_by,
               ns->get_name(),
               android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
               android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-              android::base::Join(ns->get_permitted_paths(), ':').c_str());
+              android::base::Join(ns->get_permitted_paths(), ':').c_str(),
+              android::base::Join(ns->get_forbidden_paths(), ':').c_str());
       }
       return false;
     }
@@ -2214,6 +2215,9 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_ld_library_paths(std::move(ld_library_paths));
   ns->set_default_library_paths(std::move(default_library_paths));
   ns->set_permitted_paths(std::move(permitted_paths));
+  // Note: forbidden_paths is skipped because we do not want to change the
+  // function signature of create_namespace().
+  // ns->set_forbidden_paths({});
 
   return ns;
 }
@@ -3475,6 +3479,7 @@ void init_default_namespace(const char* executable_path) {
   g_default_namespace.set_isolated(default_ns_config->isolated());
   g_default_namespace.set_default_library_paths(default_ns_config->search_paths());
   g_default_namespace.set_permitted_paths(default_ns_config->permitted_paths());
+  g_default_namespace.set_forbidden_paths(default_ns_config->forbidden_paths());
 
   namespaces[default_ns_config->name()] = &g_default_namespace;
 
@@ -3490,6 +3495,7 @@ void init_default_namespace(const char* executable_path) {
     ns->set_isolated(ns_config->isolated());
     ns->set_default_library_paths(ns_config->search_paths());
     ns->set_permitted_paths(ns_config->permitted_paths());
+    ns->set_forbidden_paths(ns_config->forbidden_paths());
 
     namespaces[ns_config->name()] = ns;
     if (ns_config->visible()) {

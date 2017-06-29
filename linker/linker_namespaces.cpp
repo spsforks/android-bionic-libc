@@ -32,6 +32,12 @@
 #include "linker_utils.h"
 
 bool android_namespace_t::is_accessible(const std::string& file) {
+  for (const auto& dir : forbidden_paths_) {
+    if (file_is_under_dir(file, dir)) {
+      return false;
+    }
+  }
+
   if (!is_isolated_) {
     return true;
   }

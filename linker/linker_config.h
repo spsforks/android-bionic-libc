@@ -85,6 +85,10 @@ class NamespaceConfig {
     return permitted_paths_;
   }
 
+  const std::vector<std::string>& forbidden_paths() const {
+    return forbidden_paths_;
+  }
+
   const std::vector<NamespaceLinkConfig>& links() const {
     return namespace_links_;
   }
@@ -108,12 +112,18 @@ class NamespaceConfig {
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
     permitted_paths_ = permitted_paths;
   }
+
+  void set_forbidden_paths(std::vector<std::string>&& forbidden_paths) {
+    forbidden_paths_ = forbidden_paths;
+  }
+
  private:
   const std::string name_;
   bool isolated_;
   bool visible_;
   std::vector<std::string> search_paths_;
   std::vector<std::string> permitted_paths_;
+  std::vector<std::string> forbidden_paths_;
   std::vector<NamespaceLinkConfig> namespace_links_;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(NamespaceConfig);

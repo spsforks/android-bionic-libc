@@ -467,6 +467,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
 
     ns_config->set_search_paths(properties.get_paths(property_name_prefix + ".search.paths"));
     ns_config->set_permitted_paths(properties.get_paths(property_name_prefix + ".permitted.paths"));
+    ns_config->set_forbidden_paths(properties.get_paths(property_name_prefix + ".forbidden.paths"));
   }
 
   failure_guard.Disable();
