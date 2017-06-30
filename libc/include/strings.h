@@ -58,4 +58,6 @@ int ffs(int) __INTRODUCED_IN_X86(18);
 
 __END_DECLS
 
+#include <android/legacy_strings_inlines.h>
+
 #endif /* !defined(_STRINGS_H_) */
