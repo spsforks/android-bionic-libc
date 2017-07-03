@@ -117,12 +117,19 @@ TEST(pthread_leak, detach) {
 
   for (size_t pass = 0; pass < 2; ++pass) {
     pthread_barrier_t barrier;
-    constexpr int thread_count = 100;
+    int thread_count;
+    if (pass == 0) {
+      // To fill up kernel's thread pool.
+      thread_count = 1000;
+    } else {
+      thread_count = 100;
+    }
+
     ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
 
     // Start child threads.
     struct thread_data { pthread_barrier_t* barrier; pid_t* tid; };
-    pid_t tids[thread_count];
+    pid_t *tids = static_cast<pid_t*>(malloc(sizeof(pid_t) * thread_count));
     for (int i = 0; i < thread_count; ++i) {
       thread_data* td = new thread_data{&barrier, &tids[i]};
       const auto thread_function = +[](void* ptr) -> void* {
@@ -143,7 +150,8 @@ TEST(pthread_leak, detach) {
     pthread_barrier_wait(&barrier);
     ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-    WaitUntilAllExited(tids, arraysize(tids));
+    WaitUntilAllExited(tids, thread_count);
+    free(tids);
 
     // houdini keeps a thread pool, so we ignore the first pass while the
     // pool fills, but then on the second pass require that the "pool" isn't
