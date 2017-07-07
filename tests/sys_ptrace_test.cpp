@@ -66,14 +66,34 @@ static bool is_hw_feature_supported(pid_t child, HwFeature feature) {
   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
   if (result == -1) {
     EXPECT_EQ(EIO, errno);
+    GTEST_LOG_(INFO) << "Hardware debug support disabled at kernel configuration time.";
+    return false;
+  }
+  uint8_t hb_count = capabilities & 0xff;
+  capabilities >>= 8;
+  uint8_t wp_count = capabilities & 0xff;
+  capabilities >>= 8;
+  uint8_t max_wp_size = capabilities & 0xff;
+  if (max_wp_size == 0) {
+    GTEST_LOG_(INFO)
+        << "Kernel reports zero maximum watchpoint size. Hardware debug support missing.";
     return false;
   }
   switch (feature) {
     case HwFeature::Watchpoint:
-      return ((capabilities >> 8) & 0xff) > 0;
+      if (wp_count == 0) {
+        GTEST_LOG_(INFO) << "Kernel reports zero hardware watchpoints";
+        return false;
+      }
+      break;
     case HwFeature::Breakpoint:
-      return (capabilities & 0xff) > 0;
+      if (hb_count == 0) {
+        GTEST_LOG_(INFO) << "Kernel reports zero hardware breakpoints";
+        return false;
+      }
+      break;
   }
+  return true;
 #elif defined(__aarch64__)
   user_hwdebug_state dreg_state;
   iovec iov;
