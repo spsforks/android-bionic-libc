@@ -3477,6 +3477,9 @@ void init_default_namespace(const char* executable_path) {
   g_default_namespace.set_permitted_paths(default_ns_config->permitted_paths());
 
   namespaces[default_ns_config->name()] = &g_default_namespace;
+  if (default_ns_config->visible()) {
+    g_exported_namespaces[default_ns_config->name()] = &g_default_namespace;
+  }
 
   // 2. Initialize other namespaces
 
