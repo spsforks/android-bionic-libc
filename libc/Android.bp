@@ -1357,6 +1357,7 @@ cc_library_static {
         "bionic/ctype.cpp",
         "bionic/dirent.cpp",
         "bionic/dup2.cpp",
+        "bionic/environ.cpp",
         "bionic/epoll_create.cpp",
         "bionic/epoll_pwait.cpp",
         "bionic/epoll_wait.cpp",
@@ -1790,6 +1791,7 @@ cc_library {
 
     shared_libs: ["libdl"],
     whole_static_libs: ["libc_common", "libjemalloc"],
+    //static_libs: ["libc_common", "libjemalloc"],
 
     nocrt: true,
 
