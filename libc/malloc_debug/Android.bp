@@ -20,7 +20,8 @@ cc_library_static {
     export_include_dirs: ["."],
 
     sanitize: {
-        never: true,
+        address: false,
+        coverage: false,
     },
     native_coverage: false,
 
@@ -78,7 +79,8 @@ cc_library {
     include_dirs: ["bionic/libc"],
 
     sanitize: {
-        never: true,
+        address: false,
+        coverage: false,
     },
     native_coverage: false,
 

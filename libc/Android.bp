@@ -67,7 +67,8 @@ cc_defaults {
     stl: "none",
     system_shared_libs: [],
     sanitize: {
-        never: true,
+        address: false,
+        coverage: false,
     },
     native_coverage: false,
     clang: true,
