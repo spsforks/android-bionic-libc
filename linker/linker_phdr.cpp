@@ -1066,7 +1066,7 @@ bool ElfReader::FindPhdr() {
   // If there is a PT_PHDR, use it directly.
   for (const ElfW(Phdr)* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type == PT_PHDR) {
-      return CheckPhdr(load_bias_ + phdr->p_vaddr);
+      return CheckPhdr(load_bias_, phdr->p_vaddr);
     }
   }
 
@@ -1079,7 +1079,7 @@ bool ElfReader::FindPhdr() {
         ElfW(Addr)  elf_addr = load_bias_ + phdr->p_vaddr;
         const ElfW(Ehdr)* ehdr = reinterpret_cast<const ElfW(Ehdr)*>(elf_addr);
         ElfW(Addr)  offset = ehdr->e_phoff;
-        return CheckPhdr(reinterpret_cast<ElfW(Addr)>(ehdr) + offset);
+        return CheckPhdr(reinterpret_cast<ElfW(Addr)>(ehdr), offset);
       }
       break;
     }
