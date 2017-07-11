@@ -1,0 +1,10 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Code-Review+2: Victor Khimenko <khim@google.com>
+Verified+1: Dimitry Ivanov <dimitry@google.com>
+Autosubmit+1: Dimitry Ivanov <dimitry@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Tue, 11 Jul 2017 17:41:12 +0000
+Reviewed-on: https://android-review.googlesource.com/433120
+Project: platform/bionic
+Branch: refs/heads/master
