@@ -327,19 +327,53 @@ each test from being forked, run the tests with the flag `--no-isolate`.
 32-bit ABI bugs
 ---------------
 
-This probably belongs in the NDK documentation rather than here, but these
-are the known ABI bugs in the 32-bit ABI:
+### `off_t` is 32-bit.
 
- * `time_t` is 32-bit. <http://b/5819737>. In the 64-bit ABI, time_t is
-   64-bit.
+On 32-bit Android, `off_t` is a signed 32-bit integer. This limits many
+functions to working on 2GiB files.
 
- * `off_t` is 32-bit. There is `off64_t`, and in newer releases there is
-   almost-complete support for `_FILE_OFFSET_BITS`. Unfortunately our stdio
-   implementation uses 32-bit offsets and -- worse -- function pointers to
-   functions that use 32-bit offsets, so there's no good way to implement
-   the last few pieces <http://b/24807045>. In the 64-bit ABI, off_t is
-   off64_t.
+TL;DR: do not use `_FILE_OFFSET_BITS=64` for 32-bit code unless you only need
+to run on API 21 (Lollipop) and later.
 
- * `sigset_t` is too small on ARM and x86 (but correct on MIPS), so support
-   for real-time signals is broken. <http://b/5828899> In the 64-bit ABI,
-   `sigset_t` is the correct size for every architecture.
+Android does not use `_LARGEFILE_SOURCE` (which makes `fseeko` and `ftello`
+available), or `_LARGEFILE64_SOURCE` (which makes `off64_t` and corresponding
+functions such as `ftruncate64` available). Instead, whatever functions are
+available at your target API level will be visible. In practice, this means
+that the `_LARGEFILE_SOURCE` functions appear in API 24, while the
+`_LARGEFILE64_SOURCE` functions _start_ to appear in API 21.
+
+(There are a couple of exceptions to note. Firstly, `off64_t` and the single
+function `lseek64` were available right from the beginning in API 3. Secondly,
+Android has always silently inserted `O_LARGEFILE` into any open call, so if
+all you need to do is call `read`, large files have always worked.)
+
+Android support for `_FILE_OFFSET_BITS=64` (which turns `off_t` into `off64_t`
+and replaces each `off_t` function with its `off64_t` counterpart, such as
+`lseek` in the source becoming `lseek64` at runtime) was added late. Even when
+it became available for the platform, it wasn't available from the NDK until
+r15. Before NDK r15, `_FILE_OFFSET_BITS=64` silently did nothing: all code
+compiled with that was actually using a 32-bit `off_t`. With a new enough NDK,
+the situation becomes complicated. If you're targeting an API before 21, almost
+all functions that take an `off_t` become unavailable. You've asked for their
+64-bit equivalents, and none of them (except `lseek`/`lseek64`) exist. As you
+increase your target API level, you'll have more and more of the functions
+available. API 12 adds some of the `<unistd.h>` functions, API 21 adds `mmap`,
+and by API 24 you have everything including `<stdio.h>`.
+
+In the 64-bit ABI, `off_t` is 64-bit.
+
+### `sigset_t` is too small for real-time signals.
+
+On 32-bit Android, `sigset_t` is too small for ARM and x86 (but correct for
+MIPS). This means that there is no support for real-time signals in 32-bit
+code.
+
+In the 64-bit ABI, `sigset_t` is the correct size for every architecture.
+
+### `time_t` is 32-bit.
+
+On 32-bit Android, `time_t` is 32-bit. The header `<time64.h>` and type
+`time64_t` exist as a workaround, but the kernel interfaces exposed on 32-bit
+Android all use the 32-bit `time_t`.
+
+In the 64-bit ABI, `time_t` is 64-bit.
