@@ -1276,6 +1276,21 @@ static bool load_library(android_namespace_t* ns,
     load_tasks->push_back(LoadTask::create(name, si, task->get_readers_map()));
   });
 
+  // This is to handle the exceptional case of libdl.so: it is using the symbol
+  // __cxa_finalize which is defined in libc.so but libdl.so does not have
+  // libc.so in its DT_NEEDED entries. This is to prevent the circular
+  // dependency when build the two libraries. However this is causing link error
+  // when libdl.so is the first library that is being loaded in a linked
+  // namespace other than the default namespace. In that case, since libc.so is
+  // not loaded in the namespace, the linker can't resolve the __cxa_finalize
+  // symbol. To solve the exception case, libc.so is explicitly added to the
+  // load_tasks when the current lib being loaded is libdl.so so that libc.so
+  // can be always loaded with libdl.so.
+  const char* soname = si->get_soname();
+  if (soname != nullptr && strcmp(soname, "libdl.so") == 0) {
+    load_tasks->push_back(LoadTask::create("libc.so", si, task->get_readers_map()));
+  }
+
   return true;
 }
 
