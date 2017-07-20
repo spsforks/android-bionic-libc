@@ -27,6 +27,7 @@
 #include <wchar.h>
 #include <locale.h>
 
+#include <string>
 #include <vector>
 
 #include "BionicDeathTest.h"
@@ -40,6 +41,8 @@
 #define STDIO_TEST stdio
 #define STDIO_DEATHTEST stdio_DeathTest
 #endif
+
+using namespace std::string_literals;
 
 class stdio_DeathTest : public BionicDeathTest {};
 class stdio_nofortify_DeathTest : public BionicDeathTest {};
@@ -923,7 +926,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   ASSERT_EQ(WEOF, fgetwc(fp));
   ASSERT_EQ(EILSEQ, errno);
 
-  fclose(fp);
+  ASSERT_EQ(0, fclose(fp));
 }
 
 TEST(STDIO_TEST, fmemopen) {
@@ -934,32 +937,384 @@ TEST(STDIO_TEST, fmemopen) {
   ASSERT_NE(EOF, fputs("abc>\n", fp));
   fflush(fp);
 
+  // We wrote to the buffer...
   ASSERT_STREQ("<abc>\n", buf);
 
+  // And can read back from the file.
   AssertFileIs(fp, "<abc>\n", true);
-  fclose(fp);
+  ASSERT_EQ(0, fclose(fp));
 }
 
-TEST(STDIO_TEST, KNOWN_FAILURE_ON_BIONIC(fmemopen_NULL)) {
+TEST(STDIO_TEST, fmemopen_nullptr) {
   FILE* fp = fmemopen(nullptr, 128, "r+");
   ASSERT_NE(EOF, fputs("xyz\n", fp));
 
   AssertFileIs(fp, "xyz\n", true);
-  fclose(fp);
+  ASSERT_EQ(0, fclose(fp));
 }
 
-TEST(STDIO_TEST, fmemopen_EINVAL) {
-  char buf[16];
+TEST(STDIO_TEST, fmemopen_trailing_NUL_byte) {
+  FILE* fp;
+  char buf[8];
 
-  // Invalid size.
+  // POSIX: "When a stream open for writing is flushed or closed, a null byte
+  // shall be written at the current position or at the end of the buffer,
+  // depending on the size of the contents."
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "w"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  // Even with nothing written (and not in truncate mode), we'll flush a NUL...
+  ASSERT_EQ(0, fflush(fp));
+  EXPECT_EQ("\0xxxxxxx"s, std::string(buf, buf + sizeof(buf)));
+  // Now write and check that the NUL moves along with our writes...
+  ASSERT_NE(EOF, fputs("hello", fp));
+  EXPECT_EQ("hello\0xx"s, std::string(buf, buf + sizeof(buf)));
+  ASSERT_EQ(0, fflush(fp));
+  ASSERT_NE(EOF, fputs("wo", fp));
+  EXPECT_EQ("hellowo\0"s, std::string(buf, buf + sizeof(buf)));
+  ASSERT_EQ(0, fclose(fp));
+
+  // "If a stream open for update is flushed or closed and the last write has
+  // advanced the current buffer size, a null byte shall be written at the end
+  // of the buffer if it fits."
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "r+"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  // Nothing written yet, so no advance...
+  ASSERT_EQ(0, fflush(fp));
+  EXPECT_EQ("xxxxxxxx"s, std::string(buf, buf + sizeof(buf)));
+  ASSERT_NE(EOF, fputs("hello", fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_size) {
+  FILE* fp;
+  char buf[16];
+  memset(buf, 'x', sizeof(buf));
+
+  // POSIX: "The stream shall also maintain the size of the current buffer
+  // contents; use of fseek() or fseeko() on the stream with SEEK_END shall
+  // seek relative to this size."
+
+  // "For modes r and r+ the size shall be set to the value given by the size
+  // argument."
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "r"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "r+"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  // "For modes w and w+ the initial size shall be zero..."
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "w"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "w+"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  // "...and for modes a and a+ the initial size shall be:
+  // 1. Zero, if buf is a null pointer
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "a"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "a+"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  EXPECT_EQ(0, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  // 2. The position of the first null byte in the buffer, if one is found
+  memset(buf, 'x', sizeof(buf));
+  buf[3] = '\0';
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "a"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(3, ftell(fp));
+  EXPECT_EQ(3, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(3, ftell(fp));
+  EXPECT_EQ(3, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+  memset(buf, 'x', sizeof(buf));
+  buf[3] = '\0';
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "a+"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(3, ftell(fp));
+  EXPECT_EQ(3, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(3, ftell(fp));
+  EXPECT_EQ(3, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  // 3. The value of the size argument, if buf is not a null pointer and no
+  // null byte is found.
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "a"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, 16, "a+"));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fseeko(fp, 0, SEEK_END));
+  EXPECT_EQ(16, ftell(fp));
+  EXPECT_EQ(16, ftello(fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_seek_invalid) {
+  char buf[8];
+  memset(buf, 'x', sizeof(buf));
+  FILE* fp = fmemopen(buf, sizeof(buf), "w");
+  ASSERT_TRUE(fp != nullptr);
+
+  // POSIX: "An attempt to seek ... to a negative position or to a position
+  // larger than the buffer size given in the size argument shall fail."
+  // (There's no mention of what errno should be set to, and glibc doesn't
+  // set errno in any of these cases.)
+  EXPECT_EQ(-1, fseek(fp, -2, SEEK_SET));
+  EXPECT_EQ(-1, fseeko(fp, -2, SEEK_SET));
+  EXPECT_EQ(-1, fseek(fp, sizeof(buf) + 1, SEEK_SET));
+  EXPECT_EQ(-1, fseeko(fp, sizeof(buf) + 1, SEEK_SET));
+}
+
+
+TEST(STDIO_TEST, fmemopen_read_EOF) {
+  // POSIX: "A read operation on the stream shall not advance the current
+  // buffer position beyond the current buffer size."
+  char buf[8];
+  memset(buf, 'x', sizeof(buf));
+  FILE* fp = fmemopen(buf, sizeof(buf), "r");
+  ASSERT_TRUE(fp != nullptr);
+  char buf2[BUFSIZ];
+  ASSERT_EQ(8U, fread(buf2, 1, sizeof(buf2), fp));
+  // POSIX: "Reaching the buffer size in a read operation shall count as
+  // end-of-file.
+  ASSERT_TRUE(feof(fp));
+  ASSERT_EQ(EOF, fgetc(fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_read_null_bytes) {
+  // POSIX: "Null bytes in the buffer shall have no special meaning for reads."
+  char buf[] = "h\0e\0l\0l\0o";
+  FILE* fp = fmemopen(buf, sizeof(buf), "r");
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ('h', fgetc(fp));
+  ASSERT_EQ(0, fgetc(fp));
+  ASSERT_EQ('e', fgetc(fp));
+  ASSERT_EQ(0, fgetc(fp));
+  ASSERT_EQ('l', fgetc(fp));
+  ASSERT_EQ(0, fgetc(fp));
+  // POSIX: "The read operation shall start at the current buffer position of
+  // the stream."
+  char buf2[8];
+  memset(buf2, 'x', sizeof(buf2));
+  ASSERT_EQ(4U, fread(buf2, 1, sizeof(buf2), fp));
+  ASSERT_EQ('l', buf2[0]);
+  ASSERT_EQ(0, buf2[1]);
+  ASSERT_EQ('o', buf2[2]);
+  ASSERT_EQ(0, buf2[3]);
+  for (size_t i = 4; i < sizeof(buf2); ++i) ASSERT_EQ('x', buf2[i]) << i;
+  ASSERT_TRUE(feof(fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_write) {
+  FILE* fp;
+  char buf[8];
+
+  // POSIX: "A write operation shall start either at the current position of
+  // the stream (if mode has not specified 'a' as the first character)..."
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "r+"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
+  ASSERT_EQ(' ', fputc(' ', fp));
+  EXPECT_EQ("xx xxxxx", std::string(buf, buf + sizeof(buf)));
+  ASSERT_EQ(0, fclose(fp));
+
+  // "...or at the current size of the stream (if mode had 'a' as the first
+  // character)." (See the fmemopen_size test for what "size" means, but for
+  // mode "a", it's the first NUL byte.)
+  memset(buf, 'x', sizeof(buf));
+  buf[3] = '\0';
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "a+"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  ASSERT_EQ(' ', fputc(' ', fp));
+  EXPECT_EQ("xxx \0xxx"s, std::string(buf, buf + sizeof(buf)));
+  ASSERT_EQ(0, fclose(fp));
+
+  // "If the current position at the end of the write is larger than the
+  // current buffer size, the current buffer size shall be set to the current
+  // position." (See the fmemopen_size test for what "size" means, but to
+  // query it we SEEK_END with offset 0, and then ftell.)
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "w+"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(0, ftell(fp));
+  ASSERT_EQ(' ', fputc(' ', fp));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(1, ftell(fp));
+  ASSERT_NE(EOF, fputs("123", fp));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(4, ftell(fp));
+  EXPECT_EQ(" 123\0xxx"s, std::string(buf, buf + sizeof(buf)));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_write_EOF) {
+  // POSIX: "A write operation on the stream shall not advance the current
+  // buffer size beyond the size given in the size argument."
+  FILE* fp;
+
+  // Scalar writes...
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 4, "w"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  ASSERT_EQ('x', fputc('x', fp));
+  ASSERT_EQ('x', fputc('x', fp));
+  ASSERT_EQ('x', fputc('x', fp));
+  ASSERT_EQ(EOF, fputc('x', fp)); // Only 3 fit because of the implicit NUL.
+  ASSERT_EQ(0, fclose(fp));
+
+  // Vector writes...
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 4, "w"));
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  ASSERT_EQ(3U, fwrite("xxxx", 1, 4, fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_binary) {
+  // A non-POSIX extension mode: "the letter 'b' ... provides "binary" mode:
+  // writes don't implicitly add a terminating null byte".
+  char buf[8];
+  memset(buf, 'x', sizeof(buf));
+  FILE* fp = fmemopen(buf, sizeof(buf), "wb+");
+  ASSERT_TRUE(fp != nullptr);
+  setbuf(fp, nullptr); // glibc is buffered by default, BSD unbuffered.
+  EXPECT_EQ(strlen("hello"), fwrite("hello", 1, strlen("hello"), fp));
+  EXPECT_EQ("helloxxx", std::string(buf, buf + sizeof(buf)));
+  EXPECT_EQ(0, fclose(fp));
+
+  // "...and fseek(3) SEEK_END is relative to the end of the buffer".
+  buf[0] = '\0';
+  fp = fmemopen(buf, sizeof(buf), "wb+");
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_NE(EOF, fputs("str", fp));
+  EXPECT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(static_cast<long>(sizeof(buf)), ftell(fp));
+  EXPECT_EQ(static_cast<off_t>(sizeof(buf)), ftello(fp));
+  EXPECT_EQ(0, fclose(fp));
+
+  // "...rather than the current string length."
+  buf[0] = '\0';
+  strcpy(buf, "str");
+  fp = fmemopen(buf, sizeof(buf), "w+");
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_NE(EOF, fputs("string", fp));
+  EXPECT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(static_cast<long>(strlen("string")), ftell(fp));
+  EXPECT_EQ(static_cast<off_t>(strlen("string")), ftello(fp));
+  EXPECT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_initial_position) {
+  // POSIX: "The ... current position in the buffer ... shall be initially
+  // set to either the beginning of the buffer (for r and w modes) ..."
+  char buf[] = "hello\0world";
+  FILE* fp;
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "r"));
+  EXPECT_EQ(0L, ftell(fp));
+  EXPECT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "w"));
+  EXPECT_EQ(0L, ftell(fp));
+  EXPECT_EQ(0, fclose(fp));
+  buf[0] = 'h'; // (Undo the effects of the above.)
+
+  // POSIX: "...or to the first null byte in the buffer (for a modes)."
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "a"));
+  EXPECT_EQ(5L, ftell(fp));
+  EXPECT_EQ(0, fclose(fp));
+
+  // POSIX: "If no null byte is found in append mode, the initial position
+  // shall be set to one byte after the end of the buffer."
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_NE(nullptr, fp = fmemopen(buf, sizeof(buf), "a"));
+  EXPECT_EQ(static_cast<long>(sizeof(buf)), ftell(fp));
+  EXPECT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_initial_position_allocated) {
+  // POSIX: "If buf is a null pointer, the initial position shall always be
+  // set to the beginning of the buffer."
+  FILE* fp = fmemopen(nullptr, 128, "ab+");
+  ASSERT_TRUE(fp != nullptr);
+  EXPECT_EQ(0L, ftell(fp));
+  EXPECT_EQ(0L, fseek(fp, 0, SEEK_SET));
+  EXPECT_EQ(0, fclose(fp));
+}
+
+TEST(STDIO_TEST, fmemopen_EINVAL_zero_length) {
+  // POSIX says it's up to the implementation whether or not you can have a
+  // zero-length buffer (but "A future version of this standard may require
+  // support of zero-length buffer streams explicitly"), but BSD and glibc
+  // agree that you can't yet.
+  char buf[16];
   errno = 0;
   ASSERT_EQ(nullptr, fmemopen(buf, 0, "r+"));
   ASSERT_EQ(EINVAL, errno);
-
-  // No '+' with NULL buffer.
   errno = 0;
-  ASSERT_EQ(nullptr, fmemopen(nullptr, 0, "r"));
+  ASSERT_EQ(nullptr, fmemopen(nullptr, 0, "r+"));
   ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, fmemopen_write_only_allocated) {
+  // POSIX says fmemopen "may fail if the mode argument does not include a '+'".
+  // BSD fails, glibc doesn't. We side with the more lenient.
+  FILE* fp;
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "r"));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "rb"));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "w"));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_NE(nullptr, fp = fmemopen(nullptr, 16, "wb"));
+  ASSERT_EQ(0, fclose(fp));
 }
 
 TEST(STDIO_TEST, open_memstream) {
