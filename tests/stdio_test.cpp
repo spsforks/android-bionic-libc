@@ -33,6 +33,8 @@
 #include <vector>
 
 #include "BionicDeathTest.h"
+#include "FixedIn.h"
+#include "PlatformVersion.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 
@@ -290,6 +292,8 @@ TEST(STDIO_TEST, printf_ssize_t) {
 
 // https://code.google.com/p/android/issues/detail?id=64886
 TEST(STDIO_TEST, snprintf_a) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
   EXPECT_EQ(23, snprintf(buf, sizeof(buf), "<%a>", 9990.235));
   EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
@@ -303,6 +307,8 @@ TEST(STDIO_TEST, snprintf_lc) {
 }
 
 TEST(STDIO_TEST, snprintf_ls) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
   wchar_t* ws = NULL;
   EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%ls>", ws));
@@ -611,6 +617,8 @@ TEST(STDIO_TEST, snprintf_e) {
 }
 
 TEST(STDIO_TEST, snprintf_negative_zero_5084292) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
 
   snprintf(buf, sizeof(buf), "%e", -0.0);
@@ -663,6 +671,8 @@ static void* snprintf_small_stack_fn(void*) {
 }
 
 TEST(STDIO_TEST, snprintf_small_stack) {
+  FIXED_IN(__ANDROID_API_N__);
+
   // Is it safe to call snprintf on a thread with a small stack?
   // (The snprintf implementation puts some pretty large buffers on the stack.)
   pthread_attr_t a;
@@ -675,6 +685,8 @@ TEST(STDIO_TEST, snprintf_small_stack) {
 }
 
 TEST(STDIO_TEST, snprintf_asterisk_overflow) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[128];
   ASSERT_EQ(5, snprintf(buf, sizeof(buf), "%.*s%c", 4, "hello world", '!'));
   ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", INT_MAX/2, "hello world", '!'));
@@ -757,6 +769,8 @@ TEST(STDIO_TEST, putc) {
 }
 
 TEST(STDIO_TEST, sscanf_swscanf) {
+  FIXED_IN(__ANDROID_API_L__);
+
   struct stuff {
     char s1[123];
     int i1;
@@ -787,6 +801,8 @@ TEST(STDIO_TEST, sscanf_swscanf) {
 }
 
 TEST(STDIO_TEST, cantwrite_EBADF) {
+  FIXED_IN(__ANDROID_API_L__);
+
   // If we open a file read-only...
   FILE* fp = fopen("/proc/version", "r");
 
@@ -827,6 +843,8 @@ TEST(STDIO_TEST, cantwrite_EBADF) {
 // Tests that we can only have a consistent and correct fpos_t when using
 // f*pos functions (i.e. fpos doesn't get inside a multi byte character).
 TEST(STDIO_TEST, consistent_fpos_t) {
+  FIXED_IN(__ANDROID_API_L__);
+
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
@@ -889,6 +907,8 @@ TEST(STDIO_TEST, consistent_fpos_t) {
 
 // Exercise the interaction between fpos and seek.
 TEST(STDIO_TEST, fpos_t_and_seek) {
+  FIXED_IN(__ANDROID_API_L__);
+
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
@@ -1394,6 +1414,8 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
 }
 
 TEST(STDIO_TEST, fdopen_CLOEXEC) {
+  FIXED_IN(__ANDROID_API_M__);
+
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_TRUE(fd != -1);
 
@@ -1415,6 +1437,8 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
 }
 
 TEST(STDIO_TEST, freopen_CLOEXEC) {
+  FIXED_IN(__ANDROID_API_M__);
+
   FILE* fp = fopen("/proc/version", "r");
   ASSERT_TRUE(fp != NULL);
 
@@ -1609,13 +1633,15 @@ TEST(STDIO_TEST, fread_EOF_184847) {
   fwrite("z", 1, 1, fw);
   fflush(fw);
 
-  // ...and check that we can read it back.
-  // (BSD thinks that once a stream has hit EOF, it must always return EOF. SysV disagrees.)
-  ASSERT_EQ(1U, fread(buf, 1, 1, fr));
-  ASSERT_STREQ("z", buf);
+  if (platform_version() >= __ANDROID_API_N__) {
+    // ...and check that we can read it back.
+    // (BSD thinks that once a stream has hit EOF, it must always return EOF. SysV disagrees.)
+    ASSERT_EQ(1U, fread(buf, 1, 1, fr));
+    ASSERT_STREQ("z", buf);
 
-  // But now we're done.
-  ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+    // But now we're done.
+    ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+  }
 
   fclose(fr);
   fclose(fw);
@@ -1626,6 +1652,8 @@ TEST(STDIO_TEST, fclose_invalidates_fd) {
   // memory after it's been freed. But we know that stdin/stdout/stderr are
   // special and don't get deallocated, so this test uses stdin.
   ASSERT_EQ(0, fclose(stdin));
+
+  FIXED_IN(__ANDROID_API_O__);
 
   // Even though using a FILE* after close is undefined behavior, I've closed
   // this bug as "WAI" too many times. We shouldn't hand out stale fds,
