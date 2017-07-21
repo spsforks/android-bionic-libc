@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
+#include "FixedIn.h"
 #include "math_data_test.h"
 #include "TemporaryFile.h"
 #include "utils.h"
@@ -67,6 +68,7 @@ TEST(stdlib, erand48) {
   EXPECT_DOUBLE_EQ(0.84048536941142515, erand48(xsubi));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(stdlib, lcong48) {
   unsigned short p[7] = { 0x0102, 0x0304, 0x0506, 0x0708, 0x090a, 0x0b0c, 0x0d0e };
   lcong48(p);
@@ -81,6 +83,7 @@ TEST(stdlib, lcong48) {
   EXPECT_EQ(1531389981, lrand48());
   EXPECT_EQ(1598801533, lrand48());
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 TEST(stdlib, lrand48) {
   srand48(0x01020304);
@@ -96,6 +99,13 @@ TEST(stdlib, lrand48) {
   EXPECT_EQ(397769746, lrand48());
 }
 
+
+// For pre-L targets, rand is in legacy_stdlib_inlines.h and calls lrand48
+// (modern bionic uses random(3), which wasn't added until 21), so has different
+// results.
+//
+// Similarly, on those targets random(3) is an inline that calls lrand48.
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, random) {
   srandom(0x01020304);
   EXPECT_EQ(55436735, random());
@@ -123,6 +133,35 @@ TEST(stdlib, rand) {
   EXPECT_EQ(55436735, rand());
   EXPECT_EQ(1399865117, rand());
 }
+#else
+TEST(stdlib, random) {
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+  EXPECT_EQ(902267124, random());
+  EXPECT_EQ(132366131, random());
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+}
+
+TEST(stdlib, rand) {
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+  EXPECT_EQ(902267124, rand());
+  EXPECT_EQ(132366131, rand());
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+}
+#endif
 
 TEST(stdlib, mrand48) {
   srand48(0x01020304);
@@ -183,6 +222,8 @@ TEST(stdlib, posix_memalign_overflow) {
 }
 
 TEST(stdlib, realpath__NULL_filename) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath(NULL, NULL);
   ASSERT_TRUE(p == NULL);
@@ -190,6 +231,8 @@ TEST(stdlib, realpath__NULL_filename) {
 }
 
 TEST(stdlib, realpath__empty_filename) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath("", NULL);
   ASSERT_TRUE(p == NULL);
@@ -197,6 +240,8 @@ TEST(stdlib, realpath__empty_filename) {
 }
 
 TEST(stdlib, realpath__ENOENT) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath("/this/directory/path/almost/certainly/does/not/exist", NULL);
   ASSERT_TRUE(p == NULL);
@@ -204,6 +249,8 @@ TEST(stdlib, realpath__ENOENT) {
 }
 
 TEST(stdlib, realpath__component_after_non_directory) {
+  FIXED_IN(__ANDROID_API_L__);
+
   errno = 0;
   char* p = realpath("/dev/null/.", NULL);
   ASSERT_TRUE(p == NULL);
@@ -226,6 +273,7 @@ TEST(stdlib, realpath) {
   char* p = realpath("/proc/self/exe", buf);
   ASSERT_STREQ(executable_path, p);
 
+  FIXED_IN(__ANDROID_API_J_MR2__);
   p = realpath("/proc/self/exe", NULL);
   ASSERT_STREQ(executable_path, p);
   free(p);
@@ -276,10 +324,13 @@ static void TestBug57421_main() {
 class stdlib_DeathTest : public BionicDeathTest {};
 
 TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
+  FIXED_IN(__ANDROID_API_L__);
+
   // https://code.google.com/p/android/issues/detail?id=57421
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(stdlib, mkostemp64) {
   TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   int flags = fcntl(tf.fd, F_GETFD);
@@ -293,13 +344,16 @@ TEST(stdlib, mkostemp) {
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, mkstemp64) {
   TemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
   ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(stdlib, mkstemp) {
   TemporaryFile tf;
@@ -329,12 +383,20 @@ static void CheckStrToFloat(T fn(const char* s, char** end)) {
 
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("9.0", nullptr));
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("0.9e1", nullptr));
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
+
+  if (platform_version() >= __ANDROID_API_L__) {
+    EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
+  }
 
   const char* s = " \t\v\f\r\n9.0";
   char* p;
   EXPECT_PRED_FORMAT2(pred, 9.0, fn(s, &p));
   EXPECT_EQ(s + strlen(s), p);
+
+#if __LP64__
+  // Not a problem for LP32 where long double is just double.
+  FIXED_IN(__ANDROID_API_O__);
+#endif
 
   EXPECT_TRUE(isnan(fn("+nan", nullptr)));
   EXPECT_TRUE(isnan(fn("nan", nullptr)));
@@ -388,10 +450,15 @@ TEST(stdlib, strtold) {
   CheckStrToFloat(strtold);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
+// http://b/2206701
 TEST(stdlib, strtof_2206701) {
+  // This will fail for targets lower than 21 because strtof is replaced by
+  // strtod in legacy_stdlib_inlines.h.
   ASSERT_EQ(0.0f, strtof("7.0064923216240853546186479164495e-46", NULL));
   ASSERT_EQ(1.4e-45f, strtof("7.0064923216240853546186479164496e-46", NULL));
 }
+#endif
 
 TEST(stdlib, strtod_largest_subnormal) {
   // This value has been known to cause javac and java to infinite loop.
@@ -405,6 +472,7 @@ TEST(stdlib, strtod_largest_subnormal) {
   ASSERT_DOUBLE_EQ(-2.2250738585072014e-308, strtod("-2.2250738585072012e-308", NULL));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, quick_exit) {
   pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
@@ -444,6 +512,7 @@ TEST(stdlib, at_quick_exit) {
 
   AssertChildExited(pid, 99);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(unistd, _Exit) {
   pid_t pid = fork();
@@ -473,13 +542,17 @@ TEST(stdlib, pty_smoke) {
   close(fd);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, posix_openpt) {
   int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   close(fd);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(stdlib, ptsname_r_ENOTTY) {
+  FIXED_IN(__ANDROID_API_L__);
+
   errno = 0;
   char buf[128];
   ASSERT_EQ(ENOTTY, ptsname_r(STDOUT_FILENO, buf, sizeof(buf)));
@@ -487,6 +560,8 @@ TEST(stdlib, ptsname_r_ENOTTY) {
 }
 
 TEST(stdlib, ptsname_r_EINVAL) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -497,6 +572,8 @@ TEST(stdlib, ptsname_r_EINVAL) {
 }
 
 TEST(stdlib, ptsname_r_ERANGE) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -507,6 +584,8 @@ TEST(stdlib, ptsname_r_ERANGE) {
 }
 
 TEST(stdlib, ttyname_r) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
 
@@ -519,6 +598,8 @@ TEST(stdlib, ttyname_r) {
 }
 
 TEST(stdlib, ttyname_r_ENOTTY) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = open("/dev/null", O_WRONLY);
   errno = 0;
   char buf[128];
@@ -528,6 +609,8 @@ TEST(stdlib, ttyname_r_ENOTTY) {
 }
 
 TEST(stdlib, ttyname_r_EINVAL) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -538,6 +621,8 @@ TEST(stdlib, ttyname_r_EINVAL) {
 }
 
 TEST(stdlib, ttyname_r_ERANGE) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -555,6 +640,7 @@ TEST(stdlib, unlockpt_ENOTTY) {
   close(fd);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(stdlib, getsubopt) {
   char* const tokens[] = {
     const_cast<char*>("a"),
@@ -648,3 +734,4 @@ TEST(stdlib, strtoimax_smoke) {
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__

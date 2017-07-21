@@ -591,6 +591,7 @@ pid_t GetInvalidPid() {
   return invalid_pid;
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(time, clock_getcpuclockid) {
   // For current process.
   clockid_t clockid;
@@ -609,6 +610,7 @@ TEST(time, clock_getcpuclockid) {
   ASSERT_EQ(ESRCH, clock_getcpuclockid(GetInvalidPid(), &clockid));
   ASSERT_EQ(0, errno);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 TEST(time, clock_settime) {
   errno = 0;

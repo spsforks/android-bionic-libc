@@ -33,6 +33,8 @@
 #include <vector>
 
 #include "BionicDeathTest.h"
+#include "FixedIn.h"
+#include "PlatformVersion.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 
@@ -120,12 +122,15 @@ TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
   AssertFileIs(file.fp, "hello\n");
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, tmpfile64) {
   FILE* fp = tmpfile64();
   ASSERT_TRUE(fp != nullptr);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(STDIO_TEST, dprintf) {
   TemporaryFile tf;
 
@@ -139,7 +144,9 @@ TEST(STDIO_TEST, dprintf) {
   AssertFileIs(tfile, "hello\n");
   fclose(tfile);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
 TEST(STDIO_TEST, getdelim) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);
@@ -275,6 +282,7 @@ TEST(STDIO_TEST, getline_invalid) {
   ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR2__
 
 TEST(STDIO_TEST, printf_ssize_t) {
   // http://b/8253769
@@ -290,6 +298,8 @@ TEST(STDIO_TEST, printf_ssize_t) {
 
 // https://code.google.com/p/android/issues/detail?id=64886
 TEST(STDIO_TEST, snprintf_a) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
   EXPECT_EQ(23, snprintf(buf, sizeof(buf), "<%a>", 9990.235));
   EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
@@ -303,6 +313,8 @@ TEST(STDIO_TEST, snprintf_lc) {
 }
 
 TEST(STDIO_TEST, snprintf_ls) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
   wchar_t* ws = NULL;
   EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%ls>", ws));
@@ -486,6 +498,7 @@ static void CheckInfNan(int snprintf_fn(T*, size_t, const T*, ...),
   EXPECT_TRUE(isnan(f));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(STDIO_TEST, snprintf_sscanf_inf_nan) {
   CheckInfNan(snprintf, sscanf, "%s",
               "[%a]", "[%+a]",
@@ -555,6 +568,7 @@ TEST(STDIO_TEST, swprintf_swscanf_inf_nan) {
               L"[-INF]", L"[INF]", L"[+INF]",
               L"[-NAN]", L"[NAN]", L"[+NAN]");
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
 
 TEST(STDIO_TEST, snprintf_d_INT_MAX) {
   char buf[BUFSIZ];
@@ -611,6 +625,8 @@ TEST(STDIO_TEST, snprintf_e) {
 }
 
 TEST(STDIO_TEST, snprintf_negative_zero_5084292) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[BUFSIZ];
 
   snprintf(buf, sizeof(buf), "%e", -0.0);
@@ -663,6 +679,8 @@ static void* snprintf_small_stack_fn(void*) {
 }
 
 TEST(STDIO_TEST, snprintf_small_stack) {
+  FIXED_IN(__ANDROID_API_N__);
+
   // Is it safe to call snprintf on a thread with a small stack?
   // (The snprintf implementation puts some pretty large buffers on the stack.)
   pthread_attr_t a;
@@ -675,6 +693,8 @@ TEST(STDIO_TEST, snprintf_small_stack) {
 }
 
 TEST(STDIO_TEST, snprintf_asterisk_overflow) {
+  FIXED_IN(__ANDROID_API_L__);
+
   char buf[128];
   ASSERT_EQ(5, snprintf(buf, sizeof(buf), "%.*s%c", 4, "hello world", '!'));
   ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", INT_MAX/2, "hello world", '!'));
@@ -757,6 +777,8 @@ TEST(STDIO_TEST, putc) {
 }
 
 TEST(STDIO_TEST, sscanf_swscanf) {
+  FIXED_IN(__ANDROID_API_L__);
+
   struct stuff {
     char s1[123];
     int i1;
@@ -768,25 +790,36 @@ TEST(STDIO_TEST, sscanf_swscanf) {
       ASSERT_STREQ("hello", s1);
       ASSERT_EQ(123, i1);
       ASSERT_DOUBLE_EQ(1.23, d1);
-      ASSERT_FLOAT_EQ(9.0f, f1);
       ASSERT_STREQ("world", s2);
+      // Hex floats on the scanf family didn't work until O.
+      if (platform_version() >= __ANDROID_API_O__) {
+        ASSERT_FLOAT_EQ(9.0f, f1);
+      }
     }
   } s;
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, sscanf("  hello 123 1.23 0x1.2p3 world",
-                      "%s %i %lf %f %s",
-                      s.s1, &s.i1, &s.d1, &s.f1, s.s2));
-  s.Check();
+  {
+    SCOPED_TRACE("sscanf");
+    memset(&s, 0, sizeof(s));
+    ASSERT_EQ(5,
+              sscanf("  hello 123 1.23 world 0x1.2p3", "%s %i %lf %s %f", s.s1, &s.i1, &s.d1, s.s2,
+                     &s.f1));
+    s.Check();
+  }
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, swscanf(L"  hello 123 1.23 0x1.2p3 world",
-                       L"%s %i %lf %f %s",
-                       s.s1, &s.i1, &s.d1, &s.f1, s.s2));
-  s.Check();
+  {
+    SCOPED_TRACE("swscanf");
+    memset(&s, 0, sizeof(s));
+    ASSERT_EQ(5,
+              swscanf(L"  hello 123 1.23 world 0x1.2p3", L"%s %i %lf %s %f", s.s1, &s.i1, &s.d1,
+                      s.s2, &s.f1));
+    s.Check();
+  }
 }
 
 TEST(STDIO_TEST, cantwrite_EBADF) {
+  FIXED_IN(__ANDROID_API_L__);
+
   // If we open a file read-only...
   FILE* fp = fopen("/proc/version", "r");
 
@@ -827,11 +860,13 @@ TEST(STDIO_TEST, cantwrite_EBADF) {
 // Tests that we can only have a consistent and correct fpos_t when using
 // f*pos functions (i.e. fpos doesn't get inside a multi byte character).
 TEST(STDIO_TEST, consistent_fpos_t) {
+  FIXED_IN(__ANDROID_API_L__);
+
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  TemporaryFile file;
+  ASSERT_TRUE(file.fp != NULL);
 
   wchar_t mb_one_bytes = L'h';
   wchar_t mb_two_bytes = 0x00a2;
@@ -839,12 +874,12 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   wchar_t mb_four_bytes = 0x24b62;
 
   // Write to file.
-  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fputwc(mb_one_bytes, fp)));
-  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, fp)));
-  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, fp)));
-  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, fp)));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fputwc(mb_one_bytes, file.fp)));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, file.fp)));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, file.fp)));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, file.fp)));
 
-  rewind(fp);
+  rewind(file.fp);
 
   // Record each character position.
   fpos_t pos1;
@@ -852,15 +887,15 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   fpos_t pos3;
   fpos_t pos4;
   fpos_t pos5;
-  EXPECT_EQ(0, fgetpos(fp, &pos1));
-  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos2));
-  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos3));
-  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos4));
-  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos5));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos1));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos2));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos3));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos4));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos5));
 
 #if defined(__BIONIC__)
   // Bionic's fpos_t is just an alias for off_t. This is inherited from OpenBSD
@@ -875,22 +910,22 @@ TEST(STDIO_TEST, consistent_fpos_t) {
 #endif
 
   // Exercise back and forth movements of the position.
-  ASSERT_EQ(0, fsetpos(fp, &pos2));
-  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  ASSERT_EQ(0, fsetpos(fp, &pos1));
-  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  ASSERT_EQ(0, fsetpos(fp, &pos4));
-  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  ASSERT_EQ(0, fsetpos(fp, &pos3));
-  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  ASSERT_EQ(0, fsetpos(fp, &pos5));
-  ASSERT_EQ(WEOF, fgetwc(fp));
-
-  fclose(fp);
+  ASSERT_EQ(0, fsetpos(file.fp, &pos2));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  ASSERT_EQ(0, fsetpos(file.fp, &pos1));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  ASSERT_EQ(0, fsetpos(file.fp, &pos4));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  ASSERT_EQ(0, fsetpos(file.fp, &pos3));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  ASSERT_EQ(0, fsetpos(file.fp, &pos5));
+  ASSERT_EQ(WEOF, fgetwc(file.fp));
 }
 
 // Exercise the interaction between fpos and seek.
 TEST(STDIO_TEST, fpos_t_and_seek) {
+  FIXED_IN(__ANDROID_API_L__);
+
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
@@ -950,6 +985,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   ASSERT_EQ(0, fclose(fp));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STDIO_TEST, fmemopen) {
   char buf[16];
   memset(buf, 0, sizeof(buf));
@@ -1394,8 +1430,11 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   GTEST_LOG_(INFO) << "This test does nothing on glibc.\n";
 #endif
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 TEST(STDIO_TEST, fdopen_CLOEXEC) {
+  FIXED_IN(__ANDROID_API_M__);
+
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_TRUE(fd != -1);
 
@@ -1417,6 +1456,8 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
 }
 
 TEST(STDIO_TEST, freopen_CLOEXEC) {
+  FIXED_IN(__ANDROID_API_M__);
+
   FILE* fp = fopen("/proc/version", "r");
   ASSERT_TRUE(fp != NULL);
 
@@ -1435,6 +1476,7 @@ TEST(STDIO_TEST, freopen_CLOEXEC) {
   fclose(fp);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, fopen64_freopen64) {
   FILE* fp = fopen64("/proc/version", "r");
   ASSERT_TRUE(fp != nullptr);
@@ -1442,6 +1484,7 @@ TEST(STDIO_TEST, fopen64_freopen64) {
   ASSERT_TRUE(fp != nullptr);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
 // https://code.google.com/p/android/issues/detail?id=81155
 // http://b/18556607
@@ -1474,6 +1517,7 @@ TEST(STDIO_TEST, fread_unbuffered_pathological_performance) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STDIO_TEST, fread_EOF) {
   std::string digits("0123456789");
   FILE* fp = fmemopen(&digits[0], digits.size(), "r");
@@ -1496,6 +1540,7 @@ TEST(STDIO_TEST, fread_EOF) {
 
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 static void test_fread_from_write_only_stream(size_t n) {
   FILE* fp = fopen("/dev/null", "w");
@@ -1611,13 +1656,15 @@ TEST(STDIO_TEST, fread_EOF_184847) {
   fwrite("z", 1, 1, fw);
   fflush(fw);
 
-  // ...and check that we can read it back.
-  // (BSD thinks that once a stream has hit EOF, it must always return EOF. SysV disagrees.)
-  ASSERT_EQ(1U, fread(buf, 1, 1, fr));
-  ASSERT_STREQ("z", buf);
+  if (platform_version() >= __ANDROID_API_N__) {
+    // ...and check that we can read it back.
+    // (BSD thinks that once a stream has hit EOF, it must always return EOF. SysV disagrees.)
+    ASSERT_EQ(1U, fread(buf, 1, 1, fr));
+    ASSERT_STREQ("z", buf);
 
-  // But now we're done.
-  ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+    // But now we're done.
+    ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+  }
 
   fclose(fr);
   fclose(fw);
@@ -1628,6 +1675,8 @@ TEST(STDIO_TEST, fclose_invalidates_fd) {
   // memory after it's been freed. But we know that stdin/stdout/stderr are
   // special and don't get deallocated, so this test uses stdin.
   ASSERT_EQ(0, fclose(stdin));
+
+  FIXED_IN(__ANDROID_API_O__);
 
   // Even though using a FILE* after close is undefined behavior, I've closed
   // this bug as "WAI" too many times. We shouldn't hand out stale fds,
@@ -1674,6 +1723,7 @@ TEST(STDIO_TEST, funopen_EINVAL) {
 #endif
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, funopen_seek) {
 #if defined(__BIONIC__)
   auto read_fn = [](void*, char*, int) { return -1; };
@@ -1701,6 +1751,7 @@ TEST(STDIO_TEST, funopen_seek) {
   GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
 #endif
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
 TEST(STDIO_TEST, lots_of_concurrent_files) {
   std::vector<TemporaryFile*> tfs;
@@ -1725,6 +1776,7 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 static void AssertFileOffsetAt(FILE* fp, off64_t offset) {
   EXPECT_EQ(offset, ftell(fp));
   EXPECT_EQ(offset, ftello(fp));
@@ -1812,7 +1864,9 @@ TEST(STDIO_TEST, fseek_fseeko_EINVAL) {
 
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(STDIO_TEST, ctermid) {
   ASSERT_STREQ("/dev/tty", ctermid(nullptr));
 
@@ -1820,6 +1874,7 @@ TEST(STDIO_TEST, ctermid) {
   ASSERT_EQ(buf, ctermid(buf));
   ASSERT_STREQ("/dev/tty", buf);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
 
 TEST(STDIO_TEST, remove) {
   struct stat sb;
@@ -1843,6 +1898,9 @@ TEST(STDIO_TEST, remove) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+// libandroid_support has its own, non-fortified, snprintf.
+// TODO: Fix libandroid_support.
+#if !defined(BUILDING_WITH_NDK)
 TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
   char buf[16];
   ASSERT_EXIT(snprintf(buf, atol("-1"), "hello"),
@@ -1867,6 +1925,7 @@ TEST(STDIO_TEST, sprintf_30445072) {
   sprintf(&buf[0], "hello");
   ASSERT_EQ(buf, "hello");
 }
+#endif  // !defined(BUILDING_WITH_NDK)
 
 TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
   TemporaryFile tf;
