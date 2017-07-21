@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
+#include "FixedIn.h"
 #include "math_data_test.h"
 #include "TemporaryFile.h"
 #include "utils.h"
@@ -219,6 +220,8 @@ TEST(stdlib, posix_memalign_overflow) {
 }
 
 TEST(stdlib, realpath__NULL_filename) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath(NULL, NULL);
   ASSERT_TRUE(p == NULL);
@@ -226,6 +229,8 @@ TEST(stdlib, realpath__NULL_filename) {
 }
 
 TEST(stdlib, realpath__empty_filename) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath("", NULL);
   ASSERT_TRUE(p == NULL);
@@ -233,6 +238,8 @@ TEST(stdlib, realpath__empty_filename) {
 }
 
 TEST(stdlib, realpath__ENOENT) {
+  FIXED_IN(__ANDROID_API_J_MR2__);
+
   errno = 0;
   char* p = realpath("/this/directory/path/almost/certainly/does/not/exist", NULL);
   ASSERT_TRUE(p == NULL);
@@ -240,6 +247,8 @@ TEST(stdlib, realpath__ENOENT) {
 }
 
 TEST(stdlib, realpath__component_after_non_directory) {
+  FIXED_IN(__ANDROID_API_L__);
+
   errno = 0;
   char* p = realpath("/dev/null/.", NULL);
   ASSERT_TRUE(p == NULL);
@@ -262,6 +271,7 @@ TEST(stdlib, realpath) {
   char* p = realpath("/proc/self/exe", buf);
   ASSERT_STREQ(executable_path, p);
 
+  FIXED_IN(__ANDROID_API_J_MR2__);
   p = realpath("/proc/self/exe", NULL);
   ASSERT_STREQ(executable_path, p);
   free(p);
@@ -312,6 +322,8 @@ static void TestBug57421_main() {
 class stdlib_DeathTest : public BionicDeathTest {};
 
 TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
+  FIXED_IN(__ANDROID_API_L__);
+
   // https://code.google.com/p/android/issues/detail?id=57421
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
@@ -374,6 +386,11 @@ static void CheckStrToFloat(T fn(const char* s, char** end)) {
   char* p;
   EXPECT_PRED_FORMAT2(pred, 9.0, fn(s, &p));
   EXPECT_EQ(s + strlen(s), p);
+
+#if __LP64__
+  // Not a problem for LP32 where long double is just double.
+  FIXED_IN(__ANDROID_API_O__);
+#endif
 
   EXPECT_TRUE(isnan(fn("+nan", nullptr)));
   EXPECT_TRUE(isnan(fn("nan", nullptr)));
@@ -512,13 +529,17 @@ TEST(stdlib, pty_smoke) {
   close(fd);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, posix_openpt) {
   int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   close(fd);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(stdlib, ptsname_r_ENOTTY) {
+  FIXED_IN(__ANDROID_API_L__);
+
   errno = 0;
   char buf[128];
   ASSERT_EQ(ENOTTY, ptsname_r(STDOUT_FILENO, buf, sizeof(buf)));
@@ -526,6 +547,8 @@ TEST(stdlib, ptsname_r_ENOTTY) {
 }
 
 TEST(stdlib, ptsname_r_EINVAL) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -536,6 +559,8 @@ TEST(stdlib, ptsname_r_EINVAL) {
 }
 
 TEST(stdlib, ptsname_r_ERANGE) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -546,6 +571,8 @@ TEST(stdlib, ptsname_r_ERANGE) {
 }
 
 TEST(stdlib, ttyname_r) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
 
@@ -558,6 +585,8 @@ TEST(stdlib, ttyname_r) {
 }
 
 TEST(stdlib, ttyname_r_ENOTTY) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = open("/dev/null", O_WRONLY);
   errno = 0;
   char buf[128];
@@ -567,6 +596,8 @@ TEST(stdlib, ttyname_r_ENOTTY) {
 }
 
 TEST(stdlib, ttyname_r_EINVAL) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
@@ -577,6 +608,8 @@ TEST(stdlib, ttyname_r_EINVAL) {
 }
 
 TEST(stdlib, ttyname_r_ERANGE) {
+  FIXED_IN(__ANDROID_API_L__);
+
   int fd = getpt();
   ASSERT_NE(-1, fd);
   errno = 0;
