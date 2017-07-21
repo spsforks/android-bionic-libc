@@ -22,10 +22,13 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#if !defined(BUILDING_WITH_NDK)
 #include <tinyxml2.h>
+#endif
 
 #include "private/bionic_config.h"
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, malloc_std) {
   // Simple malloc test.
   void *ptr = malloc(100);
@@ -33,6 +36,7 @@ TEST(malloc, malloc_std) {
   ASSERT_LE(100U, malloc_usable_size(ptr));
   free(ptr);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, malloc_overflow) {
   errno = 0;
@@ -40,6 +44,7 @@ TEST(malloc, malloc_overflow) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, calloc_std) {
   // Simple calloc test.
   size_t alloc_len = 100;
@@ -51,6 +56,7 @@ TEST(malloc, calloc_std) {
   }
   free(ptr);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, calloc_illegal) {
   errno = 0;
@@ -73,6 +79,7 @@ TEST(malloc, calloc_overflow) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, memalign_multiple) {
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
@@ -86,6 +93,7 @@ TEST(malloc, memalign_multiple) {
     }
   }
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, memalign_overflow) {
   ASSERT_EQ(NULL, memalign(4096, SIZE_MAX));
@@ -100,6 +108,7 @@ TEST(malloc, memalign_non_power2) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, memalign_realloc) {
   // Memalign and then realloc the pointer a couple of times.
   for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {
@@ -272,6 +281,7 @@ TEST(malloc, calloc_multiple_realloc) {
   }
   free(ptr);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, realloc_overflow) {
   errno = 0;
@@ -289,6 +299,7 @@ TEST(malloc, realloc_overflow) {
 extern "C" void* pvalloc(size_t);
 extern "C" void* valloc(size_t);
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, pvalloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
@@ -309,12 +320,14 @@ TEST(malloc, valloc_std) {
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   free(ptr);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, valloc_overflow) {
   ASSERT_EQ(NULL, valloc(SIZE_MAX));
 }
 #endif
 
+#if !defined(BUILDING_WITH_NDK)
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
   char* buf;
@@ -362,7 +375,9 @@ TEST(malloc, malloc_info) {
   }
 #endif
 }
+#endif  // !defined(BUILDING_WITH_NDK)
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 TEST(malloc, calloc_usable_size) {
   for (size_t size = 1; size <= 2048; size++) {
     void* pointer = malloc(size);
@@ -381,6 +396,7 @@ TEST(malloc, calloc_usable_size) {
     free(zero_mem);
   }
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR1__
 
 TEST(malloc, malloc_0) {
   void* p = malloc(0);
@@ -491,9 +507,11 @@ TEST(malloc, verify_alignment) {
   delete[] values_ldouble;
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(malloc, mallopt_smoke) {
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
