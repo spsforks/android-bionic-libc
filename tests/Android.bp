@@ -87,6 +87,7 @@ cc_test_library {
         "netinet_in_test.cpp",
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
+        "PlatformVersion.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
         "qsort_test.cpp",
