@@ -37,7 +37,8 @@ std::string getWorkingDir() {
   return buf;
 }
 
-std::vector<std::string> collectHeaders(const std::string& directory) {
+std::vector<std::string> collectHeaders(const std::string& directory,
+                                        const std::unordered_set<std::string>& ignored_header_paths) {
   std::vector<std::string> headers;
 
   char* dir_argv[2] = { const_cast<char*>(directory.c_str()), nullptr };
@@ -53,11 +54,16 @@ std::vector<std::string> collectHeaders(const std::string& directory) {
       continue;
     }
 
-    if (!android::base::EndsWith(ent->fts_path, ".h")) {
+    std::string path = ent->fts_path;
+    if (!android::base::EndsWith(path, ".h")) {
       continue;
     }
 
-    headers.push_back(ent->fts_path);
+    if (ignored_header_paths.count(path) != 0) {
+      continue;
+    }
+
+    headers.push_back(std::move(path));
   }
 
   return headers;
