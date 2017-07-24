@@ -55,6 +55,8 @@
  * SUCH DAMAGE.
  */
 
+#define __BIONIC_DECLARE_FORTIFY_HELPERS
+
 #include <poll.h>
 #include <stdarg.h>
 #include <stddef.h>
