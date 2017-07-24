@@ -195,7 +195,6 @@ cc_defaults {
 cc_test_library {
     name: "libfortify1-tests-clang",
     defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
-    clang: true,
     cflags: [
         "-D_FORTIFY_SOURCE=1",
         "-DTEST_NAME=Fortify1_clang"
@@ -208,7 +207,6 @@ cc_test_library {
 cc_test_library {
     name: "libfortify2-tests-clang",
     defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
-    clang: true,
     cflags: [
         "-D_FORTIFY_SOURCE=2",
         "-DTEST_NAME=Fortify2_clang"
@@ -391,7 +389,6 @@ cc_defaults {
 cc_test {
     name: "bionic-unit-tests",
     defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
-    clang: true,
 
     target: {
         android: {

@@ -92,7 +92,6 @@ LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
     $(LLVM_PREBUILTS_PATH)/clang++ \
     CLANG \
 
-LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests-clang++
 LOCAL_CPPFLAGS := -Wall
 LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000
