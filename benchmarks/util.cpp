@@ -19,8 +19,8 @@
 #include <sched.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <cstdlib>
-#include <vector>
 
 // This function returns a pointer less than 2 * alignment + or_mask bytes into the array.
 char *GetAlignedMemory(char *orig_ptr, size_t alignment, size_t or_mask) {
