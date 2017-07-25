@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "time_benchmark.h"
 
 #include <sys/syscall.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+
+#include <map>
 
 #include <benchmark/benchmark.h>
 
@@ -27,7 +30,6 @@ static void BM_time_clock_gettime(benchmark::State& state) {
     clock_gettime(CLOCK_MONOTONIC, &t);
   }
 }
-BENCHMARK(BM_time_clock_gettime);
 
 static void BM_time_clock_gettime_syscall(benchmark::State& state) {
   timespec t;
@@ -35,7 +37,6 @@ static void BM_time_clock_gettime_syscall(benchmark::State& state) {
     syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
   }
 }
-BENCHMARK(BM_time_clock_gettime_syscall);
 
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
@@ -43,7 +44,6 @@ static void BM_time_gettimeofday(benchmark::State& state) {
     gettimeofday(&tv, nullptr);
   }
 }
-BENCHMARK(BM_time_gettimeofday);
 
 void BM_time_gettimeofday_syscall(benchmark::State& state) {
   timeval tv;
@@ -51,14 +51,12 @@ void BM_time_gettimeofday_syscall(benchmark::State& state) {
     syscall(__NR_gettimeofday, &tv, nullptr);
   }
 }
-BENCHMARK(BM_time_gettimeofday_syscall);
 
 void BM_time_time(benchmark::State& state) {
   while (state.KeepRunning()) {
     time(nullptr);
   }
 }
-BENCHMARK(BM_time_time);
 
 void BM_time_localtime(benchmark::State& state) {
   time_t t = time(nullptr);
@@ -66,7 +64,6 @@ void BM_time_localtime(benchmark::State& state) {
     localtime(&t);
   }
 }
-BENCHMARK(BM_time_localtime);
 
 void BM_time_localtime_r(benchmark::State& state) {
   time_t t = time(nullptr);
@@ -75,4 +72,13 @@ void BM_time_localtime_r(benchmark::State& state) {
     localtime_r(&t, &tm);
   }
 }
-BENCHMARK(BM_time_localtime_r);
+
+void declare_time_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_time_clock_gettime"), BM_time_clock_gettime);
+  str_to_func.emplace(std::string("BM_time_clock_gettime_syscall"), BM_time_clock_gettime_syscall);
+  str_to_func.emplace(std::string("BM_time_gettimeofday"), BM_time_gettimeofday);
+  str_to_func.emplace(std::string("BM_time_gettimeofday_syscall"), BM_time_gettimeofday_syscall);
+  str_to_func.emplace(std::string("BM_time_time"), BM_time_time);
+  str_to_func.emplace(std::string("BM_time_localtime"), BM_time_localtime);
+  str_to_func.emplace(std::string("BM_time_localtime_r"), BM_time_localtime_r);
+}

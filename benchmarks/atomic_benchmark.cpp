@@ -20,9 +20,14 @@
 // Expected mappings from C++ atomics to hardware primitives can be found at
 // http://www.cl.cam.ac.uk/~pes20/cpp/cpp0xmappings.html .
 
-#include <benchmark/benchmark.h>
+#include "atomic_benchmark.h"
+
 #include <atomic>
 #include <mutex>
+#include <map>
+
+#include <benchmark/benchmark.h>
+
 
 // We time atomic operations separated by a volatile (not atomic!) increment.  This ensures
 // that the compiler emits memory instructions (e.g. load or store) prior to any fence or the
@@ -48,7 +53,6 @@ void BM_empty(benchmark::State& state) {
     ++counter;
   }
 }
-BENCHMARK(BM_empty);
 
 static void BM_load_relaxed(benchmark::State& state) {
   unsigned result = 0;
@@ -58,7 +62,6 @@ static void BM_load_relaxed(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_load_relaxed);
 
 static void BM_load_acquire(benchmark::State& state) {
   unsigned result = 0;
@@ -68,7 +71,6 @@ static void BM_load_acquire(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_load_acquire);
 
 static void BM_store_release(benchmark::State& state) {
   int i = counter;
@@ -77,7 +79,6 @@ static void BM_store_release(benchmark::State& state) {
     ++counter;
   }
 }
-BENCHMARK(BM_store_release);
 
 static void BM_store_seq_cst(benchmark::State& state) {
   int i = counter;
@@ -86,7 +87,6 @@ static void BM_store_seq_cst(benchmark::State& state) {
     ++counter;
   }
 }
-BENCHMARK(BM_store_seq_cst);
 
 static void BM_fetch_add_relaxed(benchmark::State& state) {
   unsigned result = 0;
@@ -96,7 +96,6 @@ static void BM_fetch_add_relaxed(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_fetch_add_relaxed);
 
 static void BM_fetch_add_seq_cst(benchmark::State& state) {
   unsigned result = 0;
@@ -106,7 +105,6 @@ static void BM_fetch_add_seq_cst(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_fetch_add_seq_cst);
 
 // The fence benchmarks include a relaxed load to make it much harder to optimize away
 // the fence.
@@ -120,7 +118,6 @@ static void BM_acquire_fence(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_acquire_fence);
 
 static void BM_seq_cst_fence(benchmark::State& state) {
   unsigned result = 0;
@@ -131,7 +128,6 @@ static void BM_seq_cst_fence(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_seq_cst_fence);
 
 // For comparison, also throw in a critical section version:
 
@@ -145,4 +141,16 @@ static void BM_fetch_add_cs(benchmark::State& state) {
   }
   sink = result;
 }
-BENCHMARK(BM_fetch_add_cs);
+
+void declare_atomic_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_empty"), benchmark_func_t {&BM_empty});
+  str_to_func.emplace(std::string("BM_load_relaxed"), benchmark_func_t {&BM_load_relaxed});
+  str_to_func.emplace(std::string("BM_load_acquire"), benchmark_func_t {&BM_load_acquire});
+  str_to_func.emplace(std::string("BM_store_release"), benchmark_func_t {&BM_store_release});
+  str_to_func.emplace(std::string("BM_store_seq_cst"), benchmark_func_t {&BM_store_seq_cst});
+  str_to_func.emplace(std::string("BM_fetch_add_relaxed"), benchmark_func_t {&BM_fetch_add_relaxed});
+  str_to_func.emplace(std::string("BM_fetch_add_seq_cst"), benchmark_func_t {&BM_fetch_add_seq_cst});
+  str_to_func.emplace(std::string("BM_acquire_fence"), benchmark_func_t {&BM_acquire_fence});
+  str_to_func.emplace(std::string("BM_seq_cst_fence"), benchmark_func_t {&BM_seq_cst_fence});
+  str_to_func.emplace(std::string("BM_fetch_add_cs"), benchmark_func_t {&BM_fetch_add_cs});
+}

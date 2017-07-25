@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+#include "semaphore_benchmark.h"
+
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdatomic.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <map>
 
 #include <benchmark/benchmark.h>
 
@@ -31,7 +35,6 @@ static void BM_semaphore_sem_getvalue(benchmark::State& state) {
     sem_getvalue(&semaphore, &dummy);
   }
 }
-BENCHMARK(BM_semaphore_sem_getvalue);
 
 static void BM_semaphore_sem_wait_sem_post(benchmark::State& state) {
   sem_t semaphore;
@@ -42,7 +45,6 @@ static void BM_semaphore_sem_wait_sem_post(benchmark::State& state) {
     sem_post(&semaphore);
   }
 }
-BENCHMARK(BM_semaphore_sem_wait_sem_post);
 
 // This test reports the overhead of the underlying futex wake syscall on
 // the producer. It does not report the overhead from issuing the wake to the
@@ -119,7 +121,7 @@ class SemaphoreFixture : public benchmark::Fixture {
   bool setup = false;
 };
 
-BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
+/* BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
   while (state.KeepRunning()) {
     state.PauseTiming();
 
@@ -149,4 +151,10 @@ BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
     param.sched_priority = 0;
     sched_setscheduler(0, SCHED_IDLE, &param);
   }
+}*/
+
+void declare_semaphore_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_semaphore_sem_getvalue"), BM_semaphore_sem_getvalue);
+  str_to_func.emplace(std::string("BM_semaphore_sem_wait_sem_post"),
+                                  BM_semaphore_sem_wait_sem_post);
 }

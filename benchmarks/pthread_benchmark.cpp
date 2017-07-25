@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+#include "pthread_benchmark.h"
+
 #include <pthread.h>
+#include <map>
 
 #include <benchmark/benchmark.h>
 
@@ -26,7 +29,6 @@ static void BM_pthread_self(benchmark::State& state) {
     pthread_self_fp();
   }
 }
-BENCHMARK(BM_pthread_self);
 
 static void BM_pthread_getspecific(benchmark::State& state) {
   pthread_key_t key;
@@ -38,7 +40,6 @@ static void BM_pthread_getspecific(benchmark::State& state) {
 
   pthread_key_delete(key);
 }
-BENCHMARK(BM_pthread_getspecific);
 
 static void BM_pthread_setspecific(benchmark::State& state) {
   pthread_key_t key;
@@ -50,7 +51,6 @@ static void BM_pthread_setspecific(benchmark::State& state) {
 
   pthread_key_delete(key);
 }
-BENCHMARK(BM_pthread_setspecific);
 
 static void DummyPthreadOnceInitFunction() {
 }
@@ -63,7 +63,6 @@ static void BM_pthread_once(benchmark::State& state) {
     pthread_once(&once, DummyPthreadOnceInitFunction);
   }
 }
-BENCHMARK(BM_pthread_once);
 
 static void BM_pthread_mutex_lock(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -73,7 +72,6 @@ static void BM_pthread_mutex_lock(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock);
 
 static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
@@ -83,7 +81,6 @@ static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
 
 static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
@@ -93,7 +90,6 @@ static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
 static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
@@ -106,7 +102,6 @@ static void BM_pthread_rwlock_read(benchmark::State& state) {
 
   pthread_rwlock_destroy(&lock);
 }
-BENCHMARK(BM_pthread_rwlock_read);
 
 static void BM_pthread_rwlock_write(benchmark::State& state) {
   pthread_rwlock_t lock;
@@ -119,7 +114,6 @@ static void BM_pthread_rwlock_write(benchmark::State& state) {
 
   pthread_rwlock_destroy(&lock);
 }
-BENCHMARK(BM_pthread_rwlock_write);
 
 static void* IdleThread(void*) {
   return NULL;
@@ -134,7 +128,6 @@ static void BM_pthread_create(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_create);
 
 static void* RunThread(void* arg) {
   benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
@@ -150,7 +143,6 @@ static void BM_pthread_create_and_run(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_create_and_run);
 
 static void* ExitThread(void* arg) {
   benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
@@ -166,7 +158,6 @@ static void BM_pthread_exit_and_join(benchmark::State& state) {
     pthread_join(thread, NULL);
   }
 }
-BENCHMARK(BM_pthread_exit_and_join);
 
 static void BM_pthread_key_create(benchmark::State& state) {
   while (state.KeepRunning()) {
@@ -178,7 +169,6 @@ static void BM_pthread_key_create(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_key_create);
 
 static void BM_pthread_key_delete(benchmark::State& state) {
   while (state.KeepRunning()) {
@@ -190,4 +180,22 @@ static void BM_pthread_key_delete(benchmark::State& state) {
     pthread_key_delete(key);
   }
 }
-BENCHMARK(BM_pthread_key_delete);
+
+void declare_pthread_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_pthread_self"), BM_pthread_self);
+  str_to_func.emplace(std::string("BM_pthread_getspecific"), BM_pthread_getspecific);
+  str_to_func.emplace(std::string("BM_pthread_setspecific"), BM_pthread_setspecific);
+  str_to_func.emplace(std::string("BM_pthread_once"), BM_pthread_once);
+  str_to_func.emplace(std::string("BM_pthread_mutex_lock"), BM_pthread_mutex_lock);
+  str_to_func.emplace(std::string("BM_pthread_mutex_lock_ERRORCHECK"),
+                                  BM_pthread_mutex_lock_ERRORCHECK);
+  str_to_func.emplace(std::string("BM_pthread_mutex_lock_RECURSIVE"),
+                                  BM_pthread_mutex_lock_RECURSIVE);
+  str_to_func.emplace(std::string("BM_pthread_rwlock_read"), BM_pthread_rwlock_read);
+  str_to_func.emplace(std::string("BM_pthread_rwlock_write"), BM_pthread_rwlock_write);
+  str_to_func.emplace(std::string("BM_pthread_create"), BM_pthread_create);
+  str_to_func.emplace(std::string("BM_pthread_create_and_run"), BM_pthread_create_and_run);
+  str_to_func.emplace(std::string("BM_pthread_exit_and_join"), BM_pthread_exit_and_join);
+  str_to_func.emplace(std::string("BM_pthread_key_create"), BM_pthread_key_create);
+  str_to_func.emplace(std::string("BM_pthread_key_delete"), BM_pthread_key_delete);
+}

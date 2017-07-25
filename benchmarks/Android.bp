@@ -26,6 +26,7 @@ cc_defaults {
     ],
     srcs: [
         "atomic_benchmark.cpp",
+        "bionic_benchmarks.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",
@@ -35,6 +36,7 @@ cc_defaults {
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
     ],
+    shared_libs: ["libtinyxml2"],
     static_libs: ["libBionicBenchmarksUtils"],
 }
 
@@ -54,6 +56,7 @@ cc_defaults {
 cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
+    data: ["suites/*"],
 }
 
 // We don't build a static benchmark executable because it's not usually
@@ -79,6 +82,7 @@ cc_library_static {
     name: "libBionicBenchmarksUtils",
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: ["util.cpp"],
+    whole_static_libs: ["libgoogle-benchmark"],
     host_supported: true,
 }
 
@@ -87,6 +91,8 @@ cc_test {
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: [
         "tests/benchmark_test.cpp",
+        "tests/interface_test.cpp",
     ],
     static_libs: ["libBionicBenchmarksUtils"],
+    data: ["suites/test_*.xml"],
 }
