@@ -19,8 +19,34 @@
 #include <sched.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <cstdlib>
-#include <vector>
+
+#include "atomic_benchmark.h"
+#include "math_benchmark.h"
+#include "property_benchmark.h"
+#include "pthread_benchmark.h"
+#include "semaphore_benchmark.h"
+#include "stdio_benchmark.h"
+#include "string_benchmark.h"
+#include "time_benchmark.h"
+#include "unistd_benchmark.h"
+
+std::map<std::string, benchmark_func_t> DeclareBenchmarks() {
+  std::map <std::string, benchmark_func_t> str_to_func;
+  declare_atomic_benchmarks(str_to_func);
+  declare_math_benchmarks(str_to_func);
+#if defined(__BIONIC__)
+  declare_property_benchmarks(str_to_func);
+#endif
+  declare_pthread_benchmarks(str_to_func);
+  declare_semaphore_benchmarks(str_to_func);
+  declare_stdio_benchmarks(str_to_func);
+  declare_string_benchmarks(str_to_func);
+  declare_time_benchmarks(str_to_func);
+  declare_unistd_benchmarks(str_to_func);
+  return str_to_func;
+}
 
 // This function returns a pointer less than 2 * alignment + or_mask bytes into the array.
 char *GetAlignedMemory(char *orig_ptr, size_t alignment, size_t or_mask) {
@@ -53,6 +79,13 @@ char *GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbyte
   char* buf_aligned = GetAlignedPtr(buf, alignment, nbytes);
   memset(buf_aligned, fill_byte, nbytes);
   return buf_aligned;
+}
+
+std::string trim(std::string src) {
+  std::string copy = src;
+  copy.erase(0, copy.find_first_not_of(" \n\t\f\v\r"));
+  copy.erase(copy.find_last_not_of(" \n\t\f\v\r") + 1);
+  return copy;
 }
 
 #if defined(__APPLE__)

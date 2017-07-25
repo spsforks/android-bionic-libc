@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "unistd_benchmark.h"
 
 #include <sys/syscall.h>
 #include <unistd.h>
+
+#include <map>
 
 #include <benchmark/benchmark.h>
 
@@ -24,14 +27,12 @@ static void BM_unistd_getpid(benchmark::State& state) {
     getpid();
   }
 }
-BENCHMARK(BM_unistd_getpid);
 
 static void BM_unistd_getpid_syscall(benchmark::State& state) {
   while (state.KeepRunning()) {
     syscall(__NR_getpid);
   }
 }
-BENCHMARK(BM_unistd_getpid_syscall);
 
 #if defined(__BIONIC__)
 
@@ -43,7 +44,6 @@ static void BM_unistd_gettid(benchmark::State& state) {
     gettid_fp();
   }
 }
-BENCHMARK(BM_unistd_gettid);
 
 #endif
 
@@ -52,6 +52,12 @@ void BM_unistd_gettid_syscall(benchmark::State& state) {
     syscall(__NR_gettid);
   }
 }
-BENCHMARK(BM_unistd_gettid_syscall);
 
-BENCHMARK_MAIN()
+void declare_unistd_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_unistd_getpid"), BM_unistd_getpid);
+  str_to_func.emplace(std::string("BM_unistd_getpid_syscall"), BM_unistd_getpid_syscall);
+#if defined(__BIONIC__)
+  str_to_func.emplace(std::string("BM_unistd_gettid"), BM_unistd_gettid);
+#endif
+  str_to_func.emplace(std::string("BM_unistd_gettid_syscall"), BM_unistd_gettid_syscall);
+}

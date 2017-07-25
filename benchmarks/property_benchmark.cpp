@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+#include "property_benchmark.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include <string>
+#include <map>
 
 #if defined(__BIONIC__)
 
@@ -27,11 +30,6 @@
 #include <sys/_system_properties.h>
 
 #include <benchmark/benchmark.h>
-
-// Do not exceed 512, that is about the largest number of properties
-// that can be created with the current property area size.
-#define TEST_NUM_PROPS \
-    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)
 
 struct LocalPropertyTestState {
   explicit LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
@@ -145,7 +143,6 @@ static void BM_property_get(benchmark::State& state) {
     __system_property_get(pa.names[random() % nprops], value);
   }
 }
-BENCHMARK(BM_property_get)->TEST_NUM_PROPS;
 
 static void BM_property_find(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -157,7 +154,6 @@ static void BM_property_find(benchmark::State& state) {
     __system_property_find(pa.names[random() % nprops]);
   }
 }
-BENCHMARK(BM_property_find)->TEST_NUM_PROPS;
 
 static void BM_property_read(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -180,7 +176,6 @@ static void BM_property_read(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BENCHMARK(BM_property_read)->TEST_NUM_PROPS;
 
 static void BM_property_serial(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -201,6 +196,12 @@ static void BM_property_serial(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BENCHMARK(BM_property_serial)->TEST_NUM_PROPS;
+
+void declare_property_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_property_get"), BM_property_get);
+  str_to_func.emplace(std::string("BM_property_find"), BM_property_find);
+  str_to_func.emplace(std::string("BM_property_read"), BM_property_read);
+  str_to_func.emplace(std::string("BM_property_serial"), BM_property_serial);
+}
 
 #endif  // __BIONIC__

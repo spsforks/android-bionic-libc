@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
+#include "stdio_benchmark.h"
+
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
 
+#include <map>
+
 #include <benchmark/benchmark.h>
-
-constexpr auto KB = 1024;
-
-#define AT_COMMON_SIZES \
-    Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(8)->Arg(16)->Arg(32)->Arg(64)->Arg(512)-> \
-    Arg(1*KB)->Arg(4*KB)->Arg(8*KB)->Arg(16*KB)->Arg(64*KB)
 
 template <typename Fn>
 void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
@@ -50,22 +48,18 @@ void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
 void BM_stdio_fread(benchmark::State& state) {
   ReadWriteTest(state, fread, true);
 }
-BENCHMARK(BM_stdio_fread)->AT_COMMON_SIZES;
 
 void BM_stdio_fwrite(benchmark::State& state) {
   ReadWriteTest(state, fwrite, true);
 }
-BENCHMARK(BM_stdio_fwrite)->AT_COMMON_SIZES;
 
 void BM_stdio_fread_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fread, false);
 }
-BENCHMARK(BM_stdio_fread_unbuffered)->AT_COMMON_SIZES;
 
 void BM_stdio_fwrite_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fwrite, false);
 }
-BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
 
 static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
   char buf[1024];
@@ -80,9 +74,18 @@ static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
 static void BM_stdio_fopen_fgets_fclose_locking(benchmark::State& state) {
   FopenFgetsFclose(state, false);
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
 
 void BM_stdio_fopen_fgets_fclose_no_locking(benchmark::State& state) {
   FopenFgetsFclose(state, true);
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
+
+void declare_stdio_benchmarks(std::map <std::string, benchmark_func_t>& str_to_func) {
+  str_to_func.emplace(std::string("BM_stdio_fread"), BM_stdio_fread);
+  str_to_func.emplace(std::string("BM_stdio_fwrite"), BM_stdio_fwrite);
+  str_to_func.emplace(std::string("BM_stdio_fread_unbuffered"), BM_stdio_fread_unbuffered);
+  str_to_func.emplace(std::string("BM_stdio_fwrite_unbuffered"), BM_stdio_fwrite_unbuffered);
+  str_to_func.emplace(std::string("BM_stdio_fopen_fgets_fclose_locking"),
+                                  BM_stdio_fopen_fgets_fclose_locking);
+  str_to_func.emplace(std::string("BM_stdio_fopen_fgets_fclose_no_locking"),
+                                  BM_stdio_fopen_fgets_fclose_no_locking);
+}
