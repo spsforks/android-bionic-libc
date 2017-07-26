@@ -29,6 +29,9 @@
 #ifndef _ANDROID_LEGACY_STDLIB_INLINES_H_
 #define _ANDROID_LEGACY_STDLIB_INLINES_H_
 
+#include <errno.h>
+#include <float.h>
+#include <math.h>
 #include <stdlib.h>
 #include <sys/cdefs.h>
 
@@ -36,10 +39,13 @@
 
 __BEGIN_DECLS
 
-__noreturn void _Exit(int) __RENAME(_exit);
-
 static __inline float strtof(const char *nptr, char **endptr) {
-  return (float)strtod(nptr, endptr);
+  double d = strtod(nptr, endptr);
+  if (fabs(d) > FLT_MAX) {
+    errno = ERANGE;
+    return HUGE_VALF;
+  }
+  return __BIONIC_CAST(static_cast, float, d);
 }
 
 static __inline double atof(const char *nptr) { return (strtod(nptr, NULL)); }
