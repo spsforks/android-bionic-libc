@@ -34,28 +34,23 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 typedef struct {
   /* Pathname of shared object that contains address. */
-  const char* dli_fname;
+  const char* _Nullable dli_fname;
   /* Address at which shared object is loaded. */
-  void* dli_fbase;
+  void* _Nullable dli_fbase;
   /* Name of nearest symbol with address lower than addr. */
-  const char* dli_sname;
+  const char* _Nullable dli_sname;
   /* Exact address of symbol named in dli_sname. */
-  void* dli_saddr;
+  void* _Nullable dli_saddr;
 } Dl_info;
 
-void* dlopen(const char* filename, int flag);
+void* _Nullable dlopen(const char* _Nullable filename, int flags);
 int dlclose(void* _Nonnull handle);
-char* dlerror(void);
-void* dlsym(void* handle, const char* _Nonnull symbol);
-void* dlvsym(void* handle, const char* _Nonnull symbol, const char* _Nonnull version) __INTRODUCED_IN(24);
-int dladdr(const void* addr, Dl_info* _Nonnull info);
+char* _Nullable dlerror(void);
+void* _Nullable dlsym(void* _Nullable handle, const char* _Nonnull symbol);
+void* _Nullable dlvsym(void* _Nullable handle, const char* _Nonnull symbol, const char* _Nonnull version) __INTRODUCED_IN(24);
+int dladdr(const void* _Nullable addr, Dl_info* _Nonnull info);
 
 #define RTLD_LOCAL    0
 #define RTLD_LAZY     0x00001
@@ -78,10 +73,6 @@ int dladdr(const void* addr, Dl_info* _Nonnull info);
 #else
 #define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0xffffffff)
 #define RTLD_NEXT     __BIONIC_CAST(reinterpret_cast, void*, 0xfffffffe)
-#endif
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
 #endif
 
 __END_DECLS
