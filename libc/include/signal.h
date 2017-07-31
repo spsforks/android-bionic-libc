@@ -54,11 +54,6 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 typedef int sig_atomic_t;
 
 /* The arm and x86 kernel header files don't define _NSIG. */
@@ -81,8 +76,8 @@ typedef int sig_atomic_t;
 int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
 int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 
-extern const char* const sys_siglist[_NSIG];
-extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
+extern const char* _Nonnull const sys_siglist[_NSIG];
+extern const char* _Nonnull const sys_signame[_NSIG]; /* BSD compatibility. */
 
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
@@ -94,11 +89,11 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 struct sigaction {
   unsigned int sa_flags;
   union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction)(int, struct siginfo*, void*);
+    sighandler_t _Nullable sa_handler;
+    void (*_Nullable sa_sigaction)(int, struct siginfo* _Nonnull, void* _Nonnull);
   };
   sigset_t sa_mask;
-  void (*sa_restorer)(void);
+  void (*_Nullable sa_restorer)(void);
 };
 
 #elif defined(__mips__)
@@ -106,31 +101,31 @@ struct sigaction {
 struct sigaction {
   unsigned int sa_flags;
   union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction) (int, struct siginfo*, void*);
+    sighandler_t _Nullable sa_handler;
+    void (*_Nullable sa_sigaction) (int, struct siginfo* _Nonnull, void* _Nonnull);
   };
   sigset_t sa_mask;
 };
 
 #endif
 
-int sigaction(int, const struct sigaction*, struct sigaction*);
+int sigaction(int, const struct sigaction* _Nullable, struct sigaction* _Nullable);
 
 int siginterrupt(int, int);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
-int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
-int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
-int sigemptyset(sigset_t*) __INTRODUCED_IN(21);
-int sigfillset(sigset_t*) __INTRODUCED_IN(21);
-int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
+sighandler_t _Nullable signal(int, sighandler_t _Nullable) __INTRODUCED_IN(21);
+int sigaddset(sigset_t* _Nonnull, int) __INTRODUCED_IN(21);
+int sigdelset(sigset_t* _Nonnull, int) __INTRODUCED_IN(21);
+int sigemptyset(sigset_t* _Nonnull) __INTRODUCED_IN(21);
+int sigfillset(sigset_t* _Nonnull) __INTRODUCED_IN(21);
+int sigismember(const sigset_t* _Nonnull, int) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
 
 int sigpending(sigset_t* _Nonnull);
-int sigprocmask(int, const sigset_t*, sigset_t*);
+int sigprocmask(int, const sigset_t* _Nullable, sigset_t* _Nullable);
 int sigsuspend(const sigset_t* _Nonnull);
 int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
@@ -144,7 +139,7 @@ int sigpause(int)
 int sigrelse(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
-sighandler_t sigset(int, sighandler_t)
+sighandler_t _Nullable sigset(int, sighandler_t _Nullable)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
 
 int raise(int);
@@ -152,21 +147,17 @@ int kill(pid_t, int);
 int killpg(int, int);
 int tgkill(int tgid, int tid, int sig) __INTRODUCED_IN_32(16);
 
-int sigaltstack(const stack_t*, stack_t*);
+int sigaltstack(const stack_t* _Nullable, stack_t* _Nullable);
 
-void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
-void psignal(int, const char*) __INTRODUCED_IN(17);
+void psiginfo(const siginfo_t* _Nonnull, const char* _Nullable) __INTRODUCED_IN(17);
+void psignal(int, const char* _Nullable) __INTRODUCED_IN(17);
 
 int pthread_kill(pthread_t, int);
-int pthread_sigmask(int, const sigset_t*, sigset_t*);
+int pthread_sigmask(int, const sigset_t* _Nullable, sigset_t* _Nullable);
 
 int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
-int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
-int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
+int sigtimedwait(const sigset_t* _Nonnull, siginfo_t* _Nullable, const struct timespec* _Nullable) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t* _Nullable) __INTRODUCED_IN(23);
 
 __END_DECLS
 
