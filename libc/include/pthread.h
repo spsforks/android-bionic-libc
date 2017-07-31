@@ -38,11 +38,6 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 enum {
     PTHREAD_MUTEX_NORMAL = 0,
     PTHREAD_MUTEX_RECURSIVE = 1,
@@ -64,7 +59,7 @@ enum {
 
 enum {
   PTHREAD_RWLOCK_PREFER_READER_NP = 0,
-  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 1,
+  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 1
 };
 
 #define PTHREAD_ONCE_INIT 0
@@ -88,7 +83,7 @@ enum {
 #define PTHREAD_SCOPE_SYSTEM     0
 #define PTHREAD_SCOPE_PROCESS    1
 
-int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(12);
+int pthread_atfork(void (*_Nullable)(void), void (*_Nullable)(void), void (*_Nullable)(void)) __INTRODUCED_IN(12);
 
 int pthread_attr_destroy(pthread_attr_t* _Nonnull);
 int pthread_attr_getdetachstate(const pthread_attr_t* _Nonnull, int* _Nonnull);
@@ -96,7 +91,7 @@ int pthread_attr_getguardsize(const pthread_attr_t* _Nonnull, size_t* _Nonnull);
 int pthread_attr_getschedparam(const pthread_attr_t* _Nonnull, struct sched_param* _Nonnull);
 int pthread_attr_getschedpolicy(const pthread_attr_t* _Nonnull, int* _Nonnull);
 int pthread_attr_getscope(const pthread_attr_t* _Nonnull, int* _Nonnull);
-int pthread_attr_getstack(const pthread_attr_t* _Nonnull, void** _Nonnull, size_t* _Nonnull);
+int pthread_attr_getstack(const pthread_attr_t* _Nonnull, void* _Nonnull* _Nonnull, size_t* _Nonnull);
 int pthread_attr_getstacksize(const pthread_attr_t* _Nonnull, size_t* _Nonnull);
 int pthread_attr_init(pthread_attr_t* _Nonnull);
 int pthread_attr_setdetachstate(pthread_attr_t* _Nonnull, int);
@@ -104,7 +99,7 @@ int pthread_attr_setguardsize(pthread_attr_t* _Nonnull, size_t);
 int pthread_attr_setschedparam(pthread_attr_t* _Nonnull, const struct sched_param* _Nonnull);
 int pthread_attr_setschedpolicy(pthread_attr_t* _Nonnull, int);
 int pthread_attr_setscope(pthread_attr_t* _Nonnull, int);
-int pthread_attr_setstack(pthread_attr_t* _Nonnull, void*, size_t);
+int pthread_attr_setstack(pthread_attr_t* _Nonnull, void* _Nonnull, size_t);
 int pthread_attr_setstacksize(pthread_attr_t* _Nonnull, size_t);
 
 int pthread_condattr_destroy(pthread_condattr_t* _Nonnull);
@@ -117,16 +112,15 @@ int pthread_condattr_setpshared(pthread_condattr_t* _Nonnull, int);
 
 int pthread_cond_broadcast(pthread_cond_t* _Nonnull);
 int pthread_cond_destroy(pthread_cond_t* _Nonnull);
-int pthread_cond_init(pthread_cond_t* _Nonnull, const pthread_condattr_t*);
+int pthread_cond_init(pthread_cond_t* _Nonnull, const pthread_condattr_t* _Nullable);
 int pthread_cond_signal(pthread_cond_t* _Nonnull);
 int pthread_cond_timedwait(pthread_cond_t* _Nonnull, pthread_mutex_t* _Nonnull,
                            const struct timespec* _Nonnull);
 int pthread_cond_wait(pthread_cond_t* _Nonnull, pthread_mutex_t* _Nonnull);
 
-int pthread_create(pthread_t* _Nonnull, pthread_attr_t const*,
-                   void* (* _Nonnull start_routine)(void*), void*);
+int pthread_create(pthread_t* _Nonnull, pthread_attr_t const* _Nullable, void* _Nullable (*_Nonnull start_routine)(void* _Nullable), void* _Nullable);
 int pthread_detach(pthread_t);
-void pthread_exit(void*) __noreturn;
+void pthread_exit(void* _Nullable) __noreturn;
 
 int pthread_equal(pthread_t, pthread_t);
 
@@ -136,13 +130,13 @@ int pthread_getcpuclockid(pthread_t, clockid_t* _Nonnull);
 
 int pthread_getschedparam(pthread_t, int* _Nonnull, struct sched_param* _Nonnull);
 
-void* pthread_getspecific(pthread_key_t);
+void* _Nullable pthread_getspecific(pthread_key_t);
 
 pid_t pthread_gettid_np(pthread_t) __INTRODUCED_IN(21);
 
-int pthread_join(pthread_t, void**);
+int pthread_join(pthread_t, void* _Nullable* _Nullable);
 
-int pthread_key_create(pthread_key_t* _Nonnull, void (*)(void*));
+int pthread_key_create(pthread_key_t* _Nonnull, void (* _Nullable)(void* _Nullable));
 int pthread_key_delete(pthread_key_t);
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t* _Nonnull);
@@ -153,7 +147,7 @@ int pthread_mutexattr_setpshared(pthread_mutexattr_t* _Nonnull, int);
 int pthread_mutexattr_settype(pthread_mutexattr_t* _Nonnull, int);
 
 int pthread_mutex_destroy(pthread_mutex_t* _Nonnull);
-int pthread_mutex_init(pthread_mutex_t* _Nonnull, const pthread_mutexattr_t*);
+int pthread_mutex_init(pthread_mutex_t* _Nonnull, const pthread_mutexattr_t* _Nullable);
 int pthread_mutex_lock(pthread_mutex_t* _Nonnull);
 int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull, const struct timespec* _Nonnull)
   __INTRODUCED_IN(21);
@@ -191,7 +185,7 @@ int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t* _Nonnull, int* _No
 int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t* _Nonnull, int) __INTRODUCED_IN(23);
 
 int pthread_rwlock_destroy(pthread_rwlock_t* _Nonnull);
-int pthread_rwlock_init(pthread_rwlock_t* _Nonnull, const pthread_rwlockattr_t*);
+int pthread_rwlock_init(pthread_rwlock_t* _Nonnull, const pthread_rwlockattr_t* _Nullable);
 int pthread_rwlock_rdlock(pthread_rwlock_t* _Nonnull);
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* _Nonnull, const struct timespec* _Nonnull);
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* _Nonnull, const struct timespec* _Nonnull);
@@ -210,8 +204,7 @@ int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull attr, int psh
 #endif
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
-int pthread_barrier_init(pthread_barrier_t* _Nonnull, const pthread_barrierattr_t*, unsigned)
-  __INTRODUCED_IN(24);
+int pthread_barrier_init(pthread_barrier_t* _Nonnull, const pthread_barrierattr_t* _Nullable, unsigned) __INTRODUCED_IN(24);
 int pthread_barrier_destroy(pthread_barrier_t* _Nonnull) __INTRODUCED_IN(24);
 int pthread_barrier_wait(pthread_barrier_t* _Nonnull) __INTRODUCED_IN(24);
 #endif
@@ -234,18 +227,18 @@ int pthread_setname_np(pthread_t, const char* _Nonnull);
 
 int pthread_setschedparam(pthread_t, int, const struct sched_param* _Nonnull);
 
-int pthread_setspecific(pthread_key_t, const void*);
+int pthread_setspecific(pthread_key_t, const void* _Nullable);
 
-typedef void (*__pthread_cleanup_func_t)(void*);
+typedef void (*__pthread_cleanup_func_t)(void* _Nullable);
 
 typedef struct __pthread_cleanup_t {
-  struct __pthread_cleanup_t*   __cleanup_prev;
-  __pthread_cleanup_func_t      __cleanup_routine;
-  void*                         __cleanup_arg;
+  struct __pthread_cleanup_t* _Nullable __cleanup_prev;
+  __pthread_cleanup_func_t _Nonnull __cleanup_routine;
+  void* _Nullable __cleanup_arg;
 } __pthread_cleanup_t;
 
-void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t, void*);
-void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
+void __pthread_cleanup_push(__pthread_cleanup_t* _Nonnull c, __pthread_cleanup_func_t _Nonnull, void* _Nullable);
+void __pthread_cleanup_pop(__pthread_cleanup_t* _Nonnull, int);
 
 /* Believe or not, the definitions of pthread_cleanup_push and
  * pthread_cleanup_pop below are correct. Posix states that these
@@ -253,18 +246,14 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
  * closing braces, and that using setjmp/longjmp/return/break/continue
  * between them results in undefined behavior.
  */
-#define  pthread_cleanup_push(routine, arg)                      \
-    do {                                                         \
-        __pthread_cleanup_t  __cleanup;                          \
-        __pthread_cleanup_push( &__cleanup, (routine), (arg) );  \
+#define pthread_cleanup_push(routine, arg) \
+    do { \
+      __pthread_cleanup_t __cleanup; \
+      __pthread_cleanup_push(&__cleanup, (routine), (arg)); \
 
-#define  pthread_cleanup_pop(execute)                  \
-        __pthread_cleanup_pop( &__cleanup, (execute)); \
-    } while (0);                                       \
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
+#define pthread_cleanup_pop(execute) \
+      __pthread_cleanup_pop(&__cleanup, (execute)); \
+    } while (0); \
 
 __END_DECLS
 
