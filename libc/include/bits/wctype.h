@@ -54,12 +54,12 @@ wint_t towlower(wint_t);
 wint_t towupper(wint_t);
 
 typedef long wctype_t;
-wctype_t wctype(const char*);
+wctype_t wctype(const char* _Nonnull);
 int iswctype(wint_t, wctype_t);
 
 typedef const void* wctrans_t;
-wint_t towctrans(wint_t, wctrans_t) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
-wctrans_t wctrans(const char*) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+wint_t towctrans(wint_t, wctrans_t _Nonnull) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+wctrans_t _Nullable wctrans(const char* _Nonnull) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
 
 __END_DECLS
 
