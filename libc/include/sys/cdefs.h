@@ -144,6 +144,13 @@
 #define _Nullable
 #endif
 
+#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
+#define __BIONIC_VA_LIST va_list
+#else
+/* va_list is a pointer type on 32-bit x86. */
+#define __BIONIC_VA_LIST va_list _Nonnull
+#endif
+
 #define __printflike(x, y) __attribute__((__format__(printf, x, y)))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
 

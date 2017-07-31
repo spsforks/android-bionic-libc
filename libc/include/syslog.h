@@ -89,11 +89,7 @@ void closelog(void);
 void openlog(const char* _Nullable, int, int);
 int setlogmask(int);
 void syslog(int, const char* _Nonnull, ...) __printflike(2, 3);
-#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
-void vsyslog(int, const char* _Nonnull, va_list) __printflike(2, 0);
-#else /* defined(__mips__) || defined(__i386__) */
-void vsyslog(int, const char* _Nonnull, va_list _Nonnull) __printflike(2, 0);
-#endif
+void vsyslog(int, const char* _Nonnull, __BIONIC_VA_LIST) __printflike(2, 0);
 
 __END_DECLS
 
