@@ -601,12 +601,14 @@ TEST(stdio, open_wmemstream_EINVAL) {
 
   // Invalid buffer.
   errno = 0;
-  ASSERT_EQ(nullptr, open_wmemstream(nullptr, &size));
+  wchar_t** null_char_star_star = nullptr;
+  ASSERT_EQ(nullptr, open_wmemstream(null_char_star_star, &size));
   ASSERT_EQ(EINVAL, errno);
 
   // Invalid size.
   errno = 0;
-  ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
+  size_t* null_size_t_star = nullptr;
+  ASSERT_EQ(nullptr, open_wmemstream(&p, null_size_t_star));
   ASSERT_EQ(EINVAL, errno);
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -830,4 +832,24 @@ TEST(wchar, wcwidth_default_ignorables) {
 TEST(wchar, wcwidth_korean_common_non_syllables) {
   EXPECT_EQ(2, wcwidth(L'ㅜ')); // Korean "crying" emoticon.
   EXPECT_EQ(2, wcwidth(L'ㅋ')); // Korean "laughing" emoticon.
+}
+
+TEST(wchar, wcslen) {
+  EXPECT_EQ(2U, wcslen(L"hi"));
+  EXPECT_EQ(2U, wcslen(L"hi\0there"));
+}
+
+TEST(wchar, wcsnlen) {
+  EXPECT_EQ(2U, wcsnlen(L"hi", 8));
+  EXPECT_EQ(2U, wcsnlen(L"hi there", 2));
+}
+
+TEST(wchar, wcsxfrm) {
+  EXPECT_EQ(2U, wcsxfrm(nullptr, L"hi", 0));
+
+  wchar_t dst[8] = {};
+  EXPECT_EQ(2U, wcsxfrm(dst, L"hi", sizeof(dst)));
+  EXPECT_TRUE(wcscmp(dst, L"hi") == 0);
+  EXPECT_EQ(11U, wcsxfrm(dst, L"hello world", 5));
+  EXPECT_TRUE(wcscmp(dst, L"hell") == 0);
 }
