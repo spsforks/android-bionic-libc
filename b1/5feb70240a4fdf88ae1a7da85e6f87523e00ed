@@ -1,0 +1,8 @@
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Autosubmit+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 01 Aug 2017 18:09:01 +0000
+Reviewed-on: https://android-review.googlesource.com/448537
+Project: platform/bionic
+Branch: refs/heads/master
