@@ -38,16 +38,26 @@ class GenericTemporaryFile {
   }
 
   ~GenericTemporaryFile() {
-    close(fd);
+    close();
     unlink(filename);
   }
 
+  void close() {
+    if (fp != nullptr) {
+      fclose(fp);
+      fp = nullptr;
+      fd = -1;
+    }
+  }
+
   void reopen() {
-    close(fd);
+    close();
     fd = open(filename, O_RDWR);
+    fp = fdopen(fd, "w+");
   }
 
   int fd;
+  FILE* fp;
   char filename[1024];
 
  private:
@@ -56,6 +66,7 @@ class GenericTemporaryFile {
   void init(const char* tmp_dir) {
     snprintf(filename, sizeof(filename), "%s/TemporaryFile-XXXXXX", tmp_dir);
     fd = mk_fn(filename);
+    fp = fdopen(fd, "w+");
   }
 
   DISALLOW_COPY_AND_ASSIGN(GenericTemporaryFile);
