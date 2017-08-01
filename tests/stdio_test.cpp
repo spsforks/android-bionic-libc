@@ -105,22 +105,19 @@ TEST(STDIO_TEST, flockfile_18208568_regular) {
 }
 
 TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
-  FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
-
-  int fd = fileno(fp);
-  ASSERT_NE(fd, -1);
+  TemporaryFile file;
+  ASSERT_TRUE(file.fp != NULL);
+  ASSERT_NE(file.fd, -1);
 
   struct stat sb;
-  int rc = fstat(fd, &sb);
+  int rc = fstat(file.fd, &sb);
   ASSERT_NE(rc, -1);
   ASSERT_EQ(sb.st_mode & 0777, 0600U);
 
-  rc = fprintf(fp, "hello\n");
+  rc = fprintf(file.fp, "hello\n");
   ASSERT_EQ(rc, 6);
 
-  AssertFileIs(fp, "hello\n");
-  fclose(fp);
+  AssertFileIs(file.fp, "hello\n");
 }
 
 TEST(STDIO_TEST, tmpfile64) {
@@ -705,25 +702,28 @@ TEST(STDIO_TEST, fprintf) {
 
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
-  FILE* fp;
+  TemporaryFile file;
+  ASSERT_NE(nullptr, file.fp);
 
   // Unbuffered case where the fprintf(3) itself fails.
-  ASSERT_NE(nullptr, fp = tmpfile());
-  setbuf(fp, NULL);
-  ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
-  ASSERT_EQ(-1, fprintf(fp, "fail"));
-  ASSERT_EQ(-1, fclose(fp));
+  setbuf(file.fp, NULL);
+  ASSERT_EQ(4, fprintf(file.fp, "epic"));
+  ASSERT_EQ(0, close(file.fd));
+  ASSERT_EQ(-1, fprintf(file.fp, "fail"));
+  ASSERT_EQ(-1, fclose(file.fp));
+  file.fp = nullptr;
 
   // Buffered case where we won't notice until the fclose(3).
   // It's likely this is what was actually seen in http://b/7229520,
   // and that expecting fprintf to fail is setting yourself up for
   // disappointment. Remember to check fclose(3)'s return value, kids!
-  ASSERT_NE(nullptr, fp = tmpfile());
-  ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
-  ASSERT_EQ(4, fprintf(fp, "fail"));
-  ASSERT_EQ(-1, fclose(fp));
+  file.reopen();
+  ASSERT_NE(nullptr, file.fp);
+  ASSERT_EQ(4, fprintf(file.fp, "epic"));
+  ASSERT_EQ(0, close(file.fd));
+  ASSERT_EQ(4, fprintf(file.fp, "fail"));
+  ASSERT_EQ(-1, fclose(file.fp));
+  file.fp = nullptr;
 }
 
 TEST(STDIO_TEST, popen) {
@@ -839,8 +839,8 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  TemporaryFile file;
+  ASSERT_TRUE(file.fp != NULL);
 
   wchar_t mb_one_bytes = L'h';
   wchar_t mb_two_bytes = 0x00a2;
@@ -848,12 +848,12 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   wchar_t mb_four_bytes = 0x24b62;
 
   // Write to file.
-  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fputwc(mb_one_bytes, fp)));
-  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, fp)));
-  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, fp)));
-  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, fp)));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fputwc(mb_one_bytes, file.fp)));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fputwc(mb_two_bytes, file.fp)));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fputwc(mb_three_bytes, file.fp)));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fputwc(mb_four_bytes, file.fp)));
 
-  rewind(fp);
+  rewind(file.fp);
 
   // Record each character position.
   fpos_t pos1;
@@ -861,15 +861,15 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   fpos_t pos3;
   fpos_t pos4;
   fpos_t pos5;
-  EXPECT_EQ(0, fgetpos(fp, &pos1));
-  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos2));
-  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos3));
-  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos4));
-  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(fp)));
-  EXPECT_EQ(0, fgetpos(fp, &pos5));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos1));
+  ASSERT_EQ(mb_one_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos2));
+  ASSERT_EQ(mb_two_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos3));
+  ASSERT_EQ(mb_three_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos4));
+  ASSERT_EQ(mb_four_bytes, static_cast<wchar_t>(fgetwc(file.fp)));
+  EXPECT_EQ(0, fgetpos(file.fp, &pos5));
 
 #if defined(__BIONIC__)
   // Bionic's fpos_t is just an alias for off_t. This is inherited from OpenBSD
