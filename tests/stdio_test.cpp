@@ -27,6 +27,8 @@
 #include <wchar.h>
 #include <locale.h>
 
+#include <fstream>
+#include <streambuf>
 #include <string>
 #include <vector>
 
@@ -55,14 +57,15 @@ static void SetFileTo(const char* path, const char* content) {
 }
 
 static void AssertFileIs(const char* path, const char* expected) {
-  FILE* fp;
-  ASSERT_NE(nullptr, fp = fopen(path, "r"));
-  char* line = nullptr;
-  size_t length;
-  ASSERT_NE(EOF, getline(&line, &length, fp));
-  ASSERT_EQ(0, fclose(fp));
-  ASSERT_STREQ(expected, line);
-  free(line);
+  std::ifstream file(path);
+  std::string data;
+
+  file.seekg(0, std::ios::end);
+  data.reserve(file.tellg());
+  file.seekg(0, std::ios::beg);
+
+  data.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+  ASSERT_STREQ(expected, data.c_str());
 }
 
 static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = false) {
