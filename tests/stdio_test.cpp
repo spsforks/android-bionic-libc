@@ -102,22 +102,19 @@ TEST(STDIO_TEST, flockfile_18208568_regular) {
 }
 
 TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
-  FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
-
-  int fd = fileno(fp);
-  ASSERT_NE(fd, -1);
+  TemporaryFile file;
+  ASSERT_TRUE(file.fp != NULL);
+  ASSERT_NE(file.fd, -1);
 
   struct stat sb;
-  int rc = fstat(fd, &sb);
+  int rc = fstat(file.fd, &sb);
   ASSERT_NE(rc, -1);
   ASSERT_EQ(sb.st_mode & 0777, 0600U);
 
-  rc = fprintf(fp, "hello\n");
+  rc = fprintf(file.fp, "hello\n");
   ASSERT_EQ(rc, 6);
 
-  AssertFileIs(fp, "hello\n");
-  fclose(fp);
+  AssertFileIs(file.fp, "hello\n");
 }
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
