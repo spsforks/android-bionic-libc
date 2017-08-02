@@ -52,6 +52,9 @@ void* dlsym(void* handle, const char* symbol);
 void* dlvsym(void* handle, const char* symbol, const char* version) __INTRODUCED_IN(24);
 int dladdr(const void* addr, Dl_info* info);
 
+/* Returns the size of the CFI shadow mapping, or 0 if CFI is not (yet) used in this process. */
+size_t __cfi_shadow_size();
+
 #define RTLD_LOCAL    0
 #define RTLD_LAZY     0x00001
 #define RTLD_NOW      0x00002
