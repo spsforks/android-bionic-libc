@@ -38,6 +38,13 @@ extern "C" uintptr_t* __cfi_init(uintptr_t shadow_base) {
   return &shadow_base_storage.v;
 }
 
+extern "C" size_t __cfi_shadow_size() {
+  if (shadow_base_storage.v != 0)
+    return CFIShadow::kShadowSize;
+  else
+    return 0;
+}
+
 static uint16_t shadow_load(void* p) {
   uintptr_t addr = reinterpret_cast<uintptr_t>(p);
   uintptr_t ofs = CFIShadow::MemToShadowOffset(addr);

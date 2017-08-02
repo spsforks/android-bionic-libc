@@ -36,6 +36,8 @@ TEST(cfi_test, basic) {
   handle = dlopen("libcfi-test.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
+  EXPECT_NE(0U, __cfi_shadow_size());
+
 #define SYM(type, name) auto name = reinterpret_cast<type>(dlsym(handle, #name))
   SYM(int (*)(), get_count);
   SYM(uint64_t(*)(), get_last_type_id);
