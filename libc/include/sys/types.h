@@ -133,8 +133,11 @@ typedef unsigned int        uint;
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 typedef unsigned char  u_char;
 typedef unsigned short u_short;
+typedef unsigned short ushort;
 typedef unsigned int   u_int;
+typedef unsigned int   uint;
 typedef unsigned long  u_long;
+typedef unsigned long  ulong;
 
 typedef uint32_t u_int32_t;
 typedef uint16_t u_int16_t;
