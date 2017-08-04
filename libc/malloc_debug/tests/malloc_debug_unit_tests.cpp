@@ -32,6 +32,7 @@
 
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
+#include <android-base/strings.h>
 
 #include <private/bionic_macros.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -81,6 +82,8 @@ static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
 }
 
 static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
+
+static constexpr const char BACKTRACE_DUMP_PREFIX[] = "/data/local/tmp/backtrace_heap";
 
 class MallocDebugTest : public ::testing::Test {
  protected:
@@ -132,7 +135,7 @@ MallocDispatch MallocDebugTest::dispatch = {
   mallopt,
 };
 
-void VerifyAllocCalls() {
+void VerifyAllocCalls(bool backtrace_enabled) {
   size_t alloc_size = 1024;
 
   // Verify debug_malloc.
@@ -186,17 +189,23 @@ void VerifyAllocCalls() {
   ASSERT_TRUE(pointer == nullptr);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log;
+  if (backtrace_enabled) {
+    expected_log += android::base::StringPrintf(
+        "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+        SIGRTMAX - 17, getpid());
+  }
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, fill_generic) {
   Init("fill");
-  VerifyAllocCalls();
+  VerifyAllocCalls(false);
 }
 
 TEST_F(MallocDebugTest, fill_on_alloc_generic) {
   Init("fill_on_alloc");
-  VerifyAllocCalls();
+  VerifyAllocCalls(false);
 }
 
 TEST_F(MallocDebugTest, fill_on_alloc_partial) {
@@ -275,7 +284,7 @@ TEST_F(MallocDebugTest, free_track_partial) {
 
 TEST_F(MallocDebugTest, all_options) {
   Init("guard backtrace fill expand_alloc free_track leak_track");
-  VerifyAllocCalls();
+  VerifyAllocCalls(true);
 }
 
 TEST_F(MallocDebugTest, expand_alloc) {
@@ -624,6 +633,9 @@ TEST_F(MallocDebugTest, leak_track_no_frees_with_backtrace) {
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  expected_log += android::base::StringPrintf(
       "6 malloc_debug +++ malloc_testing leaked block of size 1024 at %p (leak 1 of 3)\n",
       pointer3);
   expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
@@ -649,7 +661,6 @@ TEST_F(MallocDebugTest, leak_track_no_frees_with_backtrace) {
   expected_log += "6 malloc_debug   #00 pc 0x1000\n";
   expected_log += "6 malloc_debug   #01 pc 0x2000\n";
   expected_log += "6 malloc_debug   #02 pc 0x3000\n";
-
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
@@ -1022,7 +1033,10 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_empty) {
   ASSERT_EQ(0U, backtrace_size);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, get_malloc_leak_info_single) {
@@ -1065,7 +1079,10 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_single) {
   debug_free(pointer);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
@@ -1144,7 +1161,10 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   debug_free(pointers[2]);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
@@ -1215,7 +1235,91 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
   debug_free(pointers[2]);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_dump_on_signal) {
+  Init("backtrace=4");
+
+  backtrace_fake_add(std::vector<uintptr_t> {0x100, 0x200});
+  backtrace_fake_add(std::vector<uintptr_t> {0xa000, 0xb000});
+
+  zygote = 1;
+  void* pointer1 = debug_malloc(100);
+  ASSERT_TRUE(pointer1 != nullptr);
+  zygote = 0;
+  void* pointer2 = debug_malloc(50);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  // Dump all of the data accumulated so far.
+  ASSERT_TRUE(kill(getpid(), SIGRTMAX - 17) == 0);
+  sleep(1);
+
+  // This triggers the dumping.
+  void* pointer3 = debug_malloc(23);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_free(pointer1);
+  debug_free(pointer2);
+  debug_free(pointer3);
+
+  // Read all of the contents.
+  std::string actual;
+  std::string name = android::base::StringPrintf("%s.%d.txt", BACKTRACE_DUMP_PREFIX, getpid());
+  ASSERT_TRUE(android::base::ReadFileToString(name, &actual));
+
+  // Remove the map data since it's not consistent.
+  std::string sanitized;
+  bool skip_map_data = false;
+  bool map_data_found = false;
+  for (auto& line : android::base::Split(actual, "\n")) {
+    if (skip_map_data) {
+      if (line == "END") {
+        if (map_data_found) {
+          sanitized += "MAP_DATA\n";
+          map_data_found = false;
+        }
+        skip_map_data = false;
+      } else {
+        map_data_found = true;
+        continue;
+      }
+    }
+    if (line == "MAPS") {
+      skip_map_data = true;
+    }
+    sanitized += line + '\n';
+  }
+
+  std::string expected =
+      "Android Native Heap Dump v1.0\n"
+      "\n"
+      "Total memory: 150\n"
+      "Allocation records: 2\n"
+      "Backtrace size: 4\n"
+      "\n"
+#if defined(__LP64__)
+      "z 0  sz       50  num    2  bt 000000000000a000 000000000000b000\n"
+      "z 1  sz      100  num    2  bt 0000000000000100 0000000000000200\n"
+#else
+      "z 0  sz       50  num    2  bt 0000a000 0000b000\n"
+      "z 1  sz      100  num    2  bt 00000100 00000200\n"
+#endif
+      "MAPS\n"
+      "MAP_DATA\n"
+      "END\n\n";
+  ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug Dumping to file: /data/local/tmp/backtrace_heap.%d.txt\n\n", getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, realloc_usable_size) {
@@ -1317,6 +1421,9 @@ TEST_F(MallocDebugTest, backtrace_enable_on_signal) {
   std::string expected_log = android::base::StringPrintf(
       "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to enable backtracing.\n",
       SIGRTMAX - 19, getpid());
+  expected_log += android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
@@ -1439,7 +1546,10 @@ TEST_F(MallocDebugTest, zygote_set) {
   debug_free(pointer);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, max_size) {
