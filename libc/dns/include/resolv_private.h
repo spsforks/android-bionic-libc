@@ -135,6 +135,7 @@ struct res_sym {
 #define	RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
 #define	RES_DFLRETRY		2	/* Default #/tries. */
 #define	RES_MAXTIME		65535	/* Infinity, in milliseconds. */
+#define	RES_MAXLENUDP		4096	/* Conventional EDNS0 UDP size limit */
 
 struct __res_state_ext;
 
@@ -269,7 +270,8 @@ union res_sockaddr_union {
 #define RES_NO_NIBBLE2	0x80000000	/* disable alternate nibble lookup */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | \
-			 RES_DNSRCH | RES_NO_NIBBLE2)
+                   	 RES_DNSRCH | RES_NO_NIBBLE2 | \
+                   	 RES_USE_EDNS0 | RES_USE_DNSSEC)
 
 /*
  * Resolver "pfcode" values.  Used by dig.
