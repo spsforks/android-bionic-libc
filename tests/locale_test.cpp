@@ -58,10 +58,17 @@ TEST(locale, setlocale) {
   EXPECT_EQ(NULL, setlocale(13, NULL));
   EXPECT_EQ(EINVAL, errno);
 
-#if defined(__BIONIC__)
   // The "" locale is implementation-defined. For bionic, it's the C.UTF-8 locale, which is
   // pretty much all we support anyway.
   // glibc will give us something like "en_US.UTF-8", depending on the user's configuration.
+#if defined(BUILDING_WITH_NDK)
+  // Older versions of Android had the default locale of C rather than C.UTF-8.
+  // Handle both.
+  const char* loc = setlocale(LC_ALL, "");
+  EXPECT_TRUE(strcmp("C.UTF-8", loc) == 0 || strcmp("C", loc) == 0)
+      << "Locale was set to " << loc << ". Expected C or C.UTF-8.";
+#elif defined(__BIONIC__)
+  // But make sure we stay with C.UTF-8 for current releases.
   EXPECT_STREQ("C.UTF-8", setlocale(LC_ALL, ""));
 #endif
   EXPECT_STREQ("C", setlocale(LC_ALL, "C"));
