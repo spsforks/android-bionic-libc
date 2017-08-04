@@ -96,6 +96,13 @@ TEST(stdlib, lrand48) {
   EXPECT_EQ(397769746, lrand48());
 }
 
+
+// For pre-L targets, rand is in legacy_stdlib_inlines.h and calls lrand48
+// (modern bionic uses random(3), which wasn't added until 21), so has different
+// results.
+//
+// Similarly, on those targets random(3) is an inline that calls lrand48.
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, random) {
   srandom(0x01020304);
   EXPECT_EQ(55436735, random());
@@ -123,6 +130,35 @@ TEST(stdlib, rand) {
   EXPECT_EQ(55436735, rand());
   EXPECT_EQ(1399865117, rand());
 }
+#else
+TEST(stdlib, random) {
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+  EXPECT_EQ(902267124, random());
+  EXPECT_EQ(132366131, random());
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+  srandom(0x01020304);
+  EXPECT_EQ(1409163720, random());
+  EXPECT_EQ(397769746, random());
+}
+
+TEST(stdlib, rand) {
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+  EXPECT_EQ(902267124, rand());
+  EXPECT_EQ(132366131, rand());
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+  srand(0x01020304);
+  EXPECT_EQ(1409163720, rand());
+  EXPECT_EQ(397769746, rand());
+}
+#endif
 
 TEST(stdlib, mrand48) {
   srand48(0x01020304);
