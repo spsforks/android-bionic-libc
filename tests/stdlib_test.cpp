@@ -69,6 +69,7 @@ TEST(stdlib, erand48) {
   EXPECT_DOUBLE_EQ(0.84048536941142515, erand48(xsubi));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(stdlib, lcong48) {
   unsigned short p[7] = { 0x0102, 0x0304, 0x0506, 0x0708, 0x090a, 0x0b0c, 0x0d0e };
   lcong48(p);
@@ -83,6 +84,7 @@ TEST(stdlib, lcong48) {
   EXPECT_EQ(1531389981, lrand48());
   EXPECT_EQ(1598801533, lrand48());
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 TEST(stdlib, lrand48) {
   srand48(0x01020304);
@@ -329,6 +331,7 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(stdlib, mkostemp64) {
   TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   int flags = fcntl(tf.fd, F_GETFD);
@@ -342,13 +345,16 @@ TEST(stdlib, mkostemp) {
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, mkstemp64) {
   TemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
   ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(stdlib, mkstemp) {
   TemporaryFile tf;
@@ -445,10 +451,15 @@ TEST(stdlib, strtold) {
   CheckStrToFloat(strtold);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
+// http://b/2206701
 TEST(stdlib, strtof_2206701) {
+  // This will fail for targets lower than 21 because strtof is replaced by
+  // strtod in legacy_stdlib_inlines.h.
   ASSERT_EQ(0.0f, strtof("7.0064923216240853546186479164495e-46", NULL));
   ASSERT_EQ(1.4e-45f, strtof("7.0064923216240853546186479164496e-46", NULL));
 }
+#endif
 
 TEST(stdlib, strtod_largest_subnormal) {
   // This value has been known to cause javac and java to infinite loop.
@@ -472,6 +483,7 @@ TEST(stdlib, strtod_largest_subnormal) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, quick_exit) {
   pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
@@ -511,6 +523,7 @@ TEST(stdlib, at_quick_exit) {
 
   AssertChildExited(pid, 99);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(unistd, _Exit) {
   pid_t pid = fork();
@@ -540,11 +553,13 @@ TEST(stdlib, pty_smoke) {
   close(fd);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(stdlib, posix_openpt) {
   int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   close(fd);
 }
+#endif  /*  __ANDROID_API__ >= __ANDROID_API_L__ */
 
 TEST(stdlib, ptsname_r_ENOTTY) {
   FIXED_IN(__ANDROID_API_L__);
@@ -636,6 +651,7 @@ TEST(stdlib, unlockpt_ENOTTY) {
   close(fd);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(stdlib, getsubopt) {
   char* const tokens[] = {
     const_cast<char*>("a"),
@@ -729,3 +745,4 @@ TEST(stdlib, strtoimax_smoke) {
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__

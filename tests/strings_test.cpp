@@ -26,6 +26,7 @@
 #define STRINGS_TEST strings
 #endif
 
+#if defined(__i386) && __ANDROID_API__ >= __ANDROID_API_J_MR2__
 TEST(STRINGS_TEST, ffs) {
   ASSERT_EQ( 0, ffs(0x00000000));
   ASSERT_EQ( 1, ffs(0x00000001));
@@ -37,6 +38,7 @@ TEST(STRINGS_TEST, ffs) {
   ASSERT_EQ(27, ffs(0x04000000));
   ASSERT_EQ(32, ffs(0x80000000));
 }
+#endif
 
 TEST(STRINGS_TEST, strcasecmp) {
   ASSERT_EQ(0, strcasecmp("hello", "HELLO"));
@@ -44,6 +46,7 @@ TEST(STRINGS_TEST, strcasecmp) {
   ASSERT_GT(strcasecmp("hello2", "hello1"), 0);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STRINGS_TEST, strcasecmp_l) {
   locale_t l = newlocale(LC_ALL, "C", 0);
   ASSERT_EQ(0, strcasecmp_l("hello", "HELLO", l));
@@ -51,6 +54,7 @@ TEST(STRINGS_TEST, strcasecmp_l) {
   ASSERT_GT(strcasecmp_l("hello2", "hello1", l), 0);
   freelocale(l);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 TEST(STRINGS_TEST, strncasecmp) {
   ASSERT_EQ(0, strncasecmp("hello", "HELLO", 3));
@@ -59,6 +63,7 @@ TEST(STRINGS_TEST, strncasecmp) {
   ASSERT_GT(strncasecmp("hello2", "hello1", 6), 0);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STRINGS_TEST, strncasecmp_l) {
   locale_t l = newlocale(LC_ALL, "C", 0);
   ASSERT_EQ(0, strncasecmp_l("hello", "HELLO", 3, l));
@@ -67,3 +72,4 @@ TEST(STRINGS_TEST, strncasecmp_l) {
   ASSERT_GT(strncasecmp_l("hello2", "hello1", 6, l), 0);
   freelocale(l);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
