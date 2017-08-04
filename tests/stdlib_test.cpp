@@ -378,7 +378,10 @@ static void CheckStrToFloat(T fn(const char* s, char** end)) {
 
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("9.0", nullptr));
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("0.9e1", nullptr));
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
+
+  if (platform_version() >= __ANDROID_API_L__) {
+    EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
+  }
 
   const char* s = " \t\v\f\r\n9.0";
   char* p;
