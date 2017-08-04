@@ -122,12 +122,15 @@ TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
   AssertFileIs(file.fp, "hello\n");
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, tmpfile64) {
   FILE* fp = tmpfile64();
   ASSERT_TRUE(fp != nullptr);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(STDIO_TEST, dprintf) {
   TemporaryFile tf;
 
@@ -141,7 +144,9 @@ TEST(STDIO_TEST, dprintf) {
   AssertFileIs(tfile, "hello\n");
   fclose(tfile);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
 TEST(STDIO_TEST, getdelim) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);
@@ -277,6 +282,7 @@ TEST(STDIO_TEST, getline_invalid) {
   ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_J_MR2__
 
 TEST(STDIO_TEST, printf_ssize_t) {
   // http://b/8253769
@@ -492,6 +498,7 @@ static void CheckInfNan(int snprintf_fn(T*, size_t, const T*, ...),
   EXPECT_TRUE(isnan(f));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(STDIO_TEST, snprintf_sscanf_inf_nan) {
   CheckInfNan(snprintf, sscanf, "%s",
               "[%a]", "[%+a]",
@@ -561,6 +568,7 @@ TEST(STDIO_TEST, swprintf_swscanf_inf_nan) {
               L"[-INF]", L"[INF]", L"[+INF]",
               L"[-NAN]", L"[NAN]", L"[+NAN]");
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
 
 TEST(STDIO_TEST, snprintf_d_INT_MAX) {
   char buf[BUFSIZ];
@@ -977,6 +985,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   ASSERT_EQ(0, fclose(fp));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STDIO_TEST, fmemopen) {
   char buf[16];
   memset(buf, 0, sizeof(buf));
@@ -1467,6 +1476,7 @@ TEST(STDIO_TEST, freopen_CLOEXEC) {
   fclose(fp);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, fopen64_freopen64) {
   FILE* fp = fopen64("/proc/version", "r");
   ASSERT_TRUE(fp != nullptr);
@@ -1474,6 +1484,7 @@ TEST(STDIO_TEST, fopen64_freopen64) {
   ASSERT_TRUE(fp != nullptr);
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
 // https://code.google.com/p/android/issues/detail?id=81155
 // http://b/18556607
@@ -1506,6 +1517,7 @@ TEST(STDIO_TEST, fread_unbuffered_pathological_performance) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 TEST(STDIO_TEST, fread_EOF) {
   std::string digits("0123456789");
   FILE* fp = fmemopen(&digits[0], digits.size(), "r");
@@ -1528,6 +1540,7 @@ TEST(STDIO_TEST, fread_EOF) {
 
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_M__
 
 static void test_fread_from_write_only_stream(size_t n) {
   FILE* fp = fopen("/dev/null", "w");
@@ -1710,6 +1723,7 @@ TEST(STDIO_TEST, funopen_EINVAL) {
 #endif
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 TEST(STDIO_TEST, funopen_seek) {
 #if defined(__BIONIC__)
   auto read_fn = [](void*, char*, int) { return -1; };
@@ -1737,6 +1751,7 @@ TEST(STDIO_TEST, funopen_seek) {
   GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
 #endif
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
 TEST(STDIO_TEST, lots_of_concurrent_files) {
   std::vector<TemporaryFile*> tfs;
@@ -1761,6 +1776,7 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
   }
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 static void AssertFileOffsetAt(FILE* fp, off64_t offset) {
   EXPECT_EQ(offset, ftell(fp));
   EXPECT_EQ(offset, ftello(fp));
@@ -1848,7 +1864,9 @@ TEST(STDIO_TEST, fseek_fseeko_EINVAL) {
 
   fclose(fp);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_N__
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(STDIO_TEST, ctermid) {
   ASSERT_STREQ("/dev/tty", ctermid(nullptr));
 
@@ -1856,6 +1874,7 @@ TEST(STDIO_TEST, ctermid) {
   ASSERT_EQ(buf, ctermid(buf));
   ASSERT_STREQ("/dev/tty", buf);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
 
 TEST(STDIO_TEST, remove) {
   struct stat sb;

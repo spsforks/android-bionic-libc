@@ -193,6 +193,7 @@ TEST(wctype, wctype) {
   EXPECT_TRUE(wctype("monkeys") == 0);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(wctype, wctype_l) {
   UtfLocale l;
   EXPECT_TRUE(wctype_l("alnum", l.l) != 0);
@@ -210,6 +211,7 @@ TEST(wctype, wctype_l) {
 
   EXPECT_TRUE(wctype_l("monkeys", l.l) == 0);
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
 TEST(wctype, iswctype) {
   EXPECT_TRUE(iswctype(L'a', wctype("alnum")));
@@ -219,6 +221,7 @@ TEST(wctype, iswctype) {
   EXPECT_EQ(0, iswctype(WEOF, wctype("alnum")));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 TEST(wctype, iswctype_l) {
   UtfLocale l;
   EXPECT_TRUE(iswctype_l(L'a', wctype_l("alnum", l.l), l.l));
@@ -227,7 +230,9 @@ TEST(wctype, iswctype_l) {
 
   EXPECT_EQ(0, iswctype_l(WEOF, wctype_l("alnum", l.l), l.l));
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_L__
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 TEST(wctype, towctrans) {
   EXPECT_TRUE(wctrans("tolower") != 0);
   EXPECT_TRUE(wctrans("toupper") != 0);
@@ -259,3 +264,4 @@ TEST(wctype, wctrans_l) {
   EXPECT_EQ(wint_t('A'), towctrans_l(L'a', wctrans_l("toupper", l.l), l.l));
   EXPECT_EQ(WEOF, towctrans_l(WEOF, wctrans_l("toupper", l.l), l.l));
 }
+#endif  // __ANDROID_API__ >= __ANDROID_API_O__
