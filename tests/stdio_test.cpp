@@ -782,22 +782,31 @@ TEST(STDIO_TEST, sscanf_swscanf) {
       ASSERT_STREQ("hello", s1);
       ASSERT_EQ(123, i1);
       ASSERT_DOUBLE_EQ(1.23, d1);
-      ASSERT_FLOAT_EQ(9.0f, f1);
       ASSERT_STREQ("world", s2);
+      // Hex floats on the scanf family didn't work until O.
+      if (platform_version() >= __ANDROID_API_O__) {
+        ASSERT_FLOAT_EQ(9.0f, f1);
+      }
     }
   } s;
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, sscanf("  hello 123 1.23 0x1.2p3 world",
-                      "%s %i %lf %f %s",
-                      s.s1, &s.i1, &s.d1, &s.f1, s.s2));
-  s.Check();
+  {
+    SCOPED_TRACE("sscanf");
+    memset(&s, 0, sizeof(s));
+    ASSERT_EQ(5,
+              sscanf("  hello 123 1.23 world 0x1.2p3", "%s %i %lf %s %f", s.s1, &s.i1, &s.d1, s.s2,
+                     &s.f1));
+    s.Check();
+  }
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, swscanf(L"  hello 123 1.23 0x1.2p3 world",
-                       L"%s %i %lf %f %s",
-                       s.s1, &s.i1, &s.d1, &s.f1, s.s2));
-  s.Check();
+  {
+    SCOPED_TRACE("swscanf");
+    memset(&s, 0, sizeof(s));
+    ASSERT_EQ(5,
+              swscanf(L"  hello 123 1.23 world 0x1.2p3", L"%s %i %lf %s %f", s.s1, &s.i1, &s.d1,
+                      s.s2, &s.f1));
+    s.Check();
+  }
 }
 
 TEST(STDIO_TEST, cantwrite_EBADF) {
