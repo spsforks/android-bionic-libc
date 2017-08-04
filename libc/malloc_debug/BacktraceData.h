@@ -49,11 +49,15 @@ class BacktraceData : public OptionData {
 
   bool enabled() { return enabled_; }
   void set_enabled(bool enabled) { enabled_ = enabled; }
+  bool dump() { return dump_; }
+  void set_dump(bool dump) { dump_ = dump; }
 
  private:
   size_t alloc_offset_ = 0;
 
   volatile bool enabled_ = false;
+
+  volatile bool dump_ = false;
 
   DISALLOW_COPY_AND_ASSIGN(BacktraceData);
 };
