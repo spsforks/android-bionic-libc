@@ -27,9 +27,11 @@
 #include <string>
 #include <regex>
 
+#if !defined(BUILDING_WITH_NDK)
 #include <android-base/file.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
+#endif  // !defined(BUILDING_WITH_NDK)
 
 #if defined(__LP64__)
 #define PATH_TO_SYSTEM_LIB "/system/lib64/"
@@ -61,6 +63,7 @@ struct map_record {
   std::string pathname;
 };
 
+#if !defined(BUILDING_WITH_NDK)
 class Maps {
  public:
   static bool parse_maps(std::vector<map_record>* maps) {
@@ -105,11 +108,13 @@ class Maps {
     return true;
   }
 };
+#endif  // !defined(BUILDING_WITH_NDK)
 
 extern "C" pid_t gettid();
 
 #endif
 
+#if !defined(BUILDING_WITH_NDK)
 static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
   while (tid == 0) {
     usleep(1000);
@@ -126,6 +131,7 @@ static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
     usleep(1000);
   }
 }
+#endif  // !defined(BUILDING_WITH_NDK)
 
 static inline void AssertChildExited(int pid, int expected_exit_status) {
   int status;

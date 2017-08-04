@@ -1879,6 +1879,9 @@ TEST(STDIO_TEST, remove) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+// libandroid_support has its own, non-fortified, snprintf.
+// TODO: Fix libandroid_support.
+#if !defined(BUILDING_WITH_NDK)
 TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
   char buf[16];
   ASSERT_EXIT(snprintf(buf, atol("-1"), "hello"),
@@ -1903,6 +1906,7 @@ TEST(STDIO_TEST, sprintf_30445072) {
   sprintf(&buf[0], "hello");
   ASSERT_EQ(buf, "hello");
 }
+#endif  // !defined(BUILDING_WITH_NDK)
 
 TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
   TemporaryFile tf;

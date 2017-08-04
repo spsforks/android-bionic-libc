@@ -22,7 +22,9 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#if !defined(BUILDING_WITH_NDK)
 #include <tinyxml2.h>
+#endif
 
 #include "private/bionic_config.h"
 
@@ -315,6 +317,7 @@ TEST(malloc, valloc_overflow) {
 }
 #endif
 
+#if !defined(BUILDING_WITH_NDK)
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
   char* buf;
@@ -362,6 +365,7 @@ TEST(malloc, malloc_info) {
   }
 #endif
 }
+#endif  // !defined(BUILDING_WITH_NDK)
 
 TEST(malloc, calloc_usable_size) {
   for (size_t size = 1; size <= 2048; size++) {
