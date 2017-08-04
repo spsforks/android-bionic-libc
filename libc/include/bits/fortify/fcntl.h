@@ -40,7 +40,10 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 
 #if defined(__BIONIC_FORTIFY)
 #define __open_too_many_args_error "too many arguments"
-#define __open_too_few_args_error "called with O_CREAT, but missing mode"
+#define __open_too_few_args_error "called with O_CREAT or O_TMPFILE, but missing mode"
+#define __open_no_creat_warning "has superfluous mode bits; missing O_CREAT or O_TMPFILE?"
+#define __open_req_modes(flags) (((flags) & O_CREAT) == O_CREAT || \
+                                 ((flags) & O_TMPFILE) == O_TMPFILE)
 #if defined(__clang__)
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
@@ -57,12 +60,13 @@ int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
 __BIONIC_FORTIFY_INLINE
 int open(const char* const __pass_object_size pathname, int flags)
         __overloadable
-        __clang_error_if(flags & O_CREAT, "'open' " __open_too_few_args_error) {
+        __clang_error_if(__open_req_modes(flags), "'open' " __open_too_few_args_error) {
     return __open_2(pathname, flags);
 }
 
 __BIONIC_FORTIFY_INLINE
-int open(const char* const __pass_object_size pathname, int flags, mode_t modes) __overloadable {
+int open(const char* const __pass_object_size pathname, int flags, mode_t modes) __overloadable
+        __clang_warning_if(!__open_req_modes(flags) && modes, "'open' " __open_no_creat_warning) {
     return __open_real(pathname, flags, modes);
 }
 
@@ -75,13 +79,14 @@ __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname,
            int flags)
         __overloadable
-        __clang_error_if(flags & O_CREAT, "'openat' " __open_too_few_args_error) {
+        __clang_error_if(__open_req_modes(flags), "'openat' " __open_too_few_args_error) {
     return __openat_2(dirfd, pathname, flags);
 }
 
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname, int flags,
-           mode_t modes) __overloadable {
+           mode_t modes) __overloadable
+        __clang_warning_if(!__open_req_modes(flags) && modes, "'openat' " __open_no_creat_warning) {
     return __openat_real(dirfd, pathname, flags, modes);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -94,7 +99,7 @@ __errordecl(__creat_too_many_args, __open_too_many_args_error);
 __BIONIC_FORTIFY_INLINE
 int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
-        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+        if (__open_req_modes(flags) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  /* Compile time error. */
         }
     }
@@ -113,7 +118,7 @@ int open(const char* pathname, int flags, ...) {
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
-        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+        if (__open_req_modes(flags) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  /* Compile time error. */
         }
     }
@@ -134,4 +139,6 @@ int openat(int dirfd, const char* pathname, int flags, ...) {
 
 #undef __open_too_many_args_error
 #undef __open_too_few_args_error
+#undef __open_no_creat_warning
+#undef __open_req_modes
 #endif /* defined(__BIONIC_FORTIFY) */
