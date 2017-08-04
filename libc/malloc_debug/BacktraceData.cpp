@@ -49,6 +49,10 @@ static void EnableToggle(int, siginfo_t*, void*) {
   }
 }
 
+static void EnableDump(int, siginfo_t*, void*) {
+  g_debug->backtrace->EnableDumping();
+}
+
 BacktraceData::BacktraceData(DebugData* debug_data, const Config& config, size_t* offset)
     : OptionData(debug_data) {
   size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames();
@@ -72,5 +76,20 @@ bool BacktraceData::Initialize(const Config& config) {
     info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
              config.backtrace_signal(), getpid());
   }
+
+  struct sigaction act;
+  memset(&act, 0, sizeof(act));
+
+  act.sa_sigaction = EnableDump;
+  act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  sigemptyset(&act.sa_mask);
+  if (sigaction(config.backtrace_dump_signal(), &act, nullptr) != 0) {
+    error_log("Unable to set up backtrace dump signal function: %s", strerror(errno));
+    return false;
+  }
+  info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
+           config.backtrace_dump_signal(), getpid());
+
+  dump_ = false;
   return true;
 }

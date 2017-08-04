@@ -31,6 +31,8 @@
 
 #include <stdint.h>
 
+#include <atomic>
+
 #include <private/bionic_macros.h>
 
 #include "OptionData.h"
@@ -50,10 +52,18 @@ class BacktraceData : public OptionData {
   bool enabled() { return enabled_; }
   void set_enabled(bool enabled) { enabled_ = enabled; }
 
+  void EnableDumping() { dump_ = true; }
+  bool ShouldDump() {
+    bool expected = true;
+    return dump_.compare_exchange_strong(expected, false);
+  }
+
  private:
   size_t alloc_offset_ = 0;
 
-  volatile bool enabled_ = false;
+  std::atomic_bool enabled_;
+
+  std::atomic_bool dump_;
 
   DISALLOW_COPY_AND_ASSIGN(BacktraceData);
 };
