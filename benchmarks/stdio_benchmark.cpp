@@ -65,7 +65,7 @@ BIONIC_BENCHMARK(BM_stdio_fwrite_unbuffered);
 static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
   char buf[1024];
   while (state.KeepRunning()) {
-    FILE* fp = fopen("/proc/version", "re");
+    FILE* fp = fopen("/dev/zero", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
     if (fgets(buf, sizeof(buf), fp) == nullptr) abort();
     fclose(fp);
@@ -81,3 +81,24 @@ void BM_stdio_fopen_fgets_fclose_no_locking(benchmark::State& state) {
   FopenFgetsFclose(state, true);
 }
 BIONIC_BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
+
+static void FopenFgetcFclose(benchmark::State& state, bool no_locking) {
+  while (state.KeepRunning()) {
+    FILE* fp = fopen("/dev/zero", "re");
+    if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
+    volatile int c __attribute__((unused));
+    c = fgetc(fp);
+    fclose(fp);
+  }
+}
+
+static void BM_stdio_fopen_fgetc_fclose_locking(benchmark::State& state) {
+  FopenFgetcFclose(state, false);
+}
+BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_locking);
+
+void BM_stdio_fopen_fgetc_fclose_no_locking(benchmark::State& state) {
+  FopenFgetcFclose(state, true);
+}
+BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_no_locking);
+
