@@ -49,6 +49,11 @@ char* GetAlignedPtr(std::vector<char>* buf, size_t alignment, size_t nbytes) {
   return GetAlignedMemory(buf->data(), alignment, 0);
 }
 
+wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbytes) {
+  buf->resize(nbytes + 3 * alignment);
+  return (wchar_t*) GetAlignedMemory((char*) buf->data(), alignment, 0);
+}
+
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte) {
   char* buf_aligned = GetAlignedPtr(buf, alignment, nbytes);
   memset(buf_aligned, fill_byte, nbytes);
