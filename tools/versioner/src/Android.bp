@@ -29,6 +29,9 @@ cc_binary_host {
         "-Wextra",
         "-Werror",
         "-Wno-unused-parameter",
+        "-g",
+        "-O0",
+        "-fno-omit-frame-pointer",
 
         "-D__STDC_CONSTANT_MACROS",
         "-D__STDC_LIMIT_MACROS",
