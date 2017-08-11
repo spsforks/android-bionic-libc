@@ -349,7 +349,8 @@ TEST_F(SystemTests, full_suite) {
     "BM_unistd_getpid_syscall/iterations:1\n"
     "BM_unistd_gettid/iterations:1\n"
     "BM_unistd_gettid_syscall/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_full.xml",
+  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=/data/nativetest/bionic-benchmarks"
+                                                "-tests/suites/test_full.xml",
                                                 "--bionic_iterations=1"});
 }
 
@@ -358,7 +359,8 @@ TEST_F(SystemTests, small) {
     "BM_string_memcmp/8/8/8\n"
     "BM_math_sqrt\n"
     "BM_property_get/1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_small.xml"});
+  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=/data/nativetest/bionic-benchmarks"
+                                                "-tests/suites/test_small.xml"});
 }
 
 TEST_F(SystemTests, medium) {
@@ -374,7 +376,8 @@ TEST_F(SystemTests, medium) {
     "BM_math_sqrt/iterations:1\n"
     "BM_string_memcpy/512/4/4/iterations:25\n"
     "BM_property_get/1/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_medium.xml",
+  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=/data/nativetest/bionic-benchmarks"
+                                                "-tests/suites/test_medium.xml",
                                                 "--bionic_iterations=1"});
 }
 
@@ -389,7 +392,8 @@ TEST_F(SystemTests, from_each) {
     "BM_string_memcpy/512/4/4/iterations:1\n"
     "BM_time_clock_gettime/iterations:1\n"
     "BM_unistd_getpid/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_from_each.xml",
+  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=/data/nativetest/bionic-benchmarks"
+                                                "-tests/suites/test_from_each.xml",
                                                 "--bionic_iterations=1"});
 }
 
@@ -435,7 +439,8 @@ TEST_F(SystemTests, xml_and_args) {
   Verify(expected, 0, std::vector<const char *>{"--bionic_extra=BM_string_memcpy AT_ALIGNED_TWOBUF",
                                                 "--bionic_extra=BM_math_log10",
                                                 "--bionic_cpu -1",
-                                                "--bionic_xml=suites/test_medium.xml",
+                                                "--bionic_xml=/data/nativetest/bionic-benchmarks"
+                                                "-tests/suites/test_medium.xml",
                                                 "--bionic_iterations=1"});
 }
 
@@ -521,6 +526,7 @@ TEST_F(SystemTests, alignment) {
     "BM_string_strlen/16384/2048/iterations:1\n"
     "BM_string_strlen/32768/2048/iterations:1\n"
     "BM_string_strlen/65536/2048/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_alignment.xml",
+  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=/data/nativetest/bionic-benchmarks-"
+                                                "tests/suites/test_alignment.xml",
                                                 "--bionic_iterations=100"});
 }
