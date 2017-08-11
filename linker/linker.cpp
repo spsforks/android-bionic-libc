@@ -83,6 +83,20 @@ static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 static LinkerTypeAllocator<android_namespace_t> g_namespace_allocator;
 static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_list_allocator;
 
+#if defined(__arm__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.arm.txt";
+#elif defined(__aarch64__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.arm64.txt";
+#elif defined(__i386__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.x86.txt";
+#elif defined(__x86_64__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.x86_64.txt";
+#elif defined(__mips__) && !defined(__LP64__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.mips.txt";
+#elif defined(__mips__) && defined(__LP64__)
+static const char* const kLdConfigArchFilePath = "/system/etc/ld.config.mips64.txt";
+#endif
+
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 
 #if defined(__LP64__)
@@ -3467,7 +3481,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string error_msg;
 
-  const char* config_file = kLdConfigFilePath;
+  const char* config_file = file_exists(kLdConfigArchFilePath) ? kLdConfigArchFilePath : kLdConfigFilePath;
 #ifdef USE_LD_CONFIG_FILE
   // This is a debugging/testing only feature. Must not be available on
   // production builds.
