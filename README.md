@@ -306,8 +306,10 @@ Running the benchmarks
     $ mma
     $ adb remount
     $ adb sync
-    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
-    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
+    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks \
+        --bionic_xml=/data/nativetest/bionic-benchmarks/suites/full.xml
+    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks \
+        --bionic_xml=/data/nativetest64/bionic-benchmarks/suites/full.xml
 
 You can use `--benchmark_filter=getpid` to just run benchmarks with "getpid"
 in their name.
@@ -316,6 +318,8 @@ in their name.
 
 See the "Host tests" section of "Running the tests" above.
 
+Note that path resolution happens from the project root, so a likely path to an xml file would
+look like bionic/benchmarks/suites/
 
 Attaching GDB to the tests
 --------------------------
