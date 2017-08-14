@@ -35,6 +35,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "pthread_internal.h"
 
 #include "private/bionic_futex.h"
@@ -206,6 +208,12 @@ int pthread_cond_timedwait(pthread_cond_t *cond_interface, pthread_mutex_t * mut
                            const timespec *abstime) {
 
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
+  if (cond->use_realtime_clock() && abstime != nullptr) {
+    async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                          "pthread_cond_timedwait() called for a condition variable using "
+                          "CLOCK_REALTIME (You almost definitely do not want to do this)");
+  }
+
   return __pthread_cond_timedwait(cond, mutex, cond->use_realtime_clock(), abstime);
 }
 
