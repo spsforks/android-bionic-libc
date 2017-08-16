@@ -171,7 +171,7 @@ static int __pthread_cond_pulse(pthread_cond_internal_t* cond, int thread_count)
 }
 
 static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex_t* mutex,
-                                    bool use_realtime_clock, const timespec* abs_timeout_or_null) {
+                                    const timespec* abs_timeout_or_null) {
   int result = check_timespec(abs_timeout_or_null, true);
   if (result != 0) {
     return result;
@@ -179,8 +179,8 @@ static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex
 
   unsigned int old_state = atomic_load_explicit(&cond->state, memory_order_relaxed);
   pthread_mutex_unlock(mutex);
-  int status = __futex_wait_ex(&cond->state, cond->process_shared(), old_state,
-                               use_realtime_clock, abs_timeout_or_null);
+  int status =
+      __futex_wait_ex(&cond->state, cond->process_shared(), old_state, false, abs_timeout_or_null);
   pthread_mutex_lock(mutex);
 
   if (status == -ETIMEDOUT) {
@@ -199,14 +199,34 @@ int pthread_cond_signal(pthread_cond_t* cond_interface) {
 
 int pthread_cond_wait(pthread_cond_t* cond_interface, pthread_mutex_t* mutex) {
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
-  return __pthread_cond_timedwait(cond, mutex, false, nullptr);
+  return __pthread_cond_timedwait(cond, mutex, nullptr);
 }
 
 int pthread_cond_timedwait(pthread_cond_t *cond_interface, pthread_mutex_t * mutex,
                            const timespec *abstime) {
 
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
-  return __pthread_cond_timedwait(cond, mutex, cond->use_realtime_clock(), abstime);
+  if (abstime == nullptr) {
+    return __pthread_cond_timedwait(cond, mutex, nullptr);
+  }
+
+  // pthread condition variables' default initialization is to use CLOCK_REALTIME, however this
+  // behavior is essentially never intended, as that clock is prone to change discontinuously.
+  // What users really intend is to use CLOCK_MONOTONIC, however there is a large amount of existing
+  // code that does not opt into CLOCK_MONOTONIC, and we have seen numerous bugs directly
+  // attributable to this difference.  Therefore, we provide this general workaround to always
+  // use CLOCK_MONOTONIC for waiting, regardless of what the input timespec is.
+  timespec monotonic_abstime;
+  if (cond->use_realtime_clock()) {
+    int result = check_timespec(abstime, false);
+    if (result != 0) {
+      return result;
+    }
+    monotonic_time_from_realtime_time(monotonic_abstime, *abstime);
+  } else {
+    monotonic_abstime = *abstime;
+  }
+  return __pthread_cond_timedwait(cond, mutex, &monotonic_abstime);
 }
 
 #if !defined(__LP64__)
@@ -214,8 +234,7 @@ int pthread_cond_timedwait(pthread_cond_t *cond_interface, pthread_mutex_t * mut
 extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond_interface,
                                                 pthread_mutex_t* mutex,
                                                 const timespec* abs_timeout) {
-
-  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, false, abs_timeout);
+  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, abs_timeout);
 }
 
 extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond_interface,
@@ -235,7 +254,7 @@ extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond_interface
     absolute_timespec_from_timespec(ts, *rel_timeout, CLOCK_MONOTONIC);
     abs_timeout = &ts;
   }
-  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, false, abs_timeout);
+  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, abs_timeout);
 }
 
 extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond_interface,
