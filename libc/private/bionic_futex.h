@@ -65,12 +65,8 @@ static inline int __futex_wait(volatile void* ftx, int value, const struct times
   return __futex(ftx, FUTEX_WAIT, value, timeout, 0);
 }
 
-static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value,
-                                  bool use_realtime_clock, const struct timespec* abs_timeout) {
-  return __futex(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE) |
-                 (use_realtime_clock ? FUTEX_CLOCK_REALTIME : 0), value, abs_timeout,
-                 FUTEX_BITSET_MATCH_ANY);
-}
+__LIBC_HIDDEN__ int __futex_wait_ex(volatile void* ftx, bool shared, int value,
+                                    bool use_realtime_clock, const struct timespec* abs_timeout);
 
 __END_DECLS
 
