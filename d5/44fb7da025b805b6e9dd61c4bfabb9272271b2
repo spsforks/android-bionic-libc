@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Hung-ying Tyan <tyanh@google.com>
+Code-Review+1: Andrew Hsieh <andrewhsieh@google.com>
+Verified+1: Isaac Chen <ycchen@google.com>
+Submitted-by: Isaac Chen <ycchen@google.com>
+Submitted-at: Thu, 17 Aug 2017 07:19:31 +0000
+Reviewed-on: https://android-review.googlesource.com/423560
+Project: platform/bionic
+Branch: refs/heads/master
