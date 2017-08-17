@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Colin Cross <ccross@android.com>
+Build-Cop-Override+1: Colin Cross <ccross@android.com>
+Submitted-by: Colin Cross <ccross@android.com>
+Submitted-at: Thu, 17 Aug 2017 18:30:55 +0000
+Reviewed-on: https://android-review.googlesource.com/460497
+Project: platform/bionic
+Branch: refs/heads/master
