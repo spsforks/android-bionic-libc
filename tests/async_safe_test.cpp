@@ -183,6 +183,8 @@ TEST(async_safe_log, buffer_overrun) {
   EXPECT_STREQ("hello world", buf);
   ASSERT_EQ(11, async_safe_format_buffer(buf, 8, "hello %s", "world"));
   EXPECT_STREQ("hello w", buf);
+  ASSERT_EQ(5, async_safe_format_buffer(buf, 0, "xxxxx"));
+  EXPECT_STREQ("hello w", buf);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__

@@ -64,7 +64,9 @@ struct BufferOutputStream {
     buffer_ = buffer;
     end_ = buffer + size - 1;
     pos_ = buffer_;
-    pos_[0] = '\0';
+    if (size > 0) {
+      pos_[0] = '\0';
+    }
   }
 
   ~BufferOutputStream() {}
@@ -78,7 +80,7 @@ struct BufferOutputStream {
 
     while (len > 0) {
       int avail = end_ - pos_;
-      if (avail == 0) {
+      if (avail <= 0) {
         return;
       }
       if (avail > len) {
