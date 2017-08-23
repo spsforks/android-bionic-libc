@@ -66,13 +66,11 @@ void BM_stdio_fwrite_unbuffered(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_stdio_fwrite_unbuffered);
 
 static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
-  size_t nbytes = state.range(0);
-  char buf[nbytes];
+  char buf[BUFSIZ];
   while (state.KeepRunning()) {
-    FILE* fp = fopen("/dev/zero", "re");
+    FILE* fp = fopen("/proc/self/maps", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
-    if (fgets(buf, sizeof(buf), fp) == nullptr) {
-      errx(1, "ERROR: fgets of %zu bytes failed.", nbytes);
+    while (fgets(buf, sizeof(buf), fp) != nullptr) {
     }
     fclose(fp);
   }
@@ -87,6 +85,30 @@ void BM_stdio_fopen_fgets_fclose_no_locking(benchmark::State& state) {
   FopenFgetsFclose(state, true);
 }
 BIONIC_BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
+
+static void FopenGetlineFclose(benchmark::State& state, bool no_locking) {
+  while (state.KeepRunning()) {
+    FILE* fp = fopen("/proc/self/maps", "re");
+    if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
+
+    char* line = nullptr;
+    size_t n = 0;
+    while (getline(&line, &n, fp) != -1) {
+    }
+    free(line);
+    fclose(fp);
+  }
+}
+
+static void BM_stdio_fopen_getline_fclose_locking(benchmark::State& state) {
+  FopenGetlineFclose(state, false);
+}
+BIONIC_BENCHMARK(BM_stdio_fopen_getline_fclose_locking);
+
+void BM_stdio_fopen_getline_fclose_no_locking(benchmark::State& state) {
+  FopenGetlineFclose(state, true);
+}
+BIONIC_BENCHMARK(BM_stdio_fopen_getline_fclose_no_locking);
 
 static void FopenFgetcFclose(benchmark::State& state, bool no_locking) {
   size_t nbytes = state.range(0);
