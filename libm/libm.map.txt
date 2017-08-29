@@ -273,25 +273,25 @@ LIBC {
 
 LIBC_O {
   global:
-    cacoshl;
-    cacosl;
-    casinhl;
-    casinl;
-    catanhl;
-    catanl;
-    ccoshl;
-    ccosl;
-    cexpl;
-    clog;
-    clogf;
-    clogl;
-    cpow;
-    cpowf;
-    cpowl;
-    csinhl;
-    csinl;
-    ctanhl;
-    ctanl;
+    cacoshl; # introduced=26
+    cacosl; # introduced=26
+    casinhl; # introduced=26
+    casinl; # introduced=26
+    catanhl; # introduced=26
+    catanl; # introduced=26
+    ccoshl; # introduced=26
+    ccosl; # introduced=26
+    cexpl; # introduced=26
+    clog; # introduced=26
+    clogf; # introduced=26
+    clogl; # introduced=26
+    cpow; # introduced=26
+    cpowf; # introduced=26
+    cpowl; # introduced=26
+    csinhl; # introduced=26
+    csinl; # introduced=26
+    ctanhl; # introduced=26
+    ctanl; # introduced=26
 } LIBC;
 
 LIBC_DEPRECATED { # arm mips platform-only
