@@ -178,7 +178,7 @@ enum {
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 struct tcp_md5sig {
-  struct __kernel_sockaddr_storage tcpm_addr;
+  struct sockaddr_storage tcpm_addr;
   __u16 __tcpm_pad1;
   __u16 tcpm_keylen;
   __u32 __tcpm_pad2;
