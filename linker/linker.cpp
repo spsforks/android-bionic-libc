@@ -330,6 +330,13 @@ static void soinfo_free(soinfo* si) {
   // clear links to/from si
   si->remove_all_links();
 
+  // release all segments in rand_addr_segments
+  for (const soinfo::SegmentInfo &seg_info : si->get_rand_addr_segments()) {
+    ElfW(Addr) page_start = PAGE_START(seg_info.mem_addr);
+    ElfW(Addr) page_end = PAGE_END(seg_info.mem_addr + seg_info.mem_size);
+    munmap(reinterpret_cast<void*>(page_start), page_end - page_start);
+  }
+
   si->~soinfo();
   g_soinfo_allocator.free(si);
 }
@@ -369,7 +376,8 @@ static bool realpath_fd(int fd, std::string* realpath) {
 // Intended to be called by libc's __gnu_Unwind_Find_exidx().
 _Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
   for (soinfo* si = solist_get_head(); si != 0; si = si->next) {
-    if ((pc >= si->base) && (pc < (si->base + si->size))) {
+    if (((pc >= si->base) && (pc < (si->base + si->size))) ||
+        si->is_rand_segment(pc)) {
         *pcount = si->ARM_exidx_count;
         return reinterpret_cast<_Unwind_Ptr>(si->ARM_exidx);
     }
@@ -652,6 +660,7 @@ class LoadTask {
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
+    si_->set_rand_addr_segments(elf_reader.rand_addr_segments());
 
     return true;
   }
@@ -882,10 +891,15 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   return s;
 }
 
+// Takes a loaded memory address and returns the soinfo containing that address,
+// if any. If pagerando is enabled, this address must not be the file vaddr +
+// load_bias for pagerando randomized segments, but rather their randomized load
+// address in memory.
 soinfo* find_containing_library(const void* p) {
   ElfW(Addr) address = reinterpret_cast<ElfW(Addr)>(p);
   for (soinfo* si = solist_get_head(); si != nullptr; si = si->next) {
-    if (address >= si->base && address - si->base < si->size) {
+    if ((address >= si->base && address - si->base < si->size) ||
+        si->is_rand_segment(address)) {
       return si;
     }
   }
@@ -2482,7 +2496,10 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
 
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
+    // We must translate the file virtual address to a randomized memory address
+    // to allow relocations in PF_RAND_ADDR segments.
+    ElfW(Addr) reloc = file_to_mem_vaddr(rel->r_offset);
+
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
     ElfW(Addr) addend = get_addend(rel, reloc);
@@ -2614,18 +2631,22 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       case R_GENERIC_RELATIVE:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
-                   reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(load_bias + addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
+        {
+          ElfW(Addr) target = file_to_mem_vaddr(addend);
+          TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
+                     reinterpret_cast<void*>(reloc),
+                     reinterpret_cast<void*>(target));
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = target;
+        }
         break;
       case R_GENERIC_IRELATIVE:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
-                    reinterpret_cast<void*>(reloc),
-                    reinterpret_cast<void*>(load_bias + addend));
         {
+          ElfW(Addr) target = file_to_mem_vaddr(addend);
+          TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
+                     reinterpret_cast<void*>(reloc),
+                     reinterpret_cast<void*>(target));
 #if !defined(__LP64__)
           // When relocating dso with text_relocation .text segment is
           // not executable. We need to restore elf flags for this
@@ -2638,7 +2659,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
             }
           }
 #endif
-          ElfW(Addr) ifunc_addr = call_ifunc_resolver(load_bias + addend);
+          ElfW(Addr) ifunc_addr = call_ifunc_resolver(target);
 #if !defined(__LP64__)
           // Unprotect it afterwards...
           if (has_text_relocations) {
@@ -3318,6 +3339,12 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
                      "Enforced-for-API-level-23)", get_realpath());
       return false;
     }
+    // Fail if library uses pagerando
+    if (!rand_addr_segments.empty()) {
+      DL_ERR_AND_LOG("\"%s\" uses text relocations, which are incompatible with pagerando",
+                     get_realpath());
+      return false;
+    }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
     DL_WARN("\"%s\" has text relocations (https://android.googlesource.com/platform/"
@@ -3438,11 +3465,61 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   return true;
 }
 
+/* Apply GNU relro protection if specified by the program header. This will
+ * turn some of the pages of a writable PT_LOAD segment to read-only, as
+ * specified by one or more PT_GNU_RELRO segments. This must be always
+ * performed after relocations.
+ *
+ * The areas typically covered are .got and .data.rel.ro, these are
+ * read-only from the program's POV, but contain absolute addresses
+ * that need to be relocated before use.
+ *
+ * Return:
+ *   true on success, false on failure
+ */
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
-           get_realpath(), strerror(errno));
-    return false;
+  // Protecting relro segments when using pagerando requires access to
+  // rand_addr_segments, so the implementation needs to be here rather than in
+  // linker_phdr.
+  const ElfW(Phdr)* cur_phdr = this->phdr;
+  const ElfW(Phdr)* phdr_limit = this->phdr + phnum;
+
+  for (; cur_phdr < phdr_limit; cur_phdr++) {
+    // Protect RELRO and writable PF_RAND_ADDR segments
+    bool is_pot_flags =
+      (cur_phdr->p_flags & (PF_RAND_ADDR | PF_W)) == (PF_RAND_ADDR | PF_W);
+    if (cur_phdr->p_type != PT_GNU_RELRO && !is_pot_flags) {
+      continue;
+    }
+
+    // Tricky: what happens when the relro segment does not start
+    // or end at page boundaries? We're going to be over-protective
+    // here and put every page touched by the segment as read-only.
+
+    // This seems to match Ian Lance Taylor's description of the
+    // feature at http://www.airs.com/blog/archives/189.
+
+    //    Extract:
+    //       Note that the current dynamic linker code will only work
+    //       correctly if the PT_GNU_RELRO segment starts on a page
+    //       boundary. This is because the dynamic linker rounds the
+    //       p_vaddr field down to the previous page boundary. If
+    //       there is anything on the page which should not be read-only,
+    //       the program is likely to fail at runtime. So in effect the
+    //       linker must only emit a PT_GNU_RELRO segment if it ensures
+    //       that it starts on a page boundary.
+    ElfW(Addr) load_addr = file_to_mem_vaddr(cur_phdr->p_vaddr);
+    ElfW(Addr) seg_page_start = PAGE_START(load_addr);
+    ElfW(Addr) seg_page_end   = PAGE_END(load_addr + cur_phdr->p_memsz);
+
+    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
+                       seg_page_end - seg_page_start,
+                       PROT_READ);
+    if (ret < 0) {
+      DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
+             get_realpath(), strerror(errno));
+      return false;
+    }
   }
   return true;
 }

@@ -40,6 +40,7 @@
 #include "linker_globals.h"
 #include "linker_logger.h"
 #include "linker_utils.h"
+#include "private/bionic_page.h"
 
 // TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
 bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym);
@@ -296,7 +297,7 @@ static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
 }
 
 ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
-  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - load_bias;
+  ElfW(Addr) soaddr = mem_to_file_vaddr(reinterpret_cast<ElfW(Addr)>(addr));
 
   for (size_t i = 0; i < gnu_nbucket_; ++i) {
     uint32_t n = gnu_bucket_[i];
@@ -317,7 +318,7 @@ ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
 }
 
 ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
-  ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - load_bias;
+  ElfW(Addr) soaddr = mem_to_file_vaddr(reinterpret_cast<ElfW(Addr)>(addr));
 
   // Search the library's symbol table for any defined symbol which
   // contains this address.
@@ -629,11 +630,13 @@ android_namespace_list_t& soinfo::get_secondary_namespaces() {
 }
 
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
+  ElfW(Addr) mem_addr = file_to_mem_vaddr(s->st_value);
+
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-    return call_ifunc_resolver(s->st_value + load_bias);
+    return call_ifunc_resolver(mem_addr);
   }
 
-  return static_cast<ElfW(Addr)>(s->st_value + load_bias);
+  return static_cast<ElfW(Addr)>(mem_addr);
 }
 
 const char* soinfo::get_string(ElfW(Word) index) const {
@@ -743,6 +746,73 @@ void soinfo::generate_handle() {
            g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
 
   g_soinfo_handles_map[handle_] = this;
+}
+
+void soinfo::set_rand_addr_segments(const seginfo_list_t &segments) {
+  rand_addr_segments = segments;
+  if (rand_addr_segments.size() == 0)
+    return;
+
+  std::sort(rand_addr_segments.begin(), rand_addr_segments.end(),
+            [](const SegmentInfo &a, const SegmentInfo &b) {
+              return a.phdr_addr < b.phdr_addr;
+            });
+
+  // Ensure that the rand_addr segments are contigous by checking their phdr
+  // indices
+  size_t cur_index = rand_addr_segments[0].index;
+  rand_addr_min = rand_addr_segments[0].phdr_addr;
+  for (auto &seg : rand_addr_segments) {
+    if (seg.index != cur_index) {
+      is_rand_addr_contiguous = false;
+      break;
+    }
+    ++cur_index;
+    rand_addr_max = seg.phdr_addr + seg.mem_size;
+  }
+}
+
+const soinfo::seginfo_list_t& soinfo::get_rand_addr_segments() const {
+  return rand_addr_segments;
+}
+
+const soinfo::SegmentInfo* soinfo::find_rand_segment(ElfW(Addr) mem_vaddr) const {
+  for (const SegmentInfo &seg_info : rand_addr_segments) {
+    if (mem_vaddr >= seg_info.mem_addr &&
+        (mem_vaddr - seg_info.mem_addr) < seg_info.mem_size) {
+      return &seg_info;
+    }
+  }
+  return nullptr;
+}
+
+ElfW(Addr) soinfo::file_to_mem_vaddr(ElfW(Addr) file_vaddr) const {
+  ElfW(Addr) res = file_vaddr + load_bias;
+  if (is_rand_addr_contiguous &&
+      (file_vaddr < rand_addr_min ||
+       file_vaddr >= rand_addr_max))
+    return res;
+
+  auto I = std::lower_bound(
+    rand_addr_segments.begin(), rand_addr_segments.end(),
+    file_vaddr, [](const SegmentInfo &a, ElfW(Addr) addr) {
+      return ((a.phdr_addr + a.mem_size) <= addr);
+    });
+  if (I != rand_addr_segments.end() &&
+      file_vaddr >= I->phdr_addr &&
+      (file_vaddr - I->phdr_addr) < I->mem_size)
+    res = I->mem_addr + (file_vaddr - I->phdr_addr);
+
+  return res;
+}
+
+ElfW(Addr) soinfo::mem_to_file_vaddr(ElfW(Addr) file_vaddr) const {
+  const SegmentInfo* seg_info = find_rand_segment(file_vaddr);
+  if (seg_info == nullptr) {
+    return file_vaddr - load_bias;
+  } else {
+    return file_vaddr - seg_info->mem_addr + seg_info->phdr_addr;
+  }
 }
 
 // TODO(dimitry): Move SymbolName methods to a separate file.

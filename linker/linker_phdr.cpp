@@ -132,6 +132,27 @@ static int GetTargetElfMachine() {
   The load_bias must be added to any p_vaddr value read from the ELF file to
   determine the corresponding memory address.
 
+
+  PAGERANDO
+
+  Pagerando is an ABI extension that allows some segments to be loaded at random
+  offsets relative to the rest of the binary. Pagerando creates finer
+  granularity address randomization than ASLR, while still allowing memory
+  sharing of libraries between processes. Normal segments are loaded as detailed
+  above. Segments marked with PF_RAND_ADDR in p_flags will be loaded at a
+  randomly chosen, per-segment base address. If phdr1 is a pagerando segment, it
+  will be loaded at:
+
+       phdr1_load_address = PAGE_START(random_address1)
+
+  where random_address1 is a randomly chosen address in the range
+  [RAND_ADDR_LOW, RAND_ADDR_HIGH), independently generated for this segment.
+
+  Since we cannot calculate the address of symbols in PF_RAND_ADDR segments by
+  adding a fixed load_bias, we need to keep metadata on where these segments are
+  located. Pagerando segment mappings are stored in the rand_addr_segments
+  vector for later use in resolving addresses.
+
  **/
 
 #define MAYBE_MAP_FLAG(x, from, to)  (((x) & (from)) ? (to) : 0)
@@ -172,7 +193,7 @@ bool ElfReader::Load(const android_dlextinfo* extinfo) {
     return true;
   }
   if (ReserveAddressSpace(extinfo) &&
-      LoadSegments() &&
+      LoadSegments(extinfo) &&
       FindPhdr()) {
     did_load_ = true;
   }
@@ -483,7 +504,8 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table[i];
 
-    if (phdr->p_type != PT_LOAD) {
+    if (phdr->p_type != PT_LOAD ||
+        (phdr->p_flags & PF_RAND_ADDR) != 0) {
       continue;
     }
     found_pt_load = true;
@@ -608,7 +630,17 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   return true;
 }
 
-bool ElfReader::LoadSegments() {
+// Tentative pagerando mapping ranges. Only implemented for ARM, AArch64. These
+// guards must match the guards for picking a random address below.
+#if defined(__arm__)
+static const unsigned long RAND_ADDR_LOW  = 0xb0000000;
+static const unsigned long RAND_ADDR_HIGH = 0xb6000000;
+#elif defined(__aarch64__)
+static const unsigned long RAND_ADDR_LOW  = 0x1000000000;
+static const unsigned long RAND_ADDR_HIGH = 0x5000000000;
+#endif
+
+bool ElfReader::LoadSegments(const android_dlextinfo* extinfo) {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
@@ -616,8 +648,42 @@ bool ElfReader::LoadSegments() {
       continue;
     }
 
+    bool random_start = false;
+#if defined(__aarch64__) || defined(__arm__)
+    // Randomly map PF_RAND_ADDR segments, but only if the client is not
+    // overriding with a fixed load address
+    random_start = (phdr->p_flags & PF_RAND_ADDR) != 0 &&
+      !((extinfo != nullptr && (
+           extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS ||
+           extinfo->flags & ANDROID_DLEXT_FORCE_FIXED_VADDR ||
+           extinfo->flags & ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS)));
+
+    ElfW(Addr) random_start_address = 0;
+    // Linux provides 8 bits of entropy for mmaps (see
+    // arch/arm/mm/mmap.c). However, after the address space is somewhat full,
+    // this results in little to no actual randomness. We try to fix this here.
+    if (random_start) {
+      ElfW(Addr) range = RAND_ADDR_HIGH - RAND_ADDR_LOW;
+
+      // 2^N % x == (2^N - x) % x where N = 32 or 64
+      ElfW(Addr) min = -range % range;
+
+      // Calculate a random value in the range [2^N % range, 2^N) where N = 32
+      // or 64 depending on the target address size.
+      do {
+        // This is actually a ChaCha RNG seeded with getentropy(), so is
+        // reasonable for secure randomness. We use random_buf to get a 64-bit
+        // value on 64-bit platforms.
+        arc4random_buf(&random_start_address, sizeof(ElfW(Addr)));
+      } while (random_start_address < min);
+      // Map that random number back to the range [RAND_ADDR_LOW, RAND_ADDR_HIGH)
+      random_start_address = random_start_address % range + RAND_ADDR_LOW;
+    }
+#endif // defined(__aarch64__) || defined(__arm__)
+
     // Segment addresses in memory.
-    ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+
+    ElfW(Addr) seg_start = random_start ? random_start_address : (phdr->p_vaddr + load_bias_);
     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
 
     ElfW(Addr) seg_page_start = PAGE_START(seg_start);
@@ -661,12 +727,31 @@ bool ElfReader::LoadSegments() {
       void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
                             file_length,
                             prot,
-                            MAP_FIXED|MAP_PRIVATE,
+                            MAP_PRIVATE | (random_start ? 0 : MAP_FIXED),
                             fd_,
                             file_offset_ + file_page_start);
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
+      }
+
+      if (random_start) {
+        // We are using a randomized segment load address, so recompute the
+        // other segment parameters based on the selected random
+        // address. seg_addr will be a multiple of page size.
+        seg_start = reinterpret_cast<ElfW(Addr)>(seg_addr) + PAGE_OFFSET(phdr->p_vaddr);
+        seg_end   = seg_start + phdr->p_memsz;
+
+        seg_page_start = reinterpret_cast<ElfW(Addr)>(seg_addr);
+        seg_page_end   = PAGE_END(seg_end);
+
+        seg_file_end   = seg_start + phdr->p_filesz;
+
+        // Record the segment in soinfo's random segment list
+        rand_addr_segments_.emplace_back(phdr->p_vaddr,
+                                         seg_start,
+                                         phdr->p_memsz,
+                                         i);
       }
     }
 
@@ -711,10 +796,14 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
 
   for (; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
+    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0 ||
+        (phdr->p_flags & PF_RAND_ADDR) != 0) {
       continue;
     }
 
+    // Simply adding load_bias rather than handling PF_RAND_ADDR segments is
+    // safe here because we do not allow text relocations in libraries that are
+    // randomized with pagerando and thus use PF_RAND_ADDR segments.
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
@@ -769,69 +858,6 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
                                   size_t phdr_count, ElfW(Addr) load_bias) {
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
-}
-
-/* Used internally by phdr_table_protect_gnu_relro and
- * phdr_table_unprotect_gnu_relro.
- */
-static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                          ElfW(Addr) load_bias, int prot_flags) {
-  const ElfW(Phdr)* phdr = phdr_table;
-  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
-
-  for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type != PT_GNU_RELRO) {
-      continue;
-    }
-
-    // Tricky: what happens when the relro segment does not start
-    // or end at page boundaries? We're going to be over-protective
-    // here and put every page touched by the segment as read-only.
-
-    // This seems to match Ian Lance Taylor's description of the
-    // feature at http://www.airs.com/blog/archives/189.
-
-    //    Extract:
-    //       Note that the current dynamic linker code will only work
-    //       correctly if the PT_GNU_RELRO segment starts on a page
-    //       boundary. This is because the dynamic linker rounds the
-    //       p_vaddr field down to the previous page boundary. If
-    //       there is anything on the page which should not be read-only,
-    //       the program is likely to fail at runtime. So in effect the
-    //       linker must only emit a PT_GNU_RELRO segment if it ensures
-    //       that it starts on a page boundary.
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
-
-    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
-                       seg_page_end - seg_page_start,
-                       prot_flags);
-    if (ret < 0) {
-      return -1;
-    }
-  }
-  return 0;
-}
-
-/* Apply GNU relro protection if specified by the program header. This will
- * turn some of the pages of a writable PT_LOAD segment to read-only, as
- * specified by one or more PT_GNU_RELRO segments. This must be always
- * performed after relocations.
- *
- * The areas typically covered are .got and .data.rel.ro, these are
- * read-only from the program's POV, but contain absolute addresses
- * that need to be relocated before use.
- *
- * Input:
- *   phdr_table  -> program header table
- *   phdr_count  -> number of entries in tables
- *   load_bias   -> load bias
- * Return:
- *   0 on error, -1 on failure (error code in errno).
- */
-int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
-                                 size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
 }
 
 /* Serialize the GNU relro segments to the given file descriptor. This can be

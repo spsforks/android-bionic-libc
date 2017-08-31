@@ -340,6 +340,63 @@ struct soinfo {
   friend soinfo* get_libdl_info(const char* linker_path,
                                 const soinfo& linker_si,
                                 const link_map& linker_map);
+
+ public:
+  struct SegmentInfo {
+    // Segment virtual address in file phdr
+    ElfW(Addr) phdr_addr;
+    // Randomized virtual address where the segment is loaded in memory. This
+    // value will have the same page offset as phdr_addr.
+    ElfW(Addr) mem_addr;
+    // Segment size in memory (may not be a multiple of page size)
+    ElfW(Word) mem_size;
+    // Segment phdr index
+    size_t index;
+
+    SegmentInfo(ElfW(Addr) phdr_addr, ElfW(Addr) mem_addr,
+                ElfW(Word) mem_size, size_t index)
+      : phdr_addr(phdr_addr), mem_addr(mem_addr), mem_size(mem_size),
+        index(index) { }
+  };
+
+  typedef std::vector<SegmentInfo> seginfo_list_t;
+
+  void set_rand_addr_segments(const seginfo_list_t &segments);
+  const seginfo_list_t& get_rand_addr_segments() const;
+
+  // Return whether the given in-memory, potentially randomized virtual address
+  // is located in a PF_RAND_ADDR segment.
+  bool is_rand_segment(ElfW(Addr) vaddr) const {
+    return find_rand_segment(vaddr) != nullptr;
+  }
+
+ private:
+  // rand_addr_segments is a vector of randomly mapped segments, sorted by their
+  // file virtual address for fast translation from file vaddr to randomized
+  // vaddr in file_to_mem_vaddr().
+  seginfo_list_t rand_addr_segments;
+
+  bool is_rand_addr_contiguous = true;
+
+  // If all rand_addr segments are contigous, these fields store the begin and
+  // end of the contigous file virtual address range. Only valid if
+  // is_rand_addr_contiguous is true.
+  ElfW(Addr) rand_addr_min = 0;
+  ElfW(Addr) rand_addr_max = 0;
+
+  // Find and return segment info for pagerando randomly mapped segment
+  // containing the given (loaded) virtual address, if any.
+  const SegmentInfo* find_rand_segment(ElfW(Addr) mem_vaddr) const;
+
+  // Translate the given file virtual address to its corresponding virtual
+  // address in memory. For segments loaded with basic ASLR, this is just
+  // file_vaddr+load_bias, For segments randomly mapped with pagerando this
+  // function looks up the correct randomized virtual address for the target.
+  ElfW(Addr) file_to_mem_vaddr(ElfW(Addr) file_vaddr) const;
+
+  // Translate the given in-memory virtual address to its corresponding file
+  // virtual address.
+  ElfW(Addr) mem_to_file_vaddr(ElfW(Addr) mem_vaddr) const;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

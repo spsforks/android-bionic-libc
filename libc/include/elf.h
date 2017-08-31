@@ -182,6 +182,10 @@ typedef struct {
 
 #define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
 
+/* Android specific for Pagerando. This segment can be mapped at an arbitrary
+ * offset from all other segments in the library. */
+#define PF_RAND_ADDR 0x00100000
+
 #define PT_GNU_RELRO 0x6474e552
 
 #undef ELF_ST_TYPE
