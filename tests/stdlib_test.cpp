@@ -650,3 +650,47 @@ TEST(stdlib, strtoimax_smoke) {
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
 }
+
+TEST(stdlib, abs) {
+  ASSERT_EQ(INT_MAX, abs(-INT_MAX));
+  ASSERT_EQ(INT_MAX, abs(INT_MAX));
+}
+
+TEST(stdlib, labs) {
+  ASSERT_EQ(LONG_MAX, labs(-LONG_MAX));
+  ASSERT_EQ(LONG_MAX, labs(LONG_MAX));
+}
+
+TEST(stdlib, llabs) {
+  ASSERT_EQ(LLONG_MAX, llabs(-LLONG_MAX));
+  ASSERT_EQ(LLONG_MAX, llabs(LLONG_MAX));
+}
+
+TEST(stdlib, imaxabs) {
+  ASSERT_EQ(INTMAX_MAX, imaxabs(-INTMAX_MAX));
+  ASSERT_EQ(INTMAX_MAX, imaxabs(INTMAX_MAX));
+}
+
+TEST(stdlib, div) {
+  div_t r = div(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(stdlib, ldiv) {
+  ldiv_t r = ldiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(stdlib, lldiv) {
+  lldiv_t r = lldiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(stdlib, imaxdiv) {
+  imaxdiv_t r = imaxdiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
