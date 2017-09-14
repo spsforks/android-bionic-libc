@@ -176,6 +176,8 @@ typedef struct {
 
 #define DT_ANDROID_RELA (DT_LOOS + 4)
 #define DT_ANDROID_RELASZ (DT_LOOS + 5)
+#define DT_ANDROID_COMPRESSED_RELA (DT_LOOS + 6)
+#define DT_ANDROID_COMPRESSED_RELASZ (DT_LOOS + 7)
 
 /* gnu hash entry */
 #define DT_GNU_HASH 0x6ffffef5

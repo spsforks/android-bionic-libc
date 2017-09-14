@@ -53,6 +53,7 @@
 #include "linker.h"
 #include "linker_block_allocator.h"
 #include "linker_cfi.h"
+#include "linker_compressed_sleb128.h"
 #include "linker_config.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
@@ -2989,10 +2990,12 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_ANDROID_RELA:
+      case DT_ANDROID_COMPRESSED_RELA:
         android_relocs_ = reinterpret_cast<uint8_t*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_ANDROID_RELASZ:
+      case DT_ANDROID_COMPRESSED_RELASZ:
         android_relocs_size_ = d->d_un.d_val;
         break;
 
@@ -3040,10 +3043,12 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_ANDROID_REL:
+      case DT_ANDROID_COMPRESSED_RELA:
         android_relocs_ = reinterpret_cast<uint8_t*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_ANDROID_RELSZ:
+      case DT_ANDROID_COMPRESSED_RELASZ:
         android_relocs_size_ = d->d_un.d_val;
         break;
 
@@ -3335,21 +3340,33 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (android_relocs_ != nullptr) {
     // check signature
     if (android_relocs_size_ > 3 &&
-        android_relocs_[0] == 'A' &&
+        (android_relocs_[0] == 'A' || android_relocs_[0] == 'Z') &&
         android_relocs_[1] == 'P' &&
         android_relocs_[2] == 'S' &&
         android_relocs_[3] == '2') {
       DEBUG("[ android relocating %s ]", get_realpath());
 
       bool relocated = false;
+      bool compressed = android_relocs_[0] == 'Z';
       const uint8_t* packed_relocs = android_relocs_ + 4;
       const size_t packed_relocs_size = android_relocs_size_ - 4;
-
-      relocated = relocate(
-          version_tracker,
-          packed_reloc_iterator<sleb128_decoder>(
-            sleb128_decoder(packed_relocs, packed_relocs_size)),
-          global_group, local_group);
+      if (compressed) {
+        auto decoder = compressed_sleb128_decoder(packed_relocs, packed_relocs_size);
+        if (!decoder.initialize()) {
+          return false;
+        }
+        relocated = relocate(
+            version_tracker,
+            packed_reloc_iterator<compressed_sleb128_decoder>(
+                std::move(decoder)),
+            global_group, local_group);
+      } else {
+        relocated = relocate(
+            version_tracker,
+            packed_reloc_iterator<sleb128_decoder>(
+              sleb128_decoder(packed_relocs, packed_relocs_size)),
+            global_group, local_group);
+      }
 
       if (!relocated) {
         return false;
