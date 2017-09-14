@@ -9,8 +9,8 @@
 //
 // For more on LEB128 see http://en.wikipedia.org/wiki/LEB128.
 
-#ifndef TOOLS_RELOCATION_PACKER_SRC_SLEB128_H_
-#define TOOLS_RELOCATION_PACKER_SRC_SLEB128_H_
+#ifndef TOOLS_RELOCATION_PACKER_SRC_LEB128_H_
+#define TOOLS_RELOCATION_PACKER_SRC_LEB128_H_
 
 #include <stdint.h>
 #include <unistd.h>
@@ -22,7 +22,7 @@ namespace relocation_packer {
 
 // Encode packed words as a signed LEB128 byte stream.
 template<typename int_t>
-class Sleb128Encoder {
+class Leb128Encoder {
  public:
   // Add a value to the encoding stream.
   // |value| is the signed int to add.
@@ -43,11 +43,11 @@ class Sleb128Encoder {
 
 // Decode a signed LEB128 byte stream to produce packed words.
 template <typename int_t>
-class Sleb128Decoder {
+class Leb128Decoder {
  public:
   // Create a new decoder for the given encoded stream.
   // |encoding| is the vector of encoded data.
-  Sleb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with);
+  Leb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with);
 
   // Retrieve the next value from the encoded stream.
   int_t Dequeue();
@@ -66,4 +66,4 @@ class Sleb128Decoder {
 
 }  // namespace relocation_packer
 
-#endif  // TOOLS_RELOCATION_PACKER_SRC_SLEB128_H_
+#endif  // TOOLS_RELOCATION_PACKER_SRC_LEB128_H_

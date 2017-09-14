@@ -174,4 +174,74 @@ class packed_reloc_iterator {
   rel_t reloc_;
 };
 
+template <typename decoder_t>
+class packed_reloc_iterator2 {
+#if defined(USE_RELA)
+  typedef ElfW(Rela) rel_t;
+#else
+  typedef ElfW(Rel) rel_t;
+#endif
+ public:
+  packed_reloc_iterator2(decoder_t&& decoder, ElfW(Addr) load_bias)
+      : decoder_(decoder), load_bias_(load_bias)
+  {
+    relocation_count_ = decoder_.pop_front();
+  }
+
+  bool has_next() const {
+    return relocation_index_ < relocation_count_;
+  }
+
+  rel_t* next() {
+    if (relocation_index_ == same_info_end_index_) {
+      size_t encoded_offset = decoder_.pop_front();
+      same_info_end_index_ += encoded_offset & 1;
+#if defined(USE_RELA)
+      has_addends_ = (encoded_offset & 2) != 0;
+#endif
+      reloc_.r_offset = encoded_offset & ~3;
+      if (relocation_index_ == same_info_end_index_) {
+        same_info_end_index_ += decoder_.pop_front();
+      }
+      reloc_.r_info = decoder_.pop_front();
+    } else {
+      if (relocation_index_ == same_delta_end_index_) {
+        offset_delta_ = decoder_.pop_front();
+        same_delta_end_index_ = relocation_index_ + (offset_delta_ & 3);
+        if (same_delta_end_index_ == relocation_index_) {
+          same_delta_end_index_ += decoder_.pop_front();
+        }
+      }
+
+      reloc_.r_offset += offset_delta_;
+    }
+
+#if defined(USE_RELA)
+    if (has_addends_) {
+      reloc_.r_addend = decoder_.pop_front();
+    } else if (ELFW(R_TYPE)(reloc_.r_info) == R_GENERIC_RELATIVE ||
+               ELFW(R_TYPE)(reloc_.r_info) == R_GENERIC_IRELATIVE) {
+      reloc_.r_addend = *reinterpret_cast<ElfW(Addr)*>(reloc_.r_offset + load_bias_);
+    } else {
+      reloc_.r_addend = 0;
+    }
+#endif
+    relocation_index_ += 1;
+    return &reloc_;
+  }
+
+ private:
+  decoder_t decoder_;
+  ElfW(Addr) load_bias_;
+  size_t relocation_count_ = 0;
+  size_t relocation_index_ = 0;
+  size_t same_info_end_index_ = 0;
+  size_t same_delta_end_index_ = 0;
+  size_t offset_delta_ = 0;
+  rel_t reloc_ = {};
+#if defined(USE_RELA)
+  bool has_addends_ = false;
+#endif
+};
+
 #endif  // __LINKER_RELOC_ITERATORS_H
