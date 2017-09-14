@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "sleb128.h"
+#include "leb128.h"
 
 #include <limits.h>
 #include <stdint.h>
@@ -38,34 +38,20 @@ namespace relocation_packer {
 // most significant bit is zero for a positive number and one for a
 // negative number).
 template <typename uint_t>
-void Sleb128Encoder<uint_t>::Enqueue(uint_t value) {
-  typedef typename uint_traits<uint_t>::int_t int_t;
-  static const size_t size = CHAR_BIT * sizeof(value);
-
-  bool more = true;
-  const bool negative = static_cast<int_t>(value) < 0;
-
-  while (more) {
+void Leb128Encoder<uint_t>::Enqueue(uint_t value) {
+  do {
     uint8_t byte = value & 127;
     value >>= 7;
 
-    // Sign extend if encoding a -ve value.
-    if (negative)
-      value |= -(static_cast<uint_t>(1) << (size - 7));
-
-    // The sign bit of byte is second high order bit.
-    const bool sign_bit = byte & 64;
-    if ((value == 0 && !sign_bit) || (value == static_cast<uint_t>(-1) && sign_bit))
-      more = false;
-    else
+    if (value != 0)
       byte |= 128;
     encoding_.push_back(byte);
-  }
+  } while (value);
 }
 
 // Add a vector of values to the encoding.
 template <typename uint_t>
-void Sleb128Encoder<uint_t>::EnqueueAll(const std::vector<uint_t>& values) {
+void Leb128Encoder<uint_t>::EnqueueAll(const std::vector<uint_t>& values) {
   for (size_t i = 0; i < values.size(); ++i) {
     Enqueue(values[i]);
   }
@@ -73,7 +59,7 @@ void Sleb128Encoder<uint_t>::EnqueueAll(const std::vector<uint_t>& values) {
 
 // Create a new decoder for the given encoded stream.
 template <typename uint_t>
-Sleb128Decoder<uint_t>::Sleb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with) {
+Leb128Decoder<uint_t>::Leb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with) {
   encoding_ = encoding;
   cursor_ = start_with;
 }
@@ -82,10 +68,8 @@ Sleb128Decoder<uint_t>::Sleb128Decoder(const std::vector<uint8_t>& encoding, siz
 // until one without its most significant bit is found, and re-form the
 // value from the 7 bit fields of the bytes consumed.
 template <typename uint_t>
-uint_t Sleb128Decoder<uint_t>::Dequeue() {
+uint_t Leb128Decoder<uint_t>::Dequeue() {
   uint_t value = 0;
-  static const size_t size = CHAR_BIT * sizeof(value);
-
   size_t shift = 0;
   uint8_t byte;
 
@@ -96,25 +80,20 @@ uint_t Sleb128Decoder<uint_t>::Dequeue() {
     shift += 7;
   } while (byte & 128);
 
-  // The sign bit is second high order bit of the final byte decoded.
-  // Sign extend if value is -ve and we did not shift all of it.
-  if (shift < size && (byte & 64))
-    value |= -(static_cast<uint_t>(1) << shift);
-
   return static_cast<uint_t>(value);
 }
 
 // Decode and retrieve all remaining values from the encoding.
 template <typename uint_t>
-void Sleb128Decoder<uint_t>::DequeueAll(std::vector<uint_t>* values) {
+void Leb128Decoder<uint_t>::DequeueAll(std::vector<uint_t>* values) {
   while (cursor_ < encoding_.size()) {
     values->push_back(Dequeue());
   }
 }
 
-template class Sleb128Encoder<uint32_t>;
-template class Sleb128Encoder<uint64_t>;
-template class Sleb128Decoder<uint32_t>;
-template class Sleb128Decoder<uint64_t>;
+template class Leb128Encoder<uint32_t>;
+template class Leb128Encoder<uint64_t>;
+template class Leb128Decoder<uint32_t>;
+template class Leb128Decoder<uint64_t>;
 
 }  // namespace relocation_packer

@@ -37,14 +37,17 @@ cc_library_host_static {
     srcs: [
         "src/debug.cc",
         "src/delta_encoder.cc",
+        "src/delta_encoder2.cc",
         "src/elf_file.cc",
         "src/packer.cc",
+        "src/leb128.cc",
         "src/sleb128.cc",
     ],
 
     static_libs: [
         "libelf",
         "libz",
+        "liblz4",
     ],
 }
 
@@ -58,6 +61,7 @@ cc_binary_host {
         "libelf",
         "libz",
         "libbase",
+        "liblz4",
     ],
 
     // Statically linking libc++ to make it work from prebuilts

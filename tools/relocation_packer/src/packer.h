@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "elf.h"
+#include "libelf.h"
 
 namespace relocation_packer {
 
@@ -19,17 +20,21 @@ namespace relocation_packer {
 template <typename ELF>
 class RelocationPacker {
  public:
+  RelocationPacker(Elf* elf) : elf_(elf) {}
+
   // Pack relocations into a more compact form.
   // |relocations| is a vector of relocation structs.
   // |packed| is the vector of packed bytes into which relocations are packed.
-  static void PackRelocations(const std::vector<typename ELF::Rela>& relocations,
-                              std::vector<uint8_t>* packed);
+  void PackRelocations(const std::vector<typename ELF::Rela>& relocations,
+                       std::vector<uint8_t>* packed, bool use_legacy_codec);
 
   // Unpack relocations from their more compact form.
   // |packed| is the vector of packed relocations.
   // |relocations| is a vector of unpacked relocation structs.
-  static void UnpackRelocations(const std::vector<uint8_t>& packed,
-                                std::vector<typename ELF::Rela>* relocations);
+  void UnpackRelocations(const std::vector<uint8_t>& packed,
+                         std::vector<typename ELF::Rela>* relocations);
+ private:
+  Elf* elf_;
 };
 
 }  // namespace relocation_packer
