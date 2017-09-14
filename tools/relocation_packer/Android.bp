@@ -45,6 +45,7 @@ cc_library_host_static {
     static_libs: [
         "libelf",
         "libz",
+        "liblz4",
     ],
 }
 
@@ -58,6 +59,7 @@ cc_binary_host {
         "libelf",
         "libz",
         "libbase",
+        "liblz4",
     ],
 
     // Statically linking libc++ to make it work from prebuilts

@@ -36,11 +36,12 @@ static void PrintUsage(const char* argv0) {
   const char* basename = temporary.c_str();
 
   printf(
-      "Usage: %s [-u] [-v] [-p] file\n\n"
+      "Usage: %s [-u] [-v] [-n] [-p] file\n\n"
       "Pack or unpack relative relocations in a shared library.\n\n"
-      "  -u, --unpack   unpack previously packed relative relocations\n"
-      "  -v, --verbose  trace object file modifications (for debugging)\n"
-      "  -p, --pad      do not shrink relocations, but pad (for debugging)\n\n",
+      "  -n, --no-compress disable compression of packed relocations\n"
+      "  -u, --unpack      unpack previously packed relative relocations\n"
+      "  -v, --verbose     trace object file modifications (for debugging)\n"
+      "  -p, --pad         do not shrink relocations, but pad (for debugging)\n\n",
       basename);
 
   printf(
@@ -52,14 +53,15 @@ int main(int argc, char* argv[]) {
   bool is_unpacking = false;
   bool is_verbose = false;
   bool is_padding = false;
+  bool is_compressing = true;
 
   static const option options[] = {
-    {"unpack", 0, 0, 'u'}, {"verbose", 0, 0, 'v'}, {"pad", 0, 0, 'p'},
-    {"help", 0, 0, 'h'}, {NULL, 0, 0, 0}
+    {"unpack", 0, 0, 'u'}, {"verbose", 0, 0, 'v'}, {"no-compress", 0, 0, 'n'},
+    {"pad", 0, 0, 'p'}, {"help", 0, 0, 'h'}, {NULL, 0, 0, 0}
   };
   bool has_options = true;
   while (has_options) {
-    int c = getopt_long(argc, argv, "uvph", options, NULL);
+    int c = getopt_long(argc, argv, "uvpzh", options, NULL);
     switch (c) {
       case 'u':
         is_unpacking = true;
@@ -73,6 +75,9 @@ int main(int argc, char* argv[]) {
       case 'h':
         PrintUsage(argv[0]);
         return 0;
+      case 'n':
+        is_compressing = false;
+        break;
       case '?':
         LOG(INFO) << "Try '" << argv[0] << " --help' for more information.";
         return 1;
@@ -125,7 +130,7 @@ int main(int argc, char* argv[]) {
     if (is_unpacking) {
       status = elf_file.UnpackRelocations();
     } else {
-      status = elf_file.PackRelocations();
+      status = elf_file.PackRelocations(is_compressing);
     }
   } else if (e_ident[EI_CLASS] == ELFCLASS64) {
     relocation_packer::ElfFile<ELF64_traits> elf_file(fd.get());
@@ -134,7 +139,7 @@ int main(int argc, char* argv[]) {
     if (is_unpacking) {
       status = elf_file.UnpackRelocations();
     } else {
-      status = elf_file.PackRelocations();
+      status = elf_file.PackRelocations(is_compressing);
     }
   } else {
     LOG(ERROR) << file << ": unknown ELFCLASS: " << e_ident[EI_CLASS];
