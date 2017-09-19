@@ -40,15 +40,16 @@ TEST(cfi_test, basic) {
   EXPECT_NE(0U, __cfi_shadow_size());
 
 #define SYM(type, name) auto name = reinterpret_cast<type>(dlsym(handle, #name))
-  SYM(int (*)(), get_count);
+  SYM(size_t (*)(), get_count);
   SYM(uint64_t(*)(), get_last_type_id);
   SYM(void* (*)(), get_last_address);
   SYM(void* (*)(), get_last_diag);
   SYM(void* (*)(), get_global_address);
   SYM(void (*)(uint64_t, void*, void*), __cfi_check);
+  SYM(char*, bss);
 #undef SYM
 
-  int c = get_count();
+  size_t c = get_count();
 
   // CFI check for code inside the DSO. Can't use just any function address - this is only
   // guaranteed to work for code addresses above __cfi_check.
@@ -87,6 +88,12 @@ TEST(cfi_test, basic) {
   void* p = malloc(4096);
   EXPECT_DEATH(__cfi_slowpath(46, p), "");
   free(p);
+
+  // Check all the addresses.
+  for (size_t p = 0; p < 1024 * 1024; ++p) {
+    __cfi_slowpath(47, bss + p);
+    EXPECT_EQ(++c, get_count());
+  }
 
   // Load the same library again.
   void* handle2 = dlopen("libcfi-test.so", RTLD_NOW | RTLD_LOCAL);
