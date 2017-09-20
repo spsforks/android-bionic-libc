@@ -29,62 +29,58 @@
 #include "linker_compressed_sleb128.h"
 
 #include <stdlib.h>
+#include <sys/mman.h>
 
 #include <async_safe/log.h>
+#include <lz4.h>
 
 #include "linker_allocator.h"
 #include "linker_debug.h"
+#include "linker_globals.h"
 
 
-// Use a 32kb buffer, but leave space for allocator overhead.
-constexpr size_t kDeflateBufferSize = 32 * 1024 - sizeof(page_info);
+// Must match the constant used by relocation_packer.
+static constexpr size_t kCompressionChunkSize = 64 * 1024;
 
 
-compressed_sleb128_decoder::compressed_sleb128_decoder(const uint8_t* buffer, size_t count) {
-  // Skip over decoded length.
-  stream_.next_in = const_cast<uint8_t*>(buffer) + 4;
-  stream_.avail_in = count - 4;
-}
+compressed_sleb128_decoder::compressed_sleb128_decoder(const uint8_t* buffer, size_t count)
+  // Skip over decoded length (header has already been skipped).
+  : lz4_src_(reinterpret_cast<const char*>(buffer) + 4),
+    lz4_end_(reinterpret_cast<const char*>(buffer) + count) {}
 
 compressed_sleb128_decoder::~compressed_sleb128_decoder() {
-  if (stream_.avail_out) {
-    inflateEnd(&stream_);
-    free(stream_.next_out);
+  if (buffer_) {
+    munmap(buffer_, kCompressionChunkSize);
   }
 }
 
 bool compressed_sleb128_decoder::initialize() {
-  stream_.avail_out = kDeflateBufferSize;
-  stream_.next_out = static_cast<uint8_t*>(malloc(kDeflateBufferSize));
-  if (!stream_.avail_out)
-    return false;
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
-  // deflateInit is actually a macro that uses an old-style cast.
-  int err = inflateInit(&stream_);
-#pragma clang diagnostic pop
-  if (err != Z_OK) {
-    PRINT("inflateInit failed %d\n", err);
-    return false;
+  buffer_ = reinterpret_cast<char*>(mmap(nullptr, kCompressionChunkSize, PROT_READ | PROT_WRITE,
+                                         MAP_PRIVATE | MAP_ANONYMOUS, 0, 0));
+  if (buffer_ == MAP_FAILED) {
+    async_safe_fatal("mmap failed");
   }
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, buffer_, kCompressionChunkSize, "linker_relro_lz4");
 
-  current_ = stream_.next_out;
-  return inflate_next();
+  return uncompress_chunk();
 }
 
-bool compressed_sleb128_decoder::inflate_next() {
-  uint8_t* orig_next_out = stream_.next_out;
-  stream_.avail_out = kDeflateBufferSize;
-  int err = inflate(&stream_, Z_NO_FLUSH);
-  if (err < 0) {
-    PRINT("inflate failed %d\n", err);
+bool compressed_sleb128_decoder::uncompress_chunk() {
+  uint32_t chunk_size;
+  memcpy(&chunk_size, lz4_src_, sizeof(uint32_t));
+  if (lz4_src_ + chunk_size >= lz4_end_) {
+    LD_ERR("Out-of-bounds during lz4 decompress");
     return false;
   }
-  stream_.next_out = orig_next_out;
-  current_ = orig_next_out;
-  end_ = current_ + kDeflateBufferSize - stream_.avail_out;
-  PRINT("Inflated %d more bytes", kDeflateBufferSize - stream_.avail_out);
+  lz4_src_ += sizeof(uint32_t);
+  int bytes_decompressed = LZ4_decompress_safe(lz4_src_, buffer_, chunk_size, kCompressionChunkSize);
+  if (bytes_decompressed <= 0) {
+    LD_ERR("Decompress failed.");
+    return false;
+  }
+  lz4_src_ += chunk_size;
+  current_ = reinterpret_cast<uint8_t*>(buffer_);
+  end_ = current_ + bytes_decompressed;
 
   return true;
 }
@@ -98,8 +94,7 @@ size_t compressed_sleb128_decoder::pop_front() {
 
   do {
     if (current_ >= end_) {
-      inflate_next();
-      if (current_ >= end_) {
+      if (!uncompress_chunk()) {
         async_safe_fatal("compressed_sleb128_decoder ran out of bounds");
       }
     }

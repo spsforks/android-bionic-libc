@@ -31,8 +31,6 @@
 
 #include <stdint.h>
 
-#include "zlib.h"
-
 class compressed_sleb128_decoder {
  public:
   compressed_sleb128_decoder(const uint8_t* buffer, size_t count);
@@ -41,12 +39,18 @@ class compressed_sleb128_decoder {
   size_t pop_front();
   bool initialize();
  private:
-  bool inflate_next();
+  bool uncompress_chunk();
 
-  z_stream stream_ = {};
-  //int err_ = 0;
-  //size_t available_ = 0;
+  // Holds the active uncompressed chunk.
+  char* buffer_ = nullptr;
+  // Points to next chunk to uncompress.
+  const char* lz4_src_;
+  // Points to end of compressed data.
+  const char* lz4_end_;
+
+  // Cursor for sleb128 decoding (within buffer_).
   const uint8_t* current_ = nullptr;
+  // Points to end of uncompressed chunk.
   const uint8_t* end_ = nullptr;
 };
 

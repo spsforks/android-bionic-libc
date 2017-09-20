@@ -135,6 +135,7 @@ cc_binary {
         "libziparchive",
         "libutils",
         "libbase",
+        "liblz4",
         "libz",
 
         "libdebuggerd_handler_fallback",

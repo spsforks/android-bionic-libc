@@ -24,7 +24,8 @@
 #include "libelf.h"
 #include "packer.h"
 
-#include "zlib.h"
+#include <lz4.h>
+#include <lz4hc.h>
 
 namespace relocation_packer {
 
@@ -44,7 +45,9 @@ static constexpr uint32_t SHT_ANDROID_RELA = SHT_LOOS + 2;
 static constexpr uint32_t SHT_ANDROID_COMPRESSED_REL = SHT_LOOS + 3;
 static constexpr uint32_t SHT_ANDROID_COMPRESSED_RELA = SHT_LOOS + 4;
 
+static constexpr size_t kCompressionChunkSize = 64 * 1024;
 static constexpr size_t kAndroidRelroPrefixSize = 4;  // APS2
+static constexpr size_t kMinimumCompressionBytesSaves = 100;
 
 static const size_t kPageSize = 4096;
 
@@ -143,70 +146,82 @@ static void VerboseLogSectionData(const Elf_Data* data) {
   VLOG(1) << "    d_align = " << data->d_align;
 }
 
-// Compresses using zlib, which gives about 94% compression for libchrome.so.
-// Switching to libzopfli would give 95%.
+// Compresses using lz4, which gives about 92% compression for libchrome.so.
+// libz gives 94% for libchrome.so, but is much slower.
+// lz4 ints (without first encoding as sleb128) results in 89% compression.
 // The format used here:
-//   * First four bytes as a marker "ZPS2",
+//   * First four bytes as a marker "APZ2",
 //   * Next four bytes is a little-endian uint32 storing the uncompressed size.
-//   * Remaining is deflated stream (which does not include the "APS2" marker).
-static bool Deflate(std::vector<uint8_t>* data) {
+//   * Remaining is compressed chunks of the form (chuck_size, bytes).
+static bool Compress(std::vector<uint8_t>* data) {
+  // Uses memcpy to store uint32_t in little endian.
+  CHECK(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
+
+  // Allocate data->size() for output buffer to ensure compression does not make
+  // data larger.
   std::vector<uint8_t> buffer(data->size());
+  const char* src = reinterpret_cast<const char *>(&(*data)[0]) + kAndroidRelroPrefixSize;
+  char* dest = reinterpret_cast<char*>(&buffer[0]) + sizeof(uint32_t) + kAndroidRelroPrefixSize;
 
-  z_stream stream = {};
-  stream.next_in =
-      reinterpret_cast<uint8_t*>(&(*data)[kAndroidRelroPrefixSize]);
-  stream.avail_in = data->size() - kAndroidRelroPrefixSize;
-  // 4 bytes for header, then 4 bytes for uncompressed size.
-  stream.next_out = &buffer[kAndroidRelroPrefixSize + sizeof(uint32_t)];
-  stream.avail_out = buffer.size() - sizeof(uint32_t) - kAndroidRelroPrefixSize;
+  int remaining_in = data->size() - kAndroidRelroPrefixSize;
+  int remaining_out = buffer.size() - sizeof(uint32_t) - kAndroidRelroPrefixSize;
+  while (remaining_in > 0) {
+    int chunk_size_in = std::min(static_cast<int>(kCompressionChunkSize), remaining_in);
+    uint32_t chunk_size_out = static_cast<uint32_t>(
+        LZ4_compress_HC(src, dest + sizeof(uint32_t), chunk_size_in, remaining_out, LZ4HC_CLEVEL_MAX));
+    // Happens if compression would increase size.
+    if (chunk_size_out == 0) {
+      VLOG(1) << "Skipping compression since it would increase size.";
+      return false;
+    }
+    memcpy(dest, &chunk_size_out, sizeof(uint32_t));
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
-  // deflateInit is actually a macro that uses an old-style cast.
-  CHECK(deflateInit(&stream, Z_BEST_COMPRESSION) == Z_OK);
-#pragma clang diagnostic pop
-
-  int err = deflate(&stream, Z_FINISH);
-  deflateEnd(&stream);
-
-  if (stream.avail_out == 0) {
-    LOG(INFO) << "delate() would increase size";
+    src += chunk_size_in;
+    remaining_in -= chunk_size_in;
+    dest += sizeof(uint32_t) + chunk_size_out;
+    remaining_out -= sizeof(uint32_t) + chunk_size_out;
+  }
+  uint32_t compressed_size = buffer.size() - remaining_out;
+  uint32_t savings = data->size() - compressed_size;
+  if (savings < kMinimumCompressionBytesSaves) {
+    VLOG(1) << "Skipping compression since it would save only " << savings << " bytes";
     return false;
   }
-  CHECK(err == Z_STREAM_END);
 
-  CHECK(__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__);
   memcpy(&buffer[0], &(*data)[0], kAndroidRelroPrefixSize);
-  buffer[0] = 'Z';  // Change from APS2 -> ZPS2.
-  memcpy(&buffer[kAndroidRelroPrefixSize], &stream.total_in, sizeof(uint32_t));
-  buffer.resize(sizeof(uint32_t) + kAndroidRelroPrefixSize + stream.total_out);
+  buffer[2] = 'Z';  // Change from APS2 -> APZ2.
+  uint32_t uncompressed_size = data->size() - kAndroidRelroPrefixSize;
+  memcpy(&buffer[kAndroidRelroPrefixSize], &uncompressed_size, sizeof(uint32_t));
+  buffer.resize(compressed_size);
   data->swap(buffer);
   return true;
 }
 
-static std::vector<uint8_t> Inflate(const std::vector<uint8_t>& data) {
-  uint32_t inflated_size = 0;
-  CHECK(data[0] == 'Z');
+static std::vector<uint8_t> Uncompress(const std::vector<uint8_t>& data) {
+  uint32_t uncompressed_size = 0;
+  CHECK(data[0] == 'A');
   CHECK(data[1] == 'P');
-  CHECK(data[2] == 'S');
-  memcpy(&inflated_size, &data[kAndroidRelroPrefixSize], sizeof(uint32_t));
-  std::vector<uint8_t> buffer(kAndroidRelroPrefixSize + inflated_size);
+  CHECK(data[2] == 'Z');
+  memcpy(&uncompressed_size, &data[kAndroidRelroPrefixSize], sizeof(uint32_t));
+  std::vector<uint8_t> buffer(kAndroidRelroPrefixSize + uncompressed_size);
 
-  z_stream stream = {};
-  stream.next_in = const_cast<uint8_t*>(&data[0]) + sizeof(uint32_t) + kAndroidRelroPrefixSize;
-  stream.avail_in = data.size() - sizeof(uint32_t) - kAndroidRelroPrefixSize;
-  stream.next_out = &buffer[kAndroidRelroPrefixSize];
-  stream.avail_out = buffer.size() - kAndroidRelroPrefixSize;
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
-  // inflateInit is actually a macro that uses an old-style cast.
-  CHECK(inflateInit(&stream) == Z_OK);
-#pragma clang diagnostic pop
-  CHECK(inflate(&stream, Z_FINISH) == Z_STREAM_END);
-  CHECK(inflateEnd(&stream) == Z_OK);
+  const char* src = reinterpret_cast<const char*>(&data[0]) + kAndroidRelroPrefixSize + sizeof(uint32_t);
+  char* dest = reinterpret_cast<char*>(&buffer[0]) + kAndroidRelroPrefixSize;
+  int dest_remaining = uncompressed_size;
+  while (dest_remaining > 0) {
+    uint32_t chunk_size;
+    memcpy(&chunk_size, src, sizeof(uint32_t));
+    CHECK(chunk_size);
+    src += sizeof(uint32_t);
+    int bytes_decompressed = LZ4_decompress_safe(src, dest, chunk_size, dest_remaining);
+    CHECK(bytes_decompressed <= static_cast<int>(kCompressionChunkSize));
+    src += chunk_size;
+    dest += bytes_decompressed;
+    dest_remaining -= bytes_decompressed;
+  }
+  CHECK(dest_remaining == 0);
   memcpy(&buffer[0], &data[0], kAndroidRelroPrefixSize);
-  buffer[0] = 'A';  // Change from ZPS2 -> APS2
+  buffer[2] = 'S';  // Change from APZ2 -> APS2
 
   return buffer;
 }
@@ -829,8 +844,10 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   VLOG(1) << "Packed         (no padding): " << packed.size() << " bytes";
 
   if (compress) {
-    compress = Deflate(&packed);
-    VLOG(1) << "Packed + deflate (no padding): " << packed.size() << " bytes";
+    compress = Compress(&packed);
+    if (compress) {
+      VLOG(1) << "Packed & compressed (no padding): " << packed.size() << " bytes";
+    }
   }
 
   if (packed.empty()) {
@@ -872,7 +889,7 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   // Run a loopback self-test as a check that packing is lossless.
   std::vector<Rela> unpacked;
   if (compress) {
-    std::vector<uint8_t> inflated = Inflate(packed);
+    std::vector<uint8_t> inflated = Uncompress(packed);
     packer.UnpackRelocations(inflated, &unpacked);
   } else {
     packer.UnpackRelocations(packed, &unpacked);
@@ -959,12 +976,12 @@ bool ElfFile<ELF>::UnpackRelocations() {
   bool compress = false;
   if (IsPackedSectionType(section_header->sh_type) &&
       packed.size() > 3 &&
-      (packed[0] == 'A' || packed[0] == 'Z') &&
+      packed[0] == 'A' &&
       packed[1] == 'P' &&
-      packed[2] == 'S' &&
+      (packed[2] == 'S' || packed[2] == 'Z') &&
       packed[3] == '2') {
     LOG(INFO) << "Relocations   : " << (relocations_type_ == REL ? "REL" : "RELA");
-    compress = packed[0] == 'Z';
+    compress = packed[2] == 'Z';
   } else {
     LOG(ERROR) << "Packed relocations not found (not packed?)";
     return false;
@@ -982,7 +999,7 @@ bool ElfFile<ELF>::UnpackTypedRelocations(const std::vector<uint8_t>& packed, bo
   std::vector<typename ELF::Rela> unpacked_relocations;
   RelocationPacker<ELF> packer;
   if (compress) {
-    std::vector<uint8_t> inflated = Inflate(packed);
+    std::vector<uint8_t> inflated = Uncompress(packed);
     packer.UnpackRelocations(inflated, &unpacked_relocations);
   } else {
     packer.UnpackRelocations(packed, &unpacked_relocations);
