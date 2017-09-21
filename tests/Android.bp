@@ -169,7 +169,7 @@ cc_test_library {
     ],
 
     target: {
-        android: {
+        bionic: {
             whole_static_libs: ["libasync_safe"],
         },
     },
@@ -628,6 +628,12 @@ cc_test_host {
     product_variables: {
         debuggable: {
             cppflags: ["-DUSE_LD_CONFIG_FILE"],
+        },
+    },
+
+    target: {
+        linux_bionic: {
+            enabled: false,
         },
     },
 }
