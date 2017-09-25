@@ -158,18 +158,23 @@ static soinfo* somain; // main process, always the one after libdl_info
 #if defined(__LP64__)
 static const char* const kSystemLibDir     = "/system/lib64";
 static const char* const kVendorLibDir     = "/vendor/lib64";
+static const char* const kOdmLibDir        = "/odm/lib64";
 static const char* const kAsanSystemLibDir = "/data/lib64";
 static const char* const kAsanVendorLibDir = "/data/vendor/lib64";
+static const char* const kAsanOdmLibDir    = "/data/odm/lib64";
 #else
 static const char* const kSystemLibDir     = "/system/lib";
 static const char* const kVendorLibDir     = "/vendor/lib";
+static const char* const kOdmLibDir        = "/odm/lib";
 static const char* const kAsanSystemLibDir = "/data/lib";
 static const char* const kAsanVendorLibDir = "/data/vendor/lib";
+static const char* const kAsanOdmLibDir    = "/data/odm/lib";
 #endif
 
 static const char* const kDefaultLdPaths[] = {
   kSystemLibDir,
   kVendorLibDir,
+  kOdmLibDir,
   nullptr
 };
 
@@ -178,6 +183,8 @@ static const char* const kAsanDefaultLdPaths[] = {
   kSystemLibDir,
   kAsanVendorLibDir,
   kVendorLibDir,
+  kAsanOdmLibDir,
+  kOdmLibDir,
   nullptr
 };
 
