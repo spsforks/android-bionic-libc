@@ -269,7 +269,8 @@ union res_sockaddr_union {
 #define RES_NO_NIBBLE2	0x80000000	/* disable alternate nibble lookup */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | \
-			 RES_DNSRCH | RES_NO_NIBBLE2)
+                   	 RES_DNSRCH | RES_NO_NIBBLE2 | \
+                   	 RES_USE_EDNS0)
 
 /*
  * Resolver "pfcode" values.  Used by dig.
