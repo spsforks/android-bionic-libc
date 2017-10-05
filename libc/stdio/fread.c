@@ -38,11 +38,17 @@
 #include <sys/param.h>
 #include "local.h"
 
+#include <async_safe/log.h>
+
 #define MUL_NO_OVERFLOW	(1UL << (sizeof(size_t) * 4))
 
 size_t
 fread(void *buf, size_t size, size_t count, FILE *fp) __overloadable
 {
+	if (__predict_false((uintptr_t)fp < 4096)) {
+		async_safe_fatal("invalid FILE* %p passed to %s", fp, __FUNCTION__);
+	}
+
 	/*
 	 * Extension:  Catch integer overflow.
 	 */
