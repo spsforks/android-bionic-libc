@@ -50,7 +50,9 @@ void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
+#endif
 
 int munmap(void* __addr, size_t __size);
 int msync(void* __addr, size_t __size, int __flags);
@@ -85,5 +87,7 @@ int madvise(void* __addr, size_t __size, int __advice);
 int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 
 __END_DECLS
+
+#include <android/legacy_sys_stat_inlines.h>
 
 #endif
