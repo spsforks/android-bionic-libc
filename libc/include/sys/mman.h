@@ -86,4 +86,6 @@ int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23)
 
 __END_DECLS
 
+#include <android/legacy_sys_stat_inlines.h>
+
 #endif
