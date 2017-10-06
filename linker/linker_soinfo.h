@@ -259,7 +259,7 @@ struct soinfo {
 
   uint32_t get_target_sdk_version() const;
 
-  void set_dt_runpath(const char *);
+  void set_dt_runpath(const char*);
   const std::vector<std::string>& get_dt_runpath() const;
   android_namespace_t* get_primary_namespace();
   void add_secondary_namespace(android_namespace_t* secondary_ns);

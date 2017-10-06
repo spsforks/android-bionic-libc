@@ -188,17 +188,18 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) 
 extern "C" int __system_properties_init(void);
 
 static const char* get_executable_path() {
-  static std::string executable_path;
-  if (executable_path.empty()) {
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
-    }
-    executable_path = std::string(path, path_len);
+  static std::string holder;
+  char path[PATH_MAX];
+  ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+  if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+    // You can have an executable whose path is > PATH_MAX, but readlink(2) won't let you
+    // resolve it (http://b/67016227). This is only used for debugging purposes, so a
+    // placeholder is fine.
+    holder = "<executable>";
+  } else {
+    holder = std::string(path, path_len);
   }
-
-  return executable_path.c_str();
+  return holder.c_str();
 }
 
 #if defined(__LP64__)

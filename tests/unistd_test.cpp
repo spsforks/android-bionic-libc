@@ -1382,6 +1382,28 @@ TEST(UNISTD_TEST, exec_argv0_null) {
               "<unknown>: usage: run-as");
 }
 
+TEST(UNISTD_TEST, exec_long_path) {
+  // Copy an executable somewhere with a very deep path (> PATH_MAX).
+  TemporaryDir td;
+  ASSERT_EQ(0, chdir(td.dirname));
+
+  std::string dir(250, 'x');
+  for (size_t i = 0; i < 20; ++i) {
+    ASSERT_EQ(0, mkdir(dir.c_str(), 0777));
+    ASSERT_EQ(0, chdir(dir.c_str()));
+  }
+
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString("/system/bin/toybox", &content));
+  ASSERT_TRUE(android::base::WriteStringToFile(content, "toybox"));
+  ASSERT_EQ(0, chmod("toybox", 0777));
+
+  // Check that it still works.
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { execve("toybox", eth.GetArgs(), eth.GetEnv()); }, 0, "hello world\n");
+}
+
 TEST(UNISTD_TEST, getlogin_r) {
   char buf[LOGIN_NAME_MAX] = {};
   EXPECT_EQ(ERANGE, getlogin_r(buf, 0));
