@@ -28,10 +28,9 @@
 
 #pragma once
 
+#include <errno.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
-#include <sys/syscall.h>
-#include <unistd.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__
 
