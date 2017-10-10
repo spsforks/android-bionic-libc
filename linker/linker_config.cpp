@@ -43,6 +43,9 @@
 #include <string>
 #include <unordered_map>
 
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
+
 class ConfigParser {
  public:
   enum {
@@ -333,6 +336,13 @@ class Properties {
       async_safe_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
       params.push_back({ "SDK_VER", buf });
     }
+
+    char vndk[PROP_VALUE_MAX + 1] = {};
+    __system_property_get("ro.vndk.version", vndk + 1);
+    if (strlen(vndk + 1) != 0 && strcmp(vndk + 1, "current") != 0) {
+      vndk[0] = '-';
+    }
+    params.push_back({ "VNDK_VER", vndk });
 
     for (auto&& path : paths) {
       format_string(&path, params);
