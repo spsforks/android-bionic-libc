@@ -159,6 +159,7 @@ static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
   "/system/lib64",
   "/vendor/lib64",
+  "/odm/lib64",
 #else
   "/system/lib",
   "/vendor/lib",
@@ -172,11 +173,13 @@ static const char* const kAsanDefaultLdPaths[] = {
   "/system/lib64",
   "/data/vendor/lib64",
   "/vendor/lib64",
+  "/odm/lib64",
 #else
   "/data/lib",
   "/system/lib",
   "/data/vendor/lib",
   "/vendor/lib",
+  "/odm/lib",
 #endif
   nullptr
 };
