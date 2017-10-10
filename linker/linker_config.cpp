@@ -43,6 +43,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "private/CachedProperty.h"
+
 class ConfigParser {
  public:
   enum {
@@ -333,6 +335,17 @@ class Properties {
       async_safe_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
       params.push_back({ "SDK_VER", buf });
     }
+
+    static CachedProperty vndkVersion("ro.vndk.version");
+    std::string vndk = vndkVersion.Get();
+    if (vndk.size() != 0) {
+      if(vndk.compare("current") != 0) {
+        vndk = "-" + vndk;
+      } else {
+        vndk = "";
+      }
+    }
+    params.push_back({ "VNDK_VER", vndk });
 
     for (auto&& path : paths) {
       format_string(&path, params);
