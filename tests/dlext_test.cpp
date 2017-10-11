@@ -1635,6 +1635,7 @@ TEST(dlext, ns_anonymous) {
 
   uintptr_t addr_start = 0;
   uintptr_t addr_end = 0;
+  bool has_executable_segment = false;
   std::vector<map_record> maps_to_copy;
 
   for (const auto& rec : maps) {
@@ -1643,6 +1644,7 @@ TEST(dlext, ns_anonymous) {
         addr_start = rec.addr_start;
       }
       addr_end = rec.addr_end;
+      has_executable_segment = has_executable_segment || (rec.perms & PROT_EXEC) != 0;
 
       maps_to_copy.push_back(rec);
     }
@@ -1654,6 +1656,14 @@ TEST(dlext, ns_anonymous) {
   ASSERT_EQ(3U, maps_to_copy.size());
   ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
   ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
+
+  if (!has_executable_segment) {
+    // For some NB environments this code might be missing the
+    // executable flag. In which case we assume that the first
+    // segment is the one that has this flag.
+    ASSERT_TRUE((maps_to_copy[0].perms & PROT_WRITE) == 0);
+    maps_to_copy[0].perms |= PROT_EXEC;
+  }
 
   // copy
   uintptr_t reserved_addr = reinterpret_cast<uintptr_t>(mmap(nullptr, addr_end - addr_start,
