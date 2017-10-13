@@ -1817,6 +1817,7 @@ cc_library_static {
 cc_library {
     defaults: ["libc_defaults"],
     name: "libc",
+    ship_static_lib_in_ndk: true,
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
