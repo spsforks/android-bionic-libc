@@ -25,28 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/cdefs.h>
+
 #include <netdb.h>
+
 #include "servent.h"
 
-struct servent *
-getservbyport(int port, const char *proto)
-{
-    res_static       rs = __res_get_static();
-
-    if (rs == NULL || proto == NULL) {
-        errno = EINVAL;
-        return NULL;
+struct servent* getservbyport(int port, const char* proto) {
+  res_static rs = __res_get_static();
+  rs->servent_ptr = NULL;
+  struct servent* s;
+  while ((s = getservent_r(rs)) != NULL) {
+    if (s->s_port == port && (proto == NULL || strcmp(s->s_proto, proto) == 0)) {
+      return s;
     }
-
-    rs->servent_ptr = NULL;
-    while (1) {
-        struct servent*  s = getservent_r(rs);
-        if (s == NULL)
-            break;
-        if ( s->s_port == port && !strcmp( s->s_proto, proto ) )
-            return s;
-    }
-
-    return NULL;
+  }
+  return NULL;
 }
