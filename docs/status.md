@@ -13,6 +13,7 @@ New libc functions in P:
   * `glob`/`globfree` (adding <glob.h>)
   * `hcreate`/hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
+  * `pthread_setschedprio`
   * <spawn.h>
   * `syncfs`
 
@@ -93,7 +94,6 @@ pthread_mutexattr_setprotocol
 pthread_mutexattr_setrobust
 pthread_setcancelstate
 pthread_setcanceltype
-pthread_setschedprio
 pthread_testcancel
 sethostent
 setnetent
