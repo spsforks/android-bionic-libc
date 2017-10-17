@@ -48,7 +48,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_log10.c",
         "upstream-freebsd/lib/msun/src/e_log10f.c",
         "upstream-freebsd/lib/msun/src/e_log2.c",
-        "upstream-freebsd/lib/msun/src/e_log2f.c",
         "upstream-freebsd/lib/msun/src/e_log.c",
         "upstream-freebsd/lib/msun/src/e_logf.c",
         "upstream-freebsd/lib/msun/src/e_pow.c",
@@ -113,7 +112,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_erf.c",
         "upstream-freebsd/lib/msun/src/s_erff.c",
         "upstream-freebsd/lib/msun/src/s_exp2.c",
-        "upstream-freebsd/lib/msun/src/s_exp2f.c",
         "upstream-freebsd/lib/msun/src/s_expm1.c",
         "upstream-freebsd/lib/msun/src/s_expm1f.c",
         "upstream-freebsd/lib/msun/src/s_fdim.c",
@@ -199,6 +197,18 @@ cc_library {
         "upstream-netbsd/lib/libm/complex/csinl.c",
         "upstream-netbsd/lib/libm/complex/ctanhl.c",
         "upstream-netbsd/lib/libm/complex/ctanl.c",
+
+        // Add Optimized ARM/ARM64 math routines from newlib
+        "upstream-newlib/common/math_errf.c",
+        "upstream-newlib/common/sf_exp.c",
+        "upstream-newlib/common/sf_exp2.c",
+        "upstream-newlib/common/sf_exp2_data.c",
+        "upstream-newlib/common/sf_log.c",
+        "upstream-newlib/common/sf_log2.c",
+        "upstream-newlib/common/sf_log2_data.c",
+        "upstream-newlib/common/sf_log_data.c",
+        "upstream-newlib/common/sf_pow.c",
+        "upstream-newlib/common/sf_pow_log2_data.c",
 
         // TODO: this comes from from upstream's libc, not libm, but it's an
         // implementation detail that should have hidden visibility, so it needs

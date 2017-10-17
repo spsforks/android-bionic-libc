@@ -19,6 +19,8 @@ __FBSDID("$FreeBSD$");
 #include "math.h"
 #include "math_private.h"
 
+#if __OBSOLETE_MATH
+
 static const float
 ln2_hi =   6.9313812256e-01,	/* 0x3f317180 */
 ln2_lo =   9.0580006145e-06,	/* 0x3717f7d1 */
@@ -87,3 +89,4 @@ __ieee754_logf(float x)
 		     return dk*ln2_hi-((s*(f-R)-dk*ln2_lo)-f);
 	}
 }
+#endif /* __OBSOLETE_MATH */
