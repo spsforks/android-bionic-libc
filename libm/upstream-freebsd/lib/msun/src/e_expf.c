@@ -21,6 +21,8 @@ __FBSDID("$FreeBSD$");
 #include "math.h"
 #include "math_private.h"
 
+#if __OBSOLETE_MATH
+
 static const float
 one	= 1.0,
 halF[2]	= {0.5,-0.5,},
@@ -96,3 +98,4 @@ __ieee754_expf(float x)
 	    return y*twopk*twom100;
 	}
 }
+#endif /* __OBSOLETE_MATH */
