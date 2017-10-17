@@ -407,6 +407,25 @@ void sincosf(float __x, float* __sin, float* __cos);
 void sincosl(long double __x, long double* __sin, long double* __cos);
 #endif
 
+/*
+   __OBSOLETE_MATH
+
+	If set to 1 then some new math code will be disabled and older libm
+	code will be used instead.  This is necessary because the new math
+	code does not support all targets, it assumes that the toolchain has
+	ISO C99 support (hexfloat literals, standard fenv semantics), the
+	target has IEEE-754 conforming binary32 float and binary64 double
+	(not mixed endian) representation, standard SNaN representation,
+	double and single precision arithmetics has similar latency and it
+	has no legacy SVID matherr support, only POSIX errno and fenv
+	exception based error handling.
+*/
+#if defined(__ARM_NEON) || (__arm64__)
+#define __OBSOLETE_MATH 0
+#else
+#define __OBSOLETE_MATH 1
+#endif
+
 __END_DECLS
 
 #endif

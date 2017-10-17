@@ -19,6 +19,8 @@ __FBSDID("$FreeBSD$");
 #include "math.h"
 #include "math_private.h"
 
+#if __OBSOLETE_MATH
+
 static const float
 bp[] = {1.0, 1.5,},
 dp_h[] = { 0.0, 5.84960938e-01,}, /* 0x3f15c000 */
@@ -247,3 +249,4 @@ __ieee754_powf(float x, float y)
 	else SET_FLOAT_WORD(z,j);
 	return sn*z;
 }
+#endif /* __OBSOLETE_MATH */
