@@ -77,6 +77,9 @@ enum {
 #define PTHREAD_CREATE_DETACHED  0x00000001
 #define PTHREAD_CREATE_JOINABLE  0x00000000
 
+#define PTHREAD_EXPLICIT_SCHED 0
+#define PTHREAD_INHERIT_SCHED 1
+
 #define PTHREAD_PROCESS_PRIVATE  0
 #define PTHREAD_PROCESS_SHARED   1
 
@@ -88,6 +91,7 @@ int pthread_atfork(void (*__prepare)(void), void (*__parent)(void), void (*__chi
 int pthread_attr_destroy(pthread_attr_t* __attr);
 int pthread_attr_getdetachstate(const pthread_attr_t* __attr, int* __state);
 int pthread_attr_getguardsize(const pthread_attr_t* __attr, size_t* __size);
+int pthread_attr_getinheritsched(const pthread_attr_t* __attr, int* __flag);
 int pthread_attr_getschedparam(const pthread_attr_t* __attr, struct sched_param* __param);
 int pthread_attr_getschedpolicy(const pthread_attr_t* __attr, int* __policy);
 int pthread_attr_getscope(const pthread_attr_t* __attr, int* __scope);
@@ -96,6 +100,7 @@ int pthread_attr_getstacksize(const pthread_attr_t* __attr, size_t* __size);
 int pthread_attr_init(pthread_attr_t* __attr);
 int pthread_attr_setdetachstate(pthread_attr_t* __attr, int __state);
 int pthread_attr_setguardsize(pthread_attr_t* __attr, size_t __size);
+int pthread_attr_setinheritsched(pthread_attr_t* __attr, int __flag);
 int pthread_attr_setschedparam(pthread_attr_t* __attr, const struct sched_param* __param);
 int pthread_attr_setschedpolicy(pthread_attr_t* __attr, int __policy);
 int pthread_attr_setscope(pthread_attr_t* __attr, int __scope);
