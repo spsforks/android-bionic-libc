@@ -1692,7 +1692,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_ndk",
     defaults: ["libc_defaults"],
-    srcs: libc_common_src_files + ["bionic/malloc_common.cpp"],
+    srcs: libc_common_src_files,
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
@@ -1729,7 +1729,6 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
-        "libjemalloc",
         "libstdc++",
     ],
 }
@@ -1755,7 +1754,6 @@ cc_library_static {
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
-        "libc_malloc",
         "libc_netbsd",
         "libc_openbsd",
         "libc_openbsd_large_stack",
@@ -1817,14 +1815,19 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
+// libc_malloc.a - jemalloc + dlmalloc-compat wrappers
 // ========================================================
 cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: ["bionic/jemalloc_wrapper.cpp"],
-    cflags: ["-fvisibility=hidden"],
-
     name: "libc_malloc",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/jemalloc_wrapper.cpp",
+        "bionic/malloc_common.cpp",
+    ],
+
+    whole_static_libs: [
+        "libjemalloc",
+    ],
 }
 
 // ========================================================
@@ -1841,7 +1844,6 @@ cc_library {
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
-            "bionic/malloc_common.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: ["libc_init_static"],
@@ -1851,7 +1853,6 @@ cc_library {
             "arch-common/bionic/crtbegin_so.c",
             "arch-common/bionic/crtbrand.S",
             "bionic/icu.cpp",
-            "bionic/malloc_common.cpp",
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
@@ -1878,7 +1879,7 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common", "libjemalloc"],
+    whole_static_libs: ["libc_common", "libc_malloc"],
 
     nocrt: true,
 
