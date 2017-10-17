@@ -1463,6 +1463,27 @@ cc_library_static {
     generated_headers: ["generated_android_ids"],
 }
 
+cc_library_static {
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/bionic_futex.cpp",
+        "bionic/bionic_time_conversions.cpp",
+        "bionic/bionic_systrace_disabled.cpp",
+        "bionic/pthread_attr.cpp",
+        "bionic/pthread_barrier.cpp",
+        "bionic/pthread_cond.cpp",
+        "bionic/pthread_mutex.cpp",
+        "bionic/pthread_once.cpp",
+        "bionic/pthread_rwlock.cpp",
+        "bionic/pthread_spinlock.cpp",
+    ],
+
+    cppflags: ["-Wold-style-cast"],
+    include_dirs: ["bionic/libstdc++/include"],
+    name: "libc_pthread_types",
+}
+
+
 // ========================================================
 // libc_pthread.a - pthreads parts that previously lived in
 // libc_bionic.a. Relocated to their own library because
