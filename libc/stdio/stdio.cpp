@@ -75,7 +75,7 @@ _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
 #define CHECK_FP(fp)                                                       \
   do {                                                                     \
-    if (__predict_false(reinterpret_cast<uintptr_t>(fp) < 4096)) {         \
+    if (__predict_false(reinterpret_cast<uintptr_t>(fp) == 0)) {           \
       async_safe_fatal("invalid FILE* %p passed to %s", fp, __FUNCTION__); \
     }                                                                      \
   } while (0)
