@@ -58,6 +58,7 @@ void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
 // -fno-stack-protector because it's responsible for setting up the main
 // thread's TLS (which stack protector relies on).
 
+__attribute__((__weak__))
 void __libc_init_main_thread(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 #if defined(__i386__)
