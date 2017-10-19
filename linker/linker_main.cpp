@@ -125,12 +125,13 @@ static void parse_LD_LIBRARY_PATH(const char* path) {
 }
 
 static void parse_LD_PRELOAD(const char* path) {
-  g_ld_preload_names.clear();
+  std::vector<std::string> result;
   if (path != nullptr) {
     // We have historically supported ':' as well as ' ' in LD_PRELOAD.
-    g_ld_preload_names = android::base::Split(path, " :");
-    g_ld_preload_names.erase(std::remove_if(g_ld_preload_names.begin(), g_ld_preload_names.end(),
-                                            [](const std::string& s) { return s.empty(); }));
+    result = android::base::Split(path, " :");
+    result.erase(std::remove_if(result.begin(), result.end(),
+                                [](const std::string& s) { return s.empty(); }));
+    std::copy(result.begin(), result.end(), std::back_inserter(g_ld_preload_names));
   }
 }
 
@@ -268,6 +269,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
   // doesn't cost us anything.
   const char* ldpath_env = nullptr;
   const char* ldpreload_env = nullptr;
+  const char* ldpreload_arch_env = nullptr;
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
@@ -276,6 +278,16 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
     ldpreload_env = getenv("LD_PRELOAD");
     if (ldpreload_env != nullptr) {
       INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
+    }
+#if defined(__LP64__)
+#define LD_PRELOAD_ARCH_ENV "LD_PRELOAD_64"
+#else
+#define LD_PRELOAD_ARCH_ENV "LD_PRELOAD_32"
+#endif
+
+    ldpreload_arch_env = getenv(LD_PRELOAD_ARCH_ENV);
+    if (ldpreload_arch_env != nullptr) {
+      INFO("[ " LD_PRELOAD_ARCH_ENV " set to \"%s\" ]", ldpreload_arch_env);
     }
   }
 
@@ -348,6 +360,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
+  parse_LD_PRELOAD(ldpreload_arch_env);
 
   somain = si;
 

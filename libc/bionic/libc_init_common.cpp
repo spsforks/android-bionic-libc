@@ -258,6 +258,8 @@ static bool __is_unsafe_environment_variable(const char* name) {
     "LD_LIBRARY_PATH",
     "LD_ORIGIN_PATH",
     "LD_PRELOAD",
+    "LD_PRELOAD_32",
+    "LD_PRELOAD_64",
     "LD_PROFILE",
     "LD_SHOW_AUXV",
     "LD_USE_LOAD_BIAS",
