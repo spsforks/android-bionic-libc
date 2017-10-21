@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <sys/ipc.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void sys_ipc_h() {
+  TYPE(struct ipc_perm);
+  STRUCT_MEMBER(struct ipc_perm, uid_t, uid);
+  STRUCT_MEMBER(struct ipc_perm, gid_t, gid);
+  STRUCT_MEMBER(struct ipc_perm, uid_t, cuid);
+  STRUCT_MEMBER(struct ipc_perm, gid_t, cgid);
+  STRUCT_MEMBER(struct ipc_perm, mode_t, mode);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  TYPE(uid_t);
+  TYPE(gid_t);
+  TYPE(mode_t);
+  TYPE(key_t);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  MACRO(IPC_CREAT);
+  MACRO(IPC_EXCL);
+  MACRO(IPC_NOWAIT);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+  MACRO(IPC_PRIVATE);
 
-__END_DECLS
+  MACRO(IPC_RMID);
+  MACRO(IPC_SET);
+  MACRO(IPC_STAT);
 
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(ftok, key_t (*f)(const char*, int));
+}
