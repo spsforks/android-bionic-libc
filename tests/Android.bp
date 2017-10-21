@@ -627,4 +627,4 @@ cc_test_host {
     },
 }
 
-subdirs = ["libs"]
+subdirs = ["*"]
