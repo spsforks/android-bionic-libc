@@ -223,7 +223,7 @@ struct soinfo {
   ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const;
 
   const char* get_string(ElfW(Word) index) const;
-  bool can_unload() const;
+  bool can_unload(std::string* reason) const;
   bool is_gnu_hash() const;
 
   bool inline has_min_version(uint32_t min_version __unused) const {

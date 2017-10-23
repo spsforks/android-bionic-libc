@@ -1739,11 +1739,10 @@ static void soinfo_unload(soinfo* si) {
 
   ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
 
-  if (!root->can_unload()) {
-    LD_LOG(kLogDlopen,
-           "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
-           root->get_realpath(),
-           root);
+  std::string reason;
+  if (!root->can_unload(&reason)) {
+    LD_LOG(kLogDlopen, "... dlclose(root=\"%s\"@%p) ... not unloading - %s", root->get_realpath(),
+           root, reason.c_str());
     return;
   }
 
@@ -1765,7 +1764,8 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
   for (size_t i = 0; i < count; ++i) {
     soinfo* si = soinfos[i];
 
-    if (si->can_unload()) {
+    std::string reason;
+    if (si->can_unload(&reason)) {
       size_t ref_count = si->is_linked() ? si->decrement_ref_count() : 0;
       if (ref_count == 0) {
         unload_list.push_back(si);
@@ -1777,10 +1777,8 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
                ref_count);
       }
     } else {
-      LD_LOG(kLogDlopen,
-             "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
-             si->get_realpath(),
-             si);
+      LD_LOG(kLogDlopen, "... dlclose(root=\"%s\"@%p) ... not unloading - %s", si->get_realpath(),
+             si, reason.c_str());
       return;
     }
   }

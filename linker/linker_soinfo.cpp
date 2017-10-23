@@ -649,8 +649,27 @@ bool soinfo::is_gnu_hash() const {
   return (flags_ & FLAG_GNU_HASH) != 0;
 }
 
-bool soinfo::can_unload() const {
-  return !is_linked() || ((get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0);
+bool soinfo::can_unload(std::string* reason) const {
+  std::string dummy;
+  if (reason == nullptr) {
+    reason = &dummy;
+  }
+
+  if (!is_linked()) {
+    return true;
+  }
+
+  if ((get_rtld_flags() & RTLD_NODELETE) != 0) {
+    *reason = "the binary is flagged with NODELETE";
+    return false;
+  }
+
+  if ((get_rtld_flags() & RTLD_GLOBAL) != 0) {
+    *reason = "the binary is loaded RTLD_GLOBAL";
+    return false;
+  }
+
+  return true;
 }
 
 bool soinfo::is_linked() const {
