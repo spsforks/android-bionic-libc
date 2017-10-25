@@ -56,8 +56,21 @@
     f: \
     __bionic_asm_custom_entry(f); \
 
+#define WEAK_ENTRY_NO_DWARF(f) \
+    .text; \
+    .globl f; \
+    .weak f; \
+    .balign __bionic_asm_align; \
+    .type f, __bionic_asm_function_type; \
+    f: \
+    __bionic_asm_custom_entry(f); \
+
 #define ENTRY(f) \
     ENTRY_NO_DWARF(f) \
+    .cfi_startproc \
+
+#define WEAK_ENTRY(f) \
+    WEAK_ENTRY_NO_DWARF(f) \
     .cfi_startproc \
 
 #define END_NO_DWARF(f) \
@@ -77,6 +90,11 @@
 #define ENTRY_PRIVATE_NO_DWARF(f) \
     ENTRY_NO_DWARF(f); \
     .hidden f \
+
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .globl alias; \
+    .weak alias; \
+    .equ alias, original
 
 #define ALIAS_SYMBOL(alias, original) \
     .globl alias; \

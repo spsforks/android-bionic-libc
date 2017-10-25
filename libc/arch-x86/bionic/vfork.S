@@ -30,7 +30,7 @@
 
 // This custom code preserves the return address across the system call.
 
-ENTRY(vfork)
+WEAK_ENTRY(vfork)
   popl    %ecx  // Grab the return address.
   .cfi_adjust_cfa_offset 4
   .cfi_rel_offset ecx, 0

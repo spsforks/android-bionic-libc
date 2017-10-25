@@ -98,18 +98,18 @@
   m_mangle_registers \reg, sp_reg=\sp_reg
 .endm
 
-ENTRY(setjmp)
+WEAK_ENTRY(setjmp)
   mov w1, #1
   b sigsetjmp
 END(setjmp)
 
-ENTRY(_setjmp)
+WEAK_ENTRY(_setjmp)
   mov w1, #0
   b sigsetjmp
 END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
-ENTRY(sigsetjmp)
+WEAK_ENTRY(sigsetjmp)
   stp x0, x30, [sp, #-16]!
   .cfi_def_cfa_offset 16
   .cfi_rel_offset x0, 0
@@ -177,7 +177,7 @@ ENTRY(sigsetjmp)
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
-ENTRY(siglongjmp)
+WEAK_ENTRY(siglongjmp)
 #if USE_CHECKSUM
   // Check the checksum before doing anything.
   m_calculate_checksum x12, x0, x2
@@ -255,5 +255,5 @@ ENTRY(siglongjmp)
   ret
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(_longjmp, siglongjmp)

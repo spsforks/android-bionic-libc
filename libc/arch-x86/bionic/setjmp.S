@@ -77,19 +77,19 @@
   .endr
 .endm
 
-ENTRY(setjmp)
+WEAK_ENTRY(setjmp)
   movl 4(%esp),%ecx
   mov $1,%eax
   jmp .L_sigsetjmp
 END(setjmp)
 
-ENTRY(_setjmp)
+WEAK_ENTRY(_setjmp)
   movl 4(%esp),%ecx
   movl $0,%eax
   jmp .L_sigsetjmp
 END(_setjmp)
 
-ENTRY(sigsetjmp)
+WEAK_ENTRY(sigsetjmp)
   movl 4(%esp),%ecx
   movl 8(%esp),%eax
 
@@ -141,7 +141,7 @@ ENTRY(sigsetjmp)
   ret
 END(sigsetjmp)
 
-ENTRY(siglongjmp)
+WEAK_ENTRY(siglongjmp)
   movl 4(%esp),%edx
 
   // Check the checksum before doing anything.
@@ -204,5 +204,5 @@ ENTRY(siglongjmp)
   call PIC_PLT(__bionic_setjmp_checksum_mismatch)
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(_longjmp, siglongjmp)

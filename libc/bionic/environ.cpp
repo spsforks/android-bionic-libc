@@ -30,4 +30,5 @@
 
 // Keep that variable in separate .o file to make sure programs which define
 // their own "environ" are compileable.
+__attribute__((__weak__))
 char** environ;
