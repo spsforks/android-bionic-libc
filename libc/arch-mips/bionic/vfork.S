@@ -33,7 +33,7 @@
 // #include <asm/signal.h>
 #define SIGCHLD 18
 
-ENTRY(vfork)
+WEAK_ENTRY(vfork)
 	.set	noreorder
 	.cpload	$t9
 

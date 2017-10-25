@@ -30,7 +30,7 @@
 #include <asm/signal.h>
 #include <linux/sched.h>
 
-ENTRY(vfork)
+WEAK_ENTRY(vfork)
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
     mrs     x0, tpidr_el0
     ldr     x0, [x0, #8]

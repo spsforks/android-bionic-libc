@@ -75,12 +75,12 @@
 #define _JB_CORE_BASE   (_JB_FLOAT_STATE+1)
 #define _JB_CHECKSUM    (_JB_CORE_BASE+10)
 
-ENTRY(setjmp)
+WEAK_ENTRY(setjmp)
   mov r1, #1
   b sigsetjmp
 END(setjmp)
 
-ENTRY(_setjmp)
+WEAK_ENTRY(_setjmp)
   mov r1, #0
   b sigsetjmp
 END(_setjmp)
@@ -116,7 +116,7 @@ END(_setjmp)
 .endm
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
-ENTRY(sigsetjmp)
+WEAK_ENTRY(sigsetjmp)
   stmfd sp!, {r0, lr}
   .cfi_def_cfa_offset 8
   .cfi_rel_offset r0, 0
@@ -190,7 +190,7 @@ ENTRY(sigsetjmp)
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
-ENTRY(siglongjmp)
+WEAK_ENTRY(siglongjmp)
   stmfd sp!, {r0, r1, lr}
   .cfi_def_cfa_offset 12
   .cfi_rel_offset r0, 0
@@ -261,5 +261,5 @@ ENTRY(siglongjmp)
   bx lr
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(longjmp, siglongjmp)
+WEAK_ALIAS_SYMBOL(_longjmp, siglongjmp)

@@ -30,7 +30,7 @@
 
 // This custom code preserves the return address across the system call.
 
-ENTRY(vfork)
+WEAK_ENTRY(vfork)
   popq    %rdi  // Grab the return address.
 
   // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
