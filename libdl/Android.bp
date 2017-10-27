@@ -151,5 +151,6 @@ ndk_library {
 
 llndk_library {
     name: "libdl",
+    export_include_dirs: ["include"],
     symbol_file: "libdl.map.txt",
 }
