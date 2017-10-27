@@ -537,5 +537,6 @@ ndk_library {
 
 llndk_library {
     name: "libm",
+    export_include_dirs: ["include",]
     symbol_file: "libm.map.txt",
 }
