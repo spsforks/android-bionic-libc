@@ -28,6 +28,7 @@
 
 #include "linker_main.h"
 
+#include "dlfcn.h"
 #include "linker_debug.h"
 #include "linker_cfi.h"
 #include "linker_gdb_support.h"
@@ -596,6 +597,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
+  args.dl_add_thread_local_dtor = __loader_add_thread_local_dtor;
+  args.dl_remove_thread_local_dtor = __loader_remove_thread_local_dtor;
   ElfW(Addr) start_address = __linker_init_post_relocation(args);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));

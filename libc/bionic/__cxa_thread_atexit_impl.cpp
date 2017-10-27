@@ -17,15 +17,9 @@
 
 #include <private/bionic_defs.h>
 
+#include "async_safe/log.h"
 #include "pthread_internal.h"
-
-class thread_local_dtor {
- public:
-  void (*func) (void *);
-  void *arg;
-  void *dso_handle; // unused...
-  thread_local_dtor* next;
-};
+#include "thread_local_dtor.h"
 
 extern "C" int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle);
 
@@ -40,6 +34,17 @@ int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle)
   pthread_internal_t* thread = __get_thread();
   dtor->next = thread->thread_local_dtors;
   thread->thread_local_dtors = dtor;
+
+  // The linker needs to know that the DSO has thread local destructors because
+  // it can't unload a dlclose'd library until the destructors have run,
+  // otherwise the destructor jumps to arbitrary.
+  if (dl_add_thread_local_dtor == nullptr) {
+    async_safe_fatal("dl_add_thread_local_dtor is null");
+  }
+
+  if (!dl_add_thread_local_dtor(dso_handle)) {
+    async_safe_fatal("Could not find DSO containing %p", dso_handle);
+  }
   return 0;
 }
 
@@ -50,6 +55,16 @@ extern "C" __LIBC_HIDDEN__ void __cxa_thread_finalize() {
     thread->thread_local_dtors = current->next;
 
     current->func(current->arg);
+
+    if (dl_remove_thread_local_dtor == nullptr) {
+      async_safe_fatal("dl_remove_thread_local_dtor is null");
+    }
+
+    // If all the threads with thread local destructors have already joined,
+    // dlclose can unload the library without issues.
+    if (!dl_remove_thread_local_dtor(current->dso_handle)) {
+      async_safe_fatal("Could not find DSO containing %p", current->dso_handle);
+    }
     delete current;
   }
 }

@@ -73,4 +73,7 @@ bool solist_remove_soinfo(soinfo* si);
 soinfo* solist_get_head();
 soinfo* solist_get_somain();
 
+extern "C" bool __loader_add_thread_local_dtor(void*);
+extern "C" bool __loader_remove_thread_local_dtor(void*);
+
 #endif

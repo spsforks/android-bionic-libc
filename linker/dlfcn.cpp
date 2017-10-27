@@ -26,10 +26,13 @@
  * SUCH DAMAGE.
  */
 
+#include "dlfcn.h"
+
 #include "linker.h"
 #include "linker_cfi.h"
-#include "linker_globals.h"
 #include "linker_dlwarning.h"
+#include "linker_globals.h"
+#include "linker_main.h"
 
 #include <pthread.h>
 #include <stdio.h>
@@ -82,6 +85,8 @@ void* __loader_dlvsym(void* handle,
                       const char* symbol,
                       const char* version,
                       const void* caller_addr) __LINKER_PUBLIC__;
+bool __loader_add_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
+bool __loader_remove_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_PUBLIC__;
 #endif
@@ -310,4 +315,32 @@ soinfo* get_libdl_info(const char* linker_path,
   }
 
   return __libdl_info;
+}
+
+bool __loader_add_thread_local_dtor(void* dso_handle) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  soinfo* si = find_containing_library(dso_handle);
+  if (si == nullptr) {
+    return false;
+  }
+  if (si->is_linked()) {
+    si->increment_thread_local_dtors();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool __loader_remove_thread_local_dtor(void* dso_handle) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  soinfo* si = find_containing_library(dso_handle);
+  if (si == nullptr) {
+    return false;
+  }
+  if (si->is_linked()) {
+    si->decrement_thread_local_dtors();
+    return true;
+  } else {
+    return false;
+  }
 }

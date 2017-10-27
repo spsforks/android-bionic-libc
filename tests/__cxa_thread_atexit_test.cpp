@@ -16,9 +16,13 @@
 
 #include <gtest/gtest.h>
 
+#include <dlfcn.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <string>
+#include <thread>
 
 static std::string class_with_dtor_output;
 
@@ -124,4 +128,13 @@ TEST(__cxa_thread_atexit_impl, smoke) {
   ASSERT_EQ("one, two, three, oops, four, five.", atexit_call_sequence);
 }
 
-
+TEST(__cxa_thread_atexit_impl, dlclose) {
+  void* lib = dlopen("libthread_local_atexit_test.so", RTLD_LAZY);
+  ASSERT_TRUE(lib != nullptr);
+  auto do_test = reinterpret_cast<void (*)()>(dlsym(lib, "do_test"));
+  ASSERT_TRUE(do_test != nullptr);
+  std::thread t([&] {
+    do_test();
+  });
+  ASSERT_EQ(0, dlclose(lib));
+}

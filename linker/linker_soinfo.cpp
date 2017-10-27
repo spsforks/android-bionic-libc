@@ -35,11 +35,24 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <bionic/pthread_internal.h>
+#include <bionic/thread_local_dtor.h>
 
+#include "linker_block_allocator.h"
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "linker_logger.h"
 #include "linker_utils.h"
+
+//static LinkerTypeAllocator<SoInfoRwData> g_soinfo_rwdata_allocator;
+
+class SoInfoRwData {
+ public:
+  size_t num_thread_local_dtors;
+
+  SoInfoRwData() : num_thread_local_dtors(0) {
+  }
+};
 
 // TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
 bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym);
@@ -66,9 +79,15 @@ soinfo::soinfo(android_namespace_t* ns, const char* realpath,
 
   this->rtld_flags_ = rtld_flags;
   this->primary_namespace_ = ns;
+
+  async_safe_format_fd(STDERR_FILENO, "initializing rw_data_\n");
+  //rw_data_ = new (g_soinfo_rwdata_allocator.alloc()) SoInfoRwData();
 }
 
 soinfo::~soinfo() {
+  //rw_data_->~SoInfoRwData();
+  //g_soinfo_rwdata_allocator.free(rw_data_);
+
   g_soinfo_handles_map.erase(handle_);
 }
 
@@ -670,6 +689,12 @@ bool soinfo::can_unload(std::string* reason) const {
   }
 
   return true;
+  if (has_min_version(4) && rw_data_->num_thread_local_dtors > 0) {
+    *reason = "the binary contains thread local destructors";
+    return false;
+  }
+
+  return true;
 }
 
 bool soinfo::is_linked() const {
@@ -762,6 +787,30 @@ void soinfo::generate_handle() {
            g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
 
   g_soinfo_handles_map[handle_] = this;
+}
+
+void soinfo::increment_thread_local_dtors() {
+  if (!has_min_version(4)) {
+    return;
+  }
+
+  return;
+
+  ++rw_data_->num_thread_local_dtors;
+}
+
+void soinfo::decrement_thread_local_dtors() {
+  if (!has_min_version(4)) {
+    return;
+  }
+
+  return;
+
+  if (rw_data_->num_thread_local_dtors == 0) {
+    async_safe_fatal(
+        "soinfo::decrement_thread_local_dtors called when num_thread_local_dtors was 0");
+  }
+  --rw_data_->num_thread_local_dtors;
 }
 
 // TODO(dimitry): Move SymbolName methods to a separate file.

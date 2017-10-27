@@ -43,6 +43,7 @@
 
 #include <async_safe/log.h>
 
+#include "bionic/thread_local_dtor.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
 #include "private/bionic_auxv.h"
@@ -53,6 +54,10 @@
 
 extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
+
+// Passed to us by the linker. Initialized in __libc_init_common.
+bool (*dl_add_thread_local_dtor)(void*) = nullptr;
+bool (*dl_remove_thread_local_dtor)(void*) = nullptr;
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
@@ -113,6 +118,12 @@ void __libc_init_common(KernelArgumentBlock& args) {
   errno = 0;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
   __abort_message_ptr = args.abort_message_ptr;
+  dl_add_thread_local_dtor = args.dl_add_thread_local_dtor;
+  dl_remove_thread_local_dtor = args.dl_remove_thread_local_dtor;
+  async_safe_format_log(ANDROID_LOG_ERROR, "libc", "dl_add_thread_local_dtor is %p",
+                        dl_add_thread_local_dtor);
+  async_safe_format_log(ANDROID_LOG_ERROR, "libc", "dl_remove_thread_local_dtor is %p",
+                        dl_remove_thread_local_dtor);
 
 #if !defined(__LP64__)
   __check_max_thread_id();

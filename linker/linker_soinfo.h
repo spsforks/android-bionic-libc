@@ -43,7 +43,7 @@
                                          // and should not be unmapped
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 3
+#define SOINFO_VERSION 4
 
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
@@ -81,6 +81,8 @@ struct version_info {
 
 // TODO(dimitry): remove reference from soinfo member functions to this class.
 class VersionTracker;
+
+class SoInfoRwData;
 
 #if defined(__work_around_b_24465209__)
 #define SOINFO_NAME_LEN 128
@@ -272,6 +274,9 @@ struct soinfo {
   void generate_handle();
   void* to_handle();
 
+  void increment_thread_local_dtors();
+  void decrement_thread_local_dtors();
+
  private:
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
@@ -340,6 +345,9 @@ struct soinfo {
   friend soinfo* get_libdl_info(const char* linker_path,
                                 const soinfo& linker_si,
                                 const link_map& linker_map);
+
+  // version >= 4
+  SoInfoRwData* rw_data_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <sys/auxv.h>
 
+#include "bionic/thread_local_dtor.h"
 #include "private/bionic_macros.h"
 
 struct abort_msg_t;
@@ -66,6 +67,8 @@ class KernelArgumentBlock {
   ElfW(auxv_t)* auxv;
 
   abort_msg_t** abort_message_ptr;
+  decltype(dl_add_thread_local_dtor) dl_add_thread_local_dtor;
+  decltype(dl_remove_thread_local_dtor) dl_remove_thread_local_dtor;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
