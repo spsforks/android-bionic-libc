@@ -19,8 +19,11 @@
 
 static void* g_libc_close_ptr;
 
-static void __attribute__((constructor)) __libc_close_lookup() {
+static void* g_foo_ptr;
+
+static void __attribute__((constructor)) __symbols_lookup() {
   g_libc_close_ptr = dlsym(RTLD_NEXT, "close");
+  g_foo_ptr = dlsym(RTLD_NEXT, "foo");
 }
 
 // A libc function used for RTLD_NEXT
@@ -33,4 +36,11 @@ extern "C" void* get_libc_close_ptr() {
   return g_libc_close_ptr;
 }
 
+extern "C" int __attribute__((weak)) foo() {
+  abort();
+}
+
+extern "C" void* get_foo_ptr() {
+  return g_foo_ptr;
+}
 

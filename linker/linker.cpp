@@ -830,16 +830,25 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   if (handle == RTLD_NEXT) {
     if (caller == nullptr) {
       return nullptr;
-    } else {
-      auto it = soinfo_list.find(caller);
-      CHECK (it != soinfo_list.end());
-      start = ++it;
     }
   }
 
   const ElfW(Sym)* s = nullptr;
+  bool is_after_caller = false;
+
   for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
+    if (handle == RTLD_NEXT) {
+      if (si == caller) {
+        is_after_caller = true;
+        // Calling library is always skipped in RTLD_NEXT case.
+        continue;
+      }
+      if (!is_after_caller && (si->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+        // Skip RTLD_LOCAL libraries in front of the calling library
+        continue;
+      }
+    }
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
     // if the library is opened by application with target api level < M.
     // See http://b/21565766
