@@ -1115,6 +1115,27 @@ TEST(dlfcn, rtld_next_from_library) {
   dlclose(library_with_close);
 }
 
+// Check that RTLD_NEXT does not skip RTLD_GLOBAL libs even when the RTLD_GLOBAL
+// libs are in front of the caller in the lookup order.
+TEST(dlfcn, rtld_next_with_df_1_global) {
+  // expected_addr is from libtest_dlopen_df_1_global
+  void* handle1 = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
+  ASSERT_TRUE(handle1 != nullptr) << dlerror();
+  void* expected_addr = dlsym(handle1, "foo");
+  ASSERT_TRUE(expected_addr != nullptr) << dlerror();
+
+  // get_foo_ptr() returns the result of dlsym(RTLD_NEXT, "foo")
+  void* handle2 = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+  typedef void* (*get_foo_ptr_fn_t)();
+  get_foo_ptr_fn_t get_foo_ptr =
+      reinterpret_cast<get_foo_ptr_fn_t>(dlsym(handle2, "get_foo_ptr"));
+  ASSERT_TRUE(get_foo_ptr != nullptr) << dlerror();
+
+  // dlsym(RTLD_NEXT, "foo") should be found in the first lib
+  ASSERT_EQ(expected_addr, get_foo_ptr());
+}
+
 
 TEST(dlfcn, dlsym_weak_func) {
   dlerror();
