@@ -1326,6 +1326,11 @@ LIBC_P { # introduced=P
     endnetent;
     endprotoent;
     fexecve;
+    fflush_unlocked;
+    fgetc_unlocked;
+    fputc_unlocked;
+    fread_unlocked;
+    fwrite_unlocked;
     getentropy;
     getnetent;
     getprotoent;

@@ -1962,3 +1962,50 @@ TEST(STDIO_TEST, constants) {
   ASSERT_LE(FILENAME_MAX, PATH_MAX);
   ASSERT_EQ(L_tmpnam, PATH_MAX);
 }
+
+TEST(STDIO_TEST, perror) {
+  ExecTestHelper eth;
+  eth.Run([&]() { errno = EINVAL; perror("a b c"); exit(0); }, 0, "a b c: Invalid argument\n");
+}
+
+TEST(STDIO_TEST, puts) {
+  ExecTestHelper eth;
+  eth.Run([&]() { exit(puts("a b c")); }, 0, "a b c\n");
+}
+
+TEST(STDIO_TEST, unlocked) {
+  TemporaryFile tf;
+
+  FILE* fp = fopen(tf.filename, "w+");
+  ASSERT_TRUE(fp != nullptr);
+
+  clearerr_unlocked(fp);
+  ASSERT_FALSE(feof_unlocked(fp));
+  ASSERT_FALSE(ferror_unlocked(fp));
+
+  ASSERT_EQ(fileno(fp), fileno_unlocked(fp));
+
+  ASSERT_NE(EOF, putc_unlocked('a', fp));
+  ASSERT_NE(EOF, putc('b', fp));
+  ASSERT_NE(EOF, fputc_unlocked('c', fp));
+  ASSERT_NE(EOF, fputc('d', fp));
+
+  rewind(fp);
+  ASSERT_EQ('a', getc_unlocked(fp));
+  ASSERT_EQ('b', getc(fp));
+  ASSERT_EQ('c', fgetc_unlocked(fp));
+  ASSERT_EQ('d', fgetc(fp));
+
+  rewind(fp);
+  ASSERT_EQ(2U, fwrite_unlocked("AB", 1, 2, fp));
+  ASSERT_EQ(2U, fwrite("CD", 1, 2, fp));
+  ASSERT_EQ(0, fflush_unlocked(fp));
+
+  rewind(fp);
+  char buf[5] = {};
+  ASSERT_EQ(2U, fread_unlocked(&buf[0], 1, 2, fp));
+  ASSERT_EQ(2U, fread(&buf[2], 1, 2, fp));
+  ASSERT_STREQ("ABCD", buf);
+
+  ASSERT_EQ(0, fclose(fp));
+}
