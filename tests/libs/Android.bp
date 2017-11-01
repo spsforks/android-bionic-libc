@@ -467,6 +467,14 @@ cc_test_library {
     srcs: ["check_rtld_next_from_library.cpp"],
 }
 
+cc_test {
+    name: "rtld_next_from_library_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["rtld_next_from_library_helper.cpp"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
 // -----------------------------------------------------------------------------
 // Library with constructor that calls dlopen() b/7941716
 // -----------------------------------------------------------------------------

@@ -1101,18 +1101,16 @@ TEST(dlfcn, rtld_next_known_symbol) {
 }
 
 // Check that RTLD_NEXT of a libc symbol works in dlopened library
+// The test is run in a child process in order not to preload any lib which can
+// interfere the test.
 TEST(dlfcn, rtld_next_from_library) {
-  void* library_with_close = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
-  ASSERT_TRUE(library_with_close != nullptr) << dlerror();
-  void* expected_addr = dlsym(RTLD_DEFAULT, "close");
-  ASSERT_TRUE(expected_addr != nullptr) << dlerror();
-  typedef void* (*get_libc_close_ptr_fn_t)();
-  get_libc_close_ptr_fn_t get_libc_close_ptr =
-      reinterpret_cast<get_libc_close_ptr_fn_t>(dlsym(library_with_close, "get_libc_close_ptr"));
-  ASSERT_TRUE(get_libc_close_ptr != nullptr) << dlerror();
-  ASSERT_EQ(expected_addr, get_libc_close_ptr());
-
-  dlclose(library_with_close);
+  std::string helper = get_testlib_root() +
+      "/rtld_next_from_library_helper/rtld_next_from_library_helper";
+  chmod(helper.c_str(), 0755);
+  ExecTestHelper eth;
+  eth.SetArgs({ helper.c_str(), nullptr });
+  eth.SetEnv({ nullptr });
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "success");
 }
 
 
