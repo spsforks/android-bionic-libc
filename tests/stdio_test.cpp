@@ -302,6 +302,13 @@ TEST(STDIO_TEST, snprintf_lc) {
   EXPECT_STREQ("<a>", buf);
 }
 
+TEST(STDIO_TEST, snprintf_C) { // Obsolete synonym for %lc.
+  char buf[BUFSIZ];
+  wchar_t wc = L'a';
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%C>", wc));
+  EXPECT_STREQ("<a>", buf);
+}
+
 TEST(STDIO_TEST, snprintf_ls) {
   char buf[BUFSIZ];
   wchar_t* ws = NULL;
@@ -311,6 +318,18 @@ TEST(STDIO_TEST, snprintf_ls) {
   wchar_t chars[] = { L'h', L'i', 0 };
   ws = chars;
   EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%ls>", ws));
+  EXPECT_STREQ("<hi>", buf);
+}
+
+TEST(STDIO_TEST, snprintf_S) { // Obsolete synonym for %ls.
+  char buf[BUFSIZ];
+  wchar_t* ws = NULL;
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%S>", ws));
+  EXPECT_STREQ("<(null)>", buf);
+
+  wchar_t chars[] = { L'h', L'i', 0 };
+  ws = chars;
+  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%S>", ws));
   EXPECT_STREQ("<hi>", buf);
 }
 
@@ -584,6 +603,24 @@ TEST(STDIO_TEST, swprintf_a) {
   ASSERT_EQ(std::wstring(L"0x1.921fb54411744p+1"), buf);
 }
 
+TEST(STDIO_TEST, swprintf_lc) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  wint_t wc = L'a';
+  EXPECT_EQ(3, swprintf(buf, nchars, L"<%lc>", wc));
+  EXPECT_EQ(std::wstring(L"<a>"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_C) { // Obsolete synonym for %lc.
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  wint_t wc = L'a';
+  EXPECT_EQ(3, swprintf(buf, nchars, L"<%C>", wc));
+  EXPECT_EQ(std::wstring(L"<a>"), buf);
+}
+
 TEST(STDIO_TEST, swprintf_ls) {
   constexpr size_t nchars = 32;
   wchar_t buf[nchars];
@@ -592,6 +629,17 @@ TEST(STDIO_TEST, swprintf_ls) {
   ASSERT_EQ(12, swprintf(buf, nchars, L"%ls", kWideString));
   ASSERT_EQ(std::wstring(kWideString), buf);
   ASSERT_EQ(12, swprintf(buf, 13, L"%ls", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+}
+
+TEST(STDIO_TEST, swprintf_S) { // Obsolete synonym for %ls.
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  static const wchar_t kWideString[] = L"Hello\uff41 World";
+  ASSERT_EQ(12, swprintf(buf, nchars, L"%S", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+  ASSERT_EQ(12, swprintf(buf, 13, L"%S", kWideString));
   ASSERT_EQ(std::wstring(kWideString), buf);
 }
 
