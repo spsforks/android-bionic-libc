@@ -112,6 +112,10 @@ static int GetSlowThresholdMs(const std::string& /*test_name*/) {
   return global_test_run_slow_threshold_ms;
 }
 
+static size_t GetDefaultJobCount() {
+  return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
+}
+
 static void PrintHelpInfo() {
   printf("Bionic Unit Test Options:\n"
          "  -j [JOB_COUNT] or -j[JOB_COUNT]\n"
@@ -128,11 +132,11 @@ static void PrintHelpInfo() {
          "      Only valid in isolation mode. Default slow threshold is 2000 ms.\n"
          "  --gtest-filter=POSITIVE_PATTERNS[-NEGATIVE_PATTERNS]\n"
          "      Used as a synonym for --gtest_filter option in gtest.\n"
-         "Default bionic unit test option is -j.\n"
+         "Default bionic unit test option is -j %zu.\n"
          "In isolation mode, you can send SIGQUIT to the parent process to show current\n"
          "running tests, or send SIGINT to the parent process to stop testing and\n"
          "clean up current running tests.\n"
-         "\n");
+         "\n", GetDefaultJobCount() );
 }
 
 enum TestResult {
@@ -951,10 +955,6 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   }
 
   return all_tests_passed;
-}
-
-static size_t GetDefaultJobCount() {
-  return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
 static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
