@@ -17,20 +17,20 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 
-static void* g_libc_close_ptr;
+static void* g_libc_fclose_ptr;
 
-static void __attribute__((constructor)) __libc_close_lookup() {
-  g_libc_close_ptr = dlsym(RTLD_NEXT, "close");
+static void __attribute__((constructor)) __libc_fclose_lookup() {
+  g_libc_fclose_ptr = dlsym(RTLD_NEXT, "fclose");
 }
 
 // A libc function used for RTLD_NEXT
 // This function in not supposed to be called
-extern "C" int __attribute__((weak)) close(int) {
+extern "C" int __attribute__((weak)) fclose(FILE *fp) {
   abort();
 }
 
-extern "C" void* get_libc_close_ptr() {
-  return g_libc_close_ptr;
+extern "C" void* get_libc_fclose_ptr() {
+  return g_libc_fclose_ptr;
 }
 
 
