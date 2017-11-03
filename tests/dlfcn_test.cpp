@@ -824,6 +824,24 @@ TEST(dlfcn, dlopen_failure) {
 #endif
 }
 
+TEST(dlfcn, dlclose_unload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
+  uint32_t local_taxicab_number = 0;
+  // Making sure that the library has been unmapped as part of library unload
+  // process. Attempt to access the variable should result in SIGSEGV
+  // Another way to do that would be to check /proc/self/maps but this might
+  // result in flaky test - see https://bugs.chromium.org/p/chromium/issues/detail?id=258451
+  // for example.
+  ASSERT_EXIT(memcpy(&local_taxicab_number, taxicab_number, sizeof(local_taxicab_number)),
+              testing::KilledBySignal(SIGSEGV),
+              "");
+}
+
 static void ConcurrentDlErrorFn(std::string& error) {
   ASSERT_TRUE(dlerror() == nullptr);
 
