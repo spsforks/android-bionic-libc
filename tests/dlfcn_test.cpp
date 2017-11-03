@@ -824,6 +824,19 @@ TEST(dlfcn, dlopen_failure) {
 #endif
 }
 
+TEST(dlfcn, dlclose_unload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
+  uint32_t local_taxicab_number = 0;
+  ASSERT_EXIT(memcpy(&local_taxicab_number, taxicab_number, sizeof(local_taxicab_number)),
+              testing::KilledBySignal(SIGSEGV),
+              "");
+}
+
 static void ConcurrentDlErrorFn(std::string& error) {
   ASSERT_TRUE(dlerror() == nullptr);
 
