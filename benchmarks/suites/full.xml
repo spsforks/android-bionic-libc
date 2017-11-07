@@ -269,6 +269,12 @@
   <name>BM_time_clock_gettime_BOOTTIME</name>
 </fn>
 <fn>
+  <name>BM_time_clock_getres</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_syscall</name>
+</fn>
+<fn>
   <name>BM_time_gettimeofday</name>
 </fn>
 <fn>
