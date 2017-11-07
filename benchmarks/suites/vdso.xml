@@ -49,3 +49,6 @@
 <fn>
   <name>BM_time_time</name>
 </fn>
+<fn>
+  <name>BM_time_time_syscall</name>
+</fn>
