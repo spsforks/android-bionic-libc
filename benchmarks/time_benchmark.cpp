@@ -38,6 +38,38 @@ static void BM_time_clock_gettime_syscall(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_time_clock_gettime_syscall);
 
+static void BM_time_clock_gettime_REALTIME(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_REALTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_REALTIME);
+
+static void BM_time_clock_gettime_BOOTTIME(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_BOOTTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_BOOTTIME);
+
+static void BM_time_clock_gettime_TAI(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(11, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_TAI);
+
+static void BM_time_clock_gettime_unsupported(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(32639, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_unsupported);
+
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
