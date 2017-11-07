@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
 #include <sys/syscall.h>
 #include <sys/time.h>
 #include <time.h>
@@ -23,6 +24,7 @@
 #include "util.h"
 
 static void BM_time_clock_gettime(benchmark::State& state) {
+  // CLOCK_MONOTONIC is required supported in vdso
   timespec t;
   while (state.KeepRunning()) {
     clock_gettime(CLOCK_MONOTONIC, &t);
@@ -31,12 +33,80 @@ static void BM_time_clock_gettime(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_time_clock_gettime);
 
 static void BM_time_clock_gettime_syscall(benchmark::State& state) {
+  // CLOCK_MONOTONIC is required supported in vdso
   timespec t;
   while (state.KeepRunning()) {
     syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
   }
 }
 BIONIC_BENCHMARK(BM_time_clock_gettime_syscall);
+
+static void BM_time_clock_gettime_MONOTONIC_COARSE_(benchmark::State& state) {
+  // CLOCK_MONOTONIC_COARSE is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_MONOTONIC_COARSE, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_MONOTONIC_COARSE_);
+
+static void BM_time_clock_gettime_MONOTONIC_RAW_(benchmark::State& state) {
+  // CLOCK_MONOTONIC_RAW is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_MONOTONIC_RAW_);
+
+static void BM_time_clock_gettime_REALTIME(benchmark::State& state) {
+  // CLOCK_REALTIME is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_REALTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_REALTIME);
+
+static void BM_time_clock_gettime_REALTIME_COARSE_(benchmark::State& state) {
+  // CLOCK_REALTIME_COARSE is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_REALTIME_COARSE, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_REALTIME_COARSE_);
+
+static void BM_time_clock_gettime_BOOTTIME(benchmark::State& state) {
+  // CLOCK_BOOTTIME is optionally supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_BOOTTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_BOOTTIME);
+
+static void BM_time_clock_gettime_TAI_(benchmark::State& state) {
+  // CLOCK_TAI (11) is a reserved value that may not land in
+  // headers.  clock_gettime vdso does not support it anyways,
+  // so helps measure syscall-only supported overhead.
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(11, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_TAI_);
+
+static void BM_time_clock_gettime_unsupported_(benchmark::State& state) {
+  // guaranteed unsupported and positive regardless of implementation
+  // details by both vdso and syscall.  Helps measure fast error path,
+  // and baseline sys call overhead.
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(INT8_MAX + (INT8_MAX << 8), &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_unsupported_);
 
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
