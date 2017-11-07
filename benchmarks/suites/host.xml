@@ -237,6 +237,15 @@
   <name>BM_time_clock_gettime_syscall</name>
 </fn>
 <fn>
+  <name>BM_time_clock_gettime_REALTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_BOOTTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_TAI</name>
+</fn>
+<fn>
   <name>BM_time_gettimeofday</name>
 </fn>
 <fn>
