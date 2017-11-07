@@ -66,6 +66,46 @@ static void BM_time_clock_gettime_TAI(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_time_clock_gettime_TAI);
 
+static void BM_time_clock_getres(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_getres(CLOCK_MONOTONIC, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_getres);
+
+static void BM_time_clock_getres_syscall(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    syscall(__NR_clock_getres, CLOCK_MONOTONIC, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_getres_syscall);
+
+static void BM_time_clock_getres_REALTIME(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_getres(CLOCK_REALTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_getres_REALTIME);
+
+static void BM_time_clock_getres_BOOTTIME(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_getres(CLOCK_BOOTTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_getres_BOOTTIME);
+
+static void BM_time_clock_getres_TAI(benchmark::State& state) {
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_getres(CLOCK_TAI, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_getres_TAI);
+
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
