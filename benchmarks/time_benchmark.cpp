@@ -171,6 +171,15 @@ void BM_time_time(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_time_time);
 
+#ifdef __NR_time
+void BM_time_time_syscall(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    syscall(__NR_time, nullptr);
+  }
+}
+BIONIC_BENCHMARK(BM_time_time_syscall);
+#endif
+
 void BM_time_localtime(benchmark::State& state) {
   time_t t = time(nullptr);
   while (state.KeepRunning()) {
