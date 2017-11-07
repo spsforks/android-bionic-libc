@@ -408,6 +408,8 @@ TEST_F(SystemTests, full_suite) {
     "BM_string_strchr/65536/0/iterations:1\n"
     "BM_time_clock_gettime/iterations:1\n"
     "BM_time_clock_gettime_syscall/iterations:1\n"
+    "BM_time_clock_gettime_REALTIME/iterations:1\n"
+    "BM_time_clock_gettime_BOOTTIME/iterations:1\n"
     "BM_time_gettimeofday/iterations:1\n"
     "BM_time_gettimeofday_syscall/iterations:1\n"
     "BM_time_time/iterations:1\n"
