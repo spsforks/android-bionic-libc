@@ -410,6 +410,8 @@ TEST_F(SystemTests, full_suite) {
     "BM_time_clock_gettime_syscall/iterations:1\n"
     "BM_time_clock_gettime_REALTIME/iterations:1\n"
     "BM_time_clock_gettime_BOOTTIME/iterations:1\n"
+    "BM_time_clock_getres/iterations:1\n"
+    "BM_time_clock_getres_syscall/iterations:1\n"
     "BM_time_gettimeofday/iterations:1\n"
     "BM_time_gettimeofday_syscall/iterations:1\n"
     "BM_time_time/iterations:1\n"
