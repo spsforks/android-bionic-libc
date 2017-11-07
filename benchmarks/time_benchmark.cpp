@@ -149,6 +149,7 @@ static void BM_time_clock_getres_BOOTTIME(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_time_clock_getres_BOOTTIME);
 
 static void BM_time_gettimeofday(benchmark::State& state) {
+  // gettimeofday() vdso call is optional, and will be much faster than syscall.
   timeval tv;
   while (state.KeepRunning()) {
     gettimeofday(&tv, nullptr);
@@ -165,11 +166,29 @@ void BM_time_gettimeofday_syscall(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_time_gettimeofday_syscall);
 
 void BM_time_time(benchmark::State& state) {
+  // time() vdso call is optional, and will be much faster by one or two
+  // orders of magnitude than the implementation that use time() syscall or
+  // gettimeofday() (vdso or syscall).
   while (state.KeepRunning()) {
     time(nullptr);
   }
 }
 BIONIC_BENCHMARK(BM_time_time);
+
+void BM_time_time_syscall(benchmark::State& state) {
+  // time() syscall is optional, since most implementation use gettimeofday().
+  // Some architectures define __ARCH_WANT_SYSCALL_DEPRECATED (arm, arm64) in
+  // the kernel, and some (x86, mips) do not, this gates when the syscall is
+  // implemented.
+#ifdef __NR_time
+  while (state.KeepRunning()) {
+    syscall(__NR_time, nullptr);
+  }
+#else
+  state.SkipWithError("not implemented");
+#endif
+}
+BIONIC_BENCHMARK(BM_time_time_syscall);
 
 void BM_time_localtime(benchmark::State& state) {
   time_t t = time(nullptr);

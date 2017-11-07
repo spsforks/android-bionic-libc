@@ -457,6 +457,7 @@ TEST_F(SystemTests, all_benchmarks) {
     "BM_time_localtime/iterations:1\n"
     "BM_time_localtime_r/iterations:1\n"
     "BM_time_time/iterations:1\n"
+    "BM_time_time_syscall/iterations:1\n"
     "BM_unistd_getpid/iterations:1\n"
     "BM_unistd_getpid_syscall/iterations:1\n"
     "BM_unistd_gettid/iterations:1\n"
