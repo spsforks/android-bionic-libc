@@ -23,6 +23,7 @@
 #include <libgen.h>
 #include <limits.h>
 #include <signal.h>
+#include <spawn.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -269,21 +270,45 @@ static int64_t NanoTime() {
 }
 
 static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
-  std::string command;
-  for (int i = 0; i < argc; ++i) {
-    command += argv[i];
-    command += " ";
-  }
-  command += "--gtest_list_tests";
-  FILE* fp = popen(command.c_str(), "r");
-  if (fp == NULL) {
-    perror("popen");
+  std::vector<const char*> args;
+  for (int i = 0; i < argc; ++i) args.push_back(argv[i]);
+  args.push_back("--gtest_list_tests");
+  args.push_back(nullptr);
+
+  // We use posix_spawn(3) rather than the simpler popen(3) because we don't want an intervening
+  // surprise shell invocation making quoting interesting for --gtest_filter (http://b/68949647).
+
+  int fds[2];
+  if (pipe(fds) == -1) {
+    perror("pipe");
     return false;
   }
 
-  char buf[200];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    char* p = buf;
+  posix_spawn_file_actions_t fa;
+  posix_spawn_file_actions_init(&fa);
+  posix_spawn_file_actions_addclose(&fa, fds[0]);
+  posix_spawn_file_actions_adddup2(&fa, fds[1], 1);
+  posix_spawn_file_actions_adddup2(&fa, fds[1], 2);
+  posix_spawn_file_actions_addclose(&fa, fds[1]);
+
+  pid_t pid;
+  if (posix_spawnp(&pid, argv[0], &fa, nullptr, const_cast<char**>(args.data()), nullptr) == -1) {
+    perror("posix_spawn");
+    return false;
+  }
+  posix_spawn_file_actions_destroy(&fa);
+  close(fds[1]);
+
+  FILE* fp = fdopen(fds[0], "r");
+  if (fp == nullptr) {
+    perror("fdopen");
+    return false;
+  }
+
+  char* line = nullptr;
+  size_t line_len = 0;
+  while (getline(&line, &line_len, fp) > 0) {
+    char* p = line;
 
     while (*p != '\0' && isspace(*p)) {
       ++p;
@@ -310,8 +335,13 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
       testcase_list.back().AppendTest(start);
     }
   }
-  int result = pclose(fp);
-  return (result != -1 && WEXITSTATUS(result) == 0);
+
+  int status;
+  if (waitpid(pid, &status, 0) != pid) {
+    perror("waitpid");
+    return false;
+  }
+  return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
 }
 
 // Part of the following *Print functions are copied from external/gtest/src/gtest.cc:
