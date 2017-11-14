@@ -26,7 +26,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <bitset>
+#include <set>
 
 #include <private/android_filesystem_config.h>
 
@@ -188,10 +188,8 @@ TEST(pwd, getpwnam_app_id_u1_i0) {
 
 TEST(pwd, getpwent_iterate) {
   passwd* pwd;
-  std::bitset<10000> exist;
+  std::set<uid_t> uid_set;
   bool application = false;
-
-  exist.reset();
 
   setpwent();
   while ((pwd = getpwent()) != NULL) {
@@ -202,7 +200,7 @@ TEST(pwd, getpwent_iterate) {
     EXPECT_TRUE(NULL == pwd->pw_gecos) << "pwd->pw_uid: " << pwd->pw_uid;
 #endif
     EXPECT_TRUE(NULL != pwd->pw_shell);
-    if (pwd->pw_uid >= exist.size()) {
+    if (pwd->pw_uid >= AID_APP_START && pwd->pw_uid != AID_OVERFLOWUID) {
       EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
       application = true;
     } else {
@@ -213,22 +211,22 @@ TEST(pwd, getpwent_iterate) {
       // yet, so therefore we do not check for uid's in the OEM range.
       if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
           !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
-        EXPECT_FALSE(exist[pwd->pw_uid]) << "pwd->pw_uid: " << pwd->pw_uid;
+        EXPECT_EQ(0U, uid_set.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
       }
-      exist[pwd->pw_uid] = true;
+      uid_set.emplace(pwd->pw_uid);
     }
   }
   endpwent();
 
   // Required content
   for (size_t n = 0; n < android_id_count; ++n) {
-    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
+    EXPECT_EQ(1U, uid_set.count(android_ids[n].aid)) << "android_ids[n].aid: " << android_ids[n].aid;
   }
   for (size_t n = 2900; n < 2999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
+    EXPECT_EQ(1U, uid_set.count(n)) << "n: " << n;
   }
   for (size_t n = 5000; n < 5999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
+    EXPECT_EQ(1U, uid_set.count(n)) << "n: " << n;
   }
   EXPECT_TRUE(application);
 }
@@ -446,10 +444,8 @@ TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
 
 TEST(grp, getgrent_iterate) {
   group* grp;
-  std::bitset<10000> exist;
+  std::set<gid_t> gid_set;
   bool application = false;
-
-  exist.reset();
 
   setgrent();
   while ((grp = getgrent()) != NULL) {
@@ -457,7 +453,7 @@ TEST(grp, getgrent_iterate) {
     ASSERT_TRUE(grp->gr_mem != NULL) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
-    if (grp->gr_gid >= exist.size()) {
+    if (grp->gr_gid >= AID_APP_START && grp->gr_gid != AID_OVERFLOWUID) {
       application = true;
     } else {
       // TODO(b/27999086): fix this check with the OEM range
@@ -466,22 +462,22 @@ TEST(grp, getgrent_iterate) {
       // yet, so therefore we do not check for gid's in the OEM range.
       if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
           !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
-        EXPECT_FALSE(exist[grp->gr_gid]) << "grp->gr_gid: " << grp->gr_gid;
+        EXPECT_EQ(0U, gid_set.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
       }
-      exist[grp->gr_gid] = true;
+      gid_set.emplace(grp->gr_gid);
     }
   }
   endgrent();
 
   // Required content
   for (size_t n = 0; n < android_id_count; ++n) {
-    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
+    EXPECT_EQ(1U, gid_set.count(android_ids[n].aid)) << "android_ids[n].aid: " << android_ids[n].aid;
   }
   for (size_t n = 2900; n < 2999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
+    EXPECT_EQ(1U, gid_set.count(n)) << "n: " << n;
   }
   for (size_t n = 5000; n < 5999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
+    EXPECT_EQ(1U, gid_set.count(n)) << "n: " << n;
   }
   EXPECT_TRUE(application);
 }
