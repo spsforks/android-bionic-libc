@@ -195,6 +195,66 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
   return NULL;
 }
 
+static uid_t user_ranges[][2] = {
+  { AID_APP_START, AID_APP_END },
+  { AID_CACHE_GID_START, AID_CACHE_GID_END },
+  { AID_EXT_GID_START, AID_EXT_GID_END },
+  { AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END },
+  { AID_SHARED_GID_START, AID_SHARED_GID_END },
+  { AID_ISOLATED_START, AID_ISOLATED_END },
+};
+
+static bool is_valid_app_id(id_t id) {
+  // AID_OVERFLOWUID is never a valid app id, so we explicitly return false to ensure this.
+  if (id == AID_OVERFLOWUID) {
+    return false;
+  }
+
+  id_t appid = id % AID_USER_OFFSET;
+
+  // If we've resolved to something before app_start, we have already checked against
+  // android_ids, so no need to check again.
+  if (appid < AID_APP_START) {
+    return true;
+  }
+
+  // Otherwise check that the appid is in one of the reserved ranges.
+  for (size_t i = 0; i < arraysize(user_ranges); ++i) {
+    if (appid >= user_ranges[i][0] && appid <= user_ranges[i][1]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+static uid_t get_next_app_id(uid_t current_id) {
+  // If current_id is below the first of the user_ranges, then we're uninitialized, and return the
+  // first valid id.
+  if (current_id < user_ranges[0][0]) {
+    return user_ranges[0][0];
+  }
+
+  uid_t incremented_id = current_id + 1;
+
+  // Check to see if our incremented_id is between two ranges, and if so, return the beginning of
+  // the next valid range.
+  for (size_t i = 1; i < arraysize(user_ranges); ++i) {
+    if (incremented_id > user_ranges[i - 1][1] && incremented_id < user_ranges[i][0]) {
+      return user_ranges[i][0];
+    }
+  }
+
+  // Check to see if our incremented_id is above final range, and return -1 to indicate that we've
+  // completed if so.
+  if (incremented_id > user_ranges[arraysize(user_ranges) - 1][1]) {
+    return -1;
+  }
+
+  // Otherwise the incremented_id is valid, so return it.
+  return incremented_id;
+}
+
 // Translate a user/group name to the corresponding user/group id.
 // all_a1234 -> 0 * AID_USER_OFFSET + AID_SHARED_GID_START + 1234 (group name only)
 // u0_a1234_cache -> 0 * AID_USER_OFFSET + AID_CACHE_GID_START + 1234 (group name only)
@@ -377,7 +437,7 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 // AID_USER_OFFSET+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_APP_START) {
+  if (uid < AID_APP_START || !is_valid_app_id(uid)) {
     errno = ENOENT;
     return NULL;
   }
@@ -405,7 +465,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
 // Translate a gid into the corresponding app_<gid>
 // group structure (sets errno to ENOENT on failure).
 static group* app_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_APP_START) {
+  if (gid < AID_APP_START || !is_valid_app_id(gid)) {
     errno = ENOENT;
     return NULL;
   }
@@ -521,11 +581,10 @@ passwd* getpwent() {
         state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
   }
 
-  start = end;
-  end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher users
+  state->getpwent_idx = get_next_app_id(state->getpwent_idx);
 
-  if (state->getpwent_idx < end) {
-    return app_id_to_passwd(state->getpwent_idx++ - start + AID_APP_START, state);
+  if (state->getpwent_idx != -1) {
+    return app_id_to_passwd(state->getpwent_idx, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
@@ -652,9 +711,10 @@ group* getgrent() {
   start = end;
   end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher groups
 
-  if (state->getgrent_idx < end) {
-    init_group_state(state);
-    return app_id_to_group(state->getgrent_idx++ - start + AID_APP_START, state);
+  state->getgrent_idx = get_next_app_id(state->getgrent_idx);
+
+  if (state->getgrent_idx != -1) {
+    return app_id_to_group(state->getgrent_idx, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
