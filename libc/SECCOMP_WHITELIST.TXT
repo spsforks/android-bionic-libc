@@ -128,3 +128,5 @@ int compat_select:_newselect(int n, unsigned long* inp, unsigned long* outp, uns
 
 # b/62090571
 int mkdir(const char *pathname, mode_t mode)	arm,x86,mips
+
+int bpf(int cmd, union bpf_attr *attr, unsigned int size) all
