@@ -540,3 +540,14 @@ TEST(properties, __system_property_extra_long_read_only_too_long) {
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif  // __BIONIC__
 }
+
+TEST(properties, tom_just_read) {
+#if defined(__BIONIC__)
+  char value[PROP_VALUE_MAX];
+  __system_property_get("ro.hardware", value);
+  EXPECT_EQ("bullhead", value);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
+
+}
