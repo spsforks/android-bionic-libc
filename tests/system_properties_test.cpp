@@ -24,7 +24,11 @@
 #include <string>
 #include <thread>
 
+#include <android-base/file.h>
+
 using namespace std::literals;
+using android::base::ReadFileToString;
+using android::base::WriteStringToFile;
 
 #if defined(__BIONIC__)
 
@@ -45,6 +49,11 @@ struct LocalPropertyTestState {
 
         pa_dirname = dirname;
         pa_filename = pa_dirname + "/__properties__";
+        mkdir(pa_filename.c_str(), 0666);
+
+        std::string serialized_info;
+        ReadFileToString("/dev/__properties__/property_info", &serialized_info);
+        WriteStringToFile(serialized_info, pa_filename + "/property_info", 0444, 0, 0, false);
 
         __system_property_set_filename(pa_filename.c_str());
         __system_property_area_init();
