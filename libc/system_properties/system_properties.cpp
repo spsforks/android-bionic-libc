@@ -57,6 +57,7 @@
 #include "context_node.h"
 #include "contexts.h"
 #include "contexts_pre_split.h"
+#include "contexts_serialized.h"
 #include "contexts_split.h"
 #include "prop_area.h"
 #include "prop_info.h"
@@ -65,6 +66,7 @@
 // We don't want to use new or malloc in properties (b/31659220), and since these classes are
 // small enough and don't have non-trivial constructors, it's easier to just statically declare
 // them than anything else.
+static ContextsSerialized contexts_serialized;
 static ContextsSplit contexts_split;
 static ContextsPreSplit contexts_pre_split;
 static Contexts* contexts = nullptr;
@@ -276,6 +278,12 @@ int __system_properties_init() {
   }
   contexts = nullptr;
   if (is_dir(property_filename)) {
+    if (access("/dev/__properties__/property_contexts", R_OK) == 0) {
+      if (contexts_serialized.Initialize(false)) {
+        contexts = &contexts_serialized;
+        return 0;
+      }
+    }
     if (!contexts_split.Initialize(false)) {
       return -1;
     }
@@ -305,8 +313,14 @@ int __system_property_area_init() {
   }
   // We set this unconditionally as we want tests to continue on regardless of if this failed
   // and property_service will abort on an error condition, so no harm done.
+  /*
   contexts = &contexts_split;
   if (!contexts_split.Initialize(true)) {
+    return -1;
+  }
+  */
+  contexts = &contexts_serialized;
+  if (!contexts_serialized.Initialize(true)) {
     return -1;
   }
   return 0;
