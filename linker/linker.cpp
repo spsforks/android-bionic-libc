@@ -60,6 +60,9 @@
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
 #include "linker_utils.h"
+#ifdef ENABLE_NON_PIE_SUPPORT
+#include "linker_non_pie_executables.h"
+#endif
 
 #include "android-base/strings.h"
 #include "ziparchive/zip_archive.h"
@@ -1230,6 +1233,80 @@ typedef linked_list_t<soinfo> SoinfoLinkedList;
 typedef linked_list_t<const char> StringLinkedList;
 typedef std::vector<LoadTask*> LoadTaskList;
 
+static soinfo* find_library(android_namespace_t* ns,
+                           const char* name, int rtld_flags,
+                           const android_dlextinfo* extinfo,
+                           soinfo* needed_by);
+
+// g_ld_all_shim_libs maintains the references to memory as it used
+// in the soinfo structures and in the g_active_shim_libs list.
+
+typedef std::pair<std::string, std::string> ShimDescriptor;
+static std::vector<ShimDescriptor> g_ld_all_shim_libs;
+
+// g_active_shim_libs are all shim libs that are still eligible
+// to be loaded.  We must remove a shim lib from the list before
+// we load the library to avoid recursive loops (load shim libA
+// for libB where libA also links against libB).
+
+static linked_list_t<const ShimDescriptor> g_active_shim_libs;
+
+static void reset_g_active_shim_libs(void) {
+  g_active_shim_libs.clear();
+  for (const auto& pair : g_ld_all_shim_libs) {
+    g_active_shim_libs.push_back(&pair);
+  }
+}
+
+static void parse_shim_libs(const char* path) {
+  if (path != nullptr) {
+    // We have historically supported ':' as well as ' ' in LD_SHIM_LIBS.
+    for (const auto& pair : android::base::Split(path, " :")) {
+      size_t pos = pair.find('|');
+      if (pos > 0 && pos < pair.length() - 1) {
+        auto desc = std::pair<std::string, std::string>(pair.substr(0, pos), pair.substr(pos + 1));
+        g_ld_all_shim_libs.push_back(desc);
+      }
+    }
+  }
+  reset_g_active_shim_libs();
+}
+
+static void parse_LD_SHIM_LIBS(const char* path) {
+  g_ld_all_shim_libs.clear();
+  parse_shim_libs(path);
+}
+
+template<typename F>
+static void for_each_matching_shim(const char *const path, F action) {
+  if (path == nullptr) return;
+  INFO("Finding shim libs for \"%s\"\n", path);
+  std::vector<const ShimDescriptor *> matched;
+
+  g_active_shim_libs.for_each([&](const ShimDescriptor *a_pair) {
+    if (a_pair->first == path) {
+      matched.push_back(a_pair);
+    }
+  });
+
+  g_active_shim_libs.remove_if([&](const ShimDescriptor *a_pair) {
+    return a_pair->first == path;
+  });
+
+  for (const auto& one_pair : matched) {
+    INFO("Injecting shim lib \"%s\" as needed for %s", one_pair->second.c_str(), path);
+    action(one_pair->second.c_str());
+  }
+}
+
+static bool allow_non_pie(const char* executable) {
+    const int array_len = sizeof(linker_non_pie_executables)/sizeof(*linker_non_pie_executables);
+    for (int i = 0; i < array_len; i++) {
+        if (!strcmp(linker_non_pie_executables[i], executable))
+            return true;
+    }
+    return false;
+}
 
 // This function walks down the tree of soinfo dependencies
 // in breadth-first order and
@@ -1668,6 +1745,7 @@ static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unu
 
 template<typename F>
 static void for_each_dt_needed(const soinfo* si, F action) {
+  for_each_matching_shim(si->get_realpath(), action);
   for (const ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
       action(fix_dt_needed(si->get_string(d->d_un.d_val), si->get_realpath()));
@@ -1677,6 +1755,7 @@ static void for_each_dt_needed(const soinfo* si, F action) {
 
 template<typename F>
 static void for_each_dt_needed(const ElfReader& elf_reader, F action) {
+  for_each_matching_shim(elf_reader.name(), action);
   for (const ElfW(Dyn)* d = elf_reader.dynamic(); d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
       action(fix_dt_needed(elf_reader.get_string(d->d_un.d_val), elf_reader.name()));
@@ -2397,6 +2476,7 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   }
 
   ProtectedDataGuard guard;
+  reset_g_active_shim_libs();
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   if (si != nullptr) {
     si->call_constructors();
@@ -2763,10 +2843,10 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 
     const ElfW(Sym)* s = nullptr;
     soinfo* lsi = nullptr;
+    const version_info* vi = nullptr;
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      const version_info* vi = nullptr;
 
       if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
         return false;
@@ -3077,6 +3157,41 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
          * R_ARM_COPY may only appear in executable objects where e_type is
          * set to ET_EXEC.
          */
+#ifdef ENABLE_NON_PIE_SUPPORT
+        if (allow_non_pie(get_realpath())) {
+          if ((flags_ & FLAG_EXE) == 0) {
+            DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", get_realpath());
+            return false;
+          }
+          count_relocation(kRelocCopy);
+          MARK(rel->r_offset);
+          TRACE_TYPE(RELO, "RELO %08x <- %d @ %08x %s", reloc, s->st_size, sym_addr, sym_name);
+          if (reloc == sym_addr) {
+            const ElfW(Sym)* src = nullptr;
+
+            if (!soinfo_do_lookup(NULL, sym_name, vi, &lsi, global_group, local_group, &src)) {
+              DL_ERR("%s R_ARM_COPY relocation source cannot be resolved", get_realpath());
+              return false;
+            }
+            if (lsi->has_DT_SYMBOLIC) {
+              DL_ERR("%s invalid R_ARM_COPY relocation against DT_SYMBOLIC shared "
+                     "library %s (built with -Bsymbolic?)", get_realpath(), lsi->soname_);
+              return false;
+            }
+            if (s->st_size < src->st_size) {
+              DL_ERR("%s R_ARM_COPY relocation size mismatch (%d < %d)",
+                     get_realpath(), s->st_size, src->st_size);
+              return false;
+            }
+            memcpy(reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
+          } else {
+            DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", get_realpath());
+            return false;
+          }
+          break;
+        }
+#endif
         DL_ERR("%s R_ARM_COPY relocations are not supported", get_realpath());
         return false;
 #elif defined(__i386__)
@@ -3950,7 +4065,12 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Fail if app is targeting sdk version > 22
+#if defined(TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS)
+    if (get_application_target_sdk_version() != __ANDROID_API__
+        && get_application_target_sdk_version() > 22) {
+#else
     if (get_application_target_sdk_version() > 22) {
+#endif
       PRINT("%s: has text relocations", get_realpath());
       DL_ERR("%s: has text relocations", get_realpath());
       return false;
@@ -4217,6 +4337,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // doesn't cost us anything.
   const char* ldpath_env = nullptr;
   const char* ldpreload_env = nullptr;
+  const char* ldshim_libs_env = nullptr;
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
@@ -4226,6 +4347,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     if (ldpreload_env != nullptr) {
       INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
     }
+    ldshim_libs_env = getenv("LD_SHIM_LIBS");
   }
 
   struct stat file_stat;
@@ -4275,15 +4397,25 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   }
   si->dynamic = nullptr;
 
+#ifdef ENABLE_NON_PIE_SUPPORT
+  if (allow_non_pie(executable_path)) {
+    DL_WARN("Non position independent executable (non PIE) allowed: %s",
+            executable_path);
+  } else {
+#endif
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
     __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
                  args.argv[0]);
   }
+#ifdef ENABLE_NON_PIE_SUPPORT
+  }
+#endif
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
+  parse_LD_SHIM_LIBS(ldshim_libs_env);
 
   somain = si;
 

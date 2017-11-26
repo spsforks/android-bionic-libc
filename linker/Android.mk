@@ -54,8 +54,17 @@ ifeq ($(TARGET_IS_64_BIT),true)
 LOCAL_CPPFLAGS += -DTARGET_IS_64_BIT
 endif
 
+ifeq ($(TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS),true)
+LOCAL_CPPFLAGS += -DTARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS
+endif
+
 # We need to access Bionic private headers in the linker.
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
+
+ifneq ($(LINKER_NON_PIE_EXECUTABLES_HEADER_DIR),)
+    LOCAL_CFLAGS += -DENABLE_NON_PIE_SUPPORT
+    LOCAL_C_INCLUDES += $(LINKER_NON_PIE_EXECUTABLES_HEADER_DIR)
+endif
 
 # we don't want crtbegin.o (because we have begin.o), so unset it
 # just for this module
