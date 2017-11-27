@@ -278,15 +278,6 @@ static bool parse_config_file(const char* ld_config_file_path,
   return true;
 }
 
-static std::string getVndkVersionString() {
-  char vndk_version_str[1 + PROP_VALUE_MAX] = {};
-  __system_property_get("ro.vndk.version", vndk_version_str + 1);
-  if (strlen(vndk_version_str + 1) != 0 && strcmp(vndk_version_str + 1, "current") != 0) {
-    vndk_version_str[0] = '-';
-  }
-  return vndk_version_str;
-}
-
 static Config g_config;
 
 static constexpr const char* kDefaultConfigName = "default";
@@ -346,7 +337,7 @@ class Properties {
       params.push_back({ "SDK_VER", buf });
     }
 
-    static std::string vndk = getVndkVersionString();
+    static std::string vndk = Config::get_vndk_version_string();
     params.push_back({ "VNDK_VER", vndk });
 
     for (auto&& path : paths) {
@@ -501,6 +492,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
   failure_guard.Disable();
   *config = &g_config;
   return true;
+}
+
+std::string Config::get_vndk_version_string(const char delimiter) {
+  char vndk_version_str[1 + PROP_VALUE_MAX] = {};
+  __system_property_get("ro.vndk.version", vndk_version_str + 1);
+  if (strlen(vndk_version_str + 1) > 0 && strcmp(vndk_version_str + 1, "current") != 0) {
+    vndk_version_str[0] = delimiter;
+  }
+  return vndk_version_str;
 }
 
 NamespaceConfig* Config::create_namespace_config(const std::string& name) {
