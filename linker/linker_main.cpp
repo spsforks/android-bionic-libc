@@ -399,7 +399,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
                       nullptr,
                       true /* add_as_children */,
                       true /* search_linked_namespaces */,
-                      readers_map,
+                      &readers_map,
                       &namespaces)) {
     __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
