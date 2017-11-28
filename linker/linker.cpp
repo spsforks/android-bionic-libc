@@ -321,9 +321,7 @@ static void soinfo_free(soinfo* si) {
   TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
 
   if (!solist_remove_soinfo(si)) {
-    // TODO (dimitry): revisit this - for now preserving the logic
-    // but it does not look right, abort if soinfo is not in the list instead?
-    return;
+    async_safe_fatal("soinfo=%p is not in soinfo_list (double unload?)", si);
   }
 
   // clear links to/from si
@@ -1520,11 +1518,6 @@ bool find_libraries(android_namespace_t* ns,
     }
   });
 
-  auto failure_guard = android::base::make_scope_guard([&]() {
-    // Housekeeping
-    soinfo_unload(soinfos, soinfos_count);
-  });
-
   ZipArchiveCache zip_archive_cache;
 
   // Step 1: expand the list of load_tasks to include
@@ -1645,11 +1638,18 @@ bool find_libraries(android_namespace_t* ns,
                          nullptr /* soinfos */, nullptr /* ld_preloads */, 0 /* ld_preload_count */,
                          rtld_flags, nullptr /* extinfo */, false /* add_as_children */,
                          false /* search_linked_namespaces */, readers_map, namespaces)) {
-        // If this lib is directly needed by one of the libs in this namespace,
-        // then increment the count
+        // If the lib that needs this lib is one of the libs in load_tasks,
+        // then increment the count.
+        // Note: not incremented when needed_by == si->get_local_group_root(),
+        // since that would be an self increment
         soinfo* needed_by = task->get_needed_by();
-        if (needed_by != nullptr && needed_by->get_primary_namespace() == ns && si->is_linked()) {
-          si->increment_ref_count();
+        if (needed_by != nullptr && si->is_linked()) {
+          for (auto&& t : load_tasks) {
+            if (needed_by == t->get_soinfo() && needed_by != si->get_local_group_root()) {
+              si->increment_ref_count();
+              break;
+            }
+          }
         }
       } else {
         return false;
@@ -1689,8 +1689,6 @@ bool find_libraries(android_namespace_t* ns,
         si->set_linked();
       }
     });
-
-    failure_guard.Disable();
   }
 
   return linked;
@@ -1700,7 +1698,7 @@ static soinfo* find_library(android_namespace_t* ns,
                             const char* name, int rtld_flags,
                             const android_dlextinfo* extinfo,
                             soinfo* needed_by) {
-  soinfo* si;
+  soinfo* si = nullptr;
 
   // readers_map is shared across recursive calls to find_libraries.
   // However, the map is not shared across different threads.
@@ -1719,6 +1717,9 @@ static soinfo* find_library(android_namespace_t* ns,
                              false /* add_as_children */,
                              true /* search_linked_namespaces */,
                              readers_map)) {
+    if (si != nullptr) {
+      soinfo_unload(si);
+    }
     return nullptr;
   }
 
