@@ -321,9 +321,7 @@ static void soinfo_free(soinfo* si) {
   TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
 
   if (!solist_remove_soinfo(si)) {
-    // TODO (dimitry): revisit this - for now preserving the logic
-    // but it does not look right, abort if soinfo is not in the list instead?
-    return;
+    async_safe_fatal("soinfo=%p is not is soinfo_list (double unload?)", si);
   }
 
   // clear links to/from si
