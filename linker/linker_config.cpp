@@ -75,6 +75,31 @@ class ConfigParser {
         continue;
       }
 
+      if (line[line.size() - 1] == '\\') {
+        line = android::base::Trim(line.substr(0, line.size() - 1));
+        std::string wrapped_line;
+        // append the next lines to the current line until the next line
+        // is empty or does not ends with '\'.
+        while(NextLine(&wrapped_line)) {
+          // allow comment after '\'
+          size_t found = wrapped_line.find('#');
+          wrapped_line = android::base::Trim(wrapped_line.substr(0, found));
+
+          if (wrapped_line.empty()) {
+            break;
+          }
+
+          if (wrapped_line[wrapped_line.size() - 1] != '\\') {
+            line = line + android::base::Trim(wrapped_line);
+            break;
+          } else {
+            wrapped_line = android::base::Trim(wrapped_line
+                                               .substr(0, wrapped_line.size() - 1));
+            line = line + wrapped_line;
+          }
+        }
+      }
+
       if (line[0] == '[' && line[line.size() - 1] == ']') {
         *name = line.substr(1, line.size() - 2);
         return kSection;
