@@ -307,7 +307,10 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
                          std::string fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
-    errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
+    if (g_str_to_func.find(fn_name + "_") == g_str_to_func.end()) {
+      errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
+    }
+    fn_name = fn_name + "_";
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
                                                          secondary_opts.num_iterations;
@@ -519,6 +522,7 @@ void RegisterAllBenchmarks(const bench_opts_t& opts,
   std::vector<std::string> prop_tests;
 
   for (auto& entry : g_str_to_func) {
+    if (android::base::EndsWith(entry.first, "_")) continue;
     if (android::base::StartsWith(entry.first, "BM_property_")) {
       prop_tests.push_back(entry.first);
     } else {
