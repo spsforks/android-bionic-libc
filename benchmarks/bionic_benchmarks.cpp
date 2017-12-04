@@ -15,6 +15,7 @@
  */
 
 #include <err.h>
+#include <fnmatch.h>
 #include <getopt.h>
 #include <math.h>
 #include <sys/resource.h>
@@ -307,7 +308,18 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
                          std::string fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
-    errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
+    bool found = false;
+    for (const auto& func : g_str_to_func) {
+      if (!::fnmatch(fn_name.c_str(), func.first.c_str(), 0)) {
+        RegisterGoogleBenchmarks(primary_opts, secondary_opts, func.first, run_args);
+        found = true;
+      }
+    }
+
+    if (!found) {
+      errx(1, "ERROR: No benchmark for function matching %s", fn_name.c_str());
+    }
+    return;
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
                                                          secondary_opts.num_iterations;
