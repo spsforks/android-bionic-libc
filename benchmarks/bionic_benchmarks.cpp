@@ -21,6 +21,7 @@
 
 #include <map>
 #include <mutex>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -308,7 +309,22 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
                          std::string fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
     if (g_str_to_func.find(fn_name + "_") == g_str_to_func.end()) {
-      errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
+      std::regex base_regex(fn_name);
+      std::regex hidden_regex(fn_name + "_");
+      bool found = false;
+      for (const auto& func : g_str_to_func) {
+        std::smatch results;
+        if (std::regex_match(func.first, results, base_regex, std::regex_constants::match_any) ||
+            std::regex_match(func.first, results, hidden_regex, std::regex_constants::match_any)) {
+          RegisterGoogleBenchmarks(primary_opts, secondary_opts, results[0].str(), run_args);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        errx(1, "ERROR: No benchmark for function matching %s", fn_name.c_str());
+      }
+      return;
     }
     fn_name = fn_name + "_";
   }
