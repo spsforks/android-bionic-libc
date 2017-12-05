@@ -135,6 +135,9 @@ classmatch(const char *pattern, char test, int foldcase, const char **ep)
 	return(rval);
 }
 
+static int extmatch(const char **pattern, const char **string, int flags, int nest);
+static int sniff(const char *pattern, const char *string, int flags, int nest);
+
 /* Most MBCS/collation/case issues handled here.  Wildcard '*' is not handled.
  * EOS '\0' and the FNM_PATHNAME '/' delimiters are not advanced over, 
  * however the "\/" sequence is advanced to '/'.
@@ -142,12 +145,13 @@ classmatch(const char *pattern, char test, int foldcase, const char **ep)
  * Both pattern and string are **char to support pointer increment of arbitrary
  * multibyte characters for the given locale, in a later iteration of this code
  */
-static int fnmatch_ch(const char **pattern, const char **string, int flags)
+static int fnmatch_ch(const char **pattern, const char **string, int flags, int nest)
 {
     const char * const mismatch = *pattern;
     const int nocase = !!(flags & FNM_CASEFOLD);
     const int escape = !(flags & FNM_NOESCAPE);
     const int slash = !!(flags & FNM_PATHNAME);
+    const int ext = !!(flags & FNM_EXTMATCH);
     int result = FNM_NOMATCH;
     const char *startch;
     int negate;
@@ -247,14 +251,31 @@ leadingclosebrace:
         result = FNM_NOMATCH;
     }
     else if (**pattern == '?') {
+        if (ext && (*pattern)[1] == '(') {
+            return extmatch(pattern, string, flags, nest);
+        }
         /* Optimize '?' match before unescaping **pattern */
         if (!**string || (slash && (**string == '/')))
             return FNM_NOMATCH;
         result = 0;
         goto fnmatch_ch_success;
     }
+    else if (**pattern == '*') {
+        if (ext && (*pattern)[1] == '(') {
+            return extmatch(pattern, string, flags, nest);
+        }
+        ++*pattern;
+        while (**string && sniff(*pattern, *string, flags, nest)) {
+            ++*string;
+        }
+        return 0;
+    }
     else if (escape && (**pattern == '\\') && (*pattern)[1]) {
         ++*pattern;
+    }
+    else if (ext && ((*pattern)[1] == '(') &&
+             ((**pattern == '+') || (**pattern == '@') || (**pattern == '!'))) {
+        return extmatch(pattern, string, flags, nest);
     }
 
     /* XXX: handle locale/MBCS comparison, advance by the MBCS char width */
@@ -278,12 +299,158 @@ fnmatch_ch_success:
 }
 
 
+static int extmatch_nest_direction(const char *pattern)
+{
+    switch (*pattern) {
+        case ')':
+            return -1;
+        case '?':
+        case '*':
+        case '+':
+        case '@':
+        case '!':
+            if (pattern[1] == '(') {
+                return 1;
+            }
+    }
+    return 0;
+}
+
+/* sniff if matching end */
+static int sniff(const char *pattern, const char *string, int flags, int nest) {
+    const int escape = !(flags & FNM_NOESCAPE);
+
+    /* Can not happen */
+    if (!pattern) {
+        return FNM_NOMATCH;
+    }
+    while (*pattern) {
+        if ((nest >= 0) && ((*pattern == '|') || (*pattern == ')'))) {
+            int n;
+
+            for (n = nest--; (n > nest) && *pattern; ++pattern) {
+                if (escape && (*pattern == '\\')) {
+                    ++pattern;
+                    continue;
+                }
+                n += extmatch_nest_direction(pattern);
+            }
+            continue;
+        }
+        if (fnmatch_ch(&pattern, &string, flags, nest)) {
+            break;
+        }
+    }
+    if (!*string && !*pattern) {
+        return 0;
+    }
+    return FNM_NOMATCH;
+}
+
+static int extmatch(const char **pattern, const char **string, int flags, int nest) {
+    const int escape = !(flags & FNM_NOESCAPE);
+    int zero = 0, one = 0, not = 0;
+    const char *p, *highest_match, *next;
+
+    /* can never happen */
+    if (!(flags & FNM_EXTMATCH)) {
+        return 0;
+    }
+
+    switch (**pattern) {
+        case '?': zero = 1; /* FALLTHRU */
+        case '@': one = 1; break;
+        case '*': zero = 1; break;
+        case '+': break;
+        case '!': not = 1; break;
+        default: return 0; /* can never happen */
+    }
+
+    /* can never happen */
+    if ((*pattern)[1] != '(') {
+        return FNM_NOMATCH;
+    }
+
+    *pattern += 2;
+    p = *pattern;
+    highest_match = *string;
+    next = NULL;
+    if (zero || !one) {
+        int n = 1;
+
+        /* Need to find the end of the pattern */
+        for (next = p; *next && n; ++next) {
+            if (escape && (*next == '\\')) {
+                ++next;
+                continue;
+            }
+            n += extmatch_nest_direction(next);
+        }
+    }
+    while ((*p != ')') && *p) {
+        const char *rebegin = p;
+        const char *begin, *end;
+        const char *s;
+        int n;
+
+        begin = p;
+        for (n = 0; *p && (((*p != '|') && (*p != ')')) || (n > 0)); ++p) {
+            if (escape && (*p == '\\')) {
+                ++p;
+                continue;
+            }
+            n += extmatch_nest_direction(p);
+        }
+        end = p;
+
+        s = *string;
+        while (*s) {
+            if (zero && (s == *string) && !sniff(next, s, flags, nest)) {
+                break;
+            }
+            while ((begin < end) && !fnmatch_ch(&begin, &s, flags, nest + 1));
+            if (begin < end) {
+                break;
+            }
+            if (begin > end) {  /* Can not happen, bail on parsing error */
+                return FNM_NOMATCH;
+            }
+            if (s > highest_match) {
+                highest_match = s;
+            }
+            if (one || !sniff(next, s, flags, nest)) {
+                break;
+            }
+            begin = rebegin;
+        }
+        p = end;
+        if (*p == '|') {
+            ++p;
+        }
+    }
+    if (highest_match > *string) {
+        *string = highest_match;
+        if (not) {
+            return FNM_NOMATCH;
+        }
+    } else if (!zero && !not) {
+        return FNM_NOMATCH;
+    }
+    if (*p) {
+        ++p;
+    }
+    *pattern = p;
+    return 0;
+}
+
+
 int fnmatch(const char *pattern, const char *string, int flags)
 {
     static const char dummystring[2] = {' ', 0};
     const int escape = !(flags & FNM_NOESCAPE);
     const int slash = !!(flags & FNM_PATHNAME);
     const int leading_dir = !!(flags & FNM_LEADING_DIR);
+    const int ext = !!(flags & FNM_EXTMATCH);
     const char *strendseg;
     const char *dummyptr;
     const char *matchptr;
@@ -353,7 +520,8 @@ firstsegment:
             /* Reduce groups of '*' and '?' to n '?' matches
              * followed by one '*' test for simplicity
              */
-            for (wild = 0; ((*pattern == '*') || (*pattern == '?')); ++pattern)
+            for (wild = 0; ((*pattern == '*') || (*pattern == '?')) &&
+                           (!ext || (pattern[1] != '(')); ++pattern)
             {
                 if (*pattern == '*') {
                     wild = 1;
@@ -416,7 +584,7 @@ firstsegment:
                     }
                     else if (*matchptr == '[') {
                         dummyptr = dummystring;
-                        fnmatch_ch(&matchptr, &dummyptr, flags);
+                        fnmatch_ch(&matchptr, &dummyptr, flags, 0);
                     }
                     else {
                         ++matchptr;
@@ -424,14 +592,23 @@ firstsegment:
                 }
             }
 
+            /*
+             * Do not bypass fnmatch_ch() if FNM_EXTMATCH and end of string,
+             * so as to swallow pattern fragment
+             */
+            if (ext && (*pattern == '*') && (pattern[1] == '(') &&
+                (string >= strendseg) && fnmatch_ch(&pattern, &string, flags, 0)) {
+                return FNM_NOMATCH;
+            }
             /* Incrementally match string against the pattern
              */
             while (*pattern && (string < strendseg))
             {
                 /* Success; begin a new wild pattern search
                  */
-                if (*pattern == '*')
+                if ((*pattern == '*') && (!ext || (pattern[1] != '('))) {
                     break;
+                }
 
                 if (slash && ((*string == '/')
                               || (*pattern == '/')
@@ -442,8 +619,9 @@ firstsegment:
                 /* Compare ch's (the pattern is advanced over "\/" to the '/',
                  * but slashes will mismatch, and are not consumed)
                  */
-                if (!fnmatch_ch(&pattern, &string, flags))
+                if (!fnmatch_ch(&pattern, &string, flags, 0)) {
                     continue;
+                }
 
                 /* Failed to match, loop against next char offset of string segment 
                  * until not enough string chars remain to match the fixed pattern
