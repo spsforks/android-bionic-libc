@@ -360,22 +360,24 @@ being incompatible with future versions of Android.
 
 ## Enable logging of dlopen/dlsym and library loading errors for apps (Available in Android O)
 
-Starting with Android O it is possible to enable logging of all dlsym/dlopen calls
-for debuggable apps. Here is short instruction on how to do that:
+Starting with Android O it is possible to enable logging of all
+dlclose/dlopen/dlsym calls for debuggable apps by setting a property
+corresponding to the fully-qualified name of the specific app:
 ```
-adb shell setprop debug.ld.app.com.example.myapp dlsym,dlopen,dlerror
+adb shell setprop debug.ld.app.com.example.myapp dlerror,dlopen,dlsym
 adb logcat
 ```
 
-Any subset of (dlsym,dlopen,dlerror) can be used.
+Any combination of dlerror/dlopen/dlsym can be used. There's no separate
+dlclose option: `dlopen` includes both dlopen and dlclose.
 
-On userdebug and eng builds it is possible to enable tracing for the whole system
-by using debug.ld.all system property instead of app-specific one:
+On userdebug and eng builds it is possible to enable tracing for the
+whole system by using the `debug.ld.all` system property instead of
+app-specific one. For example, to enable logging of all dlerror and dlopen
+(and thus dclose), but not dlsym calls:
 ```
 adb shell setprop debug.ld.all dlerror,dlopen
 ```
-
-enables logging of all errors and dlopen calls
 
 ## dlclose interacts badly with thread local variables with non-trivial destructors
 
