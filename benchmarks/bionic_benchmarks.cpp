@@ -311,7 +311,7 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
     bool found = false;
     for (const auto& func : g_str_to_func) {
       std::smatch results;
-      if (!::fnmatch(fn_name.c_str(), func.first.c_str(), 0)) {
+      if (!::fnmatch(fn_name.c_str(), func.first.c_str(), FNM_EXTMATCH)) {
         RegisterGoogleBenchmarks(primary_opts, secondary_opts, func.first, run_args);
         found = true;
       }
