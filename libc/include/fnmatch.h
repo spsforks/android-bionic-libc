@@ -41,6 +41,7 @@ __BEGIN_DECLS
 #define FNM_PERIOD       0x04        /* Period must be matched by period. */
 #define FNM_LEADING_DIR  0x08        /* Ignore /<tail> after Imatch. */
 #define FNM_CASEFOLD     0x10        /* Case insensitive search. */
+#define FNM_EXTMATCH     0x20        /* Use ksh/bash-like extended matching. */
 
 #define FNM_IGNORECASE   FNM_CASEFOLD
 #define FNM_FILE_NAME    FNM_PATHNAME
