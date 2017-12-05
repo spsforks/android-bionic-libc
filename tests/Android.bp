@@ -70,6 +70,7 @@ cc_test_library {
         "fcntl_test.cpp",
         "fenv_test.cpp",
         "float_test.cpp",
+	"fnmatch_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
         "getcwd_test.cpp",
