@@ -288,11 +288,83 @@ TEST(FNMATCH_TEST, glob) {
     { false, "fn????H",            "fnmatch",                FNM_CASEFOLD },
     { false, "fn????[Hh]",         "fnmatch",                0 },
     { false, "[^a-eg-z]n????[Hh]", "fnmatch",                0 },
+#ifdef FNM_EXTMATCH
+#define FNM_FLIP 0x40000000
+    { false, "?(fnmatch)",         "X(fnmatch)",             FNM_FLIP },
+    { false, "?(fnmatch)",         "fnmatch",                FNM_EXTMATCH },
+    { true,  "?(fn*tc|help)",      "fnmatch",                FNM_EXTMATCH },
+    { false, "?(fn*tc|fnmatch)",   "fnmatch",                FNM_EXTMATCH },
+    { false, "?(fn*tch|help)",     "fnmatch",                FNM_EXTMATCH },
+    { true,  "?(fn*tch|help)",     "fnmatchfnmatch",         FNM_EXTMATCH },
+    { false, "*(fnmatch)",         "",                       FNM_EXTMATCH },
+    { true,  "*(fn*tc|help)",      "fnmatch",                FNM_EXTMATCH },
+    { false, "*(fn*tc|fnmatch)",   "fnmatchfnmatch",         FNM_EXTMATCH },
+    { true,  "+(fn*tc|help)",      "fnmatch",                FNM_EXTMATCH },
+    { false, "+(fn*tc|fnmatch)",   "fnmatch",                FNM_EXTMATCH },
+    { true,  "+(fn*tc|fnmatch)",   "",                       FNM_EXTMATCH },
+    { true,  "@(fn*tc|help)",      "fnmatch",                FNM_EXTMATCH },
+    { false, "@(fn*tc|fnmatch)",   "fnmatch",                FNM_EXTMATCH },
+    { true,  "@(fn*tc|fnmatch)",   "",                       FNM_EXTMATCH },
+    { true,  "@(fn*tc|fnmatch)",   "fnmatchfnmatch",         FNM_EXTMATCH },
+    { false, "!(help)fnmatch",     "fnmatch",                FNM_EXTMATCH },
+    { true,  "!(fn*tc|fnmatc)h",   "fnmatch",                FNM_EXTMATCH },
+    { true,  "BM_time_@(clock_getres|clock_gettime|gettimeofday|time)*",
+                                   "BM_time_unknown",        FNM_EXTMATCH },
+    { false, "BM_time_@(clock_getres|clock_gettime|gettimeofday|time)*",
+                                   "BM_time_time_syscall",   FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(getres|gettime)|gettimeofday|time)*",
+                                   "BM_time_clock_getres",   FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(getres|gettime)|gettimeofday|time)*",
+                                   "BM_time_clock_gettime",  FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(getres|gettime)|gettimeofday|time)*",
+                                   "BM_time_clock_gettimeofday",
+                                                             FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(getres|gettime)|gettimeofday|time)*",
+                                   "BM_time_time_syscall",   FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(get*\\res|gettime)|gettimeofday|ti*\\me)*",
+                                   "BM_time_clock_getres",   FNM_EXTMATCH },
+    { true,  "BM_time_@(clock_@(get*\\res|gettime)|gettimeofday|ti*\\me)*",
+                                   "BM_time_clock_getres",   FNM_EXTMATCH |
+                                                             FNM_NOESCAPE },
+    { false, "BM_time_@(clock_@(get*\\res|gettime)|gettimeofday|ti*\\me)*",
+                                   "BM_time_clock_gettime",  FNM_EXTMATCH },
+    { false, "BM_time_@(clock_@(get*\\res|gettime)|gettimeofday|ti*\\me)*",
+                                   "BM_time_time_syscall",   FNM_EXTMATCH },
+    { false, "a+(b)c",             "abc",                    FNM_EXTMATCH },
+    { false, "a+(b+(c)d)f",        "abcdf",                  FNM_EXTMATCH },
+    { true,  "a+(b\\+(c)d)f",      "abcdf",                  FNM_EXTMATCH },
+    { true,  "a+(b\\+(c)d)f",      "ab+(c)df",               FNM_EXTMATCH },
+    { false, "a+(b\\+(c)d)f",      "ab+(cd)f",               FNM_EXTMATCH },
+    { false, "a+(b\\+(c\\)d)f",    "ab+(c)df",               FNM_EXTMATCH },
+    { true,  "a+(b\\+(c)d)f",      "abcdf",                  FNM_EXTMATCH |
+                                                             FNM_NOESCAPE },
+    { false, "a+(b\\+(c)d)f",      "ab\\cdf",                FNM_EXTMATCH |
+                                                             FNM_NOESCAPE },
+    { true,  "a+(b+\\(c)d)f",      "abcdf",                  FNM_EXTMATCH },
+    { true,  "a+(b+\\(c)d)f",      "ab+(c)df",               FNM_EXTMATCH },
+    { false, "a+(b+\\(c\\)d)f",    "ab+(c)df",               FNM_EXTMATCH },
+    { true,  "a+(b+\\(c\\)d)f",    "abcdf",                  FNM_EXTMATCH |
+                                                             FNM_NOESCAPE },
+    { false, "a+(b+\\(c\\)d)f",    "ab+\\(c\\d)f",           FNM_EXTMATCH |
+                                                             FNM_NOESCAPE },
+#endif
     /* ToDo import shell test cases with FNM_PERIOD | FNM_FILE_NAME */
   };
 
   for(auto& t : tests) {
-    EXPECT_EQ(t.fail ? FNM_NOMATCH : 0, fnmatch(t.pattern, t.string, t.flags))
+    EXPECT_EQ(t.fail ? FNM_NOMATCH : 0, fnmatch(t.pattern, t.string, t.flags & ~FNM_FLIP))
         << "fnmatch(\"" << t.pattern << "\", \"" << t.string << "\", " << t.flags << ")";
+#ifdef FNM_EXTMATCH
+    if (t.flags & FNM_EXTMATCH) {
+        EXPECT_EQ((t.flags & FNM_FLIP) ? 0 : FNM_NOMATCH, fnmatch(t.pattern, t.string, t.flags & ~(FNM_EXTMATCH | FNM_FLIP)))
+            << "fnmatch(\"" << t.pattern << "\", \"" << t.string << "\", " << (t.flags & ~(FNM_EXTMATCH | FNM_FLIP)) << ")";
+    } else if (t.flags & FNM_FLIP) {
+        EXPECT_EQ(t.fail ? 0 : FNM_NOMATCH , fnmatch(t.pattern, t.string, (t.flags & ~FNM_FLIP) | FNM_EXTMATCH))
+        << "fnmatch(\"" << t.pattern << "\", \"" << t.string << "\", " << ((t.flags & ~FNM_FLIP) | FNM_EXTMATCH) << ")";
+    } else {
+        EXPECT_EQ(t.fail ? FNM_NOMATCH : 0, fnmatch(t.pattern, t.string, t.flags | FNM_EXTMATCH))
+        << "fnmatch(\"" << t.pattern << "\", \"" << t.string << "\", " << (t.flags | FNM_EXTMATCH) << ")";
+    }
+#endif
   }
 }
