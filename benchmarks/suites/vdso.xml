@@ -1,12 +1,3 @@
 <fn>
-  <name>BM_time_clock_getres*</name>
-</fn>
-<fn>
-  <name>BM_time_clock_gettime*</name>
-</fn>
-<fn>
-  <name>BM_time_gettimeofday*</name>
-</fn>
-<fn>
-  <name>BM_time_time*</name>
+  <name>BM_time_@(clock_@(getres|gettime)|gettimeofday|time)*</name>
 </fn>
