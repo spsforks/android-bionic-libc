@@ -95,6 +95,8 @@
 #define	RANGE_NOMATCH	0
 #define	RANGE_ERROR	(-1)
 
+#define FNM_EXTMATCH_NESTED 0x80000000
+
 static int
 classmatch(const char *pattern, char test, int foldcase, const char **ep)
 {
@@ -135,6 +137,8 @@ classmatch(const char *pattern, char test, int foldcase, const char **ep)
 	return(rval);
 }
 
+static int extmatch(const char **pattern, const char **string, int flags);
+
 /* Most MBCS/collation/case issues handled here.  Wildcard '*' is not handled.
  * EOS '\0' and the FNM_PATHNAME '/' delimiters are not advanced over, 
  * however the "\/" sequence is advanced to '/'.
@@ -148,6 +152,7 @@ static int fnmatch_ch(const char **pattern, const char **string, int flags)
     const int nocase = !!(flags & FNM_CASEFOLD);
     const int escape = !(flags & FNM_NOESCAPE);
     const int slash = !!(flags & FNM_PATHNAME);
+    const int ext = !!(flags & FNM_EXTMATCH);
     int result = FNM_NOMATCH;
     const char *startch;
     int negate;
@@ -247,6 +252,8 @@ leadingclosebrace:
         result = FNM_NOMATCH;
     }
     else if (**pattern == '?') {
+        if (ext && (*pattern)[1] == '(')
+            return extmatch(pattern, string, flags);
         /* Optimize '?' match before unescaping **pattern */
         if (!**string || (slash && (**string == '/')))
             return FNM_NOMATCH;
@@ -255,6 +262,10 @@ leadingclosebrace:
     }
     else if (escape && (**pattern == '\\') && (*pattern)[1]) {
         ++*pattern;
+    }
+    else if (ext && ((**pattern == '*') || (((*pattern)[1] == '(') &&
+             ((**pattern == '+') || (**pattern == '@') || (**pattern == '!'))))) {
+        return extmatch(pattern, string, flags);
     }
 
     /* XXX: handle locale/MBCS comparison, advance by the MBCS char width */
@@ -278,12 +289,121 @@ fnmatch_ch_success:
 }
 
 
+static int extmatch_nest_crement(const char *pattern)
+{
+    switch (*pattern) {
+        case ')':
+            return -1;
+        case '?':
+        case '*':
+        case '+':
+        case '@':
+        case '!':
+            if (pattern[1] == '(')
+                return 1;
+    }
+    return 0;
+}
+
+
+static int extmatch(const char **pattern, const char **string, int flags) {
+    int set_pattern = 0, zero = 0, one = 0, not = 0;
+    const char *p, *highest_match, *next;
+    char buffer[128];
+
+    if (!(flags & FNM_EXTMATCH)) return 0;
+    switch (**pattern) {
+        case '?': zero = one = 1; break;
+        case '*': zero = 1; break;
+        case '+': break;
+        case '@': one = 1; break;
+        case '!': not = 1; break;
+        default: return 0;
+    }
+    if ((*pattern)[1] != '(') {
+        /* X(?)... where X is typically '*' and ... starts at *pattern + 1 */
+        strcpy(buffer, "?)");
+        strncpy(buffer + 2, *pattern + 1, sizeof(buffer) - 2);
+        buffer[sizeof(buffer) - 1] = '\0';
+        p = buffer;
+        ++*pattern;
+    } else {
+        set_pattern = 1;
+        *pattern += 2;
+        p = *pattern;
+    }
+    highest_match = *string;
+    next = NULL;
+    if (zero || !one) {
+        int n = 1;
+
+        /* Need to find the end of the pattern */
+        for (next = p; *next && n; ++next)
+            n += extmatch_nest_crement(next);
+        if (!*next || ((flags & FNM_EXTMATCH_NESTED) && ((*next == '|') || (*next == ')'))))
+            next = NULL;
+    }
+    while ((*p != ')') && *p) {
+        const char *rebegin = p;
+        const char *begin, *end;
+        const char *s;
+        int n;
+
+        begin = p;
+        for (n = 0; *p && (((*p != '|') && (*p != ')')) || (n > 0)); ++p)
+            n += extmatch_nest_crement(p);
+        end = p;
+
+        s = *string;
+        while (*s) {
+            if (zero && next && (s == *string)) {
+                /* sniff of matching end */
+                const char *c = next;
+                const char *d = s;
+                if (!fnmatch_ch(&c, &d, flags))
+                    break;
+            }
+            while ((begin < end) && !fnmatch_ch(&begin, &s, flags | FNM_EXTMATCH_NESTED));
+            if (begin < end)
+                break;
+            if (begin > end)  /* Can not happen, bail on parsing error */
+                return FNM_NOMATCH;
+            if (s > highest_match)
+                highest_match = s;
+            if (one)
+                break;
+            if (next) {  /* sniff of matching end */
+                const char *c = next;
+                const char *d = s;
+                if (!fnmatch_ch(&c, &d, flags))
+                    break;
+            }
+            begin = rebegin;
+        }
+        p = end;
+        if (*p == '|')
+            ++p;
+    }
+    if (set_pattern) {
+        if (*p)
+            ++p;
+        *pattern = p;
+    }
+    if (highest_match > *string) {
+        *string = highest_match;
+        return not ? FNM_NOMATCH : 0;
+    }
+    return (zero || not) ? 0 : FNM_NOMATCH;
+}
+
+
 int fnmatch(const char *pattern, const char *string, int flags)
 {
     static const char dummystring[2] = {' ', 0};
     const int escape = !(flags & FNM_NOESCAPE);
     const int slash = !!(flags & FNM_PATHNAME);
     const int leading_dir = !!(flags & FNM_LEADING_DIR);
+    const int ext = !!(flags & FNM_EXTMATCH);
     const char *strendseg;
     const char *dummyptr;
     const char *matchptr;
@@ -353,7 +473,8 @@ firstsegment:
             /* Reduce groups of '*' and '?' to n '?' matches
              * followed by one '*' test for simplicity
              */
-            for (wild = 0; ((*pattern == '*') || (*pattern == '?')); ++pattern)
+            for (wild = 0; ((*pattern == '*') || (*pattern == '?')) &&
+                           (!ext || (pattern[1] != '(')); ++pattern)
             {
                 if (*pattern == '*') {
                     wild = 1;
@@ -424,13 +545,21 @@ firstsegment:
                 }
             }
 
+            /*
+             * Do not bypass fnmatch_ch() if FNM_EXTMATCH and end of string,
+             * so as to swallow pattern fragment
+             */
+            if (ext && (*pattern == '*') && (pattern[1] == '(') &&
+                (string >= strendseg) && fnmatch_ch(&pattern, &string, flags)) {
+                return FNM_NOMATCH;
+            }
             /* Incrementally match string against the pattern
              */
             while (*pattern && (string < strendseg))
             {
                 /* Success; begin a new wild pattern search
                  */
-                if (*pattern == '*')
+                if ((*pattern == '*') && (!ext || (pattern[1] != '(')))
                     break;
 
                 if (slash && ((*string == '/')
