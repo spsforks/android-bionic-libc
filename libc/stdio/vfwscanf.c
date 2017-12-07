@@ -84,12 +84,39 @@
 #define CT_INT 3    /* integer, i.e., strtoimax or strtoumax */
 #define CT_FLOAT 4  /* floating, i.e., strtod */
 
-#define u_char unsigned char
-#define u_long unsigned long
+// An interpretive version of __sccl from vfscanf.c --- a table of all wchar_t values would
+// be a little too expensive, and some kind of compressed version isn't worth the trouble.
+static inline bool in_ccl(wchar_t wc, const wchar_t* ccl) {
+  // Is this a negated set?
+  bool member_result = true;
+  if (*ccl == '^') {
+    member_result = false;
+    ++ccl;
+  }
 
-#define INCCL(_c)                                        \
-  (cclcompl ? (wmemchr(ccls, (_c), ccle - ccls) == NULL) \
-            : (wmemchr(ccls, (_c), ccle - ccls) != NULL))
+  // The first character may be ']' or '-' without being special.
+  if (*ccl == '-' || *ccl == ']') {
+    // A literal match?
+    if (*ccl == wc) return member_result;
+    ++ccl;
+  }
+
+  while (*ccl && *ccl != ']') {
+    // The last character may be '-' without being special.
+    if (*ccl == '-' && ccl[1] != '\0' && ccl[1] != ']') {
+      // In the range?
+      wchar_t first = *(ccl - 1);
+      wchar_t last = *(ccl + 1);
+      for (wchar_t i = first; i < last; ++i) {
+        if (i == wc) return member_result;
+      }
+    }
+    // A literal match?
+    if (*ccl == wc) return member_result;
+    ++ccl;
+  }
+  return !member_result;
+}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wframe-larger-than="
@@ -109,9 +136,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
   int nread;              /* number of characters consumed from fp */
   int base;               /* base argument to strtoimax/strtouimax */
   wchar_t buf[BUF];       /* buffer for numeric conversions */
-  const wchar_t* ccls;    /* character class start */
-  const wchar_t* ccle;    /* character class end */
-  int cclcompl;           /* ccl is complemented? */
+  const wchar_t* ccl;
   wint_t wi;              /* handy wint_t */
   char* mbp;              /* multibyte string pointer for %c %s %[ */
   size_t nconv;           /* number of bytes in mb. conversion */
@@ -127,7 +152,6 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
   nconversions = 0;
   nread = 0;
   base = 0; /* XXX just to keep gcc happy */
-  ccls = ccle = NULL;
   for (;;) {
     c = *fmt++;
     if (c == 0) {
@@ -210,9 +234,6 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
       /*
        * Conversions.
        * Those marked `compat' are for 4.[123]BSD compatibility.
-       *
-       * (According to ANSI, E and X formats are supposed
-       * to the same as e and x.  Sorry about that.)
        */
       case 'D': /* compat */
         flags |= LONG;
@@ -266,15 +287,10 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
         break;
 
       case '[':
-        ccls = fmt;
-        if (*fmt == '^') {
-          cclcompl = 1;
-          fmt++;
-        } else
-          cclcompl = 0;
+        ccl = fmt;
+        if (*fmt == '^') fmt++;
         if (*fmt == ']') fmt++;
         while (*fmt != '\0' && *fmt != ']') fmt++;
-        ccle = fmt;
         fmt++;
         flags |= NOSKIP;
         c = CT_CCL;
@@ -387,12 +403,12 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
         /* take only those things in the class */
         if ((flags & SUPPRESS) && (flags & LONG)) {
           n = 0;
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && INCCL(wi)) n++;
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && in_ccl(wi, ccl)) n++;
           if (wi != WEOF) __ungetwc(wi, fp);
           if (n == 0) goto match_failure;
         } else if (flags & LONG) {
           p0 = p = va_arg(ap, wchar_t*);
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && INCCL(wi))
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && in_ccl(wi, ccl))
             *p++ = (wchar_t)wi;
           if (wi != WEOF) __ungetwc(wi, fp);
           n = p - p0;
@@ -403,7 +419,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
           if (!(flags & SUPPRESS)) mbp = va_arg(ap, char*);
           n = 0;
           memset(&mbs, 0, sizeof(mbs));
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width != 0 && INCCL(wi)) {
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width != 0 && in_ccl(wi, ccl)) {
             if (width >= MB_CUR_MAX && !(flags & SUPPRESS)) {
               nconv = wcrtomb(mbp, wi, &mbs);
               if (nconv == (size_t)-1) goto input_failure;
