@@ -1016,6 +1016,14 @@ TEST(STDIO_TEST, swscanf_ccl) {
   CheckScanf(swscanf, L"+,-/.", L"%[+--/]", 1, "+,-/");
 }
 
+// https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=202240
+TEST(STDIO_TEST, scanf_wscanf_EOF) {
+  EXPECT_EQ(0, sscanf("b", "ab"));
+  EXPECT_EQ(EOF, sscanf("", "a"));
+  EXPECT_EQ(0, swscanf(L"b", L"ab"));
+  EXPECT_EQ(EOF, swscanf(L"", L"a"));
+}
+
 TEST(STDIO_TEST, cantwrite_EBADF) {
   // If we open a file read-only...
   FILE* fp = fopen("/proc/version", "r");
