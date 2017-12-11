@@ -45,7 +45,7 @@ long double fabsl(long double x) {
 }
 #endif
 
-#if defined(__aarch64__)
+#if defined __ARM_ARCH >= 8 || __aarch64__
 float fmaf(float x, float y, float z) { return __builtin_fmaf(x, y, z); }
 double fma(double x, double y, double z) { return __builtin_fma(x, y, z); }
 
