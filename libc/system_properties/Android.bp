@@ -1,0 +1,17 @@
+cc_library_static {
+    name: "libsystemproperties",
+    srcs: [
+        "system_properties/context_node.cpp",
+        "system_properties/contexts_split.cpp",
+        "system_properties/contexts_serialized.cpp",
+        "system_properties/prop_area.cpp",
+        "system_properties/prop_info.cpp",
+        "system_properties/system_properties.cpp",
+    ],
+    sanitize: {
+        misc_undefined: ["signed-integer-overflow"],
+    },
+    whole_static_libs: ["libpropertyinfoparser"],
+    stl: "none",
+    export_include_dirs: ["include"],
+}

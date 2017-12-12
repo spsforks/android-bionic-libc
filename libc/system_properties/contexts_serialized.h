@@ -36,6 +36,8 @@
 
 class ContextsSerialized : public Contexts {
  public:
+  ContextsSerialized(const char* filename) : filename_(filename) {
+  }
   virtual ~ContextsSerialized() override {
   }
 
@@ -53,6 +55,7 @@ class ContextsSerialized : public Contexts {
   bool InitializeProperties();
   bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
 
+  const char* filename_;
   android::properties::PropertyInfoAreaFile property_info_area_file_;
   ContextNode* context_nodes_ = nullptr;
   size_t num_context_nodes_ = 0;

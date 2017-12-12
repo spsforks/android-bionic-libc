@@ -38,7 +38,6 @@
 #include <async_safe/log.h>
 
 #include "private/bionic_prctl.h"
-#include "property_filename.h"
 
 bool ContextsSerialized::InitializeContextNodes() {
   auto num_context_nodes = property_info_area_file_->num_contexts();
@@ -58,7 +57,7 @@ bool ContextsSerialized::InitializeContextNodes() {
   context_nodes_mmap_size_ = context_nodes_mmap_size;
 
   for (size_t i = 0; i < num_context_nodes; ++i) {
-    new (&context_nodes_[i]) ContextNode(property_info_area_file_->context(i));
+    new (&context_nodes_[i]) ContextNode(property_info_area_file_->context(i), filename_);
   }
 
   return true;
@@ -66,8 +65,7 @@ bool ContextsSerialized::InitializeContextNodes() {
 
 bool ContextsSerialized::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
-  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial",
-                                     property_filename);
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial", filename_);
   if (len < 0 || len > PROP_FILENAME_MAX) {
     serial_prop_area_ = nullptr;
     return false;
@@ -101,7 +99,7 @@ bool ContextsSerialized::Initialize(bool writable) {
   }
 
   if (writable) {
-    mkdir(property_filename, S_IRWXU | S_IXGRP | S_IXOTH);
+    mkdir(filename_, S_IRWXU | S_IXGRP | S_IXOTH);
     bool open_failed = false;
     bool fsetxattr_failed = false;
 

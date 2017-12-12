@@ -36,6 +36,8 @@ class ContextListNode;
 
 class ContextsSplit : public Contexts {
  public:
+  ContextsSplit(const char* filename) : filename_(filename) {
+  }
   virtual ~ContextsSplit() override {
   }
 
@@ -56,6 +58,7 @@ class ContextsSplit : public Contexts {
   PrefixNode* prefixes_ = nullptr;
   ContextListNode* contexts_ = nullptr;
   prop_area* serial_prop_area_ = nullptr;
+  const char* filename_ = nullptr;
 };
 
 #endif

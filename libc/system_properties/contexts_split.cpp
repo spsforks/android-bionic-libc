@@ -36,12 +36,11 @@
 #include <async_safe/log.h>
 
 #include "context_node.h"
-#include "property_filename.h"
 
 class ContextListNode : public ContextNode {
  public:
-  ContextListNode(ContextListNode* next, const char* context)
-      : ContextNode(strdup(context)), next(next) {
+  ContextListNode(ContextListNode* next, const char* context, const char* filename)
+      : ContextNode(strdup(context), filename), next(next) {
   }
 
   ~ContextListNode() {
@@ -194,8 +193,7 @@ static int read_spec_entries(char* line_buf, int num_args, ...) {
 
 bool ContextsSplit::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
-  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial",
-                                     property_filename);
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial", filename_);
   if (len < 0 || len > PROP_FILENAME_MAX) {
     serial_prop_area_ = nullptr;
     return false;
@@ -245,7 +243,7 @@ bool ContextsSplit::InitializePropertiesFromFile(const char* filename) {
     if (old_context) {
       ListAddAfterLen(&prefixes_, prop_prefix, old_context);
     } else {
-      ListAdd(&contexts_, context);
+      ListAdd(&contexts_, context, filename_);
       ListAddAfterLen(&prefixes_, prop_prefix, contexts_);
     }
     free(prop_prefix);
@@ -291,7 +289,7 @@ bool ContextsSplit::Initialize(bool writable) {
   }
 
   if (writable) {
-    mkdir(property_filename, S_IRWXU | S_IXGRP | S_IXOTH);
+    mkdir(filename_, S_IRWXU | S_IXGRP | S_IXOTH);
     bool open_failed = false;
     bool fsetxattr_failed = false;
     ListForEach(contexts_, [&fsetxattr_failed, &open_failed](ContextListNode* l) {
