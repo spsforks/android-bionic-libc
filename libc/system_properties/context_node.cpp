@@ -28,11 +28,10 @@
 
 #include "context_node.h"
 
+#include <limits.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
-
-#include "property_filename.h"
 
 // pthread_mutex_lock() calls into system_properties in the case of contention.
 // This creates a risk of dead lock if any system_properties functions
@@ -48,10 +47,9 @@ bool ContextNode::Open(bool access_rw, bool* fsetxattr_failed) {
     return true;
   }
 
-  char filename[PROP_FILENAME_MAX];
-  int len =
-      async_safe_format_buffer(filename, sizeof(filename), "%s/%s", property_filename, context_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  char filename[PATH_MAX];
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
+  if (len < 0 || len > PATH_MAX) {
     lock_.unlock();
     return false;
   }
@@ -84,10 +82,9 @@ void ContextNode::ResetAccess() {
 }
 
 bool ContextNode::CheckAccess() {
-  char filename[PROP_FILENAME_MAX];
-  int len =
-      async_safe_format_buffer(filename, sizeof(filename), "%s/%s", property_filename, context_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  char filename[PATH_MAX];
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
+  if (len < 0 || len > PATH_MAX) {
     return false;
   }
 
