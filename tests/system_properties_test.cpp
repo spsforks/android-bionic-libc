@@ -56,8 +56,8 @@ struct LocalPropertyTestState {
             return;
         }
 
+        // Setting the filename back to PROP_FILENAME magically restores the original property area.
         __system_property_set_filename(PROP_FILENAME);
-        __system_properties_init();
         unlink(pa_filename.c_str());
         rmdir(pa_dirname.c_str());
     }
@@ -536,6 +536,43 @@ TEST(properties, __system_property_extra_long_read_only_too_long) {
   auto value = std::string(128 * 1024 + 1, 'x');
   ASSERT_NE(0, __system_property_add(name.c_str(), name.size(), value.c_str(), value.size()));
 
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
+}
+
+TEST(properties, __system_property_safe_use_after_test) {
+#if defined(__BIONIC__)
+  auto name = "ro.hardware"s;
+  auto test_value = "dummy value"s;
+
+  auto hardware_prop_info = __system_property_find(name.c_str());
+  ASSERT_NE(nullptr, hardware_prop_info);
+  char original_name[PROP_NAME_MAX];
+  char original_value[PROP_VALUE_MAX];
+  __system_property_read(hardware_prop_info, original_name, original_value);
+  EXPECT_EQ(name, original_name);
+
+  // Use a scope here so LocalPropertyTestState is destructed.
+  {
+    LocalPropertyTestState pa;
+    ASSERT_TRUE(pa.valid);
+
+    ASSERT_EQ(
+        0, __system_property_add(name.c_str(), name.size(), test_value.c_str(), test_value.size()));
+    char test_value_read[PROP_VALUE_MAX];
+    EXPECT_EQ(static_cast<int>(test_value.size()),
+              __system_property_get(name.c_str(), test_value_read));
+    EXPECT_EQ(test_value, test_value_read);
+  }
+
+  char second_name[PROP_NAME_MAX];
+  char second_value[PROP_VALUE_MAX];
+  __system_property_read(hardware_prop_info, second_name, second_value);
+
+  EXPECT_EQ(name, second_name);
+  EXPECT_STREQ(original_value, second_value);
+  EXPECT_NE(test_value, second_value);
 #else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif  // __BIONIC__

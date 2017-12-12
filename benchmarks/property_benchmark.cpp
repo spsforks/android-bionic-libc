@@ -102,8 +102,8 @@ struct LocalPropertyTestState {
     if (!valid)
       return;
 
+    // Setting the filename back to PROP_FILENAME magically restores the original property area.
     __system_property_set_filename(PROP_FILENAME);
-    __system_property_area_init();
     unlink(pa_filename.c_str());
     rmdir(pa_dirname.c_str());
 

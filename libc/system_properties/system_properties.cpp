@@ -68,13 +68,16 @@
 // small enough and we place them in a static union.  Note that system properties are initialized
 // before static initializers are called, so using a Constructor here is an error.  Even a
 // Constructor that zero initializes a class will clobber the previous property initialization.
-static union ContextsUnion {
+union ContextsUnion {
   ContextsUnion() {}
   ~ContextsUnion() {}
   ContextsSplit contexts_split;
   ContextsPreSplit contexts_pre_split;
-} contexts_union;
+};
+static ContextsUnion contexts_union;
+static ContextsUnion contexts_union_stored;
 static Contexts* contexts = nullptr;
+static Contexts* contexts_stored = nullptr;
 
 #define SERIAL_DIRTY(serial) ((serial)&1)
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
@@ -302,6 +305,20 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set_filename(const char* filename) {
   size_t len = strlen(filename);
   if (len >= sizeof(property_filename)) return -1;
+
+  // Below is a take on move given the restrictions that we have working in libc.
+  if (!strcmp(property_filename, PROP_FILENAME)) {
+    memcpy(&contexts_union_stored, &contexts_union, sizeof(ContextsUnion));
+    memset(&contexts_union, 0, sizeof(ContextsUnion));
+    contexts_stored = contexts;
+    contexts = nullptr;
+  }
+
+  if (!strcmp(filename, PROP_FILENAME)) {
+    memcpy(&contexts_union, &contexts_union_stored, sizeof(ContextsUnion));
+    memset(&contexts_union_stored, 0, sizeof(ContextsUnion));
+    contexts = contexts_stored;
+  }
 
   strcpy(property_filename, filename);
   return 0;
