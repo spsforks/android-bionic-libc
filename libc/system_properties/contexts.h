@@ -37,7 +37,7 @@ class Contexts {
   virtual ~Contexts() {
   }
 
-  virtual bool Initialize(bool writable) = 0;
+  virtual int Initialize(bool writable, const char* filename) = 0;
   virtual prop_area* GetPropAreaForName(const char* name) = 0;
   virtual prop_area* GetSerialPropArea() = 0;
   virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) = 0;
