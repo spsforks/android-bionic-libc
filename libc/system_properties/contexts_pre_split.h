@@ -32,7 +32,6 @@
 #include "contexts.h"
 #include "prop_area.h"
 #include "prop_info.h"
-#include "property_filename.h"
 
 class ContextsPreSplit : public Contexts {
  public:
@@ -40,8 +39,8 @@ class ContextsPreSplit : public Contexts {
   }
 
   // We'll never initialize this legacy option as writable, so don't even check the arg.
-  virtual bool Initialize(bool) override {
-    pre_split_prop_area_ = prop_area::map_prop_area(property_filename);
+  virtual bool Initialize(bool, const char* filename) override {
+    pre_split_prop_area_ = prop_area::map_prop_area(filename);
     return pre_split_prop_area_ != nullptr;
   }
 
