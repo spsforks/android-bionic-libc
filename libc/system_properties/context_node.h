@@ -35,7 +35,8 @@
 
 class ContextNode {
  public:
-  ContextNode(const char* context) : context_(context), pa_(nullptr), no_access_(false) {
+  ContextNode(const char* context, const char* filename)
+      : context_(context), pa_(nullptr), no_access_(false), filename_(filename) {
     lock_.init(false);
   }
   ~ContextNode() {
@@ -66,6 +67,7 @@ class ContextNode {
   const char* context_;
   prop_area* pa_;
   bool no_access_;
+  const char* filename_;
 };
 
 #endif

@@ -39,7 +39,7 @@ class ContextsSplit : public Contexts {
   virtual ~ContextsSplit() override {
   }
 
-  virtual bool Initialize(bool writable) override;
+  virtual bool Initialize(bool writable, const char* filename) override;
   virtual prop_area* GetPropAreaForName(const char* name) override;
   virtual prop_area* GetSerialPropArea() override {
     return serial_prop_area_;
@@ -56,6 +56,7 @@ class ContextsSplit : public Contexts {
   PrefixNode* prefixes_ = nullptr;
   ContextListNode* contexts_ = nullptr;
   prop_area* serial_prop_area_ = nullptr;
+  const char* filename_ = nullptr;
 };
 
 #endif
