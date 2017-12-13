@@ -87,7 +87,7 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 #if defined(__LP64__)
 
 struct sigaction {
-  unsigned int sa_flags;
+  int sa_flags;
   union {
     sighandler_t sa_handler;
     void (*sa_sigaction)(int, struct siginfo*, void*);
@@ -99,7 +99,7 @@ struct sigaction {
 #elif defined(__mips__)
 
 struct sigaction {
-  unsigned int sa_flags;
+  int sa_flags;
   union {
     sighandler_t sa_handler;
     void (*sa_sigaction) (int, struct siginfo*, void*);

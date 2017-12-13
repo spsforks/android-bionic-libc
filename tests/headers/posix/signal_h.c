@@ -103,12 +103,8 @@ static void signal_h() {
   TYPE(struct sigaction);
   STRUCT_MEMBER_FUNCTION_POINTER(struct sigaction, void (*f)(int), sa_handler);
   STRUCT_MEMBER(struct sigaction, sigset_t, sa_mask);
-#if defined(__BIONIC__)
-#if defined(__LP64__)
-  STRUCT_MEMBER(struct sigaction, unsigned int, sa_flags); // TODO: easily fixed!
-#else
+#if defined(__BIONIC__) && (defined(__arm__) || defined(__i386__)) // Currently comes from uapi header.
   STRUCT_MEMBER(struct sigaction, unsigned long, sa_flags);
-#endif
 #else
   STRUCT_MEMBER(struct sigaction, int, sa_flags);
 #endif
