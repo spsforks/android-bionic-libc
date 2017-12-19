@@ -194,6 +194,14 @@ typedef struct {
   Elf64_Word vna_next;
 } Elf64_Vernaux;
 
+/* Relocation table entry for relative (in section of type SHT_RELR).  */
+typedef Elf32_Word Elf32_Relr;
+typedef Elf64_Xword Elf64_Relr;
+#define ELF32_R_JUMP(val) ((val) >> 24)
+#define ELF32_R_BITS(val) ((val) & 0xffffff)
+#define ELF64_R_JUMP(val) ((val) >> 56)
+#define ELF64_R_BITS(val) ((val) & 0xffffffffffffff)
+
 /* http://www.sco.com/developers/gabi/latest/ch5.dynamic.html */
 #define DF_ORIGIN     0x00000001
 #define DF_SYMBOLIC   0x00000002
@@ -241,6 +249,13 @@ typedef struct {
 /* glibc and BSD disagree for DT_ENCODING; glibc looks wrong. */
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
+#define DT_SYMTAB_SHNDX 34
+/* relr sections */
+#define DT_RELRSZ 35
+#define DT_RELR 36
+#define DT_RELRENT 37
+
+#define DT_RELRCOUNT 0x6ffffff8
 
 /* Android compressed rel/rela sections */
 #define DT_ANDROID_REL (DT_LOOS + 2)
@@ -489,8 +504,9 @@ typedef struct {
 #define SHT_PREINIT_ARRAY 16
 #define SHT_GROUP 17
 #define SHT_SYMTAB_SHNDX 18
+#define SHT_RELR 19
 #undef SHT_NUM
-#define SHT_NUM 19
+#define SHT_NUM 20
 #define SHT_LOOS 0x60000000
 #define SHT_HIOS 0x6fffffff
 
