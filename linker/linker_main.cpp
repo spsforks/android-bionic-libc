@@ -49,10 +49,14 @@
 
 #include <vector>
 
+#include "private/ScopedPthreadMutexLocker.h"
+
 extern void __libc_init_globals(KernelArgumentBlock&);
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
 
 extern "C" void _start();
+
+extern pthread_mutex_t g_solist_mutex;
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -71,6 +75,7 @@ void solist_add_soinfo(soinfo* si) {
 }
 
 bool solist_remove_soinfo(soinfo* si) {
+  ScopedPthreadMutexLocker locker(&g_solist_mutex);
   soinfo *prev = nullptr, *trav;
   for (trav = solist; trav != nullptr; trav = trav->next) {
     if (trav == si) {

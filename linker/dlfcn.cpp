@@ -87,6 +87,8 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_
 #endif
 }
 
+pthread_mutex_t g_solist_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static char* __bionic_set_dlerror(char* new_value) {
@@ -184,7 +186,7 @@ int __loader_dlclose(void* handle) {
 }
 
 int __loader_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedPthreadMutexLocker locker(&g_solist_mutex);
   return do_dl_iterate_phdr(cb, data);
 }
 
@@ -195,7 +197,7 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
 
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedPthreadMutexLocker locker(&g_solist_mutex);
   return do_dl_unwind_find_exidx(pc, pcount);
 }
 #endif
