@@ -2537,6 +2537,35 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
+// Process relocations in SHT_RELR section (experimental).
+// See the original proposal for details of the encoding:
+// - https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg
+bool soinfo::relocate_relr() {
+  ElfW(Relr)* begin = relr_;
+  ElfW(Relr)* end = relr_ + relr_count_;
+
+  ElfW(Addr) offset = 0;
+  for (ElfW(Relr)* current = begin; current < end; ++current) {
+    ElfW(Addr) jump = ELFW(R_JUMP)(*current);
+    ElfW(Addr) bits = ELFW(R_BITS)(*current);
+    offset += jump * sizeof(ElfW(Addr));
+    if (jump == 0) {
+      ++current;
+      offset = *current;
+    }
+    ElfW(Addr) r_offset = offset;
+    for (; bits != 0; bits >>= 1) {
+      if ((bits&1) != 0) {
+        ElfW(Addr) reloc = static_cast<ElfW(Addr)>(r_offset + load_bias);
+        ElfW(Addr) addend = *reinterpret_cast<ElfW(Addr)*>(reloc);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
+      }
+      r_offset += sizeof(ElfW(Addr));
+    }
+  }
+  return true;
+}
+
 #if !defined(__mips__)
 #if defined(USE_RELA)
 static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
@@ -3154,6 +3183,25 @@ bool soinfo::prelink_image() {
         return false;
 
 #endif
+      case DT_RELR:
+        relr_ = reinterpret_cast<ElfW(Relr)*>(load_bias + d->d_un.d_ptr);
+        break;
+
+      case DT_RELRSZ:
+        relr_count_ = d->d_un.d_val / sizeof(ElfW(Relr));
+        break;
+
+      case DT_RELRENT:
+        if (d->d_un.d_val != sizeof(ElfW(Relr))) {
+          DL_ERR("invalid DT_RELRENT: %zd", static_cast<size_t>(d->d_un.d_val));
+          return false;
+        }
+        break;
+
+      // ignored
+      case DT_RELRCOUNT:
+        break;
+
       case DT_INIT:
         init_func_ = reinterpret_cast<linker_ctor_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT) found at %p", get_realpath(), init_func_);
@@ -3477,6 +3525,13 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 #endif
+
+  if (relr_ != nullptr) {
+    DEBUG("[ relocating %s relr ]", get_realpath());
+    if (!relocate_relr()) {
+      return false;
+    }
+  }
 
 #if defined(__mips__)
   if (!mips_relocate_got(version_tracker, global_group, local_group)) {

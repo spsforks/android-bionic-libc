@@ -154,6 +154,10 @@ struct soinfo {
   size_t rel_count_;
 #endif
 
+  ElfW(Relr)* relr_;
+  size_t relr_count_;
+  bool relocate_relr();
+
   linker_ctor_function_t* preinit_array_;
   size_t preinit_array_count_;
 
