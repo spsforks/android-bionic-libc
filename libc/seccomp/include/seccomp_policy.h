@@ -20,8 +20,8 @@
 #include <stddef.h>
 #include <linux/filter.h>
 
-bool set_seccomp_filter();
+bool set_app_seccomp_filter();
+bool set_system_seccomp_filter();
 bool set_global_seccomp_filter();
-void get_seccomp_filter(const sock_filter*& filter, size_t& filter_size);
 
 #endif
