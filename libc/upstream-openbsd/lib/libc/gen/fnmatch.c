@@ -91,48 +91,40 @@
 
 #include "charclass.h"
 
-#define	RANGE_MATCH	1
-#define	RANGE_NOMATCH	0
-#define	RANGE_ERROR	(-1)
+#define RANGE_MATCH   1
+#define RANGE_NOMATCH 0
+#define RANGE_ERROR   (-1)
 
 static int
-classmatch(const char *pattern, char test, int foldcase, const char **ep)
+classmatch(const char** ep, char test, int foldcase)
 {
-	struct cclass *cc;
-	const char *colon;
-	size_t len;
-	int rval = RANGE_NOMATCH;
-	const char * const mismatch = pattern;
+    struct cclass* cc;
+    const char* colon;
+    size_t len;
+    const char* pattern = *ep;
 
-	if (*pattern != '[' || pattern[1] != ':') {
-		*ep = mismatch;
-		return(RANGE_ERROR);
-	}
-
-	pattern += 2;
-
-	if ((colon = strchr(pattern, ':')) == NULL || colon[1] != ']') {
-		*ep = mismatch;
-		return(RANGE_ERROR);
-	}
-	*ep = colon + 2;
-	len = (size_t)(colon - pattern);
-
-	if (foldcase && strncmp(pattern, "upper:]", 7) == 0)
-		pattern = "lower:]";
-	for (cc = cclasses; cc->name != NULL; cc++) {
-		if (!strncmp(pattern, cc->name, len) && cc->name[len] == '\0') {
-			if (cc->isctype((unsigned char)test))
-				rval = RANGE_MATCH;
-			break;
-		}
-	}
-	if (cc->name == NULL) {
-		/* invalid character class, treat as normal text */
-		*ep = mismatch;
-		rval = RANGE_ERROR;
-	}
-	return(rval);
+    if (*pattern != ':') {
+        return RANGE_ERROR;
+    }
+    ++pattern;
+    colon = strchr(pattern, ':');
+    if (colon == NULL) {
+        return RANGE_ERROR;
+    }
+    if (foldcase && (strncmp(pattern, "upper:", 6) == 0)) {
+        pattern = "lower";
+    }
+    len = (size_t)(colon - pattern);
+    for (cc = cclasses; cc->name != NULL; cc++) {
+        if (!strncmp(pattern, cc->name, len) && (cc->name[len] == '\0')) {
+            *ep = colon + 1;
+            if (cc->isctype((unsigned char)test)) {
+                return RANGE_MATCH;
+            }
+            return RANGE_NOMATCH;
+        }
+    }
+    return RANGE_ERROR;
 }
 
 /* Most MBCS/collation/case issues handled here.  Wildcard '*' is not handled.
@@ -187,8 +179,7 @@ static int fnmatch_ch(const char **pattern, const char **string, int flags)
                 break;
 
             /* Match character classes. */
-            if (classmatch(*pattern, **string, nocase, pattern)
-                == RANGE_MATCH) {
+            if (classmatch(pattern, **string, nocase) == RANGE_MATCH) {
                 result = 0;
                 continue;
             }
