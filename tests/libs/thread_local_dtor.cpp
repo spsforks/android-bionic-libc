@@ -26,36 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#include <stdlib.h>
-#include <sys/cdefs.h>
+namespace {
 
+class TestClass {
+ public:
+  TestClass(bool* flag) : flag_(flag) {}
+  ~TestClass() {
+    *flag_ = true;
+  }
+ private:
+  bool* flag_;
+};
 
-extern "C" void __fail() {
-  abort();
+};  // namespace
+
+extern "C" void init_thread_local_variable(bool* flag) {
+  thread_local TestClass test(flag);
 }
-
-__strong_alias(__loader_android_create_namespace, __fail);
-__strong_alias(__loader_android_dlopen_ext, __fail);
-__strong_alias(__loader_android_dlwarning, __fail);
-__strong_alias(__loader_android_get_application_target_sdk_version, __fail);
-__strong_alias(__loader_android_get_LD_LIBRARY_PATH, __fail);
-__strong_alias(__loader_android_get_exported_namespace, __fail);
-__strong_alias(__loader_android_init_anonymous_namespace, __fail);
-__strong_alias(__loader_android_link_namespaces, __fail);
-__strong_alias(__loader_android_set_application_target_sdk_version, __fail);
-__strong_alias(__loader_android_update_LD_LIBRARY_PATH, __fail);
-__strong_alias(__loader_cfi_fail, __fail);
-__strong_alias(__loader_dl_iterate_phdr, __fail);
-__strong_alias(__loader_dladdr, __fail);
-__strong_alias(__loader_dlclose, __fail);
-__strong_alias(__loader_dlerror, __fail);
-__strong_alias(__loader_dlopen, __fail);
-__strong_alias(__loader_dlsym, __fail);
-__strong_alias(__loader_dlvsym, __fail);
-__strong_alias(__loader_add_thread_local_dtor, __fail);
-__strong_alias(__loader_remove_thread_local_dtor, __fail);
-#if defined(__arm__)
-__strong_alias(__loader_dl_unwind_find_exidx, __fail);
-#endif
-__strong_alias(rtld_db_dlactivity, __fail);
-
