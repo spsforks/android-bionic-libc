@@ -33,6 +33,8 @@
 
 #include "private/bionic_fortify.h"
 
+#define __openat __openat_hook
+
 extern "C" int __openat(int, const char*, int, int);
 
 static inline int force_O_LARGEFILE(int flags) {

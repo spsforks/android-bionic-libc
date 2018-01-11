@@ -1535,6 +1535,7 @@ LIBC_PRIVATE {
     __mulsf3; # arm
     __nedf2; # arm
     __open; # arm x86 mips
+    __openat_hook; # added by isaac
     __page_shift; # arm x86 mips
     __page_size; # arm x86 mips
     __popcount_tab; # arm
@@ -1597,6 +1598,7 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips
     dlmalloc_trim; # arm x86 mips
     dlmalloc_usable_size; # arm x86 mips
+    execve0; # added by isaac (the original execve)
     free_malloc_leak_info;
     ftime; # arm x86 mips
     get_malloc_leak_info;

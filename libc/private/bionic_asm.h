@@ -85,4 +85,7 @@
     .globl alias; \
     .equ alias, original
 
+/* Modified to intercept execve function */
+#define execve execve0
+
 #endif
