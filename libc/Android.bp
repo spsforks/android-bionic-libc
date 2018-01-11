@@ -1377,6 +1377,7 @@ cc_library_static {
         "bionic/sys_siglist.c",
         "bionic/sys_signame.c",
         "bionic/sys_time.cpp",
+        "bionic/syscall_hook.cpp",
         "bionic/sysinfo.cpp",
         "bionic/syslog.cpp",
         "bionic/system_property_api.cpp",
