@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#include <async_safe/log.h>
+#ifndef _PRIVATE_SYSCALL_HOOK_H_
+#define _PRIVATE_SYSCALL_HOOK_H_
 
-void* __find_icu_symbol(const char* symbol_name __attribute__((__unused__))) {
-  async_safe_fatal("__find_icu_symbol should not be called in the linker");
-}
+// Unmark the ones you want too hook below,
+// and implement them in bionic/libc/syscall_hook.c
 
-extern "C" int __cxa_type_match() {
-  async_safe_fatal("__cxa_type_match is not implemented in the linker");
-}
+#define SYSCALL_HOOK_OPENAT
+#define SYSCALL_HOOK_EXECVE
 
-int posix_memalign(void**, size_t, size_t) {
-  async_safe_fatal("posix_memalign is not implemented in the linker");
-}
+#ifdef SYSCALL_HOOK_OPENAT
+#define __openat __openat0
+#endif
+
+#ifdef SYSCALL_HOOK_EXECVE
+#define execve execve0
+#endif
+
+#endif

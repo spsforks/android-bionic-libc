@@ -48,6 +48,8 @@
 #include <private/bionic_asm_x86_64.h>
 #endif
 
+#include <private/syscall_hook.h>
+
 #define ENTRY_NO_DWARF(f) \
     .text; \
     .globl f; \
