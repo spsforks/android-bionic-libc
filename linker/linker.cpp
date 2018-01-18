@@ -1430,7 +1430,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   }
 
   // returning true with empty soinfo means that the library is okay to be
-  // loaded in the namespace buy has not yet been loaded there before.
+  // loaded in the namespace but has not yet been loaded there before.
   task->set_soinfo(nullptr);
   return true;
 }
@@ -2298,7 +2298,7 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
     return false;
   }
 
-  if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames)) {
+  if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames, false)) {
     return false;
   }
 
@@ -2363,7 +2363,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
     // and copy parent namespace links
     for (auto& link : parent_namespace->linked_namespaces()) {
-      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames(),
+                               link.allow_all_shared_libs());
     }
   } else {
     // If not shared - copy only the shared group
@@ -2379,7 +2380,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
 
 bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
-                     const char* shared_lib_sonames) {
+                     const char* shared_lib_sonames,
+                     bool allow_all_shared_libs) {
   if (namespace_to == nullptr) {
     namespace_to = &g_default_namespace;
   }
@@ -2389,17 +2391,31 @@ bool link_namespaces(android_namespace_t* namespace_from,
     return false;
   }
 
-  if (shared_lib_sonames == nullptr || shared_lib_sonames[0] == '\0') {
-    DL_ERR("error linking namespaces \"%s\"->\"%s\": the list of shared libraries is empty.",
-           namespace_from->get_name(), namespace_to->get_name());
-    return false;
+  std::unordered_set<std::string> sonames_set;
+
+  const bool empty_shared_lib_sonames =
+      (shared_lib_sonames == nullptr || shared_lib_sonames[0] == '\0');
+
+  if (allow_all_shared_libs) {
+    if (!empty_shared_lib_sonames) {
+      DL_ERR("error linking namespaces \"%s\"->\"%s\": the list of shared libraries is not empty "
+             "and allow_all_shared_libs is true.",
+             namespace_from->get_name(), namespace_to->get_name());
+      return false;
+    }
+  } else {
+    if (empty_shared_lib_sonames) {
+      DL_ERR("error linking namespaces \"%s\"->\"%s\": the list of shared libraries is empty.",
+             namespace_from->get_name(), namespace_to->get_name());
+      return false;
+    }
+
+    auto sonames = android::base::Split(shared_lib_sonames, ":");
+    sonames_set.insert(sonames.begin(), sonames.end());
   }
 
-  auto sonames = android::base::Split(shared_lib_sonames, ":");
-  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
-
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, allow_all_shared_libs);
 
   return true;
 }
@@ -3763,7 +3779,8 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
       auto it_to = namespaces.find(ns_link.ns_name());
       CHECK(it_to != namespaces.end());
       android_namespace_t* namespace_to = it_to->second;
-      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str(),
+                      ns_link.allow_all_shared_libs());
     }
   }
   // we can no longer rely on the fact that libdl.so is part of default namespace
