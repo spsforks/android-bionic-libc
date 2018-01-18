@@ -1430,7 +1430,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   }
 
   // returning true with empty soinfo means that the library is okay to be
-  // loaded in the namespace buy has not yet been loaded there before.
+  // loaded in the namespace but has not yet been loaded there before.
   task->set_soinfo(nullptr);
   return true;
 }
@@ -2363,7 +2363,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
     // and copy parent namespace links
     for (auto& link : parent_namespace->linked_namespaces()) {
-      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames(),
+                               link.allow_all_shared_libs());
     }
   } else {
     // If not shared - copy only the shared group
@@ -2395,11 +2396,15 @@ bool link_namespaces(android_namespace_t* namespace_from,
     return false;
   }
 
-  auto sonames = android::base::Split(shared_lib_sonames, ":");
-  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
+  std::unordered_set<std::string> sonames_set;
+  bool allow_all_shared_libs = strcmp(shared_lib_sonames, "/*all-libs*/") == 0;
+  if (!allow_all_shared_libs) {
+    auto sonames = android::base::Split(shared_lib_sonames, ":");
+    sonames_set.insert(sonames.begin(), sonames.end());
+  }
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, allow_all_shared_libs);
 
   return true;
 }
