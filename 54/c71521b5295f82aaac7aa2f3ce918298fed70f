@@ -1,0 +1,7 @@
+Code-Review+2: Joachim Sauer <jsauer@google.com>
+Build-Cop-Override+1: Joachim Sauer <jsauer@google.com>
+Submitted-by: Joachim Sauer <jsauer@google.com>
+Submitted-at: Thu, 18 Jan 2018 11:38:42 +0000
+Reviewed-on: https://android-review.googlesource.com/592593
+Project: platform/bionic
+Branch: refs/heads/master
