@@ -1016,6 +1016,26 @@ TEST(STDIO_TEST, swscanf_ccl) {
   CheckScanf(swscanf, L"+,-/.", L"%[+--/]", 1, "+,-/");
 }
 
+template <typename T>
+static void CheckScanfM(int sscanf_fn(const T*, const T*, ...),
+                        const T* input, const T* fmt,
+                        int expected_count, const char* expected_string) {
+  T* result = nullptr;
+  ASSERT_EQ(expected_count, sscanf_fn(input, fmt, &result)) << fmt;
+  if (expected_string == nullptr) {
+    ASSERT_EQ(nullptr, result);
+  } else {
+    ASSERT_STREQ(expected_string, result) << fmt;
+  }
+  free(result);
+}
+
+TEST(STDIO_TEST, sscanf_ms) {
+  CheckScanfM(sscanf, "hello", "%ms", 1, "hello");
+  CheckScanfM(sscanf, "hello", "%4ms", 1, "hell");
+  CheckScanfM(sscanf, "hello world", "%30ms", 1, "hello");
+}
+
 // https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=202240
 TEST(STDIO_TEST, scanf_wscanf_EOF) {
   EXPECT_EQ(0, sscanf("b", "ab"));

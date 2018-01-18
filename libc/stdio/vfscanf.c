@@ -37,66 +37,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <wctype.h>
 #include "local.h"
 
 #include <private/bionic_ctype.h>
 
+// TODO: why is this so long?
 #define BUF 513 /* Maximum length of numeric string. */
 
-/*
- * Flags used during conversion.
- */
-#define LONG 0x00001       /* l: long or double */
-#define LONGDBL 0x00002    /* L: long double */
-#define SHORT 0x00004      /* h: short */
-#define SHORTSHORT 0x00008 /* hh: 8 bit integer */
-#define LLONG 0x00010      /* ll: long long (+ deprecated q: quad) */
-#define POINTER 0x00020    /* p: void * (as hex) */
-#define SIZEINT 0x00040    /* z: (signed) size_t */
-#define MAXINT 0x00080     /* j: intmax_t */
-#define PTRINT 0x00100     /* t: ptrdiff_t */
-#define NOSKIP 0x00200     /* [ or c: do not skip blanks */
-#define SUPPRESS 0x00400   /* *: suppress assignment */
-#define UNSIGNED 0x00800   /* %[oupxX] conversions */
+// Flags used during conversion.
+// Size/type:
+#define LONG       0x00001 // l: long or double
+#define LONGDBL    0x00002 // L: long double
+#define SHORT      0x00004 // h: short
+#define SHORTSHORT 0x00008 // hh: 8 bit integer
+#define LLONG      0x00010 // ll: long long (+ deprecated q: quad)
+#define POINTER    0x00020 // p: void* (as hex)
+#define SIZEINT    0x00040 // z: (signed) size_t
+#define MAXINT     0x00080 // j: intmax_t
+#define PTRINT     0x00100 // t: ptrdiff_t
+#define NOSKIP     0x00200 // [ or c: do not skip blanks
+// Modifiers:
+#define SUPPRESS   0x00400 // *: suppress assignment
+#define UNSIGNED   0x00800 // %[oupxX] conversions
+#define ALLOCATE   0x01000 // m: allocate a char*
+// Internal use during integer parsing:
+#define SIGNOK     0x02000 // +/- is (still) legal
+#define HAVESIGN   0x04000 // Sign detected
+#define NDIGITS    0x08000 // No digits detected
+#define PFXOK      0x10000 // "0x" prefix is (still) legal
+#define NZDIGITS   0x20000 // No zero digits detected
 
-/*
- * The following are used in numeric conversions only:
- * SIGNOK, HAVESIGN, NDIGITS, DPTOK, and EXPOK are for floating point;
- * SIGNOK, HAVESIGN, NDIGITS, PFXOK, and NZDIGITS are for integral.
- */
-#define SIGNOK 0x01000   /* +/- is (still) legal */
-#define HAVESIGN 0x02000 /* sign detected */
-#define NDIGITS 0x04000  /* no digits detected */
+// Conversion types.
+#define CT_CHAR 0   // %c conversion
+#define CT_CCL 1    // %[...] conversion
+#define CT_STRING 2 // %s conversion
+#define CT_INT 3    // Integer: strtoimax/strtoumax
+#define CT_FLOAT 4  // Float: strtod
 
-#define DPTOK 0x08000 /* (float) decimal point is still legal */
-#define EXPOK 0x10000 /* (float) exponent (e+3, etc) still legal */
-
-#define PFXOK 0x08000    /* 0x prefix is (still) legal */
-#define NZDIGITS 0x10000 /* no zero digits detected */
-
-/*
- * Conversion types.
- */
-#define CT_CHAR 0   /* %c conversion */
-#define CT_CCL 1    /* %[...] conversion */
-#define CT_STRING 2 /* %s conversion */
-#define CT_INT 3    /* integer, i.e., strtoimax or strtoumax */
-#define CT_FLOAT 4  /* floating, i.e., strtod */
-
-static u_char* __sccl(char*, u_char*);
+static const unsigned char* __sccl(char*, const unsigned char*);
 
 /*
  * Internal, unlocked version of vfscanf
  */
-int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
-  u_char* fmt = (u_char*)fmt0;
+int __svfscanf(FILE* fp, const char* fmt0, va_list ap) {
+  const unsigned char* fmt = (const unsigned char*) fmt0;
   int c;            /* character from format, or conversion */
   size_t width;     /* field width, or 0 */
   char* p;          /* points into all kinds of strings */
-  int n;            /* handy integer */
+  size_t n;
   int flags;        /* flags as defined above */
-  char* p0;         /* saves original value of p when necessary */
   int nassigned;    /* number of fields assigned */
   int nread;        /* number of characters consumed from fp */
   int base;         /* base argument to strtoimax/strtouimax */
@@ -105,6 +96,8 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
   wchar_t* wcp;     /* handy wide character pointer */
   size_t nconv;     /* length of multibyte sequence converted */
   mbstate_t mbs;
+  char* allocation = NULL; // Allocated but unassigned result for %mc/%ms/%m[.
+  size_t allocation_size;  // Number of bytes allocated in `allocation`.
 
   /* `basefix' is used to avoid `if' tests in the integer scanner */
   static short basefix[17] = { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
@@ -113,10 +106,9 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
 
   nassigned = 0;
   nread = 0;
-  base = 0; /* XXX just to keep gcc happy */
   for (;;) {
     c = *fmt++;
-    if (c == 0) return (nassigned);
+    if (c == 0) return nassigned;
     if (IsSpace(c)) {
       while ((fp->_r > 0 || __srefill(fp) == 0) && IsSpace(*fp->_p)) nread++, fp->_r--, fp->_p++;
       continue;
@@ -163,6 +155,9 @@ literal:
         } else {
           flags |= LONG;
         }
+        goto again;
+      case 'm':
+        flags |= ALLOCATE;
         goto again;
       case 'q':
         flags |= LLONG; /* deprecated */
@@ -262,29 +257,30 @@ literal:
 
       case 'n':
         if (flags & SUPPRESS) continue;
-        if (flags & SHORTSHORT)
+        if (flags & SHORTSHORT) {
           *va_arg(ap, signed char*) = nread;
-        else if (flags & SHORT)
+        } else if (flags & SHORT) {
           *va_arg(ap, short*) = nread;
-        else if (flags & LONG)
+        } else if (flags & LONG) {
           *va_arg(ap, long*) = nread;
-        else if (flags & SIZEINT)
+        } else if (flags & SIZEINT) {
           *va_arg(ap, ssize_t*) = nread;
-        else if (flags & PTRINT)
+        } else if (flags & PTRINT) {
           *va_arg(ap, ptrdiff_t*) = nread;
-        else if (flags & LLONG)
+        } else if (flags & LLONG) {
           *va_arg(ap, long long*) = nread;
-        else if (flags & MAXINT)
+        } else if (flags & MAXINT) {
           *va_arg(ap, intmax_t*) = nread;
-        else
+        } else {
           *va_arg(ap, int*) = nread;
+        }
         continue;
 
       /*
        * Disgusting backwards compatibility hacks.	XXX
        */
       case '\0': /* compat */
-        return (EOF);
+        return EOF;
 
       default: /* compat */
         if (IsUpper(c)) flags |= LONG;
@@ -292,6 +288,11 @@ literal:
         base = 10;
         break;
     }
+
+    // TODO: fortify fail if ALLOCATE but not CT_CHAR/CT_STRING/CT_CCL.
+    // TODO: fortify fail if ALLOCATE and SUPPRESS.
+
+    // TODO: fortify fail if ALLOCATE and LONG (valid, but unimplemented).
 
     /*
      * We have a conversion that requires input.
@@ -326,10 +327,11 @@ literal:
         /* scan arbitrary characters (sets NOSKIP) */
         if (width == 0) width = 1;
         if (flags & LONG) {
+          // TODO: %mlc
           wcp = ((flags & SUPPRESS) == 0) ? va_arg(ap, wchar_t*) : NULL;
           n = 0;
           while (width != 0) {
-            if (n == (int)MB_CUR_MAX) {
+            if (n == MB_CUR_MAX) {
               fp->_flags |= __SERR;
               goto input_failure;
             }
@@ -361,7 +363,7 @@ literal:
         } else if (flags & SUPPRESS) {
           size_t sum = 0;
           for (;;) {
-            if ((n = fp->_r) < (int)width) {
+            if ((n = fp->_r) < width) {
               sum += n;
               width -= n;
               fp->_p += n;
@@ -378,6 +380,7 @@ literal:
           }
           nread += sum;
         } else {
+          // TODO: %mc
           size_t r = fread((void*)va_arg(ap, char*), 1, width, fp);
 
           if (r == 0) goto input_failure;
@@ -390,15 +393,16 @@ literal:
       case CT_STRING:
         // CT_CCL: scan a (nonempty) character class (sets NOSKIP).
         // CT_STRING: like CCL, but zero-length string OK, & no NOSKIP.
-        if (width == 0) width = (size_t)~0; // 'infinity'.
+        if (width == 0) width = SIZE_MAX;
         if (flags & LONG) {
           wchar_t twc;
           int nchars = 0;
 
+          // TODO: %mls
           wcp = (flags & SUPPRESS) == 0 ? va_arg(ap, wchar_t*) : &twc;
           n = 0;
           while ((c == CT_CCL || !IsSpace(*fp->_p)) && width != 0) {
-            if (n == (int)MB_CUR_MAX) {
+            if (n == MB_CUR_MAX) {
               fp->_flags |= __SERR;
               goto input_failure;
             }
@@ -450,24 +454,40 @@ literal:
             }
           }
         } else {
-          p0 = p = va_arg(ap, char*);
+          if (flags & ALLOCATE) {
+            allocation_size = MIN(width, 32);
+            allocation = p = malloc(allocation_size);
+            if (allocation == NULL) goto allocation_failure;
+          } else {
+            p = va_arg(ap, char*);
+          }
+          n = 0;
           while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !IsSpace(*fp->_p))) {
             fp->_r--;
-            *p++ = *fp->_p++;
+            p[n++] = *fp->_p++;
+            if ((flags & ALLOCATE) != 0 && n == allocation_size) {
+              allocation_size *= 2; // TODO: what would std::string do?
+              char* new_allocation = realloc(allocation, allocation_size);
+              if (new_allocation == NULL) goto allocation_failure;
+              allocation = p = new_allocation;
+            }
             if (--width == 0) break;
             if (fp->_r <= 0 && __srefill(fp)) {
-              if (c == CT_CCL && p == p0) goto input_failure;
+              if (c == CT_CCL && n == 0) goto input_failure;
               break;
             }
           }
-          n = p - p0;
+          if (flags & ALLOCATE) {
+            *va_arg(ap, char**) = allocation;
+            allocation = NULL;
+          }
         }
         if (c == CT_CCL && n == 0) goto match_failure;
         if (!(flags & SUPPRESS)) {
           if (flags & LONG) {
             *wcp = L'\0';
           } else {
-            *p = '\0';
+            p[n] = '\0';
           }
           ++nassigned;
         }
@@ -659,10 +679,12 @@ literal:
         break;
     }
   }
+allocation_failure:
 input_failure:
+  free(allocation);
   if (nassigned == 0) nassigned = -1;
 match_failure:
-  return (nassigned);
+  return nassigned;
 }
 
 /*
@@ -671,7 +693,7 @@ match_failure:
  * closing `]'.  The table has a 1 wherever characters should be
  * considered part of the scanset.
  */
-static u_char* __sccl(char* tab, u_char* fmt) {
+static const unsigned char* __sccl(char* tab, const unsigned char* fmt) {
   int c, n, v;
 
   /* first `clear' the whole table */
@@ -744,7 +766,7 @@ static u_char* __sccl(char* tab, u_char* fmt) {
         break;
 
       case ']': /* end of scanset */
-        return (fmt);
+        return fmt;
 
       default: /* just another character */
         c = n;
