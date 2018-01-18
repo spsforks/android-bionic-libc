@@ -257,7 +257,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       const char* shared_libs_sonames) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
-  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
+  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames, false);
 
   if (!success) {
     __bionic_format_dlerror("android_link_namespaces failed", linker_get_error_buffer());
