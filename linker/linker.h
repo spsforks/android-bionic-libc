@@ -178,7 +178,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
 
 bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
-                     const char* shared_lib_sonames);
+                     const char* shared_lib_sonames,
+                     bool allow_all_shared_libs);
 
 android_namespace_t* get_exported_namespace(const char* name);
 
