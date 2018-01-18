@@ -65,6 +65,10 @@ bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
 bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       android_namespace_t* namespace_to,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
+bool __loader_android_link_namespaces_ext(android_namespace_t* namespace_from,
+                                          android_namespace_t* namespace_to,
+                                          const char* shared_libs_sonames,
+                                          bool allow_all_shared_libs) __LINKER_PUBLIC__;
 void __loader_android_set_application_target_sdk_version(uint32_t target) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
@@ -257,10 +261,26 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       const char* shared_libs_sonames) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
-  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
+  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames, false);
 
   if (!success) {
     __bionic_format_dlerror("android_link_namespaces failed", linker_get_error_buffer());
+  }
+
+  return success;
+}
+
+bool __loader_android_link_namespaces_ext(android_namespace_t* namespace_from,
+                                          android_namespace_t* namespace_to,
+                                          const char* shared_libs_sonames,
+                                          bool allow_all_shared_libs) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+
+  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames,
+                                 allow_all_shared_libs);
+
+  if (!success) {
+    __bionic_format_dlerror("android_link_namespaces_ext failed", linker_get_error_buffer());
   }
 
   return success;
