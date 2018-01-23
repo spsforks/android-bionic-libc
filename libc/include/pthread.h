@@ -86,6 +86,9 @@ enum {
 #define PTHREAD_SCOPE_SYSTEM 0
 #define PTHREAD_SCOPE_PROCESS 1
 
+#define PTHREAD_PRIO_NONE 0
+#define PTHREAD_PRIO_INHERIT 1
+
 int pthread_atfork(void (*__prepare)(void), void (*__parent)(void), void (*__child)(void)) __INTRODUCED_IN(12);
 
 int pthread_attr_destroy(pthread_attr_t* __attr);
@@ -145,9 +148,11 @@ int pthread_key_delete(pthread_key_t __key);
 int pthread_mutexattr_destroy(pthread_mutexattr_t* __attr);
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* __attr, int* __shared);
 int pthread_mutexattr_gettype(const pthread_mutexattr_t* __attr, int* __type);
+int pthread_mutexattr_getprotocol(const pthread_mutexattr_t* __attr, int* __protocol);
 int pthread_mutexattr_init(pthread_mutexattr_t* __attr);
 int pthread_mutexattr_setpshared(pthread_mutexattr_t* __attr, int __shared);
 int pthread_mutexattr_settype(pthread_mutexattr_t* __attr, int __type);
+int pthread_mutexattr_setprotocol(pthread_mutexattr_t* __attr, int __protocol);
 
 int pthread_mutex_destroy(pthread_mutex_t* __mutex);
 int pthread_mutex_init(pthread_mutex_t* __mutex, const pthread_mutexattr_t* __attr);

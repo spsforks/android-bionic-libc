@@ -57,3 +57,18 @@ int __futex_wait_ex(volatile void* ftx, bool shared, int value, bool use_realtim
   return __futex(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE), value,
                  futex_abs_timeout, FUTEX_BITSET_MATCH_ANY);
 }
+
+int __futex_pi_lock_ex(volatile void* ftx, bool shared, bool use_realtime_clock,
+                       const timespec* abs_timeout) {
+  const timespec* futex_abs_timeout = abs_timeout;
+  timespec converted_monotonic_abs_timeout;
+  if (abs_timeout && use_realtime_clock) {
+    monotonic_time_from_realtime_time(converted_monotonic_abs_timeout, *abs_timeout);
+    if (converted_monotonic_abs_timeout.tv_sec < 0) {
+      return -ETIMEDOUT;
+    }
+    futex_abs_timeout = &converted_monotonic_abs_timeout;
+  }
+
+  return __futex(ftx, (shared ? FUTEX_LOCK_PI : FUTEX_LOCK_PI_PRIVATE), 0, futex_abs_timeout, 0);
+}
