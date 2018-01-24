@@ -39,12 +39,13 @@ static pid_t fallback_tid = 0;
 
 // Used by libdebuggerd_handler to switch allocators during a crash dump, in
 // case the linker heap is corrupted. Do not use this function.
-extern "C" void __linker_enable_fallback_allocator() {
+extern "C" bool __linker_enable_fallback_allocator() {
   if (fallback_tid != 0) {
-    async_safe_fatal("attempted to use currently-in-use fallback allocator");
+    return false;
   }
 
   fallback_tid = gettid();
+  return true;
 }
 
 extern "C" void __linker_disable_fallback_allocator() {
