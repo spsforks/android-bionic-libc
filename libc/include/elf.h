@@ -197,10 +197,6 @@ typedef struct {
 /* Relocation table entry for relative (in section of type SHT_RELR).  */
 typedef Elf32_Word Elf32_Relr;
 typedef Elf64_Xword Elf64_Relr;
-#define ELF32_R_JUMP(val) ((val) >> 24)
-#define ELF32_R_BITS(val) ((val) & 0xffffff)
-#define ELF64_R_JUMP(val) ((val) >> 56)
-#define ELF64_R_BITS(val) ((val) & 0xffffffffffffff)
 
 /* http://www.sco.com/developers/gabi/latest/ch5.dynamic.html */
 #define DF_ORIGIN     0x00000001
