@@ -41,6 +41,6 @@ extern unsigned __exidx_start;
 _Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __attribute__((unused)), 
                                     int *pcount)
 {
-	*pcount = (__exidx_end-__exidx_start)/8;
-	return (_Unwind_Ptr)__exidx_start;
+	*pcount = (&__exidx_end-&__exidx_start)/8;
+	return (_Unwind_Ptr)&__exidx_start;
 }
