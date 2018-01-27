@@ -65,6 +65,9 @@ struct addrinfo;
  * The introduction of per-UID routing means the uid is also an essential part
  * of the evaluation context. Its proper uninitialized value is
  * NET_CONTEXT_INVALID_UID.
+ *
+ * Additional flags indicate other special handling applicable to queries made
+ * using this context.
  */
 struct android_net_context {
     unsigned app_netid;
