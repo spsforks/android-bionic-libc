@@ -774,6 +774,12 @@ void res_setnetcontext(res_state statp, const struct android_net_context *netcon
 		statp->netid = netcontext->dns_netid;
 		statp->_mark = netcontext->dns_mark;
 		statp->qhook = netcontext->qhook;
+		if (statp->qhook) {
+			// If a query hook is specified, then we are using a modern, non-default
+			// transport, so we are in a legacy-free environment where it is safe to
+			// use EDNS and set DNSSEC_OK.
+			statp->options |= RES_USE_EDNS0 | RES_USE_DNSSEC;
+		}
 	}
 }
 
