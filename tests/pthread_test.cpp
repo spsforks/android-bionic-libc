@@ -1378,12 +1378,13 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   EXPECT_EQ(stack_size, stack_size2);
 
 #if defined(__BIONIC__)
-  // What does /proc/self/maps' [stack] line say?
+  // Find stack in /proc/self/maps using a pointer to the stack
   void* maps_stack_hi = NULL;
   std::vector<map_record> maps;
   ASSERT_TRUE(Maps::parse_maps(&maps));
+  uintptr_t stack_address = reinterpret_cast<uintptr_t>(&maps_stack_hi);
   for (const auto& map : maps) {
-    if (map.pathname == "[stack]") {
+    if (map.addr_start <= stack_address && map.addr_end > stack_address){
       maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
       break;
     }
