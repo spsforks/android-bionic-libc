@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,28 +26,49 @@
  * SUCH DAMAGE.
  */
 
+#include <gtest/gtest.h>
+
 #include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
-#include <string.h>
-#include <time.h>
+#include <sys/signalfd.h>
+#include <unistd.h>
 
-#include "private/kernel_sigset_t.h"
+#include <thread>
 
-extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t);
+#include "ScopedSignalHandler.h"
 
-int sigwait(const sigset_t* set, int* sig) {
-  kernel_sigset_t sigset(set);
-  while (true) {
-    // __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
-    // around them since sigwait is only allowed to return EINVAL.
-    int result = __rt_sigtimedwait(sigset.get(), NULL, NULL, sizeof(sigset));
-    if (result >= 0) {
-      *sig = result;
-      return 0;
-    }
+static void TestSignalFd(int fd, int signal) {
+  ASSERT_NE(-1, fd) << strerror(errno);
 
-    if (errno != EAGAIN && errno != EINTR) {
-      return errno;
-    }
-  }
+  ASSERT_EQ(0, raise(signal));
+
+  signalfd_siginfo sfd_si;
+  ASSERT_EQ(static_cast<ssize_t>(sizeof(sfd_si)), read(fd, &sfd_si, sizeof(sfd_si)));
+
+  ASSERT_EQ(signal, static_cast<int>(sfd_si.ssi_signo));
+
+  close(fd);
+}
+
+TEST(sys_signalfd, signalfd) {
+  SignalMaskRestorer smr;
+
+  sigset_t mask = {};
+  sigaddset(&mask, SIGALRM);
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &mask, nullptr));
+
+  TestSignalFd(signalfd(-1, &mask, SFD_CLOEXEC), SIGALRM);
+}
+
+TEST(sys_signalfd, signalfd64) {
+#if defined(__BIONIC__)
+  SignalMaskRestorer smr;
+
+  sigset64_t mask = {};
+  sigaddset64(&mask, SIGRTMIN);
+  ASSERT_EQ(0, sigprocmask64(SIG_SETMASK, &mask, nullptr));
+
+  TestSignalFd(signalfd64(-1, &mask, SFD_CLOEXEC), SIGRTMIN);
+#endif
 }

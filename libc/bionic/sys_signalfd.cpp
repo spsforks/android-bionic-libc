@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,26 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <signal.h>
 
-/* this function is called from the ARM assembly setjmp fragments */
-int
-sigblock(int mask)
-{
-    int  n;
-    union {
-        int       the_mask;
-        sigset_t  the_sigset;
-    } in, out;
+#include <sys/signalfd.h>
 
-    sigemptyset(&in.the_sigset);
-    in.the_mask = mask;
+#include "private/SigSetConverter.h"
 
-    n = sigprocmask(SIG_BLOCK, &in.the_sigset, &out.the_sigset);
-    if (n)
-        return n;
+extern "C" int __signalfd4(int, const sigset64_t*, size_t, int);
 
-    return out.the_mask;
+int signalfd(int fd, const sigset_t* mask, int flags) {
+  SigSetConverter set = {};
+  set.sigset = *mask;
+  return signalfd64(fd, &set.sigset64, flags);
 }
 
-
+int signalfd64(int fd, const sigset64_t* mask, int flags) {
+  return __signalfd4(fd, mask, sizeof(*mask), flags);
+}

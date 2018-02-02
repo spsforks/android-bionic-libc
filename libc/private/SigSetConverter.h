@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <signal.h>
+#pragma once
 
-int sigwaitinfo(const sigset_t* set, siginfo_t* info) {
-  return sigtimedwait(set, info, NULL);
-}
+union SigSetConverter {
+  int bsd;
+  sigset_t sigset;
+  sigset64_t sigset64;
+};

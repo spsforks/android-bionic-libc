@@ -140,6 +140,7 @@ cc_test_library {
         "sys_sem_test.cpp",
         "sys_sendfile_test.cpp",
         "sys_shm_test.cpp",
+        "sys_signalfd_test.cpp",
         "sys_socket_test.cpp",
         "sys_stat_test.cpp",
         "sys_statvfs_test.cpp",
@@ -413,6 +414,7 @@ cc_defaults {
     target: {
         android: {
             shared_libs: [
+                "ld-android",
                 "libdl",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
@@ -554,6 +556,10 @@ cc_test {
         "libnstest_root",
         "libnstest_public",
         "libnstest_public_internal",
+        "libnstest_ns_a_public1",
+        "libnstest_ns_a_public1_internal",
+        "libnstest_ns_b_public2",
+        "libnstest_ns_b_public3",
     ],
 }
 

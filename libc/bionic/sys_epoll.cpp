@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,15 +27,35 @@
  */
 
 #include <errno.h>
-#include <signal.h>
+#include <sys/epoll.h>
 
-int sigdelset(sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
-  unsigned long* local_set = reinterpret_cast<unsigned long*>(set);
-  if (set == NULL || bit < 0 || bit >= static_cast<int>(8*sizeof(sigset_t))) {
+#include "private/SigSetConverter.h"
+
+extern "C" int __epoll_pwait(int, epoll_event*, int, int, const sigset64_t*, size_t);
+
+int epoll_create(int size) {
+  if (size <= 0) {
     errno = EINVAL;
     return -1;
   }
-  local_set[bit / LONG_BIT] &= ~(1UL << (bit % LONG_BIT));
-  return 0;
+  return epoll_create1(0);
+}
+
+int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {};
+    set.sigset = *ss;
+    ss_ptr = &set.sigset64;
+  }
+  return epoll_pwait64(fd, events, max_events, timeout, ss_ptr);
+}
+
+int epoll_pwait64(int fd, epoll_event* events, int max_events, int timeout, const sigset64_t* ss) {
+  return __epoll_pwait(fd, events, max_events, timeout, ss, sizeof(*ss));
+}
+
+int epoll_wait(int fd, struct epoll_event* events, int max_events, int timeout) {
+  return epoll_pwait64(fd, events, max_events, timeout, nullptr);
 }

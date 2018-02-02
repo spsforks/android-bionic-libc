@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SCOPED_SIGNAL_BLOCKER_H
-#define SCOPED_SIGNAL_BLOCKER_H
+static const char ns_a_public1_internal_string[] = "libnstest_ns_a_public1_internal.so";
 
-#include <signal.h>
-
-#include "bionic_macros.h"
-
-class ScopedSignalBlocker {
- public:
-  explicit ScopedSignalBlocker() {
-    sigset64_t set;
-    sigfillset64(&set);
-    sigprocmask64(SIG_SETMASK, &set, &old_set_);
-  }
-
-  ~ScopedSignalBlocker() {
-    reset();
-  }
-
-  void reset() {
-    sigprocmask64(SIG_SETMASK, &old_set_, nullptr);
-  }
-
- private:
-  sigset64_t old_set_;
-
-  DISALLOW_COPY_AND_ASSIGN(ScopedSignalBlocker);
-};
-
-#endif
+extern "C" const char* get_ns_a_public1_internal_string() {
+  return ns_a_public1_internal_string;
+}
