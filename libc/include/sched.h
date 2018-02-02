@@ -32,6 +32,7 @@
 #include <bits/timespec.h>
 #include <linux/sched.h>
 #include <sys/cdefs.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
@@ -42,8 +43,31 @@ struct sched_param {
   int sched_priority;
 };
 
+struct sched_attr {
+  uint32_t size;
+
+  uint32_t sched_policy;
+
+  uint64_t sched_flags;
+
+  /* SCHED_NORMAL, SCHED_BATCH */
+  int32_t sched_nice;
+
+  /* SCHED_FIFO, SCHED_RR */
+  uint32_t sched_priority;
+
+  /* SCHED_DEADLINE (nsec) */
+  uint64_t sched_runtime;
+  uint64_t sched_deadline;
+  uint64_t sched_period;
+};
+
 int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* __param);
 int sched_getscheduler(pid_t __pid);
+int sched_setattr(pid_t __pid, const struct sched_attr *__param,
+		  unsigned int flags);
+int sched_getattr(pid_t __pid, struct sched_attr *__param, unsigned int size,
+		  unsigned int flags);
 int sched_yield(void);
 int sched_get_priority_max(int __policy);
 int sched_get_priority_min(int __policy);

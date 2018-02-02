@@ -277,6 +277,8 @@ int           sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param)  all
 int sched_getscheduler(pid_t pid)  all
+int sched_setattr(pid_t pid, const struct sched_attr *attr, unsigned int flags)  all
+int sched_getattr(pid_t pid, struct sched_attr *attr, unsigned int size, unsigned int flags)  all
 int sched_yield(void)  all
 int sched_setparam(pid_t pid, const struct sched_param* param)  all
 int sched_getparam(pid_t pid, struct sched_param* param)  all

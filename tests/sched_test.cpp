@@ -301,3 +301,10 @@ TEST(sched, sched_getscheduler_sched_setscheduler) {
   // don't behave as POSIX specifies. http://b/26203902.
   ASSERT_EQ(0, sched_setscheduler(getpid(), original_policy, &p));
 }
+
+TEST(sched, sched_getattr_sched_setattr) {
+  sched_attr sa;
+
+  ASSERT_EQ(sched_getattr(getpid()), &sa, sizeof(sa), 0);
+  ASSERT_EQ(sched_setattr(getpid()), &sa, 0);
+}
