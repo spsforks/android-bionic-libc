@@ -1,0 +1,1 @@
+--wrap=__openat --wrap=execve --wrap=__bionic_clone
