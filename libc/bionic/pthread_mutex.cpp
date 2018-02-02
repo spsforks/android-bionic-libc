@@ -31,7 +31,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdatomic.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
@@ -131,6 +130,8 @@ int pthread_mutexattr_getprotocol(const pthread_mutexattr_t* attr, int* protocol
     return 0;
 }
 
+#if defined(__LP64__)
+
 // Priority Inheritance mutex implementation
 struct PIMutex {
   // mutex type, can be 0 (normal), 1 (recursive), 2 (errorcheck), constant during lifetime
@@ -171,16 +172,12 @@ static inline __always_inline int PIMutexTryLock(PIMutex& mutex) {
     return EBUSY;
 }
 
-// Inlining this function in pthread_mutex_lock() add the cost of stack frame instructions on
-// ARM/ARM64, which increases at most 20 percent overhead. So make it noinline.
-static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
-                                                       const timespec* abs_timeout) {
+static int PIMutexTimedLock(PIMutex& mutex, const timespec* abs_timeout) {
     int ret = PIMutexTryLock(mutex);
     if (__predict_true(ret == 0)) {
         return 0;
     }
     if (ret == EBUSY) {
-        ScopedTrace trace("Contending for pthread mutex");
         ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, true, abs_timeout);
     }
     return ret;
@@ -231,97 +228,7 @@ static int PIMutexDestroy(PIMutex& mutex) {
     }
     return EBUSY;
 }
-
-#if !defined(__LP64__)
-
-namespace PIMutexAllocator {
-// pthread_mutex_t has only 4 bytes in 32-bit programs, which are not enough to hold PIMutex.
-// So we use malloc to allocate PIMutexes and use 16-bit of pthread_mutex_t as indexes to find
-// the allocated PIMutexes. This allows at most 65536 PI mutexes.
-// When calling operations like pthread_mutex_lock/unlock, the 16-bit index is mapped to the
-// corresponding PIMutex. To make the map operation fast, we use a lockless mapping method:
-//   Once a PIMutex is allocated, all the data used to map index to the PIMutex isn't changed until
-//   it is destroyed.
-// Below are the data structures:
-//   // struct Node contains a PIMutex.
-//   typedef Node NodeArray[256];
-//   typedef NodeArray* NodeArrayP;
-//   NodeArrayP nodes[256];
-//
-// A 16-bit index is mapped to Node as below:
-//   (*nodes[index >> 8])[index & 0xff]
-//
-// Also use a free list to allow O(1) finding recycled PIMutexes.
-
-union Node {
-    PIMutex mutex;
-    int next_free_id;  // If not -1, refer to the next node in the free PIMutex list.
-};
-typedef Node NodeArray[256];
-typedef NodeArray* NodeArrayP;
-
-// lock_ protects below items.
-static Lock lock;
-static NodeArrayP* nodes;
-static int next_to_alloc_id;
-static int first_free_id = -1;  // If not -1, refer to the first node in the free PIMutex list.
-
-static inline __always_inline Node& IdToNode(int id) {
-    return (*nodes[id >> 8])[id & 0xff];
-}
-
-static inline __always_inline PIMutex& IdToPIMutex(int id) {
-    return IdToNode(id).mutex;
-}
-
-static int AllocIdLocked() {
-    if (first_free_id != -1) {
-        int result = first_free_id;
-        first_free_id = IdToNode(result).next_free_id;
-        return result;
-    }
-    if (next_to_alloc_id >= 0x10000) {
-        return -1;
-    }
-    int array_pos = next_to_alloc_id >> 8;
-    int node_pos = next_to_alloc_id & 0xff;
-    if (node_pos == 0) {
-        if (array_pos == 0) {
-            nodes = static_cast<NodeArray**>(calloc(256, sizeof(NodeArray*)));
-            if (nodes == nullptr) {
-                return -1;
-            }
-        }
-        nodes[array_pos] = static_cast<NodeArray*>(malloc(sizeof(NodeArray)));
-        if (nodes[array_pos] == nullptr) {
-            return -1;
-        }
-    }
-    return next_to_alloc_id++;
-}
-
-// If succeed, return an id referring to a PIMutex, otherwise return -1.
-// A valid id is in range [0, 0xffff].
-static int AllocId() {
-    lock.lock();
-    int result = AllocIdLocked();
-    lock.unlock();
-    if (result != -1) {
-        memset(&IdToPIMutex(result), 0, sizeof(PIMutex));
-    }
-    return result;
-}
-
-static void FreeId(int id) {
-    lock.lock();
-    IdToNode(id).next_free_id = first_free_id;
-    first_free_id = id;
-    lock.unlock();
-}
-
-}  // namespace PIMutexAllocator
-
-#endif  // !defined(__LP64__)
+#endif  // defined(__LP64__)
 
 
 /* Convenience macro, creates a mask of 'bits' bits that starts from
@@ -417,7 +324,7 @@ static void FreeId(int id) {
 
 // For a PI mutex, it includes below fields:
 //   Atomic(uint16_t) state;
-//   PIMutex pi_mutex;  // uint16_t pi_mutex_id in 32-bit programs
+//   PIMutex pi_mutex;
 //
 //   state holds the following fields:
 //
@@ -425,7 +332,6 @@ static void FreeId(int id) {
 //   15-14   type    mutex type, should be 3
 //
 //   pi_mutex holds the state of a PI mutex.
-//   pi_mutex_id holds an integer to find the state of a PI mutex.
 //
 // For a Non-PI mutex, it includes below fields:
 //   Atomic(uint16_t) state;
@@ -445,41 +351,19 @@ static void FreeId(int id) {
 //   thread id.
 //
 // PI mutexes and Non-PI mutexes are distinguished by checking type field in state.
+struct pthread_mutex_internal_t {
+  _Atomic(uint16_t) state;
 #if defined(__LP64__)
-struct pthread_mutex_internal_t {
-    _Atomic(uint16_t) state;
-    uint16_t __pad;
-    union {
-        atomic_int owner_tid;
-        PIMutex pi_mutex;
-    };
-    char __reserved[28];
-
-    PIMutex& ToPIMutex() {
-        return pi_mutex;
-    }
-
-    void FreePIMutex() {
-    }
-} __attribute__((aligned(4)));
-
+  uint16_t __pad;
+  union {
+    atomic_int owner_tid;
+    PIMutex pi_mutex;
+  };
+  char __reserved[28];
 #else
-struct pthread_mutex_internal_t {
-    _Atomic(uint16_t) state;
-    union {
-        _Atomic(uint16_t) owner_tid;
-        uint16_t pi_mutex_id;
-    };
-
-    PIMutex& ToPIMutex() {
-        return PIMutexAllocator::IdToPIMutex(pi_mutex_id);
-    }
-
-    void FreePIMutex() {
-        PIMutexAllocator::FreeId(pi_mutex_id);
-    }
-} __attribute__((aligned(4)));
+  _Atomic(uint16_t) owner_tid;
 #endif
+} __attribute__((aligned(4)));
 
 static_assert(sizeof(pthread_mutex_t) == sizeof(pthread_mutex_internal_t),
               "pthread_mutex_t should actually be pthread_mutex_internal_t in implementation.");
@@ -523,20 +407,13 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
     }
 
     if (((*attr & MUTEXATTR_PROTOCOL_MASK) >> MUTEXATTR_PROTOCOL_SHIFT) == PTHREAD_PRIO_INHERIT) {
-#if !defined(__LP64__)
-        if (state & MUTEX_SHARED_MASK) {
-            return EINVAL;
-        }
-        int id = PIMutexAllocator::AllocId();
-        if (id == -1) {
-            return ENOMEM;
-        }
-        mutex->pi_mutex_id = id;
-#endif
+#if defined(__LP64__)
         atomic_init(&mutex->state, MUTEX_TYPE_BITS_WITH_PI);
-        PIMutex& pi_mutex = mutex->ToPIMutex();
-        pi_mutex.type = *attr & MUTEXATTR_TYPE_MASK;
-        pi_mutex.shared = (*attr & MUTEXATTR_SHARED_MASK) != 0;
+        mutex->pi_mutex.type = *attr & MUTEXATTR_TYPE_MASK;
+        mutex->pi_mutex.shared = (*attr & MUTEXATTR_SHARED_MASK) != 0;
+#else
+        return EINVAL;
+#endif
     } else {
         atomic_init(&mutex->state, state);
         atomic_init(&mutex->owner_tid, 0);
@@ -791,20 +668,18 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
+    uint16_t shared = (old_state & MUTEX_SHARED_MASK);
     // Avoid slowing down fast path of normal mutex lock operation.
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
-        uint16_t shared = (old_state & MUTEX_SHARED_MASK);
-        if (__predict_true(NonPI::NormalMutexTryLock(mutex, shared) == 0)) {
-            return 0;
-        }
-    } else if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
-        PIMutex& m = mutex->ToPIMutex();
-        // Handle common case first.
-        if (__predict_true(PIMutexTryLock(m) == 0)) {
-            return 0;
-        }
-        return PIMutexTimedLock(mutex->ToPIMutex(), nullptr);
+      if (__predict_true(NonPI::NormalMutexTryLock(mutex, shared) == 0)) {
+        return 0;
+      }
     }
+#if defined(__LP64__)
+    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+        return PIMutexTimedLock(mutex->pi_mutex, nullptr);
+    }
+#endif
     return NonPI::MutexLockWithTimeout(mutex, false, nullptr);
 }
 
@@ -829,9 +704,11 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
         NonPI::NormalMutexUnlock(mutex, shared);
         return 0;
     }
+#if defined(__LP64__)
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
-        return PIMutexUnlock(mutex->ToPIMutex());
+        return PIMutexUnlock(mutex->pi_mutex);
     }
+#endif
 
     // Do we already own this recursive or error-check mutex?
     pid_t tid = __get_thread()->tid;
@@ -875,9 +752,11 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
         uint16_t shared = (old_state & MUTEX_SHARED_MASK);
         return NonPI::NormalMutexTryLock(mutex, shared);
     }
+#if defined(__LP64__)
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
-        return PIMutexTryLock(mutex->ToPIMutex());
+        return PIMutexTryLock(mutex->pi_mutex);
     }
+#endif
 
     // Do we already own this recursive or error-check mutex?
     pid_t tid = __get_thread()->tid;
@@ -934,23 +813,23 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
             return 0;
         }
     }
+#if defined(__LP64__)
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
-        return PIMutexTimedLock(mutex->ToPIMutex(), abs_timeout);
+        return PIMutexTimedLock(mutex->pi_mutex, abs_timeout);
     }
+#endif
     return NonPI::MutexLockWithTimeout(mutex, true, abs_timeout);
 }
 
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+#if defined(__LP64__)
     uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
-        int result = PIMutexDestroy(mutex->ToPIMutex());
-        if (result == 0) {
-            mutex->FreePIMutex();
-        }
-        return result;
+        return PIMutexDestroy(mutex->pi_mutex);
     }
+#endif
     // Store 0xffff to make the mutex unusable. Although POSIX standard says it is undefined
     // behavior to destroy a locked mutex, we prefer not to change mutex->state in that situation.
     if (MUTEX_STATE_BITS_IS_UNLOCKED(old_state) &&
