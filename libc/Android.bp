@@ -1372,6 +1372,7 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wcwidth.cpp",
         "bionic/wmempcpy.cpp",
+        "bionic/wrap_functions.cpp",
 
         // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
         // which will be overridden by the actual one in libc.so.
@@ -1672,6 +1673,8 @@ cc_library {
         ],
         whole_static_libs: ["libc_init_dynamic"],
     },
+
+    ldflags: ["-Wl,@bionic/libc/wrap_functions.rsp"],
 
     required: ["tzdata"],
 
