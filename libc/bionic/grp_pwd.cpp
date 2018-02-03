@@ -44,6 +44,7 @@
 
 // Generated android_ids array
 #include "generated_android_ids.h"
+#include "grp_pwd_file.h"
 
 // POSIX seems to envisage an implementation where the <pwd.h> functions are
 // implemented by brute-force searching with getpwent(3), and the <grp.h>
@@ -422,7 +423,11 @@ static id_t oem_id_from_name(const char* name) {
 
 static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
   if (!is_oem_id(uid)) {
-    return NULL;
+    return nullptr;
+  }
+
+  if (FindPasswdById(uid, state)) {
+    return &state->passwd_;
   }
 
   snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
@@ -440,7 +445,11 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
 
 static group* oem_id_to_group(gid_t gid, group_state_t* state) {
   if (!is_oem_id(gid)) {
-    return NULL;
+    return nullptr;
+  }
+
+  if (FindGroupById(gid, state)) {
+    return &state->group_;
   }
 
   snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
@@ -530,6 +539,13 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
+
+  if (FindPasswdByName(login, state)) {
+    if (is_oem_id(state->passwd_.pw_uid)) {
+      return &state->passwd_;
+    }
+  }
+
   // Handle OEM range.
   pw = oem_id_to_passwd(oem_id_from_name(login), state);
   if (pw != NULL) {
@@ -640,6 +656,13 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
   if (grp != NULL) {
     return grp;
   }
+
+  if (FindGroupByName(name, state)) {
+    if (is_oem_id(state->group_.gr_gid)) {
+      return &state->group_;
+    }
+  }
+
   // Handle OEM range.
   grp = oem_id_to_group(oem_id_from_name(name), state);
   if (grp != NULL) {
