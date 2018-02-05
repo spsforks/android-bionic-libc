@@ -91,6 +91,7 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
     kernel_new = {};
     kernel_new.sa_flags = bionic_new->sa_flags;
     kernel_new.sa_handler = bionic_new->sa_handler;
+    kernel_new.sa_restorer = bionic_new->sa_restorer;
     memcpy(&kernel_new.sa_mask, &bionic_new->sa_mask, sizeof(bionic_new->sa_mask));
   }
 
@@ -100,6 +101,7 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
     *bionic_old = {};
     bionic_old->sa_flags = kernel_old.sa_flags;
     bionic_old->sa_handler = kernel_old.sa_handler;
+    bionic_old->sa_restorer = kernel_old.sa_restorer;
     memcpy(&bionic_old->sa_mask, &kernel_old.sa_mask, sizeof(bionic_old->sa_mask));
   }
   return result;

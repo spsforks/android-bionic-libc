@@ -316,6 +316,23 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
 
+  // Set a new-style sa_sigaction signal handler with restorer.
+  auto no_op_restorer = []() {};
+  sa = {};
+  sigaddset_fn(&sa.sa_mask, sig);
+  sa.sa_flags = SA_ONSTACK | SA_SIGINFO | sa_restorer;
+  sa.sa_sigaction = no_op_sigaction;
+  sa.sa_restorer = no_op_restorer;
+  ASSERT_EQ(0, sigaction_fn(sig, &sa, NULL));
+
+  // Check that we can read it back.
+  sa = {};
+  ASSERT_EQ(0, sigaction_fn(sig, NULL, &sa));
+  ASSERT_TRUE(sa.sa_sigaction == no_op_sigaction);
+  ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
+  ASSERT_EQ(SA_ONSTACK | SA_SIGINFO | sa_restorer, static_cast<unsigned>(sa.sa_flags));
+  ASSERT_TRUE(sa.sa_restorer == no_op_restorer);
+
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction_fn(sig, &original_sa, NULL));
 }
