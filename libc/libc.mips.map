@@ -1304,6 +1304,7 @@ LIBC_O {
 
 LIBC_P { # introduced=P
   global:
+    aligned_alloc;
     __freading;
     __fwriting;
     endhostent;
