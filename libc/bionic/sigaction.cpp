@@ -110,10 +110,12 @@ int sigaction64(int signal, const struct sigaction64* bionic_new, struct sigacti
   struct sigaction64 kernel_new;
   if (bionic_new) {
     kernel_new = *bionic_new;
+#if defined(SA_RESTORER)
     if (!(kernel_new.sa_flags & SA_RESTORER)) {
       kernel_new.sa_flags |= SA_RESTORER;
       kernel_new.sa_restorer = (kernel_new.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
     }
+#endif
   }
 
   return __rt_sigaction(signal,
