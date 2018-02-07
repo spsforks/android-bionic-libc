@@ -26,49 +26,40 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
-
 #include <errno.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <sys/signalfd.h>
+#include <paths.h>
+#include <stdlib.h>
+#include <spawn.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
-#include <thread>
+#include "private/ScopedSignalBlocker.h"
+#include "private/ScopedSignalHandler.h"
 
-#include "SignalUtils.h"
+int system(const char* command) {
+  // Return non-zero if a shell is available.
+  if (command == nullptr) return 1;
 
-static void TestSignalFd(int fd, int signal) {
-  ASSERT_NE(-1, fd) << strerror(errno);
+  ScopedSignalBlocker sigchld_blocker(SIGCHLD);
 
-  ASSERT_EQ(0, raise(signal));
+  posix_spawnattr_t attributes;
+  if ((errno = posix_spawnattr_init(&attributes))) return -1;
+  if ((errno = posix_spawnattr_setsigmask64(&attributes, &sigchld_blocker.old_set_))) return -1;
+  if ((errno = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_SETSIGMASK))) return -1;
 
-  signalfd_siginfo sfd_si;
-  ASSERT_EQ(static_cast<ssize_t>(sizeof(sfd_si)), read(fd, &sfd_si, sizeof(sfd_si)));
+  const char* argv[] = { "sh", "-c", command, nullptr };
+  pid_t child;
+  if ((errno = posix_spawn(&child, _PATH_BSHELL, nullptr, &attributes,
+                           const_cast<char**>(argv), environ)) != 0) {
+    return -1;
+  }
 
-  ASSERT_EQ(signal, static_cast<int>(sfd_si.ssi_signo));
+  posix_spawnattr_destroy(&attributes);
 
-  close(fd);
-}
+  ScopedSignalHandler sigint_ignorer(SIGINT, SIG_IGN);
+  ScopedSignalHandler sigquit_ignorer(SIGQUIT, SIG_IGN);
 
-TEST(sys_signalfd, signalfd) {
-  SignalMaskRestorer smr;
-
-  sigset_t mask = {};
-  sigaddset(&mask, SIGALRM);
-  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &mask, nullptr));
-
-  TestSignalFd(signalfd(-1, &mask, SFD_CLOEXEC), SIGALRM);
-}
-
-TEST(sys_signalfd, signalfd64) {
-#if defined(__BIONIC__)
-  SignalMaskRestorer smr;
-
-  sigset64_t mask = {};
-  sigaddset64(&mask, SIGRTMIN);
-  ASSERT_EQ(0, sigprocmask64(SIG_SETMASK, &mask, nullptr));
-
-  TestSignalFd(signalfd64(-1, &mask, SFD_CLOEXEC), SIGRTMIN);
-#endif
+  int status;
+  pid_t pid = TEMP_FAILURE_RETRY(waitpid(child, &status, 0));
+  return (pid == -1 ? -1 : status);
 }
