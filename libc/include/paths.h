@@ -34,11 +34,24 @@
 
 #include <sys/cdefs.h>
 
-#ifndef _PATH_BSHELL
-#define	_PATH_BSHELL	"/system/bin/sh"
+/*
+ * Code such as popen(3) and system(3) needs to choose between
+ * /system/bin/sh and /vendor/bin/sh at runtime, based on the caller.
+ */
+#if !defined(_PATH_BSHELL)
+#define _PATH_BSHELL "/system/bin/sh"
 #endif
+
+/*
+ * Some code built for /vendor (such as /vendor/bin/sh) needs to override
+ * the default path because SELinux restricts what the vendor partition
+ * shell is allowed to execute.
+ */
+#if !defined(_PATH_DEFPATH)
+#define _PATH_DEFPATH "/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
+#endif
+
 #define	_PATH_CONSOLE	"/dev/console"
-#define	_PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
 #define	_PATH_DEV	"/dev/"
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_KLOG	"/proc/kmsg"
