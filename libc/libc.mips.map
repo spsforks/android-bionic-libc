@@ -1468,6 +1468,8 @@ LIBC_DEPRECATED {
 
 LIBC_PLATFORM {
   global:
+    __bionic_get_default_path;
+    __bionic_get_shell_path;
     __system_properties_init;
     __system_property_area__; # var
     __system_property_add;
