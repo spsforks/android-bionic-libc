@@ -1218,7 +1218,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "bionic/NetdClientDispatch.cpp",
-        "bionic/__bionic_get_shell_path.cpp",
         "bionic/__cmsg_nxthdr.cpp",
         "bionic/__errno.cpp",
         "bionic/__gnu_basename.cpp",
@@ -1311,6 +1310,7 @@ cc_library_static {
         "bionic/nl_types.cpp",
         "bionic/open.cpp",
         "bionic/pathconf.cpp",
+        "bionic/paths.cpp",
         "bionic/pause.cpp",
         "bionic/pipe.cpp",
         "bionic/poll.cpp",
@@ -1388,11 +1388,6 @@ cc_library_static {
         lib32: {
             // LP32 cruft
             srcs: ["bionic/mmap.cpp"],
-        },
-    },
-    product_variables: {
-        treble_linker_namespaces: {
-            cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
     whole_static_libs: ["libsystemproperties"],

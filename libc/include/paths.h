@@ -30,19 +30,46 @@
  */
 
 #ifndef _PATHS_H_
-#define	_PATHS_H_
+#define _PATHS_H_
 
 #include <sys/cdefs.h>
 
-#ifndef _PATH_BSHELL
-#define	_PATH_BSHELL	"/system/bin/sh"
+__BEGIN_DECLS
+
+/*
+ * Code such as popen(3) and system(3) needs to choose between
+ * /system/bin/sh and /vendor/bin/sh at runtime, based on the caller.
+ */
+#define __BIONIC_PATH_BSHELL_SYSTEM "/system/bin/sh"
+#define __BIONIC_PATH_BSHELL_VENDOR "/vendor/bin/sh"
+#if defined(__ANDROID_NDK__)
+#define _PATH_BSHELL __BIONIC_PATH_BSHELL_SYSTEM
+#else
+const char* __bionic_get_shell_path(void);
+#define _PATH_BSHELL __bionic_get_shell_path()
 #endif
+
+/*
+ * Some code built for /vendor (such as /vendor/bin/sh) needs to override
+ * the default path because SELinux restricts what the vendor partition
+ * shell is allowed to execute.
+ */
+#define __BIONIC_PATH_DEFPATH_SYSTEM "/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
+#define __BIONIC_PATH_DEFPATH_VENDOR "/vendor/bin:/vendor/xbin"
+#if defined(__ANDROID_NDK__)
+#define _PATH_DEFPATH __BIONIC_PATH_DEFPATH_SYSTEM
+#else
+const char* __bionic_get_default_path(void);
+#define _PATH_DEFPATH __bionic_get_default_path()
+#endif
+
 #define	_PATH_CONSOLE	"/dev/console"
-#define	_PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
 #define	_PATH_DEV	"/dev/"
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_KLOG	"/proc/kmsg"
 #define	_PATH_MOUNTED	"/proc/mounts"
 #define	_PATH_TTY	"/dev/tty"
 
-#endif /* !_PATHS_H_ */
+__END_DECLS
+
+#endif

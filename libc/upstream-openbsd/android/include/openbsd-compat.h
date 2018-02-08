@@ -76,10 +76,6 @@ extern const char* __progname;
  */
 #define _PATH_TMP "/data/local/tmp/"
 
-/* Use appropriate shell depending on process's executable. */
-__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
-#define _PATH_BSHELL __bionic_get_shell_path()
-
 /* OpenBSD has this as API, but we just use it internally. */
 __LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
 
