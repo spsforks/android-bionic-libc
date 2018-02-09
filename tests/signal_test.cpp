@@ -331,6 +331,45 @@ TEST(signal, sigaction64_SIGRTMIN) {
   TestSigAction(sigaction64, sigaddset64, SIGRTMIN);
 }
 
+TEST(signal, sigaction_filter) {
+  static uint64_t sigset = 0;
+  ASSERT_EQ(0, syscall(__NR_rt_sigprocmask, SIG_SETMASK, &sigset, nullptr, sizeof(sigset)));
+
+  struct sigaction64 sa = {};
+  sa.sa_handler = [](int) {
+    syscall(__NR_rt_sigprocmask, SIG_SETMASK, nullptr, &sigset, sizeof(sigset));
+  };
+  sigfillset64(&sa.sa_mask);
+  sigaction64(SIGUSR1, &sa, nullptr);
+  raise(SIGUSR1);
+  ASSERT_NE(0ULL, sigset);
+  for (int i = 0; i < 64; ++i) {
+    int signo = i + 1;
+    bool signal_blocked = sigset & (1ULL << i);
+    bool signal_should_be_blocked =
+        signo != SIGKILL && signo != SIGSTOP && (signo < __SIGRTMIN || signo >= SIGRTMIN);
+    EXPECT_EQ(signal_blocked, signal_should_be_blocked) << "signal = " << signo;
+  }
+}
+
+TEST(signal, sigprocmask_filter) {
+  static uint64_t sigset = 0;
+  ASSERT_EQ(0, syscall(__NR_rt_sigprocmask, SIG_SETMASK, &sigset, nullptr, sizeof(sigset)));
+
+  sigset64_t sigset_libc;
+  sigfillset64(&sigset_libc);
+  ASSERT_EQ(0, sigprocmask64(SIG_SETMASK, &sigset_libc, nullptr));
+
+  ASSERT_EQ(0, syscall(__NR_rt_sigprocmask, SIG_SETMASK, nullptr, &sigset, sizeof(sigset)));
+  for (int i = 0; i < 64; ++i) {
+    int signo = i + 1;
+    bool signal_blocked = sigset & (1ULL << i);
+    bool signal_should_be_blocked =
+        signo != SIGKILL && signo != SIGSTOP && (signo < __SIGRTMIN || signo >= SIGRTMIN);
+    EXPECT_EQ(signal_blocked, signal_should_be_blocked) << "signal = " << signo;
+  }
+}
+
 TEST(signal, sys_signame) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(sys_signame[0] == NULL);
