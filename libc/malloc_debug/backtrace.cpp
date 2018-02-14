@@ -31,10 +31,14 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <signal.h>
+#include <setjmp.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <unwind.h>
+
+#include <atomic>
 
 #include <demangle.h>
 
@@ -55,6 +59,14 @@ extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 static MapData g_map_data;
 static const MapEntry* g_current_code_map = nullptr;
 
+static constexpr size_t MAX_JMPBUFS = 512;
+static sigjmp_buf g_jmpbufs[MAX_JMPBUFS];
+static std::atomic_int g_tids[MAX_JMPBUFS];
+static std::atomic_uint g_jmpbuf_index;
+static std::atomic_uint g_active_backtraces;
+static std::atomic_uintptr_t g_segfault_handler;
+static struct sigaction g_segfault_action;
+
 static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
   uintptr_t ip = _Unwind_GetIP(context);
 
@@ -65,8 +77,33 @@ static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
   return _URC_END_OF_STACK;
 }
 
+static void handle_segfault(int signal, siginfo_t* info, void* context) {
+  pid_t tid = gettid();
+  // This is an error condition, so loop through and find the jmpbuf
+  // associated with this tid.
+  for (size_t i = 0; i < MAX_JMPBUFS; i++) {
+    if (g_tids[i] == tid) {
+      siglongjmp(g_jmpbufs[i], 1);
+      // Should not get here.
+      break;
+    }
+  }
+  // Crash from thread not doing a backtrace.
+  void (*action)(int, siginfo_t*, void*) =
+      reinterpret_cast<void (*)(int, siginfo_t*, void*)>(g_segfault_handler.load());
+  if (action != nullptr) {
+    action(signal, info, context);
+  }
+}
+
 void backtrace_startup() {
   _Unwind_Backtrace(find_current_map, nullptr);
+
+
+  memset(&g_segfault_action, 0, sizeof(g_segfault_action));
+  sigemptyset(&g_segfault_action.sa_mask);
+  g_segfault_action.sa_sigaction = handle_segfault;
+  g_segfault_action.sa_flags = SA_SIGINFO | SA_ONSTACK;
 }
 
 void backtrace_shutdown() {
@@ -127,9 +164,53 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   return (state->cur_frame >= state->frame_count) ? _URC_END_OF_STACK : _URC_NO_REASON;
 }
 
+static inline bool enable_segfault_handler() {
+  // Set up a handler for a segfault.
+  struct sigaction old_action;
+  if (sigaction(SIGSEGV, &g_segfault_action, &old_action) == -1) {
+    return false;
+  }
+  if (!(old_action.sa_flags & SA_SIGINFO)) {
+    g_segfault_handler.store(reinterpret_cast<uintptr_t>(old_action.sa_handler));
+  } else if (old_action.sa_sigaction != handle_segfault) {
+    g_segfault_handler.store(reinterpret_cast<uintptr_t>(old_action.sa_sigaction));
+  }
+  g_active_backtraces.fetch_add(1, std::memory_order_relaxed);
+
+  return true;
+}
+
 size_t backtrace_get(uintptr_t* frames, size_t frame_count) {
   stack_crawl_state_t state(frames, frame_count);
-  _Unwind_Backtrace(trace_function, &state);
+
+  bool segfault_occurred = false;
+  bool handler_enabled = enable_segfault_handler();
+  size_t jmpbuf_index = 0;
+  if (handler_enabled) {
+    jmpbuf_index = g_jmpbuf_index.fetch_add(1, std::memory_order_relaxed) % MAX_JMPBUFS;
+    int prev = 0;
+    if (g_tids[jmpbuf_index].compare_exchange_weak(prev, gettid())) {
+      segfault_occurred = (sigsetjmp(g_jmpbufs[jmpbuf_index], 1) != 0);
+    }
+  }
+
+  if (!segfault_occurred) {
+    _Unwind_Backtrace(trace_function, &state);
+  } else {
+    error_log("+++ Crashed while trying to unwind.");
+    if (frame_count > 0) {
+      state.cur_frame = 1;
+      frames[0] = 0xdeaddead;
+    }
+  }
+
+  if (handler_enabled) {
+    g_tids[jmpbuf_index] = 0;
+    if (g_active_backtraces.fetch_sub(1, std::memory_order_release) == 1) {
+      // Last backtrace is done, reset the handler.
+      sigaction(SIGSEGV, &g_segfault_action, nullptr);
+    }
+  }
   return state.cur_frame;
 }
 
