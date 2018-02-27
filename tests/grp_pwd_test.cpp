@@ -238,6 +238,7 @@ static void expect_ids(const T& ids) {
 }
 
 TEST(pwd, getpwent_iterate) {
+#if defined(__BIONIC__)
   passwd* pwd;
   std::set<uid_t> uids;
 
@@ -263,6 +264,7 @@ TEST(pwd, getpwent_iterate) {
   endpwent();
 
   expect_ids(uids);
+#endif
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
@@ -477,6 +479,7 @@ TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
 }
 
 TEST(grp, getgrent_iterate) {
+#if defined(__BIONIC__)
   group* grp;
   std::set<gid_t> gids;
 
@@ -493,4 +496,5 @@ TEST(grp, getgrent_iterate) {
   endgrent();
 
   expect_ids(gids);
+#endif
 }
