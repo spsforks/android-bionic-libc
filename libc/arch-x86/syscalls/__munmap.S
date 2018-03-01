@@ -2,34 +2,22 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(___mremap)
+ENTRY(__munmap)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
     pushl   %ecx
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ecx, 0
-    pushl   %edx
-    .cfi_adjust_cfa_offset 4
-    .cfi_rel_offset edx, 0
-    pushl   %esi
-    .cfi_adjust_cfa_offset 4
-    .cfi_rel_offset esi, 0
-    pushl   %edi
-    .cfi_adjust_cfa_offset 4
-    .cfi_rel_offset edi, 0
 
     call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
 
-    mov     28(%esp), %ebx
-    mov     32(%esp), %ecx
-    mov     36(%esp), %edx
-    mov     40(%esp), %esi
-    mov     44(%esp), %edi
-    movl    $__NR_mremap, %eax
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
+    movl    $__NR_munmap, %eax
     call    *(%esp)
     addl    $4, %esp
 
@@ -40,11 +28,7 @@ ENTRY(___mremap)
     call    __set_errno_internal
     addl    $4, %esp
 1:
-    popl    %edi
-    popl    %esi
-    popl    %edx
     popl    %ecx
     popl    %ebx
     ret
-END(___mremap)
-.hidden ___mremap
+END(__munmap)

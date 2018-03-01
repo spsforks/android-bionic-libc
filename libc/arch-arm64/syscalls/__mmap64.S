@@ -2,8 +2,8 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(___mremap)
-    mov     x8, __NR_mremap
+ENTRY(__mmap64)
+    mov     x8, __NR_mmap
     svc     #0
 
     cmn     x0, #(MAX_ERRNO + 1)
@@ -11,5 +11,5 @@ ENTRY(___mremap)
     b.hi    __set_errno_internal
 
     ret
-END(___mremap)
-.hidden ___mremap
+END(__mmap64)
+.hidden __mmap64

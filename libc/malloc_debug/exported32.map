@@ -21,6 +21,9 @@ LIBC_MALLOC_DEBUG {
     debug_pvalloc;
     debug_realloc;
     debug_valloc;
+    debug_mmap64;
+    debug_mremap;
+    debug_munmap;
 
   local:
     *;

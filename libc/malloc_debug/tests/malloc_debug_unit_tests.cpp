@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -118,6 +119,10 @@ class MallocDebugTest : public ::testing::Test {
   static MallocDispatch dispatch;
 };
 
+void* orig_mremap(void* old_address, size_t old_size, size_t new_size, int flags, void* new_address) {
+  return mremap(old_address, old_size, new_size, flags, new_address);
+}
+
 MallocDispatch MallocDebugTest::dispatch = {
   calloc,
   free,
@@ -138,6 +143,9 @@ MallocDispatch MallocDebugTest::dispatch = {
   nullptr,
   mallopt,
   aligned_alloc,
+  mmap64,
+  orig_mremap,
+  munmap,
 };
 
 void VerifyAllocCalls(bool backtrace_enabled) {

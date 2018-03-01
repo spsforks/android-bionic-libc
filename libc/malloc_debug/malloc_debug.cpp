@@ -88,6 +88,10 @@ int debug_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void debug_malloc_disable();
 void debug_malloc_enable();
+void* debug_mmap64(void* old_address, size_t old_size, size_t new_size, int flags,
+                   void* new_address);
+void* debug_mremap(void* addr, size_t length, int prot, int flags, int fd, off64_t offset);
+int debug_munmap(void* addr, size_t length);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* debug_pvalloc(size_t bytes);
@@ -795,6 +799,18 @@ void* debug_valloc(size_t size) {
   return debug_memalign(getpagesize(), size);
 }
 #endif
+
+void* debug_mmap64(void* addr, size_t length, int prot, int flags, int fd, off64_t offset) {
+  return g_dispatch->mmap64(addr, length, prot, flags, fd, offset);
+}
+
+void* debug_mremap(void* old_address, size_t old_size, size_t new_size, int flags, void* new_address) {
+  return g_dispatch->mremap(old_address, old_size, new_size, flags, new_address);
+}
+
+int debug_munmap(void* addr, size_t length) {
+  return g_dispatch->munmap(addr, length);
+}
 
 static std::mutex g_dump_lock;
 

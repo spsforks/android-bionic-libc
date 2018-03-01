@@ -41,6 +41,8 @@
 //                          get_malloc_leak_info.
 
 #include <pthread.h>
+#include <stdarg.h>
+#include <sys/mman.h>
 
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
@@ -48,6 +50,10 @@
 
 #include "jemalloc.h"
 #define Malloc(function)  je_ ## function
+
+extern "C" void* _mmap64(void*, size_t, int, int, int, off64_t);
+extern "C" void* _mremap(void*, size_t, size_t, int, void*);
+extern "C" int _munmap(void*, size_t);
 
 static constexpr MallocDispatch __libc_malloc_default_dispatch
   __attribute__((unused)) = {
@@ -70,6 +76,9 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
     Malloc(malloc_enable),
     Malloc(mallopt),
     Malloc(aligned_alloc),
+    _mmap64,
+    _mremap,
+    _munmap,
   };
 
 // Malloc hooks.
@@ -182,6 +191,43 @@ extern "C" void* valloc(size_t bytes) {
   return Malloc(valloc)(bytes);
 }
 #endif
+
+extern "C" void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
+  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
+}
+
+extern "C" void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
+  auto mmap64_func = __libc_globals->malloc_dispatch.mmap64;
+  if (__predict_false(mmap64_func != nullptr)) {
+    return mmap64_func(addr, size, prot, flags, fd, offset);
+  }
+  return _mmap64(addr, size, prot, flags, fd, offset);
+}
+
+extern "C" void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
+  // The last argument is void* new_address is only valid if MREMAP_FIXED
+  // is set in the flags.
+  void* new_address = nullptr;
+  if (flags & MREMAP_FIXED) {
+    va_list ap;
+    va_start(ap, flags);
+    new_address = va_arg(ap, void*);
+    va_end(ap);
+  }
+  auto mremap_func = __libc_globals->malloc_dispatch.mremap;
+  if (__predict_false(mremap_func != nullptr)) {
+    return mremap_func(old_address, old_size, new_size, flags, new_address);
+  }
+  return _mremap(old_address, old_size, new_size, flags, new_address);
+}
+
+extern "C" int munmap(void* addr, size_t size) {
+  auto munmap_func = __libc_globals->malloc_dispatch.munmap;
+  if (__predict_false(munmap_func != nullptr)) {
+    return munmap_func(addr, size);
+  }
+  return _munmap(addr, size);
+}
 
 // We implement malloc debugging only in libc.so, so the code below
 // must be excluded if we compile this file for static libc.a
@@ -327,6 +373,16 @@ static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const
     return false;
   }
 #endif
+
+  if (!InitMallocFunction<MallocMmap64>(impl_handler, &table->mmap64, prefix, "mmap64")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMremap>(impl_handler, &table->mremap, prefix, "mremap")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMunmap>(impl_handler, &table->munmap, prefix, "munmap")) {
+    return false;
+  }
 
   return true;
 }

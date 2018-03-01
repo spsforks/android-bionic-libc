@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(munmap)
+ENTRY(__mmap64)
     .set push
     .set noreorder
-    li $v0, __NR_munmap
+    li $v0, __NR_mmap
     syscall
     bnez $a3, 1f
     move $a0, $v0
@@ -22,4 +22,5 @@ ENTRY(munmap)
     j $t9
     move $ra, $t0
     .set pop
-END(munmap)
+END(__mmap64)
+.hidden __mmap64

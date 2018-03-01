@@ -75,6 +75,9 @@ void* hooks_pvalloc(size_t bytes);
 void* hooks_valloc(size_t size);
 #endif
 
+void* hooks_mmap64(void* addr, size_t length, int prot, int flags, int fd, off64_t offset);
+int hooks_munmap(void* addr, size_t length);
+
 static void* default_malloc_hook(size_t bytes, const void*) {
   return g_dispatch->malloc(bytes);
 }
@@ -232,3 +235,15 @@ void* hooks_valloc(size_t size) {
   return hooks_memalign(getpagesize(), size);
 }
 #endif
+
+void* hooks_mmap64(void* addr, size_t length, int prot, int flags, int fd, off64_t offset) {
+  return g_dispatch->mmap64(addr, length, prot, flags, fd, offset);
+}
+
+void* hooks_mremap(void* old_address, size_t old_size, size_t new_size, int flags, void* new_address) {
+  return g_dispatch->mremap(old_address, old_size, new_size, flags, new_address);
+}
+
+int hooks_munmap(void* addr, size_t length) {
+  return g_dispatch->munmap(addr, length);
+}

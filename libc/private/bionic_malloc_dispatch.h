@@ -31,6 +31,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
 #include <private/bionic_config.h>
 
 // Entry in malloc dispatch table.
@@ -47,6 +48,9 @@ typedef void (*MallocMallocDisable)();
 typedef void (*MallocMallocEnable)();
 typedef int (*MallocMallopt)(int, int);
 typedef void* (*MallocAlignedAlloc)(size_t, size_t);
+typedef void* (*MallocMmap64)(void*, size_t, int, int, int, off64_t);
+typedef void* (*MallocMremap)(void*, size_t, size_t, int, void*);
+typedef int (*MallocMunmap)(void*, size_t length);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocPvalloc)(size_t);
@@ -73,6 +77,9 @@ struct MallocDispatch {
   MallocMallocEnable malloc_enable;
   MallocMallopt mallopt;
   MallocAlignedAlloc aligned_alloc;
+  MallocMmap64 mmap64;
+  MallocMremap mremap;
+  MallocMunmap munmap;
 } __attribute__((aligned(32)));
 
 #endif

@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(___mremap)
+ENTRY(__mremap)
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 16
@@ -19,5 +19,4 @@ ENTRY(___mremap)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(___mremap)
-.hidden ___mremap
+END(__mremap)

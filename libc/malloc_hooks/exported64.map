@@ -18,6 +18,9 @@ LIBC_MALLOC_HOOKS {
     hooks_memalign;
     hooks_posix_memalign;
     hooks_realloc;
+    hooks_mmap64;
+    hooks_mremap;
+    hooks_munmap;
 
   local:
     *;
