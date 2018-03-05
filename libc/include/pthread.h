@@ -122,6 +122,8 @@ int pthread_cond_destroy(pthread_cond_t* __cond);
 int pthread_cond_init(pthread_cond_t* __cond, const pthread_condattr_t* __attr);
 int pthread_cond_signal(pthread_cond_t* __cond);
 int pthread_cond_timedwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __timeout);
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex,
+                                        const struct timespec* __timeout);
 int pthread_cond_wait(pthread_cond_t* __cond, pthread_mutex_t* __mutex);
 
 int pthread_create(pthread_t* __pthread_ptr, pthread_attr_t const* __attr, void* (*__start_routine)(void*), void*);
@@ -159,6 +161,8 @@ int pthread_mutex_init(pthread_mutex_t* __mutex, const pthread_mutexattr_t* __at
 int pthread_mutex_lock(pthread_mutex_t* __mutex);
 int pthread_mutex_timedlock(pthread_mutex_t* __mutex, const struct timespec* __timeout)
   __INTRODUCED_IN(21);
+int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* __mutex, const struct timespec* __timeout)
+    __INTRODUCED_IN(28);
 int pthread_mutex_trylock(pthread_mutex_t* __mutex);
 int pthread_mutex_unlock(pthread_mutex_t* __mutex);
 
@@ -176,7 +180,6 @@ int pthread_mutex_unlock(pthread_mutex_t* __mutex);
  */
 int pthread_mutex_lock_timeout_np(pthread_mutex_t* __mutex, unsigned __timeout_ms);
 int pthread_cond_timeout_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, unsigned __timeout_ms);
-int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __timeout);
 int pthread_cond_timedwait_relative_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __relative_timeout);
 #endif
 
@@ -195,6 +198,10 @@ int pthread_rwlock_init(pthread_rwlock_t* __rwlock, const pthread_rwlockattr_t* 
 int pthread_rwlock_rdlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* __rwlock, const struct timespec* __timeout);
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* __rwlock, const struct timespec* __timeout);
+int pthread_rwlock_timedrdlock_monotonic_np(pthread_rwlock_t* __rwlock,
+                                            const struct timespec* __timeout) __INTRODUCED_IN(28);
+int pthread_rwlock_timedwrlock_monotonic_np(pthread_rwlock_t* __rwlock,
+                                            const struct timespec* __timeout) __INTRODUCED_IN(28);
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_trywrlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t* __rwlock);
