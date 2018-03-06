@@ -84,14 +84,16 @@ ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
 // don't use off64_t (see SYSCALLS.TXT for more). Here, this means that we need
 // to implement all four functions because the two system calls don't match any
 // of the userspace functions. Unlike llseek, the pair is split lo-hi, not hi-lo.
-ssize_t preadv(int fd, const struct iovec* ios, int count, off_t offset) {
-  return __preadv64(fd, ios, count, offset, 0);
+ssize_t preadv(int fd, const struct iovec* ios, int count, off_t offset32) {
+  off64_t offset = offset32;
+  return __preadv64(fd, ios, count, offset, offset >> 32);
 }
 ssize_t preadv64(int fd, const struct iovec* ios, int count, off64_t offset) {
   return __preadv64(fd, ios, count, offset, offset >> 32);
 }
-ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset) {
-  return __pwritev64(fd, ios, count, offset, 0);
+ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset32) {
+  off64_t offset = offset32;
+  return __pwritev64(fd, ios, count, offset, offset >> 32);
 }
 ssize_t pwritev64(int fd, const struct iovec* ios, int count, off64_t offset) {
   return __pwritev64(fd, ios, count, offset, offset >> 32);
