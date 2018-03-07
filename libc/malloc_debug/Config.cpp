@@ -70,13 +70,13 @@ static constexpr const char DEFAULT_RECORD_ALLOCS_FILE[] = "/data/local/tmp/reco
 
 const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {"guard",
-      {FRONT_GUARD | REAR_GUARD, &Config::SetGuard},
+      {FRONT_GUARD | REAR_GUARD | TRACK_ALLOCS, &Config::SetGuard},
     },
     {"front_guard",
-      {FRONT_GUARD, &Config::SetFrontGuard},
+      {FRONT_GUARD | TRACK_ALLOCS, &Config::SetFrontGuard},
     },
     {"rear_guard",
-      {REAR_GUARD, &Config::SetRearGuard},
+      {REAR_GUARD | TRACK_ALLOCS, &Config::SetRearGuard},
     },
 
     {"backtrace",
@@ -108,7 +108,7 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     },
 
     {"free_track",
-      {FREE_TRACK | FILL_ON_FREE, &Config::SetFreeTrack},
+      {FREE_TRACK | FILL_ON_FREE | TRACK_ALLOCS, &Config::SetFreeTrack},
     },
     {"free_track_backtrace_num_frames",
       {0, &Config::SetFreeTrackBacktraceNumFrames},
@@ -123,6 +123,10 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     },
     {"record_allocs_file",
       {0, &Config::SetRecordAllocsFile},
+    },
+
+    {"verify_pointers",
+      {TRACK_ALLOCS, &Config::VerifyValueEmpty},
     },
 };
 
@@ -419,6 +423,10 @@ void Config::LogUsage() const {
   error_log("    This option only has meaning if the record_allocs options has been specified.");
   error_log("    This is the name of the file to which recording information will be dumped.");
   error_log("    The default is %s.", DEFAULT_RECORD_ALLOCS_FILE);
+  error_log("");
+  error_log("  verify_pointers");
+  error_log("    A lightweight way to verify that free/malloc_usable_size/realloc");
+  error_log("    are passed valid pointers.");
 }
 
 bool Config::GetOption(const char** options_str, std::string* option, std::string* value) {

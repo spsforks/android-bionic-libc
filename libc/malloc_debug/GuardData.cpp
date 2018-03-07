@@ -49,7 +49,7 @@ GuardData::GuardData(DebugData* debug_data, int init_value, size_t num_bytes)
 void GuardData::LogFailure(const Header* header, const void* pointer, const void* data) {
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p SIZE %zu HAS A CORRUPTED %s GUARD", pointer,
-            header->real_size(), GetTypeName());
+            header->size, GetTypeName());
 
   // Log all of the failing bytes.
   const uint8_t* expected = cmp_mem_.data();
