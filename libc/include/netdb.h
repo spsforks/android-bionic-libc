@@ -169,6 +169,9 @@ struct addrinfo {
 /* special recommended flags for getipnodebyname */
 #define	AI_DEFAULT	(AI_V4MAPPED_CFG | AI_ADDRCONFIG)
 
+/* flag to force use of network-assigned DNS servers */
+#define AI_USE_LOCAL_NAMESERVERS    0x10000000
+
 /*
  * Constants for getnameinfo()
  */
