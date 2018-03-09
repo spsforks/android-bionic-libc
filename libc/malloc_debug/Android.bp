@@ -63,6 +63,10 @@ cc_library {
         },
     },
 
+    // Maybe only arm target has problem with lld due since it uses
+    // libunwind_llvm. We make it simpler by disabling lld for all.
+    use_clang_lld: false,
+
     static_libs: [
         "libasync_safe",
         "libbase",
