@@ -60,8 +60,8 @@ void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) __LINK
 uint32_t __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) __LINKER_PUBLIC__;
 android_namespace_t* __loader_android_get_exported_namespace(const char* name) __LINKER_PUBLIC__;
-bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
-                                               const char* library_search_path) __LINKER_PUBLIC__;
+android_namespace_t* __loader_android_init_anonymous_namespace(
+    const char* shared_libs_sonames, const char* library_search_path) __LINKER_PUBLIC__;
 bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       android_namespace_t* namespace_to,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
@@ -219,15 +219,15 @@ void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) {
   get_dlwarning(obj, f);
 }
 
-bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
+android_namespace_t* __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
                                                const char* library_search_path) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  bool success = init_anonymous_namespace(shared_libs_sonames, library_search_path);
-  if (!success) {
+  android_namespace_t* anon_ns = init_anonymous_namespace(shared_libs_sonames, library_search_path);
+  if (anon_ns == nullptr) {
     __bionic_format_dlerror("android_init_anonymous_namespace failed", linker_get_error_buffer());
   }
 
-  return success;
+  return anon_ns;
 }
 
 android_namespace_t* __loader_android_create_namespace(const char* name,

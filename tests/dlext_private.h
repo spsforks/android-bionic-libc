@@ -29,8 +29,8 @@ __BEGIN_DECLS
  * is used in the case when linker cannot identify the caller of dlopen/dlsym. This happens
  * for the code not loaded by dynamic linker; for example calls from the mono-compiled code.
  */
-extern bool android_init_anonymous_namespace(const char* shared_libs_sonames,
-                                             const char* library_search_path);
+extern android_namespace_t* android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                                             const char* library_search_path);
 
 
 enum {
