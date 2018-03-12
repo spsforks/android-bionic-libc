@@ -166,7 +166,8 @@ enum {
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,
 };
 
-bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path);
+android_namespace_t* init_anonymous_namespace(const char* shared_lib_sonames,
+                                              const char* library_search_path);
 android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* name,
                                       const char* ld_library_path,

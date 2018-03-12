@@ -73,8 +73,8 @@ __attribute__((__weak__, visibility("default")))
 uint32_t __loader_android_get_application_target_sdk_version();
 
 __attribute__((__weak__, visibility("default")))
-bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
-                                               const char* library_search_path);
+android_namespace_t* __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                                               const char* library_search_path);
 
 __attribute__((__weak__, visibility("default")))
 struct android_namespace_t* __loader_android_create_namespace(
@@ -175,8 +175,8 @@ uint32_t android_get_application_target_sdk_version() {
 }
 
 __attribute__((__weak__))
-bool android_init_anonymous_namespace(const char* shared_libs_sonames,
-                                      const char* library_search_path) {
+android_namespace_t* android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                                      const char* library_search_path) {
   return __loader_android_init_anonymous_namespace(shared_libs_sonames, library_search_path);
 }
 

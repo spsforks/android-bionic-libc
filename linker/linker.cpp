@@ -2275,10 +2275,11 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
-bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
+android_namespace_t* init_anonymous_namespace(const char* shared_lib_sonames,
+                                              const char* library_search_path) {
   if (g_anonymous_namespace_initialized) {
     DL_ERR("anonymous namespace has already been initialized.");
-    return false;
+    return nullptr;
   }
 
   ProtectedDataGuard guard;
@@ -2297,17 +2298,17 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
                        &g_default_namespace);
 
   if (anon_ns == nullptr) {
-    return false;
+    return nullptr;
   }
 
   if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames)) {
-    return false;
+    return nullptr;
   }
 
   g_anonymous_namespace = anon_ns;
   g_anonymous_namespace_initialized = true;
 
-  return true;
+  return g_anonymous_namespace;
 }
 
 static void add_soinfos_to_namespace(const soinfo_list_t& soinfos, android_namespace_t* ns) {
