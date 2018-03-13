@@ -13,6 +13,7 @@
     __loader_android_get_application_target_sdk_version;
     __loader_android_init_anonymous_namespace;
     __loader_android_create_namespace;
+    __loader_android_update_namespace_add_search_path;
     __loader_dlvsym;
     __loader_android_dlwarning;
     __loader_cfi_fail;

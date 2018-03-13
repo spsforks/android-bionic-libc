@@ -2381,6 +2381,16 @@ android_namespace_t* create_namespace(const void* caller_addr,
   return ns;
 }
 
+bool update_namespace_add_search_path(android_namespace_t* ns,
+                                      const char* default_library_path) {
+  ProtectedDataGuard guard;
+  std::vector<std::string> default_library_paths;
+  parse_path(default_library_path, ":", &default_library_paths);
+  ns->add_default_library_paths(default_library_paths);
+
+  return true;
+}
+
 bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
                      const char* shared_lib_sonames) {

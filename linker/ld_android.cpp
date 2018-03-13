@@ -34,6 +34,7 @@ extern "C" void __internal_linker_error() {
 }
 
 __strong_alias(__loader_android_create_namespace, __internal_linker_error);
+__strong_alias(__loader_android_update_namespace_add_search_path, __internal_linker_error);
 __strong_alias(__loader_android_dlopen_ext, __internal_linker_error);
 __strong_alias(__loader_android_dlwarning, __internal_linker_error);
 __strong_alias(__loader_android_get_application_target_sdk_version, __internal_linker_error);
