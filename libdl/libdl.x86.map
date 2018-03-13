@@ -52,4 +52,5 @@ LIBC_PLATFORM {
     android_create_namespace;
     android_link_namespaces;
     android_get_exported_namespace;
+    android_update_namespace_add_search_path;
 } LIBC_OMR1;

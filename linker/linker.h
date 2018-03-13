@@ -176,6 +176,9 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace);
 
+bool update_namespace_add_search_path(android_namespace_t* ns,
+                                      const char* default_library_path);
+
 bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
                      const char* shared_lib_sonames);
