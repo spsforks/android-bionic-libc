@@ -91,6 +91,9 @@ extern struct android_namespace_t* android_create_namespace(const char* name,
                                                             const char* permitted_when_isolated_path,
                                                             android_namespace_t* parent);
 
+extern bool android_update_namespace_add_search_path(android_namespace_t* ns,
+                                                     const char* default_library_path);
+
 extern bool android_link_namespaces(android_namespace_t* from,
                                     android_namespace_t* to,
                                     const char* shared_libs_sonames);

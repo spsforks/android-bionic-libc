@@ -52,6 +52,8 @@ android_namespace_t* __loader_android_create_namespace(const char* name,
                                                        const char* permitted_when_isolated_path,
                                                        android_namespace_t* parent_namespace,
                                                        const void* caller_addr) __LINKER_PUBLIC__;
+bool __loader_android_update_namespace_add_search_path(android_namespace_t* ns,
+                                                       const char* default_library_paths) __LINKER_PUBLIC__;
 void* __loader_android_dlopen_ext(const char* filename,
                            int flags,
                            const android_dlextinfo* extinfo,
@@ -252,6 +254,19 @@ android_namespace_t* __loader_android_create_namespace(const char* name,
   }
 
   return result;
+}
+
+bool __loader_android_update_namespace_add_search_path(android_namespace_t* ns,
+                                                       const char* default_library_paths) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+
+  bool success = update_namespace_add_search_path(ns, default_library_paths);
+  if (!success) {
+    __bionic_format_dlerror("android_update_namespace_add_search_path failed",
+                            linker_get_error_buffer());
+  }
+
+  return success;
 }
 
 bool __loader_android_link_namespaces(android_namespace_t* namespace_from,

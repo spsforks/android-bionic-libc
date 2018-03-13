@@ -820,6 +820,40 @@ TEST(dlext, ns_smoke) {
   dlclose(handle2);
 }
 
+TEST(dlext, ns_update_add_path) {
+  static const char* root_lib = "libnstest_root.so";
+  std::string shared_libs = g_core_shared_libs;
+  ASSERT_TRUE(android_init_anonymous_namespace(shared_libs.c_str(), nullptr) != nullptr) << dlerror();
+
+  android_namespace_t* ns =
+          android_create_namespace("private",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns, nullptr, shared_libs.c_str())) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns;
+
+  void* handle = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
+
+  // add new path to the namespace
+  bool result = android_update_namespace_add_search_path(
+      ns, (get_testlib_root() + "/public_namespace_libs").c_str());
+
+  ASSERT_TRUE(result) << dlerror();
+
+  handle = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+}
+
 TEST(dlext, dlopen_ext_use_o_tmpfile_fd) {
   const std::string lib_path = get_testlib_root() + "/libtest_simple.so";
 
