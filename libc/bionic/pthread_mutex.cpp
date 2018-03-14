@@ -40,7 +40,9 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_constants.h"
+#include "private/bionic_fortify.h"
 #include "private/bionic_futex.h"
+#include "private/bionic_sdk_version.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
@@ -777,6 +779,18 @@ static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, bool use_realti
 
 }  // namespace NonPI
 
+static inline __always_inline bool CheckMutexDestroyed(pthread_mutex_t* mutex, uint16_t mutex_state,
+                                                       const char* function_name) {
+    if (__predict_false(mutex_state == 0xffff)) {
+        // The mutex has been destroyed.
+        if (bionic_get_application_target_sdk_version() >= __ANDROID_API_P__) {
+            __fortify_fatal("%s called on a destroyed mutex (%p)", function_name, mutex);
+        }
+        return true;
+    }
+    return false;
+}
+
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 #if !defined(__LP64__)
     // Some apps depend on being able to pass NULL as a mutex and get EINVAL
@@ -788,7 +802,6 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 #endif
 
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
     // Avoid slowing down fast path of normal mutex lock operation.
@@ -797,7 +810,11 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
         if (__predict_true(NonPI::NormalMutexTryLock(mutex, shared) == 0)) {
             return 0;
         }
-    } else if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    }
+    if (__predict_false(CheckMutexDestroyed(mutex_interface, old_state, __FUNCTION__))) {
+        return EBUSY;
+    }
+    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
         PIMutex& m = mutex->ToPIMutex();
         // Handle common case first.
         if (__predict_true(PIMutexTryLock(m) == 0)) {
@@ -819,7 +836,6 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
 #endif
 
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
     uint16_t shared = (old_state & MUTEX_SHARED_MASK);
@@ -828,6 +844,9 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
         NonPI::NormalMutexUnlock(mutex, shared);
         return 0;
+    }
+    if (__predict_false(CheckMutexDestroyed(mutex_interface, old_state, __FUNCTION__))) {
+        return EBUSY;
     }
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
         return PIMutexUnlock(mutex->ToPIMutex());
@@ -874,6 +893,9 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
         uint16_t shared = (old_state & MUTEX_SHARED_MASK);
         return NonPI::NormalMutexTryLock(mutex, shared);
+    }
+    if (__predict_false(CheckMutexDestroyed(mutex_interface, old_state, __FUNCTION__))) {
+        return EBUSY;
     }
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
         return PIMutexTryLock(mutex->ToPIMutex());
@@ -934,6 +956,9 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
             return 0;
         }
     }
+    if (__predict_false(CheckMutexDestroyed(mutex_interface, old_state, __FUNCTION__))) {
+        return EBUSY;
+    }
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
         return PIMutexTimedLock(mutex->ToPIMutex(), abs_timeout);
     }
@@ -943,8 +968,7 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    if (old_state == 0xffff) {
-        // The mutex has been destroyed.
+    if (__predict_false(CheckMutexDestroyed(mutex_interface, old_state, __FUNCTION__))) {
         return EBUSY;
     }
     uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
