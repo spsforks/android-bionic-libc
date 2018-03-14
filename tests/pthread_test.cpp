@@ -1718,7 +1718,6 @@ struct PthreadMutex {
 
   void destroy() {
     ASSERT_EQ(0, pthread_mutex_destroy(&lock));
-    ASSERT_EQ(EBUSY, pthread_mutex_destroy(&lock));
   }
 
   DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
