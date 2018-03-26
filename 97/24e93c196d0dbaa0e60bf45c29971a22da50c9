@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Dimitry Ivanov <dimitry@google.com>
+Verified+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Mon, 26 Mar 2018 18:07:08 +0000
+Reviewed-on: https://android-review.googlesource.com/648760
+Project: platform/bionic
+Branch: refs/heads/master
