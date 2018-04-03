@@ -197,6 +197,11 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
   return __loader_dl_iterate_phdr(cb, data);
 }
 
+// This function is needed by libc.a
+extern "C" uint32_t android_get_application_target_sdk_version() {
+  return __ANDROID_API__;
+}
+
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
