@@ -2286,7 +2286,8 @@ TEST_F(MallocDebugTest, verify_pointers) {
   std::string realloc_pointer_str(
       android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p UNKNOWN POINTER (realloc)\n",
                                   pointer));
-  std::string backtrace_str("6 malloc_debug Backtrace failed to get any frames.\n");
+  std::string backtrace_str("6 malloc_debug Backtrace at time of failure:\n");
+  backtrace_str += "6 malloc_debug   Backtrace failed to get any frames.\n";
 
   std::string expected_log(DIVIDER + free_pointer_str + backtrace_str + DIVIDER);
   expected_log += DIVIDER + usable_pointer_str + backtrace_str + DIVIDER;
