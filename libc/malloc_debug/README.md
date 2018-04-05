@@ -150,8 +150,8 @@ The file location can be changed by setting the backtrace\_dump\_prefix
 option.
 
 ### backtrace\_dump\_prefix
-As of P, when the backtrace options has been enabled, this sets the prefix
-used for dumping files when the signal SIGRTMAX - 17 is received or when
+As of P, when one of the backtrace options has been enabled, this sets the
+prefix used for dumping files when the signal SIGRTMAX - 17 is received or when
 the program exits and backtrace\_dump\_on\_exit is set.
 
 The default is /data/local/tmp/backtrace\_heap.
@@ -159,6 +159,11 @@ The default is /data/local/tmp/backtrace\_heap.
 When this value is changed from the default, then the filename chosen
 on the signal will be backtrace\_dump\_prefix.**PID**.txt. The filename chosen
 when the program exits will be backtrace\_dump\_prefix.**PID**.exit.txt.
+
+### backtrace\_full
+As of P, any time that a backtrace is gathered, a different algorithm is used
+that is extra thorough and can unwind through Java frames. This will run
+slower than the normal backtracing function.
 
 ### fill\_on\_alloc[=MAX\_FILLED\_BYTES]
 Any allocation routine, other than calloc, will result in the allocation being
