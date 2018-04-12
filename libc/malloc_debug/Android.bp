@@ -38,6 +38,9 @@ cc_library_static {
 // ==============================================================
 // libc_malloc_debug.so
 // ==============================================================
+
+malloc_static_libs = ["libasync_safe", "libbase", "libc_malloc_debug_backtrace"]
+
 cc_library {
     name: "libc_malloc_debug",
 
@@ -57,15 +60,18 @@ cc_library {
     // doesn't mix with the other default unwind code.
     arch: {
         arm: {
-            static_libs: ["libunwind_llvm"],
+            static_libs: malloc_static_libs + ["libunwind_llvm"],
         },
+        arm64:  { static_libs: malloc_static_libs },
+        mips:   { static_libs: malloc_static_libs },
+        mips64: { static_libs: malloc_static_libs },
+        x86:    { static_libs: malloc_static_libs },
+        x86_64: { static_libs: malloc_static_libs },
     },
 
-    static_libs: [
-        "libasync_safe",
-        "libbase",
-        "libc_malloc_debug_backtrace",
-    ],
+    // Maybe only arm target has problem with lld since it uses
+    // libunwind_llvm. We make it simpler by disabling lld for all.
+    use_clang_lld: false,
 
     multilib: {
         lib32: {
