@@ -80,17 +80,20 @@
 
 int __FD_ISSET_chk(int fd, const fd_set* set, size_t set_size) {
   __check_fd_set("FD_ISSET", fd, set_size);
-  return FD_ISSET(fd, set);
+  // Must not use FD_ISSET here.
+  return ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0);
 }
 
 void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_CLR", fd, set_size);
-  FD_CLR(fd, set);
+  // Must not use FD_CLR here.
+  (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd));
 }
 
 void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_SET", fd, set_size);
-  FD_SET(fd, set);
+  // Must not use FD_SET here.
+  (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd));
 }
 
 char* __fgets_chk(char* dst, int supplied_size, FILE* stream, size_t dst_len_from_compiler) {
