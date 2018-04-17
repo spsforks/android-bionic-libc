@@ -81,7 +81,7 @@ TEST(stdlib, erand48) {
 TEST(stdlib, lcong48) {
   unsigned short p[7] = { 0x0102, 0x0304, 0x0506, 0x0708, 0x090a, 0x0b0c, 0x0d0e };
   lcong48(p);
-  EXPECT_EQ(1531389981, lrand48());
+  EXPECT_EQ(153138992, lrand48());
   EXPECT_EQ(1598801533, lrand48());
   EXPECT_EQ(2080534853, lrand48());
   EXPECT_EQ(1102488897, lrand48());
