@@ -248,6 +248,9 @@ copy_hdrs "${KERNEL_DIR}/${src_dir}/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
 copy_hdrs "${KERNEL_DIR}/${src_dir}/drivers/staging/android/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi/linux" "no-copy-dirs"
 
+# Remove ion.h, it's current not fully supported by the upstream kernel.
+rm "${ANDROID_KERNEL_DIR}/uapi/linux/ion.h"
+
 # Copy the generated headers.
 copy_hdrs "${KERNEL_DIR}/${src_dir}/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
