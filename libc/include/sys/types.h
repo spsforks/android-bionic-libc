@@ -128,8 +128,10 @@ typedef __builtin_va_list __va_list;
 typedef __kernel_ssize_t ssize_t;
 #endif
 
-typedef unsigned int        uint_t;
-typedef unsigned int        uint;
+#if defined(__USE_BSD) || defined(__USE_GNU)
+typedef unsigned int uint_t;
+typedef unsigned int uint;
+#endif
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 typedef unsigned char  u_char;
