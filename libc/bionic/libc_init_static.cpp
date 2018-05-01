@@ -89,7 +89,6 @@ __noreturn void __libc_init(void* raw_args,
   __libc_init_main_thread(args);
 
   // Initializing the globals requires TLS to be available for errno.
-  __init_thread_stack_guard(__get_thread());
   __libc_init_globals(args);
 
   __libc_init_AT_SECURE(args);
