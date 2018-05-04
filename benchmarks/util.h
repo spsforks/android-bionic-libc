@@ -45,8 +45,8 @@ static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name,
 constexpr auto KB = 1024;
 
 typedef struct {
-  long cpu_to_lock;
-  long num_iterations;
+  long cpu_to_lock = -1;
+  long num_iterations = 0;
   std::string xmlpath;
   std::vector<std::string> extra_benchmarks;
 } bench_opts_t;
