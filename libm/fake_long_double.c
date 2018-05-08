@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <complex.h>
 #include <float.h>
 #include <math.h>
 
