@@ -33,6 +33,7 @@
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
+#include "linker_tls.h"
 #include "linker_utils.h"
 
 #include "private/bionic_auxv.h"
@@ -48,6 +49,7 @@
 #endif
 
 #include <async_safe/log.h>
+#include <bionic/pthread_internal.h>
 
 #include <vector>
 
@@ -388,6 +390,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     exit(EXIT_FAILURE);
   }
 
+  init_linker_tls_modules();
+
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
@@ -437,6 +441,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                       &namespaces)) {
     __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
+    // XXX: Review this code pathway for ELF TLS. If we get here, the
+    // executable doesn't even use libc.so? Does that really happen? (Is this
+    // really a special case or could the above pathway be used here too?)
     if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
       __linker_cannot_link(g_argv[0]);
     }
@@ -445,9 +452,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
+  __libc_init_main_thread_final_tcb();
+
   // Store a pointer to the kernel argument block in a TLS slot to be
   // picked up by the libc constructor.
   __get_tls()[TLS_SLOT_BIONIC_PREINIT] = &args;
+  __libc_shared_globals->tls_get_addr = &__ld_tls_get_addr;
 
   si->call_pre_init_constructors();
   si->call_constructors();
@@ -459,11 +469,13 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
            (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
+  // XXX: I should test kRelocTls stats...
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol, %d tls", g_argv[0],
          linker_stats.count[kRelocAbsolute],
          linker_stats.count[kRelocRelative],
          linker_stats.count[kRelocCopy],
-         linker_stats.count[kRelocSymbol]);
+         linker_stats.count[kRelocSymbol],
+         linker_stats.count[kRelocTls]);
 #endif
 #if COUNT_PAGES
   {
@@ -554,9 +566,12 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
-#if defined(__i386__)
-  __libc_init_sysinfo(args);
-#endif
+  // Allocate the initial TCB on the stack. We'll reallocate it later once we
+  // know the size of the initial TLS block.
+  bionic_tcb temp_tcb {};
+
+  // Initialize the main thread early so we can invoke system calls.
+  __libc_init_main_thread_early(args, temp_tcb);
 
   // When the linker is run by itself (rather than as an interpreter for
   // another program), AT_BASE is 0.
@@ -615,8 +630,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
  */
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) {
-  // Initialize the main thread (including TLS, so system calls really work).
-  __libc_init_main_thread(args);
+  __libc_init_main_thread_late(args);
 
   // We didn't protect the linker's RELRO pages in link_image because we
   // couldn't make system calls on x86 at that point, but we can now...

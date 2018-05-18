@@ -1,10 +1,18 @@
+// XXX: DO NOT SUBMIT. I'm only doing this temporarily to avoid version control
+// headaches while I'm also editing the file. It should be moved instead of doing this.
+filegroup {
+    name: "linker_allocator_cpp",
+    srcs: [
+        "linker_allocator.cpp"
+    ]
+}
+
 cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
 
     srcs: [
-        "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
     cflags: [
@@ -86,6 +94,7 @@ filegroup {
         "linker_phdr.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
     ],
@@ -95,6 +104,7 @@ filegroup {
     name: "linker_sources_arm",
     srcs: [
         "arch/arm/begin.S",
+        "arch/arm/tlsdesc_resolver.S",
         "linker_exidx_static.c",
     ],
 }
@@ -103,6 +113,7 @@ filegroup {
     name: "linker_sources_arm64",
     srcs: [
         "arch/arm64/begin.S",
+        "arch/arm64/tlsdesc_resolver.S",
     ],
 }
 
@@ -110,6 +121,7 @@ filegroup {
     name: "linker_sources_x86",
     srcs: [
         "arch/x86/begin.S",
+        "arch/x86/tlsdesc_resolver.S",
     ],
 }
 
@@ -117,6 +129,7 @@ filegroup {
     name: "linker_sources_x86_64",
     srcs: [
         "arch/x86_64/begin.S",
+        "arch/x86_64/tlsdesc_resolver.S",
     ],
 }
 
@@ -179,6 +192,10 @@ cc_defaults {
         "-Wextra",
         "-Wunused",
         "-Werror",
+
+        // Define _USING_LIBCXX so <stdatomic.h> defers to the <atomic> header. When an STL is
+        // configured, Soong also passes this macro, but the linker links against libc++ manually.
+        "-D_USING_LIBCXX",
     ],
 
     // TODO: split out the asflags.

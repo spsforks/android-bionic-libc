@@ -74,7 +74,7 @@ static inline bool KeyInValidRange(pthread_key_t key) {
 __LIBC_HIDDEN__ void pthread_key_clean_all() {
   // Because destructors can do funky things like deleting/creating other keys,
   // we need to implement this in a loop.
-  pthread_key_data_t* key_data = __get_thread()->key_data;
+  pthread_key_data_t* key_data = __get_tcb()->key_data;
   for (size_t rounds = PTHREAD_DESTRUCTOR_ITERATIONS; rounds > 0; --rounds) {
     size_t called_destructor_count = 0;
     for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
@@ -158,7 +158,7 @@ void* pthread_getspecific(pthread_key_t key) {
   }
   key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
-  pthread_key_data_t* data = &(__get_thread()->key_data[key]);
+  pthread_key_data_t* data = &(__get_tcb()->key_data[key]);
   // It is user's responsibility to synchornize between the creation and use of pthread keys,
   // so we use memory_order_relaxed when checking the sequence number.
   if (__predict_true(SeqOfKeyInUse(seq) && data->seq == seq)) {
@@ -178,7 +178,7 @@ int pthread_setspecific(pthread_key_t key, const void* ptr) {
   key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   if (__predict_true(SeqOfKeyInUse(seq))) {
-    pthread_key_data_t* data = &(__get_thread()->key_data[key]);
+    pthread_key_data_t* data = &(__get_tcb()->key_data[key]);
     data->seq = seq;
     data->data = const_cast<void*>(ptr);
     return 0;

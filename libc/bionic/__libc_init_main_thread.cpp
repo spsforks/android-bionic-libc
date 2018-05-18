@@ -41,13 +41,6 @@ extern "C" int __set_tid_address(int* tid_address);
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
-static pthread_internal_t main_thread;
-
-__attribute__((no_sanitize("hwaddress")))
-pthread_internal_t* __get_main_thread() {
-  return &main_thread;
-}
-
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
 // globals from this function will apply to linker-private copies and will not
@@ -61,18 +54,31 @@ pthread_internal_t* __get_main_thread() {
 // -fno-stack-protector because it's responsible for setting up the main
 // thread's TLS (which stack protector relies on).
 
+// Do enough setup to:
+//  - Let the dynamic linker invoke system calls (and access errno)
+//  - Ensure that TLS access functions (__get_{tls,thread,tcb}) never return NULL
+//  - Allow the stack protector to work (with a zero cookie)
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread(KernelArgumentBlock& args) {
+void __libc_init_main_thread_early(KernelArgumentBlock& args, bionic_tcb& temp_tcb) {
   __libc_auxv = args.auxv;
 #if defined(__i386__)
   __libc_init_sysinfo(args);
 #endif
+  static pthread_internal_t main_thread;
+  __init_tcb(&temp_tcb, &main_thread);
+  main_thread.tid = -1;
+  main_thread.set_cached_pid(-1);
+  main_thread.tcb = &temp_tcb;
+  __set_tls(temp_tcb.slots);
+}
 
-  // The -fstack-protector implementation uses TLS, so make sure that's
-  // set up before we call any function that might get a stack check inserted.
-  // TLS also needs to be set up before errno (and therefore syscalls) can be used.
-  __set_tls(main_thread.tls);
-  if (!__init_tls(&main_thread)) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_main_thread_late(KernelArgumentBlock& args) {
+  bionic_tcb& temp_tcb = *__get_tcb();
+  auto& main_thread = *__get_thread();
+
+  main_thread.bionic_tls = __allocate_bionic_tls();
+  if (main_thread.bionic_tls == nullptr) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
@@ -97,9 +103,27 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
   __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
-  __init_thread_stack_guard(&main_thread);
+  __init_tcb_stack_guard(&temp_tcb);
 
   __init_thread(&main_thread);
 
   __init_alternate_signal_stack(&main_thread);
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_main_thread_final_tcb() {
+  auto& main_thread = *__get_thread();
+
+  MainThreadTcb alloc = __allocate_main_thread_final_tcb();
+
+  // Free the TCB and static TLS segments if the main thread exits.
+  main_thread.mmap_base = alloc.mmap_base;
+  main_thread.mmap_size = alloc.mmap_size;
+
+  // Switch from the temporary TCB to the final one.
+  bionic_tcb* final_tcb = alloc.tcb;
+  memcpy(final_tcb, __get_tcb(), sizeof(bionic_tcb));
+  final_tcb->slots[TLS_SLOT_SELF] = final_tcb->slots;
+  main_thread.tcb = final_tcb;
+  __set_tls(final_tcb->slots);
 }

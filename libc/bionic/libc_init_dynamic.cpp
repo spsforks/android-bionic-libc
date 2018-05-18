@@ -51,6 +51,7 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
+#include "elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
@@ -79,6 +80,7 @@ __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 __attribute__((noinline))
 static void __libc_preinit_impl(KernelArgumentBlock& args) {
   __libc_shared_globals = args.shared_globals;
+  *__libc_shared_globals->tls_get_addr = TLS_GET_ADDR;
 
   __libc_init_globals(args);
   __libc_init_common(args);

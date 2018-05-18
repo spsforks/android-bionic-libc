@@ -36,6 +36,9 @@
 #include <sys/auxv.h>
 #include <sys/mman.h>
 
+#include <async_safe/log.h>
+
+#include "elf_tls.h"
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
@@ -82,6 +85,50 @@ static void apply_gnu_relro() {
   }
 }
 
+static void init_static_tls_module() {
+  TlsSegment seg = __bionic_get_tls_segment(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)),
+                                            getauxval(AT_PHNUM), 0);
+  if (seg.size == 0) {
+    // Fallback for a static binary with no PT_TLS segment.
+    __libc_shared_globals->tls_modules = TlsModules {
+      .initset_alignment = 1,
+      .initset_data = "",
+      .mutex = PTHREAD_MUTEX_INITIALIZER,
+      .generation = atomic_uintptr_t(1),
+      .module_count = 0,
+    };
+    return;
+  }
+
+  __bionic_validate_exe_tls_segment(seg);
+
+  static TlsModule tls_module;
+  tls_module = TlsModule {
+    .first_generation = 1,
+    .initset_present = true,
+    .initset_delta = seg.tpoffset,
+    .size = seg.size,
+    .alignment = seg.alignment,
+    .init_ptr = seg.init_ptr,
+    .init_size = seg.init_size,
+  };
+  __libc_shared_globals->tls_modules = TlsModules {
+    .initset_size = __BIONIC_ALIGN(seg.tpoffset + seg.size, seg.alignment),
+    .initset_alignment = seg.alignment,
+    .initset_data = seg.init_ptr,
+    .initset_data_offset = seg.tpoffset,
+    .initset_data_size = seg.init_size,
+    .mutex = PTHREAD_MUTEX_INITIALIZER,
+    .generation = atomic_uintptr_t(1),
+    .module_count = 1,
+    .modules = &tls_module,
+  };
+}
+
+// If temp_tcb is a local, it exceeds the -Wframe-larger-than= limit. It wastes the same amount of
+// memory in .bss or on the stack, because __libc_init never returns.
+static bionic_tcb __temp_tcb {};
+
 // The program startup function __libc_init() defined here is
 // used for static executables only (i.e. those that don't depend
 // on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
@@ -98,7 +145,8 @@ __noreturn static void __real_libc_init(void *raw_args,
   KernelArgumentBlock args(raw_args);
 
   // Initializing the globals requires TLS to be available for errno.
-  __libc_init_main_thread(args);
+  __libc_init_main_thread_early(args, __temp_tcb);
+  __libc_init_main_thread_late(args);
 
   static libc_shared_globals shared_globals;
   __libc_shared_globals = &shared_globals;
@@ -110,6 +158,8 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_common(args);
 
   apply_gnu_relro();
+  init_static_tls_module();
+  __libc_init_main_thread_final_tcb();
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
@@ -137,8 +187,7 @@ __noreturn void __libc_init(void* raw_args,
 #if __has_feature(hwaddress_sanitizer)
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
   // all we need is access to TLS_SLOT_TSAN.
-  pthread_internal_t* main_thread = __get_main_thread();
-  __set_tls(main_thread->tls);
+  __set_tls(__temp_tcb.slots);
   // Initialize HWASan. This sets up TLS_SLOT_TSAN, among other things.
   __hwasan_init();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...

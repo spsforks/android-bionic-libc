@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 
+#include "bionic/elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
@@ -52,6 +53,15 @@ struct libc_shared_globals {
   // record the number of arguments passed to the linker itself rather than to
   // the program it's loading. Typically 0, sometimes 1.
   int initial_linker_arg_count;
+
+  TlsModules tls_modules;
+
+  // XXX: I originally added this field because __tls_get_addr used jemalloc, and the linker didn't
+  // have jemalloc. Now __tls_get_addr uses the linker/bionic allocator, so this hack could be
+  // removed, but it's still maybe useful because it lets an LD_PRELOAD library interpose
+  // __tls_get_addr. It should *probably* be removed, but figure out the sanitizer<->TLS situation
+  // first.
+  void* (**tls_get_addr)(TlsIndex* ti) TLS_GET_ADDR_CCONV;
 };
 
 __LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;

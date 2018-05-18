@@ -33,12 +33,15 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "elf_tls.h"
 #include "private/bionic_defs.h"
+#include "private/bionic_globals.h"
 #include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
 extern "C" __noreturn void __exit(int);
+extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int*);
 extern "C" void __cxa_thread_finalize();
 
@@ -62,12 +65,6 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   if (execute) {
     c->__cleanup_routine(c->__cleanup_arg);
   }
-}
-
-static void __pthread_unmap_tls(pthread_internal_t* thread) {
-  // Unmap the bionic TLS, including guard pages.
-  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PTHREAD_GUARD_SIZE;
-  munmap(allocation, BIONIC_TLS_SIZE + 2 * PTHREAD_GUARD_SIZE);
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
@@ -108,6 +105,13 @@ void pthread_exit(void* return_value) {
          !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
   }
 
+  // XXX: Benchmark the effect of this on thread creation/destruction time. AFAIK, we need to
+  // block signals before freeing the DTV, because we want dynamic TLS to be AS-safe.
+  ScopedSignalBlocker ssb;
+
+  __free_bionic_tls(thread->bionic_tls);
+  __free_tls_dtv(thread);
+
   if (old_state == THREAD_DETACHED) {
     // The thread is detached, no one will use pthread_internal_t after pthread_exit.
     // So we can free mapped space, which includes pthread_internal_t and thread stack.
@@ -121,19 +125,11 @@ void pthread_exit(void* return_value) {
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
       // That's not something we can do in C.
-
-      // We don't want to take a signal after we've unmapped the stack.
-      // That's one last thing we can do before dropping to assembler.
-      ScopedSignalBlocker ssb;
-      __pthread_unmap_tls(thread);
       __hwasan_thread_exit();
-      _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
+      _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size);
     }
   }
 
-  // No need to free mapped space. Either there was no space mapped, or it is left for
-  // the pthread_join caller to clean up.
-  __pthread_unmap_tls(thread);
   __hwasan_thread_exit();
   __exit(0);
 }

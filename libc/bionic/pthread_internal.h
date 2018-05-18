@@ -65,6 +65,7 @@ enum ThreadJoinState {
   THREAD_DETACHED
 };
 
+class bionic_tcb;
 class thread_local_dtor;
 
 class pthread_internal_t {
@@ -108,13 +109,10 @@ class pthread_internal_t {
 
   Lock startup_handshake_lock;
 
+  void* mmap_base;
   size_t mmap_size;
 
   thread_local_dtor* thread_local_dtors;
-
-  void* tls[BIONIC_TLS_SLOTS];
-
-  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
 
   /*
    * The dynamic linker implements dlerror(3), which makes it hard for us to implement this
@@ -124,34 +122,59 @@ class pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 
   bionic_tls* bionic_tls;
+  bionic_tcb* tcb;
+
+  size_t dtv_module_count;
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
-__LIBC_HIDDEN__ bool __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
+// The thread pointer points at the bionic_tcb::slots array.
+class bionic_tcb {
+ public:
+  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
+  void* slots[BIONIC_TLS_SLOTS];
+};
+
+constexpr size_t kBionicTcbSlotsOffset = offsetof(bionic_tcb, slots);
+
+// The thread pointer will point to the TCB slots, which need to be aligned
+// according to the TLS segments of the Initial TLS block.
+static_assert(kBionicTcbSlotsOffset % alignof(bionic_tcb) == 0,
+              "Bionic slots are underaligned");
+
+struct MainThreadTcb {
+  void* mmap_base;
+  size_t mmap_size;
+  bionic_tcb* tcb;
+};
+
+__LIBC_HIDDEN__ bionic_tls* __allocate_bionic_tls();
+__LIBC_HIDDEN__ void __free_bionic_tls(bionic_tls* tls);
+__LIBC_HIDDEN__ MainThreadTcb __allocate_main_thread_final_tcb();
+__LIBC_HIDDEN__ void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_tcb_stack_guard(bionic_tcb* tcb);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
 __LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
 
+static inline __always_inline bionic_tcb* __get_tcb() {
+  char* tp = reinterpret_cast<char*>(__get_tls());
+  tp -= kBionicTcbSlotsOffset;
+  return reinterpret_cast<bionic_tcb*>(tp);
+}
+
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {
-  void** tls = __get_tls();
-  if (__predict_true(tls)) {
-    return reinterpret_cast<pthread_internal_t*>(tls[TLS_SLOT_THREAD_ID]);
-  }
-
-  // This happens when called during libc initialization before TLS has been initialized.
-  return nullptr;
+  return static_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }
 
 static inline __always_inline bionic_tls& __get_bionic_tls() {
   return *__get_thread()->bionic_tls;
 }
 
-extern __LIBC_HIDDEN__ pthread_internal_t* __get_main_thread();
 extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);

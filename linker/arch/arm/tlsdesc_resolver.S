@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,17 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_AUXV_H_
-#define _PRIVATE_BIONIC_AUXV_H_
 
-#include <elf.h>
-#include <link.h>
-#include <sys/cdefs.h>
+#include <private/bionic_asm.h>
 
-__BEGIN_DECLS
+// XXX: CFI annotations?
 
-__LIBC_HIDDEN__ extern ElfW(auxv_t)* __libc_auxv;
+ENTRY(tlsdesc_resolver_static)
+  ldr r0, [r0]
+  bx lr
+END(tlsdesc_resolver_static)
 
-__END_DECLS
-
-#endif /* _PRIVATE_BIONIC_AUXV_H_ */
+ENTRY(tlsdesc_resolver_dynamic)
+  udf 0xfdee
+  bx lr
+END(tlsdesc_resolver_dynamic)
