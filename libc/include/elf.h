@@ -474,6 +474,11 @@ typedef Elf64_Xword Elf64_Relr;
 
 #define PT_GNU_RELRO 0x6474e552
 
+/* PT_ANDROID_TLS_TPOFFSET's p_memsz field indicates the expected offset from
+ * the thread pointer to the TLS segment in executables using a non-standard
+ * ELF TLS layout. */
+#define PT_ANDROID_TLS_TPOFFSET 0x66000000
+
 #define STB_LOOS 10
 #define STB_HIOS 12
 #define STB_LOPROC 13

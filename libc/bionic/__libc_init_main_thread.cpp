@@ -36,17 +36,11 @@
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
 
+extern "C" pid_t __getpid();
 extern "C" int __set_tid_address(int* tid_address);
 
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
-
-static pthread_internal_t main_thread;
-
-__attribute__((no_sanitize("hwaddress")))
-pthread_internal_t* __get_main_thread() {
-  return &main_thread;
-}
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
@@ -61,45 +55,81 @@ pthread_internal_t* __get_main_thread() {
 // -fno-stack-protector because it's responsible for setting up the main
 // thread's TLS (which stack protector relies on).
 
+// Do enough setup to:
+//  - Let the dynamic linker invoke system calls (and access errno)
+//  - Ensure that TLS access functions (__get_{tls,thread}) never return NULL
+//  - Allow the stack protector to work (with a zero cookie)
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread(KernelArgumentBlock& args) {
+void __libc_init_main_thread_early(KernelArgumentBlock& args, pthread_internal_t& temp_thread) {
   __libc_auxv = args.auxv;
 #if defined(__i386__)
   __libc_init_sysinfo(args);
 #endif
+  __init_tls(&temp_thread);
+  temp_thread.tid = -1;
+  temp_thread.set_cached_pid(-1);
+  __set_tls(temp_thread.tls);
+}
 
-  // The -fstack-protector implementation uses TLS, so make sure that's
-  // set up before we call any function that might get a stack check inserted.
-  // TLS also needs to be set up before errno (and therefore syscalls) can be used.
-  __set_tls(main_thread.tls);
-  if (!__init_tls(&main_thread)) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
+// Finish initializing the main thread. This code runs in the dynamic linker prior to loading
+// the executable's shared object dependencies, so we don't yet know how large the static ELF TLS
+// block will be. Once we do know, the main thread is reallocated.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_main_thread_late(KernelArgumentBlock& args) {
+  auto& temp_thread = *__get_thread();
 
-  // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
-  // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
-  main_thread.tid = __set_tid_address(&main_thread.tid);
-  main_thread.set_cached_pid(main_thread.tid);
+  temp_thread.bionic_tls = __allocate_bionic_tls();
+  if (temp_thread.bionic_tls == nullptr) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
+
+  temp_thread.tid = __getpid();
+  temp_thread.set_cached_pid(temp_thread.tid);
 
   // We don't want to free the main thread's stack even when the main thread exits
   // because things like environment variables with global scope live on it.
   // We also can't free the pthread_internal_t itself, since it is a static variable.
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
-  main_thread.mmap_size = 0;
+  temp_thread.mmap_size = 0;
 
-  pthread_attr_init(&main_thread.attr);
+  pthread_attr_init(&temp_thread.attr);
   // We don't want to explicitly set the main thread's scheduler attributes (http://b/68328561).
-  pthread_attr_setinheritsched(&main_thread.attr, PTHREAD_INHERIT_SCHED);
+  pthread_attr_setinheritsched(&temp_thread.attr, PTHREAD_INHERIT_SCHED);
   // The main thread has no guard page.
-  pthread_attr_setguardsize(&main_thread.attr, 0);
+  pthread_attr_setguardsize(&temp_thread.attr, 0);
   // User code should never see this; we'll compute it when asked.
-  pthread_attr_setstacksize(&main_thread.attr, 0);
+  pthread_attr_setstacksize(&temp_thread.attr, 0);
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
   __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
-  __init_thread_stack_guard(&main_thread);
+  __init_tls_stack_guard(&temp_thread);
 
-  __init_thread(&main_thread);
+  __init_thread(&temp_thread);
 
-  __init_alternate_signal_stack(&main_thread);
+  __init_alternate_signal_stack(&temp_thread);
+}
+
+// Allocate the main thread's pthread_internal_t along with static TLS segments.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_main_thread_final() {
+  auto& temp_thread = *__get_thread();
+
+  pthread_internal_t& main_thread = *__allocate_main_thread();
+
+  // Copy the temporary pthread object to the final, including these fields:
+  //  - tid and cached_pid_
+  //  - TLS_SLOT_TSAN: this may be initialized by __hwasan_init in static binaries
+  //  - attributes and join state
+  //  - the alternate signal stack
+  // The pthread_internal_t::{prev,next} fields haven't been initialized yet, so they don't need
+  // updating.
+  main_thread = temp_thread;
+
+  // Update TLS_SLOT_SELF and TLS_SLOT_THREAD_ID to point at the new pthread_internal_t object.
+  __init_tls(&main_thread);
+
+  // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
+  __set_tid_address(&main_thread.tid);
+
+  __set_tls(main_thread.tls);
 }

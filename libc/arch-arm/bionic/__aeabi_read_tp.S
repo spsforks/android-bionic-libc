@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,17 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_AUXV_H_
-#define _PRIVATE_BIONIC_AUXV_H_
 
-#include <elf.h>
-#include <link.h>
-#include <sys/cdefs.h>
+#include <private/bionic_asm.h>
 
-__BEGIN_DECLS
-
-__LIBC_HIDDEN__ extern ElfW(auxv_t)* __libc_auxv;
-
-__END_DECLS
-
-#endif /* _PRIVATE_BIONIC_AUXV_H_ */
+// For arm32 and -mtp=soft, the compiler uses this function to read the thread
+// pointer for ELF TLS accesses. With -mtp=cp15, the compiler inlines the call
+// instead. GCC defaults to -mtp=auto, which inlines this function with
+// -march=armv7-a. Clang does not yet implement -mtp=auto, and instead defaults
+// to -mtp=soft.
+//  - https://bugs.llvm.org/show_bug.cgi?id=38394.
+//  - https://reviews.llvm.org/D34878?id=114573.
+//
+// This function must preserve every register except r0, ip, lr, and cpsr.
+ENTRY(__aeabi_read_tp)
+  // XXX: Do we need cfi/debugging annotations?
+  // __get_tls()
+  mrc p15, 0, r0, c13, c0, 3
+  bx lr
+END(__aeabi_read_tp)

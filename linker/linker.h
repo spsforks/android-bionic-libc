@@ -94,6 +94,7 @@ enum RelocationKind {
   kRelocRelative,
   kRelocCopy,
   kRelocSymbol,
+  kRelocTls,
   kRelocMax
 };
 

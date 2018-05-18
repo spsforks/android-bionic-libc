@@ -32,13 +32,16 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/param.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
 
 #include <async_safe/log.h>
 
+#include "elf_tls.h"
 #include "private/bionic_defs.h"
+#include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
@@ -50,39 +53,53 @@
 void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
-// This code is used both by each new pthread and the code that initializes the main thread.
-bool __init_tls(pthread_internal_t* thread) {
-  // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
-  thread->tls[TLS_SLOT_SELF] = thread->tls;
-  thread->tls[TLS_SLOT_THREAD_ID] = thread;
-
+// Allocate and return a bionic_tls using mmap. Surround it with guard pages.
+bionic_tls* __allocate_bionic_tls() {
   // Add a guard before and after.
   size_t allocation_size = BIONIC_TLS_SIZE + (2 * PTHREAD_GUARD_SIZE);
   void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (allocation == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "pthread_create failed: couldn't allocate TLS: %s", strerror(errno));
-    return false;
+    return nullptr;
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard");
 
   // Carve out the writable TLS section.
-  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
-                                                     PTHREAD_GUARD_SIZE);
-  if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
+  bionic_tls* btls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
+                                                   PTHREAD_GUARD_SIZE);
+  if (mprotect(btls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "pthread_create failed: couldn't mprotect TLS: %s", strerror(errno));
     munmap(allocation, allocation_size);
-    return false;
+    return nullptr;
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->bionic_tls, BIONIC_TLS_SIZE, "bionic TLS");
-  return true;
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, btls, BIONIC_TLS_SIZE, "bionic TLS");
+  return btls;
 }
 
-void __init_thread_stack_guard(pthread_internal_t* thread) {
-  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
+// Unmap the bionic TLS, including guard pages.
+void __free_bionic_tls(bionic_tls* tls) {
+  void* allocation = reinterpret_cast<char*>(tls) - PTHREAD_GUARD_SIZE;
+  munmap(allocation, BIONIC_TLS_SIZE + 2 * PTHREAD_GUARD_SIZE);
+}
+
+void __init_tls(pthread_internal_t* thread) {
+  // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
+  thread->tls[TLS_SLOT_SELF] = thread->tls;
+  thread->tls[TLS_SLOT_THREAD_ID] = thread;
+
+  // __tls_get_addr assumes that the DTV pointer is never NULL. It must check
+  // the DTV generation on every access, so initialize the DTV to one with a 0
+  // generation.
+  static const TlsDtv zero_dtv = {};
+  thread->tls[TLS_SLOT_DTV] = const_cast<TlsDtv*>(&zero_dtv);
+}
+
+void __init_tls_stack_guard(pthread_internal_t* thread) {
+  // XXX: __init_tls_stack_guard is compiled with -fstack-protector. Move it somehow (or inline it)?
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
 }
 
@@ -162,78 +179,185 @@ int __init_thread(pthread_internal_t* thread) {
   return 0;
 }
 
-static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_size) {
-  // Create a new private anonymous map.
-  int prot = PROT_READ | PROT_WRITE;
-  int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* space = mmap(nullptr, mmap_size, prot, flags, -1, 0);
-  if (space == MAP_FAILED) {
+// Initializes the initial static ELF TLS with data from PT_TLS segments. It
+// might only initialize part of the block (e.g. for statically-linked
+// programs), so the memory should be zero-initialized prior to calling this
+// function.
+static void __init_tls_initset(pthread_internal_t* thread) {
+  TlsModules& modules = __libc_shared_globals->tls_modules;
+  if (modules.initset_data != nullptr) {
+    memcpy(reinterpret_cast<char*>(&thread->tls) + modules.initset_data_offset,
+           modules.initset_data, modules.initset_data_size);
+  }
+}
+
+static void* __mmap_aligned(size_t align, size_t size) {
+  align = MAX(align, PAGE_SIZE);
+  const size_t overhead = align - PAGE_SIZE;
+  size_t outer_size;
+  if (__builtin_add_overflow(size, overhead, &outer_size)) {
     async_safe_format_log(ANDROID_LOG_WARN,
-                      "libc",
-                      "pthread_create failed: couldn't allocate %zu-bytes mapped space: %s",
-                      mmap_size, strerror(errno));
+                          "libc",
+                          "thread creation failed: stack size calculation overflowed");
     return nullptr;
   }
-
-  // Stack is at the lower end of mapped space, stack guard region is at the lower end of stack.
-  // Set the stack guard region to PROT_NONE, so we can detect thread stack overflow.
-  if (mprotect(space, stack_guard_size, PROT_NONE) == -1) {
-    async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                          "pthread_create failed: couldn't mprotect PROT_NONE %zu-byte stack guard region: %s",
-                          stack_guard_size, strerror(errno));
-    munmap(space, mmap_size);
+  const int prot = PROT_READ | PROT_WRITE;
+  const int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
+  char* const outer_beg = static_cast<char*>(mmap(nullptr, outer_size, prot, flags, -1, 0));
+  if (outer_beg == MAP_FAILED) {
+    async_safe_format_log(ANDROID_LOG_WARN,
+                          "libc",
+                          "thread creation failed: couldn't allocate %zu-bytes mapped space: %s",
+                          outer_size, strerror(errno));
     return nullptr;
   }
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, space, stack_guard_size, "thread stack guard");
+  char* const outer_end = outer_beg + outer_size;
+  char* const inner_beg = align_up(outer_beg, align);
+  char* const inner_end = inner_beg + size;
+  if (inner_end < outer_end) {
+    munmap(inner_end, outer_end - inner_end);
+  }
+  if (outer_beg < inner_beg) {
+    munmap(outer_beg, inner_beg - outer_beg);
+  }
+  return inner_beg;
+}
 
-  return space;
+struct StackItem {
+  size_t size = 0;
+  size_t align = 1;
+  void* out_base = nullptr;
+  bool is_guard = false;
+};
+
+struct AllocResult {
+  void* base = nullptr;
+  size_t size = 0;
+};
+
+static AllocResult __allocate_stack_items(const StackItem* items, size_t item_count) {
+  // First pass: calculate the total size in pages.
+  size_t max_align = PAGE_SIZE;
+  const size_t off_top = -PAGE_SIZE;
+  size_t off = off_top;
+  for (size_t i = 0; i < item_count; ++i) {
+    if (__builtin_sub_overflow(off, items[i].size, &off)) return {};
+    off = align_down(off, items[i].align);
+    if (off == 0) return {};
+    max_align = MAX(max_align, items[i].align);
+  }
+  off = align_down(off, PAGE_SIZE);
+  if (off == 0) return {};
+  const size_t mmap_size = off_top - off;
+
+  // Create a new private anonymous map.
+  void* const space = __mmap_aligned(max_align, mmap_size);
+  if (space == nullptr) return {};
+
+  // Calculate item positions, protect guard page(s).
+  char* pos = static_cast<char*>(space) + mmap_size;
+  for (size_t i = 0; i < item_count; ++i) {
+    pos -= items[i].size;
+    pos = align_down(pos, items[i].align);
+    if (items[i].out_base != nullptr) {
+      memcpy(items[i].out_base, &pos, sizeof(void*));
+    }
+    if (items[i].size > 0 && items[i].is_guard) {
+      if (mprotect(pos, items[i].size, PROT_NONE) == -1) {
+        async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                              "thread creation failed: couldn't mprotect PROT_NONE %zu-byte stack guard region: %s",
+                              items[i].size, strerror(errno));
+        munmap(space, mmap_size);
+        return {};
+      }
+      prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, pos, items[i].size, "thread stack guard");
+    }
+  }
+
+  return { space, mmap_size };
+}
+
+struct ThreadMappedSpace {
+  pthread_internal_t* thread;
+  char* stack_top;
+  char* stack_base;
+  void* mmap_base;
+  size_t mmap_size;
+};
+
+static ThreadMappedSpace __create_thread_mapped_space(size_t stack_size, size_t stack_guard_size) {
+  ThreadMappedSpace ret = {};
+  StackItem items[5] = {};
+
+  TlsModules& modules = __libc_shared_globals->tls_modules;
+
+  const size_t tls_align = modules.initset_alignment;
+  const size_t max_tls_align = MAX(alignof(pthread_internal_t), tls_align);
+  const size_t max_align = MAX(max_tls_align, PAGE_SIZE);
+
+  items[0] = { MAX(modules.initset_size, BIONIC_TLS_RESERVATION_MIN), max_tls_align };
+  items[1] = { kPthreadTlsOffset, 1, &ret.thread };
+
+  if (stack_size) {
+    items[2] = { 0, 16, &ret.stack_top };
+    items[3] = { stack_size, 1 };
+    items[4] = { stack_guard_size, max_align, &ret.stack_base, .is_guard = true };
+  }
+
+  AllocResult mapping = __allocate_stack_items(items, arraysize(items));
+  if (mapping.base == nullptr) {
+    return {};
+  }
+
+  __init_tls_initset(ret.thread);
+  ret.mmap_base = mapping.base;
+  ret.mmap_size = mapping.size;
+  return ret;
+}
+
+// Using mmap, allocate a pthread_internal_t with initialized static ELF TLS
+// memory.
+pthread_internal_t* __allocate_main_thread() {
+  ThreadMappedSpace space = __create_thread_mapped_space(0, 0);
+  if (space.mmap_base == nullptr) {
+    async_safe_fatal("couldn't allocate main thread's TLS memory");
+  }
+  space.thread->mmap_base = space.mmap_base;
+  space.thread->mmap_size = space.mmap_size;
+  return space.thread;
 }
 
 static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp, void** child_stack) {
-  size_t mmap_size;
-  uint8_t* stack_top;
+  ThreadMappedSpace mapping;
+  void* stack_top;
 
   if (attr->stack_base == nullptr) {
     // The caller didn't provide a stack, so allocate one.
-    // Make sure the stack size and guard size are multiples of PAGE_SIZE.
-    if (__builtin_add_overflow(attr->stack_size, attr->guard_size, &mmap_size)) return EAGAIN;
-    if (__builtin_add_overflow(mmap_size, sizeof(pthread_internal_t), &mmap_size)) return EAGAIN;
-    mmap_size = __BIONIC_ALIGN(mmap_size, PAGE_SIZE);
-    attr->guard_size = __BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
-    attr->stack_base = __create_thread_mapped_space(mmap_size, attr->guard_size);
-    if (attr->stack_base == nullptr) {
-      return EAGAIN;
-    }
-    stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + mmap_size;
+    mapping = __create_thread_mapped_space(attr->stack_size, attr->guard_size);
+    if (mapping.mmap_base == nullptr) return EAGAIN;
+    attr->stack_base = mapping.stack_base;
+    attr->stack_size = mapping.stack_top - mapping.stack_base;
+    attr->guard_size = align_up(attr->guard_size, PAGE_SIZE);
+    stack_top = mapping.stack_top;
   } else {
-    // Remember the mmap size is zero and we don't need to free it.
-    mmap_size = 0;
-    stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + attr->stack_size;
+    mapping = __create_thread_mapped_space(0, 0);
+    if (mapping.mmap_base == nullptr) return EAGAIN;
+    stack_top = align_down(static_cast<char*>(attr->stack_base) + attr->stack_size, 16);
   }
 
-  // Mapped space(or user allocated stack) is used for:
-  //   pthread_internal_t
-  //   thread stack (including guard)
-
-  // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
-  stack_top = reinterpret_cast<uint8_t*>(
-                (reinterpret_cast<uintptr_t>(stack_top) - sizeof(pthread_internal_t)) & ~0xf);
-
-  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
-  if (mmap_size == 0) {
-    // If thread was not allocated by mmap(), it may not have been cleared to zero.
-    // So assume the worst and zero it.
-    memset(thread, 0, sizeof(pthread_internal_t));
-  }
-  attr->stack_size = stack_top - reinterpret_cast<uint8_t*>(attr->stack_base);
-
-  thread->mmap_size = mmap_size;
+  pthread_internal_t* thread = mapping.thread;
+  thread->mmap_base = mapping.mmap_base;
+  thread->mmap_size = mapping.mmap_size;
   thread->attr = *attr;
-  if (!__init_tls(thread)) {
-    if (thread->mmap_size != 0) munmap(thread->attr.stack_base, thread->mmap_size);
+
+  thread->bionic_tls = __allocate_bionic_tls();
+  if (thread->bionic_tls == nullptr) {
+    munmap(mapping.mmap_base, mapping.mmap_size);
     return EAGAIN;
   }
-  __init_thread_stack_guard(thread);
+
+  __init_tls(thread);
+  __init_tls_stack_guard(thread);
 
   *threadp = thread;
   *child_stack = stack_top;
@@ -320,7 +444,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
     thread->startup_handshake_lock.unlock();
     if (thread->mmap_size != 0) {
-      munmap(thread->attr.stack_base, thread->mmap_size);
+      munmap(thread->mmap_base, thread->mmap_size);
     }
     async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s",
                           strerror(clone_errno));

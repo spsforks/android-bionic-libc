@@ -79,8 +79,20 @@ enum {
   // state.
   TLS_SLOT_TSAN,
 
+  // ELF TLS Dynamic Thread Vector (DTV). Points to a table of TLS blocks, one
+  // per loaded ELF binary.
+  TLS_SLOT_DTV = 9,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
+
+constexpr int MAX_BIONIC_TLS_SLOTS = 16;
+
+constexpr intptr_t BIONIC_TLS_RESERVATION_MIN = BIONIC_TLS_SLOTS * sizeof(void*);
+constexpr intptr_t BIONIC_TLS_RESERVATION_FULL = MAX_BIONIC_TLS_SLOTS * sizeof(void*);
+
+static_assert(BIONIC_TLS_SLOTS <= MAX_BIONIC_TLS_SLOTS,
+              "ELF TLS variant 1 reserves a fixed number of slots following the thread pointer");
 
 // ~3 pages.
 struct bionic_tls {
@@ -130,9 +142,10 @@ struct bionic_tls {
 
 __END_DECLS
 
-#if defined(__cplusplus)
 class KernelArgumentBlock;
-extern void __libc_init_main_thread(KernelArgumentBlock&);
-#endif
+class pthread_internal_t;
+void __libc_init_main_thread_early(KernelArgumentBlock& args, pthread_internal_t& temp_thread);
+void __libc_init_main_thread_late(KernelArgumentBlock&);
+void __libc_init_main_thread_final();
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */
