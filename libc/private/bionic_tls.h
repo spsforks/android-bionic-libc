@@ -35,6 +35,7 @@
 #include <sys/cdefs.h>
 #include <sys/param.h>
 
+#include "bionic_asm_tls.h"
 #include "bionic_macros.h"
 #include "__get_tls.h"
 #include "grp_pwd.h"
@@ -54,8 +55,13 @@ __BEGIN_DECLS
 
 // Well-known TLS slots. What data goes in which slot is arbitrary unless otherwise noted.
 enum {
+#if defined(__i386__) || defined(__x86_64__)
   TLS_SLOT_SELF = 0, // The kernel requires this specific slot for x86.
-  TLS_SLOT_THREAD_ID,
+#endif
+#ifdef BIONIC_TLS_VARIANT1
+  TLS_SLOT_DTV = 0, // Variant 1 TLS (arm/arm64) uses slot 0 for the DTV instead.
+#endif
+  TLS_SLOT_THREAD_ID = 1,
   TLS_SLOT_ERRNO,
 
   // These two aren't used by bionic itself, but allow the graphics code to
@@ -79,8 +85,16 @@ enum {
   // state.
   TLS_SLOT_TSAN,
 
+  // Reserve this slot for the TLS DTV on variant 2 architectures (x86/x86_64).
+  TLS_SLOT_VARIANT2_DTV = 9,
+#ifdef BIONIC_TLS_VARIANT2
+  TLS_SLOT_DTV = TLS_SLOT_VARIANT2_DTV,
+#endif
+
   BIONIC_TLS_SLOTS // Must come last!
 };
+
+static_assert(TLS_SLOT_DTV == TLS_SLOT_DTV_MACRO, "TLS_SLOT_DTV != TLS_SLOT_DTV_MACRO");
 
 // ~3 pages.
 struct bionic_tls {
@@ -132,7 +146,13 @@ __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-extern void __libc_init_main_thread(KernelArgumentBlock&);
+class bionic_tcb;
+struct TlsModules;
+void __libc_init_main_thread_early(KernelArgumentBlock& args, bionic_tcb& temp_tcb);
+void __libc_init_main_thread_late(KernelArgumentBlock&);
+void __libc_init_main_thread_final_tcb(TlsModules& tls_modules,
+                                       void* memalign_func(size_t, size_t),
+                                       void free_func(void*));
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */

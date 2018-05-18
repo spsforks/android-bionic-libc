@@ -86,6 +86,7 @@ cc_binary {
         "linker_phdr.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
     ],
@@ -94,6 +95,7 @@ cc_binary {
         arm: {
             srcs: [
                 "arch/arm/begin.S",
+                "arch/arm/tlsdesc_resolver.S",
                 "linker_exidx_static.c",
             ],
 
@@ -101,16 +103,25 @@ cc_binary {
             version_script: "linker.arm.map",
         },
         arm64: {
-            srcs: ["arch/arm64/begin.S"],
+            srcs: [
+                "arch/arm64/begin.S",
+                "arch/arm64/tlsdesc_resolver.S",
+            ],
             version_script: "linker.generic.map",
         },
         x86: {
-            srcs: ["arch/x86/begin.S"],
+            srcs: [
+                "arch/x86/begin.S",
+                "arch/x86/tlsdesc_resolver.S",
+            ],
             cflags: ["-D__work_around_b_24465209__"],
             version_script: "linker.generic.map",
         },
         x86_64: {
-            srcs: ["arch/x86_64/begin.S"],
+            srcs: [
+                "arch/x86_64/begin.S",
+                "arch/x86_64/tlsdesc_resolver.S",
+            ],
             version_script: "linker.generic.map",
         },
         mips: {
@@ -154,6 +165,7 @@ cc_binary {
         "-Wextra",
         "-Wunused",
         "-Werror",
+        "-D_USING_LIBCXX",
     ],
 
     // TODO: split out the asflags.

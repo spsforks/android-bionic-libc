@@ -30,8 +30,10 @@
 
 #include <link.h>
 
+#include <memory>
 #include <string>
 
+#include "bionic/elf_tls.h"
 #include "linker_namespaces.h"
 
 #define FLAG_LINKED           0x00000001
@@ -61,7 +63,7 @@
                                          // unset.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 4
+#define SOINFO_VERSION 5
 
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
@@ -99,6 +101,30 @@ struct version_info {
 
 // TODO(dimitry): remove reference from soinfo member functions to this class.
 class VersionTracker;
+
+struct TlsSegment {
+  size_t size;
+  size_t alignment;
+  void* init_ptr;
+  size_t init_size;
+};
+
+struct TlsDescResolverDynamicArg {
+  uintptr_t generation;
+  TlsIndex index;
+};
+
+typedef intptr_t TlsDescResolverFunc(intptr_t);
+
+struct TlsDescriptor {
+#if defined(__arm__)
+  intptr_t arg;
+  TlsDescResolverFunc* func;
+#else
+  TlsDescResolverFunc* func;
+  intptr_t arg;
+#endif
+};
 
 #if defined(__work_around_b_24465209__)
 #define SOINFO_NAME_LEN 128
@@ -291,6 +317,15 @@ struct soinfo {
   void generate_handle();
   void* to_handle();
 
+  const TlsSegment* get_tls_segment() const;
+  uintptr_t get_tls_module_id() const;
+  void set_tls_module_id(uintptr_t val);
+  uintptr_t get_tls_generation() const;
+  void set_tls_generation(uintptr_t val);
+  bool has_tls_initset_delta() const;
+  intptr_t get_tls_initset_delta() const;
+  void set_tls_initset_delta(intptr_t val);
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -368,6 +403,14 @@ struct soinfo {
   // version >= 4
   ElfW(Relr)* relr_;
   size_t relr_count_;
+
+  // version >= 5
+  std::unique_ptr<TlsSegment> tls_segment_;
+  uintptr_t tls_module_id_; // 0 indicates no TLS module
+  uintptr_t tls_generation_; // 0 indicates no TLS module
+  bool tls_initset_present_;
+  intptr_t tls_initset_delta_;
+  std::vector<TlsDescResolverDynamicArg> tlsdesc_resolver_dyn_args_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

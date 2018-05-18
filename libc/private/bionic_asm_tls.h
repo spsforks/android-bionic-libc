@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,17 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_AUXV_H_
-#define _PRIVATE_BIONIC_AUXV_H_
 
-#include <elf.h>
-#include <link.h>
-#include <sys/cdefs.h>
+#pragma once
 
-__BEGIN_DECLS
+#if defined(__arm__) || defined(__aarch64__)
+#define BIONIC_TLS_VARIANT1 // Linker allocates TLS variables after TP
+#elif defined(__i386__) || defined(__x86_64__)
+#define BIONIC_TLS_VARIANT2 // Linker allocates TLS variables before TP
+#else
+#error "Unrecognized architecture"
+#endif
 
-__LIBC_HIDDEN__ extern ElfW(auxv_t)* __libc_auxv;
-
-__END_DECLS
-
-#endif /* _PRIVATE_BIONIC_AUXV_H_ */
+#if defined(BIONIC_TLS_VARIANT1)
+#define TLS_SLOT_DTV_MACRO 0
+#elif defined(BIONIC_TLS_VARIANT2)
+#define TLS_SLOT_DTV_MACRO 9
+#endif

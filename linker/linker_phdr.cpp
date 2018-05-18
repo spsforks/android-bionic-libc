@@ -1055,6 +1055,29 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
   }
 }
 
+/* Return the ELF file's TLS segment information.
+ *
+ * Return:
+ *   true iff the file has a TLS segment
+ */
+bool phdr_table_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                ElfW(Addr) load_bias, TlsSegment* tls) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)& phdr = phdr_table[i];
+    if (phdr.p_type == PT_TLS) {
+      *tls = TlsSegment {
+        .size = phdr.p_memsz,
+        .alignment = phdr.p_align,
+        .init_ptr = reinterpret_cast<void*>(load_bias + phdr.p_vaddr),
+        .init_size = phdr.p_filesz,
+      };
+      return true;
+    }
+  }
+  *tls = {};
+  return false;
+}
+
 /* Return the program interpreter string, or nullptr if missing.
  *
  * Input:

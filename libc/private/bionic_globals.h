@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 
+#include "bionic/elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
@@ -47,6 +48,8 @@ __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
   FdTable<128> fd_table;
+  TlsModules tls_modules;
+  void* (**tls_get_addr)(TlsIndex* ti) TLS_GET_ADDR_CCONV;
 };
 
 __LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;

@@ -33,12 +33,15 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "elf_tls.h"
 #include "private/bionic_defs.h"
+#include "private/bionic_globals.h"
 #include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
 extern "C" __noreturn void __exit(int);
+extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int*);
 extern "C" void __cxa_thread_finalize();
 
@@ -62,12 +65,6 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   if (execute) {
     c->__cleanup_routine(c->__cleanup_arg);
   }
-}
-
-static void __pthread_unmap_tls(pthread_internal_t* thread) {
-  // Unmap the bionic TLS, including guard pages.
-  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PTHREAD_GUARD_SIZE;
-  munmap(allocation, BIONIC_TLS_SIZE + 2 * PTHREAD_GUARD_SIZE);
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
@@ -108,6 +105,8 @@ void pthread_exit(void* return_value) {
          !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
   }
 
+  bool should_unmap_stack = false;
+
   if (old_state == THREAD_DETACHED) {
     // The thread is detached, no one will use pthread_internal_t after pthread_exit.
     // So we can free mapped space, which includes pthread_internal_t and thread stack.
@@ -121,17 +120,34 @@ void pthread_exit(void* return_value) {
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
       // That's not something we can do in C.
-
-      // We don't want to take a signal after we've unmapped the stack.
-      // That's one last thing we can do before dropping to assembler.
-      ScopedSignalBlocker ssb;
-      __pthread_unmap_tls(thread);
-      _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
+      should_unmap_stack = true;
     }
   }
 
-  // No need to free mapped space. Either there was no space mapped, or it is left for
-  // the pthread_join caller to clean up.
-  __pthread_unmap_tls(thread);
-  __exit(0);
+  // We don't want to take a signal after we've unmapped the stack or after we've freed
+  // the TCB (which contains the slot for errno).
+  // XXX: If blocking signals is a problem, there are other ways to deal with this.
+  // XXX: This isn't my idea from above, but I think(?) we could allocate the TCB with the stack...
+  // ... except that's problematic when the user provides their own stack. (The user wouldn't be
+  // expecting all their __thread variables to be allocated on it, so it might be too small.)
+  ScopedSignalBlocker ssb;
+  __free_bionic_tls(thread->bionic_tls);
+  __free_tls_dtv(thread);
+
+  // XXX: We're freeing our own TCB, which frees this thread's stack protector... Returning from __free_tcb might read freed memory.
+  // XXX: This is really ugly. It will crash if anything uses a pthread key, and __get_thread()->tcb points to the old (freed) TCB.
+  void* temp_tcb_slots[BIONIC_TLS_SLOTS] {};
+#if defined(__i386__) || defined(__x86_64__)
+  temp_tcb_slots[TLS_SLOT_SELF] = temp_tcb_slots;
+#endif
+  temp_tcb_slots[TLS_SLOT_THREAD_ID] = __get_thread();
+  temp_tcb_slots[TLS_SLOT_STACK_GUARD] = __get_tls()[TLS_SLOT_STACK_GUARD];
+  __set_tls(temp_tcb_slots);
+  __free_tcb(__libc_shared_globals->tls_modules, thread->tcb, thread->tcb_free_func);
+
+  if (should_unmap_stack) {
+    _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
+  } else {
+    __exit(0);
+  }
 }

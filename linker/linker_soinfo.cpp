@@ -631,6 +631,8 @@ android_namespace_list_t& soinfo::get_secondary_namespaces() {
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
+  } else if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
+    return s->st_value;
   }
 
   return static_cast<ElfW(Addr)>(s->st_value + load_bias);
@@ -765,6 +767,44 @@ void soinfo::generate_handle() {
            g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
 
   g_soinfo_handles_map[handle_] = this;
+}
+
+const TlsSegment* soinfo::get_tls_segment() const {
+  return has_min_version(5) ? tls_segment_.get() : nullptr;
+}
+
+uintptr_t soinfo::get_tls_module_id() const {
+  return has_min_version(5) ? tls_module_id_ : 0;
+}
+
+void soinfo::set_tls_module_id(uintptr_t val) {
+  CHECK(has_min_version(5));
+  tls_module_id_ = val;
+}
+
+uintptr_t soinfo::get_tls_generation() const {
+  return has_min_version(5) ? tls_generation_ : 0;
+}
+
+void soinfo::set_tls_generation(uintptr_t val) {
+  CHECK(has_min_version(5));
+  tls_generation_ = val;
+}
+
+bool soinfo::has_tls_initset_delta() const {
+  return has_min_version(5) && tls_initset_present_;
+}
+
+intptr_t soinfo::get_tls_initset_delta() const {
+  CHECK(has_min_version(5));
+  CHECK(tls_initset_present_);
+  return tls_initset_delta_;
+}
+
+void soinfo::set_tls_initset_delta(intptr_t val) {
+  CHECK(has_min_version(5));
+  tls_initset_present_ = true;
+  tls_initset_delta_ = val;
 }
 
 // TODO(dimitry): Move SymbolName methods to a separate file.

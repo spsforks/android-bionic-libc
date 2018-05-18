@@ -30,17 +30,33 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../../private/bionic_asm_tls.h"
+
 #define SECTION(name) __attribute__((__section__(name)))
 SECTION(".preinit_array") void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
 SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 #undef SECTION
 
+// Reserve TLS space in all executables.
+#ifdef BIONIC_TLS_VARIANT1
+static __thread char __tls_slots_reservation[1] __attribute__((aligned(16 * sizeof(void*))));
+__LIBC_HIDDEN__ char* volatile __tls_slots_reservation_ptr = NULL;
+#endif
+
 __used static void _start_main(void* raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
   array.fini_array = &__FINI_ARRAY__;
+
+#ifdef BIONIC_TLS_VARIANT1
+  // XXX: We need a better way of resolving the slots<->TLS conflict, but this should suffice for now.
+  // XXX: Prevent the compiler/linker from optimizing away the __thread variable.
+  if (__tls_slots_reservation_ptr != NULL) {
+    __tls_slots_reservation_ptr = &__tls_slots_reservation[0];
+  }
+#endif
 
   __libc_init(raw_args, NULL, &main, &array);
 }

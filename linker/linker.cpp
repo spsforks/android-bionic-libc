@@ -65,12 +65,17 @@
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
+#include "linker_tls.h"
 #include "linker_utils.h"
 
 #include "android-base/macros.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
+
+// XXX: Where should this be?
+__LIBC_HIDDEN__ extern "C" intptr_t tlsdesc_resolver_static(intptr_t arg);
+__LIBC_HIDDEN__ extern "C" intptr_t tlsdesc_resolver_dynamic(intptr_t arg);
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
 
@@ -1619,6 +1624,25 @@ bool find_libraries(android_namespace_t* ns,
     }
   }
 
+  // Initialize new TLS modules.
+  bool tls_has_exe = false;
+  soinfo_list_t tls_modules;
+  for (auto&& task : load_tasks) {
+    soinfo* si = task->get_soinfo();
+    if (si->get_tls_segment() != nullptr) {
+      tls_modules.push_back(si);
+    }
+    // XXX: shuffle these modules? If the executable has TLS, it must remain
+    // at index 0 for the sake of the TLS LE access model.
+  }
+  if (add_as_children && start_with != nullptr && start_with->get_tls_segment() != nullptr) {
+    tls_has_exe = true;
+    tls_modules.push_front(start_with);
+  }
+  if (!tls_modules.empty()) {
+    register_tls_modules(tls_modules, add_as_children, tls_has_exe);
+  }
+
   // Step 4: Construct the global group. Note: DF_1_GLOBAL bit of a library is
   // determined at step 3.
 
@@ -1873,6 +1897,16 @@ static void soinfo_unload_impl(soinfo* root) {
            si->get_realpath(),
            si);
   });
+
+  soinfo_list_t tls_modules;
+  local_unload_list.for_each([&tls_modules](soinfo* si) {
+    if (si->get_tls_segment() != nullptr) {
+      tls_modules.push_back(si);
+    }
+  });
+  if (!tls_modules.empty()) {
+    unregister_tls_modules(tls_modules);
+  }
 
   while ((si = local_unload_list.pop_front()) != nullptr) {
     LD_LOG(kLogDlopen,
@@ -2665,9 +2699,15 @@ static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
 }
 #else
 static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
-  if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
+  ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
+  if (type == R_GENERIC_RELATIVE ||
+      type == R_GENERIC_IRELATIVE ||
+      type == R_GENERIC_TLS_DTPREL ||
+      type == R_GENERIC_TLS_TPREL) {
     return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
+  }
+  if (type == R_GENERIC_TLSDESC) {
+    return reinterpret_cast<TlsDescriptor*>(reloc_addr)->arg;
   }
   return 0;
 }
@@ -2676,6 +2716,9 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
 template<typename ElfRelIteratorT>
 bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+
+  std::vector<std::pair<TlsDescriptor*, size_t>> tlsdesc_dyn_relocs;
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2730,6 +2773,9 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
              type is base-relative.
          */
 
+        // XXX: TLS relocations allow weaks; they should be handled here somehow.
+        // XXX: TLS relocs: Review how omitted symbols are handled.
+        // XXX: TLS relocs: Review how addends are handled.
         switch (type) {
           case R_GENERIC_JUMP_SLOT:
           case R_GENERIC_GLOB_DAT:
@@ -2782,11 +2828,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
         }
 #endif
-        if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
-          DL_ERR("unsupported ELF TLS symbol \"%s\" referenced by \"%s\"",
-                 sym_name, get_realpath());
-          return false;
-        }
         sym_addr = lsi->resolve_symbol_address(s);
 #if !defined(__LP64__)
         if (protect_segments) {
@@ -2858,6 +2899,98 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
 #endif
           *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_addr;
+        }
+        break;
+      case R_GENERIC_TLS_DTPMOD:
+        count_relocation(kRelocTls);
+        MARK(rel->r_offset);
+        {
+          uintptr_t mod_id = lsi ? lsi->get_tls_module_id() : get_tls_module_id();
+          TRACE_TYPE(RELO, "RELO TLS_DTPMOD %16p <- %zu %s\n",
+                     reinterpret_cast<void*>(reloc), mod_id, sym_name);
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = mod_id;
+        }
+        break;
+      case R_GENERIC_TLS_DTPREL:
+        count_relocation(kRelocTls);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
+        break;
+      case R_GENERIC_TLS_TPREL:
+#if defined(R_GENERIC_TLS_TPREL_NEG)
+      case R_GENERIC_TLS_TPREL_NEG:
+#endif
+        count_relocation(kRelocTls);
+        MARK(rel->r_offset);
+        {
+          ElfW(Addr) tpoff = 0;
+          soinfo* tsi = lsi ? lsi : this;
+          if (tsi->has_tls_initset_delta()) {
+            tpoff += tsi->get_tls_initset_delta();
+          } else if (tsi->get_tls_segment() != nullptr) {
+            DL_ERR("TLS symbol \"%s\" in dlopened \"%s\" referenced from \"%s\" using IE access model",
+                   sym_name, tsi->get_realpath(), get_realpath());
+            return false;
+          }
+          tpoff += sym_addr + addend;
+#if defined(R_GENERIC_TLS_TPREL_NEG)
+          if (type == R_GENERIC_TLS_TPREL_NEG) {
+            tpoff = -tpoff;
+          }
+#endif
+          TRACE_TYPE(RELO, "RELO TLS_TPREL %16p <- %16p %s\n",
+                     reinterpret_cast<void*>(reloc),
+                     reinterpret_cast<void*>(tpoff), sym_name);
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
+        }
+        break;
+      case R_GENERIC_TLSDESC:
+        count_relocation(kRelocTls);
+        MARK(rel->r_offset);
+        {
+          intptr_t offset = sym_addr + addend;
+          TlsDescriptor& desc = *reinterpret_cast<TlsDescriptor*>(reloc);
+          // XXX: Should this mimic R_GENERIC_TLS_TPREL behavior when lsi is NULL?
+          // XXX: sym==0 means a lack of a symbol (e.g. use the local module), whereas a
+          // nonzero sym can still refer to a weak undefined symbol.
+          // XXX: TLSDESC docs talk about having a special resolver func for weak undef that
+          // converts the final address to 0. Not sure anyone implemented it.
+          soinfo* tsi = lsi ? lsi : this;
+          if (tsi->has_tls_initset_delta()) {
+            intptr_t tpoff = tsi->get_tls_initset_delta() + offset;
+            desc = {
+              .func = tlsdesc_resolver_static,
+              .arg = tpoff,
+            };
+            TRACE_TYPE(RELO, "RELO TLSDESC %16p <- %16p %s (static)\n",
+                       reinterpret_cast<void*>(reloc),
+                       reinterpret_cast<void*>(tpoff), sym_name);
+          } else if (tsi->get_tls_segment() != nullptr) {
+            uintptr_t generation = tsi->get_tls_generation();
+            uintptr_t mod_id = tsi->get_tls_module_id();
+            tlsdesc_resolver_dyn_args_.push_back(TlsDescResolverDynamicArg {
+              .generation = generation,
+              .index = TlsIndex {
+                .module = mod_id,
+                .offset = static_cast<unsigned long>(offset),
+              },
+            });
+            tlsdesc_dyn_relocs.push_back(std::make_pair(&desc, tlsdesc_resolver_dyn_args_.size() - 1));
+            TRACE_TYPE(RELO, "RELO TLSDESC %16p <- gen=%zu,mod=%zu,off=%16p %s (dynamic)\n",
+                       reinterpret_cast<void*>(reloc), generation, mod_id,
+                       reinterpret_cast<void*>(offset), sym_name);
+          } else {
+            desc = {
+              .func = tlsdesc_resolver_static,
+              .arg = offset,
+            };
+            TRACE_TYPE(RELO, "RELO TLSDESC %16p <- %16p %s (undefined)\n",
+                       reinterpret_cast<void*>(reloc),
+                       reinterpret_cast<void*>(offset), sym_name);
+          }
         }
         break;
 
@@ -2961,14 +3094,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
          */
         DL_ERR("%s R_AARCH64_COPY relocations are not supported", get_realpath());
         return false;
-      case R_AARCH64_TLS_TPREL64:
-        TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + addend), rel->r_offset);
-        break;
-      case R_AARCH64_TLSDESC:
-        TRACE_TYPE(RELO, "RELO TLSDESC *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + addend), rel->r_offset);
-        break;
 #elif defined(__x86_64__)
       case R_X86_64_32:
         count_relocation(kRelocRelative);
@@ -3038,6 +3163,14 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         return false;
     }
   }
+
+  for (std::pair<TlsDescriptor*, size_t>& desc : tlsdesc_dyn_relocs) {
+    *desc.first = TlsDescriptor {
+      .func = tlsdesc_resolver_dynamic,
+      .arg = reinterpret_cast<intptr_t>(&tlsdesc_resolver_dyn_args_[desc.second]),
+    };
+  }
+
   return true;
 }
 #endif  // !defined(__mips__)
@@ -3072,6 +3205,11 @@ bool soinfo::prelink_image() {
   (void) phdr_table_get_arm_exidx(phdr, phnum, load_bias,
                                   &ARM_exidx, &ARM_exidx_count);
 #endif
+
+  TlsSegment tls;
+  if (phdr_table_get_tls_segment(phdr, phnum, load_bias, &tls)) {
+    tls_segment_ = std::make_unique<TlsSegment>(tls);
+  }
 
   // Extract useful information from dynamic section.
   // Note that: "Except for the DT_NULL element at the end of the array,
@@ -3440,16 +3578,23 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
-          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
-            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
-            return false;
-          }
+          // XXX: I can't remember why these DT tags exist. They don't seem necessary. Is it for lazy loading of TLS symbols?
+          // XXX: Maybe it's useful for security? i.e. Mark the TLS GOT/PLT read-only after relocating them?
+          // XXX: In any case, we should suppress this warning...
+          // if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
+          //   DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
+          //   return false;
+          // }
 
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";
           } else if (d->d_tag == DT_ENCODING) {
             tag_name = "DT_ENCODING";
+          } else if (d->d_tag == DT_TLSDESC_GOT) {
+            tag_name = "DT_TLSDESC_GOT";
+          } else if (d->d_tag == DT_TLSDESC_PLT) {
+            tag_name = "DT_TLSDESC_PLT";
           } else if (d->d_tag >= DT_LOOS && d->d_tag <= DT_HIOS) {
             tag_name = "unknown OS-specific";
           } else if (d->d_tag >= DT_LOPROC && d->d_tag <= DT_HIPROC) {

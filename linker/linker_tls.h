@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,17 +25,20 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_AUXV_H_
-#define _PRIVATE_BIONIC_AUXV_H_
 
-#include <elf.h>
-#include <link.h>
-#include <sys/cdefs.h>
+#pragma once
 
-__BEGIN_DECLS
+#include "bionic/elf_tls.h"
+#include "linker_common_types.h"
 
-__LIBC_HIDDEN__ extern ElfW(auxv_t)* __libc_auxv;
+extern __LIBC_HIDDEN__ void* (*__ld_tls_get_addr)(TlsIndex* ti) TLS_GET_ADDR_CCONV;
 
-__END_DECLS
+void init_linker_tls_modules();
 
-#endif /* _PRIVATE_BIONIC_AUXV_H_ */
+void register_tls_modules(const soinfo_list_t& modules, bool is_initial, bool has_exe);
+
+void unregister_tls_modules(const soinfo_list_t& modules);
+
+void* tcb_memalign(size_t alignment, size_t size);
+
+void tcb_free(void* ptr);
