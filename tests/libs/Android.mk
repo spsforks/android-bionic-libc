@@ -42,6 +42,9 @@ libdlext_test_src_files := \
 libdlext_test_ldflags := \
     -Wl,-z,relro \
 
+# b/80093681, LLD does not generate GNU_RELRO for -z,relro
+libdlext_test_local_use_clang_lld := false
+
 libdlext_test_shared_libraries := libtest_simple
 
 module := libdlext_test

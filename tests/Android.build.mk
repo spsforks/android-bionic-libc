@@ -58,6 +58,10 @@ ifneq ($($(module)_relative_path),)
   LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
 endif
 
+ifneq ($($(module)_local_use_clang_lld),)
+  LOCAL_USE_CLANG_LLD := $($(module)_local_use_clang_lld)
+endif
+
 LOCAL_CFLAGS := \
     $(common_cflags) \
     $($(module)_cflags) \
