@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <set>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -528,8 +529,8 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   tf.fd = extinfo_.relro_fd;
 }
 
-void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pid,
-            size_t* total_pss) {
+void GetPss(const char* lib, const char* relro_file, pid_t pid,
+            size_t* total_pss, std::set<uint64_t> &cache) {
   pm_kernel_t* kernel;
   ASSERT_EQ(0, pm_kernel_create(&kernel));
 
@@ -542,22 +543,23 @@ void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pi
 
   // Calculate total PSS of the library.
   *total_pss = 0;
-  bool saw_relro_file = false;
   for (size_t i = 0; i < num_maps; ++i) {
     if (android::base::EndsWith(maps[i]->name, lib) || strcmp(maps[i]->name, relro_file) == 0) {
-      if (strcmp(maps[i]->name, relro_file) == 0) saw_relro_file = true;
-
-      pm_memusage_t usage;
-      ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
-      *total_pss += usage.pss;
+      // Different linkers, such as clang lld, might not use the relro_file name in maps.
+      // As long as the maps[i] pages are shared, the space is saved.
+      // Count usage.pss only if maps[i] has a different start address.
+      if (cache.count(maps[i]->start) == 0) {
+        cache.insert(maps[i]->start);
+        pm_memusage_t usage;
+        ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
+        *total_pss += usage.pss;
+      }
     }
   }
 
   free(maps);
   pm_process_destroy(process);
   pm_kernel_destroy(kernel);
-
-  if (shared_relro) ASSERT_TRUE(saw_relro_file);
 }
 
 void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, const char* relro_file,
@@ -616,9 +618,10 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, const ch
 
   // Sum the PSS of tested library of all the children
   size_t total_pss = 0;
+  std::set<uint64_t> cache;
   for (int i=0; i<CHILDREN; ++i) {
     size_t child_pss;
-    ASSERT_NO_FATAL_FAILURE(GetPss(share_relro, lib, relro_file, child_pids[i], &child_pss));
+    ASSERT_NO_FATAL_FAILURE(GetPss(lib, relro_file, child_pids[i], &child_pss, cache));
     total_pss += child_pss;
   }
   *pss_out = total_pss;
