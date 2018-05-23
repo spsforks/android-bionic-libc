@@ -294,6 +294,7 @@ cc_library {
             },
             instruction_set: "arm",
             ldflags: ["-Wl,--hash-style=both"],
+            use_clang_lld: false,
             version_script: "libm.arm.map",
         },
 
