@@ -1960,10 +1960,13 @@ void decrement_dso_handle_reference_counter(void* dso_handle) {
     soinfo* si = find_containing_library(dso_handle);
     if (si != nullptr) {
       ProtectedDataGuard guard;
+      // Since multiple dso_handles can belong to the same load_group
+      // we need to preform secondary (more expensive) check before unloading.
       si->unset_tls_nodelete();
       if (si->get_ref_count() == 0) {
-        // Perform deferred unload - note that soinfo_unload_impl does not decrement ref_count
-        soinfo_unload_impl(si);
+        // Perform deferred unload if possible - note that soinfo_unload_impl
+        // does not decrement ref_count
+        soinfo_unload_impl(si->get_local_group_root());
       }
     } else {
       async_safe_fatal(
