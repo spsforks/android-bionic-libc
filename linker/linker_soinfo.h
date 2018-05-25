@@ -51,14 +51,6 @@
                                          // when load group is crossing
                                          // namespace boundary twice and second
                                          // local group depends on the same libraries.
-#define FLAG_TLS_NODELETE     0x00000200 // This flag set when there is at least one
-                                         // outstanding thread_local dtor
-                                         // registered with this soinfo. In such
-                                         // a case the actual unload is
-                                         // postponed until the last thread_local
-                                         // destructor associated with this
-                                         // soinfo is executed and this flag is
-                                         // unset.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 4
@@ -260,8 +252,10 @@ struct soinfo {
   void set_linker_flag();
   void set_main_executable();
   void set_nodelete();
+  // Adds tls_nodelete counter to current local_group.
   void set_tls_nodelete();
-  void unset_tls_nodelete();
+  // returns current tls_nodelete counter for the local_group
+  size_t unset_tls_nodelete();
 
   size_t increment_ref_count();
   size_t decrement_ref_count();
@@ -370,6 +364,7 @@ struct soinfo {
   // version >= 4
   ElfW(Relr)* relr_;
   size_t relr_count_;
+  size_t tls_nodelete_count_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

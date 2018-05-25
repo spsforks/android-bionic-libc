@@ -538,11 +538,11 @@ void soinfo::set_nodelete() {
 }
 
 void soinfo::set_tls_nodelete() {
-  flags_ |= FLAG_TLS_NODELETE;
+  ++local_group_root_->tls_nodelete_count_;
 }
 
-void soinfo::unset_tls_nodelete() {
-  flags_ &= ~FLAG_TLS_NODELETE;
+size_t soinfo::unset_tls_nodelete() {
+  return --local_group_root_->tls_nodelete_count_;
 }
 
 const char* soinfo::get_realpath() const {
@@ -661,7 +661,7 @@ bool soinfo::can_unload() const {
   return !is_linked() ||
          (
              (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0 &&
-             (flags_ & FLAG_TLS_NODELETE) == 0
+             (tls_nodelete_count_ == 0)
          );
 }
 

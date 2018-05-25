@@ -708,6 +708,18 @@ cc_test_library {
     srcs: ["thread_local_dtor.cpp"],
 }
 
+
+// -----------------------------------------------------------------------------
+// Library dt_needs libtest_thread_local_dtor (to check no-unload on load_group)
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_indirect_thread_local_dtor",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    shared_libs: ["libtest_thread_local_dtor"],
+}
+
+
 // -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
 // -----------------------------------------------------------------------------
