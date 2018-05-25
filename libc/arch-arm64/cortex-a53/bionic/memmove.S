@@ -150,4 +150,6 @@ ENTRY(memmove)
 END(wmemmove)
 #else
 END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)
 #endif
