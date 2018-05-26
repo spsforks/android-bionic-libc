@@ -1017,7 +1017,7 @@ cc_library_static {
                 "arch-arm64/generic/bionic/memchr.S",
                 "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
-                "arch-arm64/generic/bionic/memmove.S",
+        	"arch-arm64/cortex-a53/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
                 "arch-arm64/generic/bionic/stpcpy.S",
                 "arch-arm64/generic/bionic/strchr.S",
@@ -1042,43 +1042,13 @@ cc_library_static {
             denver64: {
                 srcs: [
                     "arch-arm64/denver64/bionic/memcpy.S",
+                    "arch-arm64/generic/bionic/memmove.S",
                     "arch-arm64/denver64/bionic/memset.S",
                 ],
                 exclude_srcs: [
                     "arch-arm64/generic/bionic/memcpy.S",
+        	    "arch-arm64/cortex-a53/bionic/memmove.S",
                     "arch-arm64/generic/bionic/memset.S",
-                ],
-            },
-            cortex_a53: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a55: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a73: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a75: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
                 ],
             },
         },
