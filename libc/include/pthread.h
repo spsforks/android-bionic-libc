@@ -133,8 +133,7 @@ int pthread_cond_timedwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, con
  * Android provides this API to use CLOCK_MONOTONIC on a condition variable for this single wait
  * no matter how it was initialized.
  */
-int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex,
-                                        const struct timespec* __timeout) __INTRODUCED_IN_64(28);
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __timeout) __INTRODUCED_IN_32(16) __INTRODUCED_IN_64(28);
 int pthread_cond_wait(pthread_cond_t* __cond, pthread_mutex_t* __mutex);
 
 int pthread_create(pthread_t* __pthread_ptr, pthread_attr_t const* __attr, void* (*__start_routine)(void*), void*);
