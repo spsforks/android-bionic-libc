@@ -87,6 +87,9 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
+#if defined(RECOVERY_MODE)
+static const char* const kLdConfigFilePathForRecovery = "/etc/ld.config.txt";
+#endif
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir     = "/system/lib64";
@@ -3772,22 +3775,47 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string error_msg;
 
-  std::string ld_config_file_path = get_ld_config_file_path();
-
-  if (!Config::read_binary_config(ld_config_file_path.c_str(),
+#if defined(RECOVERY_MODE)
+  // When in recovery mode, read /etc/ld.config.txt which contains configs for
+  // binaries in /sbin.
+  if (!Config::read_binary_config(kLdConfigFilePathForRecovery,
                                   executable_path,
                                   g_is_asan,
                                   &config,
                                   &error_msg)) {
     if (!error_msg.empty()) {
-      DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
-              ld_config_file_path.c_str(),
+      DL_WARN("Warning: couldn't read \"%s\" for \"%s\": %s",
+              kLdConfigFilePathForRecovery,
               executable_path,
               error_msg.c_str());
     }
+    // Failing to find the config means that the binary is not under /sbin. This
+    // can happen when /system is mounted and executable_path is under /system.
+    // In that case, fallback to read config from /system/etc.
     config = nullptr;
   }
+#endif
 
+  // Read config from /system partition
+  if (config == nullptr) {
+    std::string ld_config_file_path = get_ld_config_file_path();
+
+    if (!Config::read_binary_config(ld_config_file_path.c_str(),
+                                    executable_path,
+                                    g_is_asan,
+                                    &config,
+                                    &error_msg)) {
+      if (!error_msg.empty()) {
+        DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
+                ld_config_file_path.c_str(),
+                executable_path,
+                error_msg.c_str());
+      }
+      config = nullptr;
+    }
+  }
+
+  // Finally fallback to the hard-coded config
   if (config == nullptr) {
     return init_default_namespace_no_config(g_is_asan);
   }
