@@ -95,7 +95,7 @@ Enable the hooks for all processes:
 Enable malloc debug using an environment variable:
 
     adb shell
-    # export LIBC_HOOK_ENABLE=1
+    # export LIBC_HOOKS_ENABLE=1
     # ls
 
 Any process spawned from this shell will run with malloc hooks enabled.
