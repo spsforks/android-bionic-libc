@@ -56,6 +56,7 @@ extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals;
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -73,6 +74,9 @@ void __libc_init_globals(KernelArgumentBlock& args) {
     __libc_init_vdso(globals, args);
     __libc_init_setjmp_cookie(globals, args);
   });
+}
+
+void __libc_init_shared_globals(libc_shared_globals*) {
 }
 
 #if !defined(__LP64__)

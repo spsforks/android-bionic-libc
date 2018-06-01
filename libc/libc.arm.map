@@ -1420,6 +1420,13 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    android_fdsan_close_with_tag;
+    android_fdsan_exchange_close_tag;
+    android_fdsan_set_enabled;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
