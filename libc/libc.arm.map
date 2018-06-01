@@ -1420,6 +1420,15 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    android_fdsan_close_with_tag;
+    android_fdsan_create_owner_tag;
+    android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
+    android_fdsan_set_error_level;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
