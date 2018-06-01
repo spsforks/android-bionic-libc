@@ -44,6 +44,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include <async_safe/log.h>
 
 #include "local.h"
@@ -51,6 +53,8 @@
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
+
+extern "C" int ___close(int fd);
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
@@ -90,6 +94,14 @@ FILE __sF[3] = {
 FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
+
+static void* __file_tag(FILE* fp) {
+  // Don't use a tag for the standard streams, since too much code would break.
+  if (fp == stdin || fp == stderr || fp == stdout) {
+    return nullptr;
+  }
+  return fp;
+}
 
 struct glue __sglue = { nullptr, 3, __sF };
 static struct glue* lastglue = &__sglue;
@@ -199,6 +211,7 @@ static FILE* __fopen(int fd, int flags) {
   FILE* fp = __sfp();
   if (fp != nullptr) {
     fp->_file = fd;
+    __libc_exchange_close_tag(fd, nullptr, __file_tag(fp));
     fp->_flags = flags;
     fp->_cookie = fp;
     fp->_read = __sread;
@@ -353,6 +366,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
 
   fp->_flags = flags;
   fp->_file = fd;
+  __libc_exchange_close_tag(fd, nullptr, __file_tag(fp));
   fp->_cookie = fp;
   fp->_read = __sread;
   fp->_write = __swrite;
@@ -492,7 +506,7 @@ off64_t __sseek64(void* cookie, off64_t offset, int whence) {
 
 int __sclose(void* cookie) {
   FILE* fp = reinterpret_cast<FILE*>(cookie);
-  return close(fp->_file);
+  return __libc_close_with_tag(fp->_file, __file_tag(fp));
 }
 
 static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {

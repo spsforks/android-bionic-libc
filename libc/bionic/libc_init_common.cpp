@@ -92,6 +92,7 @@ void __libc_init_globals(KernelArgumentBlock& args) {
     __libc_init_vdso(globals, args);
     __libc_init_setjmp_cookie(globals, args);
   });
+  __libc_init_fdsan();
 }
 
 #if !defined(__LP64__)

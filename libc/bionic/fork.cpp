@@ -28,6 +28,8 @@
 
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/bionic_defs.h"
 #include "pthread_internal.h"
 

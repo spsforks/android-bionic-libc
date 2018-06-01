@@ -1445,6 +1445,13 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    __libc_close_with_tag;
+    __libc_exchange_close_tag;
+    __libc_set_fdsan_enabled;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
