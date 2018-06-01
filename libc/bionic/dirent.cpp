@@ -36,6 +36,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -65,6 +67,7 @@ static DIR* __allocate_DIR(int fd) {
     return NULL;
   }
   d->fd_ = fd;
+  __libc_exchange_close_tag(fd, nullptr, d);
   d->available_bytes_ = 0;
   d->next_ = NULL;
   d->current_pos_ = 0L;
@@ -159,8 +162,9 @@ int closedir(DIR* d) {
 
   int fd = d->fd_;
   pthread_mutex_destroy(&d->mutex_);
+  int rc = __libc_close_with_tag(fd, d);
   free(d);
-  return close(fd);
+  return rc;
 }
 
 void rewinddir(DIR* d) {
