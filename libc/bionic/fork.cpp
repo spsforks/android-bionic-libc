@@ -48,6 +48,11 @@ int fork() {
     // Update the cached pid, since clone() will not set it directly (as
     // self->tid is updated by the kernel).
     self->set_cached_pid(gettid());
+
+    // Disable fdsan post-fork, so we don't falsely trigger on processes that
+    // fork, close all of their fds blindly, and then exec.
+    android_fdsan_set_enabled(false);
+
     __bionic_atfork_run_child();
   } else {
     __bionic_atfork_run_parent();
