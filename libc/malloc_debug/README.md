@@ -610,10 +610,16 @@ program/application (Android O or later):
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
 
+If you need to enable multiple options using this method, then you can set
+them like so:
+
+    adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace\ leak_track\ fill logwrapper"'
+
 For example, to enable malloc debug for the google search box (Android O or later):
 
     adb shell setprop wrap.com.google.android.googlequicksearchbox '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
     adb shell am force-stop com.google.android.googlequicksearchbox
+
 
 NOTE: On pre-O versions of the Android OS, property names had a length limit
 of 32. This meant that to create a wrap property with the name of the app, it
