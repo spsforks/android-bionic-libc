@@ -35,6 +35,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
 
@@ -151,6 +153,7 @@ static int posix_spawn(pid_t* pid_ptr,
 
   if (pid == 0) {
     // Child.
+    android_fdsan_set_enabled(false);
     ApplyAttrs(flags, attr);
     if (actions) (*actions)->Do();
     if ((flags & POSIX_SPAWN_SETSIGMASK) == 0) ssb.reset();
