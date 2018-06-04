@@ -270,6 +270,12 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
 
   while (line_beginning < end) {
     line_beginning = ParseLine(line_beginning, end, line->fields, line->kNumFields);
+
+    // Ignore commented-out lines.
+    if (strncmp(line->fields[0], "#", 1) == 0) {
+      continue;
+    }
+
     // To comply with Treble, users/groups from the vendor partition need to be prefixed with
     // vendor_.
     if (required_prefix_ != nullptr) {
