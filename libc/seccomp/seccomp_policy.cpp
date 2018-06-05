@@ -93,7 +93,7 @@ static const size_t secondary_global_filter_size = mips_global_filter_size;
 typedef std::vector<sock_filter> filter;
 
 inline void Disallow(filter& f) {
-    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRAP));
+    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW));
 }
 
 static void ExamineSyscall(filter& f) {
