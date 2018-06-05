@@ -12,6 +12,10 @@ cc_library {
         "libasync_safe",
     ],
 
+    shared_libs: [
+	"libunwindstack",
+    ],
+
     multilib: {
         lib32: {
             version_script: "exported32.map",
