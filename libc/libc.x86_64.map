@@ -1341,6 +1341,11 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    write_malloc_leak_info;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     android_getaddrinfofornet;
@@ -1352,7 +1357,7 @@ LIBC_PRIVATE {
     free_malloc_leak_info;
     get_malloc_leak_info;
     gMallocLeakZygoteChild;
-} LIBC_P;
+} LIBC_Q;
 
 LIBC_DEPRECATED {
   global:
@@ -1374,4 +1379,4 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
-} LIBC_P;
+} LIBC_Q;
