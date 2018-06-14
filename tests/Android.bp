@@ -451,6 +451,7 @@ cc_defaults {
                 "libziparchive",
                 "libz",
                 "libutils",
+                "libfilemap",
                 "libLLVMObject",
                 "libLLVMBitReader",
                 "libLLVMMC",
