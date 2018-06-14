@@ -190,6 +190,7 @@ cc_binary {
         "libm",
         "libziparchive",
         "libutils",
+        "libfilemap",
         "libbase",
         "libz",
 
