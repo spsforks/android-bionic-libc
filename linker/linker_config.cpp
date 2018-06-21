@@ -240,7 +240,7 @@ static bool parse_config_file(const char* ld_config_file_path,
       std::string resolved_path;
       if (realpath(value.c_str(), buf)) {
         resolved_path = buf;
-      } else {
+      } else if (errno != ENOENT)  {
         DL_WARN("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
                 ld_config_file_path,
                 cp.lineno(),
