@@ -57,7 +57,6 @@
 
 	/* Start of performance-critical section  -- one 64B cache line.  */
 ENTRY(strcmp)
-.p2align  6
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
 	tst	tmp1, #7
@@ -79,6 +78,7 @@ ENTRY(strcmp)
 	cbz	syndrome, .Lloop_aligned
 	/* End of performance-critical section  -- one 64B cache line.  */
 
+.Lend:
 #ifndef	__AARCH64EB__
 	rev	syndrome, syndrome
 	rev	data1, data1
@@ -152,12 +152,38 @@ ENTRY(strcmp)
 	b	.Lstart_realigned
 
 .Lmisaligned8:
-	/* We can do better than this.  */
+	/* Align SRC1 to 8 bytes and then compare 8 bytes at a time, always
+	   checking to make sure that we don't access beyond page boundary in
+	   SRC2.  */
+	tst	src1, #7
+	b.eq	.Lloop_misaligned
+.Ldo_misaligned:
 	ldrb	data1w, [src1], #1
 	ldrb	data2w, [src2], #1
 	cmp	data1w, #1
 	ccmp	data1w, data2w, #0, cs	/* NZCV = 0b0000.  */
-	b.eq	.Lmisaligned8
+	b.ne	.Ldone
+	tst	src1, #7
+	b.ne	.Ldo_misaligned
+
+.Lloop_misaligned:
+	/* Test if we are within the last dword of the end of a 4K page.  If
+	   yes then jump back to the misaligned loop to copy a byte at a time.  */
+	and	tmp1, src2, #0xff8
+	eor	tmp1, tmp1, #0xff8
+	cbz	tmp1, .Ldo_misaligned
+	ldr	data1, [src1], #8
+	ldr	data2, [src2], #8
+
+	sub	tmp1, data1, zeroones
+	orr	tmp2, data1, #REP8_7f
+	eor	diff, data1, data2	/* Non-zero if differences found.  */
+	bic	has_nul, tmp1, tmp2	/* Non-zero if NUL terminator.  */
+	orr	syndrome, diff, has_nul
+	cbz	syndrome, .Lloop_misaligned
+	b	.Lend
+
+.Ldone:
 	sub	result, data1, data2
 	ret
 END(strcmp)
