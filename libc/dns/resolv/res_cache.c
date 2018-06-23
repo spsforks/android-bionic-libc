@@ -28,6 +28,7 @@
 
 #include "resolv_cache.h"
 
+#include <ctype.h>
 #include <resolv.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -765,6 +766,7 @@ _dnsPacket_hashBytes( DnsPacket*  packet, int  numBytes, unsigned  hash )
 
     while (numBytes > 0 && p < end) {
         hash = hash*FNV_MULT ^ *p++;
+        numBytes -= 1;
     }
     packet->cursor = p;
     return hash;
@@ -799,8 +801,14 @@ _dnsPacket_hashQName( DnsPacket*  packet, unsigned  hash )
                     __FUNCTION__);
             break;
         }
+
         while (c > 0) {
-            hash = hash*FNV_MULT ^ *p++;
+            int ch = *p++;
+            if (isascii(ch) && isupper(ch)) {
+                ch = tolower(ch);
+            }
+
+            hash = hash*FNV_MULT ^ ch;
             c   -= 1;
         }
     }
@@ -889,6 +897,7 @@ _dnsPacket_isEqualDomainName( DnsPacket*  pack1, DnsPacket*  pack2 )
 
     for (;;) {
         int  c1, c2;
+        int  ch1, ch2;
 
         if (p1 >= end1 || p2 >= end2) {
             XLOG("%s: INTERNAL_ERROR: read-overflow !!\n", __FUNCTION__);
@@ -913,10 +922,23 @@ _dnsPacket_isEqualDomainName( DnsPacket*  pack1, DnsPacket*  pack2 )
                     __FUNCTION__);
             break;
         }
-        if (memcmp(p1, p2, c1) != 0)
-            break;
-        p1 += c1;
-        p2 += c1;
+
+        while (c1 > 0) {
+            ch1 = *p1++;
+            if (isascii(ch1) && isupper(ch1)) {
+                ch1 = tolower(ch1);
+            }
+
+            ch2 = *p2++;
+            if (isascii(ch2) && isupper(ch2)) {
+                ch2 = tolower(ch2);
+            }
+
+            if (ch1 != ch2)
+                break;
+
+            c1 -= 1;
+        }
         /* we rely on the bound checks at the start of the loop */
     }
     /* not the same, or one is malformed */
