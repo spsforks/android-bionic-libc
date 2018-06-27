@@ -33,4 +33,6 @@
 #include <linux/un.h>
 #include <sys/cdefs.h>
 
+#define SUN_LEN(__ptr) (offsetof(struct sockaddr_un, sun_path) + strlen((__ptr)->sun_path))
+
 #endif
