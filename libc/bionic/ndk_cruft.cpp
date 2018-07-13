@@ -32,6 +32,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <inttypes.h>
+#include <malloc.h>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
