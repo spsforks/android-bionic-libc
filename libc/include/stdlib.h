@@ -30,10 +30,12 @@
 #define _STDLIB_H
 
 #include <alloca.h>
+#include <bits/malloc.h>
 #include <bits/wait.h>
-#include <malloc.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>
 #include <xlocale.h>
 
 __BEGIN_DECLS
