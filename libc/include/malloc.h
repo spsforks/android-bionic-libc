@@ -23,12 +23,7 @@
 
 __BEGIN_DECLS
 
-// Remove the workaround once b/37423073 is fixed.
-#if defined(__clang__) && !__has_attribute(alloc_size)
-#define __BIONIC_ALLOC_SIZE(...)
-#else
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
-#endif
 
 void* malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
 void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
