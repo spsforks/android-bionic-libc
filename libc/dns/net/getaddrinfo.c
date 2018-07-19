@@ -1106,14 +1106,22 @@ get_ai(const struct addrinfo *pai, const struct afd *afd, const char *addr)
 	assert(afd != NULL);
 	assert(addr != NULL);
 
+#if defined(__ANDROID__)
+	ai = (struct addrinfo *)calloc(1, sizeof(struct addrinfo)
+		+ sizeof(struct sockaddr_storage));
+#else
 	ai = (struct addrinfo *)malloc(sizeof(struct addrinfo)
 		+ (afd->a_socklen));
+#endif
 	if (ai == NULL)
 		return NULL;
 
 	memcpy(ai, pai, sizeof(struct addrinfo));
 	ai->ai_addr = (struct sockaddr *)(void *)(ai + 1);
+#if defined(__ANDROID__)
+#else
 	memset(ai->ai_addr, 0, (size_t)afd->a_socklen);
+#endif
 
 #ifdef HAVE_SA_LEN
 	ai->ai_addr->sa_len = afd->a_socklen;
