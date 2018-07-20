@@ -371,6 +371,15 @@ TEST_F(DlExtTest, LoadAtFixedAddress) {
   ASSERT_TRUE(start != MAP_FAILED);
   munmap(start, kLibSize);
 
+  // Create some distance between "current" mmap address and
+  // the fixed address for the library. This makes some room for
+  // allocations that may happen between unload and the check
+  // in natively bridged environments.
+  start = static_cast<uint8_t*>(start) + 32768 * PAGE_SIZE;
+  start = mmap(start, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  munmap(start, kLibSize);
+
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
   extinfo.reserved_addr = start;
