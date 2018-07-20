@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "120ebbd8_2aafb941",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-20T15:19:49Z",
+      "side": 1,
+      "message": "where did this come from? would it be clearer to just say 128 * 1024, or is there some meaning behind 32Ki pages?",
+      "range": {
+        "startLine": 378,
+        "startChar": 41,
+        "endLine": 378,
+        "endChar": 58
+      },
+      "revId": "110f50ca4419c30502a68100d1846ace28015209",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
