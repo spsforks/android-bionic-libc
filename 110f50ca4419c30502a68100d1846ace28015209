@@ -22,6 +22,30 @@
       "revId": "110f50ca4419c30502a68100d1846ace28015209",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "879df372_e1492861",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-07-22T10:26:27Z",
+      "side": 1,
+      "message": "there is no special meaning behind this number.\n\nAn alternative is to have smaller buffer map with PROT_NONE and unmap it before dlclose. So that we have buffer only for something that could happen between unload and the check.",
+      "parentUuid": "120ebbd8_2aafb941",
+      "range": {
+        "startLine": 378,
+        "startChar": 41,
+        "endLine": 378,
+        "endChar": 58
+      },
+      "revId": "110f50ca4419c30502a68100d1846ace28015209",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
