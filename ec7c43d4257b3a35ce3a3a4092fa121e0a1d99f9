@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea744f6b_3cd153e6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "I think we need some unit tests too.\n\nCurrently, I don\u0027t see any tests in bionic that directly try to test res_cache (bionic/tests/resolv_test.cpp is essentially only testing base64 and other low-level routines).\n\nThe most appropriate place for a test seems to be system/netd/tests/netd_test.cpp.\nResolverTest.GetAddrInfo checks that queries are being cached, so it would be easy to also test with an uppercase domain name. Perhaps as a separate testcase, since GetAddrInfo is already pretty long...",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 0
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66072d5b_a5917cb1",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "Calling tolower() on all characters unconditionally would be simpler, and probably faster.",
+      "range": {
+        "startLine": 807,
+        "startChar": 0,
+        "endLine": 809,
+        "endChar": 13
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb86c371_5867db4b",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "Please insert spaces around *.\nAnd I\u0027d also parenthesize for the benefit of those who don\u0027t remember the precedence of ^.",
+      "range": {
+        "startLine": 811,
+        "startChar": 19,
+        "endLine": 811,
+        "endChar": 32
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7d32c99_20a9d243",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "Just c--? Or --c?",
+      "range": {
+        "startLine": 812,
+        "startChar": 12,
+        "endLine": 812,
+        "endChar": 21
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7099a0ad_5e449390",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "Since we\u0027re actually compiling in C99 mode, we can define these below, in the same statement where they\u0027re assigned (feel free to also move c1 and c2, as a cleanup).",
+      "range": {
+        "startLine": 900,
+        "startChar": 8,
+        "endLine": 900,
+        "endChar": 22
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725fc3a5_7920b351",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "This whole loop looks like a re-implementation of strncasecmp(), except this version works with embedded NULs. If this isn\u0027t required, please use strncasecmp(), which is (probably) faster than our hand-coded implementation and has (or should have) extensive tests.\n\nIf not, please extract this loop to a static function called something like memcasecmp().",
+      "range": {
+        "startLine": 926,
+        "startChar": 8,
+        "endLine": 926,
+        "endChar": 24
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c90251e4_d244ae50",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 930,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "Likewise, it\u0027s probably simpler / faster to call tolower() unconditionally.\n\nIn this case it\u0027s also less error-prone given that code for ch1 and ch2 and must match.",
+      "range": {
+        "startLine": 928,
+        "startChar": 0,
+        "endLine": 930,
+        "endChar": 13
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67f90e5e_1130b797",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "This will continue executing the outer loop, which is a change in behavior.\nTo match the old code, we should return 0 here.",
+      "range": {
+        "startLine": 937,
+        "startChar": 0,
+        "endLine": 938,
+        "endChar": 22
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19a2e139_7b1987ab",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 940,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-23T04:26:07Z",
+      "side": 1,
+      "message": "c1--?",
+      "range": {
+        "startLine": 940,
+        "startChar": 12,
+        "endLine": 940,
+        "endChar": 19
+      },
+      "revId": "ec7c43d4257b3a35ce3a3a4092fa121e0a1d99f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
