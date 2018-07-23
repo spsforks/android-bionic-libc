@@ -33,11 +33,7 @@
 #include <sys/cdefs.h>
 
 #if defined(__cplusplus) && __cplusplus >= 201103L && defined(_USING_LIBCXX)
-# ifdef __clang__
-#  if __has_feature(cxx_atomic)
-#   define _STDATOMIC_HAVE_ATOMIC
-#  endif
-# else /* gcc */
+# if __has_feature(cxx_atomic)
 #  define _STDATOMIC_HAVE_ATOMIC
 # endif
 #endif
@@ -151,17 +147,13 @@ using std::atomic_uintmax_t;
 #endif
 
 
-#ifdef __clang__
-# if __has_extension(c_atomic) || __has_extension(cxx_atomic)
-#  define       __CLANG_ATOMICS
-# else
-#  error "stdatomic.h does not support your compiler"
-# endif
-# if __has_builtin(__sync_swap)
-#  define __HAS_BUILTIN_SYNC_SWAP
-# endif
+#if __has_extension(c_atomic) || __has_extension(cxx_atomic)
+# define       __CLANG_ATOMICS
 #else
-# define __GNUC_ATOMICS
+# error "stdatomic.h does not support your compiler"
+#endif
+#if __has_builtin(__sync_swap)
+# define __HAS_BUILTIN_SYNC_SWAP
 #endif
 
 /*
