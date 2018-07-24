@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "41780388_5dca62e6",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-24T00:23:24Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "23892860_708a60e2",
+      "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff116bff_a0ddb9e1",
         "filename": "libc/include/stdatomic.h",
         "patchSetId": 1
@@ -56,6 +74,30 @@
       "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5f6ca85_dd40344d",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-24T00:23:24Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "1d8c63d0_1ffdf5c5",
+      "range": {
+        "startLine": 164,
+        "startChar": 9,
+        "endLine": 164,
+        "endChar": 23
+      },
+      "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
