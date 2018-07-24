@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23892860_708a60e2",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-07-24T00:11:58Z",
+      "side": 0,
+      "message": "Nit: This comment is now pointless.",
+      "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff116bff_a0ddb9e1",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-07-24T00:11:58Z",
+      "side": 0,
+      "message": "Looks un-FORTIFY-related.\n\nI\u0027ve no problems with it, but I won\u0027t be able to offer any kind of informed commentary. :)",
+      "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d8c63d0_1ffdf5c5",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-07-24T00:11:58Z",
+      "side": 0,
+      "message": "(Can we now remove the __GNUC_ATOMICS #ifdefs below, too?)",
+      "range": {
+        "startLine": 164,
+        "startChar": 9,
+        "endLine": 164,
+        "endChar": 23
+      },
+      "revId": "94ab04c17a0e9f412b7de079f2ef35f39c7f06fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
