@@ -138,20 +138,17 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 
 static int		get_salen __P((const struct sockaddr *));
 static struct sockaddr * get_nsaddr __P((res_state, size_t));
-static int		send_vc(res_state, const u_char *, int,
-				u_char *, int, int *, int,
-				time_t *, int *, int *);
-static int		send_dg(res_state, const u_char *, int,
-				u_char *, int, int *, int,
-				int *, int *,
-				time_t *, int *, int *);
+static int		send_vc(res_state, struct __res_params *params, const u_char *, int,
+				u_char *, int, int *, int, time_t *, int *, int *);
+static int		send_dg(res_state, struct __res_params *params, const u_char *, int,
+				u_char *, int, int *, int, int *, int *, time_t *, int *, int *);
 static void		Aerror(const res_state, FILE *, const char *, int,
 			       const struct sockaddr *, int);
 static void		Perror(const res_state, FILE *, const char *, int);
 static int		sock_eq(struct sockaddr *, struct sockaddr *);
 void res_pquery(const res_state, const u_char *, int, FILE *);
 static int connect_with_timeout(int sock, const struct sockaddr *nsap,
-			socklen_t salen, int sec);
+			socklen_t salen, const struct timespec timeout);
 static int retrying_poll(const int sock, short events, const struct timespec* finish);
 
 /* BIONIC-BEGIN: implement source port randomization */
@@ -546,7 +543,7 @@ res_nsend(res_state statp,
 			/* Use VC; at most one attempt per server. */
 			try = statp->retry;
 
-			n = send_vc(statp, buf, buflen, ans, anssiz, &terrno,
+			n = send_vc(statp, &params, buf, buflen, ans, anssiz, &terrno,
 				    ns, &now, &rcode, &delay);
 
 			/*
@@ -577,7 +574,7 @@ res_nsend(res_state statp,
 				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using send_dg\n");
 			}
 
-			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
+			n = send_dg(statp, &params, buf, buflen, ans, anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere, &now, &rcode, &delay);
 
 			/* Only record stats the first time we try a query. See above. */
@@ -727,24 +724,29 @@ get_nsaddr(statp, n)
 	}
 }
 
-static int get_timeout(const res_state statp, const int ns)
+static struct timespec get_timeout(const res_state statp, const struct __res_params* params, const int ns)
 {
-	int timeout = (statp->retrans << ns);
+	const int base_timeout_msec = (params->base_timeout_msec != 0) ?
+		params->base_timeout_msec : statp->retrans * 1000;
+	int msec = base_timeout_msec << ns;
 	if (ns > 0) {
-		timeout /= statp->nscount;
+		msec /= statp->nscount;
 	}
-	if (timeout <= 0) {
-		timeout = 1;
+	if (msec < 100) {
+		msec = 100;  // Use at least 100ms
 	}
 	if (DBG) {
-		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using timeout of %d sec\n", timeout);
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using timeout of %d msec\n", msec);
 	}
 
-	return timeout;
+	struct timespec result;
+	result.tv_sec = msec / 1000;
+	result.tv_nsec = (msec % 1000) * 1000000;
+	return result;
 }
 
 static int
-send_vc(res_state statp,
+send_vc(res_state statp, struct __res_params* params,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
 	int *terrno, int ns, time_t* at, int* rcode, int* delay)
 {
@@ -828,7 +830,7 @@ send_vc(res_state statp,
 			return (0);
 		}
 		if (connect_with_timeout(statp->_vcsock, nsap, (socklen_t)nsaplen,
-				get_timeout(statp, ns)) < 0) {
+				get_timeout(statp, params, ns)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno, nsap,
 			    nsaplen);
@@ -969,7 +971,8 @@ send_vc(res_state statp,
 
 /* return -1 on error (errno set), 0 on success */
 static int
-connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int sec)
+connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen,
+		const struct timespec timeout)
 {
 	int res, origflags;
 
@@ -983,7 +986,6 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 	}
 	if (res != 0) {
 		struct timespec now = evNowTime();
-		struct timespec timeout = evConsTime((long)sec, 0L);
 		struct timespec finish = evAddTime(now, timeout);
 		if (DBG) {
 			async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d send_vc\n", sock);
@@ -998,7 +1000,7 @@ done:
 	fcntl(sock, F_SETFL, origflags);
 	if (DBG) {
 		async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d connect_with_timeout returning %d\n", sock, res);
+			"  %d connect_with_const timeout returning %d\n", sock, res);
 	}
 	return res;
 }
@@ -1058,7 +1060,7 @@ retry:
 }
 
 static int
-send_dg(res_state statp,
+send_dg(res_state statp, struct __res_params* params,
 	const u_char *buf, int buflen, u_char *ans, int anssiz,
 	int *terrno, int ns, int *v_circuit, int *gotsomewhere,
 	time_t *at, int *rcode, int* delay)
@@ -1073,7 +1075,7 @@ send_dg(res_state statp,
 	struct timespec now, timeout, finish, done;
 	struct sockaddr_storage from;
 	socklen_t fromlen;
-	int resplen, seconds, n, s;
+	int resplen, n, s;
 
 	nsap = get_nsaddr(statp, (size_t)ns);
 	nsaplen = get_salen(nsap);
@@ -1151,9 +1153,8 @@ send_dg(res_state statp,
 	/*
 	 * Wait for reply.
 	 */
-	seconds = get_timeout(statp, ns);
+	timeout = get_timeout(statp, params, ns);
 	now = evNowTime();
-	timeout = evConsTime((long)seconds, 0L);
 	finish = evAddTime(now, timeout);
 retry:
 	n = retrying_poll(s, POLLIN, &finish);
