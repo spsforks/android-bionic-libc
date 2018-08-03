@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import collections
+import glob
 import os
 import textwrap
 from gensyscalls import SysCallsTxtParser
@@ -40,11 +41,24 @@ def merge_names(base_names, whitelist_names, blacklist_names):
   return (base_names - blacklist_names) | whitelist_names
 
 
+def get_clang_path():
+  # Gets the path of the clang prebuilt binary.
+  prebuilts_root = os.path.join(os.environ["ANDROID_BUILD_TOP"],
+                                "prebuilts/clang/host/linux-x86")
+  # First try to see if clang-stable has a usable binary.
+  clang_stable_path = os.path.join(prebuilts_root, "clang-stable/bin/clang")
+  if os.path.isfile(clang_stable_path):
+    return clang_stable_path
+  # Otherwise, return the latest version.
+  versioned_clang_path = os.path.join(prebuilts_root, "clang-[0-9]*/bin/clang")
+  return sorted(glob.glob(versioned_clang_path))[-1]
+
+
 def convert_names_to_NRs(names, header_dir, extra_switches):
   # Run preprocessor over the __NR_syscall symbols, including unistd.h,
   # to get the actual numbers
   prefix = "__SECCOMP_"  # prefix to ensure no name collisions
-  cpp = Popen(["../../prebuilts/clang/host/linux-x86/clang-stable/bin/clang",
+  cpp = Popen([get_clang_path(),
                "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/"]
                + extra_switches
                + ["-"],
