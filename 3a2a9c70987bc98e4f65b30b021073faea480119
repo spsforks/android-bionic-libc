@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "25e08a07_5eb25b6c",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-08-03T18:30:42Z",
+      "side": 1,
+      "message": "Aah, I see. srhines@ updated clang-stable from being a symlink to just hold clang-format recently.  I am not sure if omitting clang binary was intentional or accidental.",
+      "parentUuid": "b78b318e_0d93c941",
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "937958d7_fde4a7e4",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -120,6 +138,30 @@
       "side": 1,
       "message": "ah! i was intentionally avoiding the r one because the version number was smaller. but \u0027r\u0027 collates after the digits, so that it will still work :D\n\nI\u0027ll add some copious comments.",
       "parentUuid": "937958d7_fde4a7e4",
+      "range": {
+        "startLine": 53,
+        "startChar": 55,
+        "endLine": 53,
+        "endChar": 77
+      },
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd1edcbe_00d57a91",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-08-03T18:30:42Z",
+      "side": 1,
+      "message": "I considered suggesting to parse build/soong/cc/config/global.go.  It should have:\n    ClangDefaultVersion      \u003d \"clang-r328903\"\n\nAssuming someone gets notified when this script breaks (i.e. if soong variable\u0027s location or name gets changed), you can use that.",
+      "parentUuid": "93b1811e_2fdfe458",
       "range": {
         "startLine": 53,
         "startChar": 55,
