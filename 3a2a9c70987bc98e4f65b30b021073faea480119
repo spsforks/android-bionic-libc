@@ -171,6 +171,30 @@
       "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "613ad166_815267e5",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-03T20:02:04Z",
+      "side": 1,
+      "message": "I tried using ninja to parse the generated .ninja file so that it could inspect it regardless of the structure of this one file, but failed. so i went ahead with your suggestion.\n\ni think this is as far as we can go for this one change, but next i\u0027m going to try to make an Android.bp change such that this is always run during build to avoid having to generate the .cc files by hand.",
+      "parentUuid": "fd1edcbe_00d57a91",
+      "range": {
+        "startLine": 53,
+        "startChar": 55,
+        "endLine": 53,
+        "endChar": 77
+      },
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
