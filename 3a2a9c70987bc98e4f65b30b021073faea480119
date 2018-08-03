@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d63054a_056ede7f",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-08-03T18:02:24Z",
+      "side": 1,
+      "message": "The clang-stable path is going to always be present - so people to get to a clang-format without worrying about build numbers.  Hence the rest of the function that finds the latest prebuilts will be unused.",
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "937958d7_fde4a7e4",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-08-03T18:02:24Z",
+      "side": 1,
+      "message": "Starting from the current prebuilds, we started using \u0027clang-r\u003csvn-revision-no\u003e\u0027 instead of \u0027clang-\u003cbuild-id-from-build-server\u003e\u0027.  So you should include \u0027r\u0027 in the regex.  There\u0027ll always be a \u0027clang-rXYZ\u0027 in the prebuilts and it\u0027ll be strictly newer than anything with the old numbering scheme.",
+      "range": {
+        "startLine": 53,
+        "startChar": 55,
+        "endLine": 53,
+        "endChar": 77
+      },
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
