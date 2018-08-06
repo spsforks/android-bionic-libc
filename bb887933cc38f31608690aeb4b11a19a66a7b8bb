@@ -45,6 +45,30 @@
       "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48ef01e4_f35f7b4d",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-06T16:10:35Z",
+      "side": 1,
+      "message": "they switched from malloc in the original code to calloc in the new code, so this is no longer needed.\n\nif you are staying close to upstream, it might be better to just stick with malloc and leave this alone. if you are forking, you may as well just rewrite the malloc line rather than duplicate it and remove this.\n\n(and if you do decide to keep this, `#if !defined(__ANDROID__)` might be a bit clearer.)",
+      "parentUuid": "d1ef9f49_9b36d102",
+      "range": {
+        "startLine": 1123,
+        "startChar": 1,
+        "endLine": 1123,
+        "endChar": 7
+      },
+      "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
