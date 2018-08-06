@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "891d6e43_dcec3639",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-08-06T11:29:25Z",
+      "side": 1,
+      "message": "sockaddr_storage appears to reserve _K_SS_MAXSIZE \u003d 128 bytes for the socket structure. That seems to be a waste of space because sockaddr_in6 is only 28 or 32 bytes. Should we use \"sizeof(struct sockaddr_in6)\" instead?",
+      "range": {
+        "startLine": 1111,
+        "startChar": 11,
+        "endLine": 1111,
+        "endChar": 34
+      },
+      "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1ef9f49_9b36d102",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 1
