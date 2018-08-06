@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1ef9f49_9b36d102",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1015428
+      },
+      "writtenOn": "2018-08-06T09:14:27Z",
+      "side": 1,
+      "message": "I may be lacking context but I\u0027m surprised to see this removed if not __ANDROID__. Is this actually not needed unless __ANDROID__ ?",
+      "range": {
+        "startLine": 1123,
+        "startChar": 1,
+        "endLine": 1123,
+        "endChar": 7
+      },
+      "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
