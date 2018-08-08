@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d7669ca_5f8b9189",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-08T18:24:45Z",
+      "side": 1,
+      "message": "just do this in the existing fake-long-double.cpp?",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51e51dc1_0eb575f3",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-08T18:24:45Z",
+      "side": 1,
+      "message": "this should never be needed because we\u0027ll get the msun/ld128 implementations?",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
