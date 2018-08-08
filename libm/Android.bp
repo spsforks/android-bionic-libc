@@ -29,7 +29,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_atanhf.c",
         "upstream-freebsd/lib/msun/src/e_cosh.c",
         "upstream-freebsd/lib/msun/src/e_coshf.c",
-        "upstream-freebsd/lib/msun/src/e_exp.c",
         "upstream-freebsd/lib/msun/src/e_fmod.c",
         "upstream-freebsd/lib/msun/src/e_fmodf.c",
         "upstream-freebsd/lib/msun/src/e_gamma.c",
@@ -50,9 +49,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_lgamma_r.c",
         "upstream-freebsd/lib/msun/src/e_log10.c",
         "upstream-freebsd/lib/msun/src/e_log10f.c",
-        "upstream-freebsd/lib/msun/src/e_log2.c",
-        "upstream-freebsd/lib/msun/src/e_log.c",
-        "upstream-freebsd/lib/msun/src/e_pow.c",
         "upstream-freebsd/lib/msun/src/e_remainder.c",
         "upstream-freebsd/lib/msun/src/e_remainderf.c",
         "upstream-freebsd/lib/msun/src/e_rem_pio2.c",
@@ -115,7 +111,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_ctanhf.c",
         "upstream-freebsd/lib/msun/src/s_erf.c",
         "upstream-freebsd/lib/msun/src/s_erff.c",
-        "upstream-freebsd/lib/msun/src/s_exp2.c",
         "upstream-freebsd/lib/msun/src/s_expm1.c",
         "upstream-freebsd/lib/msun/src/s_expm1f.c",
         "upstream-freebsd/lib/msun/src/s_fdim.c",
@@ -274,6 +269,8 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
+
+		"arm/optimized-routines-long_double.c",
             ],
             neon: {
                 srcs: [
@@ -302,6 +299,8 @@ cc_library {
                 "arm64/rint.S",
                 "arm64/sqrt.S",
                 "arm64/trunc.S",
+
+		"arm64/optimized-routines-long_double.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/e_sqrt.c",
@@ -349,7 +348,6 @@ cc_library {
                 "x86/e_asin.S",
                 "x86/e_atan2.S",
                 "x86/e_cosh.S",
-                "x86/e_exp.S",
                 "x86/e_hypot.S",
                 "x86/e_log10.S",
                 "x86/e_log.S",
@@ -368,13 +366,14 @@ cc_library {
                 "x86/s_sin.S",
                 "x86/s_tanh.S",
                 "x86/s_tan.S",
+
+		"x86/optimized-routines-long_double.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/e_acos.c",
                 "upstream-freebsd/lib/msun/src/e_asin.c",
                 "upstream-freebsd/lib/msun/src/e_atan2.c",
                 "upstream-freebsd/lib/msun/src/e_cosh.c",
-                "upstream-freebsd/lib/msun/src/e_exp.c",
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
@@ -430,7 +429,6 @@ cc_library {
                 "x86_64/e_asin.S",
                 "x86_64/e_atan2.S",
                 "x86_64/e_cosh.S",
-                "x86_64/e_exp.S",
                 "x86_64/e_hypot.S",
                 "x86_64/e_log10.S",
                 "x86_64/e_log.S",
@@ -446,13 +444,14 @@ cc_library {
                 "x86_64/s_sin.S",
                 "x86_64/s_tanh.S",
                 "x86_64/s_tan.S",
+
+		"x86_64/optimized-routines-long_double.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/e_acos.c",
                 "upstream-freebsd/lib/msun/src/e_asin.c",
                 "upstream-freebsd/lib/msun/src/e_atan2.c",
                 "upstream-freebsd/lib/msun/src/e_cosh.c",
-                "upstream-freebsd/lib/msun/src/e_exp.c",
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
