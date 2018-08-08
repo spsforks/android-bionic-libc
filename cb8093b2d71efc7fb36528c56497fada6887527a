@@ -102,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "6856940e_f4675634",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-08T20:28:41Z",
+      "side": 1,
+      "message": "Right, I will adjust the patch to include all double precision routine from arm-optimized-routines for all architectures.",
+      "parentUuid": "92ef57ff_cbf346e5",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51e51dc1_0eb575f3",
         "filename": "libm/Android.bp",
         "patchSetId": 1
