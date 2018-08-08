@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "27911001_eab7643c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-08T19:23:47Z",
+      "side": 1,
+      "message": "On x86_64 I am seeing:\n          throughput   latency\nlog            1.08x     0.95x\npow            0.77x     0.89x\n\nSo log is pretty much equal in performance, while pow is roughly 10% slower.",
+      "parentUuid": "42ce32f9_dbd69f64",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7669ca_5f8b9189",
         "filename": "libm/Android.bp",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "aca68745_fe81e562",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-08T19:23:47Z",
+      "side": 1,
+      "message": "I added a per architecture one mainly because my initial idea of no interpose pow and log for x86. If the idea is to use them on x86, this could be simplified to use fake-long-double.cpp.",
+      "parentUuid": "9d7669ca_5f8b9189",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51e51dc1_0eb575f3",
         "filename": "libm/Android.bp",
         "patchSetId": 1
@@ -53,6 +95,41 @@
       "writtenOn": "2018-08-08T18:24:45Z",
       "side": 1,
       "message": "this should never be needed because we\u0027ll get the msun/ld128 implementations?",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e470ab56_aa5ba21e",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-08T19:23:47Z",
+      "side": 1,
+      "message": "Indeed this is not required for arm64. I will fix it.",
+      "parentUuid": "51e51dc1_0eb575f3",
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a1e7554_dc4c3286",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-08T19:23:47Z",
+      "side": 1,
+      "message": "It does not need this as well.",
       "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
