@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "42ce32f9_dbd69f64",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-08T18:26:24Z",
+      "side": 1,
+      "message": "how big is the difference? i\u0027d rather just use the same routines everywhere for consistency. especially since you already found that the x86-64 routines fail some of the tests.",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7669ca_5f8b9189",
         "filename": "libm/Android.bp",
         "patchSetId": 1
