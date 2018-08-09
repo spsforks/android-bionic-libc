@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "964d6edd_c362bc6c",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-09T01:12:10Z",
+      "side": 1,
+      "message": "long :-)",
+      "range": {
+        "startLine": 49,
+        "startChar": 56,
+        "endLine": 49,
+        "endChar": 61
+      },
+      "revId": "052b96908db51f9a94252328532c6b41dead53ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
