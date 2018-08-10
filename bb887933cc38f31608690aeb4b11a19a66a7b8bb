@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4ad0a7e1_14d49663",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1111,
+      "author": {
+        "id": 1348424
+      },
+      "writtenOn": "2018-08-10T10:55:10Z",
+      "side": 1,
+      "message": "I agree that sizeof(struct sockaddr_in6) is enough. I have a new patchset on \"aosp/725873 set 3\" which reallocates memory for synthesized addrinfo in netd. In other words, this commit could be dropped if we could go that way.\n\nreallocate addrinfo in netd:\n\u003d pros \u003d\n1. don\u0027t need to modify public library libc (func: get_ai)\n2. no wasted space for inappropriate malloc/calloc size with sockaddr_storage (ipv4v6 case) or sockaddr_in6/sockaddr_union (ipv4 case)\n\u003d cons \u003d\nreplacing addrinfo process spends resource (computing power and temporary memory)",
+      "parentUuid": "891d6e43_dcec3639",
+      "range": {
+        "startLine": 1111,
+        "startChar": 11,
+        "endLine": 1111,
+        "endChar": 34
+      },
+      "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1ef9f49_9b36d102",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "they switched from malloc in the original code to calloc in the new code, so this is no longer needed.\n\nif you are staying close to upstream, it might be better to just stick with malloc and leave this alone. if you are forking, you may as well just rewrite the malloc line rather than duplicate it and remove this.\n\n(and if you do decide to keep this, `#if !defined(__ANDROID__)` might be a bit clearer.)",
       "parentUuid": "d1ef9f49_9b36d102",
+      "range": {
+        "startLine": 1123,
+        "startChar": 1,
+        "endLine": 1123,
+        "endChar": 7
+      },
+      "revId": "bb887933cc38f31608690aeb4b11a19a66a7b8bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d98dbd_0bf0e78a",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1348424
+      },
+      "writtenOn": "2018-08-10T10:55:10Z",
+      "side": 1,
+      "message": "Thank you for your advice which is helpful to us. We will have a internal check if we could go without this libc modification.",
+      "parentUuid": "48ef01e4_f35f7b4d",
       "range": {
         "startLine": 1123,
         "startChar": 1,
