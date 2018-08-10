@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Lorenzo Colitti <lorenzo@google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Verified+1: Bernie Innocenti <codewiz@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Fri, 10 Aug 2018 01:55:08 +0000
+Reviewed-on: https://android-review.googlesource.com/723066
+Project: platform/bionic
+Branch: refs/heads/master
