@@ -27,7 +27,7 @@
  * If retval >= dsize, truncation occurred.
  */
 size_t
-strlcat(char *dst, const char *src, size_t dsize)
+strlcat_openbsd(char *dst, const char *src, size_t dsize)
 {
 	const char *odst = dst;
 	const char *osrc = src;
@@ -54,3 +54,7 @@ strlcat(char *dst, const char *src, size_t dsize)
 	return(dlen + (src - osrc));	/* count does not include NUL */
 }
 DEF_WEAK(strlcat);
+
+size_t
+strlcat(char *dst, const char *src, size_t dsize)
+__attribute__((weak, alias("strlcat_openbsd")));

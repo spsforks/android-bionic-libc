@@ -28,8 +28,13 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
 #ifndef STRLEN
-# define STRLEN strlen
+# define STRLEN strlen_generic
+  WEAK_ALIAS_SYMBOL(strlen, strlen_generic)
 #endif
 
 #ifndef L
