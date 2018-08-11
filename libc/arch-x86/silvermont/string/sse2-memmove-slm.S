@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "cache.h"
 
 #ifndef MEMMOVE
-# define MEMMOVE	memmove
+# define MEMMOVE	memmove_generic
 #endif
 
 #ifndef L
@@ -544,4 +544,11 @@ L(mm_large_page_loop_backward):
 
 END (MEMMOVE)
 
-ALIAS_SYMBOL(memcpy, MEMMOVE)
+ALIAS_SYMBOL(memcpy_generic, MEMMOVE)
+
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
+WEAK_ALIAS_SYMBOL(memcpy, memcpy_generic)
+WEAK_ALIAS_SYMBOL(memmove, MEMMOVE)

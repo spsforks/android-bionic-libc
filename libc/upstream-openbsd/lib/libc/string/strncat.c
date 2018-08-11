@@ -38,7 +38,7 @@
  * are written at dst (at most n+1 bytes being appended).  Return dst.
  */
 char *
-strncat(char *dst, const char *src, size_t n)
+strncat_openbsd(char *dst, const char *src, size_t n)
 {
 	if (n != 0) {
 		char *d = dst;
@@ -55,4 +55,8 @@ strncat(char *dst, const char *src, size_t n)
 	}
 	return (dst);
 }
-DEF_STRONG(strncat);
+DEF_WEAK(strncat);
+
+char *
+strncat(char *dst, const char *src, size_t n)
+__attribute__((weak, alias("strncat_openbsd")));
