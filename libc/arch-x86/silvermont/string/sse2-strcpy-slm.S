@@ -78,8 +78,13 @@ name:                            \
 #define PUSH(REG) pushl REG; CFI_PUSH (REG)
 #define POP(REG) popl REG; CFI_POP (REG)
 
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
 #ifndef STRCPY
-# define STRCPY  strcpy
+# define STRCPY  strcpy_generic
+  WEAK_ALIAS_SYMBOL(strcpy, strcpy_generic)
 #endif
 
 #ifdef USE_AS_STPNCPY

@@ -29,5 +29,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define USE_AS_STRNCPY
-#define STRCPY strncpy
+#define STRCPY strncpy_generic
 #include "sse2-strcpy-slm.S"
+
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
+WEAK_ALIAS_SYMBOL(strncpy, strncpy_generic)
