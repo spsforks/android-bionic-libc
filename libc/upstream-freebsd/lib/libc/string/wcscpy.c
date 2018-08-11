@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD$");
 #include <wchar.h>
 
 wchar_t *
-wcscpy(wchar_t * __restrict s1, const wchar_t * __restrict s2)
+wcscpy_freebsd(wchar_t * __restrict s1, const wchar_t * __restrict s2)
 {
 	wchar_t *cp;
 
@@ -47,3 +47,7 @@ wcscpy(wchar_t * __restrict s1, const wchar_t * __restrict s2)
 
 	return (s1);
 }
+
+wchar_t *
+wcscpy(wchar_t * __restrict s1, const wchar_t * __restrict s2)
+__attribute__((weak, alias("wcscpy_freebsd")));
