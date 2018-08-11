@@ -85,4 +85,8 @@
     .globl alias; \
     .equ alias, original
 
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
 #endif

@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD$");
 #include <wchar.h>
 
 int
-wmemcmp(const wchar_t *s1, const wchar_t *s2, size_t n)
+wmemcmp_freebsd(const wchar_t *s1, const wchar_t *s2, size_t n)
 {
 	size_t i;
 
@@ -51,3 +51,7 @@ wmemcmp(const wchar_t *s1, const wchar_t *s2, size_t n)
 	}
 	return 0;
 }
+
+int
+wmemcmp(const wchar_t *s1, const wchar_t *s2, size_t n)
+__attribute__((weak, alias("wmemcmp_freebsd")));

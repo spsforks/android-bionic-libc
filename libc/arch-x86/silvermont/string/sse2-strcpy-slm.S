@@ -82,6 +82,14 @@ name:                            \
 # define STRCPY  strcpy
 #endif
 
+#define PASTER(x,y) x ## y
+#define APPEND_GENERIC(x) PASTER(x, _generic)
+#define STRCPY_GENERIC APPEND_GENERIC(STRCPY)
+
+#define WEAK_ALIAS_SYMBOL(alias, original) \
+    .weak alias; \
+    .equ alias, original
+
 #ifdef USE_AS_STPNCPY
 # define USE_AS_STRNCPY
 # define USE_AS_STPCPY
@@ -131,7 +139,7 @@ name:                            \
 #endif
 
 .text
-ENTRY (STRCPY)
+ENTRY (STRCPY_GENERIC)
 	ENTRANCE
 	mov	STR1(%esp), %edi
 	mov	STR2(%esp), %esi
@@ -2061,7 +2069,9 @@ L(ExitZero):
 	RETURN
 #endif
 
-END (STRCPY)
+END (STRCPY_GENERIC)
+
+WEAK_ALIAS_SYMBOL(STRCPY, STRCPY_GENERIC)
 
 	.p2align 4
 	.section .rodata

@@ -25,7 +25,7 @@
  * Returns strlen(src); if retval >= dsize, truncation occurred.
  */
 size_t
-strlcpy(char *dst, const char *src, size_t dsize)
+strlcpy_openbsd(char *dst, const char *src, size_t dsize)
 {
 	const char *osrc = src;
 	size_t nleft = dsize;
@@ -49,3 +49,7 @@ strlcpy(char *dst, const char *src, size_t dsize)
 	return(src - osrc - 1);	/* count does not include NUL */
 }
 DEF_WEAK(strlcpy);
+
+size_t
+strlcpy(char *dst, const char *src, size_t dsize)
+__attribute__((weak, alias("strlcpy_openbsd")));

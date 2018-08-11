@@ -28,8 +28,11 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
 #ifndef STRLEN
-# define STRLEN strlen
+# define STRLEN strlen_generic
+.weak strlen
+.equ strlen, strlen_generic
 #endif
 
 #ifndef L
@@ -325,4 +328,3 @@ L(exit64):
 	ret
 
 END (STRLEN)
-
