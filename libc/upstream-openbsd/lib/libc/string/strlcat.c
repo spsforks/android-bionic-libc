@@ -19,6 +19,12 @@
 #include <sys/types.h>
 #include <string.h>
 
+#ifdef RENAME_FUNCTIONS_FOR_DYNAMIC_DISPATCH
+# define STRLCAT strlcat_openbsd
+#else
+# define STRLCAT strlcat
+#endif
+
 /*
  * Appends src to string dst of size dsize (unlike strncat, dsize is the
  * full size of dst, not space left).  At most dsize-1 characters
@@ -27,7 +33,7 @@
  * If retval >= dsize, truncation occurred.
  */
 size_t
-strlcat(char *dst, const char *src, size_t dsize)
+STRLCAT(char *dst, const char *src, size_t dsize)
 {
 	const char *odst = dst;
 	const char *osrc = src;

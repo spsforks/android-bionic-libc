@@ -34,10 +34,16 @@ __RCSID("$NetBSD: wcscpy.c,v 1.1 2000/12/23 23:14:36 itojun Exp $");
 #endif
 __FBSDID("$FreeBSD$");
 
+#ifdef RENAME_FUNCTIONS_FOR_DYNAMIC_DISPATCH
+# define WCSCPY wcscpy_freebsd
+#else
+# define WCSCPY wcscpy
+#endif
+
 #include <wchar.h>
 
 wchar_t *
-wcscpy(wchar_t * __restrict s1, const wchar_t * __restrict s2)
+WCSCPY(wchar_t * __restrict s1, const wchar_t * __restrict s2)
 {
 	wchar_t *cp;
 

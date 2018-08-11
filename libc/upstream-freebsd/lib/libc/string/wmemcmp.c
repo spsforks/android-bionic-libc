@@ -34,10 +34,16 @@ __RCSID("$NetBSD: wmemcmp.c,v 1.1 2000/12/23 23:14:37 itojun Exp $");
 #endif
 __FBSDID("$FreeBSD$");
 
+#ifdef RENAME_FUNCTIONS_FOR_DYNAMIC_DISPATCH
+# define WMEMCMP wmemcmp_freebsd
+#else
+# define WMEMCMP wmemcmp
+#endif
+
 #include <wchar.h>
 
 int
-wmemcmp(const wchar_t *s1, const wchar_t *s2, size_t n)
+WMEMCMP(const wchar_t *s1, const wchar_t *s2, size_t n)
 {
 	size_t i;
 
