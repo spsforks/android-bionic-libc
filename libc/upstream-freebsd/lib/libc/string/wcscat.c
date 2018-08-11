@@ -34,10 +34,16 @@ __RCSID("$NetBSD: wcscat.c,v 1.1 2000/12/23 23:14:36 itojun Exp $");
 #endif
 __FBSDID("$FreeBSD$");
 
+#ifdef RENAME_FUNCTIONS_FOR_DYNAMIC_DISPATCH
+# define WCSCAT wcscat_freebsd
+#else
+# define WCSCAT wcscat
+#endif
+
 #include <wchar.h>
 
 wchar_t *
-wcscat(wchar_t * __restrict s1, const wchar_t * __restrict s2)
+WCSCAT(wchar_t * __restrict s1, const wchar_t * __restrict s2)
 {
 	wchar_t *cp;
 
