@@ -19,13 +19,19 @@
 #include <sys/types.h>
 #include <string.h>
 
+#ifdef RENAME_FUNCTIONS_FOR_DYNAMIC_DISPATCH
+# define STRLCPY strlcpy_openbsd
+#else
+# define STRLCPY strlcpy
+#endif
+
 /*
  * Copy string src to buffer dst of size dsize.  At most dsize-1
  * chars will be copied.  Always NUL terminates (unless dsize == 0).
  * Returns strlen(src); if retval >= dsize, truncation occurred.
  */
 size_t
-strlcpy(char *dst, const char *src, size_t dsize)
+STRLCPY(char *dst, const char *src, size_t dsize)
 {
 	const char *osrc = src;
 	size_t nleft = dsize;
