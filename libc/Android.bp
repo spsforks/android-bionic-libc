@@ -1139,6 +1139,10 @@ cc_library_static {
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
+                "arch-x86/bionic/ifunc.cpp",
+
+                // sse4 functions
+                "arch-x86/silvermont/string/sse4-memcmp-slm.S",
             ],
 
             exclude_srcs: [
@@ -1184,11 +1188,7 @@ cc_library_static {
             },
             sse4: {
                 srcs: [
-                    "arch-x86/silvermont/string/sse4-memcmp-slm.S",
                     "arch-x86/silvermont/string/sse4-wmemcmp-slm.S",
-                ],
-                exclude_srcs: [
-                    "arch-x86/generic/string/memcmp.S",
                 ],
             },
         },
