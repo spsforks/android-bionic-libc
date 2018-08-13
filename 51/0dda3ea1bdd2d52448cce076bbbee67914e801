@@ -1,0 +1,9 @@
+Verified+1: Haibo Huang <hhb@google.com>
+Autosubmit+1: Haibo Huang <hhb@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Mon, 13 Aug 2018 19:22:32 +0000
+Reviewed-on: https://android-review.googlesource.com/730052
+Project: platform/bionic
+Branch: refs/heads/master
