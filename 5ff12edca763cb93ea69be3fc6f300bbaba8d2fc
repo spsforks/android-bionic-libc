@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "422c4ebd_0760da5b",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-08-14T02:41:11Z",
+      "side": 1,
+      "message": "(Highlighting this bit. I dunno how useful __BIONIC_FALLTHROUGH will be, since we already have FALLTHROUGH_INTENDED in android-base. Happy to make it unpublic until it\u0027s needed, move it elsewhere, etc.)",
+      "revId": "5ff12edca763cb93ea69be3fc6f300bbaba8d2fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
