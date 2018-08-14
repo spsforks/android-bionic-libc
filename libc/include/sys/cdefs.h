@@ -328,6 +328,19 @@
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
 
 /*
+ * Used to inform clang's -Wimplicit-fallthrough that a fallthrough is intended. There's no way to
+ * silence (or enable, apparently) -Wimplicit-fallthrough in C yet.
+ *
+ * This is considered stable, and something that users of Bionic may rely on and use (@enh: is that
+ * OK? Or should we do this elsewhere?).
+ */
+#ifdef __cplusplus
+#  define __BIONIC_FALLTHROUGH [[clang::fallthrough]]
+#else
+#  define __BIONIC_FALLTHROUGH
+#endif
+
+/*
  * Used to tag symbols that should be hidden for 64-bit,
  * but visible to preserve binary compatibility for LP32.
  */

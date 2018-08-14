@@ -189,7 +189,7 @@ literal:
        */
       case 'D': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'd':
         c = CT_INT;
         base = 10;
@@ -202,7 +202,7 @@ literal:
 
       case 'O': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'o':
         c = CT_INT;
         flags |= UNSIGNED;
