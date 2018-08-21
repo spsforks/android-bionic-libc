@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8903fcd5_0634ad3b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-21T23:30:40Z",
+      "side": 1,
+      "message": "should this be const, and the const_cast be on L179 rather than in the caller?",
+      "range": {
+        "startLine": 176,
+        "startChar": 45,
+        "endLine": 176,
+        "endChar": 49
+      },
+      "revId": "93f7ea2e36e2f2b142427669d2874972211f24f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
