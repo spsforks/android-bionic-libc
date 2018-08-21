@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f281e22d_edf958be",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-08-21T20:17:53Z",
+      "side": 1,
+      "message": "The best C++11 way of doing this is now:\n\nfor (auto _ : state) {\n\nhttps://github.com/google/benchmark#a-faster-keeprunning-loop\n\nI know you are only keeping it similar, but as we modify these I think it\u0027s worth using the new way.",
+      "range": {
+        "startLine": 262,
+        "startChar": 2,
+        "endLine": 262,
+        "endChar": 31
+      },
+      "revId": "3cc0a3c5ea7a6c9b4d4540bedea1f9d7cc1d9e9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
