@@ -35,9 +35,13 @@
 #include "private/bionic_defs.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
+// Magic for the abort message. Chosen by fair dice roll.
+constexpr uint64_t kAbortMsgMagic = 0xb18e40886ac388f0ULL;
+
 static pthread_mutex_t g_abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
-struct abort_msg_t {
+struct __attribute__((__packed__)) abort_msg_t {
+  uint64_t magic;
   size_t size;
   char msg[0];
 };
@@ -66,6 +70,7 @@ void android_set_abort_message(const char* msg) {
   }
 
   abort_msg_t* new_abort_message = reinterpret_cast<abort_msg_t*>(map);
+  new_abort_message->magic = kAbortMsgMagic;
   new_abort_message->size = size;
   strcpy(new_abort_message->msg, msg);
   *__abort_message_ptr = new_abort_message;
