@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d871d87f_e88e7323",
+        "filename": "libc/include/sys/prctl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-22T17:43:33Z",
+      "side": 1,
+      "message": "see https://android-review.googlesource.com/c/platform/bionic/+/735988 for more of this, but i\u0027ve told myself \"no more touching header files without improving the documentation\", so...\n\n(there\u0027s not much useful + brief to say about prctl, but documenting Android-only extensions is _exactly_ what i want to do with this project.)",
+      "revId": "99d54656bda40edb817e6bc6de9a85d88ef4e6b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
