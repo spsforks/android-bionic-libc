@@ -29,11 +29,16 @@
 #include <android/set_abort_message.h>
 
 #include <pthread.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
 
 #include "private/bionic_defs.h"
 #include "private/ScopedPthreadMutexLocker.h"
+
+// Magic for the abort message. Chosen by fair dice roll.
+constexpr uint64_t kAbortMsgMagic = 0xb18e40886ac388f0ULL;
 
 static pthread_mutex_t g_abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -41,6 +46,17 @@ struct abort_msg_t {
   size_t size;
   char msg[0];
 };
+static_assert(
+    offsetof(abort_msg_t, msg) == sizeof(size_t),
+    "The in-memory layout of abort_msg_t is not consistent with what libdebuggerd expects.");
+
+struct magic_abort_msg_t {
+  uint64_t magic;
+  abort_msg_t msg;
+};
+static_assert(offsetof(magic_abort_msg_t, msg) == sizeof(uint64_t),
+              "The in-memory layout of magic_abort_msg_t is not consistent with what automated "
+              "tools expect.");
 
 abort_msg_t** __abort_message_ptr; // Accessible to __libc_init_common.
 
@@ -65,8 +81,9 @@ void android_set_abort_message(const char* msg) {
     return;
   }
 
-  abort_msg_t* new_abort_message = reinterpret_cast<abort_msg_t*>(map);
-  new_abort_message->size = size;
-  strcpy(new_abort_message->msg, msg);
-  *__abort_message_ptr = new_abort_message;
+  magic_abort_msg_t* new_magic_abort_message = reinterpret_cast<magic_abort_msg_t*>(map);
+  new_magic_abort_message->magic = kAbortMsgMagic;
+  new_magic_abort_message->msg.size = size;
+  strcpy(new_magic_abort_message->msg.msg, msg);
+  *__abort_message_ptr = &new_magic_abort_message->msg;
 }
