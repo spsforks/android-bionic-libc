@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3477f76_88abf22b",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-23T19:35:03Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 62,
+        "startChar": 55,
+        "endLine": 62,
+        "endChar": 56
+      },
+      "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eedfab95_ec7ae34b",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-23T19:35:03Z",
+      "side": 1,
+      "message": "rintl can\u0027t affect the fenv on arm64, can it? so this can just be a one-liner (and in fake-long-double)?",
+      "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
