@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0596639_7b468a3a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-27T23:43:39Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "6202c5b859c20f58ddc10d881e9a453d887f59aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef2baa90_e992318e",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-27T23:43:39Z",
+      "side": 1,
+      "message": "(i\u0027m not sure whether to start enforcing \"new additions require docs\" on files that currently have no docs...)",
+      "revId": "6202c5b859c20f58ddc10d881e9a453d887f59aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
