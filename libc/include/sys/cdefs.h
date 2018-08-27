@@ -103,10 +103,7 @@
 #endif /* !__cplusplus */
 
 #else	/* !(__STDC__ || __cplusplus) */
-#define	__P(protos)	()		/* traditional C preprocessor */
-#define	__CONCAT(x,y)	x/**/y
-#define	__STRING(x)	"x"
-
+#error Here's a nickel kid, buy yourself a real compiler. (not ANSI C or C++?)
 #endif	/* !(__STDC__ || __cplusplus) */
 
 #define __always_inline __attribute__((__always_inline__))
