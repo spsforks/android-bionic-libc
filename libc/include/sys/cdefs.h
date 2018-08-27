@@ -38,7 +38,6 @@
 #define	_SYS_CDEFS_H_
 
 #include <android/api-level.h>
-#include <android/versioning.h>
 
 #define __BIONIC__ 1
 
@@ -105,6 +104,8 @@
 #else	/* !(__STDC__ || __cplusplus) */
 #error Here's a nickel kid, buy yourself a real compiler. (not ANSI C or C++?)
 #endif	/* !(__STDC__ || __cplusplus) */
+
+#include <android/versioning.h>
 
 #define __always_inline __attribute__((__always_inline__))
 #define __attribute_const__ __attribute__((__const__))
