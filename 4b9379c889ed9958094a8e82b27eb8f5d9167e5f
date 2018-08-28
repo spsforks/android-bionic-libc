@@ -22,6 +22,30 @@
       "revId": "4b9379c889ed9958094a8e82b27eb8f5d9167e5f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92d64ec1_3c516558",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2018-08-28T21:21:16Z",
+      "side": 0,
+      "message": "Sorry, put back __fds now.",
+      "parentUuid": "a881e39e_c43b8785",
+      "range": {
+        "startLine": 52,
+        "startChar": 33,
+        "endLine": 52,
+        "endChar": 38
+      },
+      "revId": "4b9379c889ed9958094a8e82b27eb8f5d9167e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
