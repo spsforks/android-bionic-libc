@@ -1326,6 +1326,9 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		hp->h_length = NS_IN6ADDRSZ;
 	}
 
+	if ((info->hp->h_addrtype == AF_INET) && (blen + NS_IN6ADDRSZ > info->buflen))
+		goto nospc;
+
 	__res_put_state(res);
 	*info->he = NETDB_SUCCESS;
 	return NS_SUCCESS;
