@@ -1053,6 +1053,15 @@ netbsd_gethostent_r(FILE *hf, struct hostent *hent, char *buf, size_t buflen, in
 	    buflen);
 	hent->h_addr_list[1] = NULL;
 
+	/* reserve space for mapping IPv4 address to IPv6 address in the place */
+	if (hent->h_addrtype == AF_INET) {
+		int paddinglen = NS_IN6ADDRSZ - NS_INADDRSZ;
+		if ((size_t)paddinglen > buflen)
+			goto nospc;
+		buf += paddinglen;
+		buflen -= paddinglen;
+	}
+
 	HENT_SCOPY(hent->h_name, name, buf, buflen);
 	for (size_t i = 0; i < anum; i++)
 		HENT_SCOPY(hent->h_aliases[i], aliases[i], buf, buflen);
@@ -1325,6 +1334,10 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		hp->h_addrtype = AF_INET6;
 		hp->h_length = NS_IN6ADDRSZ;
 	}
+
+	/* check enough space for mapping IPv4 address to IPv6 address in the place */
+	if ((info->hp->h_addrtype == AF_INET) && (blen + NS_IN6ADDRSZ > info->buflen))
+		goto nospc;
 
 	__res_put_state(res);
 	*info->he = NETDB_SUCCESS;
