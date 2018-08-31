@@ -22,6 +22,30 @@
       "revId": "cab840a5ff0d7b1c849157673ee06342e49d083a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbfab2ad_629c78e4",
+        "filename": "libc/arch-arm64/generic/bionic/__memcpy_chk.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2018-08-31T21:56:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "affcbe2e_857232f3",
+      "range": {
+        "startLine": 33,
+        "startChar": 2,
+        "endLine": 33,
+        "endChar": 25
+      },
+      "revId": "cab840a5ff0d7b1c849157673ee06342e49d083a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
