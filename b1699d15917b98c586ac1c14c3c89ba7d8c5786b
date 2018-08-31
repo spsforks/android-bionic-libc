@@ -22,6 +22,30 @@
       "revId": "b1699d15917b98c586ac1c14c3c89ba7d8c5786b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36144ec4_166a1d11",
+        "filename": "libc/arch-arm64/generic/bionic/__memcpy_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2018-08-31T22:03:11Z",
+      "side": 1,
+      "message": "Right. Somehow I did not notice the other comment and was following the file-level one instead.",
+      "parentUuid": "9536ddf6_2210c935",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 2
+      },
+      "revId": "b1699d15917b98c586ac1c14c3c89ba7d8c5786b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
