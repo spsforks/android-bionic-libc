@@ -224,6 +224,10 @@ static const char* DEBUG_PROPERTY_OPTIONS = "libc.debug.malloc.options";
 static const char* DEBUG_PROPERTY_PROGRAM = "libc.debug.malloc.program";
 static const char* DEBUG_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
 
+static const char* HEAPPROFD_SHARED_LIB = "heapprofd.so";
+static const char* HEAPPROFD_PREFIX = "heapprofd";
+static const int HEAPPROFD_SIGNAL = __SIGRTMIN + 4;
+
 enum FunctionEnum : uint8_t {
   FUNC_INITIALIZE,
   FUNC_FINALIZE,
@@ -456,24 +460,7 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
   return impl_handle;
 }
 
-// Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
-  const char* prefix;
-  const char* shared_lib;
-  char prop[PROP_VALUE_MAX];
-  char* options = prop;
-  // Prefer malloc debug since it existed first and is a more complete
-  // malloc interceptor than the hooks.
-  if (CheckLoadMallocDebug(&options)) {
-    prefix = "debug";
-    shared_lib = DEBUG_SHARED_LIB;
-  } else if (CheckLoadMallocHooks(&options)) {
-    prefix = "hooks";
-    shared_lib = HOOKS_SHARED_LIB;
-  } else {
-    return;
-  }
-
+static void install_hooks(libc_globals* globals, char* options, const char* prefix, const char* shared_lib) {
   MallocDispatch dispatch_table;
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
   if (impl_handle == nullptr) {
@@ -501,11 +488,83 @@ static void malloc_init_impl(libc_globals* globals) {
   }
 }
 
+extern "C" void InstallInitHeapprofdHook(int);
+
+// Initializes memory allocation framework once per process.
+static void malloc_init_impl(libc_globals* globals) {
+  signal(HEAPPROFD_SIGNAL, InstallInitHeapprofdHook);
+  const char* prefix;
+  const char* shared_lib;
+  char prop[PROP_VALUE_MAX];
+  char* options = prop;
+  // Prefer malloc debug since it existed first and is a more complete
+  // malloc interceptor than the hooks.
+  if (CheckLoadMallocDebug(&options)) {
+    prefix = "debug";
+    shared_lib = DEBUG_SHARED_LIB;
+  } else if (CheckLoadMallocHooks(&options)) {
+    prefix = "hooks";
+    shared_lib = HOOKS_SHARED_LIB;
+  } else {
+    return;
+  }
+  install_hooks(globals, options, prefix, shared_lib);
+}
+
 // Initializes memory allocation framework.
 // This routine is called from __libc_init routines in libc_init_dynamic.cpp.
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
+
+// The logic for triggering heapprofd below is as following.
+// 1. HEAPPROFD_SIGNAL is received by the process.
+// 2. The signal handler (InstallInitHeapprofdHook) installs a temporary
+//    malloc hook (InitHeapprofdHook).
+// 3. When this hook gets run the first time, it uninstalls itself and spawns
+//    a thread running InitHeapprofd that loads heapprofd.so and installs the
+//    hooks within.
+//
+// This roundabout way is needed because we are running non AS-safe code, so
+// we cannot run it directly in the signal handler. The other approach of
+// running a standby thread and signalling through write(2) and read(2) would
+// significantly increase the number of active threads in the system.
+
+static _Atomic bool g_heapprofd_init_in_progress = false;
+static _Atomic bool g_init_heapprofd_ran = false;
+static void* InitHeapprofdHook(size_t bytes);
+
+static void* InitHeapprofd(void*) {
+  __libc_globals.mutate([](libc_globals* globals) {
+    install_hooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
+  });
+  atomic_store(&g_heapprofd_init_in_progress, false);
+  return nullptr;
+}
+
+static void* InitHeapprofdHook(size_t bytes) {
+  if (!atomic_exchange(&g_init_heapprofd_ran, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->malloc_dispatch.malloc = nullptr;
+    });
+
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) == -1)
+      error_log("heapprofd: failed to pthread_create.");
+    if (pthread_detach(thread_id) == -1)
+      error_log("heapprofd: failed to pthread_detach");
+  }
+  return Malloc(malloc)(bytes);
+}
+
+extern "C" void InstallInitHeapprofdHook(int) {
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->malloc_dispatch.malloc = InitHeapprofdHook;
+    });
+  }
+}
+
 #endif  // !LIBC_STATIC
 
 // =============================================================================
