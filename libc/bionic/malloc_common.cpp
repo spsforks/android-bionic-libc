@@ -224,6 +224,8 @@ static const char* DEBUG_PROPERTY_OPTIONS = "libc.debug.malloc.options";
 static const char* DEBUG_PROPERTY_PROGRAM = "libc.debug.malloc.program";
 static const char* DEBUG_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
 
+static const char* HEAPPROFD_SHARED_LIB = "libprofiling.so";
+
 enum FunctionEnum : uint8_t {
   FUNC_INITIALIZE,
   FUNC_FINALIZE,
@@ -456,24 +458,7 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
   return impl_handle;
 }
 
-// Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
-  const char* prefix;
-  const char* shared_lib;
-  char prop[PROP_VALUE_MAX];
-  char* options = prop;
-  // Prefer malloc debug since it existed first and is a more complete
-  // malloc interceptor than the hooks.
-  if (CheckLoadMallocDebug(&options)) {
-    prefix = "debug";
-    shared_lib = DEBUG_SHARED_LIB;
-  } else if (CheckLoadMallocHooks(&options)) {
-    prefix = "hooks";
-    shared_lib = HOOKS_SHARED_LIB;
-  } else {
-    return;
-  }
-
+static void install_hooks(libc_globals* globals, char* options, const char* prefix, const char* shared_lib) {
   MallocDispatch dispatch_table;
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
   if (impl_handle == nullptr) {
@@ -499,6 +484,58 @@ static void malloc_init_impl(libc_globals* globals) {
   if (ret_value != 0) {
     error_log("failed to set atexit cleanup function: %d", ret_value);
   }
+}
+
+_Atomic bool TrampolineRan = false;
+
+void* TrampolineMalloc(size_t bytes);
+
+void* InitHeapprofd(void*) {
+  __libc_globals.mutate([](libc_globals* globals) {
+    install_hooks(globals, nullptr, "heapprofd", HEAPPROFD_SHARED_LIB);
+    globals->malloc_dispatch.malloc = TrampolineMalloc;
+  });
+  return nullptr;
+}
+
+void* TrampolineMalloc(size_t bytes) {
+  if (!atomic_exchange(&TrampolineRan, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->malloc_dispatch.malloc = nullptr;
+    });
+
+    pthread_t thread_id;
+    pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr);
+    // Do init.
+  }
+  return Malloc(malloc)(bytes);
+}
+
+void TriggerTrampoline(int) {
+  __libc_globals.mutate([](libc_globals* globals) {
+    globals->malloc_dispatch.malloc = TrampolineMalloc;
+  });
+}
+
+// Initializes memory allocation framework once per process.
+static void malloc_init_impl(libc_globals* globals) {
+  signal(__SIGRTMIN + 4, TriggerTrampoline);
+  const char* prefix;
+  const char* shared_lib;
+  char prop[PROP_VALUE_MAX];
+  char* options = prop;
+  // Prefer malloc debug since it existed first and is a more complete
+  // malloc interceptor than the hooks.
+  if (CheckLoadMallocDebug(&options)) {
+    prefix = "debug";
+    shared_lib = DEBUG_SHARED_LIB;
+  } else if (CheckLoadMallocHooks(&options)) {
+    prefix = "hooks";
+    shared_lib = HOOKS_SHARED_LIB;
+  } else {
+    return;
+  }
+  install_hooks(globals, options, prefix, shared_lib);
 }
 
 // Initializes memory allocation framework.
