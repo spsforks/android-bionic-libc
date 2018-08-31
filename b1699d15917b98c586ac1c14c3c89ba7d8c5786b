@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9536ddf6_2210c935",
+        "filename": "libc/arch-arm64/generic/bionic/__memcpy_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-08-31T22:01:05Z",
+      "side": 1,
+      "message": "Small nit, use // to follow the other comment and indent.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 2
+      },
+      "revId": "b1699d15917b98c586ac1c14c3c89ba7d8c5786b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
