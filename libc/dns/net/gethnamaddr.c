@@ -1326,6 +1326,8 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		hp->h_length = NS_IN6ADDRSZ;
 	}
 
+        // do nothing
+
 	__res_put_state(res);
 	*info->he = NETDB_SUCCESS;
 	return NS_SUCCESS;
