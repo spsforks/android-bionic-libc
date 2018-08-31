@@ -31,26 +31,27 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdatomic.h>
 #include <private/bionic_config.h>
 
 // Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-typedef int (*MallocIterate)(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
-typedef void (*MallocMallocDisable)();
-typedef void (*MallocMallocEnable)();
-typedef int (*MallocMallopt)(int, int);
-typedef void* (*MallocAlignedAlloc)(size_t, size_t);
+typedef void* (*_Atomic MallocCalloc)(size_t, size_t);
+typedef void (*_Atomic MallocFree)(void*);
+typedef struct mallinfo (*_Atomic MallocMallinfo)();
+typedef void* (*_Atomic MallocMalloc)(size_t);
+typedef size_t (*_Atomic MallocMallocUsableSize)(const void*);
+typedef void* (*_Atomic MallocMemalign)(size_t, size_t);
+typedef int (*_Atomic MallocPosixMemalign)(void**, size_t, size_t);
+typedef void* (*_Atomic MallocRealloc)(void*, size_t);
+typedef int (*_Atomic MallocIterate)(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
+typedef void (*_Atomic MallocMallocDisable)();
+typedef void (*_Atomic MallocMallocEnable)();
+typedef int (*_Atomic MallocMallopt)(int, int);
+typedef void* (*_Atomic MallocAlignedAlloc)(size_t, size_t);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
+typedef void* (*_Atomic MallocPvalloc)(size_t);
+typedef void* (*_Atomic MallocValloc)(size_t);
 #endif
 
 struct MallocDispatch {
