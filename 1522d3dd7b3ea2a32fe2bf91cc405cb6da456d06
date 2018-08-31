@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f981a74_d61410f0",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-08-31T23:21:57Z",
+      "side": 1,
+      "message": "WriteProtected::mutate isn\u0027t safe to call in a multithreaded context (e.g. if you receive two HEAPPROFD_SIGNALs, your signal handler will run twice).",
+      "revId": "1522d3dd7b3ea2a32fe2bf91cc405cb6da456d06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
