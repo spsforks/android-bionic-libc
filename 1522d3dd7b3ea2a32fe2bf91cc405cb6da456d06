@@ -16,6 +16,24 @@
       "revId": "1522d3dd7b3ea2a32fe2bf91cc405cb6da456d06",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d07c7d7_50945bb5",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-08-31T23:45:22Z",
+      "side": 1,
+      "message": "Thanks. I guarded it using an atomic variable so two signals do not trigger the ::mutate twice.",
+      "parentUuid": "3f981a74_d61410f0",
+      "revId": "1522d3dd7b3ea2a32fe2bf91cc405cb6da456d06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
