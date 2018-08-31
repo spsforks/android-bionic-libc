@@ -30,8 +30,10 @@
 
 ENTRY(__memcpy_chk)
   cmp x2, x3
-  bls memcpy
+  b.hi .L_memcpy_chk_fail
+  b memcpy
 
+.L_memcpy_chk_fail:
   // Preserve for accurate backtrace.
   stp x29, x30, [sp, -16]!
   .cfi_def_cfa_offset 16
