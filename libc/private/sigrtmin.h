@@ -37,6 +37,7 @@
 //   33 (__SIGRTMIN + 1)        libbacktrace
 //   34 (__SIGRTMIN + 2)        libcore
 //   35 (__SIGRTMIN + 3)        debuggerd -b
+//   36 (__SIGRTMIN + 4)        heapprofd
 //
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
