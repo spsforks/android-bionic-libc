@@ -81,6 +81,24 @@
       "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98330cc8_309f5eb4",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-09-03T20:39:57Z",
+      "side": 1,
+      "message": "In fact I am not sure about the compiler runtime contract for routines for floating point emulation regarding floating point environment. I know at least for IBM long double FP emulation the libgcc routines does change the fenv on the default FP environment. However, at least for aarch64, clang/compiler-rt indeed seems to not use single/double FP operations so I think it should be safe to just call rintl without messing with fenv.",
+      "parentUuid": "287181bf_879f7956",
+      "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
