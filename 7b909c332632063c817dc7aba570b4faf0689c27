@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5e7674f7_51f90793",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-09-03T13:02:13Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "d3477f76_88abf22b",
+      "range": {
+        "startLine": 62,
+        "startChar": 55,
+        "endLine": 62,
+        "endChar": 56
+      },
+      "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eedfab95_ec7ae34b",
         "filename": "libm/builtins.cpp",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2018-08-23T19:35:03Z",
       "side": 1,
       "message": "rintl can\u0027t affect the fenv on arm64, can it? so this can just be a one-liner (and in fake-long-double)?",
+      "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "287181bf_879f7956",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-09-03T13:02:13Z",
+      "side": 1,
+      "message": "The generic version does:\n\nlibm/upstream-freebsd/lib/msun/src/s_rintl.c\n\n 56 long double\n 57 rintl(long double x)\n 58 {\n[...]\n 81         x +\u003d shift[sign];\n 82         x -\u003d shift[sign];\n[...]\n\nWhich can raise FE_INEXACT.",
+      "parentUuid": "eedfab95_ec7ae34b",
       "revId": "7b909c332632063c817dc7aba570b4faf0689c27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
