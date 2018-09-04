@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c32f34b4_8b4d1586",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-09-04T20:29:44Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to render at all: https://android.googlesource.com/platform/bionic/+/283146177133b3bf40a4f08d63217f8414186f12/README.md#what_s-in-libc",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 6
+      },
+      "revId": "283146177133b3bf40a4f08d63217f8414186f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
