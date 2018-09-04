@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "133d0be0_02f9890f",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-09-04T19:25:00Z",
+      "side": 1,
+      "message": "Indeed, I will remove it.",
+      "parentUuid": "988c196f_ee8b8520",
+      "revId": "89a3a2aa910a9d34ca13e48b98edda4ed98cbbe6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d015524_19cb3c96",
         "filename": "libm/builtins.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2018-09-04T18:25:03Z",
       "side": 1,
       "message": "// comments.",
+      "revId": "89a3a2aa910a9d34ca13e48b98edda4ed98cbbe6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "145e6526_5ba10f4d",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-09-04T19:25:00Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "2d015524_19cb3c96",
       "revId": "89a3a2aa910a9d34ca13e48b98edda4ed98cbbe6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
