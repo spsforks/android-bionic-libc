@@ -22,6 +22,30 @@
       "revId": "283146177133b3bf40a4f08d63217f8414186f12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34b3345a_136367dd",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-04T20:32:59Z",
+      "side": 1,
+      "message": "apparently not a regression (https://android.googlesource.com/platform/bionic/#what_s-in-libc), but i\u0027ll see if i can fix it while i\u0027m here...",
+      "parentUuid": "c32f34b4_8b4d1586",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 6
+      },
+      "revId": "283146177133b3bf40a4f08d63217f8414186f12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
