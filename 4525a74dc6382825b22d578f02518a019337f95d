@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d24aeef_136cc667",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "explicitly mention the analogy with smart pointers?",
+      "range": {
+        "startLine": 42,
+        "startChar": 110,
+        "endLine": 42,
+        "endChar": 214
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c00a6b34_f1bba372",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "prevent ... from?\n\ncatch ... that closes?",
+      "range": {
+        "startLine": 44,
+        "startChar": 704,
+        "endLine": 44,
+        "endChar": 725
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25cad986_3d4c5690",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "In Android Q and above,",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 27
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ced3e4ee_ff430631",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "since this is configurable, how about you start this section explaining the 4 different modes, then say \"In Android Q and above, ...\" and then \"Alternatively, in Android Q and above you can use android_fdsan_set_error_level\"?",
+      "range": {
+        "startLine": 51,
+        "startChar": 34,
+        "endLine": 51,
+        "endChar": 48
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6a80ea9_cfe7df3e",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "include an example stack as proof?",
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db7134ec_7e26b34f",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "example?",
+      "range": {
+        "startLine": 99,
+        "startChar": 134,
+        "endLine": 99,
+        "endChar": 161
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7a72535_d47c8441",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T20:11:58Z",
+      "side": 1,
+      "message": "link to libbase?",
+      "range": {
+        "startLine": 99,
+        "startChar": 76,
+        "endLine": 99,
+        "endChar": 105
+      },
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
