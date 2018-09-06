@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "256555ff_19b734ee",
+        "filename": "libc/include/android/get_device_api_level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-09-06T21:30:06Z",
+      "side": 1,
+      "message": "I thought we already had one that was a good fit for this, but I guess not. \"API Levels\" or something maybe? Avoiding the issue until we can improve the dac layout works, but it\u0027s not ideal (users don\u0027t really want to hear that we don\u0027t have all the API reference in the same place because *our* tools are bad at dealing with doxygen).",
+      "parentUuid": "a208ed0a_b66f1ad6",
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01073032_6078c6ae",
         "filename": "libc/include/android/get_device_api_level.h",
         "patchSetId": 1
