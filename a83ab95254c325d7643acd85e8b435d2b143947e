@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a208ed0a_b66f1ad6",
+        "filename": "libc/include/android/get_device_api_level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-06T21:20:02Z",
+      "side": 1,
+      "message": "what group? maybe more useful in the NDK docs where we talk about APIs, since the dac doxgyen stuff is unnavigable anyway?",
+      "parentUuid": "25dd3773_16988e7a",
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01073032_6078c6ae",
         "filename": "libc/include/android/get_device_api_level.h",
         "patchSetId": 1
@@ -53,6 +71,30 @@
       "writtenOn": "2018-09-06T20:37:07Z",
       "side": 1,
       "message": "Isn\u0027t this not valid C? I thought C needed `{0}`. Did that finally change?",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 33
+      },
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9dcad6f_3527de1c",
+        "filename": "libc/include/bits/get_device_api_level_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-06T21:20:02Z",
+      "side": 1,
+      "message": "-pedantic doesn\u0027t like it, but it\u0027s otherwise fine. done anyway.",
+      "parentUuid": "c7690f39_ac6ff4de",
       "range": {
         "startLine": 42,
         "startChar": 31,
