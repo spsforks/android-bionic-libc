@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37796afd_f56f43e7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1775,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2018-09-06T23:33:26Z",
+      "side": 1,
+      "message": "Dan, this could be a single cc_genrule if we exported the arch as a cmd variable",
+      "revId": "0a364fb4a2ac7a41d8ace7902469b6b7ea65ede3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b84eb20_e3070f54",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2018-09-06T23:33:26Z",
+      "side": 1,
+      "message": "You could avoid having to symlink this into every directory by adding to bionic/tools/Android.bp:\n\nfilegroup {\n    name: \"bionic-generate-version-script\",\n    srcs: [\"generate-version-script.py\"],\n}\n\nAnd then use:\n\n    tool_files: [\":bionic-generate-version-script\"],\n\nAlternatively, compile generate-version-script.py using a py_binary module, and use tools instead of tool_files to refer to it.",
+      "revId": "0a364fb4a2ac7a41d8ace7902469b6b7ea65ede3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
