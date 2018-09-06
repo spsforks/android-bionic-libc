@@ -1,0 +1,1 @@
+../tools/generate-version-script.py
