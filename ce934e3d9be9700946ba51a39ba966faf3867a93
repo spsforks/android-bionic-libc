@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "340169bf_4ccccded",
+        "filename": "libc/include/android/legacy_get_device_api_level_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2018-09-06T23:19:24Z",
+      "side": 1,
+      "message": "out of curiosity, why expend the effort to define this to the default value? (rather than, say, always requiring a default value)",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 60
+      },
+      "revId": "ce934e3d9be9700946ba51a39ba966faf3867a93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
