@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a275775_bb68ff4a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2018-09-06T23:46:48Z",
+      "side": 1,
+      "message": "I think this will need to be bionic-generate-version-script?  If not that\u0027s pretty odd behavior from Soong.",
+      "range": {
+        "startLine": 1780,
+        "startChar": 21,
+        "endLine": 1780,
+        "endChar": 47
+      },
+      "revId": "8a723a3d0d1060c2b3c5f5d4f4d42f04424cd11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
