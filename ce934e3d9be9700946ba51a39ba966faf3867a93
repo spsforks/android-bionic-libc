@@ -22,6 +22,30 @@
       "revId": "ce934e3d9be9700946ba51a39ba966faf3867a93",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05617ad8_64c6232e",
+        "filename": "libc/include/android/legacy_get_device_api_level_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-06T23:23:06Z",
+      "side": 1,
+      "message": "i\u0027m cargo-culting what all the others (fenv, termios) do. i wondered that myself, but didn\u0027t want to rock the boat in this change. if i remember, i\u0027ll follow up with a CL that removes this for all the uses.",
+      "parentUuid": "340169bf_4ccccded",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 60
+      },
+      "revId": "ce934e3d9be9700946ba51a39ba966faf3867a93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
