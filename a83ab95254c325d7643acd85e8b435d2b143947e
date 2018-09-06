@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25dd3773_16988e7a",
+        "filename": "libc/include/android/get_device_api_level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-09-06T20:37:07Z",
+      "side": 1,
+      "message": "@defgroup so this appears on dac?",
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01073032_6078c6ae",
+        "filename": "libc/include/android/get_device_api_level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-09-06T20:37:07Z",
+      "side": 1,
+      "message": "I wonder if we should follow their naming scheme. `android_sdk_int` or something. I think the name you have is better, but maybe it\u0027s more discoverable if we follow the Java scheme? Probably not an issue with documentation though.",
+      "range": {
+        "startLine": 46,
+        "startChar": 34,
+        "endLine": 46,
+        "endChar": 55
+      },
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7690f39_ac6ff4de",
+        "filename": "libc/include/bits/get_device_api_level_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-09-06T20:37:07Z",
+      "side": 1,
+      "message": "Isn\u0027t this not valid C? I thought C needed `{0}`. Did that finally change?",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 33
+      },
+      "revId": "a83ab95254c325d7643acd85e8b435d2b143947e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
