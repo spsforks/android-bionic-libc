@@ -120,6 +120,9 @@ enum android_fdsan_owner_type {
 
   /* java.net.PlainSocketImpl */
   ANDROID_FDSAN_OWNER_TYPE_PLAINSOCKETIMPL = 11,
+
+  /* libziparchive's ZipArchive */
+  ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE = 12,
 };
 
 /*
