@@ -114,6 +114,12 @@ enum android_fdsan_owner_type {
 
   /* ART FdFile */
   ANDROID_FDSAN_OWNER_TYPE_ART_FDFILE = 9,
+
+  /* java.net.AbstractPlainDatagramSocketImpl */
+  ANDROID_FDSAN_OWNER_TYPE_ABSTRACTPLAINDATAGRAMSOCKETIMPL = 10,
+
+  /* java.net.PlainSocketImpl */
+  ANDROID_FDSAN_OWNER_TYPE_PLAINSOCKETIMPL = 11,
 };
 
 /*
