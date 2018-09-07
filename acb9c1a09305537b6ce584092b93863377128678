@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81106b12_98bcd30c",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-07T22:13:08Z",
+      "side": 1,
+      "message": "no need to hurt folks trying to grep.",
+      "range": {
+        "startLine": 118,
+        "startChar": 14,
+        "endLine": 118,
+        "endChar": 70
+      },
+      "revId": "acb9c1a09305537b6ce584092b93863377128678",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
