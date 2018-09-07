@@ -118,8 +118,8 @@ enum android_fdsan_owner_type {
   /* java.net.DatagramSocketImpl */
   ANDROID_FDSAN_OWNER_TYPE_DATAGRAMSOCKETIMPL = 10,
 
-  /* java.net.SocketImpl */
-  ANDROID_FDSAN_OWNER_TYPE_SOCKETIMPL = 11,
+  /* libziparchive's ZipArchive */
+  ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE = 12,
 };
 
 /*
