@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bca1f26_8b167834",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-12T00:41:40Z",
+      "side": 1,
+      "message": "can we fix breakpad to use pipe2, openat, and getdents64 instead? then we could just delete this...",
+      "revId": "74cdb253bae513197c5f96545b3c87cd3920e841",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
