@@ -56,6 +56,11 @@
    (((a)->s6_addr32[1]) == 0) && \
    (((a)->s6_addr32[2]) == ntohl(0x0000ffff)))
 
+#define IN6_IS_ADDR_V4EMBEDDED_WKP(a) \
+  ((((a)->s6_addr32[0]) == ntohl(0x0064ff9b)) && \
+   (((a)->s6_addr32[1]) == 0) && \
+   (((a)->s6_addr32[2]) == 0))
+
 #define __bionic_s6_addr(a) __BIONIC_CAST(reinterpret_cast, const uint8_t*, a)
 
 #define IN6_IS_ADDR_LINKLOCAL(a) \

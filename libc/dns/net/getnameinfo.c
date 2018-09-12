@@ -248,6 +248,8 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 				;
 			else if (IN6_IS_ADDR_LOOPBACK(&sin6->sin6_addr))
 				;
+			else if (IN6_IS_ADDR_V4EMBEDDED_WKP(&sin6->sin6_addr))
+				;
 			else
 				flags |= NI_NUMERICHOST;
 			break;
