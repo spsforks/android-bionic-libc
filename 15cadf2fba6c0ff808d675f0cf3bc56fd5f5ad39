@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2891a74_4620849d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-09-13T03:26:52Z",
+      "side": 1,
+      "message": "Netd is no longer calling the bionic resolver since last week.\nThis patch needs to be ported to system/netd/resolv/res_cache.c.\n\nNow that the resolver and its tests live in the same git repository, I think it would make sense to have this change and its tests in a single atomic commit.\n\nBy the way, I don\u0027t see your replies on my previous comments. Did you forget to hit Reply in Gerrit?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 7
+      },
+      "revId": "15cadf2fba6c0ff808d675f0cf3bc56fd5f5ad39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
