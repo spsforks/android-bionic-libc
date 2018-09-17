@@ -870,6 +870,8 @@ cc_library_static {
                 "arch-arm/bionic/setjmp.S",
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
+
+                "arch-arm/ifunc.cpp",
             ],
             cortex_a7: {
                 srcs: [
