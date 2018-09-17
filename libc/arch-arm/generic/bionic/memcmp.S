@@ -41,7 +41,7 @@
 
 .syntax unified
 
-ENTRY(memcmp)
+ENTRY_PRIVATE(__memcmp_generic)
         pld         [r0, #(CACHE_LINE_SIZE * 0)]
         pld         [r0, #(CACHE_LINE_SIZE * 1)]
 
@@ -340,4 +340,4 @@ ENTRY(memcmp)
         mov         r2, #4
 		ldmfd		sp!, {r5, r6, r7}
         b           8b
-END(memcmp)
+END(__memcmp_generic)

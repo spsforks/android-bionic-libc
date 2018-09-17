@@ -870,6 +870,8 @@ cc_library_static {
                 "arch-arm/bionic/setjmp.S",
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
+
+                "arch-arm/ifunc.cpp",
             ],
             cortex_a7: {
                 srcs: [
@@ -1035,6 +1037,8 @@ cc_library_static {
                 "arch-arm64/bionic/setjmp.S",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
+
+                "arch-arm64/ifunc.cpp",
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
@@ -2379,4 +2383,19 @@ cc_library {
     static: {
         static_libs: ["libbase"],
     },
+}
+
+cc_binary {
+    defaults: ["linux_bionic_supported"],
+    srcs: [
+        "memcmp_test.cpp",
+    ],
+
+    name: "memcmp_test",
+    multilib: {
+        lib64: {
+            suffix: "64",
+        },
+    },
+    compile_multilib: "both",
 }
