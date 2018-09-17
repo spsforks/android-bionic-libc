@@ -1750,17 +1750,34 @@ cc_library {
 
                     // special for arm
                     "arch-arm/bionic/atexit_legacy.c",
+
+                    "arch-arm/ifunc.cpp",
                 ],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
             },
             static: {
-                srcs: ["arch-arm/bionic/exidx_static.c"],
+                srcs: [
+                    "arch-arm/bionic/exidx_static.c",
+
+                    "arch-arm/ifunc_static.cpp",
+                ],
             },
         },
         arm64: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.arm64.map",
+
+            shared: {
+                srcs: [
+                    "arch-arm64/ifunc.cpp",
+                ],
+            },
+            static: {
+                srcs: [
+                    "arch-arm64/ifunc_static.cpp",
+                ],
+            },
         },
         mips: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
@@ -2379,4 +2396,19 @@ cc_library {
     static: {
         static_libs: ["libbase"],
     },
+}
+
+cc_binary {
+    defaults: ["linux_bionic_supported"],
+    srcs: [
+        "memcmp_test.cpp",
+    ],
+
+    name: "memcmp_test",
+    multilib: {
+        lib64: {
+            suffix: "64",
+        },
+    },
+    compile_multilib: "both",
 }
