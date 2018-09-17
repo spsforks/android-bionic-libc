@@ -59,7 +59,7 @@
    aligned.  After the main loop, process the last 16 bytes using unaligned
    accesses.  */
 
-ENTRY(memcmp)
+ENTRY_PRIVATE(__memcmp_generic)
 .p2align 6
 	subs	limit, limit, 8
 	b.lo	L(less8)
@@ -164,4 +164,6 @@ L(byte_loop):
 	sub	result, data1w, data2w
 	ret
 
-END(memcmp)
+END(__memcmp_generic)
+
+WEAK_ALIAS_SYMBOL(memcmp, __memcmp_generic)
