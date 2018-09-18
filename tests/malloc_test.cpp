@@ -26,6 +26,12 @@
 
 #include "private/bionic_config.h"
 
+#if defined(__BIONIC__)
+#define HAVE_REALLOCARRAY 1
+#else
+#define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
+#endif
+
 TEST(malloc, malloc_std) {
   // Simple malloc test.
   void *ptr = malloc(100);
@@ -496,4 +502,28 @@ TEST(malloc, mallopt_smoke) {
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
+}
+
+TEST(malloc, reallocarray_overflow) {
+#if HAVE_REALLOCARRAY
+  errno = 0;
+  ASSERT_TRUE(reallocarray(nullptr, SIZE_MAX - 1, 2) == nullptr);
+  ASSERT_EQ(ENOMEM, errno);
+
+  errno = 0;
+  ASSERT_TRUE(reallocarray(nullptr, 2, SIZE_MAX - 1) == nullptr);
+  ASSERT_EQ(ENOMEM, errno);
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+#endif
+}
+
+TEST(malloc, reallocarray) {
+#if HAVE_REALLOCARRAY
+  void* p = reallocarray(nullptr, 2, 32);
+  ASSERT_TRUE(p != nullptr);
+  ASSERT_GE(malloc_usable_size(p), 64U);
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+#endif
 }
