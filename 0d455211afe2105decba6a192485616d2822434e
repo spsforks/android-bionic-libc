@@ -22,6 +22,30 @@
       "revId": "0d455211afe2105decba6a192485616d2822434e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2268f487_1f23910f",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-18T21:06:00Z",
+      "side": 1,
+      "message": "yeah, you\u0027re right: the underlying malloc fails in a way that looks the same from outside.",
+      "parentUuid": "d72b2cc2_dceaaeab",
+      "range": {
+        "startLine": 510,
+        "startChar": 2,
+        "endLine": 510,
+        "endChar": 65
+      },
+      "revId": "0d455211afe2105decba6a192485616d2822434e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
