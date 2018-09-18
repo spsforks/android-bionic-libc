@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d72b2cc2_dceaaeab",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-09-18T20:27:40Z",
+      "side": 1,
+      "message": "I think this test would pass even if reallocarray didn\u0027t do overflow checking. Maybe use (INTPTR_MIN + 4, 2)?",
+      "range": {
+        "startLine": 510,
+        "startChar": 2,
+        "endLine": 510,
+        "endChar": 65
+      },
+      "revId": "0d455211afe2105decba6a192485616d2822434e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
