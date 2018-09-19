@@ -15,6 +15,9 @@ cc_library_static {
         "-Wextra",
         "-Wunused",
         "-Werror",
+
+        // Have clang emit full debug info for libdl.
+        "-fstandalone-debug",
     ],
 
     // For private/CFIShadow.h.
@@ -85,6 +88,9 @@ cc_library {
         "-Wextra",
         "-Wunused",
         "-Werror",
+
+        // Have clang emit full debug info for libdl.
+        "-fstandalone-debug",
     ],
     stl: "none",
 
