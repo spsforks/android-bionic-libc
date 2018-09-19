@@ -498,6 +498,9 @@ cc_library {
         "-Wno-unknown-pragmas",
         "-Wno-unused-const-variable",
         "-Wno-unused-variable",
+
+        // Have clang emit full debug info for libm.
+        "-fstandalone-debug",
     ],
 
     ldflags: [
