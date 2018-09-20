@@ -22,6 +22,30 @@
       "revId": "a0b9dd428bd55d114c135d209c08df3f60239fc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73603974_3393ee3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2018-09-20T15:56:41Z",
+      "side": 1,
+      "message": "I\u0027m also curious about examples, because it seems like this could only impact C++ types according to https://clang.llvm.org/docs/UsersManual.html#cmdoption-fstandalone-debug. I don\u0027t think it\u0027s a bad idea to deliberately keep everything here for these libraries if there happen to be some C++ types that were getting dropped.",
+      "parentUuid": "a328b4ae_365968ce",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 14
+      },
+      "revId": "a0b9dd428bd55d114c135d209c08df3f60239fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
