@@ -46,6 +46,30 @@
       "revId": "a0b9dd428bd55d114c135d209c08df3f60239fc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc8b9fd0_ece4d1a9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-09-20T18:14:12Z",
+      "side": 1,
+      "message": "It does not seem to affect types in libc... at least as far as I can see. We have encountered this problem in other NDK libraries, namely libvulkan.\n\nFor some types without this flag clang will decide to generate only DW_AT_decalration if they are not used in the object file but instead are passed through to a function in another library.\n\nThis in turn results in absence of information about types which leads our tools to sometimes mistakenly assume that types are compatible between different architectures where in fact they are not.\n\nSince it is not very easy to catch when it happens the safer solution would be to enable this flag for all NDK libraries.\n\nThis is longstanding behavior and it is not lld-related. I thought it was a bug but it seems to be intended behavior according to https://bugs.llvm.org/show_bug.cgi?id\u003d38822",
+      "parentUuid": "73603974_3393ee3d",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 14
+      },
+      "revId": "a0b9dd428bd55d114c135d209c08df3f60239fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
