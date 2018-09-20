@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a328b4ae_365968ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-20T15:21:21Z",
+      "side": 1,
+      "message": "do you have examples?\n\nis there a reason why this only affects libc/libm/libdl, or do we need to do this more widely (or, better, fix whatever the bug is that\u0027s affecting the types that are impacted).\n\nis this new breakage (i.e. \"could this be lld?\") or long-standing?",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 14
+      },
+      "revId": "a0b9dd428bd55d114c135d209c08df3f60239fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
