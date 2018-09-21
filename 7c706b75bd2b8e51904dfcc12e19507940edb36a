@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7592306_665eb455",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-21T16:08:41Z",
+      "side": 1,
+      "message": "can we use the diagnostic-juggling pragmas in the affected test instead? should only be one test where we\u0027re doing this, right? anywhere else would be an actual bug...",
+      "revId": "7c706b75bd2b8e51904dfcc12e19507940edb36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
