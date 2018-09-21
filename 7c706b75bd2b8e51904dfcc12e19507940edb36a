@@ -16,6 +16,24 @@
       "revId": "7c706b75bd2b8e51904dfcc12e19507940edb36a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97060ce4_d91afbc8",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2018-09-21T16:11:29Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s a good idea. I\u0027ll rewrite this when I get a chance. It can\u0027t go in until the rest of the rebase is ready, unfortunately.",
+      "parentUuid": "f7592306_665eb455",
+      "revId": "7c706b75bd2b8e51904dfcc12e19507940edb36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
