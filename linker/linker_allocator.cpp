@@ -40,13 +40,13 @@
 #include "private/bionic_page.h"
 
 //
-// LinkerMemeoryAllocator is general purpose allocator
-// designed to provide the same functionality as the malloc/free/realloc
-// libc functions.
+// LinkerMemoryAllocator is a general purpose allocator
+// designed to provide the same functionality as the
+// malloc/memalign/free/realloc libc functions.
 //
 // On alloc:
-// If size is >= 1k allocator proxies malloc call directly to mmap
-// If size < 1k allocator uses SmallObjectAllocator for the size
+// If size is > 1k allocator proxies malloc call directly to mmap
+// If size <= 1k allocator uses SmallObjectAllocator for the size
 // rounded up to the nearest power of two.
 //
 // On free:
@@ -146,7 +146,7 @@ void LinkerSmallObjectAllocator::free_page(linker_vector_t::iterator page_record
 void LinkerSmallObjectAllocator::free(void* ptr) {
   auto page_record = find_page_record(ptr);
 
-  ssize_t offset = reinterpret_cast<uintptr_t>(ptr) - sizeof(page_info);
+  uintptr_t offset = reinterpret_cast<uintptr_t>(ptr);
 
   if (offset % block_size_ != 0) {
     async_safe_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
@@ -209,11 +209,13 @@ void LinkerSmallObjectAllocator::alloc_page() {
   info->type = type_;
   info->allocator_addr = this;
 
-  size_t free_blocks_cnt = (PAGE_SIZE - sizeof(page_info))/block_size_;
+  size_t first_block_start = __BIONIC_ALIGN(sizeof(page_info), block_size_);
+  size_t free_blocks_cnt = (PAGE_SIZE - sizeof(page_info)) / block_size_;
 
   create_page_record(map_ptr, free_blocks_cnt);
 
-  small_object_block_record* first_block = reinterpret_cast<small_object_block_record*>(info + 1);
+  small_object_block_record* first_block = reinterpret_cast<small_object_block_record*>(
+      reinterpret_cast<uintptr_t>(map_ptr) + first_block_start);
 
   first_block->next = free_blocks_list_;
   first_block->free_blocks_cnt = free_blocks_cnt;
@@ -238,8 +240,35 @@ void LinkerMemoryAllocator::initialize_allocators() {
   allocators_ = allocators;
 }
 
-void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
-  size_t allocated_size = PAGE_END(size + sizeof(page_info));
+void* LinkerMemoryAllocator::alloc_mmap(size_t align, size_t size) {
+  // Allocate a region with mmap to contain `sz` bytes at `align` alignment:
+  //
+  //       +-----------+-----------------+----------------------+-----------------+
+  //       | page_info | ... padding ... | "Inner" (`sz` bytes) | ... padding ... |
+  //       +-----------+-----------------+----------------------+-----------------+
+  //       ^                             ^                                        ^
+  //       |                             |                                        |
+  //  page-aligned                   `align` alignment                       page-aligned
+  //
+  // The header precedes the inner block on the same page, unless the inner
+  // block has page alignment (or greater), in which case the header will be on
+  // the page immediately preceding the inner block.
+
+  // Calculate a mapping size large enough to guarantee that it can satisfy the
+  // alignment requirements.
+  size_t allocated_size;
+  {
+    size_t overhead = __BIONIC_ALIGN(sizeof(page_info), align);
+    size_t overhead_plus_size;
+    if (__builtin_add_overflow(overhead, size, &overhead_plus_size)) {
+      async_safe_fatal("size overflow");
+    }
+    allocated_size = PAGE_END(overhead_plus_size);
+    if (allocated_size < overhead_plus_size) {
+      async_safe_fatal("size overflow");
+    }
+  }
+
   void* map_ptr = mmap(nullptr, allocated_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
                        -1, 0);
 
@@ -249,22 +278,38 @@ void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, allocated_size, "linker_alloc_lob");
 
-  page_info* info = reinterpret_cast<page_info*>(map_ptr);
-  memcpy(info->signature, kSignature, sizeof(kSignature));
-  info->type = kLargeObject;
-  info->allocated_size = allocated_size;
+  // Lay out the mapped memory.
+  const uintptr_t outer_beg = reinterpret_cast<uintptr_t>(map_ptr);
+  const uintptr_t inner_beg = __BIONIC_ALIGN(outer_beg + sizeof(page_info), align);
+  const uintptr_t inner_end = PAGE_END(inner_beg + size);
+  const uintptr_t info_addr = PAGE_START(inner_beg - sizeof(page_info));
+  const uintptr_t outer_end = outer_beg + allocated_size;
 
-  return info + 1;
-}
-
-void* LinkerMemoryAllocator::alloc(size_t size) {
-  // treat alloc(0) as alloc(1)
-  if (size == 0) {
-    size = 1;
+  // Unmap excess pages at the start and end of the mapped area.
+  if (outer_beg < info_addr) {
+    munmap(reinterpret_cast<void*>(outer_beg), info_addr - outer_beg);
+  }
+  if (inner_end < outer_end) {
+    munmap(reinterpret_cast<void*>(inner_end), outer_end - inner_end);
   }
 
+  page_info* info = reinterpret_cast<page_info*>(info_addr);
+  memcpy(info->signature, kSignature, sizeof(kSignature));
+  info->type = kLargeObject;
+  info->allocated_size = inner_end - info_addr;
+  return reinterpret_cast<void*>(inner_beg);
+}
+
+void* LinkerMemoryAllocator::memalign(size_t align, size_t size) {
+  align = MAX(align, 16);
+  if (!powerof2(align)) {
+    async_safe_fatal("invalid memalign alignment %zu", align);
+  }
+
+  size = MAX(size, align);
+
   if (size > kSmallObjectMaxSize) {
-    return alloc_mmap(size);
+    return alloc_mmap(align, size);
   }
 
   uint16_t log2_size = log2(size);
@@ -277,7 +322,8 @@ void* LinkerMemoryAllocator::alloc(size_t size) {
 }
 
 page_info* LinkerMemoryAllocator::get_page_info(void* ptr) {
-  page_info* info = reinterpret_cast<page_info*>(PAGE_START(reinterpret_cast<size_t>(ptr)));
+  page_info* info = reinterpret_cast<page_info*>(
+      PAGE_START(reinterpret_cast<size_t>(ptr) - sizeof(page_info)));
   if (memcmp(info->signature, kSignature, sizeof(kSignature)) != 0) {
     async_safe_fatal("invalid pointer %p (page signature mismatch)", ptr);
   }

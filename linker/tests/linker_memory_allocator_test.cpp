@@ -212,4 +212,54 @@ TEST(linker_memory, test_large) {
   allocator.free(ptr_to_free);
 }
 
+TEST(linker_memory, test_memalign_small) {
+  LinkerMemoryAllocator allocator;
+  void* ptr;
 
+  // simple case
+  ptr = allocator.memalign(0x100, 0x100);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // small objects are automatically aligned to their size.
+  ptr = allocator.alloc(0x200);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x200);
+  allocator.free(ptr);
+
+  // the size (0x10) is bumped up to the alignment (0x100)
+  ptr = allocator.memalign(0x100, 0x10);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+}
+
+TEST(linker_memory, test_memalign_large) {
+  LinkerMemoryAllocator allocator;
+  void* ptr;
+
+  // a large object with alignment < PAGE_SIZE
+  ptr = allocator.memalign(0x100, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // a large object with alignment == PAGE_SIZE
+  ptr = allocator.memalign(0x1000, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x1000);
+  allocator.free(ptr);
+
+  // a large object with alignment > PAGE_SIZE
+  ptr = allocator.memalign(0x2000, 0x4000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x2000);
+  allocator.free(ptr);
+
+  // a small-sized allocation that becomes large because of alignment
+  ptr = allocator.memalign(0x2000, 0x10);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x2000);
+  allocator.free(ptr);
+}

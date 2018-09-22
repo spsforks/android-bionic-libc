@@ -102,13 +102,14 @@ class LinkerSmallObjectAllocator {
 class LinkerMemoryAllocator {
  public:
   constexpr LinkerMemoryAllocator() : allocators_(nullptr), allocators_buf_() {}
-  void* alloc(size_t size);
+  void* alloc(size_t size) { return memalign(16, size); }
+  void* memalign(size_t align, size_t size);
 
   // Note that this implementation of realloc never shrinks allocation
   void* realloc(void* ptr, size_t size);
   void free(void* ptr);
  private:
-  void* alloc_mmap(size_t size);
+  void* alloc_mmap(size_t align, size_t size);
   page_info* get_page_info(void* ptr);
   LinkerSmallObjectAllocator* get_small_object_allocator(uint32_t type);
   void initialize_allocators();
