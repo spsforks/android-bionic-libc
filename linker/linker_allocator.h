@@ -36,9 +36,9 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <vector>
-
 #include <async_safe/log.h>
+
+#include "private/MmapVector.h"
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;
@@ -73,41 +73,7 @@ struct small_object_block_record {
   size_t free_blocks_cnt;
 };
 
-// This is implementation for std::vector allocator
-template <typename T>
-class linker_vector_allocator {
- public:
-  typedef T value_type;
-  typedef T* pointer;
-  typedef const T* const_pointer;
-  typedef T& reference;
-  typedef const T& const_reference;
-  typedef size_t size_type;
-  typedef ptrdiff_t difference_type;
-
-  T* allocate(size_t n, const T* hint = nullptr) {
-    size_t size = n * sizeof(T);
-    void* ptr = mmap(const_cast<T*>(hint), size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
-                     -1, 0);
-    if (ptr == MAP_FAILED) {
-      // Spec says we need to throw std::bad_alloc here but because our
-      // code does not support exception handling anyways - we are going to abort.
-      async_safe_fatal("mmap failed: %s", strerror(errno));
-    }
-
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ptr, size, "linker_alloc_vector");
-
-    return reinterpret_cast<T*>(ptr);
-  }
-
-  void deallocate(T* ptr, size_t n) {
-    munmap(ptr, n * sizeof(T));
-  }
-};
-
-typedef
-    std::vector<small_object_page_record, linker_vector_allocator<small_object_page_record>>
-    linker_vector_t;
+typedef MmapVector<small_object_page_record> linker_vector_t;
 
 
 class LinkerSmallObjectAllocator {

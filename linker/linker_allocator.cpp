@@ -27,11 +27,8 @@
  */
 
 #include "linker_allocator.h"
-#include "linker_debug.h"
-#include "linker.h"
 
-#include <algorithm>
-#include <vector>
+#include <new>
 
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -39,6 +36,8 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+
+#include "private/bionic_page.h"
 
 //
 // LinkerMemeoryAllocator is general purpose allocator
@@ -176,8 +175,7 @@ linker_vector_t::iterator LinkerSmallObjectAllocator::find_page_record(void* ptr
   void* addr = reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
   small_object_page_record boundary;
   boundary.page_addr = addr;
-  linker_vector_t::iterator it = std::lower_bound(
-      page_records_.begin(), page_records_.end(), boundary);
+  linker_vector_t::iterator it = page_records_.lower_bound(boundary);
 
   if (it == page_records_.end() || it->page_addr != addr) {
     // not found...
@@ -193,8 +191,7 @@ void LinkerSmallObjectAllocator::create_page_record(void* page_addr, size_t free
   record.free_blocks_cnt = free_blocks_cnt;
   record.allocated_blocks_cnt = 0;
 
-  linker_vector_t::iterator it = std::lower_bound(
-      page_records_.begin(), page_records_.end(), record);
+  linker_vector_t::iterator it = page_records_.lower_bound(record);
   page_records_.insert(it, record);
 }
 
