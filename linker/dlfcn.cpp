@@ -311,6 +311,8 @@ soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si) {
     __libdl_info->flags_ |= (FLAG_LINKED | FLAG_GNU_HASH);
     __libdl_info->strtab_ = linker_si.strtab_;
     __libdl_info->symtab_ = linker_si.symtab_;
+    __libdl_info->base = linker_si.base;
+    __libdl_info->size = linker_si.size;
     __libdl_info->load_bias = linker_si.load_bias;
     __libdl_info->phdr = linker_si.phdr;
     __libdl_info->phnum = linker_si.phnum;
