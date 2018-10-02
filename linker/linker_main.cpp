@@ -35,10 +35,12 @@
 #include "linker_phdr.h"
 #include "linker_utils.h"
 
+#include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
+#include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
 #ifdef __ANDROID__
@@ -52,7 +54,7 @@
 extern void __libc_init_globals(KernelArgumentBlock&);
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
 
-extern "C" void _start();
+__LIBC_HIDDEN__ extern "C" void _start();
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -69,6 +71,7 @@ static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 static soinfo* solinker;
 static soinfo* vdso; // vdso if present
+static std::string g_executable_path;
 
 void solist_add_soinfo(soinfo* si) {
   sonext->next = si;
@@ -182,22 +185,19 @@ static void init_link_map_head(soinfo& info, const char* linker_path) {
 
 extern "C" int __system_properties_init(void);
 
-static const char* get_executable_path() {
-  static std::string executable_path;
-  if (executable_path.empty()) {
-    if (!is_init()) {
-      char path[PATH_MAX];
-      ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-      if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-        async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
-      }
-      executable_path = std::string(path, path_len);
-    } else {
-      executable_path = "/init";
+static std::string get_executable_path() {
+  std::string ret;
+  if (!is_init()) {
+    char path[PATH_MAX];
+    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
     }
+    ret = std::string(path, path_len);
+  } else {
+    ret = "/init";
   }
-
-  return executable_path.c_str();
+  return ret;
 }
 
 #if defined(__LP64__)
@@ -206,21 +206,84 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
-static void __linker_cannot_link(const char* argv0) {
-  async_safe_format_fd(STDERR_FILENO,
-                       "CANNOT LINK EXECUTABLE \"%s\": %s\n",
-                       argv0,
-                       linker_get_error_buffer());
+__printflike(1, 2)
+static void __linker_error(const char* fmt, ...) {
+  va_list ap;
 
-  async_safe_format_log(ANDROID_LOG_FATAL,
-                        "linker",
-                        "CANNOT LINK EXECUTABLE \"%s\": %s",
-                        argv0,
-                        linker_get_error_buffer());
+  va_start(ap, fmt);
+  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
+  va_end(ap);
+
+  va_start(ap, fmt);
+  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "linker", fmt, ap);
+  va_end(ap);
+
   _exit(EXIT_FAILURE);
 }
 
-static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
+static void __linker_cannot_link(const char* argv0) {
+  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s\n",
+                 argv0,
+                 linker_get_error_buffer());
+}
+
+// Normally the kernel has already loaded the executable when the linker starts. The linker can be
+// invoked directly on an executable, though, and then the linker must load it. This function
+// doesn't load dependencies or resolve relocations, but it does generate an adjusted auxv vector.
+static struct stat load_executable(const char* path, ElfW(auxv_t)* auxv) {
+  if (path[0] != '/') {
+    __linker_error("error: expected absolute path: \"%s\"\n", path);
+  }
+
+  off64_t file_offset;
+  android::base::unique_fd fd(open_executable(path, &file_offset, &g_executable_path));
+  if (fd.get() == -1) {
+    __linker_error("error: unable to open file \"%s\"\n", path);
+  }
+
+  struct stat file_stat;
+  if (TEMP_FAILURE_RETRY(fstat(fd.get(), &file_stat)) == -1) {
+    __linker_error("error: unable to stat \"%s\": %s\n", g_executable_path.c_str(), strerror(errno));
+  }
+
+  ElfReader elf_reader;
+  if (!elf_reader.Read(g_executable_path.c_str(), fd.get(), file_offset, file_stat.st_size)) {
+    __linker_error("error: %s\n", linker_get_error_buffer());
+  }
+  if (!elf_reader.Load(nullptr)) {
+    __linker_error("error: %s\n", linker_get_error_buffer());
+  }
+
+  // If there isn't a PT_INTERP, then AT_BASE will be zero, but the auxv entry
+  // for AT_BASE will still exist.
+  for (ElfW(auxv_t)* v = auxv; v->a_type != AT_NULL; ++v) {
+    switch (v->a_type) {
+      case AT_BASE:
+        v->a_un.a_val = solinker->base;
+        break;
+      case AT_ENTRY:
+        v->a_un.a_val = elf_reader.entry_point();
+        break;
+      case AT_EXECFD:
+        v->a_un.a_val = 0;
+        break;
+      case AT_EXECFN:
+        v->a_un.a_val = reinterpret_cast<ElfW(Addr)>(g_executable_path.c_str());
+        break;
+      case AT_PHDR:
+        v->a_un.a_val = reinterpret_cast<ElfW(Addr)>(elf_reader.loaded_phdr());
+        break;
+      case AT_PHNUM:
+        v->a_un.a_val = elf_reader.phdr_count();
+        break;
+      default:;
+    }
+  }
+
+  return file_stat;
+}
+
+static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
 #if TIMING
@@ -275,22 +338,27 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   }
 
   struct stat file_stat;
-  // Stat "/proc/self/exe" instead of executable_path because
-  // the executable could be unlinked by this point and it should
-  // not cause a crash (see http://b/31084669)
-  if (!is_init()) {
-    if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
-      async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
-    }
+
+  if (exe_to_load) {
+    file_stat = load_executable(exe_to_load, args.auxv);
   } else {
-    // /proc fs is not mounted when init starts. Therefore we can't use
-    // /proc/self/exe for init.
-    stat("/init", &file_stat);
+    // Stat "/proc/self/exe" instead of executable_path because
+    // the executable could be unlinked by this point and it should
+    // not cause a crash (see http://b/31084669)
+    if (!is_init()) {
+      if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
+        async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+      }
+    } else {
+      // /proc fs is not mounted when init starts. Therefore we can't use
+      // /proc/self/exe for init.
+      stat("/init", &file_stat);
+    }
+    g_executable_path = get_executable_path();
   }
 
   // Initialize the main exe's soinfo.
-  const char* executable_path = get_executable_path();
-  soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
+  soinfo* si = soinfo_alloc(&g_default_namespace, g_executable_path.c_str(), &file_stat, 0, RTLD_GLOBAL);
   somain = si;
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
   si->phnum = args.getauxval(AT_PHNUM);
@@ -298,7 +366,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->dynamic = nullptr;
   si->set_main_executable();
-  init_link_map_head(*si, executable_path);
+  init_link_map_head(*si, g_executable_path.c_str());
 
   // Register the main executable and the linker upfront to have
   // gdb aware of them before loading the rest of the dependency
@@ -336,7 +404,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
 
-  std::vector<android_namespace_t*> namespaces = init_default_namespaces(executable_path);
+  std::vector<android_namespace_t*> namespaces = init_default_namespaces(g_executable_path.c_str());
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
@@ -502,6 +570,18 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   __libc_init_sysinfo(args);
 #endif
 
+  // Detect an attempt to run the linker on itself (e.g.
+  // `linker64 /system/bin/linker64`). It's simpler if we only allow one copy
+  // of the linker to be loaded at a time. If AT_ENTRY is &_start, then this
+  // the linker was run as an executable (not a PT_INTERP), and if AT_BASE is
+  // non-zero, then it refers to some other copy of the linker.
+  if (args.getauxval(AT_ENTRY) == reinterpret_cast<uintptr_t>(&_start) &&
+      args.getauxval(AT_BASE) != 0) {
+    // The first linker already relocated this one and set up TLS, so we don't
+    // need further libc initialization.
+    __linker_error("error: linker cannot load itself\n");
+  }
+
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   if (linker_addr == 0) {
     // When the linker is run by itself (rather than as an interpreter for
@@ -565,27 +645,38 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
 
+  // Initialize the linker's own global variables
+  tmp_linker_so.call_constructors();
+
+  // When the linker is run directly rather than acting as PT_INTERP, parse
+  // arguments and determine the executable to load. When it's instead acting
+  // as PT_INTERP, AT_ENTRY will refer to the loaded executable rather than the
+  // linker's _start.
+  const char* exe_to_load = nullptr;
+  if (args.getauxval(AT_ENTRY) == reinterpret_cast<uintptr_t>(&_start)) {
+    if (args.argc <= 1 || !strcmp(args.argv[1], "--help")) {
+      async_safe_format_fd(STDOUT_FILENO,
+         "Usage: %s program [arguments...]\n"
+         "       %s path.zip!/program [arguments...]\n"
+         "\n"
+         "A helper program for linking dynamic executables. Typically, the kernel loads\n"
+         "this program because it's the PT_INTERP of a dynamic executable.\n"
+         "\n"
+         "This program can also be run directly to load and run a dynamic executable. The\n"
+         "executable can be inside a zip file if it's stored uncompressed and at a\n"
+         "page-aligned offset.\n",
+         args.argv[0], args.argv[0]);
+      exit(0);
+    }
+    exe_to_load = args.argv[1];
+    args.shift_args(1);
+    __libc_auxv = args.auxv;
+  }
+
   // store argc/argv/envp to use them for calling constructors
   g_argc = args.argc;
   g_argv = args.argv;
   g_envp = args.envp;
-
-  // Initialize the linker's own global variables
-  tmp_linker_so.call_constructors();
-
-  // If the linker is not acting as PT_INTERP entry_point is equal to
-  // _start. Which means that the linker is running as an executable and
-  // already linked by PT_INTERP.
-  //
-  // This happens when user tries to run 'adb shell /system/bin/linker'
-  // see also https://code.google.com/p/android/issues/detail?id=63174
-  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
-  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    async_safe_format_fd(STDOUT_FILENO,
-                     "This is %s, the helper program for dynamic executables.\n",
-                     args.argv[0]);
-    exit(0);
-  }
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
@@ -595,7 +686,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   init_link_map_head(*solinker, kLinkerPath);
 
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = linker_main(args);
+  ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
