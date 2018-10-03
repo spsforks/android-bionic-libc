@@ -214,7 +214,7 @@ struct soinfo {
   void call_pre_init_constructors();
   bool prelink_image();
   bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
-                  const android_dlextinfo* extinfo);
+                  const android_dlextinfo* extinfo, bool is_ifunc_stage);
   bool protect_relro();
 
   void add_child(soinfo* child);
@@ -305,7 +305,8 @@ struct soinfo {
 
   template<typename ElfRelIteratorT>
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+                const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                bool is_ifunc_stage);
   bool relocate_relr();
   void apply_relr_reloc(ElfW(Addr) offset);
 

@@ -1715,7 +1715,41 @@ bool find_libraries(android_namespace_t* ns,
       // we should avoid linking them (because if they are not linked -> they
       // are in the local_group_roots and will be linked later).
       if (!si->is_linked() && si->get_primary_namespace() == local_group_ns) {
-        if (!si->link_image(global_group, local_group, extinfo) ||
+        if (!si->link_image(global_group, local_group, extinfo, false)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    if (!linked) {
+      return false;
+    }
+  }
+
+  // Step 6.2: Link all local groups (ifunc)
+  for (auto root : local_group_roots) {
+    soinfo_list_t local_group;
+    android_namespace_t* local_group_ns = root->get_primary_namespace();
+
+    walk_dependencies_tree(root,
+      [&] (soinfo* si) {
+        if (local_group_ns->is_accessible(si)) {
+          local_group.push_back(si);
+          return kWalkContinue;
+        } else {
+          return kWalkSkip;
+        }
+      });
+
+    soinfo_list_t global_group = local_group_ns->get_global_group();
+    bool linked = local_group.visit([&](soinfo* si) {
+      // Even though local group may contain accessible soinfos from other namesapces
+      // we should avoid linking them (because if they are not linked -> they
+      // are in the local_group_roots and will be linked later).
+      if (!si->is_linked() && si->get_primary_namespace() == local_group_ns) {
+        if (!si->link_image(global_group, local_group, extinfo, true) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
@@ -2647,7 +2681,8 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
 
 template<typename ElfRelIteratorT>
 bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                      const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+                      const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                      bool is_ifunc_stage) {
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2758,6 +2793,16 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           DL_ERR("unsupported ELF TLS symbol \"%s\" referenced by \"%s\"",
                  sym_name, get_realpath());
           return false;
+        }
+        if (!is_ifunc_stage) {
+          if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+            DEBUG("DEFER IFUNC resolution: \"%s\" referenced by \"%s\"", sym_name, get_realpath());
+            continue;
+          }
+        } else {
+          if (ELF_ST_TYPE(s->st_info) != STT_GNU_IFUNC) {
+            continue;
+          }
         }
         sym_addr = lsi->resolve_symbol_address(s);
 #if !defined(__LP64__)
@@ -3502,7 +3547,7 @@ bool soinfo::prelink_image() {
 }
 
 bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
-                        const android_dlextinfo* extinfo) {
+                        const android_dlextinfo* extinfo, bool is_ifunc_stage) {
   if (is_image_linked()) {
     // already linked.
     return true;
@@ -3547,6 +3592,8 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #endif
 
+  DEBUG("RELOCATE FIRST STAGE FOR NON-IRELATIVE: %s", get_realpath());
+
   if (android_relocs_ != nullptr) {
     // check signature
     if (android_relocs_size_ > 3 &&
@@ -3564,7 +3611,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
           version_tracker,
           packed_reloc_iterator<sleb128_decoder>(
             sleb128_decoder(packed_relocs, packed_relocs_size)),
-          global_group, local_group);
+          global_group, local_group, is_ifunc_stage);
 
       if (!relocated) {
         return false;
@@ -3575,7 +3622,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 
-  if (relr_ != nullptr) {
+  if (relr_ != nullptr && !is_ifunc_stage) {
     DEBUG("[ relocating %s relr ]", get_realpath());
     if (!relocate_relr()) {
       return false;
@@ -3586,14 +3633,16 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (rela_ != nullptr) {
     DEBUG("[ relocating %s rela ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
+            plain_reloc_iterator(rela_, rela_count_), global_group, local_group,
+            is_ifunc_stage)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt rela ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
+            plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group,
+            is_ifunc_stage)) {
       return false;
     }
   }
@@ -3601,21 +3650,23 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (rel_ != nullptr) {
     DEBUG("[ relocating %s rel ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
+            plain_reloc_iterator(rel_, rel_count_), global_group, local_group,
+            is_ifunc_stage)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt rel ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
+            plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group,
+            is_ifunc_stage)) {
       return false;
     }
   }
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(version_tracker, global_group, local_group)) {
+  if (!is_ifunc_stage && !mips_relocate_got(version_tracker, global_group, local_group)) {
     return false;
   }
 #endif
@@ -3632,6 +3683,11 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 #endif
+
+  // For the first stage, let's stop here.
+  if (!is_ifunc_stage) {
+    return true;
+  }
 
   // We can also turn on GNU RELRO protection if we're not linking the dynamic linker
   // itself --- it can't make system calls yet, and will have to call protect_relro later.
