@@ -269,6 +269,7 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
+                "arm/libcrt_compat.c",
             ],
             neon: {
                 srcs: [
