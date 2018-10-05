@@ -301,7 +301,6 @@ LIBC_DEPRECATED { # arm mips platform-only
     ___Unwind_RaiseException; # arm
     ___Unwind_Resume; # arm
     ___Unwind_Resume_or_Rethrow; # arm
-    __adddf3; # arm
     __aeabi_cdcmpeq; # arm
     __aeabi_cdcmple; # arm
     __aeabi_cdrcmple; # arm
@@ -337,7 +336,6 @@ LIBC_DEPRECATED { # arm mips platform-only
     __aeabi_unwind_cpp_pr1; # arm
     __aeabi_unwind_cpp_pr2; # arm
     __cmpdf2; # arm
-    __cmpsf2; # arm
     __divdf3; # arm
     __eqdf2; # arm
     __eqsf2; # arm
