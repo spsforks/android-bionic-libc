@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afbf2bfa_fe8e19db",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-10-06T09:31:51Z",
+      "side": 1,
+      "message": "just \u0027+ i\u0027? raw_begin is char*...",
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5d7802c_644a3d7a",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-10-06T09:31:51Z",
+      "side": 1,
+      "message": "This is a bit confusing.. shouldn\u0027t argc type be changed size_t? or this int*?",
+      "range": {
+        "startLine": 61,
+        "startChar": 22,
+        "endLine": 61,
+        "endChar": 31
+      },
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "213a34a1_58268a87",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-10-06T09:31:51Z",
+      "side": 1,
+      "message": "? seems like this contradicts the code",
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
