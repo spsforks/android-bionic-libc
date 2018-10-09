@@ -31,6 +31,7 @@
 
 #include <android-base/file.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 #include <private/android_filesystem_config.h>
 
 // Generated android_ids array
@@ -242,6 +243,12 @@ static void expect_ids(const T& ids) {
   expect_range(AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END);
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
+
+  // Upgrading devices may not comply with the below check. Due to the difficulty in changing uids
+  // after launch, it is waived for upgrading devices.
+  if (!IsFactoryRom()) {
+    return;
+  }
 
   // Ensure that no other ids were returned.
   auto return_differences = [&ids, &expected_ids] {
