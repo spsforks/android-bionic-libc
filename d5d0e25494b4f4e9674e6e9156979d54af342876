@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81cddc80_7d672c4a",
+        "filename": "libc/private/sigrtmin.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:38:25Z",
+      "side": 1,
+      "message": "write these relative to __SIGRTMIN as above, or #define them above interleaved with the comment? (the timer one at least we could actually reuse elsewhere in bionic.)",
+      "range": {
+        "startLine": 65,
+        "startChar": 17,
+        "endLine": 65,
+        "endChar": 19
+      },
+      "revId": "d5d0e25494b4f4e9674e6e9156979d54af342876",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bff1f195_2605031b",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:38:25Z",
+      "side": 1,
+      "message": "T*",
+      "range": {
+        "startLine": 341,
+        "startChar": 25,
+        "endLine": 341,
+        "endChar": 35
+      },
+      "revId": "d5d0e25494b4f4e9674e6e9156979d54af342876",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c266b866_a6e7f42f",
+        "filename": "tests/spawn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:38:25Z",
+      "side": 1,
+      "message": "(would this be clearer if we \u003c\u003c so the number match up? or add a SignalSetIsSet function to hide the `- 1`s? it was bad enough before when there was only one, but now there are a couple...)",
+      "revId": "d5d0e25494b4f4e9674e6e9156979d54af342876",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
