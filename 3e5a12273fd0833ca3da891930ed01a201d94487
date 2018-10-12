@@ -16,6 +16,24 @@
       "revId": "3e5a12273fd0833ca3da891930ed01a201d94487",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a96fba0_71c90790",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2018-10-12T17:20:20Z",
+      "side": 1,
+      "message": "Well, we don\u0027t have that information in soong-only builds right now, since it lives in Make\u0027s version_defaults.mk. We could hard code it, but that would only get out of date.",
+      "parentUuid": "c8eaef4f_5ca59710",
+      "revId": "3e5a12273fd0833ca3da891930ed01a201d94487",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
