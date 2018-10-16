@@ -1,0 +1,13 @@
+Verified+1: Tom Cherry <tomcherry@google.com>
+Verified+1: Mark Hong <sungmin.h@samsung.com>
+Code-Review+1: Tom Cherry <tomcherry@google.com>
+Code-Review+1: Mark Hong <sungmin.h@samsung.com>
+Code-Review+2: Ross Yeh <rossyeh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+DrNo-Review+1: Ross Yeh <rossyeh@google.com>
+Autosubmit+1: Alex Medina <medina@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Tue, 16 Oct 2018 18:50:18 +0000
+Reviewed-on: https://android-review.googlesource.com/787339
+Project: platform/bionic
+Branch: refs/heads/pie-cts-dev
