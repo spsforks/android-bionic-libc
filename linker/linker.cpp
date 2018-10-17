@@ -643,9 +643,9 @@ class LoadTask {
     return elf_reader.Read(realpath, fd_, file_offset_, file_size);
   }
 
-  bool load() {
+  bool load(address_space_params* address_space) {
     ElfReader& elf_reader = get_elf_reader();
-    if (!elf_reader.Load(extinfo_)) {
+    if (!elf_reader.Load(address_space)) {
       return false;
     }
 
@@ -1624,10 +1624,33 @@ bool find_libraries(android_namespace_t* ns,
       load_list.push_back(task);
     }
   }
-  shuffle(&load_list);
+  bool reserved_address_recursive = false;
+  if (extinfo) {
+    reserved_address_recursive = extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
+  }
+  if (!reserved_address_recursive) {
+    // Shuffle the load order in the normal case, but not if we are loading all
+    // the libraries to a reserved address range.
+    shuffle(&load_list);
+  }
+
+  // Set up address space parameters.
+  address_space_params extinfo_params, default_params;
+  if (extinfo) {
+    if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
+      extinfo_params.start_addr = extinfo->reserved_addr;
+      extinfo_params.reserved_size = extinfo->reserved_size;
+      extinfo_params.must_use_address = true;
+    } else if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_HINT) {
+      extinfo_params.start_addr = extinfo->reserved_addr;
+      extinfo_params.reserved_size = extinfo->reserved_size;
+    }
+  }
 
   for (auto&& task : load_list) {
-    if (!task->load()) {
+    address_space_params* address_space =
+        (reserved_address_recursive || !task->is_dt_needed()) ? &extinfo_params : &default_params;
+    if (!task->load(address_space)) {
       return false;
     }
   }

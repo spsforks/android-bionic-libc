@@ -272,7 +272,8 @@ static ExecutableInfo load_executable(const char* orig_path) {
   if (!elf_reader.Read(result.path.c_str(), fd.get(), file_offset, result.file_stat.st_size)) {
     __linker_error("error: %s\n", linker_get_error_buffer());
   }
-  if (!elf_reader.Load(nullptr)) {
+  address_space_params address_space;
+  if (!elf_reader.Load(&address_space)) {
     __linker_error("error: %s\n", linker_get_error_buffer());
   }
 

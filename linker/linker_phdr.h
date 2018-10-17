@@ -43,7 +43,7 @@ class ElfReader {
   ElfReader();
 
   bool Read(const char* name, int fd, off64_t file_offset, off64_t file_size);
-  bool Load(const android_dlextinfo* extinfo);
+  bool Load(address_space_params* address_space);
 
   const char* name() const { return name_.c_str(); }
   size_t phdr_count() const { return phdr_num_; }
@@ -62,7 +62,7 @@ class ElfReader {
   bool ReadProgramHeaders();
   bool ReadSectionHeaders();
   bool ReadDynamicSection();
-  bool ReserveAddressSpace(const android_dlextinfo* extinfo);
+  bool ReserveAddressSpace(address_space_params* address_space);
   bool LoadSegments();
   bool FindPhdr();
   bool CheckPhdr(ElfW(Addr));

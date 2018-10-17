@@ -332,6 +332,28 @@ TEST_F(DlExtTest, ReservedTooSmall) {
   EXPECT_EQ(nullptr, handle_);
 }
 
+TEST_F(DlExtTest, ReservedRecursive) {
+  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
+  extinfo.reserved_addr = start;
+  extinfo.reserved_size = kLibSize;
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
+  EXPECT_LT(reinterpret_cast<void*>(f),
+            reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_EQ(4, f());
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_GE(reinterpret_cast<void*>(taxicab_number), start);
+  EXPECT_LT(reinterpret_cast<void*>(taxicab_number), reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_EQ(1729U, *taxicab_number);
+}
+
 TEST_F(DlExtTest, ReservedHint) {
   void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);

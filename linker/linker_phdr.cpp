@@ -166,14 +166,12 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
   return did_read_;
 }
 
-bool ElfReader::Load(const android_dlextinfo* extinfo) {
+bool ElfReader::Load(address_space_params* address_space) {
   CHECK(did_read_);
   if (did_load_) {
     return true;
   }
-  if (ReserveAddressSpace(extinfo) &&
-      LoadSegments() &&
-      FindPhdr()) {
+  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr()) {
     did_load_ = true;
   }
 
@@ -559,7 +557,7 @@ static void* ReserveAligned(size_t size, size_t align) {
 // Reserve a virtual address range big enough to hold all loadable
 // segments of a program header table. This is done by creating a
 // private anonymous mmap() with PROT_NONE.
-bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
+bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   ElfW(Addr) min_vaddr;
   load_size_ = phdr_table_get_load_size(phdr_table_, phdr_num_, &min_vaddr);
   if (load_size_ == 0) {
@@ -569,22 +567,11 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
 
   uint8_t* addr = reinterpret_cast<uint8_t*>(min_vaddr);
   void* start;
-  size_t reserved_size = 0;
-  bool reserved_hint = true;
 
-  if (extinfo != nullptr) {
-    if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
-      reserved_size = extinfo->reserved_size;
-      reserved_hint = false;
-    } else if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_HINT) {
-      reserved_size = extinfo->reserved_size;
-    }
-  }
-
-  if (load_size_ > reserved_size) {
-    if (!reserved_hint) {
+  if (load_size_ > address_space->reserved_size) {
+    if (address_space->must_use_address) {
       DL_ERR("reserved address space %zd smaller than %zd bytes needed for \"%s\"",
-             reserved_size - load_size_, load_size_, name_.c_str());
+             address_space->reserved_size - load_size_, load_size_, name_.c_str());
       return false;
     }
     start = ReserveAligned(load_size_, kLibraryAlignment);
@@ -593,8 +580,12 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
       return false;
     }
   } else {
-    start = extinfo->reserved_addr;
+    start = address_space->start_addr;
     mapped_by_caller_ = true;
+
+    // Update the reserved address space to subtract the space used by this library.
+    address_space->start_addr = reinterpret_cast<uint8_t*>(address_space->start_addr) + load_size_;
+    address_space->reserved_size -= load_size_;
   }
 
   load_start_ = start;
