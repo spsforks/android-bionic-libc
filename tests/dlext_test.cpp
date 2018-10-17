@@ -59,6 +59,7 @@
 
 typedef int (*fn)(void);
 constexpr const char* kLibName = "libdlext_test.so";
+constexpr const char* kLibNameRecursive = "libdlext_test_recursive.so";
 constexpr const char* kLibNameNoRelro = "libdlext_test_norelro.so";
 constexpr const char* kLibZipSimpleZip = "libdir/libatest_simple_zip.so";
 constexpr auto kLibSize = 1024 * 1024; // how much address space to reserve for it
@@ -332,6 +333,48 @@ TEST_F(DlExtTest, ReservedTooSmall) {
   EXPECT_EQ(nullptr, handle_);
 }
 
+TEST_F(DlExtTest, ReservedRecursive) {
+  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
+  extinfo.reserved_addr = start;
+  extinfo.reserved_size = kLibSize;
+  handle_ = android_dlopen_ext(kLibNameRecursive, RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
+  EXPECT_LT(reinterpret_cast<void*>(f),
+            reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_EQ(4, f());
+
+  f = reinterpret_cast<fn>(dlsym(handle_, "getBiggerRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
+  EXPECT_LT(reinterpret_cast<void*>(f),
+            reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_EQ(8, f());
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_GE(reinterpret_cast<void*>(taxicab_number), start);
+  EXPECT_LT(reinterpret_cast<void*>(taxicab_number), reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_EQ(1729U, *taxicab_number);
+}
+
+TEST_F(DlExtTest, ReservedRecursiveTooSmall) {
+  void* start = mmap(nullptr, kLibSize/2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
+  extinfo.reserved_addr = start;
+  extinfo.reserved_size = kLibSize/2;
+  handle_ = android_dlopen_ext(kLibNameRecursive, RTLD_NOW, &extinfo);
+  EXPECT_EQ(nullptr, handle_);
+}
+
 TEST_F(DlExtTest, ReservedHint) {
   void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
@@ -382,9 +425,13 @@ protected:
     DlExtTest::TearDown();
   }
 
-  void CreateRelroFile(const char* lib, const char* relro_file) {
+  void CreateRelroFile(const char* lib, const char* relro_file, bool recursive) {
     int relro_fd = open(relro_file, O_RDWR | O_TRUNC | O_CLOEXEC);
     ASSERT_NOERROR(relro_fd);
+
+    if (recursive) {
+      extinfo_.flags |= ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
+    }
 
     pid_t pid = fork();
     if (pid == 0) {
@@ -411,12 +458,18 @@ protected:
     extinfo_.relro_fd = relro_fd;
   }
 
-  void TryUsingRelro(const char* lib) {
+  void TryUsingRelro(const char* lib, bool recursive) {
     handle_ = android_dlopen_ext(lib, RTLD_NOW, &extinfo_);
     ASSERT_DL_NOTNULL(handle_);
     fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
     ASSERT_DL_NOTNULL(f);
     EXPECT_EQ(4, f());
+
+    if (recursive) {
+      fn f = reinterpret_cast<fn>(dlsym(handle_, "getBiggerRandomNumber"));
+      ASSERT_DL_NOTNULL(f);
+      EXPECT_EQ(8, f());
+    }
 
     uint32_t* taxicab_number =
             reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
@@ -434,8 +487,19 @@ TEST_F(DlExtRelroSharingTest, ChildWritesGoodData) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path));
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path, false));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName, false));
+
+  // Use destructor of tf to close and unlink the file.
+  tf.fd = extinfo_.relro_fd;
+}
+
+TEST_F(DlExtRelroSharingTest, ChildWritesGoodDataRecursive) {
+  TemporaryFile tf; // Use tf to get an unique filename.
+  ASSERT_NOERROR(close(tf.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameRecursive, tf.path, true));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibNameRecursive, true));
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
@@ -445,15 +509,15 @@ TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
   TemporaryFile tf; // // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameNoRelro, tf.path));
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibNameNoRelro));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameNoRelro, tf.path, false));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibNameNoRelro, false));
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
 }
 
 TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName, false));
 }
 
 TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
@@ -465,7 +529,7 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path, false));
 
   int pipefd[2];
   ASSERT_NOERROR(pipe(pipefd));
