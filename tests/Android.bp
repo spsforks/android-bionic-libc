@@ -528,6 +528,7 @@ cc_test {
         "libdlext_test_different_soname",
         "libdlext_test_fd",
         "libdlext_test_norelro",
+        "libdlext_test_recursive",
         "libdlext_test_runpath_zip_zipaligned",
         "libdlext_test",
         "libdlext_test_zip",
