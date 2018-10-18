@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "0fc176d2_3ed54595",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T18:44:50Z",
+      "side": 1,
+      "message": "Yes, doing it in the loop would be benchmarking the wrong thing.",
+      "parentUuid": "c0dc52e1_d602b732",
+      "range": {
+        "startLine": 34,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80ffcb89_fb3dab35",
         "filename": "benchmarks/get_heap_size_benchmark.cpp",
         "patchSetId": 1
