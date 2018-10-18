@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad312dd7_e9d44649",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T18:16:35Z",
+      "side": 1,
+      "message": "guide",
+      "range": {
+        "startLine": 18,
+        "startChar": 19,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f82f860_6e3444e8",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T18:16:35Z",
+      "side": 1,
+      "message": "Use the new style here and below:\n\nfor (auto _ : state) {",
+      "range": {
+        "startLine": 33,
+        "startChar": 2,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "222b8cd8_6e962c31",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T18:16:35Z",
+      "side": 1,
+      "message": "A mallinfo call is going to be less interesting if there haven\u0027t been many allocations.\n\nKnowing the implementation of mallinfo, the only performance related issue is that you have guaranteed that you have created the maximum number of arenas. So maybe just spawn a bunch of threads doing a single allocation. That should guarantee that you have created the maximum number of arenas.\n\nRight now we only allow 2, so they are probably both populated by this time, but in the future we might increase that amount, and that could change this benchmark so it\u0027s not representative of the real performance.",
+      "range": {
+        "startLine": 34,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80ffcb89_fb3dab35",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T18:16:35Z",
+      "side": 1,
+      "message": "ssize_t",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 7
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
