@@ -89,6 +89,7 @@ static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 #if defined(__LP64__)
+static const char* const kArtApexLibDir    = "/apex/com.android.runtime/lib64";
 static const char* const kSystemLibDir     = "/system/lib64";
 static const char* const kOdmLibDir        = "/odm/lib64";
 static const char* const kVendorLibDir     = "/vendor/lib64";
@@ -96,6 +97,7 @@ static const char* const kAsanSystemLibDir = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib64";
 #else
+static const char* const kArtApexLibDir    = "/apex/com.android.runtime/lib";
 static const char* const kSystemLibDir     = "/system/lib";
 static const char* const kOdmLibDir        = "/odm/lib";
 static const char* const kVendorLibDir     = "/vendor/lib";
@@ -107,6 +109,7 @@ static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
 static const char* const kAsanLibDirPrefix = "/data/asan";
 
 static const char* const kDefaultLdPaths[] = {
+  kArtApexLibDir,
   kSystemLibDir,
   kOdmLibDir,
   kVendorLibDir,
@@ -115,6 +118,7 @@ static const char* const kDefaultLdPaths[] = {
 
 static const char* const kAsanDefaultLdPaths[] = {
   kAsanSystemLibDir,
+  kArtApexLibDir,
   kSystemLibDir,
   kAsanOdmLibDir,
   kOdmLibDir,
@@ -180,6 +184,8 @@ static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const 
 // TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
 // gradually remove libraries from this list until it is gone.
 static bool is_greylisted(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
+  // TODO: If the Android Runtime APEX officially provides one of these
+  // libraries as part of its "API", we may have to hange the logic here.
   static const char* const kLibraryGreyList[] = {
     "libandroid_runtime.so",
     "libbinder.so",
