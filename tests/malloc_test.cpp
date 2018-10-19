@@ -560,3 +560,119 @@ TEST(malloc, reallocarray) {
   GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
 #endif
 }
+
+
+#include <android-base/file.h>
+#include <android-base/parseint.h>
+#include <android-base/stringprintf.h>
+#include <android-base/strings.h>
+#include <linux/limits.h>
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <unordered_set>
+
+#include <gtest/gtest.h>
+#include <string>
+#include <regex>
+#include <utils/Log.h>
+
+/* minimum entropy for malloc return addresses */
+const size_t minEntropyBits = 8;
+
+class AslrMallocTest : public ::testing::Test {
+ protected:
+  void GetAddress(const char* test_name, uintptr_t* address) {
+    int fds[2];
+    ASSERT_TRUE(pipe(fds) != -1);
+
+    auto pid = fork();
+    ASSERT_TRUE(pid != -1);
+    if (pid == 0) {
+      ASSERT_TRUE(TEMP_FAILURE_RETRY(dup2(fds[1], STDOUT_FILENO)) != -1);
+
+      close(fds[0]);
+      close(fds[1]);
+
+      // Exec a disabled test to print the name.
+      std::string exec(android::base::GetExecutablePath());
+      std::string filter = std::string("--gtest_filter=AslrMallocTest.DISABLED_print_alloc_size_") + test_name;
+      char* const args[4] = { const_cast<char* const>(exec.c_str()),
+                              const_cast<char* const>(filter.c_str()),
+                              const_cast<char* const>("--gtest_also_run_disabled_tests"),
+                              nullptr};
+      execvp(exec.c_str(), args);
+      exit(1);
+    }
+    close(fds[1]);
+
+    std::string output;
+    ASSERT_TRUE(android::base::ReadFdToString(fds[0], &output));
+    close(fds[0]);
+
+    int status;
+    ASSERT_EQ(pid, wait(&status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+
+    std::smatch match;
+    std::regex regex("Pointer=(0x[0-9a-f]+)");
+    std::regex_search(output, match, regex);
+    ASSERT_EQ(2U, match.size()) << output;
+
+    ASSERT_TRUE(android::base::ParseUint(match[1].str().c_str(), address)) << match[1].str();
+  }
+
+  void TestRandomization(const char* test_name) {
+    // Should be sufficient to see minEntropyBits when rounded up.
+    size_t iterations = 2 * (1 << minEntropyBits);
+
+    // Collect unique return addresses.
+    std::unordered_set<uintptr_t> addresses;
+
+    for (size_t i = 0; i < iterations; ++i) {
+      uintptr_t address;
+      ASSERT_NO_FATAL_FAILURE(GetAddress(test_name, &address));
+
+      addresses.emplace(address);
+    }
+
+    size_t entropy = static_cast<size_t>(0.5 + log2(static_cast<double>(addresses.size())));
+    ASSERT_LE(minEntropyBits, entropy) << "total_entries: " << addresses.size() << " iterations: " << iterations;
+  }
+};
+
+TEST_F(AslrMallocTest, MallocRandomization_small) {
+  TestRandomization("small");
+}
+
+TEST_F(AslrMallocTest, MallocRandomization_large) {
+  TestRandomization("large");
+}
+
+TEST_F(AslrMallocTest, MallocRandomization_huge) {
+  TestRandomization("huge");
+}
+
+TEST_F(AslrMallocTest, DISABLED_print_alloc_size_small) {
+  void* ptr = malloc(8);
+  ASSERT_TRUE(ptr != nullptr);
+  printf("Pointer=%p", ptr);
+  free(ptr);
+}
+
+TEST_F(AslrMallocTest, DISABLED_print_alloc_size_large) {
+  void* ptr = malloc(32000);
+  ASSERT_TRUE(ptr != nullptr);
+  printf("Pointer=%p", ptr);
+  free(ptr);
+}
+
+TEST_F(AslrMallocTest, DISABLED_print_alloc_size_huge) {
+  void* ptr = malloc(100000);
+  ASSERT_TRUE(ptr != nullptr);
+  printf("Pointer=%p", ptr);
+  free(ptr);
+}
