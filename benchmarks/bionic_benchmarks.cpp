@@ -37,6 +37,13 @@
 #define _STR(x) #x
 #define STRINGFY(x) _STR(x)
 
+static const std::vector<int> kSparseSizes{
+  512,
+  1 * KB,
+  128 * KB,
+  256 * KB,
+};
+
 static const std::vector<int> kCommonSizes{
   8,
   64,
@@ -500,6 +507,7 @@ std::map<std::string, args_vector_t> GetShorthand() {
   all_sizes.insert(all_sizes.end(), kLargeSizes.begin(), kLargeSizes.end());
 
   std::map<std::string, args_vector_t> args_shorthand {
+    {"AT_SPARSE_SIZES", GetArgs(kSparseSizes)},
     {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
     {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
     {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
