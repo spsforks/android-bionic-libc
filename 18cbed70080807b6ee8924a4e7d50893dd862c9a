@@ -16,6 +16,24 @@
       "revId": "18cbed70080807b6ee8924a4e7d50893dd862c9a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8ec3810_7050b8d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T23:30:36Z",
+      "side": 1,
+      "message": "Because before I was doing some magic changing of the test executable to derive the benchmark executable. This would break sometimes and it wasn\u0027t obvious what went wrong, and it wasn\u0027t obvious were the code was that was doing this.\n\nI could make it a little less hard coded by assuming something about the location of the benchmark executable, such as it will be two levels lower than where the tests dir is. But after that I still need to hard-code the name of the executable after that.",
+      "parentUuid": "ac85a9b4_b922aa5c",
+      "revId": "18cbed70080807b6ee8924a4e7d50893dd862c9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
