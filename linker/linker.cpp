@@ -1317,6 +1317,11 @@ static bool load_library(android_namespace_t* ns,
       si->set_soname(elf_reader.get_string(d->d_un.d_val));
     }
   }
+#if !defined(__ANDROID__)
+  if (si->get_dt_runpath().size() == 0) {
+    si->set_dt_runpath("$ORIGIN/../lib64:$ORIGIN/lib64");
+  }
+#endif
 
   for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
     load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
