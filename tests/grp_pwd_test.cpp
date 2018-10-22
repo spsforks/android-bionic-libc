@@ -248,31 +248,6 @@ static void expect_ids(const T& ids) {
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
-  // Upgrading devices launched before API level 28 may not comply with the below check.
-  // Due to the difficulty in changing uids after launch, it is waived for these devices.
-  if (android::base::GetIntProperty("ro.product.first_api_level", 0) < 28) {
-    return;
-  }
-
-  // Ensure that no other ids were returned.
-  auto return_differences = [&ids, &expected_ids] {
-    std::vector<typename T::key_type> missing_from_ids;
-    std::set_difference(expected_ids.begin(), expected_ids.end(), ids.begin(), ids.end(),
-                        std::inserter(missing_from_ids, missing_from_ids.begin()));
-    std::vector<typename T::key_type> extra_in_ids;
-    std::set_difference(ids.begin(), ids.end(), expected_ids.begin(), expected_ids.end(),
-                        std::inserter(extra_in_ids, extra_in_ids.begin()));
-    std::string result;
-    if (!missing_from_ids.empty()) {
-      result += "Missing ids from results: " + Join(missing_from_ids, " ");
-    }
-    if (!extra_in_ids.empty()) {
-      if (!result.empty()) result += ", ";
-      result += "Extra ids in results: " + Join(extra_in_ids, " ");
-    }
-    return result;
-  };
-  EXPECT_EQ(expected_ids, ids) << return_differences();
 }
 #endif
 
