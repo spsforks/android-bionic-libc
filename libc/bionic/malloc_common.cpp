@@ -588,18 +588,21 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 // significantly increase the number of active threads in the system.
 
 static _Atomic bool g_heapprofd_init_in_progress = false;
-static _Atomic bool g_init_heapprofd_ran = false;
+static _Atomic bool g_heapprofd_init_hook_installed = false;
 
 static void* InitHeapprofd(void*) {
   __libc_globals.mutate([](libc_globals* globals) {
     install_hooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
   });
   atomic_store(&g_heapprofd_init_in_progress, false);
+  // Allow to install hook again to re-initialize heap profiling after the
+  // current session finished.
+  atomic_store(&g_heapprofd_init_hook_installed, false);
   return nullptr;
 }
 
 static void* InitHeapprofdHook(size_t bytes) {
-  if (!atomic_exchange(&g_init_heapprofd_ran, true)) {
+  if (!atomic_exchange(&g_heapprofd_init_hook_installed, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
       atomic_store(&globals->malloc_dispatch.malloc, nullptr);
     });
