@@ -22,6 +22,30 @@
       "revId": "a8a716e42a8e6b8f28abf2b2f8f93b1e8579423d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8c80f6e_ad6aa70a",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1207838
+      },
+      "writtenOn": "2018-10-23T03:10:57Z",
+      "side": 0,
+      "message": "Yes, that is correct. New patchset is coming to fix this. We also need Google to permit exempt the vendor_prefix_users and vendor_prefix_groups for devices shipping with and before P.",
+      "parentUuid": "2ca24aa8_14bfc11d",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 3
+      },
+      "revId": "a8a716e42a8e6b8f28abf2b2f8f93b1e8579423d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
