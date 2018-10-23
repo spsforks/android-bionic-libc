@@ -22,6 +22,7 @@
 #include <initializer_list>
 #include <set>
 #include <string>
+#include <unordered_map>
 
 enum class Arch : size_t {
   arm = 0,
@@ -127,6 +128,15 @@ static const std::set<Arch> supported_archs = {
   Arch::x86_64,
 };
 
+static const std::unordered_map<std::string, Arch> arch_name_map{
+  {"arm", Arch::arm},
+  {"arm64", Arch::arm64},
+  {"mips", Arch::mips},
+  {"mips64", Arch::mips64},
+  {"x86", Arch::x86},
+  {"x86_64", Arch::x86_64},
+};
+
 static ArchMap<std::string> arch_targets = {
   { Arch::arm, "arm-linux-androideabi" },
   { Arch::arm64, "aarch64-linux-android" },
@@ -145,4 +155,24 @@ static const ArchMap<int> arch_min_api = {
   { Arch::mips64, 21 },
   { Arch::x86, 9 },
   { Arch::x86_64, 21 },
+};
+
+static constexpr int future_api = 10000;
+
+static const std::unordered_map<std::string, int> api_codename_map{
+  {"G", 9},
+  {"I", 14},
+  {"J", 16},
+  {"J-MR1", 17},
+  {"J-MR2", 18},
+  {"K", 19},
+  {"L", 21},
+  {"L-MR1", 22},
+  {"M", 23},
+  {"N", 24},
+  {"N-MR1", 25},
+  {"O", 26},
+  {"O-MR1", 27},
+  {"P", 28},
+  {"Q", 9001},
 };

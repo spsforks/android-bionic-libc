@@ -33,7 +33,6 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <optional>
 #include <set>
 #include <sstream>
 #include <string>
@@ -613,6 +612,9 @@ int main(int argc, char** argv) {
     std::string versioner_dir = to_string(top) + "/bionic/tools/versioner";
     location.header_path = versioner_dir + "/current";
     location.dependency_dir = versioner_dir + "/dependencies";
+    if (platform_dir.empty()) {
+      platform_dir = versioner_dir + "/platforms";
+    }
   } else {
     if (!android::base::Realpath(argv[optind], &location.header_path)) {
       err(1, "failed to get realpath for path '%s'", argv[optind]);
@@ -652,6 +654,12 @@ int main(int argc, char** argv) {
   std::optional<NdkSymbolDatabase> symbol_database;
 
   compilation_types = generateCompilationTypes(selected_architectures, selected_levels);
+
+  // Do this before compiling so that we can early exit if the platforms don't match what we
+  // expect.
+  if (!platform_dir.empty()) {
+    symbol_database = parsePlatforms(compilation_types, platform_dir);
+  }
 
   auto start = std::chrono::high_resolution_clock::now();
   std::unique_ptr<HeaderDatabase> declaration_database =
