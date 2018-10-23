@@ -16,6 +16,8 @@
 
 #include "SymbolDatabase.h"
 
+#include "SymbolFileParser.h"
+
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,6 +59,52 @@ std::unordered_set<std::string> getSymbols(const std::string& filename) {
     }
 
     result.insert(symbolNameOrError.get().str());
+  }
+
+  return result;
+}
+
+static std::map<std::string, NdkSymbolType> parsePlatform(const CompilationType& type,
+                                                          const std::string& platform_dir) {
+  std::map<std::string, NdkSymbolType> result;
+  const char* const wanted_files[] = {
+    "libc.map.txt",
+  };
+
+  for (auto&& filename : wanted_files) {
+    std::string path = std::string(platform_dir) + "/" + filename;
+
+    std::optional<SymbolMap> symbols_opt = parseSymbolFile(path, type);
+    if (!symbols_opt) {
+      errx(1, "error: failed to load: %s", path.c_str());
+    }
+
+    for (auto&& p : *symbols_opt) {
+      const std::string& symbol_name = p.first;
+      if (symbol_name.empty()) {
+        continue;
+      }
+      if (result.count(symbol_name) != 0) {
+        if (strict) {
+          printf("duplicated symbol '%s' in '%s'\n", symbol_name.c_str(), path.c_str());
+        }
+      }
+
+      result[symbol_name] = p.second;
+    }
+  }
+
+  return result;
+}
+
+std::optional<NdkSymbolDatabase> parsePlatforms(const std::set<CompilationType>& types,
+                                                const std::string& platform_dir) {
+  std::map<std::string, std::map<CompilationType, NdkSymbolType>> result;
+  for (const CompilationType& type : types) {
+    std::map<std::string, NdkSymbolType> symbols = parsePlatform(type, platform_dir);
+    for (const auto& it : symbols) {
+      result[it.first][type] = it.second;
+    }
   }
 
   return result;
