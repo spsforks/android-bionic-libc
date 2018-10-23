@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7dbffc21_858ceb26",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-23T15:29:47Z",
+      "side": 1,
+      "message": "i don\u0027t think that\u0027s quite true. see this comment: https://cs.corp.google.com/android/bionic/libc/arch-common/bionic/crtbegin_so.c?q\u003datexit+file:bionic\u0026g\u003d0\u0026l\u003d59",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 63
+      },
+      "revId": "cb2c6be7bb10c6c35cd82d01aefb9ba8b8813dc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
