@@ -511,10 +511,17 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
   return impl_handle;
 }
 
+static _Atomic (void*) g_current_dlhandle = nullptr;
+
 static void install_hooks(libc_globals* globals, const char* options,
                           const char* prefix, const char* shared_lib) {
   MallocDispatch dispatch_table;
-  void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+  // This will not work if we ever want to dynamically load anything else
+  // but heapprofd.
+  void* impl_handle = atomic_load(&g_current_dlhandle);
+  if (impl_handle == nullptr)
+    impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+
   if (impl_handle == nullptr) {
     return;
   }
@@ -525,6 +532,8 @@ static void install_hooks(libc_globals* globals, const char* options,
     ClearGlobalFunctions();
     return;
   }
+
+  atomic_store(&g_current_dlhandle, impl_handle);
 
   globals->malloc_dispatch = dispatch_table;
 
@@ -574,13 +583,20 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 
 // The logic for triggering heapprofd below is as following.
 // 1. HEAPPROFD_SIGNAL is received by the process.
-// 2a. If the signal is currently being handled (g_heapprofd_init_in_progress
+// 2. If neither InitHeapprofd nor InitHeapprofdHook are currently installed
+//    (g_heapprofd_init_hook_installed is false), InitHeapprofdHook is
+//    installed and g_heapprofd_init_in_progress is set to true.
+//
+// On the next subsequent malloc, InitHeapprofdHook is called and
+// 3a. If the signal is currently being handled (g_heapprofd_init_in_progress
 //     is true), no action is taken.
-// 2b. Otherwise, The signal handler (InstallInitHeapprofdHook) installs a
+// 3b. Otherwise, The signal handler (InstallInitHeapprofdHook) installs a
 //     temporary malloc hook (InitHeapprofdHook).
-// 3. When this hook gets run the first time, it uninstalls itself and spawns
+// 4. When this hook gets run the first time, it uninstalls itself and spawns
 //    a thread running InitHeapprofd that loads heapprofd.so and installs the
 //    hooks within.
+// 5. g_heapprofd_init_in_progress and g_heapprofd_init_hook_installed are
+//    reset to false so heapprofd can be reinitialized.
 //
 // This roundabout way is needed because we are running non AS-safe code, so
 // we cannot run it directly in the signal handler. The other approach of
@@ -588,18 +604,21 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 // significantly increase the number of active threads in the system.
 
 static _Atomic bool g_heapprofd_init_in_progress = false;
-static _Atomic bool g_init_heapprofd_ran = false;
+static _Atomic bool g_heapprofd_init_hook_installed = false;
 
 static void* InitHeapprofd(void*) {
   __libc_globals.mutate([](libc_globals* globals) {
     install_hooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
   });
   atomic_store(&g_heapprofd_init_in_progress, false);
+  // Allow to install hook again to re-initialize heap profiling after the
+  // current session finished.
+  atomic_store(&g_heapprofd_init_hook_installed, false);
   return nullptr;
 }
 
 static void* InitHeapprofdHook(size_t bytes) {
-  if (!atomic_exchange(&g_init_heapprofd_ran, true)) {
+  if (!atomic_exchange(&g_heapprofd_init_hook_installed, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
       atomic_store(&globals->malloc_dispatch.malloc, nullptr);
     });
