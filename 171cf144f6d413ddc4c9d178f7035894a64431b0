@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d099cc5_0bf75356",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-23T19:02:48Z",
+      "side": 1,
+      "message": "\"The value is ignored.\"?\n\n(at least s/ignore/ignored/ :-) )\n\n\n\nfor this (and M_DECAY_TIME) should we say which version(s) they\u0027re supported in? even if we don\u0027t retcon M_DECAY_TIME we should probably say \"Available since API level 29.\" for this one...",
+      "range": {
+        "startLine": 168,
+        "startChar": 47,
+        "endLine": 168,
+        "endChar": 68
+      },
+      "revId": "171cf144f6d413ddc4c9d178f7035894a64431b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
