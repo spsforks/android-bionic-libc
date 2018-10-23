@@ -42,7 +42,6 @@
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
-#include <llvm/Config/config.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
