@@ -124,7 +124,7 @@ class SymbolFileParser {
     return false;
   }
 
-  static std::vector<std::string> parseTags(const std::string &tags_line) {
+  static std::vector<std::string> parseTags(const std::string& tags_line) {
     std::vector<std::string> tags = android::base::Split(tags_line, " \t");
     tags.erase(std::remove(tags.begin(), tags.end(), ""), tags.end());
     return tags;
@@ -137,7 +137,6 @@ class SymbolFileParser {
     if (lparen == std::string::npos) {
       errx(1, "%s:%zu: error: expected '{' cannot be found in this line",
            file_path.c_str(), curr_line_num);
-      return std::optional<Version>();
     }
 
     std::string name = android::base::Trim(curr_line.substr(0, lparen));
@@ -154,7 +153,6 @@ class SymbolFileParser {
         if (semicolon_pos == std::string::npos) {
           errx(1, "%s:%zu: error: the line that ends a scope must end with ';'",
                file_path.c_str(), curr_line_num);
-          return std::optional<Version>();
         }
 
         if (cpp_scope) {
@@ -190,7 +188,6 @@ class SymbolFileParser {
         }
         errx(1, "%s:%zu: error: unknown version visibility: %s",
              file_path.c_str(), curr_line_num, visibility.c_str());
-        return std::optional<Version>();
       }
 
       if (global_scope) {
@@ -214,7 +211,6 @@ class SymbolFileParser {
 
     errx(1, "%s:%zu: error: scope started from %zu must be closed before EOF",
          file_path.c_str(), curr_line_num, start_line_num);
-    return std::optional<Version>();
   }
 
   static NdkSymbolType getSymbolType(const TagList& tags) {
@@ -252,7 +248,7 @@ class SymbolFileParser {
     std::string intro_arch_perfix =
       "introduced-" + to_string(compilation_type.arch) + "=";
 
-    for (const std::string &tag : tags) {
+    for (const std::string&tag : tags) {
       // Check api-level=
       if (android::base::StartsWith(tag, "api-level=") && !api_level_arch) {
         api_level = tag;
@@ -287,13 +283,13 @@ class SymbolFileParser {
     if (!api_level.empty()) {
       // If api-level= is specified, it must be an exact match (for versioner
       // unit tests).
-      return compilation_type.api_level == getIntroducedInValue(api_level);
+      return compilation_type.api_level == decodeApiLevelValue(api_level);
     }
 
-    return compilation_type.api_level >= getIntroducedInValue(intro);
+    return compilation_type.api_level >= decodeApiLevelValue(intro);
   }
 
-  static int getIntroducedInValue(const std::string& tag) {
+  static int decodeApiLevelValue(const std::string& tag) {
     std::string api_level = tag.substr(tag.find('=') + 1);
     auto it = API_MAP.find(api_level);
     if (it != API_MAP.end()) {
@@ -303,8 +299,8 @@ class SymbolFileParser {
   }
 
  private:
-  const std::string &file_path;
-  const CompilationType &compilation_type;
+  const std::string& file_path;
+  const CompilationType& compilation_type;
 
   std::ifstream file;
   std::string curr_line;
@@ -315,7 +311,7 @@ class SymbolFileParser {
 }  // anonymous namespace
 
 
-std::optional<SymbolMap> parseSymbolFile(const std::string &file_path,
+std::optional<SymbolMap> parseSymbolFile(const std::string& file_path,
                                          const CompilationType& type) {
 
   SymbolFileParser parser(file_path, type);

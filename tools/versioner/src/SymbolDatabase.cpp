@@ -77,11 +77,10 @@ static std::map<std::string, NdkSymbolType> parsePlatform(const CompilationType&
     std::optional<SymbolMap> symbols_opt = parseSymbolFile(path, type);
     if (!symbols_opt) {
       errx(1, "error: failed to load: %s", path.c_str());
-      continue;
     }
 
     for (auto&& p : *symbols_opt) {
-      const std::string &symbol_name = p.first;
+      const std::string& symbol_name = p.first;
       if (symbol_name.empty()) {
         continue;
       }

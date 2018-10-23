@@ -49,7 +49,9 @@ __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
 __noreturn void _Exit(int) __RENAME(_exit);
 #endif
 
+#if defined(__arm__)
 int atexit(void (*__fn)(void));
+#endif
 
 int at_quick_exit(void (*__fn)(void)) __INTRODUCED_IN(21);
 void quick_exit(int __status) __noreturn __INTRODUCED_IN(21);
