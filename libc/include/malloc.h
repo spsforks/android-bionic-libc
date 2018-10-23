@@ -163,6 +163,10 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 
 /** mallopt() option to set the decay time. Valid values are 0 and 1. */
 #define M_DECAY_TIME -100
+/**
+ * mallopt() option to immediately purge any memory not in use. This
+ * will release the memory back to the kernel. Parameters are ignore.
+ */
 #define M_PURGE -101
 
 /**
