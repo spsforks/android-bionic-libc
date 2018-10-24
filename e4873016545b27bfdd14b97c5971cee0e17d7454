@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "5aef810c_4f612065",
+        "filename": "tools/versioner/src/SymbolFileParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-10-24T17:49:39Z",
+      "side": 1,
+      "message": "vector\u0027s move constructor/assignment operator leaves the moved-from object in an empty state, but this is fine.",
+      "parentUuid": "91d1434c_bad07cf0",
+      "range": {
+        "startLine": 119,
+        "startChar": 19,
+        "endLine": 119,
+        "endChar": 49
+      },
+      "revId": "e4873016545b27bfdd14b97c5971cee0e17d7454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66dc77c9_e52f6daf",
         "filename": "tools/versioner/src/SymbolFileParser.cpp",
         "patchSetId": 2
