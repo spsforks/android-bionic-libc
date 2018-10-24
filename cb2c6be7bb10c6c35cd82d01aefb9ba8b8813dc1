@@ -22,6 +22,30 @@
       "revId": "cb2c6be7bb10c6c35cd82d01aefb9ba8b8813dc1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0648e3e_d69fea23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-10-24T07:18:55Z",
+      "side": 1,
+      "message": "I have removed the changes for `atexit()` from this CL.  Instead, I created a `crtbegin.map.txt` for testing:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/799319/3/tools/versioner/platforms/crtbegin.map.txt",
+      "parentUuid": "7dbffc21_858ceb26",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 63
+      },
+      "revId": "cb2c6be7bb10c6c35cd82d01aefb9ba8b8813dc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
