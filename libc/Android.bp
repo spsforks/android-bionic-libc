@@ -1860,6 +1860,9 @@ cc_defaults {
         "-Wno-gcc-compat",
         "-Wall",
         "-Werror",
+
+        // Clang's address-significance tables are incompatible with ld -r.
+        "-fno-addrsig",
     ],
 }
 
