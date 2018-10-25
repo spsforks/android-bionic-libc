@@ -42,9 +42,16 @@ static void sys_msg_h() {
   STRUCT_MEMBER(struct msqid_ds, msglen_t, msg_qbytes);
   STRUCT_MEMBER(struct msqid_ds, pid_t, msg_lspid);
   STRUCT_MEMBER(struct msqid_ds, pid_t, msg_lrpid);
+#if defined(__LP64__) || defined(__i386__)
   STRUCT_MEMBER(struct msqid_ds, time_t, msg_stime);
   STRUCT_MEMBER(struct msqid_ds, time_t, msg_rtime);
   STRUCT_MEMBER(struct msqid_ds, time_t, msg_ctime);
+#else
+  // New kernels for arm32 changed these to signed values.
+  STRUCT_MEMBER(struct msqid_ds, unsigned long, msg_stime);
+  STRUCT_MEMBER(struct msqid_ds, unsigned long, msg_rtime);
+  STRUCT_MEMBER(struct msqid_ds, unsigned long, msg_ctime);
+#endif
 
   TYPE(pid_t);
   TYPE(size_t);

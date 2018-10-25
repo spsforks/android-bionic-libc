@@ -48,8 +48,14 @@ static void sys_sem_h() {
 #else
   STRUCT_MEMBER(struct semid_ds, unsigned short, sem_nsems);
 #endif
+#if defined(__LP64__) || defined(__i386__)
   STRUCT_MEMBER(struct semid_ds, time_t, sem_otime);
   STRUCT_MEMBER(struct semid_ds, time_t, sem_ctime);
+#else
+  // New kernels for arm32 changed these to signed values.
+  STRUCT_MEMBER(struct semid_ds, unsigned long, sem_otime);
+  STRUCT_MEMBER(struct semid_ds, unsigned long, sem_ctime);
+#endif
 
   TYPE(pid_t);
   TYPE(size_t);

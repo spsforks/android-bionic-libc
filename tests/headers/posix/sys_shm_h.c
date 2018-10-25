@@ -43,9 +43,16 @@ static void sys_shm_h() {
   STRUCT_MEMBER(struct shmid_ds, pid_t, shm_lpid);
   STRUCT_MEMBER(struct shmid_ds, pid_t, shm_cpid);
   STRUCT_MEMBER(struct shmid_ds, shmatt_t, shm_nattch);
+#if defined(__LP64__) || defined(__i386__)
   STRUCT_MEMBER(struct shmid_ds, time_t, shm_atime);
   STRUCT_MEMBER(struct shmid_ds, time_t, shm_dtime);
   STRUCT_MEMBER(struct shmid_ds, time_t, shm_ctime);
+#else
+  // New kernels for arm32 changed these to signed values.
+  STRUCT_MEMBER(struct shmid_ds, unsigned long, shm_atime);
+  STRUCT_MEMBER(struct shmid_ds, unsigned long, shm_dtime);
+  STRUCT_MEMBER(struct shmid_ds, unsigned long, shm_ctime);
+#endif
 
   TYPE(pid_t);
   TYPE(size_t);
