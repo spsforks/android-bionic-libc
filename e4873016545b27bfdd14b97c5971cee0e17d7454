@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "75a9bb1b_f163357a",
+        "filename": "tools/versioner/src/SymbolFileParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-10-25T07:02:27Z",
+      "side": 1,
+      "message": "I\u0027ve read the C++ spec carefully.  Even though C++ spec does not guarantee the empty vector (albeit it is common among implementations), it should still be a valid object satisfying all C++ container requirement.  Thus, calling `curr_tags.clear()` must work.\n\nI have changed the code accordingly in PS#7.  Thanks.",
+      "parentUuid": "5aef810c_4f612065",
+      "range": {
+        "startLine": 119,
+        "startChar": 19,
+        "endLine": 119,
+        "endChar": 49
+      },
+      "revId": "e4873016545b27bfdd14b97c5971cee0e17d7454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66dc77c9_e52f6daf",
         "filename": "tools/versioner/src/SymbolFileParser.cpp",
         "patchSetId": 2
