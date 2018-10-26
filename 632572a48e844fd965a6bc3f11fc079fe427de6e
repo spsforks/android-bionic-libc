@@ -16,6 +16,24 @@
       "revId": "632572a48e844fd965a6bc3f11fc079fe427de6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e660e0a_c8d25e70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-26T22:42:16Z",
+      "side": 1,
+      "message": "No, I meant something like:\n\nif defined(something)\nelif 1",
+      "parentUuid": "d03014dc_e80bea4d",
+      "revId": "632572a48e844fd965a6bc3f11fc079fe427de6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
