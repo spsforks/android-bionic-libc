@@ -564,10 +564,9 @@ class LoadTask {
 
   static LoadTask* create(const char* name,
                           soinfo* needed_by,
-                          android_namespace_t* start_from,
-                          std::unordered_map<const soinfo*, ElfReader>* readers_map) {
+                          android_namespace_t* start_from) {
     LoadTask* ptr = TypeBasedAllocator<LoadTask>::alloc();
-    return new (ptr) LoadTask(name, needed_by, start_from, readers_map);
+    return new (ptr) LoadTask(name, needed_by, start_from);
   }
 
   const char* get_name() const {
@@ -625,36 +624,24 @@ class LoadTask {
   }
 
   const ElfReader& get_elf_reader() const {
-    CHECK(si_ != nullptr);
-    return (*elf_readers_map_)[si_];
-  }
-
-  ElfReader& get_elf_reader() {
-    CHECK(si_ != nullptr);
-    return (*elf_readers_map_)[si_];
-  }
-
-  std::unordered_map<const soinfo*, ElfReader>* get_readers_map() {
-    return elf_readers_map_;
+    return elf_reader_;
   }
 
   bool read(const char* realpath, off64_t file_size) {
-    ElfReader& elf_reader = get_elf_reader();
-    return elf_reader.Read(realpath, fd_, file_offset_, file_size);
+    return elf_reader_.Read(realpath, fd_, file_offset_, file_size);
   }
 
   bool load() {
-    ElfReader& elf_reader = get_elf_reader();
-    if (!elf_reader.Load(extinfo_)) {
+    if (!elf_reader_.Load(extinfo_)) {
       return false;
     }
 
-    si_->base = elf_reader.load_start();
-    si_->size = elf_reader.load_size();
-    si_->set_mapped_by_caller(elf_reader.is_mapped_by_caller());
-    si_->load_bias = elf_reader.load_bias();
-    si_->phnum = elf_reader.phdr_count();
-    si_->phdr = elf_reader.loaded_phdr();
+    si_->base = elf_reader_.load_start();
+    si_->size = elf_reader_.load_size();
+    si_->set_mapped_by_caller(elf_reader_.is_mapped_by_caller());
+    si_->load_bias = elf_reader_.load_bias();
+    si_->phnum = elf_reader_.phdr_count();
+    si_->phdr = elf_reader_.loaded_phdr();
 
     return true;
   }
@@ -662,10 +649,9 @@ class LoadTask {
  private:
   LoadTask(const char* name,
            soinfo* needed_by,
-           android_namespace_t* start_from,
-           std::unordered_map<const soinfo*, ElfReader>* readers_map)
+           android_namespace_t* start_from)
     : name_(name), needed_by_(needed_by), si_(nullptr),
-      fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map),
+      fd_(-1), close_fd_(false), file_offset_(0),
       is_dt_needed_(false), start_from_(start_from) {}
 
   ~LoadTask() {
@@ -681,7 +667,7 @@ class LoadTask {
   int fd_;
   bool close_fd_;
   off64_t file_offset_;
-  std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
+  ElfReader elf_reader_;
   // TODO(dimitry): needed by workaround for http://b/26394120 (the grey-list)
   bool is_dt_needed_;
   // END OF WORKAROUND
@@ -1329,7 +1315,7 @@ static bool load_library(android_namespace_t* ns,
 #endif
 
   for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
-    load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
+    load_tasks->push_back(LoadTask::create(name, si, ns));
   });
 
   return true;
@@ -1539,12 +1525,11 @@ bool find_libraries(android_namespace_t* ns,
                     bool search_linked_namespaces,
                     std::vector<android_namespace_t*>* namespaces) {
   // Step 0: prepare.
-  std::unordered_map<const soinfo*, ElfReader> readers_map;
   LoadTaskList load_tasks;
 
   for (size_t i = 0; i < library_names_count; ++i) {
     const char* name = library_names[i];
-    load_tasks.push_back(LoadTask::create(name, start_with, ns, &readers_map));
+    load_tasks.push_back(LoadTask::create(name, start_with, ns));
   }
 
   // If soinfos array is null allocate one on stack.
