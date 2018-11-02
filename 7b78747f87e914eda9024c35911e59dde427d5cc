@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "969eb89c_d21f0ede",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-02T19:53:35Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87a880e8_101f80a0",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-02T19:53:35Z",
+      "side": 1,
+      "message": "this seems especially suspicious. why do you think we should do this?",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
