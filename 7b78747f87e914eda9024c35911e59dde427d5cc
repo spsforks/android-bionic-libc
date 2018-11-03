@@ -33,6 +33,41 @@
       "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35ce4137_f7fc30fa",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-11-03T06:07:02Z",
+      "side": 1,
+      "message": "this looks suspicious to me too.",
+      "parentUuid": "87a880e8_101f80a0",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "380c9bc3_7a36893e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-11-03T06:07:02Z",
+      "side": 1,
+      "message": "you don\u0027t need to touch here. These are fallback paths when ld.config.txt is invalid or missing.",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
