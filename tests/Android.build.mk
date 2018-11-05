@@ -35,8 +35,12 @@ ifneq ($($(module)_install_to_native_tests_dir),)
     native_tests_var := TARGET_OUT_DATA_NATIVE_TESTS
   endif
 
-  LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)$(native_tests_var))/$($(module)_install_to_native_tests_dir)
-  LOCAL_MODULE_PATH_64 := $($(native_tests_var))/$($(module)_install_to_native_tests_dir)
+  #LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)$(native_tests_var))/$($(module)_install_to_native_tests_dir)
+  #LOCAL_MODULE_PATH_64 := $($(native_tests_var))/$($(module)_install_to_native_tests_dir)
+
+  LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)$(native_tests_var))/$($(module)_install_to_native_tests_dir)/32
+  LOCAL_MODULE_PATH_64 := $($(native_tests_var))/$($(module)_install_to_native_tests_dir)/64
+
 endif
 endif
 
