@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3f0be85_3d55a484",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-05T22:16:50Z",
+      "side": 1,
+      "message": "I think this can also be removed.",
+      "range": {
+        "startLine": 579,
+        "startChar": 2,
+        "endLine": 579,
+        "endChar": 28
+      },
+      "revId": "09f4e7b294b7ee1019defd95ae2c65f1d59e01a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e4ed719_c31dbb93",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-05T22:16:50Z",
+      "side": 1,
+      "message": "This parameter could also be removed.",
+      "range": {
+        "startLine": 596,
+        "startChar": 27,
+        "endLine": 596,
+        "endChar": 36
+      },
+      "revId": "09f4e7b294b7ee1019defd95ae2c65f1d59e01a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
