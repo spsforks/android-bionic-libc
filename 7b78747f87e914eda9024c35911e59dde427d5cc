@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "a964e139_0ce7190b",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-06T18:20:24Z",
+      "side": 1,
+      "message": "i thought developers weren\u0027t supposed to be running dex2oat? don\u0027t you have an arms race trying to prevent that?\n\nnote that this is already problematic because of the system vs vendor selinux restrictions.\n\nwe need to get back to https://android-review.googlesource.com/q/topic:%22mksh-hack-removal%22+(status:open%20OR%20status:merged) at some point. hopefully cuttlefish means we can now? not sure how complete that transition is yet...",
+      "parentUuid": "5092fa85_5236551a",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "380c9bc3_7a36893e",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
