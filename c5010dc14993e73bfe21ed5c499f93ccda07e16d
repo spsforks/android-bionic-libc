@@ -22,6 +22,30 @@
       "revId": "c5010dc14993e73bfe21ed5c499f93ccda07e16d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c54f2b59_6f9e307f",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-06T21:45:27Z",
+      "side": 1,
+      "message": "It\u0027s mostly to verify that the help for the bionic and generic benchmarks are both present. I don\u0027t expect that the help message will change much in the future.\n\nIf there is another change to the core google benchmark help message, I\u0027ll modify the code to simply verify that benchmark help is printed, but not the contents.",
+      "parentUuid": "2a208212_8532c494",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 27
+      },
+      "revId": "c5010dc14993e73bfe21ed5c499f93ccda07e16d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
