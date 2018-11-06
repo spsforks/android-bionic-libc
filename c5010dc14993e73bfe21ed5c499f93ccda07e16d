@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a208212_8532c494",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-11-06T21:41:24Z",
+      "side": 1,
+      "message": "Should we just delete this test instead?",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 27
+      },
+      "revId": "c5010dc14993e73bfe21ed5c499f93ccda07e16d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
