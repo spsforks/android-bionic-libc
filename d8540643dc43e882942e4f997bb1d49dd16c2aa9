@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67ab3880_e526ec28",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-06T23:09:17Z",
+      "side": 1,
+      "message": "You should update the comment above about why the 64 bit value is being increased.",
+      "range": {
+        "startLine": 173,
+        "startChar": 8,
+        "endLine": 173,
+        "endChar": 51
+      },
+      "revId": "d8540643dc43e882942e4f997bb1d49dd16c2aa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
