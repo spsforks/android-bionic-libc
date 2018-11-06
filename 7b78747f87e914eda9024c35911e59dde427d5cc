@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5092fa85_5236551a",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-11-06T18:15:50Z",
+      "side": 1,
+      "message": "I was thinking about developers manually invoking tools like `dex2oat` or `oatdump` using `adb shell`. Would the path configuration in `ld.config.txt` be enough to support that use case?",
+      "parentUuid": "35ce4137_f7fc30fa",
+      "revId": "7b78747f87e914eda9024c35911e59dde427d5cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "380c9bc3_7a36893e",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
