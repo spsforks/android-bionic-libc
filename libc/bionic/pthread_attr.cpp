@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <sys/resource.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <async_safe/log.h>
 
@@ -155,17 +156,19 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
 }
 
 static uintptr_t __get_main_stack_startstack() {
-  FILE* fp = fopen("/proc/self/stat", "re");
-  if (fp == nullptr) {
+  int fd = open("/proc/self/stat", O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
     async_safe_fatal("couldn't open /proc/self/stat: %s", strerror(errno));
   }
 
   char line[BUFSIZ];
-  if (fgets(line, sizeof(line), fp) == nullptr) {
+  ssize_t rd = read(fd, line, sizeof(line) - 1);
+  if (rd == -1) {
     async_safe_fatal("couldn't read /proc/self/stat: %s", strerror(errno));
   }
+  line[rd] = '\0';
 
-  fclose(fp);
+  close(fd);
 
   // See man 5 proc. There's no reason comm can't contain ' ' or ')',
   // so we search backwards for the end of it. We're looking for this field:
@@ -182,6 +185,33 @@ static uintptr_t __get_main_stack_startstack() {
   }
 
   return startstack;
+}
+
+static bool __pthread_attr_getstack_main_thread_read_chunk(
+    char** src_buf, size_t src_buf_size,
+    char** dst_buf, size_t dst_buf_size,
+    char sep
+) {
+  char* sepptr = static_cast<char*>(memchr(*src_buf, src_buf_size, sep));
+  bool done = sepptr != nullptr;
+  if (!done) {
+    sepptr = *src_buf + src_buf_size;
+  } else {
+    // Also consume the separator. This will be overwritten by \0 below.
+    ++sepptr;
+  }
+
+  size_t to_copy = sepptr - *src_buf;
+  if (to_copy > dst_buf_size) {
+    async_safe_fatal("invalid format in /proc/self/maps");
+  }
+  memcpy(*dst_buf, *src_buf, to_copy);
+  if (done) {
+    *dst_buf[to_copy] = '\0';
+  }
+  *src_buf += to_copy;
+  *dst_buf += to_copy;
+  return done;
 }
 
 static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
@@ -201,19 +231,82 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   uintptr_t startstack = __get_main_stack_startstack();
 
   // Hunt for the region that contains that address.
-  FILE* fp = fopen("/proc/self/maps", "re");
-  if (fp == nullptr) {
+  int fd = open("/proc/self/maps", O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
     async_safe_fatal("couldn't open /proc/self/maps: %s", strerror(errno));
   }
-  char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != nullptr) {
-    uintptr_t lo, hi;
-    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
-      if (lo <= startstack && startstack <= hi) {
-        *stack_size = stack_limit.rlim_cur;
-        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
-        fclose(fp);
-        return 0;
+
+  char buf[BUFSIZ];
+
+  // 17 to fit 16 hexidecimal digits and a null byte.
+  char lo_buf[17];
+  char* const lo_buf_end = lo_buf + sizeof(lo_buf);
+  char* lo_writeptr = lo_buf;
+
+  char hi_buf[17];
+  char* const hi_buf_end = hi_buf + sizeof(hi_buf);
+  char* hi_writeptr = hi_buf;
+
+  enum {
+    kReadLo,
+    kReadHi,
+    kReadName,
+  } state = kReadLo;
+
+  ssize_t rd;
+  while ((rd = read(fd, buf, sizeof(buf))) > 0) {
+    char* buf_readptr = buf;
+    char* const buf_end = buf + rd;
+
+    while (buf_readptr != buf + rd) {
+      switch (state) {
+        case kReadLo:
+          if (__pthread_attr_getstack_main_thread_read_chunk(
+              &buf_readptr, buf_end - buf_readptr,
+              &lo_writeptr, lo_buf_end - lo_writeptr,
+              '-')) {
+            lo_writeptr = lo_buf;
+            state = kReadHi;
+          }
+          break;
+        case kReadHi:
+          if (__pthread_attr_getstack_main_thread_read_chunk(
+              &buf_readptr, buf_end - buf_readptr,
+              &hi_writeptr, hi_buf_end - hi_writeptr,
+              '-')) {
+            char* end;
+            uintptr_t lo = strtoll(lo_buf, &end, 16);
+            if (*end != '\0') {
+              async_safe_fatal("invalid format in /proc/self/maps");
+            }
+
+            uintptr_t hi = strtoll(hi_buf, &end, 16);
+            if (*end != '\0') {
+              async_safe_fatal("invalid format in /proc/self/maps");
+            }
+
+            if (lo <= startstack && startstack <= hi) {
+              *stack_size = stack_limit.rlim_cur;
+              *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+              close(fd);
+              return 0;
+            }
+            hi_writeptr = hi_buf;
+            state = kReadName;
+          }
+          break;
+        case kReadName: {
+          char* newline = static_cast<char*>(
+              memchr(buf_readptr, '\n', buf_end - buf_readptr));
+          if (newline == nullptr) {
+            buf_readptr = buf_end;
+          } else {
+            // Also consume newline.
+            buf_readptr = newline + 1;
+          }
+          state = kReadLo;
+        }
+        break;
       }
     }
   }
