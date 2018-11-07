@@ -530,7 +530,7 @@ cc_test_library {
     name: "libdl_test_df_1_global",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_global.cpp"],
-    ldflags: ["-Wl,-z,global"],
+    ldflags: ["-Wl,-z,global", "-DCHH_TEST_CONTROL"],
     // b/80109858, clang lld ignores -z,global
     use_clang_lld: false,
 
@@ -560,7 +560,7 @@ cc_test_library {
     name: "libtest_dlopen_df_1_global",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_global_dummy.cpp"],
-    ldflags: ["-Wl,-z,global"],
+    ldflags: ["-Wl,-z,global", "-DCHH_TEST_CONTROL"],
     // b/80109858, clang lld ignores -z,global
     use_clang_lld: false,
 
