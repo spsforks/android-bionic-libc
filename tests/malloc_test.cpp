@@ -29,6 +29,7 @@
 
 #if defined(__BIONIC__)
 #define HAVE_REALLOCARRAY 1
+extern "C" void android_set_allocation_limit(size_t limit);
 #else
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
 #endif
@@ -560,3 +561,46 @@ TEST(malloc, reallocarray) {
   GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
 #endif
 }
+
+template <typename T>
+void CheckAllocationFunction(T t) {
+  android_set_allocation_limit(32 * 1024 * 1024);
+  if (!t(20 * 1024 * 1024))
+    exit(1);
+  if (t(20 * 1024 * 1024))
+    exit(1);
+  exit(0);
+}
+
+#if defined(__BIONIC__)
+TEST(malloc, android_set_allocation_limit) {
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(bytes, 1) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(1, bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return malloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return memalign(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p;
+                return posix_memalign(&p, sizeof(void *), bytes) == 0;
+              }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return aligned_alloc(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p = malloc(1024 * 1024);
+                return realloc(p, bytes) != nullptr;
+              }),
+              testing::ExitedWithCode(0), "");
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return pvalloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return valloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+#endif
+}
+#endif
