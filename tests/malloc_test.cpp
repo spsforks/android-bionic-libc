@@ -631,3 +631,50 @@ TEST(android_mallopt, init_zygote_child_profiling) {
 #endif
 }
 
+#if defined(__BIONIC__)
+template <typename T>
+void CheckAllocationFunction(T t) {
+  size_t limit = 32 * 1024 * 1024;
+  ASSERT_EQ(true, android_mallopt(M_SET_ALLOCATION_LIMIT, &limit, sizeof(limit)));
+  if (!t(20 * 1024 * 1024))
+    exit(1);
+  if (t(20 * 1024 * 1024))
+    exit(1);
+  exit(0);
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit) {
+#if defined(__BIONIC__)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(bytes, 1) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(1, bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return malloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return memalign(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p;
+                return posix_memalign(&p, sizeof(void *), bytes) == 0;
+              }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return aligned_alloc(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p = malloc(1024 * 1024);
+                return realloc(p, bytes) != nullptr;
+              }),
+              testing::ExitedWithCode(0), "");
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return pvalloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return valloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+#endif
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}

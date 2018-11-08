@@ -63,6 +63,7 @@ extern "C" void __sanitizer_malloc_disable() {
 
 extern "C" void __sanitizer_malloc_enable() {
 }
+#include <sanitizer/allocator_interface.h>
 #include <sanitizer/hwasan_interface.h>
 #define Malloc(function)  __sanitizer_ ## function
 
@@ -82,28 +83,7 @@ static T* RemoveConst(const T* x) {
 
 static constexpr memory_order default_read_memory_order = memory_order_acquire;
 
-static constexpr MallocDispatch __libc_malloc_default_dispatch
-  __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    Malloc(malloc),
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
-#endif
-    Malloc(realloc),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
-#endif
-    Malloc(iterate),
-    Malloc(malloc_disable),
-    Malloc(malloc_enable),
-    Malloc(mallopt),
-    Malloc(aligned_alloc),
-  };
+static WriteProtected<MallocDispatch> __libc_malloc_default_dispatch;
 
 // Malloc hooks.
 void* (*volatile __malloc_hook)(size_t, const void*);
@@ -248,6 +228,135 @@ extern "C" void* valloc(size_t bytes) {
   return Malloc(valloc)(bytes);
 }
 #endif
+
+static _Atomic size_t gAllocated;
+static size_t gAllocLimit;
+
+static bool check_limit(size_t bytes) {
+  return atomic_load(&gAllocated) + bytes <= gAllocLimit;
+}
+
+static void* limit_post_alloc(void* mem) {
+  if (mem) atomic_fetch_add(&gAllocated, Malloc(malloc_usable_size)(mem));
+  return mem;
+}
+
+static void* limit_calloc(size_t n_elements, size_t elem_size) {
+  if (!check_limit(n_elements * elem_size))
+    return nullptr;
+  return limit_post_alloc(Malloc(calloc)(n_elements, elem_size));
+}
+
+static void limit_free(void* mem) {
+  atomic_fetch_sub(&gAllocated, Malloc(malloc_usable_size)(mem));
+  Malloc(free)(mem);
+}
+
+static void* limit_malloc(size_t bytes) {
+  if (!check_limit(bytes))
+    return nullptr;
+  return limit_post_alloc(Malloc(malloc)(bytes));
+}
+
+static void* limit_memalign(size_t alignment, size_t bytes) {
+  if (!check_limit(bytes))
+    return nullptr;
+  return limit_post_alloc(Malloc(memalign)(alignment, bytes));
+}
+
+static int limit_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  if (!check_limit(size))
+    return ENOMEM;
+  int retval = Malloc(posix_memalign)(memptr, alignment, size);
+  if (retval == 0) limit_post_alloc(*memptr);
+  return retval;
+}
+
+static void* limit_aligned_alloc(size_t alignment, size_t size) {
+  if (!check_limit(size))
+    return nullptr;
+  return limit_post_alloc(Malloc(aligned_alloc)(alignment, size));
+}
+
+static void* limit_realloc(void* old_mem, size_t bytes) {
+  size_t old_usable_size = Malloc(malloc_usable_size)(old_mem);
+  if (!check_limit(bytes - old_usable_size))
+    return nullptr;
+  void* new_mem = Malloc(realloc)(old_mem, bytes);
+  if (new_mem) atomic_fetch_add(&gAllocated, Malloc(malloc_usable_size)(new_mem) - old_usable_size);
+  return new_mem;
+}
+
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+static void* limit_pvalloc(size_t bytes) {
+  if (!check_limit(bytes))
+    return nullptr;
+  return limit_post_alloc(Malloc(pvalloc)(bytes));
+}
+
+static void* limit_valloc(size_t bytes) {
+  if (!check_limit(bytes))
+    return nullptr;
+  return limit_post_alloc(Malloc(valloc)(bytes));
+}
+#endif
+
+// This function is not thread safe. It is intended to be called once at the start of the program
+// before starting any threads.
+static void HandleSetAllocationLimit(size_t limit) {
+  if (!gAllocated) {
+#if __has_feature(hwaddress_sanitizer)
+    size_t stats_allocated = __sanitizer_get_current_allocated_bytes();
+#else
+    uint64_t epoch;
+    if (Malloc(mallctl)("epoch", nullptr, nullptr, (void*)&epoch, sizeof(epoch)) != 0)
+      async_safe_fatal("android_set_allocation_limit: unable to query allocator");
+
+    size_t stats_allocated;
+    size_t stats_allocated_size = sizeof(stats_allocated);
+    if (Malloc(mallctl)("stats.allocated", (void*)&stats_allocated, &stats_allocated_size, nullptr,
+                        0) != 0)
+      async_safe_fatal("android_set_allocation_limit: unable to query allocator");
+#endif
+    atomic_init(&gAllocated, stats_allocated);
+  }
+
+  gAllocLimit = limit;
+
+  // We need to make sure not to overwrite an existing hook here.
+  __libc_globals.mutate([](libc_globals* globals) {
+    if (!globals->malloc_dispatch.calloc) globals->malloc_dispatch.calloc = limit_calloc;
+    if (!globals->malloc_dispatch.free) globals->malloc_dispatch.free = limit_free;
+    if (!globals->malloc_dispatch.malloc) globals->malloc_dispatch.malloc = limit_malloc;
+    if (!globals->malloc_dispatch.memalign) globals->malloc_dispatch.memalign = limit_memalign;
+    if (!globals->malloc_dispatch.posix_memalign)
+      globals->malloc_dispatch.posix_memalign = limit_posix_memalign;
+    if (!globals->malloc_dispatch.realloc) globals->malloc_dispatch.realloc = limit_realloc;
+    if (!globals->malloc_dispatch.aligned_alloc)
+      globals->malloc_dispatch.aligned_alloc = limit_aligned_alloc;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+    if (!globals->malloc_dispatch.pvalloc) globals->malloc_dispatch.pvalloc = limit_pvalloc;
+    if (!globals->malloc_dispatch.valloc) globals->malloc_dispatch.valloc = limit_valloc;
+#endif
+  });
+
+  // Set __libc_malloc_default_dispatch in case a hook is installed later (which would overwrite
+  // __libc_globals) or has already been installed. In that case the limit is implemented via
+  // __libc_malloc_default_dispatch which is called by the hook.
+  __libc_malloc_default_dispatch.mutate([](MallocDispatch* dispatch) {
+    dispatch->calloc = limit_calloc;
+    dispatch->free = limit_free;
+    dispatch->malloc = limit_malloc;
+    dispatch->memalign = limit_memalign;
+    dispatch->posix_memalign = limit_posix_memalign;
+    dispatch->realloc = limit_realloc;
+    dispatch->aligned_alloc = limit_aligned_alloc;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+    dispatch->pvalloc = limit_pvalloc;
+    dispatch->valloc = limit_valloc;
+#endif
+  });
+}
 
 // We implement malloc debugging only in libc.so, so the code below
 // must be excluded if we compile this file for static libc.a
@@ -607,7 +716,7 @@ static void install_hooks(libc_globals* globals, const char* options,
                           const char* prefix, const char* shared_lib) {
   init_func_t init_func = atomic_load(&g_heapprofd_init_func);
   if (init_func != nullptr) {
-    init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options);
+    init_func(&*__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options);
     info_log("%s: malloc %s re-enabled", getprogname(), prefix);
     return;
   }
@@ -618,7 +727,7 @@ static void install_hooks(libc_globals* globals, const char* options,
     return;
   }
   init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
+  if (!init_func(&*__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
     dlclose(impl_handle);
     ClearGlobalFunctions();
     return;
@@ -677,6 +786,30 @@ extern "C" void MaybeInstallInitHeapprofdHook(int);
 
 // Initializes memory allocation framework once per process.
 static void malloc_init_impl(libc_globals* globals) {
+  __libc_malloc_default_dispatch.mutate([](MallocDispatch* dispatch) {
+    *dispatch = {
+      Malloc(calloc),
+      Malloc(free),
+      Malloc(mallinfo),
+      Malloc(malloc),
+      Malloc(malloc_usable_size),
+      Malloc(memalign),
+      Malloc(posix_memalign),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+      Malloc(pvalloc),
+#endif
+      Malloc(realloc),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+      Malloc(valloc),
+#endif
+      Malloc(iterate),
+      Malloc(malloc_disable),
+      Malloc(malloc_enable),
+      Malloc(mallopt),
+      Malloc(aligned_alloc),
+    };
+  });
+
   struct sigaction action = {};
   action.sa_handler = MaybeInstallInitHeapprofdHook;
   sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
@@ -790,6 +923,16 @@ bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     return HandleInitZygoteChildProfiling();
+  }
+
+  if (opcode == M_SET_ALLOCATION_LIMIT) {
+    if (arg == nullptr || arg_size != sizeof(size_t)) {
+      errno = EINVAL;
+      return false;
+    }
+    size_t limit = *reinterpret_cast<size_t*>(arg);
+    HandleSetAllocationLimit(limit);
+    return true;
   }
 
   errno = ENOTSUP;
