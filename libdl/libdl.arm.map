@@ -41,11 +41,15 @@ LIBC_OMR1 { # introduced=27
     __cfi_slowpath_diag;
 } LIBC_N;
 
+LIBC_Q { # introduced=29
+  global:
+    android_get_application_target_sdk_version;
+} LIBC_OMR1;
+
 LIBC_PLATFORM {
   global:
     __cfi_init;
     android_dlwarning;
-    android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;
@@ -53,4 +57,4 @@ LIBC_PLATFORM {
     android_create_namespace;
     android_link_namespaces;
     android_get_exported_namespace;
-} LIBC_OMR1;
+} LIBC_Q;
