@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12cccc20_9cb62fc6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-10T00:39:26Z",
+      "side": 1,
+      "message": "Move?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 4
+      },
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e3587fd_1878e6c4",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-10T00:39:26Z",
+      "side": 1,
+      "message": "I\u0027m not sure we\u0027d want to, but I think we could expose this symbol for older API levels if we omitted the version tag in the stub library.",
+      "range": {
+        "startLine": 43,
+        "startChar": 9,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
