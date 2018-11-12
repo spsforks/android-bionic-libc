@@ -200,15 +200,25 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   int fd;
 
 #if defined(__ANDROID__)
-  // On Android, try the three hard-coded locations.
+  // On Android, try the four hard-coded locations in order.
+  // 1: The O-MR1 time zone updates via APK update mechanism.
   fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
 
+  // 2: The time zone data module which may contain newer data on
+  // devices that support module updates.
   fd = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
 
+  // 3: The runtime module, which should exist even on devices that
+  // do not support APEX file updates.
+  fd = __bionic_open_tzdata_path("/apex/com.android.runtime/etc/tz/tzdata",
+                                 olson_id, entry_length);
+  if (fd >= 0) return fd;
+
+  // 4: The ultimate fallback: the non-updatable copy in /system.
   fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
