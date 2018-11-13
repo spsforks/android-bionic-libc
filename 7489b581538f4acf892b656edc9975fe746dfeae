@@ -16,6 +16,24 @@
       "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cea8af1_e7d71e88",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-11-13T21:11:20Z",
+      "side": 1,
+      "message": "That was always a thought.  I think we got side tracked trying to find out if people would want to have the test data left over to debug a failing test and never moved forward with anything.  At least for this test, the test data is pretty useless, so this change is for-sure safe.  The TemporaryDir change is probably safe too.\n\nWe\u0027d need to make this handle subdirectories if we moved it to TemporaryDir too.",
+      "parentUuid": "6b45380a_940e56a6",
+      "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
