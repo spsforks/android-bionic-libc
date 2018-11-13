@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 #include "BionicDeathTest.h"
 
+#include <dirent.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -43,6 +44,15 @@ class SystemPropertiesTest : public SystemProperties {
   ~SystemPropertiesTest() {
     if (valid_) {
       contexts_->FreeAndUnmap();
+    }
+    std::unique_ptr<DIR, decltype(&closedir)> dir(opendir(dir_.path), closedir);
+    if (dir) {
+      dirent* entry;
+      while ((entry = readdir(dir.get()))) {
+        if (("."s == entry->d_name) || (".."s == entry->d_name)) continue;
+        auto file = dir_.path + "/"s + entry->d_name;
+        unlink(file.c_str());
+      }
     }
   }
 
