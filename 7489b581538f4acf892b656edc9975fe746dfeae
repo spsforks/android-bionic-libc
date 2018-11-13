@@ -34,6 +34,24 @@
       "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15f6f514_c1700d73",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-11-13T21:15:33Z",
+      "side": 1,
+      "message": "There is a precedent, TemporaryFile has remove_file_ and DoNotRemove() method. Do the same for TemporaryDir with destructor rm -rf.\n\nWill think if this is worth abandoning (based on test cleanliness or not), will use the TreeHugger related to this set to get the base changes in for bionic tests tho\u0027.",
+      "parentUuid": "6b45380a_940e56a6",
+      "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
