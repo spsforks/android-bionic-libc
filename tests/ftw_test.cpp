@@ -24,29 +24,62 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <string>
+
 #include <android-base/file.h>
+#include <android-base/macros.h>
 #include <android-base/stringprintf.h>
 #include <gtest/gtest.h>
 
-static void MakeTree(const char* root) {
+class MakeTree {
+ public:
+  MakeTree(const char* root);
+  ~MakeTree();
+
+private:
+  std::string root_;
+
+  DISALLOW_COPY_AND_ASSIGN(MakeTree);
+};
+
+MakeTree::MakeTree(const char* root) : root_(root) {
   char path[PATH_MAX];
 
   snprintf(path, sizeof(path), "%s/dir", root);
-  ASSERT_EQ(0, mkdir(path, 0755)) << path;
+  EXPECT_EQ(0, mkdir(path, 0755)) << path;
   snprintf(path, sizeof(path), "%s/dir/sub", root);
-  ASSERT_EQ(0, mkdir(path, 0555)) << path;
+  EXPECT_EQ(0, mkdir(path, 0555)) << path;
   snprintf(path, sizeof(path), "%s/unreadable-dir", root);
-  ASSERT_EQ(0, mkdir(path, 0000)) << path;
+  EXPECT_EQ(0, mkdir(path, 0000)) << path;
 
   snprintf(path, sizeof(path), "%s/dangler", root);
-  ASSERT_EQ(0, symlink("/does-not-exist", path));
+  EXPECT_EQ(0, symlink("/does-not-exist", path));
   snprintf(path, sizeof(path), "%s/symlink", root);
-  ASSERT_EQ(0, symlink("dir/sub", path));
+  EXPECT_EQ(0, symlink("dir/sub", path));
 
   int fd;
   snprintf(path, sizeof(path), "%s/regular", root);
-  ASSERT_NE(-1, fd = open(path, O_CREAT|O_TRUNC, 0666));
-  ASSERT_EQ(0, close(fd));
+  EXPECT_NE(-1, fd = open(path, O_CREAT|O_TRUNC, 0666));
+  EXPECT_EQ(0, close(fd));
+}
+
+MakeTree::~MakeTree() {
+  char path[PATH_MAX];
+
+  snprintf(path, sizeof(path), "%s/dir/sub", root_.c_str());
+  EXPECT_EQ(0, rmdir(path)) << path;
+  snprintf(path, sizeof(path), "%s/dir", root_.c_str());
+  EXPECT_EQ(0, rmdir(path)) << path;
+  snprintf(path, sizeof(path), "%s/unreadable-dir", root_.c_str());
+  EXPECT_EQ(0, rmdir(path)) << path;
+
+  snprintf(path, sizeof(path), "%s/dangler", root_.c_str());
+  EXPECT_EQ(0, unlink(path)) << path;
+  snprintf(path, sizeof(path), "%s/symlink", root_.c_str());
+  EXPECT_EQ(0, unlink(path)) << path;
+
+  snprintf(path, sizeof(path), "%s/regular", root_.c_str());
+  EXPECT_EQ(0, unlink(path)) << path;
 }
 
 void sanity_check_ftw(const char* fpath, const struct stat* sb, int tflag) {
@@ -152,6 +185,7 @@ TEST(ftw, bug_28197840) {
   ASSERT_EQ(0, ftw64(root.path, bug_28197840_ftw<struct stat64>, 128));
   ASSERT_EQ(0, nftw(root.path, bug_28197840_nftw<struct stat>, 128, FTW_PHYS));
   ASSERT_EQ(0, nftw64(root.path, bug_28197840_nftw<struct stat64>, 128, FTW_PHYS));
+  ASSERT_EQ(0, rmdir(path.c_str())) << path;
 }
 
 template <typename StatT>
