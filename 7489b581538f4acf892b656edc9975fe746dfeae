@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b45380a_940e56a6",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T21:00:38Z",
+      "side": 1,
+      "message": "i do wonder whether this should be [optional?] functionality of TemporaryDir instead...\n\nthe minjail one defaults to `rm -rf`: https://cs.corp.google.com/android/external/minijail/system_unittest.cc?type\u003dcs\u0026q\u003d%5CbTemporaryDir%5Cb\u0026sq\u003dpackage:%5Eandroid$\u0026g\u003d0\u0026l\u003d76\n\nand -- unlike TemporaryFile -- there are currently zero non-test uses of TemporaryDir.",
+      "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
