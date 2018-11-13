@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8dfe47d_8bdf5039",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T23:33:58Z",
+      "side": 1,
+      "message": "from a quick look at the code, i think we could safely move this one, but as long as we can\u0027t move TLS_SLOT_TSAN there doesn\u0027t seem much point?",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
