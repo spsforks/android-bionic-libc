@@ -340,5 +340,6 @@ TEST(fcntl, open_O_TMPFILE_mode) {
                        AT_SYMLINK_FOLLOW));
   ASSERT_EQ(ENOENT, errno);
   ASSERT_EQ(0, close(fd));
+  ASSERT_EQ(0, unlink(final_path.c_str())) << final_path;
 #endif
 }
