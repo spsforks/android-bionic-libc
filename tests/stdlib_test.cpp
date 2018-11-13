@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
-#include "BionicDeathTest.h"
-#include "math_data_test.h"
-#include "TemporaryFile.h"
-#include "utils.h"
-
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
@@ -35,6 +28,11 @@
 #include <limits>
 #include <string>
 
+#include <android-base/file.h>
+#include <gtest/gtest.h>
+
+#include "BionicDeathTest.h"
+#include "math_data_test.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)

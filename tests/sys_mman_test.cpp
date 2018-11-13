@@ -21,7 +21,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
 
 TEST(sys_mman, mmap_std) {
   void* map = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
