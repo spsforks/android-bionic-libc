@@ -52,6 +52,24 @@
       "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20bf7b50_3432f23d",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-11-13T21:46:59Z",
+      "side": 1,
+      "message": "Sounds good to me.",
+      "parentUuid": "15f6f514_c1700d73",
+      "revId": "7489b581538f4acf892b656edc9975fe746dfeae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
