@@ -16,6 +16,24 @@
       "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5306295_01c5af86",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-14T00:00:57Z",
+      "side": 1,
+      "message": "I\u0027d think we could move TSAN to TLS slot 6, but there are prebuilts to worry about.",
+      "parentUuid": "e8dfe47d_8bdf5039",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
