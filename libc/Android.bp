@@ -65,7 +65,7 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
-        "external/jemalloc_new/include",
+        "external/jemalloc/include",
     ],
 
     stl: "none",
@@ -1597,7 +1597,7 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
-        "libjemalloc5",
+        "libjemalloc",
         "libstdc++",
     ],
 }
@@ -1782,7 +1782,7 @@ cc_library {
         "libdl",
     ],
     whole_static_libs: [
-        "libjemalloc5",
+        "libjemalloc",
     ],
 
     nocrt: true,
