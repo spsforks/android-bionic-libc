@@ -33,6 +33,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"

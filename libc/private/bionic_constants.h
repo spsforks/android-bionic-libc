@@ -19,4 +19,12 @@
 
 #define NS_PER_S 1000000000
 
+// Size of the shadow call stack.
+#define SCS_SIZE (8 * 1024)
+
+// The shadow call stack is allocated at an aligned address within a guard region
+// of this size.
+// TODO(b/118642754): Use a larger guard region.
+#define SCS_GUARD_REGION_SIZE (12 * 1024)
+
 #endif // _BIONIC_CONSTANTS_H_
