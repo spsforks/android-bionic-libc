@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59341e24_c329614f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-14T22:11:22Z",
+      "side": 1,
+      "message": "is it faster to mmap+mprotect or mmap+mmap (or does it make no difference)?",
+      "revId": "d730d685b7c40e2dc17efc3369e9bbbee8db6693",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de8dd789_44b1268b",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-14T22:11:22Z",
+      "side": 1,
+      "message": "same line or braces",
+      "revId": "d730d685b7c40e2dc17efc3369e9bbbee8db6693",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
