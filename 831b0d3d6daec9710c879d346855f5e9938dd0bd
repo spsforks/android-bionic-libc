@@ -34,6 +34,24 @@
       "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac7ea4a9_8d588b3a",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-14T00:19:04Z",
+      "side": 1,
+      "message": "yeah, that\u0027s what i meant: we\u0027ll need to coordinate with eugenis to move TSAN, so we should wait until we know we need to do that before making any changes.",
+      "parentUuid": "f5306295_01c5af86",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
