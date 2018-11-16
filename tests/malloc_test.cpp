@@ -560,3 +560,40 @@ TEST(malloc, reallocarray) {
   GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
 #endif
 }
+
+TEST(malloc, mallinfo) {
+#if defined(__BIONIC__)
+  static size_t sizes[] = {
+    8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
+  };
+
+  for (size_t size : sizes) {
+    // If some of these allocations are stuck in a thread cache, then keep
+    // looping until we make an allocation that changes the total size of the
+    // memory allocated.
+    // jemalloc implementations counts the thread cache allocations against
+    // total memory allocated.
+    void* ptrs[50] = {};
+    bool pass = false;
+    for (size_t i = 0; i < 50; i++) {
+      size_t allocated = mallinfo().uordblks;
+      ptrs[i] = malloc(size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t new_allocated = mallinfo().uordblks;
+      if (allocated != new_allocated) {
+        size_t usable_size = malloc_usable_size(ptrs[i]);
+        ASSERT_GE(new_allocated, allocated + usable_size)
+            << "Failed at size " << size << " usable size " << usable_size;
+        pass = true;
+        break;
+      }
+    }
+    for (void* ptr : ptrs) {
+      free(ptr);
+    }
+    ASSERT_TRUE(pass) << "Allocated bytes did not increase after 50 allocations. " << size;
+  }
+#else
+  GTEST_LOG_(INFO) << "Host glibc does not pass this test, skipping.\n";
+#endif
+}
