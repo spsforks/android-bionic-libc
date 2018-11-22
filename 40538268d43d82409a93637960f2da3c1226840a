@@ -46,6 +46,30 @@
       "revId": "40538268d43d82409a93637960f2da3c1226840a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1bdb7cc_08edb827",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-11-22T15:32:26Z",
+      "side": 0,
+      "message": "Not all products ship with the Runtime APEX at the moment (marlin and sailfish don\u0027t have it yet – I\u0027m working on it). Until then, maybe you could add a fallback case checking \"/system/usr/share/zoneinfo/tzdata\" (and remove it when all products ship the Runtime APEX)?",
+      "parentUuid": "74f425d0_c07e567e",
+      "range": {
+        "startLine": 212,
+        "startChar": 34,
+        "endLine": 212,
+        "endChar": 67
+      },
+      "revId": "40538268d43d82409a93637960f2da3c1226840a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
