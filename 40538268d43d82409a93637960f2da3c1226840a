@@ -70,6 +70,30 @@
       "revId": "40538268d43d82409a93637960f2da3c1226840a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d427b80_22300d63",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-11-22T16:46:33Z",
+      "side": 0,
+      "message": "Ah, I thought you\u0027d resolved that already.\n\nThis isn\u0027t close to ready: From talking to enh@ I\u0027ve uncovered issues with tzdata I wasn\u0027t previously aware of. I might move tzlookup.xml and the ICU file but leave tzdata for a while longer.",
+      "parentUuid": "a1bdb7cc_08edb827",
+      "range": {
+        "startLine": 212,
+        "startChar": 34,
+        "endLine": 212,
+        "endChar": 67
+      },
+      "revId": "40538268d43d82409a93637960f2da3c1226840a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
