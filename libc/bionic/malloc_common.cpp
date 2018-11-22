@@ -252,8 +252,10 @@ extern "C" void* valloc(size_t bytes) {
 #if !defined(LIBC_STATIC)
 
 #include <dlfcn.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <async_safe/log.h>
 #include <sys/system_properties.h>
@@ -470,6 +472,48 @@ static bool CheckLoadMallocDebug(char** options) {
   return true;
 }
 
+static char* GetNormalizedCmdline(char* data, size_t size) {
+  int fd = open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    error_log("%s: Failed to open /proc/self/cmdline", getprogname());
+    return nullptr;
+  }
+  ssize_t rd = read(fd, data, size - 1);
+  close(fd);
+  if (rd == -1) {
+    error_log("%s: Failed to read /proc/self/cmdline", getprogname());
+    return nullptr;
+  }
+  data[rd] = '\0';
+  char* first_arg = static_cast<char*>(memchr(data, '\0', rd));
+  if (first_arg == nullptr || first_arg == data + size) {
+    error_log("%s: Overflow reading cmdline", getprogname());
+    return nullptr;
+  }
+  // For consistency with what we do with Java app cmdlines, trim everything
+  // after the @ sign of the first arg.
+  char* first_at = static_cast<char*>(memchr(data, '@', rd));
+  if (first_at != nullptr && first_at < first_arg) {
+    *first_at = '\0';
+    first_arg = first_at;
+  }
+
+  char* start = data;
+  for (;;) {
+    char* new_start = static_cast<char*>(memchr(start, '/', first_arg - start));
+    if (new_start == nullptr) {
+      break;
+    }
+    start = new_start + 1;
+  }
+  if (start == first_arg) {
+    // The first argument ended in a slash.
+    error_log("%s: cmdline ends in /", getprogname());
+    return nullptr;
+  }
+  return start;
+}
+
 static bool CheckLoadHeapprofd() {
   // First check for heapprofd.enable. If it is set to "all", enable
   // heapprofd for all processes. Otherwise, check heapprofd.enable.${prog},
@@ -482,14 +526,20 @@ static bool CheckLoadHeapprofd() {
     return true;
   }
 
-  char program_property[128];
+  char cmdline[128];
+  char* name = GetNormalizedCmdline(cmdline, sizeof(cmdline));
+  if (name == nullptr) {
+    error_log("%s: Failed to determine name", getprogname());
+    return false;
+  }
+  char program_property[100];
   int ret = snprintf(program_property, sizeof(program_property), "%s.%s",
-                     HEAPPROFD_PROPERTY_ENABLE, getprogname());
+                     HEAPPROFD_PROPERTY_ENABLE, name);
 
   if (ret < 0 || static_cast<size_t>(ret) >= sizeof(program_property)) {
     if (ret < 0) {
       error_log("Failed to concatenate heapprofd property %s.%s: %s",
-                HEAPPROFD_PROPERTY_ENABLE, getprogname(), strerror(errno));
+                HEAPPROFD_PROPERTY_ENABLE, name, strerror(errno));
     } else {
       error_log("Overflow in concatenating heapprofd property");
     }
