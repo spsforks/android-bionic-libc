@@ -572,6 +572,8 @@ static void install_hooks(libc_globals* globals, const char* options,
   }
 
   atomic_store(&g_heapprofd_init_func, init_func);
+  // The struct gets assigned elementwise and each of the elements is an
+  // _Atomic. Assigning to an _Atomic is an atomic_store operation.
   globals->malloc_dispatch = dispatch_table;
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
@@ -679,7 +681,7 @@ static void* InitHeapprofdHook(size_t bytes) {
 extern "C" void InstallInitHeapprofdHook(int) {
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
-      globals->malloc_dispatch.malloc = InitHeapprofdHook;
+      atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
     });
   }
 }
