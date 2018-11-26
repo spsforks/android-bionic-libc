@@ -195,6 +195,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     "libui.so",
     "libutils.so",
     "libvorbisidec.so",
+    "libjni_latinime.so",/*SPRD fixbug 862992 inputmethod.latin can't load libjni_latinime.so*/
     nullptr
   };
 
