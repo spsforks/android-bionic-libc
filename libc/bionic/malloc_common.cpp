@@ -684,7 +684,27 @@ extern "C" void InstallInitHeapprofdHook(int) {
   }
 }
 
+extern "C" void __malloc_dispatch_reset(const MallocDispatch* dispatch_table) {
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    __libc_globals.mutate([dispatch_table](libc_globals* globals) {
+      globals->malloc_dispatch = *dispatch_table;
+    });
+
+    atomic_store(&g_heapprofd_init_in_progress, false);
+  }
+}
+
+#else
+
+extern "C" void __malloc_dispatch_reset(const MallocDispatch* dispatch_table) {
+  __libc_globals.mutate([dispatch_table](libc_globals* globals) {
+    globals->malloc_dispatch = *dispatch_table;
+  });
+}
+
 #endif  // !LIBC_STATIC
+
+
 
 // =============================================================================
 // Exported for use by libmemunreachable.
