@@ -76,4 +76,7 @@ struct MallocDispatch {
   _Atomic MallocAlignedAlloc aligned_alloc;
 } __attribute__((aligned(32)));
 
+
+extern "C" void __malloc_dispatch_reset(const MallocDispatch*);
+
 #endif
