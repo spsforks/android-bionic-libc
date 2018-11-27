@@ -37,6 +37,8 @@
 enum {
   M_INIT_ZYGOTE_CHILD_PROFILING = 1,
 #define M_INIT_ZYGOTE_CHILD_PROFILING M_INIT_ZYGOTE_CHILD_PROFILING
+  M_RESET_HOOKS = 2,
+#define M_RESET_HOOKS M_RESET_HOOKS
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
