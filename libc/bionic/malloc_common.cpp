@@ -554,13 +554,7 @@ static void ClearGlobalFunctions() {
   }
 }
 
-static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
-  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
-  if (impl_handle == nullptr) {
-    error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
-    return nullptr;
-  }
-
+static bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
   static constexpr const char* names[] = {
     "initialize",
     "finalize",
@@ -575,16 +569,28 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
     g_functions[i] = dlsym(impl_handle, symbol);
     if (g_functions[i] == nullptr) {
       error_log("%s: %s routine not found in %s", getprogname(), symbol, shared_lib);
-      dlclose(impl_handle);
       ClearGlobalFunctions();
-      return nullptr;
+      return false;
     }
   }
 
   if (!InitMallocFunctions(impl_handle, dispatch_table, prefix)) {
-    dlclose(impl_handle);
     ClearGlobalFunctions();
+    return false;
+  }
+  return true;
+}
+
+static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
+  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
+  if (impl_handle == nullptr) {
+    error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
     return nullptr;
+  }
+
+  if (!InitSharedLibrary(impl_handle, shared_lib, prefix, dispatch_table)) {
+    dlclose(impl_handle);
+    impl_handle = nullptr;
   }
 
   return impl_handle;
@@ -593,30 +599,31 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
 // A function pointer to heapprofds init function. Used to re-initialize
 // heapprofd. This will start a new profiling session and tear down the old
 // one in case it is still active.
-static _Atomic init_func_t g_heapprofd_init_func = nullptr;
+static _Atomic (void*) g_heapprofd_handle = nullptr;
 
 static void install_hooks(libc_globals* globals, const char* options,
                           const char* prefix, const char* shared_lib) {
-  init_func_t init_func = atomic_load(&g_heapprofd_init_func);
-  if (init_func != nullptr) {
-    init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options);
-    info_log("%s: malloc %s re-enabled", getprogname(), prefix);
-    return;
-  }
-
   MallocDispatch dispatch_table;
-  void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
-  if (impl_handle == nullptr) {
-    return;
+
+  void* impl_handle = atomic_load(&g_heapprofd_handle);
+  if (impl_handle != nullptr) {
+    if (!InitSharedLibrary(impl_handle, shared_lib, prefix, &dispatch_table)) {
+      return;
+    }
+  } else {
+    impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+    if (impl_handle == nullptr) {
+      return;
+    }
   }
-  init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
+  init_func_t init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
+    error_log("%s: failed to enable malloc %s", getprogname(), prefix);
     dlclose(impl_handle);
     ClearGlobalFunctions();
     return;
   }
 
-  atomic_store(&g_heapprofd_init_func, init_func);
   // We assign free  first explicitly to prevent the case where we observe a
   // alloc, but miss the corresponding free because of initialization order.
   //
@@ -628,6 +635,7 @@ static void install_hooks(libc_globals* globals, const char* options,
   // _Atomic. Assigning to an _Atomic is an atomic_store operation.
   // The assignment is done in declaration order.
   globals->malloc_dispatch = dispatch_table;
+  atomic_store(&g_heapprofd_handle, impl_handle);
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
 
@@ -738,6 +746,24 @@ extern "C" void InstallInitHeapprofdHook(int) {
       atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
     });
   }
+}
+
+extern "C" void __malloc_dispatch_reset(const MallocDispatch* dispatch_table) {
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    __libc_globals.mutate([dispatch_table](libc_globals* globals) {
+      globals->malloc_dispatch = *dispatch_table;
+    });
+
+    atomic_store(&g_heapprofd_init_in_progress, false);
+  }
+}
+
+#else
+
+extern "C" void __malloc_dispatch_reset(const MallocDispatch* dispatch_table) {
+  __libc_globals.mutate([dispatch_table](libc_globals* globals) {
+    globals->malloc_dispatch = *dispatch_table;
+  });
 }
 
 #endif  // !LIBC_STATIC
