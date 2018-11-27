@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bb100ab_d561dee8",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-27T16:34:40Z",
+      "side": 1,
+      "message": "no TODO?",
+      "revId": "f17fd1d68aca0a63f7888cd4035858bbdfc6fa94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
