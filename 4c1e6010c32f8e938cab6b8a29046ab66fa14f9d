@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f25785d_ba16c80d",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2018-11-27T12:42:15Z",
+      "side": 1,
+      "message": "This comment looks inaccurate, as the |InitMallocFunction| only does dlsym, while the actual dispatch table assignment is done below (the struct assignment on L575 that this patch is commenting). (And therefore the reordering done in aosp/743651 wasn\u0027t necessary.)\n\nNote also that, afaict, due to the declaration order of MallocDispatch\u0027s members, the struct assignment will patch |calloc| before patching |free|. But I\u0027m not convinced the race is bad enough to require a custom copy assignment op.",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 23
+      },
+      "revId": "4c1e6010c32f8e938cab6b8a29046ab66fa14f9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
