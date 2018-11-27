@@ -16,6 +16,24 @@
       "revId": "f17fd1d68aca0a63f7888cd4035858bbdfc6fa94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecbd1cc0_7a044e14",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1115178
+      },
+      "writtenOn": "2018-11-27T16:57:55Z",
+      "side": 1,
+      "message": "Yea, mostly because it\u0027s not clear to me why this isn\u0027t cooperating with XOM yet. I don\u0027t think the cause is related to what\u0027s breaking libm/libc.",
+      "parentUuid": "8bb100ab_d561dee8",
+      "revId": "f17fd1d68aca0a63f7888cd4035858bbdfc6fa94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
