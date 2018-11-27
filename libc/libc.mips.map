@@ -1432,6 +1432,7 @@ LIBC_PRIVATE {
     __get_thread; # arm x86 mips
     __get_tls; # arm x86 mips
     __getdents64; # arm x86 mips
+    __malloc_dispatch_reset;
     __open; # arm x86 mips
     __page_shift; # arm x86 mips
     __page_size; # arm x86 mips

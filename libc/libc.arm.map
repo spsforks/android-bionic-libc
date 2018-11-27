@@ -1563,6 +1563,7 @@ LIBC_PRIVATE {
     __ledf2; # arm
     __lshrdi3; # arm
     __ltdf2; # arm
+    __malloc_dispatch_reset;
     __muldf3; # arm
     __muldi3; # arm
     __mulsf3; # arm

@@ -1361,6 +1361,7 @@ LIBC_Q { # introduced=Q
 
 LIBC_PRIVATE {
   global:
+    __malloc_dispatch_reset;
     android_getaddrinfofornet;
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
