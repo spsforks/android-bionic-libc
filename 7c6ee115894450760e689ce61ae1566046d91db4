@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "601d65b4_cbd1a273",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-29T19:55:18Z",
+      "side": 1,
+      "message": "size_t here and L124?\n\n`++i` here and L124?",
+      "range": {
+        "startLine": 111,
+        "startChar": 9,
+        "endLine": 111,
+        "endChar": 17
+      },
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a8fd585_a4704fb4",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-29T19:55:18Z",
+      "side": 1,
+      "message": "`\u003d {}` instead of the for loop?",
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
