@@ -104,11 +104,26 @@ static int ifunc_close(int fd) {
         return name; \
     }
 
+static bool is_same_name(const char* a, const char* b) {
+    static_assert(MAX_CPU_NAME_LEN % sizeof(int) == 0, "");
+    const int* ia = reinterpret_cast<const int*>(a);
+    const int* ib = reinterpret_cast<const int*>(b);
+    for (unsigned i = 0; i < MAX_CPU_NAME_LEN / sizeof(int); i ++) {
+        if (ia[i] != ib[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static CpuVariant init_cpu_variant() {
     int fd = ifunc_open("/dev/cpu_variant:arm");
     if (fd < 0) return kGeneric;
 
     char name[MAX_CPU_NAME_LEN];
+    for (int i = 0; i < MAX_CPU_NAME_LEN; i ++) {
+        name[i] = 0;
+    }
 
     int bytes_read, total_read = 0;
     while (total_read < MAX_CPU_NAME_LEN - 1 &&
@@ -125,12 +140,9 @@ static CpuVariant init_cpu_variant() {
     }
     name[total_read] = 0;
 
-    typedef int strcmp_func(const char* __lhs, const char* __rhs);
-    DECLARE_FUNC(strcmp_func, strcmp_a15);
-
     const CpuVariantNames* cpu_variant = cpu_variant_names;
     while (cpu_variant->variant != kUnknown) {
-        if (strcmp_a15(cpu_variant->name, name) == 0) {
+        if (is_same_name(cpu_variant->name, name)) {
             return cpu_variant->variant;
         }
         cpu_variant++;
