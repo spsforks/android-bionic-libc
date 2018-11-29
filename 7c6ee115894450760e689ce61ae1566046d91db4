@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bf534a99_6c499475",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-29T20:33:46Z",
+      "side": 1,
+      "message": "Are you sure this will never crash doing an unaligned access? Arm allows this, but sometimes the compiler can emit assembler instructions that will cause a problem.",
+      "range": {
+        "startLine": 109,
+        "startChar": 1,
+        "endLine": 109,
+        "endChar": 52
+      },
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "601d65b4_cbd1a273",
         "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
         "patchSetId": 1
