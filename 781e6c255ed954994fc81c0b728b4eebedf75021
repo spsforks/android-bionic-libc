@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42d0333e_c72aae6c",
+        "filename": "libc/bionic/strerror.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-01T01:39:32Z",
+      "side": 1,
+      "message": "\u003e\u003d ?",
+      "range": {
+        "startLine": 182,
+        "startChar": 38,
+        "endLine": 182,
+        "endChar": 41
+      },
+      "revId": "781e6c255ed954994fc81c0b728b4eebedf75021",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
