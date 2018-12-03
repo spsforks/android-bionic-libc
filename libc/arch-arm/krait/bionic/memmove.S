@@ -29,4 +29,4 @@
 #define MEMMOVE memmove_krait
 #define MEMCPY __memcpy_krait
 
-#include <arch-arm/denver/bionic/memmove.S>
+#include <arch-arm/cortex-a55/bionic/memmove.S>

@@ -29,4 +29,4 @@
 #define MEMMOVE memmove_a7
 #define MEMCPY __memcpy_a7
 
-#include <arch-arm/denver/bionic/memmove.S>
+#include <arch-arm/cortex-a55/bionic/memmove.S>
