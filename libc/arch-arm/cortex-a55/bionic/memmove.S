@@ -30,11 +30,11 @@
 #include <private/bionic_asm.h>
 
 #ifndef MEMMOVE
-# define MEMMOVE memmove_denver
+# define MEMMOVE memmove_a55
 #endif
 
 #ifndef MEMCPY
-# define MEMCPY __memcpy_denver
+# define MEMCPY __memcpy_a55
 #endif
 
         .text

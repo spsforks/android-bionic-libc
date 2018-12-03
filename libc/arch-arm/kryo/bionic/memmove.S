@@ -29,4 +29,4 @@
 #define MEMMOVE memmove_kryo
 #define MEMCPY __memcpy_kryo
 
-#include <arch-arm/denver/bionic/memmove.S>
+#include <arch-arm/cortex-a55/bionic/memmove.S>

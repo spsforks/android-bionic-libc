@@ -38,7 +38,6 @@ enum CpuVariant {
     kCortexA9,
     kCortexA53,
     kCortexA55,
-    kDenver,
     kKrait,
     kKryo,
 };
@@ -59,7 +58,6 @@ static constexpr CpuVariantNames cpu_variant_names[] = {
     {"krait", kKrait},
     {"cortex-a9", kCortexA9},
     {"cortex-a7", kCortexA7},
-    {"denver", kDenver},
     // kUnknown indicates the end of this array.
     {"", kUnknown},
 };
@@ -167,8 +165,7 @@ DEFINE_IFUNC(memmove) {
         case kCortexA53:
             RETURN_FUNC(memmove_func, memmove_a53);
         case kCortexA55:
-        case kDenver:
-            RETURN_FUNC(memmove_func, memmove_denver);
+            RETURN_FUNC(memmove_func, memmove_a55);
         case kKryo:
             RETURN_FUNC(memmove_func, memmove_kryo);
         default:
@@ -193,8 +190,6 @@ DEFINE_IFUNC(__memset_chk) {
             RETURN_FUNC(__memset_chk_func, __memset_chk_a9);
         case kKrait:
             RETURN_FUNC(__memset_chk_func, __memset_chk_krait);
-        case kDenver:
-            RETURN_FUNC(__memset_chk_func, __memset_chk_denver);
         default:
             RETURN_FUNC(__memset_chk_func, __memset_chk_a15);
     }
@@ -212,8 +207,6 @@ DEFINE_IFUNC(memset) {
              RETURN_FUNC(memset_func, memset_a9);
         case kKrait:
              RETURN_FUNC(memset_func, memset_krait);
-        case kDenver:
-             RETURN_FUNC(memset_func, memset_denver);
         default:
              RETURN_FUNC(memset_func, memset_a15);
     }
@@ -242,8 +235,7 @@ DEFINE_IFUNC(__strcpy_chk) {
         case kCortexA53:
             RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a53);
         case kCortexA55:
-        case kDenver:
-            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_denver);
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a55);
         default:
             RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a15);
     }
@@ -282,8 +274,7 @@ DEFINE_IFUNC(__strcat_chk) {
         case kCortexA53:
             RETURN_FUNC(__strcat_chk_func, __strcat_chk_a53);
         case kCortexA55:
-        case kDenver:
-            RETURN_FUNC(__strcat_chk_func, __strcat_chk_denver);
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_a55);
         default:
             RETURN_FUNC(__strcat_chk_func, __strcat_chk_a15);
     }
