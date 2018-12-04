@@ -15,6 +15,9 @@
 
 #include "tzfile.h"
 #include "fcntl.h"
+#if defined(__BIONIC__)
+#include "bionictz_private.h"
+#endif
 
 #if THREAD_SAFE
 # include <pthread.h>
@@ -396,9 +399,16 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 	}
 
 #if defined(__BIONIC__)
-	extern int __bionic_open_tzdata(const char*, int32_t*);
-	int32_t entry_length;
-	fid = __bionic_open_tzdata(name, &entry_length);
+	extern int __bionic_open_tzdata(const char*, struct bionic_entry_info_t*);
+	struct bionic_entry_info_t entry_info;
+	int entry_length;
+	int err = __bionic_open_tzdata(name, &entry_info);
+	if (!err) {
+		fid = entry_info.fid;
+		entry_length = entry_info.entry_length;
+	} else {
+		fid = err;
+	}
 #else
 	if (name[0] == ':')
 		++name;

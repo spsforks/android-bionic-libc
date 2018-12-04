@@ -33,12 +33,30 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "android/bionictz.h"
+#include "bionictz_private.h"
 #include "private/CachedProperty.h"
 
 extern "C" void tzset_unlocked(void);
-extern "C" int __bionic_open_tzdata(const char*, int32_t*);
+extern "C" int __bionic_open_tzdata(const char*, struct bionic_entry_info_t*);
 
 extern "C" void tzsetlcl(char const*);
+
+char* android_get_tzdb_version() {
+  bionic_entry_info_t entry;
+  static const char* ARBITRARY_TZ_ID = "Europe/London";
+  int err = __bionic_open_tzdata(ARBITRARY_TZ_ID, &entry);
+  if (!err) {
+      // We don't need the data, just the version info, so we can close the file descriptor.
+      close(entry.fid);
+
+      int version_length = sizeof(entry.tzdb_version);
+      char* index = reinterpret_cast<char*>(malloc(version_length));
+      return strncpy(index, entry.tzdb_version, version_length);
+  } else {
+      return nullptr;
+  }
+}
 
 void tzset_unlocked() {
   // The TZ environment variable is meant to override the system-wide setting.
@@ -107,7 +125,7 @@ struct index_entry_t {
 
 static int __bionic_open_tzdata_path(const char* path,
                                      const char* olson_id,
-                                     int32_t* entry_length) {
+                                     bionic_entry_info_t* entry_info) {
   int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
   if (fd == -1) {
     return -2; // Distinguish failure to find any data from failure to find a specific id.
@@ -122,11 +140,13 @@ static int __bionic_open_tzdata_path(const char* path,
     return -1;
   }
 
-  if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
+  if (strncmp(header.tzdata_version, "tzdata", 6) != 0
+      || header.tzdata_version[sizeof(header.tzdata_version) - 1] != 0) {
     fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n", __FUNCTION__, path, header.tzdata_version);
     close(fd);
     return -1;
   }
+  memcpy(&((*entry_info).tzdb_version), &header.tzdata_version[6], sizeof((*entry_info).tzdb_version));
 
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
     fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n", __FUNCTION__, path, strerror(errno));
@@ -171,7 +191,7 @@ static int __bionic_open_tzdata_path(const char* path,
 
     if (strcmp(this_id, olson_id) == 0) {
       specific_zone_offset = ntohl(entry->start) + ntohl(header.data_offset);
-      *entry_length = ntohl(entry->length);
+      (*entry_info).entry_length = ntohl(entry->length);
       break;
     }
 
@@ -193,11 +213,12 @@ static int __bionic_open_tzdata_path(const char* path,
 
   // TODO: check that there's TZ_MAGIC at this offset, so we can fall back to the other file if not.
 
-  return fd;
+  (*entry_info).fid = fd;
+  return 0; // Success!
 }
 
-int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
-  int fd;
+int __bionic_open_tzdata(const char* olson_id, bionic_entry_info_t* entry_info) {
+  int err;
 
 #if defined(__ANDROID__)
   // On Android devices, try the four hard-coded locations in order.
@@ -206,58 +227,58 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   // tried first because it allows us to test that the time zone updates
   // via APK mechanism still works even on devices with the time zone
   // module.
-  fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
-                                 olson_id, entry_length);
-  if (fd >= 0) return fd;
+  err = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
+                                  olson_id, entry_info);
+  if (err >= 0) return err;
 
   // 2: The time zone data module which may contain newer data on
   // devices that support module updates.
-  fd = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
-                                 olson_id, entry_length);
-  if (fd >= 0) return fd;
+  err = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
+                                  olson_id, entry_info);
+  if (err >= 0) return err;
 
   // 3: The runtime module, which should exist even on devices that
   // do not support APEX file updates.
-  fd = __bionic_open_tzdata_path("/apex/com.android.runtime/etc/tz/tzdata",
-                                 olson_id, entry_length);
-  if (fd >= 0) return fd;
+  err = __bionic_open_tzdata_path("/apex/com.android.runtime/etc/tz/tzdata",
+                                  olson_id, entry_info);
+  if (err >= 0) return err;
 
   // 4: The ultimate fallback: the non-updatable copy in /system.
-  fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata",
-                                 olson_id, entry_length);
-  if (fd >= 0) return fd;
+  err = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata",
+                                  olson_id, entry_info);
+  if (err >= 0) return err;
 #else
   // On the host, we don't expect those locations to exist, and we're not
   // worried about security so we trust $ANDROID_DATA, $ANDROID_RUNTIME_ROOT,
   // $ANDROID_TZDATA_ROOT, and $ANDROID_ROOT to point us in the right direction.
   char* path = make_path("ANDROID_DATA", "/misc/zoneinfo/current/tzdata");
-  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  err = __bionic_open_tzdata_path(path, olson_id, entry_info);
   free(path);
-  if (fd >= 0) return fd;
+  if (err >= 0) return err;
 
   path = make_path("ANDROID_TZDATA_ROOT", "/etc/tz/tzdata");
-  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  err = __bionic_open_tzdata_path(path, olson_id, entry_info);
   free(path);
-  if (fd >= 0) return fd;
+  if (err >= 0) return err;
 
   path = make_path("ANDROID_RUNTIME_ROOT", "/etc/tz/tzdata");
-  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  err = __bionic_open_tzdata_path(path, olson_id, entry_info);
   free(path);
-  if (fd >= 0) return fd;
+  if (err >= 0) return err;
 
   path = make_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata");
-  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  err = __bionic_open_tzdata_path(path, olson_id, entry_info);
   free(path);
-  if (fd >= 0) return fd;
+  if (err >= 0) return err;
 #endif
 
   // Not finding any tzdata is more serious that not finding a specific zone,
   // and worth logging.
-  if (fd == -2) {
+  if (err == -2) {
     // The first thing that 'recovery' does is try to format the current time. It doesn't have
     // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
     fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
   }
 
-  return fd;
+  return err;
 }
