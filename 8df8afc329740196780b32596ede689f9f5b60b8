@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94d041f5_4acb8465",
+        "filename": "libc/arch-arm/cortex-a53/bionic/memmove.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-04T00:00:37Z",
+      "side": 1,
+      "message": "does this mean it should have been a53, not a55, and a55 should just reuse a53?",
+      "revId": "8df8afc329740196780b32596ede689f9f5b60b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05c71587_f908c741",
+        "filename": "libc/arch-arm/cortex-a7/bionic/memmove.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-04T00:00:37Z",
+      "side": 1,
+      "message": "or a7 even?",
+      "revId": "8df8afc329740196780b32596ede689f9f5b60b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
