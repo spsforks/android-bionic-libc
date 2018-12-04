@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b37a3547_3d190eb6",
+        "filename": "libc/arch-arm/cortex-a53/bionic/memmove.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-12-04T00:37:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94d041f5_4acb8465",
+      "revId": "8df8afc329740196780b32596ede689f9f5b60b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05c71587_f908c741",
         "filename": "libc/arch-arm/cortex-a7/bionic/memmove.S",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "8df8afc329740196780b32596ede689f9f5b60b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d0cbdff_280dea3c",
+        "filename": "libc/arch-arm/cortex-a7/bionic/memmove.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-12-04T00:37:15Z",
+      "side": 1,
+      "message": "made it a15.",
+      "parentUuid": "05c71587_f908c741",
+      "revId": "8df8afc329740196780b32596ede689f9f5b60b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
