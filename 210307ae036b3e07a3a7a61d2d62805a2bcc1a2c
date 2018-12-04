@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdaa0e36_e3c68212",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-04T21:33:52Z",
+      "side": 1,
+      "message": "I\u0027m concerned that this change will allow a mismatched linker/libc.so combo, which would then preclude changing the linker\u003c-\u003elibc.so interface, including the pthread_internal_t struct, the libc_shared_globals struct, etc.\n\ne.g. If there\u0027s going to be a fallback Bionic on the system, then I think that fallback needs to omit this apex directory from its search path.\n\nCan we hold off on this CL until we\u0027ve fixed this issue?",
+      "range": {
+        "startLine": 92,
+        "startChar": 45,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
