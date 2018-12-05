@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5a38045_7f37a334",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-05T08:21:05Z",
+      "side": 1,
+      "message": "__BIONIC_ALIGN(sizeof(page_info), 16)",
+      "range": {
+        "startLine": 69,
+        "startChar": 40,
+        "endLine": 69,
+        "endChar": 77
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abcd3d1c_826fda02",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-05T08:21:05Z",
+      "side": 1,
+      "message": "would __BIONIC_ALIGN(reinterpret_cast\u003cuintptr_t\u003e(page + 1), block_size_) work here?",
+      "range": {
+        "startLine": 198,
+        "startChar": 6,
+        "endLine": 198,
+        "endChar": 65
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02c30f8d_4a5dac30",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-05T08:21:05Z",
+      "side": 1,
+      "message": "For run-time performance, I think it\u0027d be better if we stored this count as a field in LinkerSmallObjectAllocator. block_size_ is a power of two, but the compiler probably can\u0027t figure that out, so it\u0027ll call __aeabi_uidiv on arm32.",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 70
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
