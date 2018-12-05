@@ -55,7 +55,7 @@ struct page_info {
     // and allocator_addr for small ones.
     LinkerSmallObjectAllocator* allocator_addr;
   };
-} __attribute__((aligned(16)));
+};
 
 struct small_object_block_record {
   small_object_block_record* next;
@@ -77,9 +77,8 @@ struct small_object_page_info {
   // Linked list containing all free blocks in this page.
   small_object_block_record* free_block_list;
 
-  // Free/allocated blocks counter.
+  // Free blocks counter.
   size_t free_blocks_cnt;
-  size_t allocated_blocks_cnt;
 };
 
 class LinkerSmallObjectAllocator {
@@ -94,6 +93,10 @@ class LinkerSmallObjectAllocator {
   void free_page(small_object_page_info* page);
   void add_to_page_list(small_object_page_info* page);
   void remove_from_page_list(small_object_page_info* page);
+
+  size_t get_blocks_per_page() const {
+    return (PAGE_SIZE - sizeof(small_object_page_info)) / block_size_;
+  }
 
   uint32_t type_;
   size_t block_size_;
