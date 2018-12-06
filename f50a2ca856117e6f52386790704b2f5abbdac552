@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b33ecb5_c9116d57",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-06T16:17:12Z",
+      "side": 1,
+      "message": "why does this override the /apexes? shouldn\u0027t they (or at least the tzdata apex) come first?\n\n(even if you\u0027re not expecting to see both on the same device, you should probably optimize for the one you think most likely.)",
+      "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
