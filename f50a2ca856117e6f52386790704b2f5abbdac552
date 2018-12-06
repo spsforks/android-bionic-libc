@@ -16,6 +16,24 @@
       "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a58d88fd_3b11f1eb",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-12-06T16:26:59Z",
+      "side": 1,
+      "message": "It\u0027s arbitrary and I didn\u0027t think about the most likely case. I will reverse the order as a follow-up.\n\nI\u0027m still half expecting to remove the time zone updates via APK feature entirely in the next release but I\u0027ll do that as a big topic when I make the final decision.\n\nFYI - even having the tzdata / tzlookup.xml files in com.android.runtime at all is unnecessary if we assume that the time zone module is always present (which eventually we will) because it includes complete copies. ICU is a slightly different matter because it ships an overlay file only. Still, I\u0027m covering as many bases as I can for the near term, especially while space is being made for the runtime APEX file on all our reference devices.",
+      "parentUuid": "8b33ecb5_c9116d57",
+      "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
