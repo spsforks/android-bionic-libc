@@ -34,6 +34,24 @@
       "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a712b557_73043d27",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-12-06T16:29:04Z",
+      "side": 1,
+      "message": "Oh, I remember my reasoning now. It wasn\u0027t arbitrary. I\u0027m relying on our reference devices to demonstrate the \"...via APK\" mechanism still works. I can only do that if the optional thing is checked first.",
+      "parentUuid": "a58d88fd_3b11f1eb",
+      "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
