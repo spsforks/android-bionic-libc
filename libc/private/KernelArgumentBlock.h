@@ -24,6 +24,7 @@
 #include "private/bionic_macros.h"
 
 struct abort_msg_t;
+struct libc_shared_globals;
 
 // When the kernel starts the dynamic linker, it passes a pointer to a block
 // of memory containing argc, the argv array, the environment variable array,
@@ -66,6 +67,7 @@ class KernelArgumentBlock {
 
   // Other data that we want to pass from the dynamic linker to libc.so.
   abort_msg_t** abort_message_ptr;
+  libc_shared_globals* shared_globals;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
