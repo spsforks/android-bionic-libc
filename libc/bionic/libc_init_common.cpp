@@ -89,11 +89,11 @@ void __libc_add_main_thread() {
   __pthread_internal_add(main_thread);
 }
 
-void __libc_init_common() {
+void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
-  environ = __libc_shared_globals()->init_environ;
+  environ = args.envp;
   errno = 0;
-  __progname = __libc_shared_globals()->init_progname ?: "<unknown>";
+  __progname = args.argv[0] ? args.argv[0] : "<unknown>";
 
 #if !defined(__LP64__)
   __check_max_thread_id();
@@ -292,7 +292,7 @@ static void __initialize_personality() {
 #endif
 }
 
-void __libc_init_AT_SECURE(char** env) {
+void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
   // Check that the kernel provided a value for AT_SECURE.
   errno = 0;
   unsigned long is_AT_SECURE = getauxval(AT_SECURE);
@@ -303,11 +303,11 @@ void __libc_init_AT_SECURE(char** env) {
     // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
     __nullify_closed_stdio();
 
-    __sanitize_environment_variables(env);
+    __sanitize_environment_variables(args.envp);
   }
 
   // Now the environment has been sanitized, make it available.
-  environ = __libc_shared_globals()->init_environ = env;
+  environ = args.envp;
 
   __initialize_personality();
 }

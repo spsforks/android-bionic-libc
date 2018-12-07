@@ -298,7 +298,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #endif
 
   // Sanitize the environment.
-  __libc_init_AT_SECURE(args.envp);
+  __libc_init_AT_SECURE(args);
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
@@ -657,7 +657,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_argc = args.argc - __libc_shared_globals()->initial_linker_arg_count;
   g_argv = args.argv + __libc_shared_globals()->initial_linker_arg_count;
   g_envp = args.envp;
-  __libc_shared_globals()->init_progname = g_argv[0];
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors

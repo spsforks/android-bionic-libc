@@ -52,8 +52,8 @@ __END_DECLS
 
 __LIBC_HIDDEN__ void __libc_init_globals();
 
-__LIBC_HIDDEN__ void __libc_init_common();
+__LIBC_HIDDEN__ void __libc_init_common(KernelArgumentBlock& args);
 
-__LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
+__LIBC_HIDDEN__ void __libc_init_AT_SECURE(KernelArgumentBlock& args);
 
 #endif
