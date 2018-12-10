@@ -89,11 +89,6 @@ static int ifunc_close(int fd) {
     return r0;
 }
 
-#define DEFINE_IFUNC(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
-    __attribute__((visibility("hidden"))) \
-    name##_func* name##_resolver()
-
 #define DECLARE_FUNC(type, name) \
     __attribute__((visibility("hidden"))) \
     type name
@@ -102,6 +97,24 @@ static int ifunc_close(int fd) {
         DECLARE_FUNC(type, name); \
         return name; \
     }
+
+#ifdef USE_IFUNC
+#define DEFINE_RESOLVER(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+    __attribute__((visibility("hidden"))) \
+    name##_func* name##_resolver()
+#else
+#define DEFINE_RESOLVER(name) \
+    __attribute__((visibility("hidden"))) \
+    name##_func* name##_resolver()
+#define DEFINE_PTR(name, def) \
+    DECLARE_FUNC(name##_func, def); \
+    static name##_func* name##_ptr = def; \
+    __attribute__((constructor)) \
+    static void name##_init() { \
+        name##_ptr = name##_resolver(); \
+    }
+#endif
 
 static bool is_same_name(const char* a, const char* b) {
     static_assert(MAX_CPU_NAME_LEN % sizeof(int) == 0, "");
@@ -155,17 +168,31 @@ static CpuVariant get_cpu_variant() {
 }
 
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
-DEFINE_IFUNC(memmove) {
+DEFINE_RESOLVER(memmove) {
     RETURN_FUNC(memmove_func, memmove_a15);
 }
 
-typedef void* memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC(memcpy) {
+#ifndef USE_IFUNC
+DEFINE_PTR(memmove, memmove_a15);
+void* memmove(void* __dst, const void* __src, size_t __n) {
+    return memmove_ptr(__dst, __src, __n);
+}
+#endif
+
+typedef void* memcpy_func(void* __dst, const void* __src, size_t __n);
+DEFINE_RESOLVER(memcpy) {
     return memmove_resolver();
 }
 
-typedef void* __memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC(__memcpy) {
+#ifndef USE_IFUNC
+DEFINE_PTR(memcpy, memmove_a15);
+void* memcpy(void* __dst, const void* __src, size_t __n) {
+    return memcpy_ptr(__dst, __src, __n);
+}
+#endif
+
+typedef void* __memcpy_func(void* __dst, const void* __src, size_t __n);
+DEFINE_RESOLVER(__memcpy) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__memcpy_func, __memcpy_a7);
@@ -184,8 +211,15 @@ DEFINE_IFUNC(__memcpy) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(__memcpy, __memcpy_a15);
+void* __memcpy(void* __dst, const void* __src, size_t __n) {
+    return __memcpy_ptr(__dst, __src, __n);
+}
+#endif
+
 typedef void* __memset_chk_func(void* s, int c, size_t n, size_t n2);
-DEFINE_IFUNC(__memset_chk) {
+DEFINE_RESOLVER(__memset_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -201,8 +235,15 @@ DEFINE_IFUNC(__memset_chk) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(__memset_chk, __memset_chk_a15);
+void* __memset_chk(void* s, int c, size_t n, size_t n2) {
+    return __memset_chk_ptr(s, c, n, n2);
+}
+#endif
+
 typedef void* memset_func(void* __dst, int __ch, size_t __n);
-DEFINE_IFUNC(memset) {
+DEFINE_RESOLVER(memset) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -218,8 +259,15 @@ DEFINE_IFUNC(memset) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(memset, memset_a15);
+void* memset(void* __dst, int __ch, size_t __n) {
+    return memset_ptr(__dst, __ch, __n);
+}
+#endif
+
 typedef char* strcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC(strcpy) {
+DEFINE_RESOLVER(strcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcpy_func, strcpy_a9);
@@ -228,8 +276,15 @@ DEFINE_IFUNC(strcpy) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(strcpy, strcpy_a15);
+char* strcpy(char* __dst, const char* __src) {
+    return strcpy_ptr(__dst, __src);
+}
+#endif
+
 typedef char* __strcpy_chk_func(char* dst, const char* src, size_t dst_len);
-DEFINE_IFUNC(__strcpy_chk) {
+DEFINE_RESOLVER(__strcpy_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a7);
@@ -247,8 +302,15 @@ DEFINE_IFUNC(__strcpy_chk) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(__strcpy_chk, __strcpy_chk_a15);
+char* __strcpy_chk(char* dst, const char* src, size_t dst_len) {
+    return __strcpy_chk_ptr(dst, src, dst_len);
+}
+#endif
+
 typedef char* stpcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC(stpcpy) {
+DEFINE_RESOLVER(stpcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(stpcpy_func, stpcpy_a9);
@@ -257,8 +319,15 @@ DEFINE_IFUNC(stpcpy) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(stpcpy, stpcpy_a15);
+char* stpcpy(char* __dst, const char* __src) {
+    return stpcpy_ptr(__dst, __src);
+}
+#endif
+
 typedef char* strcat_func(char* __dst, const char* __src);
-DEFINE_IFUNC(strcat) {
+DEFINE_RESOLVER(strcat) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcat_func, strcat_a9);
@@ -267,8 +336,15 @@ DEFINE_IFUNC(strcat) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(strcat, strcat_a15);
+char* strcat(char* __dst, const char* __src) {
+    return strcat_ptr(__dst, __src);
+}
+#endif
+
 typedef char* __strcat_chk_func(char* dst, const char* src, size_t dst_buf_size);
-DEFINE_IFUNC(__strcat_chk) {
+DEFINE_RESOLVER(__strcat_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcat_chk_func, __strcat_chk_a7);
@@ -286,8 +362,15 @@ DEFINE_IFUNC(__strcat_chk) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(__strcat_chk, __strcat_chk_a15);
+char* __strcat_chk(char* dst, const char* src, size_t dst_buf_size) {
+    return __strcat_chk_ptr(dst, src, dst_buf_size);
+}
+#endif
+
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
-DEFINE_IFUNC(strcmp) {
+DEFINE_RESOLVER(strcmp) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcmp_func, strcmp_a9);
@@ -300,8 +383,15 @@ DEFINE_IFUNC(strcmp) {
     }
 }
 
+#ifndef USE_IFUNC
+DEFINE_PTR(strcmp, strcmp_a15);
+int strcmp(const char* __lhs, const char* __rhs) {
+    return strcmp_ptr(__lhs, __rhs);
+}
+#endif
+
 typedef size_t strlen_func(const char* __s);
-DEFINE_IFUNC(strlen) {
+DEFINE_RESOLVER(strlen) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strlen_func, strlen_a9);
@@ -309,5 +399,12 @@ DEFINE_IFUNC(strlen) {
             RETURN_FUNC(strlen_func, strlen_a15);
     }
 }
+
+#ifndef USE_IFUNC
+DEFINE_PTR(strlen, strlen_a15);
+size_t strlen(const char* __s) {
+    return strlen_ptr(__s);
+}
+#endif
 
 }  // extern "C"
