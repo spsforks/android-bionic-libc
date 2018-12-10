@@ -22,6 +22,30 @@
       "revId": "f009e439eaa0a29606d714fabe688f24a9e48b2a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "033b8ae6_4c974632",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-12-10T08:55:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c769cb0d_bc918b05",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 101
+      },
+      "revId": "f009e439eaa0a29606d714fabe688f24a9e48b2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
