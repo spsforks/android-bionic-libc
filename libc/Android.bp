@@ -1536,7 +1536,7 @@ cc_library {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "libc_init_dynamic",
-            "libc_common_shared",
+            "libc_common_static",
         ],
     },
 
