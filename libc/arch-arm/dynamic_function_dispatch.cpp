@@ -89,10 +89,13 @@ static int ifunc_close(int fd) {
     return r0;
 }
 
-#define DEFINE_IFUNC(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+#define DEFINE_RESOLVER(name) \
     __attribute__((visibility("hidden"))) \
     name##_func* name##_resolver()
+
+#define DEFINE_IFUNC(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+    DEFINE_RESOLVER(name)
 
 #define DECLARE_FUNC(type, name) \
     __attribute__((visibility("hidden"))) \
@@ -287,7 +290,7 @@ DEFINE_IFUNC(__strcat_chk) {
 }
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
-DEFINE_IFUNC(strcmp) {
+DEFINE_RESOLVER(strcmp) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcmp_func, strcmp_a9);
@@ -301,13 +304,36 @@ DEFINE_IFUNC(strcmp) {
 }
 
 typedef size_t strlen_func(const char* __s);
-DEFINE_IFUNC(strlen) {
+DEFINE_RESOLVER(strlen) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strlen_func, strlen_a9);
         default:
             RETURN_FUNC(strlen_func, strlen_a15);
     }
+}
+
+}  // extern "C"
+
+// Workaround for b/120254692
+extern "C" {
+
+#define DEFINE_PTR(name, def) \
+    DECLARE_FUNC(name##_func, def); \
+    static name##_func* name##_ptr = def; \
+    __attribute__((constructor)) \
+    static void name##_init() { \
+        name##_ptr = name##_resolver(); \
+    }
+
+DEFINE_PTR(strcmp, strcmp_a15);
+int strcmp(const char* __lhs, const char* __rhs) {
+    return strcmp_ptr(__lhs, __rhs);
+}
+
+DEFINE_PTR(strlen, strlen_a15);
+size_t strlen(const char* __s) {
+    return strlen_ptr(__s);
 }
 
 }  // extern "C"
