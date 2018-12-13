@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b08bdc_4ac2cb97",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-13T09:56:23Z",
+      "side": 1,
+      "message": "Yes we need. 10000 means FUTURE_API_LEVEL (build/soong/cc/gen_stub_libs.py)\n\nBecause Q hasn\u0027t been finalized (\u003d hasn\u0027t been assigned an API level though we all expect that it \nwill be 29), the symbols that we\u0027ve added to XXXX_Q version are automatically associated with 10000\nfor now.",
+      "parentUuid": "8c25ef59_f1a615eb",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3aa605_90f1a6e5",
         "filename": "libc/libc.arm.map",
         "patchSetId": 1
