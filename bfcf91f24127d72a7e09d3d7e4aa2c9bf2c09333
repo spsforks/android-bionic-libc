@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "3332ff98_af455fae",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2018-12-13T13:25:08Z",
+      "side": 1,
+      "message": "Which apex needs more symbols?",
+      "parentUuid": "1546a0b7_3e3e84ab",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3aa605_90f1a6e5",
         "filename": "libc/libc.arm.map",
         "patchSetId": 1
