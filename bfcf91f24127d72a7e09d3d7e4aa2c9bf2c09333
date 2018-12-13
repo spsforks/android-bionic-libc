@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "21695c26_f3a664b1",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-13T13:31:13Z",
+      "side": 1,
+      "message": "For bionic libs, it\u0027s not APEXes that are using more symbols. It\u0027s platform. For example, the GL loader is using private libdl functions like android_create_namespace.",
+      "parentUuid": "3332ff98_af455fae",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3aa605_90f1a6e5",
         "filename": "libc/libc.arm.map",
         "patchSetId": 1
