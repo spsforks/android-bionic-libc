@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "a37fb796_61f85b07",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2018-12-13T16:26:41Z",
+      "side": 1,
+      "message": "With this change I believe all APEXes will stop carrying their own libc\u0027s, with the exception of the Runtime APEX which will provide them. That means those APEXes (I don\u0027t know how many there are currently) might need ld.config.txt\u0027s to load them from /apex/com.android.runtime/${LIB}, and that ought to be on the same topic as this change.",
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c25ef59_f1a615eb",
         "filename": "libc/Android.bp",
         "patchSetId": 1
