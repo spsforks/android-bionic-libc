@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "1546a0b7_3e3e84ab",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-13T13:23:20Z",
+      "side": 1,
+      "message": "Yes, this is a new thing, but inside the build system, it is using many of the building blocks made for NDK.\n\nWe cannot just piggybacking on NDK because we definitely need more symbols than NDK.",
+      "parentUuid": "2ea57c36_1df22fa6",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3aa605_90f1a6e5",
         "filename": "libc/libc.arm.map",
         "patchSetId": 1
