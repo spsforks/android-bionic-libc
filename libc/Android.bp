@@ -1612,6 +1612,11 @@ cc_library {
             version_script: "libc.x86_64.map",
         },
     },
+
+    stubs: {
+        symbol_file: "libc.map.txt",
+        versions: ["10000"],
+    },
 }
 
 // ========================================================

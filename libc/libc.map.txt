@@ -1448,19 +1448,32 @@ LIBC_P { # introduced=P
 LIBC_Q { # introduced=Q
   global:
     __res_randomid;
+    __system_properties_init; # apex
+    __system_property_add; # apex
+    __system_property_area_init; # apex
+    __system_property_update; # apex
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
     android_fdsan_get_owner_tag;
     android_fdsan_get_tag_type;
     android_fdsan_get_tag_value;
-    android_fdsan_get_error_level;
     android_fdsan_set_error_level;
     android_get_device_api_level;
+    android_getaddrinfofornet; # apex
+    free_malloc_leak_info; # apex
+    get_malloc_leak_info; # apex
     getloadavg;
+    malloc_backtrace; # apex
+    malloc_disable; # apex
+    malloc_enable; # apex
+    malloc_iterate; # apex
     pthread_sigqueue;
     reallocarray;
     timespec_get;
+    write_malloc_leak_info; # apex
+    gMallocLeakZygoteChild; # apex
 } LIBC_P;
 
 LIBC_PRIVATE {
