@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c25ef59_f1a615eb",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2018-12-13T09:50:44Z",
+      "side": 1,
+      "message": "Do we need a \"versions\" ? And why does 10000 mean? Could you add a comment?",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f3aa605_90f1a6e5",
+        "filename": "libc/libc.arm.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 1426,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2018-12-13T09:50:44Z",
+      "side": 1,
+      "message": "Somehow it would be great to be able to annotate which apex uses those methods.",
+      "range": {
+        "startLine": 1426,
+        "startChar": 30,
+        "endLine": 1426,
+        "endChar": 36
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
