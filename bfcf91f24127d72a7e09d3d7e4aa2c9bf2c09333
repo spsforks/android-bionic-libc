@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2ea57c36_1df22fa6",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2018-12-13T10:12:09Z",
+      "side": 1,
+      "message": "(This discussion is primarily for my own education). Defining stubs like this is a new thing with APEX, right?\n\nNot to keen on having a bionic version. I would hope our apexes just need ndk methods, and we could re-use whatever we used before for linking with the ndk.",
+      "parentUuid": "37b08bdc_4ac2cb97",
+      "range": {
+        "startLine": 1618,
+        "startChar": 8,
+        "endLine": 1618,
+        "endChar": 27
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3aa605_90f1a6e5",
         "filename": "libc/libc.arm.map",
         "patchSetId": 1
