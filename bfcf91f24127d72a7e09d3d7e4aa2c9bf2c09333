@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2d54b230_95955368",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-14T05:06:03Z",
+      "side": 1,
+      "message": "Right. If other APEX has their own ld.config.txt, then they need to add the path to the file. However, we right now don\u0027t have such APEX.",
+      "parentUuid": "a37fb796_61f85b07",
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c25ef59_f1a615eb",
         "filename": "libc/Android.bp",
         "patchSetId": 1
