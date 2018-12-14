@@ -235,3 +235,17 @@ TEST(sys_socket, sendmmsg_error) {
   ASSERT_EQ(-1, sendmmsg(-1, nullptr, 0, 0));
   ASSERT_EQ(EBADF, errno);
 }
+
+// See
+// https://android-review.googlesource.com/c/platform/libcore/+/849173/3/luni/src/main/java/android/system/OsConstants.java#585
+// for background.
+TEST(sys_socket, O_CLOEXEC_equals_SOCK_CLOEXEC) {
+  ASSERT_EQ(O_CLOEXEC, SOCK_CLOEXEC);
+}
+
+// See
+// https://android-review.googlesource.com/c/platform/libcore/+/849173/3/luni/src/main/java/android/system/OsConstants.java#585
+// for background.
+TEST(sys_socket, O_NONBLOCK_equals_SOCK_NONBLOCK) {
+  ASSERT_EQ(O_NONBLOCK, SOCK_NONBLOCK);
+}
