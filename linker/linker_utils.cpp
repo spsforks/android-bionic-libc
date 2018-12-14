@@ -251,3 +251,43 @@ bool is_first_stage_init() {
   static bool ret = (getpid() == 1 && access("/proc/self/exe", F_OK) == -1);
   return ret;
 }
+
+const char *correct_ld_library_path(const char *ld_path) {
+  std::string resolved_path;
+  std::vector<std::string> paths;
+  split_path(ld_path, ":", &paths);
+
+  bool replaced = false;
+  int size = paths.size();
+
+  for (int i = 0; i < size; i++) {
+    std::string path = paths[i];
+    if (path[path.size() - 1] == '/') {
+      path.erase(path.end() - 1);
+    }
+    resolved_path.append(path);
+
+#if defined(__LP64__)
+    if(path == "/system/lib" || path == "/vendor/lib") {
+      resolved_path.append("64");
+      replaced = true;
+    }
+#else
+    if(path == "/system/lib64" || path == "/vendor/lib64") {
+      resolved_path.erase(resolved_path.size() - 2, 2);
+      replaced = true;
+    }
+#endif
+
+    if (i < size - 1) {
+      resolved_path.append(":");
+    }
+  }
+
+  if (replaced && resolved_path.size() <= PATH_MAX) {
+    setenv("LD_LIBRARY_PATH", resolved_path.c_str(), 1);
+    ld_path = getenv("LD_LIBRARY_PATH");
+    DL_WARN("Fixed LD_LIBRARY_PATH: %s", ld_path);
+  }
+  return ld_path;
+}

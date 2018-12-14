@@ -124,3 +124,43 @@ TEST(linker_utils, safe_add) {
   ASSERT_TRUE(safe_add(&val, 2000, 42U));
   ASSERT_EQ(2042, val);
 }
+
+TEST(linker_utils, correct_ld_library_path_1) {
+  std::string ld_path;
+  ld_path = std::string(correct_ld_library_path("/system/lib:/vendor/lib"));
+#if defined(__LP64__)
+  ASSERT_EQ("/system/lib64:/vendor/lib64", ld_path);
+#else
+  ASSERT_EQ("/system/lib:/vendor/lib", ld_path);
+#endif
+}
+
+TEST(linker_utils, correct_ld_library_path_2) {
+  std::string ld_path;
+  ld_path = std::string(correct_ld_library_path("/system/lib64:/vendor/lib64"));
+#if defined(__LP64__)
+  ASSERT_EQ("/system/lib64:/vendor/lib64", ld_path);
+#else
+  ASSERT_EQ("/system/lib:/vendor/lib", ld_path);
+#endif
+}
+
+TEST(linker_utils, correct_ld_library_path_3) {
+  std::string ld_path;
+  ld_path = std::string(correct_ld_library_path("/system/lib:/vendor/lib64"));
+#if defined(__LP64__)
+  ASSERT_EQ("/system/lib64:/vendor/lib64", ld_path);
+#else
+  ASSERT_EQ("/system/lib:/vendor/lib", ld_path);
+#endif
+}
+
+TEST(linker_utils, correct_ld_library_path_4) {
+  std::string ld_path;
+  ld_path = std::string(correct_ld_library_path("/system/lib64:/vendor/lib"));
+#if defined(__LP64__)
+  ASSERT_EQ("/system/lib64:/vendor/lib64", ld_path);
+#else
+  ASSERT_EQ("/system/lib:/vendor/lib", ld_path);
+#endif
+}

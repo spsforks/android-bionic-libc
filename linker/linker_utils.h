@@ -56,3 +56,4 @@ off64_t page_start(off64_t offset);
 size_t page_offset(off64_t offset);
 bool safe_add(off64_t* out, off64_t a, size_t b);
 bool is_first_stage_init();
+const char *correct_ld_library_path(const char *ld_path);
