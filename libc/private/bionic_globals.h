@@ -50,21 +50,23 @@ struct abort_msg_t;
 
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
-  FdTable fd_table;
+  constexpr libc_shared_globals() {}
+
+  FdTable fd_table {};
 
   // When the linker is invoked on a binary (e.g. `linker64 /system/bin/date`),
   // record the number of arguments passed to the linker itself rather than to
   // the program it's loading. Typically 0, sometimes 1.
-  int initial_linker_arg_count;
+  int initial_linker_arg_count = 0;
 
-  ElfW(auxv_t)* auxv;
+  ElfW(auxv_t)* auxv = nullptr;
 
-  pthread_mutex_t abort_msg_lock;
-  abort_msg_t* abort_msg;
+  pthread_mutex_t abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
+  abort_msg_t* abort_msg = nullptr;
 
   // Values passed from the linker to libc.so.
-  const char* init_progname;
-  char** init_environ;
+  const char* init_progname = nullptr;
+  char** init_environ = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
