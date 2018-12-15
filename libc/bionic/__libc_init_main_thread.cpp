@@ -28,9 +28,12 @@
 
 #include "libc_init_common.h"
 
+#include <async_safe/log.h>
+
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_defs.h"
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
@@ -40,13 +43,6 @@ extern "C" int __set_tid_address(int* tid_address);
 
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
-
-static pthread_internal_t main_thread;
-
-__attribute__((no_sanitize("hwaddress")))
-pthread_internal_t* __get_main_thread() {
-  return &main_thread;
-}
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
@@ -69,50 +65,68 @@ pthread_internal_t* __get_main_thread() {
 // linker, the linker binary hasn't been relocated yet, so certain kinds of code
 // are hazardous, such as accessing non-hidden global variables.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread_early(KernelArgumentBlock& args) {
+void __libc_init_main_thread_early(const KernelArgumentBlock& args,
+                                   bionic_tcb* temp_tcb,
+                                   pthread_internal_t* temp_thread) {
   __libc_shared_globals()->auxv = args.auxv;
 #if defined(__i386__)
-  __libc_init_sysinfo();
+  __libc_init_sysinfo(); // uses AT_SYSINFO auxv entry
 #endif
-  __set_tls(main_thread.tls);
-  __init_tls(&main_thread);
-  main_thread.tid = __getpid();
-  main_thread.set_cached_pid(main_thread.tid);
+  __init_tls(temp_tcb, temp_thread);
+  __set_tls(&temp_tcb->tls_slot(0));
+  const pid_t pid = __getpid();
+  temp_thread->tid = pid;
+  temp_thread->set_cached_pid(pid);
 }
 
 // Finish initializing the main thread.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_main_thread_late() {
-  main_thread.bionic_tls = __allocate_bionic_tls();
-  if (main_thread.bionic_tls == nullptr) {
-    // Avoid strerror because it might need bionic_tls.
-    async_safe_fatal("failed to allocate bionic_tls: error %d", errno);
-  }
+  pthread_internal_t* temp_thread = __get_thread();
+  temp_thread->bionic_tls = __allocate_temp_bionic_tls();
+  __get_tls()[TLS_SLOT_BIONIC_TLS] = temp_thread->bionic_tls;
 
-  // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
-  __set_tid_address(&main_thread.tid);
-
-  // We don't want to free the main thread's stack even when the main thread exits
-  // because things like environment variables with global scope live on it.
-  // We also can't free the pthread_internal_t itself, since it is a static variable.
-  // The main thread has no mmap allocated space for stack or pthread_internal_t.
-  main_thread.mmap_size = 0;
-
-  pthread_attr_init(&main_thread.attr);
+  pthread_attr_init(&temp_thread->attr);
   // We don't want to explicitly set the main thread's scheduler attributes (http://b/68328561).
-  pthread_attr_setinheritsched(&main_thread.attr, PTHREAD_INHERIT_SCHED);
+  pthread_attr_setinheritsched(&temp_thread->attr, PTHREAD_INHERIT_SCHED);
   // The main thread has no guard page.
-  pthread_attr_setguardsize(&main_thread.attr, 0);
+  pthread_attr_setguardsize(&temp_thread->attr, 0);
   // User code should never see this; we'll compute it when asked.
-  pthread_attr_setstacksize(&main_thread.attr, 0);
+  pthread_attr_setstacksize(&temp_thread->attr, 0);
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
   __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
-  __init_tls_stack_guard(&main_thread);
+  __init_tls_stack_guard(__get_bionic_tcb());
 
-  __init_thread(&main_thread);
+  __init_thread(temp_thread);
 
-  __init_additional_stacks(&main_thread);
+  __init_additional_stacks(temp_thread);
+}
+
+// Once all ELF modules are loaded, allocate the final copy of the main thread's
+// static TLS memory. For consistency with other threads, this mapping includes
+// the same per-thread data as every other thread (TCB, pthread_internal_t,
+// pthread keys, bionic_tls).
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_main_thread_final() {
+  bionic_tcb* temp_tcb = __get_bionic_tcb();
+  bionic_tls* temp_bionic_tls = &__get_bionic_tls();
+
+  // Allocate the main thread's static TLS. (This mapping doesn't include a
+  // stack.)
+  ThreadMapping mapping = __create_thread_mapping(0, PTHREAD_GUARD_SIZE, temp_tcb);
+  if (mapping.start == nullptr) {
+    async_safe_fatal("failed to mmap main thread static TLS: %s", strerror(errno));
+  }
+
+  __set_tls(&mapping.tcb->tls_slot(0));
+
+  // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
+  // For threads created by pthread_create, this setup happens during the clone syscall (i.e.
+  // CLONE_CHILD_CLEARTID).
+  __set_tid_address(&__get_thread()->tid);
+
+  __free_temp_bionic_tls(temp_bionic_tls);
 }
