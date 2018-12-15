@@ -36,6 +36,7 @@
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
+#include "linker_tls.h"
 #include "linker_utils.h"
 
 #include "private/bionic_globals.h"
@@ -51,6 +52,7 @@
 
 #include <async_safe/log.h>
 #include <bionic/libc_init_common.h>
+#include <bionic/pthread_internal.h>
 
 #include <vector>
 
@@ -450,6 +452,15 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     si->increment_ref_count();
   }
 
+  layout_linker_static_tls();
+
+  // NB: This function switches the main thread to a different
+  // pthread_internal_t object, which moves the location of errno. The __errno
+  // function is marked __attribute_const__, so this function (or any function
+  // it inlines) needs to be careful not to access errno before this call, then
+  // access it again after this call.
+  __libc_init_main_thread_final();
+
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
   si->call_pre_init_constructors();
@@ -557,7 +568,9 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
-  __libc_init_main_thread_early(args);
+  bionic_tcb temp_tcb = {};
+  pthread_internal_t temp_thread = {};
+  __libc_init_main_thread_early(args, &temp_tcb, &temp_thread);
 
   // When the linker is run by itself (rather than as an interpreter for
   // another program), AT_BASE is 0.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
-#include <private/bionic_asm_tls.h>
+#include "linker_tls.h"
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-    mrc     p15, 0, r3, c13, c0, 3
-    ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
-    mov     r0, #0
-    str     r0, [r3, #12]
+#include "private/bionic_defs.h"
+#include "private/bionic_elf_tls.h"
+#include "private/bionic_globals.h"
 
-    mov     ip, r7
-    ldr     r7, =__NR_vfork
-    swi     #0
-    mov     r7, ip
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno_internal
-END(vfork)
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __linker_reserve_pthread_in_static_tls() {
+  __libc_shared_globals()->static_tls_layout.reserve_pthread();
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __linker_reserve_bionic_tls_in_static_tls() {
+  __libc_shared_globals()->static_tls_layout.reserve_bionic_tls();
+}
+
+// Stub for linker static TLS layout.
+void layout_linker_static_tls() {
+  StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  __linker_reserve_pthread_in_static_tls();
+  layout.reserve_tcb();
+
+  // The pthread key data is located at the very front of bionic_tls. As a
+  // temporary workaround, allocate bionic_tls just after the thread pointer so
+  // Golang can find its pthread key, as long as the executable's TLS segment is
+  // small enough. Specifically, Golang scans forward 384 words from the TP on
+  // ARM.
+  //  - http://b/118381796
+  //  - https://groups.google.com/d/msg/golang-dev/yVrkFnYrYPE/2G3aFzYqBgAJ
+  __linker_reserve_bionic_tls_in_static_tls();
+
+  layout.finish_layout();
+}

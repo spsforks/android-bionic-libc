@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
-#include <private/bionic_asm_tls.h>
+#include "private/bionic_elf_tls.h"
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-    mrc     p15, 0, r3, c13, c0, 3
-    ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
-    mov     r0, #0
-    str     r0, [r3, #12]
+#include <sys/param.h>
 
-    mov     ip, r7
-    ldr     r7, =__NR_vfork
-    swi     #0
-    mov     r7, ip
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno_internal
-END(vfork)
+#include "private/bionic_macros.h"
+#include "private/bionic_tls.h"
+#include "pthread_internal.h"
+
+void StaticTlsLayout::reserve_tcb() {
+  offset_bionic_tcb_ = reserve_type<bionic_tcb>();
+}
+
+void StaticTlsLayout::reserve_pthread() {
+  offset_pthread_ = reserve_type<pthread_internal_t>();
+}
+
+void StaticTlsLayout::reserve_bionic_tls() {
+  offset_bionic_tls_ = reserve_type<bionic_tls>();
+}
+
+void StaticTlsLayout::finish_layout() {
+  // Round the offset up to the alignment.
+  offset_ = round_up_with_overflow_check(offset_, alignment_);
+}
+
+// The size is not required to be a multiple of the alignment. The alignment
+// must be a positive power-of-two.
+size_t StaticTlsLayout::reserve(size_t size, size_t alignment) {
+  offset_ = round_up_with_overflow_check(offset_, alignment);
+  const size_t result = offset_;
+  if (__builtin_add_overflow(offset_, size, &offset_)) overflowed_ = true;
+  alignment_ = MAX(alignment_, alignment);
+  return result;
+}
+
+size_t StaticTlsLayout::round_up_with_overflow_check(size_t value, size_t alignment) {
+  const size_t old_value = value;
+  value = __BIONIC_ALIGN(value, alignment);
+  if (value < old_value) overflowed_ = true;
+  return value;
+}

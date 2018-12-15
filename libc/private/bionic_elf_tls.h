@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,43 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
-#include <private/bionic_asm_tls.h>
+#pragma once
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-    mrc     p15, 0, r3, c13, c0, 3
-    ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
-    mov     r0, #0
-    str     r0, [r3, #12]
+#include <stdint.h>
 
-    mov     ip, r7
-    ldr     r7, =__NR_vfork
-    swi     #0
-    mov     r7, ip
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno_internal
-END(vfork)
+struct StaticTlsLayout {
+  constexpr StaticTlsLayout() {}
+
+private:
+  size_t offset_ = 0;
+  size_t alignment_ = 1;
+  bool overflowed_ = false;
+
+  // Offsets to various Bionic TLS structs from the beginning of static TLS.
+  size_t offset_bionic_tcb_ = SIZE_MAX;
+  size_t offset_pthread_ = SIZE_MAX;
+  size_t offset_bionic_tls_ = SIZE_MAX;
+
+public:
+  size_t offset_bionic_tcb() const { return offset_bionic_tcb_; }
+  size_t offset_pthread() const { return offset_pthread_; }
+  size_t offset_bionic_tls() const { return offset_bionic_tls_; }
+
+  size_t size() const { return offset_; }
+  size_t alignment() const { return alignment_; }
+  bool overflowed() const { return overflowed_; }
+
+  void reserve_tcb();
+  void reserve_pthread();
+  void reserve_bionic_tls();
+  void finish_layout();
+
+private:
+  size_t reserve(size_t size, size_t alignment);
+
+  template <typename T> size_t reserve_type() {
+    return reserve(sizeof(T), alignof(T));
+  }
+
+  size_t round_up_with_overflow_check(size_t value, size_t alignment);
+};
