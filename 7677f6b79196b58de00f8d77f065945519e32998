@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd87195d_7563f66f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-17T16:35:18Z",
+      "side": 1,
+      "message": "unfortunately for us, that\u0027s everything... :-)\n\n(speaking of which, that\u0027s one reason why bionic also uses __fortify_fatal for various other sanity checks like passing a null FILE* to various functions.)\n\ngbiv@ did talk about adding an _ANDROID_STRICT_SOURCE or somesuch, but we\u0027ve never done it because we don\u0027t usually spend much time thinking about things we don\u0027t really care about, only about things we\u0027d like to apply to everyone. and we either think we can, or think we can\u0027t.\n\nit\u0027s possible __attribute__((__deprecated__)) is our least worst option, and we should just resign ourselves to having -Wno-error\u003ddeprecated for external/ and all but the latest device/ or whatever. there\u0027s certainly an inherent conflict between our desire to warn about more things on the one hand, and our desire to have no warnings (ideally by having all warnings be errors) on the other.",
+      "range": {
+        "startLine": 10,
+        "startChar": 30,
+        "endLine": 11,
+        "endChar": 38
+      },
+      "revId": "7677f6b79196b58de00f8d77f065945519e32998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
