@@ -37,6 +37,11 @@
 
 __BEGIN_DECLS
 
+#if defined(__BIONIC_FORTIFY)
+#if __ANDROID_API__ >= __ANDROID_API_L__
+__errorattr("epoll_create() leaks file descriptors. Use epoll_create1(EPOLL_CLOEXEC) instead")
+#endif /* defined(__BIONIC_FORTIFY) */
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 int epoll_create(int __size);
 int epoll_create1(int __flags) __INTRODUCED_IN(21);
 
