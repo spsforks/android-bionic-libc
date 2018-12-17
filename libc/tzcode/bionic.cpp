@@ -212,7 +212,7 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
 
   // 2: The time zone data module which may contain newer data on
   // devices that support module updates.
-  fd = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
+  fd = __bionic_open_tzdata_path("/apex/com.google.android.tzdata/etc/tz/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
 
