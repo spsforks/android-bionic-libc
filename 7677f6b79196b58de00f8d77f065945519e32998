@@ -22,6 +22,30 @@
       "revId": "7677f6b79196b58de00f8d77f065945519e32998",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac3d64fa_16d962b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-12-18T03:33:01Z",
+      "side": 1,
+      "message": "\u003e it\u0027s possible __attribute__((__deprecated__)) [...]\n\n+1 to that paragraph.\n\nIf we do end up doing _ANDROID_STRICT_SOURCE (or similar), we should IMO make that mandatory for everyone except external/, etc. All it\u0027d really buy us is \"no, deprecated *actually does mean deprecated*,\" and users who opt-out of -Wdeprecated for whatever reason would still get an error here. Probably not worth it just for this, but if we have 1,000 cuts about this size that a _ANDROID_STRICT_SOURCE-shaped bandaid could cover, ...\n\nIn any case, if we do this, we should probably have diagnose_if on epoll_create1 that complains if O_CLOEXEC isn\u0027t present, as well.",
+      "parentUuid": "bd87195d_7563f66f",
+      "range": {
+        "startLine": 10,
+        "startChar": 30,
+        "endLine": 11,
+        "endChar": 38
+      },
+      "revId": "7677f6b79196b58de00f8d77f065945519e32998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
