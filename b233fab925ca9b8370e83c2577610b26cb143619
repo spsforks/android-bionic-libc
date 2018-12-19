@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46d82ac3_463a806d",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-19T05:28:17Z",
+      "side": 1,
+      "message": "are they guaranteed to be adjacent and in this order?",
+      "revId": "b233fab925ca9b8370e83c2577610b26cb143619",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
