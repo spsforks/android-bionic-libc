@@ -350,6 +350,7 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
+    native_coverage: false,
 
     sanitize: {
         never: true,
