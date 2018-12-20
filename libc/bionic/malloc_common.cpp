@@ -645,11 +645,7 @@ extern "C" void InstallInitHeapprofdHook(int);
 
 // Initializes memory allocation framework once per process.
 static void malloc_init_impl(libc_globals* globals) {
-  struct sigaction action = {};
-  action.sa_handler = InstallInitHeapprofdHook;
-  sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
-
-  const char* prefix;
+  const char* prefix = nullptr;
   const char* shared_lib;
   char prop[PROP_VALUE_MAX];
   char* options = prop;
@@ -664,10 +660,15 @@ static void malloc_init_impl(libc_globals* globals) {
   } else if (CheckLoadHeapprofd()) {
     prefix = "heapprofd";
     shared_lib = HEAPPROFD_SHARED_LIB;
-  } else {
-    return;
   }
-  install_hooks(globals, options, prefix, shared_lib);
+
+  if (prefix) {
+    install_hooks(globals, options, prefix, shared_lib);
+  }
+
+  struct sigaction action = {};
+  action.sa_handler = InstallInitHeapprofdHook;
+  sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
 }
 
 // Initializes memory allocation framework.
