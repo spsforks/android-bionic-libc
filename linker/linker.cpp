@@ -89,16 +89,20 @@ static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 #if defined(__LP64__)
+static const char* const kBootstrapLibDir  = "/system/bootstrap/lib64";
 static const char* const kSystemLibDir     = "/system/lib64";
 static const char* const kOdmLibDir        = "/odm/lib64";
 static const char* const kVendorLibDir     = "/vendor/lib64";
+static const char* const kAsanBootstrapLibDir = "/data/asan/system/bootstrap/lib64";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib64";
 #else
+static const char* const kBootstrapLibDir  = "/system/bootstrap/lib";
 static const char* const kSystemLibDir     = "/system/lib";
 static const char* const kOdmLibDir        = "/odm/lib";
 static const char* const kVendorLibDir     = "/vendor/lib";
+static const char* const kAsanBootstrapLibDir = "/data/asan/system/bootstrap/lib";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
@@ -107,6 +111,7 @@ static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
 static const char* const kAsanLibDirPrefix = "/data/asan";
 
 static const char* const kDefaultLdPaths[] = {
+  kBootstrapLibDir,
   kSystemLibDir,
   kOdmLibDir,
   kVendorLibDir,
@@ -114,6 +119,8 @@ static const char* const kDefaultLdPaths[] = {
 };
 
 static const char* const kAsanDefaultLdPaths[] = {
+  kAsanBootstrapLibDir,
+  kBootstrapLibDir,
   kAsanSystemLibDir,
   kSystemLibDir,
   kAsanOdmLibDir,
