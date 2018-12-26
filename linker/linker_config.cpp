@@ -399,6 +399,12 @@ class Properties {
     static std::string vndk = Config::get_vndk_version_string('-');
     params.push_back({ "VNDK_VER", vndk });
 
+    // TODO(b/119274217): this should be dynamic. /system/bin/linker shall
+    // replace this with /system/bootstrap, while
+    // /apex/com.android.runtime/bin/linker will replace this with
+    // /apex/com.android.runtime.
+    params.push_back({ "RUNTIME", "/system/bootstrap" });
+
     for (auto&& path : paths) {
       format_string(&path, params);
     }
