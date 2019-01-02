@@ -22,6 +22,30 @@
       "revId": "3c986d3c8e589f54209b7e1d84badbfbda36fd21",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5b1b648_988701ff",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-02T22:32:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5aba671c_19c36c92",
+      "range": {
+        "startLine": 65,
+        "startChar": 32,
+        "endLine": 65,
+        "endChar": 47
+      },
+      "revId": "3c986d3c8e589f54209b7e1d84badbfbda36fd21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
