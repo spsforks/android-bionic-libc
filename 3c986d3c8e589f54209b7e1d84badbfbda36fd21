@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aba671c_19c36c92",
+        "filename": "linker/linker_relocs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-02T21:40:39Z",
+      "side": 1,
+      "message": "FWIW: If anyone\u0027s wondering, there\u0027s also an R_386_TLS_TPOFF32 relocation. TPOFF32 is essentially the same as TPOFF, but TPOFF32 is subtracted from the TP, whereas TPOFF is added to it. Drepper\u0027s TLS paper claims that TPOFF32 was part of an earlier Sun TLS implementation, though AFAICT, illumos and Solaris aren\u0027t using it.\n\nAs Drepper points out, TPOFF is technically superior because the negative offset can be used directly in a load, e.g.:\n\n    movl x@gotntpoff(%ebx), %eax\n    movl %gs:(%eax), %eax\n\nTPOFF32 might be relevant to Bionic, because the bfd linker generates it when it relaxes a TLS relocation to IE. For now, I think I\u0027ll leave it out. gold/lld don\u0027t generate TPOFF32, and AFAIK, bfd could do the same.",
+      "range": {
+        "startLine": 65,
+        "startChar": 32,
+        "endLine": 65,
+        "endChar": 47
+      },
+      "revId": "3c986d3c8e589f54209b7e1d84badbfbda36fd21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
