@@ -978,6 +978,12 @@ cc_library_static {
         },
     },
 
+    product_variables: {
+        requires_scs_vdso_workaround: {
+            cflags: [ "-DUSE_SCS_VDSO_WORKAROUND" ],
+        },
+    },
+
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",

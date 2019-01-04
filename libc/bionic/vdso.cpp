@@ -33,10 +33,36 @@ static inline int vdso_return(int result) {
   return -1;
 }
 
+namespace {
+
+// Prevent x18 (shadow call stack address) from being clobbered by the vDSO by temporarily storing
+// the value on the stack. This is only needed on certain devices, see build/soong/android/variable.go
+// for more information.
+struct ScopedSCSExitForVDSO {
+#if defined(__aarch64__) && defined(USE_SCS_VDSO_WORKAROUND)
+    void* scs;
+
+    __attribute__((always_inline, no_sanitize("shadow-call-stack"))) ScopedSCSExitForVDSO() {
+        __asm__ __volatile__("str x18, [%0]" ::"r"(&scs));
+    }
+
+    __attribute__((always_inline, no_sanitize("shadow-call-stack"))) ~ScopedSCSExitForVDSO() {
+        __asm__ __volatile__("ldr x18, [%0]; str xzr, [%0]" ::"r"(&scs));
+    }
+#else
+    // Silence unused variable warnings in builds that don't need this.
+    __attribute__((no_sanitize("shadow-call-stack"))) ScopedSCSExitForVDSO() {}
+    __attribute__((no_sanitize("shadow-call-stack"))) ~ScopedSCSExitForVDSO() {}
+#endif
+};
+
+}
+
 int clock_gettime(int clock_id, timespec* tp) {
   auto vdso_clock_gettime = reinterpret_cast<decltype(&clock_gettime)>(
     __libc_globals->vdso[VDSO_CLOCK_GETTIME].fn);
   if (__predict_true(vdso_clock_gettime)) {
+    ScopedSCSExitForVDSO x;
     return vdso_return(vdso_clock_gettime(clock_id, tp));
   }
   return __clock_gettime(clock_id, tp);
@@ -46,6 +72,7 @@ int clock_getres(int clock_id, timespec* tp) {
   auto vdso_clock_getres = reinterpret_cast<decltype(&clock_getres)>(
     __libc_globals->vdso[VDSO_CLOCK_GETRES].fn);
   if (__predict_true(vdso_clock_getres)) {
+    ScopedSCSExitForVDSO x;
     return vdso_return(vdso_clock_getres(clock_id, tp));
   }
   return __clock_getres(clock_id, tp);
@@ -55,6 +82,7 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
   auto vdso_gettimeofday = reinterpret_cast<decltype(&gettimeofday)>(
     __libc_globals->vdso[VDSO_GETTIMEOFDAY].fn);
   if (__predict_true(vdso_gettimeofday)) {
+    ScopedSCSExitForVDSO x;
     return vdso_return(vdso_gettimeofday(tv, tz));
   }
   return __gettimeofday(tv, tz);
@@ -63,6 +91,7 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
 time_t time(time_t* t) {
   auto vdso_time = reinterpret_cast<decltype(&time)>(__libc_globals->vdso[VDSO_TIME].fn);
   if (__predict_true(vdso_time)) {
+    ScopedSCSExitForVDSO x;
     return vdso_time(t);
   }
 
