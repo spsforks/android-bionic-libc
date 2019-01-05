@@ -157,6 +157,7 @@ int pthread_join(pthread_t __pthread, void** __return_value_ptr);
 
 int pthread_key_create(pthread_key_t* __key_ptr, void (*__key_destructor)(void*));
 int pthread_key_delete(pthread_key_t __key);
+int pthread_alloc_static_tls_word_np(intptr_t* tpoff, void** api_tlsbase) __INTRODUCED_IN(29);
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t* __attr);
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* __attr, int* __shared);
