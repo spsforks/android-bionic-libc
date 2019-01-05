@@ -189,3 +189,31 @@ int pthread_setspecific(pthread_key_t key, const void* ptr) {
   }
   return EINVAL;
 }
+
+// Allocates a word of static TLS memory. Each thread will have a copy of this word at the same
+// fixed offset from the architecture-specific thread pointer (i.e. __get_tls(),
+// __builtin_thread_pointer()). The word will initially be zero in each thread.
+//
+// Returns 0 on success or EAGAIN if all slots are exhausted. On success, *tpoff is set to the fixed
+// offset from the thread pointer to the newly allocated word, in bytes, and for sanity-checking,
+// *tlsbase is set to the value of the current thread's thread pointer.
+//
+// Because Bionic keys are cleared lazily without the use of a thread list, this API can only
+// allocate a word that hasn't been used yet, and there is no API for freeing the memory.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+extern "C" int pthread_alloc_static_tls_word_np(intptr_t* tpoff, void** tlsbase) {
+  for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
+    // The new word of memory is guaranteed to be zero-initialized, so this API can't reuse a key.
+    // Only return a key whose sequence number is currently 0.
+    uintptr_t seq = 0;
+    if (atomic_compare_exchange_strong(&key_map[i].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
+      pthread_key_data_t* data = &get_thread_key_data()[i];
+      *tpoff = reinterpret_cast<intptr_t>(&data->data) - reinterpret_cast<intptr_t>(__get_tls());
+      if (tlsbase != nullptr) {
+        *tlsbase = __get_tls();
+      }
+      return 0;
+    }
+  }
+  return EAGAIN;
+}
