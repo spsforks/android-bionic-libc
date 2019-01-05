@@ -39,6 +39,7 @@
 #include <android-base/scopeguard.h>
 #include <android-base/strings.h>
 
+#include "private/__get_tls.h"
 #include "private/bionic_constants.h"
 #include "BionicDeathTest.h"
 #include "SignalUtils.h"
@@ -2713,4 +2714,79 @@ TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_
   ASSERT_EQ(SCHED_FIFO  | SCHED_RESET_ON_FORK, actual_policy);
   spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+#if defined(__BIONIC__)
+extern "C" int pthread_alloc_static_tls_word_np(intptr_t* tpoff, void** tlsbase);
+#endif
+
+TEST(pthread, pthread_alloc_static_tls_word) {
+#if defined(__BIONIC__)
+  struct ThreadArgs {
+    std::set<intptr_t> words;
+
+    void add_word() {
+      intptr_t tpoff;
+      void* tlsbase;
+      ASSERT_EQ(0, pthread_alloc_static_tls_word_np(&tpoff, &tlsbase));
+      ASSERT_EQ(static_cast<void*>(__get_tls()), tlsbase);
+      auto tlsword = reinterpret_cast<void**>(reinterpret_cast<uintptr_t>(__get_tls()) + tpoff);
+      ASSERT_EQ(nullptr, *tlsword);
+      ASSERT_TRUE(words.insert(tpoff).second);
+    }
+  } args;
+
+  const auto thread_fn = [](void* arg) -> void* {
+    static_cast<ThreadArgs*>(arg)->add_word();
+    return nullptr;
+  };
+
+  thread_fn(&args);
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, thread_fn, &args));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_alloc_static_tls_word_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_alloc_static_tls_word_recycle) {
+#if defined(__BIONIC__)
+  // Dirty half of the keys. When keys are recycled, Bionic uses used keys
+  // before fresh keys.
+  for (int round = 0; round < 3; ++round) {
+    std::vector<pthread_key_t> keys;
+    for (int i = 0; i < PTHREAD_KEYS_MAX / 2; ++i) {
+      pthread_key_t key;
+      ASSERT_EQ(0, pthread_key_create(&key, nullptr));
+      pthread_setspecific(key, reinterpret_cast<void*>(i));
+      keys.push_back(key);
+    }
+    for (auto key : keys) {
+      pthread_key_delete(key);
+    }
+  }
+  // Allocate as many fresh static TLS words as possible.
+  int count = 0;
+  while (true) {
+    intptr_t tpoff;
+    void* tlsbase;
+    int err = pthread_alloc_static_tls_word_np(&tpoff, &tlsbase);
+    if (err == 0) {
+      ++count;
+      continue;
+    }
+    ASSERT_EQ(err, EAGAIN);
+    break;
+  }
+  // We should still be able to allocate some static TLS words, but only up to
+  // half.
+  ASSERT_GE(count, PTHREAD_KEYS_MAX / 4);
+  ASSERT_LE(count, PTHREAD_KEYS_MAX / 2);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_alloc_static_tls_word_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
 }
