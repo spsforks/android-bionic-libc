@@ -23,6 +23,7 @@
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -32,6 +33,17 @@ static inline int vdso_return(int result) {
   errno = -result;
   return -1;
 }
+
+#ifdef __aarch64__
+static int vdso_workaround_clock_gettime(int clock_id, timespec* tp) {
+  void *scs;
+  __asm__ __volatile__("str x18, [%0]" ::"r"(&scs));
+  int retval =
+      reinterpret_cast<decltype(&clock_gettime)>(__libc_globals->real_clock_gettime)(clock_id, tp);
+  __asm__ __volatile__("ldr x18, [%0]; str xzr, [%0]" ::"r"(&scs));
+  return retval;
+}
+#endif
 
 int clock_gettime(int clock_id, timespec* tp) {
   auto vdso_clock_gettime = reinterpret_cast<decltype(&clock_gettime)>(
@@ -136,4 +148,19 @@ void __libc_init_vdso(libc_globals* globals) {
       }
     }
   }
+
+#ifdef __aarch64__
+  // The wahoo (4.4) and crosshatch (4.9) kernels released with Android P contain a bad patch that
+  // causes the clock_gettime function in the vDSO to clobber x18, the register that is reserved in
+  // userspace for the shadow call stack pointer. If we might be running on an affected kernel,
+  // update the vDSO function pointer for clock_gettime to point to a version of the function that
+  // works around the problem by temporarily storing x18 on the stack.
+  utsname buf;
+  if (globals->vdso[VDSO_CLOCK_GETTIME].fn &&
+      (uname(&buf) != 0 || strncmp(buf.release, "4.4.", 4) == 0 ||
+       strncmp(buf.release, "4.9.", 4) == 0)) {
+    globals->real_clock_gettime = globals->vdso[VDSO_CLOCK_GETTIME].fn;
+    globals->vdso[VDSO_CLOCK_GETTIME].fn = reinterpret_cast<void*>(vdso_workaround_clock_gettime);
+  }
+#endif
 }

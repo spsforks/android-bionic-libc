@@ -40,6 +40,7 @@
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
+  void* real_clock_gettime;
   long setjmp_cookie;
   MallocDispatch malloc_dispatch;
 };
