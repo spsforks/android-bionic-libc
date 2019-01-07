@@ -1697,6 +1697,7 @@ LIBC_PLATFORM {
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
+    android_net_res_get_dns_fail_info;
     malloc_backtrace;
     malloc_disable;
     malloc_enable;
