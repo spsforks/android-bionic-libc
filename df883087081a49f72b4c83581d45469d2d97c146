@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff69e4f1_c1e7fdeb",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-07T17:25:26Z",
+      "side": 1,
+      "message": "a single global (even if you add the missing lock) seems to racy to be useful for anything?",
+      "revId": "df883087081a49f72b4c83581d45469d2d97c146",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0afc3d6c_c0dff44a",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-07T17:25:26Z",
+      "side": 1,
+      "message": "wouldn\u0027t a circular buffer make more sense?",
+      "revId": "df883087081a49f72b4c83581d45469d2d97c146",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a14bb4db_7366d71a",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-07T17:25:26Z",
+      "side": 1,
+      "message": "missing locking.\n\nplus there\u0027s no locking on `stats_count` at all.",
+      "revId": "df883087081a49f72b4c83581d45469d2d97c146",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
