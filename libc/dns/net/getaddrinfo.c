@@ -217,7 +217,7 @@ struct res_target {
 
 static int str2number(const char *);
 static int explore_fqdn(const struct addrinfo *, const char *,
-	const char *, struct addrinfo **, const struct android_net_context *);
+	const char *, struct addrinfo **, struct android_net_context *);
 static int explore_null(const struct addrinfo *,
 	const char *, struct addrinfo **);
 static int explore_numeric(const struct addrinfo *, const char *,
@@ -577,6 +577,7 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 		.dns_netid = netid,
 		.dns_mark = mark,
 		.uid = NET_CONTEXT_INVALID_UID,
+		.cached = 0,
         };
 	return android_getaddrinfofornetcontext(hostname, servname, hints, &netcontext, res);
 }
@@ -584,7 +585,7 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 android_getaddrinfofornetcontext(const char *hostname, const char *servname,
-    const struct addrinfo *hints, const struct android_net_context *netcontext,
+    const struct addrinfo *hints, struct android_net_context *netcontext,
     struct addrinfo **res)
 {
 	struct addrinfo sentinel;
@@ -798,7 +799,7 @@ android_getaddrinfofornetcontext(const char *hostname, const char *servname,
 static int
 explore_fqdn(const struct addrinfo *pai, const char *hostname,
     const char *servname, struct addrinfo **res,
-    const struct android_net_context *netcontext)
+    struct android_net_context *netcontext)
 {
 	struct addrinfo *result;
 	struct addrinfo *cur;
@@ -1900,11 +1901,11 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct res_target q, q2;
 	res_state res;
-	const struct android_net_context *netcontext;
+	struct android_net_context *netcontext;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
-	netcontext = va_arg(ap, const struct android_net_context *);
+	netcontext = va_arg(ap, struct android_net_context *);
 	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
@@ -1989,10 +1990,12 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	res_setnetcontext(res, netcontext);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
+		netcontext->cached = res->cached;
 		free(buf);
 		free(buf2);
 		return NS_NOTFOUND;
 	}
+	netcontext->cached = res->cached;
 	ai = getanswer(buf, q.n, q.name, q.qtype, pai);
 	if (ai) {
 		cur->ai_next = ai;
