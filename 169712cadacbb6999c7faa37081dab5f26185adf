@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97d2c8ac_9838fd25",
+        "filename": "libc/dns/resolv/res_init.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-07T18:47:37Z",
+      "side": 1,
+      "message": "(nit: you only need one buffer.)",
+      "revId": "169712cadacbb6999c7faa37081dab5f26185adf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
