@@ -46,6 +46,18 @@ struct __res_stats {
     uint8_t			sample_next;
 };
 
+struct __res_fail_info {
+    uint8_t rcode;
+    uint8_t ns;
+    unsigned netid;
+};
+
+struct __res_fail_all {
+	struct __res_fail_info fail_all[MAXNSSAMPLES];
+	uint8_t count;
+	uint8_t index;
+};
+
 /* Calculate the round-trip-time from start time t0 and end time t1. */
 extern int
 _res_stats_calculate_rtt(const struct timespec* t1, const struct timespec* t0);
@@ -72,6 +84,10 @@ extern int
 android_net_res_stats_get_info_for_net(unsigned netid, int* nscount,
         struct sockaddr_storage servers[MAXNS], int* dcount, char domains[MAXDNSRCH][MAXDNSRCHPATH],
         struct __res_params* params, struct __res_stats stats[MAXNS])
+    __attribute__((visibility ("default")));
+
+extern void
+android_net_res_get_dns_fail_info(struct __res_fail_all *fails, int* total)
     __attribute__((visibility ("default")));
 
 /* Returns an array of bools indicating which servers are considered good */
