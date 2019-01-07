@@ -161,6 +161,8 @@
     } \
 })
 
+int cacheHit = 0;
+
 /** BOUNDED BUFFER FORMATTING
  **/
 
@@ -1685,6 +1687,7 @@ _resolv_cache_lookup( unsigned              netid,
     Cache*     cache;
 
     ResolvCacheStatus  result = RESOLV_CACHE_NOTFOUND;
+    cacheHit = result;
 
     XLOG("%s: lookup", __FUNCTION__);
     XLOG_QUERY(query, querylen);
@@ -1753,6 +1756,7 @@ _resolv_cache_lookup( unsigned              netid,
 
     XLOG( "FOUND IN CACHE entry=%p", e );
     result = RESOLV_CACHE_FOUND;
+    cacheHit = result;
 
 Exit:
     pthread_mutex_unlock(&_res_cache_list_lock);
@@ -2239,6 +2243,11 @@ _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info) {
             cache_info->nsstats->sample_count = cache_info->nsstats->sample_next = 0;
         }
     }
+}
+
+void
+android_net_res_get_cache_info(int* cached) {
+    *cached = cacheHit == RESOLV_CACHE_FOUND? 1 : 0;
 }
 
 int

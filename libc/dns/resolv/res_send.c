@@ -131,8 +131,14 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include "res_private.h"
 #include "resolv_stats.h"
 
+#include "pthread.h"
+
 #define EXT(res) ((res)->_u._ext)
 #define DBG 0
+
+struct __res_fail_all fail_list;
+static pthread_mutex_t _res_fail_list_lock;
+static int stats_count;
 
 /* Forward. */
 
@@ -347,6 +353,31 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 	return (1);
 }
 
+void
+_res_stats_set_fail_info(struct __res_fail_info* info, int rcode, int ns, unsigned netid)
+{
+	info->rcode = rcode;
+	info->ns = ns;
+	info->netid = netid;
+}
+
+void
+_res_add_fail_info(const struct __res_fail_info* info) {
+	pthread_mutex_lock(&_res_fail_list_lock);
+	if (fail_list.count >= 10)
+		fail_list.count = 0;
+	fail_list.fail_all[fail_list.count++] = *info;
+	pthread_mutex_unlock(&_res_fail_list_lock);
+}
+
+void
+android_net_res_get_dns_fail_info(struct __res_fail_all *fails, int* total) {
+	*fails = fail_list;
+	fail_list.count = 0;
+	*total = stats_count;
+	stats_count = 0;
+}
+
 int
 res_nsend(res_state statp,
 	  const u_char *buf, int buflen, u_char *ans, int anssiz)
@@ -556,6 +587,12 @@ res_nsend(res_state statp,
 				_res_stats_set_sample(&sample, now, rcode, delay);
 				_resolv_cache_add_resolver_stats_sample(statp->netid, revision_id,
 					ns, &sample, params.max_samples);
+				if (rcode) {
+					struct __res_fail_info info;
+					_res_stats_set_fail_info(&info, rcode, ns, statp->netid);
+					_res_add_fail_info(&info);
+				}
+				stats_count++;
 			}
 
 			if (DBG) {
@@ -583,6 +620,12 @@ res_nsend(res_state statp,
 				_res_stats_set_sample(&sample, now, rcode, delay);
 				_resolv_cache_add_resolver_stats_sample(statp->netid, revision_id,
 					ns, &sample, params.max_samples);
+				if (rcode) {
+					struct __res_fail_info info;
+					_res_stats_set_fail_info(&info, rcode, ns, statp->netid);
+					_res_add_fail_info(&info);
+				}
+				stats_count++;
 			}
 
 			if (DBG) {
