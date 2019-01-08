@@ -98,6 +98,8 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #include <unistd.h>
 #include <netdb.h>
 
+#include <sys/system_properties.h>
+
 #ifdef ANDROID_CHANGES
 #include <errno.h>
 #include <fcntl.h>
@@ -191,9 +193,31 @@ __res_vinit(res_state statp, int preinit) {
                 res_ndestroy(statp);
 
 	if (!preinit) {
+		/*
+		 * Set up statp->retrans and statp->retry to systemProperties value.
+		 * The network environment is different in different places, but dns's
+		 * retrans and retry are fixed.
+		 */
+		char dnsparabuf[PROP_VALUE_MAX];
+		int timeoutvalue = RES_TIMEOUT;
+		int retryvalue = RES_DFLRETRY;
+		if(__system_property_get("persist.sys.tcppara_retrans", dnsparabuf) > 0){
+		  timeoutvalue = atoi(dnsparabuf);
+		}
+		if(__system_property_get("persist.sys.tcppara_retry", dnsparabuf) > 0){
+		  retryvalue = atoi(dnsparabuf);
+		}
+		if((timeoutvalue > 0) && (timeoutvalue <10)){
+		  statp->retrans = timeoutvalue;
+		} else {
+		  statp->retrans = RES_TIMEOUT;
+		}
+		if((retryvalue > 0) && (retryvalue <10)){
+		  statp->retry = retryvalue;
+		} else {
+		  statp->retry = RES_DFLRETRY;
+		}
 		statp->netid = NETID_UNSET;
-		statp->retrans = RES_TIMEOUT;
-		statp->retry = RES_DFLRETRY;
 		statp->options = RES_DEFAULT;
 		statp->id = res_randomid();
 		statp->_mark = MARK_UNSET;
