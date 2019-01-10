@@ -21,8 +21,5 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 #define __arch_swab32 __arch_swab32
-#ifdef __i386__
-#else
-#endif
 #define __arch_swab64 __arch_swab64
 #endif

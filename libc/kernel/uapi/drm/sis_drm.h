@@ -20,6 +20,7 @@
 #define __SIS_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define NOT_USED_0_3
 #define DRM_SIS_FB_ALLOC 0x04
@@ -35,18 +36,19 @@
 #define DRM_IOCTL_SIS_AGP_ALLOC DRM_IOWR(DRM_COMMAND_BASE + DRM_SIS_AGP_ALLOC, drm_sis_mem_t)
 #define DRM_IOCTL_SIS_AGP_FREE DRM_IOW(DRM_COMMAND_BASE + DRM_SIS_AGP_FREE, drm_sis_mem_t)
 #define DRM_IOCTL_SIS_FB_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_SIS_FB_INIT, drm_sis_fb_t)
-typedef struct {
-  int context;
-  unsigned long offset;
-  unsigned long size;
-  unsigned long free;
-} drm_sis_mem_t;
-typedef struct {
-  unsigned long offset, size;
-} drm_sis_agp_t;
-typedef struct {
-  unsigned long offset, size;
-} drm_sis_fb_t;
+  typedef struct {
+    int context;
+    unsigned long offset;
+    unsigned long size;
+    unsigned long free;
+  } drm_sis_mem_t;
+  typedef struct {
+    unsigned long offset, size;
+  } drm_sis_agp_t;
+  typedef struct {
+    unsigned long offset, size;
+  } drm_sis_fb_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

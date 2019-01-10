@@ -23,7 +23,5 @@
 #ifndef __STRICT_ANSI__
 #define __SWAB_64_THRU_32__
 #endif
-#ifndef __thumb__
-#endif
 #define __arch_swab32 __arch_swab32
 #endif

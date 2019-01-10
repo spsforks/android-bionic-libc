@@ -273,6 +273,7 @@ enum {
 } static inline int nilfs_segment_usage_ ##name(const struct nilfs_segment_usage * su) \
 { return ! ! (le32_to_cpu(su->su_flags) & (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
 }
+NILFS_SEGMENT_USAGE_FNS(ACTIVE, active) NILFS_SEGMENT_USAGE_FNS(DIRTY, dirty) NILFS_SEGMENT_USAGE_FNS(ERROR, error)
 struct nilfs_sufile_header {
   __le64 sh_ncleansegs;
   __le64 sh_ndirtysegs;

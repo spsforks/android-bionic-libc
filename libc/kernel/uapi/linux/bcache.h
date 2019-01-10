@@ -35,6 +35,7 @@ struct bkey {
 }
 #define KEY_SIZE_BITS 16
 #define KEY_MAX_U64S 8
+KEY_FIELD(KEY_PTRS, high, 60, 3) KEY_FIELD(HEADER_SIZE, high, 58, 2) KEY_FIELD(KEY_CSUM, high, 56, 2) KEY_FIELD(KEY_PINNED, high, 55, 1) KEY_FIELD(KEY_DIRTY, high, 36, 1) KEY_FIELD(KEY_SIZE, high, 20, KEY_SIZE_BITS) KEY_FIELD(KEY_INODE, high, 0, 20)
 #define KEY(inode,offset,size) \
 ((struct bkey) {.high = (1ULL << 63) | ((__u64) (size) << 20) | (inode),.low = (offset) \
 })
@@ -45,6 +46,7 @@ struct bkey {
 #define KEY_START(k) (KEY_OFFSET(k) - KEY_SIZE(k))
 #define START_KEY(k) KEY(KEY_INODE(k), KEY_START(k), 0)
 #define PTR_DEV_BITS 12
+PTR_FIELD(PTR_DEV, 51, PTR_DEV_BITS) PTR_FIELD(PTR_OFFSET, 8, 43) PTR_FIELD(PTR_GEN, 0, 8)
 #define PTR_CHECK_DEV ((1 << PTR_DEV_BITS) - 1)
 #define MAKE_PTR(gen,offset,dev) ((((__u64) dev) << 51) | ((__u64) offset) << 8 | gen)
 #define bkey_copy(_dest,_src) memcpy(_dest, _src, bkey_bytes(_src))

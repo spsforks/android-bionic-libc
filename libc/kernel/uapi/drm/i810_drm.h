@@ -20,6 +20,7 @@
 #define _I810_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef _I810_DEFINES_
 #define _I810_DEFINES_
@@ -80,68 +81,68 @@
 #define I810_FRONT 0x1
 #define I810_BACK 0x2
 #define I810_DEPTH 0x4
-typedef enum _drm_i810_init_func {
-  I810_INIT_DMA = 0x01,
-  I810_CLEANUP_DMA = 0x02,
-  I810_INIT_DMA_1_4 = 0x03
-} drm_i810_init_func_t;
-typedef struct _drm_i810_init {
-  drm_i810_init_func_t func;
-  unsigned int mmio_offset;
-  unsigned int buffers_offset;
-  int sarea_priv_offset;
-  unsigned int ring_start;
-  unsigned int ring_end;
-  unsigned int ring_size;
-  unsigned int front_offset;
-  unsigned int back_offset;
-  unsigned int depth_offset;
-  unsigned int overlay_offset;
-  unsigned int overlay_physical;
-  unsigned int w;
-  unsigned int h;
-  unsigned int pitch;
-  unsigned int pitch_bits;
-} drm_i810_init_t;
-typedef struct _drm_i810_pre12_init {
-  drm_i810_init_func_t func;
-  unsigned int mmio_offset;
-  unsigned int buffers_offset;
-  int sarea_priv_offset;
-  unsigned int ring_start;
-  unsigned int ring_end;
-  unsigned int ring_size;
-  unsigned int front_offset;
-  unsigned int back_offset;
-  unsigned int depth_offset;
-  unsigned int w;
-  unsigned int h;
-  unsigned int pitch;
-  unsigned int pitch_bits;
-} drm_i810_pre12_init_t;
-typedef struct _drm_i810_tex_region {
-  unsigned char next, prev;
-  unsigned char in_use;
-  int age;
-} drm_i810_tex_region_t;
-typedef struct _drm_i810_sarea {
-  unsigned int ContextState[I810_CTX_SETUP_SIZE];
-  unsigned int BufferState[I810_DEST_SETUP_SIZE];
-  unsigned int TexState[2][I810_TEX_SETUP_SIZE];
-  unsigned int dirty;
-  unsigned int nbox;
-  struct drm_clip_rect boxes[I810_NR_SAREA_CLIPRECTS];
-  drm_i810_tex_region_t texList[I810_NR_TEX_REGIONS + 1];
-  int texAge;
-  int last_enqueue;
-  int last_dispatch;
-  int last_quiescent;
-  int ctxOwner;
-  int vertex_prim;
-  int pf_enabled;
-  int pf_active;
-  int pf_current_page;
-} drm_i810_sarea_t;
+  typedef enum _drm_i810_init_func {
+    I810_INIT_DMA = 0x01,
+    I810_CLEANUP_DMA = 0x02,
+    I810_INIT_DMA_1_4 = 0x03
+  } drm_i810_init_func_t;
+  typedef struct _drm_i810_init {
+    drm_i810_init_func_t func;
+    unsigned int mmio_offset;
+    unsigned int buffers_offset;
+    int sarea_priv_offset;
+    unsigned int ring_start;
+    unsigned int ring_end;
+    unsigned int ring_size;
+    unsigned int front_offset;
+    unsigned int back_offset;
+    unsigned int depth_offset;
+    unsigned int overlay_offset;
+    unsigned int overlay_physical;
+    unsigned int w;
+    unsigned int h;
+    unsigned int pitch;
+    unsigned int pitch_bits;
+  } drm_i810_init_t;
+  typedef struct _drm_i810_pre12_init {
+    drm_i810_init_func_t func;
+    unsigned int mmio_offset;
+    unsigned int buffers_offset;
+    int sarea_priv_offset;
+    unsigned int ring_start;
+    unsigned int ring_end;
+    unsigned int ring_size;
+    unsigned int front_offset;
+    unsigned int back_offset;
+    unsigned int depth_offset;
+    unsigned int w;
+    unsigned int h;
+    unsigned int pitch;
+    unsigned int pitch_bits;
+  } drm_i810_pre12_init_t;
+  typedef struct _drm_i810_tex_region {
+    unsigned char next, prev;
+    unsigned char in_use;
+    int age;
+  } drm_i810_tex_region_t;
+  typedef struct _drm_i810_sarea {
+    unsigned int ContextState[I810_CTX_SETUP_SIZE];
+    unsigned int BufferState[I810_DEST_SETUP_SIZE];
+    unsigned int TexState[2][I810_TEX_SETUP_SIZE];
+    unsigned int dirty;
+    unsigned int nbox;
+    struct drm_clip_rect boxes[I810_NR_SAREA_CLIPRECTS];
+    drm_i810_tex_region_t texList[I810_NR_TEX_REGIONS + 1];
+    int texAge;
+    int last_enqueue;
+    int last_dispatch;
+    int last_quiescent;
+    int ctxOwner;
+    int vertex_prim;
+    int pf_enabled;
+    int pf_active;
+    int pf_current_page;
+  } drm_i810_sarea_t;
 #define DRM_I810_INIT 0x00
 #define DRM_I810_VERTEX 0x01
 #define DRM_I810_CLEAR 0x02
@@ -172,21 +173,21 @@ typedef struct _drm_i810_sarea {
 #define DRM_IOCTL_I810_MC DRM_IOW(DRM_COMMAND_BASE + DRM_I810_MC, drm_i810_mc_t)
 #define DRM_IOCTL_I810_RSTATUS DRM_IO(DRM_COMMAND_BASE + DRM_I810_RSTATUS)
 #define DRM_IOCTL_I810_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I810_FLIP)
-typedef struct _drm_i810_clear {
-  int clear_color;
-  int clear_depth;
-  int flags;
-} drm_i810_clear_t;
-typedef struct _drm_i810_vertex {
-  int idx;
-  int used;
-  int discard;
-} drm_i810_vertex_t;
-typedef struct _drm_i810_copy_t {
-  int idx;
-  int used;
-  void * address;
-} drm_i810_copy_t;
+  typedef struct _drm_i810_clear {
+    int clear_color;
+    int clear_depth;
+    int flags;
+  } drm_i810_clear_t;
+  typedef struct _drm_i810_vertex {
+    int idx;
+    int used;
+    int discard;
+  } drm_i810_vertex_t;
+  typedef struct _drm_i810_copy_t {
+    int idx;
+    int used;
+    void * address;
+  } drm_i810_copy_t;
 #define PR_TRIANGLES (0x0 << 18)
 #define PR_TRISTRIP_0 (0x1 << 18)
 #define PR_TRISTRIP_1 (0x2 << 18)
@@ -196,23 +197,24 @@ typedef struct _drm_i810_copy_t {
 #define PR_LINESTRIP (0x6 << 18)
 #define PR_RECTS (0x7 << 18)
 #define PR_MASK (0x7 << 18)
-typedef struct drm_i810_dma {
-  void * __linux_virtual;
-  int request_idx;
-  int request_size;
-  int granted;
-} drm_i810_dma_t;
-typedef struct _drm_i810_overlay_t {
-  unsigned int offset;
-  unsigned int physical;
-} drm_i810_overlay_t;
-typedef struct _drm_i810_mc {
-  int idx;
-  int used;
-  int num_blocks;
-  int * length;
-  unsigned int last_render;
-} drm_i810_mc_t;
+  typedef struct drm_i810_dma {
+    void * __linux_virtual;
+    int request_idx;
+    int request_size;
+    int granted;
+  } drm_i810_dma_t;
+  typedef struct _drm_i810_overlay_t {
+    unsigned int offset;
+    unsigned int physical;
+  } drm_i810_overlay_t;
+  typedef struct _drm_i810_mc {
+    int idx;
+    int used;
+    int num_blocks;
+    int * length;
+    unsigned int last_render;
+  } drm_i810_mc_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

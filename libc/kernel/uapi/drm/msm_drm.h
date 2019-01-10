@@ -20,6 +20,7 @@
 #define __MSM_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define MSM_PIPE_NONE 0x00
 #define MSM_PIPE_2D0 0x01
@@ -28,10 +29,10 @@
 #define MSM_PIPE_ID_MASK 0xffff
 #define MSM_PIPE_ID(x) ((x) & MSM_PIPE_ID_MASK)
 #define MSM_PIPE_FLAGS(x) ((x) & ~MSM_PIPE_ID_MASK)
-struct drm_msm_timespec {
-  __s64 tv_sec;
-  __s64 tv_nsec;
-};
+  struct drm_msm_timespec {
+    __s64 tv_sec;
+    __s64 tv_nsec;
+  };
 #define MSM_PARAM_GPU_ID 0x01
 #define MSM_PARAM_GMEM_SIZE 0x02
 #define MSM_PARAM_CHIP_ID 0x03
@@ -39,11 +40,11 @@ struct drm_msm_timespec {
 #define MSM_PARAM_TIMESTAMP 0x05
 #define MSM_PARAM_GMEM_BASE 0x06
 #define MSM_PARAM_NR_RINGS 0x07
-struct drm_msm_param {
-  __u32 pipe;
-  __u32 param;
-  __u64 value;
-};
+  struct drm_msm_param {
+    __u32 pipe;
+    __u32 param;
+    __u64 value;
+  };
 #define MSM_BO_SCANOUT 0x00000001
 #define MSM_BO_GPU_READONLY 0x00000002
 #define MSM_BO_CACHE_MASK 0x000f0000
@@ -51,92 +52,92 @@ struct drm_msm_param {
 #define MSM_BO_WC 0x00020000
 #define MSM_BO_UNCACHED 0x00040000
 #define MSM_BO_FLAGS (MSM_BO_SCANOUT | MSM_BO_GPU_READONLY | MSM_BO_CACHED | MSM_BO_WC | MSM_BO_UNCACHED)
-struct drm_msm_gem_new {
-  __u64 size;
-  __u32 flags;
-  __u32 handle;
-};
+  struct drm_msm_gem_new {
+    __u64 size;
+    __u32 flags;
+    __u32 handle;
+  };
 #define MSM_INFO_IOVA 0x01
 #define MSM_INFO_FLAGS (MSM_INFO_IOVA)
-struct drm_msm_gem_info {
-  __u32 handle;
-  __u32 flags;
-  __u64 offset;
-};
+  struct drm_msm_gem_info {
+    __u32 handle;
+    __u32 flags;
+    __u64 offset;
+  };
 #define MSM_PREP_READ 0x01
 #define MSM_PREP_WRITE 0x02
 #define MSM_PREP_NOSYNC 0x04
 #define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC)
-struct drm_msm_gem_cpu_prep {
-  __u32 handle;
-  __u32 op;
-  struct drm_msm_timespec timeout;
-};
-struct drm_msm_gem_cpu_fini {
-  __u32 handle;
-};
-struct drm_msm_gem_submit_reloc {
-  __u32 submit_offset;
-  __u32 or;
-  __s32 shift;
-  __u32 reloc_idx;
-  __u64 reloc_offset;
-};
+  struct drm_msm_gem_cpu_prep {
+    __u32 handle;
+    __u32 op;
+    struct drm_msm_timespec timeout;
+  };
+  struct drm_msm_gem_cpu_fini {
+    __u32 handle;
+  };
+  struct drm_msm_gem_submit_reloc {
+    __u32 submit_offset;
+    __u32 or;
+    __s32 shift;
+    __u32 reloc_idx;
+    __u64 reloc_offset;
+  };
 #define MSM_SUBMIT_CMD_BUF 0x0001
 #define MSM_SUBMIT_CMD_IB_TARGET_BUF 0x0002
 #define MSM_SUBMIT_CMD_CTX_RESTORE_BUF 0x0003
-struct drm_msm_gem_submit_cmd {
-  __u32 type;
-  __u32 submit_idx;
-  __u32 submit_offset;
-  __u32 size;
-  __u32 pad;
-  __u32 nr_relocs;
-  __u64 relocs;
-};
+  struct drm_msm_gem_submit_cmd {
+    __u32 type;
+    __u32 submit_idx;
+    __u32 submit_offset;
+    __u32 size;
+    __u32 pad;
+    __u32 nr_relocs;
+    __u64 relocs;
+  };
 #define MSM_SUBMIT_BO_READ 0x0001
 #define MSM_SUBMIT_BO_WRITE 0x0002
 #define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE)
-struct drm_msm_gem_submit_bo {
-  __u32 flags;
-  __u32 handle;
-  __u64 presumed;
-};
+  struct drm_msm_gem_submit_bo {
+    __u32 flags;
+    __u32 handle;
+    __u64 presumed;
+  };
 #define MSM_SUBMIT_NO_IMPLICIT 0x80000000
 #define MSM_SUBMIT_FENCE_FD_IN 0x40000000
 #define MSM_SUBMIT_FENCE_FD_OUT 0x20000000
 #define MSM_SUBMIT_SUDO 0x10000000
 #define MSM_SUBMIT_FLAGS (MSM_SUBMIT_NO_IMPLICIT | MSM_SUBMIT_FENCE_FD_IN | MSM_SUBMIT_FENCE_FD_OUT | MSM_SUBMIT_SUDO | 0)
-struct drm_msm_gem_submit {
-  __u32 flags;
-  __u32 fence;
-  __u32 nr_bos;
-  __u32 nr_cmds;
-  __u64 bos;
-  __u64 cmds;
-  __s32 fence_fd;
-  __u32 queueid;
-};
-struct drm_msm_wait_fence {
-  __u32 fence;
-  __u32 pad;
-  struct drm_msm_timespec timeout;
-  __u32 queueid;
-};
+  struct drm_msm_gem_submit {
+    __u32 flags;
+    __u32 fence;
+    __u32 nr_bos;
+    __u32 nr_cmds;
+    __u64 bos;
+    __u64 cmds;
+    __s32 fence_fd;
+    __u32 queueid;
+  };
+  struct drm_msm_wait_fence {
+    __u32 fence;
+    __u32 pad;
+    struct drm_msm_timespec timeout;
+    __u32 queueid;
+  };
 #define MSM_MADV_WILLNEED 0
 #define MSM_MADV_DONTNEED 1
 #define __MSM_MADV_PURGED 2
-struct drm_msm_gem_madvise {
-  __u32 handle;
-  __u32 madv;
-  __u32 retained;
-};
+  struct drm_msm_gem_madvise {
+    __u32 handle;
+    __u32 madv;
+    __u32 retained;
+  };
 #define MSM_SUBMITQUEUE_FLAGS (0)
-struct drm_msm_submitqueue {
-  __u32 flags;
-  __u32 prio;
-  __u32 id;
-};
+  struct drm_msm_submitqueue {
+    __u32 flags;
+    __u32 prio;
+    __u32 id;
+  };
 #define DRM_MSM_GET_PARAM 0x00
 #define DRM_MSM_GEM_NEW 0x02
 #define DRM_MSM_GEM_INFO 0x03
@@ -158,5 +159,6 @@ struct drm_msm_submitqueue {
 #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
 #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE DRM_IOW(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
 #ifdef __cplusplus
+}
 #endif
 #endif
