@@ -20,11 +20,12 @@
 #define __ETNAVIV_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
-struct drm_etnaviv_timespec {
-  __s64 tv_sec;
-  __s64 tv_nsec;
-};
+  struct drm_etnaviv_timespec {
+    __s64 tv_sec;
+    __s64 tv_nsec;
+  };
 #define ETNAVIV_PARAM_GPU_MODEL 0x01
 #define ETNAVIV_PARAM_GPU_REVISION 0x02
 #define ETNAVIV_PARAM_GPU_FEATURES_0 0x03
@@ -52,62 +53,62 @@ struct drm_etnaviv_timespec {
 #define ETNAVIV_PARAM_GPU_NUM_CONSTANTS 0x19
 #define ETNAVIV_PARAM_GPU_NUM_VARYINGS 0x1a
 #define ETNA_MAX_PIPES 4
-struct drm_etnaviv_param {
-  __u32 pipe;
-  __u32 param;
-  __u64 value;
-};
+  struct drm_etnaviv_param {
+    __u32 pipe;
+    __u32 param;
+    __u64 value;
+  };
 #define ETNA_BO_CACHE_MASK 0x000f0000
 #define ETNA_BO_CACHED 0x00010000
 #define ETNA_BO_WC 0x00020000
 #define ETNA_BO_UNCACHED 0x00040000
 #define ETNA_BO_FORCE_MMU 0x00100000
-struct drm_etnaviv_gem_new {
-  __u64 size;
-  __u32 flags;
-  __u32 handle;
-};
-struct drm_etnaviv_gem_info {
-  __u32 handle;
-  __u32 pad;
-  __u64 offset;
-};
+  struct drm_etnaviv_gem_new {
+    __u64 size;
+    __u32 flags;
+    __u32 handle;
+  };
+  struct drm_etnaviv_gem_info {
+    __u32 handle;
+    __u32 pad;
+    __u64 offset;
+  };
 #define ETNA_PREP_READ 0x01
 #define ETNA_PREP_WRITE 0x02
 #define ETNA_PREP_NOSYNC 0x04
-struct drm_etnaviv_gem_cpu_prep {
-  __u32 handle;
-  __u32 op;
-  struct drm_etnaviv_timespec timeout;
-};
-struct drm_etnaviv_gem_cpu_fini {
-  __u32 handle;
-  __u32 flags;
-};
-struct drm_etnaviv_gem_submit_reloc {
-  __u32 submit_offset;
-  __u32 reloc_idx;
-  __u64 reloc_offset;
-  __u32 flags;
-};
+  struct drm_etnaviv_gem_cpu_prep {
+    __u32 handle;
+    __u32 op;
+    struct drm_etnaviv_timespec timeout;
+  };
+  struct drm_etnaviv_gem_cpu_fini {
+    __u32 handle;
+    __u32 flags;
+  };
+  struct drm_etnaviv_gem_submit_reloc {
+    __u32 submit_offset;
+    __u32 reloc_idx;
+    __u64 reloc_offset;
+    __u32 flags;
+  };
 #define ETNA_SUBMIT_BO_READ 0x0001
 #define ETNA_SUBMIT_BO_WRITE 0x0002
-struct drm_etnaviv_gem_submit_bo {
-  __u32 flags;
-  __u32 handle;
-  __u64 presumed;
-};
+  struct drm_etnaviv_gem_submit_bo {
+    __u32 flags;
+    __u32 handle;
+    __u64 presumed;
+  };
 #define ETNA_PM_PROCESS_PRE 0x0001
 #define ETNA_PM_PROCESS_POST 0x0002
-struct drm_etnaviv_gem_submit_pmr {
-  __u32 flags;
-  __u8 domain;
-  __u8 pad;
-  __u16 signal;
-  __u32 sequence;
-  __u32 read_offset;
-  __u32 read_idx;
-};
+  struct drm_etnaviv_gem_submit_pmr {
+    __u32 flags;
+    __u8 domain;
+    __u8 pad;
+    __u16 signal;
+    __u32 sequence;
+    __u32 read_offset;
+    __u32 read_idx;
+  };
 #define ETNA_SUBMIT_NO_IMPLICIT 0x0001
 #define ETNA_SUBMIT_FENCE_FD_IN 0x0002
 #define ETNA_SUBMIT_FENCE_FD_OUT 0x0004
@@ -115,60 +116,60 @@ struct drm_etnaviv_gem_submit_pmr {
 #define ETNA_PIPE_3D 0x00
 #define ETNA_PIPE_2D 0x01
 #define ETNA_PIPE_VG 0x02
-struct drm_etnaviv_gem_submit {
-  __u32 fence;
-  __u32 pipe;
-  __u32 exec_state;
-  __u32 nr_bos;
-  __u32 nr_relocs;
-  __u32 stream_size;
-  __u64 bos;
-  __u64 relocs;
-  __u64 stream;
-  __u32 flags;
-  __s32 fence_fd;
-  __u64 pmrs;
-  __u32 nr_pmrs;
-  __u32 pad;
-};
+  struct drm_etnaviv_gem_submit {
+    __u32 fence;
+    __u32 pipe;
+    __u32 exec_state;
+    __u32 nr_bos;
+    __u32 nr_relocs;
+    __u32 stream_size;
+    __u64 bos;
+    __u64 relocs;
+    __u64 stream;
+    __u32 flags;
+    __s32 fence_fd;
+    __u64 pmrs;
+    __u32 nr_pmrs;
+    __u32 pad;
+  };
 #define ETNA_WAIT_NONBLOCK 0x01
-struct drm_etnaviv_wait_fence {
-  __u32 pipe;
-  __u32 fence;
-  __u32 flags;
-  __u32 pad;
-  struct drm_etnaviv_timespec timeout;
-};
+  struct drm_etnaviv_wait_fence {
+    __u32 pipe;
+    __u32 fence;
+    __u32 flags;
+    __u32 pad;
+    struct drm_etnaviv_timespec timeout;
+  };
 #define ETNA_USERPTR_READ 0x01
 #define ETNA_USERPTR_WRITE 0x02
-struct drm_etnaviv_gem_userptr {
-  __u64 user_ptr;
-  __u64 user_size;
-  __u32 flags;
-  __u32 handle;
-};
-struct drm_etnaviv_gem_wait {
-  __u32 pipe;
-  __u32 handle;
-  __u32 flags;
-  __u32 pad;
-  struct drm_etnaviv_timespec timeout;
-};
-struct drm_etnaviv_pm_domain {
-  __u32 pipe;
-  __u8 iter;
-  __u8 id;
-  __u16 nr_signals;
-  char name[64];
-};
-struct drm_etnaviv_pm_signal {
-  __u32 pipe;
-  __u8 domain;
-  __u8 pad;
-  __u16 iter;
-  __u16 id;
-  char name[64];
-};
+  struct drm_etnaviv_gem_userptr {
+    __u64 user_ptr;
+    __u64 user_size;
+    __u32 flags;
+    __u32 handle;
+  };
+  struct drm_etnaviv_gem_wait {
+    __u32 pipe;
+    __u32 handle;
+    __u32 flags;
+    __u32 pad;
+    struct drm_etnaviv_timespec timeout;
+  };
+  struct drm_etnaviv_pm_domain {
+    __u32 pipe;
+    __u8 iter;
+    __u8 id;
+    __u16 nr_signals;
+    char name[64];
+  };
+  struct drm_etnaviv_pm_signal {
+    __u32 pipe;
+    __u8 domain;
+    __u8 pad;
+    __u16 iter;
+    __u16 id;
+    char name[64];
+  };
 #define DRM_ETNAVIV_GET_PARAM 0x00
 #define DRM_ETNAVIV_GEM_NEW 0x02
 #define DRM_ETNAVIV_GEM_INFO 0x03
@@ -193,5 +194,6 @@ struct drm_etnaviv_pm_signal {
 #define DRM_IOCTL_ETNAVIV_PM_QUERY_DOM DRM_IOWR(DRM_COMMAND_BASE + DRM_ETNAVIV_PM_QUERY_DOM, struct drm_etnaviv_pm_domain)
 #define DRM_IOCTL_ETNAVIV_PM_QUERY_SIG DRM_IOWR(DRM_COMMAND_BASE + DRM_ETNAVIV_PM_QUERY_SIG, struct drm_etnaviv_pm_signal)
 #ifdef __cplusplus
+}
 #endif
 #endif

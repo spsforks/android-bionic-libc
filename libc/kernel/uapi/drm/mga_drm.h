@@ -20,6 +20,7 @@
 #define __MGA_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef __MGA_SAREA_DEFINES__
 #define __MGA_SAREA_DEFINES__
@@ -73,70 +74,70 @@
 #define MGA_LOG_MIN_TEX_REGION_SIZE 16
 #define DRM_MGA_IDLE_RETRY 2048
 #endif
-typedef struct {
-  unsigned int dstorg;
-  unsigned int maccess;
-  unsigned int plnwt;
-  unsigned int dwgctl;
-  unsigned int alphactrl;
-  unsigned int fogcolor;
-  unsigned int wflag;
-  unsigned int tdualstage0;
-  unsigned int tdualstage1;
-  unsigned int fcol;
-  unsigned int stencil;
-  unsigned int stencilctl;
-} drm_mga_context_regs_t;
-typedef struct {
-  unsigned int pitch;
-} drm_mga_server_regs_t;
-typedef struct {
-  unsigned int texctl;
-  unsigned int texctl2;
-  unsigned int texfilter;
-  unsigned int texbordercol;
-  unsigned int texorg;
-  unsigned int texwidth;
-  unsigned int texheight;
-  unsigned int texorg1;
-  unsigned int texorg2;
-  unsigned int texorg3;
-  unsigned int texorg4;
-} drm_mga_texture_regs_t;
-typedef struct {
-  unsigned int head;
-  unsigned int wrap;
-} drm_mga_age_t;
-typedef struct _drm_mga_sarea {
-  drm_mga_context_regs_t context_state;
-  drm_mga_server_regs_t server_state;
-  drm_mga_texture_regs_t tex_state[2];
-  unsigned int warp_pipe;
-  unsigned int dirty;
-  unsigned int vertsize;
-  struct drm_clip_rect boxes[MGA_NR_SAREA_CLIPRECTS];
-  unsigned int nbox;
-  unsigned int req_drawable;
-  unsigned int req_draw_buffer;
-  unsigned int exported_drawable;
-  unsigned int exported_index;
-  unsigned int exported_stamp;
-  unsigned int exported_buffers;
-  unsigned int exported_nfront;
-  unsigned int exported_nback;
-  int exported_back_x, exported_front_x, exported_w;
-  int exported_back_y, exported_front_y, exported_h;
-  struct drm_clip_rect exported_boxes[MGA_NR_SAREA_CLIPRECTS];
-  unsigned int status[4];
-  unsigned int last_wrap;
-  drm_mga_age_t last_frame;
-  unsigned int last_enqueue;
-  unsigned int last_dispatch;
-  unsigned int last_quiescent;
-  struct drm_tex_region texList[MGA_NR_TEX_HEAPS][MGA_NR_TEX_REGIONS + 1];
-  unsigned int texAge[MGA_NR_TEX_HEAPS];
-  int ctxOwner;
-} drm_mga_sarea_t;
+  typedef struct {
+    unsigned int dstorg;
+    unsigned int maccess;
+    unsigned int plnwt;
+    unsigned int dwgctl;
+    unsigned int alphactrl;
+    unsigned int fogcolor;
+    unsigned int wflag;
+    unsigned int tdualstage0;
+    unsigned int tdualstage1;
+    unsigned int fcol;
+    unsigned int stencil;
+    unsigned int stencilctl;
+  } drm_mga_context_regs_t;
+  typedef struct {
+    unsigned int pitch;
+  } drm_mga_server_regs_t;
+  typedef struct {
+    unsigned int texctl;
+    unsigned int texctl2;
+    unsigned int texfilter;
+    unsigned int texbordercol;
+    unsigned int texorg;
+    unsigned int texwidth;
+    unsigned int texheight;
+    unsigned int texorg1;
+    unsigned int texorg2;
+    unsigned int texorg3;
+    unsigned int texorg4;
+  } drm_mga_texture_regs_t;
+  typedef struct {
+    unsigned int head;
+    unsigned int wrap;
+  } drm_mga_age_t;
+  typedef struct _drm_mga_sarea {
+    drm_mga_context_regs_t context_state;
+    drm_mga_server_regs_t server_state;
+    drm_mga_texture_regs_t tex_state[2];
+    unsigned int warp_pipe;
+    unsigned int dirty;
+    unsigned int vertsize;
+    struct drm_clip_rect boxes[MGA_NR_SAREA_CLIPRECTS];
+    unsigned int nbox;
+    unsigned int req_drawable;
+    unsigned int req_draw_buffer;
+    unsigned int exported_drawable;
+    unsigned int exported_index;
+    unsigned int exported_stamp;
+    unsigned int exported_buffers;
+    unsigned int exported_nfront;
+    unsigned int exported_nback;
+    int exported_back_x, exported_front_x, exported_w;
+    int exported_back_y, exported_front_y, exported_h;
+    struct drm_clip_rect exported_boxes[MGA_NR_SAREA_CLIPRECTS];
+    unsigned int status[4];
+    unsigned int last_wrap;
+    drm_mga_age_t last_frame;
+    unsigned int last_enqueue;
+    unsigned int last_dispatch;
+    unsigned int last_quiescent;
+    struct drm_tex_region texList[MGA_NR_TEX_HEAPS][MGA_NR_TEX_REGIONS + 1];
+    unsigned int texAge[MGA_NR_TEX_HEAPS];
+    int ctxOwner;
+  } drm_mga_sarea_t;
 #define DRM_MGA_INIT 0x00
 #define DRM_MGA_FLUSH 0x01
 #define DRM_MGA_RESET 0x02
@@ -163,82 +164,83 @@ typedef struct _drm_mga_sarea {
 #define DRM_IOCTL_MGA_SET_FENCE DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_SET_FENCE, __u32)
 #define DRM_IOCTL_MGA_WAIT_FENCE DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_WAIT_FENCE, __u32)
 #define DRM_IOCTL_MGA_DMA_BOOTSTRAP DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_DMA_BOOTSTRAP, drm_mga_dma_bootstrap_t)
-typedef struct _drm_mga_warp_index {
-  int installed;
-  unsigned long phys_addr;
-  int size;
-} drm_mga_warp_index_t;
-typedef struct drm_mga_init {
-  enum {
-    MGA_INIT_DMA = 0x01,
-    MGA_CLEANUP_DMA = 0x02
-  } func;
-  unsigned long sarea_priv_offset;
-  int chipset;
-  int sgram;
-  unsigned int maccess;
-  unsigned int fb_cpp;
-  unsigned int front_offset, front_pitch;
-  unsigned int back_offset, back_pitch;
-  unsigned int depth_cpp;
-  unsigned int depth_offset, depth_pitch;
-  unsigned int texture_offset[MGA_NR_TEX_HEAPS];
-  unsigned int texture_size[MGA_NR_TEX_HEAPS];
-  unsigned long fb_offset;
-  unsigned long mmio_offset;
-  unsigned long status_offset;
-  unsigned long warp_offset;
-  unsigned long primary_offset;
-  unsigned long buffers_offset;
-} drm_mga_init_t;
-typedef struct drm_mga_dma_bootstrap {
-  unsigned long texture_handle;
-  __u32 texture_size;
-  __u32 primary_size;
-  __u32 secondary_bin_count;
-  __u32 secondary_bin_size;
-  __u32 agp_mode;
-  __u8 agp_size;
-} drm_mga_dma_bootstrap_t;
-typedef struct drm_mga_clear {
-  unsigned int flags;
-  unsigned int clear_color;
-  unsigned int clear_depth;
-  unsigned int color_mask;
-  unsigned int depth_mask;
-} drm_mga_clear_t;
-typedef struct drm_mga_vertex {
-  int idx;
-  int used;
-  int discard;
-} drm_mga_vertex_t;
-typedef struct drm_mga_indices {
-  int idx;
-  unsigned int start;
-  unsigned int end;
-  int discard;
-} drm_mga_indices_t;
-typedef struct drm_mga_iload {
-  int idx;
-  unsigned int dstorg;
-  unsigned int length;
-} drm_mga_iload_t;
-typedef struct _drm_mga_blit {
-  unsigned int planemask;
-  unsigned int srcorg;
-  unsigned int dstorg;
-  int src_pitch, dst_pitch;
-  int delta_sx, delta_sy;
-  int delta_dx, delta_dy;
-  int height, ydir;
-  int source_pitch, dest_pitch;
-} drm_mga_blit_t;
+  typedef struct _drm_mga_warp_index {
+    int installed;
+    unsigned long phys_addr;
+    int size;
+  } drm_mga_warp_index_t;
+  typedef struct drm_mga_init {
+    enum {
+      MGA_INIT_DMA = 0x01,
+      MGA_CLEANUP_DMA = 0x02
+    } func;
+    unsigned long sarea_priv_offset;
+    int chipset;
+    int sgram;
+    unsigned int maccess;
+    unsigned int fb_cpp;
+    unsigned int front_offset, front_pitch;
+    unsigned int back_offset, back_pitch;
+    unsigned int depth_cpp;
+    unsigned int depth_offset, depth_pitch;
+    unsigned int texture_offset[MGA_NR_TEX_HEAPS];
+    unsigned int texture_size[MGA_NR_TEX_HEAPS];
+    unsigned long fb_offset;
+    unsigned long mmio_offset;
+    unsigned long status_offset;
+    unsigned long warp_offset;
+    unsigned long primary_offset;
+    unsigned long buffers_offset;
+  } drm_mga_init_t;
+  typedef struct drm_mga_dma_bootstrap {
+    unsigned long texture_handle;
+    __u32 texture_size;
+    __u32 primary_size;
+    __u32 secondary_bin_count;
+    __u32 secondary_bin_size;
+    __u32 agp_mode;
+    __u8 agp_size;
+  } drm_mga_dma_bootstrap_t;
+  typedef struct drm_mga_clear {
+    unsigned int flags;
+    unsigned int clear_color;
+    unsigned int clear_depth;
+    unsigned int color_mask;
+    unsigned int depth_mask;
+  } drm_mga_clear_t;
+  typedef struct drm_mga_vertex {
+    int idx;
+    int used;
+    int discard;
+  } drm_mga_vertex_t;
+  typedef struct drm_mga_indices {
+    int idx;
+    unsigned int start;
+    unsigned int end;
+    int discard;
+  } drm_mga_indices_t;
+  typedef struct drm_mga_iload {
+    int idx;
+    unsigned int dstorg;
+    unsigned int length;
+  } drm_mga_iload_t;
+  typedef struct _drm_mga_blit {
+    unsigned int planemask;
+    unsigned int srcorg;
+    unsigned int dstorg;
+    int src_pitch, dst_pitch;
+    int delta_sx, delta_sy;
+    int delta_dx, delta_dy;
+    int height, ydir;
+    int source_pitch, dest_pitch;
+  } drm_mga_blit_t;
 #define MGA_PARAM_IRQ_NR 1
 #define MGA_PARAM_CARD_TYPE 2
-typedef struct drm_mga_getparam {
-  int param;
-  void __user * value;
-} drm_mga_getparam_t;
+  typedef struct drm_mga_getparam {
+    int param;
+    void __user * value;
+  } drm_mga_getparam_t;
 #ifdef __cplusplus
+}
 #endif
 #endif
