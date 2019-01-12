@@ -56,3 +56,5 @@ $(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib64/libGLES*)
 # ************************************************
 # NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
 # ************************************************
+
+$(call add-clean-step, rm -f $(OUT_DIR)/.ninja_log)
