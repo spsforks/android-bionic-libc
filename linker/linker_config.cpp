@@ -567,6 +567,12 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     // denials on some executables which are not allowed to access some of the
     // permitted paths.
     ns_config->set_permitted_paths(properties.get_paths(property_name_prefix + ".permitted.paths", false));
+
+    std::string whitelisted =
+        properties.get_string(property_name_prefix + ".whitelisted", &lineno);
+    if (!whitelisted.empty()) {
+      ns_config->set_whitelisted_libs(android::base::Split(whitelisted, ":"));
+    }
   }
 
   failure_guard.Disable();
