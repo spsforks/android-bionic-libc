@@ -34,6 +34,24 @@
       "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d298c868_98d85121",
+        "filename": "libc/symbol_ordering",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-14T20:04:18Z",
+      "side": 1,
+      "message": "ah, even better. +srhines as an FYI.",
+      "parentUuid": "3fb0321e_13640536",
+      "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
