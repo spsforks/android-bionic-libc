@@ -52,6 +52,24 @@
       "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5f7d6c5_55d1bd4d",
+        "filename": "libc/symbol_ordering",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-01-14T21:26:20Z",
+      "side": 1,
+      "message": "Yep, I\u0027m on the upstream review, which is blocked because they want more data on how this impacts other projects. Once it gets submitted, we should be able to bring it in with our usual toolchain updates.",
+      "parentUuid": "d298c868_98d85121",
+      "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
