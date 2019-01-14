@@ -109,6 +109,8 @@
 #include "nsswitch.h"
 #include "private/bionic_defs.h"
 
+#include <sys/system_properties.h>
+
 typedef union sockaddr_union {
     struct sockaddr     generic;
     struct sockaddr_in  in;
@@ -1981,6 +1983,10 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		return NS_NOTFOUND;
 	}
 
+	res->log_cur_uid = netcontext->uid;
+	res->log_dns_name = name;
+	res->log_cur_qtype = q.qtype;
+
 	/* this just sets our netid val in the thread private data so we don't have to
 	 * modify the api's all the way down to res_send.c's res_nsend.  We could
 	 * fully populate the thread private data here, but if we get down there
@@ -2189,6 +2195,7 @@ again:
 		type = t->qtype;
 		answer = t->answer;
 		anslen = t->anslen;
+		res->log_cur_qtype = type;
 #ifdef DEBUG
 		if (res->options & RES_DEBUG)
 			printf(";; res_nquery(%s, %d, %d)\n", name, class, type);

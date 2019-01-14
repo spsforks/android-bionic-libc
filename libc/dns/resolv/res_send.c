@@ -118,6 +118,8 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 
 #include <async_safe/log.h>
 
+#include <sys/system_properties.h>
+
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
     strchr((const void *)(c), *(const char *)(const void *)(c)) : NULL)
@@ -355,6 +357,11 @@ res_nsend(res_state statp,
 	char abuf[NI_MAXHOST];
 	ResolvCacheStatus     cache_status = RESOLV_CACHE_UNSUPPORTED;
 
+	char dnspropbuf[PROP_VALUE_MAX] = {0};
+	char tempdnspropbuf[PROP_VALUE_MAX] = {0};
+	struct timespec start, timeout, finish;
+	int timeout_ms;
+
 	if (anssiz < HFIXEDSZ) {
 		errno = EINVAL;
 		return (-1);
@@ -573,7 +580,7 @@ res_nsend(res_state statp,
 			if (DBG) {
 				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using send_dg\n");
 			}
-
+			start = evNowTime();
 			n = send_dg(statp, &params, buf, buflen, ans, anssiz, &terrno,
 				    ns, &v_circuit, &gotsomewhere, &now, &rcode, &delay);
 
@@ -591,8 +598,38 @@ res_nsend(res_state statp,
 
 			if (n < 0)
 				goto fail;
-			if (n == 0)
+			if (n == 0) {
+				char dnsbuf[PROP_VALUE_MAX];
+				/* Want to obtain the abnormality of the domain name and its
+				 * abnormal information (name, uid, qtype, T_A or T_AAAA and retry),
+				 * We will analyze the acquired information to discover the possible
+				 * network problems of the devices.
+				 * After the upper-layer app gets the dns failure information,
+				 * it can automatically recover from the abnormal scenario.
+				 * systemproperty persist.sys.data_dnstimeout_collect guarantee
+				 * to print the log only under the data network.
+				 */
+				if(__system_property_get("persist.sys.data_dnstimeout_collect", dnsbuf) > 1){
+					finish = evNowTime();
+					timeout = evSubTime(finish, start);
+					int dnsretrans = (statp->retrans) * 1000
+					timeout_ms = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
+					if ((statp->log_cur_qtype == T_A) && (timeout_ms > dnsretrans)) {
+						async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "query dns fail ipv4 test try=%d timeout_ms=%dms cur_uidname=%u dns_name =%s\n",try,timeout_ms,statp->log_cur_uid,statp->log_dns_name);
+						sprintf(dnspropbuf, "v4,%u,%s", statp->log_cur_uid, statp->log_dns_name);
+						if(__system_property_get("persist.sys.ipv4_dnstimeout", tempdnspropbuf) < 3) {//convert ipv4 DNS timeout info
+							__system_property_set("persist.sys.ipv4_dnstimeou", dnspropbuf);
+						}
+					}
+					if ((statp->log_cur_qtype == T_AAAA) && (timeout_ms > dnsretrans)) {
+						async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "query dns fail ipv6 test try=%d timeout_ms=%dms cur_uidname=%u dns_name =%s\n",try,timeout_ms,statp->log_cur_uid,statp->log_dns_name);
+						sprintf(dnspropbuf, "v6,%u,%s", statp->log_cur_uid, statp->log_dns_name);
+						if(__system_property_get("persist.sys.ipv6_dnstimeout", tempdnspropbuf) < 3) {//convert ipv6 DNS timeout info
+							__system_property_set("persist.sys.ipv6_dnstimeout", dnspropbuf);
+						}
+				}
 				goto next_ns;
+			}
 			if (DBG) {
 				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "time=%ld\n",
 						  time(NULL));

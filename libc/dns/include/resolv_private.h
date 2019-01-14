@@ -139,6 +139,9 @@ struct res_sym {
 struct __res_state_ext;
 
 struct __res_state {
+	u_int	log_cur_uid;	 	/* storage current dns uid */
+	const char * log_dns_name;	 	/* storage current dns name */
+	int	log_cur_qtype;	 	/* storage current dns type */
 	unsigned	netid;			/* NetId: cache key and socket mark */
 	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
