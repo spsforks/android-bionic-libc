@@ -16,6 +16,24 @@
       "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fb0321e_13640536",
+        "filename": "libc/symbol_ordering",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-01-14T19:59:49Z",
+      "side": 1,
+      "message": "This is intended to be a short-term fix. The long term plan is for this to be the default behavior of LLD, and at that point this file is not needed. The change for LLD is pending review at https://reviews.llvm.org/D56325. This CL is to allow us to benefit from this without having to wait for whatever time it takes to bring in a newer version of toolchain. I\u0027d like to keep this CL simple because we\u0027d be getting rid of this soon, but if you feel strongly about this, I can look into generating this. Note that generating this list at build time isn\u0027t trivial, because you essentially need to link twice. So, longer build time and more complicated build rules.",
+      "parentUuid": "2f922a93_50c43caf",
+      "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
