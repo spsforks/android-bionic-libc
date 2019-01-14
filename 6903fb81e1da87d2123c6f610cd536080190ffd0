@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f922a93_50c43caf",
+        "filename": "libc/symbol_ordering",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-14T19:53:35Z",
+      "side": 1,
+      "message": "can we do this with a python script so we can do it at build time, rather than having to maintain this?",
+      "revId": "6903fb81e1da87d2123c6f610cd536080190ffd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
