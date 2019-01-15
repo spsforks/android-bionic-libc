@@ -142,6 +142,7 @@ struct __res_state {
 	unsigned	netid;			/* NetId: cache key and socket mark */
 	int	retrans;	 	/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
+	unsigned cached;
 #ifdef sun
 	u_int	options;		/* option flags - see below. */
 #else

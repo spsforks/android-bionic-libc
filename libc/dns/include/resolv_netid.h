@@ -74,6 +74,7 @@ struct android_net_context {
     uid_t uid;
     unsigned flags;
     res_send_qhook qhook;
+    unsigned cached;
 };
 
 #define NET_CONTEXT_INVALID_UID ((uid_t)-1)
@@ -92,7 +93,7 @@ int android_getaddrinfofornet(const char *, const char *, const struct addrinfo 
 struct hostent *android_gethostbyaddrfornetcontext(const void *, socklen_t, int, const struct android_net_context *) __used_in_netd;
 struct hostent *android_gethostbynamefornetcontext(const char *, int, const struct android_net_context *) __used_in_netd;
 int android_getaddrinfofornetcontext(const char *, const char *, const struct addrinfo *,
-    const struct android_net_context *, struct addrinfo **) __used_in_netd;
+    struct android_net_context *, struct addrinfo **) __used_in_netd;
 
 /* set name servers for a network */
 extern int _resolv_set_nameservers_for_net(unsigned netid, const char** servers,
