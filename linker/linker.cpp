@@ -2670,16 +2670,32 @@ static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
 #else
 static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
   if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
+      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE ||
+      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_DTPREL ||
+      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_TPREL) {
     return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
   }
   return 0;
 }
 #endif
 
+static bool is_tls_reloc(ElfW(Word) type) {
+  switch (type) {
+    case R_GENERIC_TLS_DTPMOD:
+    case R_GENERIC_TLS_DTPREL:
+    case R_GENERIC_TLS_TPREL:
+    case R_GENERIC_TLSDESC:
+      return true;
+    default:
+      return false;
+  }
+}
+
 template<typename ElfRelIteratorT>
 bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2702,7 +2718,42 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     const ElfW(Sym)* s = nullptr;
     soinfo* lsi = nullptr;
 
-    if (sym != 0) {
+    if (sym == 0) {
+      // Do nothing.
+    } else if (ELF_ST_BIND(symtab_[sym].st_info) == STB_LOCAL && is_tls_reloc(type)) {
+      // There is disagreement among linkers about how to reference a local TLS
+      // symbol. bfd and lld omit the symbol reference (i.e. ELFW(R_SYM) == 0),
+      // whereas Gold (and apparently one of ELF TLS's original designers),
+      // thinks that local TLS relocations should instead reference local
+      // STT_SECTION or STT_TLS symbols. References:
+      //  - https://groups.google.com/d/topic/generic-abi/dJ4_Y78aQ2M/discussion
+      //  - https://sourceware.org/bugzilla/show_bug.cgi?id=17699
+      //
+      // Try to accommodate Gold here. This code only allows a local STT_SECTION
+      // for a DTPMOD relocation, because an STT_SECTION's st_value is relative
+      // to the start of the ELF module, but we need an offset relative to the
+      // module's PT_TLS segment. Accommodating a [D]TPREL reference to an
+      // STT_SECTION is easy if it becomes necessary.
+      sym_name = get_string(symtab_[sym].st_name);
+      s = &symtab_[sym];
+      lsi = this;
+      if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
+        // Valid.
+        sym_addr = s->st_value;
+      } else if (ELF_ST_TYPE(s->st_info) == STT_SECTION) {
+        if (type != R_GENERIC_TLS_DTPMOD) {
+          DL_ERR("unexpected TLS reference to local STT_SECTION symbol"
+                 " \"%s\" (idx %zu of \"%s\")",
+                 sym_name, idx, get_realpath());
+          return false;
+        }
+      } else {
+        DL_ERR("unexpected TLS reference to local symbol \"%s\": "
+               "sym type %d, rel type %u (idx %zu of \"%s\")",
+               sym_name, ELF_ST_TYPE(s->st_info), type, idx, get_realpath());
+        return false;
+      }
+    } else {
       sym_name = get_string(symtab_[sym].st_name);
       const version_info* vi = nullptr;
 
@@ -2739,6 +2790,10 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           case R_GENERIC_GLOB_DAT:
           case R_GENERIC_RELATIVE:
           case R_GENERIC_IRELATIVE:
+          case R_GENERIC_TLS_DTPMOD:
+          case R_GENERIC_TLS_DTPREL:
+          case R_GENERIC_TLS_TPREL:
+          case R_GENERIC_TLSDESC:
 #if defined(__aarch64__)
           case R_AARCH64_ABS64:
           case R_AARCH64_ABS32:
@@ -2786,12 +2841,21 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
         }
 #endif
-        if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
-          DL_ERR("unsupported ELF TLS symbol \"%s\" referenced by \"%s\"",
-                 sym_name, get_realpath());
-          return false;
+        if (is_tls_reloc(type)) {
+          if (ELF_ST_TYPE(s->st_info) != STT_TLS) {
+            DL_ERR("reference to non-TLS symbol \"%s\" from TLS relocation in \"%s\"",
+                   sym_name, get_realpath());
+            return false;
+          }
+          sym_addr = s->st_value;
+        } else {
+          if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
+            DL_ERR("reference to TLS symbol \"%s\" from non-TLS relocation in \"%s\"",
+                   sym_name, get_realpath());
+            return false;
+          }
+          sym_addr = lsi->resolve_symbol_address(s);
         }
-        sym_addr = lsi->resolve_symbol_address(s);
 #if !defined(__LP64__)
         if (protect_segments) {
           if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
@@ -2862,6 +2926,40 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
 #endif
           *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_addr;
+        }
+        break;
+      case R_GENERIC_TLS_TPREL:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        {
+          ElfW(Addr) tpoff = 0;
+          if (sym == 0) {
+            // By convention in ld.bfd and lld, an omitted symbol
+            // (ELFW(R_SYM) == 0) refers to the local module.
+            lsi = this;
+          }
+          if (lsi == nullptr) {
+            // Unresolved weak relocation. Leave tpoff at 0 to resolve
+            // &weak_tls_symbol to __get_tls().
+          } else if (lsi->get_tls() != nullptr) {
+            soinfo_tls* lsi_tls = lsi->get_tls();
+            if (lsi_tls->module->static_offset != SIZE_MAX) {
+              tpoff += lsi_tls->module->static_offset - tls_tp_base;
+            } else {
+              DL_ERR("TLS symbol \"%s\" in dlopened \"%s\" referenced from \"%s\" using IE access model",
+                     sym_name, lsi->get_realpath(), get_realpath());
+              return false;
+            }
+          } else {
+            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
+                   sym_name, lsi->get_realpath());
+            return false;
+          }
+          tpoff += sym_addr + addend;
+          TRACE_TYPE(RELO, "RELO TLS_TPREL %16p <- %16p %s\n",
+                     reinterpret_cast<void*>(reloc),
+                     reinterpret_cast<void*>(tpoff), sym_name);
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
 
@@ -2965,10 +3063,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
          */
         DL_ERR("%s R_AARCH64_COPY relocations are not supported", get_realpath());
         return false;
-      case R_AARCH64_TLS_TPREL64:
-        TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
-                   reloc, (sym_addr + addend), rel->r_offset);
-        break;
       case R_AARCH64_TLSDESC:
         TRACE_TYPE(RELO, "RELO TLSDESC *** %16llx <- %16llx - %16llx\n",
                    reloc, (sym_addr + addend), rel->r_offset);

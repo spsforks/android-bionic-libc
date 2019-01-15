@@ -68,6 +68,10 @@ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return false;
 }
 
+size_t StaticTlsLayout::offset_thread_pointer() const {
+  return offset_bionic_tcb_ + (-MIN_TLS_SLOT * sizeof(void*));
+}
+
 // Reserves space for the Bionic TCB and the executable's TLS segment. Returns
 // the offset of the executable's TLS segment.
 size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* exe_segment,
