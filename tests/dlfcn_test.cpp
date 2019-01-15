@@ -1083,10 +1083,8 @@ TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
 }
 
 TEST(dlfcn, dlopen_library_with_ELF_TLS) {
-  dlerror(); // Clear any pending errors.
   void* handle = dlopen("libelf-tls-library.so", RTLD_NOW);
-  ASSERT_TRUE(handle == nullptr);
-  ASSERT_SUBSTR("unsupported ELF TLS", dlerror());
+  ASSERT_TRUE(handle != nullptr);
 }
 
 TEST(dlfcn, dlopen_bad_flags) {
