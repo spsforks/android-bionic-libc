@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9cc0235_b7aeac9f",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2019-01-16T21:46:24Z",
+      "side": 1,
+      "message": "Why not just add system_shared_libs: [\"libc\"]?",
+      "revId": "2bf266bda63c54ad8c2a93ca3ac777ab980155b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
