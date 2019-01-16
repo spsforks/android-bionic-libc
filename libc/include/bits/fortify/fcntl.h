@@ -47,8 +47,10 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
-        __errorattr(__open_too_many_args_error);
+int open(const char* pathname, int flags, mode_t modes, ...)
+        __overloadable
+        __errorattr(__open_too_many_args_error)
+        __attribute__((unused));
 
 /*
  * pass_object_size serves two purposes here, neither of which involve __bos: it
@@ -74,7 +76,8 @@ int open(const char* const __pass_object_size pathname, int flags, mode_t modes)
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
         __overloadable
-        __errorattr(__open_too_many_args_error);
+        __errorattr(__open_too_many_args_error)
+        __attribute__((unused));
 
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname, int flags)

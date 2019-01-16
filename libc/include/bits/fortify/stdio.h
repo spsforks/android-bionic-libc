@@ -57,6 +57,7 @@ int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int snprintf(char* dest, size_t size, const char* format)
     __overloadable
+    __unused
     __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                     __bos(dest) < __builtin_strlen(format),
                 "format string will always overflow destination buffer")
@@ -75,6 +76,7 @@ int snprintf(char* const __pass_object_size dest, size_t size, const char* forma
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int sprintf(char* dest, const char* format)
     __overloadable
+    __unused
     __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                 __bos(dest) < __builtin_strlen(format),
                 "format string will always overflow destination buffer")
