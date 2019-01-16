@@ -515,6 +515,18 @@ cc_library {
         symbol_file: "libm.map.txt",
         versions: ["10000"],
     },
+
+    required: ["libm.mountpoint"],
+}
+
+cc_prebuilt_library_shared {
+    name: "libm.mountpoint",
+    srcs: ["libm.so"],
+    stem: "libm",
+    compile_multilib: "both",
+    strip: {
+        none: true,
+    },
 }
 
 ndk_library {
