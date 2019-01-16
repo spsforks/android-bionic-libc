@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae1fbb62_934fb737",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-16T06:38:37Z",
+      "side": 1,
+      "message": "I am using `__attribute__((unused))` instead of `__unused` because `__unused` is undefined by `log_error.h` due to name conflicts [1].\n\n[1] https://android.googlesource.com/platform/system/core/+/c1a156254864f39cdefffaac34dd39dbe2853129/liblog/include/log/log_read.h#20",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 53,
+        "endChar": 31
+      },
+      "revId": "6a07c002c61a369ae56c5446e22e296bb6e735e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
