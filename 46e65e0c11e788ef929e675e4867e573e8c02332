@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2188160_1fe06121",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2736,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-16T10:05:00Z",
+      "side": 1,
+      "message": "FWIW: I\u0027m somewhat sympathetic to Rich Felker\u0027s objection to gold\u0027s output (see the bugzilla link above).\n\nIf we do allow gold\u0027s output, I would need to add a test for it. I think Soong uses gold if I turn off lld, but I assume we\u0027re trying to replace gold, so maybe a prebuilt ELF binary would be a better idea. Similarly, if we want to test Bionic\u0027s TLS underalignment error, we can\u0027t use lld to do it.",
+      "revId": "46e65e0c11e788ef929e675e4867e573e8c02332",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
