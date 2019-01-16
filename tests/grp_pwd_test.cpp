@@ -197,6 +197,10 @@ TEST(pwd, getpwnam_app_id_u0_a49999) {
   check_get_passwd("u0_a49999", 59999, TYPE_APP);
 }
 
+TEST(pwd, getpwnam_app_id_u0_z1) {
+  check_get_passwd("u0_z1", 90001, TYPE_APP);
+}
+
 TEST(pwd, getpwnam_app_id_u0_i1) {
   check_get_passwd("u0_i1", 99001, TYPE_APP);
 }
@@ -215,6 +219,10 @@ TEST(pwd, getpwnam_app_id_u1_a0) {
 
 TEST(pwd, getpwnam_app_id_u1_a40000) {
   check_get_passwd("u1_a40000", 150000, TYPE_APP);
+}
+
+TEST(pwd, getpwnam_app_id_u1_z0) {
+  check_get_passwd("u1_z0", 190000, TYPE_APP);
 }
 
 TEST(pwd, getpwnam_app_id_u1_i0) {
@@ -463,6 +471,10 @@ TEST(grp, getgrnam_app_id_all_a9999) {
   check_get_group("all_a9999", 59999);
 }
 
+TEST(grp, getgrnam_app_id_u0_z1) {
+  check_get_group("u0_z1", 90001);
+}
+
 TEST(grp, getgrnam_app_id_u0_i1) {
   check_get_group("u0_i1", 99001);
 }
@@ -481,6 +493,10 @@ TEST(grp, getgrnam_app_id_u1_a0) {
 
 TEST(grp, getgrnam_app_id_u1_a40000) {
   check_get_group("u1_a40000", 150000);
+}
+
+TEST(grp, getgrnam_app_id_z1_i0) {
+  check_get_group("u1_z0", 190000);
 }
 
 TEST(grp, getgrnam_app_id_u1_i0) {

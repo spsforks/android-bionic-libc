@@ -286,7 +286,8 @@ static uid_t get_next_app_id(uid_t current_id) {
 // all_a1234 -> 0 * AID_USER_OFFSET + AID_SHARED_GID_START + 1234 (group name only)
 // u0_a1234_cache -> 0 * AID_USER_OFFSET + AID_CACHE_GID_START + 1234 (group name only)
 // u0_a1234 -> 0 * AID_USER_OFFSET + AID_APP_START + 1234
-// u2_i1000 -> 2 * AID_USER_OFFSET + AID_ISOLATED_START + 1000
+// u2_i1000 -> 2 * AID_USER_OFFSET + AID_REGULAR_ZYGOTE_ISOLATED_START + 1000
+// u0_z0050 -> 0 * AID_USER_OFFSET + AID_APP_ZYGOTE_ISOLATED_START + 50
 // u1_system -> 1 * AID_USER_OFFSET + android_ids['system']
 // returns 0 and sets errno to ENOENT in case of error.
 static id_t app_id_from_name(const char* name, bool is_group) {
@@ -331,7 +332,10 @@ static id_t app_id_from_name(const char* name, bool is_group) {
     }
   } else if (end[1] == 'i' && isdigit(end[2])) {
     // end will point to \0 if the strtoul below succeeds.
-    appid = strtoul(end+2, &end, 10) + AID_ISOLATED_START;
+    appid = strtoul(end+2, &end, 10) + AID_REGULAR_ZYGOTE_ISOLATED_START;
+  } else if (end[1] == 'z' && isdigit(end[2])) {
+    // end will point to \0 if the strtoul below succeeds.
+    appid = strtoul(end+2, &end, 10) + AID_APP_ZYGOTE_ISOLATED_START;
   } else {
     for (size_t n = 0; n < android_id_count; n++) {
       if (!strcmp(android_ids[n].name, end + 1)) {
@@ -367,8 +371,10 @@ static id_t app_id_from_name(const char* name, bool is_group) {
 static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
   const uid_t appid = uid % AID_USER_OFFSET;
   const uid_t userid = uid / AID_USER_OFFSET;
-  if (appid >= AID_ISOLATED_START) {
-    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+  if (appid >= AID_REGULAR_ZYGOTE_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_REGULAR_ZYGOTE_ISOLATED_START);
+  } else if (appid >= AID_APP_ZYGOTE_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_z%u", userid, appid - AID_APP_ZYGOTE_ISOLATED_START);
   } else if (appid < AID_APP_START) {
     for (size_t n = 0; n < android_id_count; n++) {
       if (android_ids[n].aid == appid) {
@@ -384,8 +390,10 @@ static void print_app_name_from_uid(const uid_t uid, char* buffer, const int buf
 static void print_app_name_from_gid(const gid_t gid, char* buffer, const int bufferlen) {
   const uid_t appid = gid % AID_USER_OFFSET;
   const uid_t userid = gid / AID_USER_OFFSET;
-  if (appid >= AID_ISOLATED_START) {
-    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
+  if (appid >= AID_REGULAR_ZYGOTE_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_REGULAR_ZYGOTE_ISOLATED_START);
+  } else if (appid >= AID_APP_ZYGOTE_ISOLATED_START) {
+    snprintf(buffer, bufferlen, "u%u_z%u", userid, appid - AID_APP_ZYGOTE_ISOLATED_START);
   } else if (userid == 0 && appid >= AID_SHARED_GID_START && appid <= AID_SHARED_GID_END) {
     snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
   } else if (appid >= AID_CACHE_GID_START && appid <= AID_CACHE_GID_END) {
@@ -467,8 +475,9 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 
 // Translate a uid into the corresponding name.
 // 0 to AID_APP_START-1                    -> "system", "radio", etc.
-// AID_APP_START to AID_ISOLATED_START-1   -> u0_a1234
-// AID_ISOLATED_START to AID_USER_OFFSET-1 -> u0_i1234
+// AID_APP_START to AID_APP_ZYGOTE_ISOLATED_START-1   -> u0_a1234
+// AID_APP_ZYGOTE_ISOLATED_START to AID_REGULAR_ZYGOTE_ISOLATED_START - 1 -> u0_z1234
+// AID_REGULAR_ZYGOTE_ISOLATED_START to AID_USER_OFFSET-1 -> u0_i1234
 // AID_USER_OFFSET+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
