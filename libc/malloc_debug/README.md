@@ -394,6 +394,12 @@ malloc\_usable\_size, realloc.
 
 **NOTE**: This option is not available until the P release of Android.
 
+### trigger\_abort
+when detect error and print log end, call abort to trigger crash. then can
+catch process coredump to analyze memory status, it is very useful for these
+memory corruption issue.
+
+
 Additional Errors
 -----------------
 There are a few other error messages that might appear in the log.

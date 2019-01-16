@@ -725,3 +725,21 @@ TEST_F(MallocDebugConfigTest, record_allocs_max_error) {
       "value must be <= 50000000: 100000000\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugConfigTest, trigger_abort) {
+  ASSERT_TRUE(InitConfig("trigger_abort")) << getFakeLogPrint();
+  ASSERT_EQ(TRIGGER_ABORT, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, trigger_abort_fail) {
+  ASSERT_FALSE(InitConfig("trigger_abort=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'trigger_abort' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}

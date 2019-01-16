@@ -132,6 +132,9 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {
         "verify_pointers", {TRACK_ALLOCS, &Config::VerifyValueEmpty},
     },
+    {
+        "trigger_abort", {TRIGGER_ABORT, &Config::VerifyValueEmpty},
+    },
 };
 
 bool Config::ParseValue(const std::string& option, const std::string& value, size_t min_value,

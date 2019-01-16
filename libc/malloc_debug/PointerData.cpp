@@ -283,6 +283,9 @@ void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_si
   }
 
   error_log(LOG_DIVIDER);
+  if (g_debug->config().options() & TRIGGER_ABORT) {
+    abort();
+  }
 }
 
 void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
@@ -295,6 +298,9 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
       error_log("+++ ALLOCATION 0x%" PRIxPTR " HAS CORRUPTED HEADER TAG 0x%x AFTER FREE",
                 info.pointer, header->tag);
       error_log(LOG_DIVIDER);
+      if (g_debug->config().options() & TRIGGER_ABORT) {
+        abort();
+      }
 
       // Stop processing here, it is impossible to tell how the header
       // may have been damaged.
