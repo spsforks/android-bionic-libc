@@ -105,6 +105,18 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: ["10000"],
     },
+
+    required: ["libdl.mountpoint"],
+}
+
+cc_prebuilt_library_shared {
+    name: "libdl.mountpoint",
+    srcs: ["libdl.so"],
+    stem: "libdl",
+    compile_multilib: "both",
+    strip: {
+        none: true,
+    },
 }
 
 ndk_library {

@@ -1547,7 +1547,7 @@ cc_library {
         ],
     },
 
-    required: ["tzdata"],
+    required: ["tzdata", "libc.mountpoint"],
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.
@@ -1614,6 +1614,16 @@ cc_library {
     },
 
     symbol_ordering_file: "symbol_ordering",
+}
+
+cc_prebuilt_library_shared {
+    name: "libc.mountpoint",
+    srcs: ["libc.so"],
+    stem: "libc",
+    compile_multilib: "both",
+    strip: {
+        none: true,
+    },
 }
 
 genrule {
