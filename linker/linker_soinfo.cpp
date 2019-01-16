@@ -82,8 +82,13 @@ void soinfo::set_dt_runpath(const char* path) {
   split_path(path, ":", &runpaths);
 
   std::string origin = dirname(get_realpath());
-  // FIXME: add $LIB and $PLATFORM.
-  std::vector<std::pair<std::string, std::string>> params = {{"ORIGIN", origin}};
+  // FIXME: add $PLATFORM.
+  std::vector<std::pair<std::string, std::string>> params = {
+    {"ORIGIN", origin},
+#if defined(LIB_PATH)
+    {"LIB", LIB_PATH},
+#endif
+  };
   for (auto&& s : runpaths) {
     format_string(&s, params);
   }
