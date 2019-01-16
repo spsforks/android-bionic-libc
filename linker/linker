@@ -1,0 +1,2 @@
+#!/bin/sh
+echo This is not the dynamic linker, but a mount point for the real linker.

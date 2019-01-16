@@ -292,6 +292,24 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
+
+    required: ["linker.mountpoint"],
+}
+
+cc_prebuilt_binary {
+    name: "linker.mountpoint",
+    symlinks: ["linker_asan"],
+    srcs: ["linker"],
+    stem: "linker",
+    compile_multilib: "both",
+    multilib: {
+        lib64: {
+            suffix: "64",
+        },
+    },
+    strip: {
+        none: true,
+    },
 }
 
 cc_library {
