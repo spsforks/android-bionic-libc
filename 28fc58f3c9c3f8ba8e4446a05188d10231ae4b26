@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99d361be_de95fcd2",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-17T00:33:58Z",
+      "side": 1,
+      "message": "static constexpr?",
+      "revId": "28fc58f3c9c3f8ba8e4446a05188d10231ae4b26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
