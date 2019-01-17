@@ -16,6 +16,24 @@
       "revId": "2bf266bda63c54ad8c2a93ca3ac777ab980155b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99a1f1d5_be7326aa",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-17T03:29:58Z",
+      "side": 1,
+      "message": "No.  It does not work.  Adding `system_shared_libs: [\"libc\"]` here would result in a circular dependency because libc depends on libasync_safe.",
+      "parentUuid": "e9cc0235_b7aeac9f",
+      "revId": "2bf266bda63c54ad8c2a93ca3ac777ab980155b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
