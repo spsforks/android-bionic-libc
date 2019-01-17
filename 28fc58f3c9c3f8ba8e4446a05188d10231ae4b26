@@ -16,6 +16,24 @@
       "revId": "28fc58f3c9c3f8ba8e4446a05188d10231ae4b26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd12000f_fc6fd21f",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-17T01:01:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99d361be_de95fcd2",
+      "revId": "28fc58f3c9c3f8ba8e4446a05188d10231ae4b26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
