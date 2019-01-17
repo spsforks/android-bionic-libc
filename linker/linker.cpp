@@ -1068,7 +1068,7 @@ static int open_library(android_namespace_t* ns,
                         ZipArchiveCache* zip_archive_cache,
                         const char* name, soinfo *needed_by,
                         off64_t* file_offset, std::string* realpath) {
-  TRACE("[ opening %s at namespace %s]", name, ns->get_name());
+  TRACE("[ opening %s at namespace %s ]", name, ns->get_name());
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
@@ -1386,7 +1386,7 @@ static bool load_library(android_namespace_t* ns,
   // Open the file.
   int fd = open_library(ns, zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
-    DL_ERR("library \"%s\" not found", name);
+    DL_ERR("library \"%s\" not found in namespace %s", name, ns->get_name());
     return false;
   }
 
@@ -1459,17 +1459,21 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
 
   if (!namespace_link.is_accessible(soname.c_str())) {
     // the library is not accessible via namespace_link
+    TRACE("[ \"%s\" not accessible in namespace %s (soname \"%s\") ]",
+          task->get_name(), ns->get_name(), soname.c_str());
     return false;
   }
 
   // if library is already loaded - return it
   if (loaded) {
+    TRACE("[ \"%s\" already loaded in namespace %s ]", task->get_name(), ns->get_name());
     task->set_soinfo(candidate);
     return true;
   }
 
   // returning true with empty soinfo means that the library is okay to be
   // loaded in the namespace but has not yet been loaded there before.
+  TRACE("[ \"%s\" is ok to load in namespace %s ]", task->get_name(), ns->get_name());
   task->set_soinfo(nullptr);
   return true;
 }
@@ -1489,10 +1493,13 @@ static bool find_library_internal(android_namespace_t* ns,
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
-  TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
-      task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
+  TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder... "
+        "ns=%s, search_linked_namespaces=%d]",
+        task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate,
+        ns->get_name(), search_linked_namespaces);
 
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
+    TRACE("[ load_library ok ]");
     return true;
   }
 
@@ -1513,16 +1520,19 @@ static bool find_library_internal(android_namespace_t* ns,
           // Otherwise, the libs in the linked namespace won't get symbols from
           // the global group.
           if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks, rtld_flags, false)) {
+            TRACE("[ load_library in linked namespace %s ok ]", linked_namespace.linked_namespace()->get_name());
             return true;
           }
         } else {
           // lib is already loaded
+          TRACE("[ already loaded in linked namespace %s ]", linked_namespace.linked_namespace()->get_name());
           return true;
         }
       }
     }
   }
 
+  TRACE("[ find_library_internal for %s in %s failed ]", task->get_name(), ns->get_name());
   return false;
 }
 
@@ -3883,6 +3893,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string ld_config_file_path = get_ld_config_file_path(executable_path);
 
+  INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
   if (!Config::read_binary_config(ld_config_file_path.c_str(),
                                   executable_path,
                                   g_is_asan,
