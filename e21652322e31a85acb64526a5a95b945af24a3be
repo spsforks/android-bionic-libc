@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "262d53f7_b8c30150",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2019-01-17T15:58:44Z",
+      "side": 1,
+      "message": "Can you share all this with the llndk_library, either with export_header_lib_headers or a new defaults module?  And maybe move this above the crt modules closer to libc.so?",
+      "revId": "e21652322e31a85acb64526a5a95b945af24a3be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
