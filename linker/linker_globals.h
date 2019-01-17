@@ -39,6 +39,7 @@
 #define DL_ERR(fmt, x...) \
     do { \
       async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
+      TRACE(fmt, ##x); \
     } while (false)
 
 #define DL_WARN(fmt, x...) \
