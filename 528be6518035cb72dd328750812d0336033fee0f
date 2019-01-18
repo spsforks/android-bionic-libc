@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7fa50cf4_86b0bd74",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-18T06:12:47Z",
+      "side": 1,
+      "message": "Are all of the lines above actually needed? It seems unintuitive that a header module needs things like no_libcrt and no_libgcc, but maybe they\u0027re needed.\n\nMaybe host_supported is needed for host bionic.",
+      "revId": "528be6518035cb72dd328750812d0336033fee0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5415415d_8b9692ba",
         "filename": "libc/Android.bp",
         "patchSetId": 5
