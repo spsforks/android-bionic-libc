@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5415415d_8b9692ba",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1667,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-01-18T05:56:58Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the non-arch specific ones just go into export_include_dirs?",
+      "revId": "528be6518035cb72dd328750812d0336033fee0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
