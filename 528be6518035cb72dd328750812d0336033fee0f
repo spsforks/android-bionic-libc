@@ -51,6 +51,24 @@
       "revId": "528be6518035cb72dd328750812d0336033fee0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "311e1b21_c900701b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1667,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-18T07:14:05Z",
+      "side": 1,
+      "message": "I am willing to do so.  But I am not sure whether the relative order matters.  Let me check.",
+      "parentUuid": "5415415d_8b9692ba",
+      "revId": "528be6518035cb72dd328750812d0336033fee0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
