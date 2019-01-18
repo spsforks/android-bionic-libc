@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d0729297_681c1ef9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-18T06:20:17Z",
+      "side": 1,
+      "message": "`host_supported:true` is for host bionic.\n\n`vendor_available:true` is for libpropertyinfoparser (which has `vendor_available:true` as well).\n\n`recovery_available:true` is for bionic when the bionic libc is built for recovery partition.\n\n`stl:\"none\"` explicitly opts out from the implicit `libc++` dependency.\n\n`no_libcrt:true`, `no_libgcc:true`, and `system_shared_libs:[]` are here to avoid circular dependencies.",
+      "parentUuid": "7fa50cf4_86b0bd74",
+      "revId": "528be6518035cb72dd328750812d0336033fee0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5415415d_8b9692ba",
         "filename": "libc/Android.bp",
         "patchSetId": 5
