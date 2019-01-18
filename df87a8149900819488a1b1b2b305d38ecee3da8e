@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "801c2c61_23ccc984",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2019-01-18T20:14:42Z",
+      "side": 1,
+      "message": "Fixed existing bug in the error message here where the subtraction is backwards :)",
+      "revId": "df87a8149900819488a1b1b2b305d38ecee3da8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8480184_611afcb7",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2019-01-18T20:14:42Z",
+      "side": 1,
+      "message": "fixed existing bug here too: file_offset was missing entirely, so a library with multiple relro segments would have been corrupted.",
+      "revId": "df87a8149900819488a1b1b2b305d38ecee3da8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dcff460_603c049a",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2019-01-18T20:14:42Z",
+      "side": 1,
+      "message": "It happens that for both 32-bit and 64-bit, the current libdlext_test_recursive.so and its dependencies fits into the existing kLibSize, but not into kLibSize/2.\n\nThis doesn\u0027t seem like it\u0027s super robust but I can\u0027t think of a better way; the regular ReservedTooSmall test just allocates 1 page, which will definitely be too small, but the goal here is to allocate a space that the \"top\" library would fit into but not the entire tree..",
+      "revId": "df87a8149900819488a1b1b2b305d38ecee3da8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
