@@ -16,6 +16,24 @@
       "revId": "e21652322e31a85acb64526a5a95b945af24a3be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5003c5cc_f3e2b65e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-18T03:17:31Z",
+      "side": 1,
+      "message": "Unfortunately, llndk_library supports neither `defaults` nor `export_header_libs_headers`.  I have moved libc_headers to Line 1650 in the next PS#5.",
+      "parentUuid": "262d53f7_b8c30150",
+      "revId": "e21652322e31a85acb64526a5a95b945af24a3be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
