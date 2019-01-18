@@ -284,8 +284,26 @@ cc_library {
             },
             instruction_set: "arm",
             pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
+            ldflags: [
+                "-Wl,--hash-style=both",
+
+                // libm exposes various runtime functions as LIBC_DEPRECATED,
+                // but LTO causes these functions to not be statically linked in
+                // due to a bug in gold rescan logic
+                "-Wl,--undefined=__adddf3",
+                "-Wl,--undefined=__aeabi_cdcmpeq",
+                "-Wl,--undefined=__aeabi_ddiv",
+                "-Wl,--undefined=__aeabi_l2d",
+                "-Wl,--undefined=__floatdidf",
+            ],
             version_script: ":libm.arm.map",
+
+            // Prevent inlining of floating point status getter/setters. With
+            // LTO these functions may get inlined, but Clang doesn't track
+            // floating-point status register dependencies between
+            // floating-point intrinsics and read/writes to the floating point
+            // status register. See https://bugs.llvm.org/show_bug.cgi?id=6050
+            cflags: ["-fno-inline"],
         },
 
         arm64: {
@@ -319,6 +337,13 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.arm64.map",
+
+            // Prevent inlining of floating point status getter/setters. With
+            // LTO these functions may get inlined, but Clang doesn't track
+            // floating-point status register dependencies between
+            // floating-point intrinsics and read/writes to the floating point
+            // status register. See https://bugs.llvm.org/show_bug.cgi?id=6050
+            cflags: ["-fno-inline"],
         },
 
         x86: {
@@ -507,6 +532,7 @@ cc_library {
         integer_overflow: false,
     },
     stl: "none",
+    pagerando: true,
 
     stubs: {
         symbol_file: "libm.map.txt",

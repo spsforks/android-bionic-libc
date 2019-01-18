@@ -55,6 +55,7 @@ class ElfReader {
   const char* get_string(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
   ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
+  const soinfo::seginfo_list_t& rand_addr_segments() { return rand_addr_segments_; }
 
  private:
   bool ReadElfHeader();
@@ -63,7 +64,7 @@ class ElfReader {
   bool ReadSectionHeaders();
   bool ReadDynamicSection();
   bool ReserveAddressSpace(address_space_params* address_space);
-  bool LoadSegments();
+  bool LoadSegments(address_space_params* address_space);
   bool FindPhdr();
   bool CheckPhdr(ElfW(Addr));
   bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
@@ -104,6 +105,9 @@ class ElfReader {
 
   // Is map owned by the caller
   bool mapped_by_caller_;
+
+  // PT_RAND_ADDR segments
+  soinfo::seginfo_list_t rand_addr_segments_;
 };
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
@@ -114,9 +118,6 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
 
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias);
-
-int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                 ElfW(Addr) load_bias);
 
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                    ElfW(Addr) load_bias, int fd, size_t* file_offset);

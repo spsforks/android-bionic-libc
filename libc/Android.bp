@@ -1625,6 +1625,10 @@ cc_library {
     },
 
     symbol_ordering_file: "symbol_ordering",
+
+    // Can't enable pagerando until it works with LLD. LLD is required for
+    // symbol_ordering_file support.
+    pagerando: false,
 }
 
 genrule {
