@@ -1413,6 +1413,12 @@ cc_library_static {
     whole_static_libs: [
         "libc_common",
     ],
+
+    // ifuncs are currently broken with LLVM LTO:
+    // https://bugs.llvm.org/show_bug.cgi?id=40368
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
@@ -1443,6 +1449,12 @@ cc_library_static {
     whole_static_libs: [
         "libc_common",
     ],
+
+    // ifuncs are currently broken with LLVM LTO:
+    // https://bugs.llvm.org/show_bug.cgi?id=40368
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
@@ -1614,6 +1626,10 @@ cc_library {
     },
 
     symbol_ordering_file: "symbol_ordering",
+
+    // Can't enable pagerando until it works with LLD. LLD is required for
+    // symbol_ordering_file support.
+    pagerando: false,
 }
 
 genrule {

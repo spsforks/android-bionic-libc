@@ -472,6 +472,10 @@ typedef Elf64_Xword Elf64_Relr;
 #define PF_MASKOS   0x0ff00000
 #define PF_MASKPROC 0xf0000000
 
+/* Android specific for Pagerando. This segment can be mapped at an arbitrary
+ * offset from all other segments in the library. */
+#define PF_RAND_ADDR 0x00100000
+
 #define PT_GNU_RELRO 0x6474e552
 
 #define STB_LOOS 10
