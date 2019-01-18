@@ -233,6 +233,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["namespaces_root.cpp"],
     relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+    xom: false,
     shared_libs: [
         "libnstest_public",
         "libnstest_private",
