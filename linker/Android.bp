@@ -297,6 +297,7 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
+    required: ["linker.mountpoint"],
 }
 
 cc_library {
