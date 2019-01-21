@@ -197,11 +197,8 @@ int sigpause(int sig) {
 }
 
 int sigpending(sigset_t* bionic_set) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
-  if (__rt_sigpending(&set.sigset64, sizeof(set.sigset64)) == -1) return -1;
-  *bionic_set = set.sigset;
-  return 0;
+  return __rt_sigpending(reinterpret_cast<sigset64_t*>(bionic_set),
+                         sizeof(sigset_t));
 }
 
 int sigpending64(sigset64_t* set) {
