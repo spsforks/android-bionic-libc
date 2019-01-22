@@ -22,6 +22,30 @@
       "revId": "366d740c3df8f17afa648284325ae06a424c154a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2931a7f_88a1b2e7",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2019-01-22T16:28:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61bbe16f_a2d3c5fe",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 29
+      },
+      "revId": "366d740c3df8f17afa648284325ae06a424c154a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
