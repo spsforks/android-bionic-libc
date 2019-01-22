@@ -2075,6 +2075,11 @@ void* do_dlopen(const char* name, int flags,
   soinfo* const caller = find_containing_library(caller_addr);
   android_namespace_t* ns = get_caller_namespace(caller);
 
+  if (!strcmp(name, "/apex/com.android.resolv/lib64/libnetd_resolv.so") ||
+      !strcmp(name, "/apex/com.android.resolv/lib/libnetd_resolv.so")) {
+    g_ld_debug_verbosity = 2;
+  }
+
   LD_LOG(kLogDlopen,
          "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p) ...",
          name,

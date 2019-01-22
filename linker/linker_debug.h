@@ -39,7 +39,7 @@
 #define LINKER_DEBUG_TO_LOG  1
 
 #define TRACE_DEBUG          1
-#define DO_TRACE_LOOKUP      1
+#define DO_TRACE_LOOKUP      0
 #define DO_TRACE_RELO        1
 #define DO_TRACE_IFUNC       1
 #define TIMING               0
