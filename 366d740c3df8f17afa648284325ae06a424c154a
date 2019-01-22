@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61bbe16f_a2d3c5fe",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2019-01-22T16:17:58Z",
+      "side": 1,
+      "message": "while you\u0027re here, could you please add a brief comment about why setresuid is allowed?  Then future reader will have better idea about the user/group asymmetry.",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 29
+      },
+      "revId": "366d740c3df8f17afa648284325ae06a424c154a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
