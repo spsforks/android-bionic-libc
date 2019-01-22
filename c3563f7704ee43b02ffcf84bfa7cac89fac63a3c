@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b36a143_7a6cbc82",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1131915
+      },
+      "writtenOn": "2019-01-22T17:19:46Z",
+      "side": 1,
+      "message": "I\u0027d add the bug here:\n\nBug: 112484513",
+      "revId": "c3563f7704ee43b02ffcf84bfa7cac89fac63a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
