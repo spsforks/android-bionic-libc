@@ -359,6 +359,10 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
 
+  if (!strcmp(exe_path.c_str(), "/system/bin/netd")) {
+    g_ld_debug_verbosity = 2;
+  }
+
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
                             exe_path.c_str(), &exe_info.file_stat,
