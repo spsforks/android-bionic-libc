@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17ba63f9_16292a5f",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-22T22:05:28Z",
+      "side": 1,
+      "message": "Could we have a trailing comma here and on the \"lib\" line?",
+      "range": {
+        "startLine": 89,
+        "startChar": 19,
+        "endLine": 89,
+        "endChar": 20
+      },
+      "revId": "ea2c947a2a426b8344d7b1a719efa1ec3bc0dfea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
