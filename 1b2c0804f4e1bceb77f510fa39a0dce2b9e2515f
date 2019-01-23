@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66127f54_2008248a",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-23T00:15:40Z",
+      "side": 1,
+      "message": "someone could have done `fcntl(fileno(fp))`? (though if we\u0027re going to use that argument to not delete this code, we should add a comment!)",
+      "revId": "1b2c0804f4e1bceb77f510fa39a0dce2b9e2515f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
