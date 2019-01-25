@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93e1f8e1_1b66b0a1",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-01-25T09:52:41Z",
+      "side": 1,
+      "message": "use function instead?",
+      "revId": "ece427c91bc4f39aa254367b2e3a0870f25c5daa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
