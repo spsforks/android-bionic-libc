@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c375d0d6_83c8bade",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-25T23:55:46Z",
+      "side": 1,
+      "message": "\u003e same line or braces\n\nDone.\n\n\u003e (should we make BIONIC_ROUND_UP_POWER_OF_2 a no-op if the argument is a power of 2, and then you can lose the if?)\n\nProbably. I think it can be done in a later CL. Most uses of the macro already wrap it with powerof2(). The new usage for static TLS (BIONIC_ROUND_UP_POWER_OF_2(MAX_TLS_SLOT)) doesn\u0027t have the powerof2() check, but that\u0027s because it\u0027s a constant. I had originally written it as BIONIC_ROUND_UP_POWER_OF_2(MAX_TLS_SLOT + 1) before I realized that the macro meant _next_ power-of-2.",
+      "parentUuid": "eefb6c24_1390774d",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b75640ca_3384b5ad",
         "filename": "libc/bionic/bionic_elf_tls.cpp",
         "patchSetId": 2
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "28453973_3fb60c90",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-25T23:55:46Z",
+      "side": 1,
+      "message": "I described the DTV allocation strategy here w.r.t. async-signal safety. I think that makes it clear why we wouldn\u0027t want to reallocate with a smaller DTV?\n\nAssuming we *did* free old DTVs, reallocating with a smaller DTV could reduce memory usage if some code dlopen\u0027ed a large number of modules, then dlclose\u0027d them. For that to work, the linker would also have to shrink its g_tls_modules table when the trailing slots were vacated by dlclosed\u0027d solibs.",
+      "parentUuid": "b75640ca_3384b5ad",
+      "range": {
+        "startLine": 239,
+        "startChar": 12,
+        "endLine": 239,
+        "endChar": 13
+      },
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aaa2b4e_b6158e9b",
         "filename": "libc/bionic/bionic_elf_tls.cpp",
         "patchSetId": 2
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "dadaa7fe_98de7c91",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-25T23:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aaa2b4e_b6158e9b",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec447cc8_30716c6a",
         "filename": "libc/libc.map.txt",
         "patchSetId": 2
@@ -73,6 +133,24 @@
       "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa71adec_346e7ba5",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1452,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-25T23:55:46Z",
+      "side": 1,
+      "message": "Yeah... According to Drepper\u0027s paper, Sun\u0027s x86 implementation had a `__tls_get_addr` that used the default calling convention rather than regparm(1).\n\nThe ARM ABI addendum also describes an arm32 `___tls_get_addr` that\u0027s optimized for smaller size.\n\nSo far, I\u0027ve only seen Clang/gcc use the variants I\u0027ve implemented in this CL.",
+      "parentUuid": "ec447cc8_30716c6a",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
