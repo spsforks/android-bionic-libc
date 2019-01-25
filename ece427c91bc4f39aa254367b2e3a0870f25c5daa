@@ -34,6 +34,24 @@
       "revId": "ece427c91bc4f39aa254367b2e3a0870f25c5daa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f29fe2c9_ed70867d",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-01-25T10:08:24Z",
+      "side": 1,
+      "message": "Ah, yes.. ASSERTs do not like functions that return.. ok.",
+      "parentUuid": "0ab015e0_a6539803",
+      "revId": "ece427c91bc4f39aa254367b2e3a0870f25c5daa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
