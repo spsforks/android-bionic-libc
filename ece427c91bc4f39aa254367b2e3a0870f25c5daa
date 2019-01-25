@@ -16,6 +16,24 @@
       "revId": "ece427c91bc4f39aa254367b2e3a0870f25c5daa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ab015e0_a6539803",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-25T09:59:53Z",
+      "side": 1,
+      "message": "Maybe... I originally had it as a lambda that returned a function pointer, but IIRC the ASSERT_NE() had a \"return;\" inside it, and Clang complained about the wrong return value type.",
+      "parentUuid": "93e1f8e1_1b66b0a1",
+      "revId": "ece427c91bc4f39aa254367b2e3a0870f25c5daa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
