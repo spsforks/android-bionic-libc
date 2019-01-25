@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eefb6c24_1390774d",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-25T21:55:36Z",
+      "side": 1,
+      "message": "same line or braces\n\n(should we make BIONIC_ROUND_UP_POWER_OF_2 a no-op if the argument is a power of 2, and then you can lose the if?)",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b75640ca_3384b5ad",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-25T21:55:36Z",
+      "side": 1,
+      "message": "say why not?",
+      "range": {
+        "startLine": 239,
+        "startChar": 12,
+        "endLine": 239,
+        "endChar": 13
+      },
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aaa2b4e_b6158e9b",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-25T21:55:36Z",
+      "side": 1,
+      "message": "same line or brace",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec447cc8_30716c6a",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1452,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-25T21:55:36Z",
+      "side": 1,
+      "message": "/me groans.\n\nat least no-one\u0027s using `_tls_get_addr` or `____tls_get_addr`...",
+      "revId": "ad914b4a637221486121dc5fd741e45cb2d0df6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
