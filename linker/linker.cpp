@@ -43,6 +43,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <map>
 
 #include <android-base/properties.h>
 #include <android-base/scopeguard.h>
@@ -2103,6 +2104,39 @@ void* do_dlopen(const char* name, int flags,
       ns = extinfo->library_namespace;
     }
   }
+
+#ifdef __LP64__
+#define SYSTEM_LIB "/system/lib64/"
+#define RUNTIME_APEX_LIB "/apex/com.android.runtime/lib64/"
+#else
+#define SYSTEM_LIB "/system/lib/"
+#define RUNTIME_APEX_LIB "/apex/com.android.runtime/lib/"
+#endif
+
+  // TODO: workaround for dlopen(/system/lib/<soname>) when .so are in APEX
+  if (get_application_target_sdk_version() < __ANDROID_API_Q__) {
+    LD_LOG(kLogDlopen, "name=%s targetSdkVersion=%i",
+           name,
+           get_application_target_sdk_version());
+    static const std::map<const std::string, const std::string> systemToApexLibMap = {
+      {SYSTEM_LIB "libicuuc.so", RUNTIME_APEX_LIB "libicuuc.so"},
+      {SYSTEM_LIB "libicui18n.so", RUNTIME_APEX_LIB "libicui18n.so"},
+    };
+    std::map<const std::string, const std::string>::const_iterator it =
+        systemToApexLibMap.find(name);
+    if (it != systemToApexLibMap.end()) {
+      // Only translate the name if the name does not exist and the new name exists
+      const char* newName = it->second.c_str();
+      LD_LOG(kLogDlopen, "name=%s newName=%i",
+              name,
+              newName);
+      if (!file_exists(name) && file_exists(newName)) {
+        name = newName;
+      }
+    }
+
+  }
+  // End workaround for dlopen(/system/lib/<soname>) when .so are in APEX
 
   std::string asan_name_holder;
 
