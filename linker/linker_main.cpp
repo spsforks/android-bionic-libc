@@ -503,6 +503,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   fflush(stdout);
 #endif
 
+  purge();
+
   ElfW(Addr) entry = exe_info.entry_point;
   TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;

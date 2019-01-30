@@ -536,6 +536,10 @@ class SizeBasedAllocator {
     allocator_.free(ptr);
   }
 
+  static void purge() {
+    allocator_.purge();
+  }
+
  private:
   static LinkerBlockAllocator allocator_;
 };
@@ -552,6 +556,10 @@ class TypeBasedAllocator {
 
   static void free(T* ptr) {
     SizeBasedAllocator<sizeof(T)>::free(ptr);
+  }
+
+  static void purge() {
+    SizeBasedAllocator<sizeof(T)>::purge();
   }
 };
 
@@ -696,6 +704,10 @@ class LoadTask {
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(LoadTask);
 };
+
+void purge() {
+  TypeBasedAllocator<LoadTask>::purge();
+}
 
 LoadTask::deleter_t LoadTask::deleter;
 
@@ -2073,6 +2085,8 @@ void* do_dlopen(const char* name, int flags,
          caller == nullptr ? "(null)" : caller->get_realpath(),
          ns == nullptr ? "(null)" : ns->get_name(),
          ns);
+
+  auto purge_guard = android::base::make_scope_guard([&]() { purge(); });
 
   auto failure_guard = android::base::make_scope_guard(
       [&]() { LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer()); });
