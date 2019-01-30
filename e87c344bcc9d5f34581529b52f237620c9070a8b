@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14380ca4_e568581f",
+        "filename": "tests/Android.build.prebuilt.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2019-01-30T18:58:39Z",
+      "side": 1,
+      "message": "Normally these would come from the defaults LOCAL_SYSTEM_SHARED_LIBRARIES -- apparently BUILD_PREBUILT isn\u0027t adding those in this case?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 22
+      },
+      "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
