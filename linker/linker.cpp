@@ -43,6 +43,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <map>
 
 #include <android-base/properties.h>
 #include <android-base/scopeguard.h>
@@ -97,6 +98,7 @@ static const char* const kVendorLibDir     = "/vendor/lib64";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib64";
+static const char* const kRuntimeApexLibDir = "/apex/com.android.runtime/lib64";
 #else
 static const char* const kSystemLibDir     = "/system/lib";
 static const char* const kOdmLibDir        = "/odm/lib";
@@ -104,6 +106,7 @@ static const char* const kVendorLibDir     = "/vendor/lib";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
+static const char* const kRuntimeApexLibDir = "/apex/com.android.runtime/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -227,6 +230,29 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   return false;
 }
 // END OF WORKAROUND
+
+// Workaround for dlopen(/system/lib/<soname>) when .so is in /apex. http://b/121248172
+// The workaround works only when targetSdkVersion < Q.
+static const std::map<const std::string, const std::string> getSystemToApexLibMap() {
+  std::map<const std::string, const std::string> map;
+  static const char* const kSystemToRuntimeApexLibs[] = {
+    "libicuuc.so",
+    "libicui18n.so",
+  };
+
+  for(const char* soname : kSystemToRuntimeApexLibs) {
+    std::string fromPath(kSystemLibDir);
+    fromPath.append("/").append(soname);
+    std::string toPath(kRuntimeApexLibDir);
+    toPath.append("/").append(soname);
+
+    map.insert(std::pair<const std::string, const std::string>(fromPath, toPath));
+  }
+  // New mapping for new apex should be added below
+
+  return map;
+}
+// End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -2066,13 +2092,14 @@ void* do_dlopen(const char* name, int flags,
   android_namespace_t* ns = get_caller_namespace(caller);
 
   LD_LOG(kLogDlopen,
-         "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p) ...",
+         "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p, targetSdkVersion=%i) ...",
          name,
          flags,
          android_dlextinfo_to_string(extinfo).c_str(),
          caller == nullptr ? "(null)" : caller->get_realpath(),
          ns == nullptr ? "(null)" : ns->get_name(),
-         ns);
+         ns,
+         get_application_target_sdk_version());
 
   auto failure_guard = android::base::make_scope_guard(
       [&]() { LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer()); });
@@ -2103,6 +2130,29 @@ void* do_dlopen(const char* name, int flags,
       ns = extinfo->library_namespace;
     }
   }
+
+  // Workaround for dlopen(/system/lib/<soname>) when .so is in /apex. http://b/121248172
+  // The workaround works only when targetSdkVersion < Q.
+  if (get_application_target_sdk_version() < __ANDROID_API_Q__) {
+    static const std::map<const std::string, const std::string> systemToApexLibMap = 
+        getSystemToApexLibMap();
+    std::map<const std::string, const std::string>::const_iterator it =
+        systemToApexLibMap.find(name);
+    if (it != systemToApexLibMap.end()) {
+      const char* newName = it->second.c_str();
+      LD_LOG(kLogDlopen, "dlopen translating path to /apex: name=%s newName=%s",
+              name,
+              newName);
+      // Some APEXs could be optionally disabled. Only translate the path
+      // when the old file is absent and the new file exists.
+      if (!file_exists(name) && file_exists(newName)) {
+        LD_LOG(kLogDlopen, "dlopen new path to /apex: newName=%s",
+              newName);
+        name = newName;
+      }
+    }
+  }
+  // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
   std::string asan_name_holder;
 
