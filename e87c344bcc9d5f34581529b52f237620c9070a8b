@@ -22,6 +22,30 @@
       "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5767116d_7ca30843",
+        "filename": "tests/Android.build.prebuilt.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-31T03:11:07Z",
+      "side": 1,
+      "message": "There are two cases.  If LOCAL_STRIP_MODULE is not empty, dynamic_binary.mk is included and these shared libs are added by LOCAL_SYSTEM_SHARED_LIBRARIES[1].  If LOCAL_STRIP_MODULE is empty, base_rules.mk is included and these shared libs are missing in this case[2].\n\nIf I set LOCAL_STRIP_MODULE to keep_symbols, then LOCAL_SHARED_LIBRARIES can be ignored.\n\nAlternatively, I can replicate the logic for LOCAL_SYSTEM_SHARED_LIBRARIES in that case.  How do you think?\n\n[1] https://android.googlesource.com/platform/build/+/0e53d887d6cf33adf4051d1e6c6e6476eb81d19c/core/prebuilt_internal.mk#121\n[2] https://android.googlesource.com/platform/build/+/0e53d887d6cf33adf4051d1e6c6e6476eb81d19c/core/prebuilt_internal.mk#126",
+      "parentUuid": "14380ca4_e568581f",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 22
+      },
+      "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
