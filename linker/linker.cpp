@@ -214,10 +214,14 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     return !maybe_accessible_via_namespace_links(ns, name);
   }
 
-  // if this is an absolute path - make sure it points to /system/lib(64)
-  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
-    // and reduce the path to basename
-    name = basename(name);
+  // if this is an absolute path - make sure it points to /system/lib(64) or the
+  // Runtime APEX
+  if (name[0] == '/') {
+    std::string dname = dirname(name);
+    if (dname == kSystemLibDir || dname == kRuntimeApexLibDir) {
+      // and reduce the path to basename
+      name = basename(name);
+    }
   }
 
   for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
