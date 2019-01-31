@@ -46,6 +46,30 @@
       "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9602e76c_21a1bcde",
+        "filename": "tests/Android.build.prebuilt.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-01-31T06:36:03Z",
+      "side": 1,
+      "message": "I\u0027ve uploaded an alternative CL to ensure all paths in prebuilt_internal.mk have the same behavior regarding to system shared libs.  PTAL:\n\nhttps://android-review.googlesource.com/c/platform/build/+/891153",
+      "parentUuid": "5767116d_7ca30843",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 22
+      },
+      "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
