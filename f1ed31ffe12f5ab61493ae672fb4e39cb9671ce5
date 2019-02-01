@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e968bddd_42da4c0f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-01T00:04:51Z",
+      "side": 1,
+      "message": "__libc_safe_arc4random_buf uses `access(\"/dev/urandom\", R_OK) \u003d\u003d 0` to decide whether it\u0027s safe to use arc4random. Should this code do the same instead of `(getpid() \u003d\u003d 1)`?\n\narc4random gets its entropy from Bionic\u0027s getentropy, which first tries getrandom, then falls back to /dev/urandom.\n\nMaybe __libc_safe_arc4random_buf\u0027s behavior would matter if:\n - Older kernels don\u0027t support getrandom.\n - Maybe getrandom(GRND_NONBLOCK) fails with EAGAIN if there\u0027s not enough entropy at startup.\n - A process might run in a chroot w/o access to /dev/urandom?\n\nI\u0027m not sure we need to care about a chroot w/o /dev/urandom. Seems obscure. The linker does require /proc/self/exe.",
+      "revId": "f1ed31ffe12f5ab61493ae672fb4e39cb9671ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
