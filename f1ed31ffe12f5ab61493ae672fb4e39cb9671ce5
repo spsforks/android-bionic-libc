@@ -34,6 +34,24 @@
       "revId": "f1ed31ffe12f5ab61493ae672fb4e39cb9671ce5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f6b6f6c_b2decb31",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-01T01:05:00Z",
+      "side": 1,
+      "message": "Yes, I basically followed the lead of the linker here (or at least, of the linker from a few months ago when I originally wrote this code). Now the linker is checking /dev/urandom as well to accommodate second stage init. It would be possible to make this look more like the linker if we wanted to randomize the SCS in second stage init as well, but that wouldn\u0027t provide any benefit yet because init doesn\u0027t currently use SCS.",
+      "parentUuid": "4c9206a4_01818390",
+      "revId": "f1ed31ffe12f5ab61493ae672fb4e39cb9671ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
