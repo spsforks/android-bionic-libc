@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a64c0ce1_4c3e2f8b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-01T22:30:59Z",
+      "side": 1,
+      "message": "remove blank line",
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fb73725_dbbde9c6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2169,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-01T22:30:59Z",
+      "side": 1,
+      "message": "exist",
+      "range": {
+        "startLine": 2169,
+        "startChar": 88,
+        "endLine": 2169,
+        "endChar": 94
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
