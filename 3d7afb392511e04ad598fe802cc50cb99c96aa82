@@ -164,6 +164,30 @@
     },
     {
       "key": {
+        "uuid": "322a827d_d155f56e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:20:12Z",
+      "side": 1,
+      "message": "Sigh obviously it\u0027s the dirname in linker...  :( Good catch.\n\nDefinitely prefer calling \"compare\" to avoid any confusion.",
+      "parentUuid": "ea45e938_1ba0fcab",
+      "range": {
+        "startLine": 253,
+        "startChar": 24,
+        "endLine": 253,
+        "endChar": 54
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8cc5d82_adaeb7bd",
         "filename": "linker/linker.cpp",
         "patchSetId": 4
