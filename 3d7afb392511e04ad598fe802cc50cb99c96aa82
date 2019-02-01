@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "ea45e938_1ba0fcab",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-01T15:17:25Z",
+      "side": 1,
+      "message": "It\u0027s std::string dirname(const char* path)\nhttps://android.googlesource.com/platform/bionic/+/master/linker/linker_utils.cpp#63\n\nI can change dirname(name).compare. Which one do you prefer?",
+      "parentUuid": "105b6ebe_eded6c40",
+      "range": {
+        "startLine": 253,
+        "startChar": 24,
+        "endLine": 253,
+        "endChar": 54
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8cc5d82_adaeb7bd",
         "filename": "linker/linker.cpp",
         "patchSetId": 4
