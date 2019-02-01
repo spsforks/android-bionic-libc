@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f8115ed_7b0f5b5a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 14
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ce650d3_23d6d561",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "Drop this?",
+      "range": {
+        "startLine": 238,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 61
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe0b6a32_698de19a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "Not the style of this file, so I suggest just commenting the parameters without the \u0027@\u0027.",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 40
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "727fd4f4_d6414439",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "Add a comment (Also, I suggest two ifs: one for the null check, one for the target sdk, so you can comment each).",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 3
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "663f40ab_ed14c26b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "If the path is not absolute, or isn\u0027t /system/lib, there\u0027s nothing to do.",
+      "range": {
+        "startLine": 252,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 85
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "105b6ebe_eded6c40",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "This is comparing two char*, so pointer equality. You want strcmp here.",
+      "range": {
+        "startLine": 253,
+        "startChar": 24,
+        "endLine": 253,
+        "endChar": 54
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8cc5d82_adaeb7bd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "Move this to line 247?",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 51
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99bbade6_d3874161",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2161,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-01T15:06:15Z",
+      "side": 1,
+      "message": "I would also log the other way, I think apex being disabled is a rare case that ought to be warned.",
+      "range": {
+        "startLine": 2161,
+        "startChar": 6,
+        "endLine": 2161,
+        "endChar": 75
+      },
+      "revId": "3d7afb392511e04ad598fe802cc50cb99c96aa82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
