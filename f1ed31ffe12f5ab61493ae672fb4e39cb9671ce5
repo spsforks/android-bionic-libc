@@ -16,6 +16,24 @@
       "revId": "f1ed31ffe12f5ab61493ae672fb4e39cb9671ce5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c9206a4_01818390",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-01T00:12:48Z",
+      "side": 1,
+      "message": "OTOH, the linker is already using getpid() \u003d\u003d 1 to decide whether arc4random is available in `shuffle` and `is_first_stage_init`.",
+      "parentUuid": "e968bddd_42da4c0f",
+      "revId": "f1ed31ffe12f5ab61493ae672fb4e39cb9671ce5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
