@@ -22,6 +22,30 @@
       "revId": "5bb113cba279f93fb840954463e897b9e28a8660",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce2ef17e_0c847065",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-02T00:52:13Z",
+      "side": 1,
+      "message": "you can\u0027t without annotating everything in the header :-(",
+      "parentUuid": "2148c33d_915caa02",
+      "range": {
+        "startLine": 167,
+        "startChar": 82,
+        "endLine": 167,
+        "endChar": 100
+      },
+      "revId": "5bb113cba279f93fb840954463e897b9e28a8660",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
