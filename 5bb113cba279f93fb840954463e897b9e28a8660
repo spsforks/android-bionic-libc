@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2148c33d_915caa02",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-02T00:45:20Z",
+      "side": 1,
+      "message": "Is it worth adding a _Nonnull here and below?",
+      "range": {
+        "startLine": 167,
+        "startChar": 82,
+        "endLine": 167,
+        "endChar": 100
+      },
+      "revId": "5bb113cba279f93fb840954463e897b9e28a8660",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
