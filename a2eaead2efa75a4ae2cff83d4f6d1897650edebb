@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "33c0b3e8_fcc39c00",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-04T09:43:27Z",
+      "side": 1,
+      "message": "Add: || name.size() \u003d\u003d 0 ?",
+      "range": {
+        "startLine": 255,
+        "startChar": 21,
+        "endLine": 255,
+        "endChar": 22
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7fb73725_dbbde9c6",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
