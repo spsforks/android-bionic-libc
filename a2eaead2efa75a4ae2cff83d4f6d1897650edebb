@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "2b0b2414_2b412433",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2019-02-04T12:55:18Z",
+      "side": 1,
+      "message": "Oh right, then nevermind, you don\u0027t need the strlen check, name[0] will contain \u00270\u0027.",
+      "parentUuid": "36770816_785cf9e0",
+      "range": {
+        "startLine": 255,
+        "startChar": 21,
+        "endLine": 255,
+        "endChar": 22
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7fb73725_dbbde9c6",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
