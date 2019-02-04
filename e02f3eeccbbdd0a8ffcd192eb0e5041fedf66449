@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73fa356d_8391487b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T20:24:45Z",
+      "side": 1,
+      "message": "Nit: (*foo). is usually written foo-\u003e.",
+      "range": {
+        "startLine": 262,
+        "startChar": 6,
+        "endLine": 262,
+        "endChar": 26
+      },
+      "revId": "e02f3eeccbbdd0a8ffcd192eb0e5041fedf66449",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
