@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "596585da_d963e78b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T14:58:27Z",
+      "side": 1,
+      "message": "Please add \u003clibgen.h\u003e for basename.",
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67802afc_6c8b8195",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T14:58:27Z",
+      "side": 1,
+      "message": "Nit: Please keep alignment of these equal signs.",
+      "range": {
+        "startLine": 99,
+        "startChar": 43,
+        "endLine": 99,
+        "endChar": 44
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30d0874c_33d6dfcd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T14:58:27Z",
+      "side": 1,
+      "message": "Code style is to use pointers rather than references to output parameters (http://go/cpp-style#Reference_Arguments). Also please add /*out*/ before for extra clarity. (Also, changing it to pointer doesn\u0027t imply you must add a check for nullptr.)",
+      "range": {
+        "startLine": 241,
+        "startChar": 60,
+        "endLine": 241,
+        "endChar": 72
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f732a77b_ce8b15b8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T14:58:27Z",
+      "side": 1,
+      "message": "I believe we\u0027ll need this for libnative{bridge,helper,loader}.so libs as well. Can we do it in one go here, or is it better to separate?",
+      "range": {
+        "startLine": 243,
+        "startChar": 1,
+        "endLine": 244,
+        "endChar": 20
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b47633aa_d1daf674",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T14:58:27Z",
+      "side": 1,
+      "message": "Afaics name can never be null here. I suggest dropping this, or possibly replacing it with a CHECK (http://cs/aosp-master/external/libchrome/base/logging.h?l\u003d835).",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 3
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
