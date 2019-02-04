@@ -88,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "679efddf_a4b4c25e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-04T16:45:06Z",
+      "side": 1,
+      "message": "Chatted a bit with ngeoffray@, and none of the libnative* libraries are in public.libraries.*.txt. There\u0027s also no \"permitted\" path to /system/${LIB} in ld.config.txt. Then I gather there is no way to dlopen them with an absolute path.\n\nI\u0027d like to confirm that from someone who knows for sure (+rpritchard, +dimitry, +enh), but it looks like we don\u0027t need special cases for these libs.\n\nlibnativehelper.so is present in the greylist above, but if it only needs to work with a relative path then we\u0027re fine.",
+      "parentUuid": "f732a77b_ce8b15b8",
+      "range": {
+        "startLine": 243,
+        "startChar": 1,
+        "endLine": 244,
+        "endChar": 20
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b47633aa_d1daf674",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
