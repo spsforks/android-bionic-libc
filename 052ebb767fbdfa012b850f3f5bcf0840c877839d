@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "de25b129_f6fef7b7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T17:28:28Z",
+      "side": 1,
+      "message": "Unfortunately, I can\u0027t. The dirname in libgen.h has conflict with dirname function in linker_utils.h.\n\nI don\u0027t know how to figure out how basename is included in the chain of #include. But\nI am not the first user of basename in this file.  Can we keep it as it was?",
+      "parentUuid": "596585da_d963e78b",
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67802afc_6c8b8195",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "849eb2be_c640ff74",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T17:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67802afc_6c8b8195",
+      "range": {
+        "startLine": 99,
+        "startChar": 43,
+        "endLine": 99,
+        "endChar": 44
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30d0874c_33d6dfcd",
         "filename": "linker/linker.cpp",
         "patchSetId": 7
@@ -62,6 +104,30 @@
       "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5009e9ee_8f661a5b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T17:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30d0874c_33d6dfcd",
+      "range": {
+        "startLine": 241,
+        "startChar": 60,
+        "endLine": 241,
+        "endChar": 72
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -132,6 +198,30 @@
       "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4934169b_2872ded7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T17:28:28Z",
+      "side": 1,
+      "message": "Done. removed",
+      "parentUuid": "b47633aa_d1daf674",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 3
+      },
+      "revId": "052ebb767fbdfa012b850f3f5bcf0840c877839d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
