@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8c8a584c_3a992b94",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T11:09:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a64c0ce1_4c3e2f8b",
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33c0b3e8_fcc39c00",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -30,6 +48,30 @@
       "writtenOn": "2019-02-04T09:43:27Z",
       "side": 1,
       "message": "Add: || name.size() \u003d\u003d 0 ?",
+      "range": {
+        "startLine": 255,
+        "startChar": 21,
+        "endLine": 255,
+        "endChar": 22
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36770816_785cf9e0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T11:09:43Z",
+      "side": 1,
+      "message": "name is char pointer. Do you mean strlen(name) \u003d\u003d 0? It\u0027s done now.",
+      "parentUuid": "33c0b3e8_fcc39c00",
       "range": {
         "startLine": 255,
         "startChar": 21,
@@ -62,6 +104,30 @@
       "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d36b4734_aaf9997d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2169,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T11:09:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fb73725_dbbde9c6",
+      "range": {
+        "startLine": 2169,
+        "startChar": 88,
+        "endLine": 2169,
+        "endChar": 94
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
