@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "140545fe_971974bd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-04T14:33:46Z",
+      "side": 1,
+      "message": "OK. It\u0027s what I thought too. Removed.",
+      "parentUuid": "2b0b2414_2b412433",
+      "range": {
+        "startLine": 255,
+        "startChar": 21,
+        "endLine": 255,
+        "endChar": 22
+      },
+      "revId": "a2eaead2efa75a4ae2cff83d4f6d1897650edebb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fb73725_dbbde9c6",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
