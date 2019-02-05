@@ -16,6 +16,24 @@
       "revId": "22aa96e421feed4cd582c3a8da248203fe301bd5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eceb4aef_e4ff39a1",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-05T19:52:43Z",
+      "side": 1,
+      "message": "that\u0027s fine --- just delete the relevant line there (the original author will be grateful for it!).",
+      "parentUuid": "5a0a82fe_12799edd",
+      "revId": "22aa96e421feed4cd582c3a8da248203fe301bd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
