@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a3e2c92_617ad1b4",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1575,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-05T01:57:38Z",
+      "side": 1,
+      "message": "My understanding of strxfrm is that it might not be possible to assume anything about the transform itself.\n\nWould it be better for the test to do something like:\n\nconst char* src1 \u003d \"aab\";\nconst char* src2 \u003d \"aac\";\nchar dst1[16] \u003d {};\nchar dst2[16] \u003d {};\n\nASSERT_GT(0, strxfrm(dst1, src1, sizeof(dst1)));\nASSERT_GT(0, strxfrm(dst2, src2, sizeof(dst2)));\nASSERT_TRUE(strcmp(dst1, dst2) \u003c 0));",
+      "range": {
+        "startLine": 1575,
+        "startChar": 15,
+        "endLine": 1575,
+        "endChar": 20
+      },
+      "revId": "9951bc4a484a9ee4f6ead5e12073dffdb8d0983b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
