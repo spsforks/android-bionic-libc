@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a0a82fe_12799edd",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1373934
+      },
+      "writtenOn": "2019-02-05T18:35:06Z",
+      "side": 1,
+      "message": "Initially I thought about inlining g_icudata_version completely, but it was not building with\n\n\u003e ld.lld: error: symbol ordering file: no such symbol: _ZL17g_icudata_version\n\nwhich can be found in bionic/libc/symbol_ordering",
+      "revId": "22aa96e421feed4cd582c3a8da248203fe301bd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
