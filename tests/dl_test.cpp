@@ -150,6 +150,7 @@ TEST(dl, preinit_system_calls) {
 
 TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array
   std::string helper = GetTestlibRoot() +
       "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
