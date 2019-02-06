@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bf07b0f_a50c13cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-02-06T17:21:02Z",
+      "side": 1,
+      "message": "I thought the unversioned API (\"_android\") was only a subset of the versioned (\"_63\") API, is that not correct?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 15
+      },
+      "revId": "4e26fb9ed802a1444e4e156d862889bf6ec47c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2efbbdb_09a88e42",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-02-06T17:21:02Z",
+      "side": 1,
+      "message": "why is the +1 needed here but wasn\u0027t needed previously?",
+      "revId": "4e26fb9ed802a1444e4e156d862889bf6ec47c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
