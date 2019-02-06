@@ -70,6 +70,30 @@
       "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18a373b2_0150f3b7",
+        "filename": "tests/Android.build.prebuilt.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-02-06T14:02:50Z",
+      "side": 1,
+      "message": "Hi Dan,\n\nThere is a path in BUILD_PREBUILT that don\u0027t add libc/libdl/libm by default.  I tried to fix it in aosp/891153.  How do you think?\n\nIf we can fix it there, this CL will no longer be necessary.  If it is preferred to keep the build system as-is, I think this CL would be necessary.",
+      "parentUuid": "9602e76c_21a1bcde",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 22
+      },
+      "revId": "e87c344bcc9d5f34581529b52f237620c9070a8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
