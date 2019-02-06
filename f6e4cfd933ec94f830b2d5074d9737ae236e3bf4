@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6ce43eb_2c49ff8b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-06T16:45:26Z",
+      "side": 0,
+      "message": "isn\u0027t it easier/quicker to add the missing `name \u003d\u003d nullptr || ` here?\n\n(and the missing `dlopen(nullptr)` test...)",
+      "revId": "f6e4cfd933ec94f830b2d5074d9737ae236e3bf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
