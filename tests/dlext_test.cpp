@@ -232,6 +232,10 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlopen_from_nullptr) {
+  ASSERT_TRUE(dlopen(nullptr, RTLD_NOW) != nullptr);
+}
+
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
   const std::string lib_path = GetTestlibRoot() + lib_zip_path;
