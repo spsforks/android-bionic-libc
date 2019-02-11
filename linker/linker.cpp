@@ -246,9 +246,15 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
   // New mapping for new apex should be added below
 
   // Nothing to do if target sdk version is Q or above
+  // TODO(b/124218500): Re-enable it once the app compat bug is resolved
+  // The .so files are duplicated in /system and /apex.
+  // This is disabled temporarily to avoid any app dlopen(3)
+  // the uninitialized /system one regardless targetSdkVersion
+  /*
   if (get_application_target_sdk_version() >= __ANDROID_API_Q__) {
     return false;
   }
+  */
 
   // If the path isn't /system/lib, there's nothing to do.
   if (name == nullptr || dirname(name) != kSystemLibDir) {
@@ -2165,9 +2171,13 @@ void* do_dlopen(const char* name, int flags,
            new_name);
     // Some APEXs could be optionally disabled. Only translate the path
     // when the old file is absent and the new file exists.
+    // TODO(b/124218500): Re-enable it once app compat issue is resolved
+    /*
     if (file_exists(name)) {
       LD_LOG(kLogDlopen, "dlopen %s exists, not translating", name);
-    } else if (!file_exists(new_name)) {
+    } else
+    */
+    if (!file_exists(new_name)) {
       LD_LOG(kLogDlopen, "dlopen %s does not exist, not translating",
              new_name);
     } else {
