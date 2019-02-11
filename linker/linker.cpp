@@ -2165,9 +2165,7 @@ void* do_dlopen(const char* name, int flags,
            new_name);
     // Some APEXs could be optionally disabled. Only translate the path
     // when the old file is absent and the new file exists.
-    if (file_exists(name)) {
-      LD_LOG(kLogDlopen, "dlopen %s exists, not translating", name);
-    } else if (!file_exists(new_name)) {
+    if (!file_exists(new_name)) {
       LD_LOG(kLogDlopen, "dlopen %s does not exist, not translating",
              new_name);
     } else {
