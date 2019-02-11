@@ -1544,6 +1544,13 @@ static bool find_library_internal(android_namespace_t* ns,
     return true;
   }
 
+  if (ns->is_greylist_enabled() && is_greylisted(ns, task->get_name(), task->get_needed_by())) {
+    if (load_library(&g_default_namespace, task, zip_archive_cache, load_tasks, rtld_flags,
+                     search_linked_namespaces)) {
+      return true;
+    }
+  }
+
   if (search_linked_namespaces) {
     // if a library was not found - look into linked namespaces
     // preserve current dlerror in the case it fails.
