@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "4d39cb2b_aced38e8",
+        "filename": "libc/bionic/malloc_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-12T22:05:18Z",
+      "side": 1,
+      "message": "Looks like the fix is in our libcxx now. Maybe remove the workaround?",
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f48ce71b_9bdb6a65",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 3
