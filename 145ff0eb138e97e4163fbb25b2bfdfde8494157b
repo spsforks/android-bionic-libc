@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df8e5c8e_5c5112f5",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T22:19:27Z",
+      "side": 1,
+      "message": "Oops, I going to claim it was carryover from a header file.",
+      "parentUuid": "59a6499a_fd6b5034",
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d39cb2b_aced38e8",
         "filename": "libc/bionic/malloc_common.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6489d7b1_96687223",
+        "filename": "libc/bionic/malloc_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T22:19:27Z",
+      "side": 1,
+      "message": "Does look like it\u0027s been fixed, so removed.",
+      "parentUuid": "4d39cb2b_aced38e8",
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f48ce71b_9bdb6a65",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 3
@@ -47,6 +83,30 @@
       "writtenOn": "2019-02-12T21:53:48Z",
       "side": 1,
       "message": "isn\u0027t that three?",
+      "range": {
+        "startLine": 39,
+        "startChar": 41,
+        "endLine": 39,
+        "endChar": 44
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26fe3cba_0652bddc",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T22:19:27Z",
+      "side": 1,
+      "message": "Oops, yes it should be three. I didn\u0027t update that comment when I added write_malloc_leak_info.\n\nFixed now.",
+      "parentUuid": "f48ce71b_9bdb6a65",
       "range": {
         "startLine": 39,
         "startChar": 41,
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "4149ca8b_862c3d6e",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T22:19:27Z",
+      "side": 1,
+      "message": "There are going to be mallopts handled in this file soon (I actually have some follow-up cls that will have it). That\u0027s why I didn\u0027t just define this in the heapprofd file.",
+      "parentUuid": "30aac660_65ea73e2",
+      "range": {
+        "startLine": 418,
+        "startChar": 9,
+        "endLine": 418,
+        "endChar": 25
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d5443a6_9b94686e",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 3
@@ -93,6 +177,30 @@
       "writtenOn": "2019-02-12T21:53:48Z",
       "side": 1,
       "message": "braces?\n\nnote also that pthread functions don\u0027t return -1 on failure...",
+      "range": {
+        "startLine": 260,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 77
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbf348fe_5accf75f",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T22:19:27Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "1d5443a6_9b94686e",
       "range": {
         "startLine": 260,
         "startChar": 4,
