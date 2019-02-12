@@ -1480,6 +1480,7 @@ LIBC_Q { # introduced=Q
 
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
+    android_getaddrinfofornetcontext; # apex
 
     # Used by libandroid_runtime
     android_mallopt; # apex
@@ -1663,7 +1664,6 @@ LIBC_PRIVATE {
     _Unwind_VRS_Get; # arm
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
-    android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
     android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
