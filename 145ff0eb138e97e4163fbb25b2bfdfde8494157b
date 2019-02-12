@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59a6499a_fd6b5034",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-12T21:53:48Z",
+      "side": 1,
+      "message": "in a .cpp file?",
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f48ce71b_9bdb6a65",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-12T21:53:48Z",
+      "side": 1,
+      "message": "isn\u0027t that three?",
+      "range": {
+        "startLine": 39,
+        "startChar": 41,
+        "endLine": 39,
+        "endChar": 44
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30aac660_65ea73e2",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-12T21:53:48Z",
+      "side": 1,
+      "message": "that seems a bit weird...",
+      "range": {
+        "startLine": 418,
+        "startChar": 9,
+        "endLine": 418,
+        "endChar": 25
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d5443a6_9b94686e",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-12T21:53:48Z",
+      "side": 1,
+      "message": "braces?\n\nnote also that pthread functions don\u0027t return -1 on failure...",
+      "range": {
+        "startLine": 260,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 77
+      },
+      "revId": "145ff0eb138e97e4163fbb25b2bfdfde8494157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
