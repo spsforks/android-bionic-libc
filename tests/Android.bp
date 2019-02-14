@@ -649,6 +649,8 @@ cc_test {
         "ld_config_test_helper_lib2",
         "ld_config_test_helper_lib3",
     ],
+
+    test_suites: ["device-tests"],
 }
 
 // -----------------------------------------------------------------------------
