@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Yi Kong <yikong@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Yi Kong <yikong@google.com>
+Submitted-at: Fri, 15 Feb 2019 23:58:08 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/905653
+Project: platform/bionic
+Branch: refs/heads/master
