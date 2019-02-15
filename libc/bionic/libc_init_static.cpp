@@ -66,6 +66,10 @@ static void call_array(void(**list)()) {
   }
 }
 
+// ld.gold doesn't emit __rel_iplt_start/__rel_iplt_end, and ld.gold is still
+// used by default for most architectures in the NDK. Until this works in the
+// default NDK configuration, disable ifuncs for static executables.
+#if defined(__BIONIC_ALLOW_STATIC_IFUNCS)
 #if defined(__aarch64__) || defined(__x86_64__)
 extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
 
@@ -87,6 +91,10 @@ static void call_ifunc_resolvers() {
     ElfW(Addr) resolver = *offset;
     *offset = reinterpret_cast<ifunc_resolver_t>(resolver)();
   }
+}
+#endif
+#else
+static void call_ifunc_resolvers() {
 }
 #endif
 

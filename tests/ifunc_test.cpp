@@ -26,6 +26,10 @@ extern "C" void* resolver() {
 
 int ifunc() __attribute__((ifunc("resolver")));
 
+#if defined(STATIC_TESTS)
+TEST(ifunc, xfail_function) {
+#else
 TEST(ifunc, function) {
+#endif
   ASSERT_EQ(42, ifunc());
 }

@@ -95,7 +95,6 @@ cc_test_library {
         "grp_pwd_file_test.cpp",
         "iconv_test.cpp",
         "ifaddrs_test.cpp",
-        "ifunc_test.cpp",
         "inttypes_test.cpp",
         "iso646_test.c",
         "langinfo_test.cpp",
@@ -442,6 +441,7 @@ cc_defaults {
         // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
         "__cxa_thread_atexit_test.cpp",
         "gtest_globals.cpp",
+        "ifunc_test.cpp",
         "thread_local_test.cpp",
     ],
 
@@ -670,6 +670,7 @@ cc_test {
         // The Bionic allocator has its own C++ API. It isn't packaged into its
         // own library, so it can only be tested when it's part of libc.a.
         "bionic_allocator_test.cpp",
+        "ifunc_test.cpp",
     ],
     include_dirs: [
         "bionic/libc",
@@ -677,6 +678,7 @@ cc_test {
     whole_static_libs: [
         "libBionicTests",
     ],
+    cflags: ["-DSTATIC_TESTS"],
 
     static_libs: [
         "libm",
@@ -716,6 +718,7 @@ cc_test_host {
         "dl_test.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+        "ifunc_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
 
