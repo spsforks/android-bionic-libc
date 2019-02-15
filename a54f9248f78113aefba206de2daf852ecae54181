@@ -22,6 +22,30 @@
       "revId": "a54f9248f78113aefba206de2daf852ecae54181",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8cbb6a2_937d893e",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2019-02-15T21:58:25Z",
+      "side": 1,
+      "message": "seems reasonable",
+      "parentUuid": "a97bf703_8f0b3a66",
+      "range": {
+        "startLine": 374,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 6
+      },
+      "revId": "a54f9248f78113aefba206de2daf852ecae54181",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
