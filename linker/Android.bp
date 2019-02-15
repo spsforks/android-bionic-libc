@@ -368,3 +368,44 @@ cc_library {
         never: true,
     },
 }
+
+cc_test {
+    name: "linker-unit-tests",
+    multilib: {
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
+    },
+
+    cflags: [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
+    srcs: [
+        "linker_block_allocator_test.cpp",
+        "linker_config_test.cpp",
+        "linked_list_test.cpp",
+        "linker_sleb128_test.cpp",
+        "linker_utils_test.cpp",
+        "linker_block_allocator.cpp",
+        "linker_config.cpp",
+        "linker_test_globals.cpp",
+        "linker_utils.cpp",
+    ],
+
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "liblog",
+    ],
+}
