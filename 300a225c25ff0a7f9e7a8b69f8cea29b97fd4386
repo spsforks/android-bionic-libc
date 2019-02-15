@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65ad0762_7b9cf844",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-15T01:41:55Z",
+      "side": 1,
+      "message": "at least a blank line to make it clear that this isn\u0027t related to the comment.",
+      "revId": "300a225c25ff0a7f9e7a8b69f8cea29b97fd4386",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
