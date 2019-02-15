@@ -46,6 +46,47 @@
       "revId": "a54f9248f78113aefba206de2daf852ecae54181",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57e562cf_c2fa69e9",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-15T22:05:58Z",
+      "side": 1,
+      "message": "Seems fine to me. That\u0027s what we do for /data/nativetest[64]/bionic-unit-tests/bionic-unit-tests.",
+      "parentUuid": "b8cbb6a2_937d893e",
+      "range": {
+        "startLine": 374,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 6
+      },
+      "revId": "a54f9248f78113aefba206de2daf852ecae54181",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b98ddfb9_1bdbb798",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-15T22:05:58Z",
+      "side": 1,
+      "message": "Should this be sorted? It\u0027s mostly sorted, except for the files moved from tests/.",
+      "revId": "a54f9248f78113aefba206de2daf852ecae54181",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
