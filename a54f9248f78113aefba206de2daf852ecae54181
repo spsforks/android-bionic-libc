@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "19e0fa64_a1afb927",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-15T22:38:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57e562cf_c2fa69e9",
+      "range": {
+        "startLine": 374,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 6
+      },
+      "revId": "a54f9248f78113aefba206de2daf852ecae54181",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b98ddfb9_1bdbb798",
         "filename": "linker/Android.bp",
         "patchSetId": 1
@@ -84,6 +108,24 @@
       "writtenOn": "2019-02-15T22:05:58Z",
       "side": 1,
       "message": "Should this be sorted? It\u0027s mostly sorted, except for the files moved from tests/.",
+      "revId": "a54f9248f78113aefba206de2daf852ecae54181",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d22a15fe_6c23b4dc",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-15T22:38:52Z",
+      "side": 1,
+      "message": "i think it was sorted in two groups, tests first, then infrastructure. i tried to preserve that.\n\ni\u0027ll add comments...",
+      "parentUuid": "b98ddfb9_1bdbb798",
       "revId": "a54f9248f78113aefba206de2daf852ecae54181",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
