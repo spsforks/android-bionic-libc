@@ -32,6 +32,7 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -117,10 +118,23 @@ static void MaybeInstallInitHeapprofdHook(int) {
     return;
   }
 
-  if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
-    __libc_globals.mutate([](libc_globals* globals) {
-      atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
-    });
+  // Checking this variable is only necessary when this could conflict with
+  // the change to enable the allocation limit. All other places will
+  // not ever have a conflict modifying the globals.
+  if (!atomic_exchange(&gGlobalsMutating, true)) {
+    if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
+      __libc_globals.mutate([](libc_globals* globals) {
+        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
+        auto dispatch_table = GetDispatchTable();
+        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
+          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
+        }
+      });
+    }
+    atomic_store(&gGlobalsMutating, false);
+  } else {
+    // Resend the same signal to force the recheck.
+    raise(kHeapprofdSignal);
   }
 }
 
@@ -211,6 +225,24 @@ void HeapprofdInstallSignalHandler() {
   sigaction(kHeapprofdSignal, &action, nullptr);
 }
 
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+
+void HeapprofdMaskSignalHandler() {
+  sigset64_t mask_set;
+  // Need to use this function instead because sigprocmask64 filters
+  // out this signal.
+  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
+  sigaddset64(&mask_set, kHeapprofdSignal);
+  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
+}
+
+void HeapprofdUnmaskSignalHandler() {
+  sigset64_t mask_set;
+  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
+  sigdelset64(&mask_set, kHeapprofdSignal);
+  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
+}
+
 static void DisplayError(int) {
   error_log("Cannot install heapprofd while malloc debug/malloc hooks are enabled.");
 }
@@ -250,9 +282,11 @@ void HeapprofdInstallHooksAtInit(libc_globals* globals) {
 }
 
 static void* InitHeapprofd(void*) {
+  pthread_mutex_lock(&gGlobalsMutateLock);
   __libc_globals.mutate([](libc_globals* globals) {
     CommonInstallHooks(globals);
   });
+  pthread_mutex_unlock(&gGlobalsMutateLock);
 
   // Allow to install hook again to re-initialize heap profiling after the
   // current session finished.
@@ -262,9 +296,15 @@ static void* InitHeapprofd(void*) {
 
 extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
   if (!atomic_exchange(&gHeapprofdInitHookInstalled, true)) {
+    pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      atomic_store(&globals->current_dispatch_table, nullptr);
+      auto old_dispatch = GetDefaultDispatchTable();
+      atomic_store(&globals->default_dispatch_table, nullptr);
+      if (GetDispatchTable() == old_dispatch) {
+        atomic_store(&globals->current_dispatch_table, nullptr);
+      }
     });
+    pthread_mutex_unlock(&gGlobalsMutateLock);
 
     pthread_t thread_id;
     if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) != 0) {
@@ -294,9 +334,15 @@ static bool HandleInitZygoteChildProfiling() {
 
 static bool DispatchReset() {
   if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
+    pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      atomic_store(&globals->current_dispatch_table, nullptr);
+      auto old_dispatch = GetDefaultDispatchTable();
+      atomic_store(&globals->default_dispatch_table, nullptr);
+      if (GetDispatchTable() == old_dispatch) {
+        atomic_store(&globals->current_dispatch_table, nullptr);
+      }
     });
+    pthread_mutex_unlock(&gGlobalsMutateLock);
     atomic_store(&gHeapprofdInitInProgress, false);
     return true;
   }
