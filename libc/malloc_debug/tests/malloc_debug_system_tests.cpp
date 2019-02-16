@@ -44,6 +44,8 @@
 #include <string>
 #include <vector>
 
+#include "private/bionic_malloc.h"
+
 static constexpr time_t kTimeoutSeconds = 5;
 
 static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
@@ -60,13 +62,15 @@ static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
     ASSERT_NE(0, dup2(fds[1], STDERR_FILENO));
 
     std::vector<const char*> args;
-    args.push_back(testing::internal::GetArgvs()[0].c_str());
+    // Get a copy of this argument so it doesn't disappear on us.
+    std::string exec(testing::internal::GetArgvs()[0]);
+    args.push_back(exec.c_str());
     args.push_back("--gtest_also_run_disabled_tests");
     std::string filter_arg = std::string("--gtest_filter=") + test_name;
     args.push_back(filter_arg.c_str());
     args.push_back(nullptr);
     execv(args[0], reinterpret_cast<char* const*>(const_cast<char**>(args.data())));
-    exit(1);
+    exit(20);
   }
   ASSERT_NE(-1, *pid);
   close(fds[1]);
@@ -196,16 +200,193 @@ TEST(MallocDebugSystemTest, smoke) {
   ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"}));
 }
 
-TEST(MallocTests, DISABLED_leak_memory) {
+static void SetAllocationLimit() {
+  // Set to a large value, this is only to enable the limit code and
+  // verify that malloc debug is still called properly.
+  size_t limit = 500 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+}
+
+static void AlignedAlloc() {
+  void* ptr = aligned_alloc(64, 1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_aligned_alloc) {
+  AlignedAlloc();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_aligned_alloc) {
+  SetAllocationLimit();
+  AlignedAlloc();
+}
+
+static void Calloc() {
+  void* ptr = calloc(1, 1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 1, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_calloc) {
+  Calloc();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_calloc) {
+  SetAllocationLimit();
+  Calloc();
+}
+
+static void Malloc() {
   void* ptr = malloc(1123);
   ASSERT_TRUE(ptr != nullptr);
   memset(ptr, 0, 1123);
 }
 
-TEST(MallocDebugSystemTest, verify_leak) {
-  pid_t pid;
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_leak_memory", "backtrace leak_track", &pid));
+TEST(MallocTests, DISABLED_leak_memory_malloc) {
+  Malloc();
+}
 
-  ASSERT_NO_FATAL_FAILURE(FindStrings(
-      pid, std::vector<const char*>{"malloc debug enabled", "leaked block of size 1123 at"}));
+TEST(MallocTests, DISABLED_leak_memory_limit_malloc) {
+  SetAllocationLimit();
+  Malloc();
+}
+
+static void Memalign() {
+  void* ptr = memalign(64, 1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_memalign) {
+  Memalign();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_memalign) {
+  SetAllocationLimit();
+  Memalign();
+}
+
+static void PosixMemalign() {
+  void* ptr;
+  ASSERT_EQ(0, posix_memalign(&ptr, 64, 1123));
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_posix_memalign) {
+  PosixMemalign();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_posix_memalign) {
+  SetAllocationLimit();
+  PosixMemalign();
+}
+
+static void Reallocarray() {
+  void* ptr = reallocarray(nullptr, 1, 1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_reallocarray) {
+  Reallocarray();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_reallocarray) {
+  SetAllocationLimit();
+  Reallocarray();
+}
+
+static void Realloc() {
+  void* ptr = realloc(nullptr, 1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_realloc) {
+  Realloc();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_realloc) {
+  SetAllocationLimit();
+  Realloc();
+}
+
+#if !defined(__LP64__)
+extern "C" void* pvalloc(size_t);
+
+static void Pvalloc() {
+  void* ptr = pvalloc(1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_pvalloc) {
+  Pvalloc();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_pvalloc) {
+  SetAllocationLimit();
+  Pvalloc();
+}
+
+extern "C" void* valloc(size_t);
+
+static void Valloc() {
+  void* ptr = valloc(1123);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1123);
+}
+
+TEST(MallocTests, DISABLED_leak_memory_valloc) {
+  Valloc();
+}
+
+TEST(MallocTests, DISABLED_leak_memory_limit_valloc) {
+  SetAllocationLimit();
+  Valloc();
+}
+#endif
+
+static void VerifyLeak(const char* test_prefix) {
+  static const char* functions[] = {
+    "aligned_alloc",
+    "calloc",
+    "malloc",
+    "memalign",
+    "posix_memalign",
+    "reallocarray",
+    "realloc",
+#if !defined(__LP64__)
+    "valloc",
+#endif
+  };
+
+  for (size_t i = 0; i < sizeof(functions) / sizeof(char*); i++) {
+    pid_t pid;
+    std::string test = std::string("MallocTests.DISABLED_") + test_prefix + functions[i];
+    EXPECT_NO_FATAL_FAILURE(Exec(test.c_str(), "backtrace leak_track", &pid)) << "Failed " << functions[i] << " " << test;
+
+    EXPECT_NO_FATAL_FAILURE(FindStrings(
+        pid, std::vector<const char*>{"malloc debug enabled", "leaked block of size 1123 at"})) << "Failed " << functions[i] << " " << test;
+  }
+
+#if !defined(__LP64__)
+  // Test pvalloc separately because the size is different.
+  pid_t pid;
+  std::string test = std::string("MallocTests.DISABLED_") + test_prefix + "pvalloc";
+  EXPECT_NO_FATAL_FAILURE(Exec(test.c_str(), "backtrace leak_track", &pid)) << "Failed pvalloc";
+
+  EXPECT_NO_FATAL_FAILURE(FindStrings(
+      pid, std::vector<const char*>{"malloc debug enabled", "leaked block of size 4096 at"})) << "Failed pvalloc";
+#endif
+}
+
+TEST(MallocDebugSystemTest, verify_leak) {
+  VerifyLeak("leak_memory_");
+}
+
+TEST(MallocDebugSystemTest, verify_leak_allocation_limit) {
+  VerifyLeak("leak_memory_limit_");
 }
