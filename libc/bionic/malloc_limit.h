@@ -30,18 +30,5 @@
 
 #include <stdint.h>
 
-#include <private/bionic_globals.h>
-
-bool HeapprofdShouldLoad();
-
-void HeapprofdInstallHooksAtInit(libc_globals* globals);
-
-void HeapprofdInstallSignalHandler();
-
-void HeapprofdInstallErrorSignalHandler();
-
-void HeapprofdMaskSignalHandler();
-
-void HeapprofdUnmaskSignalHandler();
-
-bool HeapprofdMallopt(int optcode, void* arg, size_t arg_size);
+// Function prototypes.
+bool LimitEnable(void* arg, size_t arg_size);

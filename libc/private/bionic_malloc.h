@@ -39,6 +39,10 @@ enum {
 #define M_INIT_ZYGOTE_CHILD_PROFILING M_INIT_ZYGOTE_CHILD_PROFILING
   M_RESET_HOOKS = 2,
 #define M_RESET_HOOKS M_RESET_HOOKS
+  // Set an upper bound on the total size of all allocations made using the
+  // memory allocation APIs.
+  M_SET_ALLOCATION_LIMIT = 3,
+#define M_SET_ALLOCATION_LIMIT M_SET_ALLOCATION_LIMIT
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
