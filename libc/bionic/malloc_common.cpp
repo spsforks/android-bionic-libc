@@ -44,8 +44,10 @@
 #include <stdint.h>
 
 #include <private/bionic_config.h>
+#include <private/bionic_malloc.h>
 
 #include "malloc_common.h"
+#include "malloc_limit.h"
 
 // =============================================================================
 // Global variables instantations.
@@ -263,8 +265,10 @@ extern "C" void __sanitizer_malloc_enable() {
 // Platform-internal mallopt variant.
 // =============================================================================
 #if defined(LIBC_STATIC)
-extern "C" bool android_mallopt(int, void*, size_t) {
-  // There are no options supported on static executables.
+extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
+  if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
+    return LimitEnable(arg, arg_size);
+  }
   errno = ENOTSUP;
   return false;
 }
