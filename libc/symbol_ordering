@@ -169,8 +169,6 @@ __res_randomid.__libc_mutex_random
 locallock
 g_atexit_lock
 _ZL10gFunctions
-_ZL13vendor_passwd
-_ZL12vendor_group
 tm
 _ZL18g_thread_list_lock
 buf_asctime
