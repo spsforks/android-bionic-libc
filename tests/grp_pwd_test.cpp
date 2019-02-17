@@ -72,11 +72,7 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
     EXPECT_STREQ("/", pwd->pw_dir);
   }
 
-  if (uid_type == TYPE_VENDOR) {
-    EXPECT_STREQ("/vendor/bin/sh", pwd->pw_shell);
-  } else {
-    EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
-  }
+  EXPECT_STREQ("/bin/sh", pwd->pw_shell);
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
@@ -222,7 +218,7 @@ TEST(pwd, getpwnam_app_id_u1_i0) {
 }
 #if defined(__BIONIC__)
 template <typename T>
-static void expect_ids(const T& ids) {
+static void expect_ids(T ids) {
   std::set<typename T::key_type> expected_ids;
   // Ensure that all android_ids are iterated through.
   for (size_t n = 0; n < android_id_count; ++n) {
@@ -246,6 +242,14 @@ static void expect_ids(const T& ids) {
   expect_range(AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END);
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
+
+  auto allow_range = [&ids](uid_t start, uid_t end) {
+    for (size_t n = start; n <= end; ++n) {
+      ids.erase(n);
+    }
+  };
+
+  allow_range(AID_SYSTEM_RESERVED_START, AID_PRODUCT_SERVICES_RESERVED_END);
 
   // Upgrading devices launched before API level 28 may not comply with the below check.
   // Due to the difficulty in changing uids after launch, it is waived for these devices.
