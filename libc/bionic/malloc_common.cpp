@@ -61,6 +61,13 @@ void* (*volatile __memalign_hook)(size_t, size_t, const void*);
 int gMallocLeakZygoteChild = 0;
 // =============================================================================
 
+static inline void* LogOnFailure(const char* fn, void* p) {
+  if (__predict_false(p == nullptr)) {
+    warning_log("%s failed: returning null pointer", fn);
+  }
+  return p;
+}
+
 // =============================================================================
 // Allocation functions
 // =============================================================================
@@ -69,7 +76,7 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->calloc(n_elements, elem_size);
   }
-  return Malloc(calloc)(n_elements, elem_size);
+  return LogOnFailure("calloc", Malloc(calloc)(n_elements, elem_size));
 }
 
 extern "C" void free(void* mem) {
@@ -102,7 +109,7 @@ extern "C" void* malloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc(bytes);
   }
-  return Malloc(malloc)(bytes);
+  return LogOnFailure("malloc", Malloc(malloc)(bytes));
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
@@ -118,7 +125,7 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->memalign(alignment, bytes);
   }
-  return Malloc(memalign)(alignment, bytes);
+  return LogOnFailure("memalign", Malloc(memalign)(alignment, bytes));
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
@@ -134,7 +141,7 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->aligned_alloc(alignment, size);
   }
-  return Malloc(aligned_alloc)(alignment, size);
+  return LogOnFailure("aligned_alloc", Malloc(aligned_alloc)(alignment, size));
 }
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
@@ -142,7 +149,7 @@ extern "C" void* realloc(void* old_mem, size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->realloc(old_mem, bytes);
   }
-  return Malloc(realloc)(old_mem, bytes);
+  return LogOnFailure("realloc", Malloc(realloc)(old_mem, bytes));
 }
 
 extern "C" void* reallocarray(void* old_mem, size_t item_count, size_t item_size) {
@@ -160,7 +167,7 @@ extern "C" void* pvalloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->pvalloc(bytes);
   }
-  return Malloc(pvalloc)(bytes);
+  return LogOnFailure("pvalloc", Malloc(pvalloc)(bytes));
 }
 
 extern "C" void* valloc(size_t bytes) {
@@ -168,7 +175,7 @@ extern "C" void* valloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->valloc(bytes);
   }
-  return Malloc(valloc)(bytes);
+  return LogOnFailure("valloc", Malloc(valloc)(bytes));
 }
 #endif
 // =============================================================================
