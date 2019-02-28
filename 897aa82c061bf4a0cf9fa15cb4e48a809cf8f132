@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f90786_06460e00",
+        "filename": "libc/include/bits/glibc-syscalls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2019-02-28T18:43:59Z",
+      "side": 1,
+      "message": "I understand, my hopes are to push this into a build and confirm no usage by the associated SYS references.\n\n(gensyscalls.py probably need to be modified)",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 47
+      },
+      "revId": "897aa82c061bf4a0cf9fa15cb4e48a809cf8f132",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
