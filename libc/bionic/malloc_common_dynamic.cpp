@@ -374,6 +374,7 @@ static void MallocInitImpl(libc_globals* globals) {
 // This routine is called from __libc_init routines in libc_init_dynamic.cpp.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
+  error_log("Init normal");
   MallocInitImpl(globals);
 }
 
