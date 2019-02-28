@@ -31,9 +31,6 @@
 #if defined(__NR_afs_syscall)
   #define SYS_afs_syscall __NR_afs_syscall
 #endif
-#if defined(__NR_alarm)
-  #define SYS_alarm __NR_alarm
-#endif
 #if defined(__NR_arch_prctl)
   #define SYS_arch_prctl __NR_arch_prctl
 #endif
@@ -442,9 +439,6 @@
 #if defined(__NR_ioprio_set)
   #define SYS_ioprio_set __NR_ioprio_set
 #endif
-#if defined(__NR_ipc)
-  #define SYS_ipc __NR_ipc
-#endif
 #if defined(__NR_kcmp)
   #define SYS_kcmp __NR_kcmp
 #endif
@@ -751,9 +745,6 @@
 #if defined(__NR_readahead)
   #define SYS_readahead __NR_readahead
 #endif
-#if defined(__NR_readdir)
-  #define SYS_readdir __NR_readdir
-#endif
 #if defined(__NR_readlink)
   #define SYS_readlink __NR_readlink
 #endif
@@ -870,9 +861,6 @@
 #endif
 #if defined(__NR_security)
   #define SYS_security __NR_security
-#endif
-#if defined(__NR_select)
-  #define SYS_select __NR_select
 #endif
 #if defined(__NR_semctl)
   #define SYS_semctl __NR_semctl
@@ -1078,9 +1066,6 @@
 #if defined(__NR_statx)
   #define SYS_statx __NR_statx
 #endif
-#if defined(__NR_stime)
-  #define SYS_stime __NR_stime
-#endif
 #if defined(__NR_stty)
   #define SYS_stty __NR_stty
 #endif
@@ -1108,9 +1093,6 @@
 #if defined(__NR_syncfs)
   #define SYS_syncfs __NR_syncfs
 #endif
-#if defined(__NR_syscall)
-  #define SYS_syscall __NR_syscall
-#endif
 #if defined(__NR_syscalls)
   #define SYS_syscalls __NR_syscalls
 #endif
@@ -1131,9 +1113,6 @@
 #endif
 #if defined(__NR_tgkill)
   #define SYS_tgkill __NR_tgkill
-#endif
-#if defined(__NR_time)
-  #define SYS_time __NR_time
 #endif
 #if defined(__NR_timer_create)
   #define SYS_timer_create __NR_timer_create
@@ -1186,9 +1165,6 @@
 #if defined(__NR_umask)
   #define SYS_umask __NR_umask
 #endif
-#if defined(__NR_umount)
-  #define SYS_umount __NR_umount
-#endif
 #if defined(__NR_umount2)
   #define SYS_umount2 __NR_umount2
 #endif
@@ -1212,9 +1188,6 @@
 #endif
 #if defined(__NR_ustat)
   #define SYS_ustat __NR_ustat
-#endif
-#if defined(__NR_utime)
-  #define SYS_utime __NR_utime
 #endif
 #if defined(__NR_utimensat)
   #define SYS_utimensat __NR_utimensat
