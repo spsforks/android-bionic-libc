@@ -31,7 +31,7 @@
 #define __NR_unlink 10
 #define __NR_execve 11
 #define __NR_chdir 12
-#define __NR_time 13
+/* #define __NR_time 13  // deprecated */
 #define __NR_mknod 14
 #define __NR_chmod 15
 #define __NR_lchown 16
@@ -40,15 +40,15 @@
 #define __NR_lseek 19
 #define __NR_getpid 20
 #define __NR_mount 21
-#define __NR_umount 22
+/* #define __NR_umount 22  // deprecated */
 #define __NR_setuid 23
 #define __NR_getuid 24
-#define __NR_stime 25
+/* #define __NR_stime 25  // deprecated */
 #define __NR_ptrace 26
-#define __NR_alarm 27
+/* #define __NR_alarm 27  // deprecated */
 #define __NR_oldfstat 28
 #define __NR_pause 29
-#define __NR_utime 30
+/* #define __NR_utime 30  // deprecated */
 #define __NR_stty 31
 #define __NR_gtty 32
 #define __NR_access 33
@@ -100,14 +100,14 @@
 #define __NR_settimeofday 79
 #define __NR_getgroups 80
 #define __NR_setgroups 81
-#define __NR_select 82
+/* #define __NR_select 82  // deprecated */
 #define __NR_symlink 83
 #define __NR_oldlstat 84
 #define __NR_readlink 85
 #define __NR_uselib 86
 #define __NR_swapon 87
 #define __NR_reboot 88
-#define __NR_readdir 89
+/* #define __NR_readdir 89  // deprecated */
 #define __NR_mmap 90
 #define __NR_munmap 91
 #define __NR_truncate 92
@@ -135,7 +135,7 @@
 #define __NR_wait4 114
 #define __NR_swapoff 115
 #define __NR_sysinfo 116
-#define __NR_ipc 117
+/* #define __NR_ipc 117  // deprecated */
 #define __NR_fsync 118
 #define __NR_sigreturn 119
 #define __NR_clone 120
