@@ -21,7 +21,7 @@
 #include <asm/sgidefs.h>
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 #define __NR_Linux 4000
-#define __NR_syscall (__NR_Linux + 0)
+/* #define __NR_syscall (__NR_Linux + 0)  // deprecated */
 #define __NR_exit (__NR_Linux + 1)
 #define __NR_fork (__NR_Linux + 2)
 #define __NR_read (__NR_Linux + 3)
@@ -34,7 +34,7 @@
 #define __NR_unlink (__NR_Linux + 10)
 #define __NR_execve (__NR_Linux + 11)
 #define __NR_chdir (__NR_Linux + 12)
-#define __NR_time (__NR_Linux + 13)
+/* #define __NR_time (__NR_Linux + 13)  // deprecated */
 #define __NR_mknod (__NR_Linux + 14)
 #define __NR_chmod (__NR_Linux + 15)
 #define __NR_lchown (__NR_Linux + 16)
@@ -43,15 +43,15 @@
 #define __NR_lseek (__NR_Linux + 19)
 #define __NR_getpid (__NR_Linux + 20)
 #define __NR_mount (__NR_Linux + 21)
-#define __NR_umount (__NR_Linux + 22)
+/* #define __NR_umount (__NR_Linux + 22)  // deprecated */
 #define __NR_setuid (__NR_Linux + 23)
 #define __NR_getuid (__NR_Linux + 24)
-#define __NR_stime (__NR_Linux + 25)
+/* #define __NR_stime (__NR_Linux + 25)  // deprecated */
 #define __NR_ptrace (__NR_Linux + 26)
-#define __NR_alarm (__NR_Linux + 27)
+/* #define __NR_alarm (__NR_Linux + 27)  // deprecated */
 #define __NR_unused28 (__NR_Linux + 28)
 #define __NR_pause (__NR_Linux + 29)
-#define __NR_utime (__NR_Linux + 30)
+/* #define __NR_utime (__NR_Linux + 30)  // deprecated */
 #define __NR_stty (__NR_Linux + 31)
 #define __NR_gtty (__NR_Linux + 32)
 #define __NR_access (__NR_Linux + 33)
@@ -97,7 +97,7 @@
 #define __NR_sigpending (__NR_Linux + 73)
 #define __NR_sethostname (__NR_Linux + 74)
 #define __NR_setrlimit (__NR_Linux + 75)
-#define __NR_getrlimit (__NR_Linux + 76)
+/* #define __NR_getrlimit (__NR_Linux + 76)  // deprecated */
 #define __NR_getrusage (__NR_Linux + 77)
 #define __NR_gettimeofday (__NR_Linux + 78)
 #define __NR_settimeofday (__NR_Linux + 79)
@@ -110,8 +110,8 @@
 #define __NR_uselib (__NR_Linux + 86)
 #define __NR_swapon (__NR_Linux + 87)
 #define __NR_reboot (__NR_Linux + 88)
-#define __NR_readdir (__NR_Linux + 89)
-#define __NR_mmap (__NR_Linux + 90)
+/* #define __NR_readdir (__NR_Linux + 89)  // deprecated */
+/* #define __NR_mmap (__NR_Linux + 90)     // deprecated */
 #define __NR_munmap (__NR_Linux + 91)
 #define __NR_truncate (__NR_Linux + 92)
 #define __NR_ftruncate (__NR_Linux + 93)
@@ -123,7 +123,7 @@
 #define __NR_statfs (__NR_Linux + 99)
 #define __NR_fstatfs (__NR_Linux + 100)
 #define __NR_ioperm (__NR_Linux + 101)
-#define __NR_socketcall (__NR_Linux + 102)
+/* #define __NR_socketcall (__NR_Linux + 102)  // deprecated */
 #define __NR_syslog (__NR_Linux + 103)
 #define __NR_setitimer (__NR_Linux + 104)
 #define __NR_getitimer (__NR_Linux + 105)
@@ -138,7 +138,7 @@
 #define __NR_wait4 (__NR_Linux + 114)
 #define __NR_swapoff (__NR_Linux + 115)
 #define __NR_sysinfo (__NR_Linux + 116)
-#define __NR_ipc (__NR_Linux + 117)
+/* #define __NR_ipc (__NR_Linux + 117)  // deprecated */
 #define __NR_fsync (__NR_Linux + 118)
 #define __NR_sigreturn (__NR_Linux + 119)
 #define __NR_clone (__NR_Linux + 120)
@@ -163,7 +163,7 @@
 #define __NR_setfsgid (__NR_Linux + 139)
 #define __NR__llseek (__NR_Linux + 140)
 #define __NR_getdents (__NR_Linux + 141)
-#define __NR__newselect (__NR_Linux + 142)
+/* #define __NR__newselect (__NR_Linux + 142)  // deprecated */
 #define __NR_flock (__NR_Linux + 143)
 #define __NR_msync (__NR_Linux + 144)
 #define __NR_readv (__NR_Linux + 145)
@@ -404,7 +404,7 @@
 #define __NR_lstat (__NR_Linux + 6)
 #define __NR_poll (__NR_Linux + 7)
 #define __NR_lseek (__NR_Linux + 8)
-#define __NR_mmap (__NR_Linux + 9)
+/* #define __NR_mmap (__NR_Linux + 9)  // deprecated */
 #define __NR_mprotect (__NR_Linux + 10)
 #define __NR_munmap (__NR_Linux + 11)
 #define __NR_brk (__NR_Linux + 12)
@@ -417,7 +417,7 @@
 #define __NR_writev (__NR_Linux + 19)
 #define __NR_access (__NR_Linux + 20)
 #define __NR_pipe (__NR_Linux + 21)
-#define __NR__newselect (__NR_Linux + 22)
+/* #define __NR__newselect (__NR_Linux + 22)  // deprecated */
 #define __NR_sched_yield (__NR_Linux + 23)
 #define __NR_mremap (__NR_Linux + 24)
 #define __NR_msync (__NR_Linux + 25)
@@ -432,7 +432,7 @@
 #define __NR_nanosleep (__NR_Linux + 34)
 #define __NR_getitimer (__NR_Linux + 35)
 #define __NR_setitimer (__NR_Linux + 36)
-#define __NR_alarm (__NR_Linux + 37)
+/* #define __NR_alarm (__NR_Linux + 37)  // deprecated */
 #define __NR_getpid (__NR_Linux + 38)
 #define __NR_sendfile (__NR_Linux + 39)
 #define __NR_socket (__NR_Linux + 40)
@@ -490,7 +490,7 @@
 #define __NR_lchown (__NR_Linux + 92)
 #define __NR_umask (__NR_Linux + 93)
 #define __NR_gettimeofday (__NR_Linux + 94)
-#define __NR_getrlimit (__NR_Linux + 95)
+/* #define __NR_getrlimit (__NR_Linux + 95)  // deprecated */
 #define __NR_getrusage (__NR_Linux + 96)
 #define __NR_sysinfo (__NR_Linux + 97)
 #define __NR_times (__NR_Linux + 98)
@@ -525,7 +525,7 @@
 #define __NR_rt_sigqueueinfo (__NR_Linux + 127)
 #define __NR_rt_sigsuspend (__NR_Linux + 128)
 #define __NR_sigaltstack (__NR_Linux + 129)
-#define __NR_utime (__NR_Linux + 130)
+/* #define __NR_utime (__NR_Linux + 130)  // deprecated */
 #define __NR_mknod (__NR_Linux + 131)
 #define __NR_personality (__NR_Linux + 132)
 #define __NR_ustat (__NR_Linux + 133)
@@ -738,7 +738,7 @@
 #define __NR_lstat (__NR_Linux + 6)
 #define __NR_poll (__NR_Linux + 7)
 #define __NR_lseek (__NR_Linux + 8)
-#define __NR_mmap (__NR_Linux + 9)
+/* #define __NR_mmap (__NR_Linux + 9)  // deprecated */
 #define __NR_mprotect (__NR_Linux + 10)
 #define __NR_munmap (__NR_Linux + 11)
 #define __NR_brk (__NR_Linux + 12)
@@ -751,7 +751,7 @@
 #define __NR_writev (__NR_Linux + 19)
 #define __NR_access (__NR_Linux + 20)
 #define __NR_pipe (__NR_Linux + 21)
-#define __NR__newselect (__NR_Linux + 22)
+/* #define __NR__newselect (__NR_Linux + 22)  // deprecated */
 #define __NR_sched_yield (__NR_Linux + 23)
 #define __NR_mremap (__NR_Linux + 24)
 #define __NR_msync (__NR_Linux + 25)
@@ -766,7 +766,7 @@
 #define __NR_nanosleep (__NR_Linux + 34)
 #define __NR_getitimer (__NR_Linux + 35)
 #define __NR_setitimer (__NR_Linux + 36)
-#define __NR_alarm (__NR_Linux + 37)
+/* #define __NR_alarm (__NR_Linux + 37)  // deprecated */
 #define __NR_getpid (__NR_Linux + 38)
 #define __NR_sendfile (__NR_Linux + 39)
 #define __NR_socket (__NR_Linux + 40)
@@ -824,7 +824,7 @@
 #define __NR_lchown (__NR_Linux + 92)
 #define __NR_umask (__NR_Linux + 93)
 #define __NR_gettimeofday (__NR_Linux + 94)
-#define __NR_getrlimit (__NR_Linux + 95)
+/* #define __NR_getrlimit (__NR_Linux + 95)  // deprecated */
 #define __NR_getrusage (__NR_Linux + 96)
 #define __NR_sysinfo (__NR_Linux + 97)
 #define __NR_times (__NR_Linux + 98)
@@ -859,7 +859,7 @@
 #define __NR_rt_sigqueueinfo (__NR_Linux + 127)
 #define __NR_rt_sigsuspend (__NR_Linux + 128)
 #define __NR_sigaltstack (__NR_Linux + 129)
-#define __NR_utime (__NR_Linux + 130)
+/* #define __NR_utime (__NR_Linux + 130)  // deprecated */
 #define __NR_mknod (__NR_Linux + 131)
 #define __NR_personality (__NR_Linux + 132)
 #define __NR_ustat (__NR_Linux + 133)

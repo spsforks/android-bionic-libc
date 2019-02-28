@@ -203,7 +203,7 @@
 #define __NR_uname 160
 #define __NR_sethostname 161
 #define __NR_setdomainname 162
-#define __NR_getrlimit 163
+/* #define __NR_getrlimit 163  // deprecated */
 #define __NR_setrlimit 164
 #define __NR_getrusage 165
 #define __NR_umask 166
@@ -335,7 +335,7 @@
 #define __NR_newfstatat __NR3264_fstatat
 #define __NR_fstat __NR3264_fstat
 #endif
-#define __NR_mmap __NR3264_mmap
+/* #define __NR_mmap __NR3264_mmap  // deprecated */
 #define __NR_fadvise64 __NR3264_fadvise64
 #ifdef __NR3264_stat
 #define __NR_stat __NR3264_stat
