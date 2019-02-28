@@ -36,7 +36,7 @@
 #define __NR_pwrite64 (__X32_SYSCALL_BIT + 18)
 #define __NR_access (__X32_SYSCALL_BIT + 21)
 #define __NR_pipe (__X32_SYSCALL_BIT + 22)
-#define __NR_select (__X32_SYSCALL_BIT + 23)
+/* #define __NR_select (__X32_SYSCALL_BIT + 23)  // deprecated */
 #define __NR_sched_yield (__X32_SYSCALL_BIT + 24)
 #define __NR_mremap (__X32_SYSCALL_BIT + 25)
 #define __NR_msync (__X32_SYSCALL_BIT + 26)
@@ -50,7 +50,7 @@
 #define __NR_pause (__X32_SYSCALL_BIT + 34)
 #define __NR_nanosleep (__X32_SYSCALL_BIT + 35)
 #define __NR_getitimer (__X32_SYSCALL_BIT + 36)
-#define __NR_alarm (__X32_SYSCALL_BIT + 37)
+/* #define __NR_alarm (__X32_SYSCALL_BIT + 37)  // deprecated */
 #define __NR_setitimer (__X32_SYSCALL_BIT + 38)
 #define __NR_getpid (__X32_SYSCALL_BIT + 39)
 #define __NR_sendfile (__X32_SYSCALL_BIT + 40)
@@ -134,7 +134,7 @@
 #define __NR_capget (__X32_SYSCALL_BIT + 125)
 #define __NR_capset (__X32_SYSCALL_BIT + 126)
 #define __NR_rt_sigsuspend (__X32_SYSCALL_BIT + 130)
-#define __NR_utime (__X32_SYSCALL_BIT + 132)
+/* #define __NR_utime (__X32_SYSCALL_BIT + 132)  // deprecated */
 #define __NR_mknod (__X32_SYSCALL_BIT + 133)
 #define __NR_personality (__X32_SYSCALL_BIT + 135)
 #define __NR_ustat (__X32_SYSCALL_BIT + 136)
