@@ -27,7 +27,7 @@
 #define __NR_lstat 6
 #define __NR_poll 7
 #define __NR_lseek 8
-#define __NR_mmap 9
+/* #define __NR_mmap 9  // deprecated */
 #define __NR_mprotect 10
 #define __NR_munmap 11
 #define __NR_brk 12
@@ -41,7 +41,7 @@
 #define __NR_writev 20
 #define __NR_access 21
 #define __NR_pipe 22
-#define __NR_select 23
+/* #define __NR_select 23  // deprecated */
 #define __NR_sched_yield 24
 #define __NR_mremap 25
 #define __NR_msync 26
@@ -55,7 +55,7 @@
 #define __NR_pause 34
 #define __NR_nanosleep 35
 #define __NR_getitimer 36
-#define __NR_alarm 37
+/* #define __NR_alarm 37  // deprecated */
 #define __NR_setitimer 38
 #define __NR_getpid 39
 #define __NR_sendfile 40
@@ -115,7 +115,7 @@
 #define __NR_lchown 94
 #define __NR_umask 95
 #define __NR_gettimeofday 96
-#define __NR_getrlimit 97
+/* #define __NR_getrlimit 97  // deprecated */
 #define __NR_getrusage 98
 #define __NR_sysinfo 99
 #define __NR_times 100
@@ -150,7 +150,7 @@
 #define __NR_rt_sigqueueinfo 129
 #define __NR_rt_sigsuspend 130
 #define __NR_sigaltstack 131
-#define __NR_utime 132
+/* #define __NR_utime 132  // deprecated */
 #define __NR_mknod 133
 #define __NR_uselib 134
 #define __NR_personality 135
@@ -219,7 +219,7 @@
 #define __NR_lremovexattr 198
 #define __NR_fremovexattr 199
 #define __NR_tkill 200
-#define __NR_time 201
+/* #define __NR_time 201  // deprecated */
 #define __NR_futex 202
 #define __NR_sched_setaffinity 203
 #define __NR_sched_getaffinity 204

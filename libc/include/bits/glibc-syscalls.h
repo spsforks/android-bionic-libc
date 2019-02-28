@@ -4,9 +4,11 @@
 #if defined(__NR__llseek)
   #define SYS__llseek __NR__llseek
 #endif
+/*  // deprecated
 #if defined(__NR__newselect)
   #define SYS__newselect __NR__newselect
 #endif
+ */
 #if defined(__NR__sysctl)
   #define SYS__sysctl __NR__sysctl
 #endif
@@ -31,9 +33,11 @@
 #if defined(__NR_afs_syscall)
   #define SYS_afs_syscall __NR_afs_syscall
 #endif
+/*  // deprecated
 #if defined(__NR_alarm)
   #define SYS_alarm __NR_alarm
 #endif
+ */
 #if defined(__NR_arch_prctl)
   #define SYS_arch_prctl __NR_arch_prctl
 #endif
@@ -358,9 +362,11 @@
 #if defined(__NR_getresuid32)
   #define SYS_getresuid32 __NR_getresuid32
 #endif
+/*  // deprecated
 #if defined(__NR_getrlimit)
   #define SYS_getrlimit __NR_getrlimit
 #endif
+ */
 #if defined(__NR_getrusage)
   #define SYS_getrusage __NR_getrusage
 #endif
@@ -442,9 +448,11 @@
 #if defined(__NR_ioprio_set)
   #define SYS_ioprio_set __NR_ioprio_set
 #endif
+/*  // deprecated
 #if defined(__NR_ipc)
   #define SYS_ipc __NR_ipc
 #endif
+ */
 #if defined(__NR_kcmp)
   #define SYS_kcmp __NR_kcmp
 #endif
@@ -547,9 +555,11 @@
 #if defined(__NR_mlockall)
   #define SYS_mlockall __NR_mlockall
 #endif
+/*  // deprecated
 #if defined(__NR_mmap)
   #define SYS_mmap __NR_mmap
 #endif
+ */
 #if defined(__NR_mmap2)
   #define SYS_mmap2 __NR_mmap2
 #endif
@@ -751,9 +761,11 @@
 #if defined(__NR_readahead)
   #define SYS_readahead __NR_readahead
 #endif
+/*  // deprecated
 #if defined(__NR_readdir)
   #define SYS_readdir __NR_readdir
 #endif
+ */
 #if defined(__NR_readlink)
   #define SYS_readlink __NR_readlink
 #endif
@@ -871,9 +883,11 @@
 #if defined(__NR_security)
   #define SYS_security __NR_security
 #endif
+/*  // deprecated
 #if defined(__NR_select)
   #define SYS_select __NR_select
 #endif
+ */
 #if defined(__NR_semctl)
   #define SYS_semctl __NR_semctl
 #endif
@@ -1051,9 +1065,11 @@
 #if defined(__NR_socket)
   #define SYS_socket __NR_socket
 #endif
+/*  // deprecated
 #if defined(__NR_socketcall)
   #define SYS_socketcall __NR_socketcall
 #endif
+ */
 #if defined(__NR_socketpair)
   #define SYS_socketpair __NR_socketpair
 #endif
@@ -1078,9 +1094,11 @@
 #if defined(__NR_statx)
   #define SYS_statx __NR_statx
 #endif
+/*  // deprecated
 #if defined(__NR_stime)
   #define SYS_stime __NR_stime
 #endif
+ */
 #if defined(__NR_stty)
   #define SYS_stty __NR_stty
 #endif
@@ -1108,9 +1126,11 @@
 #if defined(__NR_syncfs)
   #define SYS_syncfs __NR_syncfs
 #endif
+/*  // deprecated
 #if defined(__NR_syscall)
   #define SYS_syscall __NR_syscall
 #endif
+ */
 #if defined(__NR_syscalls)
   #define SYS_syscalls __NR_syscalls
 #endif
@@ -1132,9 +1152,11 @@
 #if defined(__NR_tgkill)
   #define SYS_tgkill __NR_tgkill
 #endif
+/*  // deprecated
 #if defined(__NR_time)
   #define SYS_time __NR_time
 #endif
+ */
 #if defined(__NR_timer_create)
   #define SYS_timer_create __NR_timer_create
 #endif
@@ -1186,9 +1208,11 @@
 #if defined(__NR_umask)
   #define SYS_umask __NR_umask
 #endif
+/*  // deprecated
 #if defined(__NR_umount)
   #define SYS_umount __NR_umount
 #endif
+ */
 #if defined(__NR_umount2)
   #define SYS_umount2 __NR_umount2
 #endif
@@ -1213,9 +1237,11 @@
 #if defined(__NR_ustat)
   #define SYS_ustat __NR_ustat
 #endif
+/*  // deprecated
 #if defined(__NR_utime)
   #define SYS_utime __NR_utime
 #endif
+ */
 #if defined(__NR_utimensat)
   #define SYS_utimensat __NR_utimensat
 #endif

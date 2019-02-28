@@ -18,6 +18,8 @@
  ****************************************************************************/
 #ifndef _UAPI_ASM_ARM_UNISTD_OABI_H
 #define _UAPI_ASM_ARM_UNISTD_OABI_H 1
+#warning unistd-oabi.h deprecated and unsupported in Android
+/*
 #define __NR_time (__NR_SYSCALL_BASE + 13)
 #define __NR_umount (__NR_SYSCALL_BASE + 22)
 #define __NR_stime (__NR_SYSCALL_BASE + 25)
@@ -30,4 +32,5 @@
 #define __NR_socketcall (__NR_SYSCALL_BASE + 102)
 #define __NR_syscall (__NR_SYSCALL_BASE + 113)
 #define __NR_ipc (__NR_SYSCALL_BASE + 117)
+ */
 #endif

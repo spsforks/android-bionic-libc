@@ -123,7 +123,7 @@
 #define __NR_setfsgid (__NR_SYSCALL_BASE + 139)
 #define __NR__llseek (__NR_SYSCALL_BASE + 140)
 #define __NR_getdents (__NR_SYSCALL_BASE + 141)
-#define __NR__newselect (__NR_SYSCALL_BASE + 142)
+/* #define __NR__newselect (__NR_SYSCALL_BASE + 142) // deprecated */
 #define __NR_flock (__NR_SYSCALL_BASE + 143)
 #define __NR_msync (__NR_SYSCALL_BASE + 144)
 #define __NR_readv (__NR_SYSCALL_BASE + 145)

@@ -27,7 +27,7 @@
 #define __NR_lstat (__X32_SYSCALL_BIT + 6)
 #define __NR_poll (__X32_SYSCALL_BIT + 7)
 #define __NR_lseek (__X32_SYSCALL_BIT + 8)
-#define __NR_mmap (__X32_SYSCALL_BIT + 9)
+/* #define __NR_mmap (__X32_SYSCALL_BIT + 9)  // deprecated */
 #define __NR_mprotect (__X32_SYSCALL_BIT + 10)
 #define __NR_munmap (__X32_SYSCALL_BIT + 11)
 #define __NR_brk (__X32_SYSCALL_BIT + 12)
@@ -36,7 +36,7 @@
 #define __NR_pwrite64 (__X32_SYSCALL_BIT + 18)
 #define __NR_access (__X32_SYSCALL_BIT + 21)
 #define __NR_pipe (__X32_SYSCALL_BIT + 22)
-#define __NR_select (__X32_SYSCALL_BIT + 23)
+/* #define __NR_select (__X32_SYSCALL_BIT + 23)  // deprecated */
 #define __NR_sched_yield (__X32_SYSCALL_BIT + 24)
 #define __NR_mremap (__X32_SYSCALL_BIT + 25)
 #define __NR_msync (__X32_SYSCALL_BIT + 26)
@@ -50,7 +50,7 @@
 #define __NR_pause (__X32_SYSCALL_BIT + 34)
 #define __NR_nanosleep (__X32_SYSCALL_BIT + 35)
 #define __NR_getitimer (__X32_SYSCALL_BIT + 36)
-#define __NR_alarm (__X32_SYSCALL_BIT + 37)
+/* #define __NR_alarm (__X32_SYSCALL_BIT + 37)  // deprecated */
 #define __NR_setitimer (__X32_SYSCALL_BIT + 38)
 #define __NR_getpid (__X32_SYSCALL_BIT + 39)
 #define __NR_sendfile (__X32_SYSCALL_BIT + 40)
@@ -104,7 +104,7 @@
 #define __NR_lchown (__X32_SYSCALL_BIT + 94)
 #define __NR_umask (__X32_SYSCALL_BIT + 95)
 #define __NR_gettimeofday (__X32_SYSCALL_BIT + 96)
-#define __NR_getrlimit (__X32_SYSCALL_BIT + 97)
+/* #define __NR_getrlimit (__X32_SYSCALL_BIT + 97)  // deprecated */
 #define __NR_getrusage (__X32_SYSCALL_BIT + 98)
 #define __NR_sysinfo (__X32_SYSCALL_BIT + 99)
 #define __NR_times (__X32_SYSCALL_BIT + 100)
@@ -134,7 +134,7 @@
 #define __NR_capget (__X32_SYSCALL_BIT + 125)
 #define __NR_capset (__X32_SYSCALL_BIT + 126)
 #define __NR_rt_sigsuspend (__X32_SYSCALL_BIT + 130)
-#define __NR_utime (__X32_SYSCALL_BIT + 132)
+/* #define __NR_utime (__X32_SYSCALL_BIT + 132)  // deprecated */
 #define __NR_mknod (__X32_SYSCALL_BIT + 133)
 #define __NR_personality (__X32_SYSCALL_BIT + 135)
 #define __NR_ustat (__X32_SYSCALL_BIT + 136)
