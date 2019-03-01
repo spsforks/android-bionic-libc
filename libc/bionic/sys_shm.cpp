@@ -28,9 +28,11 @@
 
 #include <sys/shm.h>
 
+#include <errno.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#if defined(SYS_shmat) || defined(SYS_ipc)
 void* shmat(int id, const void* address, int flags) {
 #if defined(SYS_shmat)
   return reinterpret_cast<void*>(syscall(SYS_shmat, id, address, flags));
@@ -43,7 +45,14 @@ void* shmat(int id, const void* address, int flags) {
   return result;
 #endif
 }
+#else
+void* shmat(int, const void*, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_shmctl) || defined(SYS_ipc)
 int shmctl(int id, int cmd, struct shmid_ds* buf) {
 #if !defined(__LP64__) || defined(__mips__)
   // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
@@ -56,7 +65,14 @@ int shmctl(int id, int cmd, struct shmid_ds* buf) {
   return syscall(SYS_ipc, SHMCTL, id, cmd, 0, buf, 0);
 #endif
 }
+#else
+int shmctl(int, int, struct shmid_ds*) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_shmdt) || defined(SYS_ipc)
 int shmdt(const void* address) {
 #if defined(SYS_shmdt)
   return syscall(SYS_shmdt, address);
@@ -64,7 +80,14 @@ int shmdt(const void* address) {
   return syscall(SYS_ipc, SHMDT, 0, 0, 0, address, 0);
 #endif
 }
+#else
+int shmdt(const void*) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_shmget) || defined(SYS_ipc)
 int shmget(key_t key, size_t size, int flags) {
 #if defined(SYS_shmget)
   return syscall(SYS_shmget, key, size, flags);
@@ -72,3 +95,9 @@ int shmget(key_t key, size_t size, int flags) {
   return syscall(SYS_ipc, SHMGET, key, size, flags, 0, 0);
 #endif
 }
+#else
+int shmget(key_t, size_t, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
