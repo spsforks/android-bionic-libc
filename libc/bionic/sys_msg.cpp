@@ -28,9 +28,11 @@
 
 #include <sys/msg.h>
 
+#include <errno.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#if defined(SYS_msgctl) || defined(SYS_ipc)
 int msgctl(int id, int cmd, msqid_ds* buf) {
 #if !defined(__LP64__) || defined(__mips__)
   // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
@@ -43,7 +45,14 @@ int msgctl(int id, int cmd, msqid_ds* buf) {
   return syscall(SYS_ipc, MSGCTL, id, cmd, 0, buf, 0);
 #endif
 }
+#else
+int msgctl(int, int, msqid_ds*) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_msgget) || defined(SYS_ipc)
 int msgget(key_t key, int flags) {
 #if defined(SYS_msgget)
   return syscall(SYS_msgget, key, flags);
@@ -51,7 +60,14 @@ int msgget(key_t key, int flags) {
   return syscall(SYS_ipc, MSGGET, key, flags, 0, 0, 0);
 #endif
 }
+#else
+int msgget(key_t, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_msgrcv) || defined(SYS_ipc)
 ssize_t msgrcv(int id, void* msg, size_t n, long type, int flags) {
 #if defined(SYS_msgrcv)
   return syscall(SYS_msgrcv, id, msg, n, type, flags);
@@ -59,7 +75,14 @@ ssize_t msgrcv(int id, void* msg, size_t n, long type, int flags) {
   return syscall(SYS_ipc, IPCCALL(1, MSGRCV), id, n, flags, msg, type);
 #endif
 }
+#else
+ssize_t msgrcv(int, void*, size_t, long, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_msgsnd) || defined(SYS_ipc)
 int msgsnd(int id, const void* msg, size_t n, int flags) {
 #if defined(SYS_msgsnd)
   return syscall(SYS_msgsnd, id, msg, n, flags);
@@ -67,3 +90,9 @@ int msgsnd(int id, const void* msg, size_t n, int flags) {
   return syscall(SYS_ipc, MSGSND, id, n, flags, msg, 0);
 #endif
 }
+#else
+int msgsnd(int, const void*, size_t, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
