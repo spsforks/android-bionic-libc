@@ -28,10 +28,12 @@
 
 #include <sys/sem.h>
 
+#include <errno.h>
 #include <stdarg.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#if defined(SYS_semctl) || defined(SYS_ipc)
 int semctl(int id, int num, int cmd, ...) {
 #if !defined(__LP64__) || defined(__mips__)
   // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
@@ -48,7 +50,14 @@ int semctl(int id, int num, int cmd, ...) {
   return syscall(SYS_ipc, SEMCTL, id, num, cmd, &arg, 0);
 #endif
 }
+#else
+int semctl(id, num, cmd, ...) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
+#if defined(SYS_semget) || defined(SYS_ipc)
 int semget(key_t key, int n, int flags) {
 #if defined(SYS_semget)
   return syscall(SYS_semget, key, n, flags);
@@ -56,11 +65,18 @@ int semget(key_t key, int n, int flags) {
   return syscall(SYS_ipc, SEMGET, key, n, flags, 0, 0);
 #endif
 }
+#else
+int semget(key_t, int, int) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
 
 int semop(int id, sembuf* ops, size_t op_count) {
   return semtimedop(id, ops, op_count, nullptr);
 }
 
+#if defined(SYS_semtimedop) || defined(SYS_ipc)
 int semtimedop(int id, sembuf* ops, size_t op_count, const timespec* ts) {
 #if defined(SYS_semtimedop)
   return syscall(SYS_semtimedop, id, ops, op_count, ts);
@@ -68,3 +84,9 @@ int semtimedop(int id, sembuf* ops, size_t op_count, const timespec* ts) {
   return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
 #endif
 }
+#else
+int semtimedop(int, sembuf*, size_t, const timespec*) {
+  errno = ENOSYS;
+  return -1;
+}
+#endif
