@@ -1,4 +1,14 @@
 # SPC-elf_tls
+<details>
+<summary><b>metadata</b></summary>
+<b>partof:</b> <i>none</i></a><br>
+<b>parts:</b> <i>none</i></a><br>
+<b>file:</b> <a href="https://cs.corp.google.com/android/bionic/docs/elf-tls.md?l=1">docs/elf-tls.md</a><br>
+<b>impl:</b> <a href="https://cs.corp.google.com/android/bionic/libc/bionic/bionic_elf_tls.cpp?l=29">libc/bionic/bionic_elf_tls.cpp[28]</a><br>
+<b>spc:</b>100.00&nbsp;&nbsp;<b>tst:</b>0.00<br>
+<hr>
+</details>
+
 
 # Android ELF TLS (Draft)
 
@@ -882,3 +892,5 @@ arm64:
 [arm-elf]: http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044f/IHI0044F_aaelf.pdf
 [llvm22408]: https://bugs.llvm.org/show_bug.cgi?id=22408#c10
 [arm64-elf]: http://infocenter.arm.com/help/topic/com.arm.doc.ihi0056b/IHI0056B_aaelf64.pdf
+
+

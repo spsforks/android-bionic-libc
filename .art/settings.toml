@@ -1,0 +1,40 @@
+# ---- Artifact Project Settings ----
+
+# Paths containing artifact markdown files
+artifact_paths = ["docs/elf-tls.md"]
+
+# Paths to exclude when loading artifacts
+exclude_artifact_paths = []
+
+# Paths containing code that has artifact links
+code_paths = ["libc/"]
+
+# Paths to exclude when searching through code
+exclude_code_paths = []
+
+# Working (example) Code URL
+code_url = "https://cs.corp.google.com/android/bionic/{file}?l={line}"
+
+# [parse]
+# md_name = {type="prefix", value="#"}
+
+[format]
+md_attrs = {type="code", prefix="yaml"}
+
+[export]
+# md_name = {type="prefix", value="#"}
+# md_header = """
+# # Example Feature
+# 
+# [TOC]
+# 
+# Example header, will go to the top of the exported doc.
+# 
+# TODO: add the old google doc for reference.
+# TODO: link to non-design docs (your team's docs, related bugs, etc)
+# 
+# See [REQ-purpose](#REQ-PURPOSE) for the top level artifact.
+# """
+
+md_family = { type = "list" } # "graph" is still non-functional
+md_toc = false

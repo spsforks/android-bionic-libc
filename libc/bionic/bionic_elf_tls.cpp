@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+// #SPC-elf_tls
+
 #include "private/bionic_elf_tls.h"
 
 #include <async_safe/log.h>
