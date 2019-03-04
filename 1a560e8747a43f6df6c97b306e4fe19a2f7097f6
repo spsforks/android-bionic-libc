@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a80000f2_55102353",
+        "filename": "libc/malloc_hooks/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-03-04T23:12:16Z",
+      "side": 1,
+      "message": "should these be in TEST_MAPPING?",
+      "revId": "1a560e8747a43f6df6c97b306e4fe19a2f7097f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
