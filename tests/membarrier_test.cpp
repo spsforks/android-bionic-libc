@@ -46,7 +46,7 @@ TEST(membarrier, query) {
 
 TEST(membarrier, global_barrier) {
   if (!HasMembarrier(MEMBARRIER_CMD_GLOBAL)) {
-    GTEST_LOG_(INFO) << "MEMBARRIER_CMD_GLOBAL not supported, skipping test.";
+    GTEST_SKIP() << "MEMBARRIER_CMD_GLOBAL not supported";
     return;
   }
   ASSERT_EQ(0, syscall(__NR_membarrier, MEMBARRIER_CMD_GLOBAL, 0));
@@ -78,13 +78,11 @@ static const char* MembarrierCommandToName(int membarrier_cmd) {
 static void TestRegisterAndBarrierCommands(int membarrier_cmd_register,
                                            int membarrier_cmd_barrier) {
   if (!HasMembarrier(membarrier_cmd_register)) {
-    GTEST_LOG_(INFO) << MembarrierCommandToName(membarrier_cmd_register)
-        << " not supported, skipping test.";
+    GTEST_SKIP() << MembarrierCommandToName(membarrier_cmd_register) << " not supported";
     return;
   }
   if (!HasMembarrier(membarrier_cmd_barrier)) {
-    GTEST_LOG_(INFO) << MembarrierCommandToName(membarrier_cmd_barrier)
-        << " not supported, skipping test.";
+    GTEST_SKIP() << MembarrierCommandToName(membarrier_cmd_barrier) << " not supported";
     return;
   }
 

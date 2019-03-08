@@ -34,7 +34,7 @@
 
 TEST(sys_shm, smoke) {
   if (shmctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
-    GTEST_LOG_(INFO) << "no <sys/shm.h> support in this kernel\n";
+    GTEST_SKIP() << "no <sys/shm.h> support in this kernel";
     return;
   }
 
