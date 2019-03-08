@@ -265,6 +265,9 @@ extern "C" void __sanitizer_malloc_disable() {
 
 extern "C" void __sanitizer_malloc_enable() {
 }
+
+extern "C" int __sanitizer_malloc_info(int, FILE*) {
+}
 #endif
 // =============================================================================
 
