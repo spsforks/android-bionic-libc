@@ -254,7 +254,7 @@ TEST(dlfcn, dlopen_by_soname) {
 TEST(dlfcn, dlopen_vdso) {
 #if __has_include(<sys/auxv.h>)
   if (getauxval(AT_SYSINFO_EHDR) == 0) {
-    GTEST_LOG_(INFO) << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test.";
+    GTEST_SKIP() << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test";
     return;
   }
 #endif
@@ -970,9 +970,9 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #if defined(__BIONIC__)
   ASSERT_EQ(handle1, handle2);
 #else
-  GTEST_LOG_(INFO) << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
-                      "it loads a separate copy of the main executable "
-                      "on dlopen by absolute path.";
+  GTEST_SKIP() << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
+                  "it loads a separate copy of the main executable "
+                  "on dlopen by absolute path";
 #endif
 }
 
@@ -1020,8 +1020,7 @@ TEST(dlfcn, dladdr_libc) {
   ASSERT_STREQ("puts", info.dli_sname);
   ASSERT_EQ(addr, info.dli_saddr);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing for glibc. Glibc returns path from ldconfig "
-      "for libc.so, which is symlink itself (not a realpath).\n";
+  GTEST_SKIP() << "glibc returns libc.so's ldconfig path, which is a symlink (not a realpath)";
 #endif
 }
 
@@ -1060,7 +1059,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
   ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
+  GTEST_SKIP() << "mips toolchain does not support '--hash-style=gnu'";
 #endif
 }
 
@@ -1183,7 +1182,7 @@ TEST(dlfcn, dlopen_dlopen_from_ctor) {
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
 #else
-  GTEST_LOG_(INFO) << "This test is disabled for glibc (glibc segfaults if you try to call dlopen from a constructor).\n";
+  GTEST_SKIP() << "glibc segfaults if you try to call dlopen from a constructor";
 #endif
 }
 

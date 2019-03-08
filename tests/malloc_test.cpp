@@ -533,7 +533,7 @@ TEST(malloc, mallopt_decay) {
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -543,7 +543,7 @@ TEST(malloc, mallopt_purge) {
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -561,7 +561,7 @@ TEST(malloc, reallocarray_overflow) {
   ASSERT_TRUE(reallocarray(nullptr, b, a) == nullptr);
   ASSERT_EQ(ENOMEM, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+  GTEST_SKIP() << "reallocarray not available";
 #endif
 }
 
@@ -571,7 +571,7 @@ TEST(malloc, reallocarray) {
   ASSERT_TRUE(p != nullptr);
   ASSERT_GE(malloc_usable_size(p), 64U);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+  GTEST_SKIP() << "reallocarray not available";
 #endif
 }
 
@@ -616,7 +616,7 @@ TEST(malloc, mallinfo) {
         << kMaxAllocs << " allocations.";
   }
 #else
-  GTEST_LOG_(INFO) << "Host glibc does not pass this test, skipping.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif
 }
 
@@ -627,7 +627,7 @@ TEST(android_mallopt, error_on_unexpected_option) {
   EXPECT_EQ(false, android_mallopt(unrecognized_option, nullptr, 0));
   EXPECT_EQ(ENOTSUP, errno);
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -673,6 +673,6 @@ TEST(android_mallopt, init_zygote_child_profiling) {
     EXPECT_EQ(ENOTSUP, errno);
   }
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
