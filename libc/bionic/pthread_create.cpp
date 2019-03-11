@@ -55,6 +55,7 @@ void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
 // This code is used both by each new pthread and the code that initializes the main thread.
+<<<<<<< HEAD   (432db6 Merge "linker: Handle libraries with disjoint mappings corre)
 __attribute__((no_stack_protector))
 void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread) {
 #ifdef TLS_SLOT_SELF
@@ -63,6 +64,33 @@ void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread) {
   tcb->tls_slot(TLS_SLOT_SELF) = &tcb->tls_slot(TLS_SLOT_SELF);
 #endif
   tcb->tls_slot(TLS_SLOT_THREAD_ID) = thread;
+=======
+bool __init_tls(pthread_internal_t* thread) {
+  // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
+  thread->tls[TLS_SLOT_SELF] = thread->tls;
+  thread->tls[TLS_SLOT_THREAD_ID] = thread;
+
+  // Add a guard before and after.
+  size_t allocation_size = BIONIC_TLS_SIZE + (2 * PTHREAD_GUARD_SIZE);
+  void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation == MAP_FAILED) {
+    async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                          "pthread_create failed: couldn't allocate TLS: %s", strerror(errno));
+    return false;
+  }
+
+  // Carve out the writable TLS section.
+  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
+                                                     PTHREAD_GUARD_SIZE);
+  if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
+    async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                          "pthread_create failed: couldn't mprotect TLS: %s", strerror(errno));
+    munmap(allocation, allocation_size);
+    return false;
+  }
+
+  return true;
+>>>>>>> BRANCH (1863ec Snap for 5240760 from 68f7efc044b4ff9813fba79e3e16e5804c4df6)
 }
 
 __attribute__((no_stack_protector))
@@ -243,6 +271,7 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
     munmap(space, mmap_size);
     return {};
   }
+<<<<<<< HEAD   (432db6 Merge "linker: Handle libraries with disjoint mappings corre)
 
   ThreadMapping result = {};
   result.mmap_base = space;
@@ -251,6 +280,9 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   result.stack_base = space;
   result.stack_top = result.static_tls;
   return result;
+=======
+  return space;
+>>>>>>> BRANCH (1863ec Snap for 5240760 from 68f7efc044b4ff9813fba79e3e16e5804c4df6)
 }
 
 static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** child_stack) {
