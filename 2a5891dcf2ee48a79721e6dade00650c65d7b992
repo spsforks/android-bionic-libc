@@ -16,6 +16,24 @@
       "revId": "2a5891dcf2ee48a79721e6dade00650c65d7b992",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b1c6d55_2516c6f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-03-12T01:11:57Z",
+      "side": 1,
+      "message": "Yeah, \"previous\" is clearer. I updated it.",
+      "parentUuid": "698791af_00cceb4a",
+      "revId": "2a5891dcf2ee48a79721e6dade00650c65d7b992",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
