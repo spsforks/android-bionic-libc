@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "698791af_00cceb4a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-03-12T01:06:00Z",
+      "side": 1,
+      "message": "By current, you mean the calculation from before this patch, right? (previous would make this clearer)",
+      "revId": "2a5891dcf2ee48a79721e6dade00650c65d7b992",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
