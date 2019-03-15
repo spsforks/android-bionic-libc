@@ -34,6 +34,52 @@
       "revId": "9c4906bdd4b2236fa74f2444bfff35a6641613b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "841387ae_9fec4b23",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1586,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-03-15T22:43:29Z",
+      "side": 1,
+      "message": "Do we need this? We already cover every paths inside find_library_in_linked_namespace.",
+      "range": {
+        "startLine": 1585,
+        "startChar": 0,
+        "endLine": 1586,
+        "endChar": 96
+      },
+      "revId": "9c4906bdd4b2236fa74f2444bfff35a6641613b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5caa0b4e_bd1aa75e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-03-15T22:43:29Z",
+      "side": 1,
+      "message": "this as well. already reported inside find_library_in_linked_namespace.",
+      "range": {
+        "startLine": 1605,
+        "startChar": 0,
+        "endLine": 1607,
+        "endChar": 100
+      },
+      "revId": "9c4906bdd4b2236fa74f2444bfff35a6641613b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
