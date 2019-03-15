@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1505b795_fb21c381",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1298,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-03-15T21:43:52Z",
+      "side": 1,
+      "message": "The format string only accepts 2 arguments, but there are 3.\n\nClang won\u0027t detect a mismatch because LinkerLogger::Log doesn\u0027t have a \"format\" attribute. Bionic needs this patch:\n\ndiff --git a/linker/linker_logger.h b/linker/linker_logger.h\nindex f9fc38e6e..fedbc05cf 100644\n--- a/linker/linker_logger.h\n+++ b/linker/linker_logger.h\n@@ -49,7 +49,7 @@ class LinkerLogger {\n   LinkerLogger() : flags_(0) { }\n \n   void ResetState();\n-  void Log(const char* format, ...);\n+  void Log(const char* format, ...) __printflike(2, 3);\n \n   uint32_t IsEnabled(uint32_t type) {\n     return flags_ \u0026 type;",
+      "revId": "9c4906bdd4b2236fa74f2444bfff35a6641613b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
