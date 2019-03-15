@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "30a9e940_dd5d2dfe",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-15T20:54:56Z",
+      "side": 1,
+      "message": "Use cbz x0, .L_exit for these instructions.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 16
+      },
+      "revId": "950498cf5fba2505fb4fb0132d8fc10d82b566ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0b6648d_b43c1111",
         "filename": "libc/arch-arm64/bionic/vfork.S",
         "patchSetId": 1
@@ -13,6 +36,24 @@
       "writtenOn": "2019-03-15T04:57:36Z",
       "side": 1,
       "message": "move the label down to L76?",
+      "revId": "950498cf5fba2505fb4fb0132d8fc10d82b566ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28735cf2_05375fa5",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-15T20:54:56Z",
+      "side": 1,
+      "message": "Since the label is only used in this #if block, I think it\u0027s okay to leave it in the #if.",
+      "parentUuid": "b0b6648d_b43c1111",
       "revId": "950498cf5fba2505fb4fb0132d8fc10d82b566ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
