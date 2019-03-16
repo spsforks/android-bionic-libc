@@ -41,6 +41,8 @@
 
 __BEGIN_DECLS
 
+size_t __sanitizer_get_current_allocated_bytes();
+
 // FIXME: implement these in HWASan allocator.
 int __sanitizer_iterate(uintptr_t base, size_t size,
                         void (*callback)(uintptr_t base, size_t size, void* arg),
