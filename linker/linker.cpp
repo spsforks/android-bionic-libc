@@ -2278,10 +2278,12 @@ void* do_dlopen(const char* name, int flags,
 
   if (si != nullptr) {
     void* handle = si->to_handle();
-    LD_LOG(kLogDlopen,
-           "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
-           si->get_realpath(), si->get_soname(), handle);
-    si->call_constructors();
+    if (!extinfo || (extinfo->flags & ANDROID_DLEXT_PRELOAD) == 0) {
+      LD_LOG(kLogDlopen,
+             "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
+             si->get_realpath(), si->get_soname(), handle);
+      si->call_constructors();
+    }
     failure_guard.Disable();
     LD_LOG(kLogDlopen,
            "... dlopen successful: realpath=\"%s\", soname=\"%s\", handle=%p",
