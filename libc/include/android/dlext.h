@@ -136,6 +136,18 @@ enum {
    */
   ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE = 0x400,
 
+  /**
+   * Instructs dlopen to load and link a library but skip calling constructors.
+   *
+   * When a library has been preloaded, the next dlopen on the same library will
+   * be faster, as loading and linking is already done.  This also enables
+   * sharing of dirty memory incurred by relocation across forked processes.
+   *
+   * When this flag is used, the handle returned can only be used with
+   * dlclose.
+   */
+  ANDROID_DLEXT_PRELOAD = 0x800,
+
 
   /** Mask of valid bits. */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
@@ -146,7 +158,8 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
                                         ANDROID_DLEXT_USE_NAMESPACE |
-                                        ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE,
+                                        ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE |
+                                        ANDROID_DLEXT_PRELOAD,
 };
 
 struct android_namespace_t;
