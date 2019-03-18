@@ -68,6 +68,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
 bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
                                                android_namespace_t* namespace_to) __LINKER_PUBLIC__;
+void __loader_android_run_executable(const char* filename, char *const argv[]) __LINKER_PUBLIC__;
 void __loader_android_set_application_target_sdk_version(int target) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
@@ -204,6 +205,11 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
   return do_dl_unwind_find_exidx(pc, pcount);
 }
 #endif
+
+extern void run_executable(const char* filename, char *const argv[]);
+void __loader_android_run_executable(const char* filename, char *const argv[]) {
+  run_executable(filename, argv);
+}
 
 void __loader_android_set_application_target_sdk_version(int target) {
   // lock to avoid modification in the middle of dlopen.
