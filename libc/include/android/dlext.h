@@ -136,6 +136,18 @@ enum {
    */
   ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE = 0x400,
 
+  /**
+   * Instructs dlopen to load and link a library but skip calling constructors.
+   *
+   * When a library has been preloaded, the next dlopen on the same library will
+   * be faster, as loading and linking is already done.  This also enables
+   * sharing of dirty memory incurred by relocation across forked processes.
+   *
+   * When this flag is used, the handle returned can only be used with
+   * dlclose.
+   */
+  ANDROID_DLEXT_PRELOAD = 0x800,
+
 
   /** Mask of valid bits. */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
@@ -146,7 +158,8 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
                                         ANDROID_DLEXT_USE_NAMESPACE |
-                                        ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE,
+                                        ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE |
+                                        ANDROID_DLEXT_PRELOAD,
 };
 
 struct android_namespace_t;
@@ -182,6 +195,26 @@ typedef struct {
  */
 void* android_dlopen_ext(const char* __filename, int __flags, const android_dlextinfo* __info)
   __INTRODUCED_IN(21);
+
+/**
+ * Executes an executable in the current process.  This is similar to execv()
+ * but the target executable does NOT replace the current executable.  Instead,
+ * the linker loads the target executable and its dependencies, performs
+ * linking, and hands control over to it.  Since this doesn't go through the
+ * kernel, the caller needs to handle all changes to the state of the process if
+ * needed, for example:
+ *   - /proc/<pid>/cmdline
+ *   - /proc/<pid>/comm
+ *   - SELinux context
+ *   - Capabilities
+ * Also note that this function simply jumps to the target executable.  If there
+ * are other threads running, they will keep running.
+ *
+ * This function can be useful if there is a need to preserve existing memory
+ * map or existing threads, but most of the time, it is much easier and safer to
+ * use execv().
+ */
+void android_run_executable(const char *__filename, char *const argv[]);
 
 __END_DECLS
 
