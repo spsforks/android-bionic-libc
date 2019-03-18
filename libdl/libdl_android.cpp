@@ -59,6 +59,9 @@ void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 __attribute__((__weak__, visibility("default")))
 struct android_namespace_t* __loader_android_get_exported_namespace(const char* name);
 
+__attribute__((__weak__, visibility("default")))
+void* __loader_android_run_executable(const char* filename, char *const argv[]);
+
 // Proxy calls to bionic loader
 __attribute__((__weak__))
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
@@ -113,6 +116,11 @@ void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
 __attribute__((__weak__))
 struct android_namespace_t* android_get_exported_namespace(const char* name) {
   return __loader_android_get_exported_namespace(name);
+}
+
+__attribute__((__weak__))
+void android_run_executable(const char* filename, char *const argv[]) {
+  __loader_android_run_executable(filename, argv);
 }
 
 #if defined(__arm__)
