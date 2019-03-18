@@ -30,6 +30,7 @@
 
 #include <link.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 #include "linker_debug.h"
 #include "linker_cfi.h"
@@ -58,6 +59,10 @@
 
 __LIBC_HIDDEN__ extern "C" void _start();
 
+__LIBC_HIDDEN__ extern "C" void push_to_stack_and_jump(uintptr_t* data,
+                                                       size_t count,
+                                                       uintptr_t entry_point);
+
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
@@ -73,6 +78,9 @@ static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 static soinfo* solinker;
 static soinfo* vdso; // vdso if present
+
+static bool g_first_exe_linked;
+static std::vector<android_namespace_t*> namespaces;
 
 void solist_add_soinfo(soinfo* si) {
   sonext->next = si;
@@ -293,6 +301,175 @@ static ExecutableInfo load_executable(const char* orig_path) {
   return result;
 }
 
+// Link an executable that is already loaded.  The first executable linked will
+// be considered the main one.  Linker namespaces and static TLS storage are
+// set up using the main executable.
+static void link_executable(const ExecutableInfo &exe_info) {
+  ProtectedDataGuard guard;
+  soinfo* si = soinfo_alloc(&g_default_namespace,
+                            exe_info.path.c_str(), &exe_info.file_stat,
+                            0, RTLD_GLOBAL);
+  if (g_first_exe_linked) {
+    // We do not want the second executable to link against symbols exported by
+    // the first executable.  Unset the GLOBAL flag in somain.
+    somain->set_dt_flags_1(somain->get_dt_flags_1() & ~DF_1_GLOBAL);
+  } else {
+    somain = si;
+  }
+
+  si->phdr = exe_info.phdr;
+  si->phnum = exe_info.phdr_count;
+  get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
+  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
+  si->dynamic = nullptr;
+  si->set_main_executable();
+
+  // Make a copy of the path string, as it needs to last until the program
+  // exits.
+  init_link_map_head(*si, strdup(exe_info.path.c_str()));
+
+  ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
+
+  // We haven't supported non-PIE since Lollipop for security reasons.
+  if (elf_hdr->e_type != ET_DYN) {
+    // We don't use async_safe_fatal here because we don't want a tombstone:
+    // even after several years we still find ourselves on app compatibility
+    // investigations because some app's trying to launch an executable that
+    // hasn't worked in at least three years, and we've "helpfully" dropped a
+    // tombstone for them. The tombstone never provided any detail relevant to
+    // fixing the problem anyway, and the utility of drawing extra attention
+    // to the problem is non-existent at this late date.
+    async_safe_format_fd(STDERR_FILENO,
+                         "\"%s\": error: Android 5.0 and later only support "
+                         "position-independent executables (-fPIE).\n",
+                         g_argv[0]);
+    _exit(EXIT_FAILURE);
+  }
+
+  if (!g_first_exe_linked) {
+    // Register the main executable and the linker upfront to have
+    // gdb aware of them before loading the rest of the dependency
+    // tree.
+    //
+    // gdb expects the linker to be in the debug shared object list.
+    // Without this, gdb has trouble locating the linker's ".text"
+    // and ".plt" sections. Gdb could also potentially use this to
+    // relocate the offset of our exported 'rtld_db_dlactivity' symbol.
+    //
+    insert_link_map_into_debug_map(&si->link_map_head);
+    insert_link_map_into_debug_map(&solinker->link_map_head);
+
+    namespaces = init_default_namespaces(exe_info.path.c_str());
+  }
+
+  if (!si->prelink_image()) __linker_cannot_link(exe_info.path.c_str());
+
+  // add si to global group
+  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
+  // ... and add it to all other linked namespaces
+  for (auto linked_ns : namespaces) {
+    if (linked_ns != &g_default_namespace) {
+      linked_ns->add_soinfo(si);
+      si->add_secondary_namespace(linked_ns);
+    }
+  }
+
+  if (g_first_exe_linked) {
+    register_soinfo_tls(si);
+  } else {
+    linker_setup_exe_static_tls(g_argv[0]);
+  }
+
+  std::vector<const char*> needed_library_name_list;
+  size_t ld_preloads_count = 0;
+
+  for (const auto& ld_preload_name : g_ld_preload_names) {
+    needed_library_name_list.push_back(ld_preload_name.c_str());
+    ++ld_preloads_count;
+  }
+
+  for_each_dt_needed(si, [&](const char* name) {
+    needed_library_name_list.push_back(name);
+  });
+
+  const char** needed_library_names = &needed_library_name_list[0];
+  size_t needed_libraries_count = needed_library_name_list.size();
+
+  if (needed_libraries_count > 0 &&
+      !find_libraries(&g_default_namespace,
+                      si,
+                      needed_library_names,
+                      needed_libraries_count,
+                      nullptr,
+                      &g_ld_preloads,
+                      ld_preloads_count,
+                      RTLD_GLOBAL,
+                      nullptr,
+                      true /* add_as_children */,
+                      true /* search_linked_namespaces */,
+                      &namespaces)) {
+    __linker_cannot_link(exe_info.path.c_str());
+  } else if (needed_libraries_count == 0) {
+    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr,
+                        nullptr)) {
+      __linker_cannot_link(exe_info.path.c_str());
+    }
+    si->increment_ref_count();
+  }
+
+  if (!g_first_exe_linked) {
+    linker_finalize_static_tls();
+    __libc_init_main_thread_final();
+
+    if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
+
+    g_first_exe_linked = true;
+  }
+
+  si->call_pre_init_constructors();
+  si->call_constructors();
+}
+
+static std::vector<uintptr_t> construct_arg_block(char *const argv[]) {
+  size_t argc = 0;
+  while (argv[argc]) {
+    ++argc;
+  }
+
+  std::vector<uintptr_t> arg_block;
+  arg_block.push_back(argc);
+  for (size_t i = 0; i < argc; ++i) {
+    arg_block.push_back(reinterpret_cast<uintptr_t>(argv[i]));
+  }
+  // Add end markers for argv(1), envp(1), and auxv(2).
+  for (size_t i = 0; i < 4; ++i) {
+    arg_block.push_back(0);
+  }
+  return arg_block;
+}
+
+void run_executable(const char* filename, char *const argv[]) {
+#if defined(__arm__) || defined(__i386__)
+  TRACE("[ Linking executable \"%s\" ]", filename);
+  const ExecutableInfo exe_info = load_executable(filename);
+  link_executable(exe_info);
+
+  // Fix up args related fields in libc shared globals.
+  __libc_shared_globals()->initial_linker_arg_count = 0;
+  __libc_shared_globals()->init_progname = filename;
+
+  std::vector<uintptr_t> arg_block = construct_arg_block(argv);
+
+  TRACE("[ Ready to execute \"%s\" @ %p ]", filename,
+        reinterpret_cast<void*>(exe_info.entry_point));
+
+  push_to_stack_and_jump(&arg_block[0], arg_block.size(), exe_info.entry_point);
+#else
+  // For platforms without a push_to_stack_and_jump definition, we error out.
+  __linker_error("run_executable() is not supported on this platform!");
+#endif
+}
+
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
@@ -349,122 +526,13 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
                                                 get_executable_info();
-
-  // Assign to a static variable for the sake of the debug map, which needs
-  // a C-style string to last until the program exits.
-  static std::string exe_path = exe_info.path;
-
-  INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
-
-  // Initialize the main exe's soinfo.
-  soinfo* si = soinfo_alloc(&g_default_namespace,
-                            exe_path.c_str(), &exe_info.file_stat,
-                            0, RTLD_GLOBAL);
-  somain = si;
-  si->phdr = exe_info.phdr;
-  si->phnum = exe_info.phdr_count;
-  get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
-  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-  si->dynamic = nullptr;
-  si->set_main_executable();
-  init_link_map_head(*si, exe_path.c_str());
-
-  // Register the main executable and the linker upfront to have
-  // gdb aware of them before loading the rest of the dependency
-  // tree.
-  //
-  // gdb expects the linker to be in the debug shared object list.
-  // Without this, gdb has trouble locating the linker's ".text"
-  // and ".plt" sections. Gdb could also potentially use this to
-  // relocate the offset of our exported 'rtld_db_dlactivity' symbol.
-  //
-  insert_link_map_into_debug_map(&si->link_map_head);
-  insert_link_map_into_debug_map(&solinker->link_map_head);
-
   add_vdso();
-
-  ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
-
-  // We haven't supported non-PIE since Lollipop for security reasons.
-  if (elf_hdr->e_type != ET_DYN) {
-    // We don't use async_safe_fatal here because we don't want a tombstone:
-    // even after several years we still find ourselves on app compatibility
-    // investigations because some app's trying to launch an executable that
-    // hasn't worked in at least three years, and we've "helpfully" dropped a
-    // tombstone for them. The tombstone never provided any detail relevant to
-    // fixing the problem anyway, and the utility of drawing extra attention
-    // to the problem is non-existent at this late date.
-    async_safe_format_fd(STDERR_FILENO,
-                         "\"%s\": error: Android 5.0 and later only support "
-                         "position-independent executables (-fPIE).\n",
-                         g_argv[0]);
-    _exit(EXIT_FAILURE);
-  }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
 
-  std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_path.c_str());
-
-  if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
-
-  // add somain to global group
-  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
-  // ... and add it to all other linked namespaces
-  for (auto linked_ns : namespaces) {
-    if (linked_ns != &g_default_namespace) {
-      linked_ns->add_soinfo(somain);
-      somain->add_secondary_namespace(linked_ns);
-    }
-  }
-
-  linker_setup_exe_static_tls(g_argv[0]);
-
-  // Load ld_preloads and dependencies.
-  std::vector<const char*> needed_library_name_list;
-  size_t ld_preloads_count = 0;
-
-  for (const auto& ld_preload_name : g_ld_preload_names) {
-    needed_library_name_list.push_back(ld_preload_name.c_str());
-    ++ld_preloads_count;
-  }
-
-  for_each_dt_needed(si, [&](const char* name) {
-    needed_library_name_list.push_back(name);
-  });
-
-  const char** needed_library_names = &needed_library_name_list[0];
-  size_t needed_libraries_count = needed_library_name_list.size();
-
-  if (needed_libraries_count > 0 &&
-      !find_libraries(&g_default_namespace,
-                      si,
-                      needed_library_names,
-                      needed_libraries_count,
-                      nullptr,
-                      &g_ld_preloads,
-                      ld_preloads_count,
-                      RTLD_GLOBAL,
-                      nullptr,
-                      true /* add_as_children */,
-                      true /* search_linked_namespaces */,
-                      &namespaces)) {
-    __linker_cannot_link(g_argv[0]);
-  } else if (needed_libraries_count == 0) {
-    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr)) {
-      __linker_cannot_link(g_argv[0]);
-    }
-    si->increment_ref_count();
-  }
-
-  linker_finalize_static_tls();
-  __libc_init_main_thread_final();
-
-  if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
-
-  si->call_pre_init_constructors();
-  si->call_constructors();
+  link_executable(exe_info);
 
 #if TIMING
   gettimeofday(&t1, nullptr);
@@ -514,7 +582,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   purge_unused_memory();
 
   ElfW(Addr) entry = exe_info.entry_point;
-  TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  TRACE("[ Ready to execute \"%s\" @ %p ]", somain->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;
 }
 

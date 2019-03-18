@@ -96,6 +96,7 @@ filegroup {
     name: "linker_sources_arm",
     srcs: [
         "arch/arm/begin.S",
+        "arch/arm/exec.S",
         "linker_exidx_static.c",
     ],
 }
@@ -112,6 +113,7 @@ filegroup {
     name: "linker_sources_x86",
     srcs: [
         "arch/x86/begin.S",
+        "arch/x86/exec.S",
     ],
 }
 
