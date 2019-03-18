@@ -1916,7 +1916,7 @@ bool find_libraries(android_namespace_t* ns,
   return true;
 }
 
-static soinfo* find_library(android_namespace_t* ns,
+soinfo* find_library(android_namespace_t* ns,
                             const char* name, int rtld_flags,
                             const android_dlextinfo* extinfo,
                             soinfo* needed_by) {
@@ -4038,7 +4038,7 @@ bool soinfo::protect_relro() {
   return true;
 }
 
-static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {
+std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {
   g_default_namespace.set_isolated(false);
   auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
 

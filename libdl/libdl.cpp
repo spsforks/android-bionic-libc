@@ -70,6 +70,9 @@ void* __loader_android_dlopen_ext(const char* filename,
                                   const void* caller_addr);
 
 __attribute__((__weak__, visibility("default")))
+void* __loader_android_load_and_run_exe(const char* filename, const char **argv);
+
+__attribute__((__weak__, visibility("default")))
 int __loader_android_get_application_target_sdk_version();
 
 // Proxy calls to bionic loader
@@ -131,6 +134,11 @@ __attribute__((__weak__))
 void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo) {
   const void* caller_addr = __builtin_return_address(0);
   return __loader_android_dlopen_ext(filename, flag, extinfo, caller_addr);
+}
+
+__attribute__((__weak__))
+void android_load_and_run_exe(const char* filename, const char **argv) {
+  __loader_android_load_and_run_exe(filename, argv);
 }
 
 __attribute__((__weak__))

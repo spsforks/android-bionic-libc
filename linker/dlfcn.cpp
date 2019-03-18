@@ -41,6 +41,7 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
+#include "linker_debug.h"
 
 #define __LINKER_PUBLIC__ __attribute__((visibility("default")))
 
@@ -57,6 +58,7 @@ void* __loader_android_dlopen_ext(const char* filename,
                            int flags,
                            const android_dlextinfo* extinfo,
                            const void* caller_addr) __LINKER_PUBLIC__;
+void __loader_android_load_and_run_exe(const char* filename, const char **argv) __LINKER_PUBLIC__;
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) __LINKER_PUBLIC__;
 int __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) __LINKER_PUBLIC__;
@@ -148,6 +150,11 @@ void* __loader_android_dlopen_ext(const char* filename,
                            const android_dlextinfo* extinfo,
                            const void* caller_addr) {
   return dlopen_ext(filename, flags, extinfo, caller_addr);
+}
+
+extern void load_and_run_exe(const char* filename, const char **argv);
+void __loader_android_load_and_run_exe(const char* filename, const char **argv) {
+  load_and_run_exe(filename, argv);
 }
 
 void* __loader_dlopen(const char* filename, int flags, const void* caller_addr) {

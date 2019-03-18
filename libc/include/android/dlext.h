@@ -183,6 +183,8 @@ typedef struct {
 void* android_dlopen_ext(const char* __filename, int __flags, const android_dlextinfo* __info)
   __INTRODUCED_IN(21);
 
+void android_load_and_run_exe(const char *__filename, const char **argv);
+
 __END_DECLS
 
 /** @} */

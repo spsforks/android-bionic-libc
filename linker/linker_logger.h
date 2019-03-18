@@ -46,7 +46,7 @@ constexpr const uint32_t kLogDlsym  = 1 << 2;
 
 class LinkerLogger {
  public:
-  LinkerLogger() : flags_(0) { }
+  LinkerLogger() : flags_(kLogErrors) { }
 
   void ResetState();
   void Log(const char* format, ...) __printflike(2, 3);

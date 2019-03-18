@@ -30,6 +30,7 @@
 
 #include <link.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 #include "linker_debug.h"
 #include "linker_cfi.h"
@@ -73,6 +74,8 @@ static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 static soinfo* solinker;
 static soinfo* vdso; // vdso if present
+
+static std::vector<android_namespace_t*> my_namespaces;
 
 void solist_add_soinfo(soinfo* si) {
   sonext->next = si;
@@ -292,6 +295,279 @@ static ExecutableInfo load_executable(const char* orig_path) {
   return result;
 }
 
+#if 0
+static const char* mykernelargs[] = {
+  reinterpret_cast<const char*>(2),  // argc
+  "/system/bin/ls",  // argv[0]
+  // "ls",  // argv[1]
+  "/",  // argv[2]
+  nullptr,  // end of argv
+  nullptr,  // end of envp
+  nullptr,  // AT_NULL, marking end of auxv
+  nullptr   // unused a_value for AT_NULL
+};
+#endif
+
+// TODO: Report error if any
+void set_process_cmdline(uintptr_t* data) {
+  size_t argc = data[0];
+  size_t total_len = 0;
+  for (size_t i = 0; i < argc; ++i) {
+    total_len += strlen(reinterpret_cast<const char *>(data[i+1])) + 1;
+  }
+  char* buf = static_cast<char *>(malloc(total_len));
+  char* ptr = buf;
+  for (size_t i = 0; i < argc; ++i) {
+    const char *x = reinterpret_cast<const char *>(data[i+1]);
+    size_t len = strlen(x);
+    memcpy(ptr, x, len);
+    data[i+1] = reinterpret_cast<uintptr_t>(ptr);
+    ptr += len;
+    *ptr = '\0';
+    ++ptr;
+  }
+  char *end = buf + total_len + 1;
+  if (prctl(PR_SET_MM, PR_SET_MM_ARG_START, buf, 0, 0) < 0) {
+    prctl(PR_SET_MM, PR_SET_MM_ARG_END, end, 0, 0);
+    prctl(PR_SET_MM, PR_SET_MM_ARG_START, buf, 0, 0);
+  } else {
+    prctl(PR_SET_MM, PR_SET_MM_ARG_END, end, 0, 0);
+  }
+
+  const char *p, *last_slash;
+  p = reinterpret_cast<const char *>(data[1]);
+  last_slash = p;
+  while (*p) {
+    if (*p == '/') last_slash = p + 1;
+    ++p;
+  }
+  prctl(PR_SET_NAME, last_slash, 0, 0, 0);
+}
+
+static void /* noreturn */ push_and_jump(void* data, size_t count, size_t nullcount, uintptr_t entry) {
+#ifdef __x86_64__
+  PRINT("Push and jump! x86_64");
+  __asm__ __volatile__(
+      "nullloopbegin:"
+      "  pushq $0;"
+      "  dec %2;"
+      "  jnz nullloopbegin;"
+      "loopbegin:"
+      "  pushq -8(%0, %1, 8);"
+      "  dec %1;"
+      "  jnz loopbegin;"
+      "  jmp *%3;"
+      :: "r"(data), "r"(count), "r"(nullcount), "r"(entry)
+  );
+#elif defined(__i386__)
+  PRINT("Push and jump! i386");
+  __asm__ __volatile__(
+      "nullloopbegin:"
+      "  push $0;"
+      "  dec %2;"
+      "  jnz nullloopbegin;"
+      "loopbegin:"
+      "  push -4(%0, %1, 4);"
+      "  dec %1;"
+      "  jnz loopbegin;"
+      "  jmp *%3;"
+      :: "r"(data), "r"(count), "r"(nullcount), "r"(entry)
+  );
+#elif defined(__arm__)
+  int zero = 0;
+  PRINT("Push and jump! ARM");
+  __asm__ __volatile__(
+      "nullloopbegin:"
+      "  push {%4};"
+      "  subs %2, %2, #1;"
+      "  bne nullloopbegin;"
+      "loopbegin:"
+      "  mov %4, %0;"  // %4 = data
+      "  add %4, %1, %4;"  // %4 += count * 4
+      "  add %4, %1, %4;"
+      "  add %4, %1, %4;"
+      "  add %4, %1, %4;"
+      "  sub %4, %4, #4;"  // %4 -= 4
+      "  ldr %4, [%4];"  // %4 = *%4 -> %4 = data[count-1]
+      "  push {%4};"
+      "  subs %1, %1, #1;"
+      "  bne loopbegin;"
+      "  bx %3;"
+      :: "r"(data), "r"(count), "r"(nullcount), "r"(entry), "r"(zero)
+  );
+#else
+#error push_and_jump not defined for current arch!
+#endif
+}
+
+// static void call_secret_function(const char **argv) {
+//   while (*argv) argv++;
+//   argv++;
+//   void (*fn)() = reinterpret_cast<void (*)()>(const_cast<char *>(*argv));
+//   fn();
+// }
+
+#pragma clang optimize off
+#if 0
+static char *get_target_seclabel(const char *filename) {
+  char *con = nullptr;
+  char *filecon = nullptr;
+
+  if (getexeccon(&con) == -1) {
+    PRINT("Error getexeccon().");
+    return nullptr;
+  }
+  if (con) {
+    return con;
+  }
+
+  if (getcon(&con) == -1) {
+    PRINT("Error getcon().");
+    return nullptr;
+  }
+  if (getfilecon(filename, &filecon) == -1) {
+    PRINT("Error getfilecon().");
+    return nullptr;
+  }
+
+  char *new_con = nullptr;
+  int rc = security_compute_create(con, filecon, string_to_security_class("process"), &new_con);
+  if (filecon) {
+    freecon(filecon);
+  }
+
+  if (rc == 0 && strcmp(new_con, con) == 0) {
+    freecon(con);
+    freecon(new_con);
+    PRINT("Failed to compute new context.");
+    return nullptr;
+  }
+  if (rc < 0) {
+    freecon(con);
+    PRINT("Failed security_compute_create().");
+    return nullptr;
+  }
+  freecon(con);
+  return new_con;
+}
+#endif
+
+void load_and_run_exe(const char* filename, const char **argv) {
+  PRINT("load and run %s", filename);
+  // mykernelargs[1] = filename;
+  void (*entry_func)() = nullptr;
+  {
+    ProtectedDataGuard guard;
+    const ExecutableInfo exe_info = load_executable(filename);
+    soinfo* si = soinfo_alloc(&g_default_namespace,
+                              filename, &exe_info.file_stat,
+                              0, RTLD_GLOBAL);
+    // auto bak = &somain->link_map_head;
+    somain = si;
+    si->phdr = exe_info.phdr;
+    si->phnum = exe_info.phdr_count;
+    get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
+    si->size = phdr_table_get_load_size(si->phdr, si->phnum);
+    si->dynamic = nullptr;
+    // si->set_main_executable();
+    init_link_map_head(*si, filename);
+    // insert_link_map_into_debug_map(&solinker->link_map_head);
+
+    if (!si->prelink_image()) __linker_cannot_link(filename);
+
+    // add somain to global group
+    si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
+    // ... and add it to all other linked namespaces
+    for (auto linked_ns : my_namespaces) {
+      if (linked_ns != &g_default_namespace) {
+        linked_ns->add_soinfo(somain);
+        somain->add_secondary_namespace(linked_ns);
+      }
+    }
+
+    linker_setup_exe_static_tls(filename);
+
+    std::vector<const char*> needed_library_name_list;
+    size_t ld_preloads_count = 0;
+
+    for (const auto& ld_preload_name : g_ld_preload_names) {
+      needed_library_name_list.push_back(ld_preload_name.c_str());
+      ++ld_preloads_count;
+    }
+
+    for_each_dt_needed(si, [&](const char* name) {
+      needed_library_name_list.push_back(name);
+    });
+
+    const char** needed_library_names = &needed_library_name_list[0];
+    size_t needed_libraries_count = needed_library_name_list.size();
+
+    if (needed_libraries_count > 0 &&
+        !find_libraries(&g_default_namespace,
+                        si,
+                        needed_library_names,
+                        needed_libraries_count,
+                        nullptr,
+                        &g_ld_preloads,
+                        ld_preloads_count,
+                        RTLD_GLOBAL,
+                        nullptr,
+                        true /* add_as_children */,
+                        true /* search_linked_namespaces */,
+                        &my_namespaces)) {
+      __linker_cannot_link(filename);
+    } else if (needed_libraries_count == 0) {
+      if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr)) {
+        __linker_cannot_link(filename);
+      }
+      si->increment_ref_count();
+    }
+
+    // Grab the link map for already loaded libraries.
+    // auto lm = &somain->link_map_head;
+    // while (lm->l_next != nullptr) {
+    //   lm = lm->l_next;
+    // }
+    // lm->l_next = bak;
+    // bak->l_prev = lm;
+
+    linker_finalize_static_tls();
+    __libc_init_main_thread_final();
+    si->set_main_executable();
+
+    // if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(filename);
+
+    si->call_pre_init_constructors();
+    si->call_constructors();
+    ElfW(Addr) entry = exe_info.entry_point;
+    TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+    fflush(stdout);
+    fflush(stderr);
+    entry_func = reinterpret_cast<void (*)()>(entry);
+  }
+  __libc_shared_globals()->initial_linker_arg_count = 0;
+  __libc_shared_globals()->init_progname = filename;
+
+  // call_secret_function(argv);
+  // while (true);
+
+  // char *seclabel = get_target_seclabel(filename);
+  // if (!seclabel) {
+  //   __linker_cannot_link(filename);
+  // }
+  // PRINT("Setting sec con to %s", seclabel);
+  // if (setcon(seclabel) == -1) {
+  //   PRINT("Failed to setcon().");
+  //   __linker_cannot_link(filename);
+  // }
+  // freecon(seclabel);
+  // setexeccon(NULL);
+
+  // set_process_cmdline(reinterpret_cast<uintptr_t*>(argv));
+  push_and_jump(reinterpret_cast<void*>(argv), reinterpret_cast<size_t>(argv[0]) + 1, 4, reinterpret_cast<uintptr_t>(entry_func));
+}
+#pragma clang optimize on
+
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
@@ -405,6 +681,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   parse_LD_PRELOAD(ldpreload_env);
 
   std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_path.c_str());
+  my_namespaces = namespaces;
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
@@ -633,6 +910,14 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   return __linker_init_post_relocation(args, tmp_linker_so);
 }
 
+// VICTORYANG===========
+extern std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan);
+extern soinfo* find_library(android_namespace_t* ns,
+                            const char* name, int rtld_flags,
+                            const android_dlextinfo* extinfo,
+                            soinfo* needed_by);
+// VICTORYANG===========
+
 /*
  * This code is called after the linker has linked itself and fixed its own
  * GOT. It is safe to make references to externs and other non-local data at
@@ -653,6 +938,19 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   // Initialize the linker's own global variables
   tmp_linker_so.call_constructors();
+
+  /*
+  sonext = solist = solinker = get_libdl_info(kLinkerPath, tmp_linker_so);
+  g_default_namespace.add_soinfo(solinker);
+  init_link_map_head(*solinker, kLinkerPath);
+  */
+  // init_default_namespace_no_config(false);
+  // g_ld_debug_verbosity = 1;
+  // if (!find_library(&g_default_namespace, "libc++.so", RTLD_GLOBAL, nullptr, solinker)) {
+  //   async_safe_format_fd(STDOUT_FILENO, "Failed to load libc++\n");
+  //   exit(0);
+  // }
+  // fork();
 
   // When the linker is run directly rather than acting as PT_INTERP, parse
   // arguments and determine the executable to load. When it's instead acting
