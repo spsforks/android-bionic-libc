@@ -195,12 +195,6 @@ extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
-// Address space is precious on LP32, so use the minimum unit: one page.
-// On LP64, we could use more but there's no obvious advantage to doing
-// so, and the various media processes use RLIMIT_AS as a way to limit
-// the amount of allocation they'll do.
-#define PTHREAD_GUARD_SIZE PAGE_SIZE
-
 // SIGSTKSZ (8KiB) is not big enough.
 // An snprintf to a stack buffer of size PATH_MAX consumes ~7KiB of stack.
 // On 64-bit, logging uses more than 8KiB by itself, ucontext is comically
@@ -218,6 +212,18 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 // from the default thread stack size. This should keep memory usage
 // roughly constant.
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGNAL_STACK_SIZE_WITHOUT_GUARD)
+
+// On LP64 address space is free, so use guards as large as the default stack
+// itself to make it really hard to accidentally run off the end of a stack and
+// land on an accessible VMA. We couldn't do this before Q because the various
+// media processes used RLIMIT_AS to limit allocation. In Q they can use
+// android_mallopt() to more directly express their intention instead.
+#if defined(__LP64__)
+#define PTHREAD_GUARD_SIZE (64 * 1024)
+#else
+// Address space is precious on LP32, so use the minimum unit: one page.
+#define PTHREAD_GUARD_SIZE PAGE_SIZE
+#endif
 
 // Leave room for a guard page in the internally created signal stacks.
 #define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD + PTHREAD_GUARD_SIZE)
