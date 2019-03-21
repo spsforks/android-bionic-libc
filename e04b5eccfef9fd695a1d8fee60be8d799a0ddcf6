@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ca71164_536711c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-03-21T18:14:47Z",
+      "side": 1,
+      "message": "please don\u0027t do that. put it inline, where it\u0027s immediately accessible and won\u0027t go missing.",
+      "range": {
+        "startLine": 10,
+        "startChar": 45,
+        "endLine": 12,
+        "endChar": 46
+      },
+      "revId": "e04b5eccfef9fd695a1d8fee60be8d799a0ddcf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
