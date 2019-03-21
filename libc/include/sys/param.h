@@ -52,7 +52,7 @@
 #define roundup(x, y)   ((((x)+((y)-1))/(y))*(y))
 
 /** Returns true if the argument is a power of two. */
-#define powerof2(x) ((((x)-1)&(x))==0)
+#define powerof2(x) (((x)>0) && (((((x)-1)&(x))==0)))
 
 /** Returns the lesser of its two arguments. */
 #define MIN(a,b) (((a)<(b))?(a):(b))
