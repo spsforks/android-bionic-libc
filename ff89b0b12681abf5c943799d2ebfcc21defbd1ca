@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "890b480d_868fd9cc",
+        "filename": "libc/include/sys/param.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-03-27T17:50:26Z",
+      "side": 1,
+      "message": "while you\u0027re here, change this to `/**` so it shows up as a doc comment in some IDEs (and on the web when we come up with a plan of how to do that without drowning out all the Android-specific API...)?",
+      "revId": "ff89b0b12681abf5c943799d2ebfcc21defbd1ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
