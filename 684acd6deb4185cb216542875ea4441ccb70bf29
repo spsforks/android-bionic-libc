@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "724c0206_6fa13d70",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-03-27T23:17:27Z",
+      "side": 1,
+      "message": "should this also be lib64?",
+      "range": {
+        "startLine": 984,
+        "startChar": 46,
+        "endLine": 984,
+        "endChar": 49
+      },
+      "revId": "684acd6deb4185cb216542875ea4441ccb70bf29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e95f382_f0476351",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-03-27T23:17:27Z",
+      "side": 1,
+      "message": "and this",
+      "range": {
+        "startLine": 987,
+        "startChar": 46,
+        "endLine": 987,
+        "endChar": 49
+      },
+      "revId": "684acd6deb4185cb216542875ea4441ccb70bf29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
