@@ -975,7 +975,7 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 }
 
 #if defined (__aarch64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/arm64/"
 #elif defined (__arm__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
 #elif defined (__i386__)
