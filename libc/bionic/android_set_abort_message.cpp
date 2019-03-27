@@ -82,6 +82,10 @@ void android_set_abort_message(const char* msg) {
     return;
   }
 
+  // Name the abort message mapping to make it easier for tools to find the
+  // mapping.
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, size, "abort message");
+
   magic_abort_msg_t* new_magic_abort_message = reinterpret_cast<magic_abort_msg_t*>(map);
   fill_abort_message_magic(new_magic_abort_message);
   new_magic_abort_message->msg.size = size;
