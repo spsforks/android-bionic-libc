@@ -172,7 +172,9 @@ if __name__ == "__main__":
             dst_file = os.path.join(dst_dir, path)
             src_file = os.path.join(src_dir, path)
             new_data = cleanupFile(dst_file, src_file, path)
-            print new_data
+            # Use sys.stdout.write instead of a simple print statement to avoid
+            # outputting an extra new line character at the end.
+            sys.stdout.write(new_data)
 
         sys.exit(0)
 
