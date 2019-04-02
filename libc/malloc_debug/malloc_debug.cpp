@@ -252,6 +252,10 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
   // of different error cases.
   backtrace_startup();
 
+  if (g_debug->config().options() & VERBOSE) {
+    info_log("%s: malloc debug enabled", getprogname());
+  }
+
   return true;
 }
 
