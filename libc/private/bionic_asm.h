@@ -51,6 +51,7 @@
 #define ENTRY_NO_DWARF(f) \
     .text; \
     .globl f; \
+    .section .text. ## f, "ax", %progbits; \
     .balign __bionic_asm_align; \
     .type f, __bionic_asm_function_type; \
     f: \
