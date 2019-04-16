@@ -39,8 +39,7 @@ int     setuid:setuid32(uid_t)    arm,x86
 int     setuid:setuid(uid_t)      arm64,mips,mips64,x86_64
 int     setregid:setregid32(gid_t, gid_t)  arm,x86
 int     setregid:setregid(gid_t, gid_t)    arm64,mips,mips64,x86_64
-int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
-int     setreuid:setreuid(uid_t, uid_t)     arm64,mips,mips64,x86_64
+# setreuid is explicitly allowed for strace.
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
 # setresuid is explicitly allowed, see above.
