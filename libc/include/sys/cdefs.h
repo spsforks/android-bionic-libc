@@ -334,5 +334,14 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
  */
 #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
 
+/* Clang lock annotations for use with -Wthread-safety. */
+#define __locks_exclusive(...) __attribute__((__exclusive_lock_function__(__VA_ARGS__)))
+#define __locks_shared(...) __attribute__((__shared_lock_function__(__VA_ARGS__)))
+#define __trylocks_exclusive(...) __attribute__((__exclusive_trylock_function__(__VA_ARGS__)))
+#define __trylocks_shared(...) __attribute__((__shared_trylock_function__(__VA_ARGS__)))
+#define __unlocks(...) __attribute__((__unlock_function__(__VA_ARGS__)))
+#define __requires_exclusive(...) __attribute__((__exclusive_locks_required__(__VA_ARGS__)))
+#define __requires_unlocked(...) __attribute__((__locks_excluded__(__VA_ARGS__)))
+
 #include <android/versioning.h>
 #include <android/api-level.h>
