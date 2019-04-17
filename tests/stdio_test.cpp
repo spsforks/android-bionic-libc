@@ -32,6 +32,7 @@
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/unique_fd.h>
 
 #include "BionicDeathTest.h"
 #include "utils.h"
@@ -2576,4 +2577,78 @@ TEST(STDIO_TEST, dev_std_files) {
   length = readlink("/dev/stderr", path, sizeof(path));
   ASSERT_LT(0, length);
   ASSERT_EQ("/proc/self/fd/2", std::string(path, length));
+}
+
+TEST(STDIO_TEST, rename) {
+  TemporaryDir td;
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, rename(old_path.c_str(), new_path.c_str()));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+}
+
+TEST(STDIO_TEST, renameat) {
+  TemporaryDir td;
+  android::base::unique_fd dirfd{open(td.path, O_PATH)};
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, renameat(dirfd, "old", dirfd, "new"));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+}
+
+TEST(STDIO_TEST, renameat2) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28";
+#else
+  TemporaryDir td;
+  android::base::unique_fd dirfd{open(td.path, O_PATH)};
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, renameat2(dirfd, "old", dirfd, "new", 0));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+
+  // After this, both "old" and "new" exist.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+
+  // Rename and check it moved.
+  ASSERT_EQ(-1, renameat2(dirfd, "old", dirfd, "new", RENAME_NOREPLACE));
+  ASSERT_EQ(EEXIST, errno);
+#endif
+}
+
+TEST(STDIO_TEST, renameat2_flags) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28";
+#else
+ ASSERT_NE(0, RENAME_EXCHANGE);
+ ASSERT_NE(0, RENAME_NOREPLACE);
+ ASSERT_NE(0, RENAME_WHITEOUT);
+#endif
 }

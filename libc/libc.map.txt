@@ -1485,6 +1485,11 @@ LIBC_Q { # introduced=Q
     android_mallopt; # apex
 } LIBC_P;
 
+LIBC_R { # introduced=R
+  global:
+    renameat2;
+} LIBC_Q;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
