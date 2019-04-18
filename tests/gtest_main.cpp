@@ -95,7 +95,7 @@ using testing::internal::COLOR_GREEN;
 using testing::internal::COLOR_YELLOW;
 using testing::internal::ColoredPrintf;
 
-constexpr int DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS = 90000;
+constexpr int DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS = 180000;
 constexpr int DEFAULT_GLOBAL_TEST_RUN_SLOW_THRESHOLD_MS = 2000;
 
 // The time each test can run before killed for the reason of timeout.
