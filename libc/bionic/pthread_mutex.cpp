@@ -644,6 +644,11 @@ static inline __always_inline void NormalMutexUnlock(pthread_mutex_internal_t* m
         // we call wake, the thread we eventually wake will find an unlocked mutex
         // and will execute. Either way we have correct behavior and nobody is
         // orphaned on the wait queue.
+        //
+        // The pthread_mutex_internal_t object may have been deallocated between the
+        // atomic exchange and the wake call. In that case, the wake call will use a
+        // dangling address, but that's OK:
+        // http://austingroupbugs.net/view.php?id=811#c2267
         __futex_wake_ex(&mutex->state, shared, 1);
     }
 }

@@ -72,6 +72,10 @@ class Lock {
   void unlock() {
     bool shared = process_shared; /* cache to local variable */
     if (atomic_exchange_explicit(&state, Unlocked, memory_order_release) == LockedWithWaiter) {
+      // The Lock object may have been deallocated between the atomic exchange and the futex wake
+      // call, so avoid accessing any fields of Lock here. In that case, the wake call will use a
+      // dangling address, but that's OK. The same situation happens with pthread mutexes:
+      // http://austingroupbugs.net/view.php?id=811#c2267
       __futex_wake_ex(&state, shared, 1);
     }
   }
