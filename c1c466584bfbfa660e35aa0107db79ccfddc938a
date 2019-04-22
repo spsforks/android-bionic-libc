@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7c69dd0_bf61feb4",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Apparently threads.h is specified to leak time.h. 7.26.1.1:\n\n\u003e The header \u003cthreads.h\u003e includes the header \u003ctime.h\u003e, defines macros, and\n\u003e declares types, enumeration constants, and functions that support multiple threads of\n\u003e execution.)\n\nThis is already being satisfied by pthread.h, but probably should do so explicitly.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64264819_e76a5b27",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Success is returned even if no thread was waiting on the condition variable. Assert that the count is the correct value after each wait? cnd_broadcast would also pass this test.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a1493e7_cafff9c0",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Shouldn\u0027t there be spaces around this? Or has it been that long since I\u0027ve seen how our clang format works?",
+      "range": {
+        "startLine": 207,
+        "startChar": 48,
+        "endLine": 207,
+        "endChar": 49
+      },
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad5896fe_e2756a36",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Missing a test for a non-empty timespec.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dfc7eb5_8058b47e",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Missing a test for mtx_unlock (it\u0027s used in the above functions, but each of those would also pass if unlock was a no-op).",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "137b4ada_ef04c501",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "A missing but more difficult part to test:\n\n\u003e The program shall terminate normally after the last thread has been terminated. The\n\u003e behavior shall be as if the program called the exit function with the status\n\u003e EXIT_SUCCESS at thread termination time.\n\nfork, thrd_exit(1), wait, assert that exit status is 0?",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9a7e76a_152b2ea9",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "At what point does the thrd_t become invalid? Can you `ASSERT_EQ(thrd_error, thrd_join(t, nullptr));` here? I\u0027m not sure under what conditions thrd_join fails.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9e6061a_fefc0a0e",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Also test the behavior with the remaining time used? Can assert that the remaining time is greater than zero and less than duration, but probably not much more than that.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "818296b3_4b9cb9ed",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-22T20:55:57Z",
+      "side": 1,
+      "message": "Worth adding a link to http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_416, since this isn\u0027t actually in the most recent version of the standard?",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
