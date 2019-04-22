@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79632329_ac9ff577",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-22T17:44:05Z",
+      "side": 1,
+      "message": "i was assuming that renameat2 would be in by now, but i still need to talk to cferris about what we\u0027re going to do about `BLOCK_SIZE` from \u003clinux/fs.h\u003e...",
+      "revId": "44a10393fa25f3781074ecfea4f5d9859c7fdf44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
