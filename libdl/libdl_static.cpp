@@ -23,7 +23,7 @@ void* dlopen(const char* /*filename*/, int /*flag*/) {
 }
 
 char* dlerror() {
-  return nullptr;
+  return const_cast<char*>("libdl.a is a stub");
 }
 
 void* dlsym(void* /*handle*/, const char* /*symbol*/) {
