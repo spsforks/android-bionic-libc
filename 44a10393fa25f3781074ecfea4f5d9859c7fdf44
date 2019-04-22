@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1a67ed86_d5f21360",
+        "filename": "libc/include/bits/threads_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-04-22T19:33:01Z",
+      "side": 1,
+      "message": "Got it.  Totally missed the *\u0027s.",
+      "parentUuid": "42eff896_90bd92bd",
+      "revId": "44a10393fa25f3781074ecfea4f5d9859c7fdf44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79632329_ac9ff577",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
