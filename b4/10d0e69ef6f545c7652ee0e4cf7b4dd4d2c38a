@@ -1,0 +1,8 @@
+Code-Review+2: Stephen Hines <srhines@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Yi Kong <yikong@google.com>
+Submitted-at: Tue, 23 Apr 2019 05:54:31 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/949316
+Project: platform/bionic
+Branch: refs/heads/master
