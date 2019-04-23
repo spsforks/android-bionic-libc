@@ -37,6 +37,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/system_properties.h>
+
 #include "private/android_filesystem_config.h"
 #include "private/bionic_macros.h"
 #include "private/grp_pwd.h"
@@ -402,12 +404,34 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+static bool is_android_builtin_id(id_t id) {
+  for (size_t n = 0; n < android_id_count; n++) {
+    if (android_ids[n].aid == id) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // oem_XXXX -> uid
 //  Supported ranges:
 //   AID_OEM_RESERVED_START to AID_OEM_RESERVED_END (2900-2999)
 //   AID_OEM_RESERVED_2_START to AID_OEM_RESERVED_2_END (5000-5999)
 // Check OEM id is within range.
 static bool is_oem_id(id_t id) {
+  // Upgrading devices launched before API level 29 may not comply with the below check.
+  // Due to the difficulty in changing uids after launch, it is waived for these devices.
+  // ranges:
+  // AID_OEM_RESERVED_END to AID_OEM_RESERVED_2_START (3000-4999) except android builtin id
+  // AID_OEM_RESERVED_2_END to AID_EVERYBODY (6000-9996)
+  char value[PROP_VALUE_MAX] = { 0 };
+  if ((__system_property_get("ro.product.first_api_level", value) != 0) &&
+      (atoi(value) < 29) &&
+      (((id > AID_OEM_RESERVED_END) && (id < AID_OEM_RESERVED_2_START)) ||
+      ((id > AID_OEM_RESERVED_2_END) && (id < AID_EVERYBODY))) &&
+      !is_android_builtin_id(id))
+    return true;
+
   return (((id >= AID_OEM_RESERVED_START) && (id <= AID_OEM_RESERVED_END)) ||
       ((id >= AID_OEM_RESERVED_2_START) && (id <= AID_OEM_RESERVED_2_END)));
 }
