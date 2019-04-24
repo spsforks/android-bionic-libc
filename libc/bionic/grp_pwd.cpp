@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <android/api-level.h>
 #include <ctype.h>
 #include <errno.h>
 #include <grp.h>
@@ -35,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/system_properties.h>
 #include <unistd.h>
 
 #include "private/android_filesystem_config.h"
@@ -372,14 +374,35 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+static bool is_before_api_29() {
+  static bool result = [] {
+    char value[PROP_VALUE_MAX] = { 0 };
+    if (__system_property_get("ro.product.first_api_level", value) != 0) {
+      return false;
+    }
+    int value_int = atoi(value);
+    return value_int != 0 && value_int < 29;
+  }();
+  return result;
+}
+
 // oem_XXXX -> uid
 //  Supported ranges:
 //   AID_OEM_RESERVED_START to AID_OEM_RESERVED_END (2900-2999)
 //   AID_OEM_RESERVED_2_START to AID_OEM_RESERVED_2_END (5000-5999)
 // Check OEM id is within range.
 static bool is_oem_id(id_t id) {
-  return (((id >= AID_OEM_RESERVED_START) && (id <= AID_OEM_RESERVED_END)) ||
-      ((id >= AID_OEM_RESERVED_2_START) && (id <= AID_OEM_RESERVED_2_END)));
+  // Upgrading devices launched before API level 29 may not comply with the below check.
+  // Due to the difficulty in changing uids after launch, it is waived for these devices.
+  // The legacy range:
+  // AID_OEM_RESERVED_START to AID_EVERYBODY (2900-9996), excluding builtin AIDs.
+  if (is_before_api_29() && id >= AID_OEM_RESERVED_START && id < AID_EVERYBODY &&
+      find_android_id_info(id) == nullptr) {
+    return true;
+  }
+
+  return (id >= AID_OEM_RESERVED_START && id <= AID_OEM_RESERVED_END) ||
+         (id >= AID_OEM_RESERVED_2_START && id <= AID_OEM_RESERVED_2_END);
 }
 
 // Translate an OEM name to the corresponding user/group id.
