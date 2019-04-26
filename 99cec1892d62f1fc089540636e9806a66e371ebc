@@ -22,6 +22,30 @@
       "revId": "99cec1892d62f1fc089540636e9806a66e371ebc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "688f3971_c31f8bfd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2019-04-26T19:17:56Z",
+      "side": 1,
+      "message": "Yes indeed.  :-) . I implied that by saying \"treat LD_CONFIG_FILE like LD_PRELOAD\", but maybe I should have been more explicit.",
+      "parentUuid": "a0d33617_bfe603dc",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 62
+      },
+      "revId": "99cec1892d62f1fc089540636e9806a66e371ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
