@@ -998,7 +998,7 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #else
 #error "Unknown architecture"
 #endif
-#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
+#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
