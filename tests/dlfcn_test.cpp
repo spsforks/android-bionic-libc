@@ -998,13 +998,19 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #else
 #error "Unknown architecture"
 #endif
-#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
+#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__GLIBC__)
   GTEST_SKIP() << "glibc returns libc.so's ldconfig path, which is a symlink (not a realpath)";
 #endif
+
+  system("getprop");
+  system("env");
+  char buf[256];
+  snprintf(buf, 256, "cat /proc/%d/maps", getpid());
+  system(buf);
 
   Dl_info info;
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
