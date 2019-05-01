@@ -235,6 +235,15 @@ cc_test_library {
     cflags: [
         "-fno-emulated-tls",
     ],
+    // With fuzzer builds, compiler instrumentation generates a reference to the
+    // __sancov_lowest_stack variable, which (for now) is defined by the fuzzer
+    // library as an emutls symbol. The -fno-emulated-tls flag above configures
+    // the compiler to reference an ordinary ELF TLS __sancov_lowest_stack
+    // symbol instead, which isn't defined. Disable the fuzzer for this test
+    // until the platform is switched to ELF TLS.
+    sanitize: {
+        fuzzer: false,
+    },
 }
 
 cc_test_library {
@@ -256,6 +265,15 @@ cc_test_library {
     cflags: [
         "-fno-emulated-tls",
     ],
+    // Fuzzer builds require the __sancov_lowest_stack symbol, which is TLS. It
+    // requires platform TLS, which for now, is emulated. The -fno-emulated-tls
+    // flag above overrides this setting, and when the compiler instrumentation
+    // from the fuzzer build generates a reference to this symbol, it's of the
+    // non-TLS variant (which fails to compile as only the emutls variant is
+    // defined by the fuzzer library).
+    sanitize: {
+        fuzzer: false,
+    },
 }
 
 // -----------------------------------------------------------------------------
