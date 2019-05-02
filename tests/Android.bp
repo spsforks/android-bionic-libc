@@ -275,6 +275,16 @@ cc_defaults {
     },
 }
 
+cc_defaults {
+    name: "compile_time_test_defaults",
+    cflags: [
+        "-U_FORTIFY_SOURCE",
+        "-D_FORTIFY_SOURCE=2",
+        "-Wall",
+        "-fsyntax-only",
+    ],
+}
+
 // If building this fails, then we have both FORTIFY and ASAN enabled, which
 // isn't desirable. (Ideally, we'd emit FORTIFY diagnostics even with ASAN
 // enabled, but that's not a reality today.) This is meant to be otherwise
@@ -288,6 +298,7 @@ cc_test_library {
         // enabled. Since the intent is just to build this, we can get away with
         // passing this flag on its own.
         "-fsanitize=address",
+        "-Wno-memset-transposed-args",
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
@@ -304,8 +315,44 @@ cc_test_library {
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
         "-D__clang_analyzer__",
+        "-Wno-memset-transposed-args",
     ],
     srcs: ["fortify_filecheck_diagnostics_test.cpp"],
+}
+
+// Check that our FORTIFY diagnostics work. This makes use of clang's built-in
+// diagnostic verification bits. For more information, please see the upstream
+// documentation at
+// https://clang.llvm.org/doxygen/classclang_1_1VerifyDiagnosticConsumer.html#details
+//
+// Note that this will never actually produce an object file of any kind, so we
+// need to be a bit careful with how this is used.
+cc_object {
+    name: "fortify_compiler_diags_test",
+    host_supported: false,
+    device_supported: true,
+    defaults: ["compile_time_test_defaults"],
+    cflags: [
+        // FORTIFY emits some diags as warnings, and others as errors. We want
+        // to see these as FORTIFY emits them, so we should ignore any -Werror
+        // flags (or similar) that show up in our compile command.
+        "-Wno-error",
+        "-ferror-limit=10000",
+        "-Xclang",
+        "-verify",
+    ],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
+}
+
+cc_genrule {
+    name: "fortify_compiler_diags_test_genrule",
+    host_supported: false,
+    device_supported: true,
+    srcs: [
+        ":fortify_compiler_diags_test",
+    ],
+    out: ["fortify_compiler_diags_test_genrule.stamp"],
+    cmd: "touch $(out)",
 }
 
 cc_test_library {
