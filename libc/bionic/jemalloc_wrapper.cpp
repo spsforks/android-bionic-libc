@@ -68,11 +68,11 @@ int je_mallopt(int param, int value) {
   // The only parameter we currently understand is M_DECAY_TIME.
   if (param == M_DECAY_TIME) {
     // Only support setting the value to 1 or 0.
-    ssize_t decay_time_ms;
+    ssize_t decay_time;
     if (value) {
-      decay_time_ms = 1000;
+      decay_time = 1;
     } else {
-      decay_time_ms = 0;
+      decay_time = 0;
     }
     // First get the total number of arenas.
     unsigned narenas;
@@ -82,22 +82,15 @@ int je_mallopt(int param, int value) {
     }
 
     // Set the decay time for any arenas that will be created in the future.
-    if (je_mallctl("arenas.dirty_decay_ms", nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
-      return 0;
-    }
-    if (je_mallctl("arenas.muzzy_decay_ms", nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
+    if (je_mallctl("arenas.decay_time", nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
       return 0;
     }
 
     // Change the decay on the already existing arenas.
     char buffer[100];
     for (unsigned i = 0; i < narenas; i++) {
-      snprintf(buffer, sizeof(buffer), "arena.%d.dirty_decay_ms", i);
-      if (je_mallctl(buffer, nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
-        break;
-      }
-      snprintf(buffer, sizeof(buffer), "arena.%d.muzzy_decay_ms", i);
-      if (je_mallctl(buffer, nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
+      snprintf(buffer, sizeof(buffer), "arena.%d.decay_time", i);
+      if (je_mallctl(buffer, nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
         break;
       }
     }
@@ -127,10 +120,11 @@ int je_mallopt(int param, int value) {
 
 __BEGIN_DECLS
 
-size_t je_mallinfo_narenas();
-size_t je_mallinfo_nbins();
-struct mallinfo je_mallinfo_arena_info(size_t);
-struct mallinfo je_mallinfo_bin_info(size_t, size_t);
+
+__LIBC_HIDDEN__ size_t __mallinfo_narenas();
+__LIBC_HIDDEN__ size_t __mallinfo_nbins();
+__LIBC_HIDDEN__ struct mallinfo __mallinfo_arena_info(size_t);
+__LIBC_HIDDEN__ struct mallinfo __mallinfo_bin_info(size_t, size_t);
 
 __END_DECLS
 
@@ -142,9 +136,8 @@ int je_malloc_info(int options, FILE* fp) {
 
   MallocXmlElem root(fp, "malloc", "version=\"jemalloc-1\"");
 
-  // Dump all of the large allocations in the arenas.
-  for (size_t i = 0; i < je_mallinfo_narenas(); i++) {
-    struct mallinfo mi = je_mallinfo_arena_info(i);
+  for (size_t i = 0; i < __mallinfo_narenas(); i++) {
+    struct mallinfo mi = __mallinfo_arena_info(i);
     if (mi.hblkhd != 0) {
       MallocXmlElem arena_elem(fp, "heap", "nr=\"%d\"", i);
       {
@@ -153,8 +146,8 @@ int je_malloc_info(int options, FILE* fp) {
         MallocXmlElem(fp, "allocated-bins").Contents("%zu", mi.fsmblks);
 
         size_t total = 0;
-        for (size_t j = 0; j < je_mallinfo_nbins(); j++) {
-          struct mallinfo mi = je_mallinfo_bin_info(i, j);
+        for (size_t j = 0; j < __mallinfo_nbins(); j++) {
+          struct mallinfo mi = __mallinfo_bin_info(i, j);
           if (mi.ordblks != 0) {
             MallocXmlElem bin_elem(fp, "bin", "nr=\"%d\"", j);
             MallocXmlElem(fp, "allocated").Contents("%zu", mi.ordblks);
