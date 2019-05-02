@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d2d14e4_bd57cd03",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-02T23:40:20Z",
+      "side": 1,
+      "message": "(Yeah, this is somewhat ugly. Alternatives are appreciated)",
+      "revId": "46130e24a86218d28ccfa36ddc26ea2bbbe03a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
