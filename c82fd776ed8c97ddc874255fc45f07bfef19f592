@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cc030e1d_ed896499",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-05-03T16:38:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32e24314_8fa7300e",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 46
+      },
+      "revId": "c82fd776ed8c97ddc874255fc45f07bfef19f592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "245ef850_b6d256c0",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f9bf7ae8_b989dc60",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-05-03T16:38:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "245ef850_b6d256c0",
+      "range": {
+        "startLine": 156,
+        "startChar": 2,
+        "endLine": 157,
+        "endChar": 46
+      },
+      "revId": "c82fd776ed8c97ddc874255fc45f07bfef19f592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97660f77_1b949d90",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 3
@@ -68,6 +116,30 @@
       "revId": "c82fd776ed8c97ddc874255fc45f07bfef19f592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d634e7ac_c13d9d87",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-05-03T16:38:16Z",
+      "side": 1,
+      "message": "This check is redundant. It was meant to check whether we didn\u0027t fully read the first argument in cmdline. This check is fully done by first_arg \u003d\u003d nullptr though, as we only do the memchr until up to including cmdline[rd-1] (we set cmdline[rd] to 0 just in case we use any C string functions below at any point). If that matches anything, we know we have read a nullbyte and have fully read the first argument.",
+      "parentUuid": "97660f77_1b949d90",
+      "range": {
+        "startLine": 173,
+        "startChar": 30,
+        "endLine": 173,
+        "endChar": 61
+      },
+      "revId": "c82fd776ed8c97ddc874255fc45f07bfef19f592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
