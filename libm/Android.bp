@@ -507,6 +507,7 @@ cc_library {
         integer_overflow: false,
     },
     stl: "none",
+    native_bridge_supported: true,
 
     stubs: {
         symbol_file: "libm.map.txt",
@@ -522,6 +523,7 @@ ndk_library {
 
 llndk_library {
     name: "libm",
+    native_bridge_supported: true,
     symbol_file: "libm.map.txt",
 }
 
