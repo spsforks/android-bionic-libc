@@ -16,6 +16,24 @@
       "revId": "76d753efbe619f2e9888269f834119713a7d61d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57471300_471c1942",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-03T02:40:23Z",
+      "side": 1,
+      "message": "Oops, I removed this comment because I have a better comment around the EXPECT_EQ when I do the check.",
+      "parentUuid": "bb0260d3_1c07636a",
+      "revId": "76d753efbe619f2e9888269f834119713a7d61d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
