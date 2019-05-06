@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47cd36a1_ab11b631",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-06T23:59:38Z",
+      "side": 1,
+      "message": "Do you need the exclude here too?",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 37
+      },
+      "revId": "1ea23a831d8b64d55768425235fdf8b1fabdca32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
