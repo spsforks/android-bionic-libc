@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7a09824_a9888c14",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-05-07T20:54:07Z",
+      "side": 1,
+      "message": "Instead of blocking all of the other threads, could we just exchange into a finalizing flag to pick the thread that gets to do finalization, and then just delete everything from backtrace_shutdown onwards?",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 45
+      },
+      "revId": "d269fcc935b276502b9e47a575d76693fe1b8455",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
