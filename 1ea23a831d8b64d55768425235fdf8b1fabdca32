@@ -22,6 +22,30 @@
       "revId": "1ea23a831d8b64d55768425235fdf8b1fabdca32",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "925041c7_8f94863b",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2019-05-07T00:02:13Z",
+      "side": 1,
+      "message": "Yes... I missed this one.",
+      "parentUuid": "47cd36a1_ab11b631",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 37
+      },
+      "revId": "1ea23a831d8b64d55768425235fdf8b1fabdca32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
