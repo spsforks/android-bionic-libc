@@ -22,6 +22,30 @@
       "revId": "d269fcc935b276502b9e47a575d76693fe1b8455",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af82332e_8eb7d275",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-07T21:21:12Z",
+      "side": 1,
+      "message": "You still need to wait for any pending operations to complete in any other active threads, and you want to block any active threads from doing any other work.\n\nI think I might be able to build something that saves a bit of time in each call, but I don\u0027t think the extra complexity is worth the potential time savings.\n\nIs there another benefit from this proposal other than speeding up the calls?",
+      "parentUuid": "f7a09824_a9888c14",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 45
+      },
+      "revId": "d269fcc935b276502b9e47a575d76693fe1b8455",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
