@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b5aceed_3f6a5069",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-05-09T23:01:47Z",
+      "side": 1,
+      "message": "i initially added the logging here, but it seems like we get here several times for each library.\n\nis that expected?",
+      "revId": "3c5c00a13d1d284b4bf022dfbfeb101007970f6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
