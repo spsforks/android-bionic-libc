@@ -397,7 +397,7 @@ void soinfo::call_pre_init_constructors() {
 }
 
 void soinfo::call_constructors() {
-  if (constructors_called) {
+  if (constructors_called || g_is_ldd) {
     return;
   }
 
