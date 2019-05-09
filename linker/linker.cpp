@@ -3876,6 +3876,11 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     return true;
   }
 
+  if (g_is_ldd && !is_main_executable()) {
+    async_safe_format_fd(STDOUT_FILENO, "\t%s => %s (%p)\n", get_soname(),
+                         get_realpath(), reinterpret_cast<void*>(base));
+  }
+
   local_group_root_ = local_group.front();
   if (local_group_root_ == nullptr) {
     local_group_root_ = this;
