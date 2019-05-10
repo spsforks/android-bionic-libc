@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "511224ae_c544261b",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1207103
+      },
+      "writtenOn": "2019-05-10T22:44:07Z",
+      "side": 1,
+      "message": "There are a lot of 2 cores devices that pass this test with 100. Are you sure about 50?",
+      "parentUuid": "0f880543_c204403e",
+      "range": {
+        "startLine": 130,
+        "startChar": 22,
+        "endLine": 130,
+        "endChar": 24
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eddf9360_bd106ff9",
         "filename": "tests/leak_test.cpp",
         "patchSetId": 3
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "yeah, that (or just inlining `sysconf(_SC_NPROCESSORS_ONLN)` which is probably more meaningful and intention-revealing than the equivalent C++ to most) sgtm.",
       "parentUuid": "eddf9360_bd106ff9",
+      "range": {
+        "startLine": 132,
+        "startChar": 6,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06b3a9f5_acffdcba",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1207103
+      },
+      "writtenOn": "2019-05-10T22:44:07Z",
+      "side": 1,
+      "message": "Lev, I have a compilation error if I make kThreadCount non constant value hence I used second variable (ERROR: variable-sized object may not be initialized). Same issue happens if I use your suggested solution.\n\nElliott, looks like _SC_NPROCESSORS_ONLN is for online cores. Let me try _SC_NPROCESSORS_CONF.",
+      "parentUuid": "db76d960_c4255572",
       "range": {
         "startLine": 132,
         "startChar": 6,
