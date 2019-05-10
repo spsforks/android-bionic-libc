@@ -104,6 +104,7 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
   return os;
 }
 
+
 // http://b/36045112
 TEST(pthread_leak, join) {
   LeakChecker lc;
@@ -124,17 +125,23 @@ TEST(pthread_leak, join) {
 // http://b/36045112
 TEST(pthread_leak, detach) {
   LeakChecker lc;
+  constexpr int kThreadCount = 100;
 
-  for (size_t pass = 0; pass < 2; ++pass) {
-    constexpr int kThreadCount = 100;
+  // Devices with low power cores/low number of cores can not finish test in time hence decreasing
+  // threads count to 80
+  // http://b/129924384
+  int concurrentThreadsSupported = std::thread::hardware_concurrency();
+  int lThreadCount = concurrentThreadsSupported > 2 ? kThreadCount : (kThreadCount - 10);
+
+  for (size_t pass = 0; pass < 1; ++pass) {
     struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[kThreadCount] = {};
 
     pthread_barrier_t barrier;
-    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, kThreadCount + 1), 0);
+    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, lThreadCount + 1), 0);
 
     // Start child threads.
     pid_t tids[kThreadCount];
-    for (int i = 0; i < kThreadCount; ++i) {
+    for (int i = 0; i < lThreadCount; ++i) {
       threads[i] = {&barrier, &tids[i]};
       const auto thread_function = +[](void* ptr) -> void* {
         thread_data* data = static_cast<thread_data*>(ptr);
