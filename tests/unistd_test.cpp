@@ -657,7 +657,7 @@ __attribute__((noinline, no_sanitize("hwaddress"))) static void HwasanVforkTestP
   HwasanReadMemory(x, sizeof(x));
 }
 
-TEST(UNISTD_TEST, hwasan_vfork) {
+TEST(UNISTD_TEST, hwasan_vfork) __attribute__((optnone)) {
   // Test hwasan annotation in vfork. This test is only interesting when built with hwasan, but it
   // is supposed to work correctly either way.
   if (vfork()) {
