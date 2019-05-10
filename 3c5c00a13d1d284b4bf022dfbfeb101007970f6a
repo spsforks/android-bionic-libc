@@ -16,6 +16,41 @@
       "revId": "3c5c00a13d1d284b4bf022dfbfeb101007970f6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4018160d_e2e171bd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3382,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-10T00:03:10Z",
+      "side": 1,
+      "message": "IIRC, I think find_libraries creates a LoadTask each time it sees a library listed as DT_NEEDED, so it\u0027s normal to have it appear repeatedly in the load_tasks list. It does seem a little surprising that we\u0027re repeating the prelink_image work.",
+      "parentUuid": "0b5aceed_3f6a5069",
+      "revId": "3c5c00a13d1d284b4bf022dfbfeb101007970f6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f14598a_dc555327",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-10T00:03:10Z",
+      "side": 1,
+      "message": "I think this parsing logic needs to be inside the AT_ENTRY comparison?\n\nOtherwise, I\u0027d guess that running any program could activate the ldd logic:\n\n    /system/bin/echo --list /system/bin/toybox",
+      "revId": "3c5c00a13d1d284b4bf022dfbfeb101007970f6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
