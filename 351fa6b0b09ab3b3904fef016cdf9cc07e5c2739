@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "164f1a4e_dd3e344a",
+        "filename": "linker/ldd",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-10T05:05:08Z",
+      "side": 1,
+      "message": "We could make ldd safe for paths with spaces by replacing $1 with \"$1\" here and on the linker[64] command-lines.",
+      "range": {
+        "startLine": 13,
+        "startChar": 14,
+        "endLine": 13,
+        "endChar": 16
+      },
+      "revId": "351fa6b0b09ab3b3904fef016cdf9cc07e5c2739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
