@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f880543_c204403e",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2019-05-10T21:02:48Z",
+      "side": 1,
+      "message": "I thought we negotiated dropping the count by 2 times, down to 50 that is.",
+      "range": {
+        "startLine": 130,
+        "startChar": 22,
+        "endLine": 130,
+        "endChar": 24
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eddf9360_bd106ff9",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2019-05-10T21:02:48Z",
+      "side": 1,
+      "message": "non-const variables must be snake_case. I also don\u0027t see the point in introducing 2nd variable for the thread count. It doesn\u0027t need to be constexpr (or even const) to be used in \u0027threads\u0027 declaration.\n\nWhy not just\n\nconst int kThreadCount \u003d (std::thread::hardware_concurrency() \u003e 2) ? 100 : 50;",
+      "range": {
+        "startLine": 132,
+        "startChar": 6,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
