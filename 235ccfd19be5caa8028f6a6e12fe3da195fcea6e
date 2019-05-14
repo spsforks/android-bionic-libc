@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90786e77_9cf108b4",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-14T16:55:58Z",
+      "side": 0,
+      "message": "(looks like diags were using __bos, but run-time checks were using __bos0. Oops :) )",
+      "revId": "235ccfd19be5caa8028f6a6e12fe3da195fcea6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
