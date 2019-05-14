@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a85bbc11_880c3d5e",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-14T17:38:51Z",
+      "side": 1,
+      "message": "Tricky bit: note that we check __builtin_constant_p() on the second argument before evaluating it. So if __builtin_strlen() isn\u0027t a constant, it\u0027ll get compiled away.",
+      "revId": "e3bc1f01772c248521abcdaeadb446d32881315f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
