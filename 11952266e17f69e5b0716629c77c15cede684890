@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed437799_7a151433",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-16T04:43:52Z",
+      "side": 1,
+      "message": "I think this can just be `proc_self_fd`.",
+      "range": {
+        "startLine": 405,
+        "startChar": 51,
+        "endLine": 405,
+        "endChar": 67
+      },
+      "revId": "11952266e17f69e5b0716629c77c15cede684890",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
