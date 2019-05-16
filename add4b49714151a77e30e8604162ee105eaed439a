@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ba5f730_71d81341",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2019-05-16T18:13:11Z",
+      "side": 1,
+      "message": "I think this is not quite correct, the msum s_nearbyintl.c does:\n\n--\nfenv_t env;\nfegetenv(\u0026env);\nret \u003d rint(x);\nfesetenv(\u0026env);\nreturn ret;\n--\n\nSo any inexact exception is clear out after the rint call.",
+      "revId": "add4b49714151a77e30e8604162ee105eaed439a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
