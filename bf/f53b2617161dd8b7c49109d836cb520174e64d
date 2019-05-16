@@ -1,0 +1,7 @@
+Code-Review+2: Haibo Huang <hhb@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Haibo Huang <hhb@google.com>
+Submitted-at: Thu, 16 May 2019 19:28:10 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/390675
+Project: platform/bionic
+Branch: refs/heads/master
