@@ -39,6 +39,7 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 
+#include <mutex>
 #include <new>
 #include <string>
 #include <unordered_map>
@@ -269,8 +270,6 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
-
-static bool g_anonymous_namespace_initialized;
 
 #if STATS
 struct linker_stats_t {
@@ -2445,7 +2444,22 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
+// Make ns as the anonymous namespace that is a namespace used when
+// we fail to determine the caller address (e.g., call from mono-jited code)
+// The first untrusted namespace created in the process becomes the
+// anonymous namespace.
+void set_anonymous_namespace(android_namespace_t* ns) {
+  static std::once_flag flag;
+  std::call_once(flag, [ns]{
+    CHECK(ns->is_untrusted());
+    g_anonymous_namespace = ns;
+  });
+}
+
+// TODO(b/130388701) remove this. Currently, this is used only for testing
+// where we don't have classloader namespace.
 bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
+  static bool g_anonymous_namespace_initialized = false;
   if (g_anonymous_namespace_initialized) {
     DL_ERR("anonymous namespace has already been initialized.");
     return false;
@@ -2516,6 +2530,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
   ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
+  ns->set_untrusted((type & ANDROID_NAMESPACE_TYPE_UNTRUSTED) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
     // append parent namespace paths.
@@ -2546,6 +2561,12 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_ld_library_paths(std::move(ld_library_paths));
   ns->set_default_library_paths(std::move(default_library_paths));
   ns->set_permitted_paths(std::move(permitted_paths));
+
+  // The untrusted namespace created first in the process becomes the
+  // anonymous namespace
+  if (ns->is_untrusted()) {
+    set_anonymous_namespace(ns);
+  }
 
   return ns;
 }
