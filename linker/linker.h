@@ -157,6 +157,11 @@ enum {
    */
   ANDROID_NAMESPACE_TYPE_SHARED = 2,
 
+  /* An untrusted namespace is the namespace for untrusted libraries, i.e. shared libs from
+   * apps. This is also used to load libraries when the caller of the dlopen cannot be
+   * determined, which is usually the case for mono-jited code */
+  ANDROID_NAMESPACE_TYPE_UNTRUSTED = 4,
+
   /* This flag instructs linker to enable grey-list workaround for the namespace.
    * See http://b/26394120 for details.
    */
