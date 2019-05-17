@@ -1628,6 +1628,14 @@ cc_library {
             static: {
                 srcs: [":libc_sources_static_arm"],
             },
+
+            // Arm 32 bit does not produce complete exidx unwind information
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/132992102 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
         },
         arm64: {
             version_script: ":libc.arm64.map",
