@@ -22,6 +22,30 @@
       "revId": "8361cd75c8306fd17564b09cd29a78e3b8249076",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87956efa_d3646e46",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-18T00:54:43Z",
+      "side": 1,
+      "message": "I am a little nervous about moving it, but I do think it makes a bit more sense, so moved.",
+      "parentUuid": "0f5c6d7a_551fa649",
+      "range": {
+        "startLine": 1588,
+        "startChar": 8,
+        "endLine": 1588,
+        "endChar": 27
+      },
+      "revId": "8361cd75c8306fd17564b09cd29a78e3b8249076",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
