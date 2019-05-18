@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f5c6d7a_551fa649",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2019-05-18T00:18:12Z",
+      "side": 1,
+      "message": "So that\u0027s why you need keep_symbols_and_debug_frame to override keep_symbols. Can we avoid this override rule? For example, move keep_symbols inside arch?",
+      "range": {
+        "startLine": 1588,
+        "startChar": 8,
+        "endLine": 1588,
+        "endChar": 27
+      },
+      "revId": "8361cd75c8306fd17564b09cd29a78e3b8249076",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
