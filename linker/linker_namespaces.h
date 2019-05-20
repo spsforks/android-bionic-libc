@@ -75,7 +75,7 @@ struct android_namespace_t {
   android_namespace_t() : name_(nullptr), is_isolated_(false), is_greylist_enabled_(false) {}
 
   const char* get_name() const { return name_; }
-  void set_name(const char* name) { name_ = name; }
+  void set_name(const char* name) { name_ = strdup(name); }
 
   bool is_isolated() const { return is_isolated_; }
   void set_isolated(bool isolated) { is_isolated_ = isolated; }
