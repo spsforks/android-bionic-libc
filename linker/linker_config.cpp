@@ -215,9 +215,12 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
 
     if (result == ConfigParser::kPropertyAssign) {
-      if (!android::base::StartsWith(name, "dir.")) {
+      bool is_dir_prop = android::base::StartsWith(name, "dir.");
+      bool is_exe_prop = android::base::StartsWith(name, "exe.");
+      if (!is_dir_prop && !is_exe_prop) {
         DL_WARN("%s:%zd: warning: unexpected property name \"%s\", "
-                "expected format dir.<section_name> (ignoring this line)",
+                "expected format dir.<section_name> or exe.<section_name> "
+                "(ignoring this line)",
                 ld_config_file_path,
                 cp.lineno(),
                 name.c_str());
@@ -239,7 +242,12 @@ static bool parse_config_file(const char* ld_config_file_path,
       // If the path can be resolved, resolve it
       char buf[PATH_MAX];
       std::string resolved_path;
-      if (access(value.c_str(), R_OK) != 0) {
+      if (is_exe_prop) {
+        // Individual files are usually not accessible by other executables.
+        // To avoid SELinux denial spam, we require the value to be real path
+        // and thus do not perform resolution here.
+        resolved_path = value;
+      } else if (access(value.c_str(), R_OK) != 0) {
         if (errno == ENOENT) {
           // no need to test for non-existing path. skip.
           continue;
@@ -262,7 +270,10 @@ static bool parse_config_file(const char* ld_config_file_path,
         resolved_path = value;
       }
 
-      if (file_is_under_dir(binary_realpath, resolved_path)) {
+      if (is_dir_prop && file_is_under_dir(binary_realpath, resolved_path)) {
+        section_name = name.substr(4);
+        break;
+      } else if (is_exe_prop && binary_realpath == resolved_path) {
         section_name = name.substr(4);
         break;
       }
