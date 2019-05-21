@@ -305,3 +305,29 @@ TEST(linker_config, dir_path_resolve) {
   ASSERT_TRUE(config != nullptr) << error_msg;
   ASSERT_TRUE(error_msg.empty()) << error_msg;
 }
+
+TEST(linker_config, exe_path_resolve) {
+  std::string config_str =
+      "exe.test = /some-path/some-binary\n"
+      "\n"
+      "[test]\n";
+  TemporaryFile tmp_file;
+  close(tmp_file.fd);
+  tmp_file.fd = -1;
+
+  android::base::WriteStringToFile(config_str, tmp_file.path);
+
+  std::string executable_path = "/some-path/some-binary";
+
+  const Config* config = nullptr;
+  std::string error_msg;
+
+  ASSERT_TRUE(Config::read_binary_config(tmp_file.path,
+                                         executable_path.c_str(),
+                                         false,
+                                         &config,
+                                         &error_msg)) << error_msg;
+
+  ASSERT_TRUE(config != nullptr) << error_msg;
+  ASSERT_TRUE(error_msg.empty()) << error_msg;
+}
