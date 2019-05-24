@@ -168,7 +168,7 @@ ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
         __error_if_overflows_objectsize(count, __bos0(buf), write) {
     size_t bos = __bos0(buf);
 
-    if (__bos_trivially_not_lt_no_overflow(bos, count)) {
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __call_bypassing_fortify(write)(fd, buf, count);
     }
 
