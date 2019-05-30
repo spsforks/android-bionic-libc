@@ -1,0 +1,7 @@
+Code-Review+2: Jeff Sharkey <jsharkey@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Tom Cherry <tomcherry@google.com>
+Submitted-at: Thu, 30 May 2019 19:50:45 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/973363
+Project: platform/bionic
+Branch: refs/heads/master
