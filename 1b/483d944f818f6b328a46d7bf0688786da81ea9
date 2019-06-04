@@ -1,0 +1,13 @@
+Verified+1: Dmytro Chystiakov <dmytro.chystiakov@intel.corp-partner.google.com>
+Verified+1: Kazuhiro Inaba <kinaba@google.com>
+Code-Review+1: Dmytro Chystiakov <dmytro.chystiakov@intel.corp-partner.google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Rafi Ahmad <rafiahmad@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+DrNo-Review+1: Rafi Ahmad <rafiahmad@google.com>
+Autosubmit+1: Kazuhiro Inaba <kinaba@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Tue, 04 Jun 2019 16:16:31 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/970916
+Project: platform/bionic
+Branch: refs/heads/pie-cts-dev
