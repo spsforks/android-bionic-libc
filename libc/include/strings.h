@@ -45,23 +45,17 @@
 
 #include <sys/types.h>
 #include <sys/cdefs.h>
+#include <string.h>
 #include <xlocale.h>
 
 #include <bits/strcasecmp.h>
 
 __BEGIN_DECLS
 
-#if defined(__BIONIC_FORTIFY)
 /** Deprecated. Use memmove() instead. */
-#define bcopy(b1, b2, len) (void)(__builtin___memmove_chk((b2), (b1), (len), __bos0(b2)))
+#define bcopy(b1, b2, len) (void)(memmove((b2), (b1), (len)))
 /** Deprecated. Use memset() instead. */
-#define bzero(b, len) (void)(__builtin___memset_chk((b), '\0', (len), __bos0(b)))
-#else
-/** Deprecated. Use memmove() instead. */
-#define bcopy(b1, b2, len) (void)(__builtin_memmove((b2), (b1), (len)))
-/** Deprecated. Use memset() instead. */
-#define bzero(b, len) (void)(__builtin_memset((b), '\0', (len)))
-#endif
+#define bzero(b, len) (void)(memset((b), '\0', (len)))
 
 #if !defined(__i386__) || __ANDROID_API__ >= __ANDROID_API_J_MR2__
 /**
