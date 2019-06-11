@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b92f765_730c02c9",
+        "filename": "tests/clang_fortify_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-11T20:04:37Z",
+      "side": 1,
+      "message": "So we have a few FORTIFY tests available at the moment.\n\nSince this one is targeted directly at Bionic, the thought is that any shared glibc/bionic testing should happen in our already-existing fortify_tests.cpp. Similarly, any non-broken functionality testing should also probably happen there (e.g. it\u0027s great that FORTIFY\u0027s memcpy doesn\u0027t crash with ${inputs}, but does it *actually* do what the docs say and copy the bits). This is more meant to be the failure modes and the diagnostics emitted by them.\n\nI feel like having the badness testing split out on its own is valuable, since there\u0027s a lot of arguably necessary repetition here, and a lot of similar functions that see that repetition, e.g. anything spelled open*.\n\nOpen to differing opinions, though.",
+      "revId": "9a2741010a93bfa08cc03e8d92c20c47d7e65abc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
