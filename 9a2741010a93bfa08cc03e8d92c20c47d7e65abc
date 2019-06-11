@@ -16,6 +16,24 @@
       "revId": "9a2741010a93bfa08cc03e8d92c20c47d7e65abc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6fd69c7_67c90bd0",
+        "filename": "tests/clang_fortify_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-11T20:13:26Z",
+      "side": 1,
+      "message": "yeah, that sgtm. (and is what we\u0027d been assuming made sense historically.)",
+      "parentUuid": "7b92f765_730c02c9",
+      "revId": "9a2741010a93bfa08cc03e8d92c20c47d7e65abc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
