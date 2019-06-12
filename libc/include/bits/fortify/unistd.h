@@ -87,6 +87,7 @@ char* getcwd(char* const __pass_object_size buf, size_t size)
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count, off_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pread)
@@ -101,6 +102,7 @@ ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count, off_t o
 }
 
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count, off64_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pread64)
@@ -117,6 +119,7 @@ ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count, off64
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count, off_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pwrite)
@@ -131,6 +134,7 @@ ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count, 
 }
 
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf, size_t count, off64_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pwrite64)
@@ -179,6 +183,7 @@ ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t size)
         __overloadable
         __error_if_overflows_ssizet(size, readlink)
@@ -193,6 +198,7 @@ ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t si
 }
 
 __BIONIC_FORTIFY_INLINE
+__wur
 ssize_t readlinkat(int dirfd, const char* path, char* const __pass_object_size buf, size_t size)
         __overloadable
         __error_if_overflows_ssizet(size, readlinkat)

@@ -56,6 +56,8 @@
 #undef __clang_warning_if
 #define __clang_warning_if(...)
 
+#pragma clang diagnostic ignored "-Wunused-result"
+
 // SOMETIMES_CONST allows clang to emit eager diagnostics when we're doing compilation tests, but
 // blocks them otherwise. This is needed for diagnostics emitted with __enable_if.
 #define SOMETIMES_CONST volatile
@@ -525,14 +527,10 @@ FORTIFY_TEST(unistd) {
 #endif
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(read(kBogusFD, small_buffer, sizeof(small_buffer) + 1));
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(pread(kBogusFD, small_buffer, sizeof(small_buffer) + 1, 0));
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(pread64(kBogusFD, small_buffer, sizeof(small_buffer) + 1, 0));
 #if 0
@@ -540,21 +538,18 @@ FORTIFY_TEST(unistd) {
 #endif
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(write(kBogusFD, small_buffer, sizeof(small_buffer) + 1));
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(pwrite(kBogusFD, small_buffer, sizeof(small_buffer) + 1, 0));
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(pwrite64(kBogusFD, small_buffer, sizeof(small_buffer) + 1, 0));
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{bytes overflows the given object}}
   EXPECT_FORTIFY_DEATH(readlink("/", small_buffer, sizeof(small_buffer) + 1));
+  // expected-warning@+2{{ignoring return value of function}}
+  // expected-error@+1{{bytes overflows the given object}}
+  EXPECT_FORTIFY_DEATH(readlinkat(0, "/", small_buffer, sizeof(small_buffer) + 1));
 #if 0
   // expected-error@+2{{ignoring return value of function}}
 #endif
@@ -571,16 +566,22 @@ FORTIFY_TEST(unistd) {
   } split;
 
   EXPECT_NO_DEATH(read(kBogusFD, split.tiny_buffer, sizeof(split)));
-  EXPECT_NO_DEATH(pread(kBogusFD, split.tiny_buffer, sizeof(split), 0));
-  EXPECT_NO_DEATH(pread64(kBogusFD, split.tiny_buffer, sizeof(split), 0));
+  EXPECT_NO_DEATH((void)pread(kBogusFD, split.tiny_buffer, sizeof(split), 0));
+  EXPECT_NO_DEATH((void)pread64(kBogusFD, split.tiny_buffer, sizeof(split), 0));
   EXPECT_NO_DEATH(write(kBogusFD, split.tiny_buffer, sizeof(split)));
-  EXPECT_NO_DEATH(pwrite(kBogusFD, split.tiny_buffer, sizeof(split), 0));
-  EXPECT_NO_DEATH(pwrite64(kBogusFD, split.tiny_buffer, sizeof(split), 0));
+  EXPECT_NO_DEATH((void)pwrite(kBogusFD, split.tiny_buffer, sizeof(split), 0));
+  EXPECT_NO_DEATH((void)pwrite64(kBogusFD, split.tiny_buffer, sizeof(split), 0));
 
 #if _FORTIFY_SOURCE > 1
-  // expected-error@+2{{bytes overflows the given object}}
+  // expected-error@+3{{bytes overflows the given object}}
 #endif
+  // expected-warning@+1{{ignoring return value of function}}
   EXPECT_FORTIFY_DEATH_STRUCT(readlink("/", split.tiny_buffer, sizeof(split)));
+#if _FORTIFY_SOURCE > 1
+  // expected-error@+3{{bytes overflows the given object}}
+#endif
+  // expected-warning@+1{{ignoring return value of function}}
+  EXPECT_FORTIFY_DEATH_STRUCT(readlinkat(0, "/", split.tiny_buffer, sizeof(split)));
 #if _FORTIFY_SOURCE > 1
   // expected-error@+2{{bytes overflows the given object}}
 #endif
@@ -592,15 +593,15 @@ FORTIFY_TEST(unistd) {
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
     EXPECT_FORTIFY_DEATH(read(kBogusFD, unknown, count));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
-    EXPECT_FORTIFY_DEATH(pread(kBogusFD, unknown, count, 0));
+    EXPECT_FORTIFY_DEATH((void)pread(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
-    EXPECT_FORTIFY_DEATH(pread64(kBogusFD, unknown, count, 0));
+    EXPECT_FORTIFY_DEATH((void)pread64(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
     EXPECT_FORTIFY_DEATH(write(kBogusFD, unknown, count));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
-    EXPECT_FORTIFY_DEATH(pwrite(kBogusFD, unknown, count, 0));
+    EXPECT_FORTIFY_DEATH((void)pwrite(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
-    EXPECT_FORTIFY_DEATH(pwrite64(kBogusFD, unknown, count, 0));
+    EXPECT_FORTIFY_DEATH((void)pwrite64(kBogusFD, unknown, count, 0));
   }
 }
 
