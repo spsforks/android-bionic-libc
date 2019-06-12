@@ -1,0 +1,8 @@
+Code-Review+1: Jiyong Park <jiyong@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Ryan Prichard <rprichard@google.com>
+Submitted-at: Wed, 12 Jun 2019 19:40:18 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/978448
+Project: platform/bionic
+Branch: refs/heads/master
