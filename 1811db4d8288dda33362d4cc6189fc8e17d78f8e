@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4d93c8c_49d6d70b",
+        "filename": "libc/include/bits/fortify/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-13T20:52:21Z",
+      "side": 1,
+      "message": "(subtle note: this means we\u0027ll be calling the _chk function even if __bos \u003d\u003d -1, which the tests now check for)",
+      "revId": "1811db4d8288dda33362d4cc6189fc8e17d78f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
