@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6653ca3b_af005f0b",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-13T20:45:33Z",
+      "side": 0,
+      "message": "(removed because it\u0027s technically not \"broken\" code -- just silently truncated -- and i\u0027d be surprised if it ever actually found anything. the sprintf stays though, since there\u0027s no `size`. if you think this is valuable, happy to keep it and add a test)",
+      "revId": "27c9ffc06b7da681cec4c937b0d6d82fa8942aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
