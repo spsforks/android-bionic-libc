@@ -23,6 +23,8 @@
 #include <android-base/file.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(sys_mman, mmap_std) {
   void* map = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
@@ -238,4 +240,10 @@ TEST(sys_mman, mmap_bug_27265969) {
                                             MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
   // Some kernels had bugs that would cause segfaults here...
   __builtin___clear_cache(base, base + (PAGE_SIZE * 2));
+}
+
+TEST(sys_mman, mlockall_hwasan) {
+  if (running_with_hwasan()) {
+    ASSERT_EQ(-1, mlockall(MCL_CURRENT));
+  }
 }

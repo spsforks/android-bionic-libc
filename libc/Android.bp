@@ -1089,6 +1089,7 @@ cc_library_static {
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
+        "bionic/mlockall.cpp",
         "bionic/mntent.cpp",
         "bionic/mremap.cpp",
         "bionic/net_if.cpp",
