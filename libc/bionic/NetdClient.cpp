@@ -45,20 +45,23 @@ static void netdClientInitImpl() {
         return;
     }
 
-    void* netdClientHandle = dlopen("libnetd_client.so", RTLD_NOW);
-    if (netdClientHandle == NULL) {
+    void* handle = dlopen("libnetd_client.so", RTLD_NOW);
+    if (handle == NULL) {
         // If the library is not available, it's not an error. We'll just use
         // default implementations of functions that it would've overridden.
         return;
     }
-    netdClientInitFunction(netdClientHandle, "netdClientInitAccept4",
-                           &__netdClientDispatch.accept4);
-    netdClientInitFunction(netdClientHandle, "netdClientInitConnect",
-                           &__netdClientDispatch.connect);
-    netdClientInitFunction(netdClientHandle, "netdClientInitNetIdForResolv",
+
+    netdClientInitFunction(handle, "netdClientInitAccept4", &__netdClientDispatch.accept4);
+    netdClientInitFunction(handle, "netdClientInitConnect", &__netdClientDispatch.connect);
+    netdClientInitFunction(handle, "netdClientInitSendto", &__netdClientDispatch.sendto);
+    netdClientInitFunction(handle, "netdClientInitSendmmsg", &__netdClientDispatch.sendmmsg);
+    netdClientInitFunction(handle, "netdClientInitSendmsg", &__netdClientDispatch.sendmsg);
+    netdClientInitFunction(handle, "netdClientInitSocket", &__netdClientDispatch.socket);
+
+    netdClientInitFunction(handle, "netdClientInitNetIdForResolv",
                            &__netdClientDispatch.netIdForResolv);
-    netdClientInitFunction(netdClientHandle, "netdClientInitSocket", &__netdClientDispatch.socket);
-    netdClientInitFunction(netdClientHandle, "netdClientInitDnsOpenProxy",
+    netdClientInitFunction(handle, "netdClientInitDnsOpenProxy",
                            &__netdClientDispatch.dnsOpenProxy);
 }
 
