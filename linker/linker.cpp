@@ -814,27 +814,40 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
                                             const version_info* vi) {
   const ElfW(Sym)* result = nullptr;
   bool skip_lookup = skip_until != nullptr;
+  LD_LOG(kLogDlopen, "dlsym_handle_lookup(%s) ns %s root %s skip_until %s", symbol_name.get_name(),
+         ns->get_name(), root == nullptr ? "(nullptr)" : root->get_soname(),
+         skip_until == nullptr ? "(nullptr)" : skip_until->get_soname());
 
   walk_dependencies_tree(root, [&](soinfo* current_soinfo) {
     if (skip_lookup) {
       skip_lookup = current_soinfo != skip_until;
+      LD_LOG(kLogDlopen, "  dlsym_handle_lookup current %s skip continue",
+             current_soinfo->get_soname());
       return kWalkContinue;
     }
 
     if (!ns->is_accessible(current_soinfo)) {
+      LD_LOG(kLogDlopen, "  dlsym_handle_lookup current %s skip",
+             current_soinfo->get_soname());
       return kWalkSkip;
     }
 
     if (!current_soinfo->find_symbol_by_name(symbol_name, vi, &result)) {
       result = nullptr;
+      LD_LOG(kLogDlopen, "  dlsym_handle_lookup current %s not found",
+             current_soinfo->get_soname());
       return kWalkStop;
     }
 
     if (result != nullptr) {
       *found = current_soinfo;
+      LD_LOG(kLogDlopen, "  dlsym_handle_lookup current %s found",
+             current_soinfo->get_soname());
       return kWalkStop;
     }
 
+    LD_LOG(kLogDlopen, "  dlsym_handle_lookup current %s continue",
+           current_soinfo->get_soname());
     return kWalkContinue;
   });
 
@@ -896,12 +909,22 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
       auto it = soinfo_list.find(caller);
       CHECK (it != soinfo_list.end());
       start = ++it;
+      LD_LOG(kLogDlopen, "dlsym_linear_lookup(%s, RTLD_NEXT) caller %s ns %s", name,
+             caller->get_soname(), ns->get_name());
     }
+  } else {
+    LD_LOG(kLogDlopen, "dlsym_linear_lookup(%s, RTLD_DEFAULT) caller %s ns %s", name,
+           caller == nullptr ? "(nullptr)" : caller->get_soname(), ns->get_name());
+  }
+
+  for (auto it = soinfo_list.begin(); it != start; ++it) {
+    LD_LOG(kLogDlopen, "  dlsym_linear_lookup(%s) skipping %s", name, (*it)->get_soname());
   }
 
   const ElfW(Sym)* s = nullptr;
   for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
+    LD_LOG(kLogDlopen, "  dlsym_linear_lookup(%s) checking %s", name, si->get_soname());
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
     // if the library is opened by application with target api level < M.
     // See http://b/21565766
@@ -911,11 +934,13 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     }
 
     if (!si->find_symbol_by_name(symbol_name, vi, &s)) {
+      LD_LOG(kLogDlopen, "  dlsym_linear_lookup(%s) not found", name);
       return nullptr;
     }
 
     if (s != nullptr) {
       *found = si;
+      LD_LOG(kLogDlopen, "  dlsym_linear_lookup(%s) found in %s", name, si->get_soname());
       break;
     }
   }
@@ -923,6 +948,11 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   // If not found - use dlsym_handle_lookup for caller's local_group
   if (s == nullptr && caller != nullptr) {
     soinfo* local_group_root = caller->get_local_group_root();
+    android_namespace_t* root_ns = local_group_root->get_primary_namespace();
+    LD_LOG(kLogDlopen,
+           "dlsym_linear_lookup(%s) caller %s not found - trying local group from root %s ns %s",
+           name, caller->get_soname(), local_group_root->get_soname(),
+           root_ns == nullptr ? "(nullptr)" : root_ns->get_name());
 
     return dlsym_handle_lookup(local_group_root->get_primary_namespace(),
                                local_group_root,
@@ -932,6 +962,7 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
                                vi);
   }
 
+  LD_LOG(kLogDlopen, "dlsym_linear_lookup(%s) caller %s not found", name, caller->get_soname());
   if (s != nullptr) {
     TRACE_TYPE(LOOKUP, "%s s->st_value = %p, found->base = %p",
                name, reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
