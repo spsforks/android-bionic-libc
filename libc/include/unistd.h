@@ -324,3 +324,5 @@ void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(
 #endif
 
 __END_DECLS
+
+#include <android/legacy_unistd_inlines.h>
