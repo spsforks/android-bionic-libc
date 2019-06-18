@@ -254,6 +254,8 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   ThreadMapping result = {};
   result.mmap_base = space;
   result.mmap_size = mmap_size;
+  result.mmap_base_unguarded = space + stack_guard_size;
+  result.mmap_size_unguarded = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
   result.static_tls = space + mmap_size - PTHREAD_GUARD_SIZE - layout.size();
   result.stack_base = space;
   result.stack_top = result.static_tls;
@@ -315,10 +317,22 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->attr = *attr;
   thread->mmap_base = mapping.mmap_base;
   thread->mmap_size = mapping.mmap_size;
+  thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
+  thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
 
   *tcbp = tcb;
   *child_stack = stack_top;
   return 0;
+}
+
+void __set_stack_and_tls_vma_name() {
+  // Name the thread's stack-and-tls area to help with debugging. This mapped area also includes
+  // static TLS data, which is typically a few pages (e.g. bionic_tls). The kernel doesn't copy the
+  // name string, but this variable will last at least as long as the mapped area. The mapped area's
+  // VMAs are unmapped with a single call to munmap.
+  pthread_internal_t* thread = __get_thread();
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->mmap_base_unguarded, thread->mmap_size_unguarded,
+        thread->get_vma_name(gettid()));
 }
 
 __attribute__((no_sanitize("hwaddress")))
@@ -333,6 +347,7 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
+  __set_stack_and_tls_vma_name();
   __init_additional_stacks(thread);
 
   void* result = thread->start_routine(thread->start_routine_arg);
