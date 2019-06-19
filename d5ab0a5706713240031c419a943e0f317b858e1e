@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdda81e0_f0b08f50",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-19T20:08:31Z",
+      "side": 1,
+      "message": "does this even make it into CTS, or do you need to push the #if down inside the TESTs?",
+      "revId": "d5ab0a5706713240031c419a943e0f317b858e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
