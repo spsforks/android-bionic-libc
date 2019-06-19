@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "543608bf_41fa72f3",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-06-19T20:01:28Z",
+      "side": 1,
+      "message": "This comment is out of date now.",
+      "range": {
+        "startLine": 268,
+        "startChar": 59,
+        "endLine": 268,
+        "endChar": 78
+      },
+      "revId": "267e73ff16807391d01e90c68c15a3586f5e1c02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
