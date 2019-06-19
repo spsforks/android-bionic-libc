@@ -22,6 +22,30 @@
       "revId": "8d0a5ee6d1c9aec4f7054ed40b58ce1ee82d8b60",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cf73197_0ffa84eb",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-19T22:42:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c664c17e_9d771a3e",
+      "range": {
+        "startLine": 268,
+        "startChar": 7,
+        "endLine": 268,
+        "endChar": 8
+      },
+      "revId": "8d0a5ee6d1c9aec4f7054ed40b58ce1ee82d8b60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
