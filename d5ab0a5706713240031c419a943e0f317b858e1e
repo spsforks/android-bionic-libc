@@ -16,6 +16,24 @@
       "revId": "d5ab0a5706713240031c419a943e0f317b858e1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90a7afce_b5c1252e",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-06-19T20:15:25Z",
+      "side": 1,
+      "message": "Oops, yes that\u0027s a mistake, the tests are missing in 64 bit. I\u0027ll fix that in a subsequent CL so I\u0027m not mixing fixes.",
+      "parentUuid": "cdda81e0_f0b08f50",
+      "revId": "d5ab0a5706713240031c419a943e0f317b858e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
