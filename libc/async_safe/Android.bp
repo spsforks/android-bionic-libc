@@ -1,23 +1,50 @@
 // ========================================================
 // libasync_safe.a
 // ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
+
+cc_defaults {
+    name: "libasync_defaults",
     srcs: [
         "async_safe_log.cpp",
     ],
 
-    name: "libasync_safe",
     vendor_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
     include_dirs: ["bionic/libc"],
-    header_libs: ["libc_headers", "liblog_headers"],
 
     export_include_dirs: ["include"],
-    export_header_lib_headers: ["liblog_headers"],
     stl: "none",
+}
+
+cc_library_static {
+    name: "libasync_safe",
+    defaults: [
+        "libasync_defaults",
+        "libc_defaults",
+    ],
+    header_libs: [
+        "libc_headers",
+        "liblog_headers",
+    ],
+    export_header_lib_headers: ["liblog_headers"],
+}
+
+// TODO(b/xxx): Switch all users to this NDK variant and replace the library
+// above with it. Possible?
+cc_library_static {
+    name: "libasync_safe_ndk",
+    defaults: [
+        "libasync_defaults",
+        "libc_defaults",
+    ],
+    sdk_version: "current",
+    header_libs: [
+        "libc_headers_ndk",
+        "liblog_headers_ndk",
+    ],
+    export_header_lib_headers: ["liblog_headers_ndk"],
 }
 
 cc_library_headers {

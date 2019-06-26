@@ -1708,8 +1708,8 @@ genrule {
 }
 
 // libc_headers for libasync_safe and libpropertyinfoparser
-cc_library_headers {
-    name: "libc_headers",
+cc_defaults {
+    name: "libc_headers_defaults",
 
     host_supported: true,
     vendor_available: true,
@@ -1758,6 +1758,17 @@ cc_library_headers {
             ],
         },
     },
+}
+
+cc_library_headers {
+    name: "libc_headers",
+    defaults: ["libc_headers_defaults"],
+}
+
+cc_library_headers {
+    name: "libc_headers_ndk",
+    defaults: ["libc_headers_defaults"],
+    sdk_version: "current",
 }
 
 // ========================================================

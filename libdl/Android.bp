@@ -175,11 +175,12 @@ cc_library {
     sanitize: {
         never: true,
     },
+}
 
-    stubs: {
-        symbol_file: "libdl_android.map.txt",
-        versions: ["10000"],
-    },
+ndk_library {
+    name: "libdl_android",
+    symbol_file: "libdl_android.map.txt",
+    first_version: "20",
 }
 
 ndk_library {

@@ -300,7 +300,7 @@ cc_binary {
 
     target: {
         android: {
-            static_libs: ["libdebuggerd_handler_fallback"],
+            // FIXME static_libs: ["libdebuggerd_handler_fallback"],
         },
     },
     compile_multilib: "both",

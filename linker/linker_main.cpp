@@ -46,8 +46,10 @@
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
+#if 0
 #ifdef __ANDROID__
 #include "debuggerd/handler.h"
+#endif
 #endif
 
 #include <async_safe/log.h>
@@ -309,6 +311,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __system_properties_init(); // may use 'environ'
 
   // Register the debuggerd signal handler.
+#if 0
 #ifdef __ANDROID__
   debuggerd_callbacks_t callbacks = {
     .get_abort_message = []() {
@@ -317,6 +320,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     .post_dump = &notify_gdb_of_libraries,
   };
   debuggerd_init(&callbacks);
+#endif
 #endif
 
   g_linker_logger.ResetState();
