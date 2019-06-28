@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68e6b6ee_2ff56dff",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "commands",
+      "range": {
+        "startLine": 144,
+        "startChar": 65,
+        "endLine": 144,
+        "endChar": 72
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c53d6da_f0d7a2aa",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "commands",
+      "range": {
+        "startLine": 176,
+        "startChar": 65,
+        "endLine": 176,
+        "endChar": 72
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "245024b9_20fb4c31",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "allocations",
+      "range": {
+        "startLine": 181,
+        "startChar": 64,
+        "endLine": 181,
+        "endChar": 74
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d415d69_740154fc",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "benchmark",
+      "range": {
+        "startLine": 210,
+        "startChar": 5,
+        "endLine": 210,
+        "endChar": 15
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7b1c1a8_bef7ad66",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "commands",
+      "range": {
+        "startLine": 223,
+        "startChar": 65,
+        "endLine": 223,
+        "endChar": 72
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01c935b4_2ee367f4",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-28T17:00:20Z",
+      "side": 1,
+      "message": "process",
+      "range": {
+        "startLine": 321,
+        "startChar": 5,
+        "endLine": 321,
+        "endChar": 11
+      },
+      "revId": "a6836bd6fb9d6c0b1b95abd9f2270dd8a7df6639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
