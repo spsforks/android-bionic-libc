@@ -369,6 +369,11 @@ cc_library {
     recovery_available: true,
     native_bridge_supported: true,
 
+    vendor_available: true,     // Required by libdl_android.
+    // TODO: Silence error about this, which results from dependency libGLESv3
+    // -> libEGL -> libgraphicsenv -> libc -> dl-android
+    double_loadable: true,
+
     nocrt: true,
     system_shared_libs: [],
 

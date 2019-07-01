@@ -120,6 +120,11 @@ cc_library {
     recovery_available: true,
     native_bridge_supported: true,
 
+    vendor_available: true,    // Required by libopenjdk.
+    // TODO: Silence error about this, which results from dependency libGLESv3
+    // -> libEGL -> {libgraphicsenv,libvndksupport} -> libdl_android
+    double_loadable: true,
+
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
     // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
     // a) pull symbols from libgcc.a and b) depend on libdl.so will not rely on libdl.so
