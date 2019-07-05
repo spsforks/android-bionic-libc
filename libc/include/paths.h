@@ -47,6 +47,8 @@
 #define _PATH_CONSOLE "/dev/console"
 
 /** Default shell search path. */
+// TODO: Do we need both runtime and art here?
+// #define _PATH_DEFPATH "/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
 #define _PATH_DEFPATH "/product/bin:/apex/com.android.runtime/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
 
 /** Path to the directory containing device files. */
