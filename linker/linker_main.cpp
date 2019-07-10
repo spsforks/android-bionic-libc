@@ -118,7 +118,13 @@ soinfo* solist_get_vdso() {
 }
 
 bool g_is_ldd;
+
+#if 0
 int g_ld_debug_verbosity;
+#else
+// FIXME: Force-set the verbosity level.
+int g_ld_debug_verbosity = 1;
+#endif
 
 static std::vector<std::string> g_ld_preload_names;
 
