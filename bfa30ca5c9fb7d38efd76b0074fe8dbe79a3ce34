@@ -93,6 +93,30 @@
       "revId": "bfa30ca5c9fb7d38efd76b0074fe8dbe79a3ce34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dfec6b9_3e87a5bf",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-07-16T20:35:10Z",
+      "side": 1,
+      "message": "(eugenis pointed out that you meant remove the space.)",
+      "parentUuid": "29368da8_a40f71ba",
+      "range": {
+        "startLine": 56,
+        "startChar": 37,
+        "endLine": 56,
+        "endChar": 43
+      },
+      "revId": "bfa30ca5c9fb7d38efd76b0074fe8dbe79a3ce34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
