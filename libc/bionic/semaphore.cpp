@@ -220,7 +220,7 @@ int sem_wait(sem_t* sem) {
       return 0;
     }
 
-    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
+    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, {}, nullptr);
     if (android_get_application_target_sdk_version() >= __ANDROID_API_N__) {
       if (result ==-EINTR) {
         errno = EINTR;
@@ -230,7 +230,7 @@ int sem_wait(sem_t* sem) {
   }
 }
 
-static int __sem_timedwait(sem_t* sem, const timespec* abs_timeout, bool use_realtime_clock) {
+static int __sem_timedwait(sem_t* sem, const timespec* abs_timeout, FutexWaitMode wait_mode) {
   atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
 
   // POSIX says we need to try to decrement the semaphore
@@ -256,8 +256,8 @@ static int __sem_timedwait(sem_t* sem, const timespec* abs_timeout, bool use_rea
     }
 
     // Contention detected. Wait for a wakeup event.
-    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE,
-                                 use_realtime_clock, abs_timeout);
+    int result =
+        __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, wait_mode, abs_timeout);
 
     // Return in case of timeout or interrupt.
     if (result == -ETIMEDOUT || result == -EINTR) {
@@ -268,11 +268,11 @@ static int __sem_timedwait(sem_t* sem, const timespec* abs_timeout, bool use_rea
 }
 
 int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
-  return __sem_timedwait(sem, abs_timeout, true);
+  return __sem_timedwait(sem, abs_timeout, FutexWaitMode::kConvertedRealTime);
 }
 
 int sem_timedwait_monotonic_np(sem_t* sem, const timespec* abs_timeout) {
-  return __sem_timedwait(sem, abs_timeout, false);
+  return __sem_timedwait(sem, abs_timeout, FutexWaitMode::kMonotonic);
 }
 
 int sem_clockwait(sem_t* sem, clockid_t clock, const timespec* abs_timeout) {
@@ -280,7 +280,7 @@ int sem_clockwait(sem_t* sem, clockid_t clock, const timespec* abs_timeout) {
     case CLOCK_MONOTONIC:
       return sem_timedwait_monotonic_np(sem, abs_timeout);
     case CLOCK_REALTIME:
-      return sem_timedwait(sem, abs_timeout);
+      return __sem_timedwait(sem, abs_timeout, FutexWaitMode::kRealTime);
     default:
       return EINVAL;
   }

@@ -171,7 +171,7 @@ static int __pthread_cond_pulse(pthread_cond_internal_t* cond, int thread_count)
 }
 
 static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex_t* mutex,
-                                    bool use_realtime_clock, const timespec* abs_timeout_or_null) {
+                                    FutexWaitMode wait_mode, const timespec* abs_timeout_or_null) {
   int result = check_timespec(abs_timeout_or_null, true);
   if (result != 0) {
     return result;
@@ -179,8 +179,8 @@ static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex
 
   unsigned int old_state = atomic_load_explicit(&cond->state, memory_order_relaxed);
   pthread_mutex_unlock(mutex);
-  int status = __futex_wait_ex(&cond->state, cond->process_shared(), old_state,
-                               use_realtime_clock, abs_timeout_or_null);
+  int status = __futex_wait_ex(&cond->state, cond->process_shared(), old_state, wait_mode,
+                               abs_timeout_or_null);
   pthread_mutex_lock(mutex);
 
   if (status == -ETIMEDOUT) {
@@ -199,20 +199,23 @@ int pthread_cond_signal(pthread_cond_t* cond_interface) {
 
 int pthread_cond_wait(pthread_cond_t* cond_interface, pthread_mutex_t* mutex) {
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
-  return __pthread_cond_timedwait(cond, mutex, false, nullptr);
+  return __pthread_cond_timedwait(cond, mutex, {}, nullptr);
 }
 
 int pthread_cond_timedwait(pthread_cond_t *cond_interface, pthread_mutex_t * mutex,
                            const timespec *abstime) {
 
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
-  return __pthread_cond_timedwait(cond, mutex, cond->use_realtime_clock(), abstime);
+  FutexWaitMode wait_mode =
+      cond->use_realtime_clock() ? FutexWaitMode::kConvertedRealTime : FutexWaitMode::kMonotonic;
+  return __pthread_cond_timedwait(cond, mutex, wait_mode, abstime);
 }
 
 extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond_interface,
                                                    pthread_mutex_t* mutex,
                                                    const timespec* abs_timeout) {
-  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, false, abs_timeout);
+  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex,
+                                  FutexWaitMode::kMonotonic, abs_timeout);
 }
 
 int pthread_cond_clockwait(pthread_cond_t* cond_interface, pthread_mutex_t* mutex, clockid_t clock,
@@ -221,7 +224,8 @@ int pthread_cond_clockwait(pthread_cond_t* cond_interface, pthread_mutex_t* mute
     case CLOCK_MONOTONIC:
       return pthread_cond_timedwait_monotonic_np(cond_interface, mutex, abs_timeout);
     case CLOCK_REALTIME:
-      return pthread_cond_timedwait(cond_interface, mutex, abs_timeout);
+      return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex,
+                                      FutexWaitMode::kRealTime, abs_timeout);
     default:
       return EINVAL;
   }
@@ -246,7 +250,8 @@ extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond_interface
     absolute_timespec_from_timespec(ts, *rel_timeout, CLOCK_MONOTONIC);
     abs_timeout = &ts;
   }
-  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, false, abs_timeout);
+  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex,
+                                  FutexWaitMode::kMonotonic, abs_timeout);
 }
 
 extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond_interface,

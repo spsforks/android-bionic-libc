@@ -174,16 +174,15 @@ static inline __always_inline int PIMutexTryLock(PIMutex& mutex) {
 
 // Inlining this function in pthread_mutex_lock() adds the cost of stack frame instructions on
 // ARM/ARM64, which increases at most 20 percent overhead. So make it noinline.
-static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
-                                                       bool use_realtime_clock,
-                                                       const timespec* abs_timeout) {
+static int __attribute__((noinline))
+PIMutexTimedLock(PIMutex& mutex, FutexWaitMode wait_mode, const timespec* abs_timeout) {
     int ret = PIMutexTryLock(mutex);
     if (__predict_true(ret == 0)) {
         return 0;
     }
     if (ret == EBUSY) {
         ScopedTrace trace("Contending for pthread mutex");
-        ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, use_realtime_clock, abs_timeout);
+        ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, wait_mode, abs_timeout);
     }
     return ret;
 }
@@ -577,9 +576,8 @@ static inline __always_inline int NormalMutexTryLock(pthread_mutex_internal_t* m
  * "type" value is zero, so the only bits that will be set are the ones in
  * the lock state field.
  */
-static inline __always_inline int NormalMutexLock(pthread_mutex_internal_t* mutex,
-                                                  uint16_t shared,
-                                                  bool use_realtime_clock,
+static inline __always_inline int NormalMutexLock(pthread_mutex_internal_t* mutex, uint16_t shared,
+                                                  FutexWaitMode wait_mode,
                                                   const timespec* abs_timeout_or_null) {
     if (__predict_true(NormalMutexTryLock(mutex, shared) == 0)) {
         return 0;
@@ -604,7 +602,7 @@ static inline __always_inline int NormalMutexLock(pthread_mutex_internal_t* mute
     // made by other threads visible to the current CPU.
     while (atomic_exchange_explicit(&mutex->state, locked_contended,
                                     memory_order_acquire) != unlocked) {
-        if (__futex_wait_ex(&mutex->state, shared, locked_contended, use_realtime_clock,
+        if (__futex_wait_ex(&mutex->state, shared, locked_contended, wait_mode,
                             abs_timeout_or_null) == -ETIMEDOUT) {
             return ETIMEDOUT;
         }
@@ -685,7 +683,7 @@ static inline __always_inline int RecursiveIncrement(pthread_mutex_internal_t* m
 static inline __always_inline int RecursiveOrErrorcheckMutexWait(pthread_mutex_internal_t* mutex,
                                                                  uint16_t shared,
                                                                  uint16_t old_state,
-                                                                 bool use_realtime_clock,
+                                                                 FutexWaitMode wait_mode,
                                                                  const timespec* abs_timeout) {
 // __futex_wait always waits on a 32-bit value. But state is 16-bit. For a normal mutex, the owner_tid
 // field in mutex is not used. On 64-bit devices, the __pad field in mutex is not used.
@@ -693,7 +691,7 @@ static inline __always_inline int RecursiveOrErrorcheckMutexWait(pthread_mutex_i
 // owner_tid value in the value argument for __futex_wait, otherwise we may always get EAGAIN error.
 
 #if defined(__LP64__)
-  return __futex_wait_ex(&mutex->state, shared, old_state, use_realtime_clock, abs_timeout);
+  return __futex_wait_ex(&mutex->state, shared, old_state, wait_mode, abs_timeout);
 
 #else
   // This implementation works only when the layout of pthread_mutex_internal_t matches below expectation.
@@ -702,13 +700,13 @@ static inline __always_inline int RecursiveOrErrorcheckMutexWait(pthread_mutex_i
   static_assert(offsetof(pthread_mutex_internal_t, owner_tid) == 2, "");
 
   uint32_t owner_tid = atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed);
-  return __futex_wait_ex(&mutex->state, shared, (owner_tid << 16) | old_state,
-                         use_realtime_clock, abs_timeout);
+  return __futex_wait_ex(&mutex->state, shared, (owner_tid << 16) | old_state, wait_mode,
+                         abs_timeout);
 #endif
 }
 
 // Lock a Non-PI mutex.
-static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, bool use_realtime_clock,
+static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, FutexWaitMode wait_mode,
                                 const timespec* abs_timeout_or_null) {
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
@@ -716,7 +714,7 @@ static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, bool use_realti
 
     // Handle common case first.
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
-        return NormalMutexLock(mutex, shared, use_realtime_clock, abs_timeout_or_null);
+        return NormalMutexLock(mutex, shared, wait_mode, abs_timeout_or_null);
     }
 
     // Do we already own this recursive or error-check mutex?
@@ -781,7 +779,7 @@ static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, bool use_realti
             return result;
         }
         // We are in locked_contended state, sleep until someone wakes us up.
-        if (RecursiveOrErrorcheckMutexWait(mutex, shared, old_state, use_realtime_clock,
+        if (RecursiveOrErrorcheckMutexWait(mutex, shared, old_state, wait_mode,
                                            abs_timeout_or_null) == -ETIMEDOUT) {
             return ETIMEDOUT;
         }
@@ -831,12 +829,12 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
         if (__predict_true(PIMutexTryLock(m) == 0)) {
             return 0;
         }
-        return PIMutexTimedLock(mutex->ToPIMutex(), false, nullptr);
+        return PIMutexTimedLock(mutex->ToPIMutex(), {}, nullptr);
     }
     if (__predict_false(IsMutexDestroyed(old_state))) {
         return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
-    return NonPI::MutexLockWithTimeout(mutex, false, nullptr);
+    return NonPI::MutexLockWithTimeout(mutex, {}, nullptr);
 }
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
@@ -950,8 +948,8 @@ extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex_interface, u
     timespec_from_ms(ts, ms);
     timespec abs_timeout;
     absolute_timespec_from_timespec(abs_timeout, ts, CLOCK_MONOTONIC);
-    int error = NonPI::MutexLockWithTimeout(__get_internal_mutex(mutex_interface), false,
-                                            &abs_timeout);
+    int error = NonPI::MutexLockWithTimeout(__get_internal_mutex(mutex_interface),
+                                            FutexWaitMode::kMonotonic, &abs_timeout);
     if (error == ETIMEDOUT) {
         error = EBUSY;
     }
@@ -959,7 +957,7 @@ extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex_interface, u
 }
 #endif
 
-static int __pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, bool use_realtime_clock,
+static int __pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, FutexWaitMode wait_mode,
                                      const timespec* abs_timeout, const char* function) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
@@ -972,30 +970,34 @@ static int __pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, bool use_
         }
     }
     if (old_state == PI_MUTEX_STATE) {
-        return PIMutexTimedLock(mutex->ToPIMutex(), use_realtime_clock, abs_timeout);
+        return PIMutexTimedLock(mutex->ToPIMutex(), wait_mode, abs_timeout);
     }
     if (__predict_false(IsMutexDestroyed(old_state))) {
         return HandleUsingDestroyedMutex(mutex_interface, function);
     }
-    return NonPI::MutexLockWithTimeout(mutex, use_realtime_clock, abs_timeout);
+    return NonPI::MutexLockWithTimeout(mutex, wait_mode, abs_timeout);
 }
 
 int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const struct timespec* abs_timeout) {
-    return __pthread_mutex_timedlock(mutex_interface, true, abs_timeout, __FUNCTION__);
+  return __pthread_mutex_timedlock(mutex_interface, FutexWaitMode::kConvertedRealTime, abs_timeout,
+                                   __FUNCTION__);
 }
 
 int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* mutex_interface,
                                          const struct timespec* abs_timeout) {
-    return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
+  return __pthread_mutex_timedlock(mutex_interface, FutexWaitMode::kMonotonic, abs_timeout,
+                                   __FUNCTION__);
 }
 
 int pthread_mutex_clocklock(pthread_mutex_t* mutex_interface, clockid_t clock,
                             const struct timespec* abs_timeout) {
   switch (clock) {
     case CLOCK_MONOTONIC:
-      return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
+      return __pthread_mutex_timedlock(mutex_interface, FutexWaitMode::kMonotonic, abs_timeout,
+                                       __FUNCTION__);
     case CLOCK_REALTIME:
-      return __pthread_mutex_timedlock(mutex_interface, true, abs_timeout, __FUNCTION__);
+      return __pthread_mutex_timedlock(mutex_interface, FutexWaitMode::kRealTime, abs_timeout,
+                                       __FUNCTION__);
     default: {
       pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
       uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);

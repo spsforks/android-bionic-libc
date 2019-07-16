@@ -38,6 +38,13 @@
 
 struct timespec;
 
+enum class FutexWaitMode {
+  kMonotonic = 0,  // timeout is already based on CLOCK_MONOTONIC.
+  kConvertedRealTime =
+      1,          // timeout is based on CLOCK_REALTIME and should be converted to CLOCK_MONOTONIC.
+  kRealTime = 2,  // timeout is based on CLOCK_REALTIME and should be kept as is.
+};
+
 static inline __always_inline int __futex(volatile void* ftx, int op, int value,
                                           const timespec* timeout, int bitset) {
   // Our generated syscall assembler sets errno, but our callers (pthread functions) don't want to.
@@ -68,13 +75,13 @@ static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value) {
 }
 
 __LIBC_HIDDEN__ int __futex_wait_ex(volatile void* ftx, bool shared, int value,
-                                    bool use_realtime_clock, const timespec* abs_timeout);
+                                    FutexWaitMode wait_mode, const timespec* abs_timeout);
 
 static inline int __futex_pi_unlock(volatile void* ftx, bool shared) {
   return __futex(ftx, shared ? FUTEX_UNLOCK_PI : FUTEX_UNLOCK_PI_PRIVATE, 0, nullptr, 0);
 }
 
-__LIBC_HIDDEN__ int __futex_pi_lock_ex(volatile void* ftx, bool shared, bool use_realtime_clock,
+__LIBC_HIDDEN__ int __futex_pi_lock_ex(volatile void* ftx, bool shared, FutexWaitMode wait_mode,
                                        const timespec* abs_timeout);
 
 #endif /* _BIONIC_FUTEX_H */

@@ -33,7 +33,7 @@
 #include "private/bionic_time_conversions.h"
 
 static inline __always_inline int FutexWithTimeout(volatile void* ftx, int op, int value,
-                                                   bool use_realtime_clock,
+                                                   FutexWaitMode wait_mode,
                                                    const timespec* abs_timeout, int bitset) {
   const timespec* futex_abs_timeout = abs_timeout;
   // pthread's and semaphore's default behavior is to use CLOCK_REALTIME, however this behavior is
@@ -46,26 +46,36 @@ static inline __always_inline int FutexWithTimeout(volatile void* ftx, int op, i
   // We have seen numerous bugs directly attributable to this difference.  Therefore, we provide
   // this general workaround to always use CLOCK_MONOTONIC for waiting, regardless of what the input
   // timespec is.
+  //
+  // If CLOCK_REALTIME is explicitly specified with pthread_cond_clockwait(),
+  // pthread_mutex_clocklock(), pthread_rwlock_clockrdlock(), pthread_rwlock_clockwrlock(),
+  // or sem_clockwait(), each of which take an explicit clock parameter, we assume the caller really
+  // does want CLOCK_REALTIME, and we therefore give it to them.
   timespec converted_monotonic_abs_timeout;
-  if (abs_timeout && use_realtime_clock) {
-    monotonic_time_from_realtime_time(converted_monotonic_abs_timeout, *abs_timeout);
-    if (converted_monotonic_abs_timeout.tv_sec < 0) {
-      return -ETIMEDOUT;
+  int clock_op = 0;
+  if (abs_timeout != nullptr) {
+    if (wait_mode == FutexWaitMode::kConvertedRealTime) {
+      monotonic_time_from_realtime_time(converted_monotonic_abs_timeout, *abs_timeout);
+      if (converted_monotonic_abs_timeout.tv_sec < 0) {
+        return -ETIMEDOUT;
+      }
+      futex_abs_timeout = &converted_monotonic_abs_timeout;
+    } else if (wait_mode == FutexWaitMode::kRealTime) {
+      clock_op = FUTEX_CLOCK_REALTIME;
     }
-    futex_abs_timeout = &converted_monotonic_abs_timeout;
   }
 
-  return __futex(ftx, op, value, futex_abs_timeout, bitset);
+  return __futex(ftx, op | clock_op, value, futex_abs_timeout, bitset);
 }
 
-int __futex_wait_ex(volatile void* ftx, bool shared, int value, bool use_realtime_clock,
+int __futex_wait_ex(volatile void* ftx, bool shared, int value, FutexWaitMode wait_mode,
                     const timespec* abs_timeout) {
   return FutexWithTimeout(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE), value,
-                          use_realtime_clock, abs_timeout, FUTEX_BITSET_MATCH_ANY);
+                          wait_mode, abs_timeout, FUTEX_BITSET_MATCH_ANY);
 }
 
-int __futex_pi_lock_ex(volatile void* ftx, bool shared, bool use_realtime_clock,
+int __futex_pi_lock_ex(volatile void* ftx, bool shared, FutexWaitMode wait_mode,
                        const timespec* abs_timeout) {
-  return FutexWithTimeout(ftx, (shared ? FUTEX_LOCK_PI : FUTEX_LOCK_PI_PRIVATE), 0,
-                          use_realtime_clock, abs_timeout, 0);
+  return FutexWithTimeout(ftx, (shared ? FUTEX_LOCK_PI : FUTEX_LOCK_PI_PRIVATE), 0, wait_mode,
+                          abs_timeout, 0);
 }
