@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4ea82142_e84e8e67",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-07-16T20:30:18Z",
+      "side": 1,
+      "message": "Will fix.",
+      "parentUuid": "6c106e6a_db0ba8a8",
+      "range": {
+        "startLine": 54,
+        "startChar": 14,
+        "endLine": 54,
+        "endChar": 17
+      },
+      "revId": "bfa30ca5c9fb7d38efd76b0074fe8dbe79a3ce34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f40f5199_da81ed16",
         "filename": "libc/private/WriteProtected.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-07-16T19:53:12Z",
       "side": 1,
       "message": "type*",
+      "range": {
+        "startLine": 56,
+        "startChar": 37,
+        "endLine": 56,
+        "endChar": 43
+      },
+      "revId": "bfa30ca5c9fb7d38efd76b0074fe8dbe79a3ce34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29368da8_a40f71ba",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-07-16T20:30:18Z",
+      "side": 1,
+      "message": "mprotect takes a pointer of type void*.",
+      "parentUuid": "f40f5199_da81ed16",
       "range": {
         "startLine": 56,
         "startChar": 37,
