@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9beec85a_9a84a8d7",
+        "filename": "libc/include/bits/pthread_cond_clockwait_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-17T21:32:34Z",
+      "side": 1,
+      "message": "This comment and the ones below are copy/paste from our current functions.\n\nOn one hand, we could implement each of these in bits and include them to get the actual symbols, but then we\u0027d leak a bunch of implementation details, which I tried to avoid by doing this.\n\nOn the other hand, maintenance gets harder if there are changes to these functions in the future.",
+      "revId": "d291305af36ae3bd3810a7cda0ebadc56ab34cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
