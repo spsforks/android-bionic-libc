@@ -121,8 +121,11 @@ int pthread_condattr_setclock(pthread_condattr_t* __attr, clockid_t __clock) __I
 int pthread_condattr_setpshared(pthread_condattr_t* __attr, int __shared);
 
 int pthread_cond_broadcast(pthread_cond_t* __cond);
+// pthread_cond_clockwait() is implemented as a static inline before API level 30.
+#if __ANDROID_API__ >= __ANDROID_API_R__ && !defined(__BIONIC_PTHREAD_COND_INLINE)
 int pthread_cond_clockwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, clockid_t __clock,
                            const struct timespec* __timeout) __INTRODUCED_IN(30);
+#endif
 int pthread_cond_destroy(pthread_cond_t* __cond);
 int pthread_cond_init(pthread_cond_t* __cond, const pthread_condattr_t* __attr);
 int pthread_cond_signal(pthread_cond_t* __cond);
@@ -315,5 +318,9 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
     } while (0);                                       \
 
 __END_DECLS
+
+#if __ANDROID_API__ < __ANDROID_API_R__ || defined(__BIONIC_PTHREAD_COND_INLINE)
+#include <bits/pthread_cond_clockwait_inlines.h>
+#endif
 
 #endif
