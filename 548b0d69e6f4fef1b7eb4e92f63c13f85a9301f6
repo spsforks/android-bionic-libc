@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a3bc8979_8bcd7a64",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-18T03:41:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "530b4040_eb6bfe8c",
+      "range": {
+        "startLine": 335,
+        "startChar": 29,
+        "endLine": 335,
+        "endChar": 37
+      },
+      "revId": "548b0d69e6f4fef1b7eb4e92f63c13f85a9301f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "898ef543_6c0889cb",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "548b0d69e6f4fef1b7eb4e92f63c13f85a9301f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0da1306_32813c81",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-18T03:41:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "898ef543_6c0889cb",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 12
+      },
+      "revId": "548b0d69e6f4fef1b7eb4e92f63c13f85a9301f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
