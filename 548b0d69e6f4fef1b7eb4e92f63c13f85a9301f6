@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "530b4040_eb6bfe8c",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-18T01:38:57Z",
+      "side": 1,
+      "message": "or pull it directly out of `thread`?",
+      "range": {
+        "startLine": 335,
+        "startChar": 29,
+        "endLine": 335,
+        "endChar": 37
+      },
+      "revId": "548b0d69e6f4fef1b7eb4e92f63c13f85a9301f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "898ef543_6c0889cb",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-18T01:38:57Z",
+      "side": 1,
+      "message": "use the async_safe_ function instead?",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 12
+      },
+      "revId": "548b0d69e6f4fef1b7eb4e92f63c13f85a9301f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
