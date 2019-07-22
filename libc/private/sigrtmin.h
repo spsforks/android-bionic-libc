@@ -41,6 +41,7 @@
 //   35 (__SIGRTMIN + 3)        debuggerd -b
 //   36 (__SIGRTMIN + 4)        heapprofd
 //   37 (__SIGRTMIN + 5)        coverage (libprofile-extras)
+//   38 (__SIGRTMIN + 6)        java heap dumps
 //
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
