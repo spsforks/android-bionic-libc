@@ -18,6 +18,12 @@ cc_library_static {
         "libasync_safe",
     ],
 
+    target: {
+        android: {
+            whole_static_libs: ["libc++demangle"],
+        },
+    },
+
     include_dirs: ["bionic/libc"],
 
     export_include_dirs: ["."],
