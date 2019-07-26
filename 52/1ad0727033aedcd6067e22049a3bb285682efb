@@ -1,0 +1,7 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Submitted-by: Vic Yang <victoryang@google.com>
+Submitted-at: Fri, 26 Jul 2019 20:09:18 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1089806
+Project: platform/bionic
+Branch: refs/heads/master
