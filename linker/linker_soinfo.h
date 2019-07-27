@@ -70,6 +70,46 @@
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
 
+class LookupLib {
+public:
+  uint32_t gnu_maskwords_ = 0;
+  uint32_t gnu_shift2_ = 0;
+  ElfW(Addr)* gnu_bloom_filter_ = nullptr;
+
+  const char* strtab_;
+  size_t strtab_size_;
+  const ElfW(Sym)* symtab_;
+  const ElfW(Versym)* versym_;
+
+  const uint32_t* gnu_chain_;
+  size_t gnu_nbucket_;
+  uint32_t* gnu_bucket_;
+
+  soinfo* si_ = nullptr;
+
+public:
+  LookupLib() {}
+  explicit LookupLib(soinfo* si);
+  bool needs_fallback() const { return si_ != nullptr && gnu_bloom_filter_ == nullptr; }
+};
+
+class LookupList {
+  std::vector<LookupLib> libs_;
+  LookupLib sole_lib_;
+  const LookupLib* begin_;
+  const LookupLib* end_;
+  size_t fallback_lib_count_ = 0;
+
+public:
+  explicit LookupList(soinfo* si);
+  LookupList(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  void set_dt_symbolic_lib(soinfo* symbolic_lib);
+
+  const LookupLib* begin() const { return begin_; }
+  const LookupLib* end() const { return end_; }
+  bool needs_fallback() const { return fallback_lib_count_ > 0; }
+};
+
 class SymbolName {
  public:
   explicit SymbolName(const char* name)
@@ -103,6 +143,9 @@ struct version_info {
 
 // TODO(dimitry): remove reference from soinfo member functions to this class.
 class VersionTracker;
+
+const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
+                                  soinfo** si_found_in, const LookupList& lookup_list);
 
 struct soinfo_tls {
   TlsSegment segment;
@@ -142,9 +185,11 @@ struct soinfo {
  private:
   uint32_t flags_;
 
+public:
   const char* strtab_;
   ElfW(Sym)* symtab_;
 
+private:
   size_t nbucket_;
   size_t nchain_;
   uint32_t* bucket_;
@@ -222,7 +267,7 @@ struct soinfo {
   void call_destructors();
   void call_pre_init_constructors();
   bool prelink_image();
-  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+  bool link_image(const LookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
@@ -242,6 +287,7 @@ struct soinfo {
 
   soinfo_list_t& get_parents();
 
+  __attribute__((noinline))
   bool find_symbol_by_name(SymbolName& symbol_name,
                            const version_info* vi,
                            const ElfW(Sym)** symbol) const;
@@ -259,6 +305,10 @@ struct soinfo {
 #else
     return true;
 #endif
+  }
+
+  const ElfW(Versym)* get_versym_table() const {
+    return has_min_version(2) ? versym_ : nullptr;
   }
 
   bool is_linked() const;
@@ -303,8 +353,9 @@ struct soinfo {
   void generate_handle();
   void* to_handle();
 
- private:
+public:
   bool is_image_linked() const;
+ private:
   void set_image_linked();
 
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
@@ -316,8 +367,8 @@ struct soinfo {
                            const char* sym_name, const version_info** vi);
 
   template<typename ElfRelIteratorT>
-  bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT rel_iterator,
+                const LookupList& lookup_list);
   bool relocate_relr();
   void apply_relr_reloc(ElfW(Addr) offset);
 
@@ -338,10 +389,12 @@ struct soinfo {
   off64_t file_offset_;
   uint32_t rtld_flags_;
   uint32_t dt_flags_1_;
+public:
   size_t strtab_size_;
 
   // version >= 2
 
+public:
   size_t gnu_nbucket_;
   uint32_t* gnu_bucket_;
   uint32_t* gnu_chain_;
@@ -349,6 +402,7 @@ struct soinfo {
   uint32_t gnu_shift2_;
   ElfW(Addr)* gnu_bloom_filter_;
 
+private:
   soinfo* local_group_root_;
 
   uint8_t* android_relocs_;

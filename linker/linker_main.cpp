@@ -168,7 +168,7 @@ static void add_vdso() {
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   si->prelink_image();
-  si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr);
+  si->link_image(LookupList(si), si, nullptr, nullptr);
   // prevents accidental unloads...
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
   si->set_linked();
@@ -296,12 +296,23 @@ static ExecutableInfo load_executable(const char* orig_path) {
   return result;
 }
 
+#if TIMING
+static uint64_t get_time() {
+  // It's probably safe(?) to call clock_gettime, but the vDSO might not be set up yet, so skip
+  // that.
+  struct timespec ts {};
+  //__clock_gettime(CLOCK_MONOTONIC, &ts);
+  __clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
+  return static_cast<uint64_t>(ts.tv_sec) * 1000000 +
+         static_cast<uint64_t>(ts.tv_nsec) / 1000;
+}
+#endif
+
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
 #if TIMING
-  struct timeval t0, t1;
-  gettimeofday(&t0, 0);
+  const uint64_t t0 = get_time();
 #endif
 
   // Sanitize the environment.
@@ -456,6 +467,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   const char** needed_library_names = &needed_library_name_list[0];
   size_t needed_libraries_count = needed_library_name_list.size();
 
+#if TIMING
+  const uint64_t load_t0 = get_time();
+#endif
   if (needed_libraries_count > 0 &&
       !find_libraries(&g_default_namespace,
                       si,
@@ -471,11 +485,16 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                       &namespaces)) {
     __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
-    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr)) {
+    if (!si->link_image(LookupList(si), si, nullptr, nullptr)) {
       __linker_cannot_link(g_argv[0]);
     }
     si->increment_ref_count();
   }
+#if TIMING
+  const uint64_t load_t1 = get_time();
+  PRINT("LINKER TIME: %s: LOAD: %lld microseconds",
+        g_argv[0], static_cast<long long>(load_t1 - load_t0));
+#endif
 
   linker_finalize_static_tls();
   __libc_init_main_thread_final();
@@ -486,12 +505,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->call_constructors();
 
 #if TIMING
-  gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0],
-        static_cast<int>(((static_cast<long long>(t1.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t1.tv_usec)) -
-                         ((static_cast<long long>(t0.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t0.tv_usec))));
+  const uint64_t t1 = get_time();
+  PRINT("LINKER TIME: %s: MAIN: %lld microseconds",
+        g_argv[0], static_cast<long long>(t1 - t0));
 #endif
 #if STATS
   print_linker_stats();
@@ -662,14 +678,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // Prelink the linker so we can access linker globals.
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
-
-  // This might not be obvious... The reasons why we pass g_empty_list
-  // in place of local_group here are (1) we do not really need it, because
-  // linker is built with DT_SYMBOLIC and therefore relocates its symbols against
-  // itself without having to look into local_group and (2) allocators
-  // are not yet initialized, and therefore we cannot use linked_list.push_*
-  // functions at this point.
-  if (!tmp_linker_so.link_image(g_empty_list, g_empty_list, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
+  if (!tmp_linker_so.link_image(LookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) {
+    __linker_cannot_link(args.argv[0]);
+  }
 
   return __linker_init_post_relocation(args, tmp_linker_so);
 }

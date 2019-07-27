@@ -96,6 +96,7 @@ filegroup {
     name: "linker_sources_arm",
     srcs: [
         "arch/arm/begin.S",
+        "arch/arm/gnu_hash.S",
         "linker_exidx_static.c",
     ],
 }

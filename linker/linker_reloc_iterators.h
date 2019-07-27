@@ -32,6 +32,8 @@
 
 #include <string.h>
 
+#include <async_safe/log.h>
+
 const size_t RELOCATION_GROUPED_BY_INFO_FLAG = 1;
 const size_t RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG = 2;
 const size_t RELOCATION_GROUPED_BY_ADDEND_FLAG = 4;
@@ -87,12 +89,7 @@ class packed_reloc_iterator {
 
   rel_t* next() {
     if (relocation_group_index_ == group_size_) {
-      if (!read_group_fields()) {
-        // Iterator is inconsistent state; it should not be called again
-        // but in case it is let's make sure has_next() returns false.
-        relocation_index_ = relocation_count_ = 0;
-        return nullptr;
-      }
+      read_group_fields();
     }
 
     if (is_relocation_grouped_by_offset_delta()) {
@@ -118,7 +115,7 @@ class packed_reloc_iterator {
     return &reloc_;
   }
  private:
-  bool read_group_fields() {
+  void read_group_fields() {
     group_size_ = decoder_.pop_front();
     group_flags_ = decoder_.pop_front();
 
@@ -130,21 +127,20 @@ class packed_reloc_iterator {
       reloc_.r_info = decoder_.pop_front();
     }
 
+#if !defined(USE_RELA)
+    if (is_relocation_group_has_addend()) {
+      async_safe_fatal("unexpected addends in android.rel section");
+    }
+#else
     if (is_relocation_group_has_addend() &&
         is_relocation_grouped_by_addend()) {
-#if !defined(USE_RELA)
-      // This platform does not support rela, and yet we have it encoded in android_rel section.
-      DL_ERR("unexpected r_addend in android.rel section");
-      return false;
-#else
       reloc_.r_addend += decoder_.pop_front();
     } else if (!is_relocation_group_has_addend()) {
       reloc_.r_addend = 0;
-#endif
     }
+#endif
 
     relocation_group_index_ = 0;
-    return true;
   }
 
   bool is_relocation_grouped_by_info() {

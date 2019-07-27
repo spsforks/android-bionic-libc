@@ -46,6 +46,222 @@ bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Ve
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
 int get_application_target_sdk_version();
 
+#if defined(__arm__)
+#define USE_GNU_HASH_ASM 1
+#else
+#define USE_GNU_HASH_ASM 0
+#endif
+
+static std::pair<uint32_t, size_t> calculate_gnu_hash(const char* name);
+
+#if USE_GNU_HASH_ASM
+extern "C" uint64_t calculate_gnu_hash_asm(const char* name);
+#endif
+
+static const ElfW(Versym) kVersymHiddenBit = 0x8000;
+
+LookupLib::LookupLib(soinfo* si) {
+  si_ = si;
+
+  // For libs that only have SysV hashes, leave the gnu_bloom_filter_ field NULL to signal that
+  // the fallback code path is needed.
+  if (!si->is_gnu_hash()) {
+    return;
+  }
+
+  gnu_maskwords_ = si->gnu_maskwords_;
+  gnu_shift2_ = si->gnu_shift2_;
+  gnu_bloom_filter_ = si->gnu_bloom_filter_;
+
+  CHECK(gnu_bloom_filter_);
+
+  strtab_ = si->strtab_;
+  strtab_size_ = si->strtab_size_;
+  symtab_ = si->symtab_;
+  versym_ = si->get_versym_table();
+
+  gnu_chain_ = si->gnu_chain_;
+  gnu_nbucket_ = si->gnu_nbucket_;
+  gnu_bucket_ = si->gnu_bucket_;
+}
+
+LookupList::LookupList(soinfo* si) : sole_lib_(si), begin_(&sole_lib_), end_(&sole_lib_ + 1) {
+  CHECK(si != nullptr);
+  fallback_lib_count_ += sole_lib_.needs_fallback();
+}
+
+LookupList::LookupList(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  libs_.reserve(1 + global_group.size() + local_group.size());
+
+  // Reserve a space in front for DT_SYMBOLIC lookup.
+  libs_.push_back(LookupLib {});
+
+  global_group.for_each([this](soinfo* si) {
+    libs_.push_back(LookupLib(si));
+    fallback_lib_count_ += libs_.back().needs_fallback();
+  });
+
+  local_group.for_each([this](soinfo* si) {
+    libs_.push_back(LookupLib(si));
+    fallback_lib_count_ += libs_.back().needs_fallback();
+  });
+
+  begin_ = &libs_[1];
+  end_ = &libs_[0] + libs_.size();
+}
+
+/* "This element's presence in a shared object library alters the dynamic linker's
+ * symbol resolution algorithm for references within the library. Instead of starting
+ * a symbol search with the executable file, the dynamic linker starts from the shared
+ * object itself. If the shared object fails to supply the referenced symbol, the
+ * dynamic linker then searches the executable file and other shared objects as usual."
+ *
+ * http://www.sco.com/developers/gabi/2012-12-31/ch5.dynamic.html
+ *
+ * Note that this is unlikely since static linker avoids generating
+ * relocations for -Bsymbolic linked dynamic executables.
+ */
+void LookupList::set_dt_symbolic_lib(soinfo* lib) {
+  CHECK(!libs_.empty());
+  fallback_lib_count_ -= libs_[0].needs_fallback();
+  libs_[0] = lib ? LookupLib(lib) : LookupLib();
+  begin_ = lib ? &libs_[0] : &libs_[1];
+  fallback_lib_count_ += libs_[0].needs_fallback();
+}
+
+static inline bool check_symbol_version_2(const ElfW(Versym)* ver_table, uint32_t sym_idx,
+                                          const ElfW(Versym) verneed) {
+  if (ver_table == nullptr) return true;
+  const uint32_t verdef = ver_table[sym_idx];
+  // XXX: If verneed is kVersymNotNeeded, are we supposed to match with verdef of 0?
+  // See https://www.akkadia.org/drepper/symbol-versioning...
+  // XXX: This seems odd to me. Verify it...
+  //  - we want sym@FOO, no versions in DSO ==> sym matches
+  //  - we want sym@FOO, no FOO in DSO ==> sym@@BAR matches
+  //  - we want sym@FOO, baz@FOO in DSO ==> sym@@BAR does not match?
+  if (verneed == kVersymNotNeeded) {
+    return !(verdef & kVersymHiddenBit);
+  } else {
+    return verneed == (verdef & ~kVersymHiddenBit);
+  }
+}
+
+static inline bool is_symbol_global_and_defined(const ElfW(Sym)* s) {
+  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
+      ELF_ST_BIND(s->st_info) == STB_WEAK) {
+    return s->st_shndx != SHN_UNDEF;
+  }
+  // else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
+  //   DL_WARN("Warning: unexpected ST_BIND value: %d for \"%s\" in \"%s\" (ignoring)",
+  //           ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
+  // }
+  return false;
+}
+
+__attribute__((always_inline))
+static inline const ElfW(Sym)* finish_lookup(const LookupLib& lib, const char* name, size_t name_len,
+                                             uint32_t hash31, const version_info* vi, uint32_t sym_idx) {
+  // lookup versym for the version definition in this library
+  // note the difference between "version is not requested" (vi == nullptr)
+  // and "version not found". In the first case verneed is kVersymNotNeeded
+  // which implies that the default version can be accepted; the second case results in
+  // verneed = 1 (kVersymGlobal) and implies that we should ignore versioned symbols
+  // for this library and consider only *global* ones.
+  ElfW(Versym) verneed = kVersymNotNeeded;
+  bool calculated_verneed = false;
+
+  const ElfW(Sym)* const symtab = lib.symtab_;
+  const char* const strtab = lib.strtab_;
+  const uint32_t* const gnu_chain = lib.gnu_chain_;
+  const ElfW(Versym)* const versym = lib.versym_;
+  uint32_t chain_value = 0;
+  const ElfW(Sym)* sym = nullptr;
+
+  auto do_lookup = [&](auto calc_verneed) -> const ElfW(Sym)* {
+    do {
+      sym = symtab + sym_idx;
+      chain_value = gnu_chain[sym_idx];
+      if ((chain_value >> 1) == hash31) {
+        ElfW(Versym) inner_verneed = calc_verneed();
+        if (check_symbol_version_2(versym, sym_idx, inner_verneed) &&
+            // XXX: This strtab bounds check isn't quite right (e.g. overflow...)
+            sym->st_name + name_len + 1 <= lib.strtab_size_ &&
+            memcmp(strtab + sym->st_name, name, name_len + 1) == 0 &&
+            is_symbol_global_and_defined(sym)) {
+          return sym;
+        }
+      }
+      ++sym_idx;
+    } while ((chain_value & 1) == 0);
+    return nullptr;
+  };
+
+  if (vi != nullptr) {
+    return do_lookup([&]() -> ElfW(Versym) {
+      if (!calculated_verneed) {
+        if (!find_verdef_version_index(lib.si_, vi, &verneed)) {
+          async_safe_fatal("can we detect bad verdef entries earlier instead?");
+        }
+        calculated_verneed = true;
+      }
+      return verneed;
+    });
+  } else {
+    return do_lookup([]() -> ElfW(Versym) { return kVersymNotNeeded; });
+  }
+}
+
+template <bool EnableFallback>
+__attribute__((noinline)) static const ElfW(Sym)*
+soinfo_do_lookup_impl(const char* name, const version_info* vi,
+                     soinfo** si_found_in, const LookupList& lookup_list) {
+  const std::pair<uint32_t, size_t> hash_len = calculate_gnu_hash(name);
+  const uint32_t hash = hash_len.first;
+  const size_t name_len = hash_len.second;
+  const uint32_t bloom_mask_bits = sizeof(ElfW(Addr)) * 8;
+  SymbolName fallback_symbol_name(name);
+
+  for (const LookupLib& lib : lookup_list) {
+    if (EnableFallback && lib.needs_fallback()) {
+      // Fallback -- search this DSO the slow way.
+      const ElfW(Sym)* result = nullptr;
+      if (!lib.si_->find_symbol_by_name(fallback_symbol_name, vi, &result)) {
+        async_safe_fatal("can we detect bad verdef entries earlier instead?");
+      }
+      if (result != nullptr) {
+        *si_found_in = lib.si_;
+        return result;
+      }
+      continue;
+    }
+
+    const uint32_t word_num = (hash / bloom_mask_bits) & lib.gnu_maskwords_;
+    const ElfW(Addr) bloom_word = lib.gnu_bloom_filter_[word_num];
+    const uint32_t h1 = hash % bloom_mask_bits;
+    const uint32_t h2 = (hash >> lib.gnu_shift2_) % bloom_mask_bits;
+
+    if ((1 & (bloom_word >> h1) & (bloom_word >> h2)) == 1) {
+      const uint32_t first_index = lib.gnu_bucket_[hash % lib.gnu_nbucket_];
+      if (first_index != 0) {
+        if (const ElfW(Sym)* sym = finish_lookup(lib, name, name_len, hash >> 1, vi, first_index)) {
+          *si_found_in = lib.si_;
+          return sym;
+        }
+      }
+    }
+  }
+  return nullptr;
+}
+
+const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
+                                  soinfo** si_found_in, const LookupList& lookup_list) {
+  if (lookup_list.needs_fallback()) {
+    return soinfo_do_lookup_impl<true>(name, vi, si_found_in, lookup_list);
+  } else {
+    return soinfo_do_lookup_impl<false>(name, vi, si_found_in, lookup_list);
+  }
+}
+
 soinfo::soinfo(android_namespace_t* ns, const char* realpath,
                const struct stat* file_stat, off64_t file_offset,
                int rtld_flags) {
@@ -99,11 +315,8 @@ void soinfo::set_dt_runpath(const char* path) {
 }
 
 const ElfW(Versym)* soinfo::get_versym(size_t n) const {
-  if (has_min_version(2) && versym_ != nullptr) {
-    return versym_ + n;
-  }
-
-  return nullptr;
+  auto table = get_versym_table();
+  return table ? table + n : nullptr;
 }
 
 ElfW(Addr) soinfo::get_verneed_ptr() const {
@@ -153,20 +366,6 @@ bool soinfo::find_symbol_by_name(SymbolName& symbol_name,
 
   return success;
 }
-
-static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
-  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
-      ELF_ST_BIND(s->st_info) == STB_WEAK) {
-    return s->st_shndx != SHN_UNDEF;
-  } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("Warning: unexpected ST_BIND value: %d for \"%s\" in \"%s\" (ignoring)",
-            ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
-  }
-
-  return false;
-}
-
-static const ElfW(Versym) kVersymHiddenBit = 0x8000;
 
 static inline bool is_versym_hidden(const ElfW(Versym)* versym) {
   // the symbol is hidden if bit 15 of versym is set.
@@ -234,7 +433,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
     if (((gnu_chain_[n] ^ hash) >> 1) == 0 &&
         check_symbol_version(verneed, verdef) &&
         strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
-        is_symbol_global_and_defined(this, s)) {
+        is_symbol_global_and_defined(s)) {
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
           symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(s->st_value),
           static_cast<size_t>(s->st_size));
@@ -274,7 +473,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
 
     if (check_symbol_version(verneed, verdef) &&
         strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
-        is_symbol_global_and_defined(this, s)) {
+        is_symbol_global_and_defined(s)) {
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
                  symbol_name.get_name(), get_realpath(),
                  reinterpret_cast<void*>(s->st_value),
@@ -810,6 +1009,20 @@ uint32_t calculate_elf_hash(const char* name) {
   return h;
 }
 
+static std::pair<uint32_t, size_t> calculate_gnu_hash(const char* name) {
+#if !USE_GNU_HASH_ASM
+  uint32_t h = 5381;
+  const uint8_t* name_bytes = reinterpret_cast<const uint8_t*>(name);
+  while (*name_bytes != 0) {
+    h += (h << 5) + *name_bytes++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
+  }
+  return { h, reinterpret_cast<const char*>(name_bytes) - name };
+#else
+  uint64_t hash_len = calculate_gnu_hash_asm(name);
+  return { static_cast<uint32_t>(hash_len), hash_len >> 32 };
+#endif
+}
+
 uint32_t SymbolName::elf_hash() {
   if (!has_elf_hash_) {
     elf_hash_ = calculate_elf_hash(name_);
@@ -821,13 +1034,7 @@ uint32_t SymbolName::elf_hash() {
 
 uint32_t SymbolName::gnu_hash() {
   if (!has_gnu_hash_) {
-    uint32_t h = 5381;
-    const uint8_t* name = reinterpret_cast<const uint8_t*>(name_);
-    while (*name != 0) {
-      h += (h << 5) + *name++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
-    }
-
-    gnu_hash_ =  h;
+    gnu_hash_ = calculate_gnu_hash(name_).first;
     has_gnu_hash_ = true;
   }
 

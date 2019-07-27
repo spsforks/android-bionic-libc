@@ -491,100 +491,6 @@ int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), v
   return rv;
 }
 
-
-bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo_list_t& global_group,
-                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol) {
-  SymbolName symbol_name(name);
-  const ElfW(Sym)* s = nullptr;
-
-  /* "This element's presence in a shared object library alters the dynamic linker's
-   * symbol resolution algorithm for references within the library. Instead of starting
-   * a symbol search with the executable file, the dynamic linker starts from the shared
-   * object itself. If the shared object fails to supply the referenced symbol, the
-   * dynamic linker then searches the executable file and other shared objects as usual."
-   *
-   * http://www.sco.com/developers/gabi/2012-12-31/ch5.dynamic.html
-   *
-   * Note that this is unlikely since static linker avoids generating
-   * relocations for -Bsymbolic linked dynamic executables.
-   */
-  if (si_from->has_DT_SYMBOLIC) {
-    DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->get_realpath(), name);
-    if (!si_from->find_symbol_by_name(symbol_name, vi, &s)) {
-      return false;
-    }
-
-    if (s != nullptr) {
-      *si_found_in = si_from;
-    }
-  }
-
-  // 1. Look for it in global_group
-  if (s == nullptr) {
-    bool error = false;
-    global_group.visit([&](soinfo* global_si) {
-      DEBUG("%s: looking up %s in %s (from global group)",
-          si_from->get_realpath(), name, global_si->get_realpath());
-      if (!global_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
-      if (s != nullptr) {
-        *si_found_in = global_si;
-        return false;
-      }
-
-      return true;
-    });
-
-    if (error) {
-      return false;
-    }
-  }
-
-  // 2. Look for it in the local group
-  if (s == nullptr) {
-    bool error = false;
-    local_group.visit([&](soinfo* local_si) {
-      if (local_si == si_from && si_from->has_DT_SYMBOLIC) {
-        // we already did this - skip
-        return true;
-      }
-
-      DEBUG("%s: looking up %s in %s (from local group)",
-          si_from->get_realpath(), name, local_si->get_realpath());
-      if (!local_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
-      if (s != nullptr) {
-        *si_found_in = local_si;
-        return false;
-      }
-
-      return true;
-    });
-
-    if (error) {
-      return false;
-    }
-  }
-
-  if (s != nullptr) {
-    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
-               "found in %s, base = %p, load bias = %p",
-               si_from->get_realpath(), name, reinterpret_cast<void*>(s->st_value),
-               (*si_found_in)->get_realpath(), reinterpret_cast<void*>((*si_found_in)->base),
-               reinterpret_cast<void*>((*si_found_in)->load_bias));
-  }
-
-  *symbol = s;
-  return true;
-}
-
 ProtectedDataGuard::ProtectedDataGuard() {
   if (ref_count_++ == 0) {
     protect_data(PROT_READ | PROT_WRITE);
@@ -1929,6 +1835,18 @@ bool find_libraries(android_namespace_t* ns,
       });
 
     soinfo_list_t global_group = local_group_ns->get_global_group();
+    LookupList lookup_list(global_group, local_group);
+    soinfo* local_group_root = local_group.front();
+
+#if 0
+    {
+      PRINT("lookup list: needs_fallback=%d", static_cast<int>(lookup_list.needs_fallback()));
+      for (const LookupLib& lib : lookup_list) {
+        PRINT("  search: %s", lib.si_->get_realpath());
+      }
+    }
+#endif
+
     bool linked = local_group.visit([&](soinfo* si) {
       // Even though local group may contain accessible soinfos from other namespaces
       // we should avoid linking them (because if they are not linked -> they
@@ -1943,7 +1861,15 @@ bool find_libraries(android_namespace_t* ns,
         if (__libc_shared_globals()->load_hook) {
           __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
         }
-        if (!si->link_image(global_group, local_group, link_extinfo, &relro_fd_offset) ||
+
+#if 0
+        if (!si->is_image_linked()) {
+          PRINT("  link: %s", si->get_realpath());
+        }
+#endif
+
+        lookup_list.set_dt_symbolic_lib(si->has_DT_SYMBOLIC ? si : nullptr);
+        if (!si->link_image(lookup_list, local_group_root, link_extinfo, &relro_fd_offset) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
@@ -2954,8 +2880,8 @@ static bool is_tls_reloc(ElfW(Word) type) {
 }
 
 template<typename ElfRelIteratorT>
-bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                      const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT rel_iterator,
+                      const LookupList& lookup_list) {
   const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
   std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
 
@@ -2972,9 +2898,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
-    if (rel == nullptr) {
-      return false;
-    }
 
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
@@ -3025,9 +2948,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           return false;
         }
 
-        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
+        s = soinfo_do_lookup(sym_name, vi, &lsi, lookup_list);
 
         symbol_lookup_cache.sym = sym;
         symbol_lookup_cache.s = s;
@@ -3303,85 +3224,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
                    reloc, sym_addr + addend, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-        break;
-      case R_AARCH64_ABS32:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_ABS16:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL64:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-        break;
-      case R_AARCH64_PREL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL16:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
         break;
 
       case R_AARCH64_COPY:
@@ -3980,7 +3822,7 @@ bool soinfo::prelink_image() {
   return true;
 }
 
-bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+bool soinfo::link_image(const LookupList& lookup_list, soinfo* local_group_root,
                         const android_dlextinfo* extinfo, size_t* relro_fd_offset) {
   if (is_image_linked()) {
     // already linked.
@@ -3992,7 +3834,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
                          get_realpath(), reinterpret_cast<void*>(base));
   }
 
-  local_group_root_ = local_group.front();
+  local_group_root_ = local_group_root;
   if (local_group_root_ == nullptr) {
     local_group_root_ = this;
   }
@@ -4048,7 +3890,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
           version_tracker,
           packed_reloc_iterator<sleb128_decoder>(
             sleb128_decoder(packed_relocs, packed_relocs_size)),
-          global_group, local_group);
+          lookup_list);
 
       if (!relocated) {
         return false;
@@ -4070,14 +3912,14 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (rela_ != nullptr) {
     DEBUG("[ relocating %s rela ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
+            plain_reloc_iterator(rela_, rela_count_), lookup_list)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt rela ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
+            plain_reloc_iterator(plt_rela_, plt_rela_count_), lookup_list)) {
       return false;
     }
   }
@@ -4085,21 +3927,21 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (rel_ != nullptr) {
     DEBUG("[ relocating %s rel ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
+            plain_reloc_iterator(rel_, rel_count_), lookup_list)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt rel ]", get_realpath());
     if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
+            plain_reloc_iterator(plt_rel_, plt_rel_count_), lookup_list)) {
       return false;
     }
   }
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(version_tracker, global_group, local_group)) {
+  if (!mips_relocate_got(version_tracker, lookup_list)) {
     return false;
   }
 #endif

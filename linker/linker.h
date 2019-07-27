@@ -85,10 +85,6 @@ class VersionTracker {
   DISALLOW_COPY_AND_ASSIGN(VersionTracker);
 };
 
-bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo_list_t& global_group,
-                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol);
-
 enum RelocationKind {
   kRelocAbsolute = 0,
   kRelocRelative,
