@@ -702,7 +702,7 @@ ns_name_skip(const u_char **ptrptr, const u_char *eom)
 			cp += n;
 			continue;
 		case NS_TYPE_ELT: /* EDNS0 extended label */
-			if ((l = labellen(cp - 1)) < 0) {
+			if (cp < eom && (l = labellen(cp - 1)) < 0) {
 				errno = EMSGSIZE; /* XXX */
 				return(-1);
 			}
