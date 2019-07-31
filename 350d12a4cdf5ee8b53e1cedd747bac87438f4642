@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8747b4bf_df02fcd5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2479,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-07-31T04:19:22Z",
+      "side": 1,
+      "message": "Done for static.\n\nI didn\u0027t know that we had g_dl_mutex. Thanks. mutex removed.",
+      "parentUuid": "d8abfe97_e7a8a4d1",
+      "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "552b6cdf_6904d21b",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -33,6 +51,24 @@
       "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88e20b37_d9e7ed2b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-07-31T04:19:22Z",
+      "side": 1,
+      "message": "Yes, reachable. create_namespace can return nullptr when the anon namespace is already set. See #2604.\n\nTrailing space removed.",
+      "parentUuid": "552b6cdf_6904d21b",
+      "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
