@@ -353,6 +353,7 @@ int     __set_thread_area:set_thread_area(void*) x86
 # vdso stuff.
 int __clock_getres:clock_getres(clockid_t, struct timespec*) all
 int __clock_gettime:clock_gettime(clockid_t, timespec*) all
+int __clock_gettime64:clock_gettime64(clockid_t, struct __kernel_timespec *) all
 int __gettimeofday:gettimeofday(timeval*, timezone*) all
 
 # <sys/random.h>
