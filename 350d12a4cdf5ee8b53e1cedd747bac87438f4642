@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8abfe97_e7a8a4d1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2479,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-31T01:00:45Z",
+      "side": 1,
+      "message": "I think this function can be static.\n\nIs the mutex needed? Everything in the linker is protected by g_dl_mutex.",
+      "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "552b6cdf_6904d21b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-31T01:00:45Z",
+      "side": 1,
+      "message": "Is this code path reachable? (Also: trailing space char)",
+      "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
