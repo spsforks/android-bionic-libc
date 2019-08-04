@@ -36,6 +36,10 @@
 // Similarly, there are a few overload tricks we have to emit errors. Ignore any notes from those.
 // expected-note@* 0+{{candidate function}}
 
+// expected-warning@* 0+{{will always overflow}}
+// expected-warning@* 0+{{size argument is too large}}
+// expected-note@* 0+{{has been explicitly marked unavailable here}}
+
 #ifndef _FORTIFY_SOURCE
 #error "_FORTIFY_SOURCE must be defined"
 #endif
