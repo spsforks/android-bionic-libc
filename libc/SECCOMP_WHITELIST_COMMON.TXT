@@ -71,7 +71,6 @@ int membarrier(int cmd, int flags) all
 int sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int flags) all
 int sched_setattr(pid_t pid, struct sched_attr* attr, unsigned int size, unsigned int flags) all
 int memfd_create(const char* name, unsigned int flags) all
-int renameat2(int olddirfd, const char* oldpath, int newdirfd, const char* newpath, unsigned int flags)  all
 int execveat(int dirfd, const char* pathname, char* const* argv, char* const* envp, int flags)  all
 ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, size_t len, unsigned int flags) all
 int mlock2(const void* addr, size_t len, int flags) all
