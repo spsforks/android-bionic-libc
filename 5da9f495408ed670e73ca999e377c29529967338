@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "629fb151_4a05d862",
+        "filename": "libc/SECCOMP_WHITELIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-08-05T21:17:51Z",
+      "side": 1,
+      "message": "Is this change goingt to disallow syscall(__NR_memfd_create...), syscall(__NR_mlock2...)? or does this change mean that memfd_create and mlock2 calls are not allowed either?",
+      "revId": "5da9f495408ed670e73ca999e377c29529967338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdc1fc72_2beac17e",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-08-05T21:17:51Z",
+      "side": 1,
+      "message": "Technically, this returns MAP_FAILED, same as mmap.",
+      "range": {
+        "startLine": 103,
+        "startChar": 37,
+        "endLine": 103,
+        "endChar": 39
+      },
+      "revId": "5da9f495408ed670e73ca999e377c29529967338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
