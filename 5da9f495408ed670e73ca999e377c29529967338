@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0f106fb0_8364cd4a",
+        "filename": "libc/SECCOMP_WHITELIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-05T23:30:56Z",
+      "side": 1,
+      "message": "no, you only need to be in here if you\u0027re _not_ in one of the other files. and these are now in SYSCALLS.TXT...",
+      "parentUuid": "629fb151_4a05d862",
+      "revId": "5da9f495408ed670e73ca999e377c29529967338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cdc1fc72_2beac17e",
         "filename": "libc/include/sys/mman.h",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "5da9f495408ed670e73ca999e377c29529967338",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b5091f0_ebe2b71f",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-05T23:30:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdc1fc72_2beac17e",
+      "range": {
+        "startLine": 103,
+        "startChar": 37,
+        "endLine": 103,
+        "endChar": 39
+      },
+      "revId": "5da9f495408ed670e73ca999e377c29529967338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
