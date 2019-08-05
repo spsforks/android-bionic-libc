@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8165189c_fb4751b7",
+        "filename": "tests/clang_fortify_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-08-05T16:49:05Z",
+      "side": 1,
+      "message": "imo, assuming clang\u0027s diags cover all of the same cases as our FORTIFY diags, we should be removing Bionic\u0027s custom FORTIFY diags from these functions.\n\nthat should probably wait until the world is on this new compiler though; please add a `FIXME` to this effect.",
+      "revId": "e3921654ef3a245c9243a71fc1088804c24a811c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
