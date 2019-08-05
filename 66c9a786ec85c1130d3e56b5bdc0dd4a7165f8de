@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b536756_a2c80a69",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-05T22:39:08Z",
+      "side": 1,
+      "message": "do we even care? what was the actual intention here?",
+      "revId": "66c9a786ec85c1130d3e56b5bdc0dd4a7165f8de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
