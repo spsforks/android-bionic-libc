@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29b93f7d_97f1e24a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1908,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-05T23:49:00Z",
+      "side": 1,
+      "message": "Bionic coding style uses curly brackets unless it\u0027s on one line.",
+      "range": {
+        "startLine": 1908,
+        "startChar": 46,
+        "endLine": 1908,
+        "endChar": 47
+      },
+      "revId": "c729939751d093a388a1d2e416fb17ca567e1ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
