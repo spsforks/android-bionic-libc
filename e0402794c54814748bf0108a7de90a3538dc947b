@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f9a9d400_72f7b52e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1907,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-08-08T21:55:26Z",
+      "side": 1,
+      "message": "\u003e Is there a similar potential bug in CFI here? The shadow is set up after link_image(), so any checks in ifunc resolvers would fail.\n\nI think so. I tried to verify it by compiling one of the linker tests with CFI but that caused a linker crash (CFI+ifunc crashing sounded familiar -- turns out that I fixed it in https://reviews.llvm.org/D55046 but forgot to land the patch (!) -- I\u0027ll do that in a bit).\n\n\u003e Also, I think we need to call unload_hook if link_image() fails.\n\nWill fix.",
+      "parentUuid": "3ac36978_5cfcf37e",
+      "revId": "e0402794c54814748bf0108a7de90a3538dc947b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "435fa19c_0d89728b",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2019-08-08T21:10:28Z",
       "side": 1,
       "message": "Why does the section name change?",
+      "revId": "e0402794c54814748bf0108a7de90a3538dc947b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad2a2499_343b048c",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-08-08T21:55:26Z",
+      "side": 1,
+      "message": "Because we\u0027re appending \".hwasan\" to the name of the global and making it private, which prepends \".L\" to the name. The assembler name of the global is used in its section name so we end up with \".bss..Lend_of_gap.hwasan\".",
+      "parentUuid": "435fa19c_0d89728b",
       "revId": "e0402794c54814748bf0108a7de90a3538dc947b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
