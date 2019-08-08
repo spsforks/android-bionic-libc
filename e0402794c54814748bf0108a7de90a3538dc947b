@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "0e063fe1_74ff877f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1907,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-08-08T22:32:14Z",
+      "side": 1,
+      "message": "After patching in the linker bug fix I couldn\u0027t get the CFI issue to trigger, which I realised is because with cross-DSO CFI we first do an intra-DSO CFI check, which won\u0027t access CFI shadow.",
+      "parentUuid": "f9a9d400_72f7b52e",
+      "revId": "e0402794c54814748bf0108a7de90a3538dc947b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "435fa19c_0d89728b",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 1
