@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "27ec9957_47046088",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1907,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-08-08T23:01:08Z",
+      "side": 1,
+      "message": "Yes, so the bad case would be when an ifunc transfers control outside of the current DSO, and the callee then runs a CFI check against the caller.\n\nAFAIK this can not be done on Android, because the loader does not guarantee that the dependencies of the current DSO have been relocated when the ifunc resolver runs.",
+      "parentUuid": "0e063fe1_74ff877f",
+      "revId": "e0402794c54814748bf0108a7de90a3538dc947b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "435fa19c_0d89728b",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 1
