@@ -124,7 +124,7 @@ TEST(pthread_leak, join) {
 // http://b/36045112
 TEST(pthread_leak, detach) {
   LeakChecker lc;
-  constexpr int kThreadCount = 100;
+  constexpr int kThreadCount = 80;
 
   // Devices with low power cores/low number of cores can not finish test in time hence decreasing
   // threads count to 90.
