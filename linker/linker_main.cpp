@@ -63,6 +63,8 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                    ElfW(Addr)* base, ElfW(Addr)* load_bias);
 
+static void set_bss_vma_name(soinfo* si);
+
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
 // before linker links itself.
@@ -366,6 +368,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->set_main_executable();
   init_link_map_head(*si);
 
+  set_bss_vma_name(si);
+
   // Use the executable's PT_INTERP string as the solinker filename in the
   // dynamic linker's module list. gdb reads both PT_INTERP and the module list,
   // and if the paths for the linker are different, gdb will report that the
@@ -570,6 +574,31 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
   async_safe_fatal("Could not find a PHDR: broken executable?");
 }
 
+/*
+ * Set anonymous VMA name for .bss section.  For DSOs loaded by the linker, this
+ * is done by ElfReader.  This function is here for DSOs loaded by the kernel,
+ * namely the linker itself and the main executable.
+ */
+static void set_bss_vma_name(soinfo* si) {
+  for (size_t i = 0; i < si->phnum; ++i) {
+    auto phdr = &si->phdr[i];
+
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    ElfW(Addr) seg_start = phdr->p_vaddr + si->load_bias;
+    ElfW(Addr) seg_page_end = PAGE_END(seg_start + phdr->p_memsz);
+    ElfW(Addr) seg_file_end = PAGE_END(seg_start + phdr->p_filesz);
+
+    if (seg_page_end > seg_file_end) {
+      prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+            reinterpret_cast<void*>(seg_file_end), seg_page_end - seg_file_end,
+            ".bss");
+    }
+  }
+}
+
 // Detect an attempt to run the linker on itself. e.g.:
 //   /system/bin/linker64 /system/bin/linker64
 // Use priority-1 to run this constructor before other constructors.
@@ -653,6 +682,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
  */
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) {
+  set_bss_vma_name(&tmp_linker_so);
+
   // Finish initializing the main thread.
   __libc_init_main_thread_late();
 
