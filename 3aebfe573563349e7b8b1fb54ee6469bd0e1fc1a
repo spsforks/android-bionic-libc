@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "428603e0_7cc52492",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-08-13T23:11:21Z",
+      "side": 1,
+      "message": "If you include android-base/threads.h, you can use tgkill without having to call syscall directly.",
+      "range": {
+        "startLine": 48,
+        "startChar": 12,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "3aebfe573563349e7b8b1fb54ee6469bd0e1fc1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
