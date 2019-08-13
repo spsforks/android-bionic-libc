@@ -17,8 +17,10 @@
 #include <err.h>
 #include <inttypes.h>
 #include <pthread.h>
+#include <sched.h>
 #include <stdio.h>
 #include <string.h>
+#include <syscall.h>
 #include <sys/mman.h>
 #include <sys/user.h>
 #include <unistd.h>
@@ -35,21 +37,23 @@
 
 using namespace std::chrono_literals;
 
-static void WaitUntilAllExited(pid_t* pids, size_t pid_count) {
+static void WaitUntilAllThreadsExited(pid_t* tids, size_t tid_count) {
   // Wait until all children have exited.
   bool alive = true;
   while (alive) {
     alive = false;
-    for (size_t i = 0; i < pid_count; ++i) {
-      if (pids[i] != 0) {
-        if (kill(pids[i], 0) == 0) {
+    for (size_t i = 0; i < tid_count; ++i) {
+      if (tids[i] != 0) {
+        // glibc doesn't have a wrapper for tgkill until 2.30.
+        if (syscall(__NR_tgkill, getpid(), tids[i], 0) == 0) {
           alive = true;
         } else {
           EXPECT_EQ(errno, ESRCH);
-          pids[i] = 0;  // Skip in next loop.
+          tids[i] = 0;  // Skip in next loop.
         }
       }
     }
+    sched_yield();
   }
 }
 
@@ -155,7 +159,7 @@ TEST(pthread_leak, detach) {
     pthread_barrier_wait(&barrier);
     ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-    WaitUntilAllExited(tids, arraysize(tids));
+    WaitUntilAllThreadsExited(tids, threads_count);
 
     // A native bridge implementation might need a warm up pass to reach a steady state.
     // http://b/37920774.
