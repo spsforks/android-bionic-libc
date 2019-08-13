@@ -733,17 +733,6 @@ cc_test {
     ],
 }
 
-cc_test {
-    name: "bionic-unit-tests-scudo",
-    defaults: [
-        "bionic_unit_tests_defaults",
-    ],
-
-    shared_libs: [
-        "libc_scudo",
-    ],
-}
-
 // -----------------------------------------------------------------------------
 // Tests for the device linked against bionic's static library. Run with:
 //   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static

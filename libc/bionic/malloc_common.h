@@ -55,15 +55,15 @@ __END_DECLS
 
 #else // __has_feature(hwaddress_sanitizer)
 
-#if defined(USE_SCUDO)
-
-#include "scudo.h"
-#define Malloc(function)  scudo_ ## function
-
-#else
+#if defined(USE_JEMALLOC)
 
 #include "jemalloc.h"
 #define Malloc(function)  je_ ## function
+
+#else
+
+#include "scudo.h"
+#define Malloc(function)  scudo_ ## function
 
 #endif
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
@@ -24,6 +25,7 @@
 
 #include <vector>
 
+#include <android-base/strings.h>
 #include <procinfo/process_map.h>
 
 #include "utils.h"
@@ -91,11 +93,11 @@ static void SavePointers(uintptr_t base, size_t size, void* data) {
 static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
-  // Find all of the maps that are [anon:libc_malloc].
+  // Find all of the maps that are [anon:scudo:*].
   ASSERT_TRUE(android::procinfo::ReadMapFile(
       "/proc/self/maps",
       [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-        if (std::string(name) == "[anon:libc_malloc]") {
+        if (android::base::StartsWith(std::string(name), "[anon:scudo:")) {
           malloc_disable();
           malloc_iterate(start, end - start, SavePointers, test_data);
           malloc_enable();
@@ -180,14 +182,21 @@ TEST(malloc_iterate, invalid_pointers) {
   SKIP_WITH_HWASAN;
   TestDataType test_data = {};
 
-  // Find all of the maps that are not [anon:libc_malloc].
+  // Find all of the maps that are not [anon:scudo:*].
   ASSERT_TRUE(android::procinfo::ReadMapFile(
       "/proc/self/maps",
       [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-        if (std::string(name) != "[anon:libc_malloc]") {
+        std::string map_name(name);
+        if (!android::base::StartsWith(map_name, "[anon:scudo:")) {
+          size_t total = test_data.total_allocated_bytes;
           malloc_disable();
           malloc_iterate(start, end - start, SavePointers, &test_data);
           malloc_enable();
+          total = test_data.total_allocated_bytes - total;
+          if (map_name.empty()) {
+            map_name = android::base::StringPrintf("anonymous:<%" PRIx64 "-%" PRIx64 ">", start, end);
+          }
+          EXPECT_EQ(0UL, total) << "Failed on map " << map_name;
         }
       }));
 
