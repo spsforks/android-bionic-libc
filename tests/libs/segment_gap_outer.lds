@@ -5,11 +5,9 @@ SECTIONS {
   .rodata : {}
   . = ALIGN(0x1000);
   .text : {}
+  .dynamic ALIGN(0x1000) : {}
   . = ALIGN(0x1000);
   .data : {}
-  . = ALIGN(0x1000);
-  .data.rel.ro : {}
-  . = ALIGN(0x1000);
   .bss : {}
 
   # Now create the gap. We need a text segment first to prevent the linker from
