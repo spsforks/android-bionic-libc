@@ -453,6 +453,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.x86_64.map",
+            no_libcrt: true,
         },
     },
 
