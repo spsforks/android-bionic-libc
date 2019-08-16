@@ -1,0 +1,7 @@
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Peter Collingbourne <pcc@google.com>
+Submitted-at: Fri, 16 Aug 2019 17:26:04 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1099295
+Project: platform/bionic
+Branch: refs/heads/master
