@@ -47,6 +47,14 @@ struct dl_phdr_info {
   const char* dlpi_name;
   const ElfW(Phdr)* dlpi_phdr;
   ElfW(Half) dlpi_phnum;
+
+  // These fields were added in Android R.
+#if __ANDROID_API__ >= __ANDROID_API_R__
+  unsigned long long dlpi_adds;
+  unsigned long long dlpi_subs;
+  size_t dlpi_tls_modid;
+  void* dlpi_tls_data;
+#endif
 };
 
 #if defined(__arm__)
