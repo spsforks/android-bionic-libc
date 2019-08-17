@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "663f2ceb_89a40879",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-17T01:10:59Z",
+      "side": 1,
+      "message": "I wonder if changing the size of dl_phdr_info is an ABI concern.",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d42af45f_2e5d4d56",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-17T01:10:59Z",
+      "side": 1,
+      "message": "I need to confirm that 0 is the right value to put here.",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8efee56f_a44d92da",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2074,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-17T01:10:59Z",
+      "side": 1,
+      "message": "I think the order of this operation w.r.t. unload_hook won\u0027t matter.",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
