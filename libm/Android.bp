@@ -421,6 +421,13 @@ cc_library {
                 "x86_64/s_tanh.S",
                 "x86_64/s_tan.S",
             ],
+            avx2: {
+                srcs: [
+                    "x86_64/avx2_exp_data.S",
+                    "x86_64/avx2_exp_cout.S",
+                    "x86_64/avx2_exp.S",
+                ],
+            },
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/e_acos.c",
                 "upstream-freebsd/lib/msun/src/e_asin.c",
