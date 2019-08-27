@@ -27,11 +27,15 @@
  */
 
 #include "linker_block_allocator.h"
+
+#include <errno.h>
 #include <inttypes.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <unistd.h>
+
+#include "linker_debug.h"
 
 static constexpr size_t kAllocateSize = PAGE_SIZE * 100;
 static_assert(kAllocateSize % PAGE_SIZE == 0, "Invalid kAllocateSize.");
@@ -90,12 +94,14 @@ void LinkerBlockAllocator::free(void* block) {
   LinkerBlockAllocatorPage* page = find_page(block);
 
   if (page == nullptr) {
+    PRINT("LinkerBlockAllocator::free abort: Page not found for block %p", block);
     abort();
   }
 
   ssize_t offset = reinterpret_cast<uint8_t*>(block) - page->bytes;
 
   if (offset % block_size_ != 0) {
+    PRINT("LinkerBlockAllocator::free abort: Unaligned offset %zd for block %p", offset, block);
     abort();
   }
 
@@ -114,6 +120,7 @@ void LinkerBlockAllocator::free(void* block) {
 void LinkerBlockAllocator::protect_all(int prot) {
   for (LinkerBlockAllocatorPage* page = page_list_; page != nullptr; page = page->next) {
     if (mprotect(page, kAllocateSize, prot) == -1) {
+      PRINT("LinkerBlockAllocator::protect_all abort: mprotect failure: %d", errno);
       abort();
     }
   }
@@ -127,6 +134,7 @@ void LinkerBlockAllocator::create_new_page() {
       mmap(nullptr, kAllocateSize, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0));
 
   if (page == MAP_FAILED) {
+    PRINT("LinkerBlockAllocator::create_new_page abort: mmap failure: %d", errno);
     abort(); // oom
   }
 
@@ -144,6 +152,7 @@ void LinkerBlockAllocator::create_new_page() {
 
 LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
   if (block == nullptr) {
+    PRINT("LinkerBlockAllocator::find_page abort: got null block");
     abort();
   }
 
@@ -157,6 +166,7 @@ LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
     page = page->next;
   }
 
+  PRINT("LinkerBlockAllocator::find_page abort: page not found for block %p", block);
   abort();
 }
 
