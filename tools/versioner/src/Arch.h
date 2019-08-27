@@ -165,4 +165,5 @@ static const std::unordered_map<std::string, int> api_codename_map{
   {"O-MR1", 27},
   {"P", 28},
   {"Q", 29},
+  {"R", 30},
 };
