@@ -16,6 +16,24 @@
       "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b4e813a_7a59fe5e",
+        "filename": "libc/include/bits/threads_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1018664
+      },
+      "writtenOn": "2019-08-28T05:05:16Z",
+      "side": 1,
+      "message": "\u003candroid/legacy_threads_inlines.h\u003e defines __BIONIC_THREADS_INLINE before including this file.  Thus, people can still get these inline functions when they include \u003cthreads.h\u003e (__ANDROID_API__ \u003c __ANDROID_API_R__).\n\nDo people directly include \u003cbits/threads_inlines.h\u003e?",
+      "parentUuid": "037c81b5_87256386",
+      "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
