@@ -52,6 +52,24 @@
       "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1da7ff0f_4c9f5552",
+        "filename": "libc/include/bits/threads_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-08-29T23:49:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76537cbb_0d941e54",
+      "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
