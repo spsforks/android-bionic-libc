@@ -43,6 +43,7 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
+#include "log/log_transport.h"
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
@@ -120,7 +121,13 @@ soinfo* solist_get_vdso() {
 }
 
 bool g_is_ldd;
+
+#if 0
 int g_ld_debug_verbosity;
+#else
+// FIXME: Force-set the verbosity level.
+int g_ld_debug_verbosity = 1;
+#endif
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -303,6 +310,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   struct timeval t0, t1;
   gettimeofday(&t0, 0);
 #endif
+
+  android_set_log_transport(LOGGER_STDERR | LOGGER_LOGD);
 
   // Sanitize the environment.
   __libc_init_AT_SECURE(args.envp);
