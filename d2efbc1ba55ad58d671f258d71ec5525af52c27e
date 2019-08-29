@@ -34,6 +34,24 @@
       "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76537cbb_0d941e54",
+        "filename": "libc/include/bits/threads_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-29T22:01:10Z",
+      "side": 1,
+      "message": "(sorry, was ooo sick.)\n\nah, yes, you\u0027re right. still move this below the #includes, though, so folks get consistent transitive includes?",
+      "parentUuid": "8b4e813a_7a59fe5e",
+      "revId": "d2efbc1ba55ad58d671f258d71ec5525af52c27e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
