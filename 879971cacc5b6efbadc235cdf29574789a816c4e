@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b66118a9_471fc8b9",
+        "filename": "libc/include/sys/statvfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-30T03:57:33Z",
+      "side": 1,
+      "message": "hmm. this seemed like a good idea, but it prevents me from rebuild our own tests, so...",
+      "revId": "879971cacc5b6efbadc235cdf29574789a816c4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
