@@ -1133,6 +1133,7 @@ cc_library_static {
         "bionic/sigprocmask.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
+        "bionic/statfs.cpp",
         "bionic/statvfs.cpp",
         "bionic/stdlib_l.cpp",
         "bionic/strchrnul.cpp",
