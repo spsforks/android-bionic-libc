@@ -441,6 +441,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_invalid.cpp"],
     ldflags: ["-Wl,-soname=libtest_with_dependency_loop_b.so"],
+    allow_mismatched_soname: true,
 }
 
 // -----------------------------------------------------------------------------
