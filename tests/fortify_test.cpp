@@ -1036,3 +1036,14 @@ TEST_F(DEATHTEST, open_O_TMPFILE_without_mode_fortified) {
   ASSERT_FORTIFY(open("", flags));
 #endif
 }
+
+TEST_F(DEATHTEST, dynamic_object_size_malloc) {
+#if __BIONIC__ // glibc doesn't use __builtin_dynamic_object_size
+  // Volatile because we have to fool both the frontend and the optimizer.
+  volatile int i = 32;
+  volatile int j = i + 1;
+  void *mem = malloc(i);
+  ASSERT_FORTIFY(memset(mem, 0, j));
+  free(mem);
+#endif
+}
