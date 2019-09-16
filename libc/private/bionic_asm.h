@@ -86,3 +86,26 @@
     .equ alias, original
 
 #endif
+
+#define ENTRY_NO_DWARF_X86(f) \
+    .text; \
+    .globl f; \
+    .align 16,0x90; \
+    f: \
+    __bionic_asm_custom_entry(f); \
+
+#define ENTRYX86(f) \
+    ENTRY_NO_DWARF_X86(f) \
+    .cfi_startproc \
+
+#define END_NO_DWARF_X86(f) \
+    .align 16,0x90; \
+    .type f, __bionic_asm_function_type; \
+    .size f, .-f; \
+    .data \
+    __bionic_asm_custom_end(f) \
+
+#define ENDX86(f) \
+    .cfi_endproc; \
+    END_NO_DWARF_X86(f) \
+
