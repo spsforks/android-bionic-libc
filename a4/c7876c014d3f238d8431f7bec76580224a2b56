@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Code-Review+2: Haibo Huang <hhb@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Wed, 18 Sep 2019 18:01:54 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1123445
+Project: platform/bionic
+Branch: refs/heads/master
