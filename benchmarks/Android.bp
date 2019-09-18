@@ -35,6 +35,7 @@ cc_defaults {
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",
         "semaphore_benchmark.cpp",
+        "spawn_benchmark.cpp",
         "stdio_benchmark.cpp",
         "stdlib_benchmark.cpp",
         "string_benchmark.cpp",
@@ -48,6 +49,10 @@ cc_defaults {
         "libtinyxml2",
     ],
     stl: "libc++_static",
+    required: [
+        "bench_noop",
+        "bench_noop_nostl",
+    ],
 }
 
 cc_defaults {
@@ -115,4 +120,20 @@ cc_test {
         "libgoogle-benchmark",
     ],
     data: ["test_suites/*"],
+}
+
+cc_test {
+    name: "bench_noop",
+    srcs: ["noop.cpp"],
+
+    // Labeling these targets with "cc_test" allows building 32- and 64-bit binaries simultaneously.
+    // They're not actually tests, so don't link against gtest.
+    gtest: false,
+}
+
+cc_test {
+    name: "bench_noop_nostl",
+    srcs: ["noop.cpp"],
+    stl: "none",
+    gtest: false,
 }
