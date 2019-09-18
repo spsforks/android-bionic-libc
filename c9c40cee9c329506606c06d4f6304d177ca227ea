@@ -33,6 +33,23 @@
       "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42096879_fe01f9b7",
+        "filename": "libm/x86_64/avx2/d_atan.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-18T17:39:23Z",
+      "side": 1,
+      "message": "since we\u0027re using ifuncs going forward, these need to be called something like `atan_avx2`, similar to the optimized x86 string routines.",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
