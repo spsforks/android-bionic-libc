@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d23532_e92e8487",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-18T17:30:05Z",
+      "side": 1,
+      "message": "why do you need these?",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "292cdd04_d245c3f7",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-18T17:30:05Z",
+      "side": 1,
+      "message": "isn\u0027t the 16 wrong (because this is .align rather than .balign)? and unnecessary because we already have `.balign 16` in ENTRY_NO_DWARF.\n\nand why do you need to explicitly pad with NOP rather than 0? (since you\u0027re in a code sectino, shouldn\u0027t you get that automatically?)",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
