@@ -21,7 +21,6 @@
 #include <sys/resource.h>
 
 #include <map>
-#include <mutex>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -81,9 +80,7 @@ static std::map<std::string, const std::vector<int> &> kSizes{
   { "LARGE",  kLargeSizes },
 };
 
-std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
-
-std::mutex g_map_lock;
+std::map<std::string, BionicBenchmark> g_bionic_benchmarks;
 
 static struct option g_long_options[] =
 {
@@ -214,15 +211,13 @@ bench_opts_t ParseOpts(int argc, char** argv) {
 void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, int cpu_to_lock) {
   if (cpu_to_lock >= 0) LockToCPU(cpu_to_lock);
 
-  // To avoid having to link against Google benchmarks in libutil,
-  // benchmarks are kept without parameter information, necessitating this cast.
-  reinterpret_cast<void(*) (benchmark::State&)>(func_to_bench)(state);
+  func_to_bench(state);
 }
 
 static constexpr char kOnebufManualStr[] = "AT_ONEBUF_MANUAL_ALIGN_";
 static constexpr char kTwobufManualStr[] = "AT_TWOBUF_MANUAL_ALIGN1_";
 
-static bool ParseOnebufManualStr(std::string& arg, args_vector_t* to_populate) {
+static bool ParseOnebufManualStr(const std::string& arg, args_vector_t* to_populate) {
   // The format of this is:
   //   AT_ONEBUF_MANUAL_ALIGN_XX_SIZE_YY
   // Where:
@@ -264,7 +259,7 @@ static bool ParseOnebufManualStr(std::string& arg, args_vector_t* to_populate) {
   return true;
 }
 
-static bool ParseTwobufManualStr(std::string& arg, args_vector_t* to_populate) {
+static bool ParseTwobufManualStr(const std::string& arg, args_vector_t* to_populate) {
   // The format of this is:
   //   AT_TWOBUF_MANUAL_ALIGN1_XX_ALIGN2_YY_SIZE_ZZ
   // Where:
@@ -310,7 +305,7 @@ static bool ParseTwobufManualStr(std::string& arg, args_vector_t* to_populate) {
   return true;
 }
 
-args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
+args_vector_t* ResolveArgs(args_vector_t* to_populate, const std::string& args,
                            std::map<std::string, args_vector_t>& args_shorthand) {
   // args is either a space-separated list of ints, a macro name, or
   // special free form macro.
@@ -350,7 +345,7 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
                               const std::string& fn_name, args_vector_t* run_args) {
-  if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
+  if (g_bionic_benchmarks.find(fn_name) == g_bionic_benchmarks.end()) {
     errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
@@ -363,11 +358,14 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
     cpu_to_use = secondary_opts.cpu_to_lock;
   }
 
-  benchmark_func_t benchmark_function = g_str_to_func.at(fn_name).first;
+  const BionicBenchmark& benchmark = g_bionic_benchmarks.at(fn_name);
   for (const std::vector<int64_t>& args : (*run_args)) {
     auto registration = benchmark::RegisterBenchmark(fn_name.c_str(), LockAndRun,
-                                                     benchmark_function,
+                                                     benchmark.func,
                                                      cpu_to_use)->Args(args);
+    if (benchmark.config_func) {
+      benchmark.config_func(registration);
+    }
     if (iterations_to_use > 0) {
       registration->Iterations(iterations_to_use);
     }
@@ -555,10 +553,10 @@ static bool FileExists(const std::string& file) {
 
 void RegisterAllBenchmarks(const bench_opts_t& opts,
                            std::map<std::string, args_vector_t>& args_shorthand) {
-  for (auto& entry : g_str_to_func) {
-    auto& function_info = entry.second;
+  for (const auto& entry : g_bionic_benchmarks) {
+    const BionicBenchmark& function_info = entry.second;
     args_vector_t arg_vector;
-    args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
+    args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.arg,
                                           args_shorthand);
     RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
   }

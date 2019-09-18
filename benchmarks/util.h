@@ -16,30 +16,44 @@
 
 #pragma once
 
+#include <functional>
 #include <map>
-#include <mutex>
 #include <string>
 #include <utility>
 #include <vector>
 
-typedef void (*benchmark_func_t) (void);
+#include <benchmark/benchmark.h>
 
-extern std::mutex g_map_lock;
+typedef void (*benchmark_func_t)(benchmark::State& state);
 
-extern std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
+struct BionicBenchmark {
+  benchmark_func_t func;
+  std::string arg;
+  std::function<void(benchmark::internal::Benchmark*)> config_func;
+};
 
-static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name, benchmark_func_t fn_ptr, const std::string& arg = "") {
-  g_map_lock.lock();
-  g_str_to_func.emplace(std::string(fn_name), std::make_pair(fn_ptr, arg));
-  g_map_lock.unlock();
+extern std::map<std::string, BionicBenchmark> g_bionic_benchmarks;
+
+__attribute__((unused))
+static int RegisterBionicBenchmark(const std::string& fn_name, benchmark_func_t fn_ptr,
+                                   std::function<void(benchmark::internal::Benchmark*)> config_func={},
+                                   const std::string& arg="") {
+  g_bionic_benchmarks[fn_name] = {
+    .func = fn_ptr,
+    .arg = arg,
+    .config_func = std::move(config_func),
+  };
   return 0;
 }
 
+#define DECLARE_BIONIC_BENCHMARK(n, ...) \
+  int _bionic_benchmark_##n __attribute__((unused)) = RegisterBionicBenchmark(#n, __VA_ARGS__)
+
 #define BIONIC_BENCHMARK(n) \
-  int _bionic_benchmark_##n __attribute__((unused)) = EmplaceBenchmark(std::string(#n), reinterpret_cast<benchmark_func_t>(n))
+  DECLARE_BIONIC_BENCHMARK(n, n)
 
 #define BIONIC_BENCHMARK_WITH_ARG(n, arg) \
-  int _bionic_benchmark_##n __attribute__((unused)) = EmplaceBenchmark(std::string(#n), reinterpret_cast<benchmark_func_t>(n), arg)
+  DECLARE_BIONIC_BENCHMARK(n, n, {}, arg)
 
 
 constexpr auto KB = 1024;

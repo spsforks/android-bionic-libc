@@ -97,6 +97,7 @@ cc_library_static {
     name: "libBionicBenchmarksUtils",
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: ["util.cpp"],
+    static_libs: ["libgoogle-benchmark"],
     host_supported: true,
 }
 
@@ -111,6 +112,7 @@ cc_test {
     static_libs: [
         "libbase",
         "libBionicBenchmarksUtils",
+        "libgoogle-benchmark",
     ],
     data: ["test_suites/*"],
 }

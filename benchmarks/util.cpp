@@ -17,6 +17,7 @@
 #include "util.h"
 
 #include <err.h>
+#include <errno.h>
 #include <math.h>
 #include <sched.h>
 #include <stdio.h>
