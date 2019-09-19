@@ -45,7 +45,6 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 /* O_TMPFILE shares bits with O_DIRECTORY. */
 #define __open_modes_useful(flags) (((flags) & O_CREAT) || ((flags) & O_TMPFILE) == O_TMPFILE)
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
         __errorattr(__open_too_many_args_error);
@@ -60,7 +59,11 @@ __BIONIC_FORTIFY_INLINE
 int open(const char* const __pass_object_size pathname, int flags)
         __overloadable
         __clang_error_if(__open_modes_useful(flags), "'open' " __open_too_few_args_error) {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     return __open_2(pathname, flags);
+#else
+    return __open_real(pathname, flags);
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -68,7 +71,11 @@ int open(const char* const __pass_object_size pathname, int flags, mode_t modes)
         __overloadable
         __clang_warning_if(!__open_modes_useful(flags) && modes,
                            "'open' " __open_useless_modes_warning) {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     return __open_real(pathname, flags, modes);
+#else
+    return __open_real(pathname, flags, modes);
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 }
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
@@ -80,7 +87,11 @@ __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname, int flags)
         __overloadable
         __clang_error_if(__open_modes_useful(flags), "'openat' " __open_too_few_args_error) {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     return __openat_2(dirfd, pathname, flags);
+#else
+    return __openat_real(dirfd, pathname, flags);
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -88,9 +99,12 @@ int openat(int dirfd, const char* const __pass_object_size pathname, int flags, 
         __overloadable
         __clang_warning_if(!__open_modes_useful(flags) && modes,
                            "'openat' " __open_useless_modes_warning) {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     return __openat_real(dirfd, pathname, flags, modes);
-}
+#else
+    return __openat_real(dirfd, pathname, flags, modes);
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+}
 
 #if __ANDROID_API__ >= __ANDROID_API_R__
 int __open64_2(const char*, int) __INTRODUCED_IN(30);
@@ -106,7 +120,11 @@ __BIONIC_FORTIFY_INLINE
 int open64(const char* const __pass_object_size pathname, int flags)
         __overloadable
         __clang_error_if(__open_modes_useful(flags), "'open64' " __open_too_few_args_error) {
+#if __ANDROID_API__ >= __ANDROID_API_R__
     return __open64_2(pathname, flags);
+#else
+    return __open64_real(pathname, flags);
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -114,7 +132,11 @@ int open64(const char* const __pass_object_size pathname, int flags, mode_t mode
         __overloadable
         __clang_warning_if(!__open_modes_useful(flags) && modes,
                            "'open64' " __open_useless_modes_warning) {
+#if __ANDROID_API__ >= __ANDROID_API_R__
     return __open64_real(pathname, flags, modes);
+#else
+    return __open64_real(pathname, flags, modes);
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
 }
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
@@ -126,7 +148,11 @@ __BIONIC_FORTIFY_INLINE
 int openat64(int dirfd, const char* const __pass_object_size pathname, int flags)
         __overloadable
         __clang_error_if(__open_modes_useful(flags), "'openat64' " __open_too_few_args_error) {
+#if __ANDROID_API__ >= __ANDROID_API_R__
     return __openat64_2(dirfd, pathname, flags);
+#else
+    return __openat64_real(dirfd, pathname, flags);
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -134,9 +160,13 @@ int openat64(int dirfd, const char* const __pass_object_size pathname, int flags
         __overloadable
         __clang_warning_if(!__open_modes_useful(flags) && modes,
                            "'openat64' " __open_useless_modes_warning) {
+#if __ANDROID_API__ >= __ANDROID_API_R__
     return __openat64_real(dirfd, pathname, flags, modes);
-}
+#else
+    return __openat64_real(dirfd, pathname, flags, modes);
 #endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #undef __open_too_many_args_error
 #undef __open_too_few_args_error
