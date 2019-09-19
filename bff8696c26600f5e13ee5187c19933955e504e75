@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7af98498_13439095",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2019-09-19T20:05:46Z",
+      "side": 1,
+      "message": "the Q GSI should set EXTRA_VNDK_VERSIONS in this case, right?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 46
+      },
+      "revId": "bff8696c26600f5e13ee5187c19933955e504e75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47a2dfa2_18ff3fae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2019-09-19T20:05:46Z",
+      "side": 1,
+      "message": "if it isn\u0027t a guarantee, I don\u0027t think we want to rely on it",
+      "range": {
+        "startLine": 11,
+        "startChar": 63,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "bff8696c26600f5e13ee5187c19933955e504e75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
