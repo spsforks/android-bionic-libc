@@ -117,12 +117,30 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
 }
 
 wint_t towlower(wint_t wc) {
+  if (wc >= 'A' && wc <= 'Z')
+    return wc | 0x20;
+
+  // Return quick for non-zero ASCII characters in range 1..0x7f. Not considering
+  // Zero as ASCII because it would complicate the detection of ASCII strings in
+  // Modified-UTF8.
+  if ((static_cast<unsigned int>(wc) - 1u) < 0x7fu)
+    return wc;
+
   typedef UChar32 (*FnT)(UChar32);
   static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
   return u_tolower ? u_tolower(wc) : tolower(wc);
 }
 
 wint_t towupper(wint_t wc) {
+  if (wc >= 'a' && wc <= 'z')
+    return wc & 0xdf;
+
+  // Return quick for non-zero ASCII characters in range 1..0x7f. Not considering
+  // Zero as ASCII because it would complicate the detection of ASCII strings in
+  // Modified-UTF8.
+  if ((static_cast<unsigned int>(wc) - 1u) < 0x7fu)
+    return wc;
+
   typedef UChar32 (*FnT)(UChar32);
   static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
   return u_toupper ? u_toupper(wc) : toupper(wc);
