@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "97d5a371_be304361",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1272703
+      },
+      "writtenOn": "2019-09-23T10:30:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0d23532_e92e8487",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "292cdd04_d245c3f7",
         "filename": "libc/private/bionic_asm.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "85fe0081_5d23b6c7",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1272703
+      },
+      "writtenOn": "2019-09-23T10:30:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "292cdd04_d245c3f7",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "42096879_fe01f9b7",
         "filename": "libm/x86_64/avx2/d_atan.S",
         "patchSetId": 1
@@ -50,6 +86,24 @@
       "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "882c5018_7fe6bfd6",
+        "filename": "libm/x86_64/avx2/d_atan.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1272703
+      },
+      "writtenOn": "2019-09-23T10:30:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42096879_fe01f9b7",
+      "revId": "c9c40cee9c329506606c06d4f6304d177ca227ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
