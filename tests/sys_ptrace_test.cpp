@@ -176,6 +176,9 @@ static void run_watchpoint_test(std::function<void(T&)> child_func, size_t offse
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
   check_hw_feature_supported(child, HwFeature::Watchpoint);
+  if (::testing::Test::IsSkipped()) {
+    return;
+  }
 
   set_watchpoint(child, uintptr_t(untag_address(&data)) + offset, size);
 
@@ -343,6 +346,9 @@ TEST(sys_ptrace, hardware_breakpoint) {
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
   check_hw_feature_supported(child, HwFeature::Breakpoint);
+  if (::testing::Test::IsSkipped()) {
+    return;
+  }
 
   set_breakpoint(child);
 
