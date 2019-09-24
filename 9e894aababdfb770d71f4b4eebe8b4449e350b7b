@@ -34,6 +34,24 @@
       "revId": "9e894aababdfb770d71f4b4eebe8b4449e350b7b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d49238ec_71d6e4d0",
+        "filename": "build/run-on-host.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-24T23:20:05Z",
+      "side": 1,
+      "message": "sgtm, I filed https://github.com/landley/toybox/issues/142.",
+      "parentUuid": "847b19b1_fbb7f78e",
+      "revId": "9e894aababdfb770d71f4b4eebe8b4449e350b7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
