@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c165ad5_d42147b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-24T19:58:27Z",
+      "side": 1,
+      "message": "really? huh. i don\u0027t suppose you have any idea _why_ they\u0027re spending so much time calling this?\n\n(i\u0027ll ask our devrel folks to reach out to them...)",
+      "range": {
+        "startLine": 10,
+        "startChar": 20,
+        "endLine": 10,
+        "endChar": 64
+      },
+      "revId": "c938e74dc2d655d7ba92bf26947e2d34ed8ac7d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29093063_6ae0b444",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-24T19:58:27Z",
+      "side": 1,
+      "message": "i don\u0027t understand this part of the comment?",
+      "range": {
+        "startLine": 123,
+        "startChar": 66,
+        "endLine": 125,
+        "endChar": 19
+      },
+      "revId": "c938e74dc2d655d7ba92bf26947e2d34ed8ac7d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
