@@ -52,27 +52,39 @@ __LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(3
     fallBackDnsOpenProxy,
 };
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 int accept4(int fd, sockaddr* addr, socklen_t* addr_length, int flags) {
     return __netdClientDispatch.accept4(fd, addr, addr_length, flags);
 }
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 int connect(int fd, const sockaddr* addr, socklen_t addr_length) {
     return __netdClientDispatch.connect(fd, addr, addr_length);
 }
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 int sendmmsg(int fd, const struct mmsghdr* msgs, unsigned int msg_count, int flags) {
     return __netdClientDispatch.sendmmsg(fd, msgs, msg_count, flags);
 }
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 ssize_t sendmsg(int fd, const struct msghdr* msg, int flags) {
     return __netdClientDispatch.sendmsg(fd, msg, flags);
 }
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 ssize_t sendto(int fd, const void* buf, size_t n, int flags,
                const struct sockaddr* dst_addr, socklen_t dst_addr_length) {
     return __netdClientDispatch.sendto(fd, buf, n, flags, dst_addr, dst_addr_length);
 }
 
+// NOTE: This function is shimmed in libnetd_client. Any changes should be carefully evaluated to
+// preventing shim breakage.
 int socket(int domain, int type, int protocol) {
     return __netdClientDispatch.socket(domain, type, protocol);
 }

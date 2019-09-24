@@ -27,13 +27,24 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef __i386__
+#define __socketcall __attribute__((__cdecl__))
+#else
+#define __socketcall
+#endif
+
+extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
+extern "C" __socketcall int __socket(int, int, int);
+
 template <typename FunctionType>
-static void netdClientInitFunction(void* handle, const char* symbol, FunctionType* function) {
+static bool clientInitFunction(void* handle, const char* symbol, FunctionType* function) {
     typedef void (*InitFunctionType)(FunctionType*);
     InitFunctionType initFunction = reinterpret_cast<InitFunctionType>(dlsym(handle, symbol));
     if (initFunction != nullptr) {
         initFunction(function);
+        return true;
     }
+    return false;
 }
 
 static void netdClientInitImpl() {
@@ -52,17 +63,28 @@ static void netdClientInitImpl() {
         return;
     }
 
-    netdClientInitFunction(handle, "netdClientInitAccept4", &__netdClientDispatch.accept4);
-    netdClientInitFunction(handle, "netdClientInitConnect", &__netdClientDispatch.connect);
-    netdClientInitFunction(handle, "netdClientInitSendmmsg", &__netdClientDispatch.sendmmsg);
-    netdClientInitFunction(handle, "netdClientInitSendmsg", &__netdClientDispatch.sendmsg);
-    netdClientInitFunction(handle, "netdClientInitSendto", &__netdClientDispatch.sendto);
-    netdClientInitFunction(handle, "netdClientInitSocket", &__netdClientDispatch.socket);
+    clientInitFunction(handle, "netdClientInitAccept4", &__netdClientDispatch.accept4);
+    clientInitFunction(handle, "netdClientInitConnect", &__netdClientDispatch.connect);
+    clientInitFunction(handle, "netdClientInitSendmmsg", &__netdClientDispatch.sendmmsg);
+    clientInitFunction(handle, "netdClientInitSendmsg", &__netdClientDispatch.sendmsg);
+    clientInitFunction(handle, "netdClientInitSendto", &__netdClientDispatch.sendto);
+    clientInitFunction(handle, "netdClientInitSocket", &__netdClientDispatch.socket);
 
-    netdClientInitFunction(handle, "netdClientInitNetIdForResolv",
+    clientInitFunction(handle, "netdClientInitNetIdForResolv",
                            &__netdClientDispatch.netIdForResolv);
-    netdClientInitFunction(handle, "netdClientInitDnsOpenProxy",
-                           &__netdClientDispatch.dnsOpenProxy);
+    if (clientInitFunction(handle, "netdClientInitDnsOpenProxy",
+                           &__netdClientDispatch.dnsOpenProxy) == false) {
+        handle = dlopen("libdns_client.so", RTLD_NOW);
+        if (handle) {
+            clientInitFunction(handle, "netdClientInitDnsOpenProxy", &__netdClientDispatch.dnsOpenProxy);
+            // pass un-shimmed syscall to libdns_client. Thus, libdns_client won't waste time on 
+            // checking fwmark while doing dns_open_proxy().
+            clientInitFunction(handle, "netdClientInitConnect", &__connect);
+            clientInitFunction(handle, "netdClientInitSocket", &__socket);
+        } else {
+            async_safe_format_log(ANDROID_LOG_ERROR, "netdClient", "dlopen libdns_client.so fail");
+        }
+    }
 }
 
 static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
