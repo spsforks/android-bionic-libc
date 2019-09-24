@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c64a83c_cadc7680",
+        "filename": "build/run-on-host.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-24T22:25:31Z",
+      "side": 1,
+      "message": "I\u0027m trying to do the right thing with the \"bootstrap\" symlink here, by removing the old symlink before creating a new one. \"ln -sf\" would instead create a new symlink, /system/bin/bootstrap/bootstrap -\u003e /path/to/bootstrap.\n\nI could instead use coreutils\u0027 -T flag, which appears to do the right thing here (ln -sfT). Toybox\u0027s ln doesn\u0027t have -T. Busybox *does* have it, but it doesn\u0027t seem to behave the same way.\n\n    rprichard@cashew:/system/bin$ busybox ln -sfT /x/aosp/out-x86/target/product/generic_x86_64/system/bin/bootstrap bootstrap ; echo $?\n    ln: \u0027bootstrap\u0027 is a directory\n    1\n\n    rprichard@cashew:/system/bin$ ln -sfT /x/aosp/out-x86/target/product/generic_x86_64/system/bin/bootstrap bootstrap ; echo $?\n    0",
+      "revId": "9e894aababdfb770d71f4b4eebe8b4449e350b7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
