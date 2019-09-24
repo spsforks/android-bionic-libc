@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8523f7f6_79d0f4a4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1380668
+      },
+      "writtenOn": "2019-09-24T20:41:16Z",
+      "side": 1,
+      "message": "Yes, short answer is I\u0027ve no idea. However, I believe it\u0027s coming from the game engine but I don\u0027t have the source for Unreal Engine and it is hard to tell. It would be great if you can reach out to them and find the root cause.",
+      "parentUuid": "3c165ad5_d42147b0",
+      "range": {
+        "startLine": 10,
+        "startChar": 20,
+        "endLine": 10,
+        "endChar": 64
+      },
+      "revId": "c938e74dc2d655d7ba92bf26947e2d34ed8ac7d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29093063_6ae0b444",
         "filename": "libc/bionic/wctype.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-09-24T19:58:27Z",
       "side": 1,
       "message": "i don\u0027t understand this part of the comment?",
+      "range": {
+        "startLine": 123,
+        "startChar": 66,
+        "endLine": 125,
+        "endChar": 19
+      },
+      "revId": "c938e74dc2d655d7ba92bf26947e2d34ed8ac7d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e6c76ef_705449dd",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1380668
+      },
+      "writtenOn": "2019-09-24T20:41:16Z",
+      "side": 1,
+      "message": "My understanding was it is not safe to consider Zero as ASCII in android based on this code in\nart/runtime/mirror/string.h:243\n\n  static constexpr bool IsASCII(uint16_t c) {\n    // Valid ASCII characters are in range 1..0x7f. Zero is not considered ASCII\n    // because it would complicate the detection of ASCII strings in Modified-UTF8.\n    return (c - 1u) \u003c 0x7fu;\n  }\nIf this is not correct, I would be happy to change this.",
+      "parentUuid": "29093063_6ae0b444",
       "range": {
         "startLine": 123,
         "startChar": 66,
