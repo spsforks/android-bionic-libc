@@ -80,7 +80,8 @@
 // [1] "Addenda to, and Errata in, the ABI for the ARM Architecture". Section 3.
 // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0045e/IHI0045E_ABI_addenda.pdf
 
-#define MIN_TLS_SLOT              -1 // update this value when reserving a slot
+#define MIN_TLS_SLOT              -2 // update this value when reserving a slot
+#define TLS_SLOT_ALLOCATOR        -2
 #define TLS_SLOT_BIONIC_TLS       -1
 #define TLS_SLOT_DTV              0
 #define TLS_SLOT_THREAD_ID        1
@@ -112,7 +113,8 @@
 #define TLS_SLOT_ART_THREAD_SELF  7
 #define TLS_SLOT_DTV              8
 #define TLS_SLOT_BIONIC_TLS       9
-#define MAX_TLS_SLOT              9 // update this value when reserving a slot
+#define TLS_SLOT_ALLOCATOR        10
+#define MAX_TLS_SLOT              10 // update this value when reserving a slot
 
 #endif
 

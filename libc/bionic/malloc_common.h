@@ -55,6 +55,9 @@ __END_DECLS
 
 #else // __has_feature(hwaddress_sanitizer)
 
+// Always enable scudo.
+#define USE_SCUDO 1
+
 #if defined(USE_SCUDO)
 
 #include "scudo.h"

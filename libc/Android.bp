@@ -65,7 +65,6 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
-        "external/jemalloc_new/include",
     ],
 
     stl: "none",
@@ -1374,7 +1373,7 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
-        "libjemalloc5",
+        "libscudo",
         "libstdc++",
     ],
 }
@@ -1512,7 +1511,6 @@ cc_library_static {
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
-    srcs: ["bionic/jemalloc_wrapper.cpp"],
     cflags: ["-fvisibility=hidden"],
 
     name: "libc_malloc",
@@ -1608,7 +1606,7 @@ cc_library {
         "libdl_android",
     ],
     whole_static_libs: [
-        "libjemalloc5",
+        "libscudo",
     ],
 
     nocrt: true,
