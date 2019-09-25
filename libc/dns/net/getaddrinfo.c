@@ -92,7 +92,6 @@
 #include <ctype.h>
 #include <errno.h>
 #include <netdb.h>
-#include "NetdClientDispatch.h"
 #include "resolv_cache.h"
 #include "resolv_netid.h"
 #include "resolv_private.h"
@@ -107,7 +106,9 @@
 #include <syslog.h>
 #include <stdarg.h>
 #include "nsswitch.h"
+
 #include "private/bionic_defs.h"
+#include "private/NetdClient.h"
 
 typedef union sockaddr_union {
     struct sockaddr     generic;
@@ -422,11 +423,12 @@ android_getaddrinfo_proxy(
 		return EAI_NODATA;
 	}
 
-	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
+	struct NetdClient* netd_client = __get_netd_client();
+	FILE* proxy = fdopen(netd_client->dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		return EAI_SYSTEM;
 	}
-	netid = __netdClientDispatch.netIdForResolv(netid);
+	netid = netd_client->netIdForResolv(netid);
 
 	// Send the request.
 	if (fprintf(proxy, "getaddrinfo %s %s %d %d %d %d %u",

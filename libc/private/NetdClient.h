@@ -21,7 +21,7 @@
 
 __BEGIN_DECLS
 
-struct NetdClientDispatch {
+struct NetdClient {
     int (*accept4)(int, struct sockaddr*, socklen_t*, int);
     int (*connect)(int, const struct sockaddr*, socklen_t);
     int (*sendmmsg)(int, const struct mmsghdr*, unsigned int, int);
@@ -32,6 +32,6 @@ struct NetdClientDispatch {
     int (*dnsOpenProxy)();
 };
 
-extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
+struct NetdClient* __get_netd_client();
 
 __END_DECLS

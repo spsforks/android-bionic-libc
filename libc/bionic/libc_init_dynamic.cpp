@@ -58,10 +58,7 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
-extern "C" {
-  extern void netdClientInit(void);
-  extern int __cxa_atexit(void (*)(void *), void *, void *);
-};
+extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
 // Use an initializer so __libc_sysinfo will have a fallback implementation
 // while .preinit_array constructors run.
@@ -105,8 +102,6 @@ static void __libc_preinit_impl() {
   __libc_shared_globals()->load_hook = __hwasan_library_loaded;
   __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
 #endif
-
-  netdClientInit();
 }
 
 // We flag the __libc_preinit function as a constructor to ensure that
