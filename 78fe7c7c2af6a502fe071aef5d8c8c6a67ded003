@@ -22,6 +22,30 @@
       "revId": "78fe7c7c2af6a502fe071aef5d8c8c6a67ded003",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d8d1449_0d8cb8bd",
+        "filename": "libc/include/bits/fortify/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-09-25T20:28:47Z",
+      "side": 1,
+      "message": "Good call -- done",
+      "parentUuid": "989ec3db_3c3454dc",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "78fe7c7c2af6a502fe071aef5d8c8c6a67ded003",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
