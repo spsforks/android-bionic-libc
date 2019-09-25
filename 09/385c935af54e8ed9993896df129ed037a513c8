@@ -1,0 +1,10 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Ross Yeh <rossyeh@google.com>
+DrNo-Review+1: Ross Yeh <rossyeh@google.com>
+Autosubmit+1: Christopher Ferris <cferris@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Wed, 25 Sep 2019 22:01:09 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1126826
+Project: platform/bionic
+Branch: refs/heads/android10-tests-dev
