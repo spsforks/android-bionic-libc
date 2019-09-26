@@ -489,9 +489,9 @@ class SysCallsTxtParser:
             self.parse_open_file(fp)
 
 
-def main(arch):
+def main(arch, syscall_file):
     parser = SysCallsTxtParser()
-    parser.parse_file(os.path.join(bionic_libc, "SYSCALLS.TXT"))
+    parser.parse_file(syscall_file)
 
     for syscall in parser.syscalls:
         syscall["__NR_name"] = make__NR_name(syscall["name"])
@@ -528,4 +528,13 @@ def main(arch):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if len(sys.argv) == 0:
+      print "Usage: gensyscalls.py ARCH [SOURCE_FILE]"
+      sys.exit(1)
+
+    arch = sys.argv[1]
+    if len(sys.argv) > 1:
+      syscall_file = sys.argv[2]
+    else:
+      syscall_file = os.path.join(bionic_libc, "SYSCALLS.TXT")
+    main(arch, syscall_file)
