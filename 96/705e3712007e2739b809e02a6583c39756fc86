@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Thu, 26 Sep 2019 21:38:50 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1129177
+Project: platform/bionic
+Branch: refs/heads/master
