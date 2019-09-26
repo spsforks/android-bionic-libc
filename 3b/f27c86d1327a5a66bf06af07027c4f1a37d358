@@ -1,0 +1,7 @@
+Code-Review+2: Ian Kasprzak <iankaz@google.com>
+Build-Cop-Override+1: Ian Kasprzak <iankaz@google.com>
+Submitted-by: Raman Tenneti <rtenneti@google.com>
+Submitted-at: Thu, 26 Sep 2019 17:54:33 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1129333
+Project: platform/bionic
+Branch: refs/heads/master
