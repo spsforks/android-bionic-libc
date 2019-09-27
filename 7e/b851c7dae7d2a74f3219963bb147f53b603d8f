@@ -1,0 +1,9 @@
+Code-Review+1: Colin Cross <ccross@android.com>
+Code-Review+1: Mitch Phillips <mitchp@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Peter Collingbourne <pcc@google.com>
+Submitted-at: Fri, 27 Sep 2019 19:31:11 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1129346
+Project: platform/bionic
+Branch: refs/heads/master
