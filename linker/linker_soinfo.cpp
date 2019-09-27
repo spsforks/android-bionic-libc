@@ -435,6 +435,8 @@ void soinfo::call_constructors() {
   if (!is_linker()) {
     bionic_trace_end();
   }
+
+  constructors_completed = true;
 }
 
 void soinfo::call_destructors() {

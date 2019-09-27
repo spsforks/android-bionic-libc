@@ -2244,7 +2244,9 @@ static std::string android_dlextinfo_to_string(const android_dlextinfo* info) {
 
 void* do_dlopen(const char* name, int flags,
                 const android_dlextinfo* extinfo,
-                const void* caller_addr) {
+                const void* caller_addr,
+                void (*before_call_constructors)(void*),
+                void* before_call_constructors_data) {
   std::string trace_prefix = std::string("dlopen: ") + (name == nullptr ? "(nullptr)" : name);
   ScopedTrace trace(trace_prefix.c_str());
   ScopedTrace loading_trace((trace_prefix + " - loading and linking").c_str());
@@ -2345,6 +2347,7 @@ void* do_dlopen(const char* name, int flags,
 
   if (si != nullptr) {
     void* handle = si->to_handle();
+    before_call_constructors(before_call_constructors_data);
     LD_LOG(kLogDlopen,
            "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
            si->get_realpath(), si->get_soname(), handle);
@@ -2395,16 +2398,16 @@ static soinfo* soinfo_from_handle(void* handle) {
   return static_cast<soinfo*>(handle);
 }
 
-bool do_dlsym(void* handle,
-              const char* sym_name,
-              const char* sym_ver,
-              const void* caller_addr,
-              void** symbol) {
+SymbolLookupResult do_dlsym(void* handle,
+                            const char* sym_name,
+                            const char* sym_ver,
+                            const void* caller_addr,
+                            void** symbol) {
   ScopedTrace trace("dlsym");
 #if !defined(__LP64__)
   if (handle == nullptr) {
     DL_ERR("dlsym failed: library handle is null");
-    return false;
+    return SymbolLookupResult::FAILURE;
   }
 #endif
 
@@ -2432,7 +2435,7 @@ bool do_dlsym(void* handle,
 
   if (sym_name == nullptr) {
     DL_ERR("dlsym failed: symbol name is null");
-    return false;
+    return SymbolLookupResult::FAILURE;
   }
 
   version_info vi_instance;
@@ -2449,7 +2452,7 @@ bool do_dlsym(void* handle,
   } else {
     if (si == nullptr) {
       DL_ERR("dlsym failed: invalid handle: %p", handle);
-      return false;
+      return SymbolLookupResult::FAILURE;
     }
     sym = dlsym_handle_lookup(si, &found, sym_name, vi);
   }
@@ -2466,7 +2469,7 @@ bool do_dlsym(void* handle,
         if (tls_module == nullptr) {
           DL_ERR("TLS symbol \"%s\" in solib \"%s\" with no TLS segment",
                  sym_name, found->get_realpath());
-          return false;
+          return SymbolLookupResult::FAILURE;
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
         *symbol = static_cast<char*>(tls_block) + sym->st_value;
@@ -2477,15 +2480,17 @@ bool do_dlsym(void* handle,
       LD_LOG(kLogDlsym,
              "... dlsym successful: sym_name=\"%s\", sym_ver=\"%s\", found in=\"%s\", address=%p",
              sym_name, sym_ver, found->get_soname(), *symbol);
-      return true;
+      return found->constructors_completed
+          ? SymbolLookupResult::SUCCESS
+          : SymbolLookupResult::SUCCESS_BUT_CONSTRUCTORS_RUNNING;
     }
 
     DL_ERR("symbol \"%s\" found but not global", symbol_display_name(sym_name, sym_ver).c_str());
-    return false;
+    return SymbolLookupResult::FAILURE;
   }
 
   DL_ERR("undefined symbol: %s", symbol_display_name(sym_name, sym_ver).c_str());
-  return false;
+  return SymbolLookupResult::FAILURE;
 }
 
 int do_dlclose(void* handle) {

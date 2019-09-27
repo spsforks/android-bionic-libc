@@ -254,6 +254,28 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_wrlock(pthread_rwlock_t* __rwlock);
 
+/*
+ * Update an rwlock held for read to an rwlock held for write. To upgrade an rwlock is to take
+ * a lock held by read and immediately acquire it for write, then waiting for other readers to
+ * unlock before returning.
+ *
+ * Upgrade will deadlock if two (or more) threads have read locks on rwlock and both try to
+ * upgrade the lock. It's the caller's job to mutually exclude lock upgrades. The lock
+ * transitions atomically from read to write lock without being released, so a concurrent
+ * write-mode locker will not grab the lock during a lock upgrade. Upgrading a lock is not a
+ * memory barrier.
+ */
+int pthread_rwlock_upgrade_rdlock_to_wrlock_np(pthread_rwlock_t* __rwlock,
+                                               clockid_t __clock,
+                                               const struct timespec* __abstime_or_null)
+    __INTRODUCED_IN(30);
+
+/*
+ * Downgrade a lock held for write to a lock held for read. The lock transitions atomically
+ * from write to read lock. Downgrading a lock is a release memory barrier.
+ */
+int pthread_rwlock_downgrade_wrlock_to_rdlock_np(pthread_rwlock_t* __rwlock) __INTRODUCED_IN(30);
+
 #if __ANDROID_API__ >= __ANDROID_API_N__
 int pthread_barrierattr_init(pthread_barrierattr_t* __attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_destroy(pthread_barrierattr_t* __attr) __INTRODUCED_IN(24);

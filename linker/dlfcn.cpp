@@ -93,7 +93,144 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_
 #endif
 }
 
-static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+enum class LoaderLockLevel {
+  UNLOCKED,
+  SHARED,
+  EXCLUSIVE,
+};
+
+static pthread_rwlock_t g_dl_rwlock = PTHREAD_RWLOCK_INITIALIZER;
+static atomic_int g_dl_user_thread;
+// Modified only by the g_dl_user_thread thread
+static LoaderLockLevel g_dl_rwlock_level = LoaderLockLevel::UNLOCKED;
+
+static int get_user_thread_tid() {
+  return atomic_load_explicit(&g_dl_user_thread, memory_order_relaxed);
+}
+
+static void set_user_thread_tid(int tid) {
+  atomic_store_explicit(&g_dl_user_thread, tid, memory_order_relaxed);
+}
+
+static void transition_loader_lock(LoaderLockLevel from, LoaderLockLevel to)
+{
+  const char* fn_name;
+  int ret;
+  switch (from) {
+    case LoaderLockLevel::UNLOCKED:
+      switch (to) {
+        case LoaderLockLevel::UNLOCKED:
+          fn_name = "noop";
+          ret = 0;
+          break;
+        case LoaderLockLevel::EXCLUSIVE:
+          fn_name = "pthread_rwlock_wrlock";
+          ret = pthread_rwlock_wrlock(&g_dl_rwlock);
+          break;
+        case LoaderLockLevel::SHARED:
+          fn_name = "pthread_rwlock_rdlock";
+          ret = pthread_rwlock_rdlock(&g_dl_rwlock);
+          break;
+      }
+      break;
+    case LoaderLockLevel::EXCLUSIVE:
+      switch (to) {
+        case LoaderLockLevel::UNLOCKED:
+          fn_name = "pthread_rwlock_unlock";
+          ret = pthread_rwlock_unlock(&g_dl_rwlock);
+          break;
+        case LoaderLockLevel::EXCLUSIVE:
+          fn_name = "noop";
+          ret = 0;
+          break;
+        case LoaderLockLevel::SHARED:
+          fn_name = "pthread_rwlock_downgrade_wrlock_to_rdlock_np";
+          ret = pthread_rwlock_downgrade_wrlock_to_rdlock_np(&g_dl_rwlock);
+          break;
+      }
+      break;
+    case LoaderLockLevel::SHARED:
+      switch (to) {
+        case LoaderLockLevel::UNLOCKED:
+          fn_name = "pthread_rwlock_unlock";
+          ret = pthread_rwlock_unlock(&g_dl_rwlock);
+          break;
+        case LoaderLockLevel::EXCLUSIVE: {
+          if (get_user_thread_tid() != __get_thread()->tid) {
+            async_safe_fatal("cannot upgrade rwlock of non-current linker thread");
+          }
+          fn_name = "pthread_rwlock_upgrade_rdlock_to_wrlock_np";
+          ret = pthread_rwlock_upgrade_rdlock_to_wrlock_np(
+              &g_dl_rwlock, CLOCK_MONOTONIC, nullptr);
+          break;
+        }
+        case LoaderLockLevel::SHARED:
+          fn_name = "noop";
+          ret = 0;
+          break;
+      }
+      break;
+  }
+  if (ret) {
+    async_safe_fatal("%s failed: %d", fn_name, ret);
+  }
+}
+
+// Layer on top of rwlock that lets us take the lock exclusively recursively and automatically
+// upgrade back to exclusive if we've downgraded.
+class ScopedLoaderLock {
+ public:
+  explicit ScopedLoaderLock(LoaderLockLevel min_level) {
+    if (min_level < LoaderLockLevel::SHARED) {
+      min_level = LoaderLockLevel::SHARED;
+    }
+    int tid = __get_thread()->tid;
+    if (get_user_thread_tid() != tid) {
+      old_level_ = LoaderLockLevel::UNLOCKED;
+      transition_loader_lock(old_level_, min_level);  // Blocks
+      if (min_level == LoaderLockLevel::EXCLUSIVE) {
+        set_user_thread_tid(tid);
+        g_dl_rwlock_level = min_level;
+      }
+    } else {
+      old_level_ = g_dl_rwlock_level;
+      // Don't let ScopedLoaderLock reduce the current protection level.
+      if (min_level < old_level_) {
+        min_level = old_level_;
+      }
+      transition_loader_lock(old_level_, min_level);  // Blocks
+      g_dl_rwlock_level = min_level;
+    }
+    level_ = min_level;
+  }
+
+  // Must be the "top" ScopedLoaderLock
+  void downgrade_to(LoaderLockLevel to) {
+    int tid = __get_thread()->tid;
+    if (to < level_ && get_user_thread_tid() == tid) {
+      transition_loader_lock(level_, to);
+      level_ = to;
+      g_dl_rwlock_level = to;
+    }
+  }
+
+  ~ScopedLoaderLock() {
+    int tid = __get_thread()->tid;
+    if (get_user_thread_tid() == tid) {
+      g_dl_rwlock_level = old_level_;
+      if (old_level_ == LoaderLockLevel::UNLOCKED) {
+        set_user_thread_tid(0);
+      }
+    }
+    transition_loader_lock(level_, old_level_);
+  }
+
+ private:
+  LoaderLockLevel old_level_;
+  LoaderLockLevel level_;
+
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedLoaderLock);
+};
 
 static char* __bionic_set_dlerror(char* new_value) {
   char* old_value = __get_thread()->current_dlerror;
@@ -120,22 +257,28 @@ char* __loader_dlerror() {
 }
 
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   do_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
 }
 
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   do_android_update_LD_LIBRARY_PATH(ld_library_path);
+}
+
+static void before_call_constructors(void* data) {
+  ScopedLoaderLock* sll = reinterpret_cast<ScopedLoaderLock*>(data);
+  sll->downgrade_to(LoaderLockLevel::SHARED);
 }
 
 static void* dlopen_ext(const char* filename,
                         int flags,
                         const android_dlextinfo* extinfo,
                         const void* caller_addr) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   g_linker_logger.ResetState();
-  void* result = do_dlopen(filename, flags, extinfo, caller_addr);
+  void* result = do_dlopen(filename, flags, extinfo, caller_addr,
+                           before_call_constructors, &locker);
   if (result == nullptr) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return nullptr;
@@ -155,10 +298,29 @@ void* __loader_dlopen(const char* filename, int flags, const void* caller_addr) 
 }
 
 void* dlsym_impl(void* handle, const char* symbol, const char* version, const void* caller_addr) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  g_linker_logger.ResetState();
   void* result;
-  if (!do_dlsym(handle, symbol, version, caller_addr, &result)) {
+  SymbolLookupResult ret;
+
+  if (!LinkerLogger::isGlobalDisabled()) {
+    // If the linker logger is enabled, we need to globally serialize.
+    ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
+    g_linker_logger.ResetState();
+    ret = do_dlsym(handle, symbol, version, caller_addr, &result);
+  } else {
+    {
+      ScopedLoaderLock locker(LoaderLockLevel::SHARED);
+      ret = do_dlsym(handle, symbol, version, caller_addr, &result);
+    }
+    // The thread doing the linking is allowed to see uninitialized symbols.
+    if (ret == SymbolLookupResult::SUCCESS_BUT_CONSTRUCTORS_RUNNING &&
+        get_user_thread_tid() != __get_thread()->tid) {
+      // Taking the loader lock exclusive here is sufficient for ensuring that any constructors
+      // running at symbol lookup time have now completed.
+      ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
+    }
+  }
+
+  if (ret == SymbolLookupResult::FAILURE) {
     __bionic_format_dlerror(linker_get_error_buffer(), nullptr);
     return nullptr;
   }
@@ -175,12 +337,12 @@ void* __loader_dlvsym(void* handle, const char* symbol, const char* version, con
 }
 
 int __loader_dladdr(const void* addr, Dl_info* info) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   return do_dladdr(addr, info);
 }
 
 int __loader_dlclose(void* handle) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   int result = do_dlclose(handle);
   if (result != 0) {
     __bionic_format_dlerror("dlclose failed", linker_get_error_buffer());
@@ -189,7 +351,7 @@ int __loader_dlclose(void* handle) {
 }
 
 int __loader_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   return do_dl_iterate_phdr(cb, data);
 }
 
@@ -200,14 +362,14 @@ int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void
 
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   return do_dl_unwind_find_exidx(pc, pcount);
 }
 #endif
 
 void __loader_android_set_application_target_sdk_version(int target) {
   // lock to avoid modification in the middle of dlopen.
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   set_application_target_sdk_version(target);
 }
 
@@ -216,13 +378,13 @@ int __loader_android_get_application_target_sdk_version() {
 }
 
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   get_dlwarning(obj, f);
 }
 
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
                                                const char* library_search_path) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   bool success = init_anonymous_namespace(shared_libs_sonames, library_search_path);
   if (!success) {
     __bionic_format_dlerror("android_init_anonymous_namespace failed", linker_get_error_buffer());
@@ -238,7 +400,7 @@ android_namespace_t* __loader_android_create_namespace(const char* name,
                                                 const char* permitted_when_isolated_path,
                                                 android_namespace_t* parent_namespace,
                                                 const void* caller_addr) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
 
   android_namespace_t* result = create_namespace(caller_addr,
                                                  name,
@@ -258,7 +420,7 @@ android_namespace_t* __loader_android_create_namespace(const char* name,
 bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       android_namespace_t* namespace_to,
                                       const char* shared_libs_sonames) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
 
   bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
 
@@ -271,7 +433,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
 
 bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
                                                android_namespace_t* namespace_to) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
 
   bool success = link_namespaces_all_libs(namespace_from, namespace_to);
 
@@ -291,12 +453,12 @@ void __loader_cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void 
 }
 
 void __loader_add_thread_local_dtor(void* dso_handle) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   increment_dso_handle_reference_counter(dso_handle);
 }
 
 void __loader_remove_thread_local_dtor(void* dso_handle) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  ScopedLoaderLock locker(LoaderLockLevel::EXCLUSIVE);
   decrement_dso_handle_reference_counter(dso_handle);
 }
 
