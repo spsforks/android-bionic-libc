@@ -199,8 +199,17 @@ static inline __always_inline int __state_add_writer_flag(int state) {
   return state | STATE_OWNED_BY_WRITER_FLAG;
 }
 
+// Assumes STATE_OWNED_BY_WRITER_FLAG not set
+static inline __always_inline int __state_nreaders(int state) {
+  return state >> STATE_READER_COUNT_SHIFT;
+}
+
 static inline __always_inline bool __state_is_last_reader(int state) {
-  return (state >> STATE_READER_COUNT_SHIFT) == 1;
+  return __state_nreaders(state) == 1;
+}
+
+static inline __always_inline int __state_nreaders_wr(int state) {
+  return __state_nreaders(state &~ STATE_OWNED_BY_WRITER_FLAG);
 }
 
 static inline __always_inline bool __state_have_pending_writers(int state) {
@@ -286,9 +295,13 @@ static inline __always_inline int __pthread_rwlock_tryrdlock(pthread_rwlock_inte
   return EBUSY;
 }
 
+static inline __always_inline bool __owned_by_self(pthread_rwlock_internal_t* rwlock) {
+  return atomic_load_explicit(&rwlock->writer_tid, memory_order_relaxed) == __get_thread()->tid;
+}
+
 static int __pthread_rwlock_timedrdlock(pthread_rwlock_internal_t* rwlock, bool use_realtime_clock,
                                         const timespec* abs_timeout_or_null) {
-  if (atomic_load_explicit(&rwlock->writer_tid, memory_order_relaxed) == __get_thread()->tid) {
+  if (__owned_by_self(rwlock)) {
     return EDEADLK;
   }
 
@@ -360,7 +373,7 @@ static inline __always_inline int __pthread_rwlock_trywrlock(pthread_rwlock_inte
 
 static int __pthread_rwlock_timedwrlock(pthread_rwlock_internal_t* rwlock, bool use_realtime_clock,
                                         const timespec* abs_timeout_or_null) {
-  if (atomic_load_explicit(&rwlock->writer_tid, memory_order_relaxed) == __get_thread()->tid) {
+  if (__owned_by_self(rwlock)) {
     return EDEADLK;
   }
   while (true) {
@@ -483,12 +496,46 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock_interface) {
   return __pthread_rwlock_trywrlock(__get_internal_rwlock(rwlock_interface));
 }
 
+static void __wakeup_rwlock_waiters(pthread_rwlock_internal_t* rwlock, bool readers_only) {
+  // Wake up pending readers or writers.
+  rwlock->pending_lock.lock();
+  if (!readers_only && rwlock->pending_writer_count != 0) {
+    rwlock->pending_writer_wakeup_serial++;
+    rwlock->pending_lock.unlock();
+
+    __futex_wake_ex(&rwlock->pending_writer_wakeup_serial, rwlock->pshared, 1);
+
+  } else if (rwlock->pending_reader_count != 0) {
+    rwlock->pending_reader_wakeup_serial++;
+    rwlock->pending_lock.unlock();
+
+    __futex_wake_ex(&rwlock->pending_reader_wakeup_serial, rwlock->pshared, INT_MAX);
+
+  } else {
+    // It happens when waiters are woken up by timeout.
+    rwlock->pending_lock.unlock();
+  }
+}
+
 int pthread_rwlock_unlock(pthread_rwlock_t* rwlock_interface) {
   pthread_rwlock_internal_t* rwlock = __get_internal_rwlock(rwlock_interface);
 
   int old_state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
   if (__state_owned_by_writer(old_state)) {
-    if (atomic_load_explicit(&rwlock->writer_tid, memory_order_relaxed) != __get_thread()->tid) {
+    int nreaders = __state_nreaders_wr(old_state);
+    if (nreaders) {
+      // If we have a read count, we're actually doing a read-unlock on an rwlock that's
+      // being upgraded.
+      old_state = atomic_fetch_sub_explicit(&rwlock->state, STATE_READER_COUNT_CHANGE_STEP,
+                                            memory_order_release);
+      nreaders = __state_nreaders_wr(old_state);
+      if (nreaders == 0) {
+        __futex_wake_ex(&rwlock->state, rwlock->pshared, 1);
+      }
+      return 0;
+    }
+
+    if (!__owned_by_self(rwlock)) {
       return EPERM;
     }
     atomic_store_explicit(&rwlock->writer_tid, 0, memory_order_relaxed);
@@ -509,23 +556,86 @@ int pthread_rwlock_unlock(pthread_rwlock_t* rwlock_interface) {
     return EPERM;
   }
 
-  // Wake up pending readers or writers.
-  rwlock->pending_lock.lock();
-  if (rwlock->pending_writer_count != 0) {
-    rwlock->pending_writer_wakeup_serial++;
-    rwlock->pending_lock.unlock();
+  __wakeup_rwlock_waiters(rwlock, /*readers_only=*/false);
+  return 0;
+}
 
-    __futex_wake_ex(&rwlock->pending_writer_wakeup_serial, rwlock->pshared, 1);
+int pthread_rwlock_upgrade_rdlock_to_wrlock_np(pthread_rwlock_t* rwlock_interface,
+                                               clockid_t clock,
+                                               const struct timespec* abs_timeout_or_null) {
+  bool use_realtime_clock;
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      use_realtime_clock = false;
+      break;
+    case CLOCK_REALTIME:
+      use_realtime_clock = true;
+      break;
+    default:
+      return EINVAL;
+  }
+  int result = check_timespec(abs_timeout_or_null, true);
+  if (result != 0) {
+    return result;
+  }
 
-  } else if (rwlock->pending_reader_count != 0) {
-    rwlock->pending_reader_wakeup_serial++;
-    rwlock->pending_lock.unlock();
+  pthread_rwlock_internal_t* rwlock = __get_internal_rwlock(rwlock_interface);
+  // Atomically release one read count and set the owned-by-writer flag so that we "acquire"
+  // the lock exclusive right away.
+  int old_state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
+  if (__state_owned_by_writer(old_state)) {
+    return EPERM;
+  }
+  // No race here: we require callers to mutually exclude upgrades.
+  atomic_store_explicit(&rwlock->writer_tid, __get_thread()->tid, memory_order_relaxed);
+  int nreaders = __state_nreaders(old_state);
+  if (nreaders == 0) {
+    return EPERM;
+  }
+  int state;
+  do {
+    state = (old_state - STATE_READER_COUNT_CHANGE_STEP) | STATE_OWNED_BY_WRITER_FLAG;
+  } while (!__predict_true(atomic_compare_exchange_weak_explicit(&rwlock->state, &old_state, state,
+                                                                 memory_order_release,
+                                                                 memory_order_relaxed)));
+  // We're not done yet through: we still have to drain readers. New read-acquire attempts will
+  // see the lock as held in write mode and block.
+  while (__state_nreaders_wr(state)) {
+    int futex_result = __futex_wait_ex(&rwlock->state, rwlock->pshared,
+                                       state, use_realtime_clock, abs_timeout_or_null);
+    // If we fail, we need to undo the effect of our forcefully acquiring the lock
+    // exclusively above.
+    if (futex_result == -ETIMEDOUT) {
+      atomic_store_explicit(&rwlock->writer_tid, 0, memory_order_relaxed);
+      state = atomic_fetch_and_explicit(&rwlock->state, ~STATE_OWNED_BY_WRITER_FLAG,
+                                        memory_order_release);
+      if (state & STATE_HAVE_PENDING_READERS_FLAG) {
+        __wakeup_rwlock_waiters(rwlock, /*readers_only=*/true);
+      }
+      return ETIMEDOUT;
+    }
+    state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
+  }
 
-    __futex_wake_ex(&rwlock->pending_reader_wakeup_serial, rwlock->pshared, INT_MAX);
+  return 0;
+}
 
-  } else {
-    // It happens when waiters are woken up by timeout.
-    rwlock->pending_lock.unlock();
+int pthread_rwlock_downgrade_wrlock_to_rdlock_np(pthread_rwlock_t* rwlock_interface) {
+  pthread_rwlock_internal_t* rwlock = __get_internal_rwlock(rwlock_interface);
+  int old_state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
+  if (!__state_owned_by_writer(old_state)) {
+    return EPERM;
+  }
+  atomic_store_explicit(&rwlock->writer_tid, 0, memory_order_relaxed);
+  int new_state;
+  do {
+    // Reader count won't overflow: we previously held the lock exclusive in the old state, so
+    // in the new state we're the only reader.
+    new_state = (old_state &~ STATE_OWNED_BY_WRITER_FLAG) + STATE_READER_COUNT_CHANGE_STEP;
+  } while (!__predict_true(atomic_compare_exchange_weak_explicit(&rwlock->state, &old_state, new_state,
+                                                                 memory_order_release, memory_order_relaxed)));
+  if (old_state & STATE_HAVE_PENDING_READERS_FLAG) {
+    __wakeup_rwlock_waiters(rwlock, /*readers_only=*/true);
   }
   return 0;
 }
