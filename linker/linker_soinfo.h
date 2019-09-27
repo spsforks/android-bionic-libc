@@ -203,6 +203,7 @@ struct soinfo {
   link_map link_map_head;
 
   bool constructors_called;
+  atomic_bool constructors_completed;
 
   // When you read a virtual address from the ELF file, add this
   // value to get the corresponding address in the process' address space.
