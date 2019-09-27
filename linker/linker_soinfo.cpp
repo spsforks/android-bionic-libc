@@ -435,6 +435,8 @@ void soinfo::call_constructors() {
   if (!is_linker()) {
     bionic_trace_end();
   }
+
+  atomic_store_explicit(&constructors_completed, true, memory_order_release);
 }
 
 void soinfo::call_destructors() {

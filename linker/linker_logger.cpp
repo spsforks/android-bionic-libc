@@ -87,7 +87,7 @@ static void GetAppSpecificProperty(char* buffer) {
 void LinkerLogger::ResetState() {
   // The most likely scenario app is not debuggable and
   // is running on a user build, in which case logging is disabled.
-  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
+  if (isGlobalDisabled()) {
     return;
   }
 
@@ -123,4 +123,9 @@ void LinkerLogger::Log(const char* format, ...) {
   va_start(ap, format);
   async_safe_format_log_va_list(ANDROID_LOG_DEBUG, "linker", format, ap);
   va_end(ap);
+}
+
+bool LinkerLogger::isGlobalDisabled() {
+  static const bool global_disabled = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0;
+  return global_disabled;
 }

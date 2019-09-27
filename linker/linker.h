@@ -113,7 +113,9 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 void* do_dlopen(const char* name,
                 int flags,
                 const android_dlextinfo* extinfo,
-                const void* caller_addr);
+                const void* caller_addr,
+                void (*before_call_constructors)(void*),
+                void* before_call_constructors_data);
 
 int do_dlclose(void* handle);
 
@@ -123,10 +125,16 @@ int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), v
 _Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount);
 #endif
 
-bool do_dlsym(void* handle, const char* sym_name,
-              const char* sym_ver,
-              const void* caller_addr,
-              void** symbol);
+enum class SymbolLookupResult {
+  FAILURE,
+  SUCCESS,
+  SUCCESS_BUT_CONSTRUCTORS_RUNNING,
+};
+
+SymbolLookupResult do_dlsym(void* handle, const char* sym_name,
+                            const char* sym_ver,
+                            const void* caller_addr,
+                            void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
 

@@ -51,6 +51,9 @@ class LinkerLogger {
   void ResetState();
   void Log(const char* format, ...) __printflike(2, 3);
 
+  __attribute__((pure))
+  static bool isGlobalDisabled();
+
   uint32_t IsEnabled(uint32_t type) {
     return flags_ & type;
   }
