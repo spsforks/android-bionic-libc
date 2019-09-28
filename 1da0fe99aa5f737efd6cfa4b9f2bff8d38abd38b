@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a18af1e_0abac140",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1096528
+      },
+      "writtenOn": "2019-09-28T01:07:39Z",
+      "side": 1,
+      "message": "This needs to fail the race loser, not deadlock. This api will necessitate the use of a second lock to guard upgrade attempts in non trivial uses otherwise. The call should return with the readlock still held and a code indicating failure.",
+      "revId": "1da0fe99aa5f737efd6cfa4b9f2bff8d38abd38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
