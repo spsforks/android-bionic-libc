@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <sys/mman.h>
+#include <sys/system_properties.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -62,6 +63,18 @@ extern "C" void __hwasan_init() __attribute__((weak));
 
 static inline bool running_with_hwasan() {
   return &__hwasan_init != 0;
+}
+
+static inline bool is_native_bridge_houdini() {
+  char value[PROP_VALUE_MAX];
+  return __system_property_get("ro.dalvik.vm.native.bridge", value) &&
+        strcmp(value, "libhoudini.so") == 0;
+}
+
+static inline bool is_native_bridge_ndk_translation() {
+  char value[PROP_VALUE_MAX];
+  return __system_property_get("ro.dalvik.vm.native.bridge", value) &&
+        strcmp(value, "libndk_translation.so") == 0;
 }
 
 #define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()

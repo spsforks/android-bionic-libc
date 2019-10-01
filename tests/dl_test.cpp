@@ -29,6 +29,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sys/stat.h>
 
 #include "gtest_globals.h"
 #include <android-base/file.h>
@@ -82,23 +83,52 @@ TEST(dl, lib_does_not_preempt_global_protected) {
 #if defined(__BIONIC__)
 #if defined(__LP64__)
   static constexpr const char* kPathToLinker = "/system/bin/linker64";
+#if defined (__aarch64__)
+  static constexpr const char* kHoudiniPathToLinker = "/system/bin/arm64/linker64";
+  static constexpr const char* kNdkPathToLinker = "/system/bin/arm64/linker_arm64";
+#endif
 #else
   static constexpr const char* kPathToLinker = "/system/bin/linker";
+#if defined(__arm__)
+  static constexpr const char* kHoudiniPathToLinker = "/system/bin/arm/linker";
+  static constexpr const char* kNdkPathToLinker = "/system/bin/arm/linker_arm";
+#endif
 #endif
 #endif
 
+const char* PathToLinker() {
+  // On the systems with emulated architecture linker would be of different
+  // architecture. Try to use alternate paths first.
+
+  #if defined(__arm__) || defined (__aarch64__)
+    struct stat buffer;
+    if (is_native_bridge_houdini() &&
+        stat(kHoudiniPathToLinker, &buffer) == 0) {
+      return kHoudiniPathToLinker;
+    }
+    if (is_native_bridge_ndk_translation() &&
+        stat(kNdkPathToLinker, &buffer) == 0) {
+      return kNdkPathToLinker;
+    }
+  #endif
+
+  return kPathToLinker;
+}
+
 TEST(dl, exec_linker) {
 #if defined(__BIONIC__)
-  std::string usage_prefix = std::string("Usage: ") + kPathToLinker;
+  const char* path_to_linker = PathToLinker();
+  std::string usage_prefix = std::string("Usage: ") + path_to_linker;
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  eth.SetArgs({ path_to_linker, nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
   ASSERT_EQ(0u, eth.GetOutput().find(usage_prefix)) << "Test output:\n" << eth.GetOutput();
 #endif
 }
 
 TEST(dl, exec_linker_load_file) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string helper = GetTestlibRoot() +
       "/exec_linker_helper/exec_linker_helper";
   std::string expected_output =
@@ -106,14 +136,16 @@ TEST(dl, exec_linker_load_file) {
       "main: argc=1 argv[0]=" + helper + "\n" +
       "__progname=" + helper + "\n" +
       "helper_func called\n";
+
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_from_zip) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string helper = GetTestlibRoot() +
       "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip!/libdir/exec_linker_helper";
   std::string expected_output =
@@ -122,17 +154,18 @@ TEST(dl, exec_linker_load_from_zip) {
       "__progname=" + helper + "\n" +
       "helper_func called\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_self) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string error_message = "error: linker cannot load itself\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
+  eth.SetArgs({ path_to_linker, path_to_linker, nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
 
