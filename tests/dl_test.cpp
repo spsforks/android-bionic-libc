@@ -34,6 +34,15 @@
 #include <android-base/file.h>
 #include "utils.h"
 
+#if defined(__BIONIC__) && (defined(__arm__) || defined(__i386__))
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+
+#include <llvm/Object/Binary.h>
+
+#pragma clang diagnostic pop
+#endif //  defined(__ANDROID__) && (defined(__arm__) || defined(__i386__))
+
 extern "C" int main_global_default_serial() {
   return 3370318;
 }
@@ -82,23 +91,40 @@ TEST(dl, lib_does_not_preempt_global_protected) {
 #if defined(__BIONIC__)
 #if defined(__LP64__)
   static constexpr const char* kPathToLinker = "/system/bin/linker64";
+  static constexpr const char* kAlternatePathToLinker = "/system/lib/arm64/linker";
 #else
   static constexpr const char* kPathToLinker = "/system/bin/linker";
+  static constexpr const char* kAlternatePathToLinker = "/system/lib/arm/linker";
 #endif
 #endif
 
+const char* alternatePathToLinker() {
+  // On the systems with emulated architecture linker would be of different
+  // architecture. Try to use alternate paths first.
+  #if (defined(__arm__) || defined(__aarch64__))
+    auto binary_or_error = llvm::object::createBinary(std::string(kAlternatePathToLinker));
+    if (binary_or_error) {
+      return kAlternatePathToLinker;
+    } else {
+      return kPathToLinker;
+    }
+  #endif
+}
+
 TEST(dl, exec_linker) {
 #if defined(__BIONIC__)
-  std::string usage_prefix = std::string("Usage: ") + kPathToLinker;
+  const char* aPathToLinker = alternatePathToLinker();
+  std::string usage_prefix = std::string("Usage: ") + aPathToLinker;
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  eth.SetArgs({ aPathToLinker, nullptr });
+  eth.Run([&]() { execve(aPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
   ASSERT_EQ(0u, eth.GetOutput().find(usage_prefix)) << "Test output:\n" << eth.GetOutput();
 #endif
 }
 
 TEST(dl, exec_linker_load_file) {
 #if defined(__BIONIC__)
+  const char* aPathToLinker = alternatePathToLinker();
   std::string helper = GetTestlibRoot() +
       "/exec_linker_helper/exec_linker_helper";
   std::string expected_output =
@@ -106,14 +132,16 @@ TEST(dl, exec_linker_load_file) {
       "main: argc=1 argv[0]=" + helper + "\n" +
       "__progname=" + helper + "\n" +
       "helper_func called\n";
+
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ aPathToLinker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(aPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_from_zip) {
 #if defined(__BIONIC__)
+  const char* aPathToLinker = alternatePathToLinker();
   std::string helper = GetTestlibRoot() +
       "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip!/libdir/exec_linker_helper";
   std::string expected_output =
@@ -122,17 +150,18 @@ TEST(dl, exec_linker_load_from_zip) {
       "__progname=" + helper + "\n" +
       "helper_func called\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ aPathToLinker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(aPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_self) {
 #if defined(__BIONIC__)
+  const char* aPathToLinker = alternatePathToLinker();
   std::string error_message = "error: linker cannot load itself\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
+  eth.SetArgs({ aPathToLinker, aPathToLinker, nullptr });
+  eth.Run([&]() { execve(aPathToLinker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
 
