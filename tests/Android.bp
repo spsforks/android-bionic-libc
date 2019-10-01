@@ -782,6 +782,7 @@ cc_test {
         "libm",
         "libc",
         "libdl",
+        "libdl_static_stubs",
         "libtinyxml2",
         "liblog",
         "libbase",
