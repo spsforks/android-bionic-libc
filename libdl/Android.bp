@@ -82,9 +82,6 @@ cc_library {
     shared: {
         whole_static_libs: ["libdl_static"],
     },
-    static: {
-        srcs: ["libdl_static.cpp"],
-    },
     cflags: [
         "-Wall",
         "-Wextra",
