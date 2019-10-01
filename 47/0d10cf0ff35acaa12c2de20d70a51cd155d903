@@ -1,0 +1,8 @@
+Code-Review+2: Martin Stjernholm <mast@google.com>
+Code-Review+2: Roland Levillain <rpl@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 01 Oct 2019 20:42:21 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1131336
+Project: platform/bionic
+Branch: refs/heads/master
