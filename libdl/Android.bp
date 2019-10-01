@@ -82,9 +82,6 @@ cc_library {
     shared: {
         whole_static_libs: ["libdl_static"],
     },
-    static: {
-        srcs: ["libdl_static.cpp"],
-    },
     cflags: [
         "-Wall",
         "-Wextra",
@@ -111,6 +108,35 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: ["10000"],
     },
+}
+
+// For use in static executables that want nonfunctional dummies for dlopen etc.
+cc_library_static {
+    name: "libdl_static_dummy",
+    recovery_available: true,
+
+    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
+    // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
+    // a) pull symbols from libgcc.a and b) depend on libdl.so will not rely on libdl.so
+    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
+    // we use this property to make sure libc.so has its own copy of the code from
+    // libgcc.a it uses.
+    //
+    // DO NOT REMOVE --exclude-libs!
+
+    ldflags: [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+
+    srcs: ["libdl_static.cpp"],
+    stl: "none",
+    nocrt: true,
+    system_shared_libs: [],
 }
 
 cc_library {

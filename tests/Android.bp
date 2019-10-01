@@ -781,7 +781,7 @@ cc_test {
     static_libs: [
         "libm",
         "libc",
-        "libdl",
+        "libdl_static_dummy",
         "libtinyxml2",
         "liblog",
         "libbase",
