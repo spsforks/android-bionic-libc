@@ -344,11 +344,15 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
         name);
 }
 
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+
 __attribute__((no_sanitize("hwaddress")))
 static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
 
   __hwasan_thread_enter();
+
+  __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
 
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.
@@ -420,7 +424,12 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   __init_user_desc(&tls_descriptor, false, tls);
   tls = &tls_descriptor;
 #endif
+
+  sigset64_t block_all_mask;
+  sigfillset64(&block_all_mask);
+  __rt_sigprocmask(SIG_SETMASK, &block_all_mask, &thread->start_mask, sizeof(thread->start_mask));
   int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
+  __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
