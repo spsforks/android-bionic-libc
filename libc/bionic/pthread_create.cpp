@@ -350,6 +350,8 @@ static int __pthread_start(void* arg) {
 
   __hwasan_thread_enter();
 
+  sigprocmask64(SIG_SETMASK, &thread->start_mask, nullptr);
+
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.
   // This also provides the memory barrier needed to ensure that all memory
@@ -420,7 +422,12 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   __init_user_desc(&tls_descriptor, false, tls);
   tls = &tls_descriptor;
 #endif
+
+  sigset64_t block_all_mask;
+  sigfillset64(&block_all_mask);
+  sigprocmask64(SIG_SETMASK, &block_all_mask, &thread->start_mask);
   int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
+  sigprocmask64(SIG_SETMASK, &thread->start_mask, nullptr);
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
