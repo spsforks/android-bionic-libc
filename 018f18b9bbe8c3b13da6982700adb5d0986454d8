@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0da1f424_468abbf0",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-02T22:37:16Z",
+      "side": 1,
+      "message": "lib or bin?",
+      "range": {
+        "startLine": 94,
+        "startChar": 65,
+        "endLine": 94,
+        "endChar": 68
+      },
+      "revId": "018f18b9bbe8c3b13da6982700adb5d0986454d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53fb33aa_55a0887f",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-02T22:37:16Z",
+      "side": 1,
+      "message": "I wonder if something simpler, like access(2), might be better here. We do already use llvm::object::createBinary() in dlfcn_test.cpp, I suppose, to scan section tables.\n\nIt looks like we don\u0027t include llvm/Object/Binary.h above for Bionic arm64.",
+      "revId": "018f18b9bbe8c3b13da6982700adb5d0986454d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d381b5c9_f84ef737",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-02T22:37:16Z",
+      "side": 1,
+      "message": "local vars use the underscored_words convention. linker_path would work here.",
+      "range": {
+        "startLine": 116,
+        "startChar": 14,
+        "endLine": 116,
+        "endChar": 27
+      },
+      "revId": "018f18b9bbe8c3b13da6982700adb5d0986454d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
