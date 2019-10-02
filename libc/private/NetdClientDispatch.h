@@ -19,19 +19,36 @@
 #include <sys/cdefs.h>
 #include <sys/socket.h>
 
+#ifdef __i386__
+#define __socketcall __attribute__((__cdecl__))
+#else
+#define __socketcall
+#endif
+
 __BEGIN_DECLS
 
 struct NetdClientDispatch {
-    int (*accept4)(int, struct sockaddr*, socklen_t*, int);
-    int (*connect)(int, const struct sockaddr*, socklen_t);
-    int (*sendmmsg)(int, const struct mmsghdr*, unsigned int, int);
-    ssize_t (*sendmsg)(int, const struct msghdr*, unsigned int);
-    int (*sendto)(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
-    int (*socket)(int, int, int);
-    unsigned (*netIdForResolv)(unsigned);
-    int (*dnsOpenProxy)();
+  int (*accept4)(int, struct sockaddr*, socklen_t*, int);
+  int (*connect)(int, const struct sockaddr*, socklen_t);
+  int (*sendmmsg)(int, const struct mmsghdr*, unsigned int, int);
+  ssize_t (*sendmsg)(int, const struct msghdr*, unsigned int);
+  int (*sendto)(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
+  int (*socket)(int, int, int);
+  unsigned (*netIdForResolv)(unsigned);
+  int (*dnsOpenProxy)();
 };
 
-extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
+__socketcall int __accept4(int, struct sockaddr*, socklen_t*, int);
+__socketcall int __connect(int, const struct sockaddr*, socklen_t);
+__socketcall int __sendmmsg(int, const struct mmsghdr*, unsigned int, int);
+__socketcall ssize_t __sendmsg(int, const struct msghdr*, unsigned int);
+__socketcall int __sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
+__socketcall int __socket(int, int, int);
+unsigned __netIdForResolv_fallback(unsigned);
+int __dnsOpenProxy_fallback();
+
+struct NetdClientDispatch* __netd_client();
 
 __END_DECLS
+
+#undef __socketcall

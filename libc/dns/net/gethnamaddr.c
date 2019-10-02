@@ -792,13 +792,13 @@ static struct hostent *
 gethostbyname_internal(const char *name, int af, res_state res, struct hostent *hp, char *hbuf,
                        size_t hbuflen, int *errorp, const struct android_net_context *netcontext)
 {
-	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
+	FILE* proxy = fdopen(__netd_client()->dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
 		res_setnetcontext(res, netcontext);
 		return gethostbyname_internal_real(name, af, res, hp, hbuf, hbuflen, errorp);
 	}
-	unsigned netid = __netdClientDispatch.netIdForResolv(netcontext->app_netid);
+	unsigned netid = __netd_client()->netIdForResolv(netcontext->app_netid);
 
 	// This is writing to system/netd/server/DnsProxyListener.cpp and changes
 	// here need to be matched there.
@@ -895,7 +895,7 @@ android_gethostbyaddrfornetcontext_proxy_internal(const void* addr, socklen_t le
                              struct hostent *hp, char *hbuf, size_t hbuflen, int *he,
                              const struct android_net_context *netcontext)
 {
-	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
+	FILE* proxy = fdopen(__netd_client()->dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
 		return android_gethostbyaddrfornetcontext_real(addr,len, af, hp, hbuf, hbuflen, he, netcontext);
@@ -907,7 +907,7 @@ android_gethostbyaddrfornetcontext_proxy_internal(const void* addr, socklen_t le
 		return NULL;
 	}
 
-	unsigned netid = __netdClientDispatch.netIdForResolv(netcontext->app_netid);
+	unsigned netid = __netd_client()->netIdForResolv(netcontext->app_netid);
 
 	if (fprintf(proxy, "gethostbyaddr %s %d %d %u",
 			addrStr, len, af, netid) < 0) {

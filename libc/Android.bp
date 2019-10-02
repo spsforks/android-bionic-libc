@@ -1446,6 +1446,7 @@ cc_library_static {
             srcs: ["arch-arm/static_function_dispatch.S"],
         },
     },
+    srcs: ["bionic/netd_init_static.cpp"],
 
     whole_static_libs: [
         "libc_common",
@@ -1471,6 +1472,7 @@ cc_library_static {
             srcs: ["arch-arm/dynamic_function_dispatch.cpp"],
         },
     },
+    srcs: ["bionic/netd_init_dynamic.cpp"],
 
     whole_static_libs: [
         "libc_common",
@@ -1527,7 +1529,6 @@ filegroup {
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
-        "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
 }

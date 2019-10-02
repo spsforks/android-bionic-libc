@@ -18,61 +18,42 @@
 
 #include <sys/socket.h>
 
-#ifdef __i386__
-#define __socketcall __attribute__((__cdecl__))
-#else
-#define __socketcall
-#endif
+NetdClientDispatch* __netd_client_init();
 
-extern "C" __socketcall int __accept4(int, sockaddr*, socklen_t*, int);
-extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
-extern "C" __socketcall int __sendmmsg(int, const mmsghdr*, unsigned int, int);
-extern "C" __socketcall ssize_t __sendmsg(int, const msghdr*, unsigned int);
-extern "C" __socketcall int __sendto(int, const void*, size_t, int, const sockaddr*, socklen_t);
-extern "C" __socketcall int __socket(int, int, int);
-
-static unsigned fallBackNetIdForResolv(unsigned netId) {
-    return netId;
+unsigned __netIdForResolv_fallback(unsigned netId) {
+  return netId;
 }
 
-static int fallBackDnsOpenProxy() {
-    return -1;
+int __dnsOpenProxy_fallback() {
+  return -1;
 }
-
-// This structure is modified only at startup (when libc.so is loaded) and never
-// afterwards, so it's okay that it's read later at runtime without a lock.
-__LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
-    __accept4,
-    __connect,
-    __sendmmsg,
-    __sendmsg,
-    __sendto,
-    __socket,
-    fallBackNetIdForResolv,
-    fallBackDnsOpenProxy,
-};
 
 int accept4(int fd, sockaddr* addr, socklen_t* addr_length, int flags) {
-    return __netdClientDispatch.accept4(fd, addr, addr_length, flags);
+  return __netd_client()->accept4(fd, addr, addr_length, flags);
 }
 
 int connect(int fd, const sockaddr* addr, socklen_t addr_length) {
-    return __netdClientDispatch.connect(fd, addr, addr_length);
+  return __netd_client()->connect(fd, addr, addr_length);
 }
 
 int sendmmsg(int fd, const struct mmsghdr* msgs, unsigned int msg_count, int flags) {
-    return __netdClientDispatch.sendmmsg(fd, msgs, msg_count, flags);
+  return __netd_client()->sendmmsg(fd, msgs, msg_count, flags);
 }
 
 ssize_t sendmsg(int fd, const struct msghdr* msg, int flags) {
-    return __netdClientDispatch.sendmsg(fd, msg, flags);
+  return __netd_client()->sendmsg(fd, msg, flags);
 }
 
 ssize_t sendto(int fd, const void* buf, size_t n, int flags,
                const struct sockaddr* dst_addr, socklen_t dst_addr_length) {
-    return __netdClientDispatch.sendto(fd, buf, n, flags, dst_addr, dst_addr_length);
+  return __netd_client()->sendto(fd, buf, n, flags, dst_addr, dst_addr_length);
 }
 
 int socket(int domain, int type, int protocol) {
-    return __netdClientDispatch.socket(domain, type, protocol);
+  return __netd_client()->socket(domain, type, protocol);
+}
+
+NetdClientDispatch* __netd_client() {
+  static NetdClientDispatch* instance = __netd_client_init();
+  return instance;
 }
