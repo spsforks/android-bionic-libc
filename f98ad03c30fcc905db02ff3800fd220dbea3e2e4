@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f09875b6_c1d5b5d1",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-10-03T00:03:48Z",
+      "side": 1,
+      "message": "I think we might want to move the sigprocmask below this, since we don\u0027t actually have an alternate stack allocated until after this call.",
+      "range": {
+        "startLine": 363,
+        "startChar": 38,
+        "endLine": 364,
+        "endChar": 35
+      },
+      "revId": "f98ad03c30fcc905db02ff3800fd220dbea3e2e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
