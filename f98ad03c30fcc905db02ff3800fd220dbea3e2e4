@@ -22,6 +22,30 @@
       "revId": "f98ad03c30fcc905db02ff3800fd220dbea3e2e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7de379ef_75a6bc9a",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-10-03T00:12:38Z",
+      "side": 1,
+      "message": "Sure, it would not hurt to keep the signals blocked a little while longer.",
+      "parentUuid": "f09875b6_c1d5b5d1",
+      "range": {
+        "startLine": 363,
+        "startChar": 38,
+        "endLine": 364,
+        "endChar": 35
+      },
+      "revId": "f98ad03c30fcc905db02ff3800fd220dbea3e2e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
