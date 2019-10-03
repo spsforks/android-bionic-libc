@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53112ac9_6a496b4e",
+        "filename": "libc/include/bits/fortify/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-03T22:17:24Z",
+      "side": 1,
+      "message": "API level 16 (aka J) is the lowest officially supported. that said, we do have one user who we know is still targeting ICS, and since you\u0027ve done the work already anyway...\n\noh, hang on, you\u0027re saying \u003e\u003d I. so, yeah, let\u0027s call that \u0027true\u0027 :-)",
+      "revId": "fe612ead5ad19db03c99bcfea83ed19033d84c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
