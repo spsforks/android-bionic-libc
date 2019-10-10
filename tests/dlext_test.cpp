@@ -600,7 +600,7 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
 void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pid,
             size_t* total_pss) {
   android::meminfo::ProcMemInfo proc_mem(pid);
-  const std::vector<android::meminfo::Vma>& maps = proc_mem.Maps();
+  std::vector<android::meminfo::Vma>& maps = proc_mem.MapsWithoutUsageStatsUpdateable();
   ASSERT_GT(maps.size(), 0UL);
 
   // Calculate total PSS of the library.
@@ -612,6 +612,7 @@ void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pi
           saw_relro_file = true;
       }
 
+      ASSERT_TRUE(proc_mem.FillInVmaStats(vma));
       *total_pss += vma.usage.pss;
     }
   }
