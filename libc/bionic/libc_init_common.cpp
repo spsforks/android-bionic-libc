@@ -27,6 +27,7 @@
  */
 
 #include "libc_init_common.h"
+#include "malloc_tagged_pointers.h"
 
 #include <elf.h>
 #include <errno.h>
@@ -39,6 +40,7 @@
 #include <sys/auxv.h>
 #include <sys/personality.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
@@ -57,6 +59,24 @@ __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
+
+static bool PlatformSupportsTaggedPointers() {
+#ifndef __aarch64__
+  return false;
+#else
+  utsname buf;
+  utsname* tagged_buf = static_cast<utsname*>(TagPointer(&buf));
+  // We use `uname()` here as a system call to determine if the kernel supports
+  // tagged pointers. If ARM TBI is enabled, the kernel should truncate the tag
+  // before populating `buf`, and `uname()` should return zero (indicating no
+  // error). If ARM TBI isn't enabled, the kernel should return an error code
+  // that indicates that the tagged memory couldn't be accessed. The exact
+  // system call that we use here isn't important, it's just a convenient system
+  // call that validates a pointer.
+  return uname(tagged_buf) == 0;
+#endif
+}
+
 void __libc_init_globals() {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
@@ -65,6 +85,7 @@ void __libc_init_globals() {
   __libc_globals.mutate([](libc_globals* globals) {
     __libc_init_vdso(globals);
     __libc_init_setjmp_cookie(globals);
+    globals->tagged_pointers_supported = PlatformSupportsTaggedPointers();
   });
 }
 
