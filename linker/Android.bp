@@ -96,7 +96,6 @@ filegroup {
     name: "linker_sources_arm",
     srcs: [
         "arch/arm/begin.S",
-        "linker_exidx_static.c",
     ],
 }
 
@@ -233,6 +232,7 @@ cc_binary {
         arm: {
             srcs: [ ":linker_sources_arm" ],
             version_script: ":linker_version_script_arm",
+            static_libs: ["libunwind_llvm"],
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
@@ -275,6 +275,10 @@ cc_binary {
         // to overwrite any other malloc implementations by other static libraries.
         "liblinker_malloc",
     ],
+
+    // Ensure that the __gnu_Unwind_Find_exidx function has a non-weak definition if we pull in the
+    // arm32 unwinder from libgcc.a.
+    whole_static_libs: ["libc_unwind_static"],
 
     name: "linker",
     symlinks: ["linker_asan"],
