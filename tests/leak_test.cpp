@@ -132,7 +132,7 @@ TEST(pthread_leak, detach) {
   // Devices with low power cores/low number of cores can not finish test in time hence decreasing
   // threads count to 90.
   // http://b/129924384.
-  int threads_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? kThreadCount : (kThreadCount - 10);
+  int threads_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? kThreadCount : (kThreadCount - 50);
 
   for (size_t pass = 0; pass < 1; ++pass) {
     struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[kThreadCount] = {};
