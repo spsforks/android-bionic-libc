@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b598cbe8_a3f2daf0",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-15T23:29:24Z",
+      "side": 1,
+      "message": "Why is this needed?\n\nIs it normal to have performance vary so much based on the PR_GET_DUMPABLE flag?\n\n  // The most likely scenario app is not debuggable and\n  // is running on a user build, in which case logging is disabled.\n\nWill user builds have more linker parallelism than userdebug?",
+      "revId": "1b0a78795fa4c8ca11740df81bb4de660aa74803",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
