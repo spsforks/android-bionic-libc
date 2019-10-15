@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddb5a696_d3333ab8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-15T19:05:58Z",
+      "side": 1,
+      "message": "/me wonders whether this being slower is meaningful or not. if it _is_, it might be because you\u0027re using dladdr as the test function, and the way libdl works is weird and interesting. i wonder whether a \"real\" libc function like printf behaves the same?",
+      "revId": "03ff8241ffc5b025b36873926853c60710873d46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
