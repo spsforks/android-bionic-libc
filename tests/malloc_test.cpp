@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <elf.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdint.h>
@@ -29,9 +30,15 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <thread>
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
+#include <android-base/strings.h>
+#if defined(__BIONIC__)
+#include <meminfo/procmeminfo.h>
+#include <procinfo/process_map.h>
+#endif
 
 #include "platform/bionic/malloc.h"
 #include "private/bionic_config.h"
@@ -989,4 +996,54 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
+}
+
+TEST(thread, mallocs) {
+#if defined(__BIONIC__)
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
+#endif
+  for (size_t i = 0; ; i++) {
+    printf("Pass %zu\n", i);
+
+    std::vector<std::thread*> threads;
+    for (size_t i = 0; i < 256; i++) {
+      threads.push_back(new std::thread([]() {
+        void* buf = malloc(4096);
+        if (buf == nullptr) {
+          printf("Failed to allocate memory\n");
+          return;
+        }
+        memset(buf, 0, 4096);
+        sleep(1);
+        free(buf);
+      }));
+    }
+
+    for (auto thread : threads) {
+      thread->join();
+      delete thread;
+    }
+    threads.clear();
+
+#if defined(__BIONIC__)
+    android::meminfo::ProcMemInfo proc_mem(getpid());
+    const std::vector<android::meminfo::Vma>& maps = proc_mem.MapsWithoutUsageStats();
+    uint64_t total_rss_bytes = 0;
+    uint64_t total_vss_bytes = 0;
+    for (auto& vma : maps) {
+      if (vma.name == "[anon:libc_malloc]" || android::base::StartsWith(vma.name, "[anon:scudo:")) {
+        android::meminfo::Vma update_vma(vma);
+        ASSERT_TRUE(proc_mem.FillInVmaStats(update_vma));
+        total_rss_bytes += update_vma.usage.rss;
+        total_vss_bytes += update_vma.usage.vss;
+      }
+    }
+    printf("Total RSS %" PRIu64 " bytes %0.2f MB\n", total_rss_bytes,
+           total_rss_bytes / (1024.0 * 1024.0));
+    printf("Total VSS %" PRIu64 " bytes %0.2f MB\n", total_vss_bytes,
+           total_vss_bytes / (1024.0 * 1024.0));
+#endif
+
+    printf("Allocated memory %zu\n", mallinfo().uordblks);
+  }
 }
