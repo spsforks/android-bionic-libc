@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63e54fd1_54ca50f1",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-15T18:37:28Z",
+      "side": 1,
+      "message": "nit: dlfcn_benchmark (since we name them after the headers, not the functions).",
+      "revId": "424673b97bfe1504fce165abfa0b8b0adac6000c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
