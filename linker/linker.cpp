@@ -4186,21 +4186,20 @@ static std::string get_ld_config_file_apex_path(const char* executable_path) {
 }
 
 static std::string get_ld_config_file_vndk_path() {
-  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
-    return kLdConfigVndkLiteFilePath;
-  }
-
   // Use generated linker config if flag is set
   // TODO(b/138920271) Do not check property once it is confirmed as stable
   // TODO(b/139638519) This file should also cover legacy or vndk-lite config
-  if (android::base::GetProperty("ro.vndk.version", "") != "" &&
-      android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
+  if (android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
     if (file_exists(kLdGeneratedConfigFilePath)) {
       return kLdGeneratedConfigFilePath;
     } else {
       DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
               kLdGeneratedConfigFilePath);
     }
+  }
+
+  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
+    return kLdConfigVndkLiteFilePath;
   }
 
   std::string ld_config_file_vndk = kLdConfigFilePath;
