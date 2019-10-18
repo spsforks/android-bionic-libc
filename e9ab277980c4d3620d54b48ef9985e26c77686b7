@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "041dfb02_87d1216b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-18T15:40:09Z",
+      "side": 1,
+      "message": "could be either right? ABSOLUTE/GLOB_DAT?",
+      "range": {
+        "startLine": 3155,
+        "startChar": 31,
+        "endLine": 3155,
+        "endChar": 39
+      },
+      "revId": "e9ab277980c4d3620d54b48ef9985e26c77686b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
