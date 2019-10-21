@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c69ce2b_1ab28413",
+        "filename": "tests/malloc_extended_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-21T20:12:34Z",
+      "side": 1,
+      "message": "should this actually be a separate malloc_stress_test binary then? are you gaining anything from gtest? doesn\u0027t seem like it?",
+      "revId": "254497c01733dc7b47bb6253a9064df98a270996",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
