@@ -383,11 +383,11 @@ strtodg
 	for(s = s00;;s++) switch(*s) {
 		case '-':
 			sign = 1;
-			/* no break */
+			__fallthrough;
 		case '+':
 			if (*++s)
 				goto break2;
-			/* no break */
+			__fallthrough;
 		case 0:
 			sign = 0;
 			irv = STRTOG_NoNumber;
@@ -487,6 +487,7 @@ strtodg
 		switch(c = *++s) {
 			case '-':
 				esign = 1;
+				__fallthrough;
 			case '+':
 				c = *++s;
 			}

@@ -55,6 +55,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 static const char Base64[] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const char Pad64 = '=';
@@ -281,7 +291,7 @@ b64_pton(src, target, targsize)
 				return (-1);
 			ch = (unsigned char)*src++;		/* Skip the = */
 			/* Fall through to "single trailing =" case. */
-			/* FALLTHROUGH */
+			__fallthrough;
 
 		case 3:		/* Valid, means two bytes of info */
 			/*

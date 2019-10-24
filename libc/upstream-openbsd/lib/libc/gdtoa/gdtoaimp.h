@@ -662,4 +662,14 @@ extern void memcpy_D2A ANSI((void*, const void*, size_t));
 #define SI 0
 #endif
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 #endif /* GDTOAIMP_H_INCLUDED */
