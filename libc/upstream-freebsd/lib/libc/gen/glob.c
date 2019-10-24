@@ -149,6 +149,16 @@ typedef uint_fast64_t Char;
 #define	isprot(c)	(((c)&M_PROTECT) != 0)
 #endif
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 static int	 compare(const void *, const void *);
 static int	 g_Ctoc(const Char *, char *, size_t);
 static int	 g_lstat(Char *, struct stat *, glob_t *);
@@ -377,7 +387,7 @@ globexp2(const Char *ptr, const Char *pattern, glob_t *pglob,
 			    i--;
 			    break;
 			}
-			/* FALLTHROUGH */
+			__fallthrough;
 		case COMMA:
 			if (i && *pm == COMMA)
 				break;
