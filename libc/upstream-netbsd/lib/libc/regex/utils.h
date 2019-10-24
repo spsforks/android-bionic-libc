@@ -89,3 +89,13 @@ typedef unsigned char uch;
 #ifdef USEBCOPY
 #define	memmove(d, s, c)	bcopy(s, d, c)
 #endif
+
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif

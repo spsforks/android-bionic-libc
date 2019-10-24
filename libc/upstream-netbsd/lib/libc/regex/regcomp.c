@@ -472,7 +472,7 @@ p_ere_exp(
 		break;
 	case '{':		/* okay as ordinary except if digit follows */
 		REQUIRE(!MORE() || !isdigit((unsigned char)PEEK()), REG_BADRPT);
-		/* FALLTHROUGH */
+		__fallthrough;
 	default:
 		if (p->error != 0)
 			return;
@@ -692,7 +692,7 @@ p_simp_re(
 		break;
 	case '*':
 		REQUIRE(starordinary, REG_BADRPT);
-		/* FALLTHROUGH */
+		__fallthrough;
 	default:
 		if (p->error != 0)
 			return(0);
@@ -1854,7 +1854,7 @@ findmust(
 					return;
 				}
 			} while (OP(s) != O_QUEST && OP(s) != O_CH);
-			/* FALLTHROUGH */
+			__fallthrough;
 		default:		/* things that break a sequence */
 			if (newlen > g->mlen) {		/* ends one */
 				start = newstart;
