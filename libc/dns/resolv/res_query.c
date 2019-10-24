@@ -114,6 +114,16 @@ __RCSID("$NetBSD: res_query.c,v 1.7 2006/01/24 17:41:25 christos Exp $");
 #define MAXPACKET	1024
 #endif
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 /*
  * Formulate a normal query, send, and await answer.
  * Returned answer is placed in supplied buffer "answer".
@@ -318,7 +328,7 @@ res_nsearch(res_state statp,
 			switch (statp->res_h_errno) {
 			case NO_DATA:
 				got_nodata++;
-				/* FALLTHROUGH */
+				__fallthrough;
 			case HOST_NOT_FOUND:
 				/* keep trying */
 				break;
@@ -328,7 +338,7 @@ res_nsearch(res_state statp,
 					got_servfail++;
 					break;
 				}
-				/* FALLTHROUGH */
+				__fallthrough;
 			default:
 				/* anything else implies that we're done */
 				done++;

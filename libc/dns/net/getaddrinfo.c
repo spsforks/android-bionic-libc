@@ -136,6 +136,16 @@ static const char in6_loopback[] = {
 static const int DnsProxyQueryResult = 222;
 #endif
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 static const struct afd {
 	int a_af;
 	int a_addrlen;
@@ -2369,7 +2379,7 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 			switch (h_errno) {
 			case NO_DATA:
 				got_nodata++;
-				/* FALLTHROUGH */
+				__fallthrough;
 			case HOST_NOT_FOUND:
 				/* keep trying */
 				break;
@@ -2379,7 +2389,7 @@ res_searchN(const char *name, struct res_target *target, res_state res)
 					got_servfail++;
 					break;
 				}
-				/* FALLTHROUGH */
+				__fallthrough;
 			default:
 				/* anything else implies that we're done */
 				done++;

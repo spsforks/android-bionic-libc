@@ -45,6 +45,16 @@
 #include <time.h>
 #include "tzfile.h"
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 static const struct {
     const char *abday[7];
     const char *day[7];
@@ -281,7 +291,7 @@ literal:
 
         case 'k':   /* The hour (24-hour clock representation). */
             _LEGAL_ALT(0);
-            /* FALLTHROUGH */
+            __fallthrough;
         case 'H':
             _LEGAL_ALT(_ALT_O);
             if (!(_conv_num(&bp, &tm->tm_hour, 0, 23)))
@@ -290,7 +300,7 @@ literal:
 
         case 'l':   /* The hour (12-hour clock representation). */
             _LEGAL_ALT(0);
-            /* FALLTHROUGH */
+            __fallthrough;
         case 'I':
             _LEGAL_ALT(_ALT_O);
             if (!(_conv_num(&bp, &tm->tm_hour, 1, 12)))

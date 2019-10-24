@@ -84,6 +84,16 @@
 #define CT_INT 3    /* integer, i.e., strtoimax or strtoumax */
 #define CT_FLOAT 4  /* floating, i.e., strtod */
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 // An interpretive version of __sccl from vfscanf.c --- a table of all wchar_t values would
 // be a little too expensive, and some kind of compressed version isn't worth the trouble.
 static inline bool in_ccl(wchar_t wc, const wchar_t* ccl) {
@@ -241,7 +251,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
        */
       case 'D': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __fallthrough;
       case 'd':
         c = CT_INT;
         base = 10;
@@ -254,7 +264,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
 
       case 'O': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __fallthrough;
       case 'o':
         c = CT_INT;
         flags |= UNSIGNED;

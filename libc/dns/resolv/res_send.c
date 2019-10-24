@@ -134,6 +134,16 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #define EXT(res) ((res)->_u._ext)
 #define DBG 0
 
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(fallthrough)
+#define __fallthrough __attribute__((__fallthrough__))
+#else
+#define __fallthrough
+#endif
+
 /* Forward. */
 
 static int		get_salen __P((const struct sockaddr *));
@@ -523,9 +533,9 @@ res_nsend(res_state statp,
 					/* give the hook another try */
 					if (++loops < 42) /*doug adams*/
 						break;
-					/*FALLTHROUGH*/
+					__fallthrough;
 				case res_error:
-					/*FALLTHROUGH*/
+					__fallthrough;
 				default:
 					goto fail;
 				}
@@ -645,9 +655,9 @@ res_nsend(res_state statp,
 					/* give the hook another try */
 					if (++loops < 42) /*doug adams*/
 						break;
-					/*FALLTHROUGH*/
+					__fallthrough;
 				case res_error:
-					/*FALLTHROUGH*/
+					__fallthrough;
 				default:
 					goto fail;
 				}
