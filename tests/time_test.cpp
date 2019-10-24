@@ -921,7 +921,11 @@ TEST(time, ctime_r) {
 // https://issuetracker.google.com/37128336
 TEST(time, strftime_strptime_s) {
   char buf[32];
-  const struct tm tm0 = { .tm_year = 1982-1900, .tm_mon = 0, .tm_mday = 1 };
+  const struct tm tm0 = {
+    .tm_mday = 1,
+    .tm_mon = 0,
+    .tm_year = 1982-1900,
+  };
 
   setenv("TZ", "America/Los_Angeles", 1);
   strftime(buf, sizeof(buf), "<%s>", &tm0);

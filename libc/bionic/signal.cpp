@@ -182,7 +182,9 @@ int sigismember64(const sigset64_t* set, int sig) {
 }
 
 __LIBC_HIDDEN__ sighandler_t _signal(int sig, sighandler_t handler, int flags) {
-  struct sigaction64 sa = { .sa_handler = handler, .sa_flags = flags };
+  struct sigaction64 sa;
+  sa.sa_handler = handler;
+  sa.sa_flags = flags;
   return (sigaction64(sig, &sa, &sa) == -1) ? SIG_ERR : sa.sa_handler;
 }
 

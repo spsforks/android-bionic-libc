@@ -22,14 +22,16 @@ class ScopedSignalHandler {
  public:
   ScopedSignalHandler(int signal_number, void (*handler)(int), int sa_flags = 0)
       : signal_number_(signal_number) {
-    action_ = { .sa_flags = sa_flags, .sa_handler = handler };
+    action_.sa_flags = sa_flags;
+    action_.sa_handler = handler;
     sigaction64(signal_number_, &action_, &old_action_);
   }
 
   ScopedSignalHandler(int signal_number, void (*action)(int, siginfo_t*, void*),
                       int sa_flags = SA_SIGINFO)
       : signal_number_(signal_number) {
-    action_ = { .sa_flags = sa_flags, .sa_sigaction = action };
+    action_.sa_flags = sa_flags;
+    action_.sa_sigaction = action;
     sigaction64(signal_number_, &action_, &old_action_);
   }
 

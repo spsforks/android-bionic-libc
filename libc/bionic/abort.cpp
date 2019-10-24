@@ -46,7 +46,9 @@ void abort() {
 
   // If SIGABRT is ignored or it's caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
-  struct sigaction64 sa = { .sa_handler = SIG_DFL, .sa_flags = SA_RESTART };
+  struct sigaction64 sa;
+  sa.sa_handler = SIG_DFL;
+  sa.sa_flags = SA_RESTART;
   sigaction64(SIGABRT, &sa, nullptr);
 
   sigprocmask64(SIG_SETMASK, &mask, nullptr);
