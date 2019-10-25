@@ -42,7 +42,10 @@ libc_common_flags = [
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
-    "-Wimplicit-fallthrough",
+    // Need to fix C code from {free|net|open}bsd code.
+    "-Wno-implicit-fallthrough",
+    // struct sigaction warns based on __LP64__.
+    "-Wno-reorder-init-list",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
     "-Werror=pointer-to-int-cast",
