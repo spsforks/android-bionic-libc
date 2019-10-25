@@ -37,6 +37,8 @@ cc_defaults {
 
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
+
+        "-Wno-reorder-init-list",
     ],
     // Make the bionic tests implicitly test bionic's shadow call stack support.
     arch: {

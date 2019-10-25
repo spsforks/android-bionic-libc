@@ -475,6 +475,8 @@ cc_library {
         "-Wno-unknown-pragmas",
         "-Wno-unused-const-variable",
         "-Wno-unused-variable",
+        // b/143311272, acceptable imprecision?
+        "-Wno-implicit-int-float-conversion",
     ],
 
     ldflags: [
