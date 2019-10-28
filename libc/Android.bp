@@ -856,19 +856,26 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memchr.S",
+                "arch-arm64/generic/bionic/memchr.c",
                 "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
                 "arch-arm64/generic/bionic/stpcpy.S",
-                "arch-arm64/generic/bionic/strchr.S",
-                "arch-arm64/generic/bionic/strcmp.S",
+                "arch-arm64/generic/bionic/strchr.cpp",
+                "arch-arm64/generic/bionic/strcmp.c",
                 "arch-arm64/generic/bionic/strcpy.S",
-                "arch-arm64/generic/bionic/strlen.S",
-                "arch-arm64/generic/bionic/strncmp.S",
-                "arch-arm64/generic/bionic/strnlen.S",
+                "arch-arm64/generic/bionic/strlen.c",
+                "arch-arm64/generic/bionic/strncmp.c",
+                "arch-arm64/generic/bionic/strnlen.c",
                 "arch-arm64/generic/bionic/wmemmove.S",
+
+                "arch-arm64/nomte/bionic/memchr.S",
+                "arch-arm64/nomte/bionic/strchr.S",
+                "arch-arm64/nomte/bionic/strcmp.S",
+                "arch-arm64/nomte/bionic/strlen.S",
+                "arch-arm64/nomte/bionic/strncmp.S",
+                "arch-arm64/nomte/bionic/strnlen.S",
 
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -1494,6 +1501,9 @@ cc_library_static {
         arm: {
             srcs: ["arch-arm/static_function_dispatch.S"],
         },
+        arm64: {
+            srcs: ["arch-arm64/static_function_dispatch.S"],
+        },
     },
 
     whole_static_libs: [
@@ -1518,6 +1528,9 @@ cc_library_static {
         },
         arm: {
             srcs: ["arch-arm/dynamic_function_dispatch.cpp"],
+        },
+        arm64: {
+            srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
 
