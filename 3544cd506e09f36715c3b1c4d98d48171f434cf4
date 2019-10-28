@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08e88268_23e6d8cd",
+        "filename": "libc/include/sys/ifunc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-28T21:03:04Z",
+      "side": 1,
+      "message": "Add `Currently only meaningful for arm64.`?",
+      "revId": "3544cd506e09f36715c3b1c4d98d48171f434cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22c3aadc_0f975bd5",
+        "filename": "libc/include/sys/ifunc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-28T21:03:04Z",
+      "side": 1,
+      "message": "this probably needs a doc comment.",
+      "revId": "3544cd506e09f36715c3b1c4d98d48171f434cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7bbacab_52f03a3c",
+        "filename": "libc/include/sys/ifunc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-28T21:03:04Z",
+      "side": 1,
+      "message": "seems like we\u0027d also need the typedef to be source compatible with glibc?",
+      "revId": "3544cd506e09f36715c3b1c4d98d48171f434cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dfc3998_a067b40b",
+        "filename": "libc/include/sys/ifunc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-28T21:03:04Z",
+      "side": 1,
+      "message": "and this definitely does.",
+      "revId": "3544cd506e09f36715c3b1c4d98d48171f434cf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
