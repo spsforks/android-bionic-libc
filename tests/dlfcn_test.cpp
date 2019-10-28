@@ -24,6 +24,7 @@
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>
 #endif
+#include <sys/ifunc.h>
 #include <sys/user.h>
 
 #include <string>
@@ -367,6 +368,31 @@ TEST(dlfcn, ifunc_ctor_call_rtld_lazy) {
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
+
+TEST(dlfcn, ifunc_hwcap) {
+  typedef const char* (*fn_ptr)();
+
+  void* handle = dlopen("libtest_ifunc.so", RTLD_LAZY);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  fn_ptr hwcap = reinterpret_cast<fn_ptr>(dlsym(handle, "hwcap"));
+  ASSERT_STREQ("true", hwcap());
+
+#if defined(__aarch64__)
+  uint64_t* g_hwcap = reinterpret_cast<uint64_t*>(dlsym(handle, "g_hwcap"));
+  EXPECT_EQ(getauxval(AT_HWCAP) | _IFUNC_ARG_HWCAP, *g_hwcap);
+
+  __ifunc_arg_t* g_arg = reinterpret_cast<__ifunc_arg_t*>(dlsym(handle, "g_arg"));
+  EXPECT_EQ(sizeof(__ifunc_arg_t), g_arg->_size);
+  EXPECT_EQ(getauxval(AT_HWCAP), g_arg->_hwcap);
+  EXPECT_EQ(getauxval(AT_HWCAP2), g_arg->_hwcap2);
+#elif defined(__arm__)
+  unsigned long* g_hwcap = reinterpret_cast<unsigned long*>(dlsym(handle, "g_hwcap"));
+  EXPECT_EQ(getauxval(AT_HWCAP), *g_hwcap);
+#endif
+
+  dlclose(handle);
+}
+
 #endif
 
 TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {

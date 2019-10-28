@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ifunc.h>
 
 static uintptr_t g_flag = 0;
 
@@ -31,6 +32,8 @@ extern "C" const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
 
 // Static linker creates GLOBAL/IFUNC symbol and JUMP_SLOT relocation type for plt segment
 extern "C" const char* is_ctor_called_jump_slot() __attribute__ ((ifunc("is_ctor_called_ifun")));
+
+extern "C" const char* hwcap() __attribute__((ifunc("hwcap_ifunc")));
 
 extern "C" const char* is_ctor_called_irelative() {
   // Call internal ifunc-resolved function with IRELATIVE reloc
@@ -67,3 +70,31 @@ extern "C" fn_ptr foo_ifunc() {
 extern "C" const char* foo_library() {
    return foo();
 }
+
+#if defined(__aarch64__)
+
+extern "C" __attribute__((visibility("protected"))) uint64_t g_hwcap = 0;
+extern "C" __attribute__((visibility("protected"))) __ifunc_arg_t g_arg = {};
+
+extern "C" fn_ptr hwcap_ifunc(uint64_t hwcap, __ifunc_arg_t* arg) {
+  g_hwcap = hwcap;
+  g_arg = *arg;
+  return return_true;
+}
+
+#elif defined(__arm__)
+
+extern "C" __attribute__((visibility("protected"))) unsigned long g_hwcap = 0;
+
+extern "C" fn_ptr hwcap_ifunc(unsigned long hwcap) {
+  g_hwcap = hwcap;
+  return return_true;
+}
+
+#else
+
+extern "C" fn_ptr hwcap_ifunc() {
+  return return_true;
+}
+
+#endif
