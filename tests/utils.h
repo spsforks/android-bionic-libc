@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_UTILS_H
-#define __TEST_UTILS_H
+#pragma once
 
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -255,4 +254,8 @@ class ExecTestHelper {
 };
 #endif
 
-#endif
+static inline int64_t NanoTime() {
+  timespec now;
+  clock_gettime(CLOCK_MONOTONIC, &now);
+  return static_cast<int64_t>(now.tv_sec) * INT64_C(1000000000) + now.tv_nsec;
+}

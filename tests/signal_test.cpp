@@ -26,6 +26,7 @@
 #include <gtest/gtest.h>
 
 #include "SignalUtils.h"
+#include "utils.h"
 
 static int SIGNAL_MIN() {
   return 1; // Signals start at 1 (SIGHUP), not 0.
@@ -751,12 +752,6 @@ TEST(signal, sigtimedwait64_SIGRTMIN) {
   errno = 0;
   ASSERT_EQ(SIGRTMIN, sigtimedwait64(&just_SIGRTMIN, &info, &timeout));
   ASSERT_EQ(0, errno);
-}
-
-static int64_t NanoTime() {
-  timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
 }
 
 TEST(signal, sigtimedwait_timeout) {

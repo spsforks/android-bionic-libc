@@ -1516,3 +1516,17 @@ TEST(UNISTD_TEST, swab_negative_byte_count) {
   swab("hello", buf, -1);
   ASSERT_EQ('x', buf[0]);
 }
+
+TEST(UNISTD_TEST, usleep) {
+  int64_t t0 = NanoTime();
+  ASSERT_EQ(0, usleep(5000));
+  int64_t t1 = NanoTime();
+  ASSERT_GE(t1-t0, 5000 * 1000);
+}
+
+TEST(UNISTD_TEST, sleep) {
+  int64_t t0 = NanoTime();
+  ASSERT_EQ(0U, sleep(1));
+  int64_t t1 = NanoTime();
+  ASSERT_GE(t1-t0, 1000000000);
+}
