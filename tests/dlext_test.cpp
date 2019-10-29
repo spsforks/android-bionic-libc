@@ -1374,7 +1374,10 @@ TEST(dlext, ns_isolated) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libnstest_private_external.so\" not found: needed by "
+      "libnstest_root_not_isolated.so in namespace private_isolated1",
+      dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1502,7 +1505,10 @@ TEST(dlext, ns_shared) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libnstest_private_external.so\" not found: needed by "
+      "libnstest_root_not_isolated.so in namespace private_isolated_shared",
+      dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1762,7 +1768,10 @@ TEST(dlext, ns_isolated_rtld_global) {
 
   handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle1 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
+  ASSERT_STREQ(
+      "dlopen failed: library \"libnstest_public.so\" not found: needed by libnstest_root.so in "
+      "namespace isolated2",
+      dlerror());
 }
 
 TEST(dlext, ns_inaccessible_error_message) {
