@@ -100,7 +100,7 @@ int __system_property_add(const char* name, unsigned int namelen, const char* va
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 uint32_t __system_property_serial(const prop_info* pi) {
-  return system_properties.Serial(pi);
+  return atomic_load_explicit(&pi->serial, memory_order_relaxed);
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
