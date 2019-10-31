@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "68d3456b_94abf6a0",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-10-31T23:30:16Z",
+      "side": 1,
+      "message": "True, we can drop this one without any issues.",
+      "parentUuid": "8df1f94e_b14ce559",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "823774c6_96a82d38",
         "filename": "libc/bionic/net_if.cpp",
         "patchSetId": 1
@@ -133,6 +151,24 @@
       "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f000adf9_0b7083ea",
+        "filename": "libc/bionic/system_property_set.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-10-31T23:30:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fc600b9b_b98609f3",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
