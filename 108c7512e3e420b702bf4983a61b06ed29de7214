@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d602ce81_8ea0a586",
+        "filename": "libc/bionic/net_if.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-31T23:22:19Z",
+      "side": 1,
+      "message": "no, because the infrastructure doesn\u0027t support the fact that we\u0027d need to leave the upstream-* directories alone.\n\n(personally i prefer no spaces with this and multiplication, but i\u0027d rather have .clang-format and *anything* than this freedom :-/ .)",
+      "parentUuid": "823774c6_96a82d38",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 48,
+        "endChar": 52
+      },
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88186807_541c74fe",
         "filename": "libc/bionic/system_property_set.cpp",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "854aa5e0_5d9fe380",
+        "filename": "libc/bionic/system_property_set.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-31T23:22:19Z",
+      "side": 1,
+      "message": "yeah, that\u0027s a good idea. will do.",
+      "parentUuid": "88186807_541c74fe",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d25747e7_64b980bd",
         "filename": "libc/bionic/system_property_set.cpp",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2019-10-31T23:01:08Z",
       "side": 1,
       "message": "Do we want a .ok() like unique_fd?",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc600b9b_b98609f3",
+        "filename": "libc/bionic/system_property_set.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-31T23:22:19Z",
+      "side": 1,
+      "message": "given that C++ is inconsistent about what it calls that function on various types, i\u0027m not super keen on it. we can change our minds if we get to the point where there are multiple callers...",
+      "parentUuid": "d25747e7_64b980bd",
       "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
