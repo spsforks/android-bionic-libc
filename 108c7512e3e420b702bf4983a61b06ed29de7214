@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "8df1f94e_b14ce559",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-31T23:24:45Z",
+      "side": 1,
+      "message": "fwiw, i\u0027m not sure this one _actually_ makes sense. it did when we needed to close() in a bunch of ifs otherwise. but although this preserves the exact previous behavior, it\u0027s probably stupid?",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "823774c6_96a82d38",
         "filename": "libc/bionic/net_if.cpp",
         "patchSetId": 1
