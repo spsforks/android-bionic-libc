@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "823774c6_96a82d38",
+        "filename": "libc/bionic/net_if.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-10-31T23:01:08Z",
+      "side": 1,
+      "message": "We don\u0027t have a clang-format hook in bionic, do we.  I\u0027d expect it to have added a space around the | here.",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 48,
+        "endChar": 52
+      },
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88186807_541c74fe",
+        "filename": "libc/bionic/system_property_set.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-10-31T23:01:08Z",
+      "side": 1,
+      "message": "Do we want an overload that doesn\u0027t make you pass -1 ?",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d25747e7_64b980bd",
+        "filename": "libc/bionic/system_property_set.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-10-31T23:01:08Z",
+      "side": 1,
+      "message": "Do we want a .ok() like unique_fd?",
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
