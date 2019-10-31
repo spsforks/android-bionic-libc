@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "5b8faea0_1c70062d",
+        "filename": "libc/bionic/net_if.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-10-31T23:31:21Z",
+      "side": 1,
+      "message": "I think we could add a .clang-format in each of the upstream-* directories with DisableFormat: true?",
+      "parentUuid": "d602ce81_8ea0a586",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 48,
+        "endChar": 52
+      },
+      "revId": "108c7512e3e420b702bf4983a61b06ed29de7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88186807_541c74fe",
         "filename": "libc/bionic/system_property_set.cpp",
         "patchSetId": 1
