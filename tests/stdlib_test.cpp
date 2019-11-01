@@ -29,6 +29,7 @@
 #include <limits>
 #include <string>
 
+#include <android-base/file.h>
 #include <android-base/macros.h>
 #include <gtest/gtest.h>
 
@@ -322,6 +323,17 @@ TEST(stdlib, realpath__ENOENT) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+TEST(stdlib, realpath__ELOOP) {
+  TemporaryDir td;
+  std::string link = std::string(td.path) + "/loop";
+  ASSERT_EQ(0, symlink(link.c_str(), link.c_str()));
+
+  errno = 0;
+  char* p = realpath(link.c_str(), nullptr);
+  ASSERT_TRUE(p == nullptr);
+  ASSERT_EQ(ELOOP, errno);
+}
+
 TEST(stdlib, realpath__component_after_non_directory) {
   errno = 0;
   char* p = realpath("/dev/null/.", nullptr);
@@ -347,6 +359,18 @@ TEST(stdlib, realpath) {
 
   p = realpath("/proc/self/exe", nullptr);
   ASSERT_STREQ(executable_path, p);
+  free(p);
+}
+
+TEST(stdlib, realpath__dot) {
+  char* p = realpath("/proc/./version", nullptr);
+  ASSERT_STREQ("/proc/version", p);
+  free(p);
+}
+
+TEST(stdlib, realpath__dot_dot) {
+  char* p = realpath("/dev/../proc/version", nullptr);
+  ASSERT_STREQ("/proc/version", p);
   free(p);
 }
 
