@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
+#include <dirent.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -23,6 +22,8 @@
 #include <chrono>
 #include <sstream>
 #include <string>
+
+#include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
 #include <sys/system_properties.h>
@@ -128,6 +129,55 @@ TEST(properties, smoke) {
 #endif // __BIONIC__
 }
 
+class FdLeakChecker {
+ public:
+  FdLeakChecker() {
+  }
+
+  ~FdLeakChecker() {
+    size_t end_count = CountOpenFds();
+    EXPECT_EQ(start_count_, end_count);
+  }
+
+ private:
+  static size_t CountOpenFds() {
+    auto fd_dir = std::unique_ptr<DIR, decltype(&closedir)>{ opendir("/proc/self/fd"), closedir };
+    size_t count = 0;
+    dirent* de = nullptr;
+    while ((de = readdir(fd_dir.get())) != nullptr) {
+      if (de->d_type == DT_LNK) {
+        ++count;
+      }
+    }
+    return count;
+  }
+
+  size_t start_count_ = CountOpenFds();
+};
+
+TEST(properties, no_fd_leaks) {
+#if defined(__BIONIC__)
+  FdLeakChecker leak_checker;
+  std::stringstream ss;
+  ss << "debug.test." << getpid() << "." << NanoTime() << ".";
+  const std::string property_prefix = ss.str();
+  const std::string property_name = property_prefix + "property1";
+
+  for (size_t i = 0; i < 100; ++i) {
+    char propvalue[PROP_VALUE_MAX];
+    ASSERT_EQ(0, __system_property_set(property_name.c_str(), "value1"));
+    ASSERT_EQ(6, __system_property_get(property_name.c_str(), propvalue));
+    ASSERT_STREQ("value1", propvalue);
+
+    ASSERT_EQ(0, __system_property_set(property_name.c_str(), "value2"));
+    ASSERT_EQ(6, __system_property_get(property_name.c_str(), propvalue));
+    ASSERT_STREQ("value2", propvalue);
+  }
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
+}
+
 TEST(properties, empty_value) {
 #if defined(__BIONIC__)
     char propvalue[PROP_VALUE_MAX];
@@ -136,13 +186,13 @@ TEST(properties, empty_value) {
     ss << "debug.test." << getpid() << "." << NanoTime() << "." << "property_empty";
     const std::string property_name = ss.str();
 
-    for (size_t i=0; i<1000; ++i) {
+    for (size_t i = 0; i < 1000; ++i) {
       ASSERT_EQ(0, __system_property_set(property_name.c_str(), ""));
       ASSERT_EQ(0, __system_property_get(property_name.c_str(), propvalue));
       ASSERT_STREQ("", propvalue);
     }
 
-#else // __BIONIC__
-    GTEST_SKIP() << "bionic-only test";
+#else  // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
