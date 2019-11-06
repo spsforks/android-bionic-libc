@@ -198,8 +198,8 @@ elif [[ ! -d "${ANDROID_KERNEL_DIR}" ]]; then
   exit 1
 fi
 
-src_dir="linux-stable"
-#src_dir="common"
+#src_dir="linux-stable"
+src_dir="common"
 
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
