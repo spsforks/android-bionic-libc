@@ -70,6 +70,23 @@
       "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a533beef_ef3aa919",
+        "filename": "libc/system_properties/include/system_properties/prop_area.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-11-06T19:24:46Z",
+      "side": 1,
+      "message": "Why are comments reflowed to such short lines?  I\u0027d prefer 100 like source is; I could understand 80, but this looks like it\u0027s 70 columns.  It takes up a lot of vertical space and doesn\u0027t help the eyes to keep moving down a line.  Maybe some line breaks too; ones before \u0027Before ...\u0027 and \u0027After ...\u0027 might be good.",
+      "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
