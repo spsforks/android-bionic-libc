@@ -104,6 +104,7 @@ void __libc_init_common() {
 
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
+  __libc_init_fdtrack();
 
   // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
   // returns -EINVAL) if the kernel doesn't understand the prctl.
