@@ -46,6 +46,30 @@
       "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e555ef5_14b7ab26",
+        "filename": "libc/bionic/system_property_api.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-06T16:46:36Z",
+      "side": 1,
+      "message": "well, if they can do better and what they\u0027re doing isn\u0027t widely applicable, yes, they should use libc directly.\n\nbut in this specific case (from a quick glance, early in the morning), they\u0027re badly re-inventing the android::base::WaitForProperty wheel. (which is supposed to be the easiest way to write the code, but also the best implementation of it.)",
+      "parentUuid": "edd13efc_dbe26ed8",
+      "range": {
+        "startLine": 105,
+        "startChar": 15,
+        "endLine": 105,
+        "endChar": 27
+      },
+      "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
