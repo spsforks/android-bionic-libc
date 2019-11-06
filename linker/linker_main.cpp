@@ -441,6 +441,16 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     ++ld_preloads_count;
   }
 
+  #if __LP64__
+    #define LIBFDTRACK_PATH "/system/lib64/libfdtrack.so"
+  #else
+    #define LIBFDTRACK_PATH "/system/lib/libfdtrack.so"
+  #endif
+  if (access(LIBFDTRACK_PATH, R_OK) == 0) {
+    needed_library_name_list.push_back(LIBFDTRACK_PATH);
+    ++ld_preloads_count;
+  }
+
   for_each_dt_needed(si, [&](const char* name) {
     needed_library_name_list.push_back(name);
   });
