@@ -29,6 +29,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "private/bionic_fdtrack.h"
+
+extern "C" int __dup(int old_fd);
+extern "C" int __dup3(int old_fd, int new_fd, int flags);
+
+int dup(int old_fd) {
+  return FD_TRACK_CREATE(__dup(old_fd));
+}
+
 int dup2(int old_fd, int new_fd) {
   // If old_fd is equal to new_fd and a valid file descriptor, dup2 returns
   // old_fd without closing it. This is not true of dup3, so we have to
@@ -40,5 +49,9 @@ int dup2(int old_fd, int new_fd) {
     return old_fd;
   }
 
-  return dup3(old_fd, new_fd, 0);
+  return FD_TRACK_CREATE(__dup3(old_fd, new_fd, 0));
+}
+
+int dup3(int old_fd, int new_fd, int flags) {
+  return FD_TRACK_CREATE(__dup3(old_fd, new_fd, flags));
 }
