@@ -87,6 +87,24 @@
       "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aac5baf_3d4ff08b",
+        "filename": "libc/system_properties/include/system_properties/prop_area.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2019-11-06T19:34:51Z",
+      "side": 1,
+      "message": "Because I was using the Emacs default fill-column. :) I\u0027ll fix it and get around to automatically changing style for bionic. Thanks for pointing out the weirdness.",
+      "parentUuid": "a533beef_ef3aa919",
+      "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
