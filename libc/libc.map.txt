@@ -1484,6 +1484,7 @@ LIBC_R { # introduced=R
   global:
     __mempcpy_chk;
     __tls_get_addr; # arm64
+    android_fd_track_compare_exchange_hook;
     call_once;
     cnd_broadcast;
     cnd_destroy;
