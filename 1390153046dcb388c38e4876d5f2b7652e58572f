@@ -105,6 +105,24 @@
       "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7643861_4f55b762",
+        "filename": "libc/system_properties/include/system_properties/prop_area.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2019-11-06T20:24:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aac5baf_3d4ff08b",
+      "revId": "1390153046dcb388c38e4876d5f2b7652e58572f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
