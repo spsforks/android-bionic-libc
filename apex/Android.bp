@@ -32,6 +32,7 @@ apex {
         "libdl_android",
         "libc_malloc_debug",
         "libc_malloc_hooks",
+        "libfdtrack",
     ],
     multilib: {
         both: {
