@@ -57,6 +57,13 @@ static int __close(int fd) {
   return syscall(__NR_close, fd);
 }
 
+// Don't call libc's socket either to avoid tracking the fd creation and generating spurious leaks
+// since we're not calling its close.
+#pragma GCC poison socket
+static int __socket(int domain, int type, int protocol) {
+  return syscall(__NR_socket, domain, type, protocol);
+}
+
 // Must be kept in sync with frameworks/base/core/java/android/util/EventLog.java.
 enum AndroidEventLogType {
   EVENT_TYPE_INT = 0,
@@ -460,7 +467,7 @@ static int open_log_socket() {
   // found that all logd crashes thus far have had no problem stuffing
   // the UNIX domain socket and moving on so not critical *today*.
 
-  int log_fd = TEMP_FAILURE_RETRY(socket(PF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
+  int log_fd = TEMP_FAILURE_RETRY(__socket(PF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
   if (log_fd == -1) {
     return -1;
   }
