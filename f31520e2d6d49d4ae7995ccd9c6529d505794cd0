@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63975172_d2438705",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-07T19:02:32Z",
+      "side": 1,
+      "message": "note that this is wrong --- it broke numerous major apps in app compat testing.",
+      "revId": "f31520e2d6d49d4ae7995ccd9c6529d505794cd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d43273db_debaf6b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-07T19:02:32Z",
+      "side": 1,
+      "message": "this line should start \"Bug: \".",
+      "revId": "f31520e2d6d49d4ae7995ccd9c6529d505794cd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
