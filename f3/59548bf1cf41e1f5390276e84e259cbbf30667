@@ -1,0 +1,6 @@
+Build-Cop-Override+1: Cheney Ni <cheneyni@google.com>
+Submitted-by: George Burgess IV <gbiv@google.com>
+Submitted-at: Thu, 07 Nov 2019 07:10:36 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1161304
+Project: platform/bionic
+Branch: refs/heads/master
