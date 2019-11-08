@@ -1,0 +1,12 @@
+Verified+1: Yuexi Ma <yuexima@google.com>
+Autosubmit+1: Yuexi Ma <yuexima@google.com>
+Code-Review+2: Martin Stjernholm <mast@google.com>
+Code-Review+2: Jiyong Park <jiyong@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Presubmit-Verified-1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Martin Stjernholm <mast@google.com>
+Submitted-at: Fri, 08 Nov 2019 11:51:34 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1161593
+Project: platform/bionic
+Branch: refs/heads/master
