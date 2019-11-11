@@ -41,6 +41,7 @@ libc_common_flags = [
     "-Wno-char-subscripts",
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
+    "-Wno-reorder-init-list",
     "-Wframe-larger-than=2048",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.

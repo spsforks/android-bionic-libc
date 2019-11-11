@@ -223,6 +223,10 @@ cc_test_library {
         enabled: false,
     },
 
+    cppflags: [
+        "-Wno-reorder-init-list",
+    ],
+
     generated_headers: ["generated_android_ids"],
 }
 
