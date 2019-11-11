@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bac213a9_d6774f71",
+        "filename": "libc/include/android/fd_track.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-11-11T21:18:47Z",
+      "side": 1,
+      "message": "If this is meant to be platform specific, you should probably put this in the bionic/libc/platform/bionic directory then you don\u0027t need to duplicate it.\n\nYou will need to add the rules about who can use the headers though.",
+      "revId": "b203651ae73693ae1c7eb56b3b78beee722617a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
