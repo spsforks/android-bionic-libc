@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f9b642f2_4367fcde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-11-12T22:05:29Z",
+      "side": 1,
+      "message": "This was fixed yesterday, so if you resync it should work now. If not, please let me know.",
+      "parentUuid": "4f87191d_b18d5263",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1ca83452_e3ac6749",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
