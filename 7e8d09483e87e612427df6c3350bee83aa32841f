@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f87191d_b18d5263",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "i assume you\u0027re already talking to cferris about that?",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ca83452_e3ac6749",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "no need for struct in C++ source.\n\nadd a comment explicitly pointing out that you don\u0027t actually care about uname(), you just want a system call that validates a pointer?",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 8
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29a0836d_112a836f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "we tend to use `result` in bionic.",
+      "range": {
+        "startLine": 141,
+        "startChar": 6,
+        "endLine": 141,
+        "endChar": 8
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f4b2a87_a0afcd60",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "or inline TagPointer into MaybeTagPointer (the only caller) and avoid this case?",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db1d15f8_ab043541",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "add something to one of our .md files (or a new .md file) and point there instead. (the dynamic linker already contains a bunch of URLs for errors.)",
+      "range": {
+        "startLine": 95,
+        "startChar": 41,
+        "endLine": 95,
+        "endChar": 73
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef5d374f_3e3782e0",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-12T22:02:00Z",
+      "side": 1,
+      "message": "fix indentation?\n\n(does anyone else prefer this expression to the very long constant in the new header?)",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
