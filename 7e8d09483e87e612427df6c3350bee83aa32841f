@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "2fe759a8_cd4af63e",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-11-12T22:09:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we first (attempt to) issue the prctl that enables tagged pointers in syscalls?",
+      "parentUuid": "1ca83452_e3ac6749",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 8
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29a0836d_112a836f",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
