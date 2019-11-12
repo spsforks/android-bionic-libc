@@ -107,6 +107,40 @@
     },
     {
       "key": {
+        "uuid": "a9885d88_490f7fa8",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-11-12T23:13:12Z",
+      "side": 1,
+      "message": "from man posix_memalign:\nOn Linux (and other systems), posix_memalign() does not modify memptr on failure.",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "310a4304_e6a532be",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-11-12T23:13:12Z",
+      "side": 1,
+      "message": "Did you mean \"pointer tagging support\"?",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f4b2a87_a0afcd60",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 1
@@ -147,6 +181,23 @@
     },
     {
       "key": {
+        "uuid": "9b17e088_3b01181a",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-11-12T23:13:12Z",
+      "side": 1,
+      "message": "Check that \"x\" has a tag.",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ef5d374f_3e3782e0",
         "filename": "tests/utils.h",
         "patchSetId": 1
@@ -158,6 +209,24 @@
       "writtenOn": "2019-11-12T22:02:00Z",
       "side": 1,
       "message": "fix indentation?\n\n(does anyone else prefer this expression to the very long constant in the new header?)",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ec3882d_a29eba92",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-11-12T23:13:12Z",
+      "side": 1,
+      "message": "I do! But I\u0027m biased, I wrote this :)",
+      "parentUuid": "ef5d374f_3e3782e0",
       "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
