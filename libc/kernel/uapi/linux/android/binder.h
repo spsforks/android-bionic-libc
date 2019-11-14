@@ -122,6 +122,10 @@ struct binder_node_info_for_ref {
 #define BINDER_GET_NODE_DEBUG_INFO _IOWR('b', 11, struct binder_node_debug_info)
 #define BINDER_GET_NODE_INFO_FOR_REF _IOWR('b', 12, struct binder_node_info_for_ref)
 #define BINDER_SET_CONTEXT_MGR_EXT _IOW('b', 13, struct flat_binder_object)
+#define BINDER_CHECK_FORK_SUPPORT _IO('b', 14)
+#define BINDER_BEFORE_FORK _IO('b', 15)
+#define BINDER_AFTER_FORK_IN_CHILD _IO('b', 16)
+
 enum transaction_flags {
   TF_ONE_WAY = 0x01,
   TF_ROOT_OBJECT = 0x04,
