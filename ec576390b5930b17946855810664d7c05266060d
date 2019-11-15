@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad8f4715_a8463170",
+        "filename": "linker/linker_block_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-11-15T17:20:26Z",
+      "side": 1,
+      "message": "Left over from testing of that mprotect() bug?",
+      "revId": "ec576390b5930b17946855810664d7c05266060d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
