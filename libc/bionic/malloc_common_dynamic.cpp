@@ -395,6 +395,11 @@ static void MallocInitImpl(libc_globals* globals) {
     hook_installed = InstallHooks(globals, options, kDebugPrefix, kDebugSharedLib);
   } else if (CheckLoadMallocHooks(&options)) {
     hook_installed = InstallHooks(globals, options, kHooksPrefix, kHooksSharedLib);
+  } else {
+    // Enable GWP-ASan only if a debug allocator hasn't been installed. We don't
+    // want to sample allocations if the debug allocator is tracking them.
+    // GWP-ASan is designed to be off-by-default if left uninitialised.
+    InitGwpAsan();
   }
 
   if (!hook_installed) {

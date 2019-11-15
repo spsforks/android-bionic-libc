@@ -86,31 +86,51 @@ cc_defaults {
     },
 }
 
-libc_scudo_product_variables = {
-    malloc_not_svelte: {
-        cflags: ["-DUSE_SCUDO"],
-        whole_static_libs: ["libscudo"],
-        exclude_static_libs: [
-            "libjemalloc5",
-            "libc_jemalloc_wrapper",
-        ],
-    },
+cc_defaults {
+    name: "libc_scudo_flags",
+    product_variables: {
+        malloc_not_svelte: {
+            cflags: ["-DUSE_SCUDO"],
+        }
+    }
 }
 
-// Defaults for native allocator libs/includes to make it
-// easier to change.
-// Enable scudo for non-svelte config by adding the line:
-//     product_variables: libc_scudo_product_variables,
-// to the cc_defaults below. And remove the defaults line
-// in the libc_scudo library.
-// ========================================================
 cc_defaults {
-    name: "libc_native_allocator_defaults",
+    name: "libc_scudo_libs",
+    defaults: ["libc_scudo_flags"],
+    product_variables: {
+        malloc_not_svelte: {
+            whole_static_libs: ["libscudo"],
+        }
+    }
+}
 
+cc_defaults {
+    name: "libc_jemalloc_flags",
+}
+
+cc_defaults {
+    name: "libc_jemalloc_libs",
+    defaults: ["libc_jemalloc_flags"],
     whole_static_libs: [
         "libjemalloc5",
         "libc_jemalloc_wrapper",
     ],
+}
+
+// Defaults for native allocator libs/includes to make it easier to change.
+// Enable scudo for non-svelte config by replacing "libc_jemalloc_flags" with
+// "libc_scudo_flags", and "libc_jemalloc_libs" with "libc_scudo_libs" below.
+// ========================================================
+
+cc_defaults {
+    name: "libc_native_allocator_flags",
+    defaults: ["libc_jemalloc_flags"],
+}
+
+cc_defaults {
+    name: "libc_native_allocator_libs",
+    defaults: ["libc_jemalloc_libs"],
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -121,8 +141,7 @@ cc_library_static {
     srcs: ["bionic/jemalloc_wrapper.cpp"],
     cflags: ["-fvisibility=hidden"],
 
-    // Used to pull in the jemalloc include directory so that if the
-    // library is removed, the include directory is also removed.
+    // Used to pull in the jemalloc include directory.
     static_libs: ["libjemalloc5"],
 }
 
@@ -1382,12 +1401,10 @@ cc_library_static {
     name: "libc_ndk",
     defaults: [
         "libc_defaults",
-        "libc_native_allocator_defaults",
+        "libc_native_allocator_flags",
     ],
     ramdisk_available: false,
     srcs: libc_common_src_files + [
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
     multilib: {
@@ -1413,6 +1430,7 @@ cc_library_static {
     ],
 
     whole_static_libs: [
+        "libc_malloc_static",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1592,9 +1610,7 @@ filegroup {
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
-        "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
-        "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
         "bionic/android_profiling_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
@@ -1609,8 +1625,6 @@ filegroup {
 filegroup {
     name: "libc_sources_static",
     srcs: [
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
 }
@@ -1624,12 +1638,64 @@ filegroup {
 }
 
 // ========================================================
+// libc_malloc_(static|shared).a
+// ========================================================
+cc_defaults {
+    name: "libc_malloc_defaults",
+    srcs: [
+        "bionic/heap_tagging.cpp",
+        "bionic/malloc_common.cpp",
+    ],
+    // Platform (non-emulated) TLS is required for functions inlined from
+    // GWP-ASan.
+    cflags: ["-fno-emulated-tls"],
+    local_include_dirs: ["include"],
+    header_libs: ["gwp_asan_headers"],
+    whole_static_libs: [
+        "gwp_asan",
+    ],
+}
+
+cc_library_static {
+    name: "libc_malloc_shared",
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_libs",
+        "libc_malloc_defaults",
+    ],
+}
+
+cc_library_static {
+    name: "libc_malloc_static",
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_libs",
+        "libc_malloc_defaults",
+    ],
+    cflags: ["-DLIBC_STATIC"],
+}
+
+cc_library_static {
+    name: "libc_malloc_scudo",
+    defaults: [
+        "libc_defaults",
+        "libc_malloc_defaults",
+        "libc_scudo_flags",
+    ],
+
+    // The following options are required for libc_scudo_wrapper_defaults.
+    vendor_available: true,
+    header_libs: ["libc_headers"],
+    static_libs: ["libasync_safe"],
+}
+
+// ========================================================
 // libc.a + libc.so
 // ========================================================
 cc_library {
     defaults: [
         "libc_defaults",
-        "libc_native_allocator_defaults",
+        "libc_native_allocator_flags",
     ],
     name: "libc",
     static_ndk_lib: true,
@@ -1643,6 +1709,7 @@ cc_library {
         srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
+            "libc_malloc_static",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1651,6 +1718,7 @@ cc_library {
     shared: {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
+            "libc_malloc_shared",
             "libc_init_dynamic",
             "libc_common_shared",
         ],
@@ -2575,8 +2643,6 @@ cc_library {
 cc_defaults {
     name: "libc_scudo_wrapper_defaults",
     srcs: [
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
@@ -2589,6 +2655,10 @@ cc_defaults {
     header_libs: ["libc_headers"],
 
     static_libs: ["libasync_safe"],
+
+    whole_static_libs: [
+        "libc_malloc_scudo",
+    ],
 
     arch: {
         arm: {
