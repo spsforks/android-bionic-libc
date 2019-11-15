@@ -92,3 +92,7 @@ static inline const MallocDispatch* GetDefaultDispatchTable() {
 #define warning_log(format, ...)  \
     async_safe_format_log(ANDROID_LOG_WARN, "libc", (format), ##__VA_ARGS__ )
 // =============================================================================
+
+// Initialise the GWP-ASan allocator. Must be called before the first malloc(),
+// and before any threads are spawned.
+void InitGwpAsan();
