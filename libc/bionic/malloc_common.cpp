@@ -55,12 +55,30 @@ void* (*volatile __malloc_hook)(size_t, const void*);
 void* (*volatile __realloc_hook)(void*, size_t, const void*);
 void (*volatile __free_hook)(void*, const void*);
 void* (*volatile __memalign_hook)(size_t, size_t, const void*);
+
 // =============================================================================
+// GWP-Asan allocator. Instantiated here to avoid indirect call overhead, and
+// that the hot path is inlined properly.
+// =============================================================================
+static gwp_asan::GuardedPoolAllocator GuardedAlloc;
+
+gwp_asan::GuardedPoolAllocator *GetGuardedAllocator() {
+  return &GuardedAlloc;
+}
 
 // =============================================================================
 // Allocation functions
 // =============================================================================
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
+  if (__predict_false(GuardedAlloc.shouldSample())) {
+    size_t bytes;
+    if (!__builtin_mul_overflow(n_elements, elem_size, &bytes)) {
+      if (void *result = GuardedAlloc.allocate(bytes)) {
+        return result;
+      }
+    }
+  }
+
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return MaybeTagPointer(dispatch_table->calloc(n_elements, elem_size));
@@ -73,6 +91,11 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
 }
 
 extern "C" void free(void* mem) {
+  if (__predict_false(GuardedAlloc.pointerIsMine(mem))) {
+    GuardedAlloc.deallocate(mem);
+    return;
+  }
+
   auto dispatch_table = GetDispatchTable();
   mem = MaybeUntagAndCheckPointer(mem);
   if (__predict_false(dispatch_table != nullptr)) {
@@ -107,6 +130,12 @@ extern "C" int mallopt(int param, int value) {
 }
 
 extern "C" void* malloc(size_t bytes) {
+  if (__predict_false(GuardedAlloc.shouldSample())) {
+    if (void *result = GuardedAlloc.allocate(bytes)) {
+      return result;
+    }
+  }
+
   auto dispatch_table = GetDispatchTable();
   void *result;
   if (__predict_false(dispatch_table != nullptr)) {
@@ -122,6 +151,10 @@ extern "C" void* malloc(size_t bytes) {
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
+  if (__predict_false(GuardedAlloc.pointerIsMine(mem))) {
+    return GuardedAlloc.getSize(mem);
+  }
+
   auto dispatch_table = GetDispatchTable();
   mem = MaybeUntagAndCheckPointer(mem);
   if (__predict_false(dispatch_table != nullptr)) {
@@ -169,6 +202,15 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
 }
 
 extern "C" __attribute__((__noinline__)) void* realloc(void* old_mem, size_t bytes) {
+  if (__predict_false(GuardedAlloc.pointerIsMine(old_mem))) {
+    size_t old_size = GuardedAlloc.getSize(old_mem);
+    void *new_ptr = malloc(bytes);
+    if (new_ptr)
+      memcpy(new_ptr, old_mem, (bytes < old_size) ? bytes : old_size);
+    GuardedAlloc.deallocate(old_mem);
+    return new_ptr;
+  }
+
   auto dispatch_table = GetDispatchTable();
   old_mem = MaybeUntagAndCheckPointer(old_mem);
   if (__predict_false(dispatch_table != nullptr)) {
@@ -242,6 +284,7 @@ void CallbackWrapper(uintptr_t base, size_t size, void* arg) {
 // supports tagged pointers.
 extern "C" int malloc_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  // TODO(b/144593909): Enable malloc_iterate for GWP-ASan.
   auto dispatch_table = GetDispatchTable();
   // Wrap the malloc_iterate callback we were provided, in order to provide
   // pointer tagging support.
@@ -261,6 +304,7 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
 // Disable calls to malloc so malloc_iterate gets a consistent view of
 // allocated memory.
 extern "C" void malloc_disable() {
+  // TODO(b/144593909): Enable malloc_disable for GWP-ASan.
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_disable();
@@ -270,6 +314,7 @@ extern "C" void malloc_disable() {
 
 // Re-enable calls to malloc after a previous call to malloc_disable.
 extern "C" void malloc_enable() {
+  // TODO(b/144593909): Enable malloc_enable for GWP-ASan.
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_enable();
