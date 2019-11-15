@@ -63,12 +63,19 @@
                                          // destructor associated with this
                                          // soinfo is executed and this flag is
                                          // unset.
+#define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 5
 
+// TODO: Move this function somehow. It's defined in linker.cpp, but resolve_symbol_address is
+// inlined and needs to call it.
+ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
+
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
+
+class SymbolLookupList;
 
 class SymbolName {
  public:
@@ -142,9 +149,11 @@ struct soinfo {
  private:
   uint32_t flags_;
 
+ public:
   const char* strtab_;
   ElfW(Sym)* symtab_;
 
+ private:
   size_t nbucket_;
   size_t nchain_;
   uint32_t* bucket_;
@@ -156,6 +165,7 @@ struct soinfo {
   ElfW(Addr)** plt_got_;
 #endif
 
+ public:
 #if defined(USE_RELA)
   ElfW(Rela)* plt_rela_;
   size_t plt_rela_count_;
@@ -170,6 +180,7 @@ struct soinfo {
   size_t rel_count_;
 #endif
 
+ private:
   linker_ctor_function_t* preinit_array_;
   size_t preinit_array_count_;
 
@@ -222,7 +233,7 @@ struct soinfo {
   void call_destructors();
   void call_pre_init_constructors();
   bool prelink_image();
-  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+  bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
@@ -242,12 +253,17 @@ struct soinfo {
 
   soinfo_list_t& get_parents();
 
-  bool find_symbol_by_name(SymbolName& symbol_name,
-                           const version_info* vi,
-                           const ElfW(Sym)** symbol) const;
+  const ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name, const version_info* vi) const;
 
   ElfW(Sym)* find_symbol_by_address(const void* addr);
-  ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const;
+
+  ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const {
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+      return call_ifunc_resolver(s->st_value + load_bias);
+    }
+
+    return static_cast<ElfW(Addr)>(s->st_value + load_bias);
+  }
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
@@ -259,6 +275,10 @@ struct soinfo {
 #else
     return true;
 #endif
+  }
+
+  const ElfW(Versym)* get_versym_table() const {
+    return has_min_version(2) ? versym_ : nullptr;
   }
 
   bool is_linked() const;
@@ -309,17 +329,21 @@ struct soinfo {
   bool is_image_linked() const;
   void set_image_linked();
 
-  bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
+  uint32_t elf_lookup(SymbolName& symbol_name, const version_info* vi) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
-  bool gnu_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
+  uint32_t gnu_lookup(SymbolName& symbol_name, const version_info* vi) const;
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
 
+ public:
   bool lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
                            const char* sym_name, const version_info** vi);
 
+ private:
   template<typename ElfRelIteratorT>
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                 const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+
+public:
   bool relocate_relr();
   void apply_relr_reloc(ElfW(Addr) offset);
 
@@ -340,10 +364,13 @@ struct soinfo {
   off64_t file_offset_;
   uint32_t rtld_flags_;
   uint32_t dt_flags_1_;
+
+ public:
   size_t strtab_size_;
 
   // version >= 2
 
+ public:
   size_t gnu_nbucket_;
   uint32_t* gnu_bucket_;
   uint32_t* gnu_chain_;
@@ -351,11 +378,14 @@ struct soinfo {
   uint32_t gnu_shift2_;
   ElfW(Addr)* gnu_bloom_filter_;
 
+ private:
   soinfo* local_group_root_;
 
+ public:
   uint8_t* android_relocs_;
   size_t android_relocs_size_;
 
+ private:
   const char* soname_;
   std::string realpath_;
 
@@ -378,11 +408,14 @@ struct soinfo {
   friend soinfo* get_libdl_info(const soinfo& linker_si);
 
   // version >= 4
+ public:
   ElfW(Relr)* relr_;
   size_t relr_count_;
 
   // version >= 5
+ private:
   std::unique_ptr<soinfo_tls> tls_;
+ public:
   std::vector<TlsDynamicResolverArg> tlsdesc_args_;
 };
 
