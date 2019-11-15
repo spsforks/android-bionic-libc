@@ -64,6 +64,7 @@
 
 #include <sys/system_properties.h>
 
+#include "gwp_asan/wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
@@ -383,6 +384,15 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
   return true;
 }
 
+static void InitGwpAsan() {
+  gwp_asan::GuardedPoolAllocator *GuardedPool = GetGuardedAllocator();
+  gwp_asan::options::Options Opts;
+  Opts.setDefaults();
+  Opts.Printf = gwp_asan_wrappers::PrintfWrapper;
+  Opts.Enabled = false;
+  GuardedPool->init(Opts);
+}
+
 // Initializes memory allocation framework once per process.
 static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
@@ -395,6 +405,11 @@ static void MallocInitImpl(libc_globals* globals) {
     hook_installed = InstallHooks(globals, options, kDebugPrefix, kDebugSharedLib);
   } else if (CheckLoadMallocHooks(&options)) {
     hook_installed = InstallHooks(globals, options, kHooksPrefix, kHooksSharedLib);
+  } else {
+    // Enable GWP-ASan only if a debug allocator hasn't been installed. We don't
+    // want to sample allocations if the debug allocator is tracking them.
+    // GWP-ASan is designed to be off-by-default if left uninitialised.
+    InitGwpAsan();
   }
 
   if (!hook_installed) {

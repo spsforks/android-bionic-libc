@@ -85,6 +85,9 @@ cc_library {
     },
     allow_undefined_symbols: true,
     include_dirs: ["bionic/libc"],
+    header_libs: [
+        "gwp_asan_headers",
+    ],
 
     sanitize: {
         never: true,
