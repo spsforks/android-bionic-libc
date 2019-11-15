@@ -36,15 +36,12 @@
 
 #include <async_safe/log.h>
 
+#include "linker.h"
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "linker_logger.h"
+#include "linker_relocate.h"
 #include "linker_utils.h"
-
-// TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
-bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym);
-ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
-int get_application_target_sdk_version();
 
 soinfo::soinfo(android_namespace_t* ns, const char* realpath,
                const struct stat* file_stat, off64_t file_offset,
@@ -99,11 +96,8 @@ void soinfo::set_dt_runpath(const char* path) {
 }
 
 const ElfW(Versym)* soinfo::get_versym(size_t n) const {
-  if (has_min_version(2) && versym_ != nullptr) {
-    return versym_ + n;
-  }
-
-  return nullptr;
+  auto table = get_versym_table();
+  return table ? table + n : nullptr;
 }
 
 ElfW(Addr) soinfo::get_verneed_ptr() const {
@@ -138,35 +132,14 @@ size_t soinfo::get_verdef_cnt() const {
   return 0;
 }
 
-bool soinfo::find_symbol_by_name(SymbolName& symbol_name,
-                                 const version_info* vi,
-                                 const ElfW(Sym)** symbol) const {
-  uint32_t symbol_index;
-  bool success =
-      is_gnu_hash() ?
-      gnu_lookup(symbol_name, vi, &symbol_index) :
-      elf_lookup(symbol_name, vi, &symbol_index);
+const ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name,
+                                             const version_info* vi) const {
+  const uint32_t symbol_index = is_gnu_hash() ?
+    gnu_lookup(symbol_name, vi) :
+    elf_lookup(symbol_name, vi);
 
-  if (success) {
-    *symbol = symbol_index == 0 ? nullptr : symtab_ + symbol_index;
-  }
-
-  return success;
+  return symbol_index == 0 ? nullptr : symtab_ + symbol_index;
 }
-
-static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
-  if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
-      ELF_ST_BIND(s->st_info) == STB_WEAK) {
-    return s->st_shndx != SHN_UNDEF;
-  } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("Warning: unexpected ST_BIND value: %d for \"%s\" in \"%s\" (ignoring)",
-            ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
-  }
-
-  return false;
-}
-
-static const ElfW(Versym) kVersymHiddenBit = 0x8000;
 
 static inline bool is_versym_hidden(const ElfW(Versym)* versym) {
   // the symbol is hidden if bit 15 of versym is set.
@@ -180,17 +153,13 @@ static inline bool check_symbol_version(const ElfW(Versym) verneed,
       verneed == (*verdef & ~kVersymHiddenBit);
 }
 
-bool soinfo::gnu_lookup(SymbolName& symbol_name,
-                        const version_info* vi,
-                        uint32_t* symbol_index) const {
+uint32_t soinfo::gnu_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.gnu_hash();
   uint32_t h2 = hash >> gnu_shift2_;
 
   uint32_t bloom_mask_bits = sizeof(ElfW(Addr))*8;
   uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
   ElfW(Addr) bloom_word = gnu_bloom_filter_[word_num];
-
-  *symbol_index = 0;
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p (gnu)",
       symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
@@ -200,7 +169,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-    return true;
+    return 0;
   }
 
   // bloom test says "probably yes"...
@@ -210,7 +179,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-    return true;
+    return 0;
   }
 
   // lookup versym for the version definition in this library
@@ -219,10 +188,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
   // which implies that the default version can be accepted; the second case results in
   // verneed = 1 (kVersymGlobal) and implies that we should ignore versioned symbols
   // for this library and consider only *global* ones.
-  ElfW(Versym) verneed = 0;
-  if (!find_verdef_version_index(this, vi, &verneed)) {
-    return false;
-  }
+  ElfW(Versym) verneed = find_verdef_version_index(this, vi);
 
   do {
     ElfW(Sym)* s = symtab_ + n;
@@ -238,30 +204,24 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
           symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(s->st_value),
           static_cast<size_t>(s->st_size));
-      *symbol_index = n;
-      return true;
+      return n;
     }
   } while ((gnu_chain_[n++] & 1) == 0);
 
   TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
              symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-  return true;
+  return 0;
 }
 
-bool soinfo::elf_lookup(SymbolName& symbol_name,
-                        const version_info* vi,
-                        uint32_t* symbol_index) const {
+uint32_t soinfo::elf_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.elf_hash();
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
              symbol_name.get_name(), get_realpath(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  ElfW(Versym) verneed = 0;
-  if (!find_verdef_version_index(this, vi, &verneed)) {
-    return false;
-  }
+  ElfW(Versym) verneed = find_verdef_version_index(this, vi);
 
   for (uint32_t n = bucket_[hash % nbucket_]; n != 0; n = chain_[n]) {
     ElfW(Sym)* s = symtab_ + n;
@@ -269,7 +229,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
 
     // skip hidden versions when verneed == 0
     if (verneed == kVersymNotNeeded && is_versym_hidden(verdef)) {
-        continue;
+      continue;
     }
 
     if (check_symbol_version(verneed, verdef) &&
@@ -279,8 +239,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
                  symbol_name.get_name(), get_realpath(),
                  reinterpret_cast<void*>(s->st_value),
                  static_cast<size_t>(s->st_size));
-      *symbol_index = n;
-      return true;
+      return n;
     }
   }
 
@@ -288,8 +247,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
              symbol_name.get_name(), get_realpath(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  *symbol_index = 0;
-  return true;
+  return 0;
 }
 
 ElfW(Sym)* soinfo::find_symbol_by_address(const void* addr) {
@@ -651,14 +609,6 @@ android_namespace_list_t& soinfo::get_secondary_namespaces() {
   return secondary_namespaces_;
 }
 
-ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
-  if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
-    return call_ifunc_resolver(s->st_value + load_bias);
-  }
-
-  return static_cast<ElfW(Addr)>(s->st_value + load_bias);
-}
-
 const char* soinfo::get_string(ElfW(Word) index) const {
   if (has_min_version(1) && (index >= strtab_size_)) {
     async_safe_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
@@ -817,13 +767,7 @@ uint32_t SymbolName::elf_hash() {
 
 uint32_t SymbolName::gnu_hash() {
   if (!has_gnu_hash_) {
-    uint32_t h = 5381;
-    const uint8_t* name = reinterpret_cast<const uint8_t*>(name_);
-    while (*name != 0) {
-      h += (h << 5) + *name++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
-    }
-
-    gnu_hash_ =  h;
+    gnu_hash_ = calculate_gnu_hash(name_).first;
     has_gnu_hash_ = true;
   }
 

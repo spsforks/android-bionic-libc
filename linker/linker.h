@@ -85,10 +85,6 @@ class VersionTracker {
   DISALLOW_COPY_AND_ASSIGN(VersionTracker);
 };
 
-bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo_list_t& global_group,
-                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol);
-
 enum RelocationKind {
   kRelocAbsolute = 0,
   kRelocRelative,
@@ -204,3 +200,8 @@ struct address_space_params {
   size_t reserved_size = 0;
   bool must_use_address = false;
 };
+
+// TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
+int get_application_target_sdk_version();
+ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi);
+bool validate_verdef_section(const soinfo* si);
