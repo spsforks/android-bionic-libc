@@ -35,6 +35,8 @@
 #include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
 
+#include "gwp_asan/guarded_pool_allocator.h"
+
 #if __has_feature(hwaddress_sanitizer)
 
 #include <sanitizer/hwasan_interface.h>
@@ -70,6 +72,8 @@ __END_DECLS
 #endif
 
 extern bool gZygoteChild;
+
+gwp_asan::GuardedPoolAllocator *GetGuardedAllocator();
 
 static inline const MallocDispatch* GetDispatchTable() {
   return atomic_load_explicit(&__libc_globals->current_dispatch_table, memory_order_acquire);
