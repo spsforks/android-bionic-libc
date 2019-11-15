@@ -41,6 +41,12 @@
 #include "private/bionic_vdso.h"
 #include "private/WriteProtected.h"
 
+// Forward declare the GuardedPoolAllocator, allow us to not have to put the
+// GWP-ASan headers everywhere.
+namespace gwp_asan {
+class GuardedPoolAllocator;
+} // namespace gwp_asan
+
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
@@ -60,6 +66,8 @@ struct libc_globals {
   // limit is enabled and some other hook is enabled at the same time.
   _Atomic(const MallocDispatch*) default_dispatch_table;
   MallocDispatch malloc_dispatch_table;
+
+  gwp_asan::GuardedPoolAllocator *GuardedPoolAllocator;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;

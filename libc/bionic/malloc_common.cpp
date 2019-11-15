@@ -41,6 +41,7 @@
 #include <private/bionic_config.h>
 #include <platform/bionic/malloc.h>
 
+#include "gwp_asan/guarded_pool_allocator.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_limit.h"
@@ -55,12 +56,41 @@ void* (*volatile __malloc_hook)(size_t, const void*);
 void* (*volatile __realloc_hook)(void*, size_t, const void*);
 void (*volatile __free_hook)(void*, const void*);
 void* (*volatile __memalign_hook)(size_t, size_t, const void*);
+
 // =============================================================================
+// GWP-Asan allocator. Instantiated here to avoid indirect call overhead, and
+// that the hot path is inlined properly.
+// =============================================================================
+static gwp_asan::GuardedPoolAllocator GuardedAlloc;
+
+static void GwpAsanPrintfWrapper(const char *Format, ...) {
+  va_list List;
+  va_start(List, Format);
+  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "GWP-ASan", Format, List);
+  va_end(List);
+}
+
+void InitGwpAsan() {
+  gwp_asan::options::Options Opts;
+  Opts.setDefaults();
+  Opts.Printf = GwpAsanPrintfWrapper;
+  Opts.Enabled = false;
+  GuardedAlloc.init(Opts);
+}
 
 // =============================================================================
 // Allocation functions
 // =============================================================================
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
+  if (__predict_false(GuardedAlloc.shouldSample())) {
+    size_t bytes;
+    if (!__builtin_mul_overflow(n_elements, elem_size, &bytes)) {
+      if (void *result = GuardedAlloc.allocate(bytes)) {
+        return MaybeTagPointer(result);
+      }
+    }
+  }
+
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return MaybeTagPointer(dispatch_table->calloc(n_elements, elem_size));
@@ -73,8 +103,13 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
 }
 
 extern "C" void free(void* mem) {
-  auto dispatch_table = GetDispatchTable();
   mem = MaybeUntagAndCheckPointer(mem);
+  if (__predict_false(GuardedAlloc.pointerIsMine(mem))) {
+    GuardedAlloc.deallocate(mem);
+    return;
+  }
+
+  auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     dispatch_table->free(mem);
   } else {
@@ -107,6 +142,12 @@ extern "C" int mallopt(int param, int value) {
 }
 
 extern "C" void* malloc(size_t bytes) {
+  if (__predict_false(GuardedAlloc.shouldSample())) {
+    if (void *result = GuardedAlloc.allocate(bytes)) {
+      return MaybeTagPointer(result);
+    }
+  }
+
   auto dispatch_table = GetDispatchTable();
   void *result;
   if (__predict_false(dispatch_table != nullptr)) {
@@ -122,8 +163,12 @@ extern "C" void* malloc(size_t bytes) {
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
-  auto dispatch_table = GetDispatchTable();
   mem = MaybeUntagAndCheckPointer(mem);
+  if (__predict_false(GuardedAlloc.pointerIsMine(mem))) {
+    return GuardedAlloc.getSize(mem);
+  }
+
+  auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_usable_size(mem);
   }
@@ -169,8 +214,17 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
 }
 
 extern "C" __attribute__((__noinline__)) void* realloc(void* old_mem, size_t bytes) {
-  auto dispatch_table = GetDispatchTable();
   old_mem = MaybeUntagAndCheckPointer(old_mem);
+  if (__predict_false(GuardedAlloc.pointerIsMine(old_mem))) {
+    size_t old_size = GuardedAlloc.getSize(old_mem);
+    void *new_ptr = malloc(bytes);
+    if (new_ptr)
+      memcpy(new_ptr, old_mem, (bytes < old_size) ? bytes : old_size);
+    GuardedAlloc.deallocate(old_mem);
+    return new_ptr;
+  }
+
+  auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return MaybeTagPointer(dispatch_table->realloc(old_mem, bytes));
   }
@@ -250,6 +304,15 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
   wrapper_arg.arg = arg;
   uintptr_t untagged_base =
       reinterpret_cast<uintptr_t>(UntagPointer(reinterpret_cast<void*>(base)));
+
+  if (__predict_false(
+      GuardedAlloc.pointerIsMine(reinterpret_cast<void*>(untagged_base)))) {
+    // TODO(mitchp): GPA::iterate() returns void, but should return int.
+    // TODO(mitchp): GPA::iterate() should take uintptr_t, not void*.
+    GuardedAlloc.iterate(reinterpret_cast<void*>(untagged_base), size,
+                         CallbackWrapper, &wrapper_arg);
+    return 0;
+  }
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_iterate(
       untagged_base, size, CallbackWrapper, &wrapper_arg);
@@ -261,6 +324,7 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
 // Disable calls to malloc so malloc_iterate gets a consistent view of
 // allocated memory.
 extern "C" void malloc_disable() {
+  // TODO(b/144593909): Enable malloc_disable for GWP-ASan.
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_disable();
@@ -270,6 +334,7 @@ extern "C" void malloc_disable() {
 
 // Re-enable calls to malloc after a previous call to malloc_disable.
 extern "C" void malloc_enable() {
+  // TODO(b/144593909): Enable malloc_enable for GWP-ASan.
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc_enable();
