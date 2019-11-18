@@ -1654,6 +1654,9 @@ cc_library {
             "libc_common_static",
             "libc_unwind_static",
         ],
+        apex_available: [
+            "com.android.art.testing",
+        ],
     },
     shared: {
         srcs: [ ":libc_sources_shared" ],

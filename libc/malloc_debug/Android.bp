@@ -43,6 +43,8 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
+        "com.android.media",
+        "test_com.android.media",
     ],
 }
 
