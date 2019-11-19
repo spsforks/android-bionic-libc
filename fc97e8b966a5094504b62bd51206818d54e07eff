@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ffe7595e_57326609",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:43:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "669e3d0d_a368f06d",
+      "range": {
+        "startLine": 42,
+        "startChar": 43,
+        "endLine": 42,
+        "endChar": 55
+      },
+      "revId": "fc97e8b966a5094504b62bd51206818d54e07eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "909914af_3a5260d9",
         "filename": "libc/bionic/scudo_wrapper.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "fc97e8b966a5094504b62bd51206818d54e07eff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c5c573b_0bfc4398",
+        "filename": "libc/bionic/scudo_wrapper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:43:25Z",
+      "side": 1,
+      "message": "Just rebased - this was merged in aosp/1167511 so is no longer part of the patchset.\n\nThe red coats are coming! ;)",
+      "parentUuid": "909914af_3a5260d9",
+      "range": {
+        "startLine": 38,
+        "startChar": 24,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "fc97e8b966a5094504b62bd51206818d54e07eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
