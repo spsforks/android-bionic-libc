@@ -37,6 +37,47 @@
     },
     {
       "key": {
+        "uuid": "41eceab7_bf038a7f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Yep, works with a sync. Thanks.",
+      "parentUuid": "f9b642f2_4367fcde",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64770320_cef44d9a",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "From pcc@ - we should issue the prctl to enable TBI first. Requires some modifications to bionic.",
+      "range": {
+        "startLine": 62,
+        "startChar": 12,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1ca83452_e3ac6749",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -84,6 +125,30 @@
     },
     {
       "key": {
+        "uuid": "e5140304_3614184c",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done regarding adding the comment, added an open comment above to track prctl.",
+      "parentUuid": "2fe759a8_cd4af63e",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 8
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29a0836d_112a836f",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
@@ -107,6 +172,30 @@
     },
     {
       "key": {
+        "uuid": "ea63f8dc_e3e1d43f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29a0836d_112a836f",
+      "range": {
+        "startLine": 141,
+        "startChar": 6,
+        "endLine": 141,
+        "endChar": 8
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9885d88_490f7fa8",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
@@ -121,6 +210,24 @@
       "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aed34ce2_96745620",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9885d88_490f7fa8",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -141,6 +248,24 @@
     },
     {
       "key": {
+        "uuid": "59826042_dd8302c0",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "310a4304_e6a532be",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f4b2a87_a0afcd60",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 1
@@ -155,6 +280,24 @@
       "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "952ee0a2_b4311a54",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Is also used in libc_init_common.cpp - need to be able to forcibly tag a pointer to check in PlatformSupportsTaggedPointers",
+      "parentUuid": "6f4b2a87_a0afcd60",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -181,6 +324,30 @@
     },
     {
       "key": {
+        "uuid": "b3271229_e3f8c23f",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Ack - will follow up on this.",
+      "parentUuid": "db1d15f8_ab043541",
+      "range": {
+        "startLine": 95,
+        "startChar": 41,
+        "endLine": 95,
+        "endChar": 73
+      },
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9b17e088_3b01181a",
         "filename": "tests/tagged_pointers_test.cpp",
         "patchSetId": 1
@@ -195,6 +362,24 @@
       "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49f3d124_1dd85a94",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b17e088_3b01181a",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -230,6 +415,24 @@
       "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfe2f220_23ff5ec8",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-19T23:33:11Z",
+      "side": 1,
+      "message": "Done (also updated header)",
+      "parentUuid": "5ec3882d_a29eba92",
+      "revId": "7e8d09483e87e612427df6c3350bee83aa32841f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
