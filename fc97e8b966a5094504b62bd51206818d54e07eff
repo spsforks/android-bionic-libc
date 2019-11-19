@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "669e3d0d_a368f06d",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-19T23:40:46Z",
+      "side": 1,
+      "message": "identifiable",
+      "range": {
+        "startLine": 42,
+        "startChar": 43,
+        "endLine": 42,
+        "endChar": 55
+      },
+      "revId": "fc97e8b966a5094504b62bd51206818d54e07eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "909914af_3a5260d9",
+        "filename": "libc/bionic/scudo_wrapper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-19T23:40:46Z",
+      "side": 1,
+      "message": "initializers",
+      "range": {
+        "startLine": 38,
+        "startChar": 24,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "fc97e8b966a5094504b62bd51206818d54e07eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
