@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd3e42f4_de9c18b2",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-20T01:17:44Z",
+      "side": 1,
+      "message": "Nit: line length (although some comments in this file already break this limit)",
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79aaa472_428908f0",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-20T01:17:44Z",
+      "side": 1,
+      "message": "Alignment with below?",
+      "range": {
+        "startLine": 110,
+        "startChar": 31,
+        "endLine": 110,
+        "endChar": 39
+      },
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b70029e_c1286289",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-11-20T01:17:44Z",
+      "side": 1,
+      "message": "Why not just `(1UL)`?",
+      "range": {
+        "startLine": 111,
+        "startChar": 31,
+        "endLine": 111,
+        "endChar": 41
+      },
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
