@@ -204,7 +204,7 @@ long fpathconf(int __fd, int __name);
 long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
-int faccessat(int __dirfd, const char* __path, int __mode, int __flags);
+int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
 int link(const char* __old_path, const char* __new_path);
 int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
 int unlink(const char* __path);

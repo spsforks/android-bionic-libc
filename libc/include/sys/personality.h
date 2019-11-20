@@ -44,6 +44,6 @@ __BEGIN_DECLS
  *
  * Returns the previous persona on success, and returns -1 and sets `errno` on failure.
  */
-int personality(unsigned int __persona);
+int personality(unsigned int __persona) __INTRODUCED_IN_32(15);
 
 __END_DECLS

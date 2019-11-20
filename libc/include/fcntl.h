@@ -214,7 +214,7 @@ int posix_fallocate64(int __fd, off64_t __offset, off64_t __length) __INTRODUCED
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-ssize_t readahead(int __fd, off64_t __offset, size_t __length);
+ssize_t readahead(int __fd, off64_t __offset, size_t __length) __INTRODUCED_IN(16);
 
 /**
  * [sync_file_range(2)](http://man7.org/linux/man-pages/man2/sync_file_range.2.html)

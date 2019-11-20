@@ -182,13 +182,13 @@ void* lsearch(const void* __key, void* __array, size_t* __count, size_t __size, 
  *
  * Returns a pointer to the parent of the deleted node, or NULL on failure.
  */
-void* tdelete(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*));
+void* tdelete(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN_32(16);
 
 /**
  * [tdestroy(3)](http://man7.org/linux/man-pages/man3/tdestroy.3.html) destroys
  * the hash table `__root` using `__free_fn` on each node.
  */
-void tdestroy(void* __root, void (*__free_fn)(void*));
+void tdestroy(void* __root, void (*__free_fn)(void*)) __INTRODUCED_IN_32(16);
 
 /**
  * [tfind(3)](http://man7.org/linux/man-pages/man3/tfind.3.html) searches
@@ -197,7 +197,7 @@ void tdestroy(void* __root, void (*__free_fn)(void*));
  *
  * Returns a pointer to the matching node, or NULL on failure.
  */
-void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(const void*, const void*));
+void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN_32(16);
 
 /**
  * [tsearch(3)](http://man7.org/linux/man-pages/man3/tsearch.3.html) searches
@@ -208,12 +208,12 @@ void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(cons
  *
  * Returns a pointer to the matching node, or to the newly-added node.
  */
-void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*));
+void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN_32(16);
 
 /**
  * [twalk(3)](http://man7.org/linux/man-pages/man3/twalk.3.html) calls
  * `__visitor` on every node in the tree.
  */
-void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int));
+void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int)) __INTRODUCED_IN(21);
 
 __END_DECLS
