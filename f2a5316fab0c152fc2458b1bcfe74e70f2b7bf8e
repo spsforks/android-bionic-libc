@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "11a0c87e_78015c21",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-20T01:26:28Z",
+      "side": 1,
+      "message": "yeah, we\u0027re 100 columns.",
+      "parentUuid": "fd3e42f4_de9c18b2",
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "79aaa472_428908f0",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -53,6 +71,30 @@
       "writtenOn": "2019-11-20T01:17:44Z",
       "side": 1,
       "message": "Why not just `(1UL)`?",
+      "range": {
+        "startLine": 111,
+        "startChar": 31,
+        "endLine": 111,
+        "endChar": 41
+      },
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b29f041a_696ea7e2",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-20T01:26:28Z",
+      "side": 1,
+      "message": "if these are copied exactly from what\u0027s going in the kernel, that\u0027s a good idea... the preprocessor gets upset if they don\u0027t match exactly.",
+      "parentUuid": "9b70029e_c1286289",
       "range": {
         "startLine": 111,
         "startChar": 31,
