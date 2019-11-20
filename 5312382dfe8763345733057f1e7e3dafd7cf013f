@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23360cf7_c314b441",
+        "filename": "tests/utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2019-11-20T16:57:56Z",
+      "side": 1,
+      "message": "probably move this up or down to keep hwasan stuff together?",
+      "revId": "5312382dfe8763345733057f1e7e3dafd7cf013f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
