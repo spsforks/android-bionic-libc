@@ -290,7 +290,7 @@ static bool checkSymbol(const Symbol& symbol) {
   std::unordered_map<const Declaration*, std::set<CompilationType>> inline_definitions;
   for (const auto& decl_it : symbol.declarations) {
     const Declaration* decl = &decl_it.second;
-    if (decl->is_definition) {
+    if (decl->is_definition && !decl->no_guard) {
       std::set<CompilationType> compilation_types = getCompilationTypes(decl);
       for (const auto& inline_def_it : inline_definitions) {
         auto intersection = Intersection(compilation_types, inline_def_it.second);
