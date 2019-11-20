@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "9c2b890d_646d9835",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-11-20T01:28:27Z",
+      "side": 1,
+      "message": "It was right aligned, now it\u0027s left aligned.",
+      "parentUuid": "79aaa472_428908f0",
+      "range": {
+        "startLine": 110,
+        "startChar": 31,
+        "endLine": 110,
+        "endChar": 39
+      },
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9b70029e_c1286289",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -95,6 +119,30 @@
       "side": 1,
       "message": "if these are copied exactly from what\u0027s going in the kernel, that\u0027s a good idea... the preprocessor gets upset if they don\u0027t match exactly.",
       "parentUuid": "9b70029e_c1286289",
+      "range": {
+        "startLine": 111,
+        "startChar": 31,
+        "endLine": 111,
+        "endChar": 41
+      },
+      "revId": "f2a5316fab0c152fc2458b1bcfe74e70f2b7bf8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c47f2e2_2da74cc9",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-11-20T01:28:27Z",
+      "side": 1,
+      "message": "Yes, it matches the kernel.\n\nhttps://github.com/torvalds/linux/blob/master/include/uapi/linux/prctl.h#L235",
+      "parentUuid": "b29f041a_696ea7e2",
       "range": {
         "startLine": 111,
         "startChar": 31,
