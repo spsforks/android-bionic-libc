@@ -1,0 +1,11 @@
+Verified+1: Dmytro Chystiakov <dmytro.chystiakov@intel.com>
+Autosubmit+1: Dmytro Chystiakov <dmytro.chystiakov@intel.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Ross Yeh <rossyeh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+DrNo-Review+1: Ross Yeh <rossyeh@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Wed, 20 Nov 2019 02:05:07 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1162724
+Project: platform/bionic
+Branch: refs/heads/pie-cts-dev
