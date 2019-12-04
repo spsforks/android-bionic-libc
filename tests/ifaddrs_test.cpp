@@ -294,7 +294,7 @@ TEST(ifaddrs, errno_EMFILE) {
   while (true) {
     int fd = open("/dev/null", O_RDONLY|O_CLOEXEC);
     if (fd == -1) {
-      ASSERT_EQ(EMFILE, errno);
+      ASSERT_TRUE((errno == EMFILE) || (errno == ENFILE));
       break;
     }
     fds.push_back(fd);
