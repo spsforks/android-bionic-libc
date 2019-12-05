@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4ca8376_f1e9fc0b",
+        "filename": "docs/native_allocator.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-05T23:36:07Z",
+      "side": 1,
+      "message": "looks a bit weird in gittiles because you used `` on all the others.",
+      "range": {
+        "startLine": 282,
+        "startChar": 42,
+        "endLine": 282,
+        "endChar": 62
+      },
+      "revId": "d50e471b076b172807fb443caa9efcf51c923e2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
