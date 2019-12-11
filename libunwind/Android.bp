@@ -1,0 +1,30 @@
+cc_library_shared {
+    name: "libunwind",
+    vendor_available: true,
+    recovery_available: true,
+    native_bridge_supported: true,
+    stl: "none",
+    vndk: {
+        enabled: true,
+        support_system_process: true,
+    },
+
+    arch: {
+        arm: {
+            whole_static_libs: [ "libunwind_llvm" ],
+            version_script: "libunwind.arm.map",
+        },
+        arm64: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: "libunwind.ehframe.map",
+        },
+        x86: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: "libunwind.ehframe.map",
+        },
+        x86_64: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: "libunwind.ehframe.map",
+        },
+    },
+}

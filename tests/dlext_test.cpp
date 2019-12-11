@@ -713,7 +713,7 @@ std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
 static const char* g_public_lib = "libnstest_public.so";
 
 // These are libs shared with default namespace
-static const std::string g_core_shared_libs = "libc.so:libc++.so:libdl.so:libm.so";
+static const std::string g_core_shared_libs = "libc.so:libc++.so:libdl.so:libm.so:libunwind.so";
 
 TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
