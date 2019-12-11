@@ -262,7 +262,7 @@ static void create_ld_config_file(const char* config_file) {
        << "additional.namespaces = ns2" << std::endl
        << "namespace.default.search.paths = " << GetTestlibRoot() << std::endl
        << "namespace.default.links = ns2" << std::endl
-       << "namespace.default.link.ns2.shared_libs = libc.so:libm.so:libdl.so:ld_config_test_helper_lib1.so" << std::endl
+       << "namespace.default.link.ns2.shared_libs = libc.so:libm.so:libdl.so:libunwind.so:ld_config_test_helper_lib1.so" << std::endl
        << "namespace.ns2.search.paths = " << default_search_paths << ":" << GetTestlibRoot() << "/ns2" << std::endl;
   fout.close();
 }

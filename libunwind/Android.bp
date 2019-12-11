@@ -1,0 +1,68 @@
+genrule {
+    name: "libunwind.arm.map",
+    out: ["libunwind.arm.map"],
+    srcs: ["libunwind.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libunwind.arm64.map",
+    out: ["libunwind.arm64.map"],
+    srcs: ["libunwind.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libunwind.x86.map",
+    out: ["libunwind.x86.map"],
+    srcs: ["libunwind.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libunwind.x86_64.map",
+    out: ["libunwind.x86_64.map"],
+    srcs: ["libunwind.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+}
+
+cc_library_shared {
+    name: "libunwind",
+    recovery_available: true,
+    native_bridge_supported: true,
+    stl: "none",
+
+    arch: {
+        arm: {
+            whole_static_libs: [ "libunwind_llvm" ],
+            version_script: ":libunwind.arm.map",
+        },
+        arm64: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: ":libunwind.arm64.map",
+        },
+        x86: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: ":libunwind.x86.map",
+        },
+        x86_64: {
+            whole_static_libs: [ "libgcc_stripped" ],
+            version_script: ":libunwind.x86_64.map",
+        },
+    },
+
+    stubs: {
+        symbol_file: "libunwind.map.txt",
+        versions: ["10000"],
+    },
+}
+
+llndk_library {
+   name: "libunwind",
+   native_bridge_supported: true,
+   symbol_file: "libunwind.map.txt",
+}
