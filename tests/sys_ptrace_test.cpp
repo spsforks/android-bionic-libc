@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include <gtest/gtest.h>
@@ -62,13 +63,16 @@ class ChildGuard {
 
 enum class HwFeature { Watchpoint, Breakpoint };
 
-static void check_hw_feature_supported(pid_t child, HwFeature feature) {
+static bool check_hw_feature_supported(pid_t child,
+                                       HwFeature feature,
+                                       std::string* failure_reason) {
 #if defined(__arm__)
   long capabilities;
   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
   if (result == -1) {
     EXPECT_EQ(EIO, errno);
-    GTEST_SKIP() << "Hardware debug support disabled at kernel configuration time";
+    *failure_reason = "Hardware debug support disabled at kernel configuration time";
+    return false;
   }
   uint8_t hb_count = capabilities & 0xff;
   capabilities >>= 8;
@@ -76,11 +80,14 @@ static void check_hw_feature_supported(pid_t child, HwFeature feature) {
   capabilities >>= 8;
   uint8_t max_wp_size = capabilities & 0xff;
   if (max_wp_size == 0) {
-    GTEST_SKIP() << "Kernel reports zero maximum watchpoint size";
+    *failure_reason = "Kernel reports zero maximum watchpoint size";
+    return false;
   } else if (feature == HwFeature::Watchpoint && wp_count == 0) {
-    GTEST_SKIP() << "Kernel reports zero hardware watchpoints";
+    *failure_reason = "Kernel reports zero hardware watchpoints";
+    return false;
   } else if (feature == HwFeature::Breakpoint && hb_count == 0) {
-    GTEST_SKIP() << "Kernel reports zero hardware breakpoints";
+    *failure_reason = "Kernel reports zero hardware breakpoints";
+    return false;
   }
 #elif defined(__aarch64__)
   user_hwdebug_state dreg_state;
@@ -93,12 +100,15 @@ static void check_hw_feature_supported(pid_t child, HwFeature feature) {
   if (result == -1) {
     ASSERT_EQ(EINVAL, errno);
   }
-  if ((dreg_state.dbg_info & 0xff) == 0) GTEST_SKIP() << "hardware support missing";
+  if ((dreg_state.dbg_info & 0xff) == 0) {
+    *failure_reason = "hardware support missing";
+    return false;
+  }
 #else
   // We assume watchpoints and breakpoints are always supported on x86.
-  UNUSED(child);
-  UNUSED(feature);
+  UNUSED(child, feature, failure_reason);
 #endif
+  return true;
 }
 
 static void set_watchpoint(pid_t child, uintptr_t address, size_t size) {
@@ -175,7 +185,10 @@ static void run_watchpoint_test(std::function<void(T&)> child_func, size_t offse
   ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
-  check_hw_feature_supported(child, HwFeature::Watchpoint);
+  std::string failure_reason;
+  if (!check_hw_feature_supported(child, HwFeature::Watchpoint, &failure_reason)) {
+    GTEST_SKIP() << failure_reason;
+  }
 
   set_watchpoint(child, uintptr_t(untag_address(&data)) + offset, size);
 
@@ -342,7 +355,10 @@ TEST(sys_ptrace, hardware_breakpoint) {
   ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
-  check_hw_feature_supported(child, HwFeature::Breakpoint);
+  std::string failure_reason;
+  if (!check_hw_feature_supported(child, HwFeature::Breakpoint, &failure_reason)) {
+    GTEST_SKIP() << failure_reason;
+  }
 
   set_breakpoint(child);
 
