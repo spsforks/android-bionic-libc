@@ -30,6 +30,7 @@
 
 #include <ctype.h>
 #include <dirent.h>
+#include <dlfcn.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <pthread.h>
@@ -43,6 +44,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <unwind.h>
 #include <wchar.h>
 
 #include "private/bionic_macros.h"
@@ -386,6 +388,130 @@ int dlmalloc_trim(size_t) {
 int putw(int value, FILE* fp) {
     return fwrite(&value, sizeof(value), 1, fp) == 1 ? 0 : EOF;
 }
+
+#if defined(__arm__)
+
+// These unwinder functions used to be defined in libc.so (and were accidentally exported to NDK
+// apps), but are now defined in libunwind.so.
+
+static void* libunwind_handle() {
+  static void* handle = dlopen("libunwind.so", RTLD_GLOBAL);
+  return handle;
+}
+
+_Unwind_Reason_Code __aeabi_unwind_cpp_pr0(_Unwind_State state, _Unwind_Control_Block* ucbp,
+                                           _Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_State, _Unwind_Control_Block*,
+                                                             _Unwind_Context*)>(
+      dlsym(libunwind_handle(), "__aeabi_unwind_cpp_pr0"));
+  return fn(state, ucbp, context);
+}
+
+_Unwind_Reason_Code __aeabi_unwind_cpp_pr1(_Unwind_State state, _Unwind_Control_Block* ucbp,
+                                           _Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_State, _Unwind_Control_Block*,
+                                                             _Unwind_Context*)>(
+      dlsym(libunwind_handle(), "__aeabi_unwind_cpp_pr1"));
+  return fn(state, ucbp, context);
+}
+
+_Unwind_Reason_Code __aeabi_unwind_cpp_pr2(_Unwind_State state, _Unwind_Control_Block* ucbp,
+                                           _Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_State, _Unwind_Control_Block*,
+                                                             _Unwind_Context*)>(
+      dlsym(libunwind_handle(), "__aeabi_unwind_cpp_pr2"));
+  return fn(state, ucbp, context);
+}
+
+_Unwind_Reason_Code __gnu_unwind_frame(_Unwind_Exception* exception_object,
+                                       _Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_Exception*, _Unwind_Context*)>(
+      dlsym(libunwind_handle(), "__gnu_unwind_frame"));
+  return fn(exception_object, context);
+}
+
+_Unwind_Reason_Code _Unwind_Backtrace(_Unwind_Trace_Fn callback,
+                                       void* ref) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_Trace_Fn, void*)>(
+      dlsym(libunwind_handle(), "_Unwind_Backtrace"));
+  return fn(callback, ref);
+}
+
+void _Unwind_DeleteException(_Unwind_Exception* exception_object) {
+  static auto* fn = reinterpret_cast<void (*)(_Unwind_Exception*)>(
+      dlsym(libunwind_handle(), "_Unwind_DeleteException"));
+  fn(exception_object);
+}
+
+void _Unwind_Complete(_Unwind_Exception* exception_object) {
+  static auto* fn =
+      reinterpret_cast<void (*)(_Unwind_Exception*)>(dlsym(libunwind_handle(), "_Unwind_Complete"));
+  fn(exception_object);
+}
+
+uintptr_t _Unwind_GetDataRelBase(_Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<uintptr_t (*)(_Unwind_Context*)>(
+      dlsym(libunwind_handle(), "_Unwind_GetDataRelBase"));
+  return fn(context);
+}
+
+void* _Unwind_GetLanguageSpecificData(_Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<void* (*)(_Unwind_Context*)>(
+      dlsym(libunwind_handle(), "_Unwind_GetLanguageSpecificData"));
+  return fn(context);
+}
+
+uintptr_t _Unwind_GetRegionStart(_Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<uintptr_t (*)(_Unwind_Context*)>(
+      dlsym(libunwind_handle(), "_Unwind_GetRegionStart"));
+  return fn(context);
+}
+
+uintptr_t _Unwind_GetTextRelBase(_Unwind_Context* context) {
+  static auto* fn = reinterpret_cast<uintptr_t (*)(_Unwind_Context*)>(
+      dlsym(libunwind_handle(), "_Unwind_GetTextRelBase"));
+  return fn(context);
+}
+
+_Unwind_Reason_Code _Unwind_RaiseException(_Unwind_Exception* exception_object) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_Exception*)>(
+      dlsym(libunwind_handle(), "_Unwind_RaiseException"));
+  return fn(exception_object);
+}
+
+void _Unwind_Resume(_Unwind_Exception* exception_object) {
+  static auto* fn =
+      reinterpret_cast<void (*)(_Unwind_Exception*)>(dlsym(libunwind_handle(), "_Unwind_Resume"));
+  fn(exception_object);
+}
+
+_Unwind_Reason_Code _Unwind_Resume_or_Rethrow(_Unwind_Exception* exception_object) {
+  static auto* fn = reinterpret_cast<_Unwind_Reason_Code (*)(_Unwind_Exception*)>(
+      dlsym(libunwind_handle(), "_Unwind_Resume_or_Rethrow"));
+  return fn(exception_object);
+}
+
+_Unwind_VRS_Result
+_Unwind_VRS_Get(_Unwind_Context *context, _Unwind_VRS_RegClass regclass,
+                uint32_t regno, _Unwind_VRS_DataRepresentation representation,
+                void *valuep) {
+  static auto* fn = reinterpret_cast<_Unwind_VRS_Result (*)(
+      _Unwind_Context*, _Unwind_VRS_RegClass, uint32_t, _Unwind_VRS_DataRepresentation, void*)>(
+      dlsym(libunwind_handle(), "_Unwind_VRS_Get"));
+  return fn(context, regclass, regno, representation, valuep);
+}
+
+_Unwind_VRS_Result
+_Unwind_VRS_Set(_Unwind_Context *context, _Unwind_VRS_RegClass regclass,
+                uint32_t regno, _Unwind_VRS_DataRepresentation representation,
+                void *valuep) {
+  static auto* fn = reinterpret_cast<_Unwind_VRS_Result (*)(
+      _Unwind_Context*, _Unwind_VRS_RegClass, uint32_t, _Unwind_VRS_DataRepresentation, void*)>(
+      dlsym(libunwind_handle(), "_Unwind_VRS_Set"));
+  return fn(context, regclass, regno, representation, valuep);
+}
+
+#endif // defined (__arm__)
 
 #endif // !defined (__LP64__)
 
