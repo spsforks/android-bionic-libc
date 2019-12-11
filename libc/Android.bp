@@ -1711,7 +1711,7 @@ cc_library {
                 keep_symbols_and_debug_frame: true,
             },
 
-            whole_static_libs: [ "libgcc_stripped" ],
+            whole_static_libs: [ "libunwind_llvm" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
@@ -1721,6 +1721,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1734,6 +1736,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
@@ -1743,6 +1747,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
     },
 
