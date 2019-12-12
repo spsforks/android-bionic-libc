@@ -1,0 +1,16 @@
+Verified+1: Lev Rumyantsev <levarum@google.com>
+Verified+1: Dmytro Chystiakov <dmytro.chystiakov@intel.com>
+Autosubmit+1: Lev Rumyantsev <levarum@google.com>
+Autosubmit+1: Dmytro Chystiakov <dmytro.chystiakov@intel.com>
+Code-Review+1: Ryan Prichard <rprichard@google.com>
+Code-Review+2: Ross Yeh <rossyeh@google.com>
+Code-Review+1: Evgeny Eltsin <eaeltsin@google.com>
+Code-Review+1: Lev Rumyantsev <levarum@google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+DrNo-Review+1: Ross Yeh <rossyeh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Thu, 12 Dec 2019 03:46:43 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1164119
+Project: platform/bionic
+Branch: refs/heads/android10-tests-dev
