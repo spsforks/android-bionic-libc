@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "919f4cbb_928d1c7b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-12-13T02:07:58Z",
+      "side": 1,
+      "message": "should not these be in the same header as the other constants?",
+      "revId": "ae9c259186fe86cf4a8ccf9768769a16fc414056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05466f4d_6cb72b13",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-12-13T02:07:58Z",
+      "side": 1,
+      "message": "Add a comment that we exclude tag 0, or better, a named constant.",
+      "revId": "ae9c259186fe86cf4a8ccf9768769a16fc414056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
