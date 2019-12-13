@@ -16,19 +16,28 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_WAIT_H
-#define _UAPI_LINUX_WAIT_H
-#define WNOHANG 0x00000001
-#define WUNTRACED 0x00000002
-#define WSTOPPED WUNTRACED
-#define WEXITED 0x00000004
-#define WCONTINUED 0x00000008
-#define WNOWAIT 0x01000000
-#define __WNOTHREAD 0x20000000
-#define __WALL 0x40000000
-#define __WCLONE 0x80000000
-#define P_ALL 0
-#define P_PID 1
-#define P_PGID 2
-#define P_PIDFD 3
+#ifndef _UAPI_LINUX_FSVERITY_H
+#define _UAPI_LINUX_FSVERITY_H
+#include <linux/ioctl.h>
+#include <linux/types.h>
+#define FS_VERITY_HASH_ALG_SHA256 1
+#define FS_VERITY_HASH_ALG_SHA512 2
+struct fsverity_enable_arg {
+  __u32 version;
+  __u32 hash_algorithm;
+  __u32 block_size;
+  __u32 salt_size;
+  __u64 salt_ptr;
+  __u32 sig_size;
+  __u32 __reserved1;
+  __u64 sig_ptr;
+  __u64 __reserved2[11];
+};
+struct fsverity_digest {
+  __u16 digest_algorithm;
+  __u16 digest_size;
+  __u8 digest[];
+};
+#define FS_IOC_ENABLE_VERITY _IOW('f', 133, struct fsverity_enable_arg)
+#define FS_IOC_MEASURE_VERITY _IOWR('f', 134, struct fsverity_digest)
 #endif
