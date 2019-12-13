@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ea958a87_9c88a66f",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-13T02:30:47Z",
+      "side": 1,
+      "message": "These constants have already landed in 5.4 and are part of the stable kernel ABI, so they belong in sys/prctl.h. Now that 5.4 is released we should be able to clean this up, but that ought to be done separately.",
+      "parentUuid": "919f4cbb_928d1c7b",
+      "revId": "ae9c259186fe86cf4a8ccf9768769a16fc414056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "05466f4d_6cb72b13",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "ae9c259186fe86cf4a8ccf9768769a16fc414056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "510666f0_78dd904f",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-13T02:30:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05466f4d_6cb72b13",
+      "revId": "ae9c259186fe86cf4a8ccf9768769a16fc414056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
