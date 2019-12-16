@@ -4088,7 +4088,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     if (file_exists(kLdGeneratedConfigFilePath)) {
       return kLdGeneratedConfigFilePath;
     } else {
-      DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
+      INFO("Warning: failed to find generated linker configuration from \"%s\"",
               kLdGeneratedConfigFilePath);
     }
   }
