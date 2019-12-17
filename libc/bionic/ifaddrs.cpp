@@ -73,7 +73,7 @@ struct ifaddrs_storage {
     if (ifa.ifa_addr == nullptr) {
       // This is an IFA_ADDRESS and haven't seen an IFA_LOCAL yet, so assume this is the
       // local address. SetLocalAddress will fix things if we later see an IFA_LOCAL.
-      ifa.ifa_addr = CopyAddress(family, data, byteCount, &addr);
+      ifa.ifa_addr = AnonymizeOrCopyAddress(family, data, byteCount, &addr);
     } else {
       // We already saw an IFA_LOCAL, which implies this is a destination address.
       ifa.ifa_dstaddr = CopyAddress(family, data, byteCount, &ifa_ifu);
@@ -100,7 +100,7 @@ struct ifaddrs_storage {
       ifa.ifa_dstaddr = reinterpret_cast<sockaddr*>(memcpy(&ifa_ifu, &addr, sizeof(addr)));
     }
     // ...and then put this IFA_LOCAL into ifa_addr.
-    ifa.ifa_addr = CopyAddress(family, data, byteCount, &addr);
+    ifa.ifa_addr = AnonymizeOrCopyAddress(family, data, byteCount, &addr);
   }
 
   // Netlink gives us the prefix length as a bit count. We need to turn
@@ -124,6 +124,24 @@ struct ifaddrs_storage {
   }
 
  private:
+  static constexpr char ANONYMIZED_DEVICE_ADDRESS[6] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
+  static const size_t ANONYMIZED_DEVICE_ADDRESS_BYTE_COUNT = 6;
+  static const int FIRST_APPLICATION_UID = 10000;
+
+  sockaddr* AnonymizeOrCopyAddress(int family, const void* data, size_t byteCount, sockaddr_storage* ss) {
+    if (family != AF_PACKET) {
+      // Do not anonymize non-MAC addresses.
+      return CopyAddress(family, data, byteCount, ss);
+    }
+
+    if (getuid() >= FIRST_APPLICATION_UID) {
+      // For non-system apps, replace MAC addresses with an anonymized MAC.
+      return CopyAddress(family, ANONYMIZED_DEVICE_ADDRESS, ANONYMIZED_DEVICE_ADDRESS_BYTE_COUNT, ss);
+    } else {
+      return CopyAddress(family, data, byteCount, ss);
+    }
+  }
+
   sockaddr* CopyAddress(int family, const void* data, size_t byteCount, sockaddr_storage* ss) {
     // Netlink gives us the address family in the header, and the
     // sockaddr_in or sockaddr_in6 bytes as the payload. We need to
