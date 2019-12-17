@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d83b219_73f09c0c",
+        "filename": "linux_bionic_test/build.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-12-17T02:10:46Z",
+      "side": 1,
+      "message": "I thought this was good enough, but it\u0027s not:\n\n    rprichard@cashew:/x/aosp$ out-linux-bionic/soong/.intermediates/bionic/linux_bionic_test/linux_bionic_test/linux_bionic_x86_64/linux_bionic_test\n    CANNOT LINK EXECUTABLE \"out-linux-bionic/soong/.intermediates/bionic/linux_bionic_test/linux_bionic_test/linux_bionic_x86_64/linux_bionic_test\": library \"libc++.so\" not found: needed by main executable\n    linker: CANNOT LINK EXECUTABLE \"out-linux-bionic/soong/.intermediates/bionic/linux_bionic_test/linux_bionic_test/linux_bionic_x86_64/linux_bionic_test\": library \"libc++.so\" not found: needed by main executable\n\nI also tried using `{\"host_bionic\": true}` in a soong.config file, but I either had missing dependency or duplicate target errors, depending on whether I modified soong.variables or not. Maybe I can experiment with a few more things.",
+      "revId": "25b9f8cac542135da3c45d9fafbbeb9019c3c9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
