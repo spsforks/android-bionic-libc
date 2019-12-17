@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89a2b843_185b3f42",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-17T16:16:59Z",
+      "side": 1,
+      "message": "but if you don\u0027t have a way to _really_ implement this yet, why bother? what\u0027s your path to a proper implementation?",
+      "range": {
+        "startLine": 13,
+        "startChar": 13,
+        "endLine": 15,
+        "endChar": 70
+      },
+      "revId": "a0291e1fb59531534a8b00537e531a3354d8b4fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
