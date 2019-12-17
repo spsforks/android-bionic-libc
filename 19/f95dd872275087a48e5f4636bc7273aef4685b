@@ -1,0 +1,9 @@
+Autosubmit+1: Kiyoung Kim <kiyoungkim@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Nicolas Geoffray <ngeoffray@google.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Tue, 17 Dec 2019 08:31:29 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1190620
+Project: platform/bionic
+Branch: refs/heads/master
