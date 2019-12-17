@@ -174,10 +174,10 @@ TEST(signal, sigwait64_SIGRTMIN) {
   sigemptyset64(&wait_set);
   sigaddset64(&wait_set, SIGRTMIN);
 
-  pid_t pid = getpid();
-  std::thread thread([&pid]() {
+  pid_t tid = gettid();
+  std::thread thread([&tid]() {
     sleep(1);
-    kill(pid, SIGRTMIN);
+    tgkill(getpid(), tid, SIGRTMIN);
   });
 
   int received_signal;
