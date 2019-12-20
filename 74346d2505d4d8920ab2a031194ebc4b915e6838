@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f02ce15d_1a30feac",
+        "filename": "libc/bionic/memtag.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-20T16:23:26Z",
+      "side": 1,
+      "message": "s/memtag/SetMemoryTagLevel/",
+      "range": {
+        "startLine": 49,
+        "startChar": 17,
+        "endLine": 49,
+        "endChar": 23
+      },
+      "revId": "74346d2505d4d8920ab2a031194ebc4b915e6838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57ef36e6_88ef4f76",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-20T16:23:26Z",
+      "side": 1,
+      "message": "std::unique_ptr",
+      "revId": "74346d2505d4d8920ab2a031194ebc4b915e6838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
