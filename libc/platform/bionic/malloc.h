@@ -29,6 +29,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 // Structures for android_mallopt.
 
@@ -84,6 +85,23 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
+  // Change the tag checking state: disable memory tag checks, or switch between asynchronous and
+  // synchronous tag checks. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  M_SET_MEMORY_TAG_LEVEL = 8,
+#define M_SET_MEMORY_TAG_LEVEL M_SET_MEMORY_TAG_LEVEL
+};
+
+enum {
+  // Disable memory tag checks. Tag checks may not be re-enabled after being
+  // disabled.
+  M_MEMORY_TAG_LEVEL_NONE = 0,
+
+  // Enable asynchronous memory tag checks.
+  M_MEMORY_TAG_LEVEL_ASYNC = 1,
+
+  // Enable synchronous memory tag checks.
+  M_MEMORY_TAG_LEVEL_SYNC = 2,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

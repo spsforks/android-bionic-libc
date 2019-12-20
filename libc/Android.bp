@@ -1405,6 +1405,7 @@ cc_library_static {
     srcs: libc_common_src_files + [
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/memtag.cpp",
     ],
     multilib: {
         lib32: {
@@ -1613,6 +1614,7 @@ filegroup {
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/memtag.cpp",
         "bionic/ndk_cruft.cpp",
         "bionic/ndk_cruft_data.cpp",
         "bionic/NetdClient.cpp",
@@ -1625,6 +1627,7 @@ filegroup {
     srcs: [
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/memtag.cpp",
     ],
 }
 
@@ -2572,6 +2575,7 @@ cc_defaults {
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/memtag.cpp",
         "bionic/scudo_wrapper.cpp",
         "bionic/__set_errno.cpp",
     ],
