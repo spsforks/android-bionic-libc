@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f75d08be_b4297c7d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-12-20T22:32:55Z",
+      "side": 1,
+      "message": "Do you want to add something like:\n\n    /* api_level\u003d */\n\nor renamed to some named constants:\n\n    __ANDROID_API_23__\n\nIMO, it becomes less clear after the change.  It takes some extra efforts to figure out this argument is for  API level.",
+      "range": {
+        "startLine": 1237,
+        "startChar": 32,
+        "endLine": 1237,
+        "endChar": 34
+      },
+      "revId": "95c6cd753f028b1afc0c6a800a3dd6bd85a5a6a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
