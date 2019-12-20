@@ -26,29 +26,40 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include "heap_tagging.h"
+#include "malloc_common.h"
 
-// Defines constants used as part of the interface in an experimental MTE branch
-// of the Linux kernel, which may be found at:
-//
-// https://github.com/pcc/linux/tree/android-experimental-mte
-//
-// This interface should not be considered to be stable.
+#include <platform/bionic/malloc.h>
+#include <platform/bionic/mte_kernel.h>
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
+#include <sys/prctl.h>
 
-#define HWCAP2_MTE (1 << 10)
-#define PROT_MTE 0x20
+extern "C" void scudo_malloc_disable_memory_tagging();
 
-#define PR_MTE_TCF_SHIFT 1
-#define PR_MTE_TCF_NONE (0UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_SYNC (1UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_ASYNC (2UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_MASK (3UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_EXCL_SHIFT 3
-#define PR_MTE_EXCL_MASK (0xffffUL << PR_MTE_EXCL_SHIFT)
+static int heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
 
-#define SEGV_MTEAERR 6
-#define SEGV_MTESERR 7
+bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
+  if (arg_size != sizeof(int)) {
+    return false;
+  }
 
-#endif
+  int tag_level = *reinterpret_cast<int*>(arg);
+  switch (tag_level) {
+    case M_HEAP_TAGGING_LEVEL_NONE:
+      scudo_malloc_disable_memory_tagging();
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+        error_log(
+            "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
+        return false;
+      }
+      break;
+    default:
+      error_log("SetHeapTaggingLevel: unknown tagging level");
+      return false;
+  }
+  heap_tagging_level = tag_level;
+  info_log("SetHeapTaggingLevel: tag level set to %d", tag_level);
+  return true;
+}

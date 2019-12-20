@@ -28,27 +28,6 @@
 
 #pragma once
 
-// Defines constants used as part of the interface in an experimental MTE branch
-// of the Linux kernel, which may be found at:
-//
-// https://github.com/pcc/linux/tree/android-experimental-mte
-//
-// This interface should not be considered to be stable.
+#include <stddef.h>
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
-
-#define HWCAP2_MTE (1 << 10)
-#define PROT_MTE 0x20
-
-#define PR_MTE_TCF_SHIFT 1
-#define PR_MTE_TCF_NONE (0UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_SYNC (1UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_ASYNC (2UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_MASK (3UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_EXCL_SHIFT 3
-#define PR_MTE_EXCL_MASK (0xffffUL << PR_MTE_EXCL_SHIFT)
-
-#define SEGV_MTEAERR 6
-#define SEGV_MTESERR 7
-
-#endif
+bool SetHeapTaggingLevel(void* arg, size_t arg_size);
