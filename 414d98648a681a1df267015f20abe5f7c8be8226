@@ -16,6 +16,24 @@
       "revId": "414d98648a681a1df267015f20abe5f7c8be8226",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6f3d451_b4ca1d89",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-12-20T22:07:08Z",
+      "side": 0,
+      "message": "Added back in the latest patch set.  (And updated the header accordingly)",
+      "parentUuid": "eddd608b_fcccdb83",
+      "revId": "414d98648a681a1df267015f20abe5f7c8be8226",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
