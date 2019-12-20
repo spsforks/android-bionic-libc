@@ -43,6 +43,7 @@
 
 #include "malloc_common.h"
 #include "malloc_limit.h"
+#include "memory_tagging.h"
 
 // =============================================================================
 // Global variables instantations.
@@ -274,6 +275,9 @@ extern "C" int __sanitizer_malloc_info(int, FILE*) {
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
     return LimitEnable(arg, arg_size);
+  }
+  if (opcode == M_SET_MEMORY_TAG_LEVEL) {
+    return SetMemoryTagLevel(arg, arg_size);
   }
   errno = ENOTSUP;
   return false;

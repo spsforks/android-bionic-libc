@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <malloc.h>
@@ -34,6 +36,8 @@
 #include <android-base/file.h>
 
 #include "platform/bionic/malloc.h"
+#include "platform/bionic/mte_kernel.h"
+#include "private/ScopedSignalHandler.h"
 #include "private/bionic_config.h"
 #include "utils.h"
 
@@ -997,5 +1001,65 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
   }
 #else
   GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+template <int SiCode> void CheckSiCode(int, siginfo_t* info, void*) {
+  if (info->si_code != SiCode) {
+    _exit(2);
+  }
+  _exit(1);
+}
+
+TEST(android_mallopt, tag_level) {
+#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
+    GTEST_SKIP() << "requires MTE support";
+    return;
+  }
+
+  std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+
+  // First, check that the default tag checking level is async.
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTEAERR>, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(1), "");
+
+  int tag_level = M_MEMORY_TAG_LEVEL_SYNC;
+  EXPECT_TRUE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTESERR>, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(1), "");
+
+  tag_level = M_MEMORY_TAG_LEVEL_ASYNC;
+  EXPECT_TRUE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTEAERR>, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(1), "");
+
+  tag_level = M_MEMORY_TAG_LEVEL_NONE;
+  EXPECT_TRUE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+  volatile int oob = p[-1];
+  (void)oob;
+
+  tag_level = M_MEMORY_TAG_LEVEL_ASYNC;
+  EXPECT_FALSE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+
+  tag_level = M_MEMORY_TAG_LEVEL_SYNC;
+  EXPECT_FALSE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+
+  tag_level = M_MEMORY_TAG_LEVEL_NONE;
+  EXPECT_TRUE(android_mallopt(M_SET_MEMORY_TAG_LEVEL, &tag_level, sizeof(int)));
+#else
+  GTEST_SKIP() << "arm64 only";
 #endif
 }

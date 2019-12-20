@@ -68,6 +68,7 @@
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
 #include "malloc_limit.h"
+#include "memory_tagging.h"
 
 // =============================================================================
 // Global variables instantations.
@@ -498,6 +499,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
+  }
+  if (opcode == M_SET_MEMORY_TAG_LEVEL) {
+    return SetMemoryTagLevel(arg, arg_size);
   }
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
