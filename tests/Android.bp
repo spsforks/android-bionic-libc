@@ -49,6 +49,12 @@ cc_defaults {
         address: false,
     },
     bootstrap: true,
+
+    product_variables: {
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
