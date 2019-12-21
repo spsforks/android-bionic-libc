@@ -551,6 +551,11 @@ cc_defaults {
 
     stl: "libc++_static",
 
+    // These tests are testing the loader's behavior with specific DT_NEEDED entries.
+    // It's more straightforward to disable as-needed here than to use fake symbol
+    // dependencies to keep them around.
+    as_needed: false,
+
     target: {
         android: {
             shared_libs: [
