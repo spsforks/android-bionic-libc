@@ -1,4 +1,3 @@
-//
 // Copyright (C) 2019 The Android Open Source Project
 // All rights reserved.
 //
@@ -24,51 +23,43 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-//
 
-cc_defaults {
-    name: "bionic_spawn_benchmark_targets",
-    host_supported: true,
-    target: {
-        darwin: { enabled: false },
-        windows: { enabled: false },
-        linux_glibc_x86: { enabled: false },
-    },
-}
-
-cc_library_static {
-    name: "libbionic_spawn_benchmark",
+cc_library_headers {
+    name: "linker_reloc_bench_headers",
     defaults: ["bionic_spawn_benchmark_targets"],
-
-    srcs: ["spawn_benchmark.cpp"],
     export_include_dirs: ["include"],
-    static_libs: [
-        "libbase",
-        "libgoogle-benchmark",
-    ]
 }
+
+// TODO: This benchmark doesn't work with TradeFed/atest because it doesn't copy its test libraries
+// into the testcases/linker_reloc_bench directory. The obvious way to do that is to list each
+// library in the "data" property, but that doesn't work, because each library is listed as having a
+// "link:shared" variant (as opposed to "link:static"), whereas the cc_benchmark has no
+// "link:(shared/static)" variation. It appears that Soong needs to be fixed to make this benchmark
+// work with TradeFed/atest.
 
 cc_benchmark {
-    name: "bionic-spawn-benchmarks",
-    defaults: ["bionic_spawn_benchmark_targets"],
+    name: "linker-reloc-bench",
 
-    srcs: ["spawn_benchmarks.cpp"],
+    defaults: [
+        "bionic_spawn_benchmark_targets",
+        "linker_reloc_bench_all_libs",
+    ],
+
+    data: [":linker_reloc_bench_main"],
+    srcs: ["linker_reloc_bench.cpp"],
+
     static_libs: [
         "libbase",
         "libbionic_spawn_benchmark",
     ],
-
-    // Install these binaries in the same directory as the main benchmark binary.
-    data: [
-        ":bench_noop",
-        ":bench_noop_nostl",
-        ":bench_noop_static",
-    ],
 }
 
 cc_defaults {
-    name: "noop_binary_defaults",
+    name: "linker_reloc_bench_binary",
     defaults: ["bionic_spawn_benchmark_targets"],
+    header_libs: ["linker_reloc_bench_headers"],
+    stl: "none",
+    gtest: false,
 
     compile_multilib: "both",
     multilib: {
@@ -77,34 +68,15 @@ cc_defaults {
     },
 }
 
-cc_binary {
-    defaults: ["noop_binary_defaults"],
-    name: "bench_noop",
-    srcs: ["noop.cpp"],
-
-    // When this binary is installed to host/linux-x86/bin, its runpath is ${ORIGIN}/../lib64, which
-    // is fine for finding host/linux-x86/lib64/libc++.so. When it's installed to
-    // host/linux-x86/benchmarktest64/bionic-spawn-benchmarks, the runpath needs an extra "..".
-    target: {
-        linux_glibc_x86_64: {
-            ldflags: [
-                "-Wl,--rpath,${ORIGIN}/../../lib64",
-            ],
-        },
-    }
-}
-
-cc_binary {
-    defaults: ["noop_binary_defaults"],
-    name: "bench_noop_nostl",
-    srcs: ["noop.cpp"],
+cc_defaults {
+    name: "linker_reloc_bench_library",
+    defaults: ["bionic_spawn_benchmark_targets"],
+    header_libs: ["linker_reloc_bench_headers"],
     stl: "none",
-}
+    gtest: false,
+    relative_install_path: "linker-reloc-bench",
 
-cc_binary {
-    defaults: ["noop_binary_defaults"],
-    name: "bench_noop_static",
-    srcs: ["noop.cpp"],
-    static_executable: true,
-    stl: "libc++_static",
+    static: {
+        enabled: false,
+    },
 }
