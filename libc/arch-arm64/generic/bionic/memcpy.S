@@ -30,6 +30,22 @@
 
 #include <private/bionic_asm.h>
 
+ENTRY(__memcpy_chk)
+  cmp x2, x3
+  // Direct b.ls memcpy may not have enough range
+  b.hi .L_memcpy_chk_fail
+  b memcpy
+
+.L_memcpy_chk_fail:
+  // Preserve for accurate backtrace.
+  stp x29, x30, [sp, -16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
+
+  bl __memcpy_chk_fail
+END(__memcpy_chk)
+
 ENTRY(__memcpy)
   #include "memcpy_base.S"
 END(__memcpy)
