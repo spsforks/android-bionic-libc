@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f99135c4_c1ead842",
+        "filename": "libc/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 6237,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-30T17:03:59Z",
+      "side": 1,
+      "message": "This could get pretty bloated if we start using more of these.  Can we remove it from the header in the assembly file?",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
