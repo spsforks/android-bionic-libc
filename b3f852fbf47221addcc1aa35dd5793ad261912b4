@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "30a3b31f_c0bf0dce",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-30T19:55:03Z",
+      "side": 1,
+      "message": "Good suggestion, thank you.  Done at https://android-review.googlesource.com/c/platform/bionic/+/1198421/1.  You may want to do the same at arm-optimized-routines as well.  I assume that is still not open to external contributors, is that correct?",
+      "parentUuid": "d96a4da9_d724f301",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c85b3337_638050e0",
         "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "fab97528_ac89757c",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-30T19:55:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c85b3337_638050e0",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de96ad4b_826dddf1",
         "filename": "libc/arch-arm64/generic/bionic/memmove.S",
         "patchSetId": 1
@@ -67,6 +103,24 @@
       "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30d7dc75_fd2af312",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-30T19:55:03Z",
+      "side": 1,
+      "message": "Thanks, pushed to https://android-review.googlesource.com/c/platform/bionic/+/1198422",
+      "parentUuid": "de96ad4b_826dddf1",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -90,6 +144,30 @@
       "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f5009d2_b1358893",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-30T19:55:03Z",
+      "side": 1,
+      "message": "Makes sense to me, pushed to https://android-review.googlesource.com/c/platform/bionic/+/1198423",
+      "parentUuid": "f88a7e0b_3327be4b",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 14
+      },
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
