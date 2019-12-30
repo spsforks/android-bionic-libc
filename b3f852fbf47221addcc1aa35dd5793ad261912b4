@@ -16,6 +16,80 @@
       "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d96a4da9_d724f301",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-30T18:22:08Z",
+      "side": 1,
+      "message": "It may be worth moving this to private/bionic_asm_arm64.h so it doesn\u0027t need to be repeated in each assembler file",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c85b3337_638050e0",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-30T18:22:08Z",
+      "side": 1,
+      "message": "The __memmove_aarch64/__memcpy_aarch64 labels are not in this version, so just use memmove and memcpy here.",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de96ad4b_826dddf1",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-30T18:22:08Z",
+      "side": 1,
+      "message": "In ENTRY, __bionic_asm_align is set to 0 for Arm, which looks like a bug. AArch64 uses 16 but Optimized Routines and GLIBC use 64 so critical string functions are always at the start of a cacheline. This would be a separate change of course.",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f88a7e0b_3327be4b",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-30T18:22:08Z",
+      "side": 1,
+      "message": "It may be worth merging __memcpy_chk code here after the memcpy code as a follow-on patch, just like memset.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 14
+      },
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
