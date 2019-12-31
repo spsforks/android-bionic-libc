@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0b3e87d_2edfc390",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-31T16:39:39Z",
+      "side": 1,
+      "message": "Not sure if this copyright change is correct",
+      "revId": "5851cf2daac1a90b4eba5e1a6d7b9abef68cb229",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
