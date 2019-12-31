@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65359e71_60f6dc6b",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T12:27:46Z",
+      "side": 1,
+      "message": "This can be changed to a single b.ls now.",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 37,
+        "endChar": 10
+      },
+      "revId": "f13dc31a63ed46329847054541a6e64a597a0424",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cab4e8eb_7cfcb8e3",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T12:27:46Z",
+      "side": 1,
+      "message": "There is no point in adding a completely unused copy of memcpy here. All of the memmove.S code can be moved here and memmove.S deleted. All of the memcpy_base.S code can be moved here too since there is no need to include it.",
+      "range": {
+        "startLine": 49,
+        "startChar": 1,
+        "endLine": 51,
+        "endChar": 13
+      },
+      "revId": "f13dc31a63ed46329847054541a6e64a597a0424",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
