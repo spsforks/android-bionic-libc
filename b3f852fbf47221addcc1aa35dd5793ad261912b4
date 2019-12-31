@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "498a55e1_aeda1b6e",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T14:33:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fab97528_ac89757c",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de96ad4b_826dddf1",
         "filename": "libc/arch-arm64/generic/bionic/memmove.S",
         "patchSetId": 1
@@ -118,6 +136,24 @@
       "side": 1,
       "message": "Thanks, pushed to https://android-review.googlesource.com/c/platform/bionic/+/1198422",
       "parentUuid": "de96ad4b_826dddf1",
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a86c3c61_3656a636",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T14:33:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "30d7dc75_fd2af312",
       "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -159,6 +195,30 @@
       "side": 1,
       "message": "Makes sense to me, pushed to https://android-review.googlesource.com/c/platform/bionic/+/1198423",
       "parentUuid": "f88a7e0b_3327be4b",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 14
+      },
+      "revId": "b3f852fbf47221addcc1aa35dd5793ad261912b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18bfbaec_58ed969c",
+        "filename": "libc/arch-arm64/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T14:33:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7f5009d2_b1358893",
       "range": {
         "startLine": 70,
         "startChar": 0,
