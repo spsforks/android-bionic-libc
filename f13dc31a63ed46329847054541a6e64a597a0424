@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "42d9e684_27675073",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2019-12-31T15:46:48Z",
+      "side": 1,
+      "message": "It can only be an issue if you use a conditional branch between different text sections - within a section it\u0027s just a local branch without a relocation.",
+      "parentUuid": "1fc80f5b_96d82872",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 37,
+        "endChar": 10
+      },
+      "revId": "f13dc31a63ed46329847054541a6e64a597a0424",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cab4e8eb_7cfcb8e3",
         "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
         "patchSetId": 1
