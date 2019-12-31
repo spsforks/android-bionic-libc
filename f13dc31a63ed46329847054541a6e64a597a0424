@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1fc80f5b_96d82872",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-31T15:11:30Z",
+      "side": 1,
+      "message": "Is https://android.googlesource.com/platform/bionic/+/00d087c629185f8237488aaa992ebbf491841a68 no longer a valid issue?",
+      "parentUuid": "65359e71_60f6dc6b",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 37,
+        "endChar": 10
+      },
+      "revId": "f13dc31a63ed46329847054541a6e64a597a0424",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cab4e8eb_7cfcb8e3",
         "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-12-31T12:27:46Z",
       "side": 1,
       "message": "There is no point in adding a completely unused copy of memcpy here. All of the memmove.S code can be moved here and memmove.S deleted. All of the memcpy_base.S code can be moved here too since there is no need to include it.",
+      "range": {
+        "startLine": 49,
+        "startChar": 1,
+        "endLine": 51,
+        "endChar": 13
+      },
+      "revId": "f13dc31a63ed46329847054541a6e64a597a0424",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b95993eb_0ed593cf",
+        "filename": "libc/arch-arm64/generic/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-12-31T15:11:30Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "cab4e8eb_7cfcb8e3",
       "range": {
         "startLine": 49,
         "startChar": 1,
