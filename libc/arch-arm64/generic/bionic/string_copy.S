@@ -106,7 +106,7 @@ ENTRY(strcpy)
     mov     dst, dstin
 #endif
     ands    tmp1, src, #15
-    b.ne    .Lmisaligned
+    b.ne    L(misaligned)
     // NUL detection works on the principle that (X - 1) & (~X) & 0x80
     // (=> (X - 1) & ~(X | 0x7f)) is non-zero iff a byte is zero, and
     // can be done in parallel across the entire word.
@@ -114,21 +114,21 @@ ENTRY(strcpy)
     // slightly higher start-up cost, but we should win quite quickly,
     // especially on cores with a high number of issue slots per
     // cycle, as we get much better parallelism out of the operations.
-.Lloop:
+L(loop):
     ldp     data1, data2, [src], #16
     sub     tmp1, data1, zeroones
     orr     tmp2, data1, #REP8_7f
     bic     has_nul1, tmp1, tmp2
-    cbnz    has_nul1, .Lnul_in_data1
+    cbnz    has_nul1, L(nul_in_data1)
     sub     tmp3, data2, zeroones
     orr     tmp4, data2, #REP8_7f
     bic     has_nul2, tmp3, tmp4
-    cbnz    has_nul2, .Lnul_in_data2
+    cbnz    has_nul2, L(nul_in_data2)
     // No NUL in either register, copy it in a single instruction.
     stp     data1, data2, [dst], #16
-    b       .Lloop
+    b       L(loop)
 
-.Lnul_in_data1:
+L(nul_in_data1):
     rev     has_nul1, has_nul1
     clz     pos, has_nul1
     add     tmp1, pos, #0x8
@@ -161,7 +161,7 @@ ENTRY(strcpy)
 #endif
     ret
 
-.Lnul_in_data2:
+L(nul_in_data2):
     str     data1, [dst], #8
     rev     has_nul2, has_nul2
     clz     pos, has_nul2
@@ -195,7 +195,7 @@ ENTRY(strcpy)
 #endif
     ret
 
-.Lmisaligned:
+L(misaligned):
     tbz     src, #0, 1f
     ldrb    data1_w, [src], #1
     strb    data1_w, [dst], #1
@@ -209,11 +209,11 @@ ENTRY(strcpy)
     tbz     src, #1, 1f
     ldrb    data1_w, [src], #1
     strb    data1_w, [dst], #1
-    cbz     data1_w, .Ldone
+    cbz     data1_w, L(done)
     ldrb    data2_w, [src], #1
     strb    data2_w, [dst], #1
     cbnz    data2_w, 1f
-.Ldone:
+L(done):
 #if defined(STPCPY)
     // Back up one so that dst points to the '\0' string terminator.
     sub     dst, dst, #1
@@ -226,18 +226,18 @@ ENTRY(strcpy)
     sub     has_nul1_w, data1_w, zeroones_w
     bic     has_nul1_w, has_nul1_w, data1_w
     ands    has_nul1_w, has_nul1_w, #0x80808080
-    b.ne    .Lnul_in_data1
+    b.ne    L(nul_in_data1)
     str     data1_w, [dst], #4
 1:
-    tbz     src, #3, .Lloop
+    tbz     src, #3, L(loop)
     ldr     data1, [src], #8
     // Check for a zero.
     sub     tmp1, data1, zeroones
     orr     tmp2, data1, #REP8_7f
     bics    has_nul1, tmp1, tmp2
-    b.ne    .Lnul_in_data1
+    b.ne    L(nul_in_data1)
     str     data1, [dst], #8
-    b       .Lloop
+    b       L(loop)
 #if defined(STPCPY)
 END(stpcpy)
 #elif defined(STRCPY)

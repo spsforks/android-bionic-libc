@@ -70,11 +70,13 @@
  */
 
 ENTRY(memchr_default)
+	/* Do not dereference srcin if no bytes to compare.  */
+	cbz	cntin, L(zero_length)
+
 	/*
 	 * Magic constant 0x40100401 allows us to identify which lane matches
 	 * the requested byte.
 	 */
-	cbz	cntin, .Lzero_length
 	mov	wtmp2, #0x0401
 	movk	wtmp2, #0x4010, lsl #16
 	dup	vrepchr.16b, chrin
@@ -83,7 +85,7 @@ ENTRY(memchr_default)
 	dup	vrepmask.4s, wtmp2
 	ands	soff, srcin, #31
 	and	cntrem, cntin, #31
-	b.eq	.Lloop
+	b.eq	L(loop)
 
 	/*
 	 * Input string is not 32-byte aligned. We calculate the syndrome
@@ -106,25 +108,25 @@ ENTRY(memchr_default)
 	lsr	synd, synd, tmp
 	lsl	synd, synd, tmp
 	/* The first block can also be the last */
-	b.ls	.Lmasklast
+	b.ls	L(masklast)
 	/* Have we found something already? */
-	cbnz	synd, .Ltail
+	cbnz	synd, L(tail)
 
-.Lloop:
+L(loop):
 	ld1	{vdata1.16b, vdata2.16b}, [src], #32
 	subs	cntin, cntin, #32
 	cmeq	vhas_chr1.16b, vdata1.16b, vrepchr.16b
 	cmeq	vhas_chr2.16b, vdata2.16b, vrepchr.16b
 	/* If we're out of data we finish regardless of the result */
-	b.ls	.Lend
+	b.ls	L(end)
 	/* Use a fast check for the termination condition */
 	orr	vend.16b, vhas_chr1.16b, vhas_chr2.16b
 	addp	vend.2d, vend.2d, vend.2d
 	mov	synd, vend.d[0]
 	/* We're not out of data, loop if we haven't found the character */
-	cbz	synd, .Lloop
+	cbz	synd, L(loop)
 
-.Lend:
+L(end):
 	/* Termination condition found, let's calculate the syndrome value */
 	and	vhas_chr1.16b, vhas_chr1.16b, vrepmask.16b
 	and	vhas_chr2.16b, vhas_chr2.16b, vrepmask.16b
@@ -132,9 +134,9 @@ ENTRY(memchr_default)
 	addp	vend.16b, vend.16b, vend.16b			/* 128->64 */
 	mov	synd, vend.d[0]
 	/* Only do the clear for the last possible block */
-	b.hi	.Ltail
+	b.hi	L(tail)
 
-.Lmasklast:
+L(masklast):
 	/* Clear the (32 - ((cntrem + soff) % 32)) * 2 upper bits */
 	add	tmp, cntrem, soff
 	and	tmp, tmp, #31
@@ -143,7 +145,7 @@ ENTRY(memchr_default)
 	lsl	synd, synd, tmp
 	lsr	synd, synd, tmp
 
-.Ltail:
+L(tail):
 	/* Count the trailing zeros using bit reversing */
 	rbit	synd, synd
 	/* Compensate the last post-increment */
@@ -158,7 +160,7 @@ ENTRY(memchr_default)
 	csel	result, xzr, result, eq
 	ret
 
-.Lzero_length:
-	mov	result, xzr
+L(zero_length):
+	mov	result, #0
 	ret
 END(memchr_default)
