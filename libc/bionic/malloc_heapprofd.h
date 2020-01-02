@@ -36,12 +36,8 @@ bool HeapprofdShouldLoad();
 
 void HeapprofdInstallHooksAtInit(libc_globals* globals);
 
-void HeapprofdInstallSignalHandler();
+void HeapprofdRememberHookConflict();
 
-void HeapprofdInstallErrorSignalHandler();
-
-void HeapprofdMaskSignal();
-
-void HeapprofdUnmaskSignal();
+void HandleHeapprofdSignal();
 
 bool HeapprofdMallopt(int optcode, void* arg, size_t arg_size);

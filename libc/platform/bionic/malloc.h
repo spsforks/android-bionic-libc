@@ -84,6 +84,12 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
+  // Query whether the current process is considered to be profileable by the
+  // Android platform. Result is assigned to the arg pointer's destination.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_GET_PROCESS_PROFILEABLE = 8,
+#define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
