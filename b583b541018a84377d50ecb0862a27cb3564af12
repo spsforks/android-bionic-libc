@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95ae034c_20c6fcd0",
+        "filename": "libc/arch-arm64/default/bionic/memchr.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2020-01-03T23:07:17Z",
+      "side": 1,
+      "message": "This moves us from cferris\u0027s change at https://android-review.googlesource.com/c/platform/bionic/+/103010 to ARM\u0027s at https://git.linaro.org/toolchain/newlib.git/commit/newlib/libc/machine/aarch64/memchr.S?id\u003d59c3d5a1a4c0d8ee4f1da2c9e449ed9ab4edd4b6 to align with upstream.",
+      "revId": "b583b541018a84377d50ecb0862a27cb3564af12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
