@@ -261,3 +261,26 @@ TEST(malloc_iterate, malloc_disable_prevents_allocs) {
   GTEST_SKIP() << "bionic-only test";
 #endif
 }
+
+#include <sys/types.h>
+#include <sys/wait.h>
+
+TEST(malloc_iterate, malloc_disable_fork) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN;
+
+  malloc_disable();
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    write(STDOUT_FILENO, "got here\n", 9);
+    void* ptr = malloc(100);
+    ASSERT_TRUE(ptr != nullptr);
+    memset(ptr, 0, 100);
+    write(STDOUT_FILENO, "got here 2\n", 11);
+    _exit(0);
+  }
+  waitpid(pid, nullptr, 0);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
