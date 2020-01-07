@@ -103,6 +103,7 @@ enum HeapTaggingLevel {
   // Disable heap tagging. The program must use prctl(PR_SET_TAGGED_ADDR_CTRL) to disable memory tag
   // checks before disabling heap tagging. Heap tagging may not be re-enabled after being disabled.
   M_HEAP_TAGGING_LEVEL_NONE = 0,
+  M_HEAP_TAGGING_LEVEL_TBI = 1,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
