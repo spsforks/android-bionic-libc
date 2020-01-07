@@ -27,6 +27,7 @@
  */
 
 #include "libc_init_common.h"
+#include "malloc_tagged_pointers.h"
 
 #include <elf.h>
 #include <errno.h>
@@ -109,19 +110,25 @@ void __libc_init_common() {
   // returns -EINVAL) if the kernel doesn't understand the prctl.
 #if defined(__aarch64__)
 #define PR_SET_TAGGED_ADDR_CTRL 55
-#define PR_TAGGED_ADDR_ENABLE   (1UL << 0)
+#define PR_TAGGED_ADDR_ENABLE (1UL << 0)
+  bool heap_tagging = false;
 #ifdef ANDROID_EXPERIMENTAL_MTE
   // First, try enabling MTE in asynchronous mode, with tag 0 excluded. This will fail if the kernel
   // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in
   // syscall arguments.
   if (prctl(PR_SET_TAGGED_ADDR_CTRL,
             PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (1 << PR_MTE_EXCL_SHIFT), 0, 0, 0)) {
-    prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+    heap_tagging = prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0;
   }
-#else
-  prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
-#endif
-#endif
+#else   // ANDROID_EXPERIMENTAL_MTE
+  heap_tagging = prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0;
+#endif  // ANDROID_EXPERIMENTAL_MTE
+  if (heap_tagging) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->heap_pointer_tag = reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT;
+    });
+  }
+#endif  // aarch64
 }
 
 void __libc_init_fork_handler() {
