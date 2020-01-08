@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "320e2db0_3a8a99e5",
+        "filename": "tests/malloc_iterate_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1272474
+      },
+      "writtenOn": "2020-01-08T16:38:01Z",
+      "side": 1,
+      "message": "I was wondering why this test was not passing with the fix, while the one I added upstream did.\nIt turns out you have to malloc_enable in the parent because there is probably some heap operation later on that stalls.",
+      "revId": "8991e2c323df9babedc3dfc4ed14be74f90dcf82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
