@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ded6f021_6faf9291",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-08T01:56:05Z",
+      "side": 1,
+      "message": "This might not work when pointer tagging is disabled in an application. We need to allow deallocating previously tagged allocations.",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
