@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf4a6139_a72ccd9e",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-08T02:35:00Z",
+      "side": 1,
+      "message": "I needed to update FVP to version 11.9.41 otherwise this test would fail intermittently. It appears that there was a bug in the model where changes to SCTLR_EL1.TCF0 would sometimes not take effect that has been fixed in 11.9.41.",
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
