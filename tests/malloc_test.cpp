@@ -999,3 +999,62 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
   GTEST_SKIP() << "bionic extension";
 #endif
 }
+
+#include <atomic>
+#include <thread>
+
+TEST(malloc, alloc_after_fork) {
+  static size_t values[] = {8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152};
+
+  std::atomic_bool stop;
+
+  // Create threads that simply allocate and free different sizes.
+  std::vector<std::thread*> threads;
+  for (size_t i = 0; i < 5; i++) {
+    std::thread* t = new std::thread([&stop] {
+      while (!stop) {
+        for (size_t i = 0; i < sizeof(values) / sizeof(size_t); i++) {
+          void* ptr = malloc(values[i]);
+          if (ptr == nullptr) {
+            return;
+          }
+          // Make sure this value is not optimized away.
+          asm volatile("" : : "r,m"(ptr) : "memory");
+          free(ptr);
+        }
+      }
+    });
+    threads.push_back(t);
+  }
+
+  // Create a thread to fork and allocate.
+  for (size_t i = 0; i < 100; i++) {
+    printf("Running iteration %zu\n", i);
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+      for (size_t j = 0; j < sizeof(values) / sizeof(size_t); j++) {
+        void* ptr = malloc(values[j]);
+        ASSERT_TRUE(ptr != nullptr);
+        // Make sure this value is not optimized away.
+        asm volatile("" : : "r,m"(ptr) : "memory");
+        // Make sure we can touch all of the allocation.
+        memset(ptr, 0x1, values[j]);
+        ASSERT_LE(values[j], malloc_usable_size(ptr));
+        free(ptr);
+      }
+      _exit(10);
+    }
+    ASSERT_NE(-1, pid);
+    int status;
+    ASSERT_EQ(pid, waitpid(pid, &status, 0));
+    ASSERT_FALSE(WIFSIGNALED(status));
+    ASSERT_EQ(10, WEXITSTATUS(status));
+  }
+
+  printf("Waiting for threads to complete\n");
+  stop = true;
+  for (auto thread : threads) {
+    thread->join();
+    delete thread;
+  }
+}
