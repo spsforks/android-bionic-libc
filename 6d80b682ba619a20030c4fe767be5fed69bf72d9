@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "3a046a0a_2d185686",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-09T17:49:31Z",
+      "side": 1,
+      "message": "Needs to be renamed as well.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 1
+      },
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf4a6139_a72ccd9e",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 4
@@ -36,6 +59,24 @@
       "writtenOn": "2020-01-08T02:35:00Z",
       "side": 1,
       "message": "I needed to update FVP to version 11.9.41 otherwise this test would fail intermittently. It appears that there was a bug in the model where changes to SCTLR_EL1.TCF0 would sometimes not take effect that has been fixed in 11.9.41.",
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f087923c_6e5ef977",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-09T17:49:31Z",
+      "side": 1,
+      "message": "Oh indeed, sorry about that, I forgot to mention that you would need the latest release. This is because the architecture used to allow SCTLR_EL1.{TCF,TCF0} to be cached in TLBs, which prevented the kernel from context switching TCF0 efficiently. The architecture was modified in September, and the release 11.9 of the fast model includes that change.",
+      "parentUuid": "bf4a6139_a72ccd9e",
       "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
