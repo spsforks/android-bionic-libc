@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "319dd52a_9536a16e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2578,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-09T03:27:11Z",
+      "side": 1,
+      "message": "heap_tagging?",
+      "range": {
+        "startLine": 2578,
+        "startChar": 16,
+        "endLine": 2578,
+        "endChar": 30
+      },
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf4a6139_a72ccd9e",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 4
