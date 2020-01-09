@@ -52,6 +52,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "773c0507_d61da142",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-09T01:23:52Z",
+      "side": 1,
+      "message": "I was thinking a private interface between libc and the zygote, as we can\u0027t disable memory tagging once we reach a multi-threaded context, as the tag is currently loaded unatomically. WDYT?\n\nAlso - do we want to enable this uncoditionally for now?",
+      "parentUuid": "140dff90_580e64fd",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
