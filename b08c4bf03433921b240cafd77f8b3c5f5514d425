@@ -70,6 +70,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7595d303_0d6616ea",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T01:30:54Z",
+      "side": 1,
+      "message": "The android_mallopt function is indeed a private (i.e. not exposed to NDK) interface. For MTE there are similar constraints around disabling tagging before becoming multi-threaded, see the comments that I added to my new enumerator.",
+      "parentUuid": "773c0507_d61da142",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
