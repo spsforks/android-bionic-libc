@@ -106,6 +106,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecf87349_cae78c91",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T01:50:23Z",
+      "side": 1,
+      "message": "Yes, I think this should be done by adding another enumerator. Regarding the default, we\u0027ll need to be a little careful since we\u0027ll want ASYNC to be the default on MTE-compatible hardware and STATIC elsewhere.",
+      "parentUuid": "2ec44b81_120c501a",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
