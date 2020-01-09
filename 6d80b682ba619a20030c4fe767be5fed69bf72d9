@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "07f5a621_6a3cb6f5",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2578,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T18:37:24Z",
+      "side": 1,
+      "message": "It looks like this cc_defaults will become entirely unused once the scudo switch lands (which is why I didn\u0027t notice this problem), so I\u0027ll remove this line.",
+      "parentUuid": "319dd52a_9536a16e",
+      "range": {
+        "startLine": 2578,
+        "startChar": 16,
+        "endLine": 2578,
+        "endChar": 30
+      },
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a046a0a_2d185686",
         "filename": "libc/platform/bionic/malloc.h",
         "patchSetId": 4
@@ -77,6 +101,24 @@
       "side": 1,
       "message": "Oh indeed, sorry about that, I forgot to mention that you would need the latest release. This is because the architecture used to allow SCTLR_EL1.{TCF,TCF0} to be cached in TLBs, which prevented the kernel from context switching TCF0 efficiently. The architecture was modified in September, and the release 11.9 of the fast model includes that change.",
       "parentUuid": "bf4a6139_a72ccd9e",
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5363460d_82750f7a",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T18:37:24Z",
+      "side": 1,
+      "message": "I see, I assume that this change isn\u0027t reflected in any publicly available release of the ARM ARM? I see that version ea from July is the latest and it still mentions that the value may be cached in the TLB.",
+      "parentUuid": "f087923c_6e5ef977",
       "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
