@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e036d998_38ae086e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2578,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T19:19:25Z",
+      "side": 1,
+      "message": "Actually ended up fixing it and moving it to the dependent change since I assume that it\u0027ll land before the scudo reland.",
+      "parentUuid": "07f5a621_6a3cb6f5",
+      "range": {
+        "startLine": 2578,
+        "startChar": 16,
+        "endLine": 2578,
+        "endChar": 30
+      },
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a046a0a_2d185686",
         "filename": "libc/platform/bionic/malloc.h",
         "patchSetId": 4
@@ -69,6 +93,30 @@
       "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9030185_4ecdd629",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T19:19:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a046a0a_2d185686",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 1
+      },
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
