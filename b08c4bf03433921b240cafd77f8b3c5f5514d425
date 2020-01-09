@@ -160,6 +160,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee1965ca_43d3783e",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-09T04:04:03Z",
+      "side": 1,
+      "message": "Given that the MTE-related parts of the mallopt changes are blocked on:\n - the changes to scudo, and\n - switching bionic to use scudo by default\n\n...would it make sense to carve out the mallopt() changes and make them pointer-tagging focused, with the MTE additions to come later?",
+      "parentUuid": "1199e90c_1a9834d1",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
