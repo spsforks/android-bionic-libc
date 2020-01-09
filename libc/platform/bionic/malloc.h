@@ -90,13 +90,16 @@ enum {
   //   arg = int*
   //   arg_size = sizeof(int)
   M_SET_HEAP_TAGGING_LEVEL = 8,
-#define M_SET_HEAP_TAGGING_LEVEL M_SET_HEAP_TAGGING_LEVEL
+#define M_SET_MEMORY_TAG_LEVEL M_SET_MEMORY_TAG_LEVEL
 };
 
 enum {
   // Disable heap tagging. The program must use prctl(PR_SET_TAGGED_ADDR_CTRL) to disable memory tag
   // checks before disabling heap tagging. Heap tagging may not be re-enabled after being disabled.
   M_HEAP_TAGGING_LEVEL_NONE = 0,
+
+  // Enable heap tagging if supported, at a level appropriate for asynchronous memory tag checks.
+  M_HEAP_TAGGING_LEVEL_ASYNC = 1,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
