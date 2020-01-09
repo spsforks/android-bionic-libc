@@ -124,6 +124,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73353b63_7b4da22f",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-09T02:11:36Z",
+      "side": 1,
+      "message": "Yep. For MTE-compatible hardware, we can change the __libc_init_globals() behaviour in libc_init_common.cpp from this patchset to call SetHeapTaggingLevel() directly.\n\nWould you like me to add the enum to the other patchset? Disabling heap tagging is done via:\n\n    globals-\u003eheap_pointer_tag \u003d 0",
+      "parentUuid": "ecf87349_cae78c91",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
