@@ -142,6 +142,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1199e90c_1a9834d1",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T02:55:59Z",
+      "side": 1,
+      "message": "It would probably be best to rebase this change on top of my change, and add the enum in your change. I think it should be possible to do that by going to my change, following the instructions under \"Download -\u003e Checkout\", rebasing your change on top of that and uploading it.",
+      "parentUuid": "73353b63_7b4da22f",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
