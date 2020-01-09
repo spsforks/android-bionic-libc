@@ -16,6 +16,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfb9adb4_68e3d475",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-09T00:56:09Z",
+      "side": 1,
+      "message": "This is in relation to feature compat in the zygote, right?\n\nCurrently:\n     v tag of free-d ptr  v\n     ---------------------+\n     | 0x00 | 0x3c | 0xff |\n     +------+------+------+\n0x00 |  OK  |  BAD |  BAD |  // global \"heap tag\" 0x00 (disabled)\n0x3c |  BAD |  OK  |  BAD |  // global \"heap tag\" 0x3c (enabled)\n     +------+------+------+\n\nAllowing a previously-tagged alloc when heap tag is zero:\n\n     v tag of free-d ptr  v\n     ---------------------+\n     | 0x00 | 0x3c | 0xff |\n     +------+------+------+\n0x00 |  OK  | *OK* |  BAD |  // global \"heap tag\" 0x00 (disabled)\n0x3c |  BAD |  OK  |  BAD |  // global \"heap tag\" 0x3c (enabled)\n     +------+------+------+\n\nDone (although if you can validate my assumptions here that would be great).",
+      "parentUuid": "ded6f021_6faf9291",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
