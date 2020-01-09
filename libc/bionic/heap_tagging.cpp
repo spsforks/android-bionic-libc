@@ -31,7 +31,9 @@
 
 #include <platform/bionic/malloc.h>
 
-static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+extern "C" void scudo_malloc_disable_memory_tagging();
+
+static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
 
 bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
   if (arg_size != sizeof(HeapTaggingLevel)) {
@@ -41,6 +43,14 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
   auto tag_level = *reinterpret_cast<HeapTaggingLevel*>(arg);
   switch (tag_level) {
     case M_HEAP_TAGGING_LEVEL_NONE:
+      scudo_malloc_disable_memory_tagging();
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+        error_log(
+            "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
+        return false;
+      }
       break;
     default:
       error_log("SetHeapTaggingLevel: unknown tagging level");
