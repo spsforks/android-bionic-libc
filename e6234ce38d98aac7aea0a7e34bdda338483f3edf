@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "639268e7_34e856dd",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-09T01:08:12Z",
+      "side": 1,
+      "message": "\"to be freed\"",
+      "revId": "e6234ce38d98aac7aea0a7e34bdda338483f3edf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

@@ -34,6 +34,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "140dff90_580e64fd",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-09T01:08:12Z",
+      "side": 1,
+      "message": "This look correct, thank you.\n\nNow we need a way to actually disable the tagging. Could be done in\nhttps://android-review.googlesource.com/c/platform/bionic/+/1197046",
+      "parentUuid": "dfb9adb4_68e3d475",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
