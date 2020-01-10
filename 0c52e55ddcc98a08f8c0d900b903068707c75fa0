@@ -16,6 +16,24 @@
       "revId": "0c52e55ddcc98a08f8c0d900b903068707c75fa0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47ef717c_f67d6b3d",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-10T00:42:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "887528b7_ceb81f25",
+      "revId": "0c52e55ddcc98a08f8c0d900b903068707c75fa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
