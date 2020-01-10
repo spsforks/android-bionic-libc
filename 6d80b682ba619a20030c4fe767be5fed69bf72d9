@@ -170,6 +170,24 @@
       "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27f1d274_3c89ff79",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-10T15:16:16Z",
+      "side": 1,
+      "message": "You\u0027re right, unfortunately there hasn\u0027t been a new release of the Arm ARM since July. However, the XML specifications (https://developer.arm.com/architectures/cpu-architecture/a-profile/exploration-tools) are updated much more frequently, and the latest release does reflect the change: https://developer.arm.com/docs/ddi0595/f/aarch64-system-registers/sctlr_el1#TCF0_39",
+      "parentUuid": "5363460d_82750f7a",
+      "revId": "6d80b682ba619a20030c4fe767be5fed69bf72d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
