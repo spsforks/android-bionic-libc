@@ -1,0 +1,8 @@
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Code-Review+2: wonil <wonil@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Mon, 13 Jan 2020 09:46:27 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1156888
+Project: platform/bionic
+Branch: refs/heads/oreo-dev
