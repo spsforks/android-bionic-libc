@@ -232,6 +232,45 @@ extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }
 
+static unsigned long int *g_disabled_compat_changes = nullptr;
+static int g_disabled_compat_changes_len = 0;
+
+// Query if a given compatibility change is enabled for the current process. This method is
+// intended to be called by code running inside a process of the affected app only.
+// In a non app process all changes would be enabled.
+//
+// If this method returns 1, the calling code should implement the compatibility
+// change, resulting in differing behaviour compared to earlier releases. If this method returns
+// 0, the calling code should behave as it did in earlier releases.
+//
+// @param change_id The ID of the compatibility change in question.
+// @return 1 if the change is enabled for the current app, 0 otherwise.
+extern "C" int android_is_change_enabled(unsigned long int change_id) {
+  if (g_disabled_compat_changes == nullptr) {
+    return 1;
+  }
+  for( int i=0; i < g_disabled_compat_changes_len; i++) {
+    if (g_disabled_compat_changes[i] == change_id) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                            "Compat change id reported: %lu; UID %d; state: DISABLED",
+                            change_id, getuid());
+      return 0;
+    }
+  }
+  async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                        "Compat change id reported: %lu; UID %d; state: ENABLED",
+                        change_id, getuid());
+  return 1;
+}
+
+extern "C" void android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) {
+  g_disabled_compat_changes = reinterpret_cast<unsigned long int*>(malloc(len * sizeof(unsigned long int)));
+  for( int i=0; i < len; i++) {
+    g_disabled_compat_changes[i] = disabled_compat_changes[i];
+  }
+  g_disabled_compat_changes_len = len;
+}
+
 // This function is called in the dynamic linker before ifunc resolvers have run, so this file is
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
