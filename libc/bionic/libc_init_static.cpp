@@ -232,6 +232,59 @@ extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }
 
+static unsigned long int *g_disabled_compat_changes = nullptr;
+static int g_disabled_compat_changes_len = 0;
+
+static int compare(const void* a, const void* b) {
+    const unsigned long ai = *(reinterpret_cast<const unsigned long int*>(a));
+    const unsigned long bi = *(reinterpret_cast<const unsigned long int*>(b));
+
+    if (ai < bi) {
+        return -1;
+    } else if (ai > bi) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+// Query if a given compatibility change is enabled for the current process. This method is
+// intended to be called by code running inside a process of the affected app only.
+// In a non app process all changes would be enabled.
+//
+// If this method returns 1, the calling code should implement the compatibility
+// change, resulting in differing behaviour compared to earlier releases. If this method returns
+// 0, the calling code should behave as it did in earlier releases.
+//
+// @param change_id The ID of the compatibility change in question.
+// @return 1 if the change is enabled for the current app, 0 otherwise.
+extern "C" int android_is_change_enabled(unsigned long int change_id) {
+  if (g_disabled_compat_changes != nullptr) {
+    if (bsearch(&change_id, g_disabled_compat_changes, g_disabled_compat_changes_len,
+                sizeof(unsigned long int), compare) != NULL) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                            "Compat change id reported: %lu; state: DISABLED", change_id);
+      return 0;
+    }
+  }
+  async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                        "Compat change id reported: %lu; state: ENABLED", change_id);
+  return 1;
+}
+
+extern "C" void android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) {
+  if (disabled_compat_changes == nullptr) {
+    g_disabled_compat_changes = nullptr;
+    g_disabled_compat_changes_len = 0;
+    return;
+  }
+  int size = len * sizeof(unsigned long int);
+  g_disabled_compat_changes = reinterpret_cast<unsigned long int*>(malloc(size));
+  memcpy(g_disabled_compat_changes, disabled_compat_changes, size);
+  qsort(g_disabled_compat_changes, len, sizeof(unsigned long int), compare);
+  g_disabled_compat_changes_len = len;
+}
+
 // This function is called in the dynamic linker before ifunc resolvers have run, so this file is
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
