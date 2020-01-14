@@ -144,4 +144,10 @@ int android_get_device_api_level() __INTRODUCED_IN(29);
 
 #endif
 
+#if __ANDROID_API__ > 29
+
+int android_is_change_enabled(unsigned long int change_id) __INTRODUCED_IN(30);
+
+#endif
+
 __END_DECLS

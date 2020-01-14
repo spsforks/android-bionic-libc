@@ -19,6 +19,7 @@
 #include <android/api-level.h>
 
 extern "C" void android_set_application_target_sdk_version(int target);
+extern "C" void android_set_application_disabled_changes(long int* disabled_changes, int len);
 
 TEST(libdl, application_sdk_versions_smoke) {
   // Check initial values
@@ -31,3 +32,15 @@ TEST(libdl, application_sdk_versions_smoke) {
   ASSERT_EQ(22, android_get_application_target_sdk_version());
 }
 
+TEST(libdl, application_disabled_changes) {
+  // Check initial values
+  ASSERT_EQ(1, android_is_change_enabled(1));
+  ASSERT_EQ(1, android_is_change_enabled(2));
+  ASSERT_EQ(1, android_is_change_enabled(3));
+
+  long int disabled_changes[] = {2, 3};
+  android_set_application_disabled_changes(disabled_changes, 2);
+  ASSERT_EQ(1, android_is_change_enabled(1));
+  ASSERT_EQ(0, android_is_change_enabled(2));
+  ASSERT_EQ(0, android_is_change_enabled(3));
+}
