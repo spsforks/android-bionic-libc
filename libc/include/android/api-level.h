@@ -144,4 +144,22 @@ int android_get_device_api_level() __INTRODUCED_IN(29);
 
 #endif
 
+#if __ANDROID_API__ > 29
+
+/**
+ * Query if a given compatibility change is enabled for the current process. This method is
+ * intended to be called by code running inside a process of the affected app only.
+ * In a non app process all changes would be enabled.
+ *
+ * If this method returns 1, the calling code should implement the compatibility
+ * change, resulting in differing behaviour compared to earlier releases. If this method returns
+ * 0, the calling code should behave as it did in earlier releases.
+ *
+ * @param change_id The ID of the compatibility change in question.
+ * @return 1 if the change is enabled for the current app, 0 otherwise.
+ */
+int android_is_change_enabled(unsigned long int change_id) __INTRODUCED_IN(30);
+
+#endif
+
 __END_DECLS
