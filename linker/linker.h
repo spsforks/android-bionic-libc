@@ -137,6 +137,9 @@ void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 void set_application_target_sdk_version(int target);
 int get_application_target_sdk_version();
 
+void set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len);
+bool is_change_enabled(unsigned long int change_id);
+
 enum {
   /* A regular namespace is the namespace with a custom search path that does
    * not impose any restrictions on the location of native libraries.

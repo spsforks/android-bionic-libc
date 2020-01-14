@@ -232,6 +232,26 @@ extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }
 
+static unsigned long int *g_disabled_compat_changes = nullptr;
+static int g_disabled_compat_changes_len = 0;
+
+extern "C" bool android_is_change_enabled(unsigned long int change_id) {
+  if (g_disabled_compat_changes == nullptr) {
+    return true;
+  }
+  for( int i=0; i < g_disabled_compat_changes_len; i++) {
+    if (g_disabled_compat_changes[i] == change_id) {
+      return false;
+    }
+  }
+  return true;
+}
+
+extern "C" void android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) {
+  g_disabled_compat_changes = disabled_compat_changes;
+  g_disabled_compat_changes_len = len;
+}
+
 // This function is called in the dynamic linker before ifunc resolvers have run, so this file is
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)

@@ -72,6 +72,9 @@ void* __loader_android_dlopen_ext(const char* filename,
 __attribute__((__weak__, visibility("default")))
 int __loader_android_get_application_target_sdk_version();
 
+__attribute__((__weak__, visibility("default")))
+bool __loader_android_is_change_enabled(unsigned long int change_id);
+
 // Proxy calls to bionic loader
 __attribute__((__weak__))
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
@@ -136,6 +139,11 @@ void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo
 __attribute__((__weak__))
 int android_get_application_target_sdk_version() {
   return __loader_android_get_application_target_sdk_version();
+}
+
+__attribute__((__weak__))
+bool android_is_change_enabled(unsigned long int change_id) {
+  return __loader_android_is_change_enabled(change_id);
 }
 
 #if defined(__arm__)

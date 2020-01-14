@@ -60,6 +60,7 @@ void* __loader_android_dlopen_ext(const char* filename,
                            const void* caller_addr) __LINKER_PUBLIC__;
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) __LINKER_PUBLIC__;
 int __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
+bool __loader_android_is_change_enabled(unsigned long int change_id) __LINKER_PUBLIC__;
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) __LINKER_PUBLIC__;
 android_namespace_t* __loader_android_get_exported_namespace(const char* name) __LINKER_PUBLIC__;
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
@@ -70,6 +71,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
 bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
                                                android_namespace_t* namespace_to) __LINKER_PUBLIC__;
 void __loader_android_set_application_target_sdk_version(int target) __LINKER_PUBLIC__;
+void __loader_android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
                        void* Ptr,
@@ -209,6 +211,16 @@ void __loader_android_set_application_target_sdk_version(int target) {
 
 int __loader_android_get_application_target_sdk_version() {
   return get_application_target_sdk_version();
+}
+
+void __loader_android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) {
+  // lock to avoid modification in the middle of dlopen.
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  set_application_disabled_changes(disabled_compat_changes, len);
+}
+
+bool __loader_android_is_change_enabled(unsigned long int change_id) {
+  return is_change_enabled(change_id);
 }
 
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) {
