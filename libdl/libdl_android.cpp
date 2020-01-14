@@ -34,6 +34,9 @@ __attribute__((__weak__, visibility("default")))
 void __loader_android_set_application_target_sdk_version(int target);
 
 __attribute__((__weak__, visibility("default")))
+void __loader_android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len);
+
+__attribute__((__weak__, visibility("default")))
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
                                                const char* library_search_path);
 
@@ -73,6 +76,11 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 __attribute__((__weak__))
 void android_set_application_target_sdk_version(int target) {
   __loader_android_set_application_target_sdk_version(target);
+}
+
+__attribute__((__weak__))
+void android_set_application_disabled_changes(unsigned long int* disabled_compat_changes, int len) {
+  __loader_android_set_application_disabled_changes(disabled_compat_changes, len);
 }
 
 __attribute__((__weak__))

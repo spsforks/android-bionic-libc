@@ -157,6 +157,7 @@ filegroup {
         "linker_cfi.cpp",
         "linker_config.cpp",
         "linker_debug.cpp",
+        "linker_disabled_changes.cpp",
         "linker_gdb_support.cpp",
         "linker_globals.cpp",
         "linker_libc_support.c",
