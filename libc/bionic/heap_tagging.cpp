@@ -30,10 +30,25 @@
 #include "malloc_common.h"
 
 #include <platform/bionic/malloc.h>
+#include <android/compat_changes.h>
 
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
+  // Just test android_is_change_enabled
+  int target_sdk = android_get_application_target_sdk_version();
+  if (android_is_change_enabled(130595455)) {
+    async_safe_format_log(ANDROID_LOG_WARN, "atrost", "Change 130595455 is enabled. sdk version: %d", target_sdk);
+  } else {
+    async_safe_format_log(ANDROID_LOG_WARN, "atrost", "Change 130595455 is disabled. sdk version: %d", target_sdk);
+  }
+
+  if (android_is_change_enabled(141455849)) {
+    async_safe_format_log(ANDROID_LOG_WARN, "atrost", "Change 141455849 is enabled. sdk version: %d", target_sdk);
+  } else {
+    async_safe_format_log(ANDROID_LOG_WARN, "atrost", "Change 141455849 is disabled. sdk version: %d", target_sdk);
+  }
+
   if (arg_size != sizeof(HeapTaggingLevel)) {
     return false;
   }
