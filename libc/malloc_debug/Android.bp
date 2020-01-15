@@ -40,10 +40,17 @@ cc_library_static {
         "-Wno-error=format-zero-length",
     ],
 
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.runtime",
-    ],
+    static: {
+        apex_available: [
+            "//apex_available:platform",
+            "com.android.runtime",
+            "com.android.cronet", // from libmemunreachable
+            "test_com.android.cronet",
+            "com.android.media", // from libmediautils, libdatasource
+            "test_com.android.media",
+            "com.android.bluetooth.updatable", // from libmediautils
+        ],
+    },
 }
 
 // ==============================================================
