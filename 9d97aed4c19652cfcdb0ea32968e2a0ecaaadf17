@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0257e68c_f70ed2d1",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-15T23:58:06Z",
+      "side": 1,
+      "message": "why \u0027int\u0027 here?",
+      "range": {
+        "startLine": 248,
+        "startChar": 11,
+        "endLine": 248,
+        "endChar": 14
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c1af1e2_ed84ea9b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-15T23:58:06Z",
+      "side": 1,
+      "message": "formatting",
+      "range": {
+        "startLine": 252,
+        "startChar": 6,
+        "endLine": 252,
+        "endChar": 14
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e454b3c_7dfe8a07",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-15T23:58:06Z",
+      "side": 1,
+      "message": "this doesn\u0027t get shown if no changes are disabled (i.e. g_disabled_compat_changes \u003d\u003d nullptr), is this by design?",
+      "range": {
+        "startLine": 259,
+        "startChar": 2,
+        "endLine": 259,
+        "endChar": 48
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "896cb51e_2612f750",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-15T23:58:06Z",
+      "side": 1,
+      "message": "How many disabled compat changes do we see on average? Is it worth implementing this as a sorted list to bsearch over?",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 29
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
