@@ -1301,6 +1301,7 @@ cc_library_static {
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
         "bionic/__cxa_thread_atexit_impl.cpp",
+        "bionic/android_fast_backtrace.cpp",
         "stdlib/atexit.c",
         "bionic/fork.cpp",
     ],

@@ -282,6 +282,20 @@ cc_test_library {
     },
 }
 
+cc_test_library {
+    name: "libBionicFramePointerTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "android_fast_backtrace_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    cflags: [
+        "-fno-omit-frame-pointer",
+    ],
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -431,6 +445,7 @@ cc_test_library {
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
+        "libBionicFramePointerTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
