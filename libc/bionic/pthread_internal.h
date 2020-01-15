@@ -125,6 +125,8 @@ class pthread_internal_t {
   //    code to handle retries.
   void* shadow_call_stack_guard_region;
 
+  uintptr_t stack_top;
+
   Lock startup_handshake_lock;
 
   void* mmap_base;
