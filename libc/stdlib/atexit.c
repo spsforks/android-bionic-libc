@@ -81,14 +81,50 @@ extern void __unregister_atfork(void* dso);
 int
 __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
-	struct atexit_fn *fnp;
+	struct atexit_fn *fnp = NULL;
 	size_t pgsize = getpagesize();
-	int ret = -1;
+	int ret = -1, n;
 
 	if (pgsize < sizeof(struct atexit))
 		return (-1);
 	_ATEXIT_LOCK();
-	struct atexit *p = __atexit;
+	struct atexit *p = __atexit, *non_full_p = NULL;
+
+	/*
+	 * Find already executed atexit function slot to reuse.
+	 * Only the empty slots at the very end of the list are viable,
+	 * choising any other would mean different callback order.
+	 *
+	 * Additionally: Do not reuse the very last function-pointer
+	 * which is reserved for the cleanup function.
+	 */
+	for (; p != NULL; p = p->next) {
+		for (n = p->ind; --n >= 0;) {
+			if (p->fns[n].fn_ptr != NULL || (p->next == NULL && n == 0)) {
+				goto reuse_slot;
+			} else {
+				fnp = &p->fns[n];
+				non_full_p = p;
+			}
+		}
+	}
+
+	/*
+	 * If we found a slot to reuse then unlock the page and
+	 * skip to the registration.
+	 */
+reuse_slot:
+	if (fnp != NULL) {
+		p = non_full_p;
+		if (mprotect(p, pgsize, PROT_READ | PROT_WRITE))
+			goto unlock;
+		goto registration;
+	}
+
+	/*
+	 * Reserve new slot if available, allocate new page otherwise.
+	 */
+	p = __atexit;
 	if (p != NULL) {
 		if (p->ind + 1 >= p->max)
 			p = NULL;
@@ -115,6 +151,8 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 		__atexit = p;
 	}
 	fnp = &p->fns[p->ind++];
+
+registration:
 	fnp->fn_ptr = func;
 	fnp->fn_arg = arg;
 	fnp->fn_dso = dso;
@@ -135,7 +173,7 @@ unlock:
 void
 __cxa_finalize(void *dso)
 {
-	struct atexit *p, *q;
+	struct atexit *p, *prev_p, *q;
 	struct atexit_fn fn;
 	int n, pgsize = getpagesize();
 	static int call_depth;
@@ -173,17 +211,76 @@ restart:
 
 	/*
 	 * If called via exit(), unmap the pages since we have now run
-	 * all the handlers.  We defer this until calldepth == 0 so that
-	 * we don't unmap things prematurely if called recursively.
+	 * all the handlers.
+	 *
+	 * Otherwise we finished runninng handlers of a single DSO.
+	 * In this case we can try to find newly empty pages that can
+	 * be unmapped.
+	 *
+	 * We defer this until calldepth == 0 so that we don't unmap
+	 * things prematurely if called recursively.
 	 */
-	if (dso == NULL && call_depth == 0) {
-		for (p = __atexit; p != NULL; ) {
-			q = p;
-			p = p->next;
-			munmap(q, pgsize);
+	if (call_depth == 0) {
+		if (dso == NULL) {
+			for (p = __atexit; p != NULL; ) {
+				q = p;
+				p = p->next;
+				munmap(q, pgsize);
+			}
+			__atexit = NULL;
+		} else {
+			/*
+			 * Go through all but the last page - it contains
+			 * a function-pointer reserved for the cleanup function
+			 */
+			prev_p = NULL;
+			p = __atexit;
+			while(p != NULL && p->next != NULL) {
+				/*
+				 * Check if there are any non-NULL handlers
+				 * in the current page.
+				 */
+				for (n = p->ind; --n >= 0;) {
+					if (p->fns[n].fn_ptr != NULL)
+						break;
+				}
+
+				/*
+				 * If there aren't, then this page can be
+				 * removed from the list and unmapped.
+				 * Otherwise proceed to the next page.
+				 */
+				if (n < 0) {
+					if (prev_p != NULL) {
+						/*
+						 * If we are unable to unlock the page then give up
+						 * trying to reclaim memory and continue with the list
+						 * still in a consistent state.
+						 */
+						if (mprotect(prev_p, pgsize, PROT_READ | PROT_WRITE) == 0) {
+							prev_p->next = p->next;
+							mprotect(prev_p, pgsize, PROT_READ);
+						}
+						else
+							goto unlock;
+					}
+
+					if(p == __atexit)
+						__atexit = p->next;
+
+					q = p;
+					p = p->next;
+					munmap(q, pgsize);
+				}
+				else
+				{
+					prev_p = p;
+					p = p->next;
+				}
+			}
 		}
-		__atexit = NULL;
 	}
+unlock:
 	_ATEXIT_UNLOCK();
 
 	/* If called via exit(), flush output of all open files. */
