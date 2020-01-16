@@ -135,7 +135,7 @@ unlock:
 void
 __cxa_finalize(void *dso)
 {
-	struct atexit *p, *q;
+	struct atexit *p, *prev_p, *q;
 	struct atexit_fn fn;
 	int n, pgsize = getpagesize();
 	static int call_depth;
@@ -173,17 +173,95 @@ restart:
 
 	/*
 	 * If called via exit(), unmap the pages since we have now run
-	 * all the handlers.  We defer this until calldepth == 0 so that
-	 * we don't unmap things prematurely if called recursively.
+	 * all the handlers.
+	 *
+	 * Otherwise we finished running handlers of a single DSO.
+	 * In this case we can try to find newly empty pages that can
+	 * be unmapped.
+	 *
+	 * We defer this until calldepth == 0 so that we don't unmap
+	 * things prematurely if called recursively.
 	 */
-	if (dso == NULL && call_depth == 0) {
-		for (p = __atexit; p != NULL; ) {
-			q = p;
-			p = p->next;
-			munmap(q, pgsize);
+	if (call_depth == 0) {
+		if (dso == NULL) {
+			for (p = __atexit; p != NULL; ) {
+				q = p;
+				p = p->next;
+				munmap(q, pgsize);
+			}
+			__atexit = NULL;
+		} else {
+			/*
+			 * Go through all but the last page - it contains
+			 * a function-pointer reserved for the 'cleanup function'
+			 */
+			prev_p = NULL;
+			p = __atexit;
+			while(p != NULL && p->next != NULL) {
+				/*
+				 * Check if there are any non-NULL handlers
+				 * in the current page.
+				 */
+				for (n = p->ind; --n >= 0;) {
+					if (p->fns[n].fn_ptr != NULL)
+						break;
+				}
+
+				/*
+				 * If there aren't, then this page can be
+				 * removed from the list and unmapped.
+				 * Otherwise proceed to the next page.
+				 */
+				if (n < 0) {
+					if (prev_p != NULL) {
+						/* Unlink from the list,
+						 *
+						 * If we are unable to unlock the page then give up
+						 * trying to reclaim memory and continue with the list
+						 * still in a consistent state.
+						 */
+						if (mprotect(prev_p, pgsize, PROT_READ | PROT_WRITE) == 0) {
+							prev_p->next = p->next;
+							mprotect(prev_p, pgsize, PROT_READ);
+						}
+						else
+							goto unlock;
+					}
+
+					if (p == __atexit)
+						__atexit = p->next;
+
+					q = p;
+					p = p->next;
+					munmap(q, pgsize);
+				} else {
+					prev_p = p;
+					p = p->next;
+				}
+			}
+
+			/*
+			 * Reclaim any NULL records at the beginning of the list.
+			 *
+			 * After unmapping completely NULL-filled pages the first
+			 * one in the list is either the only remaining page or it
+			 * has at least one non-NULL record.
+			 */
+			p = __atexit;
+			if (p != NULL) {
+				for (n = p->ind; --n >= 0;) {
+					if (p->fns[n].fn_ptr != NULL || (n == 0 && p->next == NULL)) {
+						if (n + 1 < p->ind && mprotect(p, pgsize, PROT_READ | PROT_WRITE) == 0) {
+							p->ind = n + 1;
+							mprotect(p, pgsize, PROT_READ);
+						}
+						break;
+					}
+				}
+			}
 		}
-		__atexit = NULL;
 	}
+unlock:
 	_ATEXIT_UNLOCK();
 
 	/* If called via exit(), flush output of all open files. */
