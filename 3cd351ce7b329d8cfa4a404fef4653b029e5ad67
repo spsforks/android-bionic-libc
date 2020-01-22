@@ -16,6 +16,24 @@
       "revId": "3cd351ce7b329d8cfa4a404fef4653b029e5ad67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f145d28_e7513a73",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-22T02:35:41Z",
+      "side": 1,
+      "message": "Right.\nUsed PR_GET_TAGGED_ADDR_CTRL to query the status without unsetting the MTE bits or worse.",
+      "parentUuid": "d1bc84f7_3170f41e",
+      "revId": "3cd351ce7b329d8cfa4a404fef4653b029e5ad67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
