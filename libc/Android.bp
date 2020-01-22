@@ -188,6 +188,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
+    ramdisk_available: true,
     srcs: ["bionic/libc_init_static.cpp"],
     cflags: [
         "-fno-stack-protector",
@@ -1491,6 +1492,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_common",
+    ramdisk_available: true,
 
     whole_static_libs: [
         "libc_nopthread",
@@ -1504,6 +1506,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_static_dispatch",
+    ramdisk_available: true,
 
     arch: {
         x86: {
@@ -1549,6 +1552,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_common_static",
+    ramdisk_available: true,
 
     whole_static_libs: [
         "libc_common",
@@ -1575,6 +1579,7 @@ cc_library_static {
     name: "libc_unwind_static",
     defaults: ["libc_defaults"],
     cflags: ["-DLIBC_STATIC"],
+    ramdisk_available: true,
 
     srcs: ["bionic/dl_iterate_phdr_static.cpp"],
     arch: {
@@ -1650,6 +1655,7 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
+    ramdisk_available: true,
     export_include_dirs: ["include"],
     product_variables: {
         platform_sdk_version: {
@@ -1817,6 +1823,7 @@ cc_library_headers {
     ],
     host_supported: true,
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
@@ -1965,6 +1972,7 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 

@@ -32,6 +32,7 @@ cc_library_static {
 
 cc_library {
     name: "libdl",
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     static_ndk_lib: true,
@@ -122,6 +123,7 @@ cc_library {
     name: "libdl_android",
 
     defaults: ["linux_bionic_supported"],
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
