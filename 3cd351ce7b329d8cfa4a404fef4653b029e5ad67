@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1bc84f7_3170f41e",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-22T02:29:34Z",
+      "side": 1,
+      "message": "IIUC - this will now fail on devices with \u003c 4.14 kernels. If we unconditionally prctl(PR_SET_TAGGED_ADDR_CTRL), we\u0027ll know if tagged pointer are supported in the kernel - and the check that libc gives us a tagged pointer isn\u0027t affected.",
+      "revId": "3cd351ce7b329d8cfa4a404fef4653b029e5ad67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
