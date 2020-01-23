@@ -16,6 +16,24 @@
       "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e7d0cd3_05f8f019",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1406,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-01-23T01:46:32Z",
+      "side": 1,
+      "message": "This extends libc_defaults, which sets recovery_available.\n\nThe reason I don\u0027t set ramdisk_available in libc_defaults is that I don\u0027t want to enable it for libc_ndk.\n\nPerhaps I should do it, and explicitly disable ramdisk_available for libc_ndk?",
+      "parentUuid": "fdfc8704_383db664",
+      "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
