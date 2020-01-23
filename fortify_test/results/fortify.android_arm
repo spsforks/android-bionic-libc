@@ -1,0 +1,87 @@
+00000000 W std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string<std::nullptr_t>(char const*)
+00000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/android_arm_armv8-a_static/obj/bionic/fortify_test/test.o:	file format ELF32-arm-little
+
+
+Disassembly of section .text._ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+
+00000000 _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+; external/libcxx/include/string:820
+       0: 2d e9 f0 41                  	push.w	{r4, r5, r6, r7, r8, lr}
+       4: 04 46                        	mov	r4, r0
+       6: 00 20                        	movs	r0, #0
+; external/libcxx/include/memory:2140
+       8: c4 e9 00 00                  	strd	r0, r0, [r4]
+       c: 88 46                        	mov	r8, r1
+       e: a0 60                        	str	r0, [r4, #8]
+; external/libcxx/include/__string:218
+      10: 08 46                        	mov	r0, r1
+      12: ff f7 fe ff                  	bl	#-4
+; external/libcxx/include/string:1783
+      16: 10 f1 10 0f                  	cmn.w	r0, #16
+      1a: 1d d2                        	bhs	#58 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x5c>
+      1c: 06 46                        	mov	r6, r0
+; external/libcxx/include/string:1786
+      1e: 0b 28                        	cmp	r0, #11
+      20: 05 d2                        	bhs	#10 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x32>
+; external/libcxx/include/string:1471
+      22: 70 00                        	lsls	r0, r6, #1
+      24: 27 46                        	mov	r7, r4
+      26: 07 f8 01 0b                  	strb	r0, [r7], #1
+; external/libcxx/include/__string:226
+      2a: 5e b9                        	cbnz	r6, #22
+      2c: 0f e0                        	b	#30 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x52>
+; external/libcxx/include/string:1534
+      2e: 06 f1 10 00                  	add.w	r0, r6, #16
+      32: 20 f0 0f 05                  	bic	r5, r0, #15
+; external/libcxx/include/new:239
+      36: 28 46                        	mov	r0, r5
+      38: ff f7 fe ff                  	bl	#-4
+      3c: 07 46                        	mov	r7, r0
+; external/libcxx/include/string:1496
+      3e: 68 1c                        	adds	r0, r5, #1
+      40: 84 e8 c1 00                  	stm.w	r4, {r0, r6, r7}
+; bionic/libc/include/bits/fortify/string.h:50
+      44: 38 46                        	mov	r0, r7
+      46: 41 46                        	mov	r1, r8
+      48: 32 46                        	mov	r2, r6
+      4a: ff f7 fe ff                  	bl	#-4
+      4e: 00 20                        	movs	r0, #0
+; external/libcxx/include/__string:209
+      50: b8 55                        	strb	r0, [r7, r6]
+; external/libcxx/include/string:826
+      52: 20 46                        	mov	r0, r4
+      54: bd e8 f0 81                  	pop.w	{r4, r5, r6, r7, r8, pc}
+; external/libcxx/include/string:1784
+      58: 20 46                        	mov	r0, r4
+      5a: ff f7 fe ff                  	bl	#-4
+
+Disassembly of section .text.startup:
+
+00000000 _GLOBAL__sub_I_test.cpp:
+       0: 10 b5                        	push	{r4, lr}
+; bionic/fortify_test/test.cpp:3
+       2: 09 48                        	ldr	r0, [pc, #36]
+       4: 09 49                        	ldr	r1, [pc, #36]
+       6: 78 44                        	add	r0, pc
+       8: 79 44                        	add	r1, pc
+       a: 04 68                        	ldr	r4, [r0]
+       c: 20 46                        	mov	r0, r4
+       e: ff f7 fe ff                  	bl	#-4
+      12: 07 48                        	ldr	r0, [pc, #28]
+      14: 21 46                        	mov	r1, r4
+      16: 07 4a                        	ldr	r2, [pc, #28]
+      18: 78 44                        	add	r0, pc
+      1a: 7a 44                        	add	r2, pc
+      1c: 00 68                        	ldr	r0, [r0]
+      1e: bd e8 10 40                  	pop.w	{r4, lr}
+      22: ff f7 fe bf                  	b.w	#-4 <_GLOBAL__sub_I_test.cpp+0x26>
+      26: 00 bf                        	nop
+
+00000028 $d.2:
+      28:	1e 00 00 00	.word	0x0000001e
+      2c:	20 00 00 00	.word	0x00000020
+      30:	14 00 00 00	.word	0x00000014
+      34:	16 00 00 00	.word	0x00000016

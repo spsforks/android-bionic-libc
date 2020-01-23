@@ -1,0 +1,36 @@
+00000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/linux_glibc_x86_static/obj/bionic/fortify_test/test.o:	file format ELF32-i386
+
+
+Disassembly of section .text.startup:
+
+00000000 _GLOBAL__sub_I_test.cpp:
+       0: 53                           	pushl	%ebx
+       1: 83 ec 08                     	subl	$8, %esp
+; external/libcxx/include/memory:2140
+       4: e8 00 00 00 00               	calll	0 <_GLOBAL__sub_I_test.cpp+0x9>
+       9: 5b                           	popl	%ebx
+       a: 81 c3 03 00 00 00            	addl	$3, %ebx
+      10: 8b 83 00 00 00 00            	movl	(%ebx), %eax
+      16: c7 00 00 00 00 00            	movl	$0, (%eax)
+      1c: c7 40 04 00 00 00 00         	movl	$0, 4(%eax)
+      23: c7 40 08 00 00 00 00         	movl	$0, 8(%eax)
+; external/libcxx/include/string:1471
+      2a: c6 00 08                     	movb	$8, (%eax)
+; external/libcxx/include/__string:226
+      2d: c7 40 01 74 65 73 74         	movl	$1953719668, 1(%eax)
+; external/libcxx/include/__string:209
+      34: c6 40 05 00                  	movb	$0, 5(%eax)
+; bionic/fortify_test/test.cpp:3
+      38: 83 ec 04                     	subl	$4, %esp
+      3b: 8b 93 00 00 00 00            	movl	(%ebx), %edx
+      41: 8d 8b 00 00 00 00            	leal	(%ebx), %ecx
+      47: 51                           	pushl	%ecx
+      48: 50                           	pushl	%eax
+      49: 52                           	pushl	%edx
+      4a: e8 fc ff ff ff               	calll	-4 <_GLOBAL__sub_I_test.cpp+0x4b>
+      4f: 83 c4 18                     	addl	$24, %esp
+      52: 5b                           	popl	%ebx
+      53: c3                           	retl

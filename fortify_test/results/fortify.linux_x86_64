@@ -1,0 +1,24 @@
+0000000000000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/linux_glibc_x86_64_static/obj/bionic/fortify_test/test.o:	file format ELF64-x86-64
+
+
+Disassembly of section .text.startup:
+
+0000000000000000 _GLOBAL__sub_I_test.cpp:
+; external/libcxx/include/memory:2140
+       0: 0f 57 c0                     	xorps	%xmm0, %xmm0
+       3: 48 8b 35 00 00 00 00         	movq	(%rip), %rsi
+       a: 0f 11 06                     	movups	%xmm0, (%rsi)
+       d: 48 c7 46 10 00 00 00 00      	movq	$0, 16(%rsi)
+; external/libcxx/include/string:1471
+      15: c6 06 08                     	movb	$8, (%rsi)
+; external/libcxx/include/__string:226
+      18: c7 46 01 74 65 73 74         	movl	$1953719668, 1(%rsi)
+; external/libcxx/include/__string:209
+      1f: c6 46 05 00                  	movb	$0, 5(%rsi)
+; bionic/fortify_test/test.cpp:3
+      23: 48 8b 3d 00 00 00 00         	movq	(%rip), %rdi
+      2a: 48 8d 15 00 00 00 00         	leaq	(%rip), %rdx
+      31: e9 00 00 00 00               	jmp	0 <_GLOBAL__sub_I_test.cpp+0x36>

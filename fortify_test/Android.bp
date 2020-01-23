@@ -1,0 +1,22 @@
+cc_defaults {
+    name: "fortify_inline_defaults",
+    host_supported: true,
+    srcs: ["test.cpp"],
+
+    target: {
+        windows: {
+            enabled: true,
+        },
+    }
+}
+
+cc_library_static {
+    name: "inline_test_fortify",
+    defaults: ["fortify_inline_defaults"],
+}
+
+cc_library_static {
+    name: "inline_test_no_fortify",
+    defaults: ["fortify_inline_defaults"],
+    cflags: ["-U_FORTIFY_SOURCE"],
+}

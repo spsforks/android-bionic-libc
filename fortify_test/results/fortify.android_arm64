@@ -1,0 +1,88 @@
+0000000000000000 W std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string<std::nullptr_t>(char const*)
+0000000000000000 B test
+
+error: failed to compute relocation: R_AARCH64_PREL32, Invalid data was encountered while parsing the file
+error: failed to compute relocation: R_AARCH64_PREL32, Invalid data was encountered while parsing the file
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/android_arm64_armv8-a_static/obj/bionic/fortify_test/test.o:	file format ELF64-aarch64-little
+
+
+Disassembly of section .text._ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+
+0000000000000000 _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+; external/libcxx/include/string:820
+       0: fd 7b bd a9                  	stp	x29, x30, [sp, #-48]!
+       4: f6 57 01 a9                  	stp	x22, x21, [sp, #16]
+       8: f4 4f 02 a9                  	stp	x20, x19, [sp, #32]
+       c: fd 03 00 91                  	mov	x29, sp
+      10: f3 03 00 aa                  	mov	x19, x0
+; external/libcxx/include/memory:2140
+      14: 1f 7c 00 a9                  	stp	xzr, xzr, [x0]
+      18: 1f 08 00 f9                  	str	xzr, [x0, #16]
+; external/libcxx/include/__string:218
+      1c: e0 03 01 aa                  	mov	x0, x1
+      20: f4 03 01 aa                  	mov	x20, x1
+      24: 00 00 00 94                  	bl	#0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x24>
+; external/libcxx/include/string:1783
+      28: 1f 40 00 b1                  	cmn	x0, #16
+      2c: 22 03 00 54                  	b.hs	#100 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x90>
+      30: f5 03 00 aa                  	mov	x21, x0
+; external/libcxx/include/string:1786
+      34: 1f 5c 00 f1                  	cmp	x0, #23
+      38: a2 00 00 54                  	b.hs	#20 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x4c>
+; external/libcxx/include/string:1471
+      3c: a8 7a 1f 53                  	lsl	w8, w21, #1
+      40: 68 16 00 38                  	strb	w8, [x19], #1
+; external/libcxx/include/__string:226
+      44: 55 01 00 b5                  	cbnz	x21, #40 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x6c>
+      48: 0d 00 00 14                  	b	#52 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x7c>
+; external/libcxx/include/string:1534
+      4c: a8 42 00 91                  	add	x8, x21, #16
+      50: 16 ed 7c 92                  	and	x22, x8, #0xfffffffffffffff0
+; external/libcxx/include/new:239
+      54: e0 03 16 aa                  	mov	x0, x22
+      58: 00 00 00 94                  	bl	#0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x58>
+; external/libcxx/include/string:1496
+      5c: c8 02 40 b2                  	orr	x8, x22, #0x1
+; external/libcxx/include/string:1503
+      60: 75 82 00 a9                  	stp	x21, x0, [x19, #8]
+; external/libcxx/include/string:1496
+      64: 68 02 00 f9                  	str	x8, [x19]
+      68: f3 03 00 aa                  	mov	x19, x0
+; bionic/libc/include/bits/fortify/string.h:50
+      6c: e0 03 13 aa                  	mov	x0, x19
+      70: e1 03 14 aa                  	mov	x1, x20
+      74: e2 03 15 aa                  	mov	x2, x21
+      78: 00 00 00 94                  	bl	#0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x78>
+; external/libcxx/include/__string:209
+      7c: 7f 6a 35 38                  	strb	wzr, [x19, x21]
+; external/libcxx/include/string:826
+      80: f4 4f 42 a9                  	ldp	x20, x19, [sp, #32]
+      84: f6 57 41 a9                  	ldp	x22, x21, [sp, #16]
+      88: fd 7b c3 a8                  	ldp	x29, x30, [sp], #48
+      8c: c0 03 5f d6                  	ret
+; external/libcxx/include/string:1784
+      90: e0 03 13 aa                  	mov	x0, x19
+      94: 00 00 00 94                  	bl	#0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x94>
+
+Disassembly of section .text.startup:
+
+0000000000000000 _GLOBAL__sub_I_test.cpp:
+       0: fd 7b be a9                  	stp	x29, x30, [sp, #-32]!
+       4: f3 0b 00 f9                  	str	x19, [sp, #16]
+       8: fd 03 00 91                  	mov	x29, sp
+; bionic/fortify_test/test.cpp:3
+       c: 13 00 00 90                  	adrp	x19, #0
+      10: 73 02 40 f9                  	ldr	x19, [x19]
+      14: 01 00 00 90                  	adrp	x1, #0
+      18: 21 00 00 91                  	add	x1, x1, #0
+      1c: e0 03 13 aa                  	mov	x0, x19
+      20: 00 00 00 94                  	bl	#0 <_GLOBAL__sub_I_test.cpp+0x20>
+      24: 00 00 00 90                  	adrp	x0, #0
+      28: 00 00 40 f9                  	ldr	x0, [x0]
+      2c: e1 03 13 aa                  	mov	x1, x19
+      30: f3 0b 40 f9                  	ldr	x19, [sp, #16]
+      34: 02 00 00 90                  	adrp	x2, #0
+      38: 42 00 00 91                  	add	x2, x2, #0
+      3c: fd 7b c2 a8                  	ldp	x29, x30, [sp], #32
+      40: 00 00 00 14                  	b	#0 <_GLOBAL__sub_I_test.cpp+0x40>

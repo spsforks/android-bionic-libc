@@ -1,0 +1,41 @@
+00000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_no_fortify/android_x86_x86_64_static/obj/bionic/fortify_test/test.o:	file format ELF32-i386
+
+
+Disassembly of section .text.startup:
+
+00000000 _GLOBAL__sub_I_test.cpp:
+       0: 55                           	pushl	%ebp
+       1: 89 e5                        	movl	%esp, %ebp
+       3: 53                           	pushl	%ebx
+       4: 83 e4 f0                     	andl	$-16, %esp
+       7: 83 ec 10                     	subl	$16, %esp
+; external/libcxx/include/memory:2140
+       a: e8 00 00 00 00               	calll	0 <_GLOBAL__sub_I_test.cpp+0xf>
+       f: 5b                           	popl	%ebx
+      10: 81 c3 03 00 00 00            	addl	$3, %ebx
+      16: 8b 83 00 00 00 00            	movl	(%ebx), %eax
+      1c: c7 00 00 00 00 00            	movl	$0, (%eax)
+      22: c7 40 04 00 00 00 00         	movl	$0, 4(%eax)
+      29: c7 40 08 00 00 00 00         	movl	$0, 8(%eax)
+; external/libcxx/include/string:1471
+      30: c6 00 08                     	movb	$8, (%eax)
+; external/libcxx/include/__string:226
+      33: c7 40 01 74 65 73 74         	movl	$1953719668, 1(%eax)
+; external/libcxx/include/__string:209
+      3a: c6 40 05 00                  	movb	$0, 5(%eax)
+; bionic/fortify_test/test.cpp:3
+      3e: 83 ec 04                     	subl	$4, %esp
+      41: 8b 93 00 00 00 00            	movl	(%ebx), %edx
+      47: 8d 8b 00 00 00 00            	leal	(%ebx), %ecx
+      4d: 51                           	pushl	%ecx
+      4e: 50                           	pushl	%eax
+      4f: 52                           	pushl	%edx
+      50: e8 fc ff ff ff               	calll	-4 <_GLOBAL__sub_I_test.cpp+0x51>
+      55: 83 c4 10                     	addl	$16, %esp
+      58: 8d 65 fc                     	leal	-4(%ebp), %esp
+      5b: 5b                           	popl	%ebx
+      5c: 5d                           	popl	%ebp
+      5d: c3                           	retl
