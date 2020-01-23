@@ -42,3 +42,13 @@ apex {
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
 }
+
+// Device SDK exposed by the runtime module.
+sdk {
+    name: "runtime-module-sdk",
+    native_shared_libs: [
+        "libc",
+        "libm",
+        "libdl",
+    ],
+}
