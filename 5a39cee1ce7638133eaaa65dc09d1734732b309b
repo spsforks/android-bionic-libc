@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdfc8704_383db664",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1406,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-01-23T01:08:55Z",
+      "side": 1,
+      "message": "Actually, is this needed?  I figure we shouldn\u0027t need anything that isn\u0027t recovery_available already, so this seems strange.",
+      "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
