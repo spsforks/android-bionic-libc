@@ -34,6 +34,24 @@
       "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc65502e_767ef57f",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1406,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-01-23T14:51:56Z",
+      "side": 1,
+      "message": "Ah, nevermind; I misread the \u0027false\u0027.  Looks good to me.",
+      "parentUuid": "5e7d0cd3_05f8f019",
+      "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
