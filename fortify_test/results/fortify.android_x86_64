@@ -1,0 +1,88 @@
+0000000000000000 W std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string<std::nullptr_t>(char const*)
+0000000000000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/android_x86_64_static/obj/bionic/fortify_test/test.o:	file format ELF64-x86-64
+
+
+Disassembly of section .text._ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+
+0000000000000000 _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc:
+; external/libcxx/include/string:820
+       0: 41 57                        	pushq	%r15
+       2: 41 56                        	pushq	%r14
+       4: 41 54                        	pushq	%r12
+       6: 53                           	pushq	%rbx
+       7: 50                           	pushq	%rax
+       8: 49 89 f6                     	movq	%rsi, %r14
+       b: 49 89 fc                     	movq	%rdi, %r12
+; external/libcxx/include/memory:2140
+       e: 0f 57 c0                     	xorps	%xmm0, %xmm0
+      11: 0f 11 07                     	movups	%xmm0, (%rdi)
+      14: 48 c7 47 10 00 00 00 00      	movq	$0, 16(%rdi)
+; external/libcxx/include/__string:218
+      1c: 48 89 f7                     	movq	%rsi, %rdi
+      1f: e8 00 00 00 00               	callq	0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x24>
+; external/libcxx/include/string:1783
+      24: 48 83 f8 f0                  	cmpq	$-16, %rax
+      28: 73 63                        	jae	99 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x8d>
+      2a: 49 89 c7                     	movq	%rax, %r15
+; external/libcxx/include/string:1786
+      2d: 48 83 f8 17                  	cmpq	$23, %rax
+      31: 73 13                        	jae	19 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x46>
+; external/libcxx/include/string:1471
+      33: 43 8d 04 3f                  	leal	(%r15,%r15), %eax
+      37: 41 88 04 24                  	movb	%al, (%r12)
+; external/libcxx/include/string:1512
+      3b: 49 83 c4 01                  	addq	$1, %r12
+; external/libcxx/include/__string:226
+      3f: 4d 85 ff                     	testq	%r15, %r15
+      42: 75 2a                        	jne	42 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x6e>
+      44: eb 36                        	jmp	54 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x7c>
+; external/libcxx/include/string:1534
+      46: 4c 89 fb                     	movq	%r15, %rbx
+      49: 48 83 c3 10                  	addq	$16, %rbx
+      4d: 48 83 e3 f0                  	andq	$-16, %rbx
+; external/libcxx/include/new:239
+      51: 48 89 df                     	movq	%rbx, %rdi
+      54: e8 00 00 00 00               	callq	0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x59>
+; external/libcxx/include/string:1503
+      59: 49 89 44 24 10               	movq	%rax, 16(%r12)
+; external/libcxx/include/string:1496
+      5e: 48 83 cb 01                  	orq	$1, %rbx
+      62: 49 89 1c 24                  	movq	%rbx, (%r12)
+; external/libcxx/include/string:1486
+      66: 4d 89 7c 24 08               	movq	%r15, 8(%r12)
+      6b: 49 89 c4                     	movq	%rax, %r12
+; bionic/libc/include/bits/fortify/string.h:50
+      6e: 4c 89 e7                     	movq	%r12, %rdi
+      71: 4c 89 f6                     	movq	%r14, %rsi
+      74: 4c 89 fa                     	movq	%r15, %rdx
+      77: e8 00 00 00 00               	callq	0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x7c>
+; external/libcxx/include/__string:209
+      7c: 43 c6 04 3c 00               	movb	$0, (%r12,%r15)
+; external/libcxx/include/string:826
+      81: 48 83 c4 08                  	addq	$8, %rsp
+      85: 5b                           	popq	%rbx
+      86: 41 5c                        	popq	%r12
+      88: 41 5e                        	popq	%r14
+      8a: 41 5f                        	popq	%r15
+      8c: c3                           	retq
+; external/libcxx/include/string:1784
+      8d: 4c 89 e7                     	movq	%r12, %rdi
+      90: e8 00 00 00 00               	callq	0 <_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2IDnEEPKc+0x95>
+
+Disassembly of section .text.startup:
+
+0000000000000000 _GLOBAL__sub_I_test.cpp:
+       0: 53                           	pushq	%rbx
+; bionic/fortify_test/test.cpp:3
+       1: 48 8b 1d 00 00 00 00         	movq	(%rip), %rbx
+       8: 48 8d 35 00 00 00 00         	leaq	(%rip), %rsi
+       f: 48 89 df                     	movq	%rbx, %rdi
+      12: e8 00 00 00 00               	callq	0 <_GLOBAL__sub_I_test.cpp+0x17>
+      17: 48 8b 3d 00 00 00 00         	movq	(%rip), %rdi
+      1e: 48 8d 15 00 00 00 00         	leaq	(%rip), %rdx
+      25: 48 89 de                     	movq	%rbx, %rsi
+      28: 5b                           	popq	%rbx
+      29: e9 00 00 00 00               	jmp	0 <_GLOBAL__sub_I_test.cpp+0x2e>

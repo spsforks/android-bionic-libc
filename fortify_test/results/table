@@ -1,0 +1,16 @@
+fortify     android_x86_64  not_inline
+fortify     android_x86     not_inline
+fortify     android_arm64   not_inline
+fortify     android_arm     not_inline
+fortify     linux_x86_64    inline
+fortify     linux_x86       inline
+fortify     windows_x86_64  inline
+fortify     windows_x86     inline
+no_fortify  android_x86_64  inline
+no_fortify  android_x86     inline
+no_fortify  android_arm64   inline
+no_fortify  android_arm     inline
+no_fortify  linux_x86_64    inline
+no_fortify  linux_x86       inline
+no_fortify  windows_x86_64  inline
+no_fortify  windows_x86     inline

@@ -1,0 +1,35 @@
+00000000 B test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_fortify/windows_x86_64_static/obj/bionic/fortify_test/test.o:	file format COFF-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 __dtor_test:
+; external/libcxx/include/string:1427
+       0: f6 05 ff ff ff ff 01         	testb	$1, -1(%rip)
+; external/libcxx/include/string:2138
+       7: 75 01                        	jne	1 <__dtor_test+0xa>
+; bionic/fortify_test/test.cpp:3
+       9: c3                           	retq
+; external/libcxx/include/string:1506
+       a: 48 8b 0d 10 00 00 00         	movq	16(%rip), %rcx
+; external/libcxx/include/new:320
+      11: e9 00 00 00 00               	jmp	0 <__dtor_test+0x16>
+      16: 66 2e 0f 1f 84 00 00 00 00 00	nopw	%cs:(%rax,%rax)
+
+0000000000000020 _GLOBAL__sub_I_test.cpp:
+; external/libcxx/include/memory:2140
+      20: 0f 57 c0                     	xorps	%xmm0, %xmm0
+      23: 0f 11 05 00 00 00 00         	movups	%xmm0, (%rip)
+      2a: 48 c7 05 0c 00 00 00 00 00 00 00     	movq	$0, 12(%rip)
+; external/libcxx/include/string:1471
+      35: c6 05 ff ff ff ff 08         	movb	$8, -1(%rip)
+; external/libcxx/include/__string:226
+      3c: c7 05 fd ff ff ff 74 65 73 74	movl	$1953719668, -3(%rip)
+; external/libcxx/include/__string:209
+      46: c6 05 04 00 00 00 00         	movb	$0, 4(%rip)
+; bionic/fortify_test/test.cpp:3
+      4d: 48 8d 0d 00 00 00 00         	leaq	(%rip), %rcx
+      54: e9 00 00 00 00               	jmp	0 <_GLOBAL__sub_I_test.cpp+0x39>

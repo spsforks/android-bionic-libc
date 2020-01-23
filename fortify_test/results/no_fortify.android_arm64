@@ -1,0 +1,34 @@
+0000000000000000 B test
+
+error: failed to compute relocation: R_AARCH64_PREL32, Invalid data was encountered while parsing the file
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_no_fortify/android_arm64_armv8-a_static/obj/bionic/fortify_test/test.o:	file format ELF64-aarch64-little
+
+
+Disassembly of section .text.startup:
+
+0000000000000000 _GLOBAL__sub_I_test.cpp:
+; external/libcxx/include/memory:2140
+       0: 01 00 00 90                  	adrp	x1, #0
+; bionic/fortify_test/test.cpp:3
+       4: 00 00 00 90                  	adrp	x0, #0
+; external/libcxx/include/memory:2140
+       8: 21 00 40 f9                  	ldr	x1, [x1]
+; bionic/fortify_test/test.cpp:3
+       c: 00 00 40 f9                  	ldr	x0, [x0]
+      10: 89 ae 8c 52                  	mov	w9, #25972
+      14: 02 00 00 90                  	adrp	x2, #0
+      18: 08 01 80 52                  	mov	w8, #8
+      1c: 69 8e ae 72                  	movk	w9, #29811, lsl #16
+      20: 42 00 00 91                  	add	x2, x2, #0
+; external/libcxx/include/memory:2140
+      24: 3f 7c 00 a9                  	stp	xzr, xzr, [x1]
+      28: 3f 08 00 f9                  	str	xzr, [x1, #16]
+; external/libcxx/include/string:1471
+      2c: 28 00 00 39                  	strb	w8, [x1]
+; external/libcxx/include/__string:226
+      30: 29 10 00 b8                  	stur	w9, [x1, #1]
+; external/libcxx/include/__string:209
+      34: 3f 14 00 39                  	strb	wzr, [x1, #5]
+; bionic/fortify_test/test.cpp:3
+      38: 00 00 00 14                  	b	#0 <_GLOBAL__sub_I_test.cpp+0x38>

@@ -1,0 +1,37 @@
+00000000 B _test
+
+
+/usr/local/google/home/dwillemsen/external/master/out/soong/.intermediates/bionic/fortify_test/inline_test_no_fortify/windows_x86_static/obj/bionic/fortify_test/test.o:	file format COFF-i386
+
+
+Disassembly of section .text:
+
+00000000 ___dtor_test:
+; external/libcxx/include/string:1427
+       0: f6 05 00 00 00 00 01         	testb	$1, 0
+; external/libcxx/include/string:2138
+       7: 74 0e                        	je	14 <___dtor_test+0x17>
+; external/libcxx/include/new:320
+       9: ff 35 08 00 00 00            	pushl	8
+       f: e8 00 00 00 00               	calll	0 <___dtor_test+0x14>
+      14: 83 c4 04                     	addl	$4, %esp
+; bionic/fortify_test/test.cpp:3
+      17: c3                           	retl
+      18: 0f 1f 84 00 00 00 00 00      	nopl	(%eax,%eax)
+
+00000020 __GLOBAL__sub_I_test.cpp:
+; external/libcxx/include/memory:2140
+      20: c7 05 00 00 00 00 00 00 00 00	movl	$0, 0
+      2a: c7 05 04 00 00 00 00 00 00 00	movl	$0, 4
+      34: c7 05 08 00 00 00 00 00 00 00	movl	$0, 8
+; external/libcxx/include/string:1471
+      3e: c6 05 00 00 00 00 08         	movb	$8, 0
+; external/libcxx/include/__string:226
+      45: c7 05 01 00 00 00 74 65 73 74	movl	$1953719668, 1
+; external/libcxx/include/__string:209
+      4f: c6 05 05 00 00 00 00         	movb	$0, 5
+; bionic/fortify_test/test.cpp:3
+      56: 68 00 00 00 00               	pushl	$0
+      5b: e8 00 00 00 00               	calll	0 <__GLOBAL__sub_I_test.cpp+0x40>
+      60: 83 c4 04                     	addl	$4, %esp
+      63: c3                           	retl
