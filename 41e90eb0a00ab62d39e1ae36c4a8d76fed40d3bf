@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "97ecaf89_87b588ff",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-01-24T23:26:10Z",
+      "side": 1,
+      "message": "The phrasing here makes it sound like it\u0027s not available in 29. May need to split into two sections for clarity.\n\nAlso, your [see below] link doesn\u0027t go anywhere, I think.",
+      "range": {
+        "startLine": 460,
+        "startChar": 9,
+        "endLine": 460,
+        "endChar": 52
+      },
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b14ec02c_2967b2d4",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -31,6 +54,24 @@
       "side": 1,
       "message": "given L468, i was leaning towards \"no, we should just fix the driver to do the right thing\".\n\n+danalbert for a third opinion...",
       "parentUuid": "b14ec02c_2967b2d4",
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ffeb2e3_8cddd8ce",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-01-24T23:26:10Z",
+      "side": 1,
+      "message": "Fixing the driver behavior SGTM. If no NDK user ever has to think about this that\u0027s best.",
+      "parentUuid": "3cbd52ad_61bb7e06",
       "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
