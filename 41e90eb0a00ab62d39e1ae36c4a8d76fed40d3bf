@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cfbe4873_ffe2dada",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-24T23:40:59Z",
+      "side": 1,
+      "message": "wasn\u0027t meant to be a link, just nested parens :-)",
+      "parentUuid": "97ecaf89_87b588ff",
+      "range": {
+        "startLine": 460,
+        "startChar": 9,
+        "endLine": 460,
+        "endChar": 52
+      },
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b14ec02c_2967b2d4",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -72,6 +96,24 @@
       "side": 1,
       "message": "Fixing the driver behavior SGTM. If no NDK user ever has to think about this that\u0027s best.",
       "parentUuid": "3cbd52ad_61bb7e06",
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5eda8cf_4af3c3f5",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-24T23:40:59Z",
+      "side": 1,
+      "message": "i\u0027ve rewritten the whole section, adding mention of packed relocations and removing mention of any linker flags --- let\u0027s just make the linker flags nonsense invisible and not mention it until/unless it actually becomes a real issue for people.",
+      "parentUuid": "6ffeb2e3_8cddd8ce",
       "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
