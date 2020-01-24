@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5e73b57_ce1d6d8d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-01-24T17:22:42Z",
+      "side": 1,
+      "message": "As in the comment above I keep away from this \u0027cleanup function\u0027, but I can\u0027t really find it. All I see is one zero-filled record that doesn\u0027t seem to be used for anything. (line 144)\n\nIs it still there somewhere or am I looking at some old \u0027code residue\u0027?",
+      "range": {
+        "startLine": 103,
+        "startChar": 31,
+        "endLine": 103,
+        "endChar": 62
+      },
+      "revId": "735e1712d8c29e0eeede14a55affdc292ee1e02e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
