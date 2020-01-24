@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b14ec02c_2967b2d4",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-01-24T23:21:29Z",
+      "side": 1,
+      "message": "Should this comment mention -Wl,--pack-dyn-relocs\u003d{android,relr,android+relr}? The -Wl,--use-android-relr-tags flag by itself won\u0027t turn on RELR.",
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
