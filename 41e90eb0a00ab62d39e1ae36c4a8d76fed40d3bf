@@ -16,6 +16,24 @@
       "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cbd52ad_61bb7e06",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-24T23:23:15Z",
+      "side": 1,
+      "message": "given L468, i was leaning towards \"no, we should just fix the driver to do the right thing\".\n\n+danalbert for a third opinion...",
+      "parentUuid": "b14ec02c_2967b2d4",
+      "revId": "41e90eb0a00ab62d39e1ae36c4a8d76fed40d3bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
