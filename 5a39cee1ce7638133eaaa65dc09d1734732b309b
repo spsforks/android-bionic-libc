@@ -52,6 +52,24 @@
       "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49faeb6e_80487a20",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1406,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-01-24T02:35:33Z",
+      "side": 1,
+      "message": "haha this is actually what I did! I set ramdisk_available:true in libc_defaults and disable it in libc_ndk.",
+      "parentUuid": "fc65502e_767ef57f",
+      "revId": "5a39cee1ce7638133eaaa65dc09d1734732b309b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
