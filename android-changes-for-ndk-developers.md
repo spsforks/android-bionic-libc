@@ -456,3 +456,13 @@ Most apps should be unaffected by this change, but apps that hook or try to
 detect hooking of C library functions might need to fix their code to cope
 with IFUNC relocations. The affected functions are from `<string.h>`, but
 may expand to include more functions (and more libraries) in future.
+
+## RELR (Available in API level 28 or 30 [see below])
+
+Android added experimental support for RELR relocations in API level 28, but
+using `SHT_` and `DT_` constants in the space reserved for OS private use. You
+can use the LLVM linker option `-Wl,--use-android-relr-tags` to generate these.
+
+API level 30 added support for the official `SHT_` and `DT_` constants.
+
+NDK apps should probably avoid using this functionality for now.
