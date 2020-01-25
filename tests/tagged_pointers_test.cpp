@@ -18,6 +18,7 @@
 #include <sys/prctl.h>
 
 #include "platform/bionic/malloc.h"
+#include "platform/bionic/mte.h"
 #include "utils.h"
 
 #include <bionic/malloc_tagged_pointers.h>
@@ -39,6 +40,10 @@ TEST(tagged_pointers, check_tagged_pointer_dies) {
   }
 
 #ifdef __aarch64__
+  if (mte_supported()) {
+    GTEST_SKIP() << "Tagged pointers are not used on MTE hardware.";
+  }
+
   void *x = malloc(1);
 
   // Ensure that `x` has a pointer tag.
