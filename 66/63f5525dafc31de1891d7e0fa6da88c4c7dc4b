@@ -1,0 +1,9 @@
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Code-Review+2: Dan Albert <danalbert@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Mon, 27 Jan 2020 18:10:10 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1217378
+Project: platform/bionic
+Branch: refs/heads/master
