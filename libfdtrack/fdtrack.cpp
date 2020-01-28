@@ -97,13 +97,14 @@ static void fd_hook(android_fdtrack_event* event) {
 }
 
 void fdtrack_dump() {
+  bool prev = android_fdtrack_set_enabled(false);
+
   if (!installed) {
     async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack not installed");
   } else {
     async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack dumping...");
   }
 
-  bool prev = android_fdtrack_set_enabled(false);
   for (int fd = 0; fd < static_cast<int>(stack_traces.size()); ++fd) {
     FdEntry* entry = GetFdEntry(fd);
     if (!entry) {
