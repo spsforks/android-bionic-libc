@@ -11,6 +11,9 @@
     },
     {
       "name": "memunreachable_unit_test"
-    }
+    },
+    {
+      "name": "fdtrack_test"
+    },
   ]
 }
