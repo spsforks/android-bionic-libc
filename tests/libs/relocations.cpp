@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
-extern "C" const char* relr() {
-  return "relr";
+extern "C" int i;
+
+extern "C" const char* function() {
+  return "relocations";
 }
