@@ -16,3 +16,8 @@ cc_library_shared {
     allow_undefined_symbols: true,
     recovery_available: true,
 }
+
+cc_binary {
+    name: "fdtrack_test",
+    srcs: ["fdtrack_test.cpp"],
+}
