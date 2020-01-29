@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ec63e43_18fce883",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "All of this needs to be merged with the new code, and it needs to support the ability to move to scudo easily.",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c819ec1_52e20978",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "This name is kind of weird, so it should be something like:\n\nlibc_malloc",
+      "range": {
+        "startLine": 1654,
+        "startChar": 11,
+        "endLine": 1654,
+        "endChar": 43
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0782974_963f238c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "Should be a name like:\n\nlibc_malloc_shared",
+      "range": {
+        "startLine": 1673,
+        "startChar": 11,
+        "endLine": 1673,
+        "endChar": 41
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afee3e58_2d1fcb1d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1681,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "Should be name like:\n\nlibc_malloc_static",
+      "range": {
+        "startLine": 1681,
+        "startChar": 11,
+        "endLine": 1681,
+        "endChar": 41
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6264d96a_98a2c99d",
+        "filename": "libc/bionic/gwp_asan/wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "Is there a reason you created these two files (header, source) in a separate directory for a single function that is only used once? Also why add a namespace, the place where this is used could be a simple static function in the file where it is used. It seems like overkill unless maybe you expect more code to be added over time.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "029ab10d_4f7199a2",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "If you enable gwp_asan, how does it interact with the limit code and the perfetto code? How did you test that they don\u0027t interact poorly?",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 30
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a67895c_ad2b829e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "What does it mean if gwp_asan is enabled and a call is made to malloc_iterate? Does it simply cause this to fail? Does it crash? There should be a comment describing how gwp_asan interacts with these functions.",
+      "range": {
+        "startLine": 287,
+        "startChar": 2,
+        "endLine": 287,
+        "endChar": 59
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90f00fd1_5bc0ecdc",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "If you move this to the malloc_common_dynamic.cpp (even if you don\u0027t do dynamic initialization), then you only need to add a InitGwpAsan in the header, and remove the references to the gwp_asan code. It would also centralize all gwp_asan code into one file.",
+      "range": {
+        "startLine": 387,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 1
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f165890_2b252f50",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-29T17:45:01Z",
+      "side": 1,
+      "message": "Is there any way to make this a lazy initialization? It seems unnecessary to init this in every process, when it\u0027s very unlikely to be used.",
+      "range": {
+        "startLine": 409,
+        "startChar": 1,
+        "endLine": 412,
+        "endChar": 18
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
