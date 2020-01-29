@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "027abb89_faa20da7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Done. Migration to Scudo should be easy (two line change, as documented). Also removed part of the comment that was out of date (the comment about removing the defaults in libc_scudo, as we now use libscudo from //external/scudo, not libc_scudo from toolchain). We should probably remove libc_scudo, as the toolchain scudo shouldn\u0027t ever be used.",
+      "parentUuid": "7ec63e43_18fce883",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c819ec1_52e20978",
         "filename": "libc/Android.bp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40f825a7_caee669d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1654,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c819ec1_52e20978",
+      "range": {
+        "startLine": 1654,
+        "startChar": 11,
+        "endLine": 1654,
+        "endChar": 43
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "124abbcf_47d42ff4",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0782974_963f238c",
+      "range": {
+        "startLine": 1673,
+        "startChar": 11,
+        "endLine": 1673,
+        "endChar": 41
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "afee3e58_2d1fcb1d",
         "filename": "libc/Android.bp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15a778cd_28e32736",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1681,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afee3e58_2d1fcb1d",
+      "range": {
+        "startLine": 1681,
+        "startChar": 11,
+        "endLine": 1681,
+        "endChar": 41
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2147ba88_f0a95fde",
+        "filename": "libc/bionic/gwp_asan/wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "I was expecting more code over time (for backtrace/backtrace print wrappers for GWP-ASan), but a crash handler change upstream is making both these no longer relevant, have moved into where it\u0027s used.",
+      "parentUuid": "6264d96a_98a2c99d",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "029ab10d_4f7199a2",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 5
@@ -128,6 +248,30 @@
       "writtenOn": "2020-01-29T17:45:01Z",
       "side": 1,
       "message": "If you enable gwp_asan, how does it interact with the limit code and the perfetto code? How did you test that they don\u0027t interact poorly?",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 30
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e100af03_da74a2d1",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Happy to test - I don\u0027t see any instructions at https://android.googlesource.com/platform/bionic/+/master/docs/native_allocator.md. Do you have anything in particular you\u0027re looking for?",
+      "parentUuid": "029ab10d_4f7199a2",
       "range": {
         "startLine": 77,
         "startChar": 15,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "23677cb6_8ae0bfd4",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "With this patchset GWP-ASan is *never* enabled, so nothing bad can happen.\n\nIf you were to enable GWP-ASan, and use libmemunreachable, malloc_iterate for GWP-ASan allocations will never execute the callback (i.e. you\u0027ll get false positive leaks). Good news - we have implemented this behaviour (aosp/1218941), so it won\u0027t be a problem now even if you turn GWP-ASan on.\n\nEdit: I just noticed that our implementation returns void. What is malloc_iterate supposed to return? jemalloc always returns zero, so I\u0027ve just done that here...",
+      "parentUuid": "9a67895c_ad2b829e",
+      "range": {
+        "startLine": 287,
+        "startChar": 2,
+        "endLine": 287,
+        "endChar": 59
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90f00fd1_5bc0ecdc",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 5
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "e1fed786_07dd6d45",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "Assuming /s/malloc_common_dynamic.cpp/malloc_common.cpp, done.\n\nWe will likely need to add `GetGuardedAllocator()` back at some point to expose it to debuggerd in-proc handler (to be sent to tombstoned via. ioctl), but we\u0027ll leave that for later.",
+      "parentUuid": "90f00fd1_5bc0ecdc",
+      "range": {
+        "startLine": 387,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 1
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f165890_2b252f50",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 5
@@ -197,6 +389,30 @@
       "writtenOn": "2020-01-29T17:45:01Z",
       "side": 1,
       "message": "Is there any way to make this a lazy initialization? It seems unnecessary to init this in every process, when it\u0027s very unlikely to be used.",
+      "range": {
+        "startLine": 409,
+        "startChar": 1,
+        "endLine": 412,
+        "endChar": 18
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b2e42de_60f941e4",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-29T21:58:22Z",
+      "side": 1,
+      "message": "GWP-ASan doesn\u0027t currently allow for lazy-initialisation - we can think about adding this feature if necessary (but would still be required to be inited before any threads are spawned). It\u0027s likely we\u0027ll need to do this before enabling to allow sampling in the zygote.\n\nFor now - can we simply init here? The cost of initialising GWP-ASan is near zero in always-disabled mode.",
+      "parentUuid": "8f165890_2b252f50",
       "range": {
         "startLine": 409,
         "startChar": 1,
