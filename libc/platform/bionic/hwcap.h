@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,45 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <platform/bionic/hwcap.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
-#include <errno.h>
-
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      exists = true;
-      return v->a_un.a_val;
-    }
-  }
-  exists = false;
-  return 0;
-}
-
-extern "C" unsigned long getauxval(unsigned long type) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, exists);
-  if (!exists) errno = ENOENT;
-  return result;
-}
+#pragma once
 
 #if defined(__aarch64__)
+extern "C" void __fast_hwcap2();
 
-extern "C" {
-
-typedef void __fast_hwcap2_func();
-DEFINE_IFUNC_FOR(__fast_hwcap2) {
-  return reinterpret_cast<__fast_hwcap2_func*>(arg->_hwcap2);
+// Provides fast access to getauxval(AT_HWCAP2). __fast_hwcap2 is actually an ifunc whose resolver
+// returns the value of getauxval(AT_HWCAP2) instead of a function pointer, so this function only
+// requires a single GOT access to read the "address" of __fast_hwcap2, even outside of libc.
+inline unsigned long fast_hwcap2() {
+  return reinterpret_cast<unsigned long>(__fast_hwcap2);
 }
-
-}
-
 #endif
