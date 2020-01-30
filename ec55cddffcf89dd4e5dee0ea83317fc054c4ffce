@@ -46,6 +46,30 @@
       "revId": "ec55cddffcf89dd4e5dee0ea83317fc054c4ffce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0da33260_5f4e682f",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-30T15:34:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "059f4701_4a95c82f",
+      "range": {
+        "startLine": 66,
+        "startChar": 1,
+        "endLine": 66,
+        "endChar": 55
+      },
+      "revId": "ec55cddffcf89dd4e5dee0ea83317fc054c4ffce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

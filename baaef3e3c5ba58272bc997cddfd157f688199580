@@ -308,6 +308,30 @@
     },
     {
       "key": {
+        "uuid": "86339f68_3ec139a8",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-30T15:34:13Z",
+      "side": 1,
+      "message": "I\u0027ll test the bionic/perfetto tests under enabled GWP-ASan, but they pass wholesale when disabled.",
+      "parentUuid": "8d818759_0b790d16",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 30
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a67895c_ad2b829e",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 5
