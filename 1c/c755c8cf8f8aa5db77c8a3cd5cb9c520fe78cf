@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Christopher Ferris <cferris@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Christopher Ferris <cferris@google.com>
+Submitted-at: Thu, 30 Jan 2020 21:47:37 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1222557
+Project: platform/bionic
+Branch: refs/heads/master
