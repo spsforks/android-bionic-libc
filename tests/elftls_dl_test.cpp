@@ -164,13 +164,24 @@ TEST(elftls_dl, dtv_resize) {
   static_assert(sizeof(TlsDtv) == 3 * sizeof(void*),
                 "This test assumes that the Dtv has a 3-word header");
 
-  // Initially there are 3 modules:
+  // Initially there are 4 modules:
   //  - the main test executable
+  //  - libc
   //  - libtest_elftls_shared_var
   //  - libtest_elftls_tprel
 
-  // The initial DTV is an empty DTV with no generation and a size of 0.
+#if defined(__aarch64__)
+  // The arm64 TLSDESC resolver doesn't update the DTV if it is new enough for
+  // the given access.
   TlsDtv* zero_dtv = dtv();
+#else
+  // __tls_get_addr updates the DTV anytime the generation counter changes. The
+  // initial DTV is a real DTV, as the generation counter changed from accesses
+  // in libc.
+  TlsDtv* initial_dtv = dtv();
+  TlsDtv* zero_dtv = initial_dtv->next;
+#endif
+
   ASSERT_EQ(0u, zero_dtv->count);
   ASSERT_EQ(nullptr, zero_dtv->next);
   ASSERT_EQ(kTlsGenerationNone, zero_dtv->generation);
@@ -179,9 +190,11 @@ TEST(elftls_dl, dtv_resize) {
   auto func1 = LOAD_LIB("libtest_elftls_dynamic_filler_1.so");
   ASSERT_EQ(101, func1());
 
-  // After loading one module, the DTV should be initialized to the next
-  // power-of-2 size (including the header).
+#if defined(__aarch64__)
+  // The first module forced the TLSDEC resolved to update the DTV on aarch64.
   TlsDtv* initial_dtv = dtv();
+#endif
+
   ASSERT_EQ(5u, initial_dtv->count);
   ASSERT_EQ(zero_dtv, initial_dtv->next);
   ASSERT_LT(0u, initial_dtv->generation);
@@ -189,30 +202,32 @@ TEST(elftls_dl, dtv_resize) {
   // Load module 5.
   auto func2 = LOAD_LIB("libtest_elftls_dynamic_filler_2.so");
   ASSERT_EQ(102, func1());
-  ASSERT_EQ(201, func2());
-  ASSERT_EQ(initial_dtv, dtv());
-  ASSERT_EQ(5u, initial_dtv->count);
-
-  // Load module 6.
-  auto func3 = LOAD_LIB("libtest_elftls_dynamic_filler_3.so");
-  ASSERT_EQ(103, func1());
-  ASSERT_EQ(202, func2());
 
 #if defined(__aarch64__)
-  // The arm64 TLSDESC resolver doesn't update the DTV if it is new enough for
-  // the given access.
+  // As above, arm64 hasn't updated the DTV yet, as it hasn't needed to.
   ASSERT_EQ(5u, dtv()->count);
 #else
-  // __tls_get_addr updates the DTV anytime the generation counter changes.
+  // As above, the DTV has been updated due to the generation change.
   ASSERT_EQ(13u, dtv()->count);
 #endif
 
-  ASSERT_EQ(301, func3());
+  // Calling the descriptor during this GE access updates the DTV (even on
+  // aarch64).
+  ASSERT_EQ(201, func2());
 
+  // Now, the DTV is all up-to-date.
   TlsDtv* new_dtv = dtv();
-  ASSERT_EQ(13u, new_dtv->count);
   ASSERT_NE(initial_dtv, new_dtv);
   ASSERT_EQ(initial_dtv, new_dtv->next);
+  ASSERT_EQ(13u, new_dtv->count);
+  ASSERT_LT(0u, new_dtv->generation);
+
+  // Load module 6. Should not create a new DTV.
+  auto func3 = LOAD_LIB("libtest_elftls_dynamic_filler_3.so");
+  ASSERT_EQ(103, func1());
+  ASSERT_EQ(202, func2());
+  ASSERT_EQ(301, func3());
+  ASSERT_EQ(new_dtv, dtv());
 
 #undef LOAD_LIB
 #else
