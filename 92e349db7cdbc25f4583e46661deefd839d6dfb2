@@ -22,6 +22,30 @@
       "revId": "92e349db7cdbc25f4583e46661deefd839d6dfb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dc56c34_6b844bac",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T18:17:54Z",
+      "side": 1,
+      "message": "Oops, nevermind, I somehow thought this was the usable size function.",
+      "parentUuid": "0c613dd7_d950cd5d",
+      "range": {
+        "startLine": 120,
+        "startChar": 27,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "92e349db7cdbc25f4583e46661deefd839d6dfb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
