@@ -518,6 +518,30 @@
       "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "943da36e_6b44ab3e",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-30T01:45:11Z",
+      "side": 1,
+      "message": "With Opts.Enabled \u003d false init returns immediately.\n\nWhen we enable gwp-asan, we are going to do it with something like 1% probability (so that only a few processes on a device run it at the same time). Those processes will pay the price of full initialization, which is ~ 3 mmaps and 2 mprotects.",
+      "parentUuid": "3c9d0298_0ebaec9a",
+      "range": {
+        "startLine": 409,
+        "startChar": 1,
+        "endLine": 412,
+        "endChar": 18
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
