@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1fb59b1_474caeba",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T02:43:55Z",
+      "side": 1,
+      "message": "Is there any way to isolate this out of this file? This is why the linker and bionic/tests need to include the gwp_asan headers, and it seems a bit wasteful.\n\nFor example, could you make this a void* pointer and in the actual use cast it?",
+      "range": {
+        "startLine": 66,
+        "startChar": 1,
+        "endLine": 66,
+        "endChar": 55
+      },
+      "revId": "ec55cddffcf89dd4e5dee0ea83317fc054c4ffce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
