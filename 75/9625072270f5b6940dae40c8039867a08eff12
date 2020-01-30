@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+NDK-API-Review+1: Elliott Hughes <enh@google.com>
+Submitted-by: Josh Gao <jmgao@google.com>
+Submitted-at: Thu, 30 Jan 2020 22:42:47 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1220198
+Project: platform/bionic
+Branch: refs/heads/master
