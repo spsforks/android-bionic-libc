@@ -1482,6 +1482,7 @@ LIBC_Q { # introduced=Q
 
 LIBC_R { # introduced=R
   global:
+    __fast_hwcap2; # arm64 apex llndk
     __mempcpy_chk;
     __tls_get_addr; # arm64
     call_once;
