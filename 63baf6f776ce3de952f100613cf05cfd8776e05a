@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cefc7637_7fbf971b",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-30T01:36:08Z",
+      "side": 1,
+      "message": "Perhaps this is better done without UB, by changing either memory tag (with asm(\"stg\")) or pointer tag.",
+      "revId": "63baf6f776ce3de952f100613cf05cfd8776e05a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
