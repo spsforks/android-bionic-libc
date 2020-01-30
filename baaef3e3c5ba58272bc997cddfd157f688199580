@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "8d818759_0b790d16",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T01:35:46Z",
+      "side": 1,
+      "message": "There is nothing specific called out, but if you enable gwp-asan, do bionic unit tests pass? I suspect that the android_mallopt.* tests are the ones that might fail. But you can see that if you bypass the calls, that functionality will no longer work.\n\nAlso, if you enable gwp_asan and then run the perfetto integration tests. external/perfetto is where the code lives.\n\nNeither of these are features of a native allocator, but are features that live above the native allocator and built on top of them, so that document doesn\u0027t really apply.\n\nI\u0027m not sure if these features can coexist with gwp_asan, but the limit functionality is enabled for a few processes as a security feature.",
+      "parentUuid": "e100af03_da74a2d1",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 30
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a67895c_ad2b829e",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 5
@@ -319,6 +343,30 @@
       "side": 1,
       "message": "With this patchset GWP-ASan is *never* enabled, so nothing bad can happen.\n\nIf you were to enable GWP-ASan, and use libmemunreachable, malloc_iterate for GWP-ASan allocations will never execute the callback (i.e. you\u0027ll get false positive leaks). Good news - we have implemented this behaviour (aosp/1218941), so it won\u0027t be a problem now even if you turn GWP-ASan on.\n\nEdit: I just noticed that our implementation returns void. What is malloc_iterate supposed to return? jemalloc always returns zero, so I\u0027ve just done that here...",
       "parentUuid": "9a67895c_ad2b829e",
+      "range": {
+        "startLine": 287,
+        "startChar": 2,
+        "endLine": 287,
+        "endChar": 59
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4557b27_40548a38",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T01:35:46Z",
+      "side": 1,
+      "message": "0 means no error, non-zero is an error, but the non-zero errors that could be returned don\u0027t have much meaning. In other words, returning 1 or 100 is still an error, and it won\u0027t be treated like an errno value.",
+      "parentUuid": "23677cb6_8ae0bfd4",
       "range": {
         "startLine": 287,
         "startChar": 2,
@@ -378,6 +426,30 @@
     },
     {
       "key": {
+        "uuid": "0ef35ee0_82ac6df4",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T01:35:46Z",
+      "side": 1,
+      "message": "Oops, yes move to malloc_common.cpp.",
+      "parentUuid": "e1fed786_07dd6d45",
+      "range": {
+        "startLine": 387,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 1
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f165890_2b252f50",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 5
@@ -413,6 +485,30 @@
       "side": 1,
       "message": "GWP-ASan doesn\u0027t currently allow for lazy-initialisation - we can think about adding this feature if necessary (but would still be required to be inited before any threads are spawned). It\u0027s likely we\u0027ll need to do this before enabling to allow sampling in the zygote.\n\nFor now - can we simply init here? The cost of initialising GWP-ASan is near zero in always-disabled mode.",
       "parentUuid": "8f165890_2b252f50",
+      "range": {
+        "startLine": 409,
+        "startChar": 1,
+        "endLine": 412,
+        "endChar": 18
+      },
+      "revId": "baaef3e3c5ba58272bc997cddfd157f688199580",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c9d0298_0ebaec9a",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T01:35:46Z",
+      "side": 1,
+      "message": "That seems fine, do you know how non-zero? Is it in the nanosecond or microseconds range? I think anything sub millisecond is probably fine, but it does add cost to process start-up.",
+      "parentUuid": "4b2e42de_60f941e4",
       "range": {
         "startLine": 409,
         "startChar": 1,
