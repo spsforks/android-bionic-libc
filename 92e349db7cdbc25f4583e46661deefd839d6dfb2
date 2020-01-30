@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c613dd7_d950cd5d",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T18:13:59Z",
+      "side": 1,
+      "message": "Don\u0027t you need something here to check if this is a gwp_asan pointer? Or does gwp_asan return a pointer directly from the native allocator without modification?",
+      "range": {
+        "startLine": 120,
+        "startChar": 27,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "92e349db7cdbc25f4583e46661deefd839d6dfb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
