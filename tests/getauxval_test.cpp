@@ -21,6 +21,8 @@
 #include <sys/utsname.h>
 #include <gtest/gtest.h>
 
+#include <bionic/hwcap.h>
+
 TEST(getauxval, expected_values) {
   ASSERT_EQ(0UL, getauxval(AT_SECURE));
   ASSERT_EQ(getuid(), getauxval(AT_UID));
@@ -62,4 +64,12 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
   }
 #endif
   GTEST_SKIP() << "This test is only meaningful for 32-bit ARM code on 64-bit devices";
+}
+
+TEST(getauxval, fast_hwcap2) {
+#if defined(__aarch64__)
+  EXPECT_EQ(fast_hwcap2(), getauxval(AT_HWCAP2));
+#else
+  GTEST_SKIP() << "This test is only meaningful on aarch64";
+#endif
 }

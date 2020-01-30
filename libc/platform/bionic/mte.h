@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,45 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <platform/bionic/hwcap.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
-#include <errno.h>
+#pragma once
 
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      exists = true;
-      return v->a_un.a_val;
-    }
-  }
-  exists = false;
-  return 0;
-}
+#include <bionic/hwcap.h>
+#include <bionic/mte_kernel.h>
 
-extern "C" unsigned long getauxval(unsigned long type) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, exists);
-  if (!exists) errno = ENOENT;
-  return result;
-}
-
-#if defined(__aarch64__)
-
-extern "C" {
-
-typedef void __fast_hwcap2_func();
-DEFINE_IFUNC_FOR(__fast_hwcap2) {
-  return reinterpret_cast<__fast_hwcap2_func*>(arg->_hwcap2);
-}
-
-}
-
+#ifdef __aarch64__
+inline bool mte_supported() {
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  return fast_hwcap2() & HWCAP2_MTE;
+#else
+  return false;
 #endif
+}
+#endif
+
+struct ScopedDisableMTE {
+  ScopedDisableMTE() {
+#ifdef __aarch64__
+    if (mte_supported()) {
+      __asm__ __volatile__(".arch_extension mte; msr tco, #1");
+    }
+#endif
+  }
+
+  ~ScopedDisableMTE() {
+#ifdef __aarch64__
+    if (mte_supported()) {
+      __asm__ __volatile__(".arch_extension mte; msr tco, #0");
+    }
+#endif
+  }
+};
