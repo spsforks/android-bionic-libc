@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cace08e_ae65513f",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-01-31T01:15:56Z",
+      "side": 1,
+      "message": "I would\u0027ve thought that libc.so would only use IE accesses to its TLS variables, which won\u0027t allocate a real DTV? i.e. We should mark the variables with __attribute__((tls_model(\"initial-exec\"))) or compile the relevant code with -ftls-model\u003dinitial-exec.\n\nThere should be a new DTV slot for libc.so, but the per-thread DTV is only allocated with a dynamic access (__tls_get_addr or tlsdesc_resolver_dynamic).\n\nIf a dynamic access from libc.so allocates the DTV for arm32, then I\u0027d guess that arm64 is different because the linker knows that libc.so\u0027s TLS data is static TLS, so it can use tlsdesc_resolver_static instead of tlsdesc_resolver_dynamic, and tlsdesc_resolver_static ignores the DTV (and the DTV generation field).",
+      "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
