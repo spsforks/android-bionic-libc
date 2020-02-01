@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,21 +28,17 @@
 
 #pragma once
 
-#include <pthread.h>
-#include <stdatomic.h>
+#include <stddef.h>
 
-#include <private/bionic_globals.h>
-#include <private/bionic_malloc_dispatch.h>
+bool InitGwpAsan(void* arg, size_t arg_size);
 
-// Function prototypes.
-bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* prefix,
-                       MallocDispatch* dispatch_table);
+// Returns whether this process has been selected for sampling or not.
+bool ShouldGwpAsanSampleProcess();
 
-void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table);
+// Returns the array of gFunctions for GWP-ASan.
+void** GetGwpAsanGlobalFunctions();
 
-bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix,
-                        bool is_gwp_asan = false);
+// Returns the malloc dispatch array for GWP-ASan.
+struct MallocDispatch;
+MallocDispatch* GetGwpAsanMallocDispatch();
 
-// Lock for globals, to guarantee that only one thread is doing a mutate.
-extern pthread_mutex_t gGlobalsMutateLock;
-extern _Atomic bool gGlobalsMutating;
