@@ -64,6 +64,7 @@
 
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
@@ -369,6 +370,21 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
   return true;
 }
 
+static bool MaybeInstallGwpAsanHooks(libc_globals *globals) {
+  if (!ShouldGwpAsanSampleProcess()) {
+    return false;
+  }
+
+  void** GwpAsanGlobalFunctions = GetGwpAsanGlobalFunctions();
+  for (size_t i = 0; i < FUNC_LAST; ++i) {
+    gFunctions[i] = GwpAsanGlobalFunctions[i];
+  }
+
+  globals->malloc_dispatch_table = *GetGwpAsanMallocDispatch();
+
+  return FinishInstallHooks(globals, nullptr, "GWP-ASan");
+}
+
 static bool InstallHooks(libc_globals* globals, const char* options, const char* prefix,
                          const char* shared_lib) {
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &globals->malloc_dispatch_table);
@@ -406,6 +422,8 @@ static void MallocInitImpl(libc_globals* globals) {
     // heapprofd signal handler invocations.
     HeapprofdRememberHookConflict();
   }
+
+  MaybeInstallGwpAsanHooks(globals);
 }
 
 // Initializes memory allocation framework.
@@ -530,6 +548,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   }
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
     return SetHeapTaggingLevel(arg, arg_size);
+  }
+  if (opcode == M_INITIALIZE_GWP_ASAN) {
+    return InitGwpAsan(arg, arg_size);
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);

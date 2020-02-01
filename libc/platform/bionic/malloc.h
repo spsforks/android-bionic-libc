@@ -97,6 +97,12 @@ enum {
   //   arg_size = sizeof(bool)
   M_GET_PROCESS_PROFILEABLE = 9,
 #define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
+  // Initialize GWP-ASan. This must be called before any allocations occur, and
+  // while the program is still single threaded.
+  //   arg = gwp_asan::options::Options*
+  //   arg_size = sizeof(gwp_asan::options::Options)
+  M_INITIALIZE_GWP_ASAN = 10,
+#define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
 };
 
 enum HeapTaggingLevel {
