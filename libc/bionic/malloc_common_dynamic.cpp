@@ -64,6 +64,7 @@
 
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
@@ -342,10 +343,15 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
   return impl_handle;
 }
 
-bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix) {
+bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix,
+                        bool is_gwp_asan) {
   init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gZygoteChild, options)) {
-    error_log("%s: failed to enable malloc %s", getprogname(), prefix);
+    // Don't print warning if this was GWP-ASan trying to init. This should
+    // usually fail, as we only enable on a subset of processes.
+    if (!is_gwp_asan) {
+      error_log("%s: failed to enable malloc %s", getprogname(), prefix);
+    }
     ClearGlobalFunctions();
     return false;
   }
@@ -367,6 +373,21 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
     warning_log("failed to set atexit cleanup function: %d", ret_value);
   }
   return true;
+}
+
+static bool MaybeInstallGwpAsanHooks(libc_globals *globals) {
+  if (!ShouldGwpAsanSampleProcess()) {
+    return false;
+  }
+
+  void** GwpAsanGlobalFunctions = GetGwpAsanGlobalFunctions();
+  for (size_t i = 0; i < FUNC_LAST; ++i) {
+    gFunctions[i] = GwpAsanGlobalFunctions[i];
+  }
+
+  globals->malloc_dispatch_table = *GetGwpAsanMallocDispatch();
+
+  return FinishInstallHooks(globals, nullptr, "GWP-ASan");
 }
 
 static bool InstallHooks(libc_globals* globals, const char* options, const char* prefix,
@@ -406,6 +427,8 @@ static void MallocInitImpl(libc_globals* globals) {
     // heapprofd signal handler invocations.
     HeapprofdRememberHookConflict();
   }
+
+  MaybeInstallGwpAsanHooks(globals);
 }
 
 // Initializes memory allocation framework.
@@ -530,6 +553,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   }
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
     return SetHeapTaggingLevel(arg, arg_size);
+  }
+  if (opcode == M_INITIALIZE_GWP_ASAN) {
+    return InitGwpAsan(arg, arg_size);
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
