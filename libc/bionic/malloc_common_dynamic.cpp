@@ -64,6 +64,7 @@
 
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
@@ -261,6 +262,12 @@ static bool CheckLoadMallocDebug(char** options) {
   return true;
 }
 
+void SetGlobalFunctions(void* functions[]) {
+  for (size_t i = 0; i < FUNC_LAST; i++) {
+    gFunctions[i] = functions[i];
+  }
+}
+
 static void ClearGlobalFunctions() {
   for (size_t i = 0; i < FUNC_LAST; i++) {
     gFunctions[i] = nullptr;
@@ -344,7 +351,13 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
 
 bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix) {
   init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gZygoteChild, options)) {
+
+  const MallocDispatch* prev_dispatch = GetDispatchTable();
+  if (prev_dispatch == nullptr) {
+    prev_dispatch = &__libc_malloc_default_dispatch;
+  }
+
+  if (!init_func(prev_dispatch, &gZygoteChild, options)) {
     error_log("%s: failed to enable malloc %s", getprogname(), prefix);
     ClearGlobalFunctions();
     return false;
@@ -387,6 +400,8 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
 static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
+
+  MaybeInitGwpAsanFromLibc();
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
@@ -530,6 +545,13 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   }
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
     return SetHeapTaggingLevel(arg, arg_size);
+  }
+  if (opcode == M_INITIALIZE_GWP_ASAN) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    return MaybeInitGwpAsan(*reinterpret_cast<bool*>(arg));
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
