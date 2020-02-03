@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c65fb2f_7141a692",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "pass a single bool argument",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05607946_0f5c5d80",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "storing a dispatch pointer \"for later\" will break things if other malloc is initialized after us",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 27
+      },
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca89e77e_25d8cb90",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "zygote_child \u003d\u003d nullptr\nis this ever true?",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73da94fb_c2fa1256",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "what about app_process64?\nAlso, is it not zygote/zygote64 at this point yet?",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3c08819_84aa599f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "why not call InitGwpAsan directly?",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82f7145e_3c8ac41f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "heapprofd returns -1 here",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68376395_0fe182e6",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "It might be easier to simply declare an extern global for this and the dispatch table below.",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20786eba_f4ce0ffc",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "please call it for what it does, i.e. bool no_warning_if_fails, or may_fail, something like that",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "575ea2c0_e49c3079",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-03T19:15:10Z",
+      "side": 1,
+      "message": "this needs to be done in mallopt, too",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
