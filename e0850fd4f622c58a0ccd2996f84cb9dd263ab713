@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f1142f21_169436df",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c65fb2f_7141a692",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05607946_0f5c5d80",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "556a2c00_503f9cb7",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Fixed as part of rework, gwp_asan_initialize is now called during zygote mallopt() and libc init.",
+      "parentUuid": "05607946_0f5c5d80",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 27
+      },
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca89e77e_25d8cb90",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -56,6 +98,24 @@
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "492ba936_ff74ce0c",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "I don\u0027t see any places currently - but malloc_debug does the same check (https://cs.android.com/android/platform/superproject/+/master:bionic/libc/malloc_debug/malloc_debug.cpp;l\u003d260?q\u003ddebug_initialize) :). Happy to kill if you want.",
+      "parentUuid": "ca89e77e_25d8cb90",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -112,6 +172,24 @@
     },
     {
       "key": {
+        "uuid": "312814a2_49891ea0",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Looks to me that they\u0027re app_process32/app_process64. Have made the change to fix it for 64-bit. Worth a discussion - do we want GWP-ASan for 32-bit?",
+      "parentUuid": "b60cf74f_b3a51c60",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3c08819_84aa599f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -147,6 +225,24 @@
     },
     {
       "key": {
+        "uuid": "12eed93a_eb800b28",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a497151_5a08cd1f",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82f7145e_3c8ac41f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -164,6 +260,24 @@
     },
     {
       "key": {
+        "uuid": "22bc4876_92804f06",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82f7145e_3c8ac41f",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68376395_0fe182e6",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -178,6 +292,24 @@
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95636b5a_d04c6ebe",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68376395_0fe182e6",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -216,6 +348,24 @@
     },
     {
       "key": {
+        "uuid": "cf2dfef0_31ba6271",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cfeb49fc_d2e04608",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "575ea2c0_e49c3079",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 4
@@ -230,6 +380,24 @@
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d72bffc9_58cd0c9f",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "575ea2c0_e49c3079",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -253,6 +421,30 @@
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92260db1_23639351",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-04T17:20:07Z",
+      "side": 1,
+      "message": "All uninitialised threads will take 2^32 mallocs() to realise that they can actually receive sampled allocations. You also get some racy behaviour, which can manifest in a crash if you call free() from T1 while T2 is calling init().\n\nIf there\u0027s the possibility of calling init() from multiple threads concurrently, or call init() more than once, you\u0027re going to have a bad time.",
+      "parentUuid": "eb5ef188_44c57d40",
+      "range": {
+        "startLine": 102,
+        "startChar": 14,
+        "endLine": 102,
+        "endChar": 62
+      },
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
