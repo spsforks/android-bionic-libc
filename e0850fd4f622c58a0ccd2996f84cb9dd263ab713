@@ -190,6 +190,24 @@
     },
     {
       "key": {
+        "uuid": "072f2072_4e1dbcff",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-04T18:08:30Z",
+      "side": 1,
+      "message": "_we_ probably don\u0027t care too much, but there are definitely OEMs who\u0027re shipping 32-bit devices who complain about not being able to use shiny new things like hwasan there.\n\nwhat would 32-bit support cost on our side? i\u0027m assuming it\u0027s basically free?",
+      "parentUuid": "312814a2_49891ea0",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3c08819_84aa599f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
