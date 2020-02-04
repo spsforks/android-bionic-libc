@@ -226,6 +226,24 @@
     },
     {
       "key": {
+        "uuid": "77112f53_257b02a9",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-04T19:10:08Z",
+      "side": 1,
+      "message": "yeah, sgtm. we should document this in a README.md for gwp-asan though, to make OEMs aware (both of the fact that they can use this on LP32, but also what\u0027s likely to cause trouble).",
+      "parentUuid": "54636b5d_78dc9e88",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3c08819_84aa599f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
