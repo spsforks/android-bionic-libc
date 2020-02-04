@@ -76,6 +76,24 @@
     },
     {
       "key": {
+        "uuid": "b60cf74f_b3a51c60",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-04T02:25:46Z",
+      "side": 1,
+      "message": "I tried this and it\u0027s still app_process by this time. I think both zygote are app_process at this point, but it\u0027s worth verifying.",
+      "parentUuid": "73da94fb_c2fa1256",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3c08819_84aa599f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 4
@@ -87,6 +105,24 @@
       "writtenOn": "2020-02-03T19:15:10Z",
       "side": 1,
       "message": "why not call InitGwpAsan directly?",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a497151_5a08cd1f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-04T02:25:46Z",
+      "side": 1,
+      "message": "Agreed, no reason to call the higher level function.",
+      "parentUuid": "c3c08819_84aa599f",
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -144,6 +180,24 @@
     },
     {
       "key": {
+        "uuid": "cfeb49fc_d2e04608",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-04T02:25:46Z",
+      "side": 1,
+      "message": "Yeah, maybe instead warn_on_init_fail and then you can have the warn_on_init_fail down below, rather than the negative.",
+      "parentUuid": "20786eba_f4ce0ffc",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "575ea2c0_e49c3079",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 4
@@ -155,6 +209,29 @@
       "writtenOn": "2020-02-03T19:15:10Z",
       "side": 1,
       "message": "this needs to be done in mallopt, too",
+      "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb5ef188_44c57d40",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-04T02:25:46Z",
+      "side": 1,
+      "message": "What happens if it is not single-threaded? Will it fail/crash, or something else?",
+      "range": {
+        "startLine": 102,
+        "startChar": 14,
+        "endLine": 102,
+        "endChar": 62
+      },
       "revId": "e0850fd4f622c58a0ccd2996f84cb9dd263ab713",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
