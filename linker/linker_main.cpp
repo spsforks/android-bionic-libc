@@ -294,6 +294,8 @@ static ExecutableInfo load_executable(const char* orig_path) {
   result.phdr = elf_reader.loaded_phdr();
   result.phdr_count = elf_reader.phdr_count();
   result.entry_point = elf_reader.entry_point();
+
+  __libc_shared_globals()->is_zygote = elf_reader.is_zygote();
   return result;
 }
 

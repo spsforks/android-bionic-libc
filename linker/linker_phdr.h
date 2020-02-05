@@ -53,8 +53,10 @@ class ElfReader {
   const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
   const char* get_string(ElfW(Word) index) const;
+  const char* get_section_name(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
   ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
+  bool is_zygote() const;
 
  private:
   bool ReadElfHeader();
@@ -67,6 +69,7 @@ class ElfReader {
   bool FindPhdr();
   bool CheckPhdr(ElfW(Addr));
   bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
+  bool ReadShStrTabSection();
 
   bool did_read_;
   bool did_load_;
@@ -91,6 +94,10 @@ class ElfReader {
   MappedFileFragment strtab_fragment_;
   const char* strtab_;
   size_t strtab_size_;
+
+  MappedFileFragment shstrtab_fragment_;
+  const char* shstrtab_;
+  size_t shstrtab_size_;
 
   // First page of reserved address space.
   void* load_start_;

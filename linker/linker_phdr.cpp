@@ -159,7 +159,8 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
       ReadSectionHeaders() &&
-      ReadDynamicSection()) {
+      ReadDynamicSection() &&
+      ReadShStrTabSection()) {
     did_read_ = true;
   }
 
@@ -362,6 +363,54 @@ bool ElfReader::ReadSectionHeaders() {
   }
 
   shdr_table_ = static_cast<const ElfW(Shdr)*>(shdr_fragment_.data());
+  return true;
+}
+
+const char* ElfReader::get_section_name(ElfW(Word) index) const {
+  return shstrtab_ + index;
+}
+
+bool ElfReader::is_zygote() const {
+  for (size_t i = 0; i < shdr_num_; ++i) {
+    if (shdr_table_[i].sh_type != SHT_NOTE) {
+      continue;
+    }
+
+    std::string name = get_section_name(shdr_table_[i].sh_name);
+    if (name == ".note.zygote") {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool ElfReader::ReadShStrTabSection() {
+  if (header_.e_shstrndx == SHN_UNDEF) {
+    // No shstrndx available.
+    return true;
+  }
+
+  if (header_.e_shstrndx == SHN_XINDEX) {
+    // .shstrtab is bigger than SHN_LORESERVE and is relocated. Unsupported for
+    // now.
+    return true;
+  }
+
+  const ElfW(Shdr)* shstrtab = &shdr_table_[header_.e_shstrndx];
+
+  if (!CheckFileRange(shstrtab->sh_offset, shstrtab->sh_size, alignof(const char))) {
+    DL_ERR_AND_LOG("\"%s\" has invalid offset/size of the .shstrtab section",
+                   name_.c_str());
+    return false;
+  }
+
+  if (!shstrtab_fragment_.Map(fd_, file_offset_, shstrtab->sh_offset, shstrtab->sh_size)) {
+    DL_ERR("\"%s\" shstrtab section mmap failed: %s", name_.c_str(), strerror(errno));
+    return false;
+  }
+
+  shstrtab_ = static_cast<const char*>(shstrtab_fragment_.data());
+  shstrtab_size_ = shstrtab_fragment_.size();
   return true;
 }
 

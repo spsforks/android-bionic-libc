@@ -96,6 +96,7 @@ struct libc_shared_globals {
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
+  bool is_zygote = false;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
