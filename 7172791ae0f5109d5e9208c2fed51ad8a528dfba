@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6746ae2f_f71c6e31",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-06T21:28:08Z",
+      "side": 1,
+      "message": "(that\u0027s annoying, and really distracting in my inbox.)",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0c3816e_688ae1ac",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-06T21:28:08Z",
+      "side": 1,
+      "message": "indentation\n\nalso missing __INTRODUCED_IN\n\nand don\u0027t you mean 30? i\u0027m pretty sure we shipped 29 already :-)",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "216416d5_932ca14e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-06T21:28:08Z",
+      "side": 1,
+      "message": "this needs to go in the appropriate LIBC_X section below. (where X would be R this year.)",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aee03a78_dcad8350",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-06T21:28:08Z",
+      "side": 1,
+      "message": "that shouldn\u0027t be necessary (and isn\u0027t strictly accurate either --- this list is stuff that shouldn\u0027t be exported but accidentally was long ago).",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

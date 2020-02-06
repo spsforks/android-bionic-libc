@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d8e8b60_173b14dd",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-06T21:28:08Z",
+      "side": 0,
+      "message": "put this line back?",
+      "revId": "f7c40da307be6a9cbe2287306d9b7c25f16bb09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
