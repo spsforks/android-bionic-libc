@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c720ec7a_8731f9f9",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-06T00:34:55Z",
+      "side": 1,
+      "message": "Sorry, I\u0027m finding the sentence difficult to parse. /s/\"If not usable size\"/\"If usable size\"?.\n\nIn answer to the question, this returns the size that malloc() actually asked for. malloc_usable_size() for a GWP-ASan allocation also returns the same thing. sql code only uses malloc_usable_size() bytes right? They\u0027re not doing extra-heinous things like malloc(1) and relying on it being 16-bytes big and ignoring malloc_usable_size()?",
+      "parentUuid": "b3a292cb_65fc5502",
+      "range": {
+        "startLine": 140,
+        "startChar": 11,
+        "endLine": 140,
+        "endChar": 19
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4958c052_153410a2",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 8
@@ -68,6 +92,30 @@
       "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea5a250c_375823e9",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-06T00:34:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2e60287_b7663df5",
+      "range": {
+        "startLine": 277,
+        "startChar": 8,
+        "endLine": 277,
+        "endChar": 30
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
