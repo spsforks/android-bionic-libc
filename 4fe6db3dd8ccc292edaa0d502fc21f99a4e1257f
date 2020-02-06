@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3a292cb_65fc5502",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:20:26Z",
+      "side": 1,
+      "message": "Is this the same as usable size, or is this the exact size that was allocated? If not usable size, then this should be so that you copy the entire pointer. Some of the sql code will break if you don\u0027t.",
+      "range": {
+        "startLine": 140,
+        "startChar": 11,
+        "endLine": 140,
+        "endChar": 19
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4958c052_153410a2",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:20:26Z",
+      "side": 1,
+      "message": "As above, you might want to use usable size instead of the requested size.",
+      "range": {
+        "startLine": 142,
+        "startChar": 43,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2e60287_b7663df5",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:20:26Z",
+      "side": 1,
+      "message": "Is this stored in a variable for some reason? It doesn\u0027t look like you are using the value any where else.",
+      "range": {
+        "startLine": 277,
+        "startChar": 8,
+        "endLine": 277,
+        "endChar": 30
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

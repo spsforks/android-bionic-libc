@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09afb409_77796c3d",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:20:26Z",
+      "side": 0,
+      "message": "It\u0027s a bit confusing to move this out of here. I think moving it into malloc_common.cpp, and the NativeAllocatorDispatch() function definition into that file, and the prototype into malloc_common.h is not as confusing.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 4
+      },
+      "revId": "0e0b473a4c01ec6b739ac7aa9eccb63005fa3da2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
