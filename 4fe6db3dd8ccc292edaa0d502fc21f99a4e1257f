@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bc73b37e_5265b943",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:43:13Z",
+      "side": 1,
+      "message": "Sorry, yes that was my question. If:\n\n  void* ptr \u003d gwp_asan_malloc(bytes);\n  malloc_usable_size(ptr) \u003d\u003d bytes\n\nThen there is no problem.",
+      "parentUuid": "c720ec7a_8731f9f9",
+      "range": {
+        "startLine": 140,
+        "startChar": 11,
+        "endLine": 140,
+        "endChar": 19
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4958c052_153410a2",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 8
@@ -69,6 +93,30 @@
       "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaa1c6d5_72880c27",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-06T00:43:13Z",
+      "side": 1,
+      "message": "Since bytes and the usable size are the same, no need to change this code.",
+      "parentUuid": "4958c052_153410a2",
+      "range": {
+        "startLine": 142,
+        "startChar": 43,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "4fe6db3dd8ccc292edaa0d502fc21f99a4e1257f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
