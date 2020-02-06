@@ -16,6 +16,24 @@
       "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "821fd6c6_6bfc6b58",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-06T01:16:21Z",
+      "side": 1,
+      "message": "So everything in GWP-Asan is annotated with the initial-exec attribute (https://cs.android.com/android/platform/superproject/+/master:external/gwp_asan/gwp_asan/definitions.h;l\u003d12?q\u003dfile:gwp_asan%20INITIAL).\n\nI don\u0027t know why the dtv is reallocated, as all GWP-ASan references shouldn\u0027t be through dynamic accesses.\n\nI\u0027m considering the possibility of there being a thread_local variable that\u0027s currently using emutls in libc. We globally change libc to use -fno-emulated-tls in the GWP-ASan patch, so that may induce a dynamic access and thus produce a DTV.",
+      "parentUuid": "9cace08e_ae65513f",
+      "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
