@@ -25,7 +25,6 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
 #ifndef _PTHREAD_H_
 #define _PTHREAD_H_
 
@@ -314,6 +313,19 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
         __pthread_cleanup_pop( &__cleanup, (execute)); \
     } while (0);                                       \
 
+#if __ANDROID_API__ >= 29
+// https://sourceware.org/glibc/wiki/ThreadPropertiesAPI
+//
+// API for querying various properties of the current thread, such as stack bounds,
+// static/dynamic TLS bounds.
+
+// Gets the bounds of static tls for the current thread.
+// Returns 0 for success.
+    int __libc_get_static_tls_bounds(void **stls_beg, void **stls_end);
+#endif  // __ANDROID_API__ >= 29
+
+
 __END_DECLS
+
 
 #endif

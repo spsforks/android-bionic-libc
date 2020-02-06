@@ -64,6 +64,7 @@ LIBC {
     __isthreaded; # arm x86 mips var
     __libc_current_sigrtmax; # introduced=21
     __libc_current_sigrtmin; # introduced=21
+    __libc_get_static_tls_bounds; #introduced=29
     __libc_init;
     __llseek; # arm x86 mips
     __loc_aton;

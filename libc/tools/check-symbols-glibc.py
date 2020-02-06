@@ -181,6 +181,7 @@ libresolv_stuff = set([
 known = set([
   '_ctype_',
   '__libc_init',
+  '__libc_get_static_tls_bounds',
 ])
 # POSIX has some stuff that's too stupid for words (a64l) or not actually
 # implemented in glibc unless you count always failing with ENOSYS as
