@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2af89b37_ac922acd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-07T17:27:38Z",
+      "side": 1,
+      "message": "Fixed - it was auto-completed from my G account.",
+      "parentUuid": "6746ae2f_f71c6e31",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0c3816e_688ae1ac",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2020-02-06T21:28:08Z",
       "side": 1,
       "message": "indentation\n\nalso missing __INTRODUCED_IN\n\nand don\u0027t you mean 30? i\u0027m pretty sure we shipped 29 already :-)",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ea9cb7a_d4bf0f74",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-07T17:27:38Z",
+      "side": 1,
+      "message": "Done - make it 30. Let me know if you think it should be 31",
+      "parentUuid": "a0c3816e_688ae1ac",
       "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ba672_2de37c0b",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-07T17:27:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "216416d5_932ca14e",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aee03a78_dcad8350",
         "filename": "libc/tools/check-symbols-glibc.py",
         "patchSetId": 1
@@ -73,6 +133,24 @@
       "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a39297f5_eb864a8a",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-07T17:27:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aee03a78_dcad8350",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
