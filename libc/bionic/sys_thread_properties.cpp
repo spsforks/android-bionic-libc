@@ -44,11 +44,18 @@
 #include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
+<<<<<<< HEAD
 int __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) {
   const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
   *stls_begin = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
   *stls_end = reinterpret_cast<char*>(*stls_begin) + layout.size();
   return 0;
+=======
+void __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) {
+  const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  *stls_begin = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
+  *stls_end = reinterpret_cast<char*>(*stls_begin) + layout.size();
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 }
 
 int __libc_register_thread_exit_callback(thread_exit_cb_t cb) {
@@ -57,11 +64,19 @@ int __libc_register_thread_exit_callback(thread_exit_cb_t cb) {
     return 1;
   }
 
+<<<<<<< HEAD
   modules.thread_exit_callbacks[modules.modules.thread_exit_callback_count++] = cb;
   return 0;
 }
 
 static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(tid_t tid) {
+=======
+  modules.thread_exit_callbacks[modules.thread_exit_callback_count++] = cb;
+  return 0;
+}
+
+static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(pid_t tid) {
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
   // If tid is same as self, then we don't need ptrace.
   if (gettid() == tid) return __get_bionic_tcb();
 
@@ -74,7 +89,11 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(tid_t tid)
       .iov_base = &regs,
       .iov_len = sizeof(regs),
   };
+<<<<<<< HEAD
   if (ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &pt_iov) == 0) {
+=======
+  if (ptrace(PTRACE_GETREGSET, tid, NT_PRSTATUS, &pt_iov) == 0) {
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 #if defined(__x86_64__)
     tp_reg = reinterpret_cast<void**>(regs.fs);
 #elif defined(__i386__)
@@ -82,6 +101,7 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(tid_t tid)
 #endif
   }
 #elif defined(__aarch64__) || defined(__arm__)
+<<<<<<< HEAD
   struct iovec iovec;
   uint64_t reg;
 
@@ -89,19 +109,36 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(tid_t tid)
   iovec.iov_len = sizeof(reg);
 
   if (ptrace(PTRACE_GETREGSET, pid, NT_ARM_TLS, &iovec) == 0) {
+=======
+  uint64_t reg;
+  struct iovec pt_iov {
+    .iov_base = &reg, .iov_len = sizeof(reg),
+  };
+
+  if (ptrace(PTRACE_GETREGSET, tid, NT_ARM_TLS, &pt_iov) == 0) {
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
     tp_reg = reinterpret_cast<void**>(reg);
   }
 #endif
 
   if (tp_reg == nullptr) {
+<<<<<<< HEAD
     async_safe_write_log(ANDROID_LOG_ERROR, "", "Unable to read registers");
+=======
+    async_safe_write_log(ANDROID_LOG_ERROR, "libc",
+                         "__get_bionic_tcb_for_thread failed to read thread register.");
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
     return nullptr;
   }
 
   return reinterpret_cast<bionic_tcb*>(&tp_reg[MIN_TLS_SLOT]);
 }
 
+<<<<<<< HEAD
 int __libc_iterate_dynamic_tls(tid_t tid, dtls_callback_t cb, void* arg) {
+=======
+int __libc_iterate_dynamic_tls(pid_t tid, dtls_visitor_t cb, void* arg) {
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
   bionic_tcb* const tcb = __get_bionic_tcb_for_thread(tid);
   if (tcb == nullptr) {
     return 1;
@@ -109,17 +146,29 @@ int __libc_iterate_dynamic_tls(tid_t tid, dtls_callback_t cb, void* arg) {
 
   TlsDtv* const dtv = __get_tcb_dtv(tcb);
   // TODO: not all of these will be DTLS
+<<<<<<< HEAD
   for (int i = 0; i < dtv->count; ++i) {
     cb(/*dtls_beg=*/dtv->modules[i],
        /*dtls_end=*/dtv->module_segment_sizes[i],
+=======
+  for (size_t i = 0; i < dtv->count; ++i) {
+    struct ModuleSizePair& mod = dtv->modules[i];
+    cb(/*dynamic_tls_begin=*/mod.module,
+       /*dynamic_tls_end=*/static_cast<void*>(static_cast<char*>(mod.module) + mod.segment_size),
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
        /*dso_id=*/__tls_module_idx_to_id(i), arg);
   }
 
   return 0;
 }
 
+<<<<<<< HEAD
 void __libc_register_dynamic_tls_listener(dtls_callback_t on_creation,
                                           dtls_callback_t on_destruction) {
+=======
+void __libc_register_dynamic_tls_listener(dtls_listener_t on_creation,
+                                          dtls_listener_t on_destruction) {
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
   TlsModules& tls_modules = __libc_shared_globals()->tls_modules;
   tls_modules.on_creation_cb = on_creation;
   tls_modules.on_destruction_cb = on_destruction;

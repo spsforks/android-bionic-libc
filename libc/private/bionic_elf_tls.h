@@ -33,6 +33,7 @@
 #include <stdatomic.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/thread_properties_defines.h>
 
 __LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
 
@@ -143,10 +144,19 @@ struct TlsModules {
 
   static constexpr int MAX_THREAD_EXIT_CALLBACK_COUNT = 8;
   int thread_exit_callback_count = 0;
+<<<<<<< HEAD
   thread_exit_cb_t thread_exit_callbacks[MAX_THREAD_EXIT_CALLBACK_COUNT];
+=======
+  thread_exit_cb_t thread_exit_callbacks[MAX_THREAD_EXIT_CALLBACK_COUNT] = {};
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 };
 
 void __init_static_tls(void* static_tls);
+
+struct ModuleSizePair {
+  void* module;
+  size_t segment_size;
+};
 
 // Dynamic Thread Vector. Each thread has a different DTV. For each module
 // (executable or solib), the DTV has a pointer to that module's TLS memory. The
@@ -170,9 +180,13 @@ struct TlsDtv {
   // on the fast path for a TLS lookup. The arm64 tlsdesc_resolver.S depends on
   // the layout of fields past this point.
   size_t generation;
+<<<<<<< HEAD
   void* modules[];
   // The segment size corresponding to each of the modules above.
   size_t module_segment_sizes[];
+=======
+  struct ModuleSizePair modules[];
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 };
 
 struct TlsIndex {

@@ -52,7 +52,12 @@ void test_iter_tls() {
 
   auto cb = [](void* dtls_begin, void* dtls_end, size_t dso_id, void* arg) {
     printf("dso_id= %d | dtls_begin = %p | dtls_end = %p\n", dso_id, dtls_begin, dtls_end);
+<<<<<<< HEAD
   } int ret = __libc_iterate_dynamic_tls(gettid(), db, nullptr);
+=======
+  };
+  int ret = __libc_iterate_dynamic_tls(gettid(), cb, nullptr);
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
   printf("test_iter_tls:%d\n", ert);
 }
 

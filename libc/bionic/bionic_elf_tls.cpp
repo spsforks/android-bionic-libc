@@ -205,7 +205,11 @@ void __init_static_tls(void* static_tls) {
 }
 
 static inline size_t dtv_size_in_bytes(size_t module_count) {
+<<<<<<< HEAD
   return sizeof(TlsDtv) + module_count * (sizeof(void*) + sizeof(size_t));
+=======
+  return sizeof(TlsDtv) + module_count * sizeof(ModuleSizePair);
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 }
 
 // Calculates the number of module slots to allocate in a new DTV. For small
@@ -263,7 +267,7 @@ static void update_tls_dtv(bionic_tcb* tcb) {
     if (i < modules.module_count) {
       const TlsModule& mod = modules.module_table[i];
       if (mod.static_offset != SIZE_MAX) {
-        dtv->modules[i] = static_tls + mod.static_offset;
+        dtv->modules[i].module = static_tls + mod.static_offset;
         continue;
       }
       if (mod.first_generation != kTlsGenerationNone &&
@@ -271,9 +275,15 @@ static void update_tls_dtv(bionic_tcb* tcb) {
         continue;
       }
     }
+<<<<<<< HEAD
     allocator.free(dtv->modules[i]);
     dtv->modules[i] = nullptr;
     dtv->module_segment_sizes[i] = 0;
+=======
+    allocator.free(dtv->modules[i].module);
+    dtv->modules[i].module = nullptr;
+    dtv->modules[i].segment_size = 0;
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
   }
 
   dtv->generation = atomic_load(&modules.generation);
@@ -292,19 +302,29 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
 
   TlsDtv* dtv = __get_tcb_dtv(tcb);
   const size_t module_idx = __tls_module_id_to_idx(ti->module_id);
-  void* mod_ptr = dtv->modules[module_idx];
+  void* mod_ptr = dtv->modules[module_idx].module;
   if (mod_ptr == nullptr) {
     const TlsSegment& segment = modules.module_table[module_idx].segment;
     mod_ptr = __libc_shared_globals()->tls_allocator.memalign(segment.alignment, segment.size);
     if (segment.init_size > 0) {
       memcpy(mod_ptr, segment.init_ptr, segment.init_size);
     }
+<<<<<<< HEAD
     dtv->modules[module_idx] = mod_ptr;
     dtv->module_segment_sizes[module_idx] = segment.size;
 
     // Reports the allocation to the listener, if any.
     if (modules.on_creation_cb != nullptr) {
       modules.on_creation_cb(mod_ptr, segment.size);
+=======
+    dtv->modules[module_idx].module = mod_ptr;
+    dtv->modules[module_idx].segment_size = segment.size;
+
+    // Reports the allocation to the listener, if any.
+    if (modules.on_creation_cb != nullptr) {
+      modules.on_creation_cb(mod_ptr,
+                             static_cast<void*>(static_cast<char*>(mod_ptr) + segment.size));
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
     }
   }
 
@@ -326,7 +346,7 @@ extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
   // TODO: See if we can use a relaxed memory ordering here instead.
   size_t generation = atomic_load(&__libc_tls_generation_copy);
   if (__predict_true(generation == dtv->generation)) {
-    void* mod_ptr = dtv->modules[__tls_module_id_to_idx(ti->module_id)];
+    void* mod_ptr = dtv->modules[__tls_module_id_to_idx(ti->module_id)].module;
     if (__predict_true(mod_ptr != nullptr)) {
       return static_cast<char*>(mod_ptr) + ti->offset;
     }
@@ -368,7 +388,8 @@ void __free_dynamic_tls(bionic_tcb* tcb) {
       // This module's TLS memory is allocated statically, so don't free it here.
       continue;
     }
-    allocator.free(dtv->modules[i]);
+    allocator.free(dtv->modules[i].module);
+    dtv->modules[i].segment_size = 0;
   }
 
   // Now free the thread's list of DTVs.

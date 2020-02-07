@@ -34,6 +34,12 @@
  */
 
 #include <sys/cdefs.h>
+<<<<<<< HEAD
+=======
+#include <unistd.h>
+
+#include "thread_properties_defines.h"
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 
 /**
  * https://sourceware.org/glibc/wiki/ThreadPropertiesAPI
@@ -46,6 +52,7 @@ __BEGIN_DECLS
 
 /**
  * Gets the bounds of static TLS for the current thread.
+<<<<<<< HEAD
  * Returns 0 for success.
  */
 int __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) __INTRODUCED_IN(31);
@@ -54,6 +61,12 @@ int __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) __INTRODUCE
  * The signature of the thread-exit callbacks.
  */
 typedef void (*thread_exit_cb_t)();
+=======
+ */
+void __libc_get_static_tls_bounds(void** __static_tls_begin,
+                                  void** __static_tls_end) __INTRODUCED_IN(31);
+
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 
 /**
  * Registers callback to be called right before the thread is totally destroyed.
@@ -64,6 +77,7 @@ typedef void (*thread_exit_cb_t)();
  * most 8 callbacks can be registered. No signals may arrive during the calls to
  * these callbacks; immediately after the last of these calls the thread is dead.
  *
+<<<<<<< HEAD
  * Returns 0 on success registration.
  */
 int __libc_register_thread_exit_callback(thread_exit_cb_t cb)  __INTRODUCED_IN(31);
@@ -94,5 +108,26 @@ typedef void (*dtls_listener_t)(void* dtls_begin, size_t size);
  * DTLS creation and before DTLS destruction, respectively.
  */
 void __libc_register_dynamic_tls_listener(dtls_listener_t on_creation, dtls_listener_t on_destruction)  __INTRODUCED_IN(31);
+=======
+ * Returns 0 on success registration or 1 for failure when there has been 8
+ * callbacks already registered.
+ */
+int __libc_register_thread_exit_callback(thread_exit_cb_t __cb)  __INTRODUCED_IN(31);
+
+/**
+ * Iterates over all dynamic TLS chunks for the given thread.
+ * The thread should have been suspended. It is undefined-behaviour if there is concurrent
+ * modification of the target thread's dynamic TLS
+ *
+ * Returns 0 on success iterations or 1 if the thread pointer register cannot be read.
+ */
+int __libc_iterate_dynamic_tls(pid_t __tid, dtls_visitor_t __cb, void* __arg)  __INTRODUCED_IN(31);
+
+/**
+ * Register on_creation and on_destruction callbacks that will be called after
+ * a dynamic TLS creation and before dynamic TLS destruction, respectively.
+ */
+void __libc_register_dynamic_tls_listener(dtls_listener_t __on_creation, dtls_listener_t __on_destruction)  __INTRODUCED_IN(31);
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 
 __END_DECLS

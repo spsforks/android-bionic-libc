@@ -1554,7 +1554,14 @@ LIBC_S { # introduced=S
   global:
     ffsl;
     ffsll;
+<<<<<<< HEAD
      __libc_get_static_tls_bounds;
+=======
+    __libc_get_static_tls_bounds;
+    __libc_register_thread_exit_callback;
+    __libc_iterate_dynamic_tls;
+    __libc_register_dynamic_tls_listener;
+>>>>>>> 807e64bf2... Add a thread-properties API which is needed by lsan.
 } LIBC_R;
 
 LIBC_PRIVATE {
