@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "774cc5f6_52939212",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-07T23:07:07Z",
+      "side": 1,
+      "message": "I think I\u0027d leave the \"- 1\" off here or change the parameter to a size instead of the end.\n\nThis version of the code should be fine for all architectures, both variant 1 and 2.",
+      "range": {
+        "startLine": 373,
+        "startChar": 65,
+        "endLine": 373,
+        "endChar": 68
+      },
+      "revId": "7d988d6ab8baaa4292bb2d948019c675c35bd00b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
