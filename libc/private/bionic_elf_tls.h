@@ -111,6 +111,10 @@ struct TlsModule {
   void* soinfo_ptr = nullptr;
 };
 
+// The signature of the callbacks that will be called after DTLS creation
+// and before DTLS destruction.
+typedef void (*dtls_listener_t)(void* dtls_begin, size_t size);
+
 // Table of the ELF TLS modules. Either the dynamic linker or the static
 // initialization code prepares this table, and it's then used during thread
 // creation and for dynamic TLS lookups.
@@ -128,7 +132,12 @@ struct TlsModules {
   // Pointer to a block of TlsModule objects. The first module has ID 1 and
   // is stored at index 0 in this table.
   size_t module_count = 0;
+  size_t static_module_count = 0;
   TlsModule* module_table = nullptr;
+
+  dtls_listener_t on_creation_cb = nullptr;
+  dtls_listener_t on_destruction_cb = nullptr;
+  void (*thread_exit_cb)() = nullptr;
 };
 
 void __init_static_tls(void* static_tls);
