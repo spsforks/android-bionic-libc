@@ -184,6 +184,7 @@ void __init_static_tls(void* static_tls) {
   ScopedSignalBlocker ssb;
   ScopedReadLock locker(&modules.rwlock);
 
+  modules.static_module_count = modules.module_count;
   for (size_t i = 0; i < modules.module_count; ++i) {
     TlsModule& module = modules.module_table[i];
     if (module.static_offset == SIZE_MAX) {
@@ -297,6 +298,11 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
       memcpy(mod_ptr, segment.init_ptr, segment.init_size);
     }
     dtv->modules[module_idx] = mod_ptr;
+
+    // Reports the allocation to the listener, if any.
+    if (modules.on_creation_cb != nullptr) {
+      modules.on_creation_cb(mod_ptr, segment.size);
+    }
   }
 
   return static_cast<char*>(mod_ptr) + ti->offset;
@@ -329,11 +335,19 @@ extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
 // This function frees:
 //  - TLS modules referenced by the current DTV.
 //  - The list of DTV objects associated with the current thread.
-//
+// It will also invoke all registered thread_exit_callbacks.
 // The caller must have already blocked signals.
 void __free_dynamic_tls(bionic_tcb* tcb) {
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
+
+  // Notifies the thread_exit_callbacks, if any.
+  if (modules.thread_exit_callback_count > 0) {
+    // Callbacks must be invoked in the opposite order in which they were registered.
+    for (int i = modules.thread_exit_callback_count - 1; i >= 0; --i) {
+      modules.thread_exit_callbacks[i]();
+    }
+  }
 
   // If we didn't allocate any dynamic memory, skip out early without taking
   // the lock.
