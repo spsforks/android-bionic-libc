@@ -33,6 +33,7 @@
 #include <stdatomic.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/thread_properties_defines.h>
 
 __LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
 
@@ -128,7 +129,15 @@ struct TlsModules {
   // Pointer to a block of TlsModule objects. The first module has ID 1 and
   // is stored at index 0 in this table.
   size_t module_count = 0;
+  size_t static_module_count = 0;
   TlsModule* module_table = nullptr;
+
+  dtls_listener_t on_creation_cb = nullptr;
+  dtls_listener_t on_destruction_cb = nullptr;
+
+  static constexpr int MAX_THREAD_EXIT_CALLBACK_COUNT = 8;
+  int thread_exit_callback_count = 0;
+  thread_exit_cb_t thread_exit_callbacks[MAX_THREAD_EXIT_CALLBACK_COUNT];
 };
 
 void __init_static_tls(void* static_tls);
@@ -156,6 +165,8 @@ struct TlsDtv {
   // the layout of fields past this point.
   size_t generation;
   void* modules[];
+  // The segment size corresponding to each of the modules above.
+  size_t module_segment_sizes[];
 };
 
 struct TlsIndex {

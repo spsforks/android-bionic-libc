@@ -79,6 +79,14 @@ cc_test_library {
     shared_libs: ["libtest_elftls_shared_var"],
 }
 
+cc_test {
+   name: "sys_thread_properties_test",
+   defaults: ["bionic_testlib_defaults"],
+   srcs: ["sys_thread_properties_test.cpp"],
+   cflags: ["-fno-emulated-tls"],
+   shared_libs: ["libtest_elftls_shared_var"],
+}
+
 cc_test_library {
     name: "libtest_elftls_dynamic_filler_1",
     defaults: ["bionic_testlib_defaults"],
