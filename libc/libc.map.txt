@@ -1554,6 +1554,7 @@ LIBC_S { # introduced=31
   global:
     ffsl;
     ffsll;
+     __libc_get_static_tls_bounds;
 } LIBC_R;
 
 LIBC_PRIVATE {
