@@ -1517,7 +1517,7 @@ LIBC_R { # introduced=R
     tss_delete;
     tss_get;
     tss_set;
-
+    
     # Unwinder implementation
     __aeabi_unwind_cpp_pr0; # apex llndk arm
     __aeabi_unwind_cpp_pr1; # apex llndk arm
@@ -1548,6 +1548,10 @@ LIBC_R { # introduced=R
     _Unwind_VRS_Pop; # apex llndk arm
     _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
+
+LIBC_S { # introduced=S
+    __libc_get_static_tls_bounds;
+} LIBC_R;
 
 LIBC_PRIVATE {
   global:
