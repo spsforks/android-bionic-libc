@@ -31,6 +31,7 @@
 #include <map>
 #include <thread>
 #include <vector>
+#include <sys/resource.h>
 
 TEST(ifaddrs, freeifaddrs_null) {
   freeifaddrs(nullptr);
@@ -291,6 +292,41 @@ TEST(ifaddrs, kernel_bug_31038971) {
 
 TEST(ifaddrs, errno_EMFILE) {
   std::vector<int> fds;
+  int fd_mem = -1;
+  rlimit cur_rlimit = {0, 0};
+  unsigned long memTotal = 1024 * 1024;
+  int ret = -1;
+
+
+  fd_mem = open("/proc/meminfo", O_RDONLY);
+  if (fd_mem >= 0) {
+	char mem_buf[64] = {0};
+
+	ret = read(fd_mem, mem_buf, sizeof(mem_buf));
+	close(fd_mem);
+
+	if(ret > 0) {
+		char *start = NULL;
+		char *end = NULL;
+		start = strchr(mem_buf, ':');
+		if (start != NULL) {
+			end = strchr(start + 1, '\n');
+			if (end != NULL)
+				*end = '\0';
+			*start = '\0';
+		}
+		if (strcmp(mem_buf, "MemTotal") == 0)
+			memTotal = strtoll(start + 1, NULL, 10);
+	}
+	ret = getrlimit(RLIMIT_NOFILE, &cur_rlimit);
+	if (ret == 0) {
+		if (memTotal < 512 * 1024) {
+			cur_rlimit.rlim_cur = cur_rlimit.rlim_cur / 4;
+			ret = setrlimit(RLIMIT_NOFILE, &cur_rlimit);
+		}
+	}
+  }
+
   while (true) {
     int fd = open("/dev/null", O_RDONLY|O_CLOEXEC);
     if (fd == -1) {
