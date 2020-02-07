@@ -112,7 +112,8 @@ void pthread_exit(void* return_value) {
   munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif
 
-  // Free the ELF TLS DTV and all dynamically-allocated ELF TLS memory.
+  // Free the ELF TLS DTV and all dynamically-allocated ELF TLS memory,
+  // and invokes the thread_exit_callbacks that have been registered.
   __free_dynamic_tls(__get_bionic_tcb());
 
   if (old_state == THREAD_DETACHED) {
