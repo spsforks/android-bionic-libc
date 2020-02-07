@@ -184,6 +184,7 @@ void __init_static_tls(void* static_tls) {
   ScopedSignalBlocker ssb;
   ScopedReadLock locker(&modules.rwlock);
 
+  modules.static_module_count = modules.module_count;
   for (size_t i = 0; i < modules.module_count; ++i) {
     TlsModule& module = modules.module_table[i];
     if (module.static_offset == SIZE_MAX) {
