@@ -314,6 +314,19 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
         __pthread_cleanup_pop( &__cleanup, (execute)); \
     } while (0);                                       \
 
+#if __ANDROID_API__ >= 31
+// https://sourceware.org/glibc/wiki/ThreadPropertiesAPI
+//
+// API for querying various properties of the current thread, such as stack bounds,
+// static/dynamic TLS bounds.
+
+// Gets the bounds of static tls for the current thread.
+// Returns 0 for success.
+int __libc_get_static_tls_bounds(void **stls_beg, void **stls_end) __INTRODUCED_IN(30);
+#endif  // __ANDROID_API__ >= 31
+
+
 __END_DECLS
+
 
 #endif

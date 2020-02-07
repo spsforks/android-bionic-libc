@@ -364,3 +364,15 @@ void __free_dynamic_tls(bionic_tcb* tcb) {
   // Clear the DTV slot. The DTV must not be used again with this thread.
   tcb->tls_slot(TLS_SLOT_DTV) = nullptr;
 }
+
+int __libc_get_static_tls_bounds(void** stls_beg, void** stls_end) {
+#if defined(__aarch64__) || defined(__arm__) || defined(__i386__) || defined(__x86_64__)
+  const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  *stls_beg = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
+  *stls_end = reinterpret_cast<char*>(*stls_beg) + layout.size();
+  return 0;
+#else
+#warning "Unrecognized architecture."
+  return 1;
+#endif
+}
