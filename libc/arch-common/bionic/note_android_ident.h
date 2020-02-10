@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,24 @@
  * SUCH DAMAGE.
  */
 
-  .section .note.android.ident,"a",%note
-  .balign 4
-  .type abitag, %object
-abitag:
-  .long 2f-1f                 // int32_t namesz
-  .long 3f-2f                 // int32_t descsz
-  .long 1                     // int32_t type
-#ifdef __ANDROID__
-1:.ascii "Android\0"          // char name[]
-2:.long PLATFORM_SDK_VERSION  // int32_t android_api
+__attribute__((__section__((".note.android.ident")), __aligned__((16)),
+               __unused__)) struct AndroidIdentNote {
+  int namesz;
+  int descsz;
+  int type;
+#if defined(__ANDROID__)
+  char name[8];
+  int android_api;
 #else
-1:.ascii "LinuxBionic\0"      // char name[]
-2:
+  char name[12];
 #endif
-3:
-  .size abitag, .-abitag
+} note = {
+#if defined(__ANDROID__)
+    8, 4, 1, {"Android"}, PLATFORM_SDK_VERSION,
+#else
+    12,
+    0,
+    1,
+    {"LinuxBionic"},
+#endif
+};
