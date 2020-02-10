@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,37 @@
  * SUCH DAMAGE.
  */
 
-  .section .note.android.ident,"a",%note
-  .balign 4
-  .type abitag, %object
-abitag:
-  .long 2f-1f                 // int32_t namesz
-  .long 3f-2f                 // int32_t descsz
-  .long 1                     // int32_t type
-#ifdef __ANDROID__
-1:.ascii "Android\0"          // char name[]
-2:.long PLATFORM_SDK_VERSION  // int32_t android_api
-#else
-1:.ascii "LinuxBionic\0"      // char name[]
-2:
+// This is used by the platform, by the NDK, and for host bionic.
+__attribute__((__section__((".note.android.ident")), __used__)) static struct {
+  int namesz;
+  int descsz;
+  int type;
+#if defined(__ANDROID__)
+  char name[8];
+  // Bionic for the device includes the specific API level.
+  int android_api;
+#if defined(ABI_NDK_VERSION) && defined(ABI_NDK_BUILD_NUMBER)
+  // The NDK includes detail about what NDK was used.
+  char ndk_version[64];
+  char ndk_build_number[64];
 #endif
-3:
-  .size abitag, .-abitag
+#else
+  // Host bionic.
+  char name[12];
+#endif
+} note = {
+#if defined(__ANDROID__)
+#if defined(ABI_NDK_VERSION) && defined(ABI_NDK_BUILD_NUMBER)
+    8, 4 + 64 + 64, 1, {"Android"}, PLATFORM_SDK_VERSION,
+    ABI_NDK_VERSION,
+    ABI_NDK_BUILD_NUMBER,
+#else
+    8, 4, 1, {"Android"}, PLATFORM_SDK_VERSION,
+#endif
+#else
+    12,
+    0,
+    1,
+    {"LinuxBionic"},
+#endif
+};
