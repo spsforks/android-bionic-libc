@@ -22,6 +22,30 @@
       "revId": "7d988d6ab8baaa4292bb2d948019c675c35bd00b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32e1543a_c26ca460",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-10T16:59:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "774cc5f6_52939212",
+      "range": {
+        "startLine": 373,
+        "startChar": 65,
+        "endLine": 373,
+        "endChar": 68
+      },
+      "revId": "7d988d6ab8baaa4292bb2d948019c675c35bd00b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
