@@ -120,6 +120,24 @@
     },
     {
       "key": {
+        "uuid": "e6d0c6a4_9df8a728",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-10T21:58:30Z",
+      "side": 1,
+      "message": "okay, that sounds like another vote for 31...\n\nvy: you\u0027ll also need to add the LIBC_S section to the map.txt file, now you have the [not particularly] coveted honor of adding the first S API :-) \n\nif we move this to 31/S i\u0027m happy to +2 and get this in. i don\u0027t think there\u0027s any particular reason to wait for the branch to happen.\n\n(also whitespace on this line, and `type*` rather than `type *`. oh, and use doxygen style comments. should this even be in this file, or should it be in pthread_internal.h for now, and we can add an android/sanitizers.h or something when we\u0027re done?)",
+      "parentUuid": "7f1792dd_3827f572",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "216416d5_932ca14e",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
