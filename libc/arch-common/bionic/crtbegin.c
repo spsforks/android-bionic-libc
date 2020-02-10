@@ -92,3 +92,4 @@ asm("  .section .tdata,\"awT\",@progbits\n"
 #ifdef __i386__
 # include "../../arch-x86/bionic/__stack_chk_fail_local.h"
 #endif
+#include "note_android_ident.h"

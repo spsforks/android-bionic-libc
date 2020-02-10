@@ -76,3 +76,4 @@ static void __on_dlclose_late(void) {
 #ifdef __i386__
 # include "../../arch-x86/bionic/__stack_chk_fail_local.h"
 #endif
+#include "note_android_ident.h"
