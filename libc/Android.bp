@@ -88,6 +88,9 @@ cc_defaults {
         experimental_mte: {
             cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
         },
+        platform_sdk_version: {
+            cflags: ["-DPLATFORM_SDK_VERSION=%d"],
+        },
     },
 }
 
@@ -1604,7 +1607,6 @@ filegroup {
     name: "libc_sources_shared",
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
-        "arch-common/bionic/crtbrand.S",
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
@@ -1649,11 +1651,6 @@ cc_library {
     name: "libc",
     static_ndk_lib: true,
     export_include_dirs: ["include"],
-    product_variables: {
-        platform_sdk_version: {
-            asflags: ["-DPLATFORM_SDK_VERSION=%d"],
-        },
-    },
     static: {
         srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
@@ -1969,6 +1966,7 @@ genrule {
 
 cc_defaults {
     name: "crt_defaults",
+
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     ramdisk_available: true,
@@ -1980,6 +1978,11 @@ cc_defaults {
         "-Wall",
         "-Werror",
     ],
+    product_variables: {
+        platform_sdk_version: {
+            cflags: ["-DPLATFORM_SDK_VERSION=%d"],
+        },
+    },
     sanitize: {
         never: true,
     },
@@ -1987,15 +1990,9 @@ cc_defaults {
 
 cc_defaults {
     name: "crt_so_defaults",
-    defaults: ["crt_defaults"],
 
+    defaults: ["crt_defaults"],
     arch: {
-        mips: {
-            cflags: ["-fPIC"],
-        },
-        mips64: {
-            cflags: ["-fPIC"],
-        },
         x86: {
             cflags: ["-fPIC"],
         },
@@ -2007,115 +2004,35 @@ cc_defaults {
 }
 
 cc_object {
-    name: "crtbrand",
-    // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-    local_include_dirs: ["include"],
-    product_variables: {
-        platform_sdk_version: {
-            asflags: ["-DPLATFORM_SDK_VERSION=%d"],
-        },
-    },
-    srcs: ["arch-common/bionic/crtbrand.S"],
-
-    defaults: ["crt_so_defaults"],
-}
-
-cc_object {
-    name: "crtbegin_so1",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin_so.c"],
-
-    defaults: ["crt_so_defaults"],
-}
-
-cc_object {
     name: "crtbegin_so",
 
     defaults: ["crt_so_defaults"],
-    objs: [
-        "crtbegin_so1",
-        "crtbrand",
-    ],
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin_so.c"],
 }
 
 cc_object {
     name: "crtend_so",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
-}
-
-cc_object {
-    name: "crtbegin_static1",
     local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
-
-    defaults: ["crt_defaults"],
+    srcs: ["arch-common/bionic/crtend_so.S"],
 }
 
 cc_object {
     name: "crtbegin_static",
 
-    objs: [
-        "crtbegin_static1",
-        "crtbrand",
-    ],
     defaults: ["crt_defaults"],
-}
-
-cc_object {
-    name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
-    defaults: ["crt_defaults"],
 }
 
 cc_object {
     name: "crtbegin_dynamic",
 
-    objs: [
-        "crtbegin_dynamic1",
-        "crtbrand",
-    ],
+    defaults: ["crt_defaults"],
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin.c"],
     target: {
         linux_bionic: {
             generated_sources: ["host_bionic_linker_asm"],
@@ -2124,7 +2041,6 @@ cc_object {
             ],
         },
     },
-    defaults: ["crt_defaults"],
 }
 
 cc_object {
