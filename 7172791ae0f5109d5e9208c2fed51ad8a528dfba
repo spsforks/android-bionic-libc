@@ -138,6 +138,24 @@
     },
     {
       "key": {
+        "uuid": "323e7ef2_9b6ef80f",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-02-11T18:13:26Z",
+      "side": 1,
+      "message": "\u003e vy: you\u0027ll also need to add the LIBC_S section to the map.txt file, now you have the [not \u003e particularly] coveted honor of adding the first S API :-) \n\nDone!  \nMoved the stuff to S in map.txt and changed the #if-guard to 31\n\n\u003e should this even be in this file, or should it be in pthread_internal.h for now, and we can \u003e add an android/sanitizers.h or something when we\u0027re done?\n\neugenis@ suggested it should be in pthread. (so I just assumed that meant pthread.h)\n\nI\u0027ve got no real preference as to where it should live but I would prefer moving it to a public header *now* because putting it *_internal makes it hard to test/iterate on with the llvm-toolchain branch.",
+      "parentUuid": "e6d0c6a4_9df8a728",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "216416d5_932ca14e",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
