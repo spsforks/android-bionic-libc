@@ -156,6 +156,24 @@
     },
     {
       "key": {
+        "uuid": "bca32f16_eb1db873",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-11T19:17:05Z",
+      "side": 1,
+      "message": "I was mostly talking about the implementation, not the header.\n\nBut I don\u0027t think this should be in a \"sanitizer\" header. I think of this as a general pthread introspection API, something in the spirit of dl_iterate_phdr (which is also how a potential API for dynamic TLS access might look like). It should be usable by libmemunreachable and any conservative garbage collector for C  would require it, too.",
+      "parentUuid": "323e7ef2_9b6ef80f",
+      "revId": "7172791ae0f5109d5e9208c2fed51ad8a528dfba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "216416d5_932ca14e",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
