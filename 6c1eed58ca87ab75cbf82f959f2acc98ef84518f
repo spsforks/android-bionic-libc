@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b75eb491_e6787ae0",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-11T22:45:41Z",
+      "side": 1,
+      "message": "clang-format here. NFC.",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 27
+      },
+      "revId": "6c1eed58ca87ab75cbf82f959f2acc98ef84518f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce2d0a3e_873bd65a",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-11T22:45:41Z",
+      "side": 1,
+      "message": "clang-format here. NFC.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 31
+      },
+      "revId": "6c1eed58ca87ab75cbf82f959f2acc98ef84518f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "020d3870_0c5099f4",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-11T22:45:41Z",
+      "side": 1,
+      "message": "clang-format here. NFC.",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 20
+      },
+      "revId": "6c1eed58ca87ab75cbf82f959f2acc98ef84518f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
