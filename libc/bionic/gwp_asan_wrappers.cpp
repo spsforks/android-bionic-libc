@@ -70,14 +70,11 @@ bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
   return true;
 }
 
-void gwp_asan_finalize() {
-}
+void gwp_asan_finalize() {}
 
-void gwp_asan_get_malloc_leak_info(uint8_t**, size_t*, size_t*, size_t*, size_t*) {
-}
+void gwp_asan_get_malloc_leak_info(uint8_t**, size_t*, size_t*, size_t*, size_t*) {}
 
-void gwp_asan_free_malloc_leak_info(uint8_t*) {
-}
+void gwp_asan_free_malloc_leak_info(uint8_t*) {}
 
 ssize_t gwp_asan_malloc_backtrace(void*, uintptr_t*, size_t) {
   // TODO(mitchp): GWP-ASan might be able to return the backtrace for the
@@ -90,9 +87,9 @@ bool gwp_asan_write_malloc_leak_info(FILE*) {
 }
 
 void* gwp_asan_gfunctions[] = {
-  (void*)gwp_asan_initialize,           (void*)gwp_asan_finalize,
-  (void*)gwp_asan_get_malloc_leak_info, (void*)gwp_asan_free_malloc_leak_info,
-  (void*)gwp_asan_malloc_backtrace,     (void*)gwp_asan_write_malloc_leak_info,
+    (void*)gwp_asan_initialize,           (void*)gwp_asan_finalize,
+    (void*)gwp_asan_get_malloc_leak_info, (void*)gwp_asan_free_malloc_leak_info,
+    (void*)gwp_asan_malloc_backtrace,     (void*)gwp_asan_write_malloc_leak_info,
 };
 
 // ============================================================================
@@ -168,26 +165,26 @@ void gwp_asan_malloc_enable() {
 }
 
 static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
-  gwp_asan_calloc,
-  gwp_asan_free,
-  Malloc(mallinfo),
-  gwp_asan_malloc,
-  gwp_asan_malloc_usable_size,
-  Malloc(memalign),
-  Malloc(posix_memalign),
+    gwp_asan_calloc,
+    gwp_asan_free,
+    Malloc(mallinfo),
+    gwp_asan_malloc,
+    gwp_asan_malloc_usable_size,
+    Malloc(memalign),
+    Malloc(posix_memalign),
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  Malloc(pvalloc),
+    Malloc(pvalloc),
 #endif
-  gwp_asan_realloc,
+    gwp_asan_realloc,
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  Malloc(valloc),
+    Malloc(valloc),
 #endif
-  gwp_asan_malloc_iterate,
-  gwp_asan_malloc_disable,
-  gwp_asan_malloc_enable,
-  Malloc(mallopt),
-  Malloc(aligned_alloc),
-  Malloc(malloc_info),
+    gwp_asan_malloc_iterate,
+    gwp_asan_malloc_disable,
+    gwp_asan_malloc_enable,
+    Malloc(mallopt),
+    Malloc(aligned_alloc),
+    Malloc(malloc_info),
 };
 
 // TODO(mitchp): Turn on GWP-ASan here probabilistically.
@@ -195,7 +192,7 @@ bool ShouldGwpAsanSampleProcess() {
   return false;
 }
 
-bool MaybeInitGwpAsanFromLibc() {
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
   // Never initialize the Zygote here. A Zygote chosen for sampling would also
   // have all of its children sampled. Instead, the Zygote child will choose
   // whether it samples or not just after the Zygote forks. For
@@ -205,14 +202,14 @@ bool MaybeInitGwpAsanFromLibc() {
   if (progname && strncmp(progname, "app_process", 11) == 0) {
     return false;
   }
-  return MaybeInitGwpAsan(false);
+  return MaybeInitGwpAsan(globals);
 }
 
 static bool GwpAsanInitialized = false;
 
 // Maybe initializes GWP-ASan. Called by android_mallopt() and libc's
 // initialisation. This should always be called in a single-threaded context.
-bool MaybeInitGwpAsan(bool force_init) {
+bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
   if (GwpAsanInitialized) {
     error_log("GWP-ASan was already initialized for this process.");
     return false;
@@ -239,17 +236,16 @@ bool MaybeInitGwpAsan(bool force_init) {
 
   // GWP-ASan's initialization is always called in a single-threaded context, so
   // we can initialize lock-free.
-  __libc_globals.mutate([](libc_globals* globals) {
-    // Set GWP-ASan as the malloc dispatch table.
-    globals->malloc_dispatch_table = gwp_asan_dispatch;
-    atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
+  // Set GWP-ASan as the malloc dispatch table.
+  error_log("At GWP-ASan init time, malloc_dispatch_table == %p", &globals->malloc_dispatch_table);
+  globals->malloc_dispatch_table = gwp_asan_dispatch;
+  atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
 
-    // If malloc_limit isn't installed, we can skip the default_dispatch_table
-    // lookup.
-    if (GetDispatchTable() == nullptr) {
-      atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
-    }
-  });
+  // If malloc_limit isn't installed, we can skip the default_dispatch_table
+  // lookup.
+  if (GetDispatchTable() == nullptr) {
+    atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
+  }
 
 #ifndef LIBC_STATIC
   SetGlobalFunctions(gwp_asan_gfunctions);
