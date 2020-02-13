@@ -26,20 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_SSP_H
-#define _PRIVATE_SSP_H
+#pragma once
 
 #include <stdint.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-/* GCC uses this on ARM and MIPS; we use it on x86 to set the guard in TLS. */
+/* The compiler uses this on ARM; we use it on x86 to set the guard in TLS. */
 extern uintptr_t __stack_chk_guard;
 
-/* GCC calls this if a stack guard check fails. */
+/* The compiler calls this if a stack guard check fails. */
 extern void __stack_chk_fail();
 
 __END_DECLS
-
-#endif
