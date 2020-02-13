@@ -191,8 +191,8 @@ struct soinfo {
   uint32_t* bucket_;
   uint32_t* chain_;
 
-#if defined(__mips__) || !defined(__LP64__)
-  // This is only used by mips and mips64, but needs to be here for
+#if !defined(__LP64__)
+  // This was only used by mips and mips64, but needs to be here for
   // all 32-bit architectures to preserve binary compatibility.
   ElfW(Addr)** plt_got_;
 #endif
@@ -228,16 +228,6 @@ struct soinfo {
   uint32_t* ARM_exidx;
   size_t ARM_exidx_count;
  private:
-#elif defined(__mips__)
-  uint32_t mips_symtabno_;
-  uint32_t mips_local_gotno_;
-  uint32_t mips_gotsym_;
-  bool mips_relocate_got(const VersionTracker& version_tracker,
-                         const soinfo_list_t& global_group,
-                         const soinfo_list_t& local_group);
-#if !defined(__LP64__)
-  bool mips_check_and_adjust_fp_modes();
-#endif
 #endif
   size_t ref_count_;
  public:
