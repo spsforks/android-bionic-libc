@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d508126c_c6537143",
+        "filename": "libc/private/bionic_ssp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T00:37:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78fde205_7ad82163",
+      "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0b6dea_c2700007",
         "filename": "tools/versioner/tests/preprocessor/expected/foo.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2020-02-14T00:32:48Z",
       "side": 1,
       "message": "maybe this?\n\n  #if defined(__LP64__) || __ANDROID_API__ \u003e\u003d 13",
+      "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ffb0d24_f97ca02f",
+        "filename": "tools/versioner/tests/preprocessor/expected/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T00:37:46Z",
+      "side": 1,
+      "message": "that\u0027s then the same as the third example, right? (i\u0027m not sure exactly what these different cases were meant to cover. i\u0027m assuming they\u0027d be more interesting if the arm and x86 API levels were different?)",
+      "parentUuid": "4d0b6dea_c2700007",
       "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
