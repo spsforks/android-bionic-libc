@@ -86,30 +86,6 @@ static _Atomic bool gHeapprofdIncompatibleHooks = false;
 
 extern "C" void* MallocInitHeapprofdHook(size_t);
 
-static constexpr MallocDispatch __heapprofd_init_dispatch
-  __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    MallocInitHeapprofdHook, // malloc replacement
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
-#endif
-    Malloc(realloc),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
-#endif
-    Malloc(malloc_iterate),
-    Malloc(malloc_disable),
-    Malloc(malloc_enable),
-    Malloc(mallopt),
-    Malloc(aligned_alloc),
-    Malloc(malloc_info),
-  };
-
 constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
 constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
 constexpr size_t kMaxCmdlineSize = 512;
@@ -176,6 +152,15 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
 //   is loaded synchronously).
 // In both cases, the caller is responsible for verifying that the process is
 // considered profileable.
+
+// Previously installed default dispatch table, if it exists. This is used to
+// load heapprofd properly when GWP-ASan was already installed. If GWP-ASan was
+// already installed, heapprofd will take over the dispatch table, but will use
+// GWP-ASan as the backing dispatch. This variable is atomically protected by
+// gHeapprofdInitInProgress.
+static const MallocDispatch* PreviousDefaultDispatchTable = nullptr;
+static MallocDispatch ephemeral_dispatch;
+
 void HandleHeapprofdSignal() {
   if (atomic_load_explicit(&gHeapprofdIncompatibleHooks, memory_order_acquire)) {
     error_log("%s: not enabling heapprofd, malloc_debug/malloc_hooks are enabled.", getprogname());
@@ -187,11 +172,19 @@ void HandleHeapprofdSignal() {
   // not ever have a conflict modifying the globals.
   if (!atomic_exchange(&gGlobalsMutating, true)) {
     if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
+      PreviousDefaultDispatchTable = GetDefaultDispatchTable();
       __libc_globals.mutate([](libc_globals* globals) {
-        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
-        auto dispatch_table = GetDispatchTable();
-        if (!MallocLimitInstalled() || dispatch_table == &globals->malloc_dispatch_table) {
-          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
+        // Wholesale copy the malloc dispatch table here. If the current/default
+        // dispatch table is pointing to the malloc_dispatch_table, we can't
+        // modify it as it may be racy. This dispatch table copy is ephemeral,
+        // and the dispatch tables will be resolved back to the global
+        // malloc_dispatch_table after initialization finishes.
+        ephemeral_dispatch = globals->malloc_dispatch_table;
+        ephemeral_dispatch.malloc = MallocInitHeapprofdHook;
+
+        atomic_store(&globals->default_dispatch_table, &ephemeral_dispatch);
+        if (!MallocLimitInstalled()) {
+          atomic_store(&globals->current_dispatch_table, &ephemeral_dispatch);
         }
       });
     }
@@ -274,10 +267,9 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
   if (!atomic_exchange(&gHeapprofdInitHookInstalled, true)) {
     pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
+      atomic_store(&globals->default_dispatch_table, PreviousDefaultDispatchTable);
+      if (!MallocLimitInstalled()) {
+        atomic_store(&globals->current_dispatch_table, PreviousDefaultDispatchTable);
       }
     });
     pthread_mutex_unlock(&gGlobalsMutateLock);
@@ -292,7 +284,7 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
       error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
     }
   }
-  return Malloc(malloc)(bytes);
+  return malloc(bytes);
 }
 
 bool HeapprofdInitZygoteChildProfiling() {
@@ -309,10 +301,9 @@ static bool DispatchReset() {
   if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
     pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
+      atomic_store(&globals->default_dispatch_table, PreviousDefaultDispatchTable);
+      if (!MallocLimitInstalled()) {
+        atomic_store(&globals->current_dispatch_table, PreviousDefaultDispatchTable);
       }
     });
     pthread_mutex_unlock(&gGlobalsMutateLock);
