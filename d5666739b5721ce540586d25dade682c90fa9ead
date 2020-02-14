@@ -69,6 +69,24 @@
       "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7faba4b4_3b07e958",
+        "filename": "tools/versioner/tests/preprocessor/expected/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T01:33:29Z",
+      "side": 1,
+      "message": "Given the comment on line 55, it seems that the __INTRODUCED_IN_64(21) is the important part of the test.\n\nI would guess that this file has to match exactly what the versioner generates for tests/preprocessor/headers/foo.h, though. Does \"bionic/tools/versioner/run_tests.py\" still pass?",
+      "parentUuid": "8ffb0d24_f97ca02f",
+      "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
