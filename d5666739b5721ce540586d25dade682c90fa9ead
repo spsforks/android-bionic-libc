@@ -105,6 +105,24 @@
       "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b995e93_402bb868",
+        "filename": "tools/versioner/tests/preprocessor/expected/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T02:01:17Z",
+      "side": 1,
+      "message": "updated so the tests pass.",
+      "parentUuid": "b9bda46f_af08a388",
+      "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
