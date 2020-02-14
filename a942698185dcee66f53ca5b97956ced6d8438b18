@@ -69,6 +69,81 @@
       "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ebcc214_8dc5d83f",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T21:34:58Z",
+      "side": 1,
+      "message": "Bionic has been moving from include guards to \"#pragma once\".",
+      "parentUuid": "7554f0a3_14db1b39",
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38679cf6_d3d190f4",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T21:34:58Z",
+      "side": 1,
+      "message": "android/versioning.h isn\u0027t included anywhere in bionic except for sys/cdefs.h, which is included next, so this line can/should be omitted.",
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9273f5c_f2d698ce",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T21:34:58Z",
+      "side": 1,
+      "message": "An explicit __ANDROID_API__ line isn\u0027t needed in the bionic headers, because bionic\u0027s headers are processed by the \"versioner\" tool that automatically adds them using the __INTRODUCED_IN markers.",
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04d970a8_b00a554b",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T21:34:58Z",
+      "side": 1,
+      "message": "various",
+      "range": {
+        "startLine": 38,
+        "startChar": 20,
+        "endLine": 38,
+        "endChar": 27
+      },
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
