@@ -87,6 +87,24 @@
       "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9bda46f_af08a388",
+        "filename": "tools/versioner/tests/preprocessor/expected/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-14T01:50:39Z",
+      "side": 1,
+      "message": "It looks like the tests already fail:\n\n   $ lunch something (e.g. aosp_walleye)\n   $ export PATH\u003d$ANDROID_BUILD_TOP/prebuilts/clang-tools/linux-x86/bin:$PATH\n   $ cd $ANDROID_BUILD_TOP/bionic/tools/versioner\n   $ ./run_tests.py -f\n   ...\n   [FAIL] preprocessor: unexpected failure:\n   \n       Files out/foo.h and expected/foo.h differ\n       \n   ...\n   $ cd $ANDROID_BUILD_TOP/bionic/tools/versioner/tests/preprocessor\n   $ sh run.sh\n   Files out/foo.h and expected/foo.h differ\n   $ diff -U3 expected/foo.h out/foo.h\n   ...\n\nIt seems that the current versioner prebuilt is already omitting the MIPS targets from the #if guards.",
+      "parentUuid": "7faba4b4_3b07e958",
+      "revId": "d5666739b5721ce540586d25dade682c90fa9ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
