@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a1c1e00_3d68291f",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-14T21:08:19Z",
+      "side": 1,
+      "message": "2020",
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7554f0a3_14db1b39",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-14T21:08:19Z",
+      "side": 1,
+      "message": "THREAD_PROPERTIES",
+      "revId": "a942698185dcee66f53ca5b97956ced6d8438b18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
