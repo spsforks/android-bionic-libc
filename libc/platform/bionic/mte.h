@@ -42,11 +42,16 @@ inline bool mte_supported() {
 }
 #endif
 
-struct ScopedDisableMTE {
+class ScopedDisableMTE {
+#ifdef __aarch64__
+  size_t prev_tco_;
+#endif
+
+ public:
   ScopedDisableMTE() {
 #ifdef __aarch64__
     if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, #1");
+      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=&r"(prev_tco_));
     }
 #endif
   }
@@ -54,7 +59,7 @@ struct ScopedDisableMTE {
   ~ScopedDisableMTE() {
 #ifdef __aarch64__
     if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, #0");
+      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
     }
 #endif
   }

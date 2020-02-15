@@ -20,13 +20,27 @@
 
 __attribute__((no_sanitize("hwaddress")))
 static void test_tag_mismatch() {
-  ScopedDisableMTE x;
-#if defined(__aarch64__)
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
   p[0] = 1;
   int* mistagged_p = reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(p.get()) + (1ULL << 56));
-  volatile int load = *mistagged_p;
-  (void)load;
+  (void)mistagged_p;
+  {
+    ScopedDisableMTE x;
+    { ScopedDisableMTE y; }
+#if defined(__aarch64__)
+    volatile int load = *mistagged_p;
+    (void)load;
+#endif
+  }
+#if defined(__aarch64__)
+  if (mte_supported()) {
+    EXPECT_DEATH(
+        {
+          volatile int load = *mistagged_p;
+          (void)load;
+        },
+        "");
+  }
 #endif
 }
 
