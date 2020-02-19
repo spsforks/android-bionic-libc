@@ -67,6 +67,8 @@ bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
   Opts.InstallForkHandlers = true;
 
   GuardedAlloc.init(Opts);
+  // TODO(b/149790891): The log line below causes ART tests to fail as they're
+  // not expecting any output. Disable the output for now.
   info_log("GWP-ASan has been enabled.");
   return true;
 }
