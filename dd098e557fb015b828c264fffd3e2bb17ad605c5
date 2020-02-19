@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7193d8bc_c40a6aa0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-19T16:32:08Z",
+      "side": 1,
+      "message": "i don\u0027t understand what you\u0027re trying to say here.",
+      "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
