@@ -16,6 +16,24 @@
       "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0b8c8a2_51cafd69",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-19T22:39:35Z",
+      "side": 1,
+      "message": "I think the concern is that the config file syntax is ambiguous.\n\ne.g.\n\n    namespace.com.android.neuralnetworks.search.paths \u003d ...\n\nThis line sets the \u0027search.paths\u0027 property of the \u0027com.android.neuralnetworks\u0027 namespace, but it could also set the \u0027paths\u0027 property of \u0027com.android.neuralnetworks.search\u0027 (if a \u0027paths\u0027 property existed -- it currently doesn\u0027t).",
+      "parentUuid": "7193d8bc_c40a6aa0",
+      "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
