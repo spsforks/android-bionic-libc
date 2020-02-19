@@ -34,6 +34,24 @@
       "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b181845f_45f876c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2020-02-19T23:56:46Z",
+      "side": 1,
+      "message": "Good example for this would be \u0027link\u0027. If we have two APEX modules named \u0027A\u0027 and \u0027A.link.A\u0027, then\n\nnamespace.A.link.A.link.A \u003d a.so\n\nWould be confused if this is A to A.link.A or in reverse way.",
+      "parentUuid": "a0b8c8a2_51cafd69",
+      "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
