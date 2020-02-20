@@ -52,6 +52,24 @@
       "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "373a29c4_b614a449",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-20T00:06:07Z",
+      "side": 1,
+      "message": "ah, okay. that makes sense. fix the commit message?",
+      "parentUuid": "b181845f_45f876c5",
+      "revId": "dd098e557fb015b828c264fffd3e2bb17ad605c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
