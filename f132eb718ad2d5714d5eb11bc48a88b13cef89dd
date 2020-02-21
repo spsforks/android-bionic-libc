@@ -34,6 +34,24 @@
       "revId": "f132eb718ad2d5714d5eb11bc48a88b13cef89dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "533e76c1_91914f27",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-21T22:42:55Z",
+      "side": 1,
+      "message": "ah, okay. so when i do finally get round to cleaning this up, it would still make things better. good!",
+      "parentUuid": "67e7d038_2657ba7f",
+      "revId": "f132eb718ad2d5714d5eb11bc48a88b13cef89dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
