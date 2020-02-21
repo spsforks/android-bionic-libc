@@ -16,6 +16,24 @@
       "revId": "f132eb718ad2d5714d5eb11bc48a88b13cef89dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67e7d038_2657ba7f",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-21T22:01:30Z",
+      "side": 1,
+      "message": "Because otherwise the exclude_srcs I\u0027m adding below for strchrnul.cpp wouldn\u0027t have any effect.",
+      "parentUuid": "52ffef60_bc106d76",
+      "revId": "f132eb718ad2d5714d5eb11bc48a88b13cef89dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
