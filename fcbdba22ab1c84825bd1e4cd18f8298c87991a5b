@@ -52,6 +52,24 @@
       "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c83a7102_763ff121",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-21T22:59:53Z",
+      "side": 0,
+      "message": "sort of. we\u0027re not allowed to sign CLAs with copyright reassignment clauses (like the one ARM\u0027s using there), so we\u0027ll actually just have to file bugs asking them to do it :-(",
+      "parentUuid": "d736b5cb_6da4fbc9",
+      "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
