@@ -34,6 +34,24 @@
       "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d736b5cb_6da4fbc9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2020-02-21T22:48:55Z",
+      "side": 0,
+      "message": "I see, is the plan to eventually push those upstream?",
+      "parentUuid": "160a2b1d_e01f8936",
+      "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
