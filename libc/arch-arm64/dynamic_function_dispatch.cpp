@@ -47,7 +47,7 @@ DEFINE_IFUNC_FOR(memchr) {
     if (supports_mte(arg->_hwcap2)) {
         RETURN_FUNC(memchr_func, memchr_mte);
     } else {
-        RETURN_FUNC(memchr_func, memchr_default);
+        RETURN_FUNC(memchr_func, __memchr_aarch64);
     }
 }
 
@@ -56,7 +56,16 @@ DEFINE_IFUNC_FOR(strchr) {
     if (supports_mte(arg->_hwcap2)) {
         RETURN_FUNC(strchr_func, strchr_mte);
     } else {
-        RETURN_FUNC(strchr_func, strchr_default);
+        RETURN_FUNC(strchr_func, __strchr_aarch64);
+    }
+}
+
+typedef char* strchrnul_func(const char*, int);
+DEFINE_IFUNC_FOR(strchrnul) {
+    if (supports_mte(arg->_hwcap2)) {
+        RETURN_FUNC(strchrnul_func, strchrnul_mte);
+    } else {
+        RETURN_FUNC(strchrnul_func, __strchrnul_aarch64);
     }
 }
 
@@ -65,16 +74,16 @@ DEFINE_IFUNC_FOR(strcmp) {
     if (supports_mte(arg->_hwcap2)) {
         RETURN_FUNC(strcmp_func, strcmp_mte);
     } else {
-        RETURN_FUNC(strcmp_func, strcmp_default);
+        RETURN_FUNC(strcmp_func, __strcmp_aarch64);
     }
 }
 
 typedef size_t strlen_func(const char*);
 DEFINE_IFUNC_FOR(strlen) {
     if (supports_mte(arg->_hwcap2)) {
-        RETURN_FUNC(strlen_func, strlen_mte);
+        RETURN_FUNC(strlen_func, __strlen_aarch64_mte);
     } else {
-        RETURN_FUNC(strlen_func, strlen_default);
+        RETURN_FUNC(strlen_func, __strlen_aarch64);
     }
 }
 
@@ -83,7 +92,7 @@ DEFINE_IFUNC_FOR(strncmp) {
     if (supports_mte(arg->_hwcap2)) {
         RETURN_FUNC(strncmp_func, strncmp_mte);
     } else {
-        RETURN_FUNC(strncmp_func, strncmp_default);
+        RETURN_FUNC(strncmp_func, __strncmp_aarch64);
     }
 }
 
@@ -92,7 +101,16 @@ DEFINE_IFUNC_FOR(strnlen) {
     if (supports_mte(arg->_hwcap2)) {
         RETURN_FUNC(strnlen_func, strnlen_mte);
     } else {
-        RETURN_FUNC(strnlen_func, strnlen_default);
+        RETURN_FUNC(strnlen_func, __strnlen_aarch64);
+    }
+}
+
+typedef char* strrchr_func(const char*, int);
+DEFINE_IFUNC_FOR(strrchr) {
+    if (supports_mte(arg->_hwcap2)) {
+        RETURN_FUNC(strrchr_func, strrchr_mte);
+    } else {
+        RETURN_FUNC(strrchr_func, __strrchr_aarch64);
     }
 }
 
