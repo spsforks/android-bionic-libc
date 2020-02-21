@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "beffe1c1_3d3cd684",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2020-02-21T22:30:00Z",
+      "side": 0,
+      "message": "Can you explain why these routines can\u0027t be replaced by AOR yet? Memcpy and memmove have improved quite a bit recently.",
+      "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
