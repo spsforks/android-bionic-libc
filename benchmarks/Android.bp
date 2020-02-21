@@ -34,6 +34,7 @@ cc_defaults {
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
         "malloc_sql_benchmark.cpp",
+        "map_benchmark.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",
