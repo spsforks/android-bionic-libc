@@ -16,6 +16,24 @@
       "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160a2b1d_e01f8936",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-21T22:37:27Z",
+      "side": 0,
+      "message": "These copies of the routines all have fallthroughs that aren\u0027t present in AOR. wmemmove falls through to memmove and __memset_chk falls through to memset.",
+      "parentUuid": "beffe1c1_3d3cd684",
+      "revId": "fcbdba22ab1c84825bd1e4cd18f8298c87991a5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
