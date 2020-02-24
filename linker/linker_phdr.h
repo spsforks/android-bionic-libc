@@ -37,6 +37,7 @@
 
 #include "linker.h"
 #include "linker_mapped_file_fragment.h"
+#include "linker_note_gnu_property.h"
 
 class ElfReader {
  public:
@@ -65,6 +66,7 @@ class ElfReader {
   bool ReserveAddressSpace(address_space_params* address_space);
   bool LoadSegments();
   bool FindPhdr();
+  bool FindNoteGNUPropertySection();
   bool CheckPhdr(ElfW(Addr));
   bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
 
@@ -104,13 +106,17 @@ class ElfReader {
 
   // Is map owned by the caller
   bool mapped_by_caller_;
+
+  // Only used by AArch64 at the moment.
+  ElfNoteGNUPropertySection note_gnu_property_ __unused;
 };
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
 
-int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
-                                size_t phdr_count, ElfW(Addr) load_bias);
+int phdr_table_protect_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                ElfW(Addr) load_bias,
+                                const ElfNoteGNUPropertySection* prop = nullptr);
 
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias);
