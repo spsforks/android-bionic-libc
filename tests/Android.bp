@@ -42,7 +42,10 @@ cc_defaults {
     // Make the bionic tests implicitly test bionic's shadow call stack support.
     arch: {
         arm64: {
-           cflags: ["-fsanitize=shadow-call-stack"],
+            cflags: [
+                "-fsanitize=shadow-call-stack",
+                "-mbranch-protection=standard",
+            ],
         },
     },
     stl: "libc++",
