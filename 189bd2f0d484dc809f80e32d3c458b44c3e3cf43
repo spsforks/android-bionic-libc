@@ -16,6 +16,29 @@
       "revId": "189bd2f0d484dc809f80e32d3c458b44c3e3cf43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00a5b412_168e3344",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1040443
+      },
+      "writtenOn": "2020-02-25T18:45:53Z",
+      "side": 1,
+      "message": "I\u0027d make this a bit more specific and less obscure, something like:\n\nSyscall %d trapped by seccomp sandbox while trying to initialize the profiler. Bailing out.\n\nor something simila",
+      "range": {
+        "startLine": 181,
+        "startChar": 25,
+        "endLine": 181,
+        "endChar": 96
+      },
+      "revId": "189bd2f0d484dc809f80e32d3c458b44c3e3cf43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
