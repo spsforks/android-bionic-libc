@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ae447cd7_cd1ff840",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-25T09:46:24Z",
+      "side": 1,
+      "message": "Well, this is in the ELF ABI. I am not sure why this has been chosen. For reference, I am attaching the link to the ABI in the comments.",
+      "parentUuid": "6739d9e7_bf06a71b",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 71
+      },
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "82acb8ca_d98d6916",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -54,6 +78,24 @@
       "side": 1,
       "message": "fixed by https://android-review.googlesource.com/c/platform/bionic/+/1243316",
       "parentUuid": "82acb8ca_d98d6916",
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b654be9a_09f379c2",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-25T09:46:24Z",
+      "side": 1,
+      "message": "Thank you for the quick fix.",
+      "parentUuid": "918662cb_550ff8e9",
       "revId": "390aceaa9345711906306c6b5d349120f56a689d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -180,6 +222,24 @@
     },
     {
       "key": {
+        "uuid": "502dca37_38129b2b",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-25T09:46:24Z",
+      "side": 1,
+      "message": "// I\u0027ve left that comment there to start this conversation.\n\nThis is correct. Only Elf(Nhdr) can be found elsewhere.\nI dared to define these structs hereby following the description in the referenced \"Linux Extensions to gABI\" (also attaching in comments). According to my understanding this document is a draft? though.\nLooking into binutils (because of ld) it looks like it has its own structures for parsing as well.\nWould be nice to have these defined in a common way like other Elf_* structures.",
+      "parentUuid": "22fb91da_60e1888b",
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b6c86d82_622c510b",
         "filename": "linker/linker_note_gnu_property.h",
         "patchSetId": 1
@@ -191,6 +251,30 @@
       "writtenOn": "2020-02-24T17:00:09Z",
       "side": 1,
       "message": "`type*` here and everywhere else.",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "052cf2f2_b6255185",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-25T09:46:24Z",
+      "side": 1,
+      "message": "These spaces were added by the commit hook, clang-format.py.\nIs there anything I can do about it?",
+      "parentUuid": "b6c86d82_622c510b",
       "range": {
         "startLine": 71,
         "startChar": 34,
