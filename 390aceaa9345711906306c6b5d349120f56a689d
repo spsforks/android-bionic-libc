@@ -240,6 +240,24 @@
     },
     {
       "key": {
+        "uuid": "b646f88f_db02005a",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:10:05Z",
+      "side": 1,
+      "message": "yeah, makes sense. looks like these have been used for some time for a variety of x86-64 features without making it into \u003celf.h\u003e, but using structures rather than hand-coding this makes sense, and keeping these in the linker for now probably makes sense too. (but this is probably a good place to put a comment with the link to the documentation for this stuff?)",
+      "parentUuid": "502dca37_38129b2b",
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b6c86d82_622c510b",
         "filename": "linker/linker_note_gnu_property.h",
         "patchSetId": 1
@@ -275,6 +293,30 @@
       "side": 1,
       "message": "These spaces were added by the commit hook, clang-format.py.\nIs there anything I can do about it?",
       "parentUuid": "b6c86d82_622c510b",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1019ffac_518b551b",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:10:05Z",
+      "side": 1,
+      "message": "+tomcherry,cferris",
+      "parentUuid": "052cf2f2_b6255185",
       "range": {
         "startLine": 71,
         "startChar": 34,
