@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8cd9b5a1_266bc78f",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "can\u0027t happen, so just remove all this.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3e91b3d_0da6c409",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "https://sourceware.org/glibc/wiki/ThreadPropertiesAPI describes this as \"Less attractive alternative... This approach is problematic for multiple reasons\".\n\ndocument the reasons for using this API rather than the other one?",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c04131c_3a9bf02a",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "needs ** to start. copy the style of one of the existing comments. (you\u0027ll want the @file/@brief above too.)",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59e44594_ef51f9f5",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "should this be void?",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65338729_a76eefbb",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "avoid abbreviations. s/beg/begin/. also all libc argument names should start __.",
+      "range": {
+        "startLine": 44,
+        "startChar": 45,
+        "endLine": 44,
+        "endChar": 48
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "528b2426_962f2d05",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "type*\n\ndoc comment?",
+      "range": {
+        "startLine": 46,
+        "startChar": 32,
+        "endLine": 46,
+        "endChar": 38
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbd26d5b_03f08c0e",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "is it? it takes a lock.",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b4c60d9_2744981f",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-25T21:36:49Z",
+      "side": 1,
+      "message": "also void?",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 3
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
