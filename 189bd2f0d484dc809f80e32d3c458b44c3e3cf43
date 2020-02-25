@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1d4a47c5_81e97ecb",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-02-25T19:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6a3a9eb_176a64f5",
+      "revId": "189bd2f0d484dc809f80e32d3c458b44c3e3cf43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00a5b412_168e3344",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "189bd2f0d484dc809f80e32d3c458b44c3e3cf43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "355b4d65_0928f669",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-02-25T19:08:38Z",
+      "side": 1,
+      "message": "Rephrased this log to associate it with \"profiling setup\". The \"bailing out\" part will effectively be logged by the profiling handler itself. It\u0027ll look like this log + \"failed to sedmsg: Function not implemented\" right afterwards.",
+      "parentUuid": "00a5b412_168e3344",
+      "range": {
+        "startLine": 181,
+        "startChar": 25,
+        "endLine": 181,
+        "endChar": 96
+      },
+      "revId": "189bd2f0d484dc809f80e32d3c458b44c3e3cf43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
