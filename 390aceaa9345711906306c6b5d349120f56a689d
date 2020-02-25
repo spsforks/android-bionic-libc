@@ -326,6 +326,30 @@
       "revId": "390aceaa9345711906306c6b5d349120f56a689d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f9f69e7_475927cc",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-02-25T21:49:19Z",
+      "side": 1,
+      "message": "I\u0027m guessing that it\u0027s a bug in clang-format; it may be getting tripped up over the fact that the \u0027type\u0027 has () in it.\n\nI searched but couldn\u0027t find an upstream bug for this.",
+      "parentUuid": "1019ffac_518b551b",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
