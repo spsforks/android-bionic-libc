@@ -182,17 +182,14 @@ void HandleHeapprofdSignal() {
       const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
       if (DispatchIsGwpAsan(default_dispatch)) {
         gPreviousDefaultDispatchTable = default_dispatch;
+        gEphemeralDispatch = *default_dispatch;
+      } else {
+        gEphemeralDispatch = *NativeAllocatorDispatch();
       }
 
-      __libc_globals.mutate([](libc_globals* globals) {
-        // Wholesale copy the malloc dispatch table here. If the current/default
-        // dispatch table is pointing to the malloc_dispatch_table, we can't
-        // modify it as it may be racy. This dispatch table copy is ephemeral,
-        // and the dispatch tables will be resolved back to the global
-        // malloc_dispatch_table after initialization finishes.
-        gEphemeralDispatch = globals->malloc_dispatch_table;
-        gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
+      gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
 
+      __libc_globals.mutate([](libc_globals* globals) {
         atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
         if (!MallocLimitInstalled()) {
           atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
