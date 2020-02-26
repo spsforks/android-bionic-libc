@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "433638bb_c2e5947f",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-26T16:42:43Z",
+      "side": 1,
+      "message": "\u003e This diagnostic makes me think...\n\nChange to \"unexpected note type\"\n\nAs I understand the segment we are looking for has type PT_GNU_PROPERTY and the data in it should be a note section with type NT_GNU_PROPERTY_TYPE_0. I think checking both is the safe side.\n\n\u003e ... .note.gnu.property section can have multiple notes.\n\nThe spec says that \"It (.note.gnu.property) can be merged with other SHT_NOTE sections.\"\nThough it also says that PT_GNU_PROPERTY segment contains it.\n\n\u003e GnuPropertySegment\n\nChanging to GnuPropertySection - Though I have the feeling that there segment \u003d\u003d section.\n\n\u003e .gnu.note.property\n\nOuch. Fixing it.\n\n\u003e ... but it\u0027s also part of an overlapping PT_NOTE segment.\n\nI am not sure I can understand. What do you mean exactly?",
+      "parentUuid": "a9fe0a16_dd1b74cf",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "78731fa0_43a2c1b0",
         "filename": "linker/linker_note_gnu_property.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-02-26T02:47:25Z",
       "side": 1,
       "message": "The error message is off -- we\u0027re also checking the name content, not just the size.",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acc516d3_5cd7c6c4",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-26T16:42:43Z",
+      "side": 1,
+      "message": "I am splitting this into two.",
+      "parentUuid": "78731fa0_43a2c1b0",
       "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "fa40c0c5_ea3eac04",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-26T16:42:43Z",
+      "side": 1,
+      "message": "Actually, GNU_PROPERTY_AARCH64_FEATURE_1_BTI is 1.\nIt will come from the exported kernel headers once the patch is accepted.\nhttps://lkml.org/lkml/2020/2/12/977",
+      "parentUuid": "b90c02b0_bf904c5c",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71cd1cdc_d359933c",
         "filename": "linker/linker_note_gnu_property.h",
         "patchSetId": 2
@@ -64,6 +118,30 @@
       "writtenOn": "2020-02-26T02:47:25Z",
       "side": 1,
       "message": "Should this have type char? It looks like each property record has a variable size, and we\u0027re using a byte offset below to index into this field. (If a note had two properties, I think we\u0027d read invalid memory for the second one.)",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 16
+      },
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b135d1d4_5ee5ba0d",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-26T16:42:43Z",
+      "side": 1,
+      "message": "Right, that\u0027s incorrect. It only worked because everything which emits this section emits only one property array. I am fixing this.",
+      "parentUuid": "71cd1cdc_d359933c",
       "range": {
         "startLine": 45,
         "startChar": 2,
@@ -110,6 +188,24 @@
       "writtenOn": "2020-02-26T02:47:25Z",
       "side": 1,
       "message": "I suppose we could set PROT_BTI in ElfReader::LoadSegments and leave _phdr_table_set_load_prot alone -- _phdr_table_set_load_prot is normally only used for text relocations on 32-bit architectures.\n\nThat doesn\u0027t work for the executable itself, though.\n\nIt\u0027s probably important to avoid setting PROT_BTI on a kernel that lacks support for it? This code won\u0027t set it, because there won\u0027t be any binaries that have both BTI and text relocations.",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89ea7f7b_31b36643",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-02-26T16:42:43Z",
+      "side": 1,
+      "message": "To add PROT_BTI one has to know if the ELF supports it or not.\nI don\u0027t think kernel would tolerate unknown flags.\n\nI choose to apply this flag with this function because kernel will not set PROT_BTI for loaded ELFs which have interpreter. https://lkml.org/lkml/2020/2/12/988\nTherefore at https://android-review.googlesource.com/c/platform/bionic/+/1242754/2/linker/linker_main.cpp#395 linker needs to apply this protection.",
+      "parentUuid": "f7e1d1dc_8d6578b3",
       "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
