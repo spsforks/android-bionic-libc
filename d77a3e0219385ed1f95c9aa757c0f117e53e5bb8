@@ -34,6 +34,24 @@
       "revId": "d77a3e0219385ed1f95c9aa757c0f117e53e5bb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f75d9089_f37e78f0",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-26T22:37:47Z",
+      "side": 1,
+      "message": "So the check in DispatchIsGwpAsan is actually meant to say \"default_dispatch is not heapprofd and not nullptr\"?",
+      "parentUuid": "6c7c2ba2_b0d9105a",
+      "revId": "d77a3e0219385ed1f95c9aa757c0f117e53e5bb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
