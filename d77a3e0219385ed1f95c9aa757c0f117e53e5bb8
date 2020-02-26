@@ -16,6 +16,24 @@
       "revId": "d77a3e0219385ed1f95c9aa757c0f117e53e5bb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c7c2ba2_b0d9105a",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-26T22:34:45Z",
+      "side": 1,
+      "message": "`default_dispatch` is nullptr when no malloc hooking exists.",
+      "parentUuid": "7721c23c_d9b240f4",
+      "revId": "d77a3e0219385ed1f95c9aa757c0f117e53e5bb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
