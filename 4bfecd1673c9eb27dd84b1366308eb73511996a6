@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9fe0a16_dd1b74cf",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "This diagnostic makes me think, \"There is a section named .gnu.note.property that has sh_type ___, which is unexpected\".\n\nIIUC, that\u0027s not the case, though. We\u0027re actually looking for a PT_GNU_PROPERTY segment, which we assume has at least one ELF note. We only look at the first ELF note, which should be a NT_GNU_PROPERTY_TYPE_0 note of name \"GNU\\0\". The note has a list of property records.\n\nFWIW, it looks like LLVM assumes that a .note.gnu.property section can have multiple notes. Maybe that\u0027s unnecessary? https://github.com/llvm/llvm-project/blob/d0c4277d388628154b647a45cbc6914a1ea5a822/lld/ELF/InputFiles.cpp#L750-L753\n\nOn this line, we\u0027ve determined that the ELF note has the wrong note type.\n\nSome of the earlier diagnostics say, \"\\\"%s\\\" PT_GNU_PROPERTY: ...\". Maybe use that everywhere?\n\nI think ElfNoteGNUPropertySection could be shorter -- maybe GnuPropertySegment or something.\n\nAside: this code is inconsistent about .gnu.note.property vs .note.gnu.property. It\u0027s the latter.\n\nAside 2: it looks like the NT_GNU_PROPERTY_TYPE_0 note comprises the PT_GNU_PROPERTY segment, but it\u0027s also part of an overlapping PT_NOTE segment.",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78731fa0_43a2c1b0",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "The error message is off -- we\u0027re also checking the name content, not just the size.",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b90c02b0_bf904c5c",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "The INFO message doesn\u0027t really describe what\u0027s being output. It should:\n - say bti_compatible instad of feature_1_and, or\n - print the whole feature_1_and value\n\nI think GNU_PROPERTY_AARCH64_FEATURE_1_BTI\u0027s value probably isn\u0027t 1. Where is Bionic finding the definitions of the two GNU_PROPERTY_xxx constants?",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71cd1cdc_d359933c",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "Should this have type char? It looks like each property record has a variable size, and we\u0027re using a byte offset below to index into this field. (If a note had two properties, I think we\u0027d read invalid memory for the second one.)",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 16
+      },
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d759733_4d35930b",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "same as above -- ProgProp -\u003e char",
+      "range": {
+        "startLine": 57,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 16
+      },
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7e1d1dc_8d6578b3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "I suppose we could set PROT_BTI in ElfReader::LoadSegments and leave _phdr_table_set_load_prot alone -- _phdr_table_set_load_prot is normally only used for text relocations on 32-bit architectures.\n\nThat doesn\u0027t work for the executable itself, though.\n\nIt\u0027s probably important to avoid setting PROT_BTI on a kernel that lacks support for it? This code won\u0027t set it, because there won\u0027t be any binaries that have both BTI and text relocations.",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "982d2754_06194ab6",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-26T02:47:25Z",
+      "side": 1,
+      "message": "#if defined(__aarch64__)",
+      "range": {
+        "startLine": 755,
+        "startChar": 1,
+        "endLine": 755,
+        "endChar": 18
+      },
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
