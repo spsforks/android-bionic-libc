@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d98552f_dc9c4499",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-02-27T00:35:22Z",
+      "side": 1,
+      "message": "it\u0027s static, correct? then it is zero initialized, i.e. nullptr.",
+      "range": {
+        "startLine": 12,
+        "startChar": 10,
+        "endLine": 13,
+        "endChar": 57
+      },
+      "revId": "2b26df72245ac32b21706b3b6f07e9e4161e9d03",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55a3be9d_cee2872f",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-02-27T00:35:22Z",
+      "side": 1,
+      "message": "optional: consider putting this into the two other cases, because then all cases are\n\nif (...) {\n   gPreviousDefaultDispatchTable \u003d ...\n   gEphemeralDispatch \u003d ...\n}\n\nup to you.",
+      "range": {
+        "startLine": 177,
+        "startChar": 6,
+        "endLine": 177,
+        "endChar": 46
+      },
+      "revId": "2b26df72245ac32b21706b3b6f07e9e4161e9d03",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
