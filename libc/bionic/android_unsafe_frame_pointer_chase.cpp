@@ -57,6 +57,16 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
 
   auto begin = reinterpret_cast<uintptr_t>(__builtin_frame_address(0));
   uintptr_t end = __get_thread()->stack_top;
+
+  if (__get_thread()->sigaltstack_unreliable) {
+    return 0;
+  }
+
+  if (begin >= __get_thread()->sigaltstack_bottom &&
+      begin < __get_thread()->sigaltstack_top) {
+    end = __get_thread()->sigaltstack_top;
+  }
+
   size_t num_frames = 0;
   while (1) {
     auto* frame = reinterpret_cast<frame_record*>(begin);

@@ -86,7 +86,7 @@ void pthread_exit(void* return_value) {
   // space (see pthread_key_delete).
   pthread_key_clean_all();
 
-  if (thread->alternate_signal_stack != nullptr) {
+  if (thread->bionic_alternate_signal_stack != nullptr) {
     // Tell the kernel to stop using the alternate signal stack.
     stack_t ss;
     memset(&ss, 0, sizeof(ss));
@@ -94,8 +94,8 @@ void pthread_exit(void* return_value) {
     sigaltstack(&ss, nullptr);
 
     // Free it.
-    munmap(thread->alternate_signal_stack, SIGNAL_STACK_SIZE);
-    thread->alternate_signal_stack = nullptr;
+    munmap(thread->bionic_alternate_signal_stack, SIGNAL_STACK_SIZE);
+    thread->bionic_alternate_signal_stack = nullptr;
   }
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;

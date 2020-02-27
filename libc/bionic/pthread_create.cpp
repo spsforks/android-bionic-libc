@@ -98,7 +98,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
     ss.ss_size = SIGNAL_STACK_SIZE - PTHREAD_GUARD_SIZE;
     ss.ss_flags = 0;
     sigaltstack(&ss, nullptr);
-    thread->alternate_signal_stack = stack_base;
+    thread->bionic_alternate_signal_stack = stack_base;
 
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.

@@ -100,7 +100,10 @@ class pthread_internal_t {
   void* return_value;
   sigset64_t start_mask;
 
-  void* alternate_signal_stack;
+  // The alternate signal stack allocated by bionic. Note that this may be
+  // distinct from sigaltstack_{bottom,top} if the application has allocated
+  // its own alternate signal stack.
+  void* bionic_alternate_signal_stack;
 
   // The start address of the shadow call stack's guard region (arm64 only).
   // This address is only used to deallocate the shadow call stack on thread
@@ -128,6 +131,14 @@ class pthread_internal_t {
   // A pointer to the top of the stack. This lets android_unsafe_frame_pointer_chase determine the
   // top of the stack quickly, which would otherwise require special logic for the main thread.
   uintptr_t stack_top;
+
+  // The bounds of the alternate signal stack. This lets android_unsafe_frame_pointer_chase
+  // determine the bounds without requiring a system call.
+  uintptr_t sigaltstack_bottom, sigaltstack_top;
+
+  // Set if the application has passed a flag other than SS_DISABLE to sigaltstack,
+  // which means that we don't reliably know where the alternate signal stack is.
+  bool sigaltstack_unreliable;
 
   Lock startup_handshake_lock;
 

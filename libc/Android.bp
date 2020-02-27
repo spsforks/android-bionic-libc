@@ -1115,6 +1115,7 @@ cc_library_static {
         "bionic/seteuid.cpp",
         "bionic/setpgrp.cpp",
         "bionic/sigaction.cpp",
+        "bionic/sigaltstack.cpp",
         "bionic/signal.cpp",
         "bionic/sigprocmask.cpp",
         "bionic/sleep.cpp",
