@@ -212,12 +212,14 @@ void HandleHeapprofdSignal() {
       gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
 
       // And finally, install these new malloc-family interceptors.
+      pthread_mutex_lock(&gGlobalsMutateLock);
       __libc_globals.mutate([](libc_globals* globals) {
         atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
         if (!MallocLimitInstalled()) {
           atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
         }
       });
+      pthread_mutex_unlock(&gGlobalsMutateLock);
     }
     atomic_store(&gGlobalsMutating, false);
   }
