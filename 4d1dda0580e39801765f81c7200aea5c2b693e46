@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70e13d5b_eb5c06c1",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-02-28T16:18:55Z",
+      "side": 1,
+      "message": "Are we sure that HandleHeapprofdSignal does not change this from under us? If not, please document why. But I would be more comfortable if we did\n\nauto* prev_default_dispatch_table \u003d gPreviousDefaultDispatchTable;\nif (prev_default_dispatch_table) {\n  return prev_default_dispatch_table-\u003emalloc(bytes);\n}\n\nThis makes sure that even if such a race ever happens, it\u0027s benign, because we just use one state or the other.",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 3
+      },
+      "revId": "4d1dda0580e39801765f81c7200aea5c2b693e46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
