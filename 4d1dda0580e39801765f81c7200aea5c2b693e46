@@ -22,6 +22,30 @@
       "revId": "4d1dda0580e39801765f81c7200aea5c2b693e46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "682b52a4_0cdc2820",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-28T16:30:13Z",
+      "side": 1,
+      "message": "Yes, certain.\n\ngPreviousDefaultDispatchTable is only modified while gHeapprofdInitInProgress \u003d\u003d true, and this lock is held during MallocInitHeapprofdHook by:\n\n - HandleHeapprofdSignal (locks gHeapprofdInitInProgress) -\u003e libc malloc() -\u003e MallocInitHeapprofdHook (here) -\u003e InitHeapProfd -\u003e CommonInstallHooks (unlocks gHeapprofdInitInProgress).\n\nThere\u0027s a comment where gHeapprofdInitInProgress that says: \"This variable is atomically protected by gHeapprofdInitInProgress.\", but I\u0027ll add another note here as well.",
+      "parentUuid": "70e13d5b_eb5c06c1",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 3
+      },
+      "revId": "4d1dda0580e39801765f81c7200aea5c2b693e46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
