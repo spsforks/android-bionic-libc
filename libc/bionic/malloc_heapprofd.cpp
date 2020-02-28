@@ -301,10 +301,12 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
       error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
     }
   }
-  // Get an allocation from libc malloc. If we had a previous dispatch table,
-  // this will come from it - otherwise, we'll get it from the system
-  // allocator.
-  return malloc(bytes);
+  // If we had a previous dispatch table, use that to service the allocation,
+  // otherwise fall back to the native allocator.
+  if (gPreviousDefaultDispatchTable) {
+    return gPreviousDefaultDispatchTable->malloc(bytes);
+  }
+  return NativeAllocatorDispatch()->malloc(bytes);
 }
 
 bool HeapprofdInitZygoteChildProfiling() {
