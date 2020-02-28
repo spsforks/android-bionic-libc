@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa511444_5aa70b71",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T18:25:10Z",
+      "side": 1,
+      "message": "(which change introduces this constant?)",
+      "range": {
+        "startLine": 303,
+        "startChar": 50,
+        "endLine": 303,
+        "endChar": 60
+      },
+      "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
