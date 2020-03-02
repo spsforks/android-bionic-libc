@@ -350,6 +350,30 @@
       "revId": "390aceaa9345711906306c6b5d349120f56a689d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4081852a_0e373fa1",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-03-02T08:06:17Z",
+      "side": 1,
+      "message": "So this is indeed a missing feature in clang-format.",
+      "parentUuid": "1f9f69e7_475927cc",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "390aceaa9345711906306c6b5d349120f56a689d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
