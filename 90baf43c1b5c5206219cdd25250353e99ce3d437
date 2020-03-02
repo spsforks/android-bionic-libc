@@ -22,6 +22,30 @@
       "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24386850_7dcd5884",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-03-02T08:05:33Z",
+      "side": 1,
+      "message": "This constant would also come from exported kernel headers.\nThis change is not merge-able as-is.\nShould I add some \"#ifndef then define otherwise warn that already defined\" kind-of definitions for the circa 5 yet-undefined constants?\nIs it expected that this patch can be merged without kernel support being merged first?",
+      "parentUuid": "fa511444_5aa70b71",
+      "range": {
+        "startLine": 303,
+        "startChar": 50,
+        "endLine": 303,
+        "endChar": 60
+      },
+      "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
