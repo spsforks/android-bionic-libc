@@ -1,0 +1,92 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000001795881",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1248514?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "49668898_d93e7586",
+          "description": "Change to \"libc/bionic/malloc_heapprofd.cpp\"",
+          "replacements": [
+            {
+              "path": "libc/bionic/malloc_heapprofd.cpp",
+              "range": {
+                "startLine": 105,
+                "startChar": 68,
+                "endLine": 105,
+                "endChar": 79
+              },
+              "replacement": "transferring"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "fd04c3bc_71126fa9",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-03-03T02:33:00Z",
+      "side": 1,
+      "message": "Common typo found: \"transfering\" -- should it be \"transferring\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 105,
+        "startChar": 68,
+        "endLine": 105,
+        "endChar": 79
+      },
+      "revId": "708c941d518a1abf29a5f3e79c298bf3486c154c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000001795881",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1248514?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "28b4ef70_ee774ce0",
+          "description": "Change to \"libc/bionic/malloc_heapprofd.cpp\"",
+          "replacements": [
+            {
+              "path": "libc/bionic/malloc_heapprofd.cpp",
+              "range": {
+                "startLine": 110,
+                "startChar": 61,
+                "endLine": 110,
+                "endChar": 72
+              },
+              "replacement": "transferring"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "12619abd_aedf1bc9",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-03-03T02:33:00Z",
+      "side": 1,
+      "message": "Common typo found: \"transfering\" -- should it be \"transferring\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 110,
+        "startChar": 61,
+        "endLine": 110,
+        "endChar": 72
+      },
+      "revId": "708c941d518a1abf29a5f3e79c298bf3486c154c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
