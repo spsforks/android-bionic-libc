@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "550e4d76_c3c2f77d",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Removed - for education, why can\u0027t this happen? (Who did the checking?)",
+      "parentUuid": "8cd9b5a1_266bc78f",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3e91b3d_0da6c409",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 14
@@ -36,6 +60,24 @@
       "writtenOn": "2020-02-25T21:36:49Z",
       "side": 1,
       "message": "https://sourceware.org/glibc/wiki/ThreadPropertiesAPI describes this as \"Less attractive alternative... This approach is problematic for multiple reasons\".\n\ndocument the reasons for using this API rather than the other one?",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6c68ee0_852f1591",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Added a second proposal to have a on_creation and on_destruction callbacks.\nPrefer NOT doing the proposal that requires wrapping/interposing the functions because that seems a bit more work for the tools.\n\nPlease let me know which one is preferred.",
+      "parentUuid": "b3e91b3d_0da6c409",
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "5e1425b4_67c0a73c",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c04131c_3a9bf02a",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59e44594_ef51f9f5",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 14
@@ -70,6 +130,24 @@
       "writtenOn": "2020-02-25T21:36:49Z",
       "side": 1,
       "message": "should this be void?",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0159943_698fd959",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Do we not need a way to communicate failure?",
+      "parentUuid": "59e44594_ef51f9f5",
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "715c8ffc_49b5bacf",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65338729_a76eefbb",
+      "range": {
+        "startLine": 44,
+        "startChar": 45,
+        "endLine": 44,
+        "endChar": 48
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "528b2426_962f2d05",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 14
@@ -119,6 +221,30 @@
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8485925_6f451086",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-03T04:50:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "528b2426_962f2d05",
+      "range": {
+        "startLine": 46,
+        "startChar": 32,
+        "endLine": 46,
+        "endChar": 38
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
