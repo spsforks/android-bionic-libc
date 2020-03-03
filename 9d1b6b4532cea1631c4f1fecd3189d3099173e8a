@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "da7ce886_4d93fd8b",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-03T15:59:43Z",
+      "side": 1,
+      "message": "Android only supports arm/arm64/x86/x86-64, and adding another architecture would be a massive undertaking. (and would pretty much require than any new architecture was \"sane\" --- basically mostly the same as an existing one, probably arm64 because that\u0027s the new \"clean\" one where all the Linux stuff comes from asm-generic and there are no weird special case system calls that are slightly different etc.)\n\nif this code was different for each architecture, or different for the two arms than for the two x86es, #if would make more sense. but given that they\u0027re all the same, there\u0027s really no information conveyed here.",
+      "parentUuid": "550e4d76_c3c2f77d",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3e91b3d_0da6c409",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 14
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "Added a second proposal to have a on_creation and on_destruction callbacks.\nPrefer NOT doing the proposal that requires wrapping/interposing the functions because that seems a bit more work for the tools.\n\nPlease let me know which one is preferred.",
       "parentUuid": "b3e91b3d_0da6c409",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18054492_a7f6ac4e",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-03T15:59:43Z",
+      "side": 1,
+      "message": "(i\u0027ll defer to eugenis@ as the expert on that.)",
+      "parentUuid": "e6c68ee0_852f1591",
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -148,6 +190,24 @@
       "side": 1,
       "message": "Do we not need a way to communicate failure?",
       "parentUuid": "59e44594_ef51f9f5",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47862ffc_23bc823c",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-03T15:59:43Z",
+      "side": 1,
+      "message": "is failure likely, and can the caller do anything useful on failure? my assumption is \"1. no, this should never happen. 2. no, it can only abort\", in which case we may as well just make this function void and have it abort if it fails.\n\nif either of those assumptions are wrong, returning a status would make sense.",
+      "parentUuid": "c0159943_698fd959",
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
