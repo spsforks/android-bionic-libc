@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "0345da16_12033d52",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:58:36Z",
+      "side": 1,
+      "message": "\u003e On the contrary, TSan needs to know about dtls mappings online in order to reset their access history on reuse. Does reuse even happen in Android? Anyway, this is not a thing at this point, and we may end up deploying a watchpoint-based race detection tool instead that would not care about dtls. @dvyukov to comment.\n\nOh, I was added only for this...\n\nLooking at the current uses in tsan runtime, we need to know tls ranges for the current thread during thread creation/destruction:\n\nrtl$ grep -C 3 tls tsan_rtl_thread.cpp\n                 ThreadType thread_type) {\n  uptr stk_addr \u003d 0;\n  uptr stk_size \u003d 0;\n  uptr tls_addr \u003d 0;\n  uptr tls_size \u003d 0;\n#if !SANITIZER_GO\n  if (thread_type !\u003d ThreadType::Fiber)\n    GetThreadStackAndTls(tid \u003d\u003d 0, \u0026stk_addr, \u0026stk_size, \u0026tls_addr, \u0026tls_size);\n\n  if (tid) {\n    if (stk_addr \u0026\u0026 stk_size)\n      MemoryRangeImitateWrite(thr, /*pc\u003d*/ 1, stk_addr, stk_size);\n\n    if (tls_addr \u0026\u0026 tls_size) ImitateTlsWrite(thr, tls_addr, tls_size);\n  }\n#endif\n--\n  StatInc(thr, StatThreadFinish);\n  if (thr-\u003estk_addr \u0026\u0026 thr-\u003estk_size)\n    DontNeedShadowFor(thr-\u003estk_addr, thr-\u003estk_size);\n  if (thr-\u003etls_addr \u0026\u0026 thr-\u003etls_size)\n    DontNeedShadowFor(thr-\u003etls_addr, thr-\u003etls_size);\n  thr-\u003eis_dead \u003d true;\n  ctx-\u003ethread_registry-\u003eFinishThread(thr-\u003etid);\n}\n\n\nIdeally, we probably need to do MemoryRangeImitateWrite for newly created DLTS regions as well. But that\u0027s not strictly necessary.",
+      "parentUuid": "658975b7_1bda00c9",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c04131c_3a9bf02a",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 14
