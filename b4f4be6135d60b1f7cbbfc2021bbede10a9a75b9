@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a458075_8ae60fb0",
+        "filename": "libc/include/bits/posix_limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2020-03-04T21:26:07Z",
+      "side": 1,
+      "message": "Do you mean some coding style that requires the parameter name to be __level?\nI don\u0027t know if there is any clang-tidy coding style check for that.",
+      "parentUuid": "a86452bd_900ecc93",
+      "range": {
+        "startLine": 40,
+        "startChar": 28,
+        "endLine": 40,
+        "endChar": 33
+      },
+      "revId": "b4f4be6135d60b1f7cbbfc2021bbede10a9a75b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f9b12574_b3452222",
         "filename": "libc/kernel/uapi/asm-generic/siginfo.h",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "b4f4be6135d60b1f7cbbfc2021bbede10a9a75b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0463441_06abdd77",
+        "filename": "libc/kernel/uapi/asm-generic/siginfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2020-03-04T21:26:07Z",
+      "side": 1,
+      "message": "Okay, I will not change uapi files in this CL.",
+      "parentUuid": "f9b12574_b3452222",
+      "revId": "b4f4be6135d60b1f7cbbfc2021bbede10a9a75b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
