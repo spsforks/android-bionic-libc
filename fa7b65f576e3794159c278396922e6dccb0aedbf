@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "21a525bb_2abea95e",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:54:04Z",
+      "side": 1,
+      "message": "This calls user callback under internal mutex. There are probably some restrictions associated with this. Maybe worth documenting.",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15d75db0_fe952fd3",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 22
