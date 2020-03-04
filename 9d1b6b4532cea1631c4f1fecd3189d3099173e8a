@@ -126,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "658975b7_1bda00c9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-03-04T00:25:10Z",
+      "side": 1,
+      "message": "I agree that interception should not be required to use this API.\n\nAn API based on callbacks is not going to work for a leak detector that is not \"online\". I.e. leak detection does not necessarily require any actions on thread creation, or on dlopen - it should be doable after the fact, by inspection of a frozen process memory + registers. I believe that\u0027s how libmemunreachable works.\n\nIt looks like __libc_iterate_dynamic_tls is the only viable choice. But it needs to support listing dtls for any thread, not just the current one.\n\nLeakSanitizer obtains a pointer to an internal list of dtls blocks during thread creation. This list is later updated by the interceptors when new libraries are loaded. This API will let us throw away all that code and simply query the list after the fact.\n\nA complication: LSan does not have a pthread_t for the thread it request info about. It has a pid and can ptrace any registers out of it, so it can reach TLS_SLOT_THREAD_ID, but that\u0027s becoming a little bionic specific. Not sure if there is a better solution though.\n\nOn the contrary, TSan needs to know about dtls mappings online in order to reset their access history on reuse. Does reuse even happen in Android? Anyway, this is not a thing at this point, and we may end up deploying a watchpoint-based race detection tool instead that would not care about dtls. @dvyukov to comment.\n\n\nAs for AS-safety, locks that LSan can acquire before freezing the process are OK (ex.: we grab the loader lock already), but it\u0027s better if this function did not take anything it does not strictly need.",
+      "parentUuid": "18054492_a7f6ac4e",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c04131c_3a9bf02a",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 14
