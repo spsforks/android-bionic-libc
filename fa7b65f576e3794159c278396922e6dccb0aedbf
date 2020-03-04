@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "457e15d6_11983f9c",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:47:59Z",
+      "side": 1,
+      "message": "This racy. Shouldn\u0027t this be thread-safe? Users won\u0027t be able to synchronize across each other as they are most likely completely unrelated pieces of software.",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15d75db0_fe952fd3",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:47:59Z",
+      "side": 1,
+      "message": "It seems this pulls in lots of internal guts. Perhaps it\u0027s better to declare the callback types _here_ and include this header in the internal one?",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41f52811_b41a48a1",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:47:59Z",
+      "side": 1,
+      "message": "Is it possible to achieve on android?\nIn some contexts you never know if there are any threads already or not.",
+      "range": {
+        "startLine": 60,
+        "startChar": 36,
+        "endLine": 60,
+        "endChar": 72
+      },
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb218af5_c7bb4ce9",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-04T09:47:59Z",
+      "side": 1,
+      "message": "What are thread-safety/max number of registered callbacks requirements?\nI don\u0027t see this function mentioned anywhere at https://sourceware.org/glibc/wiki/ThreadPropertiesAPI",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
