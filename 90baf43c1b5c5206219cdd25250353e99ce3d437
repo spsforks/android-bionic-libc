@@ -46,6 +46,30 @@
       "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3532d75_3e31d1c6",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-04T21:35:51Z",
+      "side": 1,
+      "message": "up to you... i\u0027m happy taking this early, or waiting for the uapi headers --- basically \"whichever makes your life easier\".\n\nis this in _any_ upstream kernel yet, and we just need to wait for 5.6 or whatever, or are the kernel changes under review, or do they still need to even be sent upstream? (the answer doesn\u0027t really affect when we take this change; i\u0027m just curious.) similar question for the LLVM changes.",
+      "parentUuid": "24386850_7dcd5884",
+      "range": {
+        "startLine": 303,
+        "startChar": 50,
+        "endLine": 303,
+        "endChar": 60
+      },
+      "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
