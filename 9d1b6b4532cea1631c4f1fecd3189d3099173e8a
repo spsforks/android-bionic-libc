@@ -162,6 +162,24 @@
     },
     {
       "key": {
+        "uuid": "fb6a4e96_98f0d4ba",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-05T05:30:02Z",
+      "side": 1,
+      "message": "\u003e Oh, I was added only for this...\n\nWell, yes, but any other comments/suggestion is also appreciated! \n\n\u003e Looking at the current uses in tsan runtime, we need to know tls ranges for the current  \n\u003e thread during thread creation/destruction:\n\nSo it looks like we may keep both the -iterate- and callback options?",
+      "parentUuid": "0345da16_12033d52",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c04131c_3a9bf02a",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 14

@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "3443608b_24030bae",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-05T05:30:02Z",
+      "side": 1,
+      "message": "This can\u0027t be racy because its precondition requires that it be called *before* any thread was created.",
+      "parentUuid": "457e15d6_11983f9c",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6b822d3_a23de0d8",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 22
@@ -94,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "0f7e1653_26c6f267",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-05T05:30:02Z",
+      "side": 1,
+      "message": "There are a couple of questions here.\nFirst, should __libc_iterate_dynamic_tls() work on the *current* thread? Or on any thread given its pitd?\n\nI had originally planned to do the former. Then in the sanitizers, set it up so that each thread calls its own __libc_iterate_dynamic_tls()\n\neugenis@ suggested doing the latter. Given the current implementation of lsan, that would definitely make it simpler there, but more complicated here. \n\nThe problem is, I can ptrace the thread-register to find the DTV, but I can\u0027t get the TlsModules struct for just any thread (ie., can\u0027t determine the DTLS block size)\n(Please see updated patch for a prototype). \n\nAny suggestion?",
+      "parentUuid": "fb61ef44_a62ec684",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15d75db0_fe952fd3",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 22
@@ -129,6 +165,24 @@
     },
     {
       "key": {
+        "uuid": "7a1ceab8_ac22c851",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-05T05:30:02Z",
+      "side": 1,
+      "message": "That would be cyclic dependency because the .cpp of this header needs to include  bionic_elf_tls.h.\n\nI think we can just declare the types in both places (as long as they match exactly).\n\n(An alternative would be to have a third header declare these - seems overkill?)",
+      "parentUuid": "15d75db0_fe952fd3",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41f52811_b41a48a1",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 22
@@ -140,6 +194,30 @@
       "writtenOn": "2020-03-04T09:47:59Z",
       "side": 1,
       "message": "Is it possible to achieve on android?\nIn some contexts you never know if there are any threads already or not.",
+      "range": {
+        "startLine": 60,
+        "startChar": 36,
+        "endLine": 60,
+        "endChar": 72
+      },
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472be1ce_cecec268",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-05T05:30:02Z",
+      "side": 1,
+      "message": "enh@ ?",
+      "parentUuid": "41f52811_b41a48a1",
       "range": {
         "startLine": 60,
         "startChar": 36,
