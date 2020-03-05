@@ -111,6 +111,24 @@
     },
     {
       "key": {
+        "uuid": "f9087704_f3901d57",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-05T01:55:13Z",
+      "side": 1,
+      "message": "(correct: this header will be unusable otherwise.)",
+      "parentUuid": "15d75db0_fe952fd3",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "41f52811_b41a48a1",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 22
