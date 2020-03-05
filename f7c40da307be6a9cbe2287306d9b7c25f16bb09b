@@ -34,6 +34,23 @@
       "revId": "f7c40da307be6a9cbe2287306d9b7c25f16bb09b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cee8121f_adf104f4",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 22
+      },
+      "lineNbr": 1520,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-05T00:12:06Z",
+      "side": 0,
+      "message": "unrelated whitespace change?",
+      "revId": "f7c40da307be6a9cbe2287306d9b7c25f16bb09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

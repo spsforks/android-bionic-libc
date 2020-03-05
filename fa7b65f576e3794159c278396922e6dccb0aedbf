@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "13532c48_9d33be25",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-05T00:12:06Z",
+      "side": 1,
+      "message": "The ti-\u003eoffset is an offset into the module\u0027s segment. i.e. Different calls to __tls_get_addr would pass offsets of values [0, segment.size).\n\nI think you just want to pass mod_ptr to the callback.",
+      "range": {
+        "startLine": 302,
+        "startChar": 47,
+        "endLine": 302,
+        "endChar": 57
+      },
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "457e15d6_11983f9c",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 22
@@ -19,6 +42,23 @@
     },
     {
       "key": {
+        "uuid": "f6b822d3_a23de0d8",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-05T00:12:06Z",
+      "side": 1,
+      "message": "I don\u0027t think this assertion is correct:\n - Initially a thread\u0027s DTV count is (IIRC) zero. The DTV is allocated lazily.\n - It might exactly equal the static module count, e.g.:\n    - Initially there is only static TLS memory.\n    - A DSO accesses a static TLS variable using __tls_get_addr, creating a DTV.\n    - A call to dlopen creates a new TLS module.\n\nAlso, I think we generally use CHECK instead of assert in bionic.",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "21a525bb_2abea95e",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 22
@@ -30,6 +70,24 @@
       "writtenOn": "2020-03-04T09:54:04Z",
       "side": 1,
       "message": "This calls user callback under internal mutex. There are probably some restrictions associated with this. Maybe worth documenting.",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb61ef44_a62ec684",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-05T00:12:06Z",
+      "side": 1,
+      "message": "FWIW, I\u0027ve been thinking of redoing the way DTLS memory is allocated to make it actually AS-safe. It\u0027s not currently AS-safe if a TLS variable is accessed after forking. b/123776208.\n\nCurrently, a signal handler could allocate DTLS memory immediately after __libc_iterate_dynamic_tls returns. I\u0027m not sure whether that\u0027s a concern for sanitizers.\n\nAlso, without checking the generation count, there\u0027s no guarantee that the segment size in the module table corresponds to the block in the DTV. (i.e. dlclose bumps the generation count when it unloads a DSO, but it doesn\u0027t actually free the DTLS blocks linked from all the running threads\u0027 DTVs.) I guess we need to detect a stale DTV and update it (do something like update_tls_dtv()).",
+      "parentUuid": "21a525bb_2abea95e",
       "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
