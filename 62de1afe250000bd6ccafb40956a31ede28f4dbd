@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9e3e537_95136fc5",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-03-05T23:40:57Z",
+      "side": 1,
+      "message": "To support tsan use case, this thing should allow reading the current thread DTLS without ptrace.",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "576628e3_07d58085",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-03-05T23:40:57Z",
+      "side": 1,
+      "message": "Do we want a list of callbacks here (similar to thread exit callbacks) for flexibility?",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "825c868c_2b1175d3",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-03-05T23:40:57Z",
+      "side": 1,
+      "message": "We could relax this condition and just say smth like \"behavior is undefined if there is concurrent modification of the target thread\u0027s DTLS\".",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
