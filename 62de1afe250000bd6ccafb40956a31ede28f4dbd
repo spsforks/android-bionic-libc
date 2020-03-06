@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4de0d4b6_3463825f",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:37:05Z",
+      "side": 1,
+      "message": "\u003e To support tsan use case, this thing should allow reading the current thread DTLS without ptrace.\n\nI\u0027m not sure I quite get this:\n - If the given tid is the same as the current thread, we wouldn\u0027t need ptrace to get the thread-pointer register.\n - If you mean we cannot use ptrace at all, then it\u0027d need some trickeries (or we\u0027d have to make the BionicAllocator keep a mapping somehow?)",
+      "parentUuid": "b9e3e537_95136fc5",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "576628e3_07d58085",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 25
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-05T23:40:57Z",
       "side": 1,
       "message": "Do we want a list of callbacks here (similar to thread exit callbacks) for flexibility?",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd62615a_653d8b31",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:37:05Z",
+      "side": 1,
+      "message": "This can be called multiple times (similarly to the *register_thread_exit* one)\n\nI think it looks simpler without a forcing a \"list\" here.\n\n(But either way, we should keep this and the *thread-exit* consistent, yes?)",
+      "parentUuid": "576628e3_07d58085",
       "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -50,6 +86,24 @@
       "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9ff6529_b93e5c6f",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:37:05Z",
+      "side": 1,
+      "message": "LGTM. Updated.",
+      "parentUuid": "825c868c_2b1175d3",
+      "revId": "62de1afe250000bd6ccafb40956a31ede28f4dbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
