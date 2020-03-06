@@ -296,6 +296,30 @@
     },
     {
       "key": {
+        "uuid": "4cecb3b1_0fdea52e",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1056155
+      },
+      "writtenOn": "2020-03-06T05:14:18Z",
+      "side": 1,
+      "message": "ack, never mind then",
+      "parentUuid": "83e4ab1b_441f46ad",
+      "range": {
+        "startLine": 60,
+        "startChar": 36,
+        "endLine": 60,
+        "endChar": 72
+      },
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb218af5_c7bb4ce9",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 22
