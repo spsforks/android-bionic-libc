@@ -51,6 +51,24 @@
       "revId": "f7c40da307be6a9cbe2287306d9b7c25f16bb09b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b70f026_be908253",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 22
+      },
+      "lineNbr": 1520,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:48:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "cee8121f_adf104f4",
+      "revId": "f7c40da307be6a9cbe2287306d9b7c25f16bb09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

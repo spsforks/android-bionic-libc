@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "32e26a4c_93e1b0ac",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7ce886_4d93fd8b",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3e91b3d_0da6c409",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 14
@@ -376,6 +400,24 @@
       "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "541416ca_bbe40ed0",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbd26d5b_03f08c0e",
+      "revId": "9d1b6b4532cea1631c4f1fecd3189d3099173e8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {

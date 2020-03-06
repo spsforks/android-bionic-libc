@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "afe55e89_3a1c47b3",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:48:04Z",
+      "side": 1,
+      "message": "Done. Thanks!",
+      "parentUuid": "13532c48_9d33be25",
+      "range": {
+        "startLine": 302,
+        "startChar": 47,
+        "endLine": 302,
+        "endChar": 57
+      },
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "457e15d6_11983f9c",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 22
@@ -74,6 +98,24 @@
       "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3123d0ae_e285b24d",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-03-06T02:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6b822d3_a23de0d8",
+      "revId": "fa7b65f576e3794159c278396922e6dccb0aedbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
