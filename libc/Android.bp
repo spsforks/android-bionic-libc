@@ -1771,6 +1771,10 @@ cc_library_headers {
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
 
     no_libcrt: true,
     stl: "none",
