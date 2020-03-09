@@ -70,6 +70,30 @@
       "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6a35b91_74920c77",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-03-09T09:12:24Z",
+      "side": 1,
+      "message": "The related kernel patch is in review.\nhttp://lists.infradead.org/pipermail/linux-arm-kernel/2020-February/714367.html\n\nLLVM has quite some BTI support merged already.",
+      "parentUuid": "a3532d75_3e31d1c6",
+      "range": {
+        "startLine": 303,
+        "startChar": 50,
+        "endLine": 303,
+        "endChar": 60
+      },
+      "revId": "90baf43c1b5c5206219cdd25250353e99ce3d437",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
