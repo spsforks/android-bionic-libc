@@ -105,6 +105,10 @@ enum {
   //   arg_size = sizeof(bool)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
+
+  // Called after the zygote forks to indicate this is a child.
+  M_GET_ZYGOTE_CHILD = 11,
+#define M_GET_ZYGOTE_CHILD M_GET_ZYGOTE_CHILD
 };
 
 enum HeapTaggingLevel {

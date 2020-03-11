@@ -468,6 +468,14 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     gZygoteChild = true;
     return true;
   }
+  if (opcode == M_GET_ZYGOTE_CHILD) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    *reinterpret_cast<bool*>(arg) = gZygoteChild;
+    return true;
+  }
   if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
     if (arg != nullptr || arg_size != 0) {
       errno = EINVAL;
