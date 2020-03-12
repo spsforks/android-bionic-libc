@@ -1,0 +1,10 @@
+Code-Review+1: Mitch Phillips <mitchp@google.com>
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Code-Review+1: Ryan Savitski <rsavitski@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Submitted-by: Florian Mayer <fmayer@google.com>
+Submitted-at: Thu, 12 Mar 2020 17:12:13 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1248514
+Project: platform/bionic
+Branch: refs/heads/master
