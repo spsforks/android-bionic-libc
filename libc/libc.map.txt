@@ -1558,6 +1558,8 @@ LIBC_S { # introduced=S
     __libc_register_thread_exit_callback;
     __libc_iterate_dynamic_tls;
     __libc_register_dynamic_tls_listeners;
+    pthread_precache_thread_stacks_np;
+    pthread_set_stack_cache_max_count_np;
 } LIBC_R;
 
 LIBC_PRIVATE {
