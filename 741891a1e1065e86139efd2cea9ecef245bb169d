@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80e97ab6_e974d779",
+        "filename": "linker/linker_debuggerd_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-03-13T23:51:13Z",
+      "side": 1,
+      "message": "Why do we need to reinterpret_cast to void*?",
+      "range": {
+        "startLine": 39,
+        "startChar": 21,
+        "endLine": 39,
+        "endChar": 80
+      },
+      "revId": "741891a1e1065e86139efd2cea9ecef245bb169d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
