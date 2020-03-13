@@ -283,6 +283,15 @@ int pthread_getname_np(pthread_t __pthread, char* __buf, size_t __n) __INTRODUCE
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t __pthread, const char* __name);
 
+// Set the maximum number of thread stacks we want to cache.
+int pthread_set_stack_cache_size_np(size_t nr_threads) __INTRODUCED_IN(30);
+// Prevent pthreads from reusing the current thread's stack.  Use when
+// mprotecting the stack.
+int pthread_prevent_stack_reuse_np(void) __INTRODUCED_IN(30);
+// Try to allocate the given number of cached thread stacks, up to the
+// cache limit specified in pthread_set_stack_cache_size_np.
+int pthread_precache_thread_stacks_np(size_t nr_threads) __INTRODUCED_IN(30);
+
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
 int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
 

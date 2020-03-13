@@ -30,6 +30,8 @@
 
 #include <pthread.h>
 #include <stdatomic.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -37,6 +39,8 @@
 #define __hwasan_thread_enter()
 #define __hwasan_thread_exit()
 #endif
+
+#include <sys/mman.h>
 
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_lock.h"
@@ -53,6 +57,10 @@
 #define PTHREAD_ATTR_FLAG_INHERIT 0x00000004
 #define PTHREAD_ATTR_FLAG_EXPLICIT 0x00000008
 
+#ifdef __aarch64__
+#define BIONIC_USE_SCS 1
+#endif
+
 enum ThreadJoinState {
   THREAD_NOT_JOINED,
   THREAD_EXITED_NOT_JOINED,
@@ -61,6 +69,54 @@ enum ThreadJoinState {
 };
 
 class thread_local_dtor;
+
+struct VmaNameBuffer {
+  char name[32];
+};
+
+// Store stack cache non-invasively in a single-linked list of StackCacheEntry
+// structures. Don't store the links invasively in the cached thread stacks (as you might
+// imagine would be an optimization) so that we don't dirty a whole 4K stack page just to
+// keep track of a stack cache entry.
+struct StackCacheEntry {
+  StackCacheEntry* next;
+  // Cached stacks all have the same size and guard page layout, so we need to store only
+  // the base address.  The field is atomic to synchronize with thread exit.
+  _Atomic(void*) mmap_base;
+  // The signal stack for this thread. You get a signal stack. And you get a signal stack.
+  // Everybody gets a signal stack!
+  void* alternate_signal_stack;
+#ifdef BIONIC_USE_SCS
+  // Return address hardening stack.
+  void* shadow_call_stack_guard_region;
+#endif
+  // Holds the name of the memory region for the thread stack.  We put it here instead of
+  // in the pthread_internal_t so we can give the stack a nice-looking name even after its
+  // previous owner thread exits and we discard its stack pages.
+  VmaNameBuffer vma_name_buffer;
+
+};
+
+inline constexpr char kThreadVmaNameCachedStack[] = "cached thread stack";
+inline constexpr char kThreadVmaNameJoinableStack[] = "joinable thread stack";
+inline constexpr char kThreadVmaNameMain[] = "stack_and_tls:main";
+inline constexpr char kThreadVmaNameSignal[] = "thread signal stack";
+
+inline constexpr bool kUseStackCache = true;
+inline constexpr bool kThreadCacheDebug = false;
+inline constexpr size_t kCachedThreadStackMmapSize = 1140384;
+inline constexpr size_t kCachedThreadStackGuardSize = PTHREAD_GUARD_SIZE;
+static constexpr size_t kDefaultMaxStackCacheEntries = 128;
+
+struct StackCache {
+  pthread_mutex_t lock;
+  size_t max_nr_entries;
+  StackCacheEntry* first;
+  size_t nr_entries;
+};
+
+
+__LIBC_HIDDEN__ extern StackCache g_stack_cache;
 
 class pthread_internal_t {
  public:
@@ -92,6 +148,7 @@ class pthread_internal_t {
   pthread_attr_t attr;
 
   _Atomic(ThreadJoinState) join_state;
+  StackCacheEntry* stack_cache_entry;
 
   __pthread_cleanup_t* cleanup_stack;
 
@@ -123,7 +180,9 @@ class pthread_internal_t {
   //    discover its address by reading /proc/self/maps. One issue with this is
   //    that reading /proc/self/maps can race with allocations, so we may need
   //    code to handle retries.
+#ifdef BIONIC_USE_SCS
   void* shadow_call_stack_guard_region;
+#endif
 
   // A pointer to the top of the stack. This lets android_unsafe_frame_pointer_chase determine the
   // top of the stack quickly, which would otherwise require special logic for the main thread.
@@ -137,7 +196,6 @@ class pthread_internal_t {
   // The location of the VMA to label as the thread's stack_and_tls.
   void* mmap_base_unguarded;
   size_t mmap_size_unguarded;
-  char vma_name_buffer[32];
 
   thread_local_dtor* thread_local_dtors;
 
@@ -154,7 +212,7 @@ class pthread_internal_t {
   int errno_value;
 };
 
-struct ThreadMapping {
+struct ThreadMapping final {
   char* mmap_base;
   size_t mmap_size;
   char* mmap_base_unguarded;
@@ -163,6 +221,14 @@ struct ThreadMapping {
   char* static_tls;
   char* stack_base;
   char* stack_top;
+
+  void* alternate_signal_stack;
+#ifdef BIONIC_USE_SCS
+  void* shadow_call_stack_guard_region;
+#endif
+
+  bool stack_clean;
+  StackCacheEntry* stack_cache_entry;
 };
 
 __LIBC_HIDDEN__ void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread);
@@ -173,8 +239,9 @@ __LIBC_HIDDEN__ bionic_tls* __allocate_temp_bionic_tls();
 __LIBC_HIDDEN__ void __free_temp_bionic_tls(bionic_tls* tls);
 __LIBC_HIDDEN__ void __init_additional_stacks(pthread_internal_t*);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
-__LIBC_HIDDEN__ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size);
-__LIBC_HIDDEN__ void __set_stack_and_tls_vma_name(bool is_main_thread);
+__LIBC_HIDDEN__ ThreadMapping __allocate_thread_mapping(size_t stack_size,
+                                                        size_t stack_guard_size,
+                                                        bool use_cached_stack);
 
 __LIBC_HIDDEN__ pthread_t __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id, const char* caller);
