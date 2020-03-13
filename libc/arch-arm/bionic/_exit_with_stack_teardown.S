@@ -28,14 +28,27 @@
 
 #include <private/bionic_asm.h>
 
-// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
+// void _exit_with_stack_teardown(void* stackBase, size_t stackSize, int madvCommand, void** cacheMmapBase)
 ENTRY_PRIVATE(_exit_with_stack_teardown)
+  subs r9, r3, #0  // If cacheMmapBase==nullptr...
+  beq do_unmap  // ...just unmap the stack
+  mov r6, r0  // Preserve r0 across the madvise
+  subs r9, r2, #0  // If madvCommand==MADV_NORMAL...
+  beq do_validate_cache_entry  // ...skip the madvise
+  ldr r7, =__NR_madvise
+  swi #0  // Clobbers r0
+do_validate_cache_entry:
+  dmb ish  // Make sure we're really done with the stack
+  str r6, [r2]  // Make the cache entry valid
+  // Fall through
+do_exit:
+  mov r0, #0
+  ldr r7, =__NR_exit
+  swi #0  // The exit syscall does not return.
+do_unmap:
   ldr r7, =__NR_munmap
   swi #0
   // If munmap failed, we ignore the failure and exit anyway.
-
-  mov r0, #0
-  ldr r7, =__NR_exit
-  swi #0
+  b do_exit
   // The exit syscall does not return.
 END(_exit_with_stack_teardown)
