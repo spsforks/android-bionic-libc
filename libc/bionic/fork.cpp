@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/prctl.h>
 #include <unistd.h>
 
 #include <android/fdsan.h>
@@ -57,7 +58,10 @@ int fork() {
 
     // Reset the stack_and_tls VMA name so it doesn't end with a tid from the
     // parent process.
-    __set_stack_and_tls_vma_name(true);
+
+    pthread_internal_t* thread = __get_thread();
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->mmap_base_unguarded,
+          thread->mmap_size_unguarded, kThreadVmaNameMain);
 
     __bionic_atfork_run_child();
   } else {
