@@ -35,12 +35,21 @@
 
 #include <async_safe/log.h>
 
+#include "private/ScopedPthreadMutexLocker.h"
 #include "private/ScopedRWLock.h"
+
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
 static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
+
+StackCache g_stack_cache = {
+    .lock = PTHREAD_MUTEX_INITIALIZER,
+    .max_nr_entries = kDefaultMaxStackCacheEntries,
+    .first = nullptr,
+    .nr_entries = 0,
+};
 
 pthread_t __pthread_internal_add(pthread_internal_t* thread) {
   ScopedWriteLock locker(&g_thread_list_lock);
@@ -69,7 +78,27 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 }
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
-  if (thread->mmap_size != 0) {
+  if (thread->mmap_size == 0) {
+    return;
+  }
+
+  // We get here only after the target thread (which isn't the current thread) transitions
+  // to THREAD_JOINED, so we can't race with anyone.  The *current* thread isn't exiting,
+  // so we can call heap functions like free() below.  The thread, in pthread_exit(), will
+  // have already added its stack_cache_entry to the stack list, so our job is to just
+  // mark the stack cache entry as usable by filling in its currently-nullptr
+  // mmap_base field.
+  StackCacheEntry* sce = thread->stack_cache_entry;
+  if (sce != nullptr) {
+    strcpy(sce->vma_name_buffer.name, kThreadVmaNameCachedStack);
+    if (kThreadCacheDebug) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "marking SCE=%p valid", sce);
+    }
+    if (kCachedThreadMadvCommand != MADV_NORMAL) {
+      madvise(thread->mmap_base, thread->mmap_size, kCachedThreadMadvCommand);
+    }
+    atomic_store_explicit(&sce->mmap_base, thread->mmap_base, memory_order_release);
+  } else {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->mmap_base, thread->mmap_size);
   }
