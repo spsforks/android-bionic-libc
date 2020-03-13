@@ -1519,6 +1519,10 @@ LIBC_R { # introduced=R
     tss_get;
     tss_set;
 
+    pthread_set_stack_cache_size_np;
+    pthread_prevent_stack_reuse_np;
+    pthread_precache_thread_stacks_np;
+
     # Unwinder implementation
     __aeabi_unwind_cpp_pr0; # apex llndk arm
     __aeabi_unwind_cpp_pr1; # apex llndk arm
