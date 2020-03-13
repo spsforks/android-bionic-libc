@@ -66,14 +66,6 @@ static inline bool running_with_hwasan() {
 
 #define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
 
-static inline void* untag_address(void* addr) {
-#if defined(__LP64__)
-  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
-  addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
-#endif
-  return addr;
-}
-
 #if defined(__linux__)
 
 #include <sys/sysmacros.h>

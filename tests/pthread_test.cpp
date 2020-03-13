@@ -31,6 +31,8 @@
 #include <unistd.h>
 #include <unwind.h>
 
+#include <bionic/macros.h>
+
 #include <atomic>
 #include <future>
 #include <vector>

@@ -18,6 +18,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include <bionic/macros.h>
+
 #include <gtest/gtest.h>
 #include "buffer_tests.h"
 #include "utils.h"

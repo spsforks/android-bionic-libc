@@ -25,6 +25,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <bionic/macros.h>
+
 #include <android/dlext.h>
 #include <android-base/file.h>
 #include <android-base/strings.h>

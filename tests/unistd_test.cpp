@@ -34,6 +34,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <bionic/macros.h>
+
 #include <chrono>
 
 #include <android-base/file.h>
