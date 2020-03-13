@@ -139,7 +139,8 @@ extern "C" void __libc_init_main_thread_final() {
 
   // Allocate the main thread's static TLS. (This mapping doesn't include a
   // stack.)
-  ThreadMapping mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE);
+  ThreadMapping mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE,
+                                                    /*use_cached_stack=*/false);
   if (mapping.mmap_base == nullptr) {
     async_safe_fatal("failed to mmap main thread static TLS: %s", strerror(errno));
   }
@@ -160,7 +161,6 @@ extern "C" void __libc_init_main_thread_final() {
   main_thread.mmap_size_unguarded = mapping.mmap_size_unguarded;
 
   __set_tls(&new_tcb->tls_slot(0));
-
-  __set_stack_and_tls_vma_name(true);
+  __set_main_thread_name();
   __free_temp_bionic_tls(temp_tls);
 }
