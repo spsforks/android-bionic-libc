@@ -1554,6 +1554,8 @@ LIBC_S { # introduced=S
   global:
     ffsl;
     ffsll;
+    pthread_precache_thread_stacks_np;
+    pthread_set_stack_cache_max_count_np;
 } LIBC_R;
 
 LIBC_PRIVATE {

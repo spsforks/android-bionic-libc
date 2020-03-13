@@ -15,6 +15,8 @@
  */
 
 #include <pthread.h>
+#include <stdlib.h>
+#include <sys/mman.h>
 
 #include <benchmark/benchmark.h>
 #include "util.h"
@@ -185,6 +187,55 @@ static void BM_pthread_create(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_pthread_create);
+
+static volatile bool spam_threads_exit_please = false;
+
+static void* spam_mmap_sem_thread(void*) {
+  size_t region_size = 4 * 1024 * 10;
+  while (!spam_threads_exit_please) {
+    void* mapping =
+        mmap(nullptr, region_size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    if (mapping != MAP_FAILED) {
+      munmap(mapping, region_size);
+    }
+  }
+  return nullptr;
+}
+
+static void BM_pthread_create_and_run_with_mmap_sem_contention(benchmark::State& state) {
+  static const size_t nr_spamming_threads = 2;
+  static const int batch_size = 5000;
+  pthread_t spamming_threads[nr_spamming_threads];
+  state.PauseTiming();
+  spam_threads_exit_please = false;
+  for (size_t i = 0; i < nr_spamming_threads; ++i) {
+    if (pthread_create(&spamming_threads[i], nullptr, spam_mmap_sem_thread, nullptr)) {
+      abort();
+    }
+  }
+  state.ResumeTiming();
+  while (state.KeepRunningBatch(batch_size)) {
+    for (int i = 0; i < batch_size; ++i) {
+      pthread_t thread;
+      if (pthread_create(&thread, nullptr, IdleThread, nullptr)) {
+        abort();
+      }
+      if (pthread_join(thread, nullptr)) {
+        abort();
+      }
+    }
+  }
+  state.PauseTiming();
+  spam_threads_exit_please = true;
+  for (size_t i = 0; i < nr_spamming_threads; ++i) {
+    if (pthread_join(spamming_threads[i], nullptr)) {
+      abort();
+    }
+  }
+  state.ResumeTiming();
+}
+
+BIONIC_BENCHMARK(BM_pthread_create_and_run_with_mmap_sem_contention);
 
 static void* RunThread(void*) {
   return nullptr;

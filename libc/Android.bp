@@ -1081,6 +1081,7 @@ cc_library_static {
         "bionic/mknod.cpp",
         "bionic/mntent.cpp",
         "bionic/mremap.cpp",
+        "bionic/mprotect.cpp",
         "bionic/net_if.cpp",
         "bionic/netdb.cpp",
         "bionic/netinet_in.cpp",

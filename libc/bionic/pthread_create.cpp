@@ -39,14 +39,17 @@
 
 #include <async_safe/log.h>
 
+#include "platform/bionic/macros.h"
+#include "private/ErrnoRestorer.h"
+#include "private/ScopedPthreadMutexLocker.h"
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
-#include "private/ErrnoRestorer.h"
+
+#include <sys/system_properties.h>
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if defined(__i386__)
@@ -84,39 +87,66 @@ void __free_temp_bionic_tls(bionic_tls* tls) {
   munmap(tls, __BIONIC_ALIGN(sizeof(bionic_tls), PAGE_SIZE));
 }
 
+static void* __allocate_alternate_signal_stack() {
+  void* stack_base =
+      mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (stack_base == MAP_FAILED) {
+    return nullptr;
+  }
+  // Create a guard to catch stack overflows in signal handlers.
+  if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE)) {
+    munmap(stack_base, SIGNAL_STACK_SIZE);
+    return nullptr;
+  }
+  // The name of the signal stack must live as long as the mapping.  Making it a static
+  // string is the easiest approach.
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<char*>(stack_base) + PTHREAD_GUARD_SIZE,
+        SIGNAL_STACK_SIZE - PTHREAD_GUARD_SIZE, "thread signal stack");
+  return stack_base;
+}
+
+#ifdef BIONIC_USE_SCS
+static void* __allocate_shadow_call_stack_guard_region() {
+  // Allocate the stack and the guard region.
+  char* scs_guard_region = reinterpret_cast<char*>(
+      mmap(nullptr, SCS_GUARD_REGION_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0));
+  if (scs_guard_region == MAP_FAILED) {
+    return nullptr;
+  }
+
+  // Make all but the last page writable.
+  if (mprotect(scs_guard_region, SCS_GUARD_REGION_SIZE - PAGE_SIZE, PROT_READ | PROT_WRITE)) {
+    munmap(scs_guard_region, SCS_GUARD_REGION_SIZE);
+    return nullptr;
+  }
+
+  return scs_guard_region;
+}
+#endif
+
 static void __init_alternate_signal_stack(pthread_internal_t* thread) {
-  // Create and set an alternate signal stack.
-  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (stack_base != MAP_FAILED) {
-    // Create a guard to catch stack overflows in signal handlers.
-    if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
-      munmap(stack_base, SIGNAL_STACK_SIZE);
-      return;
-    }
+  // We may have gotten a pre-assigned signal stack from the stack cache.  Create a new signal
+  // stack only if we don't already have one. Allocate the stack here (in the brand-new thread)
+  // instead of in pthread_create to shorten the path length in pthread_create.
+  if (thread->alternate_signal_stack == nullptr) {
+    thread->alternate_signal_stack = __allocate_alternate_signal_stack();
+  }
+
+  if (thread->alternate_signal_stack) {
     stack_t ss;
-    ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PTHREAD_GUARD_SIZE;
+    ss.ss_sp = reinterpret_cast<uint8_t*>(thread->alternate_signal_stack) + PTHREAD_GUARD_SIZE;
     ss.ss_size = SIGNAL_STACK_SIZE - PTHREAD_GUARD_SIZE;
     ss.ss_flags = 0;
     sigaltstack(&ss, nullptr);
-    thread->alternate_signal_stack = stack_base;
-
-    // We can only use const static allocated string for mapped region name, as Android kernel
-    // uses the string pointer directly when dumping /proc/pid/maps.
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
   }
 }
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
-#ifdef __aarch64__
-  // Allocate the stack and the guard region.
-  char* scs_guard_region = reinterpret_cast<char*>(
-      mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
-  thread->shadow_call_stack_guard_region = scs_guard_region;
-
-  // The address is aligned to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
-  // in jmp_buf.
-  char* scs_aligned_guard_region =
-      reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
+#ifdef BIONIC_USE_SCS
+  // SCS guard region creation is mandatory, so we can assume that
+  // thread->shadow_call_stack_guard_region is always set.
+  char* scs_aligned_guard_region = reinterpret_cast<char*>(
+      align_up(reinterpret_cast<uintptr_t>(thread->shadow_call_stack_guard_region), SCS_SIZE));
 
   // We need to ensure that [scs_offset,scs_offset+SCS_SIZE) is in the guard region and that there
   // is at least one unmapped page after the shadow call stack (to catch stack overflows). We can't
@@ -127,7 +157,6 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // Make the stack readable and writable and store its address in register x18. This is
   // deliberately the only place where the address is stored.
   char *scs = scs_aligned_guard_region + scs_offset;
-  mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #endif
 }
@@ -190,16 +219,201 @@ int __init_thread(pthread_internal_t* thread) {
   return 0;
 }
 
+int pthread_set_stack_cache_max_count_np(size_t nr_threads) {
+  if (kUseStackCache) {
+    ScopedPthreadMutexLocker locker(&g_stack_cache.lock);
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_INFO, "libc", "setting stack cache size to %zu threads",
+                            nr_threads);
+    }
+    g_stack_cache.capacity = nr_threads;
+  }
+  return 0;
+}
+
+static int __add_cached_stack_locked() {
+  void* signal_stack = __allocate_alternate_signal_stack();
+  if (signal_stack == nullptr) {
+    return ENOMEM;
+  }
+  // We hold g_stack_cache.lock here.  __allocate_thread_mapping takes that lock, but only
+  // when use_cached_stack is true.  We pass false here, saving us from deadlocking inside
+  // __allocate_thread_mapping.
+  ThreadMapping mapping = __allocate_thread_mapping(
+      kCachedThreadStackMmapSize - kCachedThreadStackGuardSize - PTHREAD_GUARD_SIZE,
+      kCachedThreadStackGuardSize,
+      /*use_cached_stack=*/false);
+  if (!mapping.mmap_base || !mapping.stack_cache_entry) {
+    munmap(signal_stack, SIGNAL_STACK_SIZE);
+    if (mapping.mmap_base) {
+      munmap(mapping.mmap_base, mapping.mmap_size);
+    }
+#ifdef BIONIC_USE_SCS
+    if (mapping.shadow_call_stack_guard_region) {
+      munmap(mapping.shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
+    }
+#endif
+    return ENOMEM;
+  }
+  StackCacheEntry* sce = mapping.stack_cache_entry;
+  sce->next = g_stack_cache.first;
+  atomic_init(&sce->mmap_base, mapping.mmap_base);
+  sce->alternate_signal_stack = signal_stack;
+#ifdef BIONIC_USE_SCS
+  sce->shadow_call_stack_guard_region = mapping.shadow_call_stack_guard_region;
+#endif
+  sce->vma_name_buffer.SetNameForCachedThread();
+  g_stack_cache.first = sce;
+  g_stack_cache.size += 1;
+  return 0;
+}
+
+int pthread_precache_thread_stacks_np(size_t nr_threads) {
+  if (kUseStackCache) {
+    ScopedPthreadMutexLocker locker(&g_stack_cache.lock);
+    if (nr_threads > g_stack_cache.capacity) {
+      nr_threads = g_stack_cache.capacity;
+    }
+    while (g_stack_cache.size < nr_threads) {
+      if (int rc = __add_cached_stack_locked()) {
+        return rc;
+      }
+    }
+  }
+  return 0;
+}
+
+void VmaNameBuffer::SetNameForCachedThread() {
+  strcpy(name, "cached thread stack");
+}
+
+// Retrieve a StackCacheEntry from the global cache if we can find a valid one.  Using two
+// out parameters lets us avoid a redundant atomic load of mmap_base on success.
+static void __try_grab_cached_stack(StackCacheEntry** out_cache_entry, char** out_mmap_base) {
+  ScopedPthreadMutexLocker locker(&g_stack_cache.lock);
+  StackCacheEntry** prev = &g_stack_cache.first;
+  StackCacheEntry* sce = *prev;
+  void* mmap_base;
+  // Skip stack cache entries that are transiently cleared during thread teardown.
+  // The load-acquire of mmap_base synchronizes with thread teardown.  Once a stack cache
+  // entry is on the stack cache list, its mmap_base transitions exactly once, from
+  // nullptr to non-nullptr, so the check below is safe.
+  while (sce &&
+         (mmap_base = atomic_load_explicit(&sce->mmap_base, memory_order_acquire)) == nullptr) {
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "skipping invalid SCE=%p", sce);
+    }
+    prev = &sce->next;
+    sce = *prev;
+  }
+  if (sce) {
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "found valid SCE=%p ne=%lu", sce,
+                            static_cast<unsigned long>(g_stack_cache.size));
+    }
+    *prev = sce->next;
+    *out_cache_entry = sce;
+    *out_mmap_base = reinterpret_cast<char*>(mmap_base);
+    g_stack_cache.size -= 1;
+  } else {
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "did not find SCE");
+    }
+  }
+}
+
+// Return whether the stack cache is enabled. Negative means the stack cache is disabled;
+// positive means that it is enabled. The function never returns zero.
+static int get_stack_cache_enable_uncached() {
+  if (getpid() == 1) {
+    return -1;  // Don't use the stack cache for init: eases debugging
+  }
+  char value[PROP_VALUE_MAX];
+  value[0] = '\0';
+  __system_property_get("debug.enable_stack_cache", value);
+  // Enable the stack cache by default.
+  bool enable = value[0] == '\0' || (value[0] == '1' && value[1] == '\0');
+  async_safe_format_log(ANDROID_LOG_INFO, "libc", "stack cache enable state: %d",
+                        static_cast<int>(enable));
+  return enable ? 1 : -1;
+}
+
+// Return whether stack cache debugging is enabled. Negative means debugging is disabled;
+// positive means that it is enabled. The function never returns zero.
+static int get_stack_cache_debug_uncached() {
+  if (getpid() == 1) {
+    return -1;  // Don't use the stack cache for init: eases debugging
+  }
+  char value[PROP_VALUE_MAX];
+  value[0] = '\0';
+  __system_property_get("debug.stack_cache_debug", value);
+  // Disable debugging by default.
+  bool enable = (value[0] == '1' && value[1] == '\0');
+  async_safe_format_log(ANDROID_LOG_INFO, "libc", "stack cache enable state: %d",
+                        static_cast<int>(enable));
+  return enable ? 1 : -1;
+}
+
+static int dynamic_is_stack_cache_enabled() {
+  // Don't initialize state with get_stack_cache_enable_uncached(): we don't want to pay for
+  // the automatically-emitted synchronization: get_stack_cache_enable_uncached() is
+  // idempotent.  Initial value of state should be zero so it can be in BSS instead of data.
+  static int state = 0;
+  if (state == 0) {
+    state = get_stack_cache_enable_uncached();
+  }
+  return state > 0;
+}
+
+bool __is_thread_cache_debug_enabled_1() {
+  // See comment in get_stack_cache_debug_control().
+  static int state = 0;
+  if (state == 0) {
+    state = get_stack_cache_debug_uncached();
+  }
+  return state > 0;
+}
 
 // Allocate a thread's primary mapping. This mapping includes static TLS and
 // optionally a stack. Static TLS includes ELF TLS segments and the bionic_tls
 // struct.
 //
 // The stack_guard_size must be a multiple of the PAGE_SIZE.
-ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size) {
+ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size,
+                                        bool use_cached_stack) {
   const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  bool donate_stack_on_exit = true;
 
-  // Allocate in order: stack guard, stack, static TLS, guard page.
+  if (!kUseStackCache) {
+    use_cached_stack = false;
+    donate_stack_on_exit = false;
+  }
+
+  if (stack_size == 0) {
+    use_cached_stack = false;
+    donate_stack_on_exit = false;
+  }
+
+  if (!dynamic_is_stack_cache_enabled()) {
+    use_cached_stack = false;
+    donate_stack_on_exit = false;
+  }
+
+  // Cached stacks must use the default guard region size and the caller must want an
+  // actual stack (i.e., stack_size != 0).
+  if (donate_stack_on_exit && stack_guard_size <= kCachedThreadStackGuardSize) {
+    stack_guard_size = kCachedThreadStackGuardSize;
+  } else {
+    if (__is_thread_cache_debug_enabled() && donate_stack_on_exit) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                            "not using stack cache due to unusual guard size request of %zu",
+                            stack_guard_size);
+    }
+    use_cached_stack = false;
+    donate_stack_on_exit = false;
+  }
+
+  // Allocate in order: stack guard, stack, guard page.
   size_t mmap_size;
   if (__builtin_add_overflow(stack_size, stack_guard_size, &mmap_size)) return {};
   if (__builtin_add_overflow(mmap_size, layout.size(), &mmap_size)) return {};
@@ -210,43 +424,118 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   mmap_size = __BIONIC_ALIGN(mmap_size, PAGE_SIZE);
   if (mmap_size < unaligned_size) return {};
 
-  // Create a new private anonymous map. Make the entire mapping PROT_NONE, then carve out a
-  // read+write area in the middle.
-  const int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  char* const space = static_cast<char*>(mmap(nullptr, mmap_size, PROT_NONE, flags, -1, 0));
-  if (space == MAP_FAILED) {
-    async_safe_format_log(ANDROID_LOG_WARN,
-                          "libc",
-                          "pthread_create failed: couldn't allocate %zu-bytes mapped space: %s",
-                          mmap_size, strerror(errno));
-    return {};
+  // Compute the real cached thread mmap size here because it can vary
+  // based on the amount of static TLS in a given process.
+  const size_t cached_thread_mmap_size_full =
+      __BIONIC_ALIGN(kCachedThreadStackMmapSize + layout.size(), PAGE_SIZE);
+
+  if (mmap_size > cached_thread_mmap_size_full) {
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                            "not using stack cache due to oversize stack mmap_size=%zu max=%zu",
+                            mmap_size, cached_thread_mmap_size_full);
+    }
+    use_cached_stack = false;
+    donate_stack_on_exit = false;
   }
-  const size_t writable_size = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
-  if (mprotect(space + stack_guard_size,
-               writable_size,
-               PROT_READ | PROT_WRITE) != 0) {
-    async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                          "pthread_create failed: couldn't mprotect R+W %zu-byte thread mapping region: %s",
-                          writable_size, strerror(errno));
-    munmap(space, mmap_size);
-    return {};
+
+  if (donate_stack_on_exit && mmap_size < cached_thread_mmap_size_full) {
+    // Snap small thread stack requests to the stack cache size.  Giving a thread a stack
+    // _larger_ than requested is not a bug, and address space is abundant.
+    stack_size += (cached_thread_mmap_size_full - mmap_size);
+    mmap_size = cached_thread_mmap_size_full;
   }
 
   ThreadMapping result = {};
-  result.mmap_base = space;
   result.mmap_size = mmap_size;
-  result.mmap_base_unguarded = space + stack_guard_size;
+  if (use_cached_stack) {
+    __try_grab_cached_stack(&result.stack_cache_entry, &result.mmap_base);
+  }
+
+  if (result.stack_cache_entry) {
+    // result.mmap_base already copied from the stack cache entry by __try_grab_cached_stack.
+    // If alternate_signal_stack isn't set for whatever reason, we'll allocate a signal stack
+    // during thread startup.  Signal stack creation failure is non-fatal.
+    result.alternate_signal_stack = result.stack_cache_entry->alternate_signal_stack;
+#ifdef BIONIC_USE_SCS
+    result.shadow_call_stack_guard_region =
+        result.stack_cache_entry->shadow_call_stack_guard_region;
+#endif
+  } else {
+    result.stack_clean = true;  // New mappings guaranteed to be zero.
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
+                            "pthread_create alloc stack_size=%zu "
+                            "stack_guard_size=%zu mmap_size=%zu ps=%zu",
+                            stack_size, stack_guard_size, mmap_size, sizeof(void*));
+    }
+
+    // Create a new private anonymous map. Make the entire mapping PROT_NONE, then carve out a
+    // read+write area in the middle.
+    const int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
+    void* mmap_result = mmap(nullptr, mmap_size, PROT_NONE, flags, -1, 0);
+    if (mmap_result == MAP_FAILED) {
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "pthread_create failed: couldn't allocate %zu-bytes mapped space: %s",
+                            mmap_size, strerror(errno));
+      return {};
+    }
+    result.mmap_base = static_cast<char*>(mmap_result);
+
+    const size_t writable_size = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
+    if (mprotect(result.mmap_base + stack_guard_size, writable_size, PROT_READ | PROT_WRITE) != 0) {
+      async_safe_format_log(
+          ANDROID_LOG_ERROR, "libc",
+          "pthread_create failed: couldn't mprotect R+W %zu-byte thread mapping region: %s",
+          writable_size, strerror(errno));
+      munmap(result.mmap_base, result.mmap_size);
+      return {};
+    }
+
+    // We could try allocating a signal stack here, but since the target thread can do
+    // that on its own, let's increase concurrency by delaying that allocation until
+    // __pthread_start().
+
+#ifdef BIONIC_USE_SCS
+    // On systems that use a shadow call stack, shadow call stack creation must succeed: a
+    // thread can't run without a SCS.  We must therefore allocate the shadow call stack
+    // here, where we can still report failure from pthread_create.
+    result.shadow_call_stack_guard_region = __allocate_shadow_call_stack_guard_region();
+    if (result.shadow_call_stack_guard_region == nullptr) {
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "pthread_create failed: couldn't allocate SCS guard region: %s",
+                            strerror(errno));
+      munmap(result.mmap_base, result.mmap_size);
+      return {};
+    }
+#endif
+
+    // If this stack can be cached, pre-allocate the cache link structure here.  This way,
+    // we don't have to allocate on the exit path and the thread-exit code can reuse the
+    // StackCacheEntry structure we grabbed to create the thread.  It's okay if the malloc
+    // below fails: in that case, we just don't cache this thread's stack when it exits.
+    if (donate_stack_on_exit) {
+      result.stack_cache_entry =
+          reinterpret_cast<StackCacheEntry*>(malloc(sizeof(StackCacheEntry)));
+      if (__is_thread_cache_debug_enabled()) {
+        async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "allocated SCE=%p",
+                              result.stack_cache_entry);
+      }
+    }
+  }
+
+  result.mmap_base_unguarded = result.mmap_base + stack_guard_size;
   result.mmap_size_unguarded = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
-  result.static_tls = space + mmap_size - PTHREAD_GUARD_SIZE - layout.size();
-  result.stack_base = space;
+  result.static_tls = result.mmap_base + mmap_size - PTHREAD_GUARD_SIZE - layout.size();
+  result.stack_base = result.mmap_base;
   result.stack_top = result.static_tls;
+
   return result;
 }
 
 static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** child_stack) {
-  ThreadMapping mapping;
+  ThreadMapping mapping = {};
   char* stack_top;
-  bool stack_clean = false;
 
   if (attr->stack_base == nullptr) {
     // The caller didn't provide a stack, so allocate one.
@@ -256,15 +545,21 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
     attr->guard_size = __BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
     if (attr->guard_size < unaligned_guard_size) return EAGAIN;
 
-    mapping = __allocate_thread_mapping(attr->stack_size, attr->guard_size);
+    mapping = __allocate_thread_mapping(attr->stack_size, attr->guard_size,
+                                        /*use_cached_stack=*/true);
     if (mapping.mmap_base == nullptr) return EAGAIN;
 
     stack_top = mapping.stack_top;
     attr->stack_base = mapping.stack_base;
-    stack_clean = true;
   } else {
-    mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE);
+    mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE,
+                                        /*use_cached_stack=*/false);
     if (mapping.mmap_base == nullptr) return EAGAIN;
+
+    if (__is_thread_cache_debug_enabled()) {
+      async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "caller provided stack size=%zu",
+                            attr->stack_size);
+    }
 
     stack_top = static_cast<char*>(attr->stack_base) + attr->stack_size;
   }
@@ -276,10 +571,35 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   stack_top = align_down(stack_top - sizeof(pthread_internal_t), 16);
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
-  if (!stack_clean) {
-    // If thread was not allocated by mmap(), it may not have been cleared to zero.
-    // So assume the worst and zero it.
+  if (!mapping.stack_clean) {
+    // If thread was not just now allocated by mmap(), it may not have been cleared to
+    // zero.  So assume the worst and zero it.
     memset(thread, 0, sizeof(pthread_internal_t));
+  }
+
+  // If this thread has a stack cache entry, we want to put the VMA name there so that the
+  // VMA name outlives the thread proper.  For a thread without a stack cache entry, we
+  // just put the name on the thread stack.
+
+  VmaNameBuffer* vma_name_buffer;
+  if (mapping.stack_cache_entry) {
+    vma_name_buffer = &mapping.stack_cache_entry->vma_name_buffer;
+  } else {
+    vma_name_buffer = reinterpret_cast<VmaNameBuffer*>(stack_top);
+    stack_top = align_down(stack_top - sizeof(VmaNameBuffer), 16);
+  }
+
+  static_assert(arraysize(vma_name_buffer->name) >= arraysize("stack_and_tls:") + 11 + 1);
+  async_safe_format_buffer(vma_name_buffer->name, arraysize(vma_name_buffer->name),
+                           "stack_and_tls:%d", thread->tid);
+
+  if (mapping.stack_clean) {
+    // The stack is brand-new, so show the kernel where in memory it can find the name of this
+    // memory region.  If we're reusing a cached thread, we don't have to call
+    // PR_SET_VMA_ANON_NAME again: we instead just update the memory in place to reflect the
+    // memory region's new role.
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->mmap_base_unguarded,
+          thread->mmap_size_unguarded, vma_name_buffer->name);
   }
 
   // Locate static TLS structures within the mapped region.
@@ -288,6 +608,10 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   auto tls = reinterpret_cast<bionic_tls*>(mapping.static_tls + layout.offset_bionic_tls());
 
   // Initialize TLS memory.
+  if (!mapping.stack_clean) {
+    memset(mapping.static_tls, 0, layout.size());
+  }
+
   __init_static_tls(mapping.static_tls);
   __init_tcb(tcb, thread);
   __init_tcb_dtv(tcb);
@@ -301,29 +625,21 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
   thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
   thread->stack_top = reinterpret_cast<uintptr_t>(stack_top);
+  thread->stack_cache_entry = mapping.stack_cache_entry;
+  thread->alternate_signal_stack = mapping.alternate_signal_stack;
+#ifdef BIONIC_USE_SCS
+  thread->shadow_call_stack_guard_region = mapping.shadow_call_stack_guard_region;
+#endif
 
   *tcbp = tcb;
   *child_stack = stack_top;
   return 0;
 }
 
-void __set_stack_and_tls_vma_name(bool is_main_thread) {
-  // Name the thread's stack-and-tls area to help with debugging. This mapped area also includes
-  // static TLS data, which is typically a few pages (e.g. bionic_tls).
+void __set_main_thread_name() {
   pthread_internal_t* thread = __get_thread();
-  const char* name;
-  if (is_main_thread) {
-    name = "stack_and_tls:main";
-  } else {
-    // The kernel doesn't copy the name string, but this variable will last at least as long as the
-    // mapped area. The mapped area's VMAs are unmapped with a single call to munmap.
-    auto& name_buffer = thread->vma_name_buffer;
-    static_assert(arraysize(name_buffer) >= arraysize("stack_and_tls:") + 11 + 1);
-    async_safe_format_buffer(name_buffer, arraysize(name_buffer), "stack_and_tls:%d", thread->tid);
-    name = name_buffer;
-  }
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->mmap_base_unguarded, thread->mmap_size_unguarded,
-        name);
+        "stack_and_tls:main");
 }
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
@@ -340,7 +656,6 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
-  __set_stack_and_tls_vma_name(false);
   __init_additional_stacks(thread);
   __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
 
@@ -420,7 +735,8 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     if (thread->mmap_size != 0) {
       munmap(thread->mmap_base, thread->mmap_size);
     }
-    async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s",
+    free(thread->stack_cache_entry);
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "pthread_create failed: clone failed: %s",
                           strerror(clone_errno));
     return clone_errno;
   }
