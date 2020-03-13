@@ -33,12 +33,17 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include <async_safe/log.h>
+
+#include "private/ScopedPthreadMutexLocker.h"
+#include "private/ScopedSignalBlocker.h"
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
-#include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"
 
-extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
+// Argument order chosen to simplify the assembly code
+extern "C" __noreturn void _exit_with_stack_teardown(void* stackBase, size_t stackSize,
+                                                     int madvCommand, void* cacheMmapBase);
 extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
 extern "C" void __cxa_thread_finalize();
@@ -65,12 +70,89 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   }
 }
 
+static StackCacheEntry* __extract_or_destroy_sce(pthread_internal_t* thread) {
+  StackCacheEntry* sce = thread->stack_cache_entry;
+  if (__is_thread_cache_debug_enabled()) {
+    async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "exiting thread sce=%p", sce);
+  }
+
+  if (sce) {
+    bool free_sce = false;
+
+    // If this thread has called mprotect on its own stack, we don't want to give the stack to
+    // some other new thread.
+    if (thread->stack_maybe_modified) {
+      free_sce = true;
+    }
+
+    if (!free_sce) {
+      ScopedPthreadMutexLocker locker(&g_stack_cache.lock);
+      if (g_stack_cache.size < g_stack_cache.capacity) {
+        // We set mmap_base either in __pthread_internal_free() (via pthread_join()) or in
+        // _exit_with_stack_teardown() below.  The relaxed memory order is fine here
+        // because we've taken the stack cache lock.  When we fill sce->mmap_base below,
+        // we do it with release semantics to ensure we're really done with our stack
+        // before allowing another thread to use it.
+        sce->next = g_stack_cache.first;
+        atomic_store_explicit(&sce->mmap_base, nullptr, memory_order_relaxed);
+        g_stack_cache.first = sce;
+        g_stack_cache.size += 1;
+        if (__is_thread_cache_debug_enabled()) {
+          async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "added dummy SCE=%p", sce);
+        }
+      } else {
+        free_sce = true;
+      }
+    }
+
+    if (free_sce) {
+      // The VMA name we set in __allocate_thread dangles here for a little bit because
+      // we're freeing the memory to which the VMA name points, but that shouldn't be a
+      // problem.  If it is, we can reset the VMA name here.
+      if (__is_thread_cache_debug_enabled()) {
+        async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "freeing SCE=%p instead of donating", sce);
+      }
+      free(sce);  // Outside lock!
+      sce = nullptr;
+      thread->stack_cache_entry = nullptr;
+    }
+  }
+  return sce;
+}
+
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void pthread_exit(void* return_value) {
+  pthread_internal_t* thread = __get_thread();
+
+  // This thread is destroying itself, so adding its stack cache entry to the cache is
+  // tricky.  We want to minimize the complexity of the platform-specific assembly code in
+  // _exit_with_stack_teardown below, so do as much work as possible before we begin
+  // tearing down this thread's internal state.  We might call free(), so we do the stack
+  // donation before calling any thread destructors.  (The malloc hook can be set to
+  // anything.)  We actually add our stack cache entry to the stack cache _before_ we tear
+  // down the cache, but we set the entry's mmap_base pointer nullptr until we actually
+  // finish with the stack in _exit_with_stack_teardown().  __grab_cached_stack() knows to
+  // skip entries in this transient mmap_base===nullptr state.
+  //
+  // Synchronization with pthread_join() and pthread_detach() is tricky too. If we're a
+  // detached thread, we need to donate our own stack, but if we're instead a joinable
+  // thread, we need to defer stack donation to __pthread_internal_free() via
+  // pthread_join().  The tricky bit is that we can *become* detached between the time we
+  // enter pthread_exit() and the time we attempt to transition to
+  // THREAD_EXITED_NOT_JOINED, but we need to do most of the thread list cache
+  // manipulation before we call thread destructors because we need the heap to be in
+  // working order.
+  //
+  // Let's just add a dummy (mmap_base==nullptr) cache entry in both the detached and
+  // joinable cases and have pthread_join fill in mmap_base later.  We'll have a dummy
+  // entry in the thread cache for every joinable-but-not-yet-joined thread, but we
+  // shouldn't have too many of those.
+
+  StackCacheEntry* sce = __extract_or_destroy_sce(thread);
+
   // Call dtors for thread_local objects first.
   __cxa_thread_finalize();
 
-  pthread_internal_t* thread = __get_thread();
   thread->return_value = return_value;
 
   // Call the cleanup handlers.
@@ -86,16 +168,19 @@ void pthread_exit(void* return_value) {
   // space (see pthread_key_delete).
   pthread_key_clean_all();
 
-  if (thread->alternate_signal_stack != nullptr) {
-    // Tell the kernel to stop using the alternate signal stack.
-    stack_t ss;
-    memset(&ss, 0, sizeof(ss));
-    ss.ss_flags = SS_DISABLE;
-    sigaltstack(&ss, nullptr);
+  // Tell the kernel to stop using the alternate signal stack.
+  stack_t ss;
+  memset(&ss, 0, sizeof(ss));
+  ss.ss_flags = SS_DISABLE;
+  sigaltstack(&ss, nullptr);
 
-    // Free it.
+  if (sce) {
+    if (kCachedThreadMadvCommand != MADV_NORMAL) {
+      madvise(thread->alternate_signal_stack, SIGNAL_STACK_SIZE, kCachedThreadMadvCommand);
+    }
+    sce->alternate_signal_stack = thread->alternate_signal_stack;
+  } else if (thread->alternate_signal_stack) {
     munmap(thread->alternate_signal_stack, SIGNAL_STACK_SIZE);
-    thread->alternate_signal_stack = nullptr;
   }
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
@@ -107,9 +192,17 @@ void pthread_exit(void* return_value) {
   // stack, or dynamic TLS memory.
   ScopedSignalBlocker ssb;
 
-#ifdef __aarch64__
+#ifdef BIONIC_USE_SCS
   // Free the shadow call stack and guard pages.
-  munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
+  if (sce) {
+    if (kCachedThreadMadvCommand != MADV_NORMAL) {
+      madvise(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE,
+              kCachedThreadMadvCommand);
+    }
+    sce->shadow_call_stack_guard_region = thread->shadow_call_stack_guard_region;
+  } else {
+    munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
+  }
 #endif
 
   // Free the ELF TLS DTV and all dynamically-allocated ELF TLS memory.
@@ -126,11 +219,26 @@ void pthread_exit(void* return_value) {
     __pthread_internal_remove(thread);
 
     if (thread->mmap_size != 0) {
-      // We need to free mapped space for detached threads when they exit.
-      // That's not something we can do in C.
+      // We need to free mapped space for detached threads when they exit.  That's not
+      // something we can do in C.  If we're donating the stack, sce is non-nullptr, and
+      // we set in ASM sce->mmap_base after we're sure that we absolutely won't use our
+      // stack anymore.
       __hwasan_thread_exit();
-      _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size);
+      static_assert(sizeof(sce->mmap_base) == sizeof(void*));
+      if (sce) {
+        if (__is_thread_cache_debug_enabled()) {
+          async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "donating SCE=%p mmap_base=%p", sce,
+                                thread->mmap_base);
+        }
+        sce->vma_name_buffer.SetNameForCachedThread();
+      }
+      _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size, kCachedThreadMadvCommand,
+                                sce ? &sce->mmap_base : nullptr);
     }
+  }
+
+  if (sce) {
+    strcpy(sce->vma_name_buffer.name, "joinable thread stack");
   }
 
   // No need to free mapped space. Either there was no space mapped, or it is left for
