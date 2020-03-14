@@ -22,6 +22,30 @@
       "revId": "741891a1e1065e86139efd2cea9ecef245bb169d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b964a4e_d76c9384",
+        "filename": "linker/linker_debuggerd_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-03-14T00:11:07Z",
+      "side": 1,
+      "message": "We don\u0027t; removed.",
+      "parentUuid": "80e97ab6_e974d779",
+      "range": {
+        "startLine": 39,
+        "startChar": 21,
+        "endLine": 39,
+        "endChar": 80
+      },
+      "revId": "741891a1e1065e86139efd2cea9ecef245bb169d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
