@@ -34,3 +34,20 @@ apex {
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
 }
+
+// Device SDK exposed by the runtime module.
+// rm -rf ../master-art/prebuilts/module_sdk/runtime/current && mkdir -p ../master-art/prebuilts/module_sdk/runtime/current && build/soong/scripts/build-aml-prebuilts.sh runtime-module-sdk && unzip out-aml/soong/mainline-sdks/runtime-module-sdk-current.zip -d ../master-art/prebuilts/module_sdk/runtime/current
+sdk {
+    name: "runtime-module-sdk",
+    native_shared_libs: [
+        "libc",
+        "libdl",
+        "libm",
+        "ld-android",
+    ],
+    native_objects: [
+        "crtbegin_dynamic",
+        "crtbegin_static",
+        "crtend_android",
+    ],
+}
