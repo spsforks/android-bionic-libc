@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include <link.h>
+#include <signal.h>
 #include <sys/auxv.h>
 
 #include "linker_debug.h"
@@ -46,6 +47,8 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
+
+#include "platform/bionic/reserved_signals.h"
 
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
@@ -298,6 +301,18 @@ static ExecutableInfo load_executable(const char* orig_path) {
 }
 
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
+  // Ignore profiling signals, to make sure the program does not crash if the handler is
+  // not installed.
+  // For BIONIC_SIGNAL_PROFILER that is the case when libc is statically linked, and the
+  // profiling facilities are unavailabile, or if it is dynamically linked but the sigaction
+  // in libc has not been run yet.
+  // For BIONIC_SIGNAL_ART_PROFILER that is the case if the app is not profilable.
+  //
+  // This needs to happen as early as possible, as we need to minimize the window of opportunity
+  // for the default disposition (crash) to happen.
+  signal(BIONIC_SIGNAL_PROFILER, SIG_IGN);
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
+
   ProtectedDataGuard guard;
 
 #if TIMING
