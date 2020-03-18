@@ -32,6 +32,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -43,6 +44,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <bionic/reserved_signals.h>
 
 #include "private/WriteProtected.h"
 #include "private/bionic_defs.h"
@@ -107,6 +109,14 @@ void __libc_init_common() {
   __libc_init_fdtrack();
 
   SetDefaultHeapTaggingLevel();
+
+  // Ignore profiling signals, to make sure the program does not crash if the handler is
+  // not installed.
+  // For BIONIC_SIGNAL_PROFILER that is the case when libc is statically linked, and the
+  // profiling facilities are unavailabile.
+  // For BIONIC_SIGNAL_JAVA_PROFILER that is the case if the app is not profilable.
+  sigaction(BIONIC_SIGNAL_PROFILER, SIG_IGN, nullptr);
+  sigaction(BIONIC_SIGNAL_JAVA_PROFILER, SIG_IGN, nullptr);
 }
 
 void __libc_init_fork_handler() {
