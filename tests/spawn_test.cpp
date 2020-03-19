@@ -26,6 +26,10 @@
 #include <android-base/file.h>
 #include <android-base/strings.h>
 
+#if defined(__BIONIC__)
+#include "platform/bionic/reserved_signals.h"
+#endif
+
 // Old versions of glibc didn't have POSIX_SPAWN_SETSID.
 #if __GLIBC__
 # if !defined(POSIX_SPAWN_SETSID)
@@ -403,6 +407,13 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
   SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
   EXPECT_EQ(expected_blocked, ps.sigblk);
 
+#if defined(__BIONIC__)
+  // On bionic, there is no builtin handler for BIONIC_SIGNAL_ART_PROFILER, and
+  // its disposition is explicitly set to SIG_IGN. Mask it out for the purposes
+  // of this test.
+  ps.sigign = ps.sigign & ~(1ULL << (BIONIC_SIGNAL_ART_PROFILER - 1));
+#endif
+
   EXPECT_EQ(static_cast<uint64_t>(0), ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
@@ -427,6 +438,13 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
   // Check that's what happens...
   ProcStatus ps = {};
   GetChildStatus(&sa, &ps);
+
+#if defined(__BIONIC__)
+  // On bionic, there is no builtin handler for BIONIC_SIGNAL_ART_PROFILER, and
+  // its disposition is explicitly set to SIG_IGN. Mask it out for the purposes
+  // of this test.
+  ps.sigign = ps.sigign & ~(1ULL << (BIONIC_SIGNAL_ART_PROFILER - 1));
+#endif
 
   // TIMER_SIGNAL should be blocked.
   uint64_t expected_blocked = 0;
