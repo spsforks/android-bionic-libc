@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f5acf96e_0bdb4a1b",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-19T18:45:33Z",
+      "side": 1,
+      "message": "This breaks POSIX. execve is not documented to change signal disposition upon failure, and execve can always fail. Resetting the signals upon failure isn\u0027t enough either due to races. (execve is on the async-signal-safe list.) Can\u0027t we mask the signals instead? The signal mask is inherited across execve; we can have the new process unmask the signals.",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 8
+      },
+      "revId": "ff64668f119c3aea5f8fae3d10057ed4aa454eba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3444cb80_b9a69910",
         "filename": "tests/spawn_test.cpp",
         "patchSetId": 1
