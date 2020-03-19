@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3444cb80_b9a69910",
+        "filename": "tests/spawn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-19T18:38:48Z",
+      "side": 1,
+      "message": "note: I was a bit puzzled at first why this didn\u0027t fail in the static variant of the unittests, as static libc should also leave the profiling signal handler at SIG_IGN.\nI think what\u0027s happening is that since this execs \"cat\" from the system image, we actually always get the dynamic libc linked in in the forked child after the exec (so there\u0027s a real handler installed).",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 416,
+        "endChar": 0
+      },
+      "revId": "ff64668f119c3aea5f8fae3d10057ed4aa454eba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
