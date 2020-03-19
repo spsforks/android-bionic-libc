@@ -33,16 +33,37 @@
 #include <errno.h>
 #include <limits.h>
 #include <paths.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "private/__bionic_get_shell_path.h"
+#include "platform/bionic/reserved_signals.h"
 #include "private/FdPath.h"
+#include "private/__bionic_get_shell_path.h"
 
 extern "C" char** environ;
+
+extern "C" int __execve(const char*, char* const*, char* const*);
+
+int execve(const char* pathname, char* const argv[], char* const envp[]) {
+  // Ignore the subset of reserved signals that might be sent from outside this
+  // process. These signals might have handler functions registered, which would
+  // be reset by the kernel to their default dispositions (SIG_DFL) during the
+  // execve syscall. For realtime signals, the default is to terminate the
+  // process. This would mean that if a signal is delivered after execve, but
+  // before the new process' libc initialization has reinstalled the proper
+  // handlers, the process would be inadvertently terminated.
+  // Ignored signal dispositions (SIG_IGN) are preserved across the syscall, so
+  // this keeps them ignored in the post-exec world until the intended handlers
+  // are reinstalled.
+  signal(BIONIC_SIGNAL_DEBUGGER, SIG_IGN);
+  signal(BIONIC_SIGNAL_PROFILER, SIG_IGN);
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
+  return __execve(pathname, argv, envp);
+}
 
 enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
 
