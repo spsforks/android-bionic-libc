@@ -28,7 +28,6 @@
 
 #include <ifaddrs.h>
 
-#include <cutils/misc.h>           // FIRST_APPLICATION_UID
 #include <errno.h>
 #include <linux/if_packet.h>
 #include <net/if.h>
@@ -282,15 +281,14 @@ int getifaddrs(ifaddrs** out) {
   // Open the netlink socket and ask for all the links and addresses.
   NetlinkConnection nc;
   // SELinux policy only allows RTM_GETLINK messages to be sent by:
-  // - System apps
+  // - Privileged apps
   // - Apps with a target SDK version lower than R
-  bool getlink_success = false;
-  if (getuid() < FIRST_APPLICATION_UID ||
-      android_get_application_target_sdk_version() < __ANDROID_API_R__) {
-    getlink_success = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
-  }
+  // The following call will fail for all other apps.
+  bool getlink_success =
+      nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
+
   bool getaddr_success =
-    nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
+      nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
 
   if (!getaddr_success) {
     freeifaddrs(*out);
