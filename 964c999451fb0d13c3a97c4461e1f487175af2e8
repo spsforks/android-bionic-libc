@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "751d405c_9d5e15c9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-23T17:43:40Z",
+      "side": 1,
+      "message": "what needs this? i thought it was only for the two cases mentioned above. (i wish visibility defaulted to private, like in google3!)",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9759a03_b4891e34",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-23T17:43:40Z",
+      "side": 1,
+      "message": "who needs this and why?",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
