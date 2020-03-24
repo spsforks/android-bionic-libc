@@ -31,6 +31,8 @@
 # if !defined(POSIX_SPAWN_SETSID)
 #  define POSIX_SPAWN_SETSID 0
 # endif
+#else
+#include <platform/bionic/reserved_signals.h>
 #endif
 
 TEST(spawn, posix_spawnattr_init_posix_spawnattr_destroy) {
@@ -403,7 +405,11 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
   SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
   EXPECT_EQ(expected_blocked, ps.sigblk);
 
-  EXPECT_EQ(static_cast<uint64_t>(0), ps.sigign);
+  uint64_t expected_ignored = 0;
+#if !__GLIBC__
+  SignalSetAdd(&expected_ignored, BIONIC_SIGNAL_ART_PROFILER);
+#endif
+  EXPECT_EQ(expected_ignored, ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
@@ -435,6 +441,9 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
 
   uint64_t expected_ignored = 0;
   SignalSetAdd(&expected_ignored, SIGCONT);
+#if !__GLIBC__
+  SignalSetAdd(&expected_ignored, BIONIC_SIGNAL_ART_PROFILER);
+#endif
   EXPECT_EQ(expected_ignored, ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
