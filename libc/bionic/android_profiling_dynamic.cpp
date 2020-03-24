@@ -63,6 +63,7 @@ __LIBC_HIDDEN__ void __libc_init_profiling_handlers() {
   action.sa_flags = SA_SIGINFO | SA_RESTART;
   action.sa_sigaction = HandleProfilingSignal;
   sigaction(BIONIC_SIGNAL_PROFILER, &action, nullptr);
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
 }
 
 static void HandleSigsysSeccompOverride(int, siginfo_t*, void*);
