@@ -42,6 +42,48 @@
     },
     {
       "key": {
+        "uuid": "28d15ecb_c17d7abb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-24T15:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a631cc23_ce5128bb",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b565e0c_0d18b02a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-24T15:47:48Z",
+      "side": 1,
+      "message": "This is also about accidentally targeting a native process, we don\u0027t want to kill that either. Should reword to say that static programs will still crash, but that is probably not a big issue because no one does that.",
+      "parentUuid": "ae66dd23_922afe0a",
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "716405a1_17a34e02",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 4
@@ -79,6 +121,48 @@
       "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21c14ca5_f7461943",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-24T15:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee13c6bc_774e6eb5",
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "451f5e56_24f59338",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-24T15:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "716405a1_17a34e02",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 46
+      },
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
