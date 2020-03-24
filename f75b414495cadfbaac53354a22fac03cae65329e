@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "ae66dd23_922afe0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-24T15:40:03Z",
+      "side": 1,
+      "message": "if you\u0027re only concerned about zygote children, this should be fine, no? since this will happen when the zygote starts, and will be inherited on zygote fork?\n\nbut doesn\u0027t that also mean that you can just do this in the zygote?\n\n(i\u0027m not strongly against us knowing about the ART profiler signal, since it probably makes sense to have one true home for \"what signals are reserved\", but it does seem a bit odd for non-ART to *touch* that signal...)",
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "716405a1_17a34e02",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 4
@@ -42,6 +59,23 @@
         "endLine": 66,
         "endChar": 46
       },
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee13c6bc_774e6eb5",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-24T15:40:03Z",
+      "side": 1,
+      "message": "code comment, since we got this wrong first time?",
       "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
