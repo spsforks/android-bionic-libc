@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a631cc23_ce5128bb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-24T15:39:18Z",
+      "side": 1,
+      "message": "minor wording suggestions:\n\n(1) title doesn\u0027t tell me much atm, how about:\n\"dynamic libc: ignore ART profiling signal by default\"\n\n(2) I would personally include a phrase such as:\n\"libc doesn\u0027t own the handling of this signal, so default it to ignored, and let ART conditionally override the handling later.\"\n\n(3) please state that this *might* be reverted soon, depending on how b/151835887 is resolved.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "716405a1_17a34e02",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-24T15:39:18Z",
+      "side": 1,
+      "message": "nit: linebreak to separate the two would help readability at a glance (easy to overlook that there\u0027s two actions in this block).",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 46
+      },
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
