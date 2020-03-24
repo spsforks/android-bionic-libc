@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "92a3384e_1c3c61c3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-03-24T01:40:53Z",
+      "side": 1,
+      "message": "This is currently being used by \n\n* com.android.runtime (this is obvious)\n* com.android.art\n* com.android.media\n\nThe dependency for the later two APEXes were via libasync_safe.\n\nI\u0027ve changed \"anyapex\" to the explicit list of names of the aforementioned apexes.",
+      "parentUuid": "751d405c_9d5e15c9",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9759a03_b4891e34",
         "filename": "libc/Android.bp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-23T17:43:40Z",
       "side": 1,
       "message": "who needs this and why?",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59ee009c_7c47dc2a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-03-24T01:40:53Z",
+      "side": 1,
+      "message": "The following are inheriting from crt_defaults and are used in almost every binary files in all APEXes because they are automatically linked by the build system. [1]\n\n\t\t\"crtbegin_dynamic\",\n\t\t\"crtbegin_dynamic1\",\n\t\t\"crtbegin_so\",\n\t\t\"crtbegin_so1\",\n\t\t\"crtbegin_static\",\n\t\t\"crtbrand\",\n\t\t\"crtend_android\",\n\t\t\"crtend_so\",\n\n[1] https://source.corp.google.com/android/build/soong/cc/binary.go;l\u003d129?q\u003dcrtbegin_dynamic%20f:%5C.go",
+      "parentUuid": "e9759a03_b4891e34",
       "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
