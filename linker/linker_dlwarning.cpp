@@ -32,6 +32,8 @@
 
 #include <string>
 
+#include "linker_utils.h"
+
 static std::string current_msg;
 
 void add_dlwarning(const char* sopath, const char* message, const char* value) {
@@ -39,7 +41,7 @@ void add_dlwarning(const char* sopath, const char* message, const char* value) {
     current_msg += '\n';
   }
 
-  current_msg = current_msg + basename(sopath) + ": " + message;
+  current_msg = current_msg + linker_basename(sopath) + ": " + message;
 
   if (value != nullptr) {
     current_msg = current_msg + " \"" + value + "\"";

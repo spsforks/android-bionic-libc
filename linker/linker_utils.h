@@ -53,7 +53,8 @@ std::string resolve_path(const std::string& path);
 
 void split_path(const char* path, const char* delimiters, std::vector<std::string>* paths);
 
-std::string dirname(const char* path);
+const char* linker_basename(const char* path);
+std::string linker_dirname(const char* path);
 
 off64_t page_start(off64_t offset);
 size_t page_offset(off64_t offset);

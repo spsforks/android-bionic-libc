@@ -37,6 +37,8 @@
 
 #include <async_safe/log.h>
 
+#include "linker_utils.h"
+
 #include "android-base/strings.h"
 #include "private/CachedProperty.h"
 
@@ -70,7 +72,7 @@ static uint32_t ParseProperty(const std::string& value) {
 
 static void GetAppSpecificProperty(char* buffer) {
   // Get process basename.
-  const char* process_name_start = basename(g_argv[0]);
+  const char* process_name_start = linker_basename(g_argv[0]);
 
   // Remove ':' and everything after it. This is the naming convention for
   // services: https://developer.android.com/guide/components/services.html

@@ -486,7 +486,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
   bool versioning_enabled = properties.get_bool("enable.target.sdk.version");
   int target_sdk_version = __ANDROID_API__;
   if (versioning_enabled) {
-    std::string version_file = dirname(binary_realpath) + "/.version";
+    std::string version_file = linker_dirname(binary_realpath) + "/.version";
     std::string content;
     if (!android::base::ReadFileToString(version_file, &content)) {
       if (errno != ENOENT) {
