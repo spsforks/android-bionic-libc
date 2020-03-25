@@ -173,7 +173,7 @@ static std::string resolve_soname(const std::string& name) {
   // On the other hand there are several places where we already assume that
   // soname == basename in particular for any not-loaded library mentioned
   // in DT_NEEDED list.
-  return basename(name.c_str());
+  return linker_basename(name.c_str());
 }
 
 static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const char* name) {
@@ -220,9 +220,9 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   }
 
   // if this is an absolute path - make sure it points to /system/lib(64)
-  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
+  if (name[0] == '/' && linker_dirname(name) == kSystemLibDir) {
     // and reduce the path to basename
-    name = basename(name);
+    name = linker_basename(name);
   }
 
   for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
@@ -256,11 +256,11 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
   }
 
   // If the path isn't /system/lib, there's nothing to do.
-  if (name == nullptr || dirname(name) != kSystemLibDir) {
+  if (name == nullptr || linker_dirname(name) != kSystemLibDir) {
     return false;
   }
 
-  const char* base_name = basename(name);
+  const char* base_name = linker_basename(name);
 
   for (const char* soname : kSystemToArtApexLibs) {
     if (strcmp(base_name, soname) == 0) {
@@ -1080,7 +1080,7 @@ const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
   int app_target_api_level = get_application_target_sdk_version();
   if (app_target_api_level < 23) {
-    const char* bname = basename(dt_needed);
+    const char* bname = linker_basename(dt_needed);
     if (bname != dt_needed) {
       DL_WARN_documented_change(23,
                                 "invalid-dt_needed-entries-enforced-for-api-level-23",
@@ -3243,7 +3243,7 @@ bool soinfo::prelink_image() {
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
       get_application_target_sdk_version() < 23) {
-    soname_ = basename(realpath_.c_str());
+    soname_ = linker_basename(realpath_.c_str());
     DL_WARN_documented_change(23,
                               "missing-soname-enforced-for-api-level-23",
                               "\"%s\" has no DT_SONAME (will use %s instead)",
@@ -3461,7 +3461,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
                                                        somain->load_bias);
-  const char* bname = (interp != nullptr) ? basename(interp) : nullptr;
+  const char* bname = (interp != nullptr) ? linker_basename(interp) : nullptr;
 
   g_is_asan = bname != nullptr &&
               (strcmp(bname, "linker_asan") == 0 ||

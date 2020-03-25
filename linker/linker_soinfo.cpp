@@ -246,7 +246,7 @@ void soinfo::set_dt_runpath(const char* path) {
 
   split_path(path, ":", &runpaths);
 
-  std::string origin = dirname(get_realpath());
+  std::string origin = linker_dirname(get_realpath());
   // FIXME: add $PLATFORM.
   std::vector<std::pair<std::string, std::string>> params = {
     {"ORIGIN", origin},

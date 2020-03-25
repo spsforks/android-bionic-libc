@@ -60,7 +60,12 @@ void format_string(std::string* str, const std::vector<std::pair<std::string, st
   }
 }
 
-std::string dirname(const char* path) {
+const char* linker_basename(const char* path) {
+  const char* last_slash = strrchr(path, '/');
+  return (last_slash != nullptr) ? last_slash + 1 : path;
+}
+
+std::string linker_dirname(const char* path) {
   const char* last_slash = strrchr(path, '/');
 
   if (last_slash == path) {
