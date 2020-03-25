@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "913ebfc4_e9c28b9c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-03-25T00:26:12Z",
+      "side": 1,
+      "message": "Sorry. I now don\u0027t see the (transitive) dependency to this from  the media APEX. It was my oversight. So I am removing com.android.media.swcodec from the list.\n\n`m \u003capexname\u003e-deps-info` could be used to examine the dependency tree of an apex.\n\nIt showed me that the dependency chain to libc_headers in the ART APEX is:\n\nlibc_headers \u003c- libasync_safe\nlibasync_safe \u003c- libbacktrace, libsigchain\nlibbacktrace \u003c- libart, libartd, ...\nlibsigchain \u003c- libart, libartd, dex2oat, ...\n\n\u003e  but is there some way we can fix that to make it clear that that\u0027s just to break the cyclic dependency when building, and users of the library should just use the bionic headers via the normal route?\n\nThen I think you need to use the visibility property to make this module be visible only to the places that you want. If you want to do that with this change, please let me know.",
+      "parentUuid": "740ea3c8_e8eacfe6",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e9759a03_b4891e34",
         "filename": "libc/Android.bp",
         "patchSetId": 4
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "yeah, that makes sense. i just assumed that would be somewhere else in the build system already. but even if it was, it would probably make more sense to remove it from there are declare it here anyway, so...",
       "parentUuid": "59ee009c_7c47dc2a",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1277d6_822c3422",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-03-25T00:26:12Z",
+      "side": 1,
+      "message": "Yeah, I agree with you. So, this is better than having these whitelisted in the build system.",
+      "parentUuid": "a83e1180_e1e25318",
       "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
