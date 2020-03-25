@@ -1062,14 +1062,6 @@ static int open_library(android_namespace_t* ns,
     }
   }
 
-  // For the bootstrap linker, search for the bootstrap bionic libraries (e.g. libc.so).
-#if !defined(__ANDROID_APEX__)
-  if (fd == -1) {
-    std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset, bootstrap_paths, realpath);
-  }
-#endif
-
   // Finally search the namespace's main search path list.
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
@@ -2428,6 +2420,21 @@ static void add_soinfos_to_namespace(const soinfo_list_t& soinfos, android_names
   }
 }
 
+static std::vector<std::string> fix_lib_paths(std::vector<std::string> paths) {
+  // For the bootstrap linker, insert /system/${LIB}/bootstrap in front of /system/${LIB} in any
+  // namespace search path. The bootstrap linker should prefer to use the bootstrap bionic libraries
+  // (e.g. libc.so).
+#if !defined(__ANDROID_APEX__)
+  for (size_t i = 0; i < paths.size(); ++i) {
+    if (paths[i] == kSystemLibDir) {
+      paths.insert(paths.begin() + i, std::string(kSystemLibDir) + "/bootstrap");
+      ++i;
+    }
+  }
+#endif
+  return paths;
+}
+
 android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* name,
                                       const char* ld_library_path,
@@ -2486,7 +2493,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   }
 
   ns->set_ld_library_paths(std::move(ld_library_paths));
-  ns->set_default_library_paths(std::move(default_library_paths));
+  ns->set_default_library_paths(fix_lib_paths(std::move(default_library_paths)));
   ns->set_permitted_paths(std::move(permitted_paths));
 
   if (ns->is_also_used_as_anonymous() && !set_anonymous_namespace(ns)) {
@@ -3370,7 +3377,7 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
     }
   }
 
-  g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
+  g_default_namespace.set_default_library_paths(fix_lib_paths(std::move(ld_default_paths)));
 
   std::vector<android_namespace_t*> namespaces;
   namespaces.push_back(&g_default_namespace);
@@ -3496,7 +3503,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   const NamespaceConfig* default_ns_config = config->default_namespace_config();
 
   g_default_namespace.set_isolated(default_ns_config->isolated());
-  g_default_namespace.set_default_library_paths(default_ns_config->search_paths());
+  g_default_namespace.set_default_library_paths(fix_lib_paths(default_ns_config->search_paths()));
   g_default_namespace.set_permitted_paths(default_ns_config->permitted_paths());
 
   namespaces[default_ns_config->name()] = &g_default_namespace;
@@ -3514,7 +3521,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
     ns->set_name(ns_config->name());
     ns->set_isolated(ns_config->isolated());
-    ns->set_default_library_paths(ns_config->search_paths());
+    ns->set_default_library_paths(fix_lib_paths(ns_config->search_paths()));
     ns->set_permitted_paths(ns_config->permitted_paths());
     ns->set_whitelisted_libs(ns_config->whitelisted_libs());
 
