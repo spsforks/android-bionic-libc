@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "740ea3c8_e8eacfe6",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-25T00:08:40Z",
+      "side": 1,
+      "message": "is that a transitive dependency? i didn\u0027t media in https://source.corp.google.com/search?q\u003dlibasync_safe\u0026sq\u003dpackage:%5Eandroid$\n\nas for ART, why does it need this? presumably this is because of the `header_libs:` in the libasync_safe cc_library_static, but is there some way we can fix that to make it clear that that\u0027s just to break the cyclic dependency when building, and users of the library should just use the bionic headers via the normal route?",
+      "parentUuid": "92a3384e_1c3c61c3",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e9759a03_b4891e34",
         "filename": "libc/Android.bp",
         "patchSetId": 4
@@ -69,6 +87,24 @@
       "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a83e1180_e1e25318",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-25T00:08:40Z",
+      "side": 1,
+      "message": "yeah, that makes sense. i just assumed that would be somewhere else in the build system already. but even if it was, it would probably make more sense to remove it from there are declare it here anyway, so...",
+      "parentUuid": "59ee009c_7c47dc2a",
+      "revId": "964c999451fb0d13c3a97c4461e1f487175af2e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
