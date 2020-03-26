@@ -56,7 +56,7 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) 
 #endif
 
 #if defined(__USE_GNU)
-#if __ANDROID_API__ >= 30
+#if __ANDROID_API__ >= __ANDROID_API_R__
 __BIONIC_FORTIFY_INLINE
 void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
         __overloadable
@@ -70,7 +70,7 @@ void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_
 #endif
     return __builtin_mempcpy(dst, src, copy_amount);
 }
-#endif /* __ANDROID_API__ >= 30 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
 #endif /* __USE_GNU */
 
 __BIONIC_FORTIFY_INLINE

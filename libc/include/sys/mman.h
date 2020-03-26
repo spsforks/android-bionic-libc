@@ -135,7 +135,7 @@ int mlock(const void* __addr, size_t __size);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mlock2(const void* __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
+int mlock2(const void* __addr, size_t __size, int __flags) __INTRODUCED_IN(__ANDROID_API_R__);
 
 /**
  * [munlock(2)](http://man7.org/linux/man-pages/man2/munlock.2.html)
@@ -169,7 +169,7 @@ int madvise(void* __addr, size_t __size, int __advice);
  *
  * Returns an fd on success, and returns -1 and sets `errno` on failure.
  */
-int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
+int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(__ANDROID_API_R__);
 
 #endif
 
