@@ -14,6 +14,9 @@
     },
     {
       "name": "memunreachable_unit_test"
+    },
+    {
+      "name": "gwp_asan_unittest"
     }
   ]
 }
