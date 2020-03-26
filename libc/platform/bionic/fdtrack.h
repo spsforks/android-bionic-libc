@@ -62,12 +62,14 @@ struct android_fdtrack_event {
 typedef void (*android_fdtrack_hook_t)(struct android_fdtrack_event*);
 
 // Register a hook which is called to track fd lifecycle events.
-bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* expected, android_fdtrack_hook_t value) __INTRODUCED_IN(30);
+bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* expected,
+                                           android_fdtrack_hook_t value)
+    __INTRODUCED_IN(__ANDROID_API_R__);
 
 // Enable/disable fdtrack *on the current thread*.
 // This is primarily useful when performing operations which you don't want to track
 // (e.g. when emitting already-recorded information).
-bool android_fdtrack_get_enabled() __INTRODUCED_IN(30);
-bool android_fdtrack_set_enabled(bool new_value) __INTRODUCED_IN(30);
+bool android_fdtrack_get_enabled() __INTRODUCED_IN(__ANDROID_API_R__);
+bool android_fdtrack_set_enabled(bool new_value) __INTRODUCED_IN(__ANDROID_API_R__);
 
 __END_DECLS

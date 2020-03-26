@@ -180,7 +180,7 @@ int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19)
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int statx(int __dir_fd, const char* __path, int __flags, unsigned __mask, struct statx* __buf) __INTRODUCED_IN(30);
+int statx(int __dir_fd, const char* __path, int __flags, unsigned __mask, struct statx* __buf) __INTRODUCED_IN(__ANDROID_API_R__);
 #endif
 
 __END_DECLS

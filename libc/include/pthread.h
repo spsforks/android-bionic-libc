@@ -122,7 +122,7 @@ int pthread_condattr_setpshared(pthread_condattr_t* __attr, int __shared);
 
 int pthread_cond_broadcast(pthread_cond_t* __cond);
 int pthread_cond_clockwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, clockid_t __clock,
-                           const struct timespec* __timeout) __INTRODUCED_IN(30);
+                           const struct timespec* __timeout) __INTRODUCED_IN(__ANDROID_API_R__);
 int pthread_cond_destroy(pthread_cond_t* __cond);
 int pthread_cond_init(pthread_cond_t* __cond, const pthread_condattr_t* __attr);
 int pthread_cond_signal(pthread_cond_t* __cond);
@@ -186,7 +186,7 @@ int pthread_mutexattr_settype(pthread_mutexattr_t* __attr, int __type);
 int pthread_mutexattr_setprotocol(pthread_mutexattr_t* __attr, int __protocol) __INTRODUCED_IN(28);
 
 int pthread_mutex_clocklock(pthread_mutex_t* __mutex, clockid_t __clock,
-                            const struct timespec* __abstime) __INTRODUCED_IN(30);
+                            const struct timespec* __abstime) __INTRODUCED_IN(__ANDROID_API_R__);
 int pthread_mutex_destroy(pthread_mutex_t* __mutex);
 int pthread_mutex_init(pthread_mutex_t* __mutex, const pthread_mutexattr_t* __attr);
 int pthread_mutex_lock(pthread_mutex_t* __mutex);
@@ -235,9 +235,9 @@ int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t* __attr, int* __kin
 int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t* __attr, int __kind) __INTRODUCED_IN(23);
 
 int pthread_rwlock_clockrdlock(pthread_rwlock_t* __rwlock, clockid_t __clock,
-                               const struct timespec* __timeout) __INTRODUCED_IN(30);
+                               const struct timespec* __timeout) __INTRODUCED_IN(__ANDROID_API_R__);
 int pthread_rwlock_clockwrlock(pthread_rwlock_t* __rwlock, clockid_t __clock,
-                               const struct timespec* __timeout) __INTRODUCED_IN(30);
+                               const struct timespec* __timeout) __INTRODUCED_IN(__ANDROID_API_R__);
 int pthread_rwlock_destroy(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_init(pthread_rwlock_t* __rwlock, const pthread_rwlockattr_t* __attr);
 int pthread_rwlock_rdlock(pthread_rwlock_t* __rwlock);

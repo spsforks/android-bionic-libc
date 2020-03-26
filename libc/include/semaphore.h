@@ -45,7 +45,7 @@ typedef struct {
 
 #define SEM_FAILED __BIONIC_CAST(reinterpret_cast, sem_t*, 0)
 
-int sem_clockwait(sem_t* __sem, clockid_t __clock, const struct timespec* __ts) __INTRODUCED_IN(30);
+int sem_clockwait(sem_t* __sem, clockid_t __clock, const struct timespec* __ts) __INTRODUCED_IN(__ANDROID_API_R__);
 int sem_destroy(sem_t* __sem);
 int sem_getvalue(sem_t* __sem, int* __value);
 int sem_init(sem_t* __sem, int __shared, unsigned int __value);

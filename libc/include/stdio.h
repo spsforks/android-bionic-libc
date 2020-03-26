@@ -208,7 +208,7 @@ int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const c
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int renameat2(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, unsigned __flags) __INTRODUCED_IN(30);
+int renameat2(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, unsigned __flags) __INTRODUCED_IN(__ANDROID_API_R__);
 
 #endif
 
