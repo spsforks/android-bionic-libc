@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f082d1_61def86c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:31:51Z",
+      "side": 1,
+      "message": "is this clearer if we invert the test, move this first, and lose the else (since you don\u0027t need an else after a return)?\n\n  if (task-\u003eget_soinfo() !\u003d nullptr) return true;\n\n  // try ...",
+      "revId": "843595faa27c1b712fa2941b2a7d2fcd7cb9fe07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
