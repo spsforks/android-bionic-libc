@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "d6c0bcad_9d21507c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-27T23:56:10Z",
+      "side": 1,
+      "message": "Yes, I think the functions could accept and return std::string_view, and they would be strictly more capable than the current versions.",
+      "parentUuid": "0ddbadda_f448da98",
+      "range": {
+        "startLine": 176,
+        "startChar": 25,
+        "endLine": 176,
+        "endChar": 37
+      },
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5dac4c6f_91a73440",
         "filename": "linker/linker_utils.h",
         "patchSetId": 1
@@ -59,6 +83,24 @@
       "writtenOn": "2020-03-27T15:29:13Z",
       "side": 1,
       "message": "if you want to ensure these get used, you should probably poison the base basename/dirname. (and make sure this is included no matter what --- #include this from linker.h or something that every file includes? it seems like a bad sign for our ability to enforce this that you\u0027ve had to add some #includes to random source files.)",
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8138ffd3_1dda8d90",
+        "filename": "linker/linker_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-27T23:56:10Z",
+      "side": 1,
+      "message": "I\u0027m not sure how to poison it w/o also preventing non-linker headers from using the functions?\n\nI don\u0027t think there\u0027s a single header that all the linker cpp files include.",
+      "parentUuid": "5dac4c6f_91a73440",
       "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
