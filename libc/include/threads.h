@@ -78,7 +78,7 @@ enum {
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 30
+#if __ANDROID_API_AT_LEAST(30)
 // This file is implemented as static inlines before API level 30.
 
 /** Uses `__flag` to ensure that `__function` is called exactly once. */

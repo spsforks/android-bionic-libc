@@ -110,6 +110,9 @@ __BEGIN_DECLS
 /** Names the "R" API level (30), for comparison against `__ANDROID_API__`. */
 #define __ANDROID_API_R__ 30
 
+/** Returns true if compiling for at least the given API level. */
+#define __ANDROID_API_AT_LEAST(api_level) (__ANDROID_API__ >= __MUTATED_API_LEVEL(api_level))
+
 /**
  * Returns the `targetSdkVersion` of the caller, or `__ANDROID_API_FUTURE__`
  * if there is no known target SDK version (for code not running in the
@@ -124,14 +127,7 @@ __BEGIN_DECLS
  */
 int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
 
-#if __ANDROID_API__ < 29
-
-// android_get_device_api_level is a static inline before API level 29.
-#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
-#include <bits/get_device_api_level_inlines.h>
-#undef __BIONIC_GET_DEVICE_API_LEVEL_INLINE
-
-#else
+#if __ANDROID_API_AT_LEAST(29)
 
 /**
  * Returns the API level of the device we're actually running on, or -1 on failure.
@@ -141,6 +137,13 @@ int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
  * See also android_get_application_target_sdk_version().
  */
 int android_get_device_api_level() __INTRODUCED_IN(29);
+
+#else
+
+// android_get_device_api_level is a static inline before API level 29.
+#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
+#include <bits/get_device_api_level_inlines.h>
+#undef __BIONIC_GET_DEVICE_API_LEVEL_INLINE
 
 #endif
 
