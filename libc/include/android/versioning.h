@@ -16,7 +16,7 @@
 
 #pragma once
 
-#define __MUTATED_API_LEVEL(api_level) (api_level)
+#define __MUTATED_API_LEVEL(api_level) (((api_level) >= 30) ? ((api_level) * 100) : (api_level))
 
 // The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
 // we should only annotate headers when we are running versioner.
