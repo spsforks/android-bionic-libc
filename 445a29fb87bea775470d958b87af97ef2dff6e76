@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aed59060_18d5bce6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:29:13Z",
+      "side": 1,
+      "message": "can you expand on this? you define _GNU_SOURCE, which is actually the default for .cpp files. so getting the GNU version is just a no-op, right?",
+      "range": {
+        "startLine": 10,
+        "startChar": 36,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ddbadda_f448da98",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:29:13Z",
+      "side": 1,
+      "message": "if you were going to add your own, wouldn\u0027t they more usefully take std::string_view?",
+      "range": {
+        "startLine": 176,
+        "startChar": 25,
+        "endLine": 176,
+        "endChar": 37
+      },
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dac4c6f_91a73440",
+        "filename": "linker/linker_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:29:13Z",
+      "side": 1,
+      "message": "if you want to ensure these get used, you should probably poison the base basename/dirname. (and make sure this is included no matter what --- #include this from linker.h or something that every file includes? it seems like a bad sign for our ability to enforce this that you\u0027ve had to add some #includes to random source files.)",
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
