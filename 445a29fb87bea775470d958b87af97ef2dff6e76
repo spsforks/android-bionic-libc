@@ -104,6 +104,24 @@
       "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efdfcced_0da823ca",
+        "filename": "linker/linker_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-28T00:07:47Z",
+      "side": 1,
+      "message": "should there be? should we just have \"linker.h\" with everything?\n\n(do we have non-linker headers that use basename/dirname?)",
+      "parentUuid": "8138ffd3_1dda8d90",
+      "revId": "445a29fb87bea775470d958b87af97ef2dff6e76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
