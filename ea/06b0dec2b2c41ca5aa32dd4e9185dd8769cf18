@@ -1,0 +1,8 @@
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Peter Collingbourne <pcc@google.com>
+Submitted-at: Mon, 30 Mar 2020 19:03:38 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1261315
+Project: platform/bionic
+Branch: refs/heads/master
