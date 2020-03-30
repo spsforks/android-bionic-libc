@@ -43,6 +43,11 @@ Missing functionality:
   * Robust mutexes. See
     [discussion](https://github.com/android/ndk/issues/1181).
 
+Known POSIX violations:
+  * `execve` is not async-signal-safe. Within the thread calling execve, an
+    interrupting signal handler can observe side effects within errno and that
+    thread's signal mask.
+
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
 

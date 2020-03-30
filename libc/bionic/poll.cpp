@@ -30,10 +30,9 @@
 #include <sys/poll.h>
 #include <sys/select.h>
 
-#include <platform/bionic/reserved_signals.h>
-
-#include "private/bionic_time_conversions.h"
 #include "private/SigSetConverter.h"
+#include "private/bionic_reserved_signals.h"
+#include "private/bionic_time_conversions.h"
 
 extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t);
 extern "C" int __pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*);
