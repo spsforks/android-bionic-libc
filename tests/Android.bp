@@ -746,6 +746,7 @@ cc_defaults {
         "libtest_thread_local_dtor2",
         "preinit_getauxval_test_helper",
         "preinit_syscall_test_helper",
+        "preinit_reserved_signal_test_helper",
         "libnstest_private_external",
         "libnstest_dlopened",
         "libnstest_private",

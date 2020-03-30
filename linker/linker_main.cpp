@@ -31,9 +31,10 @@
 #include <link.h>
 #include <sys/auxv.h>
 
+#include "linker_bionic_signals.h"
+#include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
-#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -310,6 +311,13 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
+
+  // Safely unblock signals reserved by bionic's implementation, and blocked by
+  // its execve wrapper. A subset of the signals will be left ignored, so any
+  // pending or new signals will be dropped until a proper handler is installed.
+  // This must happen before any other code touches the signal mask, unless it
+  // is explicitly aware of the reserved signal filtering.
+  linker_unblock_bionic_signals();
 
   // Register the debuggerd signal handler.
   linker_debuggerd_init();
