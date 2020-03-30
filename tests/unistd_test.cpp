@@ -18,6 +18,7 @@
 
 #include "BionicDeathTest.h"
 #include "SignalUtils.h"
+#include "gtest_globals.h"
 #include "utils.h"
 
 #include <errno.h>
@@ -1497,6 +1498,33 @@ TEST(UNISTD_TEST, fexecve_args) {
   eth.SetEnv({"A=B", nullptr});
   eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
   close(printenv_fd);
+}
+
+TEST(UNISTD_TEST, execve_bionic_reserved_signals) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP();
+#else
+  SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
+  std::string helper =
+      GetTestlibRoot() + "/preinit_reserved_signal_test_helper/preinit_reserved_signal_test_helper";
+
+  // TODO(WIP): update description, maybe also assert signal mask.
+  // TODO(WIP): unfortunately, no easy way to test the linker phase itself. This
+  // test doesn't prove that the ignoring precedes the unblock, which is
+  // important and possibly easy to break, given that normal syscall wrappers do
+  // filtering of reserved handlers to keep them unimpeded (atm, linker's TLS
+  // setup logic would cause the signals to be unblocked through the use of a
+  // harmless-looking ScopeSignalBlocker).
+  char expected_out[] =
+      "preinit BIONIC_SIGNAL_DEBUGGER: custom sa_sigaction\n"
+      "preinit BIONIC_SIGNAL_PROFILER: SIG_IGN\n"
+      "preinit BIONIC_SIGNAL_ART_PROFILER: SIG_IGN\n";
+
+  ExecTestHelper eth;
+  eth.SetArgs({helper.c_str(), nullptr});
+  eth.SetEnv({nullptr});
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, expected_out);
+#endif
 }
 
 TEST(UNISTD_TEST, getlogin_r) {
