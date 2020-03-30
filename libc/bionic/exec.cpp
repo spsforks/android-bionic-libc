@@ -33,16 +33,43 @@
 #include <errno.h>
 #include <limits.h>
 #include <paths.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "private/__bionic_get_shell_path.h"
+#include "platform/bionic/reserved_signals.h"
 #include "private/FdPath.h"
+#include "private/__bionic_get_shell_path.h"
 
 extern "C" char** environ;
+
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+extern "C" int __execve(const char*, char* const*, char* const*);
+
+int execve(const char* pathname, char* const argv[], char* const envp[]) {
+  // Mask signals that are unsafe/incorrect to deliver right after the execve.
+  // TODO: CODE_REVIEW_QUESTION: block all reserved signals instead (for simplicity)?
+  sigset64_t sigset = {};
+  sigaddset64(&sigset, BIONIC_SIGNAL_POSIX_TIMERS);
+  sigaddset64(&sigset, BIONIC_SIGNAL_DEBUGGER);
+  sigaddset64(&sigset, BIONIC_SIGNAL_PROFILER);
+  sigaddset64(&sigset, BIONIC_SIGNAL_ART_PROFILER);
+  sigset64_t old_sigset = {};
+  __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
+
+  // At this point we've clobbered both the errno and the signal mask within
+  // this thread, which technically breaks the async-signal-safe property of
+  // execve, as an interrupting signal might observe the side-effects.
+
+  int ret = __execve(pathname, argv, envp);
+
+  // Syscall failed, restore mask (errno already overridden).
+  __rt_sigprocmask(SIG_SETMASK, &old_sigset, nullptr, sizeof(old_sigset));
+  return ret;
+}
 
 enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
 

@@ -29,11 +29,13 @@
 #include "linker_main.h"
 
 #include <link.h>
+#include <signal.h>
 #include <sys/auxv.h>
 
+#include "linker_bionic_signals.h"
+#include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
-#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -46,6 +48,8 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
+
+#include "platform/bionic/reserved_signals.h"
 
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
@@ -310,6 +314,15 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
+
+  // Safely unblock the signals reserved by bionic's implementation.
+  // TODO: WIP: this covers both dynamic and static libc variants (and processes
+  // that don't end up linking against libc). We disregard the possiblity of
+  // PT_INTERP in the ELF causing a different entry-point than this system
+  // linker on Android (safe assumption?).
+  // TODO: CODE_REVIEW_QUESTION: at what point is the modification/use of
+  // "errno" (TLS) safe (how does this work within the linker itself)?
+  linker_unblock_bionic_signals();
 
   // Register the debuggerd signal handler.
   linker_debuggerd_init();
