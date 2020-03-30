@@ -18,12 +18,14 @@
 
 #include "BionicDeathTest.h"
 #include "SignalUtils.h"
+#include "gtest_globals.h"
 #include "utils.h"
 
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdint.h>
 #include <sys/capability.h>
 #include <sys/param.h>
@@ -40,6 +42,10 @@
 #include <android-base/strings.h>
 
 #include "private/get_cpu_count_from_string.h"
+
+#if defined(__BIONIC__)
+#include "platform/bionic/reserved_signals.h"
+#endif
 
 #if defined(NOFORTIFY)
 #define UNISTD_TEST unistd_nofortify
@@ -1497,6 +1503,119 @@ TEST(UNISTD_TEST, fexecve_args) {
   eth.SetEnv({"A=B", nullptr});
   eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
   close(printenv_fd);
+}
+
+TEST(UNISTD_TEST, execve_bionic_reserved_signals) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP();
+#else
+  SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
+  std::string helper =
+      GetTestlibRoot() + "/preinit_reserved_signal_test_helper/preinit_reserved_signal_test_helper";
+  chmod(helper.c_str(), 0755); // TODO(b/34945607): 'x' lost on CTS.
+
+  // We expect all three of the signals to be ignored by the execve wrapper. The
+  // child process will capture their dispositions before libc is initialized,
+  // but after the linker has started, which installs a new handler for
+  // BIONIC_SIGNAL_DEBUGGER. The other signals should still be ignored at that
+  // time.
+  char expected_out[] =
+      "preinit BIONIC_SIGNAL_DEBUGGER: custom sa_sigaction\n"
+      "preinit BIONIC_SIGNAL_PROFILER: SIG_IGN\n"
+      "preinit BIONIC_SIGNAL_ART_PROFILER: SIG_IGN\n";
+
+  ExecTestHelper eth;
+  eth.SetArgs({helper.c_str(), nullptr});
+  eth.SetEnv({nullptr});
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, expected_out);
+#endif
+}
+
+TEST(UNISTD_TEST, execve_bionic_reserved_signals_failure) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP();
+#else
+  // Set a mixed signal mask before the doomed exec.
+  sigset64_t sigset = {};
+  sigaddset64(&sigset, SIGALRM);
+  sigaddset64(&sigset, BIONIC_SIGNAL_POSIX_TIMERS);
+  sigaddset64(&sigset, BIONIC_SIGNAL_PROFILER);
+  sigaddset64(&sigset, BIONIC_SIGNAL_FDTRACK);
+  ASSERT_EQ(0, syscall(__NR_rt_sigprocmask, SIG_SETMASK, &sigset, nullptr, sizeof(sigset)));
+
+  ExecTestHelper eth;
+  ASSERT_EQ(-1, execvpe("this-does-not-exist", eth.GetArgs(), eth.GetEnv()));
+
+  sigset64_t sigset_after = {};
+  ASSERT_EQ(
+      0, syscall(__NR_rt_sigprocmask, SIG_SETMASK, nullptr, &sigset_after, sizeof(sigset_after)));
+
+  // Mask unchanged.
+  ASSERT_EQ(0, memcmp(&sigset, &sigset_after, sizeof(sigset)));
+#endif
+}
+
+// Test approach: fork a new process to have exactly one controlled thread.
+// In that thread, install a custom reserved signal handler (s.t. the kernel
+// resets it to SIG_DFL during execve). Then block the signal, and self-raise
+// it, so that it stays pending. Then exec a binary, and assert that it ran to
+// completion, instead of being killed by the defaulted signal being unblocked
+// prematurely.
+TEST(UNISTD_TEST, execve_bionic_reserved_signals_safely_unblocked) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP();
+#else
+  // Return status through ptr since assert macros require void return type.
+  auto test_signal = [](int signo, int* ret) -> void {
+    pid_t pid = fork();
+    ASSERT_NE(-1, pid);
+    if (pid == 0) {  // child
+      // Exit even if asserts fire / exec fails.
+      struct Fin {
+        ~Fin() { exit(42); }
+      } fin;
+
+      // Install a custom handler, and block the signal.
+      signal(signo, [](int) { abort(); });
+      sigset64_t sigset = {};
+      sigaddset64(&sigset, signo);
+      ASSERT_EQ(0, syscall(__NR_rt_sigprocmask, SIG_BLOCK, &sigset, nullptr, sizeof(sigset)));
+
+      // Signal not pending.
+      sigset64_t pending = {};
+      ASSERT_EQ(0, sigpending64(&pending));
+      ASSERT_FALSE(sigismember64(&pending, signo));
+
+      ASSERT_EQ(0, raise(signo));
+
+      // Now pending.
+      ASSERT_EQ(0, sigpending64(&pending));
+      ASSERT_TRUE(sigismember64(&pending, signo));
+
+      const char* args[] = {"true", nullptr};
+      execv("/system/bin/true", const_cast<char**>(args));
+    }
+    // parent
+    int pid_stat = 0;
+    pid_t waited = TEMP_FAILURE_RETRY(waitpid(pid, &pid_stat, 0));
+    ASSERT_EQ(waited, pid);
+
+    *ret = pid_stat;
+  };
+
+  // Profiler signal ignored before being unblocked - binary runs to completion.
+  int status_prof = 0;
+  test_signal(BIONIC_SIGNAL_PROFILER, &status_prof);
+  ASSERT_TRUE(WIFEXITED(status_prof));
+  ASSERT_EQ(0, WEXITSTATUS(status_prof));
+
+  // Double-check that the test works by verifying that the non-specialcased
+  // fdtrack signal does terminate the program upon being unblocked.
+  int status_fdtrack = 0;
+  test_signal(BIONIC_SIGNAL_FDTRACK, &status_fdtrack);
+  ASSERT_TRUE(WIFSIGNALED(status_fdtrack));
+  ASSERT_EQ(BIONIC_SIGNAL_FDTRACK, WTERMSIG(status_fdtrack));
+#endif
 }
 
 TEST(UNISTD_TEST, getlogin_r) {
