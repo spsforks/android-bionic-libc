@@ -39,13 +39,14 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "platform/bionic/macros.h"
 #include "platform/bionic/page.h"
+#include "private/KernelArgumentBlock.h"
 #include "private/bionic_call_ifunc_resolver.h"
+#include "private/bionic_reserved_signals.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -171,6 +172,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_globals();
   __libc_shared_globals()->init_progname = args.argv[0];
   __libc_init_AT_SECURE(args.envp);
+  init_unblock_reserved_signals();  // safely unblock bionic's reserved signals
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();

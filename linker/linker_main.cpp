@@ -31,9 +31,9 @@
 #include <link.h>
 #include <sys/auxv.h>
 
+#include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
-#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -41,11 +41,12 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/KernelArgumentBlock.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
+#include "private/bionic_reserved_signals.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
 
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
@@ -310,6 +311,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
+
+  // Safely unblock signals reserved by bionic's implementation, and blocked by its execve wrapper.
+  init_unblock_reserved_signals();
 
   // Register the debuggerd signal handler.
   linker_debuggerd_init();
