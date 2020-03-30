@@ -28,11 +28,7 @@
 
 #pragma once
 
-#include <sys/cdefs.h>
-
 #include <signal.h>
-
-#include "macros.h"
 
 // Realtime signals reserved for internal use:
 //   32 (__SIGRTMIN + 0)        POSIX timers
@@ -44,8 +40,12 @@
 //   38 (__SIGRTMIN + 6)        heapprofd ART managed heap dumps
 //   39 (__SIGRTMIN + 7)        fdtrack
 //
-// If you change this, also change __ndk_legacy___libc_current_sigrtmin
-// in <android/legacy_signal_inlines.h> to match.
+// If you change this, also:
+// * change __ndk_legacy___libc_current_sigrtmin in
+//   <android/legacy_signal_inlines.h> to match.
+// * if the signal will have a custom handler, and can be delivered
+//   asynchronously during the process calling execve, see
+//   libc/private/bionic_reserved_signals.h.
 
 #define BIONIC_SIGNAL_POSIX_TIMERS (__SIGRTMIN + 0)
 #define BIONIC_SIGNAL_DEBUGGER (__SIGRTMIN + 3)
@@ -54,33 +54,4 @@
 #define BIONIC_SIGNAL_FDTRACK (__SIGRTMIN + 7)
 
 #define __SIGRT_RESERVED 8
-static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
-  int (*block)(sigset64_t*, int);
-  int (*unblock)(sigset64_t*, int);
-  switch (how) {
-    case SIG_BLOCK:
-      __BIONIC_FALLTHROUGH;
-    case SIG_SETMASK:
-      block = sigaddset64;
-      unblock = sigdelset64;
-      break;
 
-    case SIG_UNBLOCK:
-      block = sigdelset64;
-      unblock = sigaddset64;
-      break;
-  }
-
-  // The POSIX timer signal must be blocked.
-  block(&sigset, __SIGRTMIN + 0);
-
-  // Everything else must remain unblocked.
-  unblock(&sigset, __SIGRTMIN + 1);
-  unblock(&sigset, __SIGRTMIN + 2);
-  unblock(&sigset, __SIGRTMIN + 3);
-  unblock(&sigset, __SIGRTMIN + 4);
-  unblock(&sigset, __SIGRTMIN + 5);
-  unblock(&sigset, __SIGRTMIN + 6);
-  unblock(&sigset, __SIGRTMIN + 7);
-  return sigset;
-}

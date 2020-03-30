@@ -33,16 +33,45 @@
 #include <errno.h>
 #include <limits.h>
 #include <paths.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "private/__bionic_get_shell_path.h"
 #include "private/FdPath.h"
+#include "private/__bionic_get_shell_path.h"
+#include "private/bionic_reserved_signals.h"
 
 extern "C" char** environ;
+
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+extern "C" int __execve(const char*, char* const*, char* const*);
+
+// execve wrapper, which blocks bionic-reserved signals, as they might be
+// incorrect/unsafe to deliver right after the syscall. In particular, any
+// signals with custom handlers will have their disposition reset to the default
+// (terminating the program) during the execve. These signals will be safely
+// unblocked by the system linker while setting up the new process image.
+//
+// NOTE: strictly speaking, this breaks the async-signal-safety of execve, as an
+// interrupting signal can observe side-effects within errno and signal mask.
+// Additionally, this wrapper might touch errno (TLS) even if the raw execve
+// would not have.
+int execve(const char* pathname, char* const argv[], char* const envp[]) {
+  sigset64_t sigset = reserved_signal_set();
+  sigset64_t old_sigset = {};
+  __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
+
+  int ret = __execve(pathname, argv, envp);
+
+  // Syscall failed, restore signal mask.
+  int execve_errno = errno;
+  __rt_sigprocmask(SIG_SETMASK, &old_sigset, nullptr, sizeof(old_sigset));
+  errno = execve_errno;
+  return ret;
+}
 
 enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
 
