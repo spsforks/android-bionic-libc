@@ -220,7 +220,7 @@ class ExecTestHelper {
       dup2(fds[1], STDERR_FILENO);
       if (fds[1] != STDOUT_FILENO && fds[1] != STDERR_FILENO) close(fds[1]);
       child_fn();
-      FAIL();
+      FAIL() << "Function given to ExecTestHelper did not exec";
     }
 
     // Parent.
