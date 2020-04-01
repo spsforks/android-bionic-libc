@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59724dd8_c26eff35",
+        "filename": "libc/include/netinet/icmp6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-01T16:49:03Z",
+      "side": 1,
+      "message": "seems like these do end up in a kernel header, but not a uapi header, so we do need to duplicate them here rather than deferring to the kernel\u0027s own constants?",
+      "revId": "06076c5c8204059e05cd6b79ef73a4350e37a871",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36fa35c5_ae2cf393",
+        "filename": "libc/include/netinet/icmp6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-01T16:49:03Z",
+      "side": 1,
+      "message": "include the RFC for these two as well? (the only thing i find for any of this stuff is the netdev@ post proposing them.)",
+      "revId": "06076c5c8204059e05cd6b79ef73a4350e37a871",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
