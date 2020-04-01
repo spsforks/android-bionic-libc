@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e198298e_f19a2a14",
+        "filename": "libc/include/netinet/icmp6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-04-01T20:55:11Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me where this header file is coming from.\nIt seemed like it was a local to bionic header...\n\nDo you think these things should be coming from kernel headers?\nThey\u0027re not really kernel api... since they\u0027re IANA constants.\n\nAnd the struct themselves are just opaque binary blobs atm from the kernel\u0027s point of view.",
+      "parentUuid": "59724dd8_c26eff35",
+      "revId": "06076c5c8204059e05cd6b79ef73a4350e37a871",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "36fa35c5_ae2cf393",
         "filename": "libc/include/netinet/icmp6.h",
         "patchSetId": 1
