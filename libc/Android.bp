@@ -705,6 +705,26 @@ cc_library_static {
     name: "libc_gdtoa",
 }
 
+cc_fuzz {
+  name: "gdtoa_fuzzer",
+  srcs: [
+    "fuzz/gdtoa_fuzzer.cpp",
+  ],
+  static_libs: [
+    "libc_gdtoa",
+  ],
+  local_include_dirs: [
+    "upstream-openbsd/android/include",
+    "upstream-openbsd/lib/libc/include",
+    "upstream-openbsd/lib/libc/include/",
+    "upstream-openbsd/lib/libc/gdtoa/",
+  ],
+  fuzz_config: {
+    cc: ["kalder@google.com"],
+    fuzz_on_haiku_device: true,
+  },
+}
+
 // ========================================================
 // libc_fortify.a - container for our FORITFY
 // implementation details
