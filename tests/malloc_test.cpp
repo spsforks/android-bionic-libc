@@ -1253,6 +1253,12 @@ TEST(android_mallopt, tag_level) {
   HeapTaggingLevel tag_level = M_HEAP_TAGGING_LEVEL_TBI;
   EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
 
+  tag_level = M_HEAP_TAGGING_LEVEL_SYNC;
+  EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+
+  tag_level = M_HEAP_TAGGING_LEVEL_TBI;
+  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+
   tag_level = M_HEAP_TAGGING_LEVEL_NONE;
   EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
   std::unique_ptr<int[]> p2 = std::make_unique<int[]>(4);
