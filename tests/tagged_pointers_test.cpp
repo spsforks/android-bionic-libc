@@ -59,6 +59,9 @@ TEST(tagged_pointers, check_tagged_pointer_dies) {
   tag_level = M_HEAP_TAGGING_LEVEL_ASYNC;
   EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
 
+  tag_level = M_HEAP_TAGGING_LEVEL_SYNC;
+  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+
   x = malloc(1);
   void *y = malloc(1);
   // Disable heap tagging.
