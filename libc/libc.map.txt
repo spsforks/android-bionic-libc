@@ -1554,6 +1554,9 @@ LIBC_S { # introduced=31
   global:
     ffsl;
     ffsll;
+
+    # Used by scudo_unit_tests
+    android_unsafe_frame_pointer_chase; # apex
 } LIBC_R;
 
 LIBC_PRIVATE {
@@ -1714,7 +1717,6 @@ LIBC_PRIVATE {
     android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
     android_gethostbynamefornetcontext;
-    android_unsafe_frame_pointer_chase;
     arc4random_addrandom; # arm x86
     arc4random_stir; # arm x86
     atexit; # arm
