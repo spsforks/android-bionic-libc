@@ -31,6 +31,17 @@ struct __kernel_old_timespec {
   __kernel_old_time_t tv_sec;
   long tv_nsec;
 };
+#ifndef _STRUCT_TIMEVAL
+#define _STRUCT_TIMEVAL 1
+struct timeval {
+  __kernel_old_time_t tv_sec;
+  __kernel_suseconds_t tv_usec;
+};
+#endif
+struct __kernel_old_itimerval {
+  struct timeval it_interval;
+  struct timeval it_value;
+};
 struct __kernel_sock_timeval {
   __s64 tv_sec;
   __s64 tv_usec;

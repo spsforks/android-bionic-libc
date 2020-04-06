@@ -27,17 +27,13 @@ struct timespec {
   long tv_nsec;
 };
 #endif
+#ifndef _STRUCT_TIMEVAL
+#define _STRUCT_TIMEVAL 1
 struct timeval {
   __kernel_old_time_t tv_sec;
   __kernel_suseconds_t tv_usec;
 };
-struct timezone {
-  int tz_minuteswest;
-  int tz_dsttime;
-};
-#define ITIMER_REAL 0
-#define ITIMER_VIRTUAL 1
-#define ITIMER_PROF 2
+#endif
 struct itimerspec {
   struct timespec it_interval;
   struct timespec it_value;
@@ -46,6 +42,13 @@ struct itimerval {
   struct timeval it_interval;
   struct timeval it_value;
 };
+struct timezone {
+  int tz_minuteswest;
+  int tz_dsttime;
+};
+#define ITIMER_REAL 0
+#define ITIMER_VIRTUAL 1
+#define ITIMER_PROF 2
 #define CLOCK_REALTIME 0
 #define CLOCK_MONOTONIC 1
 #define CLOCK_PROCESS_CPUTIME_ID 2
