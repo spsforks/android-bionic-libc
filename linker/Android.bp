@@ -277,6 +277,8 @@ cc_defaults {
         hwaddress: false,
     },
 
+    header_libs: ["libc_headers"],
+
     static_libs: [
         "liblinker_main",
         "liblinker_malloc",
@@ -411,6 +413,8 @@ cc_library {
     sanitize: {
         never: true,
     },
+
+    header_libs: ["libc_headers"],
 
     apex_available: [
         "//apex_available:platform",
