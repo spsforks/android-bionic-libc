@@ -43,6 +43,8 @@ extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
 extern "C" void __cxa_thread_finalize();
 
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation
  */
@@ -105,7 +107,9 @@ void pthread_exit(void* return_value) {
 
   // We don't want to take a signal after unmapping the stack, the shadow call
   // stack, or dynamic TLS memory.
-  ScopedSignalBlocker ssb;
+  sigset64_t new_set, old_set;
+  sigfillset64(&new_set);
+  __rt_sigprocmask(SIG_SETMASK, &new_set, &old_set, sizeof(sigset64_t));
 
 #ifdef __aarch64__
   // Free the shadow call stack and guard pages.
