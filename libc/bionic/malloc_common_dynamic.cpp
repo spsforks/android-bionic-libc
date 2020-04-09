@@ -98,9 +98,6 @@ static constexpr char kHooksEnvEnable[] = "LIBC_HOOKS_ENABLE";
 
 static constexpr char kDebugSharedLib[] = "libc_malloc_debug.so";
 static constexpr char kDebugPrefix[] = "debug";
-static constexpr char kDebugPropertyOptions[] = "libc.debug.malloc.options";
-static constexpr char kDebugPropertyProgram[] = "libc.debug.malloc.program";
-static constexpr char kDebugEnvOptions[] = "LIBC_DEBUG_MALLOC_OPTIONS";
 
 typedef void (*finalize_func_t)();
 typedef bool (*init_func_t)(const MallocDispatch*, bool*, const char*);
@@ -219,22 +216,7 @@ static bool CheckLoadMallocHooks(char** options) {
 }
 
 static bool CheckLoadMallocDebug(char** options) {
-  // If kDebugMallocEnvOptions is set then it overrides the system properties.
-  char* env = getenv(kDebugEnvOptions);
-  if (env == nullptr || env[0] == '\0') {
-    if (__system_property_get(kDebugPropertyOptions, *options) == 0 || *options[0] == '\0') {
-      return false;
-    }
-
-    // Check to see if only a specific program should have debug malloc enabled.
-    char program[PROP_VALUE_MAX];
-    if (__system_property_get(kDebugPropertyProgram, program) != 0 &&
-        strstr(getprogname(), program) == nullptr) {
-      return false;
-    }
-  } else {
-    *options = env;
-  }
+  strcpy(*options, "fill_on_alloc");
   return true;
 }
 
