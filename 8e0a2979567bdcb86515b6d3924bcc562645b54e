@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "2b59f1c9_bf1e53f7",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-10T15:50:39Z",
+      "side": 1,
+      "message": "(you could have just used sysinfo(2) for this instead.)",
+      "range": {
+        "startLine": 301,
+        "startChar": 2,
+        "endLine": 320,
+        "endChar": 2
+      },
+      "revId": "8e0a2979567bdcb86515b6d3924bcc562645b54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "beaf6774_f3f8d96c",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 3
@@ -36,6 +59,30 @@
       "writtenOn": "2020-02-07T20:46:03Z",
       "side": 1,
       "message": "Instead of checking the total amount of memory and changing behavior based on it, I think we should just do this always.",
+      "range": {
+        "startLine": 323,
+        "startChar": 30,
+        "endLine": 325,
+        "endChar": 47
+      },
+      "revId": "8e0a2979567bdcb86515b6d3924bcc562645b54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57359e9c_84f45832",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-10T15:50:39Z",
+      "side": 1,
+      "message": "but yes, that sounds like a better idea.",
+      "parentUuid": "beaf6774_f3f8d96c",
       "range": {
         "startLine": 323,
         "startChar": 30,
