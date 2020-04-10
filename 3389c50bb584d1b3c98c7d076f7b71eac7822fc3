@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ec0423c_0389f7ff",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-10T18:16:37Z",
+      "side": 1,
+      "message": "\"...for older API levels\"?",
+      "range": {
+        "startLine": 409,
+        "startChar": 63,
+        "endLine": 409,
+        "endChar": 64
+      },
+      "revId": "3389c50bb584d1b3c98c7d076f7b71eac7822fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
