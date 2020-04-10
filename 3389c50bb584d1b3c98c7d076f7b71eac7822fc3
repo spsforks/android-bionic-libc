@@ -22,6 +22,30 @@
       "revId": "3389c50bb584d1b3c98c7d076f7b71eac7822fc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2769a099_4f13233d",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-04-10T18:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ec0423c_0389f7ff",
+      "range": {
+        "startLine": 409,
+        "startChar": 63,
+        "endLine": 409,
+        "endChar": 64
+      },
+      "revId": "3389c50bb584d1b3c98c7d076f7b71eac7822fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
