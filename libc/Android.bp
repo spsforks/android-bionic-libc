@@ -1928,7 +1928,7 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-
+    min_sdk_version: "29",
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -2482,6 +2482,7 @@ cc_library_shared {
     allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
+    min_sdk_version: "29",
 }
 
 subdirs = [
