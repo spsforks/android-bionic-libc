@@ -1807,6 +1807,7 @@ cc_library_headers {
     // (such as libunwind_llvm) depend on the headers. Setting sdk_version to 1
     // is correct because the headers can support any sdk_version.
     sdk_version: "1",
+    min_sdk_version: "1",
 
     export_include_dirs: [
         "include",
@@ -1930,7 +1931,7 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-
+    min_sdk_version: "29",
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -2484,6 +2485,7 @@ cc_library_shared {
     allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
+    min_sdk_version: "29",
 }
 
 subdirs = [
