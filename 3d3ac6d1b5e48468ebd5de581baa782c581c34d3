@@ -34,6 +34,24 @@
       "revId": "3d3ac6d1b5e48468ebd5de581baa782c581c34d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edef1c75_1a34cf28",
+        "filename": "tests/clang_fortify_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-04-17T19:08:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24c33932_9171b343",
+      "revId": "3d3ac6d1b5e48468ebd5de581baa782c581c34d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
