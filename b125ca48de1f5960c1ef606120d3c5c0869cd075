@@ -70,6 +70,29 @@
       "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "167c31d0_904ae857",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-17T22:22:39Z",
+      "side": 1,
+      "message": "Idea: maybe copy one of the address bits of the pointer into the high bit? This way, pointers *sometimes* get the high bit set and *sometimes* don\u0027t, making it more difficult to depend on one representation or the other. As a pure local ALU operation, this copying should be cheap.",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
