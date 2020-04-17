@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b939b28d_df13459e",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-17T15:17:55Z",
+      "side": 1,
+      "message": "if we do add this to the global whitelist like this, we should comment why.",
+      "revId": "5fd922e9be275c6954409ef60ee8c6fdde89489c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
