@@ -357,3 +357,5 @@ int __gettimeofday:gettimeofday(struct timeval*, struct timezone*) all
 
 # <sys/random.h>
 ssize_t getrandom(void*, size_t, unsigned) all
+
+int kcmp(pid_t, pid_t, int, unsigned long, unsigned long) all
