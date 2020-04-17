@@ -46,6 +46,30 @@
       "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e280514c_8a2de524",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-04-17T22:20:57Z",
+      "side": 1,
+      "message": "Ah ok. Maybe 2\u0027s complement is the right term?\n\nI don\u0027t actually remember why this property is so important.\n\nA 1 in the lowest bit could be nice to catch any kind of arithmetic overflows that only touch the LSB.",
+      "parentUuid": "72c7efa8_5cdf4bfd",
+      "range": {
+        "startLine": 45,
+        "startChar": 55,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
