@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "3eb556f7_735c9da4",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-04-17T22:33:16Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to have a zero lowest bit then? I feel like an overflow that writes the LSB is much more likely to write a \u00271\u0027 than a \u00270\u0027.\n\nAlso if we caught this bug during free() - it would be an invalid free anyway.",
+      "parentUuid": "e280514c_8a2de524",
+      "range": {
+        "startLine": 45,
+        "startChar": 55,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "167c31d0_904ae857",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 2
