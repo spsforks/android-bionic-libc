@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "1c12f853_d19ec631",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-04-17T22:50:46Z",
+      "side": 1,
+      "message": "yeah, I don\u0027t think it matters one way or the other",
+      "parentUuid": "3eb556f7_735c9da4",
+      "range": {
+        "startLine": 45,
+        "startChar": 55,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "167c31d0_904ae857",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 2
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "I think this is a reasonable strategy, but I\u0027m worried that having a non-deterministic crash might be more confusing for some developers. I can imagine a scenario where under GDB (i.e. no ASLR) a crash might not repro, but running with ASLR it does 50% of the time...",
       "parentUuid": "167c31d0_904ae857",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5aff800e_d6d446aa",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-04-17T22:50:46Z",
+      "side": 1,
+      "message": "We discussed, at some point, the idea of using some kind of quick crc-like function to determine the tag. I think the only arguments against were performance (on malloc stress benchmarks that are sensitive even to a single cycle on the fast path) and determinism.\n\nI kind of like this idea. Consider that otherwise we may end up with code that implicitly depends on the highest bit of address being 1. Such code would only run on Android.\n\nAnother note - with MTE, we still want to set the highest half-byte to a non-zero value.",
+      "parentUuid": "e13cfed5_7919ffc1",
       "range": {
         "startLine": 50,
         "startChar": 41,
