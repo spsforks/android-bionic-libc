@@ -1,0 +1,226 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fa0c33d_41dffe55",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "use this style on L85 too.",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a647571a_9089674c",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "libc",
+      "range": {
+        "startLine": 97,
+        "startChar": 44,
+        "endLine": 97,
+        "endChar": 46
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14d47dfb_13e02f74",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "although strictly more vague, it\u0027s probably more useful to say \"__get_bionic_tcb_for_thread failed\".\n\ncan we move forward in this case, or should this be a fatal?",
+      "range": {
+        "startLine": 97,
+        "startChar": 49,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1d0d4f1_2ff75715",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": ", or...",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19cea018_be62ca22",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "all argument names should start __ and avoid abbrevations, so `__static_tls_begin` and so on.",
+      "range": {
+        "startLine": 51,
+        "startChar": 40,
+        "endLine": 51,
+        "endChar": 50
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9fe8dc2_f56c1e33",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "is this independently useful? or just inline?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab568e3_636f05fe",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": ", or...",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59153853_201533ff",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "is this independently useful? or just inline?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a8c7bb6_2d0fc1ea",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "is this independently useful? or just inline?\n\nwhy does this one use begin/size where all the others use begin/end?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "762e0e0e_8c7b543f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 30
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "you don\u0027t need the others?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a807e4b2_88e9fd05",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "haven\u0027t i seen this somewhere before?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49985afc_93df3289",
+        "filename": "tests/libs/sys_thread_properties_test.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T22:48:35Z",
+      "side": 1,
+      "message": "i think you forgot to upload the test that calls this helper?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
