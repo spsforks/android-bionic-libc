@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "289a3c8f_ce5ecaa5",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fa0c33d_41dffe55",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a647571a_9089674c",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 30
@@ -65,6 +83,54 @@
     },
     {
       "key": {
+        "uuid": "9aef764c_eaa101e9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a647571a_9089674c",
+      "range": {
+        "startLine": 97,
+        "startChar": 44,
+        "endLine": 97,
+        "endChar": 46
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66c6c436_eddfe2f9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Updated error message.\n\nAbout fatality, IIUC, this is not \"fatal\" because it didn\u0027t do anything unrecoverable.\nTherefore we should let the caller decide what to do. (Its direct caller, *iterate_dynamic_tls will also defer to the *sanitizer for error handling.)\n\nWhat\u0027s the conventional definition of \u0027fatal\u0027 usually used by other libc functions? Happy to change it to match whatever that is",
+      "parentUuid": "14d47dfb_13e02f74",
+      "range": {
+        "startLine": 97,
+        "startChar": 49,
+        "endLine": 97,
+        "endChar": 73
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f1d0d4f1_2ff75715",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 30
@@ -79,6 +145,24 @@
       "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67e45077_72ff0c15",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1d0d4f1_2ff75715",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "95188d50_33515323",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19cea018_be62ca22",
+      "range": {
+        "startLine": 51,
+        "startChar": 40,
+        "endLine": 51,
+        "endChar": 50
+      },
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9fe8dc2_f56c1e33",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 30
@@ -119,6 +227,24 @@
       "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c13446a_360e7177",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Moved all typedefs to a defines.h file for re-use by this file and bionic_elf_tls.h\n\n(response for this an the similar comments below)",
+      "parentUuid": "a9fe8dc2_f56c1e33",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -139,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "07577675_e3dcb15c",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aab568e3_636f05fe",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59153853_201533ff",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 30
@@ -153,6 +297,24 @@
       "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed82ec0c_782d0184",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59153853_201533ff",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -173,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "9259fb82_f3e2fac5",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a8c7bb6_2d0fc1ea",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "762e0e0e_8c7b543f",
         "filename": "libc/libc.map.txt",
         "patchSetId": 30
@@ -187,6 +367,24 @@
       "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65634055_5157d0a1",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 30
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "762e0e0e_8c7b543f",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -207,6 +405,24 @@
     },
     {
       "key": {
+        "uuid": "6fd1b965_fc8a9add",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Done - moved the common typedefs to a separate header for reuse.",
+      "parentUuid": "a807e4b2_88e9fd05",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49985afc_93df3289",
         "filename": "tests/libs/sys_thread_properties_test.cpp",
         "patchSetId": 30
@@ -218,6 +434,24 @@
       "writtenOn": "2020-04-20T22:48:35Z",
       "side": 1,
       "message": "i think you forgot to upload the test that calls this helper?",
+      "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ab866fd_6f881061",
+        "filename": "tests/libs/sys_thread_properties_test.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-04-21T00:24:37Z",
+      "side": 1,
+      "message": "Actually, this was product of copy-and-paste from other tests in the same directory.\n(And they don\u0027t seem to be called by anything else).\n\nI assume these are just to verify the functions can be called ...\nCan you point me to any guide on how to set up these tests?",
+      "parentUuid": "49985afc_93df3289",
       "revId": "4d1a8320214d9c25ee3d45ecdcf09e3f1de77a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
