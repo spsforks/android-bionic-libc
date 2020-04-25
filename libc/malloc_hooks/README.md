@@ -74,7 +74,7 @@ Example Implementation
 ======================
 Below is a simple implementation intercepting only malloc/calloc calls.
 
-    void* new_malloc_hook(size_t bytes, const char* arg) {
+    void* new_malloc_hook(size_t bytes, const void* arg) {
       return orig_malloc_hook(bytes, arg);
     }
 
