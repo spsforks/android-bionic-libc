@@ -34,10 +34,18 @@
 #include <platform/bionic/mte_kernel.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
+extern "C" void scudo_malloc_set_zero_contents(int);
+extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
+#if defined(USE_SCUDO) && defined(SCUDO_PATTERN_FILL_CONTENTS)
+  scudo_malloc_set_pattern_fill_contents(1);
+#elif defined(USE_SCUDO) && defined(SCUDO_ZERO_CONTENTS)
+  scudo_malloc_set_zero_contents(1);
+#endif
+
 #if defined(__aarch64__)
 #define PR_SET_TAGGED_ADDR_CTRL 55
 #define PR_TAGGED_ADDR_ENABLE (1UL << 0)

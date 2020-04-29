@@ -100,6 +100,12 @@ libc_scudo_product_variables = {
             "libc_jemalloc_wrapper",
         ],
     },
+    malloc_zero_contents: {
+        cflags: ["-DSCUDO_ZERO_CONTENTS"],
+    },
+    malloc_pattern_fill_contents: {
+        cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+    },
 }
 
 // Defaults for native allocator libs/includes to make it
