@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baf59091_8a1469f1",
+        "filename": "tests/fdtrack_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-30T23:09:00Z",
+      "side": 1,
+      "message": "explicitly give an example?",
+      "revId": "065ac156e7c5a69acde5acd89a13ce6405d184c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
