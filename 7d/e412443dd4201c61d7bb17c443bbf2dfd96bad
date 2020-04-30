@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Josh Gao <jmgao@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Submitted-by: Josh Gao <jmgao@google.com>
+Submitted-at: Thu, 30 Apr 2020 01:54:05 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1299156
+Project: platform/bionic
+Branch: refs/heads/master
