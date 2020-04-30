@@ -16,6 +16,24 @@
       "revId": "065ac156e7c5a69acde5acd89a13ce6405d184c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4226dc49_446b0200",
+        "filename": "tests/fdtrack_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-04-30T23:17:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baf59091_8a1469f1",
+      "revId": "065ac156e7c5a69acde5acd89a13ce6405d184c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
