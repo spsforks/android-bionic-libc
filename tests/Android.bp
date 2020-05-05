@@ -213,6 +213,7 @@ cc_test_library {
         "sys_xattr_test.cpp",
         "system_properties_test.cpp",
         "system_properties_test2.cpp",
+        "tagged_pointers_test.cpp",
         "termios_test.cpp",
         "tgmath_test.c",
         "threads_test.cpp",
@@ -235,9 +236,6 @@ cc_test_library {
                 "libasync_safe",
                 "libprocinfo",
                 "libsystemproperties",
-            ],
-            srcs: [
-                "tagged_pointers_test.cpp",
             ],
         },
     },

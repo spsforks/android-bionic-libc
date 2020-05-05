@@ -39,8 +39,6 @@ static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
 #if defined(__aarch64__)
-#define PR_SET_TAGGED_ADDR_CTRL 55
-#define PR_TAGGED_ADDR_ENABLE (1UL << 0)
 #ifdef ANDROID_EXPERIMENTAL_MTE
   // First, try enabling MTE in asynchronous mode, with tag 0 excluded. This will fail if the kernel
   // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in

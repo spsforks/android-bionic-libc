@@ -21,20 +21,21 @@
 #include "platform/bionic/mte.h"
 #include "utils.h"
 
+#if defined(__BIONIC__)
 #include <bionic/malloc_tagged_pointers.h>
 
 static bool KernelSupportsTaggedPointers() {
 #ifdef __aarch64__
-#define PR_SET_TAGGED_ADDR_CTRL 55
-#define PR_TAGGED_ADDR_ENABLE (1UL << 0)
   int res = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
   return res >= 0 && res & PR_TAGGED_ADDR_ENABLE;
 #else
   return false;
 #endif
 }
+#endif
 
 TEST(tagged_pointers, check_tagged_pointer_dies) {
+#if defined(__BIONIC__)
   if (!KernelSupportsTaggedPointers()) {
     GTEST_SKIP() << "Kernel doesn't support tagged pointers.";
   }
@@ -81,4 +82,7 @@ TEST(tagged_pointers, check_tagged_pointer_dies) {
   EXPECT_EQ(untag_address(x), x);
   free(x);
 #endif // defined(__aarch64__)
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif // defined(__BIONIC__)
 }
