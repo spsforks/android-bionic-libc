@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa923ff0_aa5667c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-05-06T22:52:13Z",
+      "side": 1,
+      "message": "See build error on https://r.android.com/1281872 that removes the implicit Bionic -isystem includes from Soong.",
+      "revId": "3ddcc1e98700399777ff07b140ae484d0cb0345c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
