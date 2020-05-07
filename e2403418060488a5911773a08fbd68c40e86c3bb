@@ -16,6 +16,24 @@
       "revId": "e2403418060488a5911773a08fbd68c40e86c3bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ede6926c_a76f906e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1278660
+      },
+      "writtenOn": "2020-05-07T22:07:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d319d243_040747f0",
+      "revId": "e2403418060488a5911773a08fbd68c40e86c3bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
