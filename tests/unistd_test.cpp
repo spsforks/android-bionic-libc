@@ -25,6 +25,7 @@
 #include <libgen.h>
 #include <limits.h>
 #include <stdint.h>
+#include <string.h>
 #include <sys/capability.h>
 #include <sys/param.h>
 #include <sys/resource.h>
@@ -637,6 +638,23 @@ TEST(UNISTD_TEST, clone_fn_and_exit) {
   AssertGetTidCorrect();
 
   AssertChildExited(clone_result, 33);
+}
+
+TEST(UNISTD_TEST, clone_vfork) {
+  pid_t rc = clone(nullptr, nullptr, SIGCHLD | CLONE_VFORK | CLONE_VM, nullptr);
+  if (rc == 0) {
+    char buf[16384];
+    memset(buf, 0, sizeof(buf));
+    // Keep the compiler from optimizing this out.
+    write(-1, buf, sizeof(buf));
+    _exit(0);
+  } else {
+    int status;
+    pid_t wait_result = waitpid(rc, &status, 0);
+    ASSERT_EQ(wait_result, rc);
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
 }
 
 static void* GetPidCachingPthreadStartRoutine(void*) {
