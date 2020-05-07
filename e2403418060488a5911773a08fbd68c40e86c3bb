@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d319d243_040747f0",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-05-07T22:03:44Z",
+      "side": 1,
+      "message": "Can you add it in alphabetical order?  It looks like we already messed up \u0027frameworks\u0027 but I think we\u0027re at least hoping to keep this alphabetical.",
+      "revId": "e2403418060488a5911773a08fbd68c40e86c3bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
