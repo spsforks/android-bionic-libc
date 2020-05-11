@@ -22,6 +22,29 @@
       "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae6b04d5_6aaea1f1",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-05-11T23:53:01Z",
+      "side": 1,
+      "message": "Can mention that prebuilts get the same visibilities and apex_availabilities as their source counterparts, see the Android.bp file I linked to in the other comment.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 23
+      },
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
