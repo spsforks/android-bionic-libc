@@ -103,7 +103,9 @@ static const char* const kVendorLibDir        = "/vendor/lib64";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
+#ifndef I18N_APEX_LIB_DIR
 static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib64";
+#endif
 #else
 static const char* const kSystemLibDir        = "/system/lib";
 static const char* const kOdmLibDir           = "/odm/lib";
@@ -111,7 +113,12 @@ static const char* const kVendorLibDir        = "/vendor/lib";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
+#ifndef I18N_APEX_LIB_DIR
 static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib";
+#endif
+#endif
+#ifdef I18N_APEX_LIB_DIR
+static const char* const kI18nApexLibDir      = I18N_APEX_LIB_DIR;
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
