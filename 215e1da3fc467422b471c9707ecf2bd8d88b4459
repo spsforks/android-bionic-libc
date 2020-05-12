@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d1483e0_e0886b83",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1039338
+      },
+      "writtenOn": "2020-05-12T13:14:03Z",
+      "side": 1,
+      "message": "I am just working on a new native_stubs_libs which will require the library to provide stubs.versions so once that is up you can switch over to use that and then be confident that the stubs.versions are preserved.",
+      "parentUuid": "80071318_2bd34c84",
+      "range": {
+        "startLine": 14,
+        "startChar": 35,
+        "endLine": 14,
+        "endChar": 64
+      },
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae6b04d5_6aaea1f1",
         "filename": "apex/Android.bp",
         "patchSetId": 2
