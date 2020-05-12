@@ -194,6 +194,7 @@ TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
 #endif
 }
 
+#if 0
 TEST_F(FdsanTest, vfork) {
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
 
@@ -211,3 +212,4 @@ TEST_F(FdsanTest, vfork) {
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(0, WEXITSTATUS(status));
 }
+#endif
