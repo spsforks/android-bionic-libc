@@ -337,6 +337,7 @@ cc_binary {
         android: {
             srcs: [
                 "linker_debuggerd_android.cpp",
+                "linker_translate_path.cpp",
             ],
             static_libs: [
                 "libc++demangle",
@@ -346,6 +347,7 @@ cc_binary {
         linux_bionic: {
             static_libs: [
                 "liblinker_debuggerd_stub",
+                "linker_translate_path_stub.cpp",
             ],
         }
     },
