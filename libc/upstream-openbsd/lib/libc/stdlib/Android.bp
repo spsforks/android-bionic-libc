@@ -1,0 +1,10 @@
+// FIXME
+
+cc_library {
+    name: "libc_env_hooks",
+    srcs: ["getenv_hook.cpp"],
+    shared_libs: ["liblog"],
+    apex_available: [
+        "com.android.runtime",
+    ],
+}

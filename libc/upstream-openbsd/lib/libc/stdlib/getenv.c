@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "getenv_checks.h"
 
 /*
  * __findenv --
@@ -70,6 +71,7 @@ __findenv(const char *name, int len, int *offset)
 char *
 getenv(const char *name)
 {
+	on_getenv(name);
 	int offset = 0;
 	const char *np;
 

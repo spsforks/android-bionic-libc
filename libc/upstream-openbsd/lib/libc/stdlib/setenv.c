@@ -32,6 +32,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "getenv_checks.h"
+
 extern char **environ;
 static char **lastenv;				/* last value of environ */
 
@@ -43,6 +45,7 @@ static char **lastenv;				/* last value of environ */
 int
 putenv(char *str)
 {
+	on_putenv(str);
 	char **P, *cp;
 	size_t cnt;
 	int offset = 0;
@@ -89,6 +92,7 @@ DEF_WEAK(putenv);
 int
 setenv(const char *name, const char *value, int rewrite)
 {
+	on_setenv(name, value);
 	char *C, **P;
 	const char *np;
 	int l_value, offset = 0;
@@ -155,6 +159,7 @@ DEF_WEAK(setenv);
 int
 unsetenv(const char *name)
 {
+	on_unsetenv(name);
 	char **P;
 	const char *np;
 	int offset = 0;
