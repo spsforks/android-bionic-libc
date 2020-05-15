@@ -39,14 +39,15 @@
 
 #include <async_safe/log.h>
 
+#include "platform/bionic/macros.h"
+#include "platform/bionic/mte.h"
+#include "private/ErrnoRestorer.h"
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
-#include "private/ErrnoRestorer.h"
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if defined(__i386__)
@@ -86,7 +87,11 @@ void __free_temp_bionic_tls(bionic_tls* tls) {
 
 static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
-  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  int flags = PROT_READ | PROT_WRITE;
+#ifdef __aarch64__
+  if (mte_supported()) flags |= PROT_MTE;
+#endif
+  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, flags, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
     // Create a guard to catch stack overflows in signal handlers.
     if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
@@ -212,7 +217,7 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
 
   // Create a new private anonymous map. Make the entire mapping PROT_NONE, then carve out a
   // read+write area in the middle.
-  const int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
+  int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
   char* const space = static_cast<char*>(mmap(nullptr, mmap_size, PROT_NONE, flags, -1, 0));
   if (space == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN,
@@ -222,9 +227,11 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
     return {};
   }
   const size_t writable_size = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
-  if (mprotect(space + stack_guard_size,
-               writable_size,
-               PROT_READ | PROT_WRITE) != 0) {
+  flags = PROT_READ | PROT_WRITE;
+#ifdef __aarch64__
+  if (mte_supported()) flags |= PROT_MTE;
+#endif
+  if (mprotect(space + stack_guard_size, writable_size, flags) != 0) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "pthread_create failed: couldn't mprotect R+W %zu-byte thread mapping region: %s",
                           writable_size, strerror(errno));

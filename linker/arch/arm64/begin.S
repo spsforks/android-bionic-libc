@@ -27,12 +27,29 @@
  */
 
 #include <private/bionic_asm.h>
+#include <linux/mman.h>
 
 ENTRY(_start)
   // Force unwinds to end in this function.
   .cfi_undefined x30
 
-  mov x0, sp
+  mov x0, xzr
+  mov x1, #0x800000
+  mov x2, #(PROT_READ | PROT_WRITE | 0x20)
+  mov x3, #(MAP_ANONYMOUS | MAP_PRIVATE | MAP_NORESERVE)
+  mov x4, 0
+  mov x5, 0
+  mov x8, __NR_mmap
+  svc #0
+
+  mov x19, sp
+  cmn x0, #0x1
+  b.eq .L1
+  mov x8, #0x800000
+  add sp, x0, x8
+
+.L1:
+  mov x0, x19
   bl __linker_init
 
   /* linker init returns the _entry address in the main image */

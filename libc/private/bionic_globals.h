@@ -100,6 +100,7 @@ struct libc_shared_globals {
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
+  void* init_raw_args = nullptr;
 
   const gwp_asan::AllocatorState* gwp_asan_state = nullptr;
   const gwp_asan::AllocationMetadata* gwp_asan_metadata = nullptr;

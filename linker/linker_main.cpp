@@ -619,7 +619,7 @@ __attribute__((constructor(1))) static void detect_self_exec() {
 }
 
 static ElfW(Addr) __attribute__((noinline))
-__linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
+__linker_init_post_relocation(void* raw_args, KernelArgumentBlock& args, soinfo& linker_so);
 
 /*
  * This is the entry point for the linker, called from begin.S. This
@@ -670,7 +670,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
-  return __linker_init_post_relocation(args, tmp_linker_so);
+  return __linker_init_post_relocation(raw_args, args, tmp_linker_so);
 }
 
 /*
@@ -680,7 +680,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
  * function, so avoid inlining this function (http://b/80503879).
  */
 static ElfW(Addr) __attribute__((noinline))
-__linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) {
+__linker_init_post_relocation(void* raw_args, KernelArgumentBlock& args, soinfo& tmp_linker_so) {
   // Finish initializing the main thread.
   __libc_init_main_thread_late();
 
@@ -733,6 +733,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_argv = args.argv + __libc_shared_globals()->initial_linker_arg_count;
   g_envp = args.envp;
   __libc_shared_globals()->init_progname = g_argv[0];
+  __libc_shared_globals()->init_raw_args = raw_args;
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors

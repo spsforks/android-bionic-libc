@@ -130,13 +130,12 @@ __attribute__((constructor(1))) static void __libc_preinit() {
 //
 // Note that the dynamic linker has also run all constructors in the
 // executable at this point.
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
+__noreturn void __libc_init(void* raw_args_unused, void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+                            structors_array_t const* const structors) {
   BIONIC_STOP_UNWIND;
 
-  KernelArgumentBlock args(raw_args);
+  KernelArgumentBlock args(__libc_shared_globals()->init_raw_args);
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
