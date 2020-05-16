@@ -1,0 +1,10 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Code-Review+1: Jiyong Park <jiyong@google.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Verified+1: Victor Khimenko <khim@google.com>
+Submitted-by: Victor Khimenko <khim@google.com>
+Submitted-at: Sat, 16 May 2020 01:05:53 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1309356
+Project: platform/bionic
+Branch: refs/heads/master
