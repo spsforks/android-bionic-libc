@@ -1,0 +1,28 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63f09487_b7c721ed",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-05-19T22:20:59Z",
+      "side": 1,
+      "message": "\u003e Common typo found: \"implementaiton\" -- should it be \"implementation\"?\n\u003e Note: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.\n\nPlease fix.",
+      "parentUuid": "07a8922b_f1e7ecff",
+      "range": {
+        "startLine": 43,
+        "startChar": 21,
+        "endLine": 43,
+        "endChar": 35
+      },
+      "revId": "74dbacda3fab779e60c44beea18169e35121b5f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
