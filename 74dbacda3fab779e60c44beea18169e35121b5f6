@@ -1,0 +1,48 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000003046210",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1315196?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "0c2c0946_09e81b2d",
+          "description": "Change to \"libc/bionic/sigaction.cpp\"",
+          "replacements": [
+            {
+              "path": "libc/bionic/sigaction.cpp",
+              "range": {
+                "startLine": 43,
+                "startChar": 21,
+                "endLine": 43,
+                "endChar": 35
+              },
+              "replacement": "implementation"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "07a8922b_f1e7ecff",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-05-19T21:35:16Z",
+      "side": 1,
+      "message": "Common typo found: \"implementaiton\" -- should it be \"implementation\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 43,
+        "startChar": 21,
+        "endLine": 43,
+        "endChar": 35
+      },
+      "revId": "74dbacda3fab779e60c44beea18169e35121b5f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
