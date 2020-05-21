@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46a15561_aa0f0f14",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-21T01:14:49Z",
+      "side": 1,
+      "message": "worth commenting that you need this because the public API will mask out the signal you\u0027re interested in? or do we assume anyone reading this file already knows that?",
+      "revId": "8cc4f7921fb35fb017193cfa957592482d913dcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
