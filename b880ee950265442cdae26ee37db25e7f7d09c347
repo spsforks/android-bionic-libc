@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b490e024_bb45a2b9",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-21T00:33:55Z",
+      "side": 1,
+      "message": "that goes against the rule of \"use the same code on every architecture where possible\".",
+      "revId": "b880ee950265442cdae26ee37db25e7f7d09c347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b48e1bd_ed39a8ef",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-21T00:33:55Z",
+      "side": 1,
+      "message": "ScopedBacktraceSignalBlocker? (Backtrace because you\u0027re only blocking one signal, SignalBlocker to match the existing ScopedSignalBlocker.)",
+      "range": {
+        "startLine": 150,
+        "startChar": 6,
+        "endLine": 150,
+        "endChar": 24
+      },
+      "revId": "b880ee950265442cdae26ee37db25e7f7d09c347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7097313b_0a1e132f",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-21T00:33:55Z",
+      "side": 1,
+      "message": "this is a tricky enough use of DISABLED_ to warrant a comment :-)",
+      "range": {
+        "startLine": 533,
+        "startChar": 18,
+        "endLine": 533,
+        "endChar": 26
+      },
+      "revId": "b880ee950265442cdae26ee37db25e7f7d09c347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06d660a1_592236ed",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-21T00:33:55Z",
+      "side": 1,
+      "message": "{}",
+      "revId": "b880ee950265442cdae26ee37db25e7f7d09c347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
