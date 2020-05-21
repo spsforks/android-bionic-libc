@@ -1,0 +1,48 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000003077777",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/52650?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "daf5f984_fa7de784",
+          "description": "Change to \"libc/upstream-freebsd/lib/libc/stdlib/realpath.c\"",
+          "replacements": [
+            {
+              "path": "libc/upstream-freebsd/lib/libc/stdlib/realpath.c",
+              "range": {
+                "startLine": 142,
+                "startChar": 6,
+                "endLine": 142,
+                "endChar": 15
+              },
+              "replacement": "occurrence"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "13f57499_87c5115d",
+        "filename": "libc/upstream-freebsd/lib/libc/stdlib/realpath.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-05-21T04:21:59Z",
+      "side": 1,
+      "message": "Common typo found: \"occurence\" -- should it be \"occurrence\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 142,
+        "startChar": 6,
+        "endLine": 142,
+        "endChar": 15
+      },
+      "revId": "f0777843c03deb26b1f78c8edd17c557041696e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
