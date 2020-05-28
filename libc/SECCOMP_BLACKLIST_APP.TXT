@@ -47,3 +47,5 @@ int     swapoff(const char*) all
 int     setdomainname(const char*, size_t)  all
 int     sethostname(const char*, size_t)  all
 int     __reboot:reboot(int, int, int, void*)  all
+
+ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) all
