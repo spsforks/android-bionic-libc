@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "38f9d7eb_22552f7e",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-04T15:40:27Z",
+      "side": 1,
+      "message": "the scope is tiny, and with the \u0027k\u0027 the call sites look weird.\n\ni almost went with just L, LE, and LP!",
+      "parentUuid": "bf26eef4_f017dc33",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33e2a380_3d37d6cb",
         "filename": "libc/bionic/exec.cpp",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2020-06-04T15:21:19Z",
       "side": 1,
       "message": "Coincidentally, I had looked this up yesterday and ?: doesn\u0027t give as strong as guarantees as if constexpr(...) for removing the second code paths.  This should be fine, given that any worthwhile compiler will see that \u0027variant\u0027 is a constant and disregard the path not taken, but `if constexpr` gives you an actual guarantee that the path not taken will be removed.",
+      "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3e0658c_ddf3c455",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-04T15:40:27Z",
+      "side": 1,
+      "message": "that too makes the code a lot uglier, so i don\u0027t want to do it unless i\u0027m forced to. (and as you say, such a broken compiler would make templates a lot less useful.)",
+      "parentUuid": "33e2a380_3d37d6cb",
       "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
