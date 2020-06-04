@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf26eef4_f017dc33",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-06-04T15:21:19Z",
+      "side": 1,
+      "message": "Why drop the k ?",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33e2a380_3d37d6cb",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-06-04T15:21:19Z",
+      "side": 1,
+      "message": "Coincidentally, I had looked this up yesterday and ?: doesn\u0027t give as strong as guarantees as if constexpr(...) for removing the second code paths.  This should be fine, given that any worthwhile compiler will see that \u0027variant\u0027 is a constant and disregard the path not taken, but `if constexpr` gives you an actual guarantee that the path not taken will be removed.",
+      "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
