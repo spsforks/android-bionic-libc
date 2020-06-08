@@ -109,57 +109,49 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
 
 // http://b/36045112
 TEST(pthread_leak, join) {
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
+
   LeakChecker lc;
 
-  for (size_t pass = 0; pass < 2; ++pass) {
-    for (int i = 0; i < 100; ++i) {
-      pthread_t thread;
-      ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
-      ASSERT_EQ(0, pthread_join(thread, nullptr));
-    }
-
-    // A native bridge implementation might need a warm up pass to reach a steady state.
-    // http://b/37920774.
-    if (pass == 0) lc.Reset();
+  for (int i = 0; i < 100; ++i) {
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+    ASSERT_EQ(0, pthread_join(thread, nullptr));
   }
 }
 
 // http://b/36045112
 TEST(pthread_leak, detach) {
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
+
   LeakChecker lc;
 
   // Ancient devices with only 2 cores need a lower limit.
   // http://b/129924384 and https://issuetracker.google.com/142210680.
   const int thread_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? 100 : 50;
 
-  for (size_t pass = 0; pass < 1; ++pass) {
-    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[thread_count];
+  struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[thread_count];
 
-    pthread_barrier_t barrier;
-    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
+  pthread_barrier_t barrier;
+  ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
 
-    // Start child threads.
-    pid_t tids[thread_count];
-    for (int i = 0; i < thread_count; ++i) {
-      threads[i] = {&barrier, &tids[i]};
-      const auto thread_function = +[](void* ptr) -> void* {
-        thread_data* data = static_cast<thread_data*>(ptr);
-        *data->tid = gettid();
-        pthread_barrier_wait(data->barrier);
-        return nullptr;
-      };
-      pthread_t thread;
-      ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, &threads[i]));
-      ASSERT_EQ(0, pthread_detach(thread));
-    }
-
-    pthread_barrier_wait(&barrier);
-    ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
-
-    WaitUntilAllThreadsExited(tids, thread_count);
-
-    // A native bridge implementation might need a warm up pass to reach a steady state.
-    // http://b/37920774.
-    if (pass == 0) lc.Reset();
+  // Start child threads.
+  pid_t tids[thread_count];
+  for (int i = 0; i < thread_count; ++i) {
+    threads[i] = {&barrier, &tids[i]};
+    const auto thread_function = +[](void* ptr) -> void* {
+      thread_data* data = static_cast<thread_data*>(ptr);
+      *data->tid = gettid();
+      pthread_barrier_wait(data->barrier);
+      return nullptr;
+    };
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, &threads[i]));
+    ASSERT_EQ(0, pthread_detach(thread));
   }
+
+  pthread_barrier_wait(&barrier);
+  ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
+
+  WaitUntilAllThreadsExited(tids, thread_count);
 }
