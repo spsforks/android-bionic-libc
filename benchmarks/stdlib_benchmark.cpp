@@ -24,6 +24,79 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
+static void Malloc(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  for (auto _ : state) {
+    void* ptr;
+    benchmark::DoNotOptimize(ptr = malloc(nbytes));
+    state.PauseTiming();
+    free(ptr);
+    state.ResumeTiming();
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+
+static void BM_stdlib_malloc_only_default(benchmark::State& state) {
+#if defined(__BIONIC__)
+  // The default is expected to be a zero decay time.
+  mallopt(M_DECAY_TIME, 0);
+#endif
+
+  Malloc(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_only_default, "AT_SPECIAL_SIZES");
+
+#if defined(__BIONIC__)
+static void BM_stdlib_malloc_only_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  Malloc(state);
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_only_decay1, "AT_SPECIAL_SIZES");
+#endif
+
+static void MallocInitialize(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  int pagesize = getpagesize();
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    void* ptr;
+    benchmark::DoNotOptimize(ptr = malloc(nbytes));
+    state.ResumeTiming();
+    MakeAllocationResident(ptr, nbytes, pagesize);
+    state.PauseTiming();
+    free(ptr);
+    state.ResumeTiming();
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+
+static void BM_stdlib_malloc_initialize_default(benchmark::State& state) {
+#if defined(__BIONIC__)
+  // The default is expected to be a zero decay time.
+  mallopt(M_DECAY_TIME, 0);
+#endif
+
+  MallocInitialize(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_initialize_default, "AT_SPECIAL_SIZES");
+
+#if defined(__BIONIC__)
+static void BM_stdlib_malloc_initialize_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  MallocInitialize(state);
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_initialize_decay1, "AT_SPECIAL_SIZES");
+#endif
+
 static void MallocFree(benchmark::State& state) {
   const size_t nbytes = state.range(0);
   int pagesize = getpagesize();
