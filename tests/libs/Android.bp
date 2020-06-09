@@ -17,6 +17,7 @@
 cc_defaults {
     name: "bionic_testlib_defaults",
     host_supported: true,
+    native_coverage: false,
     cflags: [
         "-Wall",
         "-Werror",
