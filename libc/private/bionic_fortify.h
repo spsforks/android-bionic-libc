@@ -35,6 +35,10 @@
 
 #include <async_safe/log.h>
 
+//
+// LLVM can't inline variadic functions, and we don't want one definition of
+// this per #include in libc.so, so no `static`.
+//
 static inline __noreturn void __fortify_fatal(const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
