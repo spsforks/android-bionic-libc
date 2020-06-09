@@ -1,0 +1,48 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000003329778",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1325836?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "d74dddd6_65c8b5d7",
+          "description": "Change to \"tests/pthread_test.cpp\"",
+          "replacements": [
+            {
+              "path": "tests/pthread_test.cpp",
+              "range": {
+                "startLine": 2824,
+                "startChar": 21,
+                "endLine": 2824,
+                "endChar": 32
+              },
+              "replacement": "successfully"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "1dc0f4e0_6ed27c8c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2824,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-06-09T13:57:56Z",
+      "side": 1,
+      "message": "Common typo found: \"succesfully\" -- should it be \"successfully\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 2824,
+        "startChar": 21,
+        "endLine": 2824,
+        "endChar": 32
+      },
+      "revId": "b1ca30d9122e3b5a8dff5faff23cd66d4238406a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
