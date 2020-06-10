@@ -57,3 +57,6 @@ strncpy(char *dst, const char *src, size_t n)
 	return (dst);
 }
 DEF_STRONG(strncpy);
+
+char *
+__strncpy_actual(char *dst, const char *src, size_t n) __attribute__((alias("strncpy")));

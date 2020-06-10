@@ -351,10 +351,12 @@ extern "C" char* __strncat_chk(char* dst, const char* src, size_t len, size_t ds
   return dst;
 }
 
+extern "C" char* __strncpy_actual(char* dst, const char* src, size_t len);
+
 // Runtime implementation of __builtin____strncpy_chk (used directly by compiler, not in headers).
 extern "C" char* __strncpy_chk(char* dst, const char* src, size_t len, size_t dst_len) {
   __check_buffer_access("strncpy", "write into", len, dst_len);
-  return strncpy(dst, src, len);
+  return __strncpy_actual(dst, src, len);
 }
 
 // This is a variant of __strncpy_chk, but it also checks to make
