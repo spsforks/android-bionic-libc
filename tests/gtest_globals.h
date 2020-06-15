@@ -21,6 +21,7 @@
 
 constexpr const char* kPrebuiltElfDir = "prebuilt-elf-files";
 
+std::string GetPrebuiltElfDir();
 std::string GetTestlibRoot();
 
 #endif  // _BIONIC_TESTS_GTEST_GLOBALS_H
