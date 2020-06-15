@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "662acbca_a2f2dbfc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-15T23:44:05Z",
+      "side": 1,
+      "message": "How are you getting them installed into the necessary test cases directory? Are you sure there aren\u0027t just stale files being used by the tests?\n\nI suspect you\u0027d need to add the concept of a prebuilt cc_test_library, then you can adjust the installation paths like the other bionic test libraries.",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c503c95_01a7f114",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-15T23:44:05Z",
+      "side": 1,
+      "message": "These probably should be libraries, even though the Android.mk marked them as EXECUTABLES",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 18
+      },
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
