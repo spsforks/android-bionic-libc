@@ -16,10 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-# TODO(dimitry): replace with define once https://android-review.googlesource.com/247466 is reverted
-# https://github.com/google/kati/issues/83 is currently blocking it.
-
-# Move prebuilt test elf-files to $(TARGET_OUT_NATIVE_TESTS)
 bionic_tests_module := libtest_invalid-rw_load_segment.so
 include $(LOCAL_PATH)/Android.build.prebuilt.mk
 
@@ -47,11 +43,6 @@ include $(LOCAL_PATH)/Android.build.prebuilt.mk
 bionic_tests_module := libtest_invalid-textrels2.so
 include $(LOCAL_PATH)/Android.build.prebuilt.mk
 
-ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
-build_host := true
-else
-build_host := false
-endif
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
