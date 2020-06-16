@@ -1,0 +1,10 @@
+Autosubmit+1: Elliott Hughes <enh@google.com>
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified-1: Treehugger Robot <treehugger-gerrit@google.com>
+Bypass-Presubmit+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Tue, 16 Jun 2020 00:35:57 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1337313
+Project: platform/bionic
+Branch: refs/heads/master
