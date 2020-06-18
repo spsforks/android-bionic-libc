@@ -198,6 +198,7 @@ static int __bionic_open_tzdata_path(const char* path,
 
 int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   int fd;
+  bool tzdata_found = false;
 
   // Try the three locations for the tzdata file in a strict order:
   // 1: The O-MR1 time zone updates via APK update mechanism. This is
@@ -215,14 +216,17 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 
   fd = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 
   fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata",
                                  olson_id, entry_length);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 #else
   // On the host, we don't expect the hard-coded locations above to exist, and
   // we're not worried about security so we trust $ANDROID_DATA,
@@ -233,25 +237,29 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
   free(path);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 
   path = make_path("ANDROID_TZDATA_ROOT", "/etc/tz/tzdata");
   fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
   free(path);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 
   path = make_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata");
   fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
   free(path);
   if (fd >= 0) return fd;
+  if (fd == -1) tzdata_found = true;
 #endif
 
   // Not finding any tzdata is more serious that not finding a specific zone,
   // and worth logging.
-  if (fd == -2) {
+  if (!tzdata_found) {
     // The first thing that 'recovery' does is try to format the current time. It doesn't have
     // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
     fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
+    return -2;
   }
 
-  return fd;
+  return -1;
 }
