@@ -69,6 +69,30 @@
       "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "865526b3_8267dcbb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3380,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-06-26T08:12:48Z",
+      "side": 1,
+      "message": "I see. So uevent is guaranteed to run \"after\" linkerconfig. Then I feel fine with this change.",
+      "parentUuid": "483602fd_3ff84d51",
+      "range": {
+        "startLine": 3380,
+        "startChar": 63,
+        "endLine": 3380,
+        "endChar": 69
+      },
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
