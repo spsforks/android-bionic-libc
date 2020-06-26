@@ -45,6 +45,30 @@
       "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "483602fd_3ff84d51",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3380,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2020-06-26T08:11:00Z",
+      "side": 1,
+      "message": "I just worked on init as ueventd seems to be started AFTER initial linkerconfig is generated\n(https://source.corp.google.com/android/system/core/rootdir/init.rc;l\u003d67?q\u003dinit.rc\u0026sq\u003dpackage:android\u0026type\u003dcs), and also I didn\u0027t find any warning messages from ueventd.\n\nShould I consider ueventd also in this case, or make code simpler to check init directly instead of having one more function?",
+      "parentUuid": "f5c559a1_7ceda829",
+      "range": {
+        "startLine": 3380,
+        "startChar": 63,
+        "endLine": 3380,
+        "endChar": 69
+      },
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
