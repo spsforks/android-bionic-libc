@@ -524,6 +524,9 @@ cc_test_library {
                 "libLLVMSupport",
             ],
         },
+        native_bridge : {
+            enabled: false,
+        },
     },
 }
 
