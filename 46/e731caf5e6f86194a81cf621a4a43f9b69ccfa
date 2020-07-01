@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Submitted-by: Kiyoung Kim <kiyoungkim@google.com>
+Submitted-at: Wed, 01 Jul 2020 08:03:38 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1351402
+Project: platform/bionic
+Branch: refs/heads/master
