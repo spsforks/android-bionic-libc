@@ -39,5 +39,7 @@
 
 #define __bionic_asm_align 16
 
+#define ENTRY_CFI_ARCH  .cfi_register lr, lr;
+
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type %function

@@ -46,6 +46,10 @@
 #include <private/bionic_asm_x86_64.h>
 #endif
 
+#ifndef ENTRY_CFI_ARCH
+#define ENTRY_CFI_ARCH
+#endif
+
 #define ENTRY_NO_DWARF(f) \
     .text; \
     .globl f; \
@@ -57,6 +61,7 @@
 #define ENTRY(f) \
     ENTRY_NO_DWARF(f) \
     .cfi_startproc \
+    ENTRY_CFI_ARCH \
 
 #define END_NO_DWARF(f) \
     .size f, .-f; \
