@@ -16,6 +16,24 @@
       "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e133e37d_1a6e8ec7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-08T06:56:20Z",
+      "side": 1,
+      "message": "The change makes sense to me, but I was unsure about it.\n\n\u003e Today when libgcc unwinds in the sigreturn it takes the LR from the register\n\u003e incorrectly instead of PC from the siginfo therefore it misses the\n\u003e kill syscall\u0027s frame in the test.\n\nThis surprised me, so I tested with a C program that calls _Unwind_Backtrace and prints each frame, but it seems to output the kill syscall frame:\n\nhttps://gist.github.com/rprichard/048f976eac4f5c1402e4ae55b229ba1c\n\nThis test program uses NDK r21d (so libgcc, not the LLVM libunwind). I\u0027m running on a Q walleye build (so it doesn\u0027t have the kernel patch), and AFAIK libgcc won\u0027t find the eh_frame info for __kernel_rt_sigreturn so it must fall back to its sigreturn special handling (which LLVM\u0027s libunwind doesn\u0027t have).\n\nIt looks like LLVM\u0027s DwarfInstructions\u003cA, R\u003e::stepWithDwarf leaves returnAddress unset if the cieInfo.returnAddressRegister register isn\u0027t saved. I would\u0027ve guessed that it would reuse the value from the previous frame it unwound. Does libgcc behave the same way?\n\nThere are a few things unfixed:\n - A leaf function that traps (div-by-0, segfault). (AArch64 Clang leaves the return register unsaved for a leaf function.)\n - An LLVM libunwind from a new NDK running on an older Android version (e.g. this use case is important for NDK users).\n - Same as above, but a new version of Android running on an unpatched kernel. (I suppose we\u0027d need to backport the AArch64 kernel patch to keep the Bionic test working.)\n\nIf we care about these things, then maybe LLVM\u0027s libunwind needs fixing instead, e.g.:\n - Have a special case for AArch64 sigreturn, when the EH frame is missing, like what libgcc does.\n - Reuse the LR register from the previous frame, if the current frame doesn\u0027t specifiy it.\n\nI\u0027m not sure how much we care in general about unwinding through a signal frame, because an async signal handler might have interrupted a PC where the unwind info is wrong, and then calling _Unwind_Backtrace might crash. IIRC, ARM EXIDX fundamentally can\u0027t handle prologues/epilogues, and AArch64 Clang seems to optimize that info out for smaller file sizes. (AArch64 GCC outputs larger eh frame tables that look more async-correct.)\n\nIt looks like LLVM\u0027s _Unwind_Backtrace uses malloc for DW_CFA_remember_state, so it could deadlock if it interrupted malloc. IIRC libgcc uses alloca instead.",
+      "parentUuid": "1add5ceb_25cf64ba",
+      "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
