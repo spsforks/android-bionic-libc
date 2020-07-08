@@ -34,6 +34,24 @@
       "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd0e84c2_7758674f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-08T23:05:47Z",
+      "side": 1,
+      "message": "I updated the gist with a new segv_leaf_unwind.c that demonstrates AArch64 libgcc _Unwind_Backtrace unwinding through a leaf function that segfaulted. Clang doesn\u0027t record that x30/LR was saved. I would guess that LLVM\u0027s libunwind is unable to unwind through the leaf function.\n\n(I can compile the test case with LLVM\u0027s libunwind, but I\u0027d need to patch a kernel to run the test, which I can do, but is inconvenient.)",
+      "parentUuid": "e133e37d_1a6e8ec7",
+      "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
