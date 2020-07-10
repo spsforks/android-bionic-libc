@@ -52,6 +52,24 @@
       "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "134cb386_18d67873",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1470412
+      },
+      "writtenOn": "2020-07-10T10:55:05Z",
+      "side": 1,
+      "message": "\u003eThe change makes sense to me, but I was unsure about it.\n\u003e\u003eToday when libgcc unwinds in the sigreturn it takes the LR from the register\n\u003e\u003eincorrectly instead of PC from the siginfo therefore it misses the\n\u003e\u003ekill syscall\u0027s frame in the test.\n\nI don\u0027t know what went wrong in my setup.\n\n\u003eIt looks like LLVM\u0027s DwarfInstructions\u003cA, R\u003e::stepWithDwarf leaves returnAddress \u003eunset if the \u003ecieInfo.returnAddressRegister register isn\u0027t saved. I would\u0027ve guessed \u003ethat it would reuse the value \u003efrom the previous frame it unwound. Does libgcc behave \u003ethe same way?\n\nyes, I think the problem comes from that the unused and undefined registers are handled in the same way. I\u0027m going to submit a LLVM patch for this. It will solve the leaf function unwinding, so this patch is not needed.\n\n\u003eIf we care about these things, then maybe LLVM\u0027s libunwind needs fixing instead, \u003ee.g.:\n\n\u003e - Have a special case for AArch64 sigreturn, when the EH frame is missing, like what libgcc does.\nThat I\u0027d like to avoid, because heuristic is fragile and the root cause is the incorrect CFI in the kernel.\n\n\u003e - Reuse the LR register from the previous frame, if the current frame doesn\u0027t  specifiy it.\nYes, that to be fixed in the unwinder.\n\n\n\u003eIt looks like LLVM\u0027s _Unwind_Backtrace uses malloc for DW_CFA_remember_state, so it \u003ecould deadlock if it interrupted malloc. IIRC libgcc uses alloca instead.\nI\u0027ll take a look.\n\n\u003e I updated the gist with a new segv_leaf_unwind.c that demonstrates AArch64 libgcc \n\u003e _Unwind_Backtrace unwinding through a leaf function that segfaulted. Clang doesn\u0027t \u003erecord that x30/LR \u003ewas saved. I would guess that LLVM\u0027s libunwind is unable to \u003eunwind through the leaf function.\nThanks, that gave me a pointer what is wrong in the unwinder.",
+      "parentUuid": "fd0e84c2_7758674f",
+      "revId": "354676bb0e2da2432bb3c3f1f1680548bd971b1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
