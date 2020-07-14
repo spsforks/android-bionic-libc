@@ -184,11 +184,13 @@ void __init_static_tls(void* static_tls) {
   ScopedSignalBlocker ssb;
   ScopedReadLock locker(&modules.rwlock);
 
+  modules.static_module_count = modules.module_count;
   for (size_t i = 0; i < modules.module_count; ++i) {
     TlsModule& module = modules.module_table[i];
     if (module.static_offset == SIZE_MAX) {
       // All of the static modules come before all of the dynamic modules, so
       // once we see the first dynamic module, we're done.
+      modules.static_module_count = i + 1;
       break;
     }
     if (module.segment.init_size == 0) {
@@ -203,7 +205,7 @@ void __init_static_tls(void* static_tls) {
 }
 
 static inline size_t dtv_size_in_bytes(size_t module_count) {
-  return sizeof(TlsDtv) + module_count * sizeof(void*);
+  return sizeof(TlsDtv) + module_count * sizeof(ModuleInfo);
 }
 
 // Calculates the number of module slots to allocate in a new DTV. For small
@@ -261,7 +263,7 @@ static void update_tls_dtv(bionic_tcb* tcb) {
     if (i < modules.module_count) {
       const TlsModule& mod = modules.module_table[i];
       if (mod.static_offset != SIZE_MAX) {
-        dtv->modules[i] = static_tls + mod.static_offset;
+        dtv->modules[i].module = static_tls + mod.static_offset;
         continue;
       }
       if (mod.first_generation != kTlsGenerationNone &&
@@ -269,8 +271,9 @@ static void update_tls_dtv(bionic_tcb* tcb) {
         continue;
       }
     }
-    allocator.free(dtv->modules[i]);
-    dtv->modules[i] = nullptr;
+    allocator.free(dtv->modules[i].module);
+    dtv->modules[i].module = nullptr;
+    dtv->modules[i].segment_size = 0;
   }
 
   dtv->generation = atomic_load(&modules.generation);
@@ -289,14 +292,21 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
 
   TlsDtv* dtv = __get_tcb_dtv(tcb);
   const size_t module_idx = __tls_module_id_to_idx(ti->module_id);
-  void* mod_ptr = dtv->modules[module_idx];
+  void* mod_ptr = dtv->modules[module_idx].module;
   if (mod_ptr == nullptr) {
     const TlsSegment& segment = modules.module_table[module_idx].segment;
     mod_ptr = __libc_shared_globals()->tls_allocator.memalign(segment.alignment, segment.size);
     if (segment.init_size > 0) {
       memcpy(mod_ptr, segment.init_ptr, segment.init_size);
     }
-    dtv->modules[module_idx] = mod_ptr;
+    dtv->modules[module_idx].module = mod_ptr;
+    dtv->modules[module_idx].segment_size = segment.size;
+
+    // Reports the allocation to the listener, if any.
+    if (modules.on_creation_cb != nullptr) {
+      modules.on_creation_cb(mod_ptr,
+                             static_cast<void*>(static_cast<char*>(mod_ptr) + segment.size));
+    }
   }
 
   return static_cast<char*>(mod_ptr) + ti->offset;
@@ -317,7 +327,7 @@ extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
   // TODO: See if we can use a relaxed memory ordering here instead.
   size_t generation = atomic_load(&__libc_tls_generation_copy);
   if (__predict_true(generation == dtv->generation)) {
-    void* mod_ptr = dtv->modules[__tls_module_id_to_idx(ti->module_id)];
+    void* mod_ptr = dtv->modules[__tls_module_id_to_idx(ti->module_id)].module;
     if (__predict_true(mod_ptr != nullptr)) {
       return static_cast<char*>(mod_ptr) + ti->offset;
     }
@@ -329,11 +339,21 @@ extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
 // This function frees:
 //  - TLS modules referenced by the current DTV.
 //  - The list of DTV objects associated with the current thread.
-//
+// It will also invoke all registered thread_exit_callbacks.
 // The caller must have already blocked signals.
 void __free_dynamic_tls(bionic_tcb* tcb) {
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
+
+  // Notifies the thread_exit_callbacks, if any.
+  // This is done here because the thread_exit_callbacks are
+  // expected to be called right before DTLS are freed.
+  if (modules.thread_exit_callback_count > 0) {
+    // Callbacks must be invoked in the opposite order in which they were registered.
+    for (int i = modules.thread_exit_callback_count - 1; i >= 0; --i) {
+      modules.thread_exit_callbacks[i]();
+    }
+  }
 
   // If we didn't allocate any dynamic memory, skip out early without taking
   // the lock.
@@ -351,7 +371,8 @@ void __free_dynamic_tls(bionic_tcb* tcb) {
       // This module's TLS memory is allocated statically, so don't free it here.
       continue;
     }
-    allocator.free(dtv->modules[i]);
+    allocator.free(dtv->modules[i].module);
+    dtv->modules[i].segment_size = 0;
   }
 
   // Now free the thread's list of DTVs.
