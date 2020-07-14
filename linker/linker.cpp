@@ -372,7 +372,7 @@ static inline void* get_tls_block_for_this_thread(const soinfo_tls* si_tls, bool
   } else {
     TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
     if (dtv->generation < tls_mod.first_generation) return nullptr;
-    return dtv->modules[__tls_module_id_to_idx(si_tls->module_id)];
+    return dtv->modules[__tls_module_id_to_idx(si_tls->module_id)].module;
   }
 }
 
