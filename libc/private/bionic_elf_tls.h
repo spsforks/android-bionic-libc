@@ -111,6 +111,17 @@ struct TlsModule {
   void* soinfo_ptr = nullptr;
 };
 
+// Signature of the callbacks that will be called after DTLS creation.
+typedef void (*dtls_listener_t)(void* dynamic_tls_begin, void* dynamic_tls_end);
+
+// Signature of the thread-exit callbacks.
+typedef void (*thread_exit_cb_t)(void);
+
+struct CallbackHolder {
+  thread_exit_cb_t cb;
+  struct CallBackHolder* prev = nullptr;
+};
+
 // Table of the ELF TLS modules. Either the dynamic linker or the static
 // initialization code prepares this table, and it's then used during thread
 // creation and for dynamic TLS lookups.
@@ -128,10 +139,22 @@ struct TlsModules {
   // Pointer to a block of TlsModule objects. The first module has ID 1 and
   // is stored at index 0 in this table.
   size_t module_count = 0;
+  size_t static_module_count = 0;
   TlsModule* module_table = nullptr;
+
+  dtls_listener_t on_creation_cb = nullptr;
+
+  static constexpr int MAX_THREAD_EXIT_CALLBACK_COUNT = 8;
+  int thread_exit_callback_count = 0;
+  struct CallBackHolder* thread_exit_callback = nullptr;
 };
 
 void __init_static_tls(void* static_tls);
+
+struct ModuleInfo {
+  void* module;
+  size_t segment_size;
+};
 
 // Dynamic Thread Vector. Each thread has a different DTV. For each module
 // (executable or solib), the DTV has a pointer to that module's TLS memory. The
@@ -155,7 +178,7 @@ struct TlsDtv {
   // on the fast path for a TLS lookup. The arm64 tlsdesc_resolver.S depends on
   // the layout of fields past this point.
   size_t generation;
-  void* modules[];
+  struct ModuleInfo modules[];
 };
 
 struct TlsIndex {
