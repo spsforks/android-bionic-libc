@@ -382,6 +382,8 @@ void BionicAllocator::free(void* ptr) {
 
   page_info* info = get_page_info(ptr);
 
+  // TODO: call the on_destruction_cb() here for dtls.
+
   if (info->type == kLargeObject) {
     munmap(info, info->allocated_size);
   } else {
