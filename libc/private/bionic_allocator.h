@@ -110,6 +110,11 @@ class BionicAllocator {
   // Note that this implementation of realloc never shrinks allocation
   void* realloc(void* ptr, size_t size);
   void free(void* ptr);
+
+  // Returns the size of the given allocated heap chunk or 0 if it is
+  // invalid.
+  size_t get_chunk_size(void* ptr);
+
  private:
   void* alloc_mmap(size_t align, size_t size);
   inline void* alloc_impl(size_t align, size_t size);
