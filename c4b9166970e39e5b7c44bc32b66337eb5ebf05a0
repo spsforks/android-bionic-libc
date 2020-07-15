@@ -96,6 +96,23 @@
     },
     {
       "key": {
+        "uuid": "40c7b8f5_50762102",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:53:26Z",
+      "side": 1,
+      "message": "why? there\u0027s no need now this is a linked list?",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "151a6244_7a911c72",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 3
@@ -172,6 +189,24 @@
       "side": 1,
       "message": "Because we can\u0027t identify where the dynamic DTV entries begin.\n\nIn the previous revision (in the other CL), I had assumed `dtv-\u003ecount \u003e modules.static_modules_count`\n\n@rprichard commented that it wasn\u0027t a correct assertion. Maybe I misunderstood the comment.",
       "parentUuid": "959078b3_1dfe77e9",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "262b1d2b_0a18ed1c",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:53:26Z",
+      "side": 1,
+      "message": "but what\u0027s to be done? the current TODO isn\u0027t actionable, so it needs to be replaced with something that is, or fixed, or explained so that whoever has to fix it in 2025 understands. (but rprichard should be along shortly with a concrete suggestion...)",
+      "parentUuid": "8e87aec4_6ceee0c5",
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -342,6 +377,24 @@
     },
     {
       "key": {
+        "uuid": "2ba83933_6fb09f48",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:53:26Z",
+      "side": 1,
+      "message": "why?",
+      "parentUuid": "99ae1bf3_18d83568",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5c9abff_a92538ff",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 3
@@ -371,6 +424,24 @@
       "side": 1,
       "message": "Made it a union instead. The impl gives us n-1 allocations (and +16 bytes for the TlsModule struct size)\n\nA simpler approach might be: https://godbolt.org/z/aEThx6\n(also n-1 allocations but +24 bytes for the TlsModule struct).\n\nLet me know which one you\u0027d prefer.",
       "parentUuid": "d5c9abff_a92538ff",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b72f5fa2_e4edb588",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:53:26Z",
+      "side": 1,
+      "message": "(yeah, the simpler one was closer to what i\u0027d imagined. i was concerned about the number of allocations, but not particularly about the size of the struct [considering that we previously had a constant `8 * sizeof(void*)` overhead for the array].)",
+      "parentUuid": "fe666187_80da6ca1",
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
