@@ -1,0 +1,187 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "798d1281_b97aba5e",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "yes, but you can still do that in pthread_exit. it doesn\u0027t really make sense for __free_dynamic_tls to also do this. (you can tell that from the awkward change to the comment \"It will also \u003cdo this unrelated thing that the name of the function doesn\u0027t imply\u003e\".)",
+      "range": {
+        "startLine": 349,
+        "startChar": 5,
+        "endLine": 350,
+        "endChar": 55
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "779b54e9_91fda1e4",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "notice also how this comment has gone from pretty much redundant (it just says what the function name already said) to \"actually, this is subtle, so pay attention\"...",
+      "range": {
+        "startLine": 115,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 69
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151a6244_7a911c72",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "always use C++ casts.",
+      "range": {
+        "startLine": 63,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 30
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "959078b3_1dfe77e9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "why not?",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ac79cec_7e5d06ed",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "__ on these too",
+      "range": {
+        "startLine": 78,
+        "startChar": 51,
+        "endLine": 78,
+        "endChar": 68
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9346dc6_7dd44556",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "no space",
+      "range": {
+        "startLine": 89,
+        "startChar": 49,
+        "endLine": 89,
+        "endChar": 50
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e04804f3_f2517f98",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "unused",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0bb0824_2f42ad42",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "probably don\u0027t need, since the only interesting case is empty/non-empty, and that\u0027s just a null check?",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5c9abff_a92538ff",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T16:08:22Z",
+      "side": 1,
+      "message": "i was assuming you\u0027d have the head of the list inline so that in the normal cases there\u0027s no allocation? though you could argue that the _normal_ case is zero callbacks, so this is fine.\n\nrprichard: what\u0027s your opinion?\n\nno need for `struct` --- this is C++.\n\nalso, thread_exit_callbacks or thread_exit_callback_list makes the plural explicit.",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
