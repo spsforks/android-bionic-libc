@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2ffcf33d_bcef8fb1",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Makes sense. Moved to a separate function.",
+      "parentUuid": "798d1281_b97aba5e",
+      "range": {
+        "startLine": 349,
+        "startChar": 5,
+        "endLine": 350,
+        "endChar": 55
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "779b54e9_91fda1e4",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2b8ddb8_d126066d",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Normally, one could argue making comments *less* redundant is a good thing. :-)",
+      "parentUuid": "779b54e9_91fda1e4",
+      "range": {
+        "startLine": 115,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 69
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cba02d40_de953c3a",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "151a6244_7a911c72",
+      "range": {
+        "startLine": 63,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 30
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "959078b3_1dfe77e9",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 3
@@ -82,6 +154,24 @@
       "writtenOn": "2020-07-15T16:08:22Z",
       "side": 1,
       "message": "why not?",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e87aec4_6ceee0c5",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Because we can\u0027t identify where the dynamic DTV entries begin.\n\nIn the previous revision (in the other CL), I had assumed `dtv-\u003ecount \u003e modules.static_modules_count`\n\n@rprichard commented that it wasn\u0027t a correct assertion. Maybe I misunderstood the comment.",
+      "parentUuid": "959078b3_1dfe77e9",
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "b7228b01_b99178db",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ac79cec_7e5d06ed",
+      "range": {
+        "startLine": 78,
+        "startChar": 51,
+        "endLine": 78,
+        "endChar": 68
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9346dc6_7dd44556",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 3
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "15f8e878_66b35b45",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9346dc6_7dd44556",
+      "range": {
+        "startLine": 89,
+        "startChar": 49,
+        "endLine": 89,
+        "endChar": 50
+      },
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e04804f3_f2517f98",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 3
@@ -148,6 +286,24 @@
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e78f033_3e7be729",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "True, it\u0027s unused *here*, but it is used in sys_thread_properties.cpp\nI\u0027ll move it there.",
+      "parentUuid": "e04804f3_f2517f98",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -168,6 +324,24 @@
     },
     {
       "key": {
+        "uuid": "99ae1bf3_18d83568",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "We need this to gate the number of callbacks registered.",
+      "parentUuid": "a0bb0824_2f42ad42",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5c9abff_a92538ff",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 3
@@ -179,6 +353,24 @@
       "writtenOn": "2020-07-15T16:08:22Z",
       "side": 1,
       "message": "i was assuming you\u0027d have the head of the list inline so that in the normal cases there\u0027s no allocation? though you could argue that the _normal_ case is zero callbacks, so this is fine.\n\nrprichard: what\u0027s your opinion?\n\nno need for `struct` --- this is C++.\n\nalso, thread_exit_callbacks or thread_exit_callback_list makes the plural explicit.",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe666187_80da6ca1",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T22:16:50Z",
+      "side": 1,
+      "message": "Made it a union instead. The impl gives us n-1 allocations (and +16 bytes for the TlsModule struct size)\n\nA simpler approach might be: https://godbolt.org/z/aEThx6\n(also n-1 allocations but +24 bytes for the TlsModule struct).\n\nLet me know which one you\u0027d prefer.",
+      "parentUuid": "d5c9abff_a92538ff",
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
