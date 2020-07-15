@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1501a094_cc8e8d39",
+        "filename": "libc/bionic/bionic_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T01:28:38Z",
+      "side": 1,
+      "message": "Removed the TODO.\n\nBut keeping this open in case rprichard has a comment",
+      "parentUuid": "20baf02b_e91ac972",
+      "range": {
+        "startLine": 385,
+        "startChar": 3,
+        "endLine": 385,
+        "endChar": 12
+      },
+      "revId": "db1457604969c3d6e4c0828ce71843991473e4a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8c58288_ce64efd0",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 1
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "a1d78141_847b85b0",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T01:28:38Z",
+      "side": 1,
+      "message": "Changed it to a linkedlist but have some concern ... \n\n\u003e there was no good reason behind the magic number 8?\n\nTBH, I don\u0027t know about the rationale behind \u00278\u0027. (I would guess it\u0027s 1 for each sanitizer ...)\n\n\u003e are we assuming that allocation is difficult/impossible when this is called?\nYea, this is supposed to be called before the thread is created, not sure that dynamic alloc would be ok ...",
+      "parentUuid": "58a19b45_e65bf1c3",
+      "range": {
+        "startLine": 55,
+        "startChar": 1,
+        "endLine": 55,
+        "endChar": 86
+      },
+      "revId": "db1457604969c3d6e4c0828ce71843991473e4a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4087a100_dc8b704a",
         "filename": "tests/sys_thread_properties_test.cpp",
         "patchSetId": 1
@@ -110,6 +158,24 @@
       "revId": "db1457604969c3d6e4c0828ce71843991473e4a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b39ea471_36adb5eb",
+        "filename": "tests/sys_thread_properties_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T01:28:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4087a100_dc8b704a",
+      "revId": "db1457604969c3d6e4c0828ce71843991473e4a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
