@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33aa607d_b696ca2f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:49:26Z",
+      "side": 1,
+      "message": "(i\u0027d just delete these two comments now. they don\u0027t say anything that the function names don\u0027t already tell us.)",
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e80683f_d10c55d0",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:49:26Z",
+      "side": 1,
+      "message": "https://sourceware.org/glibc/wiki/ThreadPropertiesAPI talks about the need for notification on destruction too? is that not true?\n\nseems like this should either be __libc_register_dynamic_tls_listener*s* and take two callbacks, or something like __libc_register_dynamic_tls_creation_callback if that\u0027s really all it is. (we won\u0027t be able to change the arguments after we ship this API, so the more general name doesn\u0027t help us provide more functionality in future. if the actual intent is to have one callback for *both* creation and deletion, we need to add the bool argument to the callback now.)",
+      "range": {
+        "startLine": 89,
+        "startChar": 49,
+        "endLine": 89,
+        "endChar": 62
+      },
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d29341eb_a7010f4c",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T22:49:26Z",
+      "side": 1,
+      "message": "(i wasn\u0027t actually suggesting going to this much trouble --- i literally meant just always having the head of the list [the first CallbackHolder] inline.)",
+      "range": {
+        "startLine": 158,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 7
+      },
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
