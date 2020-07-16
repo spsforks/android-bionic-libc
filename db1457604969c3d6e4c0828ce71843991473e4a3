@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "c6f42655_77e8870b",
+        "filename": "libc/bionic/bionic_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "All remaining DTLS memory is freed at thread-exit, but memory for unloaded modules is freed on the next call to __tls_get_addr. (Lazy freeing happens in update_tls_dtv, where it calls allocator.free).\n\nI think we can remove this TODO, though. We\u0027d want to call the callback from update_tls_dtv rather than here.",
+      "parentUuid": "1501a094_cc8e8d39",
+      "range": {
+        "startLine": 385,
+        "startChar": 3,
+        "endLine": 385,
+        "endChar": 12
+      },
+      "revId": "db1457604969c3d6e4c0828ce71843991473e4a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8c58288_ce64efd0",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 1

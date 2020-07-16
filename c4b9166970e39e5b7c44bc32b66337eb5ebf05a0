@@ -231,6 +231,24 @@
     },
     {
       "key": {
+        "uuid": "8e69f3c4_068df35e",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "IIRC there were two exceptions:\n\nIf a thread is using `zero_dtv` (see __init_tcb_dtv), then dtv-\u003ecount can be 0 when modules.static_modules_count is non-zero. In this case, the thread has no dynamic TLS memory. It may still have static TLS memory, but the thread hasn\u0027t used __tls_get_addr to access it (yet). Maybe the thread will only use LE/IE-model accesses, which don\u0027t use __tls_get_addr or the DTV.\n\nOtherwise, dtv-\u003ecount is at least modules.static_modules_count (but it could be equal to it).",
+      "parentUuid": "262b1d2b_0a18ed1c",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1ac79cec_7e5d06ed",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 3

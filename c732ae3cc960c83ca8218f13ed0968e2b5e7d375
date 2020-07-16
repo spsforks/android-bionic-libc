@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1caf8e_9f2c96a9",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "__init_static_tls is called for each new thread. Shouldn\u0027t this be initialized once, when the modules are loaded?\n\nlinker_finalize_static_tls: At this point in a dynamic executable, all modules are static.\n\nlayout_static_tls: At this point in a static executable, there is either 0 or 1 static module. A static executable never has dynamic TLS modules.",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e08027_df91fc5a",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "I\u0027m confused. Do we really want to clear the callbacks when the first thread exits? The callbacks won\u0027t be called when the next thread exits?",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a71e538d_c9288e0a",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "I think we also need to call __notify_thread_exit_callbacks in the THREAD_DETACHED case above (see the other call to __hwasan_thread_exit).\n\nI\u0027m wondering if the order w.r.t. __hwasan_thread_exit is right...",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f076e80b_522b16a9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "I wonder if we can just use malloc here. I assume we\u0027re not calling __libc_register_thread_exit_callback from a signal handler. Maybe it\u0027s hazardous to call malloc too early -- e.g. before libc.so\u0027s constructors have been called.\n\nIt looks like the first-vs-rest special case avoids the malloc call in the typical case where there\u0027s only 1 callback?",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0a0e3c6_1c321f05",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "Is this TODO message still correct? AFAIK, all the modules beyond the static modules are DTLS. (However, some of them may be unallocated, and I guess we don\u0027t want to call cb(nullptr, nullptr).)",
+      "range": {
+        "startLine": 112,
+        "startChar": 5,
+        "endLine": 112,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22faff66_34495094",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "How do we know the target thread wasn\u0027t suspended during a DTLS modification?",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30af3095_30035854",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-16T07:44:40Z",
+      "side": 1,
+      "message": "Adding this field doubles the size of the DTV, which I think I\u0027d prefer to avoid. It should be possible to query the BionicAllocator to find the true size of the allocated heap chunk. (We would need to add an internal API to BionicAllocator.)",
+      "range": {
+        "startLine": 163,
+        "startChar": 2,
+        "endLine": 163,
+        "endChar": 22
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
