@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "cadc37fd_067616a9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40c7b8f5_50762102",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "151a6244_7a911c72",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 3
@@ -395,6 +413,24 @@
     },
     {
       "key": {
+        "uuid": "411c87fb_dd05e734",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Hmm, ok, I\u0027ve removed the restriction.\n\n(But it seemed bad if we let people register 1000+ thread-exit callbacks ...)",
+      "parentUuid": "2ba83933_6fb09f48",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5c9abff_a92538ff",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 3
@@ -445,6 +481,24 @@
       "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17ad47f7_cb838a91",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Went with the simple approach",
+      "parentUuid": "b72f5fa2_e4edb588",
+      "revId": "c4b9166970e39e5b7c44bc32b66337eb5ebf05a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

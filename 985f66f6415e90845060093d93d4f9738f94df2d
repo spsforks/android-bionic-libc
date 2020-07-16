@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b23154cb_9b31c340",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33aa607d_b696ca2f",
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e80683f_d10c55d0",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "2f27c169_ded78f45",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Sorry! I was clearly confused (originally had on_creation and on_destruction then deleted one for unclear reason)\n\nAdded the on_destruction back. It\u0027ll be called in __free_dynamic_tls() right before the memory is freed.",
+      "parentUuid": "4e80683f_d10c55d0",
+      "range": {
+        "startLine": 89,
+        "startChar": 49,
+        "endLine": 89,
+        "endChar": 62
+      },
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d29341eb_a7010f4c",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 4
@@ -62,6 +104,30 @@
       "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d3c16b0_aed77b7f",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T02:47:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d29341eb_a7010f4c",
+      "range": {
+        "startLine": 158,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 7
+      },
+      "revId": "985f66f6415e90845060093d93d4f9738f94df2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
