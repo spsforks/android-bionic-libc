@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "19659cdc_fdbbb993",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "I see. Thanks for the explanation!",
+      "parentUuid": "8d1caf8e_9f2c96a9",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98e08027_df91fc5a",
         "filename": "libc/bionic/bionic_elf_tls.cpp",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55050921_43438a8d",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "Good catch. I meant to free them when the *last* thread dies, but got confused.",
+      "parentUuid": "98e08027_df91fc5a",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a51382c4_6b531d6b",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "Done. \n\nRe: ordering, yeah, these two definitely have conflicting goals in that both of them want to be called right before the thread is gone ... Perhaps to avoid breaking existing contract, the new callbacks should be called before hwasan_thread_exit() ?",
+      "parentUuid": "a71e538d_c9288e0a",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f076e80b_522b16a9",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 9
@@ -64,6 +118,24 @@
       "writtenOn": "2020-07-16T07:44:40Z",
       "side": 1,
       "message": "I wonder if we can just use malloc here. I assume we\u0027re not calling __libc_register_thread_exit_callback from a signal handler. Maybe it\u0027s hazardous to call malloc too early -- e.g. before libc.so\u0027s constructors have been called.\n\nIt looks like the first-vs-rest special case avoids the malloc call in the typical case where there\u0027s only 1 callback?",
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa7f9528_1c72f000",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "\u003e It looks like the first-vs-rest special case avoids the malloc call in the typical case where there\u0027s only 1 callback?\n\nYes, that\u0027s correct.",
+      "parentUuid": "f076e80b_522b16a9",
       "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -93,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "c565c3e0_a961b965",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0a0e3c6_1c321f05",
+      "range": {
+        "startLine": 112,
+        "startChar": 5,
+        "endLine": 112,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22faff66_34495094",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 9
@@ -104,6 +200,30 @@
       "writtenOn": "2020-07-16T07:44:40Z",
       "side": 1,
       "message": "How do we know the target thread wasn\u0027t suspended during a DTLS modification?",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a41be5b3_721c6b4f",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "Sorry, I\u0027m not clear what you mean wrt \"DTLS modification\". \n\nThis \"suspended\" comment was meant to say \"If the DTLS is modified by the target thread while we are in this _iterate_ routine, then it\u0027s not guaranteed that the callback will be called on the newly touched DTLS\".\n\nThis _iterate_ does *not* modify anything.",
+      "parentUuid": "22faff66_34495094",
       "range": {
         "startLine": 73,
         "startChar": 3,
@@ -136,6 +256,30 @@
       "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7df4d7f6_af73a463",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-16T21:15:16Z",
+      "side": 1,
+      "message": "Done. I\u0027ve added a `get_chunk_size`",
+      "parentUuid": "30af3095_30035854",
+      "range": {
+        "startLine": 163,
+        "startChar": 2,
+        "endLine": 163,
+        "endChar": 22
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
