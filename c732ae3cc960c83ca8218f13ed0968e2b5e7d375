@@ -260,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "55c78bba_d019dde6",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-17T17:14:28Z",
+      "side": 1,
+      "message": "Ah! I see what you mean.\n\nIn theory, this is problematic, but maybe in practice it\u0027s not too bad because IIUC, the sanitizers (which would call this _iterate_()) run at the end, which I think implies the program is not in the state where it\u0027s modifying stuff. (hence the \"undefined behaviour\" comment in the function\u0027s doc)",
+      "parentUuid": "17a35e29_9086d3de",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
