@@ -236,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "17a35e29_9086d3de",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-17T05:08:04Z",
+      "side": 1,
+      "message": "\u003e This _iterate_ does *not* modify anything.\n\nRight, but what if a thread is suspended in update_tls_dtv while another thread is iterating its DTLS memory.\n\nI suspect we can make it work. This probably won\u0027t do what we want today:\n\n    allocator.free(dtv-\u003emodules[i]);\n    dtv-\u003emodules[i] \u003d nullptr;\n\ni.e. If the thread is suspended between these two calls, the DTLS memory is already freed, but the DTV still points at it. The iterate callback would report freed memory.\n\nCurrently, before any TLS memory is modified, the process blocks signals, then acquires a lock. The intent was to make DTLS async-signal-safe, but I neglected to handle the post-fork situation. Maybe in the future, the design should be changed to actually be async-signal-safe. The point, though, is that it\u0027s not normally possible to observe an intermediate state like the one above.\n\nIt might possible to observe this state in a debugger, but currently lldb/gdb don\u0027t have the metadata they need from libc.so to find TLS variables. A debugger should be robust against stray pointers into unallocated memory, too.",
+      "parentUuid": "a41be5b3_721c6b4f",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
