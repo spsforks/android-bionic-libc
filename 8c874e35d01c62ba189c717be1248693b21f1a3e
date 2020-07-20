@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f64dfa84_49291d85",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-20T10:41:44Z",
+      "side": 1,
+      "message": "If I understand correctly, it should zero out the entire ifaddrs_storage struct in line 64, though admittedly I\u0027m not a C++ expert by a long shot.\n\nIs my understanding here correct? If not, I\u0027ll explicitly zero out the flags in an else-statement on line 214 instead.",
+      "parentUuid": "dbc6f9a9_728e2b8e",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 57
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "310ae355_f2e27de3",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "604012a2_28670acd",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-20T10:41:44Z",
+      "side": 1,
+      "message": "Agreed that logging here makes a lot of sense. I decided against it at first because other errors in this file weren\u0027t logged either, but there\u0027s no good reason why these shouldn\u0027t be logged imo.",
+      "parentUuid": "310ae355_f2e27de3",
+      "range": {
+        "startLine": 281,
+        "startChar": 21,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5603a581_17a09323",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-20T10:41:44Z",
+      "side": 1,
+      "message": "TIL about strlcpy. Thanks for the suggestion! Let me know if the way I\u0027m using it doesn\u0027t make sense.",
+      "parentUuid": "d745fa06_a5ee3d3e",
+      "range": {
+        "startLine": 286,
+        "startChar": 4,
+        "endLine": 286,
+        "endChar": 11
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66a0036e_71ccd103",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "4af2c71e_cae0324c",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-20T10:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66a0036e_71ccd103",
+      "range": {
+        "startLine": 288,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 51
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41e438bb_ed573938",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
@@ -114,6 +210,30 @@
       "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e70f8c1_40e473df",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-20T10:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41e438bb_ed573938",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 29
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
