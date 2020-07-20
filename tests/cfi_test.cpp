@@ -85,6 +85,7 @@ TEST(cfi_test, basic) {
   EXPECT_EQ(get_global_address(), get_last_address());
   EXPECT_EQ(c, get_count());
 
+<<<<<<< HEAD   (ce45ee Merge "Fix linker path for emulated architecture" into andro)
   // CFI check for a stack address. This is always invalid and gets the process killed.
   EXPECT_DEATH(__cfi_slowpath(45, reinterpret_cast<void*>(&c)), "");
 
@@ -92,6 +93,13 @@ TEST(cfi_test, basic) {
   void* p = malloc(4096);
   EXPECT_DEATH(__cfi_slowpath(46, p), "");
   free(p);
+=======
+  // CFI check for a heap address.
+  // It's possible that this allocation could wind up in the same CFI granule as
+  // an unchecked library, which means the below might not crash. To force a
+  // crash keep allocating up to a max until there is a crash.
+  EXPECT_DEATH(test_cfi_slowpath_with_alloc(), "");
+>>>>>>> CHANGE (0f6b50 Remove stack address check in cfi_basic test.)
 
   // Check all the addresses.
   const size_t bss_size = 1024 * 1024;
