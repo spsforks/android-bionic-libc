@@ -308,6 +308,30 @@
     },
     {
       "key": {
+        "uuid": "2b477f8c_c8214836",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-20T23:14:59Z",
+      "side": 1,
+      "message": "\u003e ... run at the end\n\nDoes this mean that it runs when a program calls exit() or returns from main? I\u0027m not sure how processes typically end on Android, and I think a bunch of them practically run forever?\n\n\u003e Btw, @rprichard, were you suggesting that we  must fix this issue in this patch?\n\nIf we do need a fix, I think it can wait until later.",
+      "parentUuid": "d8edc220_fb15df90",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
