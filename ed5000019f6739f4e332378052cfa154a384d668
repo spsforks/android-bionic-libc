@@ -16,6 +16,46 @@
       "revId": "ed5000019f6739f4e332378052cfa154a384d668",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bc93584_898e37a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T11:07:10Z",
+      "side": 1,
+      "message": "Both those logs should probably do something to log errno and/or strerror(errno).",
+      "revId": "ed5000019f6739f4e332378052cfa154a384d668",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2642d08c_ae8d2cf2",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T11:07:10Z",
+      "side": 1,
+      "message": "yeah you\u0027re right this looks to zero here.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "ed5000019f6739f4e332378052cfa154a384d668",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
