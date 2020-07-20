@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbc6f9a9_728e2b8e",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T10:06:03Z",
+      "side": 1,
+      "message": "AFAIK C++ new (by itself) does not zero allocated memory...\n(I haven\u0027t checked if there\u0027s a constructor invocation here that will zero)\nnot sure if the removal down below doesn\u0027t result in potentially garbage",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 57
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "310ae355_f2e27de3",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T10:06:03Z",
+      "side": 1,
+      "message": "maybe log an error? if we can?",
+      "range": {
+        "startLine": 281,
+        "startChar": 21,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d745fa06_a5ee3d3e",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T10:06:03Z",
+      "side": 1,
+      "message": "would strlcpy be better?",
+      "range": {
+        "startLine": 286,
+        "startChar": 4,
+        "endLine": 286,
+        "endChar": 11
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66a0036e_71ccd103",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T10:06:03Z",
+      "side": 1,
+      "message": "can we log something on failure?",
+      "range": {
+        "startLine": 288,
+        "startChar": 0,
+        "endLine": 288,
+        "endChar": 51
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41e438bb_ed573938",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2020-07-20T10:06:03Z",
+      "side": 1,
+      "message": "maybe get_interface_flags_via_ioctl()",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 29
+      },
+      "revId": "8c874e35d01c62ba189c717be1248693b21f1a3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
