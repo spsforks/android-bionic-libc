@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "d8edc220_fb15df90",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-20T19:17:55Z",
+      "side": 1,
+      "message": "Btw, @rprichard, were you suggesting that we  must fix this issue in this patch?",
+      "parentUuid": "55c78bba_d019dde6",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
