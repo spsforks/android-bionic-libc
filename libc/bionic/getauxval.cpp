@@ -37,7 +37,7 @@
 
 // This function needs to be safe to call before TLS is set up, so it can't
 // access errno or the stack protector.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
+__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool* exists) {
   for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == type) {
       exists = true;
@@ -50,7 +50,7 @@ __LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exist
 
 extern "C" unsigned long getauxval(unsigned long type) {
   bool exists;
-  unsigned long result = __bionic_getauxval(type, exists);
+  unsigned long result = __bionic_getauxval(type, &exists);
   if (!exists) errno = ENOENT;
   return result;
 }
