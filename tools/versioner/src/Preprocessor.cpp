@@ -237,7 +237,7 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
   return "("s + Join(expressions, ") || (") + ")";
 }
 
-// Assumes that nothing crazy is happening (e.g. having the semicolon be in a macro)
+// Assumes that nothing weird is happening (e.g. having the semicolon be in a macro).
 static FileLocation findNextSemicolon(const std::deque<std::string>& lines, FileLocation start) {
   unsigned current_line = start.line;
   unsigned current_column = start.column;
