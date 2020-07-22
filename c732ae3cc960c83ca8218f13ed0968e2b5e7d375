@@ -356,6 +356,30 @@
     },
     {
       "key": {
+        "uuid": "df326352_75795b52",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-22T22:47:17Z",
+      "side": 1,
+      "message": "Is LSAN using the library load/unload hook (load_hook) that HWASan also uses (e.g. __hwasan_library_loaded)?\n\nI think you\u0027d want the TLS lock (TlsModules::rwlock), not the loader lock? Currently, it would also be necessary to block signals first.",
+      "parentUuid": "f1784fea_213a00dd",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
