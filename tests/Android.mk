@@ -53,18 +53,4 @@ else
 build_host := false
 endif
 
-ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
-
-# -----------------------------------------------------------------------------
-# Compile time tests.
-# -----------------------------------------------------------------------------
-
-FORTIFY_LEVEL := 1
-include $(LOCAL_PATH)/make_fortify_compile_test.mk
-
-FORTIFY_LEVEL := 2
-include $(LOCAL_PATH)/make_fortify_compile_test.mk
-
-endif # linux-x86
-
 include $(call first-makefiles-under,$(LOCAL_PATH))
