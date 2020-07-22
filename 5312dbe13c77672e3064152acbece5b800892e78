@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d3739d4_3c88ab17",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2020-07-22T20:54:03Z",
+      "side": 1,
+      "message": "Could likely reduce much of the duplication with a `cc_defaults` module.",
+      "range": {
+        "startLine": 926,
+        "startChar": 0,
+        "endLine": 926,
+        "endChar": 19
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8533cabd_a5cf1246",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2020-07-22T20:54:03Z",
+      "side": 1,
+      "message": "nit: any reason for the appending rather than one list?",
+      "range": {
+        "startLine": 930,
+        "startChar": 14,
+        "endLine": 941,
+        "endChar": 9
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbcc396d_286489b9",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2020-07-22T20:54:03Z",
+      "side": 1,
+      "message": "I think to restrict this to host we\u0027ll also want:\n\n```\nhost_supported: true,\ndevice_supported: false\n```",
+      "range": {
+        "startLine": 946,
+        "startChar": 0,
+        "endLine": 948,
+        "endChar": 6
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
