@@ -380,6 +380,30 @@
     },
     {
       "key": {
+        "uuid": "2cd1b8b3_e39471a9",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-23T18:41:55Z",
+      "side": 1,
+      "message": "\u003e Is LSAN using the library load/unload hook (load_hook) that HWASan also uses (e.g. __hwasan_library_loaded)? \n\nA quick look at the code suggested it doesn\u0027t.\n\n\u003e I think you\u0027d want the TLS lock (TlsModules::rwlock), not the loader lock? Currently, it would also be necessary to block signals first.\n\nWould taking the TLS lock deadlock?\n\nWhen leak detection runs, it\u0027ll make a separate process (which shares the same address space with the main one), then freeze all the threads before doing the work(ie., calls this _iterate_ interface).\n\nWithout taking the lock, as you\u0027ve already pointed out, if the \"freeze\" happens just when a thread is in update_tls_dtv, then lsan would mistakenly scan freed memory. But this would probably be fine for the lsan use case. It\u0027s the other way around that is the problem (ie., if it can\u0027t find all the dtls regions, then it\u0027d have false positives).",
+      "parentUuid": "df326352_75795b52",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
