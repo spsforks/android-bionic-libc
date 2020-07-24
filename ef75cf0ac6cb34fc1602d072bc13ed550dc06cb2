@@ -16,6 +16,24 @@
       "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d97938_d21d2657",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-07-24T02:45:54Z",
+      "side": 1,
+      "message": "I think you could put __attribute__((section(\"something\"))) on the text_before_start_of_gap function.",
+      "parentUuid": "f706ec0f_72d2481d",
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
