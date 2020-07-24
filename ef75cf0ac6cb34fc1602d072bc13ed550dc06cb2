@@ -34,6 +34,24 @@
       "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6570841a_a49de0ff",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T02:50:11Z",
+      "side": 1,
+      "message": "That\u0027s a reasonable point. I have seen that before (mumble ... Linux kernel), but it didn\u0027t dawn on me that I could actually use this power for good. :) I\u0027ll let Ryan decide whether he\u0027d prefer that option or keeping this the way it is in the code.",
+      "parentUuid": "79d97938_d21d2657",
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
