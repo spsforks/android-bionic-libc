@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d01731b9_11af007a",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-24T03:12:06Z",
+      "side": 1,
+      "message": "Should this be .rodata.* (with the extra period)?",
+      "range": {
+        "startLine": 5,
+        "startChar": 15,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f706ec0f_72d2481d",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 1
@@ -49,6 +72,24 @@
       "side": 1,
       "message": "That\u0027s a reasonable point. I have seen that before (mumble ... Linux kernel), but it didn\u0027t dawn on me that I could actually use this power for good. :) I\u0027ll let Ryan decide whether he\u0027d prefer that option or keeping this the way it is in the code.",
       "parentUuid": "79d97938_d21d2657",
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96c533a8_33227e0a",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-24T03:12:06Z",
+      "side": 1,
+      "message": "I suppose we could use the section attribute to place text_before_start_of_gap into a section that doesn\u0027t match the .text.* pattern, so that we can use the .text.* pattern here? That sounds OK to me.\n\nDoes the output section name still need to match .text.*? I would guess not. Maybe just place the function in a section named .text_before_start_of_gap?",
+      "parentUuid": "6570841a_a49de0ff",
       "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
