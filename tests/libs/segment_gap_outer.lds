@@ -2,13 +2,16 @@ SECTIONS {
   # This starts off fairly normal: rodata, text, dynamic, data, bss with
   # appropriate alignment between them.
   . = SIZEOF_HEADERS;
-  .rodata : {}
+  .rodata : {*(.rodata*)}
   . = ALIGN(0x1000);
-  .text : {}
+  .text : {
+    *(.text.__*)
+    *(.text.get_inner)
+  }
   . = ALIGN(0x1000);
   .dynamic : {}
   . = ALIGN(0x1000);
-  .data : {}
+  .data : {*(.data.*)}
   .bss : {}
 
   # Now create the gap. We need a text segment first to prevent the linker from
