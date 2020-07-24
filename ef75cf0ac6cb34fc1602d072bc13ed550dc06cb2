@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "efc38cd3_88c30a44",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T03:57:14Z",
+      "side": 1,
+      "message": "Thanks for catching this. I did miss the extra period.",
+      "parentUuid": "d01731b9_11af007a",
+      "range": {
+        "startLine": 5,
+        "startChar": 15,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f706ec0f_72d2481d",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 1
@@ -93,6 +117,24 @@
       "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3db40f31_0abdbf27",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T03:57:14Z",
+      "side": 1,
+      "message": "I shortened the name of the function now that it is in its own special text section.",
+      "parentUuid": "96c533a8_33227e0a",
+      "revId": "ef75cf0ac6cb34fc1602d072bc13ed550dc06cb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
