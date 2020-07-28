@@ -363,7 +363,7 @@ __res_vinit(res_state statp, int preinit) {
 		    if ((*cp != '\0') && (*cp != '\n')) {
 			memset(&hints, 0, sizeof(hints));
 			hints.ai_family = PF_UNSPEC;
-			hints.ai_socktype = SOCK_DGRAM;	/*dummy*/
+			hints.ai_socktype = SOCK_DGRAM;	/*temp*/
 			hints.ai_flags = AI_NUMERICHOST;
 			sprintf(sbuf, "%u", NAMESERVER_PORT);
 			if (getaddrinfo(cp, sbuf, &hints, &ai) == 0 &&

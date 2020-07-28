@@ -142,7 +142,7 @@ FTS* __fts_open(char* const* argv, int options, int (*compar)(const FTSENT**, co
 		root = fts_sort(sp, root, nitems);
 
 	/*
-	 * Allocate a dummy pointer and make fts_read think that we've just
+	 * Allocate a temp pointer and make fts_read think that we've just
 	 * finished the node before the root(s); set p->fts_info to FTS_INIT
 	 * so that everything about the "current" node is ignored.
 	 */
@@ -204,7 +204,7 @@ fts_close(FTS *sp)
 	int rfd, error = 0;
 
 	/*
-	 * This still works if we haven't read anything -- the dummy structure
+	 * This still works if we haven't read anything -- the temp structure
 	 * points to the root list, so we step through to the end of the root
 	 * list which has a valid parent pointer.
 	 */
