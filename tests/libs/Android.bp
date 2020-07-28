@@ -1187,7 +1187,7 @@ cc_test_library {
 cc_test_library {
     name: "libtest_dlopen_df_1_global",
     defaults: ["bionic_testlib_defaults"],
-    srcs: ["dl_df_1_global_dummy.cpp"],
+    srcs: ["dl_df_1_global_temp.cpp"],
     ldflags: ["-Wl,-z,global"],
 
     target: {
