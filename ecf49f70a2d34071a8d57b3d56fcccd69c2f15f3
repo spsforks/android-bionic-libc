@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a6966db_16f1e2bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-28T17:53:07Z",
+      "side": 1,
+      "message": "(the python one lgtm as-is.)",
+      "revId": "ecf49f70a2d34071a8d57b3d56fcccd69c2f15f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be736799_19cb304d",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-28T17:53:07Z",
+      "side": 1,
+      "message": "this is upstream. (but feel free to be the one to try to fix this upstream --- i haven\u0027t tried any yet. just put your name on the line in the spreadsheet if you do.)",
+      "revId": "ecf49f70a2d34071a8d57b3d56fcccd69c2f15f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f89a9cc_4a184c5d",
+        "filename": "libc/dns/resolv/res_init.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-28T17:53:07Z",
+      "side": 1,
+      "message": "\"",
+      "revId": "ecf49f70a2d34071a8d57b3d56fcccd69c2f15f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4c16630_2c7ffb6a",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-28T17:53:07Z",
+      "side": 1,
+      "message": "i was leaving these for rprichard because i assume we can come up with a more meaningful name.",
+      "revId": "ecf49f70a2d34071a8d57b3d56fcccd69c2f15f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c228303_3c8739e1",
+        "filename": "tests/libs/cfi_test_bad_lib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-28T17:53:07Z",
+      "side": 1,
+      "message": "temp seems wrong in this context. `array`?",
+      "range": {
+        "startLine": 2,
+        "startChar": 47,
+        "endLine": 2,
+        "endChar": 51
+      },
+      "revId": "ecf49f70a2d34071a8d57b3d56fcccd69c2f15f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
