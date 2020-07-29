@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b06f4c69_1530a3ae",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-29T01:23:33Z",
+      "side": 1,
+      "message": "i\u0027m assuming this means there\u0027s an N threads to M \"thread locals\" rather than N threads to N thread locals?",
+      "range": {
+        "startLine": 188,
+        "startChar": 54,
+        "endLine": 188,
+        "endChar": 76
+      },
+      "revId": "8844879212852a70918df1c9ebcac4d574f1fcd9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
