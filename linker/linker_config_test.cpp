@@ -89,8 +89,8 @@ static const char* config_str =
   "namespace.vndk_in_system.visible = true\n"
   "namespace.vndk_in_system.search.paths = /system/${LIB}\n"
   "namespace.vndk_in_system.permitted.paths = /system/${LIB}\n"
-  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so\n"
-  "namespace.vndk_in_system.whitelisted += libtinyxml2.so\n"
+  "namespace.vndk_in_system.allowlisted = libz.so:libyuv.so\n"
+  "namespace.vndk_in_system.allowlisted += libtinyxml2.so\n"
   "\n";
 // clang-format on
 
@@ -215,9 +215,8 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(ns_vndk_links[0].allow_all_shared_libs());
 
   ASSERT_TRUE(ns_vndk_in_system != nullptr) << "vndk_in_system namespace was not found";
-  ASSERT_EQ(
-      std::vector<std::string>({"libz.so", "libyuv.so", "libtinyxml2.so"}),
-      ns_vndk_in_system->whitelisted_libs());
+  ASSERT_EQ(std::vector<std::string>({"libz.so", "libyuv.so", "libtinyxml2.so"}),
+            ns_vndk_in_system->allowlisted_libs());
 }
 
 TEST(linker_config, smoke) {

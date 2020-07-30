@@ -39,10 +39,10 @@ bool android_namespace_t::is_accessible(const std::string& file) {
     return true;
   }
 
-  if (!whitelisted_libs_.empty()) {
+  if (!allowlisted_libs_.empty()) {
     const char *lib_name = basename(file.c_str());
-    if (std::find(whitelisted_libs_.begin(), whitelisted_libs_.end(),
-                  lib_name) == whitelisted_libs_.end()) {
+    if (std::find(allowlisted_libs_.begin(), allowlisted_libs_.end(), lib_name) ==
+        allowlisted_libs_.end()) {
       return false;
     }
   }
