@@ -81,6 +81,8 @@ namespace.ns.links = default
 namespace.ns.link.default.shared_libs = libc.so:libdl.so:libm.so:libstdc++.so
 
 # This defines what libraries are allowed to be loaded from ns1
-namespace.ns1.whitelisted = libsomething.so
+namespace.ns1.allowed_libs = libsomething.so
+[deprecated]
+namespace.ns1.whitelisted = libsomething2.so
 ```
 
