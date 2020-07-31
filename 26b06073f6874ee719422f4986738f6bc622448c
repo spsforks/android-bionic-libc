@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a6b8bfe_261d22ad",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-07-31T21:09:51Z",
+      "side": 1,
+      "message": "if we do keep it, should we document the arguments here?",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 67
+      },
+      "revId": "26b06073f6874ee719422f4986738f6bc622448c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
