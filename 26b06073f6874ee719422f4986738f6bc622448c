@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1961717a_0b335905",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-07-31T21:12:47Z",
+      "side": 1,
+      "message": "I think it\u0027s the right choice not to expose recallocarray.\n",
+      "revId": "26b06073f6874ee719422f4986738f6bc622448c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a6b8bfe_261d22ad",
         "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
         "patchSetId": 2
