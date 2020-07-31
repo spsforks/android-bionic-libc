@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "221173be_1a217bae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-31T19:10:09Z",
+      "side": 1,
+      "message": "the recallocarray stuff is interesting. i\u0027d be quite shy of that if it weren\u0027t for the fact that we\u0027re interested in moving quite heavily in the \"malloc \u003d\u003d calloc\" direction anyway.",
+      "revId": "944f48b6f1b958589837f98167d557a3a839b312",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
