@@ -1,0 +1,58 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004144649",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1383503?revision\u003d2",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "46c366f4_4eb9d224",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-07-31T20:02:01Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027complex\u0027, \u0027unexpected\u0027, or \u0027placeholder\u0027; see https://developers.google.com/style/inclusive-documentation#ableist-language for more details.",
+      "range": {
+        "startLine": 293,
+        "startChar": 18,
+        "endLine": 293,
+        "endChar": 23
+      },
+      "revId": "26b06073f6874ee719422f4986738f6bc622448c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004144649",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1383503?revision\u003d2",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "22337db1_4f01287b",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-07-31T20:02:01Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027complex\u0027, \u0027unexpected\u0027, or \u0027placeholder\u0027; see https://developers.google.com/style/inclusive-documentation#ableist-language for more details.",
+      "range": {
+        "startLine": 416,
+        "startChar": 30,
+        "endLine": 416,
+        "endChar": 35
+      },
+      "revId": "26b06073f6874ee719422f4986738f6bc622448c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
