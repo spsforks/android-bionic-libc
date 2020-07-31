@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c225b196_eb796a29",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-31T23:44:57Z",
+      "side": 1,
+      "message": "yeah, if nothing else this gets us closer than we currently are. we can worry about them later. (they\u0027re mostly for the linker anyway, which won\u0027t be getting coverage, so i don\u0027t think it matters until/unless we\u0027re looking at _linker_ coverage?)",
+      "parentUuid": "2ef95dc4_f1484fc0",
+      "range": {
+        "startLine": 9,
+        "startChar": 65,
+        "endLine": 9,
+        "endChar": 67
+      },
+      "revId": "e5200dab94a32facceaa2298434e22c740a07ff8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5817db5d_ab3af8e9",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
