@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ef95dc4_f1484fc0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2020-07-31T22:54:58Z",
+      "side": 1,
+      "message": "I think it\u0027s safe to disable coverage for the test libs.  I forgot which tests failed though - will re-run the test and update the commit message.",
+      "range": {
+        "startLine": 9,
+        "startChar": 65,
+        "endLine": 9,
+        "endChar": 67
+      },
+      "revId": "e5200dab94a32facceaa2298434e22c740a07ff8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5817db5d_ab3af8e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2020-07-31T22:54:58Z",
+      "side": 1,
+      "message": "There might be one other test that failed.  You can test this CL or I can try it as well.\n\n-1 until the commit message gets updated.",
+      "revId": "e5200dab94a32facceaa2298434e22c740a07ff8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
