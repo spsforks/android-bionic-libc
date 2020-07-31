@@ -1,0 +1,58 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004130854",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1379237?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "5750b663_a718a669",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-07-31T03:38:06Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027deny list\u0027 or \u0027allow list\u0027; see https://developers.google.com/style/word-list#blacklist for more details.",
+      "range": {
+        "startLine": 9,
+        "startChar": 33,
+        "endLine": 9,
+        "endChar": 42
+      },
+      "revId": "30f2f053f27731e091923a162b91439ee667944f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004130854",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1379237?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "abe9671a_4e0c16f1",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-07-31T03:38:06Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027deny list\u0027 or \u0027allow list\u0027; see https://developers.google.com/style/word-list#blacklist for more details.",
+      "range": {
+        "startLine": 329,
+        "startChar": 51,
+        "endLine": 329,
+        "endChar": 60
+      },
+      "revId": "30f2f053f27731e091923a162b91439ee667944f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
