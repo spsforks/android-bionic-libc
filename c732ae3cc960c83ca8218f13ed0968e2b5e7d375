@@ -404,6 +404,30 @@
     },
     {
       "key": {
+        "uuid": "8c8bb949_43ba87ea",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-04T16:16:35Z",
+      "side": 1,
+      "message": "@rprichard: friendly ping? Any thought/concern about this?\nThanks!",
+      "parentUuid": "2cd1b8b3_e39471a9",
+      "range": {
+        "startLine": 73,
+        "startChar": 3,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "c732ae3cc960c83ca8218f13ed0968e2b5e7d375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30af3095_30035854",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 9
