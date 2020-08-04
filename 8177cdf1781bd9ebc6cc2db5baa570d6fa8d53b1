@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "517b05ee_e215d626",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-08-04T23:20:35Z",
+      "side": 1,
+      "message": "I\u0027m still looking at the diffs in case I missed something, but it does build/boot and pass bionic unit tests.",
+      "revId": "8177cdf1781bd9ebc6cc2db5baa570d6fa8d53b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
