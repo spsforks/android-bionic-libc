@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "425debe2_1665be5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-05T05:15:27Z",
+      "side": 1,
+      "message": "ok, it seems fine to me.\n",
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d8c1579_757ba7df",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-05T05:15:27Z",
+      "side": 1,
+      "message": "newline?",
+      "range": {
+        "startLine": 108,
+        "startChar": 60,
+        "endLine": 108,
+        "endChar": 61
+      },
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcbf233f_179ec8d8",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-05T05:15:27Z",
+      "side": 1,
+      "message": "dtls_begin?",
+      "range": {
+        "startLine": 115,
+        "startChar": 10,
+        "endLine": 115,
+        "endChar": 19
+      },
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cdb42d6_8fa2ba5a",
+        "filename": "libc/private/bionic_allocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-05T05:15:27Z",
+      "side": 1,
+      "message": "If the ptr is arbitrarily invalid, the program would segfault, right? It\u0027s not going to reliably return 0...",
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
