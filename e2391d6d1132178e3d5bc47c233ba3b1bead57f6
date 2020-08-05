@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "5650aef8_cd5f98f8",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-05T16:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d8c1579_757ba7df",
+      "range": {
+        "startLine": 108,
+        "startChar": 60,
+        "endLine": 108,
+        "endChar": 61
+      },
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcbf233f_179ec8d8",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 10
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "665dd55a_33b21e17",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-05T16:21:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcbf233f_179ec8d8",
+      "range": {
+        "startLine": 115,
+        "startChar": 10,
+        "endLine": 115,
+        "endChar": 19
+      },
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7cdb42d6_8fa2ba5a",
         "filename": "libc/private/bionic_allocator.h",
         "patchSetId": 10
@@ -79,6 +127,24 @@
       "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7b99179_c9e06b94",
+        "filename": "libc/private/bionic_allocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-05T16:21:38Z",
+      "side": 1,
+      "message": "That\u0027s true. Updated the comment.\n\n(I guess this is no more likely to crash than the free() or realloc() above)",
+      "parentUuid": "7cdb42d6_8fa2ba5a",
+      "revId": "e2391d6d1132178e3d5bc47c233ba3b1bead57f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
