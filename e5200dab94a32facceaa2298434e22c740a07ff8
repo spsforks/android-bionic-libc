@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e8b08de1_afece0e4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2020-08-05T22:05:49Z",
+      "side": 1,
+      "message": "Only libtest_check_rtld_next_from_library to have coverage disabled.",
+      "parentUuid": "c225b196_eb796a29",
+      "range": {
+        "startLine": 9,
+        "startChar": 65,
+        "endLine": 9,
+        "endChar": 67
+      },
+      "revId": "e5200dab94a32facceaa2298434e22c740a07ff8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5817db5d_ab3af8e9",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
