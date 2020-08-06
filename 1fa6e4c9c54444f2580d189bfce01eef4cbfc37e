@@ -16,6 +16,23 @@
       "revId": "1fa6e4c9c54444f2580d189bfce01eef4cbfc37e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "991df4fa_2b213598",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-06T21:52:43Z",
+      "side": 1,
+      "message": "seems like you need another round anyway because this patchset doesn\u0027t compile :-)\n\n```\nbionic/libc/bionic/bionic_allocator.cpp:397:23: error: return type of out-of-line definition of \u0027BionicAllocator::get_chunk_size\u0027 differs from that in the declaration\nvoid BionicAllocator::get_chunk_size(void* ptr) {\n~~~~                  ^\n```",
+      "revId": "1fa6e4c9c54444f2580d189bfce01eef4cbfc37e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
