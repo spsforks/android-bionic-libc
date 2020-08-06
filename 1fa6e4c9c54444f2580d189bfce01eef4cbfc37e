@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a555c27b_420e1e52",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-06T21:51:33Z",
+      "side": 1,
+      "message": "Should I wait for enh@ to LGTM?\n\n(And thanks rprichard@ for the review! )",
+      "revId": "1fa6e4c9c54444f2580d189bfce01eef4cbfc37e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
