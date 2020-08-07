@@ -12,7 +12,7 @@
 # Output: HTML report is generated to /tmp/bionic-coverage/html/index.html
 #
 
-eval "$(cd ${ANDROID_BUILD_TOP}; build/soong/soong_ui.bash --dumpvars-mode --vars="TARGET_ARCH")"
+eval "$(cd ${ANDROID_BUILD_TOP}; build/soong/soong_ui.bash --dumpvars-mode --vars="TARGET_ARCH TARGET_ARCH_VARIANT")"
 
 LLVM_PROFDATA=${ANDROID_BUILD_TOP}/prebuilts/clang/host/linux-x86/llvm-binutils-stable/llvm-profdata
 LLVM_COV=${ANDROID_BUILD_TOP}/prebuilts/clang/host/linux-x86/llvm-binutils-stable/llvm-cov
@@ -40,8 +40,8 @@ ${LLVM_PROFDATA} merge \
 ${LLVM_COV} show \
   --instr-profile=${HOST_PROFDATA_DIR}/bionic.profdata \
   --format=html \
-  out/soong/.intermediates/bionic/libc/libc/android_${TARGET_ARCH}_shared_cov/unstripped/libc.so \
-  --object=out/soong/.intermediates/bionic/tests/bionic-unit-tests/android_${TARGET_ARCH}_cov/unstripped/bionic-unit-tests \
+  out/soong/.intermediates/bionic/libc/libc/android_${TARGET_ARCH}_${TARGET_ARCH_VARIANT}_shared_cov/unstripped/libc.so \
+  --object=out/soong/.intermediates/bionic/tests/bionic-unit-tests/android_${TARGET_ARCH}_${TARGET_ARCH_VARIANT}_cov/unstripped/bionic-unit-tests \
   /proc/self/cwd/bionic/libc \
   --output-dir=${HOST_PROFDATA_DIR}/html \
   --show-region-summary=false
