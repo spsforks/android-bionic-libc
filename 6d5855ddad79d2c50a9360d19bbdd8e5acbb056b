@@ -16,6 +16,121 @@
       "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb7ff508_50c0821b",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T21:19:06Z",
+      "side": 1,
+      "message": "\"functions\" is probably less confusing than \"API\" in this particular context :-)",
+      "range": {
+        "startLine": 34,
+        "startChar": 11,
+        "endLine": 34,
+        "endChar": 15
+      },
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be7ef388_963c3374",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T21:19:06Z",
+      "side": 1,
+      "message": "is there a clearer way to say what we mean here?\n\ni\u0027d be tempted to have the \"this value is set\" paragraph come much earlier too?\n\nmaybe just go straight in with \"The C/C++ equivalent of minSdkVersion\"?\n\nwe should probably explicitly say that this controls what functions are declared in the headers.",
+      "range": {
+        "startLine": 60,
+        "startChar": 36,
+        "endLine": 60,
+        "endChar": 66
+      },
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbcacb6b_3374b597",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T21:19:06Z",
+      "side": 1,
+      "message": "this is a macro.",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 62,
+        "endChar": 22
+      },
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30645746_f9443126",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T21:19:06Z",
+      "side": 1,
+      "message": "replace this not-quite-true sentence with the missing one about controlling what\u0027s declared? (this being the \"why you care\" part of that.)",
+      "range": {
+        "startLine": 68,
+        "startChar": 3,
+        "endLine": 69,
+        "endChar": 9
+      },
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4f2b79b_8768a666",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T21:19:06Z",
+      "side": 1,
+      "message": "give an example?",
+      "range": {
+        "startLine": 72,
+        "startChar": 26,
+        "endLine": 72,
+        "endChar": 27
+      },
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
