@@ -1,0 +1,10 @@
+Verified+1: Evgeny Eltsin <eaeltsin@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: Elliott Hughes <enh@google.com>
+Autosubmit+1: Evgeny Eltsin <eaeltsin@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Fri, 07 Aug 2020 05:52:50 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1382566
+Project: platform/bionic
+Branch: refs/heads/master
