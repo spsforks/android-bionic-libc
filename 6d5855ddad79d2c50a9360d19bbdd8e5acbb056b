@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55490c0f_ea0666bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-08-07T21:03:39Z",
+      "side": 1,
+      "message": "Damn, this actually mostly doesn\u0027t show on dac (none of the macros are shown, but the functions are): https://android.devsite.corp.google.com/ndk/reference/group/apilevels. All the file names are broken links too, since dac doesn\u0027t display the file views.\n\nMight be best to turn the __ANDROID_API__ documentation into a regular dac page instead of doxygen docs for now, and revisit this CL when we have tooling that works?",
+      "revId": "6d5855ddad79d2c50a9360d19bbdd8e5acbb056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
