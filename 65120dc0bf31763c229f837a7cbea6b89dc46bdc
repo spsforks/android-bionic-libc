@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e688a87e_ab375216",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-07T22:27:44Z",
+      "side": 1,
+      "message": "dwillemsen/ccross --- what\u0027s the right way to get the \"arm64_armv8-a\" string? ",
+      "revId": "65120dc0bf31763c229f837a7cbea6b89dc46bdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
