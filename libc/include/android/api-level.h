@@ -29,6 +29,13 @@
 #pragma once
 
 /**
+ * @defgroup apilevels API Levels
+ *
+ * Defines APIs and constants for working with Android API levels.
+ * @{
+ */
+
+/**
  * @file android/api-level.h
  * @brief Functions and constants for dealing with multiple API levels.
  *
@@ -42,7 +49,7 @@ __BEGIN_DECLS
 
 /**
  * Magic version number for an Android OS build which has not yet turned
- * into an official release, for comparison against `__ANDROID_API__`. See
+ * into an official release, for comparison against #__ANDROID_API__. See
  * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
  */
 #define __ANDROID_API_FUTURE__ 10000
@@ -50,78 +57,92 @@ __BEGIN_DECLS
 /* This #ifndef should never be true except when doxygen is generating docs. */
 #ifndef __ANDROID_API__
 /**
- * `__ANDROID_API__` is the API level being targeted. For the OS,
- * this is `__ANDROID_API_FUTURE__`. For the NDK, this is set by the
- * compiler system based on the API level you claimed to target. See
+ * The minimum Android OS API level that is supported by the build.
+ *
+ * The returned values correspond to the named constants in
+ * `<android/api-level.h>`, and is similar to the AndroidManifest.xml
+ * `minSdkVersion`. In most cases #__ANDROID_API__ will be identical to
+ * `minSdkVersion`, but as it is a build time constant it is possible for
+ * library code to use a different value than the app it will be included in.
+ *
+ * The code being built will not be compatible with OS versions lower than this
+ * value.
+ *
+ * This value is set automatically by Clang using the version suffix that is a
+ * part of the target name. If not set (as will be the case for OS code) this
+ * defaults to  #__ANDROID_API_FUTURE__.
+ *
+ * See android_get_device_api_level(),
+ * android_get_application_target_sdk_version() and
  * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
  */
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
 #endif
 
-/** Names the Gingerbread API level (9), for comparison against `__ANDROID_API__`. */
+/** Names the Gingerbread API level (9), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_G__ 9
 
-/** Names the Ice-Cream Sandwich API level (14), for comparison against `__ANDROID_API__`. */
+/** Names the Ice-Cream Sandwich API level (14), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_I__ 14
 
-/** Names the Jellybean API level (16), for comparison against `__ANDROID_API__`. */
+/** Names the Jellybean API level (16), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_J__ 16
 
-/** Names the Jellybean MR1 API level (17), for comparison against `__ANDROID_API__`. */
+/** Names the Jellybean MR1 API level (17), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_J_MR1__ 17
 
-/** Names the Jellybean MR2 API level (18), for comparison against `__ANDROID_API__`. */
+/** Names the Jellybean MR2 API level (18), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_J_MR2__ 18
 
-/** Names the KitKat API level (19), for comparison against `__ANDROID_API__`. */
+/** Names the KitKat API level (19), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_K__ 19
 
-/** Names the Lollipop API level (21), for comparison against `__ANDROID_API__`. */
+/** Names the Lollipop API level (21), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_L__ 21
 
-/** Names the Lollipop MR1 API level (22), for comparison against `__ANDROID_API__`. */
+/** Names the Lollipop MR1 API level (22), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_L_MR1__ 22
 
-/** Names the Marshmallow API level (23), for comparison against `__ANDROID_API__`. */
+/** Names the Marshmallow API level (23), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_M__ 23
 
-/** Names the Nougat API level (24), for comparison against `__ANDROID_API__`. */
+/** Names the Nougat API level (24), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_N__ 24
 
-/** Names the Nougat MR1 API level (25), for comparison against `__ANDROID_API__`. */
+/** Names the Nougat MR1 API level (25), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_N_MR1__ 25
 
-/** Names the Oreo API level (26), for comparison against `__ANDROID_API__`. */
+/** Names the Oreo API level (26), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_O__ 26
 
-/** Names the Oreo MR1 API level (27), for comparison against `__ANDROID_API__`. */
+/** Names the Oreo MR1 API level (27), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_O_MR1__ 27
 
-/** Names the Pie API level (28), for comparison against `__ANDROID_API__`. */
+/** Names the Pie API level (28), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_P__ 28
 
 /**
- * Names the "Q" API level (29), for comparison against `__ANDROID_API__`.
+ * Names the "Q" API level (29), for comparison against #__ANDROID_API__.
  * This release was called Android 10 publicly, not to be (but sure to be)
  * confused with API level 10.
  */
 #define __ANDROID_API_Q__ 29
 
-/** Names the "R" API level (30), for comparison against `__ANDROID_API__`. */
+/** Names the "R" API level (30), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_R__ 30
 
-/** Names the "S" API level (31), for comparison against `__ANDROID_API__`. */
+/** Names the "S" API level (31), for comparison against #__ANDROID_API__. */
 #define __ANDROID_API_S__ 31
 
 /**
- * Returns the `targetSdkVersion` of the caller, or `__ANDROID_API_FUTURE__`
- * if there is no known target SDK version (for code not running in the
- * context of an app).
+ * Returns the `targetSdkVersion` of the caller, or #__ANDROID_API_FUTURE__ if
+ * there is no known target SDK version (for code not running in the context of
+ * an app).
  *
  * The returned values correspond to the named constants in `<android/api-level.h>`,
  * and is equivalent to the AndroidManifest.xml `targetSdkVersion`.
  *
- * See also android_get_device_api_level().
+ * See also android_get_device_api_level() and #__ANDROID_API__.
  *
  * Available since API level 24.
  */
@@ -141,10 +162,12 @@ int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
  * The returned values correspond to the named constants in `<android/api-level.h>`,
  * and is equivalent to the Java `Build.VERSION.SDK_INT` API.
  *
- * See also android_get_application_target_sdk_version().
+ * See also android_get_application_target_sdk_version() and #__ANDROID_API__.
  */
 int android_get_device_api_level() __INTRODUCED_IN(29);
 
 #endif
 
 __END_DECLS
+
+/** @} */
