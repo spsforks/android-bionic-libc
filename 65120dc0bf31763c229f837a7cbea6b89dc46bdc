@@ -16,6 +16,24 @@
       "revId": "65120dc0bf31763c229f837a7cbea6b89dc46bdc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f009da8c_8544502c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2020-08-07T23:55:30Z",
+      "side": 1,
+      "message": "That\u0027s an implementation detail in Soong, it\u0027s not something we expose.  Are the files you need not in $OUT/symbols?",
+      "parentUuid": "e688a87e_ab375216",
+      "revId": "65120dc0bf31763c229f837a7cbea6b89dc46bdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
