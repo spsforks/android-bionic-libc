@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b8b565f_6392c05a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "yeah, it might have been worth waiting until i think i understand everything before adding jiyong, so he\u0027s not biased by having seen our working out :-)",
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e086e2c9_aa01c8cf",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "\"are guaranteed to be\"?\n\n(i\u0027m still uncomfortable about the complexity of the real truth here, as you can see!)",
+      "range": {
+        "startLine": 61,
+        "startChar": 45,
+        "endLine": 61,
+        "endChar": 49
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35c00aa5_22af9995",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "In the NDK, this macro is set ...",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 63,
+        "endChar": 13
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3a28cd9_24d34340",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "When building the OS itself, this ...",
+      "range": {
+        "startLine": 65,
+        "startChar": 60,
+        "endLine": 66,
+        "endChar": 32
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5ae1920_b7ecc6e5",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "i\u0027m not sure there\u0027s an \"and\" here... how about this instead:\n\n\u003cp\u003eThe value of `__ANDROID_API__` can be compared against the named constants in `\u003candroid/api-level.h\u003e`.\n\n\u003cp\u003eThe interpretation of `__ANDROID_API__` is similar to the AndroidManifest.xml ...",
+      "range": {
+        "startLine": 68,
+        "startChar": 76,
+        "endLine": 68,
+        "endChar": 79
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a91403d9_94eab40b",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "The value of `__ANDROID_API__` can be compared against the named ...",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 12
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a3f0bd4_a298c324",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "not 100% sure what you mean here. i think you mean s/multiple/different/?",
+      "range": {
+        "startLine": 72,
+        "startChar": 67,
+        "endLine": 73,
+        "endChar": 11
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f981e50_2d52343b",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "just \"on older OS versions\".",
+      "range": {
+        "startLine": 77,
+        "startChar": 72,
+        "endLine": 78,
+        "endChar": 33
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27bac496_a2d4fa25",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "\"For example, additional FORTIFY features may implicitly make use of new API, \"",
+      "range": {
+        "startLine": 80,
+        "startChar": 35,
+        "endLine": 81,
+        "endChar": 55
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8628e889_c8539a2d",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "is that actually a problem? or is the problem that SysV hashes _won\u0027t_ be generated? :-)\n\n(did that actually make it into the driver already? cool!)",
+      "range": {
+        "startLine": 81,
+        "startChar": 57,
+        "endLine": 81,
+        "endChar": 79
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe00be0d_c48d5481",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-08T00:06:04Z",
+      "side": 1,
+      "message": "do we have any docs on relocation packing? i\u0027d probably s/RELR/various kinds of relocation packing/ even if we don\u0027t have a nice link.",
+      "range": {
+        "startLine": 82,
+        "startChar": 37,
+        "endLine": 82,
+        "endChar": 41
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
