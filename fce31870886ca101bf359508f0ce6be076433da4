@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57cbb27c_b76e267d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-12T17:57:53Z",
+      "side": 1,
+      "message": "upstream discussions are ongoing, so i may revist this, but i think i\u0027d keep these names in the *code* even if there are alternatives for the API anyway...",
+      "revId": "fce31870886ca101bf359508f0ce6be076433da4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
