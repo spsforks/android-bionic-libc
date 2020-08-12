@@ -16,6 +16,23 @@
       "revId": "fce31870886ca101bf359508f0ce6be076433da4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02b60fd3_46d24e82",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-08-12T18:10:57Z",
+      "side": 1,
+      "message": "Honestly though, there has to be better names than \u0027pty\u0027 and \u0027tty\u0027.  Even after I redid all the terminal code in logwrap, I\u0027m still not clear on the acronyms.  I don\u0027t exactly have any suggestions though; I\u0027m just lamenting how unreadable this is unless you\u0027re already familiar with how terminals work.\n\n+danalbert@ since I remember hearing him talk about this in our meeting.",
+      "revId": "fce31870886ca101bf359508f0ce6be076433da4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
