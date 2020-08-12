@@ -33,6 +33,24 @@
       "revId": "fce31870886ca101bf359508f0ce6be076433da4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e87ae4e6_f9f30037",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-12T19:03:05Z",
+      "side": 1,
+      "message": "given the number of suggestions i\u0027ve seen already, i\u0027m really not sure there are better names. i think the trouble here (and one reason why master/slave was never helpful) is that you do just need to learn this thing, and once you\u0027ve done that, \"pty end\" and \"tty end\" work.\n\nin a lot of contexts _callers_ might be better off using parent/child, but since that\u0027s not always the case, i think it\u0027s reasonable to not favor that for the API itself.\n\n(and as i say in the checkin comment, for the _code_ here i think pty/tty are almost optimal. but, yeah, i may have to come back for the API.)",
+      "parentUuid": "02b60fd3_46d24e82",
+      "revId": "fce31870886ca101bf359508f0ce6be076433da4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
