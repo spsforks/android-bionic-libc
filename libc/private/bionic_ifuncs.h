@@ -43,6 +43,7 @@
 #define DEFINE_IFUNC_FOR(name) \
     name##_func name __attribute__((ifunc(#name "_resolver"))); \
     __attribute__((visibility("hidden"))) \
+    __attribute__((no_sanitize("hwaddress"))) \
     name##_func* name##_resolver IFUNC_ARGS
 
 #define DECLARE_FUNC(type, name) \
