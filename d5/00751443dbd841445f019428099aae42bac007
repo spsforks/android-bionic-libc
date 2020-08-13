@@ -1,0 +1,9 @@
+NDK-API-Review+1: Elliott Hughes <enh@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Code-Review+2: Ryan Prichard <rprichard@google.com>
+Submitted-by: Vy Nguyen <vyng@google.com>
+Submitted-at: Thu, 13 Aug 2020 19:58:00 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1360925
+Project: platform/bionic
+Branch: refs/heads/master
