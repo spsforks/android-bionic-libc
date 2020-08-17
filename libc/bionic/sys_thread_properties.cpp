@@ -107,7 +107,7 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(pid_t tid)
 
 void __libc_iterate_dynamic_tls(pid_t tid,
                                 void (*cb)(void* __dynamic_tls_begin, void* __dynamic_tls_end,
-                                           size_t __dso_id, void* __arg),
+                                           unsigned long __dso_id, void* __arg),
                                 void* arg) {
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   bionic_tcb* const tcb = __get_bionic_tcb_for_thread(tid);
@@ -119,7 +119,7 @@ void __libc_iterate_dynamic_tls(pid_t tid,
     if (dtls_begin == nullptr) continue;
     void* dtls_end =
         static_cast<void*>(static_cast<char*>(dtls_begin) + allocator.get_chunk_size(dtls_begin));
-    size_t dso_id = __tls_module_idx_to_id(i);
+    unsigned long dso_id = static_cast<unsigned long>(__tls_module_idx_to_id(i));
 
     cb(dtls_begin, dtls_end, dso_id, arg);
   }

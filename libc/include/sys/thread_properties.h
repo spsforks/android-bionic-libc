@@ -78,7 +78,7 @@ void __libc_register_thread_exit_callback(void (*__cb)(void)) __INTRODUCED_IN(31
 void __libc_iterate_dynamic_tls(pid_t __tid,
                                 void (*__cb)(void* __dynamic_tls_begin,
                                              void* __dynamic_tls_end,
-                                             size_t __dso_id,
+                                             unsigned long __dso_id,
                                              void* __arg),
                                 void* __arg) __INTRODUCED_IN(31);
 
