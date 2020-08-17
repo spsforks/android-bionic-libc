@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf41d55a_974f603d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-17T23:38:21Z",
+      "side": 1,
+      "message": "Not sure this is the best approach. Please let me know if you have a better solution. Thanks!",
+      "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
