@@ -51,6 +51,24 @@
       "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "870fbdb0_f2562541",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-18T01:13:35Z",
+      "side": 1,
+      "message": "eugenis@ did suggest just weak-declaring with type `uptr` (aka unsigned long) but I was not sure if one day `uptr` would be different from `size_t`",
+      "parentUuid": "b850e627_cbe6949d",
+      "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
