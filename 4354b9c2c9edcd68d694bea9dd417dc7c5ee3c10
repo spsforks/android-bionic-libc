@@ -34,6 +34,23 @@
       "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc14c99a_59b42209",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-08-18T01:13:35Z",
+      "side": 1,
+      "message": "I\u0027d just leave it as is.\nSanitizers can not use system headers in some places and need to redefine the basic types, and that\u0027s ok, no need to reflect it in the bionic headers. In an extern \"C\" function, size_t and unsigned long are the same thing.\n\nHaving said that, you should be able to use size_t in *_libcdep.cc.",
+      "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
