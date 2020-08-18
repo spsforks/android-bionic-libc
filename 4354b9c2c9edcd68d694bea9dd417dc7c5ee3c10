@@ -69,6 +69,24 @@
       "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab46dad_03403022",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-08-18T01:14:22Z",
+      "side": 1,
+      "message": "We rely on this in many, many places.",
+      "parentUuid": "870fbdb0_f2562541",
+      "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
