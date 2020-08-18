@@ -87,6 +87,24 @@
       "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea429d50_0a3b4959",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-18T01:16:40Z",
+      "side": 1,
+      "message": "Ok, then I\u0027d feel better about that :-) \nThanks!",
+      "parentUuid": "aab46dad_03403022",
+      "revId": "4354b9c2c9edcd68d694bea9dd417dc7c5ee3c10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
