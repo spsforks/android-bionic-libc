@@ -205,8 +205,10 @@
  */
 #if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
+#define __RENAME_LDBL_NOGUARD(rewrite)
 #else
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
+#define __RENAME_LDBL_NOGUARD(rewrite) __RENAME(rewrite)
 #endif
 
 /*
