@@ -96,7 +96,8 @@ struct lconv {
   char int_n_sign_posn;
 };
 
-struct lconv* localeconv(void) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+/* Available since API level 21 */
+struct lconv* localeconv(void);
 
 locale_t duplocale(locale_t __l) __INTRODUCED_IN(21);
 void freelocale(locale_t __l) __INTRODUCED_IN(21);
