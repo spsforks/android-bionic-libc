@@ -179,10 +179,13 @@ double scalbn(double __x, int __exponent);
 float scalbnf(float __x, int __exponent);
 long double scalbnl(long double __x, int __exponent) __RENAME_LDBL(scalbn, 3, 3);
 
-/* TODO: once the NDK only supports >= 18, use __RENAME_LDBL here too. */
-double scalbln(double __x, long __exponent) __INTRODUCED_IN_X86(18) __VERSIONER_NO_GUARD;
-float scalblnf(float __x, long __exponent) __INTRODUCED_IN_X86(18) __VERSIONER_NO_GUARD;
-long double scalblnl(long double __x, long __exponent) __INTRODUCED_IN_X86(18) __VERSIONER_NO_GUARD;
+/* TODO: once the NDK only supports >= 18, use __RENAME_LDBL here too.
+ * Available since API level 18 */
+double scalbln(double __x, long __exponent);
+/* Available since API level 18 */
+float scalblnf(float __x, long __exponent);
+/* Available since API level 18 */
+long double scalblnl(long double __x, long __exponent);
 
 double cbrt(double __x);
 float cbrtf(float __x);
@@ -282,11 +285,14 @@ long double nanl(const char* __kind) __RENAME_LDBL(nan, 13, 13) __attribute_cons
 
 double nextafter(double __x, double __y);
 float nextafterf(float __x, float __y);
-long double nextafterl(long double __x, long double __y) __RENAME_LDBL(nextafter, 3, 21) __VERSIONER_NO_GUARD;
+/* Available since API level 21 */
+long double nextafterl(long double __x, long double __y) __RENAME_LDBL_NOGUARD(nextafter);
 
-double nexttoward(double __x, long double __y) __INTRODUCED_IN(18) __VERSIONER_NO_GUARD;
+/* Available since API level 18 */
+double nexttoward(double __x, long double __y);
 float nexttowardf(float __x, long double __y);
-long double nexttowardl(long double __x, long double __y) __RENAME_LDBL(nexttoward, 18, 18) __VERSIONER_NO_GUARD;
+/* Available since API level 18 */
+long double nexttowardl(long double __x, long double __y) __RENAME_LDBL_NOGUARD(nexttoward);
 
 double fdim(double __x, double __y);
 float fdimf(float __x, float __y);
@@ -302,7 +308,8 @@ long double fminl(long double __x, long double __y) __RENAME_LDBL(fmin, 3, 3) __
 
 double fma(double __x, double __y, double __z);
 float fmaf(float __x, float __y, float __z);
-long double fmal(long double __x, long double __y, long double __z) __RENAME_LDBL(fma, 3, 21) __VERSIONER_NO_GUARD;
+/* Available since API level 21 */
+long double fmal(long double __x, long double __y, long double __z) __RENAME_LDBL_NOGUARD(fma);
 
 #define isgreater(x, y) __builtin_isgreater((x), (y))
 #define isgreaterequal(x, y) __builtin_isgreaterequal((x), (y))
