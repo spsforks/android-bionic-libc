@@ -51,10 +51,14 @@
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
-// Don't call libc's close, since it might call back into us as a result of fdsan.
+// Don't call libc's close or socket, since it might call back into us as a result of fdsan/fdtrack.
 #pragma GCC poison close
 static int __close(int fd) {
   return syscall(__NR_close, fd);
+}
+
+static int __socket(int domain, int type, int protocol) {
+  return syscall(__NR_socket, domain, type, protocol);
 }
 
 // Must be kept in sync with frameworks/base/core/java/android/util/EventLog.java.
@@ -460,7 +464,7 @@ static int open_log_socket() {
   // found that all logd crashes thus far have had no problem stuffing
   // the UNIX domain socket and moving on so not critical *today*.
 
-  int log_fd = TEMP_FAILURE_RETRY(socket(PF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
+  int log_fd = TEMP_FAILURE_RETRY(__socket(PF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
   if (log_fd == -1) {
     return -1;
   }
