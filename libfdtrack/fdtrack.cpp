@@ -28,24 +28,22 @@
 
 #include <inttypes.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include <array>
 #include <mutex>
 #include <vector>
 
 #include <android/fdsan.h>
+#include <bionic/android_unsafe_frame_pointer_chase.h>
 #include <bionic/fdtrack.h>
+#include <bionic/reserved_signals.h>
 
-#include <android-base/no_destructor.h>
 #include <android-base/thread_annotations.h>
 #include <async_safe/log.h>
-#include <bionic/reserved_signals.h>
-#include <unwindstack/LocalUnwinder.h>
+#include <unwindstack/Unwinder.h>
 
-struct FdEntry {
-  std::mutex mutex;
-  std::vector<unwindstack::LocalFrameData> backtrace GUARDED_BY(mutex);
-};
+extern "C" char* __cxa_demangle(const char*, char*, size_t*, int* status);
 
 extern "C" void fdtrack_dump();
 
@@ -55,6 +53,8 @@ extern "C" void fdtrack_iterate(fdtrack_callback_t callback, void* arg);
 
 static void fd_hook(android_fdtrack_event* event);
 
+static bool installed = false;
+
 // Backtraces for the first 4k file descriptors ought to be enough to diagnose an fd leak.
 static constexpr size_t kFdTableSize = 4096;
 
@@ -62,23 +62,19 @@ static constexpr size_t kFdTableSize = 4096;
 static constexpr size_t kStackDepth = 34;
 static constexpr size_t kStackFrameSkip = 2;
 
-static bool installed = false;
+struct FdEntry {
+  std::mutex mutex;
+  std::array<uintptr_t, kStackDepth> backtrace GUARDED_BY(mutex);
+  uint8_t backtrace_length GUARDED_BY(mutex);
+  static_assert(std::numeric_limits<decltype(backtrace_length)>::max() > kStackDepth);
+};
+
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
-static unwindstack::LocalUnwinder& Unwinder() {
-  static android::base::NoDestructor<unwindstack::LocalUnwinder> unwinder;
-  return *unwinder.get();
-}
 
 __attribute__((constructor)) static void ctor() {
-  for (auto& entry : stack_traces) {
-    entry.backtrace.reserve(kStackDepth);
-  }
-
   signal(BIONIC_SIGNAL_FDTRACK, [](int) { fdtrack_dump(); });
-  if (Unwinder().Init()) {
-    android_fdtrack_hook_t expected = nullptr;
-    installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
-  }
+  android_fdtrack_hook_t expected = nullptr;
+  installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
 }
 
 __attribute__((destructor)) static void dtor() {
@@ -99,13 +95,14 @@ static void fd_hook(android_fdtrack_event* event) {
   if (event->type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {
     if (FdEntry* entry = GetFdEntry(event->fd); entry) {
       std::lock_guard<std::mutex> lock(entry->mutex);
-      entry->backtrace.clear();
-      Unwinder().Unwind(&entry->backtrace, kStackDepth);
+      entry->backtrace.fill(0);
+      entry->backtrace_length =
+          android_unsafe_frame_pointer_chase(entry->backtrace.data(), entry->backtrace.size());
     }
   } else if (event->type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {
     if (FdEntry* entry = GetFdEntry(event->fd); entry) {
       std::lock_guard<std::mutex> lock(entry->mutex);
-      entry->backtrace.clear();
+      entry->backtrace_length = 0;
     }
   }
 }
@@ -113,9 +110,13 @@ static void fd_hook(android_fdtrack_event* event) {
 void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
   bool prev = android_fdtrack_set_enabled(false);
 
+  auto memory = unwindstack::Memory::CreateProcessMemory(getpid());
+  unwindstack::LocalMaps maps;
+  if (!maps.Parse()) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "fdtrack", "failed to parse maps");
+  }
+
   for (int fd = 0; fd < static_cast<int>(stack_traces.size()); ++fd) {
-    const char* function_names[kStackDepth];
-    uint64_t function_offsets[kStackDepth];
     FdEntry* entry = GetFdEntry(fd);
     if (!entry) {
       continue;
@@ -126,7 +127,7 @@ void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
       continue;
     }
 
-    if (entry->backtrace.empty()) {
+    if (entry->backtrace_length == 0) {
       entry->mutex.unlock();
       continue;
     } else if (entry->backtrace.size() < 2) {
@@ -137,14 +138,37 @@ void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
       continue;
     }
 
-    for (size_t i = kStackFrameSkip; i < entry->backtrace.size(); ++i) {
+    std::vector<unwindstack::FrameData> frames;
+    for (size_t i = kStackFrameSkip; i < entry->backtrace_length; ++i) {
       size_t j = i - kStackFrameSkip;
-      function_names[j] = entry->backtrace[i].function_name.c_str();
-      function_offsets[j] = entry->backtrace[i].function_offset;
+      uintptr_t pc = entry->backtrace[j];
+      if (pc == 0) {
+        entry->mutex.unlock();
+        break;
+      }
+
+      unwindstack::FrameData frame =
+          unwindstack::Unwinder::BuildFrameFromPcOnly(pc, &maps, memory, true);
+      frames.emplace_back(std::move(frame));
     }
 
-    bool should_continue = callback(fd, function_names, function_offsets,
-                                    entry->backtrace.size() - kStackFrameSkip, arg);
+    std::vector<const char*> function_names;
+    std::vector<uint64_t> function_offsets;
+
+    for (const auto& frame : frames) {
+      char* demangled_name = __cxa_demangle(frame.function_name.c_str(), nullptr, nullptr, nullptr);
+      if (demangled_name) {
+        function_names.emplace_back(demangled_name);
+        free(demangled_name);
+      } else {
+        function_names.emplace_back(frame.function_name.c_str());
+      }
+
+      function_offsets.push_back(frame.function_offset);
+    }
+
+    bool should_continue =
+        callback(fd, function_names.data(), function_offsets.data(), function_names.size(), arg);
 
     entry->mutex.unlock();
 
