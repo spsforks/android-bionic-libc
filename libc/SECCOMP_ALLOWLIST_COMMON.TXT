@@ -32,6 +32,9 @@ int open:open(const char*, int, ...)  arm,x86,x86_64
 int stat64:stat64(const char*, struct stat64*)  arm,x86
 ssize_t readlink:readlink(const char*, char*, size_t)  arm,x86,x86_64
 
+# Needed for an inline call in async-safe logging on x86, which uses socketcall normally.
+int socket:socket(int, int, int) x86
+
 #
 # Useful new syscalls which we don't yet use in bionic.
 #
