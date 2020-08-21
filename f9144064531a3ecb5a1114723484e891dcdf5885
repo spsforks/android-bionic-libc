@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c4dd79c_af28b915",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-08-21T00:37:37Z",
+      "side": 1,
+      "message": "Any chance this will run into any security policy problems? I would assume all security policies would allow the close syscall, but maybe not.",
+      "revId": "f9144064531a3ecb5a1114723484e891dcdf5885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
