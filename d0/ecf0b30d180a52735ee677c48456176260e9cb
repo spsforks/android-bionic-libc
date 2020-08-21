@@ -1,0 +1,11 @@
+Verified+1: Bowgo Tsai <bowgotsai@google.com>
+Code-Review+2: Hung-ying Tyan <tyanh@google.com>
+Code-Review+1: Tom Cherry <tomcherry@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Autosubmit+1: Bowgo Tsai <bowgotsai@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Fri, 21 Aug 2020 09:33:49 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1403568
+Project: platform/bionic
+Branch: refs/heads/master
