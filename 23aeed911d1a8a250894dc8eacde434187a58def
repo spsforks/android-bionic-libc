@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2cf7df52_8f9fc76a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-08-21T00:19:33Z",
+      "side": 1,
+      "message": "Even with the fix in https://android-review.googlesource.com/c/platform/bionic/+/1406411, I\u0027m still worried about malloc calling open or some other fd-creating function inside. jemalloc does at some point, and scudo also has a path that does so (but only if getrandom fails).\n\nI\u0027m not sure if we should merge this and poke the ART folks again to try to get them to enable frame pointers, or try to ensure that malloc doesn\u0027t call open etc. (or make fdtrack respect the fdsan \"stop recursing\" TLS bool, and make the malloc wrappers set it, maybe?).\n\nOn the other hand, this is quite a bit faster.",
+      "revId": "23aeed911d1a8a250894dc8eacde434187a58def",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
