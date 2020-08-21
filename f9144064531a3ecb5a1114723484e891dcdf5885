@@ -16,6 +16,24 @@
       "revId": "f9144064531a3ecb5a1114723484e891dcdf5885",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "158b8458_7bf6ccf4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-08-21T01:37:53Z",
+      "side": 1,
+      "message": "Well, if something is blocking close, it\u0027s not any more broken than it would be before.\n\nNow that I think about it though, we call socket via socketcall on i386, so it\u0027s possible that a seccomp policy would be broken if it had an x86 specific polcicy that only allowed socketcall. x86 has had syscall numbers for the individual socket functions since 4.3, so maybe we should just switch it over (done in PS2)",
+      "parentUuid": "2c4dd79c_af28b915",
+      "revId": "f9144064531a3ecb5a1114723484e891dcdf5885",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
