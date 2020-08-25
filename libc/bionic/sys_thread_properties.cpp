@@ -45,9 +45,20 @@
 #include "pthread_internal.h"
 
 void __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) {
+  // Bionic ELF TLS is variant2-ish:
+  //  - The thread-pointer points at the lower-bound (ie., max) of the  static TLS.
+  //  - The last static module's segment is the upper bound (ie., min) of the region.
   const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
-  *stls_begin = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
-  *stls_end = reinterpret_cast<char*>(*stls_begin) + layout.size();
+  *stls_end = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
+
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  const TlsModule& last_static_mod = modules[modules.static_module_count - 1];
+  // Assert that the module is static, and that either there is no more module after it or the next
+  // one is dynamic.
+  CHECK(last_static_mod.static_offset != SIZE_MAX &&
+        (modules.static_module_count == modules.module_count ||
+         modules[modules.static_module_count].static_offset == SIZE_MAX));
+  stls_begin = last_static_mod.segment.init_ptr;
 }
 
 void __libc_register_thread_exit_callback(thread_exit_cb_t cb) {
