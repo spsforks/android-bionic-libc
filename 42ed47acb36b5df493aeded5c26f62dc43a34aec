@@ -25,6 +25,47 @@
     },
     {
       "key": {
+        "uuid": "d760ee1f_b721b787",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-25T04:09:57Z",
+      "side": 1,
+      "message": "\u003e AFAIK, Bionic arm* does implement variant 1, while x86* implements variant 2.\n\u003e \n\u003e For simplicity and consistency with arm, the x86* implementation does place DSO TLS memory after the TCB rather than before it.\n\nI don\u0027t have access to an x86-android platforms but I ran the following test[0] on a pixel3 (arm64) and I didn\u0027t see the thread_local addresses within the static TLS block. \nMaybe I\u0027ve done something stupid in the test ? \n\n[0] Test https://paste.googleplex.com/5895126082650112\n[1] Output: https://paste.googleplex.com/5721735833845760",
+      "parentUuid": "c4549595_b93fc1f4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7993a5dc_54c6394c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-25T04:09:57Z",
+      "side": 1,
+      "message": "P.S: Only tested this on a pixel. So I can\u0027t say this is also correct for the x86 but right now, it\u0027s wrong for both.",
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "300e11a5_066c6dfc",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 1
