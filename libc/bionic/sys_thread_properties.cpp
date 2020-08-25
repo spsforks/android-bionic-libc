@@ -44,8 +44,8 @@
 #include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
+
 void __libc_get_static_tls_bounds(void** stls_begin, void** stls_end) {
-  const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
   *stls_begin = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
   *stls_end = reinterpret_cast<char*>(*stls_begin) + layout.size();
 }
