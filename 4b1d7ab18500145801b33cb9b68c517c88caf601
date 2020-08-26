@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "929028f8_0dc6fde7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-08-26T07:25:08Z",
+      "side": 1,
+      "message": "I think this one should compile now that 5.8 kernel has landed.\nThis kernel adds support for BTI. As far as I can tell its headers\nare exported to bionic.",
+      "revId": "4b1d7ab18500145801b33cb9b68c517c88caf601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
