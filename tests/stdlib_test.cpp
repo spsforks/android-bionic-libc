@@ -138,6 +138,10 @@ TEST(stdlib, lrand48) {
   EXPECT_EQ(397769746, lrand48());
 }
 
+TEST(stdlib, catch_me_if_you_can) {
+  EXPECT_EQ(0, random() & 1);
+}
+
 TEST(stdlib, random) {
   srandom(0x01020304);
   EXPECT_EQ(55436735, random());
