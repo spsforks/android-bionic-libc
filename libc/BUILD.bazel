@@ -1,0 +1,160 @@
+# Copts for libc-related libraries.
+LIBC_CFLAGS = [
+    "-D_LIBC=1",
+    "-D__BIONIC_LP32_USE_STAT64",
+    "-Wextra",
+    "-Wunused",
+    "-Wno-char-subscripts",
+    "-Wno-deprecated-declarations",
+    "-Wno-gcc-compat",
+    # TODO(b/147666318): Included in bionic's common libc flags, but causes some Bazel targets
+    # to fail.
+    # "-Wframe-larger-than=2048",
+
+    # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+    "-Werror=pointer-to-int-cast",
+    "-Werror=int-to-pointer-cast",
+    "-Werror=type-limits",
+    "-Werror",
+
+    # Clang's exit-time destructor registration hides __dso_handle, but
+    # __dso_handle needs to have default visibility on ARM32. See b/73485611.
+    "-Wexit-time-destructors",
+
+    # GWP-ASan requires platform TLS.
+    "-fno-emulated-tls",
+    "-DUSE_SCUDO",
+]
+
+
+_LIBC_LDFLAGS = [
+    "-Wl,-z,muldefs",
+    ]
+
+_LIBC_INCLUDES = [
+    "async_safe/include",
+]
+
+cc_library(
+    name = "upstream_freebsd_large_stack",
+    srcs = [
+        "upstream-freebsd/lib/libc/gen/glob.c",
+    ] + glob([
+        "upstream-freebsd/**/*.h",
+    ]),
+    copts = LIBC_CFLAGS + [
+        "-Wno-sign-compare",
+        "-Wno-unused-parameter",
+        "-include freebsd-compat.h",
+        "-Wframe-larger-than=66000",
+    ],
+    includes = _LIBC_INCLUDES + [
+        "upstream-freebsd/android/include",
+    ],
+    linkopts = _LIBC_LDFLAGS,
+    deps = [
+        ":includes_for_bionic",
+        "//system/core:includes",
+    ],
+)
+
+cc_library(
+    name = "tzcode",
+    srcs = glob([
+#        "tzcode/**/*.c",
+        "tzcode/**/*.h",
+    ]) + [
+#        "tzcode/bionic.cpp",
+#        "upstream-openbsd/lib/libc/time/wcsftime.c",  # tzcode doesn't include wcsftime, so we use the OpenBSD one.
+    ],
+    copts = LIBC_CFLAGS + [
+        "-Wno-unused-parameter",
+        # Don't use ridiculous amounts of stack.
+        "-DALL_STATE",
+        # Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
+        "-DSTD_INSPIRED",
+        # Obviously, we want to be thread-safe.
+        "-DTHREAD_SAFE",
+        # The name of the tm_gmtoff field in our struct tm.
+        "-DTM_GMTOFF=tm_gmtoff",
+        # Where we store our tzdata.
+        "-DTZDIR=\"/system/usr/share/zoneinfo\"",
+        # Include `tzname`, `timezone`, and `daylight` globals.
+        "-DHAVE_POSIX_DECLS=0",
+        "-DUSG_COMPAT=1",
+        # Use the empty string (instead of "   ") as the timezone abbreviation
+        # fallback.
+        "-DWILDABBR=\\\"\\\"",
+        "-DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU",
+        "-Dlint",
+    ],
+    includes = _LIBC_INCLUDES + ["tzcode"],
+    linkopts = _LIBC_LDFLAGS,
+    deps = [
+        ":includes_for_bionic",
+        "//system/core:includes",
+    ],
+)
+
+cc_library(
+    name = "libc_openbsd_large_stack",
+    srcs = [
+        "stdio/vfprintf.cpp",
+        "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/strstr.c",
+        "upstream-openbsd/android/include/openbsd-compat.h",
+    ] + glob(["stdio/**/*.h"]) + glob(["upstream-openbsd/lib/libc/stdio/**/*.h"]),
+    copts = LIBC_CFLAGS + [
+        "-include openbsd-compat.h",
+        "-Wno-sign-compare",
+        "-Wframe-larger-than=5000",
+    ],
+    includes = _LIBC_INCLUDES + [
+        "upstream-openbsd/android/include/",
+        "upstream-openbsd/lib/libc/include/",
+        "upstream-openbsd/lib/libc/gdtoa/",
+        "upstream-openbsd/lib/libc/stdio/",
+    ],
+    linkopts = _LIBC_LDFLAGS,
+    deps = [
+        ":includes_for_bionic",
+        "//system/core:includes",
+    ],
+)
+
+# Required by other bionic libraries.
+cc_library(
+    name = "includes_for_bionic",
+    hdrs = [
+        "include/sys/mman.h",
+        "include/dlfcn.h",
+        "include/stdlib.h",
+        "include/assert.h",
+    ] + glob([
+        "bionic/**/*.h",
+        "platform/bionic/**/*.h",
+        "kernel/uapi/**/*.h",
+        "kernel/android/uapi/**/*.h",
+    ]),
+    includes = [
+        ".",
+        "include",
+        "kernel/android/uapi",
+        "kernel/uapi",
+        "platform",
+        "kernel/uapi/asm-x86",
+    ],
+    deps = [
+        ":private_headers",
+    ],
+)
+
+cc_library(
+    name = "private_headers",
+    hdrs = glob(["private/**/*.h"]),
+    include_prefix = "private",
+    # The files are included as <private/foo.h>
+    # This means we need to strip the "private" prefix, then re-add it.
+    # If we don't, _every_ file in this package would be includable.
+    strip_include_prefix = "private",
+)
