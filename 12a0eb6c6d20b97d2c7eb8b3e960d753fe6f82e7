@@ -1,0 +1,58 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004712438",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1416649?revision\u003d1",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a67a65c3_91133954",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-09-01T02:13:13Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027primary/secondary\u0027 or \u0027manager/worker\u0027; see https://source.android.com/setup/contribute/respectful-code for more details.",
+      "range": {
+        "startLine": 8,
+        "startChar": 159,
+        "endLine": 8,
+        "endChar": 165
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000004712438",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1416649?revision\u003d1",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "a16f2cc3_61bd5ba6",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-09-01T02:13:13Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027primary/secondary\u0027 or \u0027manager/worker\u0027; see https://source.android.com/setup/contribute/respectful-code for more details.",
+      "range": {
+        "startLine": 17,
+        "startChar": 75,
+        "endLine": 17,
+        "endChar": 81
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
