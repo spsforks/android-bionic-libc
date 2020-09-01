@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f806da06_3d3facc3",
+        "filename": "libc/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T23:50:55Z",
+      "side": 1,
+      "message": "where\u0027s this coming from? your CL seems to only be BSD licensed files?",
+      "revId": "3eb002c9ff0c999d4a919f030cd343067faf6f39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
