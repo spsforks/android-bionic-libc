@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bb61321_60703860",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-03T16:11:14Z",
+      "side": 1,
+      "message": "just include \u003cprivate/bionic_asm.h\u003e and take the no-op implementation of __bionic_asm_custom_note_gnu_section() for the other architectures.",
+      "revId": "18181b3fc39da103d31b5612b6fb99ab21fc4ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
