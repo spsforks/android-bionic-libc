@@ -62,11 +62,18 @@ __thread char large_tls_var[4 * 1024 * 1024];
 void test_iter_tls() {
   void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
 
+  large_tls_var[1025] = 'a';
+  int found_count = 0;
   int i = 0;
   auto cb = [&](void* dtls_begin, void* dtls_end, size_t dso_id, void* arg) {
+    if (&large_tls_var >= dtls_begin && &large_tls_var < dtls_end)
+      ++found_count;
     printf("iterate_cb i = %d\n", i++);
   };
   __libc_iterate_dynamic_tls(gettid(), cb, nullptr);
+
+  // It should be found exactly once.
+  assert(found_count == 1);
   printf("done_iterate_dynamic_tls\n");
 }
 
