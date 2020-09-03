@@ -53,6 +53,16 @@
 #define PTHREAD_ATTR_FLAG_INHERIT 0x00000004
 #define PTHREAD_ATTR_FLAG_EXPLICIT 0x00000008
 
+#if defined(__i386__) || defined(__i686__)
+// If non-zero, Bionic should keep a mapping of pid->tcb addresses.
+__LIBC_HIDDEN__ extern _Atomic(int) __libc_keep_tcb_map;
+
+__LIBC_HIDDEN__ void __pthread_internal_add_tcb_mapping(bionic_tcb* tcb, pid_t tid);
+__LIBC_HIDDEN__ bionic_tcb* __pthread_internal_find_tcb(pid_t tid);
+__LIBC_HIDDEN__ void __pthread_internal_remove_tcb_mapping(pid_t tid);
+
+#endif
+
 enum ThreadJoinState {
   THREAD_NOT_JOINED,
   THREAD_EXITED_NOT_JOINED,

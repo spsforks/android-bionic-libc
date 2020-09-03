@@ -333,6 +333,10 @@ static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
 
   __hwasan_thread_enter();
+#if defined(__i386__) || defined(__i686__)
+  // FIXME: The main thread doesn't go through here???
+  __pthread_internal_add_tcb_mapping(__get_bionic_tcb(), gettid());
+#endif
 
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.

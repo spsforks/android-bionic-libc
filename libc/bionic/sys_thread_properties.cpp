@@ -110,7 +110,21 @@ void __libc_iterate_dynamic_tls(pid_t tid,
                                            size_t __dso_id, void* __arg),
                                 void* arg) {
   TlsModules& modules = __libc_shared_globals()->tls_modules;
-  bionic_tcb* const tcb = __get_bionic_tcb_for_thread(tid);
+  bionic_tcb* tcb = __get_bionic_tcb_for_thread(tid);
+
+  // If tcb looks like an invalid address, just ignore it.
+  if (tcb < reinterpret_cast<void*>(0xffff)) {
+#if defined(__i386__) || defined(__i686__)
+    tcb = __pthread_internal_find_tcb(tid);
+    if (tcb != nullptr) {
+      goto found_tcb;
+    }
+#endif
+    // FIXME: Would be nice to print the tracee and the address.
+    async_safe_write_log(ANDROID_LOG_VERBOSE, "libc", "Ignoring invalid TCB from tracee.");
+    return;
+  }
+found_tcb:
   TlsDtv* const dtv = __get_tcb_dtv(tcb);
   BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
 
@@ -131,3 +145,9 @@ void __libc_register_dynamic_tls_listeners(dtls_listener_t on_creation,
   tls_modules.on_creation_cb = on_creation;
   tls_modules.on_destruction_cb = on_destruction;
 }
+
+#if defined(__i386__) || defined(__i686__)
+void __libc_enable_tcb_caching() {
+  atomic_store(&__libc_keep_tcb_map, 1);
+}
+#endif

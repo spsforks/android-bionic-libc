@@ -112,6 +112,9 @@ void pthread_exit(void* return_value) {
   munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif
 
+#if defined(__i368__) || defined(__i3686__)
+  __pthread_internal_remove_tcb_mapping(gettid());
+#endif
   __free_dynamic_tls(__get_bionic_tcb());
 
   if (old_state == THREAD_DETACHED) {
