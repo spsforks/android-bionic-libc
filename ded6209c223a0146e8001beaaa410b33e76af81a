@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f7b4911_e0c147ff",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-03T16:08:27Z",
+      "side": 1,
+      "message": "is this adding any value, or would it be clearer to just inline it?",
+      "revId": "ded6209c223a0146e8001beaaa410b33e76af81a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
