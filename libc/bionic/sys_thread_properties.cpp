@@ -111,6 +111,14 @@ void __libc_iterate_dynamic_tls(pid_t tid,
                                 void* arg) {
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   bionic_tcb* const tcb = __get_bionic_tcb_for_thread(tid);
+
+  // If tcb looks like an invalid address, just ignore it.
+  if (tcb < reinterpret_cast<void*>(0xffff)) {
+    // FIXME: Would be nice to print the tracee and the address.
+    async_safe_write_log(ANDROID_LOG_VERBOSE, "libc", "Ignoring invalid TCB from tracee.");
+    return;
+  }
+
   TlsDtv* const dtv = __get_tcb_dtv(tcb);
   BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
 
