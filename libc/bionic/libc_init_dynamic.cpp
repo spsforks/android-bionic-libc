@@ -82,6 +82,13 @@ static void __libc_preinit_impl() {
   __libc_init_sysinfo();
 #endif
 
+#if __has_feature(hwaddress_sanitizer)
+  // Notify the HWASan runtime library whenever a library is loaded or unloaded
+  // so that it can update its shadow memory.
+  __libc_shared_globals()->load_hook = __hwasan_library_loaded;
+  __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
+#endif
+
   // Register libc.so's copy of the TLS generation variable so the linker can
   // update it when it loads or unloads a shared object.
   TlsModules& tls_modules = __libc_shared_globals()->tls_modules;
@@ -98,13 +105,6 @@ static void __libc_preinit_impl() {
   __libc_init_profiling_handlers();
 
   __libc_init_fork_handler();
-
-#if __has_feature(hwaddress_sanitizer)
-  // Notify the HWASan runtime library whenever a library is loaded or unloaded
-  // so that it can update its shadow memory.
-  __libc_shared_globals()->load_hook = __hwasan_library_loaded;
-  __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
-#endif
 
   netdClientInit();
 }
