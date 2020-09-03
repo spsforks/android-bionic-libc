@@ -36,4 +36,8 @@ TEST(sys_procfs, smoke) {
 
   static_assert(sizeof(prgregset_t) == sizeof(elf_gregset_t), "");
   static_assert(sizeof(prfpregset_t) == sizeof(elf_fpregset_t), "");
+
+  // NGREG != ELF_NGREG (https://github.com/android/ndk/issues/1347)
+  static_assert(sizeof(gregset_t) / sizeof(greg_t) == NGREG);
+  static_assert(sizeof(user_regs_struct) / sizeof(elf_greg_t) == ELF_NGREG);
 }

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_UCONTEXT_H_
-#define _SYS_UCONTEXT_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -74,7 +73,7 @@ enum {
 };
 
 #define NGREG 18 /* Like glibc. */
-
+#define ELF_NGREG NGREG
 typedef int greg_t;
 typedef greg_t gregset_t[NGREG];
 typedef struct user_fpregs fpregset_t;
@@ -103,6 +102,7 @@ typedef struct ucontext {
 #elif defined(__aarch64__)
 
 #define NGREG 34 /* x0..x30 + sp + pc + pstate */
+#define ELF_NGREG NGREG
 typedef unsigned long greg_t;
 typedef greg_t gregset_t[NGREG];
 typedef struct user_fpsimd_struct fpregset_t;
@@ -164,10 +164,10 @@ enum {
 #define REG_UESP REG_UESP
   REG_SS,
 #define REG_SS REG_SS
-  NGREG
-#define NGREG NGREG
 };
 
+#define NGREG 19
+#define ELF_NGREG 17
 typedef int greg_t;
 typedef greg_t gregset_t[NGREG];
 
@@ -262,10 +262,10 @@ enum {
 #define REG_OLDMASK REG_OLDMASK
   REG_CR2,
 #define REG_CR2 REG_CR2
-  NGREG
-#define NGREG NGREG
 };
 
+#define NGREG 23
+#define ELF_NGREG 27
 typedef long greg_t;
 typedef greg_t gregset_t[NGREG];
 
@@ -316,5 +316,3 @@ typedef struct ucontext {
 #endif
 
 __END_DECLS
-
-#endif /* _SYS_UCONTEXT_H_ */

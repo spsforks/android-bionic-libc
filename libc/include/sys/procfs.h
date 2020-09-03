@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_PROCFS_H_
-#define _SYS_PROCFS_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/ucontext.h>
@@ -35,7 +34,7 @@
 __BEGIN_DECLS
 
 typedef unsigned long elf_greg_t;
-typedef elf_greg_t elf_gregset_t[NGREG];
+typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 typedef fpregset_t elf_fpregset_t;
 
@@ -58,5 +57,3 @@ struct elf_siginfo {
 #define ELF_PRARGSZ 80
 
 __END_DECLS
-
-#endif
