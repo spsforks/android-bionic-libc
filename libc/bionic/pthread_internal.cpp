@@ -42,6 +42,82 @@
 static pthread_internal_t* g_thread_list = nullptr;
 static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
 
+#if defined(__i386__) || defined(__i686__)
+
+__LIBC_HIDDEN__ _Atomic(bool) __libc_keep_tcb_map = false;
+
+struct tcb_map_t {
+  tcb_map_t* next;
+  tcb_map_t* prev;
+
+  bionic_tcb* tcb;
+  pid_t tid;
+};
+
+// FIXME: Maybe make an actual map for faster lookup.
+static tcb_map_t* tcb_map = nullptr;
+static pthread_rwlock_t g_thread_tcb_map_lock = PTHREAD_RWLOCK_INITIALIZER;
+
+static tcb_map_t* __lookup_tcb_map(pid_t tid) {
+  tcb_map_t* cur = tcb_map;
+  while (cur != nullptr) {
+    if (cur->tid == tid) return cur;
+    cur = cur->next;
+  }
+  return nullptr;
+}
+
+void __pthread_internal_add_tcb_mapping(bionic_tcb* tcb, pid_t tid) {
+  if (!atomic_load(&__libc_keep_tcb_map)) return;
+
+  void* allocation =
+      mmap(nullptr, sizeof(tcb_map_t), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation == MAP_FAILED) {
+    async_safe_fatal("Failed to allocate memory for tcb_map_t: error %d", errno);
+  }
+  ScopedWriteLock locker(&g_thread_tcb_map_lock);
+  tcb_map_t* new_node = static_cast<tcb_map_t*>(allocation);
+
+  new_node->tcb = tcb;
+  new_node->tid = tid;
+  new_node->next = tcb_map;
+  new_node->prev = nullptr;
+  if (new_node->next != nullptr) {
+    new_node->next->prev = new_node;
+  }
+  tcb_map = new_node;
+}
+
+bionic_tcb* __pthread_internal_find_tcb(pid_t tid) {
+  if (!atomic_load(&__libc_keep_tcb_map)) return nullptr;
+
+  ScopedReadLock locker(&g_thread_tcb_map_lock);
+  tcb_map_t* node = __lookup_tcb_map(tid);
+  if (node == nullptr) return nullptr;
+  return node->tcb;
+}
+
+void __pthread_internal_remove_tcb_mapping(pid_t tid) {
+  if (!atomic_load(&__libc_keep_tcb_map)) return;
+
+  ScopedWriteLock locker(&g_thread_tcb_map_lock);
+  tcb_map_t* node = __lookup_tcb_map(tid);
+  if (node == nullptr) return;
+
+  if (node->next != nullptr) {
+    node->next->prev = node->prev;
+  }
+  if (node->prev != nullptr) {
+    node->prev->next = node->next;
+  } else {
+    tcb_map = node->next;
+  }
+
+  munmap(node, sizeof(tcb_map_t));
+};
+
+#endif
+
 pthread_t __pthread_internal_add(pthread_internal_t* thread) {
   ScopedWriteLock locker(&g_thread_list_lock);
 
