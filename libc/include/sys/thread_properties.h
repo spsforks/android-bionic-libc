@@ -94,4 +94,13 @@ void __libc_register_dynamic_tls_listeners(
     void (*__on_destruction)(void* __dynamic_tls_begin,
                              void* __dynamic_tls_end)) __INTRODUCED_IN(31);
 
+#if defined(__i386__) || defined(__i686__)
+/**
+ * Tell Bionic to keep a map of TCB addresses that could be looked up via a thread's pid.
+ *
+ * Note: This is somewhat of a hack for the benefit of x86 platforms where
+ * reading the gs register with PTRACE does not work.
+ */ 
+void __libc_enable_tcb_caching() __INTRODUCED_IN(31);
+#endif
 __END_DECLS
