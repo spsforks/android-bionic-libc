@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e25a8c81_7f03654c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-03T20:12:18Z",
+      "side": 1,
+      "message": "Looks good, but it looks like ELF_NGREG is already defined somewhere.",
+      "revId": "fd05629ad210d38f98b757a9f246d9e90b21ef47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
