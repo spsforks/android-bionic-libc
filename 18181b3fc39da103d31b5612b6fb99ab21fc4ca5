@@ -39,6 +39,24 @@
       "revId": "18181b3fc39da103d31b5612b6fb99ab21fc4ca5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6d64b46_07c99856",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-04T08:43:03Z",
+      "side": 1,
+      "message": "This is what we tried first, but then ran into compilation issues.\n\nExample:\n//bionic/libc:crtend_android clang arch-common/bionic/crtend.S\n...\nbionic/libc/private/bionic_asm.h:32:10: fatal error: \u0027asm/unistd.h\u0027 file not found\n#include \u003casm/unistd.h\u003e /* For system call numbers. */\n...\n\nLooks like there would be a dependency on kernel headers which I assume we should not add.\nNot very elegant, but bionic_asm_arm64.h has no include dependencies at the moment, which of course, could break anytime.\n\nDo you think there is another way we could make this work?",
+      "parentUuid": "8bb61321_60703860",
+      "revId": "18181b3fc39da103d31b5612b6fb99ab21fc4ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
