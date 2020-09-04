@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1bc53738_0f82d277",
+        "filename": "libc/private/bionic_asm_arm64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-04T03:45:16Z",
+      "side": 1,
+      "message": "The 5 here is NT_GNU_PROPERTY_TYPE_0 -- add a comment, like FEATURE_1_AND below?",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 13
+      },
+      "revId": "ded6209c223a0146e8001beaaa410b33e76af81a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f7b4911_e0c147ff",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 1
