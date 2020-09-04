@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3b242006_34f90225",
+        "filename": "libc/private/bionic_asm_arm64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-04T09:37:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bc53738_0f82d277",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 13
+      },
+      "revId": "ded6209c223a0146e8001beaaa410b33e76af81a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f7b4911_e0c147ff",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "ded6209c223a0146e8001beaaa410b33e76af81a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56456dd1_d8857461",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-04T09:37:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f7b4911_e0c147ff",
+      "revId": "ded6209c223a0146e8001beaaa410b33e76af81a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
