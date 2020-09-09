@@ -22,6 +22,30 @@
       "revId": "3da7ade493f7545422d49b2db0ba1482bed71869",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e2ffdaa_1b85b471",
+        "filename": "libc/platform/scudo_platform_tls_slot.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-09T23:51:45Z",
+      "side": 1,
+      "message": "The name is supposed to refer to \"the TLS slot reserved by the platform (for the allocator)\". I\u0027m not sure about calling it something like getAllocatorTlsSlot because the TLS slot is a feature of the platform, not of the allocator.",
+      "parentUuid": "394030e0_bb9395d8",
+      "range": {
+        "startLine": 33,
+        "startChar": 18,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "3da7ade493f7545422d49b2db0ba1482bed71869",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
