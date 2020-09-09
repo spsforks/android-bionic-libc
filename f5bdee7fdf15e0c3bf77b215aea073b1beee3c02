@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3e6eae9_24407f47",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-09T20:04:31Z",
+      "side": 1,
+      "message": "worth #defining these too?\n\n(is there a plan to add these to the assembler? if so we can always have __bionic_paciasp or whatever until we get a new enough assembler.)",
+      "revId": "f5bdee7fdf15e0c3bf77b215aea073b1beee3c02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
