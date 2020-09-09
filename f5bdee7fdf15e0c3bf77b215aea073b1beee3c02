@@ -16,6 +16,24 @@
       "revId": "f5bdee7fdf15e0c3bf77b215aea073b1beee3c02",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edf21614_2c6ef062",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1470412
+      },
+      "writtenOn": "2020-09-09T20:37:31Z",
+      "side": 1,
+      "message": "mnemonics are added to the assemblers but not all of the today\u0027s prebuilt tools are new enough.\n__bionic_paciasp sounds good to me.",
+      "parentUuid": "e3e6eae9_24407f47",
+      "revId": "f5bdee7fdf15e0c3bf77b215aea073b1beee3c02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
