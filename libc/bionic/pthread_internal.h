@@ -242,3 +242,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
+
+bool run_on_all_threads(bool (*func)());
+
+extern pthread_rwlock_t g_thread_creation_lock;
