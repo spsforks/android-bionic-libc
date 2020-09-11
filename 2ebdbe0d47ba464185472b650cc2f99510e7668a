@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f1148e1_59aa4ee4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-11T16:05:46Z",
+      "side": 1,
+      "message": "one of these days you\u0027re going to have to explain to me how you still get real work done during perf despite having reports!\n\nin the meantime, as soon as there\u0027s a gap in perf (and danalbert\u0027s back to review my changes upstream), i\u0027ll see about getting this stuff fixed in libc++ instead.",
+      "range": {
+        "startLine": 14,
+        "startChar": 24,
+        "endLine": 14,
+        "endChar": 57
+      },
+      "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
