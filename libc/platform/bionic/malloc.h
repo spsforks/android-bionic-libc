@@ -105,6 +105,11 @@ enum {
   //   arg_size = sizeof(bool)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
+  // Disable heap initialization across the whole process. If the hardware supports memory
+  // tagging, it also disables memory tagging. May be called at any time including
+  // when multiple threads are running. arg and arg_size are unused and must be set to 0.
+  M_DISABLE_MEMORY_MITIGATIONS = 11,
+#define M_DISABLE_MEMORY_MITIGATIONS M_DISABLE_MEMORY_MITIGATIONS
 };
 
 enum HeapTaggingLevel {
