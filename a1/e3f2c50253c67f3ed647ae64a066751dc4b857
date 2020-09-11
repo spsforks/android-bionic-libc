@@ -1,0 +1,9 @@
+Code-Review+2: Christian Wailes <chriswailes@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-ayeaye@system.gserviceaccount.com>
+NDK-API-Review+1: Elliott Hughes <enh@google.com>
+Submitted-by: Elliott Hughes <enh@google.com>
+Submitted-at: Fri, 11 Sep 2020 18:47:02 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1424970
+Project: platform/bionic
+Branch: refs/heads/master
