@@ -39,8 +39,8 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
-static pthread_internal_t* g_thread_list = nullptr;
-static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
+pthread_internal_t* g_thread_list = nullptr;
+pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
 
 pthread_t __pthread_internal_add(pthread_internal_t* thread) {
   ScopedWriteLock locker(&g_thread_list_lock);
