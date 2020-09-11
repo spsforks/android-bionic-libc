@@ -1558,6 +1558,7 @@ LIBC_S { # introduced=S
     __libc_register_thread_exit_callback;
     __libc_iterate_dynamic_tls;
     __libc_register_dynamic_tls_listeners;
+    android_disable_mem_init;
 } LIBC_R;
 
 LIBC_PRIVATE {

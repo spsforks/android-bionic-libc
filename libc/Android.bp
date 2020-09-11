@@ -62,6 +62,7 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
     ],
 
     header_libs: [
@@ -1004,6 +1005,7 @@ cc_library_static {
         "bionic/abort.cpp",
         "bionic/accept.cpp",
         "bionic/access.cpp",
+        "bionic/android_mem_init.cpp",
         "bionic/arpa_inet.cpp",
         "bionic/assert.cpp",
         "bionic/atof.cpp",

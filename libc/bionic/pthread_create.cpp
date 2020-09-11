@@ -43,6 +43,7 @@
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "platform/bionic/macros.h"
+#include "platform/bionic/mte_kernel.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
@@ -328,6 +329,26 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
+#ifdef ANDROID_EXPERIMENTAL_MTE
+_Atomic(int) g_thread_tcf = PR_MTE_TCF_ASYNC;
+_Atomic(bool) g_thread_tcf_pending = false;
+#endif
+
+bool sync_thread_tcf() {
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  if (tagged_addr_ctrl < 0) {
+    return false;
+  }
+
+  tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | g_thread_tcf;
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
+    return false;
+  }
+#endif
+  return true;
+}
+
 __attribute__((no_sanitize("hwaddress")))
 static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
@@ -343,6 +364,16 @@ static int __pthread_start(void* arg) {
   __set_stack_and_tls_vma_name(false);
   __init_additional_stacks(thread);
   __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
+
+  // If another thread is in the middle of a call to sync_tcf_on_all_threads(), set TCF to the value
+  // that the other thread is setting TCF to, in order to avoid a race between that function and us.
+  //
+  // Although it would also be valid to set TCF unconditionally here, the resulting prctl() syscalls
+  // may cause a crash in a sandboxed environment that raises a signal on a forbidden syscall, so we
+  // only do so if necessary.
+  if (atomic_load(&g_thread_tcf_pending)) {
+    sync_thread_tcf();
+  }
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
