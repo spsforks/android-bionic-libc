@@ -242,3 +242,8 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
+
+extern pthread_rwlock_t g_thread_creation_lock;
+
+extern pthread_internal_t* g_thread_list;
+extern pthread_rwlock_t g_thread_list_lock;
