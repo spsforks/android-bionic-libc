@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "168ca173_2dbd99ed",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-14T22:54:55Z",
+      "side": 1,
+      "message": "I think this should still be APEX specific. The platform\u0027s NDK behavior shouldn\u0027t be different since it just makes it easier to forget the guard and break NDK users. This would be exceptionally easy to do since the compiler is going to tell the user to do the wrong thing.\n\nAs an example, I add `foo()` to S but forget to add the guard, so clang thinks it\u0027s introduced in 10000. In CTS I call `foo()`, and clang tells me that I need to wrap it in `__builtin_available()`. That\u0027s the wrong advice for the test author. What they need to do is add the missing guard. Getting this right would be entirely up to the reviewer, and getting it wrong would not be noticed until an NDK user tries to call the API.\n\nThe build break you pointed out in the other change (https://android-build.googleplex.com/builds/pending/P16535749/aosp_crosshatch-userdebug/latest/view/logs/build_error.log) is actually broken and does need to be fixed if that code is supposed to work pre API 30.",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
