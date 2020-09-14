@@ -22,6 +22,30 @@
       "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bea75d65_a4e2af13",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-14T03:29:09Z",
+      "side": 1,
+      "message": "Haha, perhaps I did the perf poorly :)\n\nYeah, fixing this in libc++ would be the best, although I am not sure if we can make such an Android-specific change to libc++. In addition, what shall be the behavior if the builtin_available check fails?\n\ninline long double nexttoward(long double __lcpp_x, long double __lcpp_y) _NOEXCEPT {\n  if (__builtin_available(android 18, *)) {\n    return ::nexttowardl(__lcpp_x, __lcpp_y);\n  } else {\n    ???\n  }\n}",
+      "parentUuid": "8f1148e1_59aa4ee4",
+      "range": {
+        "startLine": 14,
+        "startChar": 24,
+        "endLine": 14,
+        "endChar": 57
+      },
+      "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
