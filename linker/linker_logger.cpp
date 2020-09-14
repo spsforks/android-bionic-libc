@@ -90,7 +90,7 @@ void LinkerLogger::ResetState() {
     return;
   }
 
-  flags_ = 0;
+  flags_ = kLogDlopen;
 
   // For logging, check the flag applied to all processes first.
   static CachedProperty debug_ld_all("debug.ld.all");
