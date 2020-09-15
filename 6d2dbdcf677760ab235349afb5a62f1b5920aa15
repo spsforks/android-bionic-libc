@@ -34,6 +34,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc19462_386aa4ca",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-15T21:02:35Z",
+      "side": 1,
+      "message": "Oh, duh. Had that backward. Honestly I\u0027m just impressed that in a full day of post-vacation email I only said one stupid thing :)\n\nThe build break above still points out how this would make it easier to write bugs in the NDK though, right? That case is a header that is in the NDK that refers to a function that\u0027s being called without a guard. The obvious fix if we allow the platform to be non-strict is to use `__builtin_available` to guard it, I think. That would break the NDK though, since that\u0027s still strict. The code that caused that build break needs to use dlsym to be compatible with anyone using strict availability, right? Or have I misunderstood the breakage?\n\nEven if we do end up making the non-strict mode an option in the future we\u0027d keep strict around because it\u0027s the only safe default.\n\nBut if we can\u0027t use this anywhere we\u0027ll never be able to figure out if it works or not, so maybe it actually is best to just ship this as an option (with a giant disclaimer) for the NDK. That way it can be off by default for the platform but the modules that don\u0027t ship *code* in the NDK can opt-in. How about:\n\n```\n// Enabling ANDROID_UNSTABLE_WEAK_AVAILABILITY causes any NDK APIs that\n// aren\u0027t available in the minSdkVersion of the OS to be weak symbols.\n// This means that code can refer to these symbols so long as it is\n// careful to not call unavailable APIs without checking for them, rather\n// than needing to use dlsym. Calling an API that is not available on the\n// device will result in a crash. It is strongly recommended to set\n// `-Werror\u003dunguarded-availability` in any build that uses this feature.\n//\n// Note that source compatibility is *not* guaranteed when this feature\n// is enabled. This feature is a preview. New NDKs may require changes to\n// how APIs are used, or how their existence is checked, or remove this\n// feature entirely.\n//\n// Also note that this does not make it possible to use APIs of\n// *libraries* that do not exist in the minSdkVersion of the OS. Those\n// still require dlopen/dlsym as there is no such thing as a weak library\n// dependency.\n//\n// Library authors should not use this feature in public headers. Relying\n// on this behavior in code that is inline in headers will force the\n// decision on your users.\n#if defined(ANDROID_UNSTABLE_PREVIEW_WEAK_AVAILABILITY)\n#define __MAYBE_STRICT\n#else\n#define __MAYBE_STRICT ,strict\n#endif\n```\n\nAnd then adding `weak_ndk_apis: true|false` for soong modules (so I only have to update soong when we change the name and not every module)? I don\u0027t think we know enough about this feature to know if it will even be source stable yet, so a foreboding name seems like a good idea.\n\nI\u0027ll run this past the rest of the team in the bionic meeting on Wednesday.",
+      "parentUuid": "bb3e872c_c1b50c6d",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
