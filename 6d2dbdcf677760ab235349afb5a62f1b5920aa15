@@ -16,6 +16,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb3e872c_c1b50c6d",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-15T03:41:11Z",
+      "side": 1,
+      "message": "What\u0027s the \u0027guard\u0027 you are referring to? Does it mean __INTRODUCED_IN(api_level)? If so, forgetting to annotating foo() with the macro won\u0027t cause any compilation error because the symbol is then assumed to be there from the beginning (i.e. api level 0). So, there won\u0027t be a wrong advice here.\n\nThis nevertheless is a problem because the symbol should anyway be annotated. I wonder how you have enforced every Bionic symbols to be annotated with the __INTRODUCED_IN macro. \n\n\u003e does need to be fixed if that code is supposed to work pre API 30\n\nI think ag/1425365 should be the fix, but the \u0027strict\u0027 option is preventing the API 30 symbols from being used at all when min_sdk_version is \u003c 30 - even with __builtin_available checks.",
+      "parentUuid": "168ca173_2dbd99ed",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
