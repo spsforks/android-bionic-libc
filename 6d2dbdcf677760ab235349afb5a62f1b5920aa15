@@ -88,6 +88,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d46190c4_f4d05fd9",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-16T19:26:28Z",
+      "side": 1,
+      "message": "\u003e I thought we could omit \u0027strict\u0027 as long as we process NDK headers with the versioner. The ifdef guards added by the tool has the same effect as \u0027strict\u0027.\n\nWe don\u0027t use versioner outside of bionic, so that would only add guards for bionic. iirc we\u0027d need to make some changes to versioner (at the very least we\u0027d need to rewrite all the ndk_headers rules) to accommodate running it on every NDK header.\n\nPlus, doing so would make it affect the platform anyway, since the platform NDK builds use the output of versioner. Would have the same affect as applying strict to all NDK APIs in the platform.\n\n\u003e Your idea actually inspired me to think this simple (albeit a little bit dirty) alternative...\n\nIt\u0027s a little odd, but I like it. Probably our best path forward atm. The fact that the compiler will warn you if you mismatch the versions makes me even less worried about it (thanks for checking!)",
+      "parentUuid": "49dec418_a54e03b8",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
