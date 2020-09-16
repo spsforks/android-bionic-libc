@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f935ccd_e7ff83ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T04:57:44Z",
+      "side": 1,
+      "message": "A few self-review comments while reading my code again.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "667b2b8d_69acd3bc",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T04:57:44Z",
+      "side": 1,
+      "message": "I\u0027ll need to read g_retval before this unlock to avoid a race with another thread calling this function.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "985ca01f_32665e59",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T04:57:44Z",
+      "side": 1,
+      "message": "I think this should be done unconditionally so that we don\u0027t zero init cached secondary allocations when MTE is enabled.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9de161a_5a3ae79f",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T04:57:44Z",
+      "side": 1,
+      "message": "This might cause build failures for now and will need to be protected with ANDROID_EXPERIMENTAL_MTE.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
