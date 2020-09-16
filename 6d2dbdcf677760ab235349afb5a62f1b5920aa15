@@ -52,6 +52,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d8985eb_350e95a6",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-16T11:39:53Z",
+      "side": 1,
+      "message": "binder_parcel_utils.h is a bad example because it actually has to be out of NDK. See aosp/1356964. Nevertheless, yes, you are right, we might have similar cases in other legit headers. That\u0027s a good point.\n\nI thought we could omit \u0027strict\u0027 as long as we process NDK headers with the versioner. The ifdef guards added by the tool has the same effect as \u0027strict\u0027.\n\nIf we are going to deprecate the versioner anytime soon, then yes, `strict` should be used for NDK clients given that we can\u0027t enforce them to be compiling with \u0027-Wunguarded-availability -Werror\u0027 (or can we?). \n\nI think what you suggested makes a lot of sense. I however think we don\u0027t need the fancy Soong switch because the module can use \u0027cflags: [\"-DANDROID_UNSTABLE...\"]\u0027 instead. In addition, not shipping the code to NDK is a big limitation at least for binder_parcel_utils.h, which unfortunately is available to NDK clients.\n\nYour idea actually inspired me to think this simple (albeit a little bit dirty) alternative. Let\u0027s keep \u0027strict\u0027 for all non-APEX cases as you originally suggested. Inside binder_parcel_utils.h, the symbols are re-declared now without the \u0027strict\u0027 flag just before it is used. So, \n\n// in binder_parcel_utils.h\n\nstd::string getDescription() const {\n    const char* AStatus_getDescription(const AStatus*) __INTRODUCED_IN_WEAK(30);\n\n    if (__builtin_available(android 30, *)) {\n        const char* cStr \u003d AStatus_getDescription(get());\n        std::string ret \u003d cStr;\n        AStatus_deleteDescription(cStr);\n        return ret;\n    }\n    return \"(not available)\";\n}\n\n// outside of the function above, AStatus_getDescription is still with \u0027strict\u0027 for non-APEX cases.\n\nThe rationale for this hack(?) is that as long as a client is using __builtin_available for an API, the use of the very API at the very call site shouldn\u0027t be bothered with the \u0027strict\u0027 flag which is for the unprepared rest. This is considered error-prone, and that\u0027s right. But given that this header is the only case that I have found so far, I don\u0027t think we will have many. And I don\u0027t think anyone is brave enough to do this without fully understanding what they are doing. So, I honestly don\u0027t feel that risky.\n\nI am not sure if we need the macro __INTRODUCED_IN_WEAK, but if it\u0027s needed, it should be with a big disclaimer of course.\n\nWhat do you think?",
+      "parentUuid": "cfc19462_386aa4ca",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
