@@ -106,6 +106,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c025e4a_f1016302",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:28:26Z",
+      "side": 1,
+      "message": "(as far as i\u0027m concerned one of the advantages of this work is that it should let us remove versioner completely.)",
+      "parentUuid": "d46190c4_f4d05fd9",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
