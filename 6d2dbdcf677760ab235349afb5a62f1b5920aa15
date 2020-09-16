@@ -70,6 +70,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49dec418_a54e03b8",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-16T12:09:42Z",
+      "side": 1,
+      "message": "\u003e This is considered error-prone\n\nThankfully, if someone makes a mistake on the version number, then the compiler gives an error:\n\nerror: availability does not match previous declaration [-Werror,-Wavailability]\n\nSo, one less worry there.",
+      "parentUuid": "4d8985eb_350e95a6",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
