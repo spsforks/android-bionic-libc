@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "414b71d0_0769e52e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:47:30Z",
+      "side": 1,
+      "message": "ah, crap, i appear never to have sent this comment.\n\n(i don\u0027t think this is blocking though. we can always clean these up later. i\u0027m assuming at some point we get an assembler that just has mnemonics for these anyway?)",
+      "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ddfbed5_01fb37f4",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:47:30Z",
+      "side": 1,
+      "message": "i wondered with the other patch where we also have `hint #XX` and a comment whether we should just add macros for the bti hints, and use those? then we don\u0027t need comments.",
+      "range": {
+        "startLine": 52,
+        "startChar": 16,
+        "endLine": 52,
+        "endChar": 21
+      },
+      "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
