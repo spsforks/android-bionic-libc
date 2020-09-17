@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "a9607e70_577361b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:53:28Z",
+      "side": 1,
+      "message": "since we should be able to come back and use the actual mnemonics soon enough anyway, \"meh\" to my earlier comments. (but an important FYI in the new comment here.)",
+      "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ddfbed5_01fb37f4",
         "filename": "libc/arch-common/bionic/crtbegin.c",
         "patchSetId": 2
@@ -36,6 +53,47 @@
         "endLine": 52,
         "endChar": 21
       },
+      "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375bd80f_409b5ecf",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:53:28Z",
+      "side": 1,
+      "message": "having now looked at the final patch in the stack i guess i never sent that comment on this change because i sent it on a different change :-)",
+      "parentUuid": "2ddfbed5_01fb37f4",
+      "range": {
+        "startLine": 52,
+        "startChar": 16,
+        "endLine": 52,
+        "endChar": 21
+      },
+      "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a32bb96b_5afd610d",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:53:28Z",
+      "side": 1,
+      "message": "note that i never worked out why https://android-review.googlesource.com/q/topic:%22crtbrand%22+(status:open%20OR%20status:merged) seemed to break hwasan builds, so there\u0027s another copy of this in the NDK that will need addressing. (or someone needs to work out what\u0027s wrong with that topic of mine and get that merged. rprichard?)",
       "revId": "18621fb30c50e7ee8bc71001a4f42236d29a6133",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
