@@ -34,6 +34,24 @@
       "revId": "f5bdee7fdf15e0c3bf77b215aea073b1beee3c02",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24f97b2b_8016a3f8",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:50:03Z",
+      "side": 1,
+      "message": "if the new mnemonics are already in upstream clang, it\u0027s probably not worth adding the extra include directories to get \u003cprivate/bionic_asm.h\u003e working everywhere for a temporary workaround. i assume the next llvm update (not the one currently in progress, the \"real\" next one) will let us just clean this up in the ideal fashion.",
+      "parentUuid": "edf21614_2c6ef062",
+      "revId": "f5bdee7fdf15e0c3bf77b215aea073b1beee3c02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
