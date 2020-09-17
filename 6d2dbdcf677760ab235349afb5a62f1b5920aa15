@@ -142,6 +142,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a82be7f_31a76924",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-17T19:20:44Z",
+      "side": 1,
+      "message": "Since you asked, non-bionic headers added guards manually, any the few that didn\u0027t (non-Google owned headers like opengl or zlib) still didn\u0027t expose a weak symbol, so they got a link error. But yes, it seems we\u0027re agreed 😊",
+      "parentUuid": "72e922ec_f7c899c2",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
