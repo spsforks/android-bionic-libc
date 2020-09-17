@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70190c9d_980e5863",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T21:10:50Z",
+      "side": 1,
+      "message": "oh, this is a cherrypick anyway...",
+      "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7a62da8_20246ee2",
+        "filename": "tests/utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T21:10:50Z",
+      "side": 1,
+      "message": "(\"arm\" vs \"arm64\" is ABI_STRING in \u003candroid-base/macros.h\u003e which you\u0027re already including.)",
+      "range": {
+        "startLine": 79,
+        "startChar": 72,
+        "endLine": 79,
+        "endChar": 77
+      },
+      "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
