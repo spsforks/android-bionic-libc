@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2a875f4_13cbb055",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1244622
+      },
+      "writtenOn": "2020-09-17T17:50:10Z",
+      "side": 1,
+      "message": "Elliott, can you please review? It references the CL which you had reviewed before: https://android-review.googlesource.com/c/platform/bionic/+/1371143 ",
+      "revId": "6525d54985938336499a3de8e25da2147c8573bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
