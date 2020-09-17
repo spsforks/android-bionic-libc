@@ -124,6 +124,24 @@
       "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72e922ec_f7c899c2",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-17T05:26:12Z",
+      "side": 1,
+      "message": "Re Dan,\n\nThe fact that we haven\u0027t been running versioner for non-Bionic NDK headers means that omitting \u0027strict\u0027 doesn\u0027t make problem worse, right? NDK clients have had the risk of using unavailable APIs if the APIs were not manually guarded by the API owner. For the APIs that have been guarded correctly, `strict` doesn\u0027t give a stronger protection.\n\nAnyway, I am all in using strict for NDK clients and deprecating versioner.\n\nLooks like you are okay with my proposal at least for now. I will take that path. Thanks!\n\n\nRe Elliott,\n\nYes, it would be.",
+      "parentUuid": "0c025e4a_f1016302",
+      "revId": "6d2dbdcf677760ab235349afb5a62f1b5920aa15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
