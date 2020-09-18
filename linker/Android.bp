@@ -42,6 +42,9 @@ cc_object {
         x86_64: {
             srcs: ["arch/x86_64/begin.S"],
         },
+        arm64: {
+            srcs: ["arch/arm64/begin.S"],
+        },
     },
 
     prefix_symbols: "__dlwrap_",
