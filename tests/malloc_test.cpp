@@ -84,6 +84,20 @@ TEST(malloc, calloc_std) {
   free(ptr);
 }
 
+TEST(malloc, calloc_mem_init_disabled) {
+  // calloc should still zero memory if mem-init is disabled.
+  // With jemalloc the mallopts will fail but that shouldn't affect the
+  // execution of the test.
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
+  size_t alloc_len = 100;
+  char *ptr = (char *)calloc(1, alloc_len);
+  for (size_t i = 0; i < alloc_len; i++) {
+    ASSERT_EQ(0, ptr[i]);
+  }
+  free(ptr);
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
+}
+
 TEST(malloc, calloc_illegal) {
   SKIP_WITH_HWASAN;
   errno = 0;
