@@ -22,6 +22,30 @@
       "revId": "0270ba030ead24a5ea68d48f185fd31ccd61a223",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21c2341f_c279a669",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-21T22:34:29Z",
+      "side": 1,
+      "message": "In this case the operation will fail (by mallopt returning 0). Since jemalloc doesn\u0027t have the feature anyway you should be fine if you ignore the mallopt return value.",
+      "parentUuid": "b4cf7bb7_663ba67b",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 33
+      },
+      "revId": "0270ba030ead24a5ea68d48f185fd31ccd61a223",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
