@@ -34,8 +34,19 @@
 
 #include <assert.h>
 #include <dlfcn.h>
+#include <elf.h>
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sched.h>
 #include <stdio.h>
-#include <unistd.h>  // for gettid
+#include <string.h>
+#include <sys/prctl.h>
+#include <sys/ptrace.h>
+#include <sys/uio.h>
+#include <sys/user.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 // Helper binary to use TLS-related functions in thread_properties
 
@@ -62,17 +73,57 @@ __thread char large_tls_var[4 * 1024 * 1024];
 void test_iter_tls() {
   void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
 
+  large_tls_var[1025] = 'a';
+  int found_count = 0;
   int i = 0;
   auto cb = [&](void* dtls_begin, void* dtls_end, size_t dso_id, void* arg) {
+    if (&large_tls_var >= dtls_begin && &large_tls_var < dtls_end) ++found_count;
     printf("iterate_cb i = %d\n", i++);
   };
   __libc_iterate_dynamic_tls(gettid(), cb, nullptr);
+
+  // It should be found exactly once.
+  assert(found_count == 1);
   printf("done_iterate_dynamic_tls\n");
 }
 
+void test_iterate_another_thread_tls() {
+  large_tls_var[1025] = 'b';
+
+  pid_t pid = fork();
+  assert(pid != -1);
+  int status;
+  if (pid) {
+    printf("in parent: child pid = %d\n", pid);
+    assert(pid == wait(&status));
+    printf("in parent: child still running ?\n");
+    assert(0 == status);
+  } else {
+    shared = 2;
+    pid_t parent_pid = getppid();
+    printf("in child: parent pid is %d\n", parent_pid);
+    sleep(1);  // give parent time
+    assert(0 == ptrace(PTRACE_ATTACH, parent_pid));
+    assert(parent_pid == waitpid(parent_pid, &status, 0));
+    printf("in child: parent should be stopped\n");
+
+    int found_count = 0;
+    int i = 0;
+    auto cb = [&](void* dtls_begin, void* dtls_end, size_t dso_id, void* arg) {
+      if (&large_tls_var >= dtls_begin && &large_tls_var < dtls_end) ++found_count;
+      printf("iterate_cb i = %d\n", i++);
+    };
+    __libc_iterate_dynamic_tls(parent_pid, cb, nullptr);
+    // It should be found exactly once.
+    assert(found_count == 1);
+    printf("done_iterate_another_thread_tls\n");
+  }
+}
 int main() {
   test_static_tls_bounds();
   test_iter_tls();
+
+  // iterate for another thread.
   return 0;
 }
 
