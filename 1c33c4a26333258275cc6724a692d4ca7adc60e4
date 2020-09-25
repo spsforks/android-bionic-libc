@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44289469_f4f1a6d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-09-25T00:22:06Z",
+      "side": 1,
+      "message": "This isn\u0027t ideal, but with tomorrow being a day off for me, this is the best solution we\u0027re going to have in the short term.",
+      "revId": "1c33c4a26333258275cc6724a692d4ca7adc60e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
