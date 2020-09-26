@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a918ca1_1c7e2bd1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-26T02:04:25Z",
+      "side": 1,
+      "message": "I tried adapting the x86_64 FDE to arm64, but it doesn\u0027t work because the FDE needs to restore the PC to a different value from the LR.\n",
+      "revId": "f8aed6cc4cff0e50f51b7c714f09738891a8d1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
