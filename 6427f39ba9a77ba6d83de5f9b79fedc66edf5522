@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd141336_98f3316a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-09-28T18:39:19Z",
+      "side": 1,
+      "message": "PTAL",
+      "revId": "6427f39ba9a77ba6d83de5f9b79fedc66edf5522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "320c9932_02bf05dc",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-09-28T18:39:19Z",
+      "side": 1,
+      "message": "Not 100% sure that\u0027s the good name for what it does, but don\u0027t want to have 100+ characters long name either.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 38
+      },
+      "revId": "6427f39ba9a77ba6d83de5f9b79fedc66edf5522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
