@@ -1,0 +1,7 @@
+# This file added for experimental interoperability with Bazel.
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "bionic-gensyscalls",
+    srcs = ["gensyscalls.py"]
+)
