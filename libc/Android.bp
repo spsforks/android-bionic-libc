@@ -1265,6 +1265,7 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
+    bazel_module: "//bionic/libc:syscalls-arm",
 }
 
 genrule {
@@ -1273,6 +1274,7 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
+    bazel_module: "//bionic/libc:syscalls-arm64",
 }
 
 genrule {
@@ -1281,6 +1283,7 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
+    bazel_module: "//bionic/libc:syscalls-x86",
 }
 
 genrule {
@@ -1289,6 +1292,7 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
+    bazel_module: "//bionic/libc:syscalls-x86_64",
 }
 
 cc_library_static {
