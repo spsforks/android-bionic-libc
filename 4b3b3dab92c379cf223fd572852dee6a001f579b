@@ -16,6 +16,23 @@
       "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24a2f167_5b3a3efa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-02T22:18:39Z",
+      "side": 1,
+      "message": "(sounds like the two people most affected by this are happy, so no objection from me. i\u0027ll defer to one/both of them to approve when they\u0027re happy with comments etc...)",
+      "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
