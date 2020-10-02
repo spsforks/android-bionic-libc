@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dfeef3d_b5dfbdb4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-10-02T21:26:30Z",
+      "side": 1,
+      "message": "I really like the description but can we have something in the struct_layout_test.cpp itself, too?\n\nBecause test as it\u0027s written doesn\u0027t make it all obvious what we testing there and why: something like \"ensure that layout of bionic tls layout is architecture independent and only depends on bitness of the architecture\".",
+      "revId": "32f49aebe591767df2364435f51014e89186b479",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
