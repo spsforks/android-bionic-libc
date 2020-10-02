@@ -51,6 +51,24 @@
       "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf06e1f5_9391b1cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-02T22:50:45Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t read closely. I think this is good enough.\n\nMaybe it\u0027s still clumsy if I have multiple WIP changes at once that alter one of these structures. Building and running the test is also a little slow. In an alternative approach, we could just list the field sizes and alignments, so each edit to this test would be small, but I suppose that\u0027d be hazardous, because someone would be tempted to use sizeof or alignof to specify a field location, defeating the point of the test.\n\nSo, I think I\u0027m OK with this change.",
+      "parentUuid": "4c4e79bc_238417c0",
+      "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
