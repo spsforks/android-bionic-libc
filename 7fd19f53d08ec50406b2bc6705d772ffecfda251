@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "073085c3_e03cb676",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-02T21:15:26Z",
+      "side": 1,
+      "message": "does this actually help, since you still need to change ndk_translation in this case anyway? should we just add their tests to TEST_MAPPING instead?",
+      "revId": "7fd19f53d08ec50406b2bc6705d772ffecfda251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
