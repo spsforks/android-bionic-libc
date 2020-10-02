@@ -16,6 +16,24 @@
       "revId": "7fd19f53d08ec50406b2bc6705d772ffecfda251",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbb48b69_263be2a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-02T21:20:17Z",
+      "side": 1,
+      "message": "Once the test is removed from ndk_translation, I don\u0027t see why we would need to change it if we\u0027re just adding a field to pthread_internal_t for example.",
+      "parentUuid": "073085c3_e03cb676",
+      "revId": "7fd19f53d08ec50406b2bc6705d772ffecfda251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
