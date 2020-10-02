@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d74bd94_bc570d78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-02T22:16:31Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s much better to have this test in aosp.\n\nIt\u0027d be nice if we didn\u0027t have to recompute the field offsets by hand. I added a script internally to compute the offsets (pthread_translation_regen.py) but I suspect it could be done in the C++ source file too. I remember experimenting with that approach but I don\u0027t remember if the error output was good enough.\n",
+      "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
