@@ -16,6 +16,24 @@
       "revId": "32f49aebe591767df2364435f51014e89186b479",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2d8e542_ea72c623",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-02T21:34:56Z",
+      "side": 1,
+      "message": "Sure, I added a comment to the tests function.",
+      "parentUuid": "0dfeef3d_b5dfbdb4",
+      "revId": "32f49aebe591767df2364435f51014e89186b479",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
