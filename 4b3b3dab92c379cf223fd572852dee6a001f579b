@@ -33,6 +33,24 @@
       "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c4e79bc_238417c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-02T22:27:15Z",
+      "side": 1,
+      "message": "It shouldn\u0027t be necessary to recompute the offsets by hand. If the test fails, it prints output on stdout which you can just copy/paste into the .cpp file.",
+      "parentUuid": "6d74bd94_bc570d78",
+      "revId": "4b3b3dab92c379cf223fd572852dee6a001f579b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
