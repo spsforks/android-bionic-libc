@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": false,
       "key": {
         "uuid": "bd1fe1d8_d08f57ee",
         "filename": "/PATCHSET_LEVEL",
@@ -14,8 +15,24 @@
       "side": 1,
       "message": "refer : https://android-review.googlesource.com/c/platform/bionic/+/1276867",
       "revId": "df365bad9c7bc16eda6842cc00fc02ffe47a07fc",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de4cbf8e_e2f4b677",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-10-06T21:29:11Z",
+      "side": 1,
+      "message": "It\u0027s a cherry-pick - does it need to have the same Change-Id as the original change?",
+      "revId": "df365bad9c7bc16eda6842cc00fc02ffe47a07fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
