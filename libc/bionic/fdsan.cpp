@@ -137,7 +137,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     return;
   }
 
-  // Lots of code will (sensibly) fork, blindly call close on all of their fds,
+  // Lots of code will (sensibly) fork, call close on all of their fds,
   // and then exec. Compare our cached pid value against the real one to detect
   // this scenario and permit it.
   pid_t cached_pid = __get_cached_pid();
@@ -246,6 +246,10 @@ uint64_t android_fdsan_get_tag_value(uint64_t tag) {
 }
 
 int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
+  if (__get_thread()->is_vforked()) {
+    return __close(fd);
+  }
+
   FDTRACK_CLOSE(fd);
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
@@ -296,6 +300,10 @@ uint64_t android_fdsan_get_owner_tag(int fd) {
 }
 
 void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t new_tag) {
+  if (__get_thread()->is_vforked()) {
+    return;
+  }
+
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
     return;
@@ -332,6 +340,10 @@ android_fdsan_error_level android_fdsan_get_error_level() {
 }
 
 android_fdsan_error_level android_fdsan_set_error_level(android_fdsan_error_level new_level) {
+  if (__get_thread()->is_vforked()) {
+    return android_fdsan_get_error_level();
+  }
+
   return atomic_exchange(&GetFdTable().error_level, new_level);
 }
 

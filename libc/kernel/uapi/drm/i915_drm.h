@@ -725,6 +725,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_VM 0x9
 #define I915_CONTEXT_PARAM_ENGINES 0xa
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
+#define I915_CONTEXT_PARAM_RINGSIZE 0xc
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -835,6 +836,8 @@ enum drm_i915_perf_property_id {
   DRM_I915_PERF_PROP_OA_FORMAT,
   DRM_I915_PERF_PROP_OA_EXPONENT,
   DRM_I915_PERF_PROP_HOLD_PREEMPTION,
+  DRM_I915_PERF_PROP_GLOBAL_SSEU,
+  DRM_I915_PERF_PROP_POLL_OA_PERIOD,
   DRM_I915_PERF_PROP_MAX
 };
 struct drm_i915_perf_open_param {

@@ -65,6 +65,7 @@
 #include "linker_phdr.h"
 #include "linker_relocate.h"
 #include "linker_tls.h"
+#include "linker_translate_path.h"
 #include "linker_utils.h"
 
 #include "private/bionic_call_ifunc_resolver.h"
@@ -103,7 +104,6 @@ static const char* const kVendorLibDir        = "/vendor/lib64";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
-static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib64";
 #else
 static const char* const kSystemLibDir        = "/system/lib";
 static const char* const kOdmLibDir           = "/odm/lib";
@@ -111,7 +111,6 @@ static const char* const kVendorLibDir        = "/vendor/lib";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
-static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -187,10 +186,10 @@ static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const 
   return false;
 }
 
-// TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
+// TODO(dimitry): The exempt-list is a workaround for http://b/26394120 ---
 // gradually remove libraries from this list until it is gone.
-static bool is_greylisted(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
-  static const char* const kLibraryGreyList[] = {
+static bool is_exempt_lib(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
+  static const char* const kLibraryExemptList[] = {
     "libandroid_runtime.so",
     "libbinder.so",
     "libcrypto.so",
@@ -207,13 +206,13 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     nullptr
   };
 
-  // If you're targeting N, you don't get the greylist.
-  if (g_greylist_disabled || get_application_target_sdk_version() >= 24) {
+  // If you're targeting N, you don't get the exempt-list.
+  if (get_application_target_sdk_version() >= 24) {
     return false;
   }
 
   // if the library needed by a system library - implicitly assume it
-  // is greylisted unless it is in the list of shared libraries for one or
+  // is exempt unless it is in the list of shared libraries for one or
   // more linked namespaces
   if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
     return !maybe_accessible_via_namespace_links(ns, name);
@@ -225,8 +224,8 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     name = basename(name);
   }
 
-  for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
-    if (strcmp(name, kLibraryGreyList[i]) == 0) {
+  for (size_t i = 0; kLibraryExemptList[i] != nullptr; ++i) {
+    if (strcmp(name, kLibraryExemptList[i]) == 0) {
       return true;
     }
   }
@@ -234,44 +233,6 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   return false;
 }
 // END OF WORKAROUND
-
-// Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
-/**
- * Translate /system path to /apex path if needed
- * The workaround should work only when targetSdkVersion < Q.
- *
- * param out_name_to_apex pointing to /apex path
- * return true if translation is needed
- */
-static bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static const char* const kSystemToArtApexLibs[] = {
-    "libicuuc.so",
-    "libicui18n.so",
-  };
-  // New mapping for new apex should be added below
-
-  // Nothing to do if target sdk version is Q or above
-  if (get_application_target_sdk_version() >= 29) {
-    return false;
-  }
-
-  // If the path isn't /system/lib, there's nothing to do.
-  if (name == nullptr || dirname(name) != kSystemLibDir) {
-    return false;
-  }
-
-  const char* base_name = basename(name);
-
-  for (const char* soname : kSystemToArtApexLibs) {
-    if (strcmp(base_name, soname) == 0) {
-      *out_name_to_apex = std::string(kI18nApexLibDir) + "/" + base_name;
-      return true;
-    }
-  }
-
-  return false;
-}
-// End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -348,6 +309,10 @@ static void soinfo_free(soinfo* si) {
       mmap(reinterpret_cast<void*>(si->base), si->size, PROT_NONE,
            MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
     }
+  }
+
+  if (si->has_min_version(6) && si->get_gap_size()) {
+    munmap(reinterpret_cast<void*>(si->get_gap_start()), si->get_gap_size());
   }
 
   TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
@@ -638,6 +603,8 @@ class LoadTask {
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
+    si_->set_gap_start(elf_reader.gap_start());
+    si_->set_gap_size(elf_reader.gap_size());
 
     return true;
   }
@@ -665,7 +632,7 @@ class LoadTask {
   bool close_fd_;
   off64_t file_offset_;
   std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
-  // TODO(dimitry): needed by workaround for http://b/26394120 (the grey-list)
+  // TODO(dimitry): needed by workaround for http://b/26394120 (the exempt-list)
   bool is_dt_needed_;
   // END OF WORKAROUND
   const android_namespace_t* const start_from_;
@@ -1220,12 +1187,12 @@ static bool load_library(android_namespace_t* ns,
   // do not check accessibility using realpath if fd is located on tmpfs
   // this enables use of memfd_create() for apps
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
-    // TODO(dimitry): workaround for http://b/26394120 - the grey-list
+    // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
 
     // TODO(dimitry) before O release: add a namespace attribute to have this enabled
     // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
-    if (is_greylisted(ns, name, needed_by)) {
+    if (is_exempt_lib(ns, name, needed_by)) {
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
@@ -1479,14 +1446,14 @@ static bool find_library_internal(android_namespace_t* ns,
     return true;
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (ns->is_greylist_enabled() && is_greylisted(ns, task->get_name(), task->get_needed_by())) {
-    // For the libs in the greylist, switch to the default namespace and then
+  // TODO(dimitry): workaround for http://b/26394120 (the exempt-list)
+  if (ns->is_exempt_list_enabled() && is_exempt_lib(ns, task->get_name(), task->get_needed_by())) {
+    // For the libs in the exempt-list, switch to the default namespace and then
     // try the load again from there. The library could be loaded from the
     // default namespace or from another namespace (e.g. runtime) that is linked
     // from the default namespace.
     LD_LOG(kLogDlopen,
-           "find_library_internal(ns=%s, task=%s): Greylisted library - trying namespace %s",
+           "find_library_internal(ns=%s, task=%s): Exempt system library - trying namespace %s",
            ns->get_name(), task->get_name(), g_default_namespace.get_name());
     ns = &g_default_namespace;
     if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
@@ -1506,9 +1473,9 @@ static bool find_library_internal(android_namespace_t* ns,
       // Library is already loaded.
       if (task->get_soinfo() != nullptr) {
         // n.b. This code path runs when find_library_in_linked_namespace found an already-loaded
-        // library by soname. That should only be possible with a greylist lookup, where we switch
-        // the namespace, because otherwise, find_library_in_linked_namespace is duplicating the
-        // soname scan done in this function's first call to find_loaded_library_by_soname.
+        // library by soname. That should only be possible with a exempt-list lookup, where we
+        // switch the namespace, because otherwise, find_library_in_linked_namespace is duplicating
+        // the soname scan done in this function's first call to find_loaded_library_by_soname.
         return true;
       }
 
@@ -2459,7 +2426,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
-  ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
+  ns->set_exempt_list_enabled((type & ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED) != 0);
   ns->set_also_used_as_anonymous((type & ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
@@ -3174,6 +3141,14 @@ bool soinfo::prelink_image() {
         // resolves everything eagerly, so these can be ignored.
         break;
 
+#if defined(__aarch64__)
+      case DT_AARCH64_BTI_PLT:
+      case DT_AARCH64_PAC_PLT:
+      case DT_AARCH64_VARIANT_PCS:
+        // Ignored: AArch64 processor-specific dynamic array tags.
+        break;
+#endif
+
       default:
         if (!relocating_linker) {
           const char* tag_name;
@@ -3201,7 +3176,7 @@ bool soinfo::prelink_image() {
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
         reinterpret_cast<void*>(base), strtab_, symtab_);
 
-  // Sanity checks.
+  // Validity checks.
   if (relocating_linker && needed_count != 0) {
     DL_ERR("linker cannot have DT_NEEDED dependencies on other libraries");
     return false;
@@ -3411,6 +3386,22 @@ static std::string get_ld_config_file_vndk_path() {
   return ld_config_file_vndk;
 }
 
+bool is_linker_config_expected(const char* executable_path) {
+  // Do not raise message from a host environment which is expected to miss generated linker
+  // configuration.
+#if !defined(__ANDROID__)
+  return false;
+#endif
+
+  if (strcmp(executable_path, "/system/bin/init") == 0) {
+    // Generated linker configuration can be missed from processes executed
+    // with init binary
+    return false;
+  }
+
+  return true;
+}
+
 static std::string get_ld_config_file_path(const char* executable_path) {
 #ifdef USE_LD_CONFIG_FILE
   // This is a debugging/testing only feature. Must not be available on
@@ -3439,12 +3430,10 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return kLdGeneratedConfigFilePath;
   }
 
-  // Do not raise message from a host environment which is expected to miss generated linker
-  // configuration.
-#if defined(__ANDROID__)
-  DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
-          kLdGeneratedConfigFilePath);
-#endif
+  if (is_linker_config_expected(executable_path)) {
+    DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
+            kLdGeneratedConfigFilePath);
+  }
 
   path = get_ld_config_file_vndk_path();
   if (file_exists(path.c_str())) {
@@ -3519,7 +3508,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     ns->set_isolated(ns_config->isolated());
     ns->set_default_library_paths(ns_config->search_paths());
     ns->set_permitted_paths(ns_config->permitted_paths());
-    ns->set_whitelisted_libs(ns_config->whitelisted_libs());
+    ns->set_allowed_libs(ns_config->allowed_libs());
 
     namespaces[ns_config->name()] = ns;
     if (ns_config->visible()) {

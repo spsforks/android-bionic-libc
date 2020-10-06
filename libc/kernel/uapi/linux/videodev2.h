@@ -188,6 +188,7 @@ struct v4l2_capability {
 #define V4L2_CAP_STREAMING 0x04000000
 #define V4L2_CAP_META_OUTPUT 0x08000000
 #define V4L2_CAP_TOUCH 0x10000000
+#define V4L2_CAP_IO_MC 0x20000000
 #define V4L2_CAP_DEVICE_CAPS 0x80000000
 struct v4l2_pix_format {
   __u32 width;
@@ -248,6 +249,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Y6 v4l2_fourcc('Y', '0', '6', ' ')
 #define V4L2_PIX_FMT_Y10 v4l2_fourcc('Y', '1', '0', ' ')
 #define V4L2_PIX_FMT_Y12 v4l2_fourcc('Y', '1', '2', ' ')
+#define V4L2_PIX_FMT_Y14 v4l2_fourcc('Y', '1', '4', ' ')
 #define V4L2_PIX_FMT_Y16 v4l2_fourcc('Y', '1', '6', ' ')
 #define V4L2_PIX_FMT_Y16_BE v4l2_fourcc_be('Y', '1', '6', ' ')
 #define V4L2_PIX_FMT_Y10BPACK v4l2_fourcc('Y', '1', '0', 'B')
@@ -323,6 +325,10 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_SGBRG12P v4l2_fourcc('p', 'G', 'C', 'C')
 #define V4L2_PIX_FMT_SGRBG12P v4l2_fourcc('p', 'g', 'C', 'C')
 #define V4L2_PIX_FMT_SRGGB12P v4l2_fourcc('p', 'R', 'C', 'C')
+#define V4L2_PIX_FMT_SBGGR14 v4l2_fourcc('B', 'G', '1', '4')
+#define V4L2_PIX_FMT_SGBRG14 v4l2_fourcc('G', 'B', '1', '4')
+#define V4L2_PIX_FMT_SGRBG14 v4l2_fourcc('G', 'R', '1', '4')
+#define V4L2_PIX_FMT_SRGGB14 v4l2_fourcc('R', 'G', '1', '4')
 #define V4L2_PIX_FMT_SBGGR14P v4l2_fourcc('p', 'B', 'E', 'E')
 #define V4L2_PIX_FMT_SGBRG14P v4l2_fourcc('p', 'G', 'E', 'E')
 #define V4L2_PIX_FMT_SGRBG14P v4l2_fourcc('p', 'g', 'E', 'E')
@@ -415,7 +421,8 @@ struct v4l2_fmtdesc {
   __u32 flags;
   __u8 description[32];
   __u32 pixelformat;
-  __u32 reserved[4];
+  __u32 mbus_code;
+  __u32 reserved[3];
 };
 #define V4L2_FMT_FLAG_COMPRESSED 0x0001
 #define V4L2_FMT_FLAG_EMULATED 0x0002

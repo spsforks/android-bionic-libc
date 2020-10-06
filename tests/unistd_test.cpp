@@ -41,6 +41,10 @@
 
 #include "private/get_cpu_count_from_string.h"
 
+#if defined(__BIONIC__)
+#include "bionic/pthread_internal.h"
+#endif
+
 #if defined(NOFORTIFY)
 #define UNISTD_TEST unistd_nofortify
 #define UNISTD_DEATHTEST unistd_nofortify_DeathTest
@@ -429,6 +433,45 @@ TEST(UNISTD_TEST, fsync) {
 
 TEST(UNISTD_TEST, syncfs) {
   TestSyncFunction(syncfs);
+}
+
+TEST(UNISTD_TEST, vfork) {
+#if defined(__BIONIC__)
+  pthread_internal_t* self = __get_thread();
+
+  pid_t cached_pid;
+  ASSERT_TRUE(self->get_cached_pid(&cached_pid));
+  ASSERT_EQ(syscall(__NR_getpid), cached_pid);
+  ASSERT_FALSE(self->is_vforked());
+
+  pid_t rc = vfork();
+  ASSERT_NE(-1, rc);
+  if (rc == 0) {
+    if (self->get_cached_pid(&cached_pid)) {
+      const char* error = "__get_thread()->cached_pid_ set after vfork\n";
+      write(STDERR_FILENO, error, strlen(error));
+      _exit(1);
+    }
+
+    if (!self->is_vforked()) {
+      const char* error = "__get_thread()->vforked_ not set after vfork\n";
+      write(STDERR_FILENO, error, strlen(error));
+      _exit(1);
+    }
+
+    _exit(0);
+  } else {
+    ASSERT_TRUE(self->get_cached_pid(&cached_pid));
+    ASSERT_EQ(syscall(__NR_getpid), cached_pid);
+    ASSERT_FALSE(self->is_vforked());
+
+    int status;
+    pid_t wait_result = waitpid(rc, &status, 0);
+    ASSERT_EQ(wait_result, rc);
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
+#endif
 }
 
 static void AssertGetPidCorrect() {
@@ -1307,6 +1350,11 @@ TEST(UNISTD_TEST, execve_failure) {
   ASSERT_EQ(EACCES, errno);
 }
 
+static void append_llvm_cov_env_var(std::string& env_str) {
+  if (getenv("LLVM_PROFILE_FILE") != nullptr)
+    env_str.append("__LLVM_PROFILE_RT_INIT_ONCE=__LLVM_PROFILE_RT_INIT_ONCE\n");
+}
+
 TEST(UNISTD_TEST, execve_args) {
   // int execve(const char* path, char* argv[], char* envp[]);
 
@@ -1318,7 +1366,12 @@ TEST(UNISTD_TEST, execve_args) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execl_failure) {
@@ -1343,8 +1396,13 @@ TEST(UNISTD_TEST, execle_failure) {
 TEST(UNISTD_TEST, execle) {
   ExecTestHelper eth;
   eth.SetEnv({"A=B", nullptr});
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
   // int execle(const char* path, const char* arg, ..., char* envp[]);
-  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0, "A=B\n");
+  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execv_failure) {
@@ -1407,7 +1465,11 @@ TEST(UNISTD_TEST, execvpe) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execvpe_ENOEXEC) {
@@ -1495,7 +1557,11 @@ TEST(UNISTD_TEST, fexecve_args) {
   ASSERT_NE(-1, printenv_fd);
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
   close(printenv_fd);
 }
 
