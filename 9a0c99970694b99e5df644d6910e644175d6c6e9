@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cee2bc5a_424d6f9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-06T22:50:27Z",
+      "side": 1,
+      "message": "Hey, Elliott. I know this is the most beautiful patch, but I wanted to have something ready. Let me know if you have preferences/suggestions for a different way to expose this, and I am happy to implement them.",
+      "revId": "9a0c99970694b99e5df644d6910e644175d6c6e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
