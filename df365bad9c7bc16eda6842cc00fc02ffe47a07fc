@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd1fe1d8_d08f57ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1050443
+      },
+      "writtenOn": "2020-10-06T07:32:22Z",
+      "side": 1,
+      "message": "refer : https://android-review.googlesource.com/c/platform/bionic/+/1276867",
+      "revId": "df365bad9c7bc16eda6842cc00fc02ffe47a07fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
