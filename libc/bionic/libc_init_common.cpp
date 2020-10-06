@@ -58,6 +58,7 @@ extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
 // Not public, but well-known in the BSDs.
+__BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 const char* __progname;
 
 void __libc_init_globals() {
@@ -86,10 +87,13 @@ static void arc4random_fork_handler() {
 }
 
 static void __libc_init_malloc_fill_contents() {
+// TODO(b/158870657) make this unconditional when all devices support SCUDO.
+#if defined(USE_SCUDO)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
   scudo_malloc_set_pattern_fill_contents(1);
 #elif defined(SCUDO_ZERO_CONTENTS)
   scudo_malloc_set_zero_contents(1);
+#endif
 #endif
 }
 
@@ -241,37 +245,38 @@ static bool __is_unsafe_environment_variable(const char* name) {
   // of executing a setuid program or the result of an SELinux
   // security transition.
   static constexpr const char* UNSAFE_VARIABLE_NAMES[] = {
-    "ANDROID_DNS_MODE",
-    "GCONV_PATH",
-    "GETCONF_DIR",
-    "HOSTALIASES",
-    "JE_MALLOC_CONF",
-    "LD_AOUT_LIBRARY_PATH",
-    "LD_AOUT_PRELOAD",
-    "LD_AUDIT",
-    "LD_CONFIG_FILE",
-    "LD_DEBUG",
-    "LD_DEBUG_OUTPUT",
-    "LD_DYNAMIC_WEAK",
-    "LD_LIBRARY_PATH",
-    "LD_ORIGIN_PATH",
-    "LD_PRELOAD",
-    "LD_PROFILE",
-    "LD_SHOW_AUXV",
-    "LD_USE_LOAD_BIAS",
-    "LIBC_DEBUG_MALLOC_OPTIONS",
-    "LIBC_HOOKS_ENABLE",
-    "LOCALDOMAIN",
-    "LOCPATH",
-    "MALLOC_CHECK_",
-    "MALLOC_CONF",
-    "MALLOC_TRACE",
-    "NIS_PATH",
-    "NLSPATH",
-    "RESOLV_HOST_CONF",
-    "RES_OPTIONS",
-    "TMPDIR",
-    "TZDIR",
+      "ANDROID_DNS_MODE",
+      "GCONV_PATH",
+      "GETCONF_DIR",
+      "HOSTALIASES",
+      "JE_MALLOC_CONF",
+      "LD_AOUT_LIBRARY_PATH",
+      "LD_AOUT_PRELOAD",
+      "LD_AUDIT",
+      "LD_CONFIG_FILE",
+      "LD_DEBUG",
+      "LD_DEBUG_OUTPUT",
+      "LD_DYNAMIC_WEAK",
+      "LD_LIBRARY_PATH",
+      "LD_ORIGIN_PATH",
+      "LD_PRELOAD",
+      "LD_PROFILE",
+      "LD_SHOW_AUXV",
+      "LD_USE_LOAD_BIAS",
+      "LIBC_DEBUG_MALLOC_OPTIONS",
+      "LIBC_HOOKS_ENABLE",
+      "LOCALDOMAIN",
+      "LOCPATH",
+      "MALLOC_CHECK_",
+      "MALLOC_CONF",
+      "MALLOC_TRACE",
+      "NIS_PATH",
+      "NLSPATH",
+      "RESOLV_HOST_CONF",
+      "RES_OPTIONS",
+      "SCUDO_OPTIONS",
+      "TMPDIR",
+      "TZDIR",
   };
   for (const auto& unsafe_variable_name : UNSAFE_VARIABLE_NAMES) {
     if (env_match(name, unsafe_variable_name) != nullptr) {
@@ -358,10 +363,8 @@ void __libc_fini(void* array) {
   Dtor* fini_array = reinterpret_cast<Dtor*>(array);
   const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
 
-  // Sanity check - first entry must be -1.
-  if (array == nullptr || fini_array[0] != minus1) {
-    return;
-  }
+  // Validity check: the first entry must be -1.
+  if (array == nullptr || fini_array[0] != minus1) return;
 
   // Skip over it.
   fini_array += 1;
@@ -372,15 +375,9 @@ void __libc_fini(void* array) {
     ++count;
   }
 
-  // Now call each destructor in reverse order.
+  // Now call each destructor in reverse order, ignoring any -1s.
   while (count > 0) {
     Dtor dtor = fini_array[--count];
-
-    // Sanity check, any -1 in the list is ignored.
-    if (dtor == minus1) {
-      continue;
-    }
-
-    dtor();
+    if (dtor != minus1) dtor();
   }
 }

@@ -26,6 +26,10 @@
 #include <unistd.h>
 
 #if defined(__BIONIC__)
+#include <sys/system_properties.h>
+#endif
+
+#if defined(__BIONIC__)
 #include <bionic/macros.h>
 #else
 #define untag_address(p) p
@@ -71,6 +75,16 @@ static inline bool running_with_hwasan() {
 }
 
 #define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
+
+static inline bool running_with_native_bridge() {
+#if defined(__BIONIC__)
+  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
+  return pi != nullptr;
+#endif
+  return false;
+}
+
+#define SKIP_WITH_NATIVE_BRIDGE if (running_with_native_bridge()) GTEST_SKIP()
 
 #if defined(__linux__)
 

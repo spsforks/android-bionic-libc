@@ -210,6 +210,9 @@ enum ethtool_stringset {
   ETH_SS_LINK_MODES,
   ETH_SS_MSG_CLASSES,
   ETH_SS_WOL_MODES,
+  ETH_SS_SOF_TIMESTAMPING,
+  ETH_SS_TS_TX_TYPES,
+  ETH_SS_TS_RX_FILTERS,
   ETH_SS_COUNT
 };
 struct ethtool_gstrings {
@@ -456,12 +459,14 @@ enum ethtool_fec_config_bits {
   ETHTOOL_FEC_OFF_BIT,
   ETHTOOL_FEC_RS_BIT,
   ETHTOOL_FEC_BASER_BIT,
+  ETHTOOL_FEC_LLRS_BIT,
 };
 #define ETHTOOL_FEC_NONE (1 << ETHTOOL_FEC_NONE_BIT)
 #define ETHTOOL_FEC_AUTO (1 << ETHTOOL_FEC_AUTO_BIT)
 #define ETHTOOL_FEC_OFF (1 << ETHTOOL_FEC_OFF_BIT)
 #define ETHTOOL_FEC_RS (1 << ETHTOOL_FEC_RS_BIT)
 #define ETHTOOL_FEC_BASER (1 << ETHTOOL_FEC_BASER_BIT)
+#define ETHTOOL_FEC_LLRS (1 << ETHTOOL_FEC_LLRS_BIT)
 #define ETHTOOL_GSET 0x00000001
 #define ETHTOOL_SSET 0x00000002
 #define ETHTOOL_GDRVINFO 0x00000003
@@ -619,6 +624,7 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_400000baseLR8_ER8_FR8_Full_BIT = 71,
   ETHTOOL_LINK_MODE_400000baseDR8_Full_BIT = 72,
   ETHTOOL_LINK_MODE_400000baseCR8_Full_BIT = 73,
+  ETHTOOL_LINK_MODE_FEC_LLRS_BIT = 74,
   __ETHTOOL_LINK_MODE_MASK_NBITS
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))
@@ -703,6 +709,17 @@ enum ethtool_link_mode_bit_indices {
 #define DUPLEX_HALF 0x00
 #define DUPLEX_FULL 0x01
 #define DUPLEX_UNKNOWN 0xff
+#define MASTER_SLAVE_CFG_UNSUPPORTED 0
+#define MASTER_SLAVE_CFG_UNKNOWN 1
+#define MASTER_SLAVE_CFG_MASTER_PREFERRED 2
+#define MASTER_SLAVE_CFG_SLAVE_PREFERRED 3
+#define MASTER_SLAVE_CFG_MASTER_FORCE 4
+#define MASTER_SLAVE_CFG_SLAVE_FORCE 5
+#define MASTER_SLAVE_STATE_UNSUPPORTED 0
+#define MASTER_SLAVE_STATE_UNKNOWN 1
+#define MASTER_SLAVE_STATE_MASTER 2
+#define MASTER_SLAVE_STATE_SLAVE 3
+#define MASTER_SLAVE_STATE_ERR 4
 #define PORT_TP 0x00
 #define PORT_AUI 0x01
 #define PORT_MII 0x02
@@ -802,7 +819,9 @@ struct ethtool_link_settings {
   __u8 eth_tp_mdix_ctrl;
   __s8 link_mode_masks_nwords;
   __u8 transceiver;
-  __u8 reserved1[3];
+  __u8 master_slave_cfg;
+  __u8 master_slave_state;
+  __u8 reserved1[1];
   __u32 reserved[7];
   __u32 link_mode_masks[0];
 };

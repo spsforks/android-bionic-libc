@@ -167,6 +167,7 @@ enum {
   TCA_RED_PARMS,
   TCA_RED_STAB,
   TCA_RED_MAX_P,
+  TCA_RED_FLAGS,
   __TCA_RED_MAX,
 };
 #define TCA_RED_MAX (__TCA_RED_MAX - 1)
@@ -181,7 +182,9 @@ struct tc_red_qopt {
 #define TC_RED_ECN 1
 #define TC_RED_HARDDROP 2
 #define TC_RED_ADAPTATIVE 4
+#define TC_RED_NODROP 8
 };
+#define TC_RED_HISTORIC_FLAGS (TC_RED_ECN | TC_RED_HARDDROP | TC_RED_ADAPTATIVE)
 struct tc_red_xstats {
   __u32 early;
   __u32 pdrop;
@@ -665,6 +668,9 @@ enum {
   TCA_FQ_ORPHAN_MASK,
   TCA_FQ_LOW_RATE_THRESHOLD,
   TCA_FQ_CE_THRESHOLD,
+  TCA_FQ_TIMER_SLACK,
+  TCA_FQ_HORIZON,
+  TCA_FQ_HORIZON_DROP,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
@@ -682,6 +688,8 @@ struct tc_fq_qd_stats {
   __u32 throttled_flows;
   __u32 unthrottle_latency_ns;
   __u64 ce_mark;
+  __u64 horizon_drops;
+  __u64 horizon_caps;
 };
 enum {
   TCA_HHF_UNSPEC,
@@ -907,8 +915,8 @@ enum {
   __TCA_TAPRIO_SCHED_MAX,
 };
 #define TCA_TAPRIO_SCHED_MAX (__TCA_TAPRIO_SCHED_MAX - 1)
-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST BIT(0)
-#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD BIT(1)
+#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST _BITUL(0)
+#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD _BITUL(1)
 enum {
   TCA_TAPRIO_ATTR_UNSPEC,
   TCA_TAPRIO_ATTR_PRIOMAP,
