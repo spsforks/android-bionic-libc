@@ -1,0 +1,12 @@
+Code-Review+2: Christopher Ferris <cferris@google.com>
+Code-Review+1: Elliott Hughes <enh@google.com>
+Autosubmit+1: Peter Collingbourne <pcc@google.com>
+Lint+1: Lint 🤖 <android-build-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Presubmit-Verified-Together+1: Treehugger Robot <treehugger-gerrit@google.com>
+NDK-API-Review+1: Elliott Hughes <enh@google.com>
+Submitted-by: Steven Moreland <smoreland@google.com>
+Submitted-at: Fri, 09 Oct 2020 21:05:00 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1427377
+Project: platform/bionic
+Branch: refs/heads/master
