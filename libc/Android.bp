@@ -1807,7 +1807,7 @@ cc_library_headers {
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
-        "com.android.art.release", // from libdexfile_external
+        "com.android.art", // from libdexfile_external
         "com.android.art.debug", // from libdexfile_external
     ],
 }
