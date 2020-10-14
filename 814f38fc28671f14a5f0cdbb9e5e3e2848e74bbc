@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ada5397_e0c976aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-10-14T00:11:07Z",
+      "side": 1,
+      "message": "PTAL, the corresponding internal topic is\n\nhttps://googleplex-android-review.git.corp.google.com/q/topic:%22b%252F170665833-master%22+(status:open%20OR%20status:merged)",
+      "revId": "814f38fc28671f14a5f0cdbb9e5e3e2848e74bbc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
