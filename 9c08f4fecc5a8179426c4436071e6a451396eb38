@@ -16,6 +16,23 @@
       "message": "LGTM, but I\u0027d like Elliott and/or Yabin to look at this as well.",
       "revId": "9c08f4fecc5a8179426c4436071e6a451396eb38",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1bf6a3b_61397936",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2020-10-15T17:39:37Z",
+      "side": 1,
+      "message": "LGTM. And I don\u0027t have a good idea testing the behavior change.",
+      "revId": "9c08f4fecc5a8179426c4436071e6a451396eb38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
