@@ -986,6 +986,15 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
 #elif defined (__x86_64__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
+<<<<<<< TARGET BRANCH (359605 Merge "Merge "Stop executing if skip occurs." into android10)
+=======
+#elif defined (__mips__)
+#if defined(__LP64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/mips64/"
+#else
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
+#endif
+>>>>>>> SOURCE BRANCH (3382f3 Merge "Fix Bionic dlfcn.dladdr_libc test case for 64bit bina)
 #else
 #error "Unknown architecture"
 #endif
