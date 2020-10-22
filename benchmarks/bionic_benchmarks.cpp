@@ -37,19 +37,18 @@
 #define _STR(x) #x
 #define STRINGFY(x) _STR(x)
 
-static const std::vector<int> kCommonSizes{
-  8,
-  16,
-  32,
-  64,
-  512,
-  1 * KB,
-  8 * KB,
-  16 * KB,
-  32 * KB,
-  64 * KB,
-  128 * KB,
-};
+static const std::vector<int> kCommonSizes = []() {
+  std::vector<int> sizes = {8, 16, 32, 64, 512, 1 * KB};
+  for (size_t nkb = 60; nkb <= 70; nkb += 1) {
+    sizes.push_back(nkb * KB);
+  }
+  sizes.push_back(65534);
+  sizes.push_back(65535);
+  sizes.push_back(65536);
+  sizes.push_back(65537);
+  sizes.push_back(65538);
+  return sizes;
+}();
 
 static const std::vector<int> kSmallSizes{
   // Increment by 1
