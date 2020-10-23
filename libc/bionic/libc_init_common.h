@@ -31,8 +31,8 @@
 #include <sys/cdefs.h>
 
 typedef struct {
-  void (**preinit_array)(void);
-  void (**init_array)(void);
+  void (**preinit_array)(int, char*[], char*[]);
+  void (**init_array)(int, char*[], char*[]);
   void (**fini_array)(void);
 } structors_array_t;
 
