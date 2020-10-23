@@ -361,13 +361,8 @@ void __libc_init_AT_SECURE(char** env) {
 void __libc_fini(void* array) {
   typedef void (*Dtor)();
   Dtor* fini_array = reinterpret_cast<Dtor*>(array);
-  const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
 
-  // Validity check: the first entry must be -1.
-  if (array == nullptr || fini_array[0] != minus1) return;
-
-  // Skip over it.
-  fini_array += 1;
+  if (array == nullptr) return;
 
   // Count the number of destructors.
   int count = 0;
@@ -377,7 +372,6 @@ void __libc_fini(void* array) {
 
   // Now call each destructor in reverse order, ignoring any -1s.
   while (count > 0) {
-    Dtor dtor = fini_array[--count];
-    if (dtor != minus1) dtor();
+    fini_array[--count]();
   }
 }
