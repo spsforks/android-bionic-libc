@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85e81bdd_921c112e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-10-23T17:43:36Z",
+      "side": 1,
+      "message": "missing an \u0027s\u0027",
+      "range": {
+        "startLine": 17,
+        "startChar": 36,
+        "endLine": 17,
+        "endChar": 38
+      },
+      "revId": "e6b2969ca1e83d72a7c2f6b27257e86ebc9f996e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f80f90f2_ceb9edf3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-10-23T17:43:36Z",
+      "side": 1,
+      "message": "+Ryan for OWNERS approval, but this looks like a great solution. Thank you Matthew and Ivan for figuring out this mystery.",
+      "revId": "e6b2969ca1e83d72a7c2f6b27257e86ebc9f996e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
