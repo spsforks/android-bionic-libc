@@ -95,9 +95,31 @@ TEST(dl, lib_does_not_preempt_global_protected) {
   static constexpr const char* kAlternatePathToLinker = "/system/bin/x86_64/linker64";
 #elif defined (__i386__)
   static constexpr const char* kAlternatePathToLinker = "/system/bin/x86/linker";
+<<<<<<< HEAD   (98b842 Merge "[automerger skipped] Merge "Fix Bionic dlfcn.dladdr_l)
+#else
+#error "Unknown architecture"
+=======
+#elif defined (__mips__)
+#if defined(__LP64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips64/linker64";
+#else
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips/linker";
+>>>>>>> BRANCH (ce45ee Merge "Fix linker path for emulated architecture" into andro)
+#endif
 #else
 #error "Unknown architecture"
 #endif
+
+const char* PathToLinker() {
+  // On the systems with emulated architecture linker would be of different
+  // architecture. Try to use alternate paths first.
+  struct stat buffer;
+  if (stat(kAlternatePathToLinker, &buffer) == 0) {
+    return kAlternatePathToLinker;
+  }
+  return kPathToLinker;
+}
+#endif  // defined(__BIONIC__)
 
 const char* PathToLinker() {
   // On the systems with emulated architecture linker would be of different
