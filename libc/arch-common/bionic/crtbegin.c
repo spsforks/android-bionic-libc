@@ -30,17 +30,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define SECTION(name) __attribute__((__section__(name)))
-SECTION(".preinit_array") void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
-#undef SECTION
+extern void (*__preinit_array_start[])(int, char*[], char*[]) __LIBC_HIDDEN__;
+extern void (*__init_array_start[])(int, char*[], char*[]) __LIBC_HIDDEN__;
+extern void (*__fini_array_start[])(void) __LIBC_HIDDEN__;
 
 __used static void _start_main(void* raw_args) {
   structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
+  array.preinit_array = __preinit_array_start;
+  array.init_array = __init_array_start;
+  array.fini_array = __fini_array_start;
 
   __libc_init(raw_args, NULL, &main, &array);
 }
