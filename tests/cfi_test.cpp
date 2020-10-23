@@ -95,11 +95,18 @@ TEST(cfi_test, basic) {
   EXPECT_EQ(get_global_address(), get_last_address());
   EXPECT_EQ(c, get_count());
 
+<<<<<<< TARGET BRANCH (8734e1 Merge "[automerger skipped] Merge "Fix linker path for emula)
   // CFI check for a heap address.
   // It's possible that this allocation could wind up in the same CFI granule as
   // an unchecked library, which means the below might not crash. To force a
   // crash keep allocating up to a max until there is a crash.
   EXPECT_DEATH(test_cfi_slowpath_with_alloc(), "");
+=======
+  // CFI check for a heap address. This is always invalid and gets the process killed.
+  void* p = malloc(4096);
+  EXPECT_DEATH(__cfi_slowpath(46, p), "");
+  free(p);
+>>>>>>> SOURCE BRANCH (c9608a Merge "Remove stack address check in cfi_basic test." into a)
 
   // Check all the addresses.
   const size_t bss_size = 1024 * 1024;
