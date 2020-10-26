@@ -51,19 +51,27 @@
 #include "grp_pwd_file.h"
 
 static PasswdFile passwd_files[] = {
-  { "/system/etc/passwd", "system_" },
-  { "/vendor/etc/passwd", "vendor_" },
-  { "/odm/etc/passwd", "odm_" },
-  { "/product/etc/passwd", "product_" },
-  { "/system_ext/etc/passwd", "system_ext_" },
+#if defined(__ANDROID__)
+    {"/system/etc/passwd", "system_"},
+    {"/vendor/etc/passwd", "vendor_"},
+    {"/odm/etc/passwd", "odm_"},
+    {"/product/etc/passwd", "product_"},
+    {"/system_ext/etc/passwd", "system_ext_"},
+#else
+    {"/etc/passwd", nullptr},
+#endif
 };
 
 static GroupFile group_files[] = {
-  { "/system/etc/group", "system_" },
-  { "/vendor/etc/group", "vendor_" },
-  { "/odm/etc/group", "odm_" },
-  { "/product/etc/group", "product_" },
-  { "/system_ext/etc/group", "system_ext_" },
+#if defined(__ANDROID__)
+    {"/system/etc/group", "system_"},
+    {"/vendor/etc/group", "vendor_"},
+    {"/odm/etc/group", "odm_"},
+    {"/product/etc/group", "product_"},
+    {"/system_ext/etc/group", "system_ext_"},
+#else
+    {"/etc/group", nullptr},
+#endif
 };
 
 // POSIX seems to envisage an implementation where the <pwd.h> functions are
@@ -267,7 +275,7 @@ static id_t get_next_app_id(id_t current_id, bool is_group) {
 // u2_i1000 -> 2 * AID_USER_OFFSET + AID_ISOLATED_START + 1000
 // u1_system -> 1 * AID_USER_OFFSET + android_ids['system']
 // returns 0 and sets errno to ENOENT in case of error.
-static id_t app_id_from_name(const char* name, bool is_group) {
+static __attribute__((__unused__)) id_t app_id_from_name(const char* name, bool is_group) {
   char* end;
   unsigned long userid;
   bool is_shared_gid = false;
@@ -422,7 +430,7 @@ static bool is_oem_id(id_t id) {
 }
 
 // Translate an OEM name to the corresponding user/group id.
-static id_t oem_id_from_name(const char* name) {
+static __attribute__((__unused__)) id_t oem_id_from_name(const char* name) {
   unsigned int id;
   if (sscanf(name, "oem_%u", &id) != 1) {
     return 0;
@@ -518,6 +526,7 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
 }
 
 passwd* getpwuid_internal(uid_t uid, passwd_state_t* state) {
+#if defined(__ANDROID__)
   if (auto* android_id_info = find_android_id_info(uid); android_id_info != nullptr) {
     return android_iinfo_to_passwd(state, android_id_info);
   }
@@ -528,6 +537,14 @@ passwd* getpwuid_internal(uid_t uid, passwd_state_t* state) {
     return pw;
   }
   return app_id_to_passwd(uid, state);
+#else
+  for (auto& passwd_file : passwd_files) {
+    if (passwd_file.FindById(uid, state)) {
+      return &state->passwd_;
+    }
+  }
+  return nullptr;
+#endif
 }
 
 passwd* getpwuid(uid_t uid) {  // NOLINT: implementing bad function.
@@ -536,9 +553,11 @@ passwd* getpwuid(uid_t uid) {  // NOLINT: implementing bad function.
 }
 
 passwd* getpwnam_internal(const char* login, passwd_state_t* state) {
+#if defined(__ANDROID__)
   if (auto* android_id_info = find_android_id_info(login); android_id_info != nullptr) {
     return android_iinfo_to_passwd(state, android_id_info);
   }
+#endif
 
   for (auto& passwd_file : passwd_files) {
     if (passwd_file.FindByName(login, state)) {
@@ -546,12 +565,16 @@ passwd* getpwnam_internal(const char* login, passwd_state_t* state) {
     }
   }
 
+#if defined(__ANDROID__)
   // Handle OEM range.
   passwd* pw = oem_id_to_passwd(oem_id_from_name(login), state);
   if (pw != nullptr) {
     return pw;
   }
   return app_id_to_passwd(app_id_from_name(login, false), state);
+#else
+  return nullptr;
+#endif
 }
 
 passwd* getpwnam(const char* login) {  // NOLINT: implementing bad function.
@@ -677,6 +700,7 @@ passwd* getpwent() {
 }
 
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
+#if defined(__ANDROID__)
   if (auto* android_id_info = find_android_id_info(gid); android_id_info != nullptr) {
     return android_iinfo_to_group(state, android_id_info);
   }
@@ -687,6 +711,14 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
     return grp;
   }
   return app_id_to_group(gid, state);
+#else
+  for (auto& group_file : group_files) {
+    if (group_file.FindById(gid, state)) {
+      return &state->group_;
+    }
+  }
+  return nullptr;
+#endif
 }
 
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
@@ -695,9 +727,11 @@ group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
 }
 
 static group* getgrnam_internal(const char* name, group_state_t* state) {
+#if defined(__ANDROID__)
   if (auto* android_id_info = find_android_id_info(name); android_id_info != nullptr) {
     return android_iinfo_to_group(state, android_id_info);
   }
+#endif
 
   for (auto& group_file : group_files) {
     if (group_file.FindByName(name, state)) {
@@ -705,12 +739,16 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
     }
   }
 
+#if defined(__ANDROID__)
   // Handle OEM range.
   group* grp = oem_id_to_group(oem_id_from_name(name), state);
   if (grp != nullptr) {
     return grp;
   }
   return app_id_to_group(app_id_from_name(name, true), state);
+#else
+  return nullptr;
+#endif
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
