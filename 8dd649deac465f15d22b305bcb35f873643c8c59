@@ -16,6 +16,24 @@
       "message": "if we didn\u0027t support libc.a running on old devices, we could just use /bin/sh now there\u0027s a symlink. but we should probably keep libc.a working :-(",
       "revId": "8dd649deac465f15d22b305bcb35f873643c8c59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb281a19_3366ad01",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-26T16:34:13Z",
+      "side": 1,
+      "message": "Ack. Thanks for reviewing this so quickly - even before I asked.",
+      "parentUuid": "72204c67_b0ef12d0",
+      "revId": "8dd649deac465f15d22b305bcb35f873643c8c59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
