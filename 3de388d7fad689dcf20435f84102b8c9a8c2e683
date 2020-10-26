@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83933723_f19369fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2020-10-26T06:09:11Z",
+      "side": 1,
+      "message": "FYI to enh@ for these changes to the Bionic source tree: this is one of a series of CLs to add experimental mixed builds between Soong and Bazel, using Bionic as the build target. \n\nChris will probably have more to add, but I think we should clearly communicate that these shouldn\u0027t affect the current development workflow for Bionic folks, but could be used in an opt-in manner.",
+      "revId": "3de388d7fad689dcf20435f84102b8c9a8c2e683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
