@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc21700c_e85aaf9c",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-26T20:28:31Z",
+      "side": 1,
+      "message": "would it be a smaller change to just have these functions return failure, and then leave the higher-level functions alone?",
+      "revId": "4bd343a33f5b87f2c78be99a63edb304ac9da307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
