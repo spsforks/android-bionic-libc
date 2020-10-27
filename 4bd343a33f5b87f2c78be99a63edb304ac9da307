@@ -16,6 +16,24 @@
       "message": "would it be a smaller change to just have these functions return failure, and then leave the higher-level functions alone?",
       "revId": "4bd343a33f5b87f2c78be99a63edb304ac9da307",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d603d7_4f95267b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-27T00:40:15Z",
+      "side": 1,
+      "message": "Yes I agree with you. In the new PS, I tried to touch the bottom functions (like is_oem_id) so that I don\u0027t need to touch the higher-level functions.",
+      "parentUuid": "cc21700c_e85aaf9c",
+      "revId": "4bd343a33f5b87f2c78be99a63edb304ac9da307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
