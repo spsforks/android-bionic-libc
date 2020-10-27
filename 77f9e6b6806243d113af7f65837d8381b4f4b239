@@ -16,6 +16,24 @@
       "message": "(here we probably can use the /etc symlink on modern devices to make the device and host code the same, since i don\u0027t think devices without that symlink had any passwd/group files anyway.)",
       "revId": "77f9e6b6806243d113af7f65837d8381b4f4b239",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96b980b7_839b5fc4",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-27T05:31:23Z",
+      "side": 1,
+      "message": "That will only allow us to change \"/system/etc/*\" to \"/etc/*\" at line 61 and 69. We still need to have device-specific code for files in other partitions. We also should behave differently for the handling of app ids, oem ids, etc.\n\nIn general, I don\u0027t think we can achieve the same code for device and host here.",
+      "parentUuid": "d61b4c98_5a35c5c8",
+      "revId": "77f9e6b6806243d113af7f65837d8381b4f4b239",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
