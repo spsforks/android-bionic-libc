@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e80aa8ca_52bc807d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-27T04:33:08Z",
+      "side": 1,
+      "message": "Could you review this?\n\nIn addition, let me know if you want me to work on get[gr|pw]ent as a follow-up.",
+      "revId": "a94dbef8518281f40648d91de0c1eb417d6246aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
