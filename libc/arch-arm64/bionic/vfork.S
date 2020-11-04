@@ -36,6 +36,22 @@
 
 ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+// Use regular fork on MTE devices.
+    hint    #25 // paciasp
+    .cfi_negate_ra_state
+    str     x30, [sp, #-16]!
+    .cfi_adjust_cfa_offset 16
+    .cfi_rel_offset x30, 0
+    bl      __vfork_is_fork
+    ldr     x30, [sp], #16
+    .cfi_adjust_cfa_offset -16
+    .cfi_restore x30
+    hint #29 // autiasp
+    .cfi_negate_ra_state
+    cbz     x0, .L_cont
+    b       fork
+.L_cont:
+
     // x9 = __get_tls()[TLS_SLOT_THREAD_ID]
     mrs     x9, tpidr_el0
     ldr     x9, [x9, #(TLS_SLOT_THREAD_ID * 8)]
