@@ -1,0 +1,7 @@
+Presubmit-Ready+1: Tej Singh <singhtejinder@google.com>
+Build-Cop-Override+1: Hyunyoung Song <hyunyoungs@google.com>
+Submitted-by: Tej Singh <singhtejinder@google.com>
+Submitted-at: Sat, 14 Nov 2020 01:59:31 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1499099
+Project: platform/bionic
+Branch: refs/heads/master
