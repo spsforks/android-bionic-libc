@@ -53,6 +53,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 
+__LIBC_HIDDEN__ void __libc_init_malloc_fill_contents();
 __LIBC_HIDDEN__ void __libc_init_globals();
 
 __LIBC_HIDDEN__ void __libc_init_common();

@@ -86,7 +86,7 @@ static void arc4random_fork_handler() {
   _thread_arc4_lock();
 }
 
-static void __libc_init_malloc_fill_contents() {
+void __libc_init_malloc_fill_contents() {
 // TODO(b/158870657) make this unconditional when all devices support SCUDO.
 #if defined(USE_SCUDO)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
@@ -120,7 +120,6 @@ void __libc_init_common() {
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
 
-  __libc_init_malloc_fill_contents();
   SetDefaultHeapTaggingLevel();
 }
 

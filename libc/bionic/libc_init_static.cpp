@@ -193,6 +193,7 @@ __noreturn static void __real_libc_init(void *raw_args,
     __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
 
+  __libc_init_malloc_fill_contents();
   exit(slingshot(args.argc, args.argv, args.envp));
 }
 
