@@ -134,6 +134,7 @@ setenv(const char *name, const char *value, int rewrite)
 		P = reallocarray(lastenv, cnt + 2, sizeof(char *));
 		if (!P)
 			return (-1);
+		P[cnt] = NULL;
 		if (lastenv != environ && environ != NULL)
 			memcpy(P, environ, cnt * sizeof(char *));
 		lastenv = environ = P;
