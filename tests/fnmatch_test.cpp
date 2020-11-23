@@ -84,3 +84,38 @@ TEST(fnmatch, wild_one) {
   ASSERT_EQ(0, fnmatch("ab?cd", "ab/cd", 0));
   ASSERT_EQ(FNM_NOMATCH, fnmatch("ab?cd", "ab/cd", FNM_PATHNAME));
 }
+
+TEST(fnmatch, leading_dir) {
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab", "abcd", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab*", "abcd", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("*ab*", "1/2/3/4/abcd", FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("*ab*", "1/2/3/4/abcd", FNM_PATHNAME | FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab?", "abcd", FNM_LEADING_DIR));
+
+  EXPECT_EQ(0, fnmatch("ab", "ab/cd", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab", "ab/cd", FNM_PATHNAME | FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("*ab", "1/2/3/4/ab/cd", FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("*ab", "1/2/3/4/ab/cd", FNM_PATHNAME | FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab*", "ab/cd/ef", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab*", "ab/cd/ef", FNM_PATHNAME | FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("*ab*", "1/2/3/4/ab/cd/ef", FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("*ab*", "1/2/3/4/ab/cd/ef", FNM_PATHNAME | FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab?", "ab/cd/ef", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab?", "abx/cd/ef", FNM_LEADING_DIR));
+
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab/", "ab/cd/ef", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab/*", "ab/cd/ef", FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab/?", "ab/cd/ef", FNM_LEADING_DIR));
+
+  EXPECT_EQ(0, fnmatch("ab*c", "ab/1/2/3/c/d/e", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab?c", "ab/c/ef", FNM_LEADING_DIR));
+
+  EXPECT_EQ(0, fnmatch("ab*c*", "ab/1/2/3/c/d/e", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab?c*", "ab/c/ef", FNM_LEADING_DIR));
+
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab*c/", "ab/1/2/3/c/d/e", FNM_LEADING_DIR));
+  EXPECT_EQ(FNM_NOMATCH, fnmatch("ab?c/", "ab/c/ef", FNM_LEADING_DIR));
+
+  EXPECT_EQ(0, fnmatch("ab*c/*", "ab/1/2/3/c/d/e", FNM_LEADING_DIR));
+  EXPECT_EQ(0, fnmatch("ab?c/*", "ab/c/ef", FNM_LEADING_DIR));
+}
