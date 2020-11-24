@@ -95,10 +95,11 @@ static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
   // Find all of the maps that are from the native allocator.
-  auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-    if (strcmp(name, "[anon:libc_malloc]") == 0 || strncmp(name, "[anon:scudo:", 12) == 0 ||
-        strncmp(name, "[anon:GWP-ASan", 14) == 0) {
-      malloc_iterate(start, end - start, SavePointers, test_data);
+  auto callback = [&](android::procinfo::MapInfo mapinfo) {
+    if (strcmp(mapinfo.name.c_str(), "[anon:libc_malloc]") == 0 ||
+        strncmp(mapinfo.name.c_str(), "[anon:scudo:", 12) == 0 ||
+        strncmp(mapinfo.name, "[anon:GWP-ASan", 14) == 0) {
+      malloc_iterate(mapinfo.start, mapinfo.end - mapinfo.start, SavePointers, test_data);
     }
   };
 
@@ -192,22 +193,23 @@ TEST(malloc_iterate, invalid_pointers) {
   TestDataType test_data = {};
 
   // Only attempt to get memory data for maps that are not from the native allocator.
-  auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-    if (strcmp(name, "[anon:libc_malloc]") != 0 && strncmp(name, "[anon:scudo:", 12) != 0 &&
-        strncmp(name, "[anon:GWP-ASan", 14) != 0) {
+  auto callback = [&](android::procinfo::MapInfo mapinfo) {
+    if (strcmp(mapinfo.name.c_str(), "[anon:libc_malloc]") != 0 &&
+        strncmp(mapinfo.name.c_str(), "[anon:scudo:", 12) != 0 &&
+        strncmp(mapinfo.name.c_str(), "[anon:GWP-ASan", 14) != 0) {
       size_t total = test_data.total_allocated_bytes;
-      malloc_iterate(start, end - start, SavePointers, &test_data);
+      malloc_iterate(mapinfo.start, mapinfo.end - mapinfo.start, SavePointers, &test_data);
       total = test_data.total_allocated_bytes - total;
       if (total > 0) {
         char buffer[256];
         int len = 0;
         if (name[0] != '\0') {
-          len = async_safe_format_buffer(buffer, sizeof(buffer), "Failed on map %s: %zu\n", name,
-                                         total);
+          len = async_safe_format_buffer(buffer, sizeof(buffer), "Failed on map %s: %zu\n",
+                                         mapinfo.name.c_str(), total);
         } else {
           len = async_safe_format_buffer(buffer, sizeof(buffer),
                                          "Failed on map anon:<%" PRIx64 "-%" PRIx64 ">: %zu\n",
-                                         start, end, total);
+                                         mapinfo.start, mapinfo.end, total);
         }
         if (len > 0) {
           write(STDOUT_FILENO, buffer, len);
