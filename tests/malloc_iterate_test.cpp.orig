@@ -95,11 +95,18 @@ static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
   // Find all of the maps that are from the native allocator.
+<<<<<<< HEAD
+  auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name, bool) {
+    if (strcmp(name, "[anon:libc_malloc]") == 0 || strncmp(name, "[anon:scudo:", 12) == 0 ||
+        strncmp(name, "[anon:GWP-ASan", 14) == 0) {
+      malloc_iterate(start, end - start, SavePointers, test_data);
+=======
   auto callback = [&](android::procinfo::MapInfo mapinfo) {
     if (strcmp(mapinfo.name.c_str(), "[anon:libc_malloc]") == 0 ||
         strncmp(mapinfo.name.c_str(), "[anon:scudo:", 12) == 0 ||
         strncmp(mapinfo.name, "[anon:GWP-ASan", 14) == 0) {
       malloc_iterate(mapinfo.start, mapinfo.end - mapinfo.start, SavePointers, test_data);
+>>>>>>> 2275c7049 (Add a flag to distinguish shared VMAs)
     }
   };
 
@@ -194,8 +201,12 @@ TEST(malloc_iterate, invalid_pointers) {
 
   // Only attempt to get memory data for maps that are not from the native allocator.
   auto callback = [&](android::procinfo::MapInfo mapinfo) {
+<<<<<<< HEAD
+    if (strcmp(mapinfo.name.c_str(), "[anon:libc_malloc]") != 0 && strncmp(mapinfo.name.c_str(), "[anon:scudo:", 12) != 0 &&
+=======
     if (strcmp(mapinfo.name.c_str(), "[anon:libc_malloc]") != 0 &&
         strncmp(mapinfo.name.c_str(), "[anon:scudo:", 12) != 0 &&
+>>>>>>> 2275c7049 (Add a flag to distinguish shared VMAs)
         strncmp(mapinfo.name.c_str(), "[anon:GWP-ASan", 14) != 0) {
       size_t total = test_data.total_allocated_bytes;
       malloc_iterate(mapinfo.start, mapinfo.end - mapinfo.start, SavePointers, &test_data);
@@ -204,8 +215,13 @@ TEST(malloc_iterate, invalid_pointers) {
         char buffer[256];
         int len = 0;
         if (name[0] != '\0') {
+<<<<<<< HEAD
+          len = async_safe_format_buffer(buffer, sizeof(buffer), "Failed on map %s: %zu\n", mapinfo.name.c_str(),
+                                         total);
+=======
           len = async_safe_format_buffer(buffer, sizeof(buffer), "Failed on map %s: %zu\n",
                                          mapinfo.name.c_str(), total);
+>>>>>>> 2275c7049 (Add a flag to distinguish shared VMAs)
         } else {
           len = async_safe_format_buffer(buffer, sizeof(buffer),
                                          "Failed on map anon:<%" PRIx64 "-%" PRIx64 ">: %zu\n",
