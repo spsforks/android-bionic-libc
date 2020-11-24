@@ -718,8 +718,8 @@ std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
   std::string found_name = "<not found>";
 
   EXPECT_TRUE(android::procinfo::ReadMapFile(
-      "/proc/self/maps",
-      [&](uint64_t start, uint64_t end, uint16_t, uint16_t, ino_t, const char* name) {
+      "/proc/self/maps", [&](uint64_t start, uint64_t end, uint16_t, uint16_t, ino_t,
+                             const char* name, bool isShared) {
         if (addr >= start && addr < end) {
           found_name = name;
         }

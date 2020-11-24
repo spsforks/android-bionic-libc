@@ -1499,6 +1499,7 @@ LIBC_R { # introduced=R
     mtx_timedlock;
     mtx_trylock;
     mtx_unlock;
+    process_madvise;
     pthread_cond_clockwait;
     pthread_mutex_clocklock;
     pthread_rwlock_clockrdlock;
