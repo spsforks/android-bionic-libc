@@ -36,6 +36,7 @@ apex {
     },
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
+    compressible: false,
     prebuilts: [
         "bionic-linker-config",
     ],
