@@ -1010,18 +1010,6 @@ TEST(malloc, align_check) {
   AlignCheck();
 }
 
-// Force GWP-ASan on and verify all alignment checks still pass.
-TEST(malloc, align_check_gwp_asan) {
-#if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-
-  AlignCheck();
-#else
-  GTEST_SKIP() << "bionic-only test";
-#endif
-}
-
 // Jemalloc doesn't pass this test right now, so leave it as disabled.
 TEST(malloc, DISABLED_alloc_after_fork) {
   // Both of these need to be a power of 2.
@@ -1371,17 +1359,28 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(android_mallopt, force_init_gwp_asan) {
-#if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
+void Die() {
+  ASSERT_TRUE(false) << "Assertion failure.";
+}
 
-  // Verify that trying to do the call again also passes no matter the
-  // value of force_init.
-  force_init = false;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-  force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
+TEST(android_mallopt, DISABLED_multiple_enable_gwp_asan) {
+#if defined(__BIONIC__)
+  android_mallopt_gwp_asan_options_t options;
+  options.program_name = "";  // Don't infer GWP-ASan options from sysprops.
+  options.use_lottery = false;
+  options.is_app = false;
+  // GWP-ASan should already be enabled. Trying to enable or disable it should
+  // always pass.
+  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
+  options.use_lottery = true;
+  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
+#endif  // defined(__BIONIC__)
+}
+
+TEST(android_mallopt, multiple_enable_gwp_asan) {
+#if defined(__BIONIC__)
+  // Always enable GWP-Asan, with default options.
+  RunGwpAsanTest("*.DISABLED_multiple_enable_gwp_asan", ":1:");
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
