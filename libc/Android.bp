@@ -29,6 +29,7 @@ libc_common_src_files = [
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
+    "bionic/sysprop_helpers.cpp",
     "stdio/fmemopen.cpp",
     "stdio/parsefloat.c",
     "stdio/refill.c",
@@ -1414,6 +1415,7 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "gwp_asan_options_parser",
         "libarm-optimized-routines-string",
         "libasync_safe",
         "libc_bionic_ndk",
@@ -1653,6 +1655,7 @@ cc_library {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_options_parser",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1662,6 +1665,7 @@ cc_library {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_options_parser",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
