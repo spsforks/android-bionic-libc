@@ -129,6 +129,22 @@ enum HeapTaggingLevel {
   M_HEAP_TAGGING_LEVEL_SYNC = 3,
 };
 
+typedef struct {
+  // The null-terminated name that the zygote is spawning. Because native SpecializeCommon (where
+  // the GWP-ASan mallopt() is called from) happens before argv[0] is set, we need the zygote to
+  // tell us the new app name.
+  const char* program_name;
+
+  // Should we use a lottery to choose whether this app has GWP-ASan? If we're not using a lottery,
+  // then the app gets GWP-ASan enabled every time.
+  bool use_lottery;
+
+  // At this point, we don't give apps any control over their GWP-ASan settings. In the future, we
+  // might give them options of "high", "medium", and "low" sanitization, but I'm not particularly
+  // keen on exposing implementation details to them because the configuration options aren't
+  // guaranteed to be stable.
+} android_mallopt_gwp_asan_options_t;
+
 // Manipulates bionic-specific handling of memory allocation APIs such as
 // malloc. Only for use by the Android platform itself.
 //
