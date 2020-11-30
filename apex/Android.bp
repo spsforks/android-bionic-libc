@@ -31,6 +31,7 @@ apex {
             binaries: [
                 "crash_dump",
                 "linker",
+                "linkerconfig",
             ],
         },
     },
