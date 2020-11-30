@@ -1751,6 +1751,7 @@ LIBC_PRIVATE {
     index; # arm x86
     issetugid; # arm x86
     memswap; # arm x86
+    ParseGwpAsanOptions;
     pthread_attr_getstackaddr; # arm x86
     pthread_attr_setstackaddr; # arm x86
     SHA1Final; # arm x86
