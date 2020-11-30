@@ -321,13 +321,14 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     return SetHeapTaggingLevel(arg, arg_size);
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {
-    if (arg == nullptr || arg_size != sizeof(bool)) {
+    if (arg == nullptr || arg_size != sizeof(android_mallopt_gwp_asan_options_t)) {
       errno = EINVAL;
       return false;
     }
     __libc_globals.mutate([&](libc_globals* globals) {
-      return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
+      MaybeInitGwpAsan(globals, reinterpret_cast<android_mallopt_gwp_asan_options_t*>(arg));
     });
+    return true;
   }
   if (opcode == M_DISABLE_MEMORY_MITIGATIONS) {
     return DisableMemoryMitigations(arg, arg_size);
