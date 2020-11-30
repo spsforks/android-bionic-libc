@@ -102,6 +102,21 @@ enum {
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
 };
 
+typedef struct {
+  // The null-terminated name that the zygote is spawning. Because native
+  // SpecializeCommon (where the GWP-ASan mallopt() is called from) happens
+  // before argv[0] is set, we need the zygote to tell us the new app name.
+  const char* program_name = nullptr;
+
+  // For system apps and system processes, we use a "lottery" system by default
+  // to enable GWP-ASan. For non-system apps, enabling GWP-ASan is an all-on or
+  // all-off system. The default lottery behaviour can be overruled by the
+  // "libc.debug.gwp_asan.<name>" system property.
+  bool use_lottery = true;
+
+  bool is_app = true;
+} android_mallopt_gwp_asan_options_t;
+
 // Manipulates bionic-specific handling of memory allocation APIs such as
 // malloc. Only for use by the Android platform itself.
 //
