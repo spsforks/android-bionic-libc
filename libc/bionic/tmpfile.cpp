@@ -35,6 +35,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -99,3 +100,37 @@ FILE* tmpfile() {
   return fp;
 }
 __strong_alias(tmpfile64, tmpfile);
+
+char* tempnam(const char* dir, const char* prefix) {
+  // This function is a terrible idea and marked deprecated in our headers,
+  // but we make some effort anyway, since we can't easily remove it...
+
+  // $TMPDIR overrides any directory passed in.
+  char* tmpdir = getenv("TMPDIR");
+  if (tmpdir != nullptr) dir = tmpdir;
+
+  // If we still have no directory, we'll give you a default.
+  // It's useless for apps, but good enough for the shell.
+  if (dir == nullptr) dir = "/data/local/tmp";
+
+  // Default prefix?
+  if (prefix == nullptr) prefix = "tempnam.";
+
+  // Make up a mktemp(3) template and defer to it for the real work.
+  char* path = nullptr;
+  if (asprintf(&path, "%s/%sXXXXXXXXXX", dir, prefix) == -1) return nullptr;
+  if (mktemp(path) == nullptr) {
+    free(path);
+    return nullptr;
+  }
+  return path;
+}
+
+char* tmpnam(char* s) {
+  static char buf[L_tmpnam];
+  if (s == nullptr) s = buf;
+
+  // This function is a terrible idea, useless as defined on Android,
+  // marked deprecated in our headers, and marked obsolete by POSIX.
+  return mktemp(strcpy(s, "/tmp/tmpnam.XXXXXXXXXX"));
+}
