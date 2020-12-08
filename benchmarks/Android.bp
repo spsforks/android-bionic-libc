@@ -29,7 +29,6 @@ cc_defaults {
         "bionic_benchmarks.cpp",
         "atomic_benchmark.cpp",
         "ctype_benchmark.cpp",
-        "dlfcn_benchmark.cpp",
         "get_heap_size_benchmark.cpp",
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
@@ -80,12 +79,28 @@ cc_defaults {
 cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
+    srcs: [
+        "dlfcn_benchmark.cpp",
+    ],
     data: ["suites/*"],
     static_libs: [
         "libsystemproperties",
         "libasync_safe",
     ],
     include_dirs: ["bionic/libc"],
+}
+
+cc_benchmark {
+    name: "bionic-benchmarks-static",
+    defaults: ["bionic-benchmarks-defaults"],
+    data: ["suites/*"],
+    static_libs: [
+        "liblog",
+        "libsystemproperties",
+        "libasync_safe",
+    ],
+    include_dirs: ["bionic/libc"],
+    static_executable: true,
 }
 
 // We don't build a static benchmark executable because it's not usually
@@ -98,6 +113,9 @@ cc_benchmark {
 cc_benchmark_host {
     name: "bionic-benchmarks-glibc",
     defaults: ["bionic-benchmarks-defaults"],
+    srcs: [
+        "dlfcn_benchmark.cpp",
+    ],
     target: {
         darwin: {
             // Only supported on linux systems.
