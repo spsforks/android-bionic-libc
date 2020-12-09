@@ -38,6 +38,7 @@
 #include "private/ErrnoRestorer.h"
 
 extern "C" _Atomic(android_fdtrack_hook_t) __android_fdtrack_hook;
+void android_fdtrack_set_globally_enabled(bool new_value) __INTRODUCED_IN(31);
 
 // Macro to record file descriptor creation.
 // e.g.:

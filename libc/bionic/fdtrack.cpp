@@ -37,8 +37,14 @@
 
 _Atomic(android_fdtrack_hook_t) __android_fdtrack_hook;
 
+static bool g_globally_disabled = false;
+
+void android_fdtrack_set_globally_enabled(bool new_value) {
+  g_globally_disabled = !new_value;
+}
+
 bool android_fdtrack_get_enabled() {
-  return !__get_bionic_tls().fdtrack_disabled;
+  return !__get_bionic_tls().fdtrack_disabled && !g_globally_disabled;
 }
 
 bool android_fdtrack_set_enabled(bool new_value) {
