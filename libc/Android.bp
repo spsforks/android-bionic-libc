@@ -1897,7 +1897,7 @@ cc_library_headers {
         "//external/arm-optimized-routines",
         "//external/gwp_asan",
         "//external/jemalloc_new",
-        "//external/libunwind_llvm",
+        "//external/llvm-project/libunwind",
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
