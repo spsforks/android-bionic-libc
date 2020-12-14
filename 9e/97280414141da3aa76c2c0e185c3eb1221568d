@@ -1,0 +1,9 @@
+Code-Review+2: Jeffrey Vander Stoep <jeffv@google.com>
+Presubmit-Ready+1: Treehugger Robot <treehugger-gerrit@google.com>
+Build-Cop-Override+1: Florian Rival <florianrival@google.com>
+Bypass-Presubmit+1: Bram Bonné <brambonne@google.com>
+Submitted-by: Bram Bonné <brambonne@google.com>
+Submitted-at: Mon, 14 Dec 2020 14:40:45 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1526427
+Project: platform/bionic
+Branch: refs/heads/master
