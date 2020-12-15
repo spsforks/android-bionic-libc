@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f0cb3cd_be91e71d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-12-15T05:06:29Z",
+      "side": 1,
+      "message": "This kernel supports all mte defines, so I\u0027ll remove mte_kernel.h in a future update.",
+      "revId": "fe1ca525366d01197651cb9d1098cd1cb340b7d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
