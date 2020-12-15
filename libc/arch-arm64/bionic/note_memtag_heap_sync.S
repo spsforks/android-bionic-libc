@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,40 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm_arm64.h>
 
-#include <sys/auxv.h>
-#include "mte_kernel.h"
+__bionic_asm_custom_note_gnu_section()
 
-inline bool mte_supported() {
-#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-  static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
-#else
-  static bool supported = false;
-#endif
-  return supported;
-}
-
-#ifdef __aarch64__
-class ScopedDisableMTE {
-  size_t prev_tco_;
-
- public:
-  ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=r"(prev_tco_));
-    }
-  }
-
-  ~ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
-    }
-  }
-};
-#else
-struct ScopedDisableMTE {
-  // Silence unused variable warnings in non-aarch64 builds.
-  ScopedDisableMTE() {}
-};
-#endif
+  .section ".note.android.memtag", "a", %note
+  .p2align 2
+  .long 1f - 0f
+  .long 3f - 2f
+  .long 1
+0:
+  .asciz "MemTag"
+1:
+  .p2align 2
+2:
+  .long (NT_MEMTAG_LEVEL_SYNC | NT_MEMTAG_HEAP)
+3:
+  .p2align 2
