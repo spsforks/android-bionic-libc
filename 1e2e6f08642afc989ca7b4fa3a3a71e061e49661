@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "805f4024_72e1a4f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-12-18T07:17:17Z",
+      "side": 1,
+      "message": "I verified that this CL doesn\u0027t break the existing bionic unit tests, but I still need to verify that it really fixes the bug (and write a test).",
+      "revId": "1e2e6f08642afc989ca7b4fa3a3a71e061e49661",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
