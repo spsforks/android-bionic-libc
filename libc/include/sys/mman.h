@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <linux/memfd.h>
 #include <linux/mman.h>
+#include <linux/uio.h>
 
 __BEGIN_DECLS
 
@@ -160,6 +161,13 @@ int mincore(void* __addr, size_t __size, unsigned char* __vector);
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
 int madvise(void* __addr, size_t __size, int __advice);
+
+/**
+ * gives the kernel advice about future usage patterns of a pid.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int process_madvise(int pidfd, const struct iovec* vec, size_t vlen, int behavior, unsigned int flags);
 
 #if defined(__USE_GNU)
 

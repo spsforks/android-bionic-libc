@@ -1554,6 +1554,7 @@ LIBC_S { # introduced=S
   global:
     ffsl;
     ffsll;
+    process_madvise;
     __libc_get_static_tls_bounds;
     __libc_register_thread_exit_callback;
     __libc_iterate_dynamic_tls;
