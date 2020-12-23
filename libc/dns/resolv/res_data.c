@@ -175,11 +175,11 @@ res_mkquery(int op,			/* opcode of query */
 	    u_char *buf,		/* buffer to put query */
 	    int buflen)			/* size of buffer */
 {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
+	res_state res = __res_get_state();
+	if (res == NULL) {
 		return (-1);
 	}
-	return (res_nmkquery(&_nres, op, dname, class, type,
+	return (res_nmkquery(res, op, dname, class, type,
 			     data, datalen,
 			     newrr_in, buf, buflen));
 }
