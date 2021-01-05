@@ -101,7 +101,10 @@ static inline void* MaybeUntagAndCheckPointer(const volatile void* ptr) {
   if ((ptr_int & PointerCheckMask()) != FixedPointerTag()) {
     // TODO(b/145604058) - Upstream tagged pointers documentation and provide
     // a link to it in the abort message here.
-    async_safe_fatal("Pointer tag for %p was truncated.", ptr);
+    async_safe_fatal(
+        "Pointer tag for %p was truncated, see "
+        "'https://source.android.com/devices/tech/debug/tagged-pointers'.",
+        ptr);
   }
   return reinterpret_cast<void*>(ptr_int & PointerUntagMask());
 }
