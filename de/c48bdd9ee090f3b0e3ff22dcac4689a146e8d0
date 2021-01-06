@@ -1,0 +1,8 @@
+Code-Review+2: Elliott Hughes <enh@google.com>
+Presubmit-Verified+2: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <ayeaye-gerrit@google.com>
+Submitted-by: Evgenii Stepanov <eugenis@google.com>
+Submitted-at: Wed, 06 Jan 2021 19:23:05 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/bionic/+/1539276
+Project: platform/bionic
+Branch: refs/heads/master
