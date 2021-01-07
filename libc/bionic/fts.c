@@ -42,7 +42,7 @@
 #include <string.h>
 #include <unistd.h>
 
-static FTSENT	*fts_alloc(FTS *, char *, size_t);
+static FTSENT	*fts_alloc(FTS *, const char *, size_t);
 static FTSENT	*fts_build(FTS *, int);
 static void	 fts_lfree(FTSENT *);
 static void	 fts_load(FTS *, FTSENT *);
@@ -51,7 +51,7 @@ static void	 fts_padjust(FTS *, FTSENT *);
 static int	 fts_palloc(FTS *, size_t);
 static FTSENT	*fts_sort(FTS *, FTSENT *, int);
 static u_short	 fts_stat(FTS *, FTSENT *, int, int);
-static int	 fts_safe_changedir(FTS *, FTSENT *, int, char *);
+static int	 fts_safe_changedir(FTS *, FTSENT *, int, const char *);
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
@@ -892,7 +892,7 @@ fts_sort(FTS *sp, FTSENT *head, int nitems)
 }
 
 static FTSENT *
-fts_alloc(FTS *sp, char *name, size_t namelen)
+fts_alloc(FTS *sp, const char *name, size_t namelen)
 {
 	FTSENT *p;
 	size_t len;
@@ -1010,7 +1010,7 @@ fts_maxarglen(char * const *argv)
  * Assumes p->fts_dev and p->fts_ino are filled in.
  */
 static int
-fts_safe_changedir(FTS *sp, FTSENT *p, int fd, char *path)
+fts_safe_changedir(FTS *sp, FTSENT *p, int fd, const char *path)
 {
 	int ret, oerrno, newfd;
 	struct stat sb;
