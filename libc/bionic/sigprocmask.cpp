@@ -41,9 +41,10 @@ extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 // can't allow clang to decide to inline sigprocmask.
 //
 
+__attribute__((__noinline__))
 int sigprocmask(int how,
                 const sigset_t* bionic_new_set,
-                sigset_t* bionic_old_set) __attribute__((__noinline__)) {
+                sigset_t* bionic_old_set) {
   SigSetConverter new_set;
   sigset64_t* new_set_ptr = nullptr;
   if (bionic_new_set != nullptr) {
@@ -64,9 +65,10 @@ int sigprocmask(int how,
   return 0;
 }
 
+__attribute__((__noinline__))
 int sigprocmask64(int how,
                   const sigset64_t* new_set,
-                  sigset64_t* old_set) __attribute__((__noinline__)) {
+                  sigset64_t* old_set) {
   // how is only checked for validity if new_set is provided.
   if (new_set && how != SIG_BLOCK && how != SIG_UNBLOCK && how != SIG_SETMASK) {
     errno = EINVAL;
