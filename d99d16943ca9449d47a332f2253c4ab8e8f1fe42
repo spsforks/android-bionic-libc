@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7067292d_029837b9",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-01-07T20:59:13Z",
+      "side": 1,
+      "message": "Since you are modifying this, could you add an:\n\n#else \n  GTEST_SKIP() \u003c\u003c \"bionic/arm64 only\";\n#endif\n\nLike in the test below that has a similar check?",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 6
+      },
+      "revId": "d99d16943ca9449d47a332f2253c4ab8e8f1fe42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
