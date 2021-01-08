@@ -39,15 +39,16 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "platform/bionic/macros.h"
 #include "platform/bionic/page.h"
+#include "private/KernelArgumentBlock.h"
+#include "private/bionic_asm.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
-#include "private/bionic_asm.h"
-#include "private/bionic_asm_note.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
+#include "sys/system_properties.h"
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -160,6 +161,52 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   layout.finish_layout();
 }
 
+// Returns false if the property value didn't exist, otherwise writes the value
+// into the buffer `dest` of `dest_size` and returns true.
+static bool get_property_value_if_exists(const char* property_name, char* dest, size_t dest_size) {
+  const prop_info* prop = __system_property_find(property_name);
+  if (!prop) return false;
+
+  struct PropCbCookie {
+    char* dest;
+    size_t size;
+  };
+  *dest = '\0';
+  PropCbCookie cb_cookie = {dest, dest_size};
+
+  __system_property_read_callback(
+      prop,
+      [](void* cookie, const char* /* name */, const char* value, uint32_t /* serial */) {
+        auto* cb_cookie = reinterpret_cast<PropCbCookie*>(cookie);
+        strncpy(cb_cookie->dest, value, cb_cookie->size);
+        cb_cookie->dest[cb_cookie->size - 1] = '\0'; // Ensure null-termination.
+      },
+      &cb_cookie);
+
+  return *dest != '\0';
+}
+
+// Get the presiding config string, in the following order of priority:
+//   1. Environment variables.
+//   2. System properties, in the order they're specified in sys_prop_names.
+// If neither of these options are specified, this function returns false.
+// Otherwise, it returns true, and the presiding options string is written to
+// the `options` buffer of size `size`.
+bool get_presiding_config_string(const char* env_var_name, const char* const * sys_prop_names,
+                                 size_t sys_prop_names_size, char* options, size_t options_size) {
+  const char* env = getenv(env_var_name);
+  if (env && *env != '\0') {
+    strncpy(options, env, options_size);
+    options[options_size - 1] = '\0'; // Ensure null-termination.
+    return true;
+  }
+
+  for (size_t i = 0; i < sys_prop_names_size; ++i) {
+    if (get_property_value_if_exists(sys_prop_names[i], options, options_size)) return true;
+  }
+  return false;
+}
+
 #ifdef __aarch64__
 static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
                                unsigned* result) {
@@ -204,13 +251,57 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
   return 0;
 }
 
+static const char kMemtagEnvVariable[] = "MEMTAG_OPTIONS";
+static const char kMemtagPrognameSyspropPrefix[] = "memtag.process.";
+
+// Returns true if there's an environment setting (either sysprop or env var)
+// that should overwrite the ELF note, and places the equivalent note value into
+// `*value`.
+static bool get_environment_memtag_setting(unsigned* value) {
+  const char* progname = __libc_shared_globals()->init_progname;
+  const char* basename = progname;
+  for (const char* c = basename; *c != '\0'; ++c) {
+    if (*c == '/') {
+      basename = ++c;
+    }
+  }
+
+  static constexpr size_t kOptionsSize = PROP_VALUE_MAX;
+  char options_str[kOptionsSize];
+  size_t sysprop_size =
+      strlen(basename) * sizeof(char) + sizeof(kMemtagPrognameSyspropPrefix) / sizeof(char);
+  char* sysprop_name = static_cast<char*>(alloca(sysprop_size));
+
+  async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagPrognameSyspropPrefix,
+                           progname);
+
+  if (!get_presiding_config_string(kMemtagEnvVariable, &sysprop_name, /* sys_prop_names_size */ 1,
+                                   options_str, kOptionsSize)) {
+    return false;
+  }
+
+  if (strncmp("sync", options_str, kOptionsSize) == 0) {
+    *value = NT_MEMTAG_HEAP | NT_MEMTAG_LEVEL_SYNC;
+  } else if (strncmp("async", options_str, kOptionsSize) == 0) {
+    *value = NT_MEMTAG_HEAP | NT_MEMTAG_LEVEL_ASYNC;
+  } else if (strncmp("off", options_str, kOptionsSize) == 0) {
+    *value = 0;
+  } else {
+    async_safe_fatal("unrecognized memtag config value: \"%s\"", options_str);
+  }
+
+  return true;
+}
+
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
                                                                          size_t phdr_ct,
                                                                          uintptr_t load_bias) {
-  unsigned v =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
+  unsigned v;
+  if (!get_environment_memtag_setting(&v)) {
+    v = __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
+  }
 
   if (v & ~(NT_MEMTAG_LEVEL_MASK | NT_MEMTAG_HEAP)) {
     async_safe_fatal("unrecognized android.memtag note: desc = %d", v);
