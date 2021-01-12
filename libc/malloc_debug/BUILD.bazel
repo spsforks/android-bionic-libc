@@ -1,0 +1,25 @@
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "libc_malloc_debug",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-stack-protector",
+        "-Wno-error=format-zero-length",
+        "-Wthread-safety",
+    ],
+    srcs = [
+        "Config.cpp",
+        "DebugData.cpp",
+        "debug_disable.cpp",
+        "GuardData.cpp",
+        "malloc_debug.cpp",
+        "PointerData.cpp",
+        "RecordData.cpp",
+        "UnwindBacktrace.cpp",
+    ],
+)

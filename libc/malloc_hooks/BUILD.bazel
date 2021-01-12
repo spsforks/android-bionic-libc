@@ -1,0 +1,16 @@
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "libc_malloc_hooks",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-stack-protector",
+    ],
+    srcs = [
+        "malloc_hooks.cpp",
+    ],
+)

@@ -1,0 +1,1461 @@
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "exec_linker_helper_lib",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "exec_linker_helper_lib.cpp",
+    ],
+)
+
+cc_library(
+    name = "ld_config_test_helper_lib1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ld_config_test_helper_lib1.cpp",
+    ],
+)
+
+cc_library(
+    name = "ld_config_test_helper_lib2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ld_config_test_helper_lib2.cpp",
+    ],
+)
+
+cc_library(
+    name = "ld_config_test_helper_lib3",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ld_config_test_helper_lib3.cpp",
+    ],
+)
+
+cc_library(
+    name = "ld_preload_test_helper_lib1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ld_preload_test_helper_lib1.cpp",
+    ],
+)
+
+cc_library(
+    name = "ld_preload_test_helper_lib2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ld_preload_test_helper_lib2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libatest_simple_zip",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_simple.cpp",
+    ],
+)
+
+cc_library(
+    name = "libcfi-test",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "cfi_test_lib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libcfi-test-bad",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "cfi_test_bad_lib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdl_preempt_test_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dl_preempt_library_1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdl_preempt_test_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dl_preempt_library_2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdl_test_df_1_global",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dl_df_1_global.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test_different_soname",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test_fd",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test_norelro",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test_recursive",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_recursive_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libdlext_test_zip",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libgnu-hash-table-library",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libns_hidden_child_app",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ns_hidden_child_app.cpp",
+    ],
+)
+
+cc_library(
+    name = "libns_hidden_child_global",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ns_hidden_child_global.cpp",
+    ],
+)
+
+cc_library(
+    name = "libns_hidden_child_internal",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ns_hidden_child_internal.cpp",
+    ],
+)
+
+cc_library(
+    name = "libns_hidden_child_public",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "ns_hidden_child_public.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_dlopened",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_dlopened.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_ns_a_public1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "libnstest_ns_a_public1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_ns_a_public1_internal",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "libnstest_ns_a_public1_internal.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_ns_b_public2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "libnstest_ns_b_public2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_ns_b_public3",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "libnstest_ns_b_public3.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_private",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_private.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_private_external",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_private.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_public",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_public.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_public_internal",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_public_internal.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_root",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_root.cpp",
+    ],
+)
+
+cc_library(
+    name = "libnstest_root_not_isolated",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "namespaces_root.cpp",
+    ],
+)
+
+cc_library(
+    name = "librelocations-ANDROID_REL",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "relocations.cpp",
+    ],
+)
+
+cc_library(
+    name = "librelocations-ANDROID_RELR",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "relocations.cpp",
+    ],
+)
+
+cc_library(
+    name = "librelocations-RELR",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "relocations.cpp",
+    ],
+)
+
+cc_library(
+    name = "librelocations-fat",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "relocations.cpp",
+    ],
+)
+
+cc_library(
+    name = "libsegment_gap_inner",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "segment_gap_inner.cpp",
+    ],
+)
+
+cc_library(
+    name = "libsegment_gap_outer",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "segment_gap_outer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libsysv-hash-table-library",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlext_test_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_atexit",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "atexit_testlib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_1_left",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_2_right",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=42",
+    ],
+    srcs = [
+        "dlopen_check_order_dlsym_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_3_c",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=3",
+    ],
+    srcs = [
+        "dlopen_check_order_dlsym_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_a",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=1",
+    ],
+    srcs = [
+        "dlopen_check_order_dlsym_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_b",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=2",
+        "-D__ANSWER2=43",
+    ],
+    srcs = [
+        "dlopen_check_order_dlsym_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_dlsym_d",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=4",
+        "-D__ANSWER2=4",
+    ],
+    srcs = [
+        "dlopen_check_order_dlsym_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_root",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_root_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_root_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_root_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=2",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_root_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_grandchild_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_3",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_nephew_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_a",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=42",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_b",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=1",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_c",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=2",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_c_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=42",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_grandchild_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_c_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=0",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_grandchild_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_d",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=3",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_e",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=4",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_order_reloc_siblings_f",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_check_rtld_next_from_library",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "check_rtld_next_from_library.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlopen_df_1_global",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dl_df_1_global_dummy.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlopen_from_ctor",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_dlopen_from_ctor.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlopen_from_ctor_main",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlopen_weak_undefined_func",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_weak_undefined.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlsym_df_1_global",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dl_df_1_use_global.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlsym_from_this",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlsym_from_this_symbol.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlsym_from_this_child",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlsym_from_this_functions.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlsym_from_this_grandchild",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlsym_from_this_symbol2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dlsym_weak_func",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlsym_weak_function.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_a",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_b",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_c",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_d",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_b.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_d_zip",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_b.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_x",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_dt_runpath_y",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_dynamic",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+    ],
+    srcs = [
+        "elftls_dynamic.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_dynamic_filler_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=100",
+    ],
+    srcs = [
+        "elftls_dynamic_filler.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_dynamic_filler_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=200",
+    ],
+    srcs = [
+        "elftls_dynamic_filler.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_dynamic_filler_3",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=300",
+    ],
+    srcs = [
+        "elftls_dynamic_filler.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_shared_var",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+    ],
+    srcs = [
+        "elftls_shared_var.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_shared_var_ie",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+    ],
+    srcs = [
+        "elftls_shared_var_ie.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_elftls_tprel",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-fno-emulated-tls",
+    ],
+    srcs = [
+        "elftls_tprel.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_empty",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_ifunc",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_ifunc.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_ifunc_variable",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_ifunc_variable.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_ifunc_variable_impl",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_ifunc_variable_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_indirect_thread_local_dtor",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_init_fini_order_child",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_init_fini_child.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_init_fini_order_grand_child",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_init_fini_grand_child.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_init_fini_order_root",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_init_fini_root.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_init_fini_order_root2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_check_init_fini_root.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_missing_symbol",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_missing_symbol.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_missing_symbol_child_private",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_missing_symbol_child_public",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_missing_symbol_root",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_missing_symbol.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_nodelete_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_nodelete_1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_nodelete_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_nodelete_2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_nodelete_dt_flags_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_nodelete_dt_flags_1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_pthread_atfork",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "pthread_atfork.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_relo_check_dt_needed_order",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_relo_check_dt_needed_order.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_relo_check_dt_needed_order_1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_relo_check_dt_needed_order_1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_relo_check_dt_needed_order_2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_relo_check_dt_needed_order_2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_simple",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_simple.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_thread_local_dtor",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "thread_local_dtor.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_thread_local_dtor2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "thread_local_dtor2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_two_parents_child",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_2_parents_reloc_answer.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_two_parents_parent1",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=42",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_two_parents_parent2",
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-D__ANSWER=1",
+    ],
+    srcs = [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_lib",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_lib_v3.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_libv1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_lib_v1.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_libv2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_lib_v2.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_otherlib",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_lib_other.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_otherlib_empty",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_uselibv1",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_uselib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_uselibv2",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_uselib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_uselibv2_other",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_uselib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_versioned_uselibv3_other",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "versioned_uselib.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_simple.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency_loop",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_loopy_root.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency_loop_a",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_loopy_a.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency_loop_b",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_loopy_b.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency_loop_b_tmp",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_loopy_invalid.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtest_with_dependency_loop_c",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "dlopen_testlib_loopy_c.cpp",
+    ],
+)
+
+cc_library(
+    name = "libtestshared",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "empty.cpp",
+    ],
+)

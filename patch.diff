@@ -1,0 +1,104 @@
+From 3de388d7fad689dcf20435f84102b8c9a8c2e683 Mon Sep 17 00:00:00 2001
+From: Chris Parsons <cparsons@google.com>
+Date: Tue, 29 Sep 2020 02:44:25 -0400
+Subject: [PATCH] Changes to bionic/libc to demonstrate mixed builds.
+
+Test: source build/envsetup.sh && lunch 16 && source
+build/soong/bazel/bazelenv.sh && m, then verify ninja
+file was based on intermediates from bazel-out
+
+Change-Id: I89f320dd58083710012ea1f8e3902e723602ea37
+---
+
+diff --git a/libc/Android.bp b/libc/Android.bp
+index 06eb6dd..651df50 100644
+--- a/libc/Android.bp
++++ b/libc/Android.bp
+@@ -1267,6 +1267,7 @@
+     srcs: ["SYSCALLS.TXT"],
+     tool_files: [":bionic-gensyscalls"],
+     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
++    bazel_module: { label: "//bionic/libc:syscalls-arm" }
+ }
+ 
+ genrule {
+@@ -1275,6 +1276,7 @@
+     srcs: ["SYSCALLS.TXT"],
+     tool_files: [":bionic-gensyscalls"],
+     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
++    bazel_module: { label: "//bionic/libc:syscalls-arm64" },
+ }
+ 
+ genrule {
+@@ -1283,6 +1285,7 @@
+     srcs: ["SYSCALLS.TXT"],
+     tool_files: [":bionic-gensyscalls"],
+     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
++    bazel_module: { label: "//bionic/libc:syscalls-x86" },
+ }
+ 
+ genrule {
+@@ -1291,6 +1294,7 @@
+     srcs: ["SYSCALLS.TXT"],
+     tool_files: [":bionic-gensyscalls"],
+     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
++    bazel_module: { label: "//bionic/libc:syscalls-x86_64" },
+ }
+ 
+ cc_library_static {
+diff --git a/libc/BUILD.bazel b/libc/BUILD.bazel
+new file mode 100644
+index 0000000..5bd7636
+--- /dev/null
++++ b/libc/BUILD.bazel
+@@ -0,0 +1,36 @@
++# This file added for experimental interoperability with Bazel.
++package(
++    default_visibility = ["//visibility:public"],
++)
++
++genrule(
++    name = "syscalls-arm",
++    outs = ["syscalls-arm.S"],
++    srcs = ["SYSCALLS.TXT"],
++    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
++    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
++)
++
++genrule(
++    name = "syscalls-arm64",
++    outs = ["syscalls-arm64.S"],
++    srcs = ["SYSCALLS.TXT"],
++    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
++    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
++)
++
++genrule(
++    name = "syscalls-x86",
++    outs = ["syscalls-x86.S"],
++    srcs = ["SYSCALLS.TXT"],
++    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
++    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
++)
++
++genrule(
++    name = "syscalls-x86_64",
++    outs = ["syscalls-x86_64.S"],
++    srcs = ["SYSCALLS.TXT"],
++    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
++    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
++)
+diff --git a/libc/tools/BUILD.bazel b/libc/tools/BUILD.bazel
+new file mode 100644
+index 0000000..7f54cfc
+--- /dev/null
++++ b/libc/tools/BUILD.bazel
+@@ -0,0 +1,7 @@
++# This file added for experimental interoperability with Bazel.
++package(default_visibility = ["//visibility:public"])
++
++filegroup(
++    name = "bionic-gensyscalls",
++    srcs = ["gensyscalls.py"]
++)
+

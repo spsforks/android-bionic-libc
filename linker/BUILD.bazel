@@ -1,0 +1,87 @@
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "ld-android",
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    deps = [
+        "//bionic/libc:libc_headers",
+    ],
+    linkopts = [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+    srcs = [
+        "ld_android.cpp",
+    ],
+)
+
+filegroup(
+    name = "linker_sources",
+    srcs = [
+        "dlfcn.cpp",
+        "linker.cpp",
+        "linker_block_allocator.cpp",
+        "linker_dlwarning.cpp",
+        "linker_cfi.cpp",
+        "linker_config.cpp",
+        "linker_debug.cpp",
+        "linker_gdb_support.cpp",
+        "linker_globals.cpp",
+        "linker_libc_support.c",
+        "linker_libcxx_support.cpp",
+        "linker_namespaces.cpp",
+        "linker_logger.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_note_gnu_property.cpp",
+        "linker_phdr.cpp",
+        "linker_relocate.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_soinfo.cpp",
+        "linker_tls.cpp",
+        "linker_utils.cpp",
+        "rt.cpp",
+    ],
+)
+
+filegroup(
+    name = "linker_sources_arm",
+    srcs = [
+        "arch/arm/begin.S",
+        "arch/arm_neon/linker_gnu_hash_neon.cpp",
+    ],
+)
+
+filegroup(
+    name = "linker_sources_arm64",
+    srcs = [
+        "arch/arm64/begin.S",
+        "arch/arm64/tlsdesc_resolver.S",
+        "arch/arm_neon/linker_gnu_hash_neon.cpp",
+    ],
+)
+
+filegroup(
+    name = "linker_sources_x86",
+    srcs = [
+        "arch/x86/begin.S",
+    ],
+)
+
+filegroup(
+    name = "linker_sources_x86_64",
+    srcs = [
+        "arch/x86_64/begin.S",
+    ],
+)

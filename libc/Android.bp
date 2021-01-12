@@ -1917,6 +1917,8 @@ cc_library_headers {
     no_libcrt: true,
     system_shared_libs: [],
 
+    export_header_lib_headers: ["libc_headers_arch"],
+
     target: {
         android: {
             header_libs: ["libc_headers_arch"],

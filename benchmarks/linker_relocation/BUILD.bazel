@@ -3,9 +3,6 @@ load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
 
 
 
-filegroup(
-    name = "bionic-gensyscalls",
-    srcs = [
-        "gensyscalls.py",
-    ],
+cc_library(
+    name = "linker_reloc_bench_headers",
 )

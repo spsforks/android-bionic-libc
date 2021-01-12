@@ -1,36 +1,441 @@
-# This file added for experimental interoperability with Bazel.
-package(
-    default_visibility = ["@//:__pkg__"],
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "bionic_libc_platform_headers",
 )
 
 genrule(
-    name = "syscalls-arm",
-    outs = ["syscalls-arm.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
+    name = "func_to_syscall_nrs",
+    cmd = "$(location genfunctosyscallnrs) --out-dir=$(GENDIR) $(SRCS)",
+    outs = [
+        "func_to_syscall_nrs.h",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genfunctosyscallnrs",
+    ],
 )
 
 genrule(
-    name = "syscalls-arm64",
-    outs = ["syscalls-arm64.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
+    name = "generate_app_zygote_blocklist",
+    cmd = "grep -v '^int[ 	]*setresgid' $(SRCS) > $(OUTS)",
+    outs = [
+        "SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT",
+    ],
+    srcs = [
+        "SECCOMP_BLOCKLIST_APP.TXT",
+    ],
 )
 
 genrule(
-    name = "syscalls-x86",
-    outs = ["syscalls-x86.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
+    name = "generated_android_ids",
+    cmd = "$(location fs_config_generator.py) aidarray $(SRCS) > $(OUTS)",
+    outs = [
+        "generated_android_ids.h",
+    ],
+    srcs = [
+        ":android_filesystem_config_header",
+    ],
+    tools = [
+        "fs_config_generator.py",
+    ],
+)
+
+filegroup(
+    name = "kernel_input_headers",
+    srcs = [
+        "kernel/uapi/linux/input.h",
+        "kernel/uapi/linux/input-event-codes.h",
+    ],
+)
+
+cc_library(
+    name = "libc",
+    copts = [
+        "-D_LIBC=1",
+        "-D__BIONIC_LP32_USE_STAT64",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Wno-char-subscripts",
+        "-Wno-deprecated-declarations",
+        "-Wno-gcc-compat",
+        "-Wframe-larger-than=2048",
+        "-Werror=pointer-to-int-cast",
+        "-Werror=int-to-pointer-cast",
+        "-Werror=type-limits",
+        "-Werror",
+        "-Wexit-time-destructors",
+        "-fno-emulated-tls",
+    ],
+    deps = [
+        "//external/gwp_asan:gwp_asan_headers",
+        "//bionic/libc:libc_headers",
+    ],
+    linkopts = [
+        "-Wl,-z,muldefs",
+    ],
 )
 
 genrule(
-    name = "syscalls-x86_64",
-    outs = ["syscalls-x86_64.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
+    name = "libc.arm.map",
+    cmd = "$(location :bionic-generate-version-script) arm $(SRCS) $(OUTS)",
+    outs = [
+        "libc.arm.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libc.arm64.map",
+    cmd = "$(location :bionic-generate-version-script) arm64 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.arm64.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+cc_library(
+    name = "libc.llndk",
+)
+
+genrule(
+    name = "libc.x86.map",
+    cmd = "$(location :bionic-generate-version-script) x86 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.x86.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libc.x86_64.map",
+    cmd = "$(location :bionic-generate-version-script) x86_64 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.x86_64.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+cc_library(
+    name = "libc_headers",
+    deps = [
+        "libc_headers_arch",
+    ],
+)
+
+cc_library(
+    name = "libc_headers_arch",
+    hdrs = glob([
+        "include/**/*.h",
+        "kernel/uapi/**/*.h",
+        "kernel/android/scsi/**/*.h",
+        "kernel/android/uapi/**/*.h",
+    ]),
+    includes = [
+        "include",
+        "kernel/uapi",
+        "kernel/android/scsi",
+        "kernel/android/uapi",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_shared",
+    srcs = [
+        "arch-common/bionic/crtbegin_so.c",
+        "arch-common/bionic/crtbrand.S",
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
+        "bionic/icu.cpp",
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/android_profiling_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
+        "bionic/malloc_limit.cpp",
+        "bionic/ndk_cruft.cpp",
+        "bionic/ndk_cruft_data.cpp",
+        "bionic/NetdClient.cpp",
+        "arch-common/bionic/crtend_so.S",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_shared_arm",
+    srcs = [
+        "arch-arm/bionic/exidx_dynamic.c",
+        "arch-arm/bionic/atexit_legacy.c",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_static",
+    srcs = [
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_limit.cpp",
+    ],
+)
+
+cc_library(
+    name = "libseccomp_policy",
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs = [
+        "seccomp/seccomp_policy.cpp",
+    ],
+)
+
+genrule(
+    name = "libseccomp_policy_app_sources",
+    cmd = "$(location genseccomp) --out-dir=$(GENDIR) --name-modifier=app $(SRCS)",
+    outs = [
+        "arm64_app_policy.cpp",
+        "arm_app_policy.cpp",
+        "x86_64_app_policy.cpp",
+        "x86_app_policy.cpp",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genseccomp",
+    ],
+)
+
+genrule(
+    name = "libseccomp_policy_app_zygote_sources",
+    cmd = "$(location genseccomp) --out-dir=$(GENDIR) --name-modifier=app_zygote $(SRCS)",
+    outs = [
+        "arm64_app_zygote_policy.cpp",
+        "arm_app_zygote_policy.cpp",
+        "x86_64_app_zygote_policy.cpp",
+        "x86_app_zygote_policy.cpp",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":generate_app_zygote_blocklist",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genseccomp",
+    ],
+)
+
+genrule(
+    name = "libseccomp_policy_system_sources",
+    cmd = "$(location genseccomp) --out-dir=$(GENDIR) --name-modifier=system $(SRCS)",
+    outs = [
+        "arm64_system_policy.cpp",
+        "arm_system_policy.cpp",
+        "x86_64_system_policy.cpp",
+        "x86_system_policy.cpp",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genseccomp",
+    ],
+)
+
+cc_library(
+    name = "libstdc++",
+    copts = [
+        "-D_LIBC=1",
+        "-D__BIONIC_LP32_USE_STAT64",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Wno-char-subscripts",
+        "-Wno-deprecated-declarations",
+        "-Wno-gcc-compat",
+        "-Wframe-larger-than=2048",
+        "-Werror=pointer-to-int-cast",
+        "-Werror=int-to-pointer-cast",
+        "-Werror=type-limits",
+        "-Werror",
+        "-Wexit-time-destructors",
+        "-fno-emulated-tls",
+    ],
+    deps = [
+        "//bionic/libc:libc_headers",
+        "//external/gwp_asan:gwp_asan_headers",
+    ],
+    linkopts = [
+        "-Wl,-z,muldefs",
+    ],
+    srcs = [
+        "bionic/__cxa_guard.cpp",
+        "bionic/__cxa_pure_virtual.cpp",
+        "bionic/new.cpp",
+    ],
+)
+
+genrule(
+    name = "libstdc++.arm.map",
+    cmd = "$(location :bionic-generate-version-script) arm $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.arm.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.arm64.map",
+    cmd = "$(location :bionic-generate-version-script) arm64 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.arm64.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.x86.map",
+    cmd = "$(location :bionic-generate-version-script) x86 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.x86.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.x86_64.map",
+    cmd = "$(location :bionic-generate-version-script) x86_64 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.x86_64.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "syscalls-arm.S",
+    cmd = "$(location :bionic-gensyscalls) arm $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-arm.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        ":bionic-gensyscalls",
+    ],
+)
+
+genrule(
+    name = "syscalls-arm64.S",
+    cmd = "$(location :bionic-gensyscalls) arm64 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-arm64.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        ":bionic-gensyscalls",
+    ],
+)
+
+genrule(
+    name = "syscalls-x86.S",
+    cmd = "$(location :bionic-gensyscalls) x86 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-x86.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        ":bionic-gensyscalls",
+    ],
+)
+
+genrule(
+    name = "syscalls-x86_64.S",
+    cmd = "$(location :bionic-gensyscalls) x86_64 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-x86_64.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        ":bionic-gensyscalls",
+    ],
 )

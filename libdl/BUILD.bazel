@@ -1,0 +1,109 @@
+package(default_visibility = ["//visibility:public"])
+load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
+
+
+
+cc_library(
+    name = "libdl",
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    deps = [
+        "//bionic/libc:libc_headers",
+    ],
+    linkopts = [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+)
+
+genrule(
+    name = "libdl.arm.map",
+    cmd = "$(location :bionic-generate-version-script) arm $(SRCS) $(OUTS)",
+    outs = [
+        "libdl.arm.map",
+    ],
+    srcs = [
+        "libdl.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libdl.arm64.map",
+    cmd = "$(location :bionic-generate-version-script) arm64 $(SRCS) $(OUTS)",
+    outs = [
+        "libdl.arm64.map",
+    ],
+    srcs = [
+        "libdl.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+cc_library(
+    name = "libdl.llndk",
+)
+
+genrule(
+    name = "libdl.x86.map",
+    cmd = "$(location :bionic-generate-version-script) x86 $(SRCS) $(OUTS)",
+    outs = [
+        "libdl.x86.map",
+    ],
+    srcs = [
+        "libdl.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libdl.x86_64.map",
+    cmd = "$(location :bionic-generate-version-script) x86_64 $(SRCS) $(OUTS)",
+    outs = [
+        "libdl.x86_64.map",
+    ],
+    srcs = [
+        "libdl.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+cc_library(
+    name = "libdl_android",
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    deps = [
+        "//bionic/libc:libc_headers",
+    ],
+    linkopts = [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+    srcs = [
+        "libdl_android.cpp",
+    ],
+)

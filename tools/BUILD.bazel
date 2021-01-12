@@ -4,8 +4,8 @@ load("@bp2build//build/bazel/rules:soong_module.bzl", "soong_module")
 
 
 filegroup(
-    name = "bionic-gensyscalls",
+    name = "bionic-generate-version-script",
     srcs = [
-        "gensyscalls.py",
+        "generate-version-script.py",
     ],
 )

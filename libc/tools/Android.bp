@@ -1,4 +1,5 @@
 filegroup {
     name: "bionic-gensyscalls",
-    srcs: ["gensyscalls.py"]
+    srcs: ["gensyscalls.py"],
+    bazel_module: { label: "//bionic/libc/tools:bionic-gensyscalls" },
 }
