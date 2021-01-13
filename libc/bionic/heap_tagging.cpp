@@ -47,6 +47,7 @@ void SetDefaultHeapTaggingLevel() {
 #endif
   switch (heap_tagging_level) {
     case M_HEAP_TAGGING_LEVEL_TBI:
+      scudo_malloc_disable_memory_tagging();
       __libc_globals.mutate([](libc_globals* globals) {
         // Arrange for us to set pointer tags to POINTER_TAG, check tags on
         // deallocation and untag when passing pointers to the allocator.
