@@ -3,6 +3,16 @@
 // In Q this contained Bionic, ART and Libcore.
 // It keeps the name /apex/com.android.runtime for app compat reasons.
 
+package {
+    default_applicable_licenses: ["bionic_apex_license"],
+}
+
+license {
+    name: "bionic_apex_license",
+    visibility: [":__subpackages__"],
+    license_kinds: ["legacy_notice"],
+}
+
 android_app_certificate {
     name: "com.android.runtime.certificate",
     certificate: "com.android.runtime",

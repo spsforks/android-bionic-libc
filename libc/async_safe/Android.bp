@@ -1,6 +1,10 @@
 // ========================================================
 // libasync_safe.a
 // ========================================================
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [

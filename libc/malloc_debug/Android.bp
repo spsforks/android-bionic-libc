@@ -2,6 +2,10 @@
 // libc_malloc_debug_backtrace.a
 // ==============================================================
 // Used by libmemunreachable
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library_static {
     name: "libc_malloc_debug_backtrace",
     vendor_available: true,

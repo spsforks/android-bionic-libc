@@ -1,1 +1,11 @@
+package {
+    default_applicable_licenses: ["bionic_tests_headers_license"],
+}
+
+license {
+    name: "bionic_tests_headers_license",
+    visibility: [":__subpackages__"],
+    license_kinds: ["SPDX-license-identifier-BSD"],
+}
+
 subdirs = ["*"]

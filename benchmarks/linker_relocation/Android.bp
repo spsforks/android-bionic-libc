@@ -24,6 +24,16 @@
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
+package {
+    default_applicable_licenses: ["bionic_benchmarks_linker_relocation_license"],
+}
+
+license {
+    name: "bionic_benchmarks_linker_relocation_license",
+    visibility: [":__subpackages__"],
+    license_kinds: ["SPDX-license-identifier-BSD"],
+}
+
 cc_library_headers {
     name: "linker_reloc_bench_headers",
     defaults: ["bionic_spawn_benchmark_targets"],

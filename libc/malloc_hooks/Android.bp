@@ -1,6 +1,10 @@
 // ==============================================================
 // libc_malloc_hooks.so
 // ==============================================================
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library {
     name: "libc_malloc_hooks",
 
