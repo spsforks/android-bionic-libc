@@ -55,7 +55,7 @@ static __inline int __ndk_legacy___libc_current_sigrtmin() {
   if (__builtin_available(android 21, *)) {
     return __libc_current_sigrtmin();
   }
-  return __SIGRTMIN + 7; /* Should match __libc_current_sigrtmin. */
+  return __SIGRTMIN + 10; /* Should match __libc_current_sigrtmin. */
 }
 
 #undef SIGRTMAX
