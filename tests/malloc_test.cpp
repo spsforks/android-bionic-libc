@@ -1256,7 +1256,48 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(malloc, disable_memory_mitigations) {
+TEST(malloc, zero_init) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+
+  mallopt(M_BIONIC_ZERO_INIT, 1);
+
+  constexpr int kNumAllocs = 0x1000;
+  constexpr int kMaxAllocSize = 32;
+  void* allocs[] = new void*[kNumAllocs];
+  for (unsigned i = 0; i < kNumAllocs; ++i) {
+    int size = 1 + i % kMaxAllocSize;
+    allocs[i] = malloc(size);
+    memset(allocs[i], 'X', size);
+  }
+
+  for (int i = 0; i < kNumAllocs; ++i) {
+    free(allocs[i]);
+  }
+
+  const char kBlankMemory[kMaxAllocSize] = {};
+  for (int i = 0; i < kNumAllocs; ++i) {
+    int size = 1 + i % kMaxAllocSize;
+    allocs[i] = malloc(size);
+    ASSERT_EQ(0u, memcmp(allocs[i], kBlankMemory, size));
+  }
+
+  for (int i = 0; i < kNumAllocs; ++i) {
+    free(allocs[i]);
+  }
+
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Note that MTE is enabled on cc_tests on devices that support MTE.
+TEST(malloc, disable_mte) {
 #if defined(__BIONIC__)
   if (!mte_supported()) {
     GTEST_SKIP() << "This function can only be tested with MTE";
@@ -1275,7 +1316,7 @@ TEST(malloc, disable_memory_mitigations) {
                    },
                    &sem));
 
-  ASSERT_EQ(1, mallopt(M_BIONIC_DISABLE_MEMORY_MITIGATIONS, 0));
+  ASSERT_EQ(1, mallopt(M_BIONIC_SET_HEAP_TAGGING_LEVEL, M_HEAP_TAGGING_LEVEL_NONE));
   ASSERT_EQ(0, sem_post(&sem));
 
   int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
