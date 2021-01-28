@@ -1660,6 +1660,7 @@ cc_library {
     ],
 
     nocrt: true,
+    no_libcrt: true,
 
     arch: {
         arm: {
@@ -1673,6 +1674,8 @@ cc_library {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
+                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1685,6 +1688,10 @@ cc_library {
         },
         arm64: {
             version_script: ":libc.arm64.map",
+
+            shared: {
+                static_libs: ["libclang_rt.builtins-aarch64-android"],
+            },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.
@@ -1699,6 +1706,11 @@ cc_library {
 
             version_script: ":libc.x86.map",
 
+            shared: {
+                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-x86-android-exported"],
+            },
+
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.
             strip: {
@@ -1707,6 +1719,10 @@ cc_library {
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
+
+            shared: {
+                static_libs: ["libclang_rt.builtins-x86_64-android"],
+            },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.

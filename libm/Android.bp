@@ -287,6 +287,10 @@ cc_library {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
+            shared: {
+                // For backwards-compatibility, some arm32 builtins are exported from libm.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+            },
         },
 
         arm64: {
@@ -320,6 +324,9 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.arm64.map",
+            shared: {
+                static_libs: ["libclang_rt.builtins-aarch64-android"],
+            },
         },
 
         x86: {
@@ -389,6 +396,9 @@ cc_library {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.x86.map",
+            shared: {
+                static_libs: ["libclang_rt.builtins-x86-android"],
+            },
         },
 
         x86_64: {
@@ -454,6 +464,9 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.x86_64.map",
+            shared: {
+                static_libs: ["libclang_rt.builtins-x86_64-android"],
+            },
         },
     },
 
@@ -487,6 +500,7 @@ cc_library {
 
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
+    no_libcrt: true,
 
     sanitize: {
         address: false,
