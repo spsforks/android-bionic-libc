@@ -1,0 +1,32 @@
+# Targets required to build system_properties for the target device.
+package(default_visibility = ["//visibility:public"])
+
+load("//bionic/libc:libc_flags.bzl", "LIBC_CFLAGS")
+
+cc_library(
+    name = "includes",
+    hdrs = glob(["include/**/*.h"]),
+    includes = ["include"],
+)
+
+cc_library(
+    name = "system_properties",
+    srcs = [
+        # buildifier: do not sort
+        # This is kept unalphabetized to match soong "libsystemproperties" module.
+        "context_node.cpp",
+        "contexts_split.cpp",
+        "contexts_serialized.cpp",
+        "prop_area.cpp",
+        "prop_info.cpp",
+        "system_properties.cpp",
+    ],
+    copts = LIBC_CFLAGS,
+    deps = [
+        ":includes",
+        "//bionic/libc:includes_for_bionic",
+        "//bionic/libc/async_safe:includes",
+        "//bionic/libstdc++:includes",
+        "//system/core/property_service/libpropertyinfoparser",
+    ],
+)

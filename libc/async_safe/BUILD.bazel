@@ -1,0 +1,28 @@
+# Targets required to build async_safe for the target device.
+# There are many internal utility targets here.
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "async_safe",
+    srcs = [
+        "async_safe_log.cpp",
+    ],
+    includes = [
+        "include",
+    ],
+    deps = [
+        "//bionic/libc:includes_for_bionic",
+        "//system/logging/liblog:includes",
+    ],
+)
+
+cc_library(
+    name = "includes",
+    includes = [
+        "include",
+    ],
+    deps = [
+        "//bionic/libc:includes_for_bionic",
+        "//system/logging/liblog:includes",
+    ],
+)
