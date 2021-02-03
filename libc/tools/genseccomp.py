@@ -107,7 +107,7 @@ def parse_syscall_NRs(names_path):
         pass
 
   syscalls = {}
-  for name, value in constants.iteritems():
+  for name, value in constants.items():
     if not name.startswith("__NR_") and not name.startswith("__ARM_NR"):
       continue
     if name.startswith("__NR_"):

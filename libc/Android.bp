@@ -2360,15 +2360,6 @@ python_binary_host {
     data: [
         "kernel/uapi/**/*.h",
     ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
 }
 
 python_binary_host {
