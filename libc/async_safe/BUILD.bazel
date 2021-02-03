@@ -1,0 +1,40 @@
+# NOTE: THIS FILE IS EXPERIMENTAL FOR THE BAZEL MIGRATION AND NOT USED FOR
+# YOUR BUILDS CURRENTLY.
+#
+# It is not the source of truth for your build. If you're looking to modify the
+# build file, modify Android.bp instead. Do not modify this file unless you have
+# coordinated with the Bazel team managing the Soong to Bazel migration.
+
+# Targets required to build async_safe for the target device.
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "async_safe",
+    srcs = [
+        "async_safe_log.cpp",
+    ],
+    hdrs = glob(["include/**/*.h"]),
+    includes = [
+        "include",
+    ],
+    deps = [
+        "//bionic/libc:bionic_includes",
+        "//bionic/libc:includes",
+        "//bionic/libc:includes_for_bionic",
+        "//system/logging/liblog:includes",
+    ],
+)
+
+cc_library(
+    name = "includes",
+    hdrs = glob(["include/**/*.h"]),
+    includes = [
+        "include",
+    ],
+    deps = [
+        "//bionic/libc:bionic_includes",
+        "//bionic/libc:includes",
+        "//bionic/libc:includes_for_bionic",
+        "//system/logging/liblog:includes",
+    ],
+)

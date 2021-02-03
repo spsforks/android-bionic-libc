@@ -1,0 +1,8 @@
+#  Targets required to build libstdc++ for the target device.
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "includes",
+    hdrs = ["include/new"],
+    includes = ["include"],
+)
