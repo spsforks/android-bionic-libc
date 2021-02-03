@@ -801,6 +801,7 @@ cc_library_static {
     arch: {
         arm: {
             asflags: libc_common_flags + ["-mno-restrict-it"],
+            cflags: libc_common_flags + ["-Wno-error=inline-asm"],
             srcs: [
                 "arch-arm/generic/bionic/memcmp.S",
                 "arch-arm/generic/bionic/memmove.S",
