@@ -1,6 +1,13 @@
 // ========================================================
 // libasync_safe.a
 // ========================================================
+package {
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // the below license kinds from "bionic_libc_license":
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [

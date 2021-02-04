@@ -1,3 +1,13 @@
+package {
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // the below license kinds from "bionic_license":
+    //   SPDX-license-identifier-Apache-2.0
+    //   SPDX-license-identifier-BSD
+    //   SPDX-license-identifier-ISC
+    //   SPDX-license-identifier-MIT
+    default_applicable_licenses: ["bionic_license"],
+}
+
 subdirs = ["*"]
 
 filegroup {

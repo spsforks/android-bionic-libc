@@ -26,6 +26,13 @@
 // SUCH DAMAGE.
 //
 
+package {
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // the below license kinds from "bionic_license":
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_license"],
+}
+
 cc_defaults {
     name: "bionic_spawn_benchmark_targets",
     host_supported: true,
