@@ -1,1 +1,9 @@
+package {
+// http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // the below license kinds from "bionic_license":
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_license"],
+}
+
 subdirs = ["*"]
