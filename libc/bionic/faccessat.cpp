@@ -30,28 +30,36 @@
 #include <unistd.h>
 #include <errno.h>
 
+extern "C" int __faccessat2(int, const char*, int, int);
 extern "C" int __faccessat(int, const char*, int);
 
 int faccessat(int dirfd, const char* pathname, int mode, int flags) {
-  // "The mode specifies the accessibility check(s) to be performed,
-  // and is either the value F_OK, or a mask consisting of the
-  // bitwise OR of one or more of R_OK, W_OK, and X_OK."
-  if ((mode != F_OK) && ((mode & ~(R_OK | W_OK | X_OK)) != 0) &&
-      ((mode & (R_OK | W_OK | X_OK)) == 0)) {
+  // On Linux 5.8 or later, the kernel can just do this for us.
+  // This supports AT_EACCESS and AT_SYMLINK_NOFOLLOW.
+  int result = __faccessat2(dirfd, pathname, mode, flags);
+  if (result != -1) return result;
+  if (errno != ENOSYS) return -1;
+
+  // Can we fake it?
+
+  // We never fake AT_EACCESS or AT_SYMLINK_NOFOLLOW ourselves, though glibc
+  // tries to fake both, and musl fakes the former but not the latter.
+  //
+  // More details on these mailing lists:
+  // * https://www.openwall.com/lists/musl/2015/02/05/2
+  // * http://lists.landley.net/pipermail/toybox-landley.net/2014-September/003617.html
+  // Plus the original commit of faccessat() to bionic:
+  // * https://android.googlesource.com/platform/bionic/+/35778253a5ed71e87a608ca590b63729d9f88567
+  if (flags != 0) {
     errno = EINVAL;
     return -1;
   }
 
-  if (flags != 0) {
-    // We deliberately don't support AT_SYMLINK_NOFOLLOW, a glibc
-    // only feature which is error prone and dangerous.
-    // More details at http://permalink.gmane.org/gmane.linux.lib.musl.general/6952
-    //
-    // AT_EACCESS isn't supported either. Android doesn't have setuid
-    // programs, and never runs code with euid!=uid. It could be
-    // implemented in an expensive way, following the model at
-    // https://gitlab.com/bminor/musl/commit/0a05eace163cee9b08571d2ff9d90f5e82d9c228
-    // but not worth it.
+  // Before we consider letting the kernel handle simple cases with faccessat()
+  // rather than faccessat2(), we need to check the mode ourselves because old
+  // kernels didn't.
+  if ((mode != F_OK) && ((mode & ~(R_OK | W_OK | X_OK)) != 0) &&
+      ((mode & (R_OK | W_OK | X_OK)) == 0)) {
     errno = EINVAL;
     return -1;
   }

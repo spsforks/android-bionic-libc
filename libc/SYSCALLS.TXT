@@ -145,6 +145,7 @@ int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   all
 
 int __openat:openat(int, const char*, int, mode_t) all
 int __faccessat:faccessat(int, const char*, int)  all
+int __faccessat2:faccessat2(int, const char*, int, int)  all
 int __fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
