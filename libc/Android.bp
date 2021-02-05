@@ -1591,6 +1591,7 @@ filegroup {
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1601,6 +1602,7 @@ filegroup {
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1609,6 +1611,7 @@ filegroup {
         "arch-arm/bionic/exidx_dynamic.c",
         "arch-arm/bionic/atexit_legacy.c",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
