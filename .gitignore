@@ -1,3 +1,12 @@
 *.pyc
 *.*~
 libc/kernel/original
+
+# Handcrafted Bazel BUILD files are "BUILD", while generated BUILD files are "BUILD.bazel".
+# The Bionic modules will be first handcrafted into BUILD files, while development on the
+# Soong to Bazel converter is happening in parallel, generating BUILD.bazel files. If
+# both files exist in the same package, Bazel will pick BUILD.bazel over BUILD.
+#
+# To avoid accidentally checking generated BUILD.bazel files into the repo, let's gitignore
+# BUILD.bazel files.
+BUILD.bazel

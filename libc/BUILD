@@ -5,32 +5,32 @@ package(
 
 genrule(
     name = "syscalls-arm",
-    outs = ["syscalls-arm.S"],
     srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    outs = ["syscalls-arm.S"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
 )
 
 genrule(
     name = "syscalls-arm64",
-    outs = ["syscalls-arm64.S"],
     srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    outs = ["syscalls-arm64.S"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
 )
 
 genrule(
     name = "syscalls-x86",
-    outs = ["syscalls-x86.S"],
     srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    outs = ["syscalls-x86.S"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
 )
 
 genrule(
     name = "syscalls-x86_64",
-    outs = ["syscalls-x86_64.S"],
     srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    outs = ["syscalls-x86_64.S"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
 )
