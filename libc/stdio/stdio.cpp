@@ -226,9 +226,19 @@ extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
   _fwalk(__sflush);
 }
 
-static FILE* __finit(FILE* fp, int fd, int flags) {
-  if (fp == nullptr) return nullptr;
+// On 32-bit targets, the _file field is only 16-bits. Returns true and set errno to EMFILE if the
+// fd won't fit.
+static bool __FILE_is_fd_too_big(int __unused fd) {
+#if !defined(__LP64__)
+  if (fd > SHRT_MAX) {
+    errno = EMFILE;
+    return true;
+  }
+#endif
+  return false;
+}
 
+static void __FILE_init(FILE* fp, int fd, int flags) {
   fp->_file = fd;
   android_fdsan_exchange_owner_tag(fd, 0, __get_file_tag(fp));
   fp->_flags = flags;
@@ -237,16 +247,6 @@ static FILE* __finit(FILE* fp, int fd, int flags) {
   fp->_write = __swrite;
   fp->_close = __sclose;
   _EXT(fp)->_seek64 = __sseek64;
-
-#if !defined(__LP64__)
-  if (fd > SHRT_MAX) {
-    errno = EMFILE;
-    fclose(fp);
-    return nullptr;
-  }
-#endif
-
-  return fp;
 }
 
 FILE* fopen(const char* file, const char* mode) {
@@ -259,12 +259,14 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  FILE* fp = __finit(__sfp(), fd, flags);
-  if (fp == nullptr) {
+  FILE* fp;
+  if (__FILE_is_fd_too_big(fd) || !(fp = __sfp())) {
     ErrnoRestorer errno_restorer;
     close(fd);
     return nullptr;
   }
+
+  __FILE_init(fp, fd, flags);
 
   // For append mode, O_APPEND sets the write position for free, but we need to
   // set the read position manually.
@@ -298,7 +300,12 @@ FILE* fdopen(int fd, const char* mode) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
-  return __finit(__sfp(), fd, flags);
+  if (__FILE_is_fd_too_big(fd)) return nullptr;
+  FILE* fp = __sfp();
+  if (fp == nullptr) return nullptr;
+
+  __FILE_init(fp, fd, flags);
+  return fp;
 }
 
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
@@ -398,11 +405,18 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
     }
   }
 
-  fp = __finit(fp, fd, flags);
+  if (__FILE_is_fd_too_big(fd)) {
+    fp->_flags = 0;  // Release.
+    ErrnoRestorer errno_restorer;
+    close(fd);
+    return nullptr;
+  }
+
+  __FILE_init(fp, fd, flags);
 
   // For append mode, O_APPEND sets the write position for free, but we need to
   // set the read position manually.
-  if (fp && (mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
 
   return fp;
 }
