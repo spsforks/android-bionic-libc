@@ -226,7 +226,7 @@ extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
   _fwalk(__sflush);
 }
 
-static FILE* __finit(FILE* fp, int fd, int flags) {
+static FILE* __FILE_init(FILE* fp, int fd, int flags) {
   if (fp == nullptr) return nullptr;
 
   fp->_file = fd;
@@ -240,8 +240,11 @@ static FILE* __finit(FILE* fp, int fd, int flags) {
 
 #if !defined(__LP64__)
   if (fd > SHRT_MAX) {
-    errno = EMFILE;
+    // Don't let fclose() try to close the fd, since fp->_file is truncated.
+    fp->_close = nullptr;
+    // Let fclose() clean up everything else.
     fclose(fp);
+    errno = EMFILE;
     return nullptr;
   }
 #endif
@@ -259,7 +262,7 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  FILE* fp = __finit(__sfp(), fd, flags);
+  FILE* fp = __FILE_init(__sfp(), fd, flags);
   if (fp == nullptr) {
     ErrnoRestorer errno_restorer;
     close(fd);
@@ -298,7 +301,7 @@ FILE* fdopen(int fd, const char* mode) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
-  return __finit(__sfp(), fd, flags);
+  return __FILE_init(__sfp(), fd, flags);
 }
 
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
@@ -398,7 +401,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
     }
   }
 
-  fp = __finit(fp, fd, flags);
+  fp = __FILE_init(fp, fd, flags);
 
   // For append mode, O_APPEND sets the write position for free, but we need to
   // set the read position manually.
