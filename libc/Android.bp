@@ -2072,9 +2072,13 @@ cc_object {
 cc_object {
     name: "crtbegin_so1",
     local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin_so.c"],
+    srcs: [
+        "arch-common/bionic/*.h",
+        "arch-common/bionic/crtbegin_so.c"
+    ],
 
     defaults: ["crt_so_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
