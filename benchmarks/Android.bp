@@ -124,6 +124,7 @@ cc_library_static {
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: ["util.cpp"],
     host_supported: true,
+    bazel_module: { bp2build_available: true },
 }
 
 cc_test {

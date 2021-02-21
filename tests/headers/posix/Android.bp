@@ -30,4 +30,5 @@ cc_library_static {
             enabled: false,
         },
     },
+    bazel_module: { bp2build_available: true },
 }

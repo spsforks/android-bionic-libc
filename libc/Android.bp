@@ -144,6 +144,7 @@ cc_library_static {
     // Used to pull in the jemalloc include directory so that if the
     // library is removed, the include directory is also removed.
     static_libs: ["libjemalloc5"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -182,6 +183,7 @@ cc_library_static {
     defaults: ["libc_defaults"],
     cflags: ["-fno-stack-protector", "-ffreestanding"],
     name: "libc_bootstrap",
+    bazel_module: { bp2build_available: true },
 }
 
 // libc_init_static.cpp and libc_init_dynamic.cpp need to be built without stack protector.
@@ -199,6 +201,7 @@ cc_library_static {
         // from the linker before ifunc resolvers have made string.h functions available.
         "-ffreestanding",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -206,6 +209,7 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_dynamic.cpp"],
     cflags: ["-fno-stack-protector"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -245,6 +249,7 @@ cc_library_static {
 
     local_include_dirs: ["tzcode/"],
     name: "libc_tzcode",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -278,6 +283,7 @@ cc_library_static {
     ],
 
     name: "libc_dns",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -357,6 +363,7 @@ cc_library_static {
     ],
 
     name: "libc_freebsd",
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -376,6 +383,7 @@ cc_library_static {
     ],
 
     name: "libc_freebsd_large_stack",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -431,6 +439,7 @@ cc_library_static {
     ],
 
     name: "libc_netbsd",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -560,6 +569,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/include",
         "upstream-openbsd/lib/libc/gdtoa/",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -584,6 +594,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gdtoa/",
         "upstream-openbsd/lib/libc/stdio/",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -671,6 +682,7 @@ cc_library_static {
     ],
 
     name: "libc_openbsd",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -720,6 +732,7 @@ cc_library_static {
     ],
 
     name: "libc_gdtoa",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -775,6 +788,7 @@ cc_library_static {
             ],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -978,6 +992,7 @@ cc_library_static {
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1190,6 +1205,7 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1205,6 +1221,7 @@ cc_library_static {
     apex_available: [
         "com.android.runtime",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1256,6 +1273,7 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     header_libs: ["bionic_libc_platform_headers"],
     name: "libc_pthread",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1316,6 +1334,7 @@ cc_library_static {
         },
     },
     name: "libc_syscalls",
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1334,6 +1353,7 @@ cc_library_static {
     },
     name: "libc_aeabi",
     cflags: ["-fno-builtin"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1401,6 +1421,7 @@ cc_library_static {
         "libm",
         "libstdc++",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1440,6 +1461,7 @@ cc_library_static {
             whole_static_libs: ["libc_aeabi"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1454,6 +1476,7 @@ cc_library_static {
         "libc_nopthread",
         "libc_pthread",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1474,6 +1497,7 @@ cc_library_static {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1499,6 +1523,7 @@ cc_library_static {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1512,6 +1537,7 @@ cc_library_static {
         "libc_common",
         "libc_static_dispatch",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1525,6 +1551,7 @@ cc_library_static {
         "libc_common",
         "libc_dynamic_dispatch",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // Versions of dl_iterate_phdr and similar APIs used to lookup unwinding information in a static
@@ -1541,6 +1568,7 @@ cc_library_static {
             srcs: ["arch-arm/bionic/exidx_static.c"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1560,6 +1588,7 @@ cc_library_static {
         "libc_init_static",
         "libc_unwind_static",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -2180,6 +2209,7 @@ cc_library_static {
     },
 
     defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -2191,6 +2221,7 @@ cc_library_static {
     },
 
     defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================

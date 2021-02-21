@@ -28,6 +28,7 @@ cc_library_static {
         "com.android.media",
         "com.android.media.swcodec",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
