@@ -57,6 +57,9 @@ cc_library_static {
         "libgoogle-benchmark",
         "liblog",
     ],
+
+    // FIXME: Enable bp2build once libbase (//system/libbase) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 cc_benchmark {

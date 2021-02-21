@@ -163,6 +163,9 @@ cc_library_static {
     // Used to pull in the jemalloc include directory so that if the
     // library is removed, the include directory is also removed.
     static_libs: ["libjemalloc5"],
+
+    // FIXME: Add bp2build support when libjemalloc5 (in //external/jemalloc_new) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -201,6 +204,9 @@ cc_library_static {
     defaults: ["libc_defaults"],
     cflags: ["-fno-stack-protector", "-ffreestanding"],
     name: "libc_bootstrap",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // libc_init_static.cpp and libc_init_dynamic.cpp need to be built without stack protector.
@@ -218,6 +224,9 @@ cc_library_static {
         // from the linker before ifunc resolvers have made string.h functions available.
         "-ffreestanding",
     ],
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 cc_library_static {
@@ -225,6 +234,8 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_dynamic.cpp"],
     cflags: ["-fno-stack-protector"],
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -264,6 +275,8 @@ cc_library_static {
 
     local_include_dirs: ["tzcode/"],
     name: "libc_tzcode",
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -297,6 +310,8 @@ cc_library_static {
     ],
 
     name: "libc_dns",
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -376,6 +391,9 @@ cc_library_static {
     ],
 
     name: "libc_freebsd",
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -395,6 +413,9 @@ cc_library_static {
     ],
 
     name: "libc_freebsd_large_stack",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -450,6 +471,9 @@ cc_library_static {
     ],
 
     name: "libc_netbsd",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -579,6 +603,9 @@ cc_library_static {
         "upstream-openbsd/lib/libc/include",
         "upstream-openbsd/lib/libc/gdtoa/",
     ],
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 cc_library_static {
@@ -603,6 +630,8 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gdtoa/",
         "upstream-openbsd/lib/libc/stdio/",
     ],
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -690,6 +719,9 @@ cc_library_static {
     ],
 
     name: "libc_openbsd",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -739,6 +771,9 @@ cc_library_static {
     ],
 
     name: "libc_gdtoa",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -794,6 +829,8 @@ cc_library_static {
             ],
         },
     },
+    // FIXME: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -997,6 +1034,9 @@ cc_library_static {
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1210,6 +1250,9 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+
+    // FIXME: Enable bp2build once libsystemproperties (in //bionic) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1225,6 +1268,8 @@ cc_library_static {
     apex_available: [
         "com.android.runtime",
     ],
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -1276,6 +1321,9 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     header_libs: ["bionic_libc_platform_headers"],
     name: "libc_pthread",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -1344,6 +1392,9 @@ cc_library_static {
         },
     },
     name: "libc_syscalls",
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -1362,6 +1413,9 @@ cc_library_static {
     },
     name: "libc_aeabi",
     cflags: ["-fno-builtin"],
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1430,6 +1484,9 @@ cc_library_static {
         "libm",
         "libstdc++",
     ],
+
+    // FIXME: Enable bp2build when //bionic/libm also supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1470,6 +1527,9 @@ cc_library_static {
             whole_static_libs: ["libc_aeabi"],
         },
     },
+
+    // FIXME: Enable bp2build once libasync_safe (in //bionic) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1484,6 +1544,9 @@ cc_library_static {
         "libc_nopthread",
         "libc_pthread",
     ],
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1504,6 +1567,9 @@ cc_library_static {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
     },
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -1529,6 +1595,9 @@ cc_library_static {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
+
+    // FIXME: Enable bp2build support when gwp_asan (//external/gwp_asan) also supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1542,6 +1611,9 @@ cc_library_static {
         "libc_common",
         "libc_static_dispatch",
     ],
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1555,6 +1627,8 @@ cc_library_static {
         "libc_common",
         "libc_dynamic_dispatch",
     ],
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // Versions of dl_iterate_phdr and similar APIs used to lookup unwinding information in a static
@@ -1571,6 +1645,8 @@ cc_library_static {
             srcs: ["arch-arm/bionic/exidx_static.c"],
         },
     },
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -1590,6 +1666,9 @@ cc_library_static {
         "libc_init_static",
         "libc_unwind_static",
     ],
+
+    // TODO: Enable bp2build once //external/gwp_asan supports bp2build.
+    bazel_module: { bp2build_available: false },
 }
 
 filegroup {
@@ -2202,6 +2281,7 @@ cc_library_static {
     sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -2214,6 +2294,7 @@ cc_library_static {
     sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================

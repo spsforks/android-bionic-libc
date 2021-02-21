@@ -34,4 +34,9 @@ cc_library_static {
             enabled: false,
         },
     },
+
+    local_include_dirs: ["."],
+
+    // FIXME: Enable bp2build after resolving "fatal error: 'sys/time.h' file not found".
+    bazel_module: { bp2build_available: false },
 }
