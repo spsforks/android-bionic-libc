@@ -150,18 +150,21 @@ cc_library_static {
 
     // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
     cflags: ["-ffreestanding"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linker_defaults", "linker_all_targets"],
     srcs: ["linker_memory.cpp"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
     name: "liblinker_debuggerd_stub",
     defaults: ["linker_defaults", "linker_all_targets"],
     srcs: ["linker_debuggerd_stub.cpp"],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
