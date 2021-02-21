@@ -38,6 +38,7 @@ cc_library_static {
         "com.android.media.swcodec",
     ],
     min_sdk_version: "apex_inherit",
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
