@@ -34,6 +34,7 @@ cc_library_static {
         "bionic/libstdc++/include",
     ],
     export_include_dirs: ["include"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_benchmark {
