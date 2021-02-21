@@ -47,6 +47,7 @@ cc_library_static {
     sanitize: {
         never: true,
     },
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library {

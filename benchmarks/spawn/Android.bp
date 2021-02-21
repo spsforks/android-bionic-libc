@@ -57,6 +57,7 @@ cc_library_static {
         "libgoogle-benchmark",
         "liblog",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_benchmark {
