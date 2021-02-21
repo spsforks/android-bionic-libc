@@ -38,6 +38,9 @@ cc_library_static {
         "com.android.media.swcodec",
     ],
     min_sdk_version: "apex_inherit",
+
+    // FIXME: Enable bp2build once gwp_asan (//external/gwp_asan) also supports bp2build
+    // bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
