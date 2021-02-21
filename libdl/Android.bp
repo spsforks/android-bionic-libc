@@ -47,6 +47,9 @@ cc_library_static {
     sanitize: {
         never: true,
     },
+
+    // TODO: Enable bp2build after resolving: "fatal error: 'sys/mman.h' file not found"
+    bazel_module: { bp2build_available: false },
 }
 
 cc_library {

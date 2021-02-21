@@ -138,8 +138,14 @@ cc_benchmark_host {
 cc_library_static {
     name: "libBionicBenchmarksUtils",
     defaults: ["bionic-benchmarks-extras-defaults"],
-    srcs: ["util.cpp"],
+    srcs: [
+        "util.cpp",
+        "util.h",
+    ],
     host_supported: true,
+
+    // TODO: Enable bp2build after resolving: fatal error: 'map' file not found
+    bazel_module: { bp2build_available: false },
 }
 
 cc_test {

@@ -20,7 +20,10 @@ package {
 
 cc_library_static {
     name: "libbionic_tests_headers_posix",
-    srcs: ["*.c"],
+    srcs: [
+        "*.c",
+        "*.h",
+    ],
     cflags: [
         "-Wno-absolute-value", // broken clang diagnostic that doesn't understand <tgmath.h>
         "-Wno-deprecated",
@@ -34,4 +37,7 @@ cc_library_static {
             enabled: false,
         },
     },
+
+    // FIXME: Enable bp2build after resolving "fatal error: 'sys/time.h' file not found".
+    bazel_module: { bp2build_available: false },
 }
