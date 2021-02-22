@@ -1,14 +1,11 @@
 # This file added for experimental interoperability with Bazel.
-package(
-    default_visibility = ["@//:__pkg__"],
-)
-
 genrule(
     name = "syscalls-arm",
     outs = ["syscalls-arm.S"],
     srcs = ["SYSCALLS.TXT"],
     tools = ["//bionic/libc/tools:bionic-gensyscalls"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
+    visibility = [":__pkg__"],
 )
 
 genrule(
@@ -17,6 +14,7 @@ genrule(
     srcs = ["SYSCALLS.TXT"],
     tools = ["//bionic/libc/tools:bionic-gensyscalls"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
+    visibility = [":__pkg__"],
 )
 
 genrule(
@@ -25,6 +23,7 @@ genrule(
     srcs = ["SYSCALLS.TXT"],
     tools = ["//bionic/libc/tools:bionic-gensyscalls"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
+    visibility = [":__pkg__"],
 )
 
 genrule(
@@ -33,4 +32,5 @@ genrule(
     srcs = ["SYSCALLS.TXT"],
     tools = ["//bionic/libc/tools:bionic-gensyscalls"],
     cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
+    visibility = [":__pkg__"],
 )
