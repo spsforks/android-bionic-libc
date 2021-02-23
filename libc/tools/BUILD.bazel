@@ -1,0 +1,17 @@
+
+# Targets required to build tools.
+
+package(default_visibility = ["//visibility:public"])
+
+py_binary(
+    name = "genseccomp",
+    srcs = ["genseccomp.py", "gensyscalls.py"],
+    python_version = "PY2",
+)
+
+filegroup(
+    name = "bionic-gensyscalls",
+    srcs = [
+        "gensyscalls.py",
+    ],
+)
