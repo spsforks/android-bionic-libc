@@ -2117,10 +2117,10 @@ cc_object {
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
-
     bazel_module: {
         bp2build_available: true,
-    },
+        label: "//bionic/libc:crtbegin_so1"
+    }
 }
 
 cc_object {

@@ -1,0 +1,716 @@
+load(":experimental_cc_shared_library.bzl", "cc_shared_library")
+
+package(default_visibility = ["//visibility:public"])
+
+genrule(
+    name = "func_to_syscall_nrs_genrule",
+    cmd = "$(location genfunctosyscallnrs) --out-dir=$(GENDIR) $(SRCS)",
+    outs = [
+     #   "func_to_syscall_nrs.h",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genfunctosyscallnrs",
+    ],
+)
+
+genrule(
+    name = "generate_app_zygote_blocklist",
+    cmd = "grep -v '^int[ 	]*setresgid' $(SRCS) > $(OUTS)",
+    outs = [
+        "SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT",
+    ],
+    srcs = [
+        "SECCOMP_BLOCKLIST_APP.TXT",
+    ],
+)
+
+genrule(
+    name = "generated_android_ids",
+    cmd = "$(location fs_config_generator.py) aidarray $(SRCS) > $(OUTS)",
+    outs = [
+        "generated_android_ids.h",
+    ],
+    srcs = [
+        ":android_filesystem_config_header",
+    ],
+    tools = [
+        "fs_config_generator.py",
+    ],
+)
+
+filegroup(
+    name = "kernel_input_headers",
+    srcs = [
+        "kernel/uapi/linux/input.h",
+        "kernel/uapi/linux/input-event-codes.h",
+    ],
+)
+
+genrule(
+    name = "libc.arm.map",
+    cmd = "$(location :bionic-generate-version-script) arm $(SRCS) $(OUTS)",
+    outs = [
+        "libc.arm.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libc.arm64.map",
+    cmd = "$(location :bionic-generate-version-script) arm64 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.arm64.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libc.x86.map",
+    cmd = "$(location :bionic-generate-version-script) x86 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.x86.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libc.x86_64.map",
+    cmd = "$(location :bionic-generate-version-script) x86_64 $(SRCS) $(OUTS)",
+    outs = [
+        "libc.x86_64.map",
+    ],
+    srcs = [
+        "libc.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_shared",
+    srcs = [
+        "arch-common/bionic/crtbegin_so.c",
+        "arch-common/bionic/crtbrand.S",
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
+        "bionic/icu.cpp",
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/android_profiling_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
+        "bionic/malloc_limit.cpp",
+        "bionic/ndk_cruft.cpp",
+        "bionic/ndk_cruft_data.cpp",
+        "bionic/NetdClient.cpp",
+        "arch-common/bionic/crtend_so.S",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_shared_arm",
+    srcs = [
+        "arch-arm/bionic/exidx_dynamic.c",
+        "arch-arm/bionic/atexit_legacy.c",
+    ],
+)
+
+filegroup(
+    name = "libc_sources_static",
+    srcs = [
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_limit.cpp",
+    ],
+)
+
+genrule(
+    name = "libseccomp_policy_app_zygote_sources_2",
+    cmd = "$(location genseccomp) --out-dir=$(GENDIR) --name-modifier=app_zygote $(SRCS)",
+    outs = [
+       # "arm64_app_zygote_policy.cpp",
+       # "arm_app_zygote_policy.cpp",
+       # "x86_64_app_zygote_policy.cpp",
+       # "x86_app_zygote_policy.cpp",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":generate_app_zygote_blocklist",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genseccomp",
+    ],
+)
+
+genrule(
+    name = "libseccomp_policy_system_sources_2",
+    cmd = "$(location genseccomp) --out-dir=$(GENDIR) --name-modifier=system $(SRCS)",
+    outs = [
+#        "arm64_system_policy.cpp",
+#        "arm_system_policy.cpp",
+#        "x86_64_system_policy.cpp",
+#        "x86_system_policy.cpp",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        #":libseccomp_gen_syscall_nrs_x86",
+        #":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+    tools = [
+        "genseccomp",
+    ],
+)
+
+genrule(
+    name = "libstdc++.arm.map",
+    cmd = "$(location :bionic-generate-version-script) arm $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.arm.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.arm64.map",
+    cmd = "$(location :bionic-generate-version-script) arm64 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.arm64.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.x86.map",
+    cmd = "$(location :bionic-generate-version-script) x86 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.x86.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+genrule(
+    name = "libstdc++.x86_64.map",
+    cmd = "$(location :bionic-generate-version-script) x86_64 $(SRCS) $(OUTS)",
+    outs = [
+        "libstdc++.x86_64.map",
+    ],
+    srcs = [
+        "libstdc++.map.txt",
+    ],
+    tools = [
+        ":bionic-generate-version-script",
+    ],
+)
+
+# For libseccomp prototype
+
+# Wasn't able to get this fully working. Instead, the output sources are shamelessly copied.
+genrule(
+    name = "libseccomp_policy_app_sources_failed_genrule",
+    cmd = "$(location //bionic/libc/tools:genseccomp) --out-dir=$(GENDIR) --name-modifier=app $(SRCS)",
+
+    tools = [ "//bionic/libc/tools:genseccomp" ],
+
+    srcs = [
+        "SYSCALLS.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        #":libseccomp_gen_syscall_nrs_x86",
+        #":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    outs = [
+    #    "arm64_app_policy.cpp",
+    #    "arm_app_policy.cpp",
+    #    "x86_64_app_policy.cpp",
+    #    "x86_app_policy.cpp",
+    ],
+)
+
+filegroup(
+    name = "libseccomp_policy_app_sources",
+    srcs = [
+        "arm64_app_policy.cpp",
+        "arm_app_policy.cpp",
+        "x86_64_app_policy.cpp",
+        "x86_app_policy.cpp",
+    ],
+)
+
+filegroup(
+    name = "libseccomp_policy_app_zygote_sources",
+    srcs = [
+        "arm64_app_zygote_policy.cpp",
+        "arm_app_zygote_policy.cpp",
+        "x86_64_app_zygote_policy.cpp",
+        "x86_app_zygote_policy.cpp",
+    ],
+)
+
+filegroup(
+    name = "libseccomp_policy_system_sources",
+    srcs = [
+        "arm64_system_policy.cpp",
+        "arm_system_policy.cpp",
+        "x86_64_system_policy.cpp",
+        "x86_system_policy.cpp",
+    ],
+)
+
+filegroup(
+    name = "func_to_syscall_nrs",
+    srcs = ["func_to_syscall_nrs.h"],
+)
+
+cc_library(
+    name = "libseccomp_policy",
+    hdrs = ["func_to_syscall_nrs"] + glob(["seccomp/include/**/*.h"]),
+    srcs = [
+        ":libseccomp_policy_app_sources",
+        ":libseccomp_policy_app_zygote_sources",
+        ":libseccomp_policy_system_sources",
+        "seccomp/seccomp_policy.cpp",
+        "seccomp/seccomp_bpfs.h",
+    ],
+
+    includes = ["seccomp/include"],
+    copts = [
+        "-Wall",
+        "-Werror",
+    ],
+    deps = ["//system/libbase:libbase"],
+)
+
+cc_shared_library(
+    name = "libseccomp_policy_so",
+    dynamic_deps = ["//system/libbase:libbase_so"],
+    roots = [
+        "libseccomp_policy",
+    ],
+)
+
+# Required by other bionic libraries.
+cc_library(
+    name = "includes_for_bionic",
+    hdrs = [
+    ] + glob([
+        "include/**/*.h",
+        "bionic/**/*.h",
+        "platform/bionic/**/*.h",
+        "kernel/uapi/**/*.h",
+        "kernel/android/uapi/**/*.h",
+    ]),
+    includes = [
+        ".",
+        "include",
+        "kernel/android/uapi",
+        "kernel/uapi",
+        "platform",
+    ] + select({
+        # TODO(b/147667277): Split these into separate cc_libraries.
+        "@bazel_tools//platforms:aarch64": ["kernel/uapi/asm-arm64"],
+        "@bazel_tools//platforms:arm": ["kernel/uapi/asm-arm"],
+        "@bazel_tools//platforms:x86_64": ["kernel/uapi/asm-x86"],
+        "@bazel_tools//platforms:x86_32": ["kernel/uapi/asm-x86"],
+    }),
+    visibility = [
+        "//bionic:__subpackages__",
+        "//build/bazel/tests:__subpackages__",
+        "//external/libcxx:__pkg__",
+        "//system/core/property_service:__subpackages__",
+    ],
+    deps = [
+        ":private_headers",
+    ],
+)
+
+
+# Required by libraries that include <private.h>
+cc_library(
+    name = "private_headers",
+    hdrs = glob(["private/**/*.h"]),
+    include_prefix = "private",
+    strip_include_prefix = "private",
+)
+
+# Required by libraries that include <foo/bar.h> where foo
+# is a subdir in include/
+cc_library(
+    name = "includes",
+    hdrs = glob([
+        "include/**/*.h",
+    ]),
+    include_prefix = "include",
+    strip_include_prefix = "include",
+    visibility = [
+        "//bionic:__subpackages__",
+        "//external:__subpackages__",
+        "//system/core/property_service/libpropertyinfoparser:__subpackages__",
+    ],
+)
+
+# For prototype. These are shamelessly copied from a soong run.
+# This is because genrule is allowed to depend on cc_object for Soong; can we do the same for Bazel?
+filegroup(
+  name = "libseccomp_gen_syscall_nrs_arm",
+  srcs = ["libseccomp_gen_syscall_nrs_arm.o"],
+)
+
+filegroup(
+  name = "libseccomp_gen_syscall_nrs_arm64",
+  srcs = ["libseccomp_gen_syscall_nrs_arm64.o"],
+)
+
+genrule(
+    name = "syscalls-arm",
+    outs = ["syscalls-arm.S"],
+    srcs = ["SYSCALLS.TXT"],
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
+)
+
+genrule(
+    name = "syscalls-arm64",
+    outs = ["syscalls-arm64.S"],
+    srcs = ["SYSCALLS.TXT"],
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
+)
+
+genrule(
+    name = "syscalls-x86",
+    outs = ["syscalls-x86.S"],
+    srcs = ["SYSCALLS.TXT"],
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
+)
+
+genrule(
+    name = "syscalls-x86_64",
+    outs = ["syscalls-x86_64.S"],
+    srcs = ["SYSCALLS.TXT"],
+    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
+)
+
+cc_library(
+    name = "crtbegin_so1",
+    copts = [
+        "-Wno-gcc-compat",
+        "-Wall",
+        "-Werror",
+        "-fno-addrsig",
+    ],
+    deps = [
+        "crtbegin_so1__include",
+    ],
+    srcs = [
+        "arch-common/bionic/crtbegin_so.c",
+        "arch-common/bionic/__dso_handle.h",
+        "arch-common/bionic/__dso_handle_so.h",
+        "arch-common/bionic/asm_multiarch.h",
+        "arch-common/bionic/atexit.h",
+        "arch-common/bionic/pthread_atfork.h",
+    ],
+)
+
+cc_library(
+    name = "crtbegin_so1__include",
+    hdrs = [
+        "include/alloca.h",
+        "include/ar.h",
+        "include/assert.h",
+        "include/byteswap.h",
+        "include/complex.h",
+        "include/cpio.h",
+        "include/ctype.h",
+        "include/dirent.h",
+        "include/dlfcn.h",
+        "include/elf.h",
+        "include/endian.h",
+        "include/err.h",
+        "include/errno.h",
+        "include/error.h",
+        "include/fcntl.h",
+        "include/features.h",
+        "include/fenv.h",
+        "include/fnmatch.h",
+        "include/fts.h",
+        "include/ftw.h",
+        "include/getopt.h",
+        "include/glob.h",
+        "include/grp.h",
+        "include/iconv.h",
+        "include/ifaddrs.h",
+        "include/inttypes.h",
+        "include/langinfo.h",
+        "include/lastlog.h",
+        "include/libgen.h",
+        "include/limits.h",
+        "include/link.h",
+        "include/locale.h",
+        "include/malloc.h",
+        "include/math.h",
+        "include/memory.h",
+        "include/mntent.h",
+        "include/netdb.h",
+        "include/nl_types.h",
+        "include/paths.h",
+        "include/poll.h",
+        "include/pthread.h",
+        "include/pty.h",
+        "include/pwd.h",
+        "include/regex.h",
+        "include/resolv.h",
+        "include/sched.h",
+        "include/search.h",
+        "include/semaphore.h",
+        "include/setjmp.h",
+        "include/signal.h",
+        "include/spawn.h",
+        "include/stdatomic.h",
+        "include/stdint.h",
+        "include/stdio.h",
+        "include/stdio_ext.h",
+        "include/stdlib.h",
+        "include/string.h",
+        "include/strings.h",
+        "include/syscall.h",
+        "include/sysexits.h",
+        "include/syslog.h",
+        "include/tar.h",
+        "include/termio.h",
+        "include/termios.h",
+        "include/threads.h",
+        "include/time.h",
+        "include/time64.h",
+        "include/uchar.h",
+        "include/ucontext.h",
+        "include/unistd.h",
+        "include/utime.h",
+        "include/utmp.h",
+        "include/wait.h",
+        "include/wchar.h",
+        "include/wctype.h",
+        "include/xlocale.h",
+        "include/android/api-level.h",
+        "include/android/dlext.h",
+        "include/android/fdsan.h",
+        "include/android/legacy_errno_inlines.h",
+        "include/android/legacy_fenv_inlines_arm.h",
+        "include/android/legacy_signal_inlines.h",
+        "include/android/legacy_stdlib_inlines.h",
+        "include/android/legacy_sys_mman_inlines.h",
+        "include/android/legacy_sys_stat_inlines.h",
+        "include/android/legacy_sys_statvfs_inlines.h",
+        "include/android/legacy_sys_wait_inlines.h",
+        "include/android/legacy_termios_inlines.h",
+        "include/android/legacy_threads_inlines.h",
+        "include/android/legacy_unistd_inlines.h",
+        "include/android/set_abort_message.h",
+        "include/android/versioning.h",
+        "include/arpa/ftp.h",
+        "include/arpa/inet.h",
+        "include/arpa/nameser.h",
+        "include/arpa/nameser_compat.h",
+        "include/arpa/telnet.h",
+        "include/arpa/tftp.h",
+        "include/bits/auxvec.h",
+        "include/bits/ctype_inlines.h",
+        "include/bits/elf_arm.h",
+        "include/bits/elf_arm64.h",
+        "include/bits/elf_x86.h",
+        "include/bits/elf_x86_64.h",
+        "include/bits/epoll_event.h",
+        "include/bits/fcntl.h",
+        "include/bits/fenv_arm.h",
+        "include/bits/fenv_inlines_arm.h",
+        "include/bits/fenv_x86.h",
+        "include/bits/fenv_x86_64.h",
+        "include/bits/flock.h",
+        "include/bits/flock64.h",
+        "include/bits/get_device_api_level_inlines.h",
+        "include/bits/getopt.h",
+        "include/bits/glibc-syscalls.h",
+        "include/bits/in_addr.h",
+        "include/bits/ioctl.h",
+        "include/bits/ip_mreq_source.h",
+        "include/bits/ip_msfilter.h",
+        "include/bits/lockf.h",
+        "include/bits/mbstate_t.h",
+        "include/bits/posix_limits.h",
+        "include/bits/pthread_types.h",
+        "include/bits/sa_family_t.h",
+        "include/bits/seek_constants.h",
+        "include/bits/signal_types.h",
+        "include/bits/stdatomic.h",
+        "include/bits/strcasecmp.h",
+        "include/bits/struct_file.h",
+        "include/bits/swab.h",
+        "include/bits/sys_statvfs_inlines.h",
+        "include/bits/sysconf.h",
+        "include/bits/termios_inlines.h",
+        "include/bits/threads_inlines.h",
+        "include/bits/timespec.h",
+        "include/bits/wait.h",
+        "include/bits/wchar_limits.h",
+        "include/bits/wctype.h",
+        "include/bits/fortify/fcntl.h",
+        "include/bits/fortify/poll.h",
+        "include/bits/fortify/socket.h",
+        "include/bits/fortify/stat.h",
+        "include/bits/fortify/stdio.h",
+        "include/bits/fortify/stdlib.h",
+        "include/bits/fortify/string.h",
+        "include/bits/fortify/strings.h",
+        "include/bits/fortify/unistd.h",
+        "include/net/ethernet.h",
+        "include/net/if.h",
+        "include/net/if_arp.h",
+        "include/net/if_packet.h",
+        "include/net/route.h",
+        "include/netinet/ether.h",
+        "include/netinet/icmp6.h",
+        "include/netinet/if_ether.h",
+        "include/netinet/in.h",
+        "include/netinet/in6.h",
+        "include/netinet/in_systm.h",
+        "include/netinet/ip.h",
+        "include/netinet/ip6.h",
+        "include/netinet/ip_icmp.h",
+        "include/netinet/tcp.h",
+        "include/netinet/udp.h",
+        "include/netpacket/packet.h",
+        "include/sys/_system_properties.h",
+        "include/sys/auxv.h",
+        "include/sys/cachectl.h",
+        "include/sys/capability.h",
+        "include/sys/cdefs.h",
+        "include/sys/endian.h",
+        "include/sys/epoll.h",
+        "include/sys/errno.h",
+        "include/sys/eventfd.h",
+        "include/sys/fcntl.h",
+        "include/sys/file.h",
+        "include/sys/fsuid.h",
+        "include/sys/ifunc.h",
+        "include/sys/inotify.h",
+        "include/sys/ioctl.h",
+        "include/sys/ipc.h",
+        "include/sys/klog.h",
+        "include/sys/limits.h",
+        "include/sys/mman.h",
+        "include/sys/mount.h",
+        "include/sys/msg.h",
+        "include/sys/mtio.h",
+        "include/sys/param.h",
+        "include/sys/personality.h",
+        "include/sys/poll.h",
+        "include/sys/prctl.h",
+        "include/sys/procfs.h",
+        "include/sys/ptrace.h",
+        "include/sys/queue.h",
+        "include/sys/quota.h",
+        "include/sys/random.h",
+        "include/sys/reboot.h",
+        "include/sys/reg.h",
+        "include/sys/resource.h",
+        "include/sys/select.h",
+        "include/sys/sem.h",
+        "include/sys/sendfile.h",
+        "include/sys/shm.h",
+        "include/sys/signal.h",
+        "include/sys/signalfd.h",
+        "include/sys/socket.h",
+        "include/sys/stat.h",
+        "include/sys/statfs.h",
+        "include/sys/statvfs.h",
+        "include/sys/swap.h",
+        "include/sys/syscall.h",
+        "include/sys/sysconf.h",
+        "include/sys/sysinfo.h",
+        "include/sys/syslog.h",
+        "include/sys/sysmacros.h",
+        "include/sys/system_properties.h",
+        "include/sys/thread_properties.h",
+        "include/sys/time.h",
+        "include/sys/timerfd.h",
+        "include/sys/times.h",
+        "include/sys/timex.h",
+        "include/sys/ttydefaults.h",
+        "include/sys/types.h",
+        "include/sys/ucontext.h",
+        "include/sys/uio.h",
+        "include/sys/un.h",
+        "include/sys/unistd.h",
+        "include/sys/user.h",
+        "include/sys/utsname.h",
+        "include/sys/vfs.h",
+        "include/sys/vt.h",
+        "include/sys/wait.h",
+        "include/sys/xattr.h",
+    ],
+    include_prefix = "include",
+    includes = [
+        "include",
+    ],
+    strip_include_prefix = "include",
+)
+
