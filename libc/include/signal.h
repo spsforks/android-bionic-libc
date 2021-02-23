@@ -126,6 +126,7 @@ int sigtimedwait64(const sigset64_t* __set, siginfo_t* __info, const struct time
 int sigwaitinfo(const sigset_t* __set, siginfo_t* __info) __INTRODUCED_IN(23);
 int sigwaitinfo64(const sigset64_t* __set, siginfo_t* __info) __INTRODUCED_IN(28);
 
+int pidfd_send_signal(int pidfd, int sig, siginfo_t *info, unsigned int flags) __INTRODUCED_IN(31);
 __END_DECLS
 
 #include <android/legacy_signal_inlines.h>

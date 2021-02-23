@@ -138,6 +138,26 @@ int open(const char* __path, int __flags, ...);
 int open64(const char* __path, int __flags, ...) __INTRODUCED_IN(21);
 
 /**
+ * [pidfd_open(2)](https://man7.org/linux/man-pages/man2/pidfd_open.2.html)
+ * opens a file descriptor that refers to a process. This file descriptor will
+ * have the close-on-exec flag set by default.
+ *
+ * Returns a new file descriptor on success and returns -1 and sets `errno` on
+ * failure.
+ */
+int pidfd_open(pid_t __pid, unsigned int __flags) __INTRODUCED_IN(31);
+
+/**
+ * [pidfd_getfd(2)](https://man7.org/linux/man-pages/man2/pidfd_open.2.html)
+ * dups a file descriptor from another process. This file descriptor will have
+ * the close-on-exec flag set by default.
+ *
+ * Returns a new file descriptor on success and returns -1 and sets `errno` on
+ * failure.
+ */
+int pidfd_getfd(int pidfd, int targetfd, unsigned int flags) __INTRODUCED_IN(31);
+
+/**
  * [splice(2)](http://man7.org/linux/man-pages/man2/splice.2.html)
  * splices data to/from a pipe.
  *
