@@ -1,36 +1,58 @@
 # This file added for experimental interoperability with Bazel.
-package(
-    default_visibility = ["@//:__pkg__"],
+package(default_visibility = ["//visibility:public"])
+
+genrule(
+    name = "syscalls-arm.S",
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-arm.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        "//bionic/libc/tools:bionic-gensyscalls",
+    ],
 )
 
 genrule(
-    name = "syscalls-arm",
-    outs = ["syscalls-arm.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm $< > $@",
+    name = "syscalls-arm64.S",
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-arm64.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        "//bionic/libc/tools:bionic-gensyscalls",
+    ],
 )
 
 genrule(
-    name = "syscalls-arm64",
-    outs = ["syscalls-arm64.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) arm64 $< > $@",
+    name = "syscalls-x86.S",
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-x86.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        "//bionic/libc/tools:bionic-gensyscalls",
+    ],
 )
 
 genrule(
-    name = "syscalls-x86",
-    outs = ["syscalls-x86.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86 $< > $@",
-)
-
-genrule(
-    name = "syscalls-x86_64",
-    outs = ["syscalls-x86_64.S"],
-    srcs = ["SYSCALLS.TXT"],
-    tools = ["//bionic/libc/tools:bionic-gensyscalls"],
-    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $< > $@",
+    name = "syscalls-x86_64.S",
+    cmd = "$(location //bionic/libc/tools:bionic-gensyscalls) x86_64 $(SRCS) > $(OUTS)",
+    outs = [
+        "syscalls-x86_64.S",
+    ],
+    srcs = [
+        "SYSCALLS.TXT",
+    ],
+    tools = [
+        "//bionic/libc/tools:bionic-gensyscalls",
+    ],
 )
