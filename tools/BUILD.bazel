@@ -1,0 +1,8 @@
+
+
+filegroup(
+    name = "bionic-generate-version-script",
+    srcs = [
+        "generate-version-script.py",
+    ],
+)

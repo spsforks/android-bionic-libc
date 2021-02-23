@@ -1,0 +1,123 @@
+# Targets required to build libdl for the target device.
+
+package(default_visibility = ["//visibility:public"])
+
+load("//bionic/tools:generate_version_script.bzl", "generate_version_script")
+load("//bionic/libc:experimental_cc_shared_library.bzl", "cc_shared_library")
+
+cc_library(
+    name = "libdl",
+    srcs = [
+        "libdl.cpp",
+        "libdl_cfi.cpp",
+    ],
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    deps = [
+        "//bionic/libc:includes_for_bionic",
+    ],
+)
+
+cc_library(
+    name = "libdl_android",
+    srcs = ["libdl_android.cpp"],
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    linkopts = [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+    deps = [
+        "//bionic/libc:includes_for_bionic",
+    ],
+)
+
+cc_library(
+    name = "libdl_shared_required_deps",
+    deps = [
+        # TODO(cparsons): Move to toolchain. This is an implicit dependency of all .so builds.
+        "//prebuilts/clang/host/linux-x86:libclang_rt",
+    ],
+)
+
+# At the time of creation, this *almost* matches bit-for-bit with the Soong artifact:
+#     out/target/product/generic_arm64/system/lib64/libc.so.
+# Particularly, "libdl_shared_unstripped" matches bit-for-bit with
+#     out/soong/.intermediates/bionic/libdl/libdl/android_arm64_armv8-a_shared/unstripped/libdl.so
+# (except for debug symbol differences).
+cc_shared_library(
+    name = "libdl_shared",
+    dynamic_deps = [
+        "//bionic/linker:ld_android",
+    ],
+    features = ["disable_rpath"],
+    user_link_flags = [
+        "-Wl,-soname,libdl.so",
+        "-Wl,--pack-dyn-relocs=android+relr",
+        "-Wl,--use-android-relr-tags",
+    ],
+    visibility = ["//visibility:public"],
+    #visibility_file = ":libdl.map",
+    roots = [
+        ":libdl",
+        ":libdl_shared_required_deps",
+    ],
+    static_deps = [
+        "//prebuilts/clang/host/linux-x86:libclang_rt",
+    ],
+)
+
+# Version scripts for different architectures.
+alias(
+    name = "libdl.map",
+    actual = select({
+        "//build/soong/bazel/devices:config_x86_64": ":libdl.x86_64.map",
+        "//build/soong/bazel/devices:config_x86": ":libdl.x86.map",
+        "//build/soong/bazel/devices:config_arm64": ":libdl.arm64.map",
+        "//build/soong/bazel/devices:config_arm": ":libdl.arm.map",
+    }),
+)
+
+generate_version_script(
+    name = "generate_libdl.arm.map",
+    out = "libdl.arm.map",
+    arch = "arm",
+    master = "libdl.map.txt",
+    visibility = ["//visibility:private"],
+)
+
+generate_version_script(
+    name = "generate_libdl.arm64.map",
+    out = "libdl.arm64.map",
+    arch = "arm64",
+    master = "libdl.map.txt",
+    visibility = ["//visibility:private"],
+)
+
+generate_version_script(
+    name = "generate_libdl.x86.map",
+    out = "libdl.x86.map",
+    arch = "x86",
+    master = "libdl.map.txt",
+    visibility = ["//visibility:private"],
+)
+
+generate_version_script(
+    name = "generate_libdl.x86_64.map",
+    out = "libdl.x86_64.map",
+    arch = "x86_64",
+    master = "libdl.map.txt",
+    visibility = ["//visibility:private"],
+)

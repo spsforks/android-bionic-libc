@@ -1,0 +1,59 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//bionic/libc:full_cc_library.bzl", "full_cc_library")
+
+full_cc_library(
+    name = "ld_android",
+    srcs = ["ld_android.cpp"],
+    copts = [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    linkopts = [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
+    export_deps = [
+        "//bionic/libc:includes_for_bionic",
+    ],
+    transitive_export_deps = [
+        "//bionic/libc:private_headers",
+    ],
+    user_link_flags = ["-Wl,-soname,ld-android.so"],
+)
+
+#cc_library(
+#    name = "ld_android",
+#    srcs = ["ld_android.cpp"],
+#    copts = [
+#        "-Wall",
+#        "-Wextra",
+#        "-Wunused",
+#        "-Werror",
+#    ],
+#    linkopts = [
+#        "-Wl,--exclude-libs=libgcc.a",
+#        "-Wl,--exclude-libs=libgcc_stripped.a",
+#        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+#        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+#        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+#        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+#    ],
+#    deps = [
+#        "//bionic/libc:includes_for_bionic",
+#    ],
+#)
+#
+#cc_shared_library(
+#    name = "ld_android_shared",
+#    user_link_flags = ["-Wl,-soname,ld-android.so"],
+#    exports_filter = ["//bionic/libc:includes_for_bionic", "//bionic/libc:private_headers"],
+#    static_deps = ["//bionic/libc:includes_for_bionic", "//bionic/libc:private_headers"],
+#    roots = [":ld_android"],
+#)
