@@ -336,6 +336,7 @@ cc_test_library {
         "iconv_test.cpp",
         "ifaddrs_test.cpp",
         "ifunc_test.cpp",
+        "increase_timeout.cpp",
         "inttypes_test.cpp",
         "iso646_test.c",
         "langinfo_test.cpp",
