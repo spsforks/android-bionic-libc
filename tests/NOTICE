@@ -1,3 +1,1140 @@
+//
+// Copyright (C) 2012 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+// -----------------------------------------------------------------------------
+// Unit tests.
+// -----------------------------------------------------------------------------
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
+
+build_host = ["true"]
+// ANDROIDMK TRANSLATION ERROR: else from unsupported contitional
+// else
+
+build_host = ["false"]
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+common_additional_dependencies = [
+    LOCAL_PATH + "/Android.mk",
+    LOCAL_PATH + "/Android.build.mk",
+]
+
+// -----------------------------------------------------------------------------
+// All standard tests.
+// -----------------------------------------------------------------------------
+test_cflags = [
+    "-fstack-protector-all",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Wunused",
+    "-Werror",
+    "-fno-builtin",
+]
+
+// We want to test deprecated API too.
+test_cflags += ["-Wno-deprecated-declarations"]
+
+test_cflags += ["-D__STDC_LIMIT_MACROS"] // For glibc.
+
+test_cppflags = []
+
+libBionicStandardTests_src_files = [
+    "arpa_inet_test.cpp",
+    "buffer_tests.cpp",
+    "bug_26110743_test.cpp",
+    "complex_test.cpp",
+    "ctype_test.cpp",
+    "dirent_test.cpp",
+    "error_test.cpp",
+    "eventfd_test.cpp",
+    "fcntl_test.cpp",
+    "fenv_test.cpp",
+    "ftw_test.cpp",
+    "getauxval_test.cpp",
+    "getcwd_test.cpp",
+    "grp_pwd_test.cpp",
+    "ifaddrs_test.cpp",
+    "inttypes_test.cpp",
+    "libc_logging_test.cpp",
+    "libgen_basename_test.cpp",
+    "libgen_test.cpp",
+    "locale_test.cpp",
+    "malloc_test.cpp",
+    "math_test.cpp",
+    "mntent_test.cpp",
+    "netdb_test.cpp",
+    "net_if_test.cpp",
+    "netinet_ether_test.cpp",
+    "netinet_in_test.cpp",
+    "netinet_udp_test.cpp",
+    "nl_types_test.cpp",
+    "pthread_test.cpp",
+    "pty_test.cpp",
+    "regex_test.cpp",
+    "resolv_test.cpp",
+    "sched_test.cpp",
+    "search_test.cpp",
+    "semaphore_test.cpp",
+    "setjmp_test.cpp",
+    "signal_test.cpp",
+    "stack_protector_test.cpp",
+    "stack_protector_test_helper.cpp",
+    "stack_unwinding_test.cpp",
+    "stdatomic_test.cpp",
+    "stdint_test.cpp",
+    "stdio_nofortify_test.cpp",
+    "stdio_test.cpp",
+    "stdio_ext_test.cpp",
+    "stdlib_test.cpp",
+    "string_nofortify_test.cpp",
+    "string_test.cpp",
+    "string_posix_strerror_r_test.cpp",
+    "strings_nofortify_test.cpp",
+    "strings_test.cpp",
+    "sstream_test.cpp",
+    "sys_epoll_test.cpp",
+    "sys_mman_test.cpp",
+    "sys_personality_test.cpp",
+    "sys_prctl_test.cpp",
+    "sys_procfs_test.cpp",
+    "sys_ptrace_test.cpp",
+    "sys_quota_test.cpp",
+    "sys_resource_test.cpp",
+    "sys_select_test.cpp",
+    "sys_sendfile_test.cpp",
+    "sys_socket_test.cpp",
+    "sys_stat_test.cpp",
+    "sys_statvfs_test.cpp",
+    "sys_syscall_test.cpp",
+    "sys_sysinfo_test.cpp",
+    "sys_sysmacros_test.cpp",
+    "sys_time_test.cpp",
+    "sys_timex_test.cpp",
+    "sys_types_test.cpp",
+    "sys_uio_test.cpp",
+    "sys_vfs_test.cpp",
+    "sys_xattr_test.cpp",
+    "system_properties_test.cpp",
+    "time_test.cpp",
+    "uchar_test.cpp",
+    "uniqueptr_test.cpp",
+    "unistd_nofortify_test.cpp",
+    "unistd_test.cpp",
+    "utmp_test.cpp",
+    "wchar_test.cpp",
+    "wctype_test.cpp",
+]
+
+libBionicStandardTests_cflags = test_cflags
+
+libBionicStandardTests_cppflags = test_cppflags
+
+libBionicStandardTests_c_includes = [
+    "bionic/libc",
+    "external/tinyxml2",
+]
+
+libBionicStandardTests_static_libraries = ["libbase"]
+
+libBionicStandardTests_ldlibs_host = ["-lrt"]
+
+module = ["libBionicStandardTests"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Fortify tests.
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// $(foreach compiler,gcc clang,    $(foreach test,1 2,      $(eval fortify$(test)-tests-$(compiler)_cflags :=        $(test_cflags)        -Wno-error        -U_FORTIFY_SOURCE        -D_FORTIFY_SOURCE=$(test)        -DTEST_NAME=Fortify$(test)_$(compiler));      $(eval fortify$(test)-tests-$(compiler)_src_files :=        fortify_test_main.cpp);      $(eval fortify_libs += fortify$(test)-tests-$(compiler));    )  )
+
+fortify1-tests-gcc_clang_target = ["false"]
+module = ["fortify1-tests-gcc"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+fortify2-tests-gcc_clang_target = ["false"]
+module = ["fortify2-tests-gcc"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+fortify1-tests-clang_clang_target = ["true"]
+fortify1-tests-clang_cflags_host = ["-D__clang__"]
+
+module = ["fortify1-tests-clang"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+fortify2-tests-clang_clang_target = ["true"]
+
+fortify2-tests-clang_cflags_host = ["-D__clang__"]
+
+module = ["fortify2-tests-clang"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Library of all tests (excluding the dynamic linker tests).
+// -----------------------------------------------------------------------------
+libBionicTests_whole_static_libraries = ["libBionicStandardTests"] + fortify_libs
+
+module = ["libBionicTests"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Library of bionic customized gtest main function, with simplified output format.
+// -----------------------------------------------------------------------------
+libBionicGtestMain_src_files = ["gtest_main.cpp"]
+
+libBionicGtestMain_cflags = test_cflags
+
+libBionicGtestMain_cppflags = test_cppflags
+
+module = ["libBionicGtestMain"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(HOST_OS),$(filter $(HOST_OS),linux darwin))
+
+saved_build_host = build_host
+build_host = ["true"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_host = saved_build_host
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// -----------------------------------------------------------------------------
+// Library of bionic customized gtest main function, with normal gtest output format,
+// which is needed by bionic cts test.
+// -----------------------------------------------------------------------------
+libBionicCtsGtestMain_src_files = ["gtest_main.cpp"]
+
+libBionicCtsGtestMain_cflags = test_cflags
+
+libBionicCtsGtestMain_cppflags = test_cppflags + ["-DUSING_GTEST_OUTPUT_FORMAT"]
+
+module = ["libBionicCtsGtestMain"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["STATIC_TEST_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Tests for the device using bionic's .so. Run with:
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc32
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc64
+// -----------------------------------------------------------------------------
+common_bionic-unit-tests_whole_static_libraries = [
+    "libBionicTests",
+    "libBionicGtestMain",
+]
+
+common_bionic-unit-tests_static_libraries = [
+    "libtinyxml2",
+    "liblog",
+    "libbase",
+]
+
+// TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
+common_bionic-unit-tests_src_files = [
+    "atexit_test.cpp",
+    "dl_test.cpp",
+    "dlext_test.cpp",
+    "__cxa_thread_atexit_test.cpp",
+    "dlfcn_test.cpp",
+    "libdl_test.cpp",
+    "pthread_dlfcn_test.cpp",
+    "thread_local_test.cpp",
+]
+
+common_bionic-unit-tests_cflags = test_cflags
+
+common_bionic-unit-tests_conlyflags = [
+    "-fexceptions",
+    "-fnon-call-exceptions",
+]
+
+common_bionic-unit-tests_cppflags = test_cppflags
+
+common_bionic-unit-tests_ldflags = ["-Wl,--export-dynamic"]
+
+common_bionic-unit-tests_c_includes = ["bionic/libc"]
+
+common_bionic-unit-tests_shared_libraries_target = [
+    "libdl",
+    "libpagemap",
+    "libdl_preempt_test_1",
+    "libdl_preempt_test_2",
+    "libdl_test_df_1_global",
+]
+
+// The order of these libraries matters, do not shuffle them.
+common_bionic-unit-tests_static_libraries_target = [
+    "libbase",
+    "libziparchive",
+    "libz",
+    "libutils",
+]
+
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["NATIVE_TEST"]
+
+module = ["bionic-unit-tests"]
+bionic-unit-tests_clang_target = ["true"]
+bionic-unit-tests_whole_static_libraries = common_bionic-unit-tests_whole_static_libraries
+bionic-unit-tests_static_libraries = common_bionic-unit-tests_static_libraries
+bionic-unit-tests_src_files = common_bionic-unit-tests_src_files
+bionic-unit-tests_cflags = common_bionic-unit-tests_cflags
+bionic-unit-tests_conlyflags = common_bionic-unit-tests_conlyflags
+bionic-unit-tests_cppflags = common_bionic-unit-tests_cppflags
+bionic-unit-tests_ldflags = common_bionic-unit-tests_ldflags
+bionic-unit-tests_c_includes = common_bionic-unit-tests_c_includes
+bionic-unit-tests_shared_libraries_target = common_bionic-unit-tests_shared_libraries_target
+bionic-unit-tests_static_libraries_target = common_bionic-unit-tests_static_libraries_target
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+module = ["bionic-unit-tests-gcc"]
+bionic-unit-tests-gcc_clang_target = ["false"]
+bionic-unit-tests-gcc_whole_static_libraries = common_bionic-unit-tests_whole_static_libraries
+bionic-unit-tests-gcc_static_libraries = common_bionic-unit-tests_static_libraries
+bionic-unit-tests-gcc_src_files = common_bionic-unit-tests_src_files
+bionic-unit-tests-gcc_cflags = common_bionic-unit-tests_cflags
+bionic-unit-tests-gcc_conlyflags = common_bionic-unit-tests_conlyflags
+bionic-unit-tests-gcc_cppflags = common_bionic-unit-tests_cppflags
+bionic-unit-tests-gcc_ldflags = common_bionic-unit-tests_ldflags
+bionic-unit-tests-gcc_c_includes = common_bionic-unit-tests_c_includes
+bionic-unit-tests-gcc_shared_libraries_target = common_bionic-unit-tests_shared_libraries_target
+bionic-unit-tests-gcc_static_libraries_target = common_bionic-unit-tests_static_libraries_target
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Tests for the device linked against bionic's static library. Run with:
+//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
+//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static64
+// -----------------------------------------------------------------------------
+bionic-unit-tests-static_whole_static_libraries = [
+    "libBionicTests",
+    "libBionicGtestMain",
+]
+
+bionic-unit-tests-static_static_libraries = [
+    "libm",
+    "libc",
+    "libc++_static",
+    "libdl",
+    "libtinyxml2",
+    "liblog",
+    "libbase",
+]
+
+bionic-unit-tests-static_force_static_executable = ["true"]
+
+// libc and libc++ both define std::nothrow. libc's is a private symbol, but this
+// still causes issues when linking libc.a and libc++.a, since private isn't
+// effective until it has been linked. To fix this, just allow multiple symbol
+// definitions for the static tests.
+bionic-unit-tests-static_ldflags = ["-Wl,--allow-multiple-definition"]
+
+module = ["bionic-unit-tests-static"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["NATIVE_TEST"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Tests to run on the host and linked against glibc. Run with:
+//   cd bionic/tests; mm bionic-unit-tests-glibc-run
+// -----------------------------------------------------------------------------
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
+
+bionic-unit-tests-glibc_src_files = [
+    "atexit_test.cpp",
+    "dlfcn_test.cpp",
+    "dl_test.cpp",
+    "pthread_dlfcn_test.cpp",
+]
+
+bionic-unit-tests-glibc_shared_libraries = [
+    "libdl_preempt_test_1",
+    "libdl_preempt_test_2",
+]
+
+bionic-unit-tests-glibc_shared_libraries += ["libdl_test_df_1_global"]
+
+bionic-unit-tests-glibc_whole_static_libraries = [
+    "libBionicStandardTests",
+    "libBionicGtestMain",
+] + fortify_libs
+
+bionic-unit-tests-glibc_static_libraries = [
+    "libbase",
+    "liblog",
+    "libcutils",
+]
+
+bionic-unit-tests-glibc_ldlibs = [
+    "-lresolv",
+    "-lrt",
+    "-ldl",
+    "-lutil",
+]
+
+bionic-unit-tests-glibc_c_includes = ["bionic/libc"]
+
+bionic-unit-tests-glibc_cflags = test_cflags
+bionic-unit-tests-glibc_cppflags = test_cppflags
+bionic-unit-tests-glibc_ldflags = ["-Wl,--export-dynamic"]
+
+bionic-unit-tests-glibc_allow_asan = ["true"]
+
+module = ["bionic-unit-tests-glibc"]
+module_tag = ["optional"]
+build_type = ["host"]
+build_target = ["NATIVE_TEST"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Compile time tests.
+// -----------------------------------------------------------------------------
+
+// Some of these are intentionally using = instead of := since we need access to
+// some variables not initialtized until we're in the build system.
+
+cc_library_static {
+
+    // ANDROIDMK TRANSLATION ERROR: unsupported assignment to LOCAL_CXX
+    // LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx      $(HOST_OUT_EXECUTABLES)/FileCheck      $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_CXX)      GCC
+
+    clang: false,
+    name: "bionic-compile-time-tests-g++",
+    cppflags: ["-Wall"] + ["-fdiagnostics-color=never"], // Disable color diagnostics so the warnings output matches the source
+
+    srcs: ["fortify_compilation_test.cpp"],
+}
+
+cc_library_static {
+
+    // ANDROIDMK TRANSLATION ERROR: unsupported assignment to LOCAL_CXX
+    // LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx      $(HOST_OUT_EXECUTABLES)/FileCheck      $(LLVM_PREBUILTS_PATH)/clang++      CLANG
+
+    clang: true,
+    name: "bionic-compile-time-tests-clang++",
+    cppflags: ["-Wall"] + ["-fno-color-diagnostics"], // Disable color diagnostics so the warnings output matches the source
+
+    // FileCheck will error if there aren't any CLANG: lines in the file, but there
+    // don't appear to be any cases where clang _does_ emit warnings for sn?printf :(
+
+}
+
+// -----------------------------------------------------------------------------
+// Host glibc tests.
+// -----------------------------------------------------------------------------
+
+// gtest needs ANDROID_DATA/local/tmp for death test output.
+// Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
+// Use the current target out directory as ANDROID_DATA.
+// BIONIC_TEST_FLAGS is either empty or it comes from the user.
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       .PHONY: bionic-unit-tests-glibc-run
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
+// mkdir -p $(TARGET_OUT_DATA)/local/tmp
+// ANDROID_DATA=$(TARGET_OUT_DATA)
+//     ANDROID_ROOT=$(TARGET_OUT)
+//         $(HOST_OUT_EXECUTABLES)/bionic-unit-tests-glibc64 $(BIONIC_TEST_FLAGS)
+//
+
+// -----------------------------------------------------------------------------
+// Run the unit tests built against x86 bionic on an x86 host.
+// -----------------------------------------------------------------------------
+
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/../build/run-on-host.mk
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
+
+TEST_TIMEOUT = ["0"]
+
+// BIONIC_TEST_FLAGS is either empty or it comes from the user.
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       .PHONY: bionic-unit-tests-run-on-host32
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
+// ANDROID_DATA=$(TARGET_OUT_DATA)
+//     ANDROID_DNS_MODE=local
+//     ANDROID_ROOT=$(TARGET_OUT)
+//         timeout $(TEST_TIMEOUT)
+//         $(TARGET_OUT_DATA)/nativetest/bionic-unit-tests/bionic-unit-tests32 $(BIONIC_TEST_FLAGS)
+//
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(TARGET_IS_64_BIT),true)
+
+// add target to run lp64 tests
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       .PHONY: bionic-unit-tests-run-on-host64
+// ANDROIDMK TRANSLATION ERROR: unsupported line
+// rule:       bionic-unit-tests-run-on-host64: bionic-unit-tests bionic-prepare-run-on-host
+// ANDROID_DATA=$(TARGET_OUT_DATA)
+//     ANDROID_DNS_MODE=local
+//     ANDROID_ROOT=$(TARGET_OUT)
+//         timeout $(TEST_TIMEOUT)
+//         $(TARGET_OUT_DATA)/nativetest64/bionic-unit-tests/bionic-unit-tests64 $(BIONIC_TEST_FLAGS)
+//
+//
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+// x86 x86_64
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+// linux-x86
+
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(call first-makefiles-under,$(LOCAL_PATH))
+
+-------------------------------------------------------------------
+
+//
+// Copyright (C) 2012 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+TEST_PATH = [LOCAL_PATH + "/.."]
+
+common_cppflags = []
+common_additional_dependencies = [
+    LOCAL_PATH + "/Android.mk",
+    LOCAL_PATH + "/Android.build.dt_runpath.mk",
+    LOCAL_PATH + "/Android.build.dlext_testzip.mk",
+    LOCAL_PATH + "/Android.build.dlopen_2_parents_reloc.mk",
+    LOCAL_PATH + "/Android.build.dlopen_check_order_dlsym.mk",
+    LOCAL_PATH + "/Android.build.dlopen_check_order_reloc_siblings.mk",
+    LOCAL_PATH + "/Android.build.dlopen_check_order_reloc_main_executable.mk",
+    LOCAL_PATH + "/Android.build.linker_namespaces.mk",
+    LOCAL_PATH + "/Android.build.pthread_atfork.mk",
+    LOCAL_PATH + "/Android.build.testlib.mk",
+    LOCAL_PATH + "/Android.build.versioned_lib.mk",
+    TEST_PATH + "/Android.build.mk",
+]
+
+// -----------------------------------------------------------------------------
+// Library to test gnu-styled hash
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifneq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
+
+libgnu-hash-table-library_src_files = ["dlext_test_library.cpp"]
+
+libgnu-hash-table-library_ldflags = ["-Wl,--hash-style=gnu"]
+
+module = ["libgnu-hash-table-library"]
+module_tag = ["optional"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// -----------------------------------------------------------------------------
+// Library to test sysv-styled hash
+// -----------------------------------------------------------------------------
+libsysv-hash-table-library_src_files = ["dlext_test_library.cpp"]
+
+libsysv-hash-table-library_ldflags = ["-Wl,--hash-style=sysv"]
+
+module = ["libsysv-hash-table-library"]
+module_tag = ["optional"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - with GNU RELRO program header
+// -----------------------------------------------------------------------------
+libdlext_test_src_files = ["dlext_test_library.cpp"]
+
+libdlext_test_ldflags = ["-Wl,-z,relro"]
+
+libdlext_test_shared_libraries = ["libtest_simple"]
+
+module = ["libdlext_test"]
+module_tag = ["optional"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// create symlink to libdlext_test.so for symlink test
+// -----------------------------------------------------------------------------
+// Use = instead of := to defer the evaluation of $@
+// ANDROIDMK TRANSLATION ERROR: unsupported target assignment
+// $(TARGET_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = $(hide) cd $(dir $(@)) && ln -sf $(notdir $(@)) libdlext_test_v2.so
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifneq ($(TARGET_2ND_ARCH),)
+
+// link 64 bit .so
+// ANDROIDMK TRANSLATION ERROR: unsupported target assignment
+// $(TARGET_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = $(hide) cd $(dir $(@)) && ln -sf $(notdir $(@)) libdlext_test_v2.so
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// host symlinks
+// ANDROIDMK TRANSLATION ERROR: unsupported target assignment
+// $(HOST_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = $(hide) cd $(dir $(@)) && ln -sf $(notdir $(@)) libdlext_test_v2.so
+
+// ANDROIDMK TRANSLATION ERROR: unsupported target assignment
+// $(HOST_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = $(hide) cd $(dir $(@)) && ln -sf $(notdir $(@)) libdlext_test_v2.so
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - without GNU RELRO program header
+// -----------------------------------------------------------------------------
+libdlext_test_norelro_src_files = ["dlext_test_library.cpp"]
+
+libdlext_test_norelro_ldflags = ["-Wl,-z,norelro"]
+
+libdlext_test_norelro_shared_libraries = ["libtest_simple"]
+
+module = ["libdlext_test_norelro"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["SHARED_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - different name non-default location
+// -----------------------------------------------------------------------------
+libdlext_test_fd_src_files = ["dlext_test_library.cpp"]
+
+libdlext_test_fd_shared_libraries = ["libtest_simple"]
+
+libdlext_test_fd_install_to_out_data = ["true"]
+module = ["libdlext_test_fd"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["SHARED_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+// -----------------------------------------------------------------------------
+// Libraries used by dlext tests for open from a zip-file
+// -----------------------------------------------------------------------------
+libdlext_test_zip_src_files = ["dlext_test_library.cpp"]
+
+libdlext_test_zip_shared_libraries = ["libatest_simple_zip"]
+
+libdlext_test_zip_install_to_out_data = ["true"]
+module = ["libdlext_test_zip"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["SHARED_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+libatest_simple_zip_src_files = ["dlopen_testlib_simple.cpp"]
+
+libatest_simple_zip_install_to_out_data = ["true"]
+module = ["libatest_simple_zip"]
+module_tag = ["optional"]
+build_type = ["target"]
+build_target = ["SHARED_LIBRARY"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+// ----------------------------------------------------------------------------
+// Library with soname which does not match filename
+// ----------------------------------------------------------------------------
+libdlext_test_different_soname_src_files = ["dlext_test_library.cpp"]
+
+module = ["libdlext_test_different_soname"]
+module_tag = ["optional"]
+libdlext_test_different_soname_ldflags = ["-Wl,-soname=libdlext_test_soname.so"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - zipped and aligned
+// -----------------------------------------------------------------------------
+
+bionic_2nd_arch_prefix = []
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifneq ($(TARGET_2ND_ARCH),)
+
+bionic_2nd_arch_prefix = TARGET_2ND_ARCH_VAR_PREFIX
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlext_testzip.mk
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn tests
+// -----------------------------------------------------------------------------
+libtest_simple_src_files = ["dlopen_testlib_simple.cpp"]
+
+module = ["libtest_simple"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+libtest_nodelete_1_src_files = ["dlopen_nodelete_1.cpp"]
+
+module = ["libtest_nodelete_1"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+libtest_nodelete_2_src_files = ["dlopen_nodelete_2.cpp"]
+
+module = ["libtest_nodelete_2"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+libtest_nodelete_dt_flags_1_src_files = ["dlopen_nodelete_dt_flags_1.cpp"]
+
+libtest_nodelete_dt_flags_1_ldflags = ["-Wl,-z,nodelete"]
+
+module = ["libtest_nodelete_dt_flags_1"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Build test helper libraries for linker namespaces
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.linker_namespaces.mk
+
+// -----------------------------------------------------------------------------
+// Build DT_RUNPATH test helper libraries
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dt_runpath.mk
+
+// -----------------------------------------------------------------------------
+// Build library with two parents
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_dlsym.so with its dependencies.
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_siblings.so with its dependencies.
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_root.so with its dependencies.
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_versioned_lib.so with its dependencies.
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.versioned_lib.mk
+
+// -----------------------------------------------------------------------------
+// Build libraries needed by pthread_atfork tests
+// -----------------------------------------------------------------------------
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
+
+// -----------------------------------------------------------------------------
+// Library with dependency loop used by dlfcn tests
+//
+// libtest_with_dependency_loop -> a -> b -> c -> a
+// -----------------------------------------------------------------------------
+libtest_with_dependency_loop_src_files = ["dlopen_testlib_loopy_root.cpp"]
+
+libtest_with_dependency_loop_shared_libraries = ["libtest_with_dependency_loop_a"]
+
+module = ["libtest_with_dependency_loop"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_a.so
+// -----------------------------------------------------------------------------
+libtest_with_dependency_loop_a_src_files = ["dlopen_testlib_loopy_a.cpp"]
+
+libtest_with_dependency_loop_a_shared_libraries = ["libtest_with_dependency_loop_b_tmp"]
+
+module = ["libtest_with_dependency_loop_a"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_b.so
+//
+// this is temporary placeholder - will be removed
+// -----------------------------------------------------------------------------
+libtest_with_dependency_loop_b_tmp_src_files = ["dlopen_testlib_loopy_invalid.cpp"]
+libtest_with_dependency_loop_b_tmp_ldflags = ["-Wl,-soname=libtest_with_dependency_loop_b.so"]
+
+module = ["libtest_with_dependency_loop_b_tmp"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_b.so
+// -----------------------------------------------------------------------------
+libtest_with_dependency_loop_b_src_files = ["dlopen_testlib_loopy_b.cpp"]
+libtest_with_dependency_loop_b_shared_libraries = ["libtest_with_dependency_loop_c"]
+
+module = ["libtest_with_dependency_loop_b"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_c.so
+// -----------------------------------------------------------------------------
+libtest_with_dependency_loop_c_src_files = ["dlopen_testlib_loopy_c.cpp"]
+
+libtest_with_dependency_loop_c_shared_libraries = ["libtest_with_dependency_loop_a"]
+
+module = ["libtest_with_dependency_loop_c"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// libtest_relo_check_dt_needed_order.so
+// |
+// +-> libtest_relo_check_dt_needed_order_1.so
+// |
+// +-> libtest_relo_check_dt_needed_order_2.so
+// -----------------------------------------------------------------------------
+libtest_relo_check_dt_needed_order_shared_libraries = [
+    "libtest_relo_check_dt_needed_order_1",
+    "libtest_relo_check_dt_needed_order_2",
+]
+
+libtest_relo_check_dt_needed_order_src_files = ["dlopen_testlib_relo_check_dt_needed_order.cpp"]
+libtest_relo_check_dt_needed_order_1_src_files = ["dlopen_testlib_relo_check_dt_needed_order_1.cpp"]
+libtest_relo_check_dt_needed_order_2_src_files = ["dlopen_testlib_relo_check_dt_needed_order_2.cpp"]
+
+module = ["libtest_relo_check_dt_needed_order"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+module = ["libtest_relo_check_dt_needed_order_1"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+module = ["libtest_relo_check_dt_needed_order_2"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library with dependency used by dlfcn tests
+// -----------------------------------------------------------------------------
+libtest_with_dependency_src_files = ["dlopen_testlib_simple.cpp"]
+
+libtest_with_dependency_shared_libraries = ["libdlext_test"]
+
+module = ["libtest_with_dependency"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library used by ifunc tests
+// -----------------------------------------------------------------------------
+libtest_ifunc_src_files = ["dlopen_testlib_ifunc.c"]
+
+// TODO(dimitry): clang does not support ifunc attribute
+libtest_ifunc_clang_host = ["false"]
+
+module = ["libtest_ifunc"]
+build_target = ["SHARED_LIBRARY"]
+
+build_type = ["host"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm arm64 x86 x86_64))
+
+build_type = ["target"]
+libtest_ifunc_clang_target = ["false"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(TEST_PATH)/Android.build.mk
+
+// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
+// endif
+
+// -----------------------------------------------------------------------------
+// Library used by atexit tests
+// -----------------------------------------------------------------------------
+
+libtest_atexit_src_files = ["atexit_testlib.cpp"]
+
+module = ["libtest_atexit"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// This library is used by dl_load test to check symbol preempting
+// by main executable
+// -----------------------------------------------------------------------------
+libdl_preempt_test_1_src_files = ["dl_preempt_library_1.cpp"]
+
+module = ["libdl_preempt_test_1"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// This library is used by dl_load test to check symbol preempting
+// by libdl_preempt_test_1.so
+// -----------------------------------------------------------------------------
+libdl_preempt_test_2_src_files = ["dl_preempt_library_2.cpp"]
+
+module = ["libdl_preempt_test_2"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library with DF_1_GLOBAL
+// -----------------------------------------------------------------------------
+libdl_test_df_1_global_src_files = ["dl_df_1_global.cpp"]
+libdl_test_df_1_global_ldflags = ["-Wl,-z,global"]
+
+// TODO (dimitry): host ld.gold does not yet support -z global
+// remove this line once it is updated.
+libdl_test_df_1_global_ldflags_host = ["-fuse-ld=bfd"]
+
+module = ["libdl_test_df_1_global"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library using symbol from libdl_test_df_1_global
+// -----------------------------------------------------------------------------
+libtest_dlsym_df_1_global_src_files = ["dl_df_1_use_global.cpp"]
+module = ["libtest_dlsym_df_1_global"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library with weak function
+// -----------------------------------------------------------------------------
+libtest_dlsym_weak_func_src_files = ["dlsym_weak_function.cpp"]
+
+module = ["libtest_dlsym_weak_func"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library to check RTLD_LOCAL with dlsym in 'this'
+// -----------------------------------------------------------------------------
+libtest_dlsym_from_this_src_files = ["dlsym_from_this_symbol.cpp"]
+
+libtest_dlsym_from_this_shared_libraries_target = ["libdl"]
+libtest_dlsym_from_this_shared_libraries = ["libtest_dlsym_from_this_child"]
+
+module = ["libtest_dlsym_from_this"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+libtest_dlsym_from_this_child_src_files = ["dlsym_from_this_functions.cpp"]
+
+libtest_dlsym_from_this_child_shared_libraries = ["libtest_dlsym_from_this_grandchild"]
+
+module = ["libtest_dlsym_from_this_child"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+libtest_dlsym_from_this_grandchild_src_files = ["dlsym_from_this_symbol2.cpp"]
+
+module = ["libtest_dlsym_from_this_grandchild"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Empty library
+// -----------------------------------------------------------------------------
+libtest_empty_src_files = ["empty.cpp"]
+
+module = ["libtest_empty"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library with weak undefined function
+// -----------------------------------------------------------------------------
+libtest_dlopen_weak_undefined_func_src_files = ["dlopen_weak_undefined.cpp"]
+
+module = ["libtest_dlopen_weak_undefined_func"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library with constructor that calls dlopen() b/7941716
+// -----------------------------------------------------------------------------
+libtest_dlopen_from_ctor_src_files = ["dlopen_testlib_dlopen_from_ctor.cpp"]
+
+module = ["libtest_dlopen_from_ctor"]
+
+libtest_dlopen_from_ctor_shared_libraries_target = ["libdl"]
+
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Library that depends on the library with constructor that calls dlopen() b/7941716
+// -----------------------------------------------------------------------------
+
+libtest_dlopen_from_ctor_main_src_files = ["empty.cpp"]
+libtest_dlopen_from_ctor_main_shared_libraries = ["libtest_dlopen_from_ctor"]
+
+module = ["libtest_dlopen_from_ctor_main"]
+// ANDROIDMK TRANSLATION ERROR: unsupported include
+// include $(LOCAL_PATH)/Android.build.testlib.mk
+
+// -----------------------------------------------------------------------------
+// Tool to use to align the shared libraries in a zip file.
+// -----------------------------------------------------------------------------
+cc_binary_host {
+
+    srcs: ["bionic_tests_zipalign.cpp"],
+    name: "bionic_tests_zipalign",
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+
+    static_libs: [
+        "libziparchive-host",
+        "liblog",
+        "libbase",
+        "libz",
+        "libutils",
+    ],
+
+    target: {
+        windows: {
+            enabled: true,
+        },
+    },
+
+}
+
+-------------------------------------------------------------------
+
 Copyright (C) 2012 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
