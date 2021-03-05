@@ -46,6 +46,7 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
+#include "private/bionic_defs.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "platform/bionic/macros.h"
@@ -70,6 +71,14 @@ extern "C" __attribute__((weak)) void __hwasan_library_loaded(ElfW(Addr) base,
 extern "C" __attribute__((weak)) void __hwasan_library_unloaded(ElfW(Addr) base,
                                                                 const ElfW(Phdr)* phdr,
                                                                 ElfW(Half) phnum);
+
+extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
+#if defined(USE_SCUDO)
+  scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
+#endif
+}
 
 // We need a helper function for __libc_preinit because compiling with LTO may
 // inline functions requiring a stack protector check, but __stack_chk_guard is
@@ -106,6 +115,8 @@ static void __libc_preinit_impl() {
   __libc_shared_globals()->load_hook = __hwasan_library_loaded;
   __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
 #endif
+
+  __libc_shared_globals()->set_target_sdk_version_hook = __libc_set_target_sdk_version;
 
   netdClientInit();
 }
