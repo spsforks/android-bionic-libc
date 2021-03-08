@@ -27,6 +27,8 @@ python_binary_host {
     data: [
         ":all_kernel_uapi_headers",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 python_binary_host {
@@ -42,4 +44,6 @@ python_binary_host {
     data: [
         ":all_kernel_uapi_headers",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
