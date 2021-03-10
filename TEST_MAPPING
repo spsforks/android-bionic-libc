@@ -20,6 +20,9 @@
     },
     {
       "name": "CtsTaggingHostTestCases"
+    },
+    {
+      "name": "debuggerd_test"
     }
   ]
 }
