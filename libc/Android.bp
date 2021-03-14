@@ -2583,6 +2583,17 @@ cc_library {
     },
 }
 
+cc_library {
+    name: "crash_lib",
+    srcs: ["crash_lib.cc"],
+}
+
+cc_binary {
+    name: "crash_test",
+    srcs: ["test.cc"],
+    shared_libs: ["crash_lib"],
+}
+
 subdirs = [
     "bionic/scudo",
 ]
