@@ -2114,7 +2114,10 @@ cc_object {
 
 cc_object {
     name: "crtbegin_so",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "arch-x86/bionic", // crtbegin_so.c includes arch-x86/bionic/__stack_chk_fail_local.h
+    ],
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
@@ -2144,6 +2147,7 @@ cc_object {
     local_include_dirs: [
         "include",
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
+        "arch-x86/bionic", // crtbegin.c includes arch-x86/bionic/__stack_chk_fail_local.h
     ],
 
     srcs: ["arch-common/bionic/crtbegin.c"],
@@ -2163,6 +2167,7 @@ cc_object {
     local_include_dirs: [
         "include",
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
+        "arch-x86/bionic", // crtbegin.c includes arch-x86/bionic/__stack_chk_fail_local.h
     ],
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
