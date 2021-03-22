@@ -140,6 +140,7 @@ cc_library_static {
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: ["util.cpp"],
     host_supported: true,
+    local_include_dirs: ["."],
 }
 
 cc_test {
