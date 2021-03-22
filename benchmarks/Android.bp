@@ -138,7 +138,10 @@ cc_benchmark_host {
 cc_library_static {
     name: "libBionicBenchmarksUtils",
     defaults: ["bionic-benchmarks-extras-defaults"],
-    srcs: ["util.cpp"],
+    srcs: [
+        "util.cpp",
+        "util.h",
+    ],
     host_supported: true,
 }
 
