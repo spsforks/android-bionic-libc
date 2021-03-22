@@ -34,4 +34,5 @@ cc_library_static {
             enabled: false,
         },
     },
+    local_include_dirs: ["."],
 }
