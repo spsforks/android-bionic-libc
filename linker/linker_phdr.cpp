@@ -70,8 +70,9 @@ static int GetTargetElfMachine() {
     p_memsz   -> segment memory size (always >= p_filesz)
     p_vaddr   -> segment's virtual address
     p_flags   -> segment flags (e.g. readable, writable, executable)
+    p_align   -> segment's in-memory and in-file alignment
 
-  We will ignore the p_paddr and p_align fields of ElfW(Phdr) for now.
+  We will ignore the p_paddr field of ElfW(Phdr) for now.
 
   The loadable segments can be seen as a list of [p_vaddr ... p_vaddr+p_memsz)
   ranges of virtual addresses. A few rules apply:
@@ -526,6 +527,37 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
+/* Returns the maximum p_align associated with a loadable segment the ELF
+ * program header table. Used to determine whether the file should be loaded at
+ * a specific virtual address alignment for use with huge pages. Capped at the
+ * second level page size, as further alignment reduces the number of bits
+ * available for ASLR for no benefit.
+ */
+size_t phdr_table_get_maximum_alignment(const ElfW(Phdr) * phdr_table, size_t phdr_count) {
+  size_t maximum_alignment = kLibraryAlignment;
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+    size_t alignment = phdr->p_align;
+
+    // Non-power of two alignments are invalid.
+    if (alignment > maximum_alignment && (alignment & (alignment - 1)) == 0) {
+      maximum_alignment = alignment;
+    }
+  }
+
+#if defined(__LP64__)
+  // Limit alignment to the second level page size of the platform (2MB).
+  return maximum_alignment > 1ul << 21 ? 1ul << 21 : maximum_alignment;
+#else
+  return kLibraryAlignment;
+#endif
+}
+
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
 static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_gap_start,
@@ -588,7 +620,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_g
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
   size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
-  uint8_t* start = first + n * PAGE_SIZE;
+  uint8_t* start = first + align_down(n * PAGE_SIZE, align);
   // Unmap the extra space around the allocation.
   // Keep it mapped PROT_NONE on 64-bit targets where address space is plentiful to make it harder
   // to defeat ASLR by probing for readable memory mappings.
@@ -622,7 +654,8 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, &gap_start_, &gap_size_);
+    size_t alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
+    start = ReserveWithAlignmentPadding(load_size_, alignment, &gap_start_, &gap_size_);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
@@ -705,6 +738,12 @@ bool ElfReader::LoadSegments() {
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
+      }
+
+      // if the segment is eligible for huge page backing (PMD alignment +
+      // executable), mark it as huge page eligible.
+      if ((phdr->p_flags & PF_X) && phdr->p_align == 1ul << 21) {
+        madvise(seg_addr, file_length, MADV_HUGEPAGE);
       }
     }
 
