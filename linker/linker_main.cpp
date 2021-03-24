@@ -31,9 +31,10 @@
 #include <link.h>
 #include <sys/auxv.h>
 
+#include "linker.h"
+#include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
-#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -446,6 +447,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   parse_LD_PRELOAD(ldpreload_env);
 
   std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_info.path.c_str());
+  init_transparent_hugepages_supported();
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
