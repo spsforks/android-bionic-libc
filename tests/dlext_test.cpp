@@ -25,10 +25,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <android/dlext.h>
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
 #include <android-base/test_utils.h>
+#include <android/dlext.h>
 
 #include <sys/mman.h>
 #include <sys/types.h>
