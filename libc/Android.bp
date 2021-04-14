@@ -2195,6 +2195,7 @@ cc_library_static {
     arch: {
       arm64: {
         srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
+        local_include_dirs: ["private"], # depends on bionic_asm headers
       }
     },
     sdk_version: "minimum",
@@ -2207,6 +2208,7 @@ cc_library_static {
     arch: {
       arm64: {
         srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
+        local_include_dirs: ["private"], # depends on bionic_asm headers
       }
     },
     sdk_version: "minimum",
