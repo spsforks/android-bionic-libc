@@ -2193,9 +2193,10 @@ cc_object {
 cc_library_static {
     name: "note_memtag_heap_async",
     arch: {
-      arm64: {
-        srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
-      }
+        arm64: {
+            srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
+            local_include_dirs: ["private"], // depends on bionic_asm headers
+        },
     },
     sdk_version: "minimum",
 
@@ -2205,9 +2206,10 @@ cc_library_static {
 cc_library_static {
     name: "note_memtag_heap_sync",
     arch: {
-      arm64: {
-        srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
-      }
+        arm64: {
+            srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
+            local_include_dirs: ["private"], // depends on bionic_asm headers
+        },
     },
     sdk_version: "minimum",
 
