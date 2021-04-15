@@ -89,6 +89,7 @@ cc_defaults {
     header_libs: [
         "libc_headers",
         "gwp_asan_headers",
+        "liblog_headers",  // needed by bionic/libc/async_safe/include
     ],
     export_header_lib_headers: [
         "libc_headers",
@@ -182,6 +183,9 @@ cc_library_static {
         "bionic/bionic_call_ifunc_resolver.cpp",
         "bionic/getauxval.cpp",
     ],
+    local_include_dirs: [
+        "private",  // needed by __libc_init_main_thread.cpp
+    ],
     arch: {
         arm64: {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
@@ -211,6 +215,9 @@ cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_static.cpp"],
+    local_include_dirs: [
+        "private",  // needed by libc_init_static.cpp
+    ],
     cflags: [
         "-fno-stack-protector",
 
@@ -224,6 +231,9 @@ cc_library_static {
     name: "libc_init_dynamic",
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_dynamic.cpp"],
+    local_include_dirs: [
+        "private",  // needed by libc_init_dynamic.cpp
+    ],
     cflags: ["-fno-stack-protector"],
 }
 
@@ -748,7 +758,9 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/fortify.cpp"],
-
+    local_include_dirs: [
+        "private",  // needed by fortify.cpp
+    ],
     name: "libc_fortify",
 
     // Disable FORTIFY for the compilation of these, so we don't end up having
@@ -816,6 +828,9 @@ cc_library_static {
         "bionic/strchrnul.cpp",
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
+    ],
+    local_include_dirs: [
+        "private",  // needed by android_set_abort_message.cpp
     ],
 
     arch: {
@@ -1220,6 +1235,9 @@ cc_library_static {
     srcs: [
         "bionic/bionic_systrace.cpp",
     ],
+    local_include_dirs: [
+        "private",  // needed by bionic_systrace.cpp
+    ],
     apex_available: [
         "com.android.runtime",
     ],
@@ -1268,6 +1286,9 @@ cc_library_static {
         "bionic/android_unsafe_frame_pointer_chase.cpp",
         "bionic/atexit.cpp",
         "bionic/fork.cpp",
+    ],
+    local_include_dirs: [
+        "private", // needed by pthread_getschedparam.cpp
     ],
 
     cppflags: ["-Wold-style-cast"],
@@ -1563,6 +1584,9 @@ cc_library_static {
     cflags: ["-DLIBC_STATIC"],
 
     srcs: ["bionic/dl_iterate_phdr_static.cpp"],
+    local_include_dirs: [
+        "private",  // needed by dl_iterate_phdr_static.cpp
+    ],
     arch: {
         // arm32-specific dl_unwind_find_exidx and __gnu_Unwind_Find_exidx APIs
         arm: {
