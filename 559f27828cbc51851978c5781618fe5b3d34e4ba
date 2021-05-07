@@ -1,0 +1,47 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000010602603",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1695053?revision\u003d4",
+      "fixSuggestions": [
+        {
+          "fixId": "f47ca2b5_e9faff10",
+          "description": "Change to \"libc/arch-common/bionic/crtbegin.c\"",
+          "replacements": [
+            {
+              "path": "libc/arch-common/bionic/crtbegin.c",
+              "range": {
+                "startLine": 58,
+                "startChar": 9,
+                "endLine": 58,
+                "endChar": 14
+              },
+              "replacement": "call"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "c2c61cd0_0fdf4d31",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-05-07T22:01:12Z",
+      "side": 1,
+      "message": "Common typo found: \"calll\" -- should it be \"call\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 14
+      },
+      "revId": "559f27828cbc51851978c5781618fe5b3d34e4ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
