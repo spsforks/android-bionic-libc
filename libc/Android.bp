@@ -1222,6 +1222,7 @@ cc_library_static {
         "bionic/bionic_systrace.cpp",
     ],
     apex_available: [
+        "//apex_available:platform",
         "com.android.runtime",
     ],
 }
