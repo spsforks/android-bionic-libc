@@ -2202,6 +2202,7 @@ cc_library_static {
       }
     },
     sdk_version: "minimum",
+    host_supported: true,
 
     defaults: ["crt_defaults"],
 }
@@ -2214,6 +2215,7 @@ cc_library_static {
       }
     },
     sdk_version: "minimum",
+    host_supported: true,
 
     defaults: ["crt_defaults"],
 }
