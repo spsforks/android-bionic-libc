@@ -325,8 +325,7 @@ void HeapprofdRememberHookConflict() {
 
 static void CommonInstallHooks(libc_globals* globals) {
   void* impl_handle = atomic_load(&gHeapprofdHandle);
-  bool reusing_handle = impl_handle != nullptr;
-  if (!reusing_handle) {
+  if (impl_handle == nullptr) {
     impl_handle = LoadSharedLibrary(kHeapprofdSharedLib, kHeapprofdPrefix, &globals->malloc_dispatch_table);
     if (impl_handle == nullptr) {
       return;
@@ -343,8 +342,6 @@ static void CommonInstallHooks(libc_globals* globals) {
 
   if (FinishInstallHooks(globals, nullptr, kHeapprofdPrefix)) {
     atomic_store(&gHeapprofdHandle, impl_handle);
-  } else if (!reusing_handle) {
-    dlclose(impl_handle);
   }
 }
 
