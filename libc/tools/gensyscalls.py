@@ -17,31 +17,27 @@ import tempfile
 
 SupportedArchitectures = [ "arm", "arm64", "x86", "x86_64" ]
 
-syscall_stub_header = \
-"""
-ENTRY(%(func)s)
-"""
-
 
 #
 # ARM assembler templates for each syscall stub
 #
 
-arm_eabi_call_default = syscall_stub_header + """\
+arm_eabi_call_default = """\
+    .arm
     mov     ip, r7
     .cfi_register r7, ip
     ldr     r7, =%(__NR_name)s
     swi     #0
     mov     r7, ip
     .cfi_restore r7
-    cmn     r0, #(MAX_ERRNO + 1)
+    cmn     r0, #(" STRINGIFY(MAX_ERRNO) " + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(%(func)s)
 """
 
-arm_eabi_call_long = syscall_stub_header + """\
+arm_eabi_call_long = """\
+    .arm
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 16
@@ -54,11 +50,10 @@ arm_eabi_call_long = syscall_stub_header + """\
     swi     #0
     ldmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 0
-    cmn     r0, #(MAX_ERRNO + 1)
+    cmn     r0, #(" STRINGIFY(MAX_ERRNO) " + 1)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(%(func)s)
 """
 
 
@@ -66,16 +61,15 @@ END(%(func)s)
 # Arm64 assembler template for each syscall stub
 #
 
-arm64_call = syscall_stub_header + """\
+arm64_call = """\
     mov     x8, %(__NR_name)s
     svc     #0
 
-    cmn     x0, #(MAX_ERRNO + 1)
+    cmn     x0, #(" STRINGIFY(MAX_ERRNO) " + 1)
     cneg    x0, x0, hi
     b.hi    __set_errno_internal
 
     ret
-END(%(func)s)
 """
 
 
@@ -99,7 +93,7 @@ x86_call = """\
     call    *(%%esp)
     addl    $4, %%esp
 
-    cmpl    $-MAX_ERRNO, %%eax
+    cmpl    $-" STRINGIFY(MAX_ERRNO) ", %%eax
     jb      1f
     negl    %%eax
     pushl   %%eax
@@ -110,7 +104,6 @@ x86_call = """\
 
 x86_return = """\
     ret
-END(%(func)s)
 """
 
 
@@ -121,14 +114,13 @@ END(%(func)s)
 x86_64_call = """\
     movl    $%(__NR_name)s, %%eax
     syscall
-    cmpq    $-MAX_ERRNO, %%rax
+    cmpq    $-" STRINGIFY(MAX_ERRNO) ", %%rax
     jb      1f
     negl    %%eax
     movl    %%eax, %%edi
     call    __set_errno_internal
 1:
     ret
-END(%(func)s)
 """
 
 
@@ -208,7 +200,7 @@ def add_footer(pointer_length, stub, syscall):
     # Add any aliases for this syscall.
     aliases = syscall["aliases"]
     for alias in aliases:
-        stub += "\nALIAS_SYMBOL(%s, %s)\n" % (alias, syscall["func"])
+        stub += "\n.globl %s\n.equ %s, %s\n" % (alias, alias, syscall["func"])
 
     # Use hidden visibility on LP64 for any functions beginning with underscores.
     if pointer_length == 64 and syscall["func"].startswith("__"):
@@ -229,7 +221,7 @@ def arm64_genstub(syscall):
 
 
 def x86_genstub(syscall):
-    result     = syscall_stub_header % syscall
+    result     = ""
 
     numparams = count_generic_param_registers(syscall["params"])
     stack_bias = numparams*4 + 8
@@ -265,7 +257,7 @@ def x86_genstub_socketcall(syscall):
     #   %ecx <--- Argument 2 - Pointer to the rest of the arguments
     #                          from the original function called (socket())
 
-    result = syscall_stub_header % syscall
+    result = ""
 
     # save the regs we need
     result += "    pushl   %ebx\n"
@@ -298,7 +290,7 @@ def x86_genstub_socketcall(syscall):
 
 
 def x86_64_genstub(syscall):
-    result = syscall_stub_header % syscall
+    result = ""
     num_regs = count_generic_param_registers64(syscall["params"])
     if (num_regs > 3):
         # rcx is used as 4th argument. Kernel wants it at r10.
@@ -383,12 +375,15 @@ class SysCallsTxtParser:
             params         = "void"
 
         t = {
-              "name"    : syscall_name,
-              "func"    : syscall_func,
-              "aliases" : syscall_aliases,
-              "params"  : syscall_params,
-              "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
-              "socketcall_id" : socketcall_id
+              "name":          syscall_name,
+
+              "return_type":   return_type,
+              "func":          syscall_func,
+              "params":        syscall_params,
+
+              "aliases":       syscall_aliases,
+              #"decl":          "%-15s  %s (%s);" % (return_type, syscall_func, params),
+              "socketcall_id": socketcall_id
         }
 
         # Parse the architecture list.
@@ -401,7 +396,7 @@ class SysCallsTxtParser:
                 if arch == "lp32":
                     for arch in SupportedArchitectures:
                         if "64" not in arch:
-                          t[arch] = True
+                            t[arch] = True
                 elif arch == "lp64":
                     for arch in SupportedArchitectures:
                         if "64" in arch:
@@ -432,7 +427,7 @@ def main(arch, syscall_file):
     parser.parse_file(syscall_file)
 
     for syscall in parser.syscalls:
-        syscall["__NR_name"] = make__NR_name(syscall["name"])
+        syscall["__NR_name"] = '" STRINGIFY( ' + make__NR_name(syscall["name"]) + ') "'
 
         if "arm" in syscall:
             syscall["asm-arm"] = add_footer(32, arm_eabi_genstub(syscall), syscall)
@@ -452,14 +447,34 @@ def main(arch, syscall_file):
         if "x86_64" in syscall:
             syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)
 
-    print("/* Generated by gensyscalls.py. Do not edit. */\n")
-    print("#include <private/bionic_asm.h>\n")
+    print("//")
+    print("// Generated by gensyscalls.py.")
+    print("//")
+
+    print("#include <private/bionic_asm.h> // For MAX_ERRNO.")
+
+    # TODO: is there a better way to work out what headers we need?
+    print("#include <poll.h>")
+    print("#include <sched.h>")
+    print("#include <signal.h>")
+    print("#include <sys/capability.h>")
+    print("#include <sys/types.h>")
+    print("#include <sys/select.h>")
+    
+    print("#define STRINGIFY_INNER(x) #x")
+    print("#define STRINGIFY(x) STRINGIFY_INNER(x)")
+
     for syscall in parser.syscalls:
         if ("asm-%s" % arch) in syscall:
-            print(syscall["asm-%s" % arch])
-
-    if arch == 'arm64':
-        print('\nNOTE_GNU_PROPERTY()\n')
+            return_type = syscall["return_type"]
+            func = syscall["func"]
+            args = ', '.join(syscall["params"])
+            print('__attribute__((__naked__)) extern "C" %s %s(%s) {' % (return_type, func, args))
+            print('  __asm__(')
+            for line in syscall["asm-%s" % arch].splitlines():
+                print('    "%s\\n"' % line)
+            print('  );')
+            print('}')
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

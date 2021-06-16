@@ -1282,8 +1282,8 @@ cc_library_static {
 // ========================================================
 
 genrule {
-    name: "syscalls-arm.S",
-    out: ["syscalls-arm.S"],
+    name: "syscalls-arm.cpp",
+    out: ["syscalls-arm.cpp"],
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
@@ -1293,8 +1293,8 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-arm64.S",
-    out: ["syscalls-arm64.S"],
+    name: "syscalls-arm64.cpp",
+    out: ["syscalls-arm64.cpp"],
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
@@ -1304,8 +1304,8 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86.S",
-    out: ["syscalls-x86.S"],
+    name: "syscalls-x86.cpp",
+    out: ["syscalls-x86.cpp"],
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
@@ -1315,8 +1315,8 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86_64.S",
-    out: ["syscalls-x86_64.S"],
+    name: "syscalls-x86_64.cpp",
+    out: ["syscalls-x86_64.cpp"],
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
@@ -1328,18 +1328,19 @@ genrule {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/__set_errno.cpp"],
+    cflags: ["-Wno-unused-parameter"], // TODO: fix generated code?
     arch: {
         arm: {
-            srcs: [":syscalls-arm.S"],
+            srcs: [":syscalls-arm.cpp"],
         },
         arm64: {
-            srcs: [":syscalls-arm64.S"],
+            srcs: [":syscalls-arm64.cpp"],
         },
         x86: {
-            srcs: [":syscalls-x86.S"],
+            srcs: [":syscalls-x86.cpp"],
         },
         x86_64: {
-            srcs: [":syscalls-x86_64.S"],
+            srcs: [":syscalls-x86_64.cpp"],
         },
     },
     name: "libc_syscalls",
