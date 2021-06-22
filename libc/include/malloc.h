@@ -170,6 +170,25 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * Available since API level 28.
  */
 #define M_PURGE (-101)
+
+
+/*
+ * mallopt() option to tune the allocator's choice of memory tags to
+ * make it more likely that a certain class of memory errors will be
+ * detected. The value argument should be one of:
+ * M_MEMTAG_TUNING_BUFFER_OVERFLOW: guaranteed detection of linear
+ *   (off-by-one) buffer overflow bugs by assigning distinct tag
+ *   values to adjacent allocations, reduced chance to detect
+ *   use-after-free.
+ * M_MEMTAG_TUNING_UAF: independently randomized tags with uniform
+ *   ~93% probability of detecting both types of bugs.
+ *
+ */
+#define M_MEMTAG_TUNING (-102)
+
+#define M_MEMTAG_TUNING_BUFFER_OVERFLOW 0
+#define M_MEMTAG_TUNING_UAF 1
+
 /*
  * mallopt() option for per-thread memory initialization tuning.
  * The value argument should be one of:
