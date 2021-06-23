@@ -2070,6 +2070,9 @@ cc_defaults {
     sanitize: {
         never: true,
     },
+    nocrt: true,
+    no_libcrt: true,
+    system_shared_libs: [],
 }
 
 cc_defaults {
@@ -2197,6 +2200,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
       }
     },
+    local_include_dirs: ["include"],
     sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
@@ -2209,6 +2213,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
       }
     },
+    local_include_dirs: ["include"],
     sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
