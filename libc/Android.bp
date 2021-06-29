@@ -1859,7 +1859,9 @@ cc_library_headers {
 
 cc_library_headers {
     name: "libc_llndk_headers",
-    visibility: ["//visibility:private"],
+    visibility: [
+        "//external/musl",
+    ],
     llndk: {
         llndk_headers: true,
     },
@@ -1879,7 +1881,7 @@ cc_library_headers {
 
     no_libcrt: true,
     stl: "none",
-    system_shared_libs: [],
+    default_shared_libs: [],
 
     // The build system generally requires that any dependencies of a target
     // with an sdk_version must have a lower sdk_version. By setting sdk_version
