@@ -1932,6 +1932,7 @@ cc_library_headers {
         "//bionic:__subpackages__", // visible to bionic
         // ... and only to these places (b/152668052)
         "//external/arm-optimized-routines",
+        "//external/crosvm/gpu_display",
         "//external/gwp_asan",
         "//external/jemalloc_new",
         "//external/libunwind_llvm",
@@ -1960,6 +1961,10 @@ cc_library_headers {
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
         },
+        host: {
+            header_libs: ["libc_llndk_headers"],
+            export_header_lib_headers: ["libc_llndk_headers"],
+        }
     },
     bazel_module: { bp2build_available: true },
 }
