@@ -30,6 +30,7 @@
 #define _NETINET_TCP_H
 
 #include <sys/cdefs.h>
+#include <sys/socket.h>
 #include <stdint.h>
 
 #define tcphdr __kernel_tcphdr

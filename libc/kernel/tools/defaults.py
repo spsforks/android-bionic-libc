@@ -89,7 +89,10 @@ kernel_token_replacements = {
     "udphdr": "__kernel_udphdr",
     # This causes problems when trying to export the headers for the ndk.
     "__attribute_const__": "__attribute__((__const__))",
-    # In this case the kernel tries to keep out of our way, but we're happy to use its definition.
+    # In this case the kernel tries to keep the definition out of our way,
+    # but we want references from other kernel headers to use our definition.
+    # This won't rename the definition because it is also listed in
+    # kernel_struct_replacements.
     "__kernel_sockaddr_storage": "sockaddr_storage",
     # The kernel started using struct __kernel_old_timeval in some places,
     # which is the exact same as struct timeval. Replace that name with
@@ -99,7 +102,8 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
-    }
+    "__kernel_sockaddr_storage": "sockaddr_storage",
+   }
 
 
 # This is the set of struct definitions that we want to replace with
@@ -112,6 +116,7 @@ kernel_struct_replacements = set(
           "in_addr",
           "ip_mreq_source",
           "ip_msfilter",
+          "__kernel_sockaddr_storage",
         ]
     )
 
