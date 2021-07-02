@@ -39,6 +39,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#include <atomic>
 #include <mutex>
 #include <vector>
 
@@ -62,6 +63,11 @@
 // Global Data
 // ------------------------------------------------------------------------
 DebugData* g_debug;
+
+// Set to true when the main thread finishes but malloc debug had
+// required special headers instead of passing along the pointers to the
+// underlying allocator. In this case, simply leak the pointers.
+std::atomic_bool g_LeakFrees;
 
 bool* g_zygote_child;
 
@@ -343,6 +349,12 @@ void debug_finalize() {
   // before we kill everything.
   ScopedConcurrentLock::BlockAllOperations();
 
+  // If malloc debug requires a header, just leak any frees after this
+  // point since those threads will exit soon.
+  if (g_debug->HeaderEnabled()) {
+    g_LeakFrees = true;
+  }
+
   // Turn off capturing allocations calls.
   DebugDisableSet(true);
 
@@ -545,6 +557,13 @@ static void InternalFree(void* pointer) {
 
 void debug_free(void* pointer) {
   if (DebugCallsDisabled() || pointer == nullptr) {
+    if (g_LeakFrees.load(std::memory_order_relaxed)) {
+      // Malloc debug is in the midst of a shutdown and all of the pointers
+      // require a header. We don't want to try and access any part of
+      // g_debug data since it is in some unknown state. Simply leak
+      // the pointer instead.
+      return;
+    }
     return g_dispatch->free(pointer);
   }
   ScopedConcurrentLock lock;
@@ -644,6 +663,16 @@ void* debug_memalign(size_t alignment, size_t bytes) {
 
 void* debug_realloc(void* pointer, size_t bytes) {
   if (DebugCallsDisabled()) {
+    if (g_LeakFrees.load(std::memory_order_relaxed)) {
+      // Malloc debug is in the midst of a shutdown and all of the pointers
+      // require a header. We don't want to try and access any part of
+      // g_debug data since it is in some unknown state. If the pointer
+      // is non-null, then just fail since everything is exiting.
+      if (pointer != nullptr) {
+        return nullptr;
+      }
+    }
+
     return g_dispatch->realloc(pointer, bytes);
   }
   ScopedConcurrentLock lock;
