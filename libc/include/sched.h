@@ -38,9 +38,11 @@ __BEGIN_DECLS
 /* This name is used by glibc, but not by the kernel. */
 #define SCHED_OTHER SCHED_NORMAL
 
+#if 0
 struct sched_param {
   int sched_priority;
 };
+#endif
 
 int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* __param);
 int sched_getscheduler(pid_t __pid);
