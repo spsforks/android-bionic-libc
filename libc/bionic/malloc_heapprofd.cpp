@@ -335,16 +335,16 @@ static void CommonInstallHooks(libc_globals* globals) {
     return;
   }
 
+  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
+}
+
+void HeapprofdInstallHooksAtInit(libc_globals* globals) {
   // Before we set the new default_dispatch_table in FinishInstallHooks, save
   // the previous dispatch table. If DispatchReset() gets called later, we want
   // to be able to restore the dispatch. We're still under
   // MaybeModifyGlobals locks at this point.
   atomic_store(&gPreviousDefaultDispatchTable, GetDefaultDispatchTable());
 
-  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
-}
-
-void HeapprofdInstallHooksAtInit(libc_globals* globals) {
   MaybeModifyGlobals(kWithoutLock, [globals] {
     MallocHeapprofdState expected = kInitialState;
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
