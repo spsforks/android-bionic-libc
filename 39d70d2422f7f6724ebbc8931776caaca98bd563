@@ -1,0 +1,30 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000013291831",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1767868?revision\u003d1",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "839b2ef5_d25cff34",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-07-15T14:05:07Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 405,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 2
+      },
+      "revId": "39d70d2422f7f6724ebbc8931776caaca98bd563",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
