@@ -335,16 +335,16 @@ static void CommonInstallHooks(libc_globals* globals) {
     return;
   }
 
+  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
+}
+
+void HeapprofdInstallHooksAtInit(libc_globals* globals) {
   // Before we set the new default_dispatch_table in FinishInstallHooks, save
   // the previous dispatch table. If DispatchReset() gets called later, we want
   // to be able to restore the dispatch. We're still under
   // MaybeModifyGlobals locks at this point.
   atomic_store(&gPreviousDefaultDispatchTable, GetDefaultDispatchTable());
 
-  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
-}
-
-void HeapprofdInstallHooksAtInit(libc_globals* globals) {
   MaybeModifyGlobals(kWithoutLock, [globals] {
     MallocHeapprofdState expected = kInitialState;
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
@@ -384,7 +384,6 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
           atomic_store(&globals->current_dispatch_table, previous_dispatch);
         }
       });
-      atomic_store(&gHeapprofdState, kInitialState);
 
       pthread_t thread_id;
       if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) != 0) {
@@ -403,14 +402,19 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
   });
   // If we had a previous dispatch table, use that to service the allocation,
   // otherwise fall back to the native allocator.
-  // This could be modified by a concurrent HandleHeapprofdSignal, but that is
-  // benign as we will dispatch to the ephemeral handler, which will then dispatch
-  // to the underlying one.
   const MallocDispatch* previous_dispatch = atomic_load(&gPreviousDefaultDispatchTable);
+  void* ret;
   if (previous_dispatch) {
-    return previous_dispatch->malloc(bytes);
+    ret = previous_dispatch->malloc(bytes);
+  } else {
+    ret = NativeAllocatorDispatch()->malloc(bytes);
   }
-  return NativeAllocatorDispatch()->malloc(bytes);
+  // kRemovingEphemeralHook does not allow any other state transitions, so we
+  // can set unconditionally here.
+  // We MUST NOT allow another HandleHeapprofdSignal to race this, as this
+  // will incorrectly set the gPreviousDefautDispatchTable to nullptr.
+  atomic_store(&gHeapprofdState, kInitialState);
+  return ret;
 }
 
 bool HeapprofdInitZygoteChildProfiling() {
