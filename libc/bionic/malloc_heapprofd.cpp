@@ -432,6 +432,11 @@ static bool DispatchReset() {
   MaybeModifyGlobals(kWithLock, [&success] {
     MallocHeapprofdState expected = kHookInstalled;
 
+    // Fail this on the first run.
+    static int itr = 0;
+    if (itr++ == 0)
+      return;
+
     if(atomic_compare_exchange_strong(&gHeapprofdState, &expected, kUninstallingHook)){
       __libc_globals.mutate([](libc_globals* globals) {
         const MallocDispatch* previous_dispatch = atomic_load(&gPreviousDefaultDispatchTable);
