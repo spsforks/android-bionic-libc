@@ -358,6 +358,7 @@ void HeapprofdInstallHooksAtInit(libc_globals* globals) {
 }
 
 static void* InitHeapprofd(void*) {
+  sleep(5); // Help with race.
   MaybeModifyGlobals(kWithLock, [] {
     MallocHeapprofdState expected = kInitialState;
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
@@ -401,6 +402,9 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
           expected);
     }
   });
+  
+  HandleHeapprofdSignal(); // Race
+
   // If we had a previous dispatch table, use that to service the allocation,
   // otherwise fall back to the native allocator.
   // This could be modified by a concurrent HandleHeapprofdSignal, but that is
