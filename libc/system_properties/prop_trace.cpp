@@ -32,6 +32,11 @@
 #define PROP_TRACE_MSG_LENGTH 1024
 
 static bool should_trace_prop(const char* prop_name) {
+  // b/193050299: property trace might cause the g_lock contention in
+  // the should_trace() function below. Disables it for now until we have
+  // a solution.
+  return false;
+#if 0
   // Should not trace kTraceTagsProp to avoid infinite recursion.
   // Because the following g_trace_enable_flags.Get() will get the property value
   // of kTraceTagsProp again, which in turn invokes should_trace_prop() here.
@@ -40,6 +45,7 @@ static bool should_trace_prop(const char* prop_name) {
   }
 
   return should_trace(ATRACE_TAG_SYSPROP);
+#endif
 }
 
 static void sysprop_trace_end() {
