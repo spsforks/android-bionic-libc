@@ -30,29 +30,23 @@
 
 #define WRITE_OFFSET   32
 
-static Lock g_lock;
-
 bool should_trace(const uint64_t enable_tags) {
-  static uint64_t tags_val;
-  static CachedProperty tags_prop(kTraceTagsProp);
-  g_lock.lock();
+  static thread_local uint64_t tags_val;
+  static thread_local CachedProperty tags_prop(kTraceTagsProp);
   if (tags_prop.DidChange()) {
     tags_val = strtoull(tags_prop.Get(), nullptr, 0);
   }
-  g_lock.unlock();
   return tags_val & enable_tags;
 }
 
 int get_trace_marker_fd() {
-  static int opened_trace_marker_fd = -1;
-  g_lock.lock();
+  static thread_local int opened_trace_marker_fd = -1;
   if (opened_trace_marker_fd == -1) {
     opened_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     if (opened_trace_marker_fd == -1) {
       opened_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     }
   }
-  g_lock.unlock();
   return opened_trace_marker_fd;
 }
 
