@@ -2329,6 +2329,7 @@ cc_defaults {
         "-Werror",
         "-nostdinc",
     ],
+    default_shared_libs: [],
 }
 
 cc_object {
