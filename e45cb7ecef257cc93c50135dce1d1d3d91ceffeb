@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c19c23b_f1764493",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-20T21:11:39Z",
+      "side": 1,
+      "message": "i was going to ask \"should we wait for pid to exit like Exec() does?\" but then saw that this is always called after Exec() anyway... so is the failure mode you suspect even possible? wouldn\u0027t we see a failure in Exec() instead if the process doesn\u0027t finish in time?\n\nmaybe the problem is actually that the log\u0027s being spammed so hard that it\u0027s already gone by the time we look? do we need to collect logs _while_ the process runs? (or use logwrapper?)",
+      "range": {
+        "startLine": 221,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 5
+      },
+      "revId": "e45cb7ecef257cc93c50135dce1d1d3d91ceffeb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
