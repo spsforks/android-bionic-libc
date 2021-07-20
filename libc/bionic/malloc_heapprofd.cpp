@@ -247,8 +247,23 @@ void HandleHeapprofdSignal() {
       // heapprofd. During the short period between now and when heapprofd is
       // initialized, allocations may need to be serviced. There are three
       // possible configurations:
+      const MallocDispatch* prev_dispatch =
+        atomic_load(&gPreviousDefaultDispatchTable);
 
-      if (default_dispatch == nullptr) {
+      if (prev_dispatch != nullptr) {
+        // if we have entered this function before, we can reuse the previous
+        // decision. THIS IS REQUIRED FOR CORRECTNESS, because otherwise the
+        // following can happen
+        // 1. Assume DispatchIsGwpAsan(default_dispatch)
+        // 2. This function is ran, sets gPreviousDefaultDispatchTable to
+        //    GWP ASan.
+        // 3. The sessions ends, DispatchReset FAILS due to a race. Now
+        //    heapprofd hooks are default dispatch.
+        // 4. We re-enter this function later. If we did NOT look at the
+        //    previously recorded gPreviousDefaultDispatchTable, we would
+        //    incorrectly reach case 3. below.
+        gEphemeralDispatch = *prev_dispatch;
+      } else if (default_dispatch == nullptr) {
         //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
         //  this case, everything but malloc() should come from the system
         //  allocator.
@@ -264,7 +279,8 @@ void HandleHeapprofdSignal() {
         gEphemeralDispatch = *default_dispatch;
       } else {
         // 3. It may be possible at this point in time that heapprofd is
-        // *already* the default dispatch, and as such we don't want to use
+        // *already* the default dispatch, and when it was initialized there
+        // was no default dispatch installed. As such we don't want to use
         // heapprofd as the backing store for itself (otherwise infinite
         // recursion occurs). We will use the system allocator functions. Note:
         // We've checked that no other malloc interceptors are being used by
@@ -334,12 +350,6 @@ static void CommonInstallHooks(libc_globals* globals) {
   } else if (!InitSharedLibrary(impl_handle, kHeapprofdSharedLib, kHeapprofdPrefix, &globals->malloc_dispatch_table)) {
     return;
   }
-
-  // Before we set the new default_dispatch_table in FinishInstallHooks, save
-  // the previous dispatch table. If DispatchReset() gets called later, we want
-  // to be able to restore the dispatch. We're still under
-  // MaybeModifyGlobals locks at this point.
-  atomic_store(&gPreviousDefaultDispatchTable, GetDefaultDispatchTable());
 
   FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
 }
