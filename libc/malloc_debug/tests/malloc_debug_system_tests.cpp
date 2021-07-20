@@ -57,7 +57,7 @@
 // is enabled. These tests don't run be default, and are executed
 // by wrappers that will enable various malloc debug features.
 
-static constexpr time_t kTimeoutSeconds = 10;
+static constexpr time_t kTimeoutSeconds = 30;
 
 extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
   static const char* initial_args[] = {"--slow_threshold_ms=30000",
