@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48db7e09_e3c30511",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2021-07-20T14:57:02Z",
+      "side": 0,
+      "message": "We don\u0027t need this anymore, now we do it in HandleHeapprofdSignal.",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 342,
+        "endChar": 74
+      },
+      "revId": "98115b7494a96dd0b8e6ece7ff5e50704038c906",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
