@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23c5cae3_a2e8bf0e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-21T22:24:24Z",
+      "side": 1,
+      "message": "Sure, I\u0027ve moved this into rust/Android.bp.\n\nBy Rust proper you mean the upstream libc crate, which contains bindings to libc?  I had assumed that this was Android/bionic-specific and so wouldn\u0027t fit into that crate, which is more targeted at libc.  But I don\u0027t know too much about bionic, so do you think that\u0027s wrong?",
+      "parentUuid": "277906e7_49de65c0",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d4e53d8_14d659ba",
         "filename": "libc/rust/system_properties.rs",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "writtenOn": "2021-07-21T21:20:30Z",
       "side": 1,
       "message": "yeah, just use a regular /* */ comment for this. the script\u0027s not clever enough, and we\u0027re not likely to have the time or motivation to enhance it to better support rust bindings.",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ea6352_03245fff",
+        "filename": "libc/rust/system_properties.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-21T22:24:24Z",
+      "side": 1,
+      "message": "Done (note that these two files happened to have slightly different formatting in the first lines of their copyrights, so I had to tweak them to be the same to avoid adding two entries).",
+      "parentUuid": "5d4e53d8_14d659ba",
       "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
