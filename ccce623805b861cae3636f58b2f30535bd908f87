@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "84958c1f_1ea2ccb3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-21T22:49:34Z",
+      "side": 1,
+      "message": "\u003e By Rust proper you mean the upstream libc crate, which contains bindings to libc? \n\ncorrect.\n\n\u003e I had assumed that this was Android/bionic-specific and so wouldn\u0027t fit into that crate, which is more targeted at libc. \n\nbut it\u0027s not like every libc is the same. i assumed they\u0027d gone the \"ruby route\" of exposing the union of what their supported systems offer (with compile/run-time failures if you use something that isn\u0027t on the system you\u0027re actually building for/running on), rather than the \"java route\" of only exposing the intersection (so you can\u0027t say \"this code only runs on X, so i know i can use X-specific feature Y\"). assuming they were sensible and pragmatic, it seems like the libc crate would be the right place for this?",
+      "parentUuid": "23c5cae3_a2e8bf0e",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d4e53d8_14d659ba",
         "filename": "libc/rust/system_properties.rs",
         "patchSetId": 1
