@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "45d0a8e5_af99d36e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-21T22:51:38Z",
+      "side": 1,
+      "message": "+Matt, who probably knows the libc crate better than I do.  What do you think?  (For your context, this is currently basically a copy-paste of keystore2\u0027s existing property wrapper that Paul wrote a while ago.)",
+      "parentUuid": "84958c1f_1ea2ccb3",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d4e53d8_14d659ba",
         "filename": "libc/rust/system_properties.rs",
         "patchSetId": 1
