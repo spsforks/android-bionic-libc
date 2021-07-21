@@ -16,6 +16,29 @@
       "message": "Paul, is there anything else you think we should change here?",
       "revId": "6c4d4a237bb18a602f5305359440fd941687e5da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "533a3ab0_260b780b",
+        "filename": "libc/rust/system_properties.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-21T21:21:29Z",
+      "side": 1,
+      "message": "include the name in the error message?",
+      "range": {
+        "startLine": 202,
+        "startChar": 33,
+        "endLine": 202,
+        "endChar": 61
+      },
+      "revId": "6c4d4a237bb18a602f5305359440fd941687e5da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
