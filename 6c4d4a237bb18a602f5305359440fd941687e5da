@@ -39,6 +39,30 @@
       },
       "revId": "6c4d4a237bb18a602f5305359440fd941687e5da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b19872af_05dd18b1",
+        "filename": "libc/rust/system_properties.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-21T22:24:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "533a3ab0_260b780b",
+      "range": {
+        "startLine": 202,
+        "startChar": 33,
+        "endLine": 202,
+        "endChar": 61
+      },
+      "revId": "6c4d4a237bb18a602f5305359440fd941687e5da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
