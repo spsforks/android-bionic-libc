@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6b1e3ad_5ecee2b5",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-07-21T15:21:50Z",
+      "side": 1,
+      "message": "optional nit: this comment used to refer to the 1/2/3 cases below, but is now more disassociated due to the new if-case. Consider rephrasing (e.g. list out the possibilities as part of this comment), or even remove \"There are three possible configurations:\", as it\u0027s repeating the logic.",
+      "range": {
+        "startLine": 249,
+        "startChar": 9,
+        "endLine": 249,
+        "endChar": 33
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b79861a_cff6f878",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-07-21T15:21:50Z",
+      "side": 1,
+      "message": "Am I understanding it correctly that gPreviousDefaultDispatchTable is now set once, and sticks for the lifetime of the process, even if there are successful DispatchResets? (I might be missing some pointer indirection.).\n\nIf so, that implies that the default dispatch never changes beyond the first HandleHeapprofdSignal entry, right? Is that a safe assumption, or can e.g. gwp asan be initialized beyond process startup?",
+      "range": {
+        "startLine": 251,
+        "startChar": 21,
+        "endLine": 251,
+        "endChar": 50
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c324b8c_39e4abb4",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-07-21T15:21:50Z",
+      "side": 1,
+      "message": "Sanity check: did you consider interplay with malloc_limit? Don\u0027t remember if it ever affects the default dispatch table.",
+      "range": {
+        "startLine": 456,
+        "startChar": 13,
+        "endLine": 456,
+        "endChar": 33
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
