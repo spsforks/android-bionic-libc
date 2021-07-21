@@ -49,6 +49,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ff5f47ba_d0b7b1ba",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-21T17:02:13Z",
+      "side": 1,
+      "message": "This branch can be explicit based on the value of gHeapprofdState, and it\u0027s much clearer that way and avoids an unnecessary atomic load in the general case. Like this:\n\n  // We cannot grab the mutex here, as this is used in a signal handler.\n  MaybeModifyGlobals(kWithoutLock, [] {\n    MallocHeapprofdState initial_state \u003d kInitialState;\n    // If hooks are already installed, we still want to install ephemeral hooks\n    // to retrigger heapprofd client initialization.\n    MallocHeapprofdState hook_installed \u003d kHookInstalled;\n\n    // Below, we initialize heapprofd lazily by redirecting libc\u0027s malloc() to\n    // call MallocInitHeapprofdHook, which spawns off a thread and initializes\n    // heapprofd. During the short period between now and when heapprofd is\n    // initialized, allocations may need to be serviced. There are four possible\n    // configurations, described below.\n    if (atomic_compare_exchange_strong(\u0026gHeapprofdState, \u0026initial_state,\n                                       kInstallingEphemeralHook)) {\n      const MallocDispatch *default_dispatch \u003d GetDefaultDispatchTable();\n\n      if (default_dispatch \u003d\u003d nullptr) {\n        //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In\n        //  this case, everything but malloc() should come from the system\n        //  allocator.\n        atomic_store(\u0026gPreviousDefaultDispatchTable, nullptr);\n        gEphemeralDispatch \u003d *NativeAllocatorDispatch();\n      } else if (DispatchIsGwpAsan(default_dispatch)) {\n        //  2. GWP-ASan was installed. We should use GWP-ASan for everything but\n        //  malloc() in the interim period before heapprofd is properly\n        //  installed. After heapprofd is finished installing, we will use\n        //  GWP-ASan as heapprofd\u0027s backing allocator to allow heapprofd and\n        //  GWP-ASan to coexist.\n        atomic_store(\u0026gPreviousDefaultDispatchTable, default_dispatch);\n        gEphemeralDispatch \u003d *default_dispatch;\n      } else {\n        // 3. It may be possible at this point in time that heapprofd is\n        // *already* the default dispatch, and as such we don\u0027t want to use\n        // heapprofd as the backing store for itself (otherwise infinite\n        // recursion occurs). We will use the system allocator functions. Note:\n        // We\u0027ve checked that no other malloc interceptors are being used by\n        // validating `gHeapprofdIncompatibleHooks` above, so we don\u0027t need to\n        // worry about that case here.\n        atomic_store(\u0026gPreviousDefaultDispatchTable, nullptr);\n        gEphemeralDispatch \u003d *NativeAllocatorDispatch();\n      }\n    } else if (atomic_compare_exchange_strong(\u0026gHeapprofdState, \u0026hook_installed,\n                                              kInstallingEphemeralHook)) {\n      // 4. We\u0027re looking to re-initialize the hooks. We already have a\n      // previous dispatch table marked, and we should use it for the\n      // ephemeral dispatch as well.\n      const MallocDispatch *prev_dispatch \u003d\n          atomic_load(\u0026gPreviousDefaultDispatchTable);\n      gEphemeralDispatch \u003d *prev_dispatch;\n    } else {\n      error_log(\"%s: heapprofd: failed to transition kInitialState -\u003e \"\n                \"kInstallingEphemeralHook. current state (possible race): %d\",\n                getprogname(), expected2);\n      return;\n    }\n\n    // Now, replace the malloc function so that the next call to malloc() will\n    // initialize heapprofd.\n    gEphemeralDispatch.malloc \u003d MallocInitHeapprofdHook;\n\n    // And finally, install these new malloc-family interceptors.\n    __libc_globals.mutate([](libc_globals *globals) {\n      atomic_store(\u0026globals-\u003edefault_dispatch_table, \u0026gEphemeralDispatch);\n      if (!MallocLimitInstalled()) {\n        atomic_store(\u0026globals-\u003ecurrent_dispatch_table, \u0026gEphemeralDispatch);\n      }\n    });\n    atomic_store(\u0026gHeapprofdState, kEphemeralHookInstalled);\n  });",
+      "range": {
+        "startLine": 253,
+        "startChar": 10,
+        "endLine": 253,
+        "endChar": 34
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c324b8c_39e4abb4",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 6
