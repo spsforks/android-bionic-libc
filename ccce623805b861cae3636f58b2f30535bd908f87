@@ -34,6 +34,40 @@
       "parentUuid": "76bbe21a_24159f0c",
       "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "277906e7_49de65c0",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-21T21:20:30Z",
+      "side": 1,
+      "message": "can we keep this either in its own directory, or at least in the system_properties/Android.bp?\n\nis there a reason why this isn\u0027t going into rust proper? they already have bindings for bionic in general, right? shouldn\u0027t this just be in there?",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d4e53d8_14d659ba",
+        "filename": "libc/rust/system_properties.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-21T21:20:30Z",
+      "side": 1,
+      "message": "yeah, just use a regular /* */ comment for this. the script\u0027s not clever enough, and we\u0027re not likely to have the time or motivation to enhance it to better support rust bindings.",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
