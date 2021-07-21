@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1c1529f9_686b2028",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2021-07-21T23:46:42Z",
+      "side": 1,
+      "message": "Assuming generate_notice.py is for bionic only, I\u0027d suggest just using /* */, since we\u0027re unlikely to put a bunch of Rust in here, and I\u0027m not even certain it will be this library\u0027s final form.",
+      "parentUuid": "03ec89c0_34bb74c7",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "277906e7_49de65c0",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -121,6 +139,24 @@
       "side": 1,
       "message": "(oh, yeah, to be clear: i think this is a less bad home than the current home, so i\u0027ll +2 this anyway, but longer term i think we should try to _not_ have a parallel \"stuff that should be in the libc crate\" crate :-) )",
       "parentUuid": "45d0a8e5_af99d36e",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fabb98a_66f17cda",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2021-07-21T23:46:42Z",
+      "side": 1,
+      "message": "We can expose the C functions to the upstream libc crate if it hasn\u0027t already been done - we already have android specific functions like `set_abort_message` exposed there.\n\nThe code in this library would *not* be appropriate for the upstream libc crate.\n\nI\u0027m also not certain this crate should live in the bionic repo (maybe some kind of `librustutils` ?), but I agree that this is a better place for it to live than in keystore.",
+      "parentUuid": "bd3def5c_0b5269ac",
       "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
