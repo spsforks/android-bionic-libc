@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76bbe21a_24159f0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-21T17:18:58Z",
+      "side": 1,
+      "message": "Note that I had to bypass repo\u0027s upload verification for this.  It seemed to want to copy the whole .rs file into the NOTICE file.  I assume that\u0027s because the license parsing code doesn\u0027t understand Rust comments (I think the license in our file is already there).  Elliott, what should I do about this?",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
