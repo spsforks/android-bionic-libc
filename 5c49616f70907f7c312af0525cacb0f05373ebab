@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba39ac31_97054be6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-22T22:44:36Z",
+      "side": 1,
+      "message": "hmmm... i think this might have been the rust people who _did_ run hooks. i thought the diff looked odd at the time, specifically here, but just trusted the script more than i trusted gerrit/my eyes...",
+      "revId": "5c49616f70907f7c312af0525cacb0f05373ebab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
