@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c263daa7_129b7050",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-22T19:40:07Z",
+      "side": 1,
+      "message": "Yup.",
+      "parentUuid": "1c1529f9_686b2028",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "277906e7_49de65c0",
@@ -175,6 +193,24 @@
       "side": 1,
       "message": "\u003e The code in this library would *not* be appropriate for the upstream libc crate.\n\nah, yeah, good point. the libbase API is what we\u0027d have liked to have in libc if it had been possible, but it wasn\u0027t, so it\u0027s not.\n\nthe bindings seem like they should move upstream though.\n\n\u003e I\u0027m also not certain this crate should live in the bionic repo (maybe some kind of `librustutils` ?)\n\nyeah, once you split the bindings out this becomes more like the rust \"libbase\" --- \"stuff that should have been in the standard library [at least from an Android perspective] but isn\u0027t\"[1]. but this is fine for now...",
       "parentUuid": "7fabb98a_66f17cda",
+      "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36ad24a7_c7ab083c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-22T19:40:07Z",
+      "side": 1,
+      "message": "We\u0027ll discuss in one of our team meetings where to move this, but as agreed we\u0027ll merge it now.",
+      "parentUuid": "2024a63b_ef1f4a41",
       "revId": "ccce623805b861cae3636f58b2f30535bd908f87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },

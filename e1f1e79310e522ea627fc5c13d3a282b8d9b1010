@@ -16,6 +16,24 @@
       "message": "is there a reason this isn\u0027t more like https://source.corp.google.com/android/system/libbase/properties.cpp;l\u003d234?q\u003dcachedproperty::get\u0026sq\u003dpackage:%5Eandroid$ ? (you\u0027ve cached the prop_info which is good, but you can avoid re-reading the property in most cases too.)\n\n(not a regression though, so +2 anyway...)",
       "revId": "e1f1e79310e522ea627fc5c13d3a282b8d9b1010",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfe0f012_f86f10c5",
+        "filename": "libc/rust/system_properties.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1208973
+      },
+      "writtenOn": "2021-07-22T19:40:07Z",
+      "side": 1,
+      "message": "Paul, feel free to take a look at this.",
+      "parentUuid": "cfa421a9_8949126f",
+      "revId": "e1f1e79310e522ea627fc5c13d3a282b8d9b1010",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
