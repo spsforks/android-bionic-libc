@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35b96950_d47545e0",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-23T20:57:41Z",
+      "side": 1,
+      "message": "whose death tests? ours are supposed to have suppressed stacks now...\n\ni thought we set pid_max higher, but i\u0027m seeing 32k on cf and on both phones i have available. (but 4m on my desktop.) i\u0027ve started a thread to see if i\u0027m the only one who thinks we should bump that up.",
+      "parentUuid": "f0e7a10a_0e319079",
+      "range": {
+        "startLine": 77,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b4fe3a8_ac325718",
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "I update the comment to explain this. I also added a comment in another location saying why I wasn\u0027t using the non-blocking version of the read call.",
       "parentUuid": "3b4fe3a8_ac325718",
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee67ea22_fdafe135",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-23T20:57:41Z",
+      "side": 1,
+      "message": "won\u0027t the signal alone cause the read() to fail with EINTR? oh, the read is inside liblog and protected by TEMP_FAILURE_RETRY? yeah, i get it now. (i might add that part to the comment too though.)",
+      "parentUuid": "bf5db257_c565af1b",
       "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
