@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0e7a10a_0e319079",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-07-23T18:50:43Z",
+      "side": 1,
+      "message": "Surprisingly, this happened every time I ran a particular scenario on cuttlefish. That\u0027s why I added this code, because it actually happened.\n\nBy running two copies of the malloc debug system tests, while running the liblog unit tests, it happens by about iteration 20 of the unit tests. It appears cuttlefish has a large logcat buffer, and the death tests were creating enough failing messages in the log. I don\u0027t know why the cuttlefish kernel was reusing pids so quickly.",
+      "parentUuid": "6e78a434_9749c38c",
+      "range": {
+        "startLine": 77,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b4fe3a8_ac325718",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf5db257_c565af1b",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-07-23T18:50:43Z",
+      "side": 1,
+      "message": "I update the comment to explain this. I also added a comment in another location saying why I wasn\u0027t using the non-blocking version of the read call.",
+      "parentUuid": "3b4fe3a8_ac325718",
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee4091b2_8f8e9a12",
@@ -54,6 +96,24 @@
       "writtenOn": "2021-07-23T15:37:51Z",
       "side": 1,
       "message": "this all makes me wish we had the opposite of logwrapper --- something to cause a process\u0027 logging to all go to stdout/stderr/file, since those are far less painful to deal with. given how few tests seem to be looking for stuff in logs, though, i guess we wouldn\u0027t have enough users to motivate it even if we did have someone working on logging right now...",
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "557cabe8_1b835470",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-07-23T18:50:43Z",
+      "side": 1,
+      "message": "Yes, I would love that kind of option. The log interface is not the greatest, but it seems like mostly tests are trying to read log messages. So having an intricate log interface doesn\u0027t seem like a good use of time.",
+      "parentUuid": "ee4091b2_8f8e9a12",
       "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
