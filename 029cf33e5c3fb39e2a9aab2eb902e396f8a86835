@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e78a434_9749c38c",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-23T15:37:51Z",
+      "side": 1,
+      "message": "lol at the optimism here that any Android device has ever wrapped pids before it wrapped the entire log buffer!\n\n(i guess you could always configure a 4GiB log buffer and run `while /bin/true ; do /bin/false ; done` on all the other cores :-) )",
+      "range": {
+        "startLine": 77,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b4fe3a8_ac325718",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-23T15:37:51Z",
+      "side": 1,
+      "message": "you can\u0027t just use an atomic bool? (explain why not in the comment if not?)",
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee4091b2_8f8e9a12",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-23T15:37:51Z",
+      "side": 1,
+      "message": "this all makes me wish we had the opposite of logwrapper --- something to cause a process\u0027 logging to all go to stdout/stderr/file, since those are far less painful to deal with. given how few tests seem to be looking for stuff in logs, though, i guess we wouldn\u0027t have enough users to motivate it even if we did have someone working on logging right now...",
+      "revId": "029cf33e5c3fb39e2a9aab2eb902e396f8a86835",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
