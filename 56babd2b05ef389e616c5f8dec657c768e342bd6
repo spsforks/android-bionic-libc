@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65faf4e9_ab9eb935",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2021-07-27T11:04:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f6b1e3ad_5ecee2b5",
+      "range": {
+        "startLine": 249,
+        "startChar": 9,
+        "endLine": 249,
+        "endChar": 33
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b79861a_cff6f878",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-07-21T15:21:50Z",
       "side": 1,
       "message": "Am I understanding it correctly that gPreviousDefaultDispatchTable is now set once, and sticks for the lifetime of the process, even if there are successful DispatchResets? (I might be missing some pointer indirection.).\n\nIf so, that implies that the default dispatch never changes beyond the first HandleHeapprofdSignal entry, right? Is that a safe assumption, or can e.g. gwp asan be initialized beyond process startup?",
+      "range": {
+        "startLine": 251,
+        "startChar": 21,
+        "endLine": 251,
+        "endChar": 50
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80cee4c8_f082387f",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2021-07-27T11:04:27Z",
+      "side": 1,
+      "message": "Yes, GWP ASAN is only initialized at startup.",
+      "parentUuid": "6b79861a_cff6f878",
       "range": {
         "startLine": 251,
         "startChar": 21,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c7cd368_657c37c1",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2021-07-27T11:04:27Z",
+      "side": 1,
+      "message": "I guess that is neater (the extra load is completely irrelevant though). Thanks.",
+      "parentUuid": "ff5f47ba_d0b7b1ba",
+      "range": {
+        "startLine": 253,
+        "startChar": 10,
+        "endLine": 253,
+        "endChar": 34
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c324b8c_39e4abb4",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-07-21T15:21:50Z",
       "side": 1,
       "message": "Sanity check: did you consider interplay with malloc_limit? Don\u0027t remember if it ever affects the default dispatch table.",
+      "range": {
+        "startLine": 456,
+        "startChar": 13,
+        "endLine": 456,
+        "endChar": 33
+      },
+      "revId": "56babd2b05ef389e616c5f8dec657c768e342bd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08c41c9c_9836cc5c",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2021-07-27T11:04:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1c324b8c_39e4abb4",
       "range": {
         "startLine": 456,
         "startChar": 13,
