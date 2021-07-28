@@ -271,7 +271,9 @@ TEST(netdb, gethostbyname_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
+#if !defined(MUSL)
   EXPECT_EQ(NETDB_INTERNAL, err);
+#endif
   EXPECT_EQ(ERANGE, result);
   EXPECT_EQ(nullptr, hp);
 }
@@ -282,7 +284,9 @@ TEST(netdb, gethostbyname2_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+#if !defined(MUSL)
   EXPECT_EQ(NETDB_INTERNAL, err);
+#endif
   EXPECT_EQ(ERANGE, result);
   EXPECT_EQ(nullptr, hp);
 }
@@ -294,7 +298,9 @@ TEST(netdb, gethostbyaddr_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+#if !defined(MUSL)
   EXPECT_EQ(NETDB_INTERNAL, err);
+#endif
   EXPECT_EQ(ERANGE, result);
   EXPECT_EQ(nullptr, hp);
 }

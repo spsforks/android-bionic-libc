@@ -454,7 +454,7 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
-TEST(stdlib, mkostemp64) {
+TEST(stdlib, mkostemp64_smoke) {
   MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
@@ -464,7 +464,7 @@ TEST(stdlib, mkostemp) {
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
-TEST(stdlib, mkstemp64) {
+TEST(stdlib, mkstemp64_smoke) {
   MyTemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
@@ -633,8 +633,12 @@ TEST(unistd, _Exit) {
 }
 
 TEST(stdlib, pty_smoke) {
+#if !defined(MUSL)
   // getpt returns a pty with O_RDWR|O_NOCTTY.
   int fd = getpt();
+#else
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
+#endif
   ASSERT_NE(-1, fd);
 
   // grantpt is a no-op.
@@ -663,7 +667,7 @@ TEST(stdlib, ptsname_r_ENOTTY) {
 }
 
 TEST(stdlib, ptsname_r_EINVAL) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   errno = 0;
   char* buf = nullptr;
@@ -673,7 +677,7 @@ TEST(stdlib, ptsname_r_EINVAL) {
 }
 
 TEST(stdlib, ptsname_r_ERANGE) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   errno = 0;
   char buf[1];
@@ -683,7 +687,7 @@ TEST(stdlib, ptsname_r_ERANGE) {
 }
 
 TEST(stdlib, ttyname) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
 
   // ttyname returns "/dev/ptmx" for a pty.
@@ -693,7 +697,7 @@ TEST(stdlib, ttyname) {
 }
 
 TEST(stdlib, ttyname_r) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
 
   // ttyname_r returns "/dev/ptmx" for a pty.
@@ -714,7 +718,7 @@ TEST(stdlib, ttyname_r_ENOTTY) {
 }
 
 TEST(stdlib, ttyname_r_EINVAL) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   errno = 0;
   char* buf = nullptr;
@@ -724,7 +728,7 @@ TEST(stdlib, ttyname_r_EINVAL) {
 }
 
 TEST(stdlib, ttyname_r_ERANGE) {
-  int fd = getpt();
+  int fd = posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);
   ASSERT_NE(-1, fd);
   errno = 0;
   char buf[1];
@@ -961,8 +965,8 @@ TEST(stdlib, getloadavg) {
 }
 
 TEST(stdlib, getprogname) {
-#if defined(__GLIBC__)
-  GTEST_SKIP() << "glibc doesn't have getprogname()";
+#if defined(__GLIBC__) || defined(MUSL)
+  GTEST_SKIP() << "glibc and musl don't have getprogname()";
 #else
   // You should always have a name.
   ASSERT_TRUE(getprogname() != nullptr);
@@ -972,8 +976,8 @@ TEST(stdlib, getprogname) {
 }
 
 TEST(stdlib, setprogname) {
-#if defined(__GLIBC__)
-  GTEST_SKIP() << "glibc doesn't have setprogname()";
+#if defined(__GLIBC__) || defined(MUSL)
+  GTEST_SKIP() << "glibc and musl don't have setprogname()";
 #else
   // setprogname() only takes the basename of what you give it.
   setprogname("/usr/bin/muppet");
