@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0ff00eb8_12455324",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-30T17:10:53Z",
+      "side": 1,
+      "message": "yeah, sgtm, that\u0027s what we\u0027ve done in similar cases.",
+      "parentUuid": "34a0f228_66f5989e",
+      "revId": "cc8717e7866f61b2524660fcfc57d73739d57fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "89dac818_29a12ab9",
         "filename": "tests/string_posix_strerror_r_test.cpp",
         "patchSetId": 2
