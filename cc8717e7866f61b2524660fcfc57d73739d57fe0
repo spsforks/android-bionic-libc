@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "130d1ef2_fb53fd78",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-07-30T17:49:26Z",
+      "side": 1,
+      "message": "The musl behavior is worse than both, it returns the string \"No error information\" for success (0), invalid errors (\u003c 0), and unknown errors.",
+      "parentUuid": "0ff00eb8_12455324",
+      "revId": "cc8717e7866f61b2524660fcfc57d73739d57fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "89dac818_29a12ab9",
