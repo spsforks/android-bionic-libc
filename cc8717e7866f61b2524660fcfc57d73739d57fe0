@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "34a0f228_66f5989e",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-07-30T16:54:39Z",
+      "side": 1,
+      "message": "Added an ifdef, since the bionic behavior seems preferable to the glibc behavior.",
+      "parentUuid": "60f1f068_2bdb4cab",
+      "revId": "cc8717e7866f61b2524660fcfc57d73739d57fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "89dac818_29a12ab9",
         "filename": "tests/string_posix_strerror_r_test.cpp",
         "patchSetId": 2
@@ -31,6 +49,24 @@
       "writtenOn": "2021-07-30T06:00:40Z",
       "side": 1,
       "message": "This fails on glibc, the posix spec says it returns a positive error number and not -1 + errno.  It also returns EINVAL and not ERANGE.",
+      "revId": "cc8717e7866f61b2524660fcfc57d73739d57fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "168a743f_50d80444",
+        "filename": "tests/string_posix_strerror_r_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-07-30T16:54:39Z",
+      "side": 1,
+      "message": "Fixed bionic to match glibc in preceding patch.",
+      "parentUuid": "89dac818_29a12ab9",
       "revId": "cc8717e7866f61b2524660fcfc57d73739d57fe0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
