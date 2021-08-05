@@ -236,43 +236,17 @@ void HandleHeapprofdSignal() {
     // If hooks are already installed, we still want to install ephemeral hooks to retrigger
     // heapprofd client initialization.
     MallocHeapprofdState expected2 = kHookInstalled;
+    // Below, we initialize heapprofd lazily by redirecting libc's malloc() to
+    // call MallocInitHeapprofdHook, which spawns off a thread and initializes
+    // heapprofd. During the short period between now and when heapprofd is
+    // initialized, allocations may need to be serviced.
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected,
           kInstallingEphemeralHook)) {
+      // If heapprofd hooks aren't installed, we use whatever hook was
+      // previously installed. Currently, this is only GWP-ASAN.
       const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
-
-      // Below, we initialize heapprofd lazily by redirecting libc's malloc() to
-      // call MallocInitHeapprofdHook, which spawns off a thread and initializes
-      // heapprofd. During the short period between now and when heapprofd is
-      // initialized, allocations may need to be serviced. There are three
-      // possible configurations:
-
-      if (DispatchIsGwpAsan(default_dispatch)) {
-        //  1. GWP-ASan was installed. We should use GWP-ASan for everything but
-        //  malloc() in the interim period before heapprofd is properly
-        //  installed. After heapprofd is finished installing, we will use
-        //  GWP-ASan as heapprofd's backing allocator to allow heapprofd and
-        //  GWP-ASan to coexist.
-        atomic_store(&gPreviousDefaultDispatchTable, default_dispatch);
-        gEphemeralDispatch = *default_dispatch;
-      } else {
-        // Either,
-        // 2. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
-        // this case, everything but malloc() should come from the system
-        // allocator.
-        //
-        // or,
-        //
-        // 3. It may be possible at this point in time that heapprofd is
-        // *already* the default dispatch, and when it was initialized there
-        // was no default dispatch installed. As such we don't want to use
-        // heapprofd as the backing store for itself (otherwise infinite
-        // recursion occurs). We will use the system allocator functions. Note:
-        // We've checked that no other malloc interceptors are being used by
-        // validating `gHeapprofdIncompatibleHooks` above, so we don't need to
-        // worry about that case here.
-        atomic_store(&gPreviousDefaultDispatchTable, nullptr);
-        gEphemeralDispatch = *NativeAllocatorDispatch();
-      }
+      atomic_store(&gPreviousDefaultDispatchTable, default_dispatch);
+      gEphemeralDispatch = default_dispatch ? *default_dispatch : *NativeAllocatorDispatch();
     } else if (atomic_compare_exchange_strong(&gHeapprofdState, &expected2,
                                               kInstallingEphemeralHook)) {
       // if we still have hook installed, we can reuse the previous
