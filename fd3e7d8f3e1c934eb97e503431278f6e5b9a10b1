@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f38b7ec4_7947e8c0",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-08-05T14:16:31Z",
+      "side": 1,
+      "message": "nit: wording here is potentially misleading, this case is entered in cases beyond just asan (such as the default hooks, and there\u0027s the complication around heapprofd itself setting itself as a default hook at times).\n\nIs it accurate if we say \"Currently, the potential default dispatch tables are: nullptr (system allocator), GWP-ASAN, and heapprofd itself. \u003cplus a sentence here that explains why heapprofd case is fine\u003e\"?",
+      "range": {
+        "startLine": 246,
+        "startChar": 30,
+        "endLine": 246,
+        "endChar": 64
+      },
+      "revId": "fd3e7d8f3e1c934eb97e503431278f6e5b9a10b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "881ab656_12b95ca1",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-08-05T14:16:31Z",
+      "side": 1,
+      "message": "Potential change in semantics: if we somehow enter this branch with heapprofd hooks as the default dispatch, we\u0027ll no longer set gPreviousDefaultDispatchTable to nullptr, and possibly end up in infinite recursion.\n\nIs it guaranteed that we\u0027ll never end up in such a case? Also worth considering that there are two logically distinct `kInitialState`, as we also transition back to it after `kRemovingEphemeralHook`. I haven\u0027t fully reasoned through whether that\u0027s a concern here or not.",
+      "range": {
+        "startLine": 248,
+        "startChar": 6,
+        "endLine": 248,
+        "endChar": 69
+      },
+      "revId": "fd3e7d8f3e1c934eb97e503431278f6e5b9a10b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee4a7d31_d8f15324",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2021-08-05T14:16:31Z",
+      "side": 1,
+      "message": "nit: comment a bit stale",
+      "range": {
+        "startLine": 262,
+        "startChar": 30,
+        "endLine": 262,
+        "endChar": 44
+      },
+      "revId": "fd3e7d8f3e1c934eb97e503431278f6e5b9a10b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
