@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45c72266_4292e388",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-12T16:26:43Z",
+      "side": 1,
+      "message": "heh, maybe we need to put that back in libbase! (if you find this keeps cropping up, we should probably put it somewhere. this seems fine for now though.)",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9d8bc89_cd3bd155",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-12T16:26:43Z",
+      "side": 1,
+      "message": "weird. what does musl set `err` to?",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d68ed87_eb81e8b3",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-12T16:26:43Z",
+      "side": 1,
+      "message": "maybe just have a\n```\n#if defined(MUSL)\nint getpt() {\n  return posix_openpt(O_RDWR|O_NOCTTY|O_CLOEXEC);\n}\n#endif\n```\nrather than this duplication? (also probably drop the O_CLOEXEC since getpt() isn\u0027t O_CLOEXEC? no tests care now, but that probably implies there\u0027s a missing test there :-) )",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30db5a74_aa22e56d",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-12T16:26:43Z",
+      "side": 1,
+      "message": "oops!",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
