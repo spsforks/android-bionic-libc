@@ -71,6 +71,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a2e778d_4171a5c7",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-12T19:26:54Z",
+      "side": 1,
+      "message": "(sgtm)",
+      "parentUuid": "b79d0f0d_7d567e5d",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d68ed87_eb81e8b3",
