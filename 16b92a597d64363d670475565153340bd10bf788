@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ab5ea50_ee13758b",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-12T18:13:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "45c72266_4292e388",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9d8bc89_cd3bd155",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-08-12T16:26:43Z",
       "side": 1,
       "message": "weird. what does musl set `err` to?",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b79d0f0d_7d567e5d",
+        "filename": "tests/netdb_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-12T18:13:48Z",
+      "side": 1,
+      "message": "It doesn\u0027t set err at all for ERANGE.  It also doesn\u0027t #define NETDB_INTERNAL in the headers.\n\ngethostbyname_r is a glibc extension, but the man page isn\u0027t super clear here:\nThe functions return 0 on success and a nonzero error  number  on  failure.  In addition to the errors returned by the nonreentrant versions of these functions, if buf is too small, the functions will return ERANGE, and the call should be tried  with a larger buffer.\n\nglibc sets *err to NETDB_INTERNAL (-1) like bionic, and since this is a glibc extension the difference should probably be considered a bug in musl.  I guess I\u0027ll #define NETDB_INTERNAL for musl and let it fail the test for now.",
+      "parentUuid": "f9d8bc89_cd3bd155",
       "revId": "16b92a597d64363d670475565153340bd10bf788",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17ff5f99_360bb804",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-12T18:13:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d68ed87_eb81e8b3",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30db5a74_aa22e56d",
@@ -65,6 +119,24 @@
       "writtenOn": "2021-08-12T16:26:43Z",
       "side": 1,
       "message": "oops!",
+      "revId": "16b92a597d64363d670475565153340bd10bf788",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4464ff9e_b479692a",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-12T18:13:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "30db5a74_aa22e56d",
       "revId": "16b92a597d64363d670475565153340bd10bf788",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
