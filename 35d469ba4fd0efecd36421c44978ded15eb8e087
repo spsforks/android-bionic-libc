@@ -34,6 +34,24 @@
       "parentUuid": "c3a39e4d_4703dce3",
       "revId": "35d469ba4fd0efecd36421c44978ded15eb8e087",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1446328b_6800d337",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-16T23:52:10Z",
+      "side": 1,
+      "message": "oh, yeah, that\u0027s exactly what you/dwillemsen say every time i ask this question...",
+      "parentUuid": "eec21b87_21208c21",
+      "revId": "35d469ba4fd0efecd36421c44978ded15eb8e087",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
