@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3a39e4d_4703dce3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-16T23:46:44Z",
+      "side": 1,
+      "message": "i thought we\u0027d removed 32-bit host support?",
+      "revId": "35d469ba4fd0efecd36421c44978ded15eb8e087",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
