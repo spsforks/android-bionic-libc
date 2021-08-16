@@ -16,6 +16,24 @@
       "message": "i thought we\u0027d removed 32-bit host support?",
       "revId": "35d469ba4fd0efecd36421c44978ded15eb8e087",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eec21b87_21208c21",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-16T23:49:58Z",
+      "side": 1,
+      "message": "No, art tests still use it.  This is mostly so that if I do `m USE_HOST_MUSL\u003dtrue bionic-unit-tests-glibc` it doesn\u0027t fail for the 32-bit version.  The embedded linker is not working for 32-bit though.",
+      "parentUuid": "c3a39e4d_4703dce3",
+      "revId": "35d469ba4fd0efecd36421c44978ded15eb8e087",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
