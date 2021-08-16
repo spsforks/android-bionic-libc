@@ -16,6 +16,24 @@
       "message": "(why the \u003csys/cdefs.h\u003e includes?)",
       "revId": "4c5595c968a1cf2211edfb2817009af6d5bc0522",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f3295d7_09264a19",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-08-16T23:50:27Z",
+      "side": 1,
+      "message": "That\u0027s where ANDROID_HOST_MUSL is defined, similar to __BIONIC__",
+      "parentUuid": "a51c61f2_e6ce7058",
+      "revId": "4c5595c968a1cf2211edfb2817009af6d5bc0522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
