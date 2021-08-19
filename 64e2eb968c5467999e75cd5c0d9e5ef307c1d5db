@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cafa8f8_33cad081",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2021-08-19T01:32:48Z",
+      "side": 1,
+      "message": "The loop should check whether the relocation is IRELATIVE.\n\nTechnically R_*_IRELATIVE can be in either .rela.dyn or .rela.plt.\nSetting the start address to DT_JMPREL can miss some R_*_IRELATIVE.\n\nThere is a debate where R_*_IRELATIVE should be: https://sourceware.org/bugzilla/show_bug.cgi?id\u003d28218",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
