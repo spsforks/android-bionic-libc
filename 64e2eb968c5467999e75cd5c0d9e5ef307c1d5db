@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "559a2e63_77df5a8b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-19T01:48:38Z",
+      "side": 1,
+      "message": "I suppose we should use the same method in here and in __linker_init to find the linker\u0027s ELF header (linker_addr) and the base-addr/load-bias. I\u0027m pretty sure AT_BASE is supposed to be the value that Bionic calls the \"load bias\", though, and Bionic is casting it to ElfW(Ehdr)*. It works because the loader\u0027s image-base is 0.\n\nI\u0027m happy with leaving this CL as-is and cleaning the code up later.",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5cafa8f8_33cad081",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -14,6 +31,23 @@
       "writtenOn": "2021-08-19T01:32:48Z",
       "side": 1,
       "message": "The loop should check whether the relocation is IRELATIVE.\n\nTechnically R_*_IRELATIVE can be in either .rela.dyn or .rela.plt.\nSetting the start address to DT_JMPREL can miss some R_*_IRELATIVE.\n\nThere is a debate where R_*_IRELATIVE should be: https://sourceware.org/bugzilla/show_bug.cgi?id\u003d28218",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47541142_0256e667",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-19T01:48:38Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer that we verify that each relocation has the expected type. Something like:\n\n    if (ELFW(R_TYPE)(r-\u003er_info) !\u003d R_GENERIC_IRELATIVE) continue;\n\nMaybe it could call __linker_error, but I\u0027m guessing that function doesn\u0027t work at this stage in bootstrapping the loader.",
       "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
