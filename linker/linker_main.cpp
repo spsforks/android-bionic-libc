@@ -39,6 +39,7 @@
 #include "linker_globals.h"
 #include "linker_phdr.h"
 #include "linker_relocate.h"
+#include "linker_relocs.h"
 #include "linker_tls.h"
 #include "linker_utils.h"
 
@@ -596,25 +597,75 @@ static void set_bss_vma_name(soinfo* si) {
   }
 }
 
-// TODO: There is a similar ifunc resolver calling loop in libc_init_static.cpp, but that version
-// uses weak symbols, which don't work in the linker prior to its relocation. This version also
-// supports a load bias. When we stop supporting the gold linker in the NDK, then maybe we can use
-// non-weak definitions and merge the two loops.
 #if defined(USE_RELA)
-extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+using RelType = ElfW(Rela);
+const unsigned RelTag = DT_RELA;
+const unsigned RelSzTag = DT_RELASZ;
+#else
+using RelType = ElfW(Rel);
+const unsigned RelTag = DT_REL;
+const unsigned RelSzTag = DT_RELSZ;
+#endif
 
+extern __LIBC_HIDDEN__ ElfW(Ehdr) __ehdr_start;
+
+static void find_irelative_relocs(RelType **begin, RelType **end) {
+  // Find the IRELATIVE relocations using the DT_JMPREL and DT_PLTRELSZ, or DT_RELA? and DT_RELA?SZ
+  // dynamic tags.
+  auto* ehdr = reinterpret_cast<char*>(&__ehdr_start);
+  auto* phdr = reinterpret_cast<ElfW(Phdr)*>(ehdr + __ehdr_start.e_phoff);
+  for (size_t i = 0; i != __ehdr_start.e_phnum; ++i) {
+    if (phdr[i].p_type != PT_DYNAMIC) {
+      continue;
+    }
+    auto *dyn = reinterpret_cast<ElfW(Dyn)*>(ehdr + phdr[i].p_vaddr);
+    ElfW(Addr) pltrel = 0, pltrelsz = 0, rel = 0, relsz = 0;
+    for (size_t j = 0, size = phdr[i].p_filesz / sizeof(ElfW(Dyn)); j != size; ++j) {
+      if (dyn[j].d_tag == DT_JMPREL) {
+        pltrel = dyn[j].d_un.d_ptr;
+      } else if (dyn[j].d_tag == DT_PLTRELSZ) {
+        pltrelsz = dyn[j].d_un.d_ptr;
+      } else if (dyn[j].d_tag == RelTag) {
+        rel = dyn[j].d_un.d_ptr;
+      } else if (dyn[j].d_tag == RelSzTag) {
+        relsz = dyn[j].d_un.d_ptr;
+      }
+    }
+    if (pltrel && pltrelsz) {
+      *begin = reinterpret_cast<RelType*>(ehdr + pltrel);
+      *end = reinterpret_cast<RelType*>(ehdr + pltrel + pltrelsz);
+    } else if (rel && relsz) {
+      *begin = reinterpret_cast<RelType*>(ehdr + rel);
+      *end = reinterpret_cast<RelType*>(ehdr + rel + relsz);
+    } else {
+      *begin = *end = nullptr;
+    }
+  }
+}
+
+#if defined(USE_RELA)
 static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
-  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
+  ElfW(Rela)* begin;
+  ElfW(Rela)* end;
+  find_irelative_relocs(&begin, &end);
+  for (ElfW(Rela) *r = begin; r != end; ++r) {
+    if (ELFW(R_TYPE)(r->r_info) != R_GENERIC_IRELATIVE) {
+      continue;
+    }
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
     ElfW(Addr) resolver = r->r_addend + load_bias;
     *offset = __bionic_call_ifunc_resolver(resolver);
   }
 }
 #else
-extern __LIBC_HIDDEN__ ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
-
 static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
-  for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
+  ElfW(Rel)* begin;
+  ElfW(Rel)* end;
+  find_irelative_relocs(&begin, &end);
+  for (ElfW(Rel) *r = begin; r != end; ++r) {
+    if (ELFW(R_TYPE)(r->r_info) != R_GENERIC_IRELATIVE) {
+      continue;
+    }
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
     ElfW(Addr) resolver = *offset + load_bias;
     *offset = __bionic_call_ifunc_resolver(resolver);
