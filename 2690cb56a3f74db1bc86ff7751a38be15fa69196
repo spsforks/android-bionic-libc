@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e790e20_e4adc971",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-20T18:16:13Z",
+      "side": 1,
+      "message": "otherwise lgtm. thanks!",
+      "revId": "2690cb56a3f74db1bc86ff7751a38be15fa69196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84eef26d_659e9e9f",
+        "filename": "libm/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-20T18:16:13Z",
+      "side": 1,
+      "message": "...to avoid this :-)",
+      "revId": "2690cb56a3f74db1bc86ff7751a38be15fa69196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36c42374_987f7dfa",
+        "filename": "libm/fenv-access.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-20T18:16:13Z",
+      "side": 1,
+      "message": "use the BSD license instead...",
+      "revId": "2690cb56a3f74db1bc86ff7751a38be15fa69196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
