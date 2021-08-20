@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f9ce0cd_43181666",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-20T20:29:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "559a2e63_77df5a8b",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5cafa8f8_33cad081",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bff31ac_cb7457e0",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-20T20:29:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cafa8f8_33cad081",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47541142_0256e667",
@@ -48,6 +84,24 @@
       "writtenOn": "2021-08-19T01:48:38Z",
       "side": 1,
       "message": "I think I\u0027d prefer that we verify that each relocation has the expected type. Something like:\n\n    if (ELFW(R_TYPE)(r-\u003er_info) !\u003d R_GENERIC_IRELATIVE) continue;\n\nMaybe it could call __linker_error, but I\u0027m guessing that function doesn\u0027t work at this stage in bootstrapping the loader.",
+      "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8380dc43_17f2a963",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-20T20:29:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47541142_0256e667",
       "revId": "64e2eb968c5467999e75cd5c0d9e5ef307c1d5db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
