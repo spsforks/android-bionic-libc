@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88755d61_16bc4a8f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-08-20T20:56:49Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure this is fine but rprichard should confirm since I don\u0027t really know my way around the linker 😊",
+      "revId": "2411a5e7894a1afe82c1307cea78369e1dc35c80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
