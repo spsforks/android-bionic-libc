@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aae1d87c_214e5174",
+        "filename": "libm/NOTICE",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-08-20T21:54:10Z",
+      "side": 1,
+      "message": "ah, and this *is* expected because this is libm/NOTICE not libc/NOTICE, so we should see an addition, and this is the addition we should expect to see. (i was confused for a minute!)",
+      "revId": "0c3bb2cf8f4fc0332fc0191e713f686f171ef121",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
