@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01332073_da8de25f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-26T22:10:32Z",
+      "side": 1,
+      "message": "This looks good to me, though I\u0027d like to clean up the load_bias-vs-linker_addr calculations later.\n\ne.g. If the loader\u0027s image-base weren\u0027t 0, then the resolver calls would break because we need to adjust virtual addrs using the load_bias, not the address of the ELF headers. The loader was already broken before, though, so it doesn\u0027t need to be fixed in this CL.\n",
+      "revId": "1583cd286eb9b847b72a75f15d40e2b0bc27543a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
