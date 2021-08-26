@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f9f5996_5d05a90c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-26T03:10:13Z",
+      "side": 1,
+      "message": "It\u0027s searching the first of .rela.plt or .rela.dyn that is non-empty. That ought to suffice, though, because the loader only has RELATIVE or IRELATIVE relocations, so .rela.plt could only have IRELATIVE relocations in it, and there\u0027s no reason to split the IRELATIVE relocations into two sections.\n\nOTOH, we could just search both? e.g. Remove find_irelative_relocs, have call_ifunc_resolvers call a call_ifunc_resolvers_in_section function for each of .rela.plt and .rela.dyn.\n\nAside: from a performance point of view, on Android (not linux_bionic), almost all of the relocations are RELATIVE in .relr.dyn, so we won\u0027t search them here.",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fb3d55d_f7049474",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-26T03:10:13Z",
+      "side": 1,
+      "message": "I think kRelTag / kRelSzTag is more consistent with Bionic\u0027s coding style.",
+      "range": {
+        "startLine": 602,
+        "startChar": 15,
+        "endLine": 602,
+        "endChar": 21
+      },
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87cdc9a8_e980bb5a",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-26T03:10:13Z",
+      "side": 1,
+      "message": "Maybe: *end \u003d *begin + (relsz / sizeof(RelType))\n\nIt\u0027s the same unless relsz is somehow not a multiple of sizeof(RelType).",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69b359b5_bc89e331",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-08-26T03:10:13Z",
+      "side": 1,
+      "message": "I think this line (r-\u003er_addend vs *offset) is the only difference between the two versions of call_ifunc_resolvers if ElfW(Rel[a]) is replaced with RelType. Could we de-duplicate them?",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
