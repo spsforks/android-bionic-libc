@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "977359f6_d78e2c0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-26T18:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f9f5996_5d05a90c",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4fb3d55d_f7049474",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-08-26T03:10:13Z",
       "side": 1,
       "message": "I think kRelTag / kRelSzTag is more consistent with Bionic\u0027s coding style.",
+      "range": {
+        "startLine": 602,
+        "startChar": 15,
+        "endLine": 602,
+        "endChar": 21
+      },
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05274b51_3c6de0cd",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-26T18:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4fb3d55d_f7049474",
       "range": {
         "startLine": 602,
         "startChar": 15,
@@ -58,6 +100,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6113df94_8bcdea6c",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-26T18:56:28Z",
+      "side": 1,
+      "message": "I\u0027d prefer to keep it as is, and it\u0027s also more concise given the switch to call_ifunc_resolvers_in_section.",
+      "parentUuid": "87cdc9a8_e980bb5a",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "69b359b5_bc89e331",
@@ -71,6 +131,24 @@
       "writtenOn": "2021-08-26T03:10:13Z",
       "side": 1,
       "message": "I think this line (r-\u003er_addend vs *offset) is the only difference between the two versions of call_ifunc_resolvers if ElfW(Rel[a]) is replaced with RelType. Could we de-duplicate them?",
+      "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88a6500c_5f59abae",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-08-26T18:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69b359b5_bc89e331",
       "revId": "d213fed9942b64d0e8b1b895dd59a4344cd8ac19",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
