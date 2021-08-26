@@ -86,7 +86,9 @@ void bionic_trace_end() {
     return;
   }
 
-  TEMP_FAILURE_RETRY(write(trace_marker_fd, "E|", 2));
+  char buf[3];
+  strlcpy(buf, "E|", sizeof(buf));
+  TEMP_FAILURE_RETRY(write(trace_marker_fd, buf, 2));
 }
 
 ScopedTrace::ScopedTrace(const char* message) : called_end_(false) {
