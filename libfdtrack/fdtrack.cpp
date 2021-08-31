@@ -43,11 +43,11 @@
 #include <android-base/thread_annotations.h>
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
-#include <unwindstack/LocalUnwinder.h>
+#include <unwindstack/Unwinder.h>
 
 struct FdEntry {
   std::mutex mutex;
-  std::vector<unwindstack::LocalFrameData> backtrace GUARDED_BY(mutex);
+  std::vector<unwindstack::FrameData> backtrace GUARDED_BY(mutex);
 };
 
 extern "C" void fdtrack_dump();
@@ -68,10 +68,15 @@ static constexpr size_t kStackFrameSkip = 2;
 
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
+static unwindstack::LocalUpdatableMaps& LocalMaps() {
+  static android::base::NoDestructor<unwindstack::LocalUpdatableMaps> maps;
+}
+#if 0
 static unwindstack::LocalUnwinder& Unwinder() {
   static android::base::NoDestructor<unwindstack::LocalUnwinder> unwinder;
   return *unwinder.get();
 }
+#endif
 
 __attribute__((constructor)) static void ctor() {
   for (auto& entry : stack_traces) {

@@ -36,8 +36,11 @@
 #include <vector>
 
 #include <android-base/stringprintf.h>
-#include <unwindstack/LocalUnwinder.h>
-#include <unwindstack/MapInfo.h>
+#include <unwindstack/Maps.h>
+#include <unwindstack/Memory.h>
+#include <unwindstack/Regs.h>
+#include <unwindstack/RegsGetLocal.h>
+#include <unwindstack/Unwinder.h>
 
 #include "UnwindBacktrace.h"
 #include "debug_log.h"
@@ -52,31 +55,46 @@ extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 static pthread_once_t g_setup_once = PTHREAD_ONCE_INIT;
 
-static unwindstack::LocalUnwinder* g_unwinder;
+static unwindstack::LocalUpdatableMaps* g_local_maps;
+static std::shared_ptr<unwindstack::Memory> g_process_memory;
 
-static void Setup() {
 #if defined(__LP64__)
-  std::vector<std::string> skip_libraries{"/system/lib64/libunwindstack.so", "/system/lib64/libc_malloc_debug.so"};
+static std::vector<std::string> g_skip_libraries{"/system/lib64/libunwindstack.so",
+                                                 "/system/lib64/libc_malloc_debug.so"};
 #else
-  std::vector<std::string> skip_libraries{"/system/lib/libunwindstack.so", "/system/lib/libc_malloc_debug.so"};
+static std::vector<std::string> g_skip_libraries{"/system/lib/libunwindstack.so",
+                                                 "/system/lib/libc_malloc_debug.so"};
 #endif
 
-  g_unwinder = new unwindstack::LocalUnwinder(skip_libraries);
-  g_unwinder->Init();
+static void Setup() {
+  g_local_maps = new unwindstack::LocalUpdatableMaps();
+  if (!g_local_maps->Parse()) {
+    delete g_local_maps;
+    g_local_maps = nullptr;
+  } else {
+    g_process_memory = unwindstack::Memory::CreateProcessMemoryThreadCached(getpid());
+  }
 }
 
-bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameData>* frame_info, size_t max_frames) {
+bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::FrameData>* frame_info,
+            size_t max_frames) {
   pthread_once(&g_setup_once, Setup);
 
-  if (g_unwinder == nullptr) {
+  if (g_local_maps == nullptr) {
     return false;
   }
 
-  if (!g_unwinder->Unwind(frame_info, max_frames)) {
+  std::unique_ptr<unwindstack::Regs> regs(unwindstack::Regs::CreateFromLocal());
+  unwindstack::RegsGetLocal(regs.get());
+  unwindstack::Unwinder unwinder(max_frames, g_local_maps, regs.get(), g_process_memory);
+  unwinder.Unwind(&g_skip_libraries);
+  if (unwinder.NumFrames() == 0) {
     frames->clear();
     frame_info->clear();
     return false;
   }
+
+  *frame_info = unwinder.ConsumeFrames();
 
   for (const auto& frame : *frame_info) {
     frames->push_back(frame.pc);
@@ -84,20 +102,18 @@ bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameD
   return true;
 }
 
-void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info) {
+void UnwindLog(const std::vector<unwindstack::FrameData>& frame_info) {
   for (size_t i = 0; i < frame_info.size(); i++) {
-    const unwindstack::LocalFrameData* info = &frame_info[i];
-    unwindstack::MapInfo* map_info = info->map_info;
-
+    const unwindstack::FrameData* info = &frame_info[i];
     std::string line = android::base::StringPrintf("          #%0zd  pc %" PAD_PTR "  ", i, info->rel_pc);
-    if (map_info->offset() != 0) {
-      line += android::base::StringPrintf("(offset 0x%" PRIx64 ") ", map_info->offset());
+    if (info->map_elf_start_offset != 0) {
+      line += android::base::StringPrintf("(offset 0x%" PRIx64 ") ", info->map_elf_start_offset);
     }
 
-    if (map_info->name().empty()) {
-      line += android::base::StringPrintf("<anonymous:%" PRIx64 ">", map_info->start());
+    if (info->map_name.empty()) {
+      line += android::base::StringPrintf("<anonymous:%" PRIx64 ">", info->map_start);
     } else {
-      line += map_info->name();
+      line += info->map_name;
     }
 
     if (!info->function_name.empty()) {

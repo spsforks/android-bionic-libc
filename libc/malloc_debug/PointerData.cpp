@@ -44,6 +44,7 @@
 #include <android-base/stringprintf.h>
 #include <android-base/thread_annotations.h>
 #include <platform/bionic/macros.h>
+#include <unwindstack/Unwinder.h>
 
 #include "Config.h"
 #include "DebugData.h"
@@ -66,7 +67,8 @@ std::mutex PointerData::frame_mutex_;
 std::unordered_map<FrameKeyType, size_t> PointerData::key_to_index_ GUARDED_BY(
     PointerData::frame_mutex_);
 std::unordered_map<size_t, FrameInfoType> PointerData::frames_ GUARDED_BY(PointerData::frame_mutex_);
-std::unordered_map<size_t, std::vector<unwindstack::LocalFrameData>> PointerData::backtraces_info_ GUARDED_BY(PointerData::frame_mutex_);
+std::unordered_map<size_t, std::vector<unwindstack::FrameData>> PointerData::backtraces_info_
+    GUARDED_BY(PointerData::frame_mutex_);
 constexpr size_t kBacktraceEmptyIndex = 1;
 size_t PointerData::cur_hash_index_ GUARDED_BY(PointerData::frame_mutex_);
 
@@ -136,7 +138,7 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
 
 size_t PointerData::AddBacktrace(size_t num_frames) {
   std::vector<uintptr_t> frames;
-  std::vector<unwindstack::LocalFrameData> frames_info;
+  std::vector<unwindstack::FrameData> frames_info;
   if (g_debug->config().options() & BACKTRACE_FULL) {
     if (!Unwind(&frames, &frames_info, num_frames)) {
       return kBacktraceEmptyIndex;
@@ -386,7 +388,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
     REQUIRES(pointer_mutex_, frame_mutex_) {
   for (const auto& entry : pointers_) {
     FrameInfoType* frame_info = nullptr;
-    std::vector<unwindstack::LocalFrameData>* backtrace_info = nullptr;
+    std::vector<unwindstack::FrameData>* backtrace_info = nullptr;
     size_t hash_index = entry.second.hash_index;
     if (hash_index > kBacktraceEmptyIndex) {
       auto frame_entry = frames_.find(hash_index);
@@ -588,8 +590,8 @@ void PointerData::DumpLiveToFile(int fd) {
       dprintf(fd, "  bt_info");
       for (const auto& frame : *info.backtrace_info) {
         dprintf(fd, " {");
-        if (frame.map_info != nullptr && !frame.map_info->name().empty()) {
-          dprintf(fd, "\"%s\"", frame.map_info->name().c_str());
+        if (!frame.map_name.empty()) {
+          dprintf(fd, "\"%s\"", frame.map_name.c_str());
         } else {
           dprintf(fd, "\"\"");
         }

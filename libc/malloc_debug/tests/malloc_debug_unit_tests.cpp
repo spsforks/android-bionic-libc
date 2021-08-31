@@ -43,6 +43,8 @@
 
 #include <platform/bionic/macros.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <unwindstack/MapInfo.h>
+#include <unwindstack/Unwinder.h>
 
 #include "Config.h"
 #include "malloc_debug.h"
@@ -1526,19 +1528,20 @@ END)";
 }
 
 TEST_F(MallocDebugTest, backtrace_full_dump_on_exit) {
+#if 0
   pid_t pid;
   if ((pid = fork()) == 0) {
     Init("backtrace=4 backtrace_full backtrace_dump_on_exit");
     BacktraceUnwindFake(
-      std::vector<unwindstack::LocalFrameData>{{nullptr, 0x1100, 0x100, "fake1", 10},
-                                               {nullptr, 0x1200, 0x200, "fake2", 20}});
+      std::vector<unwindstack::FrameData>{{nullptr, 0x1100, 0x100, "fake1", 10},
+                                          {nullptr, 0x1200, 0x200, "fake2", 20}});
     unwindstack::MapInfo map_info{nullptr, nullptr, 0x10000, 0x20000, 0,
                                   PROT_READ | PROT_EXEC, "/data/fake.so"};
     BacktraceUnwindFake(
-      std::vector<unwindstack::LocalFrameData>{{&map_info, 0x1a000, 0xa000, "level1", 0},
+      std::vector<unwindstack::FrameData>{{&map_info, 0x1a000, 0xa000, "level1", 0},
                                                {&map_info, 0x1b000, 0xb000, "level2", 10}});
     BacktraceUnwindFake(
-      std::vector<unwindstack::LocalFrameData>{{nullptr, 0x1a000, 0xa000, "func1", 0},
+      std::vector<unwindstack::FrameData>{{nullptr, 0x1a000, 0xa000, "func1", 0},
                                                {nullptr, 0x1b000, 0xb000, "func2", 10},
                                                {nullptr, 0x1c000, 0xc000, "", 30}});
 
@@ -1584,6 +1587,7 @@ END)";
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
+#endif
 }
 
 TEST_F(MallocDebugTest, realloc_usable_size) {
