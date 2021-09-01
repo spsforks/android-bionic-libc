@@ -1,0 +1,151 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989588",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d3",
+      "fixSuggestions": [
+        {
+          "fixId": "b5456e8b_ef60b959",
+          "description": "Change to \"libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+              "range": {
+                "startLine": 52,
+                "startChar": 1,
+                "endLine": 52,
+                "endChar": 6
+              },
+              "replacement": "call"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "5883c334_7938114c",
+        "filename": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T05:12:00Z",
+      "side": 1,
+      "message": "Common typo found: \"calll\" -- should it be \"call\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 52,
+        "startChar": 1,
+        "endLine": 52,
+        "endChar": 6
+      },
+      "revId": "646e0d7d95d0307dcdb7ea34fd46832b8cada062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989586",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "af0cae86_8c0abfbf",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memcmp-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T05:12:00Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 199,
+        "startChar": 20,
+        "endLine": 199,
+        "endChar": 21
+      },
+      "revId": "646e0d7d95d0307dcdb7ea34fd46832b8cada062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989586",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "fb2b8ef7_f5f49e3c",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memcmp-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T05:12:00Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 247,
+        "startChar": 13,
+        "endLine": 247,
+        "endChar": 14
+      },
+      "revId": "646e0d7d95d0307dcdb7ea34fd46832b8cada062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989586",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "1de6bb3d_0ecb56f6",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memcmp-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T05:12:00Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 248,
+        "startChar": 9,
+        "endLine": 248,
+        "endChar": 10
+      },
+      "revId": "646e0d7d95d0307dcdb7ea34fd46832b8cada062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989586",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d3",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "65cf8a07_c447dc4e",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T05:12:00Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 44,
+        "startChar": 15,
+        "endLine": 44,
+        "endChar": 16
+      },
+      "revId": "646e0d7d95d0307dcdb7ea34fd46832b8cada062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
