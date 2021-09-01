@@ -1,0 +1,641 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "262cab07_dfdb2a4b",
+          "description": "Change to \"libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+              "range": {
+                "startLine": 52,
+                "startChar": 1,
+                "endLine": 52,
+                "endChar": 6
+              },
+              "replacement": "call"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "882bfa5b_7f6ba810",
+        "filename": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"calll\" -- should it be \"call\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 52,
+        "startChar": 1,
+        "endLine": 52,
+        "endChar": 6
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "392343bd_0c0b049e",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+              "range": {
+                "startLine": 130,
+                "startChar": 13,
+                "endLine": 130,
+                "endChar": 19
+              },
+              "replacement": "address"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "32ad1621_e9a5797b",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"adress\" -- should it be \"address\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 130,
+        "startChar": 13,
+        "endLine": 130,
+        "endChar": 19
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "9a3507f3_efc86daf",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+              "range": {
+                "startLine": 130,
+                "startChar": 45,
+                "endLine": 130,
+                "endChar": 51
+              },
+              "replacement": "address"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "5bc69b3b_ea0f4586",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"adress\" -- should it be \"address\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 130,
+        "startChar": 45,
+        "endLine": 130,
+        "endChar": 51
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "60b31f46_072e6572",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+              "range": {
+                "startLine": 326,
+                "startChar": 45,
+                "endLine": 326,
+                "endChar": 51
+              },
+              "replacement": "address"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "5b476095_7400b2a1",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"adress\" -- should it be \"address\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 326,
+        "startChar": 45,
+        "endLine": 326,
+        "endChar": 51
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "e58d2fd1_87ef74f4",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+              "range": {
+                "startLine": 326,
+                "startChar": 13,
+                "endLine": 326,
+                "endChar": 19
+              },
+              "replacement": "address"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "7cc22f3b_7b35754d",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"adress\" -- should it be \"address\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 326,
+        "startChar": 13,
+        "endLine": 326,
+        "endChar": 19
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989378",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "33ff3c85_2961724d",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strcpy-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 459,
+        "startChar": 22,
+        "endLine": 459,
+        "endChar": 23
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989378",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "cfb06785_f6d89ff7",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strlen-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 158,
+        "endChar": 1
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989378",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "f01610a5_27151cf1",
+        "filename": "libc/arch-x86_64/silvermont/string/sse2-strlen-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 1
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "82d52013_3117c304",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 461,
+                "startChar": 24,
+                "endLine": 461,
+                "endChar": 31
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "41b63b7d_be4f2d95",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 461,
+        "startChar": 24,
+        "endLine": 461,
+        "endChar": 31
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "124fdfa1_601eacff",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 475,
+                "startChar": 20,
+                "endLine": 475,
+                "endChar": 27
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "c2528937_d5b853db",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 475,
+        "startChar": 20,
+        "endLine": 475,
+        "endChar": 27
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "8a739dda_2c70c833",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 488,
+                "startChar": 17,
+                "endLine": 488,
+                "endChar": 24
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "36822c0f_b052c596",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 488,
+        "startChar": 17,
+        "endLine": 488,
+        "endChar": 24
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "92175864_bcfc3790",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 645,
+                "startChar": 22,
+                "endLine": 645,
+                "endChar": 29
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "2bf2c574_e4a4b1df",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 645,
+        "startChar": 22,
+        "endLine": 645,
+        "endChar": 29
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "07f4596e_cc648088",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 651,
+                "startChar": 25,
+                "endLine": 651,
+                "endChar": 32
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "2e83fa88_42c48f0f",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 651,
+        "startChar": 25,
+        "endLine": 651,
+        "endChar": 32
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "5310b7b3_68c37f91",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 665,
+                "startChar": 21,
+                "endLine": 665,
+                "endChar": 28
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "dfe23b28_6b4b562a",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 665,
+        "startChar": 21,
+        "endLine": 665,
+        "endChar": 28
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "08be3371_18b83e94",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+              "range": {
+                "startLine": 1569,
+                "startChar": 55,
+                "endLine": 1569,
+                "endChar": 62
+              },
+              "replacement": "aligned"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "bc14032f_7c84a68e",
+        "filename": "libc/arch-x86_64/silvermont/string/sse4-memcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1569,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"alinged\" -- should it be \"aligned\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 1569,
+        "startChar": 55,
+        "endLine": 1569,
+        "endChar": 62
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000014989373",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d2",
+      "fixSuggestions": [
+        {
+          "fixId": "56efa95f_52d49857",
+          "description": "Change to \"libc/arch-x86_64/silvermont/string/ssse3-strcmp-slm.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86_64/silvermont/string/ssse3-strcmp-slm.S",
+              "range": {
+                "startLine": 111,
+                "startChar": 31,
+                "endLine": 111,
+                "endChar": 42
+              },
+              "replacement": "comparison"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "4cce5d9f_a8a38eba",
+        "filename": "libc/arch-x86_64/silvermont/string/ssse3-strcmp-slm.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-09-01T04:49:33Z",
+      "side": 1,
+      "message": "Common typo found: \"comparision\" -- should it be \"comparison\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 111,
+        "startChar": 31,
+        "endLine": 111,
+        "endChar": 42
+      },
+      "revId": "b7221f9a73d711f8605bd218ef0a9bf1f43b89dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
