@@ -118,6 +118,14 @@ typedef struct _ftsent {
 __BEGIN_DECLS
 
 /*
+ * This file is exported as part of libfts for use with musl, which doesn't
+ * define __INTRODUCED_IN.  Stub it out.
+ */
+#if defined(ANDROID_HOST_MUSL)
+#define __INTRODUCED_IN(x)
+#endif
+
+/*
  * Strictly these functions were available before Lollipop/21, but there was an accidental ABI
  * breakage in 21 that means you can't write code that runs on current devices and pre-21 devices,
  * so we break the tie in favor of current and future devices.
@@ -127,6 +135,10 @@ int fts_close(FTS* __fts) __INTRODUCED_IN(21);
 FTS* fts_open(char* const* __path, int __options, int (*__comparator)(const FTSENT** __lhs, const FTSENT** __rhs)) __INTRODUCED_IN(21);
 FTSENT* fts_read(FTS* __fts) __INTRODUCED_IN(21);
 int fts_set(FTS* __fts, FTSENT* __entry, int __options) __INTRODUCED_IN(21);
+
+#if defined(ANDROID_HOST_MUSL)
+#undef __INTRODUCED_IN
+#endif
 
 __END_DECLS
 

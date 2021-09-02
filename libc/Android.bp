@@ -2531,6 +2531,29 @@ cc_library {
     },
 }
 
+cc_library_host_static {
+    name: "libfts",
+    srcs: [
+        "bionic/fts.c",
+        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
+    ],
+    export_include_dirs: ["fts-include"],
+    cflags: ["-include openbsd-compat.h"],
+    local_include_dirs: [
+        "private",
+        "stdio",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/lib/libc/gdtoa/",
+    ],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
+    },
+}
+
 subdirs = [
     "bionic/scudo",
 ]

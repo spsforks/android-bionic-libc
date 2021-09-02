@@ -36,10 +36,17 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <fts.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+// This file is compiled against musl as part of libfts, and musl doesn't
+// provided __unused.
+#if defined(ANDROID_HOST_MUSL)
+#define __unused __attribute__((__unused__))
+#endif
 
 #define MAXIMUM(a, b)	(((a) > (b)) ? (a) : (b))
 
@@ -56,7 +63,9 @@ static int	 fts_safe_changedir(FTS *, FTSENT *, int, const char *);
 
 /* Android: OpenBSD source compatibility workarounds. */
 #include "private/bsd_sys_param.h"
+#ifndef DEF_WEAK
 #define DEF_WEAK(s) /* nothing */
+#endif
 void* recallocarray(void*, size_t, size_t, size_t);
 
 #define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
