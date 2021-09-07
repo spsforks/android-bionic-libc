@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd3ecb4d_16bf5dce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-07T21:59:05Z",
+      "side": 1,
+      "message": "There are a couple ugly hacks in here (the fts.h symlink so we can export just fts.h, having to #define parts of sys/cdefs.h), but I didn\u0027t find any better solutions.",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
