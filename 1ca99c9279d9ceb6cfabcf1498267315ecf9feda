@@ -91,6 +91,47 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c5cb19c6_8cb063a9",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T19:55:17Z",
+      "side": 1,
+      "message": "\u003e I could add it to musl, but it is so rarely used (just elfutils and libabigail) that it seemed like a separate add-on library made more sense.\n\nfor the \"build what we have\" goal, yes. but i\u0027m thinking ahead to the \"minimize the pain of writing code for device _and_ host\" goal :-)\n\n\u003e Alternatively, it\u0027s only used once this file, I could just expand it to __attribute__((__unused__)).\n\nyeah, sgtm. probably the least worst option here then. (one of these days i\u0027m hoping C will get the C++ [[blah]] syntax and we can try to remove a lot of this stuff with no damage to readability or portability. i\u0027ll not be holding my breath though.)",
+      "parentUuid": "4444bdc9_f68c38ca",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e4b6f98_00fc0877",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T19:55:17Z",
+      "side": 1,
+      "message": "actually, can we just delete this cruft completely? it\u0027s not upstream (http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/lib/libc/gen/fts.c?rev\u003d1.60\u0026content-type\u003dtext/x-cvsweb-markup), and i think we get the DEF_WEAK we want from the openbsd-compat.h file anyway? or am i missing something?",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 6
+      },
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c704735b_7ca40ea7",
         "filename": "libc/include/fts.h",
         "patchSetId": 1
