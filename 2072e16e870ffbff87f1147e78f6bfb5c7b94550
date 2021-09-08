@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "869b57bb_6fe15844",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T21:19:18Z",
+      "side": 1,
+      "message": "fts.c uses ALIGN from bsd_sys_param.h, which uses uintptr_t.  I either need it here or in bsd_sys_param.h.",
+      "parentUuid": "e1a79098_b157954d",
+      "revId": "2072e16e870ffbff87f1147e78f6bfb5c7b94550",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "934fbb94_9a88c9b4",
         "filename": "libc/bionic/fts.c",
         "patchSetId": 2
@@ -31,6 +49,30 @@
       "writtenOn": "2021-09-08T20:32:38Z",
       "side": 1,
       "message": "sorry for not thinking about this earlier: i suspect you can just delete this now? openbsd code isn\u0027t \"unused clean\", so i think we build that code without the warning now?",
+      "range": {
+        "startLine": 451,
+        "startChar": 16,
+        "endLine": 451,
+        "endChar": 43
+      },
+      "revId": "2072e16e870ffbff87f1147e78f6bfb5c7b94550",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7f65c8f_4050d0f5",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T21:19:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "934fbb94_9a88c9b4",
       "range": {
         "startLine": 451,
         "startChar": 16,
