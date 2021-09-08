@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "edac404a_5289bf7d",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T19:22:10Z",
+      "side": 1,
+      "message": "we can\u0027t export cflags as part of a cc_library, just includes?\n\nshould we instead link our fts into musl, and #include_next the bionic header in a musl header? that would be the most transparent option.\n\ni\u0027m wondering how many of these we\u0027ll end up with in the long run. and it always was a PITA with glibc that you couldn\u0027t __unused/__packed/etc --- i don\u0027t have much of an opinion on whether we should have the -include in the global musl cflags, but i do think we\u0027d probably be better off with a global musl-compat.h file (even if we only explicitly pull it in in those places where it\u0027s actually needed). (the counterargument to that being the education one --- we\u0027d probably still end up with people reinventing the wheel with these things because they don\u0027t realize they can just `-include` to make them go away.) (the counter-counterargument probably being \"doesn\u0027t help macOS\", though i\u0027m assuming that should be _less_ of a problem going forward, and if it matters we could always do similar there.)",
+      "parentUuid": "dcdea5e9_0ce8831d",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c704735b_7ca40ea7",
         "filename": "libc/include/fts.h",
         "patchSetId": 1
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I can look at that, but it will require libfts to export two include directories that each contain an fts.h, one for use by libfts clients, and then one that is a symlink to the bionic one.  Do you have any opinion on where I should put those?  All inside bionic/libc, or should I be trying to move it to bionic/libfts?",
       "parentUuid": "c704735b_7ca40ea7",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a11540ae_90240d9a",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T19:22:10Z",
+      "side": 1,
+      "message": "there are already a few `bionic/libc/*/include/`s. oddly they\u0027re all called `foo` rather than `libfoo`, so probably just bionic/libc/bionic_fts/include? (he says, realizing we never actually checked the bionic_regex stuff in...)\n\n(or in external/musl, as mentioned in the other comment.)",
+      "parentUuid": "342ba1a8_cc27e0c2",
       "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
