@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "13c1f8f6_ea11f5d8",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T22:00:43Z",
+      "side": 1,
+      "message": "yeah, sticking it in there instead means one less diff for me to upstream (and one less diff that upstream doesn\u0027t even need). obviously i haven\u0027t got around to this upstreaming, but (as you can see from L1) i do at least keep the forked stuff up to date, so i\u0027m still greatly motivated to minimize diffs :-)",
+      "parentUuid": "869b57bb_6fe15844",
+      "revId": "2072e16e870ffbff87f1147e78f6bfb5c7b94550",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "934fbb94_9a88c9b4",
         "filename": "libc/bionic/fts.c",
         "patchSetId": 2
