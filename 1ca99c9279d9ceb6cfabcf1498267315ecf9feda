@@ -180,6 +180,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5841073d_2924bead",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T20:16:34Z",
+      "side": 1,
+      "message": "\u003e This whole compatibility block could be dropped if fts.c were moved into libc_openbsd_ndk.\n\nsgtm. i think the idea was probably \"libc_openbsd_ndk is \u0027pure\u0027 openbsd source\", but i don\u0027t think that\u0027s a useful distinction (other than that it was easy to divide by source directory when writing the build rules!), and there\u0027s clearly benefit to building this \"mostly openbsd\" source with its siblings, so...\n\n(/me wonders how many other mistakes we have like this where we\u0027re just making our own lives more difficult and adding useless diffs!)",
+      "parentUuid": "e60e1742_b4895df2",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 6
+      },
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c704735b_7ca40ea7",
         "filename": "libc/include/fts.h",
         "patchSetId": 1
