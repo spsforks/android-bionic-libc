@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dcdea5e9_0ce8831d",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T19:10:52Z",
+      "side": 1,
+      "message": "Do you mean a local -include or global -include for all files that compile against musl?  \n\nThis one could be in a locally -included musl-compat.h that is used when compiling fts.o, but __INTRODUCED_IN is needed by clients of libfts that include fts.h, so it would have to be in a global -include.  It would only be needed when including the one bionic header, so a global -include seems like overkill.",
+      "parentUuid": "dfa4a801_724c14e3",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c704735b_7ca40ea7",
         "filename": "libc/include/fts.h",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "writtenOn": "2021-09-08T01:17:10Z",
       "side": 1,
       "message": "can we #include_next this in libfts instead? this header gets exported in the NDK...",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "342ba1a8_cc27e0c2",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T19:10:52Z",
+      "side": 1,
+      "message": "I can look at that, but it will require libfts to export two include directories that each contain an fts.h, one for use by libfts clients, and then one that is a symlink to the bionic one.  Do you have any opinion on where I should put those?  All inside bionic/libc, or should I be trying to move it to bionic/libfts?",
+      "parentUuid": "c704735b_7ca40ea7",
       "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
