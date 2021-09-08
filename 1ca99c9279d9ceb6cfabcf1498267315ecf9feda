@@ -16,6 +16,40 @@
       "message": "There are a couple ugly hacks in here (the fts.h symlink so we can export just fts.h, having to #define parts of sys/cdefs.h), but I didn\u0027t find any better solutions.",
       "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfa4a801_724c14e3",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T01:17:10Z",
+      "side": 1,
+      "message": "should we have all of this stuff in a musl-compat.h somewhere and -include that instead?",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c704735b_7ca40ea7",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-08T01:17:10Z",
+      "side": 1,
+      "message": "can we #include_next this in libfts instead? this header gets exported in the NDK...",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
