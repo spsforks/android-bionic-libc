@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1da3e1c_52a5cc63",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T22:55:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13c1f8f6_ea11f5d8",
+      "revId": "2072e16e870ffbff87f1147e78f6bfb5c7b94550",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "934fbb94_9a88c9b4",
