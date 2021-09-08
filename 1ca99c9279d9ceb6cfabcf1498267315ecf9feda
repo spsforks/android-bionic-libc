@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4444bdc9_f68c38ca",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-08T19:39:10Z",
+      "side": 1,
+      "message": "IIRC Soong supports exported cflags, but doesn\u0027t expose it to Android.bp files on the assumption that the resulting spooky action at a distance would be hard to debug.\n\nI could add it to musl, but it is so rarely used (just elfutils and libabigail) that it seemed like a separate add-on library made more sense.\n\nIt turns out we can\u0027t -include a header with __unused, locally or globally, because musl\u0027s bits/stats.h has \"long __unused[3];\" in a structure definition.  It has to be in fts.c somewhere after the standard includes.\n\nAlternatively, it\u0027s only used once this file, I could just expand it to __attribute__((__unused__)).",
+      "parentUuid": "edac404a_5289bf7d",
+      "revId": "1ca99c9279d9ceb6cfabcf1498267315ecf9feda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c704735b_7ca40ea7",
         "filename": "libc/include/fts.h",
         "patchSetId": 1
