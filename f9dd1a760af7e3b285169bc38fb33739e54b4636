@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b0f0b58_fb323101",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1616271
+      },
+      "writtenOn": "2021-09-11T02:21:37Z",
+      "side": 1,
+      "message": "Hi Elliott, thanks for fixing this issue. I\u0027m curious why pointing into the ELF file itself regressed the dlopen\u0027s perf so much. ",
+      "revId": "f9dd1a760af7e3b285169bc38fb33739e54b4636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
