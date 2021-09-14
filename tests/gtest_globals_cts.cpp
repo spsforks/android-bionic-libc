@@ -17,5 +17,5 @@
 #include "gtest_globals.h"
 
 std::string GetTestlibRoot() {
-  return "/data/local/tmp/lib/bionic-loader-test-libs";
+  return "/data/local/tests/unrestricted/lib/bionic-loader-test-libs";
 }
