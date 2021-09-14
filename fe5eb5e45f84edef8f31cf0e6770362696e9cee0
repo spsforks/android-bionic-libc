@@ -33,6 +33,24 @@
       "message": "i really wish presubmit hooks weren\u0027t skippable... https://android-review.googlesource.com/c/platform/bionic/+/1826812 is the alternative change to not use APL2. (in general, i see any APL2 [rather than BSD] additions to bionic as a mistake; given how much of bionic is or was originally from BSD it just seems like the right thing to do. but since APL2 is the default everywhere else, it\u0027s a hard habit to break...)",
       "revId": "fe5eb5e45f84edef8f31cf0e6770362696e9cee0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25ec257b_b79a50ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-09-14T20:44:17Z",
+      "side": 1,
+      "message": "I\u0027m not too knowledgeable about licenses, but I would lean towards using a single version at least for all of our code (that we explicitly wrote), and I would tend towards BSD since we already have a lot of code with that. So do you want to fix the fts license, or should I?",
+      "parentUuid": "1f5d3f2e_7826ca1d",
+      "revId": "fe5eb5e45f84edef8f31cf0e6770362696e9cee0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
