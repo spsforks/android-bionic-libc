@@ -33,6 +33,24 @@
       "message": "to avoid the cost of strlcpy(), does `char buf[] \u003d \"E|\";` get optimized into something that doesn\u0027t work?\n\nwhatever we do, this *definitely* needs a comment, or someone will come and \"fix\" this \"obviously silly\" code :-)\n\nyou\u0027ll want to change the libcutils copy of this code too...",
       "revId": "7b7bd8297f59937629c789f299fe5c1723b6d48a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0235bca_095aae41",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1040443
+      },
+      "writtenOn": "2021-09-21T18:12:29Z",
+      "side": 1,
+      "message": "100% agree this deserves a comment.\n\nFor context the issue here was: ftrace doesn\u0027t try to page-fault while doing copy_from_user, because it reuses internally code that is supposed to work in IRQ or pagefault context (so has to avoid double-pagefaults).\n\nThe issue here is that if the .rodata section that contains the literal is paged out (i.e. the clean page is evicted) beacuse of memory pressure, the kernel will replace \"E|\" with \"faulted\"\n\nSo the \"fix\" here is to copy the string onto the stack, which is more unlikely to be paged out and pass the pointer to that.\n\n\nP.S: I think this can be just\n\nvolatile char buf[3]{\u0027E\u0027, \u0027|\u0027};\nRETRY(write(fd, const_cast\u003cchar*\u003e(buf), sizeof(buf)));  \n\nwith the volatile tying to prevent that if write becomes a compiler builtin one day, clang becomes too clever around that code.\n\nP.S: IIRC the libcutil code happens to be fine because it appends the pid to the E| and as such uses the stack already.",
+      "parentUuid": "0be13a7a_1a890733",
+      "revId": "7b7bd8297f59937629c789f299fe5c1723b6d48a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
