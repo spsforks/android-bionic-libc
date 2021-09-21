@@ -119,7 +119,7 @@ cc_defaults {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
         },
         malloc_not_svelte: {
-            cflags: ["-DUSE_SCUDO"],
+            //cflags: ["-DUSE_SCUDO"],
         },
     },
 }
@@ -149,7 +149,7 @@ cc_defaults {
         "libc_jemalloc_wrapper",
     ],
     header_libs: ["gwp_asan_headers"],
-    product_variables: libc_scudo_product_variables,
+    //product_variables: libc_scudo_product_variables,
 }
 
 // Functions not implemented by jemalloc directly, or that need to
