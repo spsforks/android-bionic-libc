@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d89a28dd_1b05e793",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-09-21T23:09:59Z",
+      "side": 1,
+      "message": "Oops, didn\u0027t mean to include the Android.bp change.",
+      "revId": "b3cac0fab48fd9d33005c931e02632e290d57568",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
