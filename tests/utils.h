@@ -44,6 +44,7 @@
 #include <android-base/macros.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
+#include <android-base/test_utils.h>
 
 #if defined(__LP64__)
 #define PATH_TO_SYSTEM_LIB "/system/lib64/"
@@ -228,8 +229,7 @@ class ExecTestHelper {
     env_ = env;
   }
 
-  void Run(const std::function<void()>& child_fn, int expected_exit_status,
-           const char* expected_output) {
+  void Run(const std::function<void()>& child_fn, int expected_exit_status) {
     int fds[2];
     ASSERT_NE(pipe(fds), -1);
 
@@ -258,8 +258,21 @@ class ExecTestHelper {
 
     std::string error_msg("Test output:\n" + output_);
     AssertChildExited(pid, expected_exit_status, &error_msg);
+  }
+
+  void Run(const std::function<void()>& child_fn, int expected_exit_status,
+           const char* expected_output) {
+    Run(child_fn, expected_exit_status);
     if (expected_output != nullptr) {
       ASSERT_EQ(expected_output, output_);
+    }
+  }
+
+  void Run(const std::function<void()>& child_fn, int expected_exit_status,
+           const std::regex& expected_output_regex) {
+    Run(child_fn, expected_exit_status);
+    if (!std::regex_search(output_, expected_output_regex)) {
+      FAIL() << "regex didn't match " << output_;
     }
   }
 
