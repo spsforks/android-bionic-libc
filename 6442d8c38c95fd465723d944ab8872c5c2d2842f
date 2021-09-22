@@ -16,6 +16,24 @@
       "message": "hitting presubmit because i\u0027m pretty sure we have some tests this will break?\n\ni have to say though that i kind of like this idea. and it matches what i did in libcore a decade ago, for similar reasons. it\u0027ll amuse the toybox guy too, who\u0027s always preferred _just_ the errno names. having both seems like a better balance though --- something for everyone.",
       "revId": "6442d8c38c95fd465723d944ab8872c5c2d2842f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49780372_d70e4d32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-09-22T23:21:42Z",
+      "side": 1,
+      "message": "Yay! I\u0027m glad you like it. I couldn\u0027t find the tests quickly, and since this CL is 1 macro + vim regex, figured I\u0027d wait to see what you thought.",
+      "parentUuid": "e4f79530_2f4b5ecf",
+      "revId": "6442d8c38c95fd465723d944ab8872c5c2d2842f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
