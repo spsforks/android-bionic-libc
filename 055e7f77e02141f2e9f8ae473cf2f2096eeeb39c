@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d9f84e7_3f7f6023",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080238
+      },
+      "writtenOn": "2021-09-22T18:27:46Z",
+      "side": 1,
+      "message": "Thanks! Have changed to volatile const char array as suggested by Primiano.",
+      "revId": "055e7f77e02141f2e9f8ae473cf2f2096eeeb39c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
