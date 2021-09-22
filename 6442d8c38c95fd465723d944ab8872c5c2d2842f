@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4f79530_2f4b5ecf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-22T21:26:10Z",
+      "side": 1,
+      "message": "hitting presubmit because i\u0027m pretty sure we have some tests this will break?\n\ni have to say though that i kind of like this idea. and it matches what i did in libcore a decade ago, for similar reasons. it\u0027ll amuse the toybox guy too, who\u0027s always preferred _just_ the errno names. having both seems like a better balance though --- something for everyone.",
+      "revId": "6442d8c38c95fd465723d944ab8872c5c2d2842f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
