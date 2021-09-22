@@ -16,6 +16,24 @@
       "message": "i think you mixed your other change in with this one :-)",
       "revId": "8865933cddd9c3a9253b3cfe538aeb8bbbf28c9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e766451_38985de3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-09-22T00:47:11Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "d2601d34_096343b0",
+      "revId": "8865933cddd9c3a9253b3cfe538aeb8bbbf28c9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
