@@ -58,7 +58,7 @@ static int signum(int i) {
 TEST(STRING_TEST, strerror) {
   // Valid.
   ASSERT_STREQ("Success", strerror(0));
-  ASSERT_STREQ("Operation not permitted", strerror(1));
+  ASSERT_STREQ("Operation not permitted (EPERM)", strerror(1));
 
   // Invalid.
   ASSERT_STREQ("Unknown error -1", strerror(-1));
@@ -106,9 +106,9 @@ TEST(STRING_TEST, gnu_strerror_r) {
 #if defined(__BIONIC__)
   ASSERT_STREQ("Success", buf);
 #endif
-  ASSERT_STREQ("Operation not permitted", strerror_r(1, buf, sizeof(buf)));
+  ASSERT_STREQ("Operation not permitted (EPERM)", strerror_r(1, buf, sizeof(buf)));
 #if defined(__BIONIC__)
-  ASSERT_STREQ("Operation not permitted", buf);
+  ASSERT_STREQ("Operation not permitted (EPERM)", buf);
 #endif
 
   // Invalid.

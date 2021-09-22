@@ -33,7 +33,7 @@ TEST(string, posix_strerror_r) {
   ASSERT_STREQ("Success", buf);
 #endif
   ASSERT_EQ(0, posix_strerror_r(1, buf, sizeof(buf)));
-  ASSERT_STREQ("Operation not permitted", buf);
+  ASSERT_STREQ("Operation not permitted (EPERM)", buf);
 
 #if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
   // Invalid.
