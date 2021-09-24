@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "71f90db4_7df04c0f",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-09-24T18:26:03Z",
+      "side": 1,
+      "message": "Good point. HWASan takes precedence because it replaces scudo, while MTE is implemetned inside scudo. I *think* this new order will work for all combinations but I can not check because fvp build is having networking problems right now. We don\u0027t have any continuous testing of mte + hwasan in the same build, so it should be fine for now.",
+      "parentUuid": "d4ea1b46_be34a980",
+      "range": {
+        "startLine": 154,
+        "startChar": 13,
+        "endLine": 154,
+        "endChar": 32
+      },
+      "revId": "e9c706df4ff6aa463630ee106a93de34d6f9ef79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3ddf980a_ccaa9e44",
         "filename": "tests/leak_test.cpp",
         "patchSetId": 1
@@ -37,6 +61,24 @@
       "writtenOn": "2021-09-17T22:04:57Z",
       "side": 1,
       "message": "why repeat 4 more times then?",
+      "revId": "e9c706df4ff6aa463630ee106a93de34d6f9ef79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41ccbd75_1804b063",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-09-24T18:26:03Z",
+      "side": 1,
+      "message": "Safety margin :) Went back to a single warm up pass, it seems to work reliably.",
+      "parentUuid": "3ddf980a_ccaa9e44",
       "revId": "e9c706df4ff6aa463630ee106a93de34d6f9ef79",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
