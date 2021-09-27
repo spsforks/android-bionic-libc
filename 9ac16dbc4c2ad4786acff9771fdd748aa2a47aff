@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15af885e_f4b8a301",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-27T16:58:34Z",
+      "side": 1,
+      "message": "given that 64-bit only is going to be a thing sooner or later (https://www.arm.com/blogs/blueprint/64-bit), does mainline have a proper plan for this? i wouldn\u0027t want to do anything that they haven\u0027t signed off on as the plan of record --- it\u0027s bad enough that we already have the wrong name for our module :-)",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
