@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a75d462_b671224b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-27T18:10:47Z",
+      "side": 1,
+      "message": "+mitchp who\u0027s thought more deeply about sampling rates --- though mostly in the context of *apps*, whereas i think you\u0027re more interested in using this for the whole platform with your dogfood users?\n\n(i have various minor nits around formatting and naming, but i\u0027ll just fix those myself if we agree on the high-level details!)",
+      "revId": "9fd82873a26f0e82732b69afdb4b0b76a395f469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
