@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/system_properties.h>
 
 #include "bionic/gwp_asan_wrappers.h"
 #include "gwp_asan/guarded_pool_allocator.h"
@@ -58,12 +59,19 @@ using Options = gwp_asan::options::Options;
 // This function handles initialisation as asked for by MallocInitImpl. This
 // should always be called in a single-threaded context.
 bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
+  char value[PROP_VALUE_MAX];
   prev_dispatch = dispatch;
 
   Options Opts;
   Opts.Enabled = true;
   Opts.MaxSimultaneousAllocations = 32;
   Opts.SampleRate = 2500;
+  if(__system_property_get("ro.gwp_asan.samplerate", value)>0){
+      int SampleRate = atoi(value);
+      if(SampleRate != 0)
+          Opts.SampleRate = SampleRate;
+  }
+
   Opts.InstallSignalHandlers = false;
   Opts.InstallForkHandlers = true;
   Opts.Backtrace = android_unsafe_frame_pointer_chase;
@@ -205,7 +213,17 @@ static constexpr uint8_t kProcessSampleRate = 128;
 
 bool ShouldGwpAsanSampleProcess() {
   uint8_t random_number;
+  char value[PROP_VALUE_MAX];
+
   __libc_safe_arc4random_buf(&random_number, sizeof(random_number));
+  if(__system_property_get("ro.gwp_asan.kprocesssamplerate", value) > 0){
+      int ProcessSampleRate = atoi(value);
+      if(ProcessSampleRate != 0)
+      {
+          return random_number % ProcessSampleRate == 0;
+      }
+  }
+
   return random_number % kProcessSampleRate == 0;
 }
 
