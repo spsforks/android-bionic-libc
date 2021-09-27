@@ -52,6 +52,64 @@
       "parentUuid": "35d48f8f_b98bee76",
       "revId": "e46e2210f143e79a6d08a6fad49bfe554fd76f2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0120b90a_e6b961e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-09-27T20:37:10Z",
+      "side": 1,
+      "message": "There are quite a lot, and I\u0027ve filed b/201305529 to track that they are fixed. These tests require a bit of refactoring to make them work for glibc, and I suspect that this CL will need to be reverted anyway.\n\nWould you be okay with submitting anyway? If this needs to be reverted/can\u0027t be landed, no harm. If it sticks, we can fix the glibc failures when we make the entire test suite work on glibc.",
+      "parentUuid": "1af2273e_7e018f06",
+      "revId": "e46e2210f143e79a6d08a6fad49bfe554fd76f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "810c3cf6_73ff83fe",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-09-27T20:37:10Z",
+      "side": 1,
+      "message": "Elliott - regex won\u0027t work here",
+      "range": {
+        "startLine": 2487,
+        "startChar": 46,
+        "endLine": 2487,
+        "endChar": 52
+      },
+      "revId": "e46e2210f143e79a6d08a6fad49bfe554fd76f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ee5005e_84baad98",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2563,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-09-27T20:37:10Z",
+      "side": 1,
+      "message": "or here",
+      "revId": "e46e2210f143e79a6d08a6fad49bfe554fd76f2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
