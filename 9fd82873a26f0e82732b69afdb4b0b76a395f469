@@ -16,6 +16,24 @@
       "message": "+mitchp who\u0027s thought more deeply about sampling rates --- though mostly in the context of *apps*, whereas i think you\u0027re more interested in using this for the whole platform with your dogfood users?\n\n(i have various minor nits around formatting and naming, but i\u0027ll just fix those myself if we agree on the high-level details!)",
       "revId": "9fd82873a26f0e82732b69afdb4b0b76a395f469",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f76af5c_58fdbf77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-09-27T18:38:12Z",
+      "side": 1,
+      "message": "Hmm, I\u0027ve got this set of patches (aosp/1514989) that use the gwp-asan options parser instead, which is a lot more flexible and would allow us to do \"torture testing\" of bionic under GWP-ASan.\n\nThe question is, will I ever get back to landing them... I\u0027d like to avoid introducing a sysprop and then immediately changing the semantics/deprecating it.",
+      "parentUuid": "3a75d462_b671224b",
+      "revId": "9fd82873a26f0e82732b69afdb4b0b76a395f469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
