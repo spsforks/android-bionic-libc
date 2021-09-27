@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dc9028e_4e45f71b",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1719,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-27T22:57:07Z",
+      "side": 1,
+      "message": "accidental tabs",
+      "range": {
+        "startLine": 1719,
+        "startChar": 0,
+        "endLine": 1719,
+        "endChar": 1
+      },
+      "revId": "16621cca40a49e4a64c2ca611fb513d9768011ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
