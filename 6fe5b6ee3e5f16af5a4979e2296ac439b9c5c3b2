@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d0b90f6_116d7bbb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-27T23:47:05Z",
+      "side": 1,
+      "message": "This doesn\u0027t work right yet, it runs all the helper binaries as tests too",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f0efc3a_3d610d86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-27T23:47:05Z",
+      "side": 1,
+      "message": "This has the same problem as `atest CtsBionicTestCases`, but AFAICT it didn\u0027t work at all before",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e0a484b_cb5e7711",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-27T23:47:05Z",
+      "side": 1,
+      "message": "This doesn\u0027t understand the new layout of multilib tests in per-testcase directories yet, it\u0027s currently failing with:\n\n 09-27 16:35:58 E/TestInvocation: Local source file \u0027CtsBionicTestCases\u0027 does not exist [127.0.0.1:34905 cutf:vsoc_x86 AOSP.MASTER]",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
