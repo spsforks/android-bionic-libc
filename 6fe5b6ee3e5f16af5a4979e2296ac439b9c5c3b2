@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2be77802_54aa7712",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-29T16:16:08Z",
+      "side": 1,
+      "message": "Fixed by b/201435817",
+      "parentUuid": "0d0b90f6_116d7bbb",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6f0efc3a_3d610d86",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "482265e0_a180877e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-29T16:16:08Z",
+      "side": 1,
+      "message": "Fixed by b/201435817",
+      "parentUuid": "6f0efc3a_3d610d86",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e0a484b_cb5e7711",
@@ -48,6 +84,24 @@
       "writtenOn": "2021-09-27T23:47:05Z",
       "side": 1,
       "message": "This doesn\u0027t understand the new layout of multilib tests in per-testcase directories yet, it\u0027s currently failing with:\n\n 09-27 16:35:58 E/TestInvocation: Local source file \u0027CtsBionicTestCases\u0027 does not exist [127.0.0.1:34905 cutf:vsoc_x86 AOSP.MASTER]",
+      "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "095c9ae1_6ed9f130",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-09-29T16:16:08Z",
+      "side": 1,
+      "message": "This isn\u0027t reproducing any more.",
+      "parentUuid": "7e0a484b_cb5e7711",
       "revId": "6fe5b6ee3e5f16af5a4979e2296ac439b9c5c3b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
