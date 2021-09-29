@@ -70,6 +70,24 @@
       "parentUuid": "6118445d_454ffdba",
       "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d7be1b0_44f25b3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047376
+      },
+      "writtenOn": "2021-09-29T17:06:02Z",
+      "side": 1,
+      "message": "Hey folks :) Would it be possible to land this in the meantime while discussing the best possible fix? This breaks tracing on all devices at some low percentage chance and on some low memory devices almost all the of the time. Landing this is just the beginning of the journey here as we\u0027ll also need backports. Given that Lalit has verified this fixes the issue could we land this as is then continue the discussion?",
+      "parentUuid": "15bf6f0b_de417eb6",
+      "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
