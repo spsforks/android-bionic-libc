@@ -16,6 +16,23 @@
       "message": "Thanks! Have changed to volatile const char array as suggested by Primiano.",
       "revId": "055e7f77e02141f2e9f8ae473cf2f2096eeeb39c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa6de352_6839503c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080238
+      },
+      "writtenOn": "2021-09-29T10:27:12Z",
+      "side": 1,
+      "message": "Friendly ping on this.",
+      "revId": "055e7f77e02141f2e9f8ae473cf2f2096eeeb39c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
