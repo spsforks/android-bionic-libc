@@ -51,6 +51,24 @@
       "parentUuid": "15af885e_f4b8a301",
       "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b269ee7_5e007de3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-09-29T01:30:08Z",
+      "side": 1,
+      "message": "Oops. Sorry that I missed this. I\u0027d like let you know that this is not related with Mainline at this moment (i.e. for T). This 64-bit APEX will be included in Microdroid which is a tiny Android that we run inside an on-device VM. The VM is already 64-bit only, so does this APEX. Microdroid (actually the virt APEX [1] where Microdroid is in) is not a Mainline module for T.\n\nWhen 64-bit-only becomes a reality even for Android, we could simply delete this variant and use the old one.\n\n[1] https://cs.android.com/android/platform/superproject/+/master:packages/modules/Virtualization/apex/Android.bp;drc\u003d3ef78d9eab9d22c546406a1a8ba86265368b875b;l\u003d6",
+      "parentUuid": "f04d461b_346f0bac",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
