@@ -52,6 +52,24 @@
       "parentUuid": "39b37061_3b9291bf",
       "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15bf6f0b_de417eb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1040443
+      },
+      "writtenOn": "2021-09-29T16:47:18Z",
+      "side": 1,
+      "message": "Not sure I under understand why you need the strlcpy. What created the problem? DO you have a minified godbolt repro?\n\n\u003e We could reinterpret cast to const char* but given how surprising compiler optimisations can be, I don\u0027t trust the compiler to not optimize this away somewhat in the future. That is, unless someone more knowledgable than me was to confirm this was OK of course :) )\n\nSo i think the general problem here is that is the compiler can optimize thins under your feet if it\u0027s convinced that write will not touch the memory, because then it can go \"well then I can just pass the const string from .rodata\" (which caused the original problem)\n\nNow, the \"const\" in const char* is not enough alone. The compiler cannot rely on that (I think) because the code on the other end could const_cast it away (Although probably this alone gets into the undefined-behavior land)\n\nThe real problem though is if write() becomes a compiler builtin one day (like malloc and free), at which point the optimizer will become more aggressive (like when you try to check for malloc() return to be nullptr)\n\nThe way to avoid that reliably is to pass the pointer to a function that takes a non-const ptr and does nothing but that the compiler cannot see / know about.\nChrome has base::Alias() [1]. It does nothing, but does nothing in away that the compiler cannot know about while compiling the translation unit (the key is for the Alias function to live in a separate translation unit).\n\nNot sure if bionic has a similar concept. \n\n\n\n[1] https://source.chromium.org/chromium/chromium/src/+/main:base/debug/alias.h;l\u003d71?q\u003dalias%20f:%5Ebase\u0026ss\u003dchromium",
+      "parentUuid": "6118445d_454ffdba",
+      "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
