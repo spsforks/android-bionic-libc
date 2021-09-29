@@ -34,6 +34,24 @@
       "parentUuid": "168eeebc_b70d3b4d",
       "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6118445d_454ffdba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080238
+      },
+      "writtenOn": "2021-09-29T15:53:31Z",
+      "side": 1,
+      "message": "```\nbionic/libc/bionic/bionic_systrace.cpp:103:45: error: static_cast from \u0027volatile char *\u0027 to \u0027const char *\u0027 is not allowed\n```\nWe could reinterpret cast to const char* but given how surprising compiler optimisations can be, I don\u0027t trust the compiler to not optimize this away somewhat in the future. That is, unless someone more knowledgable than me was to confirm this was OK of course :) )",
+      "parentUuid": "39b37061_3b9291bf",
+      "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
