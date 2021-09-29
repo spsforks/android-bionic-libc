@@ -88,6 +88,24 @@
       "parentUuid": "15bf6f0b_de417eb6",
       "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83cf82d9_9469e464",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080238
+      },
+      "writtenOn": "2021-09-29T17:34:40Z",
+      "side": 1,
+      "message": "Primiano and I had a discussion and after starting at assembly produced by various compilers for a while, it feels like volatile + const_cast should be pretty safe so I\u0027ve switched the patch to use this.\n\nI concur with landing this ASAP to allow for backports.",
+      "parentUuid": "3d7be1b0_44f25b3a",
+      "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
