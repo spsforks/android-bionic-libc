@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "168eeebc_b70d3b4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080238
+      },
+      "writtenOn": "2021-09-29T10:47:57Z",
+      "side": 1,
+      "message": "Actually switched back to strlcpy because the compiler was complaining and I need to jump through hoops to get the pointers right - started feeling nervous the more complicated this gets.",
+      "revId": "5e8a989fb5a9f2344965ae66526059a8321b2e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
