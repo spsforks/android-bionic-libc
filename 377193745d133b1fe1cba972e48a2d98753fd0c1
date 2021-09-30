@@ -16,6 +16,29 @@
       "message": "From perfetto side: LGTM, there\u0027s still a window of vulnerability before a process gets to libc_init, but we\u0027re working around that (on the signalling side) for dynamically-linked processes already.\n\nFor posterity, there was an attempt to add these SIG_IGNs earlier at the linker stage (aosp/1261318), but that didn\u0027t land due to concerns with complicating the linker code for a still-racy solution.\n\nThere was also an attempt (aosp/1261226) to wrap execve to make sure that the signals stay blocked until it is safe. Which also didn\u0027t land due to complexity concerns. Going forward, we\u0027re looking at ways to reduce/remove reliance on signals for profiling in the first place.\n\nThere\u0027s no good reason we haven\u0027t landed a patch like this ages ago.",
       "revId": "377193745d133b1fe1cba972e48a2d98753fd0c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16916c4d_58d87ddb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-09-30T16:45:25Z",
+      "side": 1,
+      "message": "Is there a reason to not install a handler like in the dynamic case (beyond that there maybe no compelling case to do so)?",
+      "range": {
+        "startLine": 340,
+        "startChar": 9,
+        "endLine": 340,
+        "endChar": 31
+      },
+      "revId": "377193745d133b1fe1cba972e48a2d98753fd0c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
