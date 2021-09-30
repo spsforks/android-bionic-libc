@@ -39,6 +39,30 @@
       },
       "revId": "377193745d133b1fe1cba972e48a2d98753fd0c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc2dec4e_2749eb32",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-09-30T16:52:11Z",
+      "side": 1,
+      "message": "aiui, it works by dlopen()ing a shared library, and you can\u0027t do that from a static binary on Android. it\u0027s on +rprichard\u0027s list of bugs, but it\u0027s pretty low down, since static binaries aren\u0027t particularly well supported in general.",
+      "parentUuid": "16916c4d_58d87ddb",
+      "range": {
+        "startLine": 340,
+        "startChar": 9,
+        "endLine": 340,
+        "endChar": 31
+      },
+      "revId": "377193745d133b1fe1cba972e48a2d98753fd0c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
