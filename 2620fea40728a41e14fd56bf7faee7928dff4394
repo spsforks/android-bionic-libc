@@ -124,6 +124,24 @@
       "parentUuid": "55dd7758_61ebb1a7",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c264bd1b_a9a54c55",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-01T21:21:39Z",
+      "side": 1,
+      "message": "Definitely - though - I am thinking from my perspective as an outsider of bionic, and also people tend to copy code like this, and anyway - yeah, it doesn\u0027t really matter here (though maybe if these principles were applied everywhere by everyone for the last 40 years, we would have 10x productivity?). ;)\n\nWill you update this test to pass again and ASSERT_WSTRING -\u003e ASSERT_STRING?",
+      "parentUuid": "be1990cd_096c44d8",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
