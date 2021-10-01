@@ -16,6 +16,24 @@
       "message": "+cferris: what do you think of my use of an overload here --- stupid or clever?\n\nit\u0027s annoying you can\u0027t turn a std::regex back into its pattern. and makes me wonder whether we should _only_ have the regex form of Run() but have it take a `const char*` instead. (though obviously that means rewriting all the existing ExecTestHelper tests to escape their last argument, so if that\u0027s the consensus then i\u0027ll volunteer myself to fix that [but let smoreland get his change in in the meantime].)",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceb59527_5103dcd6",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-01T02:42:24Z",
+      "side": 1,
+      "message": "This looks good to me. since I think I\u0027ve done something like this in the recent past, I\u0027m going to call this clever.\n\nIt might simplify a few things if there is only the regex form, so I\u0027m all for a rewrite if you feel like you have time.",
+      "parentUuid": "e1de0c04_81665921",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
