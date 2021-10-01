@@ -22,6 +22,30 @@
       },
       "revId": "419554e99c70a0a395d665ce84fe34f901d6127f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "048947f9_139817cb",
+        "filename": "tests/utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-01T21:38:32Z",
+      "side": 1,
+      "message": "there\u0027s no std::regex literal (c++ snatching defeat from the jaws of victory yet again!), and the relevant constructor is explicit, so that would then be _more_ awkward than a separate `ASSERT_MATCH(..., eth.GetOutput())`.\n\nplus existing callers make use of the fact that this is a pointer (see L261). i\u0027m definitely tempted to replace _that_ with an overload instead, but (a) it hasn\u0027t caused trouble yet and (b) i shot myself in the foot with an overload yesterday [which is literally why this CL exists!], so i\u0027m struggling to convince myself that an overload is a good idea right now :-)",
+      "parentUuid": "253cfcf2_d8b6db2e",
+      "range": {
+        "startLine": 232,
+        "startChar": 11,
+        "endLine": 232,
+        "endChar": 22
+      },
+      "revId": "419554e99c70a0a395d665ce84fe34f901d6127f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
