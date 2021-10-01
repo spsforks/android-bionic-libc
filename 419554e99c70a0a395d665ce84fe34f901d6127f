@@ -46,6 +46,30 @@
       },
       "revId": "419554e99c70a0a395d665ce84fe34f901d6127f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1d1098f_1e30faaa",
+        "filename": "tests/utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-01T21:45:28Z",
+      "side": 1,
+      "message": "Yeah - please don\u0027t add operator\"\"re. They are too expensive to be made so convenient.\n\n\u003e plus existing callers make use of the fact that this is a pointer (see L261)\n\nstd::optional\u003cstd::regex\u003e could be used for that. The key red flag for me in this situation is that the semantics of the API has changed, and clients may not be aware of it, even though the quality of the test is reduced.\n\n\u003e i\u0027m definitely tempted to replace _that_ with an overload instead\n\nNo overloads! Go for orthogonality! 😊\n\n\u003e (a) it hasn\u0027t caused trouble yet\n\nyet!",
+      "parentUuid": "048947f9_139817cb",
+      "range": {
+        "startLine": 232,
+        "startChar": 11,
+        "endLine": 232,
+        "endChar": 22
+      },
+      "revId": "419554e99c70a0a395d665ce84fe34f901d6127f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
