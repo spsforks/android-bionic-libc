@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "253cfcf2_d8b6db2e",
+        "filename": "tests/utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-01T21:30:11Z",
+      "side": 1,
+      "message": "nit: std::regex here so that it is visible to clients\n\nSure, you caught the case in exec_linker_load_file - since \u0027[0]\u0027 will stop matching, when interpreted as a regex. However, we won\u0027t always get lucky.",
+      "range": {
+        "startLine": 232,
+        "startChar": 11,
+        "endLine": 232,
+        "endChar": 22
+      },
+      "revId": "419554e99c70a0a395d665ce84fe34f901d6127f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
