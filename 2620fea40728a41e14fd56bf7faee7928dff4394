@@ -52,6 +52,24 @@
       "parentUuid": "ceb59527_5103dcd6",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b2f7e50_baa4da61",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-01T18:01:42Z",
+      "side": 1,
+      "message": "I strongly prefer two calls (Run + check GetOutput) over combining them together. Checking the result of an execution should be orthogonal from specifying the execution to run. If we want \u0027contains substr\u0027, we shouldn\u0027t need another Run method, for instance.",
+      "parentUuid": "be20c467_9783ebc1",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
