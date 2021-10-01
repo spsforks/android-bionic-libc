@@ -142,6 +142,24 @@
       "parentUuid": "be1990cd_096c44d8",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9530f9ad_a6dadc8e",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-01T21:27:28Z",
+      "side": 1,
+      "message": "yeah, sorry, i should have explicitly said: \"you\u0027ve suffered enough here already, i\u0027ll make sure this lands\" :-) current plan is to get the literal -\u003e regex switch in (https://android-review.googlesource.com/c/platform/bionic/+/1843499), then rebase this on top. (that CL turned out to be a lot smaller than i was expecting! if i\u0027d known i\u0027d probably have just included it in this!)",
+      "parentUuid": "c264bd1b_a9a54c55",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
