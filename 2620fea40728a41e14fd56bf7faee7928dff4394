@@ -70,6 +70,24 @@
       "parentUuid": "be20c467_9783ebc1",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "737533f6_f25c0d8e",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-01T20:15:59Z",
+      "side": 1,
+      "message": "\u003e Checking the result of an execution should be orthogonal from specifying the execution to run.\n\nthe aim of most of these helpers is to reduce the friction for writing tests by removing the boilerplate, but also to encourage that you do actually test all things. this effectively lets us force you to _think about_ checking the output (even if we can\u0027t force you to check it, since there might reasonably be nothing practical to check).\n\nyou still can \"opt out\" and work with eth.GetOutput() directly if you have some reason to, but most callers shouldn\u0027t.\n\naka \"might the common case easy, and the uncommon cases possible\".\n\n\u003e If we want \u0027contains substr\u0027, we shouldn\u0027t need another Run method, for instance.\n\nwell, that specific case illustrates why a regex should probably be the default rather than a literal :-)",
+      "parentUuid": "5b2f7e50_baa4da61",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
