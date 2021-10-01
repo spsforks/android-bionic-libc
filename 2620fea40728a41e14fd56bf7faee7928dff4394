@@ -88,6 +88,24 @@
       "parentUuid": "5b2f7e50_baa4da61",
       "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55dd7758_61ebb1a7",
+        "filename": "tests/utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-01T20:45:38Z",
+      "side": 1,
+      "message": "Sorry, I don\u0027t buy it 😊\n\n\u003e  but also to encourage that you do actually test all things. this effectively lets us force you to _think about_ checking the output (even if we can\u0027t force you to check it, since there might reasonably be nothing practical to check).\n\nAn orthogonal API doesn\u0027t mean that a user can\u0027t be encouraged to check it out a result. For instance `struct ExecHelper { static [[nodiscard]] Result... Run(...); };` could achieve the same thing without sacrificing orthogonality of the API surface (one surface being \u0027run a binary\u0027 the other surface being \u0027ways to check test results\u0027).\n\n\u003e aka \"might the common case easy, and the uncommon cases possible\".\n\nOrthogonality makes maintaining and learning the API surface easier. People already know ASSERT_*/EXPECT_*, and with Run(..expected), they have to learn a new pattern in order to achieve a result. I think creating a \u0027parallel\u0027 API surface makes things harder.\n\n\u003e \u003e If we want \u0027contains substr\u0027, we shouldn\u0027t need another Run method, for instance.\n\u003e well, that specific case illustrates why a regex should probably be the default rather than a literal :-)\n\nThis was a bad example, because it underlaps with regex. You know what I mean, checking for valid parens (for non-pcre), checking if the output is a valid file on disk, checking the output is a prime number, etc... There are a million things you might want to do with the I/O output of a binary, and this has no impact on how the binary is run.",
+      "parentUuid": "737533f6_f25c0d8e",
+      "revId": "2620fea40728a41e14fd56bf7faee7928dff4394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
