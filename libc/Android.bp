@@ -111,29 +111,29 @@ cc_defaults {
     // warning since this is intended right now.
     ldflags: ["-Wl,-z,muldefs"],
 
-    product_variables: {
-        malloc_zero_contents: {
-            cflags: ["-DSCUDO_ZERO_CONTENTS"],
-        },
-        malloc_pattern_fill_contents: {
-            cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
-        },
-        malloc_not_svelte: {
-            cflags: ["-DUSE_SCUDO"],
-        },
-    },
+    //product_variables: {
+    //    malloc_zero_contents: {
+    //        cflags: ["-DSCUDO_ZERO_CONTENTS"],
+    //    },
+    //    malloc_pattern_fill_contents: {
+    //        cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+    //    },
+    //    //malloc_not_svelte: {
+    //    //    cflags: ["-DUSE_SCUDO"],
+    //    //},
+    //},
 }
 
-libc_scudo_product_variables = {
-    malloc_not_svelte: {
-        cflags: ["-DUSE_SCUDO"],
-        whole_static_libs: ["libscudo"],
-        exclude_static_libs: [
-            "libjemalloc5",
-            "libc_jemalloc_wrapper",
-        ],
-    },
-}
+// libc_scudo_product_variables = {
+//     malloc_not_svelte: {
+//         cflags: ["-DUSE_SCUDO"],
+//         whole_static_libs: ["libscudo"],
+//         exclude_static_libs: [
+//             "libjemalloc5",
+//             "libc_jemalloc_wrapper",
+//         ],
+//     },
+// }
 
 // Defaults for native allocator libs/includes to make it
 // easier to change.
@@ -149,7 +149,7 @@ cc_defaults {
         "libc_jemalloc_wrapper",
     ],
     header_libs: ["gwp_asan_headers"],
-    product_variables: libc_scudo_product_variables,
+    // product_variables: libc_scudo_product_variables,
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -1832,7 +1832,7 @@ cc_library_headers {
         "//device/generic/goldfish-opengl:__subpackages__",
         "//external/gwp_asan:__subpackages__",
         "//external/perfetto:__subpackages__",
-        "//external/scudo:__subpackages__",
+        // "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
         "//system/core/libcutils:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
@@ -1941,7 +1941,7 @@ cc_library_headers {
         "//external/gwp_asan",
         "//external/jemalloc_new",
         "//external/libunwind_llvm",
-        "//external/scudo",
+        // "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
     ],
@@ -2557,6 +2557,6 @@ cc_library_host_static {
     },
 }
 
-subdirs = [
-    "bionic/scudo",
-]
+// subdirs = [
+//     "bionic/scudo",
+// ]
