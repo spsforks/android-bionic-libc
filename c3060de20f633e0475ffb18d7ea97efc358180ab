@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f39cbbe_eb83297f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-05T21:42:42Z",
+      "side": 1,
+      "message": "needs another +2 after its rebase, but seems to pass all the tests... (which is good, because you\u0027d hope that outside the C library people are mostly checking `errno`, not `strerror(errno)`!)",
+      "revId": "c3060de20f633e0475ffb18d7ea97efc358180ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
