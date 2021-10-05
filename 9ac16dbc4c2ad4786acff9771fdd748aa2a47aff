@@ -87,6 +87,24 @@
       "parentUuid": "2b269ee7_5e007de3",
       "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cce63ab4_9863d569",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1305591
+      },
+      "writtenOn": "2021-10-05T17:48:06Z",
+      "side": 1,
+      "message": "Not much to comment at this point. It\u0027s not something we mentioned really. Realistically if we ever need 64-bit only artifacts we\u0027ll produce a train to that effect (like we do for arm vs arm64 atm), put them in the same app bundle and let Play serving / bundletool do the right thing depending on the target device.\n\nSo it seems that we\u0027d need a product build for 64-bit only. This was hansson\u0027s and mine toy project when we joined CoreOS: b/72810053 but then the urgency wasn\u0027t there and we moved on to other things.\n\nThis said, I don\u0027t feel as strongly about creating a product build just for this change. I don\u0027t know much about Jiyong\u0027s intended use case.",
+      "parentUuid": "b9d28ab0_46d1dd0d",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
