@@ -48,6 +48,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -68,11 +69,12 @@
 #include "linker_translate_path.h"
 #include "linker_utils.h"
 
+#include "android-base/macros.h"
+#include "android-base/stringprintf.h"
+#include "android-base/strings.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
-#include "android-base/macros.h"
-#include "android-base/strings.h"
-#include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
@@ -136,6 +138,10 @@ static const char* const kAsanDefaultLdPaths[] = {
 static bool g_is_asan = false;
 
 static CFIShadowWriter g_cfi_shadow;
+
+bool __libc_use_mte_globals();
+bool __get_memtag_note(ElfW(Word) type, const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                       const ElfW(Addr) load_bias, const void** desc_ptr, size_t* size_ptr);
 
 CFIShadowWriter* get_cfi_shadow() {
   return &g_cfi_shadow;
@@ -1669,7 +1675,11 @@ bool find_libraries(android_namespace_t* ns,
     if (!si->is_linked() && !si->prelink_image()) {
       return false;
     }
+    // async_safe_format_fd(2, "doing load task for \"%s\" with si == %p. use mte globals? %i\n", task->get_name(), si, __libc_use_mte_globals());
     register_soinfo_tls(si);
+    if (__libc_use_mte_globals()) {
+      si->tag_globals();
+    }
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
@@ -2287,9 +2297,9 @@ bool do_dlsym(void* handle,
           return false;
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
-        *symbol = static_cast<char*>(tls_block) + sym->st_value;
+        *symbol = get_tagged_address(static_cast<char*>(tls_block) + sym->st_value);
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2720,7 +2730,7 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
 
 void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
   ElfW(Addr) address = offset + load_bias;
-  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+  *reinterpret_cast<ElfW(Addr)*>(get_tagged_address(reinterpret_cast<void*>(address))) += load_bias;
 }
 
 // Process relocations in SHT_RELR section (experimental).
@@ -2760,6 +2770,33 @@ bool soinfo::relocate_relr() {
     base += (8*wordsize - 1) * wordsize;
   }
   return true;
+}
+
+size_t soinfo::get_symtab_length() const {
+  if (!is_gnu_hash()) return nchain_;
+
+  // Handle the hash table being empty.
+  if (gnu_nbucket_ == 1 && gnu_bucket_[0] == 0) {
+    return gnu_symndx_;
+  }
+
+  size_t start_of_last_chain = 0;
+  for (size_t i = 0; i < gnu_nbucket_; ++i) {
+    if (gnu_bucket_[i] > start_of_last_chain) {
+      start_of_last_chain = gnu_bucket_[i];
+    }
+  }
+
+  // `gnu_chain_` is negatively adjusted by gnu_symndx_ to make symbol lookups
+  // less complicated. We don't want this adjustment here.
+  uint32_t* chain = gnu_bucket_ + gnu_nbucket_;
+
+  for (size_t chain_index = start_of_last_chain - gnu_symndx_;; ++chain_index) {
+    if (chain[chain_index] & 1) {
+      return chain_index + gnu_symndx_ + 1;
+    }
+  }
+  return 0;
 }
 
 // An empty list of soinfos
@@ -2830,7 +2867,7 @@ bool soinfo::prelink_image() {
 
       case DT_GNU_HASH:
         gnu_nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
-        // skip symndx
+        gnu_symndx_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
         gnu_maskwords_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
         gnu_shift2_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
 
@@ -3232,14 +3269,15 @@ bool soinfo::prelink_image() {
 
 bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                         const android_dlextinfo* extinfo, size_t* relro_fd_offset) {
+  // async_safe_format_fd(2, "MAYBE link_image %s for si %p\n", get_realpath(), this);
   if (is_image_linked()) {
     // already linked.
     return true;
   }
 
   if (g_is_ldd && !is_main_executable()) {
-    async_safe_format_fd(STDOUT_FILENO, "\t%s => %s (%p)\n", get_soname(),
-                         get_realpath(), reinterpret_cast<void*>(base));
+    // async_safe_format_fd(STDOUT_FILENO, "\t%s => %s (%p)\n", get_soname(),
+    //                      get_realpath(), reinterpret_cast<void*>(base));
   }
 
   local_group_root_ = local_group_root;
@@ -3273,7 +3311,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     }
   }
 #endif
-
+  // async_safe_format_fd(2, "link_image %s for si %p\n", get_realpath(), this);
   if (!relocate(lookup_list)) {
     return false;
   }
@@ -3327,6 +3365,166 @@ bool soinfo::protect_relro() {
     return false;
   }
   return true;
+}
+
+// Reserve the lower three bits of the first byte of the step distance when
+// encoding the memtag descriptors. Found to be the best overall size tradeoff
+// when compiling Android T with full MTE globals enabled.
+constexpr uint64_t kMemtagStepVarintReservedBits = 3;
+
+// Extracts the next var-int encoded number from `input_buffer`, which has
+// `input_length` bytes. We do explicit bounds checking that we don't overflow.
+// Places the decoded value into `*value`, and returns the number of bytes
+// consumed in the decoding process.
+static size_t memtagVarIntDecode(const uint8_t* input_buffer, size_t input_length,
+                                 uint64_t first_byte_reserved_low_bits, uint64_t* value) {
+  assert(input_length > 0);
+  // Zero values are impossible, so we subtract one before encoding. Add the one
+  // back in here.
+  *value = 1 + ((input_buffer[0] & 0x7f) >> first_byte_reserved_low_bits);
+  size_t shift = 7 - first_byte_reserved_low_bits;
+
+  if ((input_buffer[0] & 0x80) == 0) return 1;
+
+  for (size_t i = 1;; ++i) {
+    if (i >= input_length) {
+      DL_ERR(
+          "malformed tagged symbol descriptor stream, last byte didn't "
+          "terminate the stream");
+    }
+    uint64_t byte = input_buffer[i];
+
+    *value += (byte & 0x7f) << shift;
+    shift += 7;
+
+    if (byte < 0x80) {
+      return i + 1;
+    }
+
+    if (shift >= sizeof(uint64_t) * 8) {
+      DL_ERR(
+          "malformed tagged symbol descriptor had a variable-length integer "
+          "that exceeded uint64_t "
+          "in size");
+    }
+  }
+  __builtin_unreachable();
+}
+
+void soinfo::tag_globals() {
+  if (is_linked()) return;
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  size_t symtab_len = get_symtab_length();
+
+  // async_safe_format_fd(2, "tagging from \"%s\" (0x%lx)\n", get_soname(), load_bias);
+
+  for (size_t i = 0; i < symtab_len; ++i) {
+    const ElfW(Sym)* sym = symtab_ + i;
+
+    if (sym->st_shndx == SHN_UNDEF) continue;
+    if (!(sym->st_other & kTaggedGlobalSymOtherBit)) continue;
+
+    const char* name = "<unknown>";
+    if (sym->st_name != 0) {
+      name = get_string(sym->st_name);
+    }
+
+    if (sym->st_size == 0 || sym->st_size % kTagGranuleSize != 0) {
+      DL_ERR("tagged symbol \"%s\" from \"%s\" has non-granule aligned size: %zu", name,
+             get_realpath(), static_cast<size_t>(sym->st_size));
+    }
+
+    void* addr = reinterpret_cast<void*>(load_bias + sym->st_value);
+    if (reinterpret_cast<uintptr_t>(addr) % 16 != 0) {
+      DL_ERR("tagged symbol \"%s\" from \"%s\" has non-granule aligned address: %p", name,
+             get_realpath(), addr);
+    }
+
+    addr = insert_random_tag(reinterpret_cast<void*>(addr));
+
+    // async_safe_format_fd(2, "tagging symbol \"%s\"+\"%s\" from %p (%p) - %p (%p): %p\n",
+    //   get_soname(), name, reinterpret_cast<void*>(sym->st_value), addr,
+    //   reinterpret_cast<void*>(sym->st_value + sym->st_size), reinterpret_cast<const char*>(addr) + sym->st_size,
+    //   addr);
+
+    for (size_t i = 0; i < sym->st_size / kTagGranuleSize; i++) {
+      auto* granule = static_cast<uint8_t*>(addr) + i * kTagGranuleSize;
+      // if (sym->st_size <= 0x1000) async_safe_format_fd(2, "  -> %p\n", granule);
+      set_memory_tag(static_cast<void*>(granule));
+    }
+  }
+
+  struct DescriptorNote {
+    uint64_t descriptors_offset;
+    uint64_t descriptors_bytes;
+  };
+
+  const DescriptorNote* descriptor_note;
+  size_t note_size;
+  if (!__get_memtag_note(NT_TYPE_MEMTAG_DESCRIPTORS, phdr, phnum, load_bias,
+                         reinterpret_cast<const void**>(&descriptor_note), &note_size)) {
+    return;
+  }
+
+  if (note_size != sizeof(DescriptorNote)) {
+    DL_ERR("Invalid MTE descriptor note size: %zu vs expected %zu", note_size,
+           sizeof(DescriptorNote));
+  }
+
+  const uint8_t* descriptor_stream =
+      reinterpret_cast<const uint8_t*>(descriptor_note->descriptors_offset + load_bias);
+  uint64_t descriptor_bytes = descriptor_note->descriptors_bytes;
+
+  if (descriptor_bytes == 0) {
+    DL_ERR("Invalid MTE descriptor pool size: %" PRIu64, descriptor_bytes);
+  }
+
+  // async_safe_format_fd(2, "bytestream: ");
+  // for (size_t i = 0; i < descriptor_bytes; ++i) {
+  //   async_safe_format_fd(2, "%u ", (unsigned) descriptor_stream[i]);
+  // }
+  // async_safe_format_fd(2, "\n");
+
+  uint64_t addr = 0;
+
+  for (size_t i = 0; i < descriptor_bytes;) {
+    uint64_t step, num_granules;
+    i += memtagVarIntDecode(descriptor_stream + i, descriptor_bytes - i,
+                            kMemtagStepVarintReservedBits, &step);
+    i += memtagVarIntDecode(descriptor_stream + i, descriptor_bytes - i,
+                            /* No reserved bits for size */ 0, &num_granules);
+    __attribute__((no_sanitize("memtag"))) static const char* format_str = "step: %zu, size: %zu\n";
+    // async_safe_format_fd(2, format_str, step * 16, num_granules * 16);
+
+    step *= kTagGranuleSize;
+    addr += step;
+    void* tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr + load_bias));
+
+    // async_safe_format_fd(
+    //     2, "tagging symbol \"%s\"+DESCRIPTOR from 0x%lx (0x%lx) - 0x%lx (0x%lx): %p\n",
+    //     get_realpath(), addr, addr + load_bias, addr + num_granules * 16,
+    //     addr + num_granules * 16 + load_bias, tagged_addr);
+    for (size_t i = 0; i < num_granules; i++) {
+      auto* granule = static_cast<uint8_t*>(tagged_addr) + i * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+  }
+
+  // size_t num_descriptors = descriptor_bytes / sizeof(Descriptor);
+
+  // for (size_t i = 0; i < num_descriptors; ++i) {
+  //   const Descriptor& d = descriptors[i];
+  //   void* addr = insert_random_tag(reinterpret_cast<void*>(d.addr + load_bias));
+  //   // async_safe_format_fd(2, "tagging symbol \"%s\"+DESCRIPTOR from 0x%lx (0x%lx) - 0x%lx (0x%lx): %p\n",
+  //   //   get_soname(), d.addr, d.addr + load_bias, d.addr + d.size, d.addr + d.size + load_bias, addr);
+  //   for (size_t i = 0; i < d.size / kTagGranuleSize; i++) {
+  //     auto* granule = static_cast<uint8_t*>(addr) + i * kTagGranuleSize;
+  //     // if (d.size <= 0x1000) async_safe_format_fd(2, "  -> %p\n", granule);
+  //     set_memory_tag(static_cast<void*>(granule));
+  //   }
+  // }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {

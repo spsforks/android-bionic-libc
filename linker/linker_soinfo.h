@@ -64,6 +64,7 @@
                                          // soinfo is executed and this flag is
                                          // unset.
 #define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
+#define FLAG_GLOBALS_TAGGED 0x00000800   // globals have been tagged by MTE.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 6
@@ -255,6 +256,8 @@ struct soinfo {
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
+  void tag_globals();
+
   void add_child(soinfo* child);
   void remove_all_links();
 
@@ -351,6 +354,8 @@ struct soinfo {
   void set_gap_size(size_t gap_size);
   size_t get_gap_size() const;
 
+  size_t get_symtab_length() const;
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -390,6 +395,7 @@ struct soinfo {
   // version >= 2
 
   size_t gnu_nbucket_;
+  // gnu_symndx_ added in version 7, below.
   uint32_t* gnu_bucket_;
   uint32_t* gnu_chain_;
   uint32_t gnu_maskwords_;
@@ -433,6 +439,10 @@ struct soinfo {
   // version >= 6
   ElfW(Addr) gap_start_;
   size_t gap_size_;
+
+  // version >= 7
+  size_t gnu_symndx_;
+  size_t symtab_length_ = 0;  // Number of ELFW(Sym) objects in the symtab pointed to by DT_SYMTAB.
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

@@ -302,7 +302,7 @@ libc_shared_globals* __loader_shared_globals() {
   return __libc_shared_globals();
 }
 
-static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
+BIONIC_USED_BEFORE_LINKER_RELOCATES static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
@@ -310,6 +310,7 @@ soinfo* get_libdl_info(const soinfo& linker_si) {
   CHECK((linker_si.flags_ & FLAG_GNU_HASH) != 0);
 
   if (__libdl_info == nullptr) {
+    // async_safe_format_fd(2, "placement new to %p\n", __libdl_info_buf);
     __libdl_info = new (__libdl_info_buf) soinfo(&g_default_namespace, nullptr, nullptr, 0, 0);
     __libdl_info->flags_ |= (FLAG_LINKED | FLAG_GNU_HASH);
     __libdl_info->strtab_ = linker_si.strtab_;

@@ -2218,6 +2218,8 @@ cc_object {
     bazel_module: { bp2build_available: true },
 }
 
+// TODO(mitchp): Once the toolchain is new enough, delete these and migrate to
+// -fsanitize=memtag-heap (with -fsanitize-memtag-async if async is desired).
 cc_library_static {
     name: "note_memtag_heap_async",
     arch: {

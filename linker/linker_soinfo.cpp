@@ -787,6 +787,7 @@ bool soinfo::can_unload() const {
 }
 
 bool soinfo::is_linked() const {
+  // async_safe_format_fd(2, "asking is linked for %s -> %i\n", get_realpath(),(flags_ & FLAG_LINKED) != 0);
   return (flags_ & FLAG_LINKED) != 0;
 }
 

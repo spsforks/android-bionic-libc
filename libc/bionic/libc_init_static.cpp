@@ -189,23 +189,9 @@ bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const
 }
 
 #ifdef __aarch64__
-static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
-                               unsigned* result) {
-  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
-    return false;
-  }
-  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
-    return false;
-  }
-  if (note->n_descsz != 4) {
-    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected 4", note->n_descsz);
-  }
-  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
-  return true;
-}
-
-static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
-                                  const ElfW(Addr) load_bias) {
+BIONIC_USED_BEFORE_LINKER_RELOCATES static const char *kNoteName = "Android";
+bool __get_memtag_note(ElfW(Word) type, const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                       const ElfW(Addr) load_bias, const void** desc_ptr, size_t* size_ptr) {
   for (size_t i = 0; i < phdr_ct; ++i) {
     const ElfW(Phdr)* phdr = &phdr_start[i];
     if (phdr->p_type != PT_NOTE) {
@@ -223,24 +209,101 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
       if (p > note_end) {
         break;
       }
-      unsigned ret;
-      if (__read_memtag_note(note, name, desc, &ret)) {
-        return ret;
+      if (note->n_namesz != 8 || strncmp(name, kNoteName, 8) != 0) {
+        continue;
       }
+      if (note->n_type != type) {
+        continue;
+      }
+      *desc_ptr = desc;
+      *size_ptr = static_cast<uint64_t>(note->n_descsz);
+      return true;
     }
   }
-  return 0;
+  return false;
 }
 
-// Returns true if there's an environment setting (either sysprop or env var)
-// that should overwrite the ELF note, and places the equivalent heap tagging
-// level into *level.
-static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
+// Used in the loader to determine whether to tag global memory. Initialized in
+// __libc_init_mte.
+BIONIC_USED_BEFORE_LINKER_RELOCATES static bool use_mte_globals = false;
+bool __libc_use_mte_globals() {
+  return use_mte_globals;
+}
+
+BIONIC_USED_BEFORE_LINKER_RELOCATES static bool use_mte_globals_early = false;
+bool __libc_use_mte_globals_early() {
+  return use_mte_globals_early;
+}
+
+// Used in the loader to determine whether to enable stack tagging. Initialized
+// in __libc_init_mte.
+static bool use_mte_stack = false;
+bool __libc_use_mte_stack() {
+  return use_mte_stack;
+}
+
+// A value of -1 means "unset".
+struct MemtagOptions {
+  // M_HEAP_TAGGING_LEVEL_ASYNC, M_HEAP_TAGGING_LEVEL_SYNC, etc. See HeapTaggingLevel.
+  int level = -1;
+  // 0 = turn feature off, 1 = turn feature on.
+  int globals = -1;
+  int stack = -1;
+  int heap = -1;
+};
+
+static void parse_environment_token(const char* token, MemtagOptions* options) {
+  if (strcmp(token, "off") == 0 || strcmp(token, "none") == 0) {
+    options->level = M_HEAP_TAGGING_LEVEL_NONE;
+    return;
+  }
+  if (strcmp(token, "async") == 0) {
+    options->level = M_HEAP_TAGGING_LEVEL_ASYNC;
+    return;
+  }
+  if (strcmp(token, "sync") == 0) {
+    options->level = M_HEAP_TAGGING_LEVEL_SYNC;
+    return;
+  }
+  if (strcmp(token, "heap") == 0) {
+    options->heap = 1;
+    return;
+  }
+  if (strcmp(token, "noheap") == 0) {
+    options->heap = 0;
+    return;
+  }
+  if (strcmp(token, "globals") == 0) {
+    async_safe_fatal(
+        "MTE globals cannot be enabled at runtime, please recompile your binary with MTE globals "
+        "enabled.");
+    return;
+  }
+  if (strcmp(token, "noglobals") == 0) {
+    options->globals = 0;
+    return;
+  }
+  if (strcmp(token, "stack") == 0) {
+    async_safe_fatal(
+        "MTE stack cannot be enabled at runtime, please recompile your binary with MTE stack "
+        "enabled.");
+    return;
+  }
+  if (strcmp(token, "nostack") == 0) {
+    options->stack = 0;
+    return;
+  }
+
+  async_safe_fatal("unrecognized memtag environment option: \"%s\"", token);
+}
+
+static MemtagOptions get_memtag_options_from_environment() {
+  MemtagOptions options{};
   static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
   static const char kMemtagGlobalSysprop[] = "persist.arm64.memtag.default";
 
   const char* progname = __libc_shared_globals()->init_progname;
-  if (progname == nullptr) return false;
+  if (progname == nullptr) return options;
 
   const char* basename = __gnu_basename(progname);
 
@@ -255,71 +318,132 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 
   if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
                                        options_str, kOptionsSize)) {
-    return false;
+    return options;
   }
 
-  if (strcmp("sync", options_str) == 0) {
-    *level = M_HEAP_TAGGING_LEVEL_SYNC;
-  } else if (strcmp("async", options_str) == 0) {
-    *level = M_HEAP_TAGGING_LEVEL_ASYNC;
-  } else if (strcmp("off", options_str) == 0) {
-    *level = M_HEAP_TAGGING_LEVEL_TBI;
-  } else {
-    async_safe_format_log(
-        ANDROID_LOG_ERROR, "libc",
-        "unrecognized memtag level: \"%s\" (options are \"sync\", \"async\", or \"off\").",
-        options_str);
-    return false;
+  char* strtok_save;
+  char* token = strtok_r(options_str, ",", &strtok_save);
+  while (token != nullptr) {
+    parse_environment_token(token, &options);
+    token = strtok_r(nullptr, ",", &strtok_save);
   }
 
-  return true;
+  // For backwards compatibility, MEMTAG_OPTIONS=[a]sync is the short form of
+  // MEMTAG_OPTIONS=[a]sync,heap. If you say MEMTAG_OPTIONS=[a]sync, it's
+  // implicit that you want heap, unless you specify 'noheap'.
+  if (options.level != -1 && options.heap == -1) {
+    options.heap = 1;
+  }
+
+  return options;
 }
 
-// Returns the initial heap tagging level. Note: This function will never return
-// M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
-// M_HEAP_TAGGING_LEVEL_TBI.
-static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
-                                                 uintptr_t load_bias) {
-  HeapTaggingLevel level;
-  if (get_environment_memtag_setting(&level)) return level;
-
-  unsigned note_val =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-  if (note_val & ~(NT_MEMTAG_LEVEL_MASK | NT_MEMTAG_HEAP)) {
-    async_safe_fatal("unrecognized android.memtag note: desc = %d", note_val);
+// Read the MTE options from the binary.
+static MemtagOptions get_memtag_options_from_binary(const void* phdr_start, size_t phdr_ct,
+                                                    uintptr_t load_bias) {
+  MemtagOptions options{};
+  const void* desc;
+  size_t size;
+  if (!__get_memtag_note(NT_TYPE_MEMTAG, reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct,
+                         load_bias, &desc, &size)) {
+    // No binary note found.
+    return options;
   }
 
-  if (!(note_val & NT_MEMTAG_HEAP)) return M_HEAP_TAGGING_LEVEL_TBI;
+  if (size != 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %zu, expected 4", size);
+  }
 
-  unsigned memtag_level = note_val & NT_MEMTAG_LEVEL_MASK;
-  switch (memtag_level) {
-    case NT_MEMTAG_LEVEL_ASYNC:
-      return M_HEAP_TAGGING_LEVEL_ASYNC;
+  uint32_t note_val = *reinterpret_cast<const uint32_t*>(desc);
+  if (note_val == 0) {
+    return options;
+  }
+
+  // async_safe_format_fd(2, "memtag note value %x\n", note_val);
+
+  uint32_t level = note_val & NT_MEMTAG_LEVEL_MASK;
+  switch (level) {
     case NT_MEMTAG_LEVEL_DEFAULT:
     case NT_MEMTAG_LEVEL_SYNC:
-      return M_HEAP_TAGGING_LEVEL_SYNC;
+      options.level = static_cast<HeapTaggingLevel>(M_HEAP_TAGGING_LEVEL_SYNC);
+      break;
+    case NT_MEMTAG_LEVEL_ASYNC:
+      options.level = static_cast<HeapTaggingLevel>(M_HEAP_TAGGING_LEVEL_ASYNC);
+      break;
     default:
-      async_safe_fatal("unrecognized android.memtag note: level = %d", memtag_level);
+      async_safe_fatal("unrecognized android.memtag note: level = %d", level);
   }
+
+  options.heap = (note_val & NT_MEMTAG_HEAP) ? 1 : 0;
+  options.globals = (note_val & NT_MEMTAG_GLOBALS) ? 1 : 0;
+  options.stack = (note_val & NT_MEMTAG_STACK) ? 1 : 0;
+
+  if (options.heap == -1 && options.globals == -1 && options.stack == -1) {
+    async_safe_fatal(
+        "unrecognized android.memtag note: desc = %d didn't have heap, globals, or stack enabled.",
+        note_val);
+  }
+  return options;
 }
 
-// Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
-// This function is called from the linker before the main executable is relocated.
+static MemtagOptions combine_memtag_options(const MemtagOptions& binary,
+                                            const MemtagOptions& environment) {
+  MemtagOptions opts{.level = (environment.level != -1) ? environment.level : binary.level,
+                     .globals = (environment.globals != -1) ? environment.globals : binary.globals,
+                     .stack = (environment.stack != -1) ? environment.stack : binary.stack,
+                     .heap = (environment.heap != -1) ? environment.heap : binary.heap};
+  return opts;
+}
+
+// Figure out the desired memory tagging mode for heap, globals, and stack, as
+// well as whether we should be running in SYNC or ASYNC mode. This function is
+// called from the linker before the main executable is relocated.
+//
+// MTE heap may be turned on/off entirely at start time.
+//
+// MTE globals and stack require recompilation of the binary, and thus turning
+// on these features is only possible by building the code with
+// -fsanitize=memtag-globals and/or -fsanitize=memtag-stack. It is possible to
+// turn these features off at runtime, using the system properties or
+// environment variable.
+//
+// The spec for the environment variable (MEMTAG_OPTIONS) and the system
+//  property (arm64.memtag.process.<basename>) is as follows:
+//  - "mode=async/sync": When one of MTE heap/stack/globals is turned on,
+//    explicitly use the following mode.
+//  - "heap=on/off", "stack=off", globals="off": Explicitly turn individual
+//    settings
+//  - These options may be combined together, using colons (":") to separate.
+//  - "async/sync" may be used as a short form for "mode=[a]sync:heap=on".
+//
+// The environment variable takes precedence over the system property, which
+// takes precedence over what the binary requests.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
                                                                          size_t phdr_ct,
                                                                          uintptr_t load_bias) {
-  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias);
+  MemtagOptions binary_options = get_memtag_options_from_binary(phdr_start, phdr_ct, load_bias);
+  MemtagOptions environment_options = get_memtag_options_from_environment();
+  MemtagOptions options = combine_memtag_options(binary_options, environment_options);
 
-  if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+  if (options.level == M_HEAP_TAGGING_LEVEL_SYNC || options.level == M_HEAP_TAGGING_LEVEL_ASYNC) {
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
-    prctl_arg |= (level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
+    prctl_arg |= (options.level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
 
     // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
     // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
     // specifying a single mode.
     if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
         prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
-      __libc_shared_globals()->initial_heap_tagging_level = level;
+      if (options.heap == 1) {
+        __libc_shared_globals()->initial_heap_tagging_level =
+            static_cast<HeapTaggingLevel>(options.level);
+      }
+      if (options.globals == 1) {
+        use_mte_globals = true;
+      }
+      if (options.stack == 1) {
+        use_mte_stack = true;
+      }
       return;
     }
   }
@@ -330,8 +454,51 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
     __libc_shared_globals()->initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
   }
 }
+
+// Environment variables and system properties require relocations to have been
+// run. In order to choose whether to tag the linker, we need to be able to read
+// the phdrs of the binary early. If the binary requests it, we'll go through
+// the hassle of remapping segments and doing tagging, which can still be
+// disabled at runtime with the prctl. But, we need an early signal as to
+// whether to do the setup for the linker.
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte_early(
+    const void* phdr_start, size_t phdr_ct, uintptr_t load_bias) {
+  MemtagOptions options = get_memtag_options_from_binary(phdr_start, phdr_ct, load_bias);
+  if (options.level != M_HEAP_TAGGING_LEVEL_SYNC && options.level != M_HEAP_TAGGING_LEVEL_ASYNC) {
+    return;
+  }
+
+  unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
+  prctl_arg |= (options.level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
+
+  // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
+  // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
+  // specifying a single mode.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
+      prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
+    if (options.globals == 1) {
+      use_mte_globals_early = true;
+    }
+  }
+  return;
+}
+
 #else   // __aarch64__
 void __libc_init_mte(const void*, size_t, uintptr_t) {}
+void __libc_init_mte_early(const void*, size_t, uintptr_t) {}
+bool __libc_use_mte_globals() {
+  return false;
+}
+bool __libc_use_mte_globals_early() {
+  return false;
+}
+bool __libc_use_mte_stack() {
+  return false;
+}
+bool __get_memtag_note(ElfW(Word), const ElfW(Phdr) *, size_t,
+                       const ElfW(Addr), const void**, size_t*){
+  return false;
+}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -424,6 +591,9 @@ extern "C" void android_set_application_target_sdk_version(int target) {
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  static libc_shared_globals globals;
+  // This global variable is address taken by the linker (in
+  // __libc_init_main_thread_early) before relocations are run. Mark it as
+  // untagged to ensure pc-relative relocations are used.
+  BIONIC_USED_BEFORE_LINKER_RELOCATES static libc_shared_globals globals;
   return &globals;
 }
