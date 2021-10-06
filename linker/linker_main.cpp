@@ -396,19 +396,29 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
+  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias);
+
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
     auto note_gnu_property = GnuPropertySection(somain);
-    if (note_gnu_property.IsBTICompatible() &&
-        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     &note_gnu_property) < 0)) {
+    if (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
+                                    &note_gnu_property) < 0) {
       __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
                      strerror(errno));
     }
+    // MTE globals requires remapping data segments with PROT_MTE as anonymous
+    // mappings, because file based mappings may not be backed by tag-capable
+    // memory (see "MAP_ANONYMOUS" on
+    // https://www.kernel.org/doc/html/latest/arm64/memory-tagging-extension.html).
+    // This is only done if the binary requests MTE, as determined by
+    // __libc_init_mte, because this remapping destroys page sharing.
+    if (phdr_table_remap_segments(somain->phdr, somain->phnum, somain->load_bias,
+                                  exe_info.path.c_str()) < 0) {
+      __linker_error("error: can't remap segments for \"%s\": %s", exe_info.path.c_str(),
+                     strerror(errno));
+    }
   }
-
-  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias);
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -686,6 +696,18 @@ __attribute__((constructor(1))) static void detect_self_exec() {
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 
+// This should be called as early as possible in the startup of the process
+// to allow the dynamic loader to tag globals during relocation. This function
+// turns on MTE in ASYNC mode, but this can be switched to SYNC in libc before
+// heap initialization happens.
+static void enable_mte_if_supported() {
+#if defined(__aarch64__)
+  // This prctl() ends up being a nop if we failed to enable ASYNC MTE.
+  // prctl(PR_SET_TAGGED_ADDR_CTRL,
+  //       PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (0xfffe << PR_MTE_TAG_SHIFT), 0, 0, 0);
+#endif
+}
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -700,6 +722,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
   bionic_tcb temp_tcb __attribute__((uninitialized));
   linker_memclr(&temp_tcb, sizeof(temp_tcb));
+
+  enable_mte_if_supported();
+
   __libc_init_main_thread_early(args, &temp_tcb);
 
   // When the linker is run by itself (rather than as an interpreter for

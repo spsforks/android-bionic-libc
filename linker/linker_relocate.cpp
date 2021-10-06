@@ -44,6 +44,8 @@
 #include "linker_soinfo.h"
 #include "private/bionic_globals.h"
 
+#include <platform/bionic/mte.h>
+
 static bool is_tls_reloc(ElfW(Word) type) {
   switch (type) {
     case R_GENERIC_TLS_DTPMOD:
@@ -154,6 +156,7 @@ void print_linker_stats() {
 }
 
 static bool process_relocation_general(Relocator& relocator, const rel_t& reloc);
+bool __libc_use_mte_globals();  // from libc_init_static.cpp
 
 template <RelocMode Mode>
 __attribute__((always_inline))
@@ -311,8 +314,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     if (r_type == R_GENERIC_ABSOLUTE) {
       count_relocation_if<IsGeneral>(kRelocAbsolute);
       const ElfW(Addr) result = sym_addr + get_addend_rel();
-      trace_reloc("RELO ABSOLUTE %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      trace_reloc("RELO ABSOLUTE %16p <- %16p %s", rel_target, reinterpret_cast<void*>(result),
+                  sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     } else if (r_type == R_GENERIC_GLOB_DAT) {
@@ -320,9 +323,28 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       // document (IHI0044F) specifies that R_ARM_GLOB_DAT has an addend, but Bionic isn't adding
       // it.
       count_relocation_if<IsGeneral>(kRelocAbsolute);
-      const ElfW(Addr) result = sym_addr + get_addend_norel();
-      trace_reloc("RELO GLOB_DAT %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      ElfW(Addr) result = sym_addr + get_addend_norel();
+
+      constexpr typeof(Elf64_Sym::st_other) kTaggedGlobalBit = 0x20;
+
+      if (__libc_use_mte_globals() && sym && (sym->st_other & kTaggedGlobalBit) &&
+          sym->st_size >= kTagGranuleSize &&
+          static_cast<uintptr_t>(result) % kTagGranuleSize == 0 &&
+          sym->st_size % kTagGranuleSize == 0) {
+        void* result_ptr = reinterpret_cast<void*>(result);
+
+        void* tagged_result = get_tagged_address(result_ptr);
+        if (result_ptr == tagged_result) {
+          tagged_result = insert_random_tag(reinterpret_cast<void*>(result_ptr));
+          for (size_t i = 0; i < sym->st_size / kTagGranuleSize; i++) {
+            auto* granule = static_cast<uint8_t*>(tagged_result) + i * kTagGranuleSize;
+            set_memory_tag(static_cast<void*>(granule));
+          }
+        }
+
+        result = reinterpret_cast<ElfW(Addr)>(tagged_result);
+      }
+
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     } else if (r_type == R_GENERIC_RELATIVE) {
@@ -330,8 +352,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       // referenced symbol (and abort if the symbol isn't found), even though it isn't used.
       count_relocation_if<IsGeneral>(kRelocRelative);
       const ElfW(Addr) result = relocator.si->load_bias + get_addend_rel();
-      trace_reloc("RELO RELATIVE %16p <- %16p",
-                  rel_target, reinterpret_cast<void*>(result));
+      trace_reloc("RELO RELATIVE %16p <- %16p", rel_target, reinterpret_cast<void*>(result));
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     }
