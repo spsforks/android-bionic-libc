@@ -33,6 +33,24 @@
       "message": "interesting...\n\nsamccone: is this WAI? it seems like if someone starts a change, and someone else takes it over and finishes it (i.e. owner !\u003d author), then *both* of those people are excluded from counting as a \"second reviewer\". that seems a bit odd? is the intent _really_ \"there should be a code review from someone who didn\u0027t touch the code at all\"? (i.e. we\u0027re assuming there are two colluding bad actors, not just one? in which case, wouldn\u0027t we just ensure that one of us made all the edits and bypass this?)\n\ncferris: in the meantime, your vote is needed after all :-)",
       "revId": "c3060de20f633e0475ffb18d7ea97efc358180ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d571e06_90026f72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060831
+      },
+      "writtenOn": "2021-10-06T16:40:27Z",
+      "side": 1,
+      "message": "FWIW the same thing happened to me earlier this week. It\u0027s clever, but is it right?",
+      "parentUuid": "ae0f1581_cb2ee380",
+      "revId": "c3060de20f633e0475ffb18d7ea97efc358180ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
