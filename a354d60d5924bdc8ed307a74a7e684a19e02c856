@@ -16,6 +16,24 @@
       "message": "may as well use ASSERT_MATCH() here. fixed in next ps...",
       "revId": "a354d60d5924bdc8ed307a74a7e684a19e02c856",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2847da01_ea3a2bdd",
+        "filename": "tests/utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2021-10-06T16:04:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ce634123_337d6505",
+      "revId": "a354d60d5924bdc8ed307a74a7e684a19e02c856",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
