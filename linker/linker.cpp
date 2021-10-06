@@ -48,6 +48,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -136,6 +137,8 @@ static const char* const kAsanDefaultLdPaths[] = {
 static bool g_is_asan = false;
 
 static CFIShadowWriter g_cfi_shadow;
+
+bool __libc_use_mte_globals();
 
 CFIShadowWriter* get_cfi_shadow() {
   return &g_cfi_shadow;
@@ -1670,6 +1673,8 @@ bool find_libraries(android_namespace_t* ns,
       return false;
     }
     register_soinfo_tls(si);
+    // Under MTE, tag globals that request it.
+    si->tag_globals();
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
@@ -2287,9 +2292,9 @@ bool do_dlsym(void* handle,
           return false;
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
-        *symbol = static_cast<char*>(tls_block) + sym->st_value;
+        *symbol = get_tagged_address(static_cast<char*>(tls_block) + sym->st_value);
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2762,6 +2767,33 @@ bool soinfo::relocate_relr() {
   return true;
 }
 
+size_t soinfo::get_symtab_length() const {
+  if (!is_gnu_hash()) return nchain_;
+
+  // Handle the hash table being empty.
+  if (gnu_nbucket_ == 1 && gnu_bucket_[0] == 0) {
+    return gnu_symndx_;
+  }
+
+  size_t start_of_last_chain = 0;
+  for (size_t i = 0; i < gnu_nbucket_; ++i) {
+    if (gnu_bucket_[i] > start_of_last_chain) {
+      start_of_last_chain = gnu_bucket_[i];
+    }
+  }
+
+  // `gnu_chain_` is negatively adjusted by gnu_symndx_ to make symbol lookups
+  // less complicated. We don't want this adjustment here.
+  uint32_t* chain = gnu_bucket_ + gnu_nbucket_;
+
+  for (size_t chain_index = start_of_last_chain - gnu_symndx_;; ++chain_index) {
+    if (chain[chain_index] & 1) {
+      return chain_index + gnu_symndx_ + 1;
+    }
+  }
+  return 0;
+}
+
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
@@ -2830,7 +2862,7 @@ bool soinfo::prelink_image() {
 
       case DT_GNU_HASH:
         gnu_nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
-        // skip symndx
+        gnu_symndx_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
         gnu_maskwords_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
         gnu_shift2_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
 
@@ -3327,6 +3359,44 @@ bool soinfo::protect_relro() {
     return false;
   }
   return true;
+}
+
+void soinfo::tag_globals() {
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  if (!__libc_use_mte_globals()) return;
+
+  size_t symtab_len = get_symtab_length();
+
+  for (size_t i = 0; i < symtab_len; ++i) {
+    const ElfW(Sym)* sym = symtab_ + i;
+
+    if (sym->st_shndx == SHN_UNDEF) continue;
+    if (!(sym->st_other & kTaggedGlobalSymOtherBit)) continue;
+
+    const char* name = "<unknown>";
+    if (sym->st_name != 0) {
+      name = get_string(sym->st_name);
+    }
+
+    if (sym->st_size == 0 || sym->st_size % kTagGranuleSize != 0) {
+      DL_ERR("tagged symbol \"%s\" from \"%s\" has non-granule aligned size: %zu", name,
+             get_realpath(), static_cast<size_t>(sym->st_size));
+    }
+
+    void* addr = reinterpret_cast<void*>(load_bias + sym->st_value);
+    if (reinterpret_cast<uintptr_t>(addr) % 16 != 0) {
+      DL_ERR("tagged symbol \"%s\" from \"%s\" has non-granule aligned address: %p", name,
+             get_realpath(), addr);
+    }
+
+    addr = insert_random_tag(reinterpret_cast<void*>(addr));
+    for (size_t i = 0; i < sym->st_size / kTagGranuleSize; i++) {
+      auto* granule = static_cast<uint8_t*>(addr) + i * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+  }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {

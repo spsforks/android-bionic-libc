@@ -69,6 +69,7 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 static void set_bss_vma_name(soinfo* si);
 
 void __libc_init_mte(const void* phdr_start, size_t phdr_count, uintptr_t load_bias);
+bool __libc_use_mte_globals();
 
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
@@ -396,19 +397,30 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
+  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias);
+
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
     auto note_gnu_property = GnuPropertySection(somain);
-    if (note_gnu_property.IsBTICompatible() &&
-        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     &note_gnu_property) < 0)) {
+    if (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
+                                    &note_gnu_property) < 0) {
       __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
                      strerror(errno));
     }
   }
 
-  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias);
+  // MTE globals requires remapping data segments with PROT_MTE as anonymous
+  // mappings, because file based mappings may not be backed by tag-capable
+  // memory (see "MAP_ANONYMOUS" on
+  // https://www.kernel.org/doc/html/latest/arm64/memory-tagging-extension.html).
+  // This is only done if the binary requests MTE, as determined by
+  // __libc_init_mte, because this remapping destroys page sharing.
+  if (phdr_table_remap_segments(somain->phdr, somain->phnum, somain->load_bias,
+                                exe_info.path.c_str()) < 0) {
+    __linker_error("error: can't remap segments for \"%s\": %s", exe_info.path.c_str(),
+                   strerror(errno));
+  }
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -450,6 +462,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_info.path.c_str());
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
+
+  si->tag_globals();
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
