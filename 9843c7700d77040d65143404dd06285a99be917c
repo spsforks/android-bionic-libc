@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbef6cc6_2aa95a83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1896186
+      },
+      "writtenOn": "2021-10-07T16:45:09Z",
+      "side": 1,
+      "message": "Good point. I added the manual testing steps in the commit message, thanks,",
+      "parentUuid": "51f91be2_d7bc6637",
+      "revId": "9843c7700d77040d65143404dd06285a99be917c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33368e4e_d5ea1bdc",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-10-06T20:22:08Z",
       "side": 1,
       "message": "Is there any possibility that the gHeapprofdState could have been modified between this call and the call above? I think that in this case it doesn\u0027t matter, but I wanted to make sure someone else had thought about this.",
+      "range": {
+        "startLine": 276,
+        "startChar": 15,
+        "endLine": 276,
+        "endChar": 50
+      },
+      "revId": "9843c7700d77040d65143404dd06285a99be917c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74eed60b_e2e0c9a8",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1896186
+      },
+      "writtenOn": "2021-10-07T16:45:09Z",
+      "side": 1,
+      "message": "I agree, it shouldn\u0027t matter in this case.\n\nThinking out loud:\n\nIn general, if gHeapprofdState state changes concurrently, doing nothing (ignoring the signal) is probably the right thing, we should let the other thread proceed.\n\nIn this case, the new `else if` is shadowing the `else` case below (which does nothing as well) and the `else if` branch that checks for `kHookInstalled`: if there\u0027s another thread that\u0027s changing gHeapprofdState to kHookInstalled, we should do nothing anyway.\n\nBTW, if you have ideas on how to refactor this code, given the complicated interactions with malloc_debug, malloc_hooks, malloc_limit and GWP-Asan, I\u0027ll be happy to discuss, but I don\u0027t think investing too much will be useful at this point.\n\nThoughts?",
+      "parentUuid": "33368e4e_d5ea1bdc",
       "range": {
         "startLine": 276,
         "startChar": 15,
