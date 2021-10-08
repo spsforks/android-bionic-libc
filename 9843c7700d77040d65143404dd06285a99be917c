@@ -81,6 +81,30 @@
       },
       "revId": "9843c7700d77040d65143404dd06285a99be917c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35121170_12b5ab74",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-08T19:43:00Z",
+      "side": 1,
+      "message": "Unfortunately, this code is really brittle, and it\u0027s my fault. I don\u0027t know how to easily refactor it.\n\nI think this solution is fine with me, as long as we\u0027ve thought about the issues.\n\nI would like to create a suite of tests for this code rather than rely on the perfetto tests, that would make a refactor possible. But that\u0027s not a big priority right now, so it will have to wait.",
+      "parentUuid": "74eed60b_e2e0c9a8",
+      "range": {
+        "startLine": 276,
+        "startChar": 15,
+        "endLine": 276,
+        "endChar": 50
+      },
+      "revId": "9843c7700d77040d65143404dd06285a99be917c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
