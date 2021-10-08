@@ -30,12 +30,15 @@
 #include <sys/system_properties.h>
 #endif
 
+<<<<<<< TARGET BRANCH (ad19c8 Merge ab/7633965)
 #if defined(__BIONIC__)
 #include <bionic/macros.h>
 #else
 #define untag_address(p) p
 #endif
 
+=======
+>>>>>>> SOURCE BRANCH (0d9701 Merge changes I42a81210,I42ce2b5a,Id949c9e5 into android11-t)
 #include <atomic>
 #include <string>
 #include <regex>
@@ -79,8 +82,28 @@ static inline bool running_with_hwasan() {
 
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
+<<<<<<< TARGET BRANCH (ad19c8 Merge ab/7633965)
   static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
   return pi != nullptr;
+=======
+#if defined(__arm__)
+  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa.arm");
+  return pi != nullptr;
+#elif defined(__aarch64__)
+  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa.arm64");
+  return pi != nullptr;
+#endif
+#endif
+  return false;
+}
+
+#define SKIP_WITH_NATIVE_BRIDGE if (running_with_native_bridge()) GTEST_SKIP()
+
+static inline void* untag_address(void* addr) {
+#if defined(__LP64__)
+  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
+  addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
+>>>>>>> SOURCE BRANCH (0d9701 Merge changes I42a81210,I42ce2b5a,Id949c9e5 into android11-t)
 #endif
   return false;
 }
