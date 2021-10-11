@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24f4c190_af335c34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-11T16:21:01Z",
+      "side": 1,
+      "message": "where? it\u0027s not obvious from the source... or i completely misunderstand this warning from its name!\n\n(do you have the actual fix for this? i\u0027ll send it upstream, since they use clang and will presumably hit this eventually.)",
+      "revId": "041c1f7ba03fee936d7bdc4194ff5d80f76a0e70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
