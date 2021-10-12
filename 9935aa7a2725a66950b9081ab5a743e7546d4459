@@ -88,6 +88,23 @@
       "parentUuid": "cb301c58_8ef60996",
       "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a6cc3a1_c77ef8eb",
+        "filename": "tests/clang_fortify_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-10-12T21:05:56Z",
+      "side": 1,
+      "message": "IIUC, this change is working around http://b/197147102 by skipping the Fortify checks.  We should undo these changes and continue reverting the upstream change until the issue is resolved upstream.",
+      "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
