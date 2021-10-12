@@ -34,6 +34,24 @@
       "parentUuid": "c1ca7a08_7c36d2ec",
       "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5858d80_4dec91c9",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-12T00:18:11Z",
+      "side": 1,
+      "message": "\u003e rare ODR violations\n\nhow though? i still don\u0027t understand what that would look like. there we\u0027d need the *variable* duplicated, no?",
+      "parentUuid": "350bd7a5_9a5602a8",
+      "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
