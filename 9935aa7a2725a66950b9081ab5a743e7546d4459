@@ -16,6 +16,24 @@
       "message": "having seen the specific example, this warning seems so useless/wrong, i\u0027m wondering whether we should turn it off globally, not just here!",
       "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "350bd7a5_9a5602a8",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2021-10-12T00:14:36Z",
+      "side": 1,
+      "message": "The warning can be ignored here because the local static \"variable\" is actual a constant across all modules and its address is not used. In general using static variable in external inline function is rare, and this warning night catch rare ODR violations.",
+      "parentUuid": "c1ca7a08_7c36d2ec",
+      "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
