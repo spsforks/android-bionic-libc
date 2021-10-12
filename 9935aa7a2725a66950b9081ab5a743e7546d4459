@@ -70,6 +70,24 @@
       "parentUuid": "d5858d80_4dec91c9",
       "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbb51ae0_a5931350",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-12T00:30:07Z",
+      "side": 1,
+      "message": "but the code in question doesn\u0027t mutate the variable! (it\u0027s static const!)\n\ni still think they checked this warning in before they\u0027d finished... :-(",
+      "parentUuid": "cb301c58_8ef60996",
+      "revId": "9935aa7a2725a66950b9081ab5a743e7546d4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
