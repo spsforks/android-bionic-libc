@@ -105,6 +105,24 @@
       "parentUuid": "b9d28ab0_46d1dd0d",
       "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00854a25_b705cf86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-10-13T14:33:39Z",
+      "side": 1,
+      "message": "Thanks Dario. Elliott, how can we proceed? As I replied above, this isn\u0027t related with Mainline. The 64-bit-only runtime APEX will be used only inside Microdroid which always is 64-bit only.\n\nEven when the virt APEX becomes a Mainline module in the future, the fact that Microdroid is 64-bit only doesn\u0027t change, regardless of whether Android still supports both ABIs. We wouldn\u0027t need the 32-bit bionic libs inside Microdroid.",
+      "parentUuid": "cce63ab4_9863d569",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
