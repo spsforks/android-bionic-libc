@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "553d2804_ebde27df",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-10-14T22:31:47Z",
+      "side": 0,
+      "message": "Should we mention bionic/build/coverage.sh?",
+      "revId": "ad60768bdfc4680edc07422693381ac152d74e37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
