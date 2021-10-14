@@ -745,6 +745,7 @@ cc_test_library {
         "dl_test.cpp",
         "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
+        "execinfo_test.cpp",
         "link_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
@@ -1143,6 +1144,7 @@ cc_test_host {
         "dl_test.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+        "execinfo_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
 
