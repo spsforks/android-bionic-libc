@@ -46,7 +46,9 @@
 // System calls we need.
 extern "C" int __llseek(int, unsigned long, unsigned long, off64_t*, int);
 extern "C" int __preadv64(int, const struct iovec*, int, long, long);
+extern "C" int __preadv64v2(int, const struct iovec*, int, long, long, int);
 extern "C" int __pwritev64(int, const struct iovec*, int, long, long);
+extern "C" int __pwritev64v2(int, const struct iovec*, int, long, long, int);
 
 // For lseek64 we need to use the llseek system call which splits the off64_t in two and
 // returns the off64_t result via a pointer because 32-bit kernels can't return 64-bit results.
@@ -85,6 +87,20 @@ ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset) {
 }
 ssize_t pwritev64(int fd, const struct iovec* ios, int count, off64_t offset) {
   return __pwritev64(fd, ios, count, offset, offset >> 32);
+}
+
+// Likewise preadv2/pwritev2.
+ssize_t preadv2(int fd, const struct iovec* ios, int count, off_t offset, int flags) {
+  return preadv64v2(fd, ios, count, offset, flags);
+}
+ssize_t preadv64v2(int fd, const struct iovec* ios, int count, off64_t offset, int flags) {
+  return __preadv64v2(fd, ios, count, offset, offset >> 32, flags);
+}
+ssize_t pwritev2(int fd, const struct iovec* ios, int count, off_t offset, int flags) {
+  return pwritev64v2(fd, ios, count, offset, flags);
+}
+ssize_t pwritev64v2(int fd, const struct iovec* ios, int count, off64_t offset, int flags) {
+  return __pwritev64v2(fd, ios, count, offset, offset >> 32, flags);
 }
 
 // There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
