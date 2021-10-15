@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0af171fe_fde0d118",
+        "filename": "tests/sys_uio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-15T19:55:50Z",
+      "side": 1,
+      "message": "Probably should include errno.h and string.h.",
+      "range": {
+        "startLine": 78,
+        "startChar": 49,
+        "endLine": 78,
+        "endChar": 64
+      },
+      "revId": "39c27822ecbff9de318aaa5de4d68585164a19cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "823f3fc4_3cd747e8",
+        "filename": "tests/sys_uio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-15T19:55:50Z",
+      "side": 1,
+      "message": "Even though the other tests use lseek, you should pobably include unisdt.h.",
+      "range": {
+        "startLine": 79,
+        "startChar": 15,
+        "endLine": 79,
+        "endChar": 20
+      },
+      "revId": "39c27822ecbff9de318aaa5de4d68585164a19cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
