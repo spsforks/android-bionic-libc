@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31028bb7_53fc5fab",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-15T04:07:49Z",
+      "side": 1,
+      "message": "Isn\u0027t S 31, so shouldn\u0027t this be 32?",
+      "range": {
+        "startLine": 110,
+        "startChar": 149,
+        "endLine": 110,
+        "endChar": 151
+      },
+      "revId": "9edb329525d30f523764ff28423ab0fdf31fdae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d14d2a73_ce1cbfcf",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-15T04:07:49Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be LIBC_S? I only noticed because I\u0027m trying to add new functions too.",
+      "range": {
+        "startLine": 1574,
+        "startChar": 2,
+        "endLine": 1574,
+        "endChar": 8
+      },
+      "revId": "9edb329525d30f523764ff28423ab0fdf31fdae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
