@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b910dfce_631e9d6f",
+        "filename": "tests/sys_uio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-18T16:17:53Z",
+      "side": 1,
+      "message": "(longer term we should have some kind of PASSERT_* macros, but i\u0027ve done the minimum \"include what you use\" for now...)",
+      "parentUuid": "0af171fe_fde0d118",
+      "range": {
+        "startLine": 78,
+        "startChar": 49,
+        "endLine": 78,
+        "endChar": 64
+      },
+      "revId": "39c27822ecbff9de318aaa5de4d68585164a19cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "823f3fc4_3cd747e8",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-10-15T19:55:50Z",
       "side": 1,
       "message": "Even though the other tests use lseek, you should pobably include unisdt.h.",
+      "range": {
+        "startLine": 79,
+        "startChar": 15,
+        "endLine": 79,
+        "endChar": 20
+      },
+      "revId": "39c27822ecbff9de318aaa5de4d68585164a19cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37c6c38b_2f28de2f",
+        "filename": "tests/sys_uio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-18T16:17:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "823f3fc4_3cd747e8",
       "range": {
         "startLine": 79,
         "startChar": 15,
