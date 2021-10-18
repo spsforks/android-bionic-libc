@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14079303_5920add0",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-10-18T19:40:30Z",
+      "side": 1,
+      "message": "2",
+      "range": {
+        "startLine": 101,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 10
+      },
+      "revId": "69d21ed8e4996d0dfba7e3ee791846763f655bbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c62b25fc_54ae5e9a",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-10-18T19:40:30Z",
+      "side": 1,
+      "message": "2",
+      "range": {
+        "startLine": 113,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 11
+      },
+      "revId": "69d21ed8e4996d0dfba7e3ee791846763f655bbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
