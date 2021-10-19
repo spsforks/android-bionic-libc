@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186897cc_c4a19679",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-19T22:19:31Z",
+      "side": 1,
+      "message": "I\u0027m not quite sure what\u0027s causing the test to fail, so this upload adds a bit more debug output. I suspect that my check for call functions is too broad, or that the symbols are getting removed somehow.\n\nI did run this on a cuttlefish and there are no errors, so I need to narrow down what\u0027s going wrong.",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
