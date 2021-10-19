@@ -33,6 +33,23 @@
       "message": "+rossyeh@ for DrNo review",
       "revId": "069cf41429fe8eab0f7412182f02ae6e0852ef7b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "144bd7dc_6f0e5cfb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2021-10-19T16:26:26Z",
+      "side": 1,
+      "message": "rossyeh@, friendly ping for DrNo review",
+      "revId": "069cf41429fe8eab0f7412182f02ae6e0852ef7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
