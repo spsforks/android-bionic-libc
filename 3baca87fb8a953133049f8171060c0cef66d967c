@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "913d27f6_b9719e4e",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T04:39:01Z",
+      "side": 1,
+      "message": "I switched this to memfd_create. I didn\u0027t use this before because I thought it wss nearly the same as my original idea of creating a buffer then doing a reallocate on the fly. It seemed like a lot of extra allocations, but I think it\u0027s better than trying to duplicate the logic here.\n\nIf someone in the future complains about the speed, I can revisit this.",
+      "parentUuid": "53543c8e_b79e44df",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5dac48c_74d07235",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02194497_989866db",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T04:39:01Z",
+      "side": 1,
+      "message": "Oops, I forgot about that one. Fixed now.",
+      "parentUuid": "f5dac48c_74d07235",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88e31089_33c60ad0",
@@ -65,6 +101,24 @@
       "writtenOn": "2021-10-20T00:36:36Z",
       "side": 1,
       "message": "(if you go the tmpfile() route, you can getline() in a loop [with a null pointer each time] and use those allocated lines directly in your array...)",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c1e230f_f0a16b3e",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T04:39:01Z",
+      "side": 1,
+      "message": "I went the memfd_create way since that\u0027s the easiest.",
+      "parentUuid": "88e31089_33c60ad0",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -122,6 +176,24 @@
       "writtenOn": "2021-10-20T00:36:36Z",
       "side": 1,
       "message": "BSD license the tests too?",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c31911d_c9845d08",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T04:39:01Z",
+      "side": 1,
+      "message": "Switched, although it looks like many tests are apache.",
+      "parentUuid": "6b5d9e61_8bc45302",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
