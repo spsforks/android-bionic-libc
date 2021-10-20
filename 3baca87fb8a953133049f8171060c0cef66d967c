@@ -16,6 +16,131 @@
       "message": "I\u0027m not quite sure what\u0027s causing the test to fail, so this upload adds a bit more debug output. I suspect that my check for call functions is too broad, or that the symbols are getting removed somehow.\n\nI did run this on a cuttlefish and there are no errors, so I need to narrow down what\u0027s going wrong.",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53543c8e_b79e44df",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "can we use memfd_create() or open(O_TMPFILE)?\n\n(if not, we should probably use tmpfile() and fileno() to avoid duplicating this logic?)",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5dac48c_74d07235",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "(there\u0027s a ScopedFd similar to android::base::unique_fd. we should perhaps rename it to android::bionic::unique_fd or something to make it easier to find!)",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88e31089_33c60ad0",
+        "filename": "libc/bionic/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "(if you go the tmpfile() route, you can getline() in a loop [with a null pointer each time] and use those allocated lines directly in your array...)",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ff5aea7_d85c1070",
+        "filename": "libc/include/execinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "copy and paste-o :-)",
+      "range": {
+        "startLine": 34,
+        "startChar": 10,
+        "endLine": 34,
+        "endChar": 49
+      },
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a596252_5e6ae4ac",
+        "filename": "libc/include/execinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "should we have a backtrace_symbols_log() too?",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b5d9e61_8bc45302",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "BSD license the tests too?",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "364228d3_b628484e",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T00:36:36Z",
+      "side": 1,
+      "message": "musl doesn\u0027t seem to have any of these functions. FreeBSD\u0027s implementation seems to be size_t under the covers, so i\u0027m assuming this fails on macOS/iOS because the multiplication for the allocation is too large [i.e. \"macOS/iOS probably agree with you, albeit maybe just by accident\"].",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
