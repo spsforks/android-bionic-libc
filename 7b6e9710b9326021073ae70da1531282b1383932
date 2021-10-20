@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b7d6fc2_1fe68483",
+        "filename": "libc/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T21:53:50Z",
+      "side": 1,
+      "message": "I struggled with this, and decided on backtrace because that\u0027s what it\u0027s doing. But it does seem like execinfo is better to match with the header file. So I changed the name to execinfo.cpp.",
+      "parentUuid": "f70e7e66_efa2806d",
+      "revId": "7b6e9710b9326021073ae70da1531282b1383932",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b831a93_1306a3ce",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-10-20T19:19:01Z",
       "side": 1,
       "message": "|sort",
+      "revId": "7b6e9710b9326021073ae70da1531282b1383932",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c8837a7_066c2356",
+        "filename": "tests/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T21:53:50Z",
+      "side": 1,
+      "message": "The sad thing is I thought I had sorted it. I clearly need to revisit my abcs.",
+      "parentUuid": "0b831a93_1306a3ce",
       "revId": "7b6e9710b9326021073ae70da1531282b1383932",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
