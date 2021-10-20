@@ -146,6 +146,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07daf7e1_12ac3241",
+        "filename": "libc/include/execinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T19:09:34Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "8ff5aea7_d85c1070",
+      "range": {
+        "startLine": 34,
+        "startChar": 10,
+        "endLine": 34,
+        "endChar": 49
+      },
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a596252_5e6ae4ac",
@@ -159,6 +183,24 @@
       "writtenOn": "2021-10-20T00:36:36Z",
       "side": 1,
       "message": "should we have a backtrace_symbols_log() too?",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "847ed37a_a0b8f6d2",
+        "filename": "libc/include/execinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T19:09:34Z",
+      "side": 1,
+      "message": "I don\u0027t know, I\u0027m not sure how often this be used. I feel a little weird adding a function like that since you could pretty easily implement the logging yourself if you really wanted to.",
+      "parentUuid": "3a596252_5e6ae4ac",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -211,6 +253,24 @@
       "writtenOn": "2021-10-20T00:36:36Z",
       "side": 1,
       "message": "musl doesn\u0027t seem to have any of these functions. FreeBSD\u0027s implementation seems to be size_t under the covers, so i\u0027m assuming this fails on macOS/iOS because the multiplication for the allocation is too large [i.e. \"macOS/iOS probably agree with you, albeit maybe just by accident\"].",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18b9b938_1386b787",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-10-20T19:09:34Z",
+      "side": 1,
+      "message": "Change this to only verify this on bionic since I don\u0027t know if I\u0027ll see a problem on another system.\n\nI don\u0027t think I need to do anything for musl, but maybe I should cc ccross on this so he know? Or is there a way to skip these tests on musl?",
+      "parentUuid": "364228d3_b628484e",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
