@@ -205,6 +205,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e82f1fc_2fa782a2",
+        "filename": "libc/include/execinfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T19:16:51Z",
+      "side": 1,
+      "message": "well, it\u0027s not _that_ easy (there\u0027s no \"logging fd\"), but, yeah, the code to call backtrace_symbols(), iterate to log each line, and then free the result isn\u0027t bad. we can always come back if we find there are lots of copy \u0026 pastes of that, but you\u0027re right that it doesn\u0027t seem too likely...",
+      "parentUuid": "847ed37a_a0b8f6d2",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b5d9e61_8bc45302",
@@ -240,6 +258,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "149e0b4a_b49423de",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T19:16:51Z",
+      "side": 1,
+      "message": "(yeah, even a new one in 2021 :-( i wish i was better at spotting that!)",
+      "parentUuid": "0c31911d_c9845d08",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "364228d3_b628484e",
@@ -271,6 +307,24 @@
       "side": 1,
       "message": "Change this to only verify this on bionic since I don\u0027t know if I\u0027ll see a problem on another system.\n\nI don\u0027t think I need to do anything for musl, but maybe I should cc ccross on this so he know? Or is there a way to skip these tests on musl?",
       "parentUuid": "364228d3_b628484e",
+      "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bc39a1d_799d1edb",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-20T19:16:51Z",
+      "side": 1,
+      "message": "yeah, i\u0027d probably have left in the comment that you explicitly know it doesn\u0027t work on glibc ... but then again, if we\u0027re expecting to remove glibc before too long, \"meh\" :-)\n\nfor musl though, you\u0027re right --- we\u0027ll want to just not build this file at all. i _think_ we already have an example like that? ccross committed all his musl test changes already. yeah, https://source.corp.google.com/android/bionic/tests/Android.bp;l\u003d475?q\u003dfile:bionic%2Ftest%20musl\u0026sq\u003dpackage:%5Eandroid$ should be the right place...",
+      "parentUuid": "18b9b938_1386b787",
       "revId": "3baca87fb8a953133049f8171060c0cef66d967c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
