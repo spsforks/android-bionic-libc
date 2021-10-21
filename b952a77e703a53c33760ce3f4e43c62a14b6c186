@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de3df683_09d08ecd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-21T16:47:37Z",
+      "side": 1,
+      "message": "fine by me, but should we just opt all the bionic tests out of LTO? (iirc we already opted all of bionic out, and i can\u0027t think why we\u0027d want LTO for our tests, _unless_ finding stuff like this is actually helpful to you over in LLVM land :-) )",
+      "revId": "b952a77e703a53c33760ce3f4e43c62a14b6c186",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
