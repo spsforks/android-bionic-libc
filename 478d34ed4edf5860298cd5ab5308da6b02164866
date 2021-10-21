@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000016452960",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d4",
+      "fixSuggestions": [
+        {
+          "fixId": "981222c1_1c23e1b8",
+          "description": "Change to \"libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+              "range": {
+                "startLine": 50,
+                "startChar": 1,
+                "endLine": 50,
+                "endChar": 6
+              },
+              "replacement": "call"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "b6bdf2b6_b552c56e",
+        "filename": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-10-21T11:56:17Z",
+      "side": 1,
+      "message": "Common typo found: \"calll\" -- should it be \"call\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 6
+      },
+      "revId": "478d34ed4edf5860298cd5ab5308da6b02164866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000016452965",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1815497?revision\u003d4",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "3a5e86a4_94424d88",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-10-21T11:56:17Z",
+      "side": 1,
+      "message": "Please remove the trailing whitespace.",
+      "range": {
+        "startLine": 43,
+        "startChar": 15,
+        "endLine": 43,
+        "endChar": 16
+      },
+      "revId": "478d34ed4edf5860298cd5ab5308da6b02164866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
