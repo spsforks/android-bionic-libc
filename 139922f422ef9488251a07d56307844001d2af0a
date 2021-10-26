@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6bd58b3d_cb16de77",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-26T15:39:32Z",
+      "side": 1,
+      "message": "did you forget to `git add` the header file too? or does the header file already say `__INTRODUCED_IN(21)`?\n\n(i think you\u0027ll actually want `__INTRODUCED_IN_NO_GUARD_FOR_NDK(21)` if you\u0027re going to add this to libandroid_support...)",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "d719e017_86508486",
