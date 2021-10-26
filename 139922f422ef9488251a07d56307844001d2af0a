@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d719e017_86508486",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-26T01:56:47Z",
+      "side": 1,
+      "message": "Aside: The two sizeof(buf) expressions in this function should be NUM_WCHARS(sizeof(buf)).\n\n(I happened to notice this while looking for instances of EXPECT_STREQ / ASSERT_STREQ that used a wide string. I didn\u0027t see any more instances of this bug.)\n\nNUM_WCHARS in this file probably ought to be replaced with std::size.",
+      "range": {
+        "startLine": 586,
+        "startChar": 33,
+        "endLine": 586,
+        "endChar": 44
+      },
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ed6ae3d_ac981e4c",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-26T01:56:47Z",
+      "side": 1,
+      "message": "Do we need the T template parameter? For WcsToFloatFn, T can be any of float, double, or long double, but for MbsToWcsFn, the return type is always just size_t.\n\nMaybe we can just inline the content of MbsToWcsFn into TEST(wchar, mbstowcs)?",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c742f13_37619188",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-26T01:56:47Z",
+      "side": 1,
+      "message": "These are single-byte characters, so maybe we should drop the L prefix?\n\n  char bytes[] \u003d { \u0027h\u0027, \u0027e\u0027, \u0027l\u0027, \u0027l\u0027, \u0027o\u0027, \u0027\\0\u0027 };\n  const char bad_chars[] \u003d { \u0027h\u0027, \u0027i\u0027, static_cast\u003cchar\u003e(0xff), \u0027\\0\u0027 };\n\nIt could be simplified, but it looks like the existing wcstombs_wcrtombs test also breaks the string up char-by-char. e.g.: It could just be this:\n\n    const char chars[] \u003d \"hello\";\n    const char bad_chars[] \u003d \"hi\\xff\";\n\nMaybe we should make the out[] buffer larger (e.g. 256 elements) so it\u0027s as large as the largest mbstowcs call?",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44edf095_0e04c3e3",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-26T01:56:47Z",
+      "side": 1,
+      "message": "I think we could add some ASSERT_STREQ(L\"...\", out) lines here? For the n\u003d0 and n\u003d1 cases, we\u0027d need to [w]memset the out buffer beforehand.",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
