@@ -813,6 +813,9 @@ template <typename T>
 using WcsToFloatFn = T (*)(const wchar_t*, wchar_t**);
 
 template <typename T>
+using MbsToWcsFn = T (*)(wchar_t*, const char*, size_t);
+
+template <typename T>
 void TestSingleWcsToFloat(WcsToFloatFn<T> fn, const wchar_t* str,
                           T expected_value, ptrdiff_t expected_len) {
   wchar_t* p;
@@ -883,6 +886,35 @@ void TestWcsToFloatInfNan(WcsToFloatFn<T> fn) {
 
 TEST(wchar, wcstof) {
   TestWcsToFloat(wcstof);
+}
+
+template <typename T>
+void TestMbsToWcs(MbsToWcsFn<T> fn) {
+  wchar_t out[8];
+  const char chars[] = {L'h', L'e', L'l', L'l', L'o', 0};
+  const char bad_chars[] = {L'h', L'i', static_cast<char>(0xffffffff), 0};
+
+  // Given a NULL destination, these functions count valid characters.
+  ASSERT_EQ(static_cast<size_t>(5), fn(nullptr, chars, 0));
+  ASSERT_EQ(static_cast<size_t>(5), fn(nullptr, chars, 1));
+  ASSERT_EQ(static_cast<size_t>(5), fn(nullptr, chars, 10));
+  ASSERT_EQ(static_cast<size_t>(0), fn(nullptr, "", 0));
+
+  errno = 0;
+  EXPECT_EQ(static_cast<size_t>(-1), fn(nullptr, bad_chars, 0));
+  EXPECT_EQ(EILSEQ, errno);
+  errno = 0;
+  EXPECT_EQ(static_cast<size_t>(-1), fn(nullptr, bad_chars, 256));
+  EXPECT_EQ(EILSEQ, errno);
+
+  // Okay, now let's test actually converting something...
+  ASSERT_EQ(static_cast<size_t>(0), fn(out, chars, 0));
+  ASSERT_EQ(static_cast<size_t>(1), fn(out, chars, 1));
+  ASSERT_EQ(static_cast<size_t>(5), fn(out, chars, 10));
+  ASSERT_EQ(static_cast<size_t>(0), fn(out, "", 0));
+
+  ASSERT_EQ(static_cast<size_t>(0), fn(out, bad_chars, 0));
+  ASSERT_EQ(static_cast<size_t>(-1), fn(out, bad_chars, 256));
 }
 
 TEST(wchar, wcstof_hex_floats) {
@@ -1220,4 +1252,8 @@ TEST(wchar, wmemset) {
   ASSERT_EQ(dst[3], wchar_t(0));
   ASSERT_EQ(dst, wmemset(dst, L'y', 0));
   ASSERT_EQ(dst[0], wchar_t(0x12345678));
+}
+
+TEST(wchar, mbstowcs) {
+  TestMbsToWcs(mbstowcs);
 }
