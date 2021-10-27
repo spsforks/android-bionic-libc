@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4285dc87_98f77bb2",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-10-27T00:19:08Z",
+      "side": 1,
+      "message": "__INTRODUCED_IN_NO_GUARD_FOR_NDK is what gets used when we want the decl but there isn\u0027t a definition (in bionic or in libandroid_support). When we define it in libandroid_support we also add the decl to the libandroid_support headers.\n\nFor this case you do want to add the __INTRODUCED_IN(21) to the bionic header.",
+      "parentUuid": "7376525f_b39432a7",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "d719e017_86508486",
