@@ -167,6 +167,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3184a5ec_4884b3c2",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-28T23:32:44Z",
+      "side": 1,
+      "message": "\u003e Ohhh, should I add one case that cause stack smashing?\n\nI don\u0027t think we need to do that? That would tend to make the test fail, I think.\n\nI was wondering whether it\u0027s OK to set the mbstowcs length parameter larger than the actual size of the output buffer, if we know that mbstowcs will stop before it exceeds the buffer size. It looks like that is allowed by C11 and POSIX, but the Linux man pages has a line, \"The programmer must ensure that there is room for at least n wide characters at dest.\" Practically, I think it would work, unless some sanitizer/fortify-mode rejected it.\n\nI think it would make sense to modify the n\u003d1 test to verify that it writes exactly one wchar (and does not write a NUL wchar). e.g. Use [w]memset to fill out with non-zero characters first, then verify afterwards that the filler is still there, but the first wchar is changed.",
+      "parentUuid": "76251c34_25d990be",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "44edf095_0e04c3e3",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
