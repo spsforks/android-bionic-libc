@@ -693,6 +693,10 @@ cc_library_static {
         "upstream-openbsd/android/include",
     ],
 
+    lto: {
+        never: true,
+    },
+
     name: "libc_openbsd",
 }
 
@@ -1533,6 +1537,10 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
+    },
+
+    lto: {
+        never: true,
     },
 }
 
