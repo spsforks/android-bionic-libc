@@ -122,6 +122,11 @@ cc_defaults {
             cflags: ["-DUSE_SCUDO"],
         },
     },
+    target: {
+        native_bridge: {
+            installable: false,
+        },
+    },
 }
 
 libc_scudo_product_variables = {
