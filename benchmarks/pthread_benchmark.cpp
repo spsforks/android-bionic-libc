@@ -76,22 +76,26 @@ static void BM_pthread_mutex_lock(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_pthread_mutex_lock);
 
 static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
+#if !defined(ANDROID_HOST_MUSL)
   pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
 
   while (state.KeepRunning()) {
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
   }
+#endif
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
 
 static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
+#if !defined(ANDROID_HOST_MUSL)
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
   while (state.KeepRunning()) {
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
   }
+#endif
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
