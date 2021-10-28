@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "568db792_41c4c5eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-28T05:40:22Z",
+      "side": 1,
+      "message": "I\u0027m wondering if we should check that the value from a successful open call returns i. Either way, it looks good to me.\n",
+      "revId": "e518556ee21987ea81aae98b6b0ffe9007df77a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
