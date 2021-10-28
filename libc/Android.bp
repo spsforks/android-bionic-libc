@@ -1534,6 +1534,10 @@ cc_library_static {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
+
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
@@ -1595,6 +1599,10 @@ cc_library_static {
         "libc_init_static",
         "libc_unwind_static",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 filegroup {
