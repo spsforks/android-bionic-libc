@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfbaa400_dc62344c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2021-10-29T08:48:51Z",
+      "side": 1,
+      "message": "Looks like a good idea. We actually planned to fix that issue in a different way (http://b/170476820) but had no spare resources to implement planned refactoring in almost whole year, thus it\u0027s probably better to use that kludge to, at least, remove build-time collisions.\n",
+      "revId": "48efa5b8cd2c91f3dc1bcf9c9efd203879e16cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
