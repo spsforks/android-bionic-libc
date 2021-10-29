@@ -52,6 +52,24 @@
       "parentUuid": "3d720fc2_9fc39735",
       "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f06e576_fa069051",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2021-10-29T06:47:02Z",
+      "side": 1,
+      "message": "Turning off LTO for strcat.o can workaround this breakage.",
+      "parentUuid": "92865cd0_9f25137a",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
