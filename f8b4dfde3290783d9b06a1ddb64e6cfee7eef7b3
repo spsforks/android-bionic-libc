@@ -70,6 +70,24 @@
       "parentUuid": "92865cd0_9f25137a",
       "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac5b80d4_d25eb676",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-29T15:59:48Z",
+      "side": 1,
+      "message": "that seems too fragile to be worth the trouble though? i wouldn\u0027t expect to see much LTO benefit with libc, since -- despite the fact that it\u0027s 1MiB of code, it\u0027s basically \"lots of tiny C programs that don\u0027t have much to do with each other\". it\u0027s just a big bag of stuff (where the compiler deciding to be \"clever\" and inline calls to other functions is almost always a *bug* anyway, since you should be able to intercept most stuff, and a lot of people rely on that). having LTO always off for libc seems like a feature rather than a bug to me? (and, indeed, the linker seems like the one place where that might not be true... that\u0027s a megabyte of code all pulling in the same direction, that users can\u0027t really influence...)",
+      "parentUuid": "2f06e576_fa069051",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
