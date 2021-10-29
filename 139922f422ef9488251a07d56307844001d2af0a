@@ -270,6 +270,24 @@
       "parentUuid": "3e08d865_cbefc090",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb416694_4ce937bc",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-10-29T22:40:52Z",
+      "side": 1,
+      "message": "So I should add mbrstowcs() like wcstombs_wcrstombs test? and I find a specific test for mbtowc() and I guess I need to rewrite and rename it to mbtowc_mbrtowc test",
+      "parentUuid": "9e112718_dcc51b18",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
