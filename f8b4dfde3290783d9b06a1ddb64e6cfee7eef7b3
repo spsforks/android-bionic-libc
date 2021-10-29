@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6e3aec2_36aaec16",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2021-10-29T05:36:17Z",
+      "side": 1,
+      "message": "Does this one belong in `libc_init_static` instead really? That only gets used additionally for regular `libc`, but I half-wonder if we\u0027re not going to see problems from the ifunc there too (but just aren\u0027t seeing it yet).",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
