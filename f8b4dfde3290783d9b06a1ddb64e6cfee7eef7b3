@@ -34,6 +34,24 @@
       "parentUuid": "b6e3aec2_36aaec16",
       "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92865cd0_9f25137a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2021-10-29T06:27:47Z",
+      "side": 1,
+      "message": "If I remove it from libc_nomalloc, I get the following error:\n\nld.lld: error: relocation R_AARCH64_CALL26 cannot refer to absolute symbol: strcat\n\u003e\u003e\u003e defined in out/soong/.intermediates/bionic/libc/libc_nomalloc/android_arm64_armv8-a_static_apex10000/libc_nomalloc.a(strcat.o)\n\u003e\u003e\u003e referenced by string.h:106 (bionic/libc/include/bits/fortify/string.h:106)\n\u003e\u003e\u003e               lto.tmp:(socket_make_sockaddr_un(char const*, int, sockaddr_un*, unsigned int*))\nclang-13: error: linker command failed with exit code 1 (use -v to see invocation)",
+      "parentUuid": "3d720fc2_9fc39735",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
