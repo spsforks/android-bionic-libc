@@ -185,6 +185,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "82acb4d9_f1104ead",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-10-29T18:34:12Z",
+      "side": 1,
+      "message": "So is it like line 162 in wcstombs test : \n  memset(bytes, \u0027x\u0027, sizeof(bytes));\n  EXPECT_EQ(0U, wcstombs(bytes, chars, 0));\n  memset(bytes, \u0027x\u0027, sizeof(bytes));\n  EXPECT_EQ(4U, wcstombs(bytes, chars, 4));\n  bytes[5] \u003d 0;\n  EXPECT_STREQ(\"hellx\", bytes);\n  memset(bytes, \u0027x\u0027, sizeof(bytes));",
+      "parentUuid": "3184a5ec_4884b3c2",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "44edf095_0e04c3e3",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
