@@ -16,6 +16,24 @@
       "message": "Does this one belong in `libc_init_static` instead really? That only gets used additionally for regular `libc`, but I half-wonder if we\u0027re not going to see problems from the ifunc there too (but just aren\u0027t seeing it yet).",
       "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d720fc2_9fc39735",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-10-29T05:51:41Z",
+      "side": 1,
+      "message": "I see code in libc_init_static.cpp for calling ifuncs, but I\u0027d guess that\u0027s not an issue with LTO? Outside of tests, the only \"attribute.*ifunc\" I see in bionic is in DEFINE_IFUNC_FOR in bionic_ifuncs.h, and DEFINE_IFUNC_FOR is only used in the arch-*/dynamic_function_dispatch.cpp files. There are also arch-*/static_function_dispatch.S files, but those are assembly.\n\nI\u0027m wondering if disabling LTO has any effect here. I think libc_nomalloc.a just collects the object files of its input libraries, so I\u0027d guess that disabling LTO on it wouldn\u0027t trigger a non-LLVM-IR build of the input archives\u0027 objects. Maybe only libc_dynamic_dispatch needs \"lto: { never: true }\"?",
+      "parentUuid": "b6e3aec2_36aaec16",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
