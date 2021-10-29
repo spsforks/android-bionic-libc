@@ -216,6 +216,24 @@
       "message": "I think we could add some ASSERT_STREQ(L\"...\", out) lines here? For the n\u003d0 and n\u003d1 cases, we\u0027d need to [w]memset the out buffer beforehand.",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e08d865_cbefc090",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-10-29T18:41:00Z",
+      "side": 1,
+      "message": "I think I can use something like \"char bytes[BUFSIZ]\" to replace \"out\" array and test whether they are equal, kind of like the comments above. Also it will include all cases.",
+      "parentUuid": "44edf095_0e04c3e3",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
