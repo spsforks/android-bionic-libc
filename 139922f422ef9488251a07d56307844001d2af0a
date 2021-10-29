@@ -288,6 +288,24 @@
       "parentUuid": "9e112718_dcc51b18",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49cbeb50_14df5cb8",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-29T23:00:20Z",
+      "side": 1,
+      "message": "yeah, wctomb_wcrtomb tests the \"single character\" API, so wcstombs_wcrstombs might want to look pretty similar, but with multiple characters.\n\ntbh, i think it\u0027s fine to mostly just test with ASCII, but we should definitely check that we _can_ handle actual multibyte sequences properly.\n\npersonally i tend to be mostly fine with \"f() is implemented by multiple calls to g(), so i don\u0027t actually need to re-test every single g() test case --- i just need to check that f() calls g() correctly\".\n\nif you want to get really fancy (or just want the computer to tell you whether or not you\u0027ve done a good job), the instructions from README.md for doing a coverage run are probably helpful:\n```\n## Gathering test coverage\n\nTo get test coverage for bionic, use `//bionic/build/coverage.sh`. Before\nrunning, follow the instructions at the top of the file to rebuild bionic with\ncoverage instrumentation.\n```\nthough obviously coverage _can\u0027t_ spot things like \"did we actually try the multi-byte case, or did we only do ASCII?\", it is really great for confirming that you\u0027ve actually covered all the interesting _lines_ of code.\n\n(one day -- hopefully not too many years from now -- we\u0027ll have this shown directly in gerrit. until then, you need to run a report manually :-( .)",
+      "parentUuid": "eb416694_4ce937bc",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
