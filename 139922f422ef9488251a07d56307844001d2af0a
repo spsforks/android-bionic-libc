@@ -203,6 +203,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a3968ff9_bac01bb0",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-29T18:49:42Z",
+      "side": 1,
+      "message": "yeah, though oddly i don\u0027t appear to have checked that (say) the first call that returned 0 didn\u0027t actually preserve all the bytes. the second test (returning 4) makes more sense :-)",
+      "parentUuid": "82acb4d9_f1104ead",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "44edf095_0e04c3e3",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
@@ -232,6 +250,24 @@
       "side": 1,
       "message": "I think I can use something like \"char bytes[BUFSIZ]\" to replace \"out\" array and test whether they are equal, kind of like the comments above. Also it will include all cases.",
       "parentUuid": "44edf095_0e04c3e3",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e112718_dcc51b18",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-10-29T18:49:42Z",
+      "side": 1,
+      "message": "or there\u0027s a wmemcmp() function you can use to do a wchar_t array comparison.\n\ni think a bigger missing part of this test is to check that mbstowcs() converts some actually _multibyte_ UTF-8 to the corresponding codepoints. see the wctomb_wcrtomb test in this file for examples of the interesting cases (L70-L94).",
+      "parentUuid": "3e08d865_cbefc090",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
