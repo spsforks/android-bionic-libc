@@ -324,6 +324,24 @@
       "parentUuid": "49cbeb50_14df5cb8",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c4124d9_69b0b15e",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-01T18:59:44Z",
+      "side": 1,
+      "message": "i think there is; they\u0027re just combined all into one string:\n```\n  constexpr const char* VALID \u003d \"A\" \"\\xc2\\xa2\" \"\\xe2\\x82\\xac\" \"\\xf0\\xa4\\xad\\xa2\" \"ef\";\n```\nthat\u0027s one single-byte character (A), one two-byte character (¢), one three-byte character (€), one four-byte character (a 漢字 that isn\u0027t in my font, so i\u0027m assuming it\u0027s not in yours either: https://www.fileformat.info/info/unicode/char/24b62/index.htm), and then two more single-byte characters (e and f).\n\nunless/until proven otherwise, that seems fine to me. (it\u0027s actually the _invalid_ possibilities that seem less well tested; there\u0027s no over-long encoding, say. but don\u0027t worry about it: your job is never to make all the tests perfect. \"good enough is good enough\" --- it\u0027s usually better for everyone to do enough for people to have confidence in the code and move on to fixing the next bug, rather than spend the next six months coming up with the perfect unicode test suite :-) )\n\nin fact, given that the implementation of the function you\u0027re adding the test for is trivial (https://source.corp.google.com/android/bionic/libc/upstream-openbsd/lib/libc/locale/wcstombs.c;l\u003d36?q\u003dfile:bionic%20wcstombs\u0026sq\u003dpackage:%5Eandroid$) i personally think it\u0027s fine to just have a \"smoke test\" here that relies on the fact that all the real work is actually done by wcsrtombs(). i\u0027m struggling to see any value in duplicating tests here, and some _negative_ value since duplicated tests need to be maintained just like duplicated code...\n\n(the same is true for mbstowcs() too, now i\u0027ve looked at the implementation: https://source.corp.google.com/android/bionic/libc/upstream-openbsd/lib/libc/locale/mbstowcs.c;l\u003d37?q\u003dfile:bionic%20mbstowcs\u0026sq\u003dpackage:%5Eandroid$)",
+      "parentUuid": "e7663e2e_5987eabb",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
