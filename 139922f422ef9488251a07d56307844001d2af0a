@@ -306,6 +306,24 @@
       "parentUuid": "eb416694_4ce937bc",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7663e2e_5987eabb",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-11-01T18:43:00Z",
+      "side": 1,
+      "message": "Okay, gotcha. But I have a question. I find test_mbsrtowcs() already exists but there is no multiply-bytes utf-8 cases when calling mbsrtowcs(). I guess I should add cases in this functions?",
+      "parentUuid": "49cbeb50_14df5cb8",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
