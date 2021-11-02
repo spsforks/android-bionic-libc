@@ -360,6 +360,24 @@
       "parentUuid": "e7663e2e_5987eabb",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbacf853_4e669b11",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-11-02T18:39:55Z",
+      "side": 1,
+      "message": "A 漢字 that is in my font :D and it is the correct traditional version.\n\nOkay I just add \"smoke test\" for wcsrtombs() and mbstowcs() :D \n\nOne is to verify whether these functions are called correctly and whether characters are filled.\n\nThe other is to add multiply-bytes utf-8 cases in test_mbsrtowcs() :-)",
+      "parentUuid": "2c4124d9_69b0b15e",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
