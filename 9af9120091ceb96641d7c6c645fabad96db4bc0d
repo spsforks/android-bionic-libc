@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45579e2a_1235a8bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1900400
+      },
+      "writtenOn": "2021-11-02T11:23:54Z",
+      "side": 1,
+      "message": "https://android.googlesource.com/platform/bionic",
+      "revId": "9af9120091ceb96641d7c6c645fabad96db4bc0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
