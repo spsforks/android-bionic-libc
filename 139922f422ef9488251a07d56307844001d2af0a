@@ -414,6 +414,24 @@
       "parentUuid": "1ec5aef4_079a50b1",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9c3adff_8f55a46b",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-03T23:38:06Z",
+      "side": 1,
+      "message": "oh, yeah, 漢字 are the chinese characters for \"chinese characters\"; 字 is the \"ji\" in emoji --- they\u0027re definitely in the first 50 or so characters anyone learns :-)\n\nthe \"difficult\" character was U+24B62 (\u0027𤭢\u0027) which according to https://en.wiktionary.org/wiki/%F0%A4%AD%A2 doesn\u0027t even one that has a korean name (which suggests i probably have never seen this character in real life).",
+      "parentUuid": "9db560e0_ebe68b5a",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
