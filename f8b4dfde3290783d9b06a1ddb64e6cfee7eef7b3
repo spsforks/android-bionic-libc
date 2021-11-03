@@ -88,6 +88,24 @@
       "parentUuid": "2f06e576_fa069051",
       "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efe977c8_c4ba61b1",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2021-11-03T14:57:53Z",
+      "side": 1,
+      "message": "Done. LTO turned off for all libc libraries.",
+      "parentUuid": "ac5b80d4_d25eb676",
+      "revId": "f8b4dfde3290783d9b06a1ddb64e6cfee7eef7b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
