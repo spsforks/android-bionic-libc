@@ -396,6 +396,24 @@
       "parentUuid": "cbacf853_4e669b11",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db560e0_ebe68b5a",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-11-03T04:41:34Z",
+      "side": 1,
+      "message": "I\u0027m able to see both 漢 and 字 on my gLinux desktop. I do have a Japanese IME installed. Chrome seems to prefer rendering U+6F22(漢) as Japanese on my machine, while Firefox prefers the traditional glyph. Both browsers can render both glyphs for text marked with a language code (ja or zh).",
+      "parentUuid": "1ec5aef4_079a50b1",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
