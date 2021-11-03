@@ -378,6 +378,24 @@
       "parentUuid": "2c4124d9_69b0b15e",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ec5aef4_079a50b1",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-03T01:31:53Z",
+      "side": 1,
+      "message": "\u003e A 漢字 that is in my font :D and it is the correct traditional version.\n\nheh, after i hit \"send\" it did occur to me that it was quite possible that you have better fonts installed. when you know less than 50 characters, two of which are 漢 and 字, you don\u0027t need much font coverage :-)",
+      "parentUuid": "cbacf853_4e669b11",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
