@@ -486,6 +486,24 @@
       "parentUuid": "b4f5f263_85f47991",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65832b97_7b46171d",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-11-04T16:12:32Z",
+      "side": 1,
+      "message": "Okay I added utf8 encoding tests in test_mbsrtowcs() although it is very similar to the previous tests...",
+      "parentUuid": "b5369259_434e500c",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
