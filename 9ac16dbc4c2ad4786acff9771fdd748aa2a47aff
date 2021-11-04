@@ -141,6 +141,23 @@
       "parentUuid": "00854a25_b705cf86",
       "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2d818fd_b85f074b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-11-04T02:18:12Z",
+      "side": 1,
+      "message": "Abandoning as the Bionic team doesn\u0027t seem to be happy with this. The price is a few MB in storage, which is not a big deal in T where Microdroid is not updatable. But it will become an issue in U when it becomes updatable. Let\u0027s revisit this then.",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
