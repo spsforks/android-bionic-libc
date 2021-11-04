@@ -468,6 +468,24 @@
       "parentUuid": "165d0b2d_4756b308",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5369259_434e500c",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-04T01:02:40Z",
+      "side": 1,
+      "message": "no, i think the test case that\u0027s already in test_mbsrtowcs is sufficient. like i said, i\u0027m happy to assume things about the implementation (such as \"mbstowcs is implemented in terms of mbsrtowcs\") and prefer that to duplicating tests. i honestly don\u0027t see much value in a mbstowcs test _at all_ given that, which is perhaps why i didn\u0027t write one when i wrote the more interesting test_mbsrtowcs :-)\n\nfor me, just converting \"hello\" seems like plenty (perhaps with a comment saying \"this is just a trivial wrapper around mbsrtowcs; see there for full tests\").\n\nif you/anyone else does think of missing tests, we should add them to test_mbsrtowcs instead.",
+      "parentUuid": "b4f5f263_85f47991",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
