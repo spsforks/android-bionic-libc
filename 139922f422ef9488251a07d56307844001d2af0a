@@ -504,6 +504,24 @@
       "parentUuid": "b5369259_434e500c",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "215b33bd_ab849c00",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-04T23:37:12Z",
+      "side": 1,
+      "message": "(sorry, meant to follow up on this sooner...)\n\nfwiw, i took a look and the computers say we already have 100% coverage: https://source.corp.google.com/android/bionic/libc/upstream-openbsd/lib/libc/locale/mbstowcs.c;l\u003d2?q\u003dfile:mbstowcs\u0026sq\u003dpackage:%5Eandroid$\n\nand also for wcstombs: https://source.corp.google.com/android/bionic/libc/upstream-openbsd/lib/libc/locale/wcstombs.c\n\nso i don\u0027t think we need any test changes for this CL at all.\n\n(you can see the coverage by going into the \"layers\" drop-down in the top right of the screen, then choosing \"file coverage\". green means \"this line is covered\"; lines without coverage show up red.)",
+      "parentUuid": "65832b97_7b46171d",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
