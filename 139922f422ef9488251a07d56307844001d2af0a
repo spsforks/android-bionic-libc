@@ -432,6 +432,24 @@
       "parentUuid": "9db560e0_ebe68b5a",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "165d0b2d_4756b308",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-11-04T00:09:20Z",
+      "side": 1,
+      "message": "Oh, sorry, I misread. Yeah, it looks like my computer\u0027s fonts also don\u0027t render U+24B62 (\u0027𤭢\u0027).",
+      "parentUuid": "a9c3adff_8f55a46b",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
