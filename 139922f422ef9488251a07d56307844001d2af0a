@@ -540,6 +540,24 @@
       "parentUuid": "215b33bd_ab849c00",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33608def_430b3140",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-05T21:15:25Z",
+      "side": 1,
+      "message": "sgtm.",
+      "parentUuid": "bea836bc_1a443883",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
