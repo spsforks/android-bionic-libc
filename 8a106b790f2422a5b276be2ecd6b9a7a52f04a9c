@@ -51,6 +51,23 @@
       "parentUuid": "28132b90_79d984ab",
       "revId": "8a106b790f2422a5b276be2ecd6b9a7a52f04a9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1fe05ce_9855d023",
+        "filename": "libc/arch-x86_64/static_function_dispatch.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1798295
+      },
+      "writtenOn": "2021-11-05T21:58:55Z",
+      "side": 1,
+      "message": "I think you might also need the following:\nFUNCTION_DELEGATE(memmove, memmove_generic)\nFUNCTION_DELEGATE(memcmp, memcmp_generic)",
+      "revId": "8a106b790f2422a5b276be2ecd6b9a7a52f04a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
