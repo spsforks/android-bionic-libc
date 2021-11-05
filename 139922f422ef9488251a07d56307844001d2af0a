@@ -522,6 +522,24 @@
       "parentUuid": "65832b97_7b46171d",
       "revId": "139922f422ef9488251a07d56307844001d2af0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bea836bc_1a443883",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2021-11-05T21:14:41Z",
+      "side": 1,
+      "message": "ohhh I see the coverage for these two functions. So there should be no changes in the wchar_test.cpp file, right? Okay, I will delete them.",
+      "parentUuid": "215b33bd_ab849c00",
+      "revId": "139922f422ef9488251a07d56307844001d2af0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
