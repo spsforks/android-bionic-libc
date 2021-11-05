@@ -158,6 +158,24 @@
       "message": "Abandoning as the Bionic team doesn\u0027t seem to be happy with this. The price is a few MB in storage, which is not a big deal in T where Microdroid is not updatable. But it will become an issue in U when it becomes updatable. Let\u0027s revisit this then.",
       "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "962c9aef_d18681fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-05T00:53:51Z",
+      "side": 1,
+      "message": "(sorry, still way behind on email...) yeah, i think it\u0027ll be easier to motivate having an extra configuration when there\u0027s some specific pressure to save that space. (and ideally mainline will have an actual plan for 64-bit-only by then --- by happy coincidence although T will support 64-bit-only [and S can actually pass CTS 64-bit-only], U is the first release where OEMs are likely to be very interested in 64-bit-only, since that\u0027s when they\u0027ll be dealing with the first 64-bit-only SoCs based on Arm\u0027s public timeline[1]...)\n\n___\n1. https://www.arm.com/blogs/blueprint/64-bit",
+      "parentUuid": "b2d818fd_b85f074b",
+      "revId": "9ac16dbc4c2ad4786acff9771fdd748aa2a47aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
