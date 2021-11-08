@@ -1,0 +1,47 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000017017925",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1864139?revision\u003d4",
+      "fixSuggestions": [
+        {
+          "fixId": "25327cb9_fd33852b",
+          "description": "Change to \"libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S\"",
+          "replacements": [
+            {
+              "path": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+              "range": {
+                "startLine": 50,
+                "startChar": 1,
+                "endLine": 50,
+                "endChar": 6
+              },
+              "replacement": "call"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "7a96c57f_8f02a287",
+        "filename": "libc/arch-x86/kabylake/string/avx2-memcpy-kbl.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2021-11-08T18:33:35Z",
+      "side": 1,
+      "message": "Common typo found: \"calll\" -- should it be \"call\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 6
+      },
+      "revId": "485eb6eed0e75c61896b9f827e52288909f87ce2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
