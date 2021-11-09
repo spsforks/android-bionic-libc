@@ -52,6 +52,24 @@
       "parentUuid": "93ce97ef_41c4d1c1",
       "revId": "a44ed68eed07b233c521115c3ed48e5fe226d4cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b574ee06_7202cc29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-09T19:10:37Z",
+      "side": 1,
+      "message": "\u003e ... does that not apply to bionic because versioner is still running? Probably. I\u0027ll play with it a bit.\n\nthat\u0027s why i thought we needed the _NO_GUARD_FOR_NDK variant here, but you and/or rprichard disagreed and i don\u0027t _really_ know what i\u0027m talking about (i always have to be reminded why we still need versioner, for example!) :-)",
+      "parentUuid": "c70fda32_0dfc5391",
+      "revId": "a44ed68eed07b233c521115c3ed48e5fe226d4cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
