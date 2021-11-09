@@ -68,6 +68,24 @@
       "message": "I think you might also need the following:\nFUNCTION_DELEGATE(memmove, memmove_generic)\nFUNCTION_DELEGATE(memcmp, memcmp_generic)",
       "revId": "8a106b790f2422a5b276be2ecd6b9a7a52f04a9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b14281e_810412e8",
+        "filename": "libc/arch-x86_64/static_function_dispatch.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1371444
+      },
+      "writtenOn": "2021-11-09T02:37:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1fe05ce_9855d023",
+      "revId": "8a106b790f2422a5b276be2ecd6b9a7a52f04a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
