@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "effee02b_58640093",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-09T18:10:04Z",
+      "side": 1,
+      "message": "looks like this will need to be in a topic with the corresponding libandroidsupport CL:\n```\nprebuilts/ndk/current/sources/cxx-stl/llvm-libc++/include/cstdlib:151:9: error: no member named \u0027mbstowcs\u0027 in the global namespace; did you mean \u0027mbtowc\u0027?\nusing ::mbstowcs;\n      ~~^\nprebuilts/ndk/current/sources/android/support/include/stdlib.h:43:5: note: \u0027mbtowc\u0027 declared here\nint mbtowc(wchar_t*, const char*, size_t);\n    ^\n\n.\n.\n.\n\nprebuilts/ndk/current/sources/cxx-stl/llvm-libc++/include/cstdlib:152:9: error: no member named \u0027wcstombs\u0027 in the global namespace; did you mean \u0027wctomb\u0027?\nusing ::wcstombs;\n      ~~^\nout/soong/ndk/sysroot/usr/include/stdlib.h:226:5: note: \u0027wctomb\u0027 declared here\nint wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);\n    ^\n```",
+      "revId": "a44ed68eed07b233c521115c3ed48e5fe226d4cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
