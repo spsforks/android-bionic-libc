@@ -31,6 +31,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/prctl.h>
 #include <unistd.h>
 
@@ -38,11 +39,6 @@
 
 static constexpr size_t kAllocateSize = PAGE_SIZE * 100;
 static_assert(kAllocateSize % PAGE_SIZE == 0, "Invalid kAllocateSize.");
-
-// the multiplier should be power of 2
-static constexpr size_t round_up(size_t size, size_t multiplier) {
-  return (size + (multiplier - 1)) & ~(multiplier-1);
-}
 
 struct LinkerBlockAllocatorPage {
   LinkerBlockAllocatorPage* next;
@@ -56,7 +52,7 @@ struct FreeBlockInfo {
 
 LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
   : block_size_(
-      round_up(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size, 16)),
+      __BIONIC_ALIGN(MAX(block_size,  sizeof(FreeBlockInfo)), kBlockSizeAlign)),
     page_list_(nullptr),
     free_block_list_(nullptr),
     allocated_(0)
