@@ -16,6 +16,23 @@
       "message": "thoughts? comment or delete?",
       "revId": "9d66092bfd100fec27cde9ebdc1909de28feef8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba613e44_29b94b77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-11-18T23:02:04Z",
+      "side": 1,
+      "message": "Either way seems fine to me.\n\nAside: mbrtoc16.cpp includes assert.h but doesn\u0027t call assert.\n\nI suppose if UTF-8 ever allows a 5-byte encoding, then it won\u0027t be convertible to UTF-16 anymore without some change to that encoding. It doesn\u0027t look like UTF-16 is going anywhere.\n",
+      "revId": "9d66092bfd100fec27cde9ebdc1909de28feef8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
