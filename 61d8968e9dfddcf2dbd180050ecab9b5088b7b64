@@ -16,6 +16,24 @@
       "message": "if it\u0027s _necessary_, can the build system just default this, rather than having to explicitly write it out?",
       "revId": "61d8968e9dfddcf2dbd180050ecab9b5088b7b64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9804342_45b968a7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1370197
+      },
+      "writtenOn": "2021-11-18T19:30:55Z",
+      "side": 1,
+      "message": "Actually you\u0027re right I think it already started defaulting to true according to b/190621617 so I don\u0027t need to explicitly set it.",
+      "parentUuid": "888471e8_355c3ec5",
+      "revId": "61d8968e9dfddcf2dbd180050ecab9b5088b7b64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
