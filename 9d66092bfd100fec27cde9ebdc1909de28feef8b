@@ -33,6 +33,24 @@
       "message": "Either way seems fine to me.\n\nAside: mbrtoc16.cpp includes assert.h but doesn\u0027t call assert.\n\nI suppose if UTF-8 ever allows a 5-byte encoding, then it won\u0027t be convertible to UTF-16 anymore without some change to that encoding. It doesn\u0027t look like UTF-16 is going anywhere.\n",
       "revId": "9d66092bfd100fec27cde9ebdc1909de28feef8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08dd1b9f_f58d5c69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-19T16:54:31Z",
+      "side": 1,
+      "message": "yeah, that was what i was trying to say in my comment... since i have no evidence this is costing us anything (at least not in its new home), i\u0027ll keep this for now then, with the comment explaining why there\u0027s no test coverage.\n\n(even though i don\u0027t expect to be around to see 5-byte UTF-8!)",
+      "parentUuid": "ba613e44_29b94b77",
+      "revId": "9d66092bfd100fec27cde9ebdc1909de28feef8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
