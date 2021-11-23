@@ -171,6 +171,17 @@ int madvise(void* __addr, size_t __size, int __advice);
  */
 ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags);
 
+/**
+ * [process_mrelease(2)]
+ * process_mrelease system call is used to free the memory of an exiting process.
+ *
+ * See https://lore.kernel.org/all/20210902220029.bfau3YxNP%25akpm@linux-foundation.org/
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int process_mrelease(int __pid_fd, unsigned __flags);
+
+
 #if defined(__USE_GNU)
 
 /**

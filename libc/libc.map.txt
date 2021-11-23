@@ -1574,6 +1574,7 @@ LIBC_T { # introduced=Tiramisu
     preadv64v2;
     pwritev2;
     pwritev64v2;
+    process_mrelease;
 } LIBC_S;
 
 LIBC_PRIVATE {
