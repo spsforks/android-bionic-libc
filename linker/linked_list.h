@@ -79,15 +79,37 @@ class LinkedList {
   typedef LinkedListIterator<T> iterator;
   typedef T* value_type;
 
-  LinkedList() : head_(nullptr), tail_(nullptr) {}
+  struct LinkedListHeader {
+    LinkedListEntry<T>* head;
+    LinkedListEntry<T>* tail;
+  };
+
+  LinkedListHeader* header() const {
+    if (header_ == nullptr) {
+      header_ = reinterpret_cast<LinkedListHeader*>(Allocator::alloc());
+      header_->head = header_->tail = nullptr;
+    }
+    return header_;
+  }
+
+#define head_ header()->head
+#define tail_ header()->tail
+
+  LinkedList() : header_(nullptr) {}
   ~LinkedList() {
     clear();
+    if (header_)
+      Allocator::free(reinterpret_cast<LinkedListEntry<T>*>(header_));
   }
 
   LinkedList(LinkedList&& that) noexcept {
     this->head_ = that.head_;
     this->tail_ = that.tail_;
     that.head_ = that.tail_ = nullptr;
+  }
+
+  bool empty() const {
+    return (header_ == nullptr || head_ == nullptr);
   }
 
   void push_front(T* const element) {
@@ -130,14 +152,13 @@ class LinkedList {
   }
 
   T* front() const {
-    if (head_ == nullptr) {
-      return nullptr;
-    }
-
-    return head_->element;
+    return empty() ? nullptr : head_->element;
   }
 
   void clear() {
+    if (empty())
+      return;
+
     while (head_ != nullptr) {
       LinkedListEntry<T>* p = head_;
       head_ = head_->next;
@@ -145,10 +166,6 @@ class LinkedList {
     }
 
     tail_ = nullptr;
-  }
-
-  bool empty() {
-    return (head_ == nullptr);
   }
 
   template<typename F>
@@ -161,6 +178,7 @@ class LinkedList {
 
   template<typename F>
   bool visit(F action) const {
+    if (empty()) return true;
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (!action(e->element)) {
         return false;
@@ -260,7 +278,6 @@ class LinkedList {
   }
 
  private:
-  LinkedListEntry<T>* head_;
-  LinkedListEntry<T>* tail_;
+  mutable LinkedListHeader* header_;
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
