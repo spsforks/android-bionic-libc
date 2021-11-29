@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fe36483_a5fc0199",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-29T17:47:14Z",
+      "side": 1,
+      "message": "has glibc or musl committed to adding a libc wrapper for this? if not, unless this is something that\u0027s likely to see a lot of unrelated call sites, usually we\u0027d just recommend you call it via syscall(3) instead.\n\nthis seems like a reasonable addition to musl/glibc, though, so i\u0027d probably go that route.\n\n(aiui, this new syscall originates with google, right? so we\u0027re responsible for dotting the is and crossing the ts.)",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5ed0bd0_7f5bca48",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-11-29T17:47:14Z",
+      "side": 1,
+      "message": "no man page yet? are you working with upstream to fix that? https://www.kernel.org/doc/man-pages/contributing.html",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
