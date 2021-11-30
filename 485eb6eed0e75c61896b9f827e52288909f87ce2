@@ -121,6 +121,24 @@
       "parentUuid": "83a6a089_d0ca5ebf",
       "revId": "485eb6eed0e75c61896b9f827e52288909f87ce2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94a34d61_ca1ffe24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1798295
+      },
+      "writtenOn": "2021-11-30T22:40:57Z",
+      "side": 1,
+      "message": "Sorry, my findings were a bit mixed unfortunately.  \n\nFor larger memory sizes, the avx2 versions of memcpy and and wmemset are definitely better. For some smaller memory sizes, however, the sse2 version was actually faster than the avx2 version. But theoretically the sse2 and avx2 versions should be pretty much the same for smaller chunks of memory, as far as I\u0027ve been told?\n\nAlso, in libc/arch-x86_64/dynamic_function_dispatch.cpp you have the sse2 version taking precedence over the avx2 version, but I assume we\u0027d rather use the avx2 version if that instruction set is available.",
+      "parentUuid": "f3094da7_45668128",
+      "revId": "485eb6eed0e75c61896b9f827e52288909f87ce2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
