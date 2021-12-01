@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e551798d_71990c63",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1054468
+      },
+      "writtenOn": "2021-12-01T20:45:45Z",
+      "side": 1,
+      "message": "It would be nice to include a note in the commit message about why this is safe - i.e. bpf usage is gated by selinux, so regular apps still may not use it.",
+      "revId": "cea826ff5d09896ee01ee253779f065fb829eda0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
