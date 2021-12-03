@@ -1570,6 +1570,7 @@ LIBC_T { # introduced=Tiramisu
     backtrace;
     backtrace_symbols;
     backtrace_symbols_fd;
+    mallinfo2;
     preadv2;
     preadv64v2;
     pwritev2;

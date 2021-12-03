@@ -93,6 +93,26 @@ extern "C" struct mallinfo mallinfo() {
   return Malloc(mallinfo)();
 }
 
+extern "C" struct mallinfo2 mallinfo2() {
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    struct mallinfo info = dispatch_table->mallinfo();
+    struct mallinfo2 info2 {
+      .arena = info.arena, .ordblks = info.ordblks, .smblks = info.smblks, .hblks = info.hblks,
+      .hblkhd = info.hblkhd, .usmblks = info.usmblks, .fsmblks = info.fsmblks,
+      .uordblks = info.uordblks, .fordblks = info.fordblks, .keepcost = info.keepcost
+    };
+    return info2;
+  }
+  struct mallinfo info = Malloc(mallinfo)();
+  struct mallinfo2 info2 {
+    .arena = info.arena, .ordblks = info.ordblks, .smblks = info.smblks, .hblks = info.hblks,
+    .hblkhd = info.hblkhd, .usmblks = info.usmblks, .fsmblks = info.fsmblks,
+    .uordblks = info.uordblks, .fordblks = info.fordblks, .keepcost = info.keepcost
+  };
+  return info2;
+}
+
 extern "C" int malloc_info(int options, FILE* fp) {
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {

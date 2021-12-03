@@ -130,6 +130,38 @@ struct mallinfo {
  */
 struct mallinfo mallinfo(void);
 
+struct mallinfo2 {
+  /** Total number of non-mmapped bytes currently allocated from OS. */
+  size_t arena;
+  /** Number of free chunks. */
+  size_t ordblks;
+  /** (Unused.) */
+  size_t smblks;
+  /** (Unused.) */
+  size_t hblks;
+  /** Total number of bytes in mmapped regions. */
+  size_t hblkhd;
+  /** Maximum total allocated space; greater than total if trimming has occurred. */
+  size_t usmblks;
+  /** (Unused.) */
+  size_t fsmblks;
+  /** Total allocated space (normal or mmapped.) */
+  size_t uordblks;
+  /** Total free space. */
+  size_t fordblks;
+  /** Upper bound on number of bytes releasable by a trim operation. */
+  size_t keepcost;
+};
+
+/**
+ * [mallinfo2(3)](http://man7.org/linux/man-pages/man3/mallinfo2.3.html) returns
+ * information about the current state of the heap. Note that mallinfo2() is
+ * inherently unreliable and consider using malloc_info() instead.
+ *
+ * Available since API level 33.
+ */
+struct mallinfo2 mallinfo2(void) __INTRODUCED_IN(33);
+
 /**
  * [malloc_info(3)](http://man7.org/linux/man-pages/man3/malloc_info.3.html)
  * writes information about the current state of the heap to the given stream.
