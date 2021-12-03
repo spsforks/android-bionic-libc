@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f741efe2_f20112ae",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-03T21:51:05Z",
+      "side": 1,
+      "message": "Since you have a maximum size for the buffer, can\u0027t you avoid the reverse by adding from the end?\n\nThat is:\n\nbuf[31] \u003d \u0027\\0\u0027;\n\np \u003d \u0026buf[30];\n\n*p-- \u003d d + \u00270\u0027;",
+      "range": {
+        "startLine": 640,
+        "startChar": 0,
+        "endLine": 646,
+        "endChar": 3
+      },
+      "revId": "1c41f2c4e3933ad5060961f64474539c9e1415cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e524a549_6833a265",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-03T21:51:05Z",
+      "side": 1,
+      "message": "Is there any worry about overflowing the buffer size? It makes me a bit nervous that there are no checks.",
+      "range": {
+        "startLine": 648,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 29
+      },
+      "revId": "1c41f2c4e3933ad5060961f64474539c9e1415cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
