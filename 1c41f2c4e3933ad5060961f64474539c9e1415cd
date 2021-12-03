@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cc48e84f_794d8c8c",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:36:45Z",
+      "side": 1,
+      "message": "oh, yeah, that\u0027s a very worthwhile extra saving!\n\nnew ps coming soon. (sorry, rewriting the code was quick but rebuilding the entire tree because i\u0027d done a top-level sync *and* my acloud instance had disappeared ... well, that took the other hours!)",
+      "parentUuid": "f741efe2_f20112ae",
+      "range": {
+        "startLine": 640,
+        "startChar": 0,
+        "endLine": 646,
+        "endChar": 3
+      },
+      "revId": "1c41f2c4e3933ad5060961f64474539c9e1415cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e524a549_6833a265",
         "filename": "libc/tzcode/strftime.c",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2021-12-03T21:51:05Z",
       "side": 1,
       "message": "Is there any worry about overflowing the buffer size? It makes me a bit nervous that there are no checks.",
+      "range": {
+        "startLine": 648,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 29
+      },
+      "revId": "1c41f2c4e3933ad5060961f64474539c9e1415cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "447954ab_870415b5",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:36:45Z",
+      "side": 1,
+      "message": "no. that\u0027s the *local* buffer which is significantly larger than the largest possible integer. the actual buffer overflow checks are hidden in the _add() call on L663: that\u0027s what it\u0027s doing with pt and ptlim.",
+      "parentUuid": "e524a549_6833a265",
       "range": {
         "startLine": 648,
         "startChar": 0,
