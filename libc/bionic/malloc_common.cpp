@@ -93,6 +93,10 @@ extern "C" struct mallinfo mallinfo() {
   return Malloc(mallinfo)();
 }
 
+// Even though mallinfo2 and mallinfo return differently named structures,
+// the format of each structure is exactly the same.
+__strong_alias(mallinfo2, mallinfo);
+
 extern "C" int malloc_info(int options, FILE* fp) {
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
