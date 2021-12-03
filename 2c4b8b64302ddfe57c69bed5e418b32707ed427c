@@ -16,6 +16,86 @@
       "message": "I wasn\u0027t sure if I should just duplicate the mallinfo2 structure, but it seems like the easiest way to do this.",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f44a17ef_3f07f542",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:33:22Z",
+      "side": 1,
+      "message": "avoid duplicating this part by moving the `struct mallinfo info` scope out one and having L107 be an `else`?\n\n(actually, given that the struct is (afaict) identical, just remove this? use `__strong_alias(mallinfo2, mallinfo);` instead?)",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 6
+      },
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdf44eb3_209b852d",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:33:22Z",
+      "side": 1,
+      "message": "typedef since this is identical? (or make it a lot clearer what\u0027s actually different, because at least by eye i can\u0027t see anything :-) )",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66f2c658_be46f326",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:33:22Z",
+      "side": 1,
+      "message": "i know this is copy \u0026 paste rather than a regression, but do we have specifics we can give here?",
+      "range": {
+        "startLine": 159,
+        "startChar": 3,
+        "endLine": 159,
+        "endChar": 24
+      },
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26fe8ee7_fbf5af1d",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:33:22Z",
+      "side": 1,
+      "message": "or should we just `__RENAME(mallinfo)`? (or even just `#define mallinfo2 mallinfo` if you can stomach the namespace pollution.) seems weird to have an API level restriction when we\u0027ve effectively always had the good API anyway, because we didn\u0027t make glibc\u0027s mistake :-)\n\nif we __RENAME, we don\u0027t need a new symbol/alias at all... (and the only unit test we need is presumably that we can take the address of mallinfo2 :-) )",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
