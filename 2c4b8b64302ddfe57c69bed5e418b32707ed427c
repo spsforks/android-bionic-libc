@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b1a2306b_353478ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-03T23:53:12Z",
+      "side": 1,
+      "message": "here\u0027s my usual hack when painted into this particular corner:\n\nhttps://source.corp.google.com/search?q\u003dfile:bionic%20_BODY%20case:yes\u0026sq\u003dpackage:%5Eandroid$\n\nit won\u0027t claim it\u0027s pretty, but, yeah, the alternatives are broken whenever there\u0027s a struct and a function with the same name. (__RENAME doesn\u0027t care at all, so long as you have structural equivalence :-) )",
+      "parentUuid": "caa76570_bec87faa",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f44a17ef_3f07f542",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
