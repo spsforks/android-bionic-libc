@@ -79,6 +79,7 @@ struct binder_buffer_object {
 };
 enum {
   BINDER_BUFFER_FLAG_HAS_PARENT = 0x01,
+  BINDER_BUFFER_FLAG_SENDER_NO_NEED = 0x02,
 };
 struct binder_fd_array_object {
   struct binder_object_header hdr;
