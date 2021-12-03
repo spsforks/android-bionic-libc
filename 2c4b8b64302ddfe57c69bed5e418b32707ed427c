@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "caa76570_bec87faa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-03T23:47:38Z",
+      "side": 1,
+      "message": "The problem is that the signature of mallinfo and mallinfo2 isn\u0027t the same. In Android, the two structs are the same, but I can\u0027t use typedef because someone decided the structure and function should be the same name.\n\nI tried to find a way to have struct mallinfo and struct mallinfo2 be allowed, but I couldn\u0027t find any way to make it work. I could potentially do a #define mallinfo2 to mallinfo, but that would cause the function call to fail. Basically, I am bound by the requirement that I need to have struct mallinfo or mallinfo2.\n\nIf you know of a way to duplicate a structure, and still allow both struct mallinfo and struct mallinfo2 to work, I\u0027d love to use it.",
+      "parentUuid": "44632317_8c8cc543",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f44a17ef_3f07f542",
