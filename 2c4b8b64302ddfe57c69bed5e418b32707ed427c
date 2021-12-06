@@ -251,6 +251,24 @@
       "parentUuid": "26fe8ee7_fbf5af1d",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dbb74ae_4d2b244c",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-06T22:09:15Z",
+      "side": 1,
+      "message": "+danalbert for the new symbol versus __RENAME() question... i\u0027m guessing from the NDK perspective that adding a new symbol is basically a bug? we\u0027d be introducing the potential for an ABI limitation (that we don\u0027t actually need) without adding any actual value?\n\nor should we have the strong_alias() *and* the __RENAME()? the former so that badly-behaved configure scripts think we have mallinfo2(3), the latter so that in practice no-one actually _needs_ the API 33 dependency?",
+      "parentUuid": "26fe8ee7_fbf5af1d",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
