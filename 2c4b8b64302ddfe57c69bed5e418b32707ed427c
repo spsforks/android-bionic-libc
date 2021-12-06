@@ -71,6 +71,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f89299e7_78c89ea2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-06T22:07:01Z",
+      "side": 1,
+      "message": "Did this along with the __strong_alias choice.",
+      "parentUuid": "b1a2306b_353478ff",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f44a17ef_3f07f542",
@@ -84,6 +102,30 @@
       "writtenOn": "2021-12-03T23:33:22Z",
       "side": 1,
       "message": "avoid duplicating this part by moving the `struct mallinfo info` scope out one and having L107 be an `else`?\n\n(actually, given that the struct is (afaict) identical, just remove this? use `__strong_alias(mallinfo2, mallinfo);` instead?)",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 6
+      },
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04fffaaa_584101a2",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-06T22:07:01Z",
+      "side": 1,
+      "message": "Did the __strong_alias version.",
+      "parentUuid": "f44a17ef_3f07f542",
       "range": {
         "startLine": 100,
         "startChar": 4,
@@ -111,6 +153,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "093b3a24_d1a96f60",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-06T22:07:01Z",
+      "side": 1,
+      "message": "Did the #define solution mentioned in the next comment.",
+      "parentUuid": "bdf44eb3_209b852d",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66f2c658_be46f326",
@@ -134,6 +194,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4219b1c5_03d318d6",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-06T22:07:01Z",
+      "side": 1,
+      "message": "I wanted to keep it vague because it depends on the version of the allocator we have.",
+      "parentUuid": "66f2c658_be46f326",
+      "range": {
+        "startLine": 159,
+        "startChar": 3,
+        "endLine": 159,
+        "endChar": 24
+      },
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26fe8ee7_fbf5af1d",
@@ -147,6 +231,24 @@
       "writtenOn": "2021-12-03T23:33:22Z",
       "side": 1,
       "message": "or should we just `__RENAME(mallinfo)`? (or even just `#define mallinfo2 mallinfo` if you can stomach the namespace pollution.) seems weird to have an API level restriction when we\u0027ve effectively always had the good API anyway, because we didn\u0027t make glibc\u0027s mistake :-)\n\nif we __RENAME, we don\u0027t need a new symbol/alias at all... (and the only unit test we need is presumably that we can take the address of mallinfo2 :-) )",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00d915fe_891f0d76",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-06T22:07:01Z",
+      "side": 1,
+      "message": "The define works, but I think it would remove the mallinfo2 symbol. Since we\u0027ve gotten into issues in the past, so having the two structures I think is the best way.",
+      "parentUuid": "26fe8ee7_fbf5af1d",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
