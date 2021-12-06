@@ -123,6 +123,24 @@
       "parentUuid": "2544c1e0_7e692bb2",
       "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c31e65d9_036a7fd7",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1275554
+      },
+      "writtenOn": "2021-12-06T19:10:13Z",
+      "side": 1,
+      "message": "IMO, many kill users to reclaim the memory will want use the this syscall in the future, for example, Android ActivityManager and others complicated apps.",
+      "parentUuid": "3379df0d_52587e65",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
