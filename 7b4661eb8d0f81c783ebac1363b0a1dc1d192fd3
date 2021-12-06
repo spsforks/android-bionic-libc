@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c047647f_c8a70e0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2021-12-06T17:10:27Z",
+      "side": 1,
+      "message": "What is the process for including a new syscall into  glibc or musl?",
+      "parentUuid": "0fe36483_a5fc0199",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c5ed0bd0_7f5bca48",
         "filename": "libc/include/sys/mman.h",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2021-11-29T17:47:14Z",
       "side": 1,
       "message": "no man page yet? are you working with upstream to fix that? https://www.kernel.org/doc/man-pages/contributing.html",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c23a6e4_e2be1470",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2021-12-06T17:10:27Z",
+      "side": 1,
+      "message": "It\u0027s on my todo list to write a manpage for this syscall but I didn\u0027t get to it yet.\nMaybe until all these pieces are in place it\u0027s better to use syscall(3)?",
+      "parentUuid": "c5ed0bd0_7f5bca48",
       "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
