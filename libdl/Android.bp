@@ -239,7 +239,7 @@ ndk_library {
 
 genrule {
     name: "libdl.arm.map",
-    out: ["libdl.arm.map"],
+    out: ["libdl.arm.gen.map"],
     srcs: ["libdl.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
@@ -247,7 +247,7 @@ genrule {
 
 genrule {
     name: "libdl.arm64.map",
-    out: ["libdl.arm64.map"],
+    out: ["libdl.arm64.gen.map"],
     srcs: ["libdl.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
@@ -255,7 +255,7 @@ genrule {
 
 genrule {
     name: "libdl.x86.map",
-    out: ["libdl.x86.map"],
+    out: ["libdl.x86.gen.map"],
     srcs: ["libdl.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
@@ -263,7 +263,7 @@ genrule {
 
 genrule {
     name: "libdl.x86_64.map",
-    out: ["libdl.x86_64.map"],
+    out: ["libdl.x86_64.gen.map"],
     srcs: ["libdl.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
