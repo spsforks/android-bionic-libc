@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b68902e_6a278e48",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-06T17:51:50Z",
+      "side": 1,
+      "message": "renaming the *file* seems the wrong way round? (i mean, adding a .gen. is fine, but then it\u0027s just bizarre that the *rule* has a name that doesn\u0027t include that.)\n\nwhat\u0027s the usual pattern in google3?",
+      "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
