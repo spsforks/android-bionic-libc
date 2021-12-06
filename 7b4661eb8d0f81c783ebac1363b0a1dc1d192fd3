@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "05d5b80a_8c36f440",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-06T17:13:37Z",
+      "side": 1,
+      "message": "no idea --- you\u0027ll have to talk to them :-)",
+      "parentUuid": "c047647f_c8a70e0d",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c5ed0bd0_7f5bca48",
         "filename": "libc/include/sys/mman.h",
         "patchSetId": 1
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "It\u0027s on my todo list to write a manpage for this syscall but I didn\u0027t get to it yet.\nMaybe until all these pieces are in place it\u0027s better to use syscall(3)?",
       "parentUuid": "c5ed0bd0_7f5bca48",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2544c1e0_7e692bb2",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-06T17:13:37Z",
+      "side": 1,
+      "message": "how many distinct call sites are you expecting? if it\u0027s not many (and _especially_ if you think everyone\u0027s actually supposed to use some library instead of messing with this themselves) then, yeah, i don\u0027t think exposing it in libc makes sense. (but that\u0027s another reason to work with the other libcs.)\n\n(note that you will still need a libc change, so that the appropriate seccomp policy doesn\u0027t block this syscall [which it will by default]. note also that adding a syscall to SYSCALLS.TXT makes it available to *all* seccomp contexts, which may or may not be what you actually intended, depending on who\u0027s supposed to be calling this.)",
+      "parentUuid": "1c23a6e4_e2be1470",
       "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
