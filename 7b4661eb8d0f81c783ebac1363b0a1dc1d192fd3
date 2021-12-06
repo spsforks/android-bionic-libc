@@ -105,6 +105,24 @@
       "parentUuid": "1c23a6e4_e2be1470",
       "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3379df0d_52587e65",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2021-12-06T18:53:36Z",
+      "side": 1,
+      "message": "lmkd is the only current user and I don\u0027t think any other component will ever need this.",
+      "parentUuid": "2544c1e0_7e692bb2",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
