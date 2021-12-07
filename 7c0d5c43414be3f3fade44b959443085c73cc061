@@ -70,6 +70,24 @@
       "parentUuid": "7a458438_f330fa71",
       "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc3e8838_462ad911",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-07T19:13:28Z",
+      "side": 1,
+      "message": "yeah, that seems fine (especially since we can update the references to use the filename -- which is the obvious/most intention-revealing name -- anyway).",
+      "parentUuid": "8475b033_c6caee90",
+      "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
