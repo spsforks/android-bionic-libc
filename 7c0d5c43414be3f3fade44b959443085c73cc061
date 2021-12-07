@@ -52,6 +52,24 @@
       "parentUuid": "1d47bd55_ff97dd93",
       "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8475b033_c6caee90",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-12-07T02:19:45Z",
+      "side": 1,
+      "message": "No, spaces are not allowed in Bazel target labels for a variety of reasons, of which, ease of shell parsing is one.\n\nTo be precise, callers of the Bazel genrule can still use `//bionic/libc:syscalls-arm.S` in their dependency declarations even if the genrule *rule* name is renamed to say, `gen-syscalls-arm`. That\u0027s because Bazel can figure out that `//bionic/libc:syscalls-arm.S` is an output of the `gen-syscalls-arm` rule target.\n\ne.g. this would work:\n\n  genrule(\n    name \u003d \"gen-syscalls-arm\",\n    outs \u003d [\"syscalls-arm.S\"],\n    cmd \u003d \"some cmd..\",\n    ...\n  ) \n\n  cc_library(\n    name \u003d \"lib\",\n    srcs \u003d [\"syscalls-arm.S\"],\n    ...\n  )\n\nhttps://docs.bazel.build/versions/main/build-ref.html#targets has some docs about this.",
+      "parentUuid": "7a458438_f330fa71",
+      "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
