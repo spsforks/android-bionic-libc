@@ -16,6 +16,24 @@
       "message": "renaming the *file* seems the wrong way round? (i mean, adding a .gen. is fine, but then it\u0027s just bizarre that the *rule* has a name that doesn\u0027t include that.)\n\nwhat\u0027s the usual pattern in google3?",
       "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d47bd55_ff97dd93",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-12-07T00:58:03Z",
+      "side": 1,
+      "message": "Yep, realized this wouldn\u0027t work as Liz also pointed this out in the linked CL where these files are included on their basenames.\n\ngoogle3 generally handles this without any convention-- folks just name their genrule rule name and output name differently based on the context. I think it makes more sense here to rename the module name, and also add guardrails to Soong to prevent backsliding.",
+      "parentUuid": "8b68902e_6a278e48",
+      "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
