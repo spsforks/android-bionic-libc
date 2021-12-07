@@ -34,6 +34,24 @@
       "parentUuid": "8b68902e_6a278e48",
       "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a458438_f330fa71",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-07T01:57:47Z",
+      "side": 1,
+      "message": "are spaces allowed in bazel genrule names? can we just have the module name be the plain english \"generate syscalls-arm.S\"? (since the current name is the obvious good name --- that\u0027s why i was asking about google3 practice.)",
+      "parentUuid": "1d47bd55_ff97dd93",
+      "revId": "7c0d5c43414be3f3fade44b959443085c73cc061",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
