@@ -159,6 +159,24 @@
       "parentUuid": "c31e65d9_036a7fd7",
       "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed4aa4cc_dbb99cc2",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2021-12-08T01:19:42Z",
+      "side": 1,
+      "message": "I\u0027ll change this to system() and if there is need to use it anywhere else we can resurrect this change and man pages probably will be ready by then. So I\u0027ll abandon this change.",
+      "parentUuid": "f9624549_10162662",
+      "revId": "7b4661eb8d0f81c783ebac1363b0a1dc1d192fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
