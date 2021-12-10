@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed502a27_a3ec7310",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-10T06:23:39Z",
+      "side": 1,
+      "message": "Do you need a +2 for this? Since you\u0027ve got it set to auto-submit, I didn\u0027t want to +2 if you aren\u0027t ready.",
+      "revId": "32a72522e0e6a69ba8c964f2f10a5a196783db85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
