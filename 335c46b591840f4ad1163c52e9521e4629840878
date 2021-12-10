@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67150949_d45c6914",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-10T22:33:47Z",
+      "side": 1,
+      "message": "I thought some native wrapped function exposed in java also have this problem? I could swear I remember some exceptions coming from a read call that would indicate it was an interrupted system call. However, that might be because errno was not being set correctly.",
+      "range": {
+        "startLine": 36,
+        "startChar": 28,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "335c46b591840f4ad1163c52e9521e4629840878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
