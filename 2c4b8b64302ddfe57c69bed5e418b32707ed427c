@@ -287,6 +287,24 @@
       "parentUuid": "6dbb74ae_4d2b244c",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e729a9d_724e2a19",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-10T23:37:13Z",
+      "side": 1,
+      "message": "__strong_alias creates an ELF symbol whose address is the same as the other symbol. so __strong_alias means \"configure scripts looking for a *symbol* will find it\". which means those connfigure scripts will say \"mallinfo2() is available\". which isn\u0027t actually true until API 33. (whereas if we _don\u0027t_ have the symbol, that kind of configure check will fail ... which is *better* if it falls back to mallinfo() but *worse* if it just fails and says \"can\u0027t build\" --- but then presumably there wouldn\u0027t *be* a configure check in that case?)\n\nmy guess is that __RENAME is a good thing, but __strong_alias (despite having initially recommended it) probably causes some non-zero harm but has zero benefit?",
+      "parentUuid": "1c90c455_c30f622c",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
