@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "994f37ab_6f2fbfb5",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-10T23:57:19Z",
+      "side": 1,
+      "message": "i\u0027ll add a proviso about bugs.",
+      "parentUuid": "67150949_d45c6914",
+      "range": {
+        "startLine": 36,
+        "startChar": 28,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "335c46b591840f4ad1163c52e9521e4629840878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "556bd3db_120a3dbd",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "243c5368_9a720aab",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-10T23:57:19Z",
+      "side": 1,
+      "message": "no prizes for guessing i wrote this on a mac keyboard...",
+      "parentUuid": "556bd3db_120a3dbd",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 16
+      },
+      "revId": "335c46b591840f4ad1163c52e9521e4629840878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c3d50b3_f6d9c380",
@@ -60,6 +108,24 @@
       "writtenOn": "2021-12-10T22:40:22Z",
       "side": 1,
       "message": "Worth a blurb about \"and if you ignore this advice you may accidentally close a file descriptor that was just opened on another thread when the retry happens, since POSIX requires that we reuse the lowest available fd\".",
+      "revId": "335c46b591840f4ad1163c52e9521e4629840878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cf09229_400449b1",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-10T23:57:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c3d50b3_f6d9c380",
       "revId": "335c46b591840f4ad1163c52e9521e4629840878",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
