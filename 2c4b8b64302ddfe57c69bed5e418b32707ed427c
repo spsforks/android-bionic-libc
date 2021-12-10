@@ -269,6 +269,24 @@
       "parentUuid": "26fe8ee7_fbf5af1d",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c90c455_c30f622c",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-12-10T22:31:55Z",
+      "side": 1,
+      "message": "The __strong_alias essentially creates an inline, doesn\u0027t it? I didn\u0027t think using it creates an API 33 dependency.\n\nIf it does, both SGTM.",
+      "parentUuid": "6dbb74ae_4d2b244c",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
