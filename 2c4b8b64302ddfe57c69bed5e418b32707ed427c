@@ -305,6 +305,24 @@
       "parentUuid": "1c90c455_c30f622c",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deeae9b6_9c4b964f",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-12-11T00:20:00Z",
+      "side": 1,
+      "message": "But because it\u0027s in a header doesn\u0027t that symbol end up in the app?",
+      "parentUuid": "1e729a9d_724e2a19",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
