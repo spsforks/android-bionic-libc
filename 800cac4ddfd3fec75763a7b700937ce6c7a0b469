@@ -16,6 +16,24 @@
       "message": "Dan, have you had a chance to look at the question enh posed?",
       "revId": "800cac4ddfd3fec75763a7b700937ce6c7a0b469",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9047c9e5_b8cf73c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-11T00:21:24Z",
+      "side": 1,
+      "message": "That\u0027s what the __RENAME() would be for: so the *old* symbol is what ends up in the app.",
+      "tag": "mailMessageId\u003d\u003cCAJgzZoqG\u003dS0ggyCX9a\u003dpQ2YuTMUEf7hUETHtRhraq98QbN+jpQ@mail.gmail.com\u003e",
+      "revId": "800cac4ddfd3fec75763a7b700937ce6c7a0b469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
