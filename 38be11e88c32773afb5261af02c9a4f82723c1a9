@@ -39,6 +39,30 @@
       },
       "revId": "38be11e88c32773afb5261af02c9a4f82723c1a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68e6fb8e_54c32f12",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-13T21:12:22Z",
+      "side": 1,
+      "message": "yeah, if anyone knows anything better, happy to switch, but this style works on github, so i assume gittiles will get better at some point...",
+      "parentUuid": "416b7465_7b4d5dab",
+      "range": {
+        "startLine": 32,
+        "startChar": 18,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "38be11e88c32773afb5261af02c9a4f82723c1a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
