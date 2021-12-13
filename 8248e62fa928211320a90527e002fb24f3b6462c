@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2e86447_a51594f4",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-13T22:38:53Z",
+      "side": 1,
+      "message": "(shouldn\u0027t block this bug, but i\u0027d still like to see an explanation of this somewhere in a later change :-) )",
+      "range": {
+        "startLine": 130,
+        "startChar": 3,
+        "endLine": 130,
+        "endChar": 65
+      },
+      "revId": "8248e62fa928211320a90527e002fb24f3b6462c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
