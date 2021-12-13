@@ -413,6 +413,24 @@
       "parentUuid": "e9c98b84_81ced7b1",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d87d652_2ea23a8f",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-13T22:19:54Z",
+      "side": 1,
+      "message": "yeah, you should be able to just remove the __INTRODUCED_IN, since mallinfo \"classic\" didn\u0027t have one... (and if it did, you\u0027d want to copy that instead.)",
+      "parentUuid": "b2d6929c_e972c748",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
