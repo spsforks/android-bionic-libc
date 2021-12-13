@@ -431,6 +431,24 @@
       "parentUuid": "b2d6929c_e972c748",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee760f1e_355f065f",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-13T22:27:21Z",
+      "side": 1,
+      "message": "I removed the INTRODUCED_IN and the mention of it because it is technically available everywhere.",
+      "parentUuid": "6d87d652_2ea23a8f",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
