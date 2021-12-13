@@ -22,6 +22,30 @@
       },
       "revId": "45d3e3ad77d0afa4c15c0273a0fc990dc2177613",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25a1a0e3_46e0c729",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-12-13T18:16:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae86747e_d92d1544",
+      "range": {
+        "startLine": 86,
+        "startChar": 39,
+        "endLine": 86,
+        "endChar": 49
+      },
+      "revId": "45d3e3ad77d0afa4c15c0273a0fc990dc2177613",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
