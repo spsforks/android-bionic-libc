@@ -55,14 +55,6 @@ def load_syscall_priorities_from_file(file_path):
   return priorities
 
 
-def merge_names(base_names, allowlist_names, blocklist_names):
-  if bool(blocklist_names - base_names):
-    raise RuntimeError("blocklist item not in bionic - aborting " + str(
-        blocklist_names - base_names))
-
-  return (base_names - blocklist_names) | allowlist_names
-
-
 def extract_priority_syscalls(syscalls, priorities):
   # Extract syscalls that are not in the priority list
   other_syscalls = \
@@ -251,7 +243,7 @@ def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files,
       priorities = load_syscall_priorities_from_file(priority_file)
 
     allowed_syscalls = []
-    for name in merge_names(base_names, allowlist_names, blocklist_names):
+    for name in ((base_names - blocklist_names) | allowlist_names):
       try:
         allowed_syscalls.append((name, syscall_NRs[arch][name]))
       except:

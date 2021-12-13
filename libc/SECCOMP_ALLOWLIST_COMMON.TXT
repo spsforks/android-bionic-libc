@@ -36,12 +36,6 @@ ssize_t readlink:readlink(const char*, char*, size_t)  arm,x86,x86_64
 # Useful new syscalls which we don't yet use in bionic.
 #
 
-# Since Linux 2.5, not in glibc.
-int io_setup(unsigned nr, aio_context_t *ctxp) all
-int io_destroy(aio_context_t ctx) all
-int io_submit(aio_context_t ctx, long nr,  struct iocb **iocbpp) all
-int io_getevents(aio_context_t ctx, long min_nr, long max_nr, struct io_event *events, struct timespec *timeout) all
-int io_cancel(aio_context_t ctx, struct iocb *, struct io_event *result) all
 # Since Linux 3.14, not in glibc.
 int sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int flags) all
 int sched_setattr(pid_t pid, struct sched_attr* attr, unsigned int size, unsigned int flags) all

@@ -6,5 +6,13 @@
 #
 # This file is processed by a python script named genseccomp.py.
 
-int     swapon(const char*, int) all
-int     swapoff(const char*) all
+int swapon(const char*, int) all
+int swapoff(const char*) all
+
+# the mostly abandoned "aio" subsystem;
+# consider io_uring or userspace threads instead?
+int io_setup(unsigned nr, aio_context_t*) all
+int io_destroy(aio_context_t) all
+int io_submit(aio_context_t, long, struct iocb**) all
+int io_getevents(aio_context_t, long, long, struct io_event*, struct timespec*) all
+int io_cancel(aio_context_t, struct iocb*, struct io_event*) all
