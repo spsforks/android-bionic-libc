@@ -16,6 +16,29 @@
       "message": "(changes LGTM)",
       "revId": "38be11e88c32773afb5261af02c9a4f82723c1a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "416b7465_7b4d5dab",
+        "filename": "docs/EINTR.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-13T19:58:33Z",
+      "side": 1,
+      "message": "I don\u0027t know if you care about this, but when looking at this after being interpreted, this results in the word formatted and then a space then the s. It\u0027s a bit odd, but I don\u0027t know if there is an easy way to fix this.",
+      "range": {
+        "startLine": 32,
+        "startChar": 18,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "38be11e88c32773afb5261af02c9a4f82723c1a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
