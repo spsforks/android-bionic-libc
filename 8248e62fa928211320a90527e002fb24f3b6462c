@@ -22,6 +22,30 @@
       },
       "revId": "8248e62fa928211320a90527e002fb24f3b6462c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32827ee1_617fdcda",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-12-14T01:07:03Z",
+      "side": 1,
+      "message": "Yeah, I\u0027ll do a follow-on cl to describe this in more detail.",
+      "parentUuid": "a2e86447_a51594f4",
+      "range": {
+        "startLine": 130,
+        "startChar": 3,
+        "endLine": 130,
+        "endChar": 65
+      },
+      "revId": "8248e62fa928211320a90527e002fb24f3b6462c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
