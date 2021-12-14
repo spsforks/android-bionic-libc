@@ -449,6 +449,24 @@
       "parentUuid": "6d87d652_2ea23a8f",
       "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e521095f_65a86ca4",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-12-14T01:21:01Z",
+      "side": 1,
+      "message": "\u003e there\u0027s nowhere that already documents the __INTRODUCED_IN and .map.txt stuff etc?\n\nThey\u0027re covered by things like go/android-ndk-abi-guidelines, https://cs.android.com/android/platform/superproject/+/master:build/soong/docs/map_files.md, and https://android.googlesource.com/platform/ndk/+/master/docs/PlatformApis.md (to an extent), but __RENAME is and __strong_alias are pretty unique to bionic I think.",
+      "parentUuid": "ee760f1e_355f065f",
+      "revId": "2c4b8b64302ddfe57c69bed5e418b32707ed427c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
