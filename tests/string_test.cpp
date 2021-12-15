@@ -129,6 +129,36 @@ TEST(STRING_TEST, gnu_strerror_r) {
 #endif
 }
 
+TEST(STRING_TEST, gnu_strerrorname_np) {
+#if defined(__BIONIC__) && defined(__USE_GNU) && __ANDROID_API__ >= 33
+  // Valid.
+  ASSERT_STREQ("SUCCESS", strerrorname_np(0));
+  ASSERT_STREQ("EPERM", strerrorname_np(EPERM));
+  ASSERT_STREQ("EHWPOISON", strerrorname_np(EHWPOISON));
+
+  // Invalid.
+  ASSERT_EQ(nullptr, strerrorname_np(-1));
+  ASSERT_EQ(nullptr, strerrorname_np(1001));
+#else
+  GTEST_SKIP() << "GNU strerrorname_np not available";
+#endif
+}
+
+TEST(STRING_TEST, gnu_strerrordesc_np) {
+#if defined(__BIONIC__) && defined(__USE_GNU) && __ANDROID_API__ >= 33
+  // Valid.
+  ASSERT_STREQ("Success", strerrordesc_np(0));
+  ASSERT_STREQ("Operation not permitted", strerrordesc_np(EPERM));
+  ASSERT_STREQ("Memory page has hardware error", strerrordesc_np(EHWPOISON));
+
+  // Invalid.
+  ASSERT_EQ(nullptr, strerrordesc_np(-1));
+  ASSERT_EQ(nullptr, strerrordesc_np(1001));
+#else
+  GTEST_SKIP() << "GNU strerrordesc_np not available";
+#endif
+}
+
 TEST(STRING_TEST, strsignal) {
   // A regular signal.
   ASSERT_STREQ("Hangup", strsignal(1));

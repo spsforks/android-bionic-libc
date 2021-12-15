@@ -99,6 +99,11 @@ char* strerror_r(int __errno_value, char* __buf, size_t __n) __RENAME(__gnu_stre
 int strerror_r(int __errno_value, char* __buf, size_t __n);
 #endif
 
+#if defined(__USE_GNU) && __ANDROID_API__ >= 33
+const char* strerrorname_np(int __errno_value) __RENAME(__gnu_strerrorname_np) __INTRODUCED_IN(33);
+const char* strerrordesc_np(int __errno_value) __RENAME(__gnu_strerrordesc_np) __INTRODUCED_IN(33);
+#endif
+
 size_t strnlen(const char* __s, size_t __n) __attribute_pure__;
 char* strncat(char* __dst, const char* __src, size_t __n);
 char* strndup(const char* __s, size_t __n);

@@ -1567,6 +1567,8 @@ LIBC_S { # introduced=S
 
 LIBC_T { # introduced=Tiramisu
   global:
+    __gnu_strerrordesc_np;
+    __gnu_strerrorname_np;
     backtrace;
     backtrace_symbols;
     backtrace_symbols_fd;
