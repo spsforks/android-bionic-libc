@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dacbadb9_b62b285e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-01-05T01:42:55Z",
+      "side": 1,
+      "message": "Just as a reminder, this is in a file that is auto-generated. We only update this file after it has been submitted into an upstream kernel.",
+      "revId": "b835850a9858a9464c2c397b13280f18a46f6908",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
