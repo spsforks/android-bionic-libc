@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "986d3d62_7fa67c1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-01-06T23:58:08Z",
+      "side": 1,
+      "message": "Uploaded for initial review/sanity-check.  Need prebuilts update with aosp/1940575 before we can merge.",
+      "revId": "b9b2ed5c6c05226ffd825ca6ab6012b2900ef06b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
