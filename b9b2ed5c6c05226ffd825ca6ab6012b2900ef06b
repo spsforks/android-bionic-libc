@@ -16,6 +16,23 @@
       "message": "Uploaded for initial review/sanity-check.  Need prebuilts update with aosp/1940575 before we can merge.",
       "revId": "b9b2ed5c6c05226ffd825ca6ab6012b2900ef06b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86cde55b_03832c2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-01-08T00:09:39Z",
+      "side": 1,
+      "message": "Versioner doesn\u0027t recognize the new attributes and produces an error:\n\n```\n/mnt/disks/build-disk/src/googleplex-android/master/bionic/libc/include/bits/fortify/string.h:130:24: warning: unknown attribute \u0027diagnose_as_builtin\u0027 ignored\n        __attribute__((diagnose_as_builtin(__builtin_memset, 1, 2, 3)))\n                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n2 warnings generated.\nversioner: compilation generated warnings or errors\n```\n\nWe either have to make versioner accept warnings or update versioner/clang-tools at the same time as next compiler switchover.",
+      "revId": "b9b2ed5c6c05226ffd825ca6ab6012b2900ef06b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
