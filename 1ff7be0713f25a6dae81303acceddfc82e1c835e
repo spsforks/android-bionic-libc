@@ -51,6 +51,24 @@
       "parentUuid": "14511366_ef445cb3",
       "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "141f1b48_4f00bd9e",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-01-14T19:48:46Z",
+      "side": 1,
+      "message": "Ah, I thought for some reason that this one remained after that CL for whatever reason. Great!",
+      "parentUuid": "c838d901_2d5cc4ea",
+      "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
