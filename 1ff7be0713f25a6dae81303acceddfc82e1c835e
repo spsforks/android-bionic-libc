@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9866e6b3_4796f3c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-01-14T19:44:23Z",
+      "side": 1,
+      "message": "Agree with cleaning this up now, rather than waiting.",
+      "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14511366_ef445cb3",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-01-14T19:44:23Z",
+      "side": 1,
+      "message": "Can this disappear now too?",
+      "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
