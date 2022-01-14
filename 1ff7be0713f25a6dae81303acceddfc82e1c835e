@@ -69,6 +69,24 @@
       "parentUuid": "c838d901_2d5cc4ea",
       "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6472a590_d85dac9c",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-14T19:50:55Z",
+      "side": 1,
+      "message": "yeah, i did check just in case there were more lying around that hadn\u0027t caused trouble yet:\n```\nenh-p920.mtv:~/aosp/bionic$ grep -r llvm_defaults\nenh-p920.mtv:~/aosp/bionic$ \n```\n\nlooks like only vendor/arm/mali still references llvm_defaults: https://source.corp.google.com/search?q\u003dllvm_defaults\u0026sq\u003dpackage:%5Eandroid$",
+      "parentUuid": "141f1b48_4f00bd9e",
+      "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
