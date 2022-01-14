@@ -33,6 +33,24 @@
       "message": "Can this disappear now too?",
       "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c838d901_2d5cc4ea",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-14T19:45:46Z",
+      "side": 1,
+      "message": "we already did, in the other change: https://android-review.googlesource.com/c/platform/bionic/+/1946968",
+      "parentUuid": "14511366_ef445cb3",
+      "revId": "1ff7be0713f25a6dae81303acceddfc82e1c835e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
