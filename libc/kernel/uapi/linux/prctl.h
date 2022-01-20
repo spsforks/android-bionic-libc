@@ -157,7 +157,8 @@ struct prctl_mm_map {
 #define PR_MTE_TCF_NONE 0UL
 #define PR_MTE_TCF_SYNC (1UL << 1)
 #define PR_MTE_TCF_ASYNC (1UL << 2)
-#define PR_MTE_TCF_MASK (PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC)
+#define PR_MTE_TCF_ASYMM (1UL << 19)
+#define PR_MTE_TCF_MASK (PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC | PR_MTE_TCF_ASYMM)
 #define PR_MTE_TAG_SHIFT 3
 #define PR_MTE_TAG_MASK (0xffffUL << PR_MTE_TAG_SHIFT)
 #define PR_MTE_TCF_SHIFT 1

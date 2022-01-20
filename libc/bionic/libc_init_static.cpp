@@ -308,15 +308,23 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
                                                                          uintptr_t load_bias) {
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias);
 
-  if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
-    unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
-    prctl_arg |= (level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
+  // When entering ASYNC mode, specify that we want to allow upgrading to SYNC or ASYMM by OR'ing
+  // in the other flags. But if the kernel doesn't know about ASYMM or does not support specifying
+  // multiple TCF modes, fall back to specifying a single mode.
+  if (level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+    unsigned long arg1 = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO | PR_MTE_TCF_ASYNC;
+    unsigned long arg2 = arg1 | PR_MTE_TCF_SYNC;
+    unsigned long arg3 = arg2 | PR_MTE_TCF_ASYMM;
 
-    // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
-    // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
-    // specifying a single mode.
-    if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
-        prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
+    if (prctl(PR_SET_TAGGED_ADDR_CTRL, arg3, 0, 0, 0) == 0 ||
+        prctl(PR_SET_TAGGED_ADDR_CTRL, arg2, 0, 0, 0) == 0 ||
+        prctl(PR_SET_TAGGED_ADDR_CTRL, arg1, 0, 0, 0) == 0) {
+      __libc_shared_globals()->initial_heap_tagging_level = level;
+      return;
+    }
+  } else if (level == M_HEAP_TAGGING_LEVEL_SYNC) {
+    unsigned long arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO | PR_MTE_TCF_SYNC;
+    if (prctl(PR_SET_TAGGED_ADDR_CTRL, arg, 0, 0, 0) == 0) {
       __libc_shared_globals()->initial_heap_tagging_level = level;
       return;
     }
