@@ -45,6 +45,7 @@ __BEGIN_DECLS
 #if defined(__USE_GNU)
 #define POSIX_SPAWN_USEVFORK 64
 #define POSIX_SPAWN_SETSID 128
+#define POSIX_SPAWN_CLOEXEC_DEFAULT 0x4000
 #endif
 
 typedef struct __posix_spawnattr* posix_spawnattr_t;
