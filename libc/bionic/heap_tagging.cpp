@@ -32,6 +32,7 @@
 
 #include <bionic/pthread_internal.h>
 #include <platform/bionic/malloc.h>
+#include <platform/bionic/mte.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
@@ -98,10 +99,38 @@ HeapTaggingLevel GetHeapTaggingLevel() {
   return heap_tagging_level;
 }
 
+static bool IsMTE(HeapTaggingLevel tag_level) {
+  return tag_level != M_HEAP_TAGGING_LEVEL_NONE && tag_level != M_HEAP_TAGGING_LEVEL_TBI;
+}
+
 // Requires `g_heap_tagging_lock` to be held.
 bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   if (tag_level == heap_tagging_level) {
     return true;
+  }
+
+  if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+#if !__has_feature(hwaddress_sanitizer)
+    // Suppress the error message in HWASan builds. Apps can try to enable TBI (or even MTE
+    // modes) being unaware of HWASan, fail them silently.
+    error_log("SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
+#endif
+    return false;
+  }
+
+  if (tag_level == M_HEAP_TAGGING_LEVEL_TBI) {
+    error_log("SetHeapTaggingLevel: switching to TBI is not supported");
+    return false;
+  }
+
+  if (!IsMTE(heap_tagging_level) && IsMTE(tag_level)) {
+    error_log("SetHeapTaggingLevel: switching from TBI to MTE is not supported");
+    return false;
+  }
+
+  if (IsMTE(tag_level) && !mte_supported()) {
+    // Avoid the system call overhead by returning early.
+    return false;
   }
 
   switch (tag_level) {
@@ -114,51 +143,55 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         });
       } else if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
-        error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
+        error_log("SetHeapTaggingLevel: set_tcf_on_all_threads(PR_MTE_TCF_NONE) failed");
         return false;
       }
 #if defined(USE_SCUDO)
       scudo_malloc_disable_memory_tagging();
 #endif
       break;
-    case M_HEAP_TAGGING_LEVEL_TBI:
     case M_HEAP_TAGGING_LEVEL_ASYNC:
-    case M_HEAP_TAGGING_LEVEL_SYNC:
-      if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
-#if !__has_feature(hwaddress_sanitizer)
-        // Suppress the error message in HWASan builds. Apps can try to enable TBI (or even MTE
-        // modes) being unaware of HWASan, fail them silently.
-        error_log(
-            "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
-#endif
-        return false;
-      } else if (tag_level == M_HEAP_TAGGING_LEVEL_TBI ||
-                 heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
-        error_log("SetHeapTaggingLevel: switching between TBI and ASYNC/SYNC is not supported");
+      // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in
+      // the SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, or is not
+      // aware of the Asymm mode, fall back to specifying a single mode.
+      if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_ASYMM | PR_MTE_TCF_SYNC) &&
+          !set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_SYNC) &&
+          !set_tcf_on_all_threads(PR_MTE_TCF_ASYNC)) {
         return false;
       }
-
-      if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
-        // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in
-        // the SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back
-        // to specifying a single mode.
-        if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_SYNC)) {
-          set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
-        }
-#if defined(USE_SCUDO)
-        scudo_malloc_set_track_allocation_stacks(0);
-#endif
-      } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
-        set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
-#if defined(USE_SCUDO)
-        scudo_malloc_set_track_allocation_stacks(1);
-#endif
+      break;
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      if (!set_tcf_on_all_threads(PR_MTE_TCF_SYNC)) {
+        return false;
+      }
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYMM:
+      // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in
+      // the SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back
+      // to specifying a single mode.
+      if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYMM | PR_MTE_TCF_SYNC) &&
+          !set_tcf_on_all_threads(PR_MTE_TCF_SYNC)) {
+        return false;
+      }
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYNC_ONLY:
+      if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC)) {
+        return false;
+      }
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYMM_ONLY:
+      if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYMM)) {
+        return false;
       }
       break;
     default:
       error_log("SetHeapTaggingLevel: unknown tagging level");
       return false;
   }
+
+#if defined(USE_SCUDO)
+  scudo_malloc_set_track_allocation_stacks(tag_level == M_HEAP_TAGGING_LEVEL_SYNC);
+#endif
 
   heap_tagging_level = tag_level;
   info_log("SetHeapTaggingLevel: tag level set to %d", tag_level);
