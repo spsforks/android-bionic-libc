@@ -30,15 +30,56 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <linux/close_range.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
+#include <sys/syscall.h>
 #include <unistd.h>
 
 #include <android/fdsan.h>
 
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
+
+static unsigned max_possible_fd() {
+  // getrlimit can lie:
+  // - both soft and hard limits can be lowered to 0, with fds still open, so it can underestimate
+  // - in practice it usually is some really large value (like 32K or more)
+  //   even though only a handful of small fds are actually open (ie. < 500),
+  //   this results in poor performance when trying to act on all possibly open fds
+  struct rlimit m;
+  int rv = getrlimit(RLIMIT_NOFILE, &m);
+  if (rv) return ~0U;     // what can we do...
+  return m.rlim_max - 1;  // should 0 stay 0, or should it intentionally become ~0U? what about 1?
+}
+
+static int set_cloexec(int i) {
+  int v = fcntl(i, F_GETFD);
+  if (v == -1) return -1;  // almost certainly: errno == EBADF
+  return fcntl(i, F_SETFD, v | FD_CLOEXEC);
+}
+
+static int cloexec_range(unsigned first, unsigned last) {
+  // requires 5.11+ (or 5.10-T) kernel, otherwise -1/ENOSYS or -1/EINVAL
+  int v = close_range(first, last, CLOSE_RANGE_CLOEXEC);
+  if (v == 0) return 0;
+
+  if (first > last) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  unsigned max = max_possible_fd();  // no open fds past this
+  if (max < last) last = max;
+
+  if (first > last) return 0;  // range shrunk to an empty one
+
+  for (unsigned i = last; i > first; --i) set_cloexec(i);
+  set_cloexec(first);
+  return 0;
+}
 
 enum Action {
   kOpen,
@@ -141,6 +182,10 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
     if (sigprocmask64(SIG_SETMASK, &(*attr)->sigmask.sigset64, nullptr)) _exit(127);
   }
+
+  if ((flags & POSIX_SPAWN_CLOEXEC_DEFAULT) != 0) {
+    if (cloexec_range(3, ~0U)) _exit(127);
+  }
 }
 
 static int posix_spawn(pid_t* pid_ptr,
@@ -199,7 +244,7 @@ int posix_spawnattr_destroy(posix_spawnattr_t* attr) {
 int posix_spawnattr_setflags(posix_spawnattr_t* attr, short flags) {
   if ((flags & ~(POSIX_SPAWN_RESETIDS | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_SETSIGDEF |
                  POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER |
-                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID)) != 0) {
+                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID | POSIX_SPAWN_CLOEXEC_DEFAULT)) != 0) {
     return EINVAL;
   }
   (*attr)->flags = flags;
