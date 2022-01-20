@@ -37,6 +37,21 @@ static bool KernelSupportsTaggedPointers() {
 #endif
 }
 
+#if defined(__BIONIC__) && defined(__aarch64__)
+static bool KernelSupportsAsymmMTE() {
+  int prev = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL,
+            PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO | PR_MTE_TCF_ASYMM, 0, 0, 0) != 0) {
+    return false;
+  }
+  bool ret = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0) & PR_MTE_TCF_ASYMM;
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, prev, 0, 0, 0) != 0) {
+    return false;
+  }
+  return ret;
+}
+#endif
+
 static bool SetHeapTaggingLevel(HeapTaggingLevel level) {
   return mallopt(M_BIONIC_SET_HEAP_TAGGING_LEVEL, level);
 }
@@ -81,10 +96,20 @@ TEST(heap_tagging_level, tagged_pointer_dies) {
 #endif // defined(__BIONIC__)
 }
 
+namespace {
 #if defined(__BIONIC__) && defined(__aarch64__)
 void ExitWithSiCode(int, siginfo_t* info, void*) {
   _exit(info->si_code);
 }
+
+template <typename Pred>
+class Or {
+  Pred A, B;
+
+ public:
+  Or(Pred A, Pred B) : A(A), B(B) {}
+  bool operator()(int exit_status) { return A(exit_status) || B(exit_status); }
+};
 #endif
 
 TEST(heap_tagging_level, sync_async_bad_accesses_die) {
@@ -94,6 +119,7 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
   }
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+  volatile int sink ATTRIBUTE_UNUSED;
 
   // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
   // mismatching tag before each allocation.
@@ -104,14 +130,94 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
         p[-1] = 42;
       },
       testing::ExitedWithCode(SEGV_MTESERR), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      testing::ExitedWithCode(SEGV_MTESERR), "");
 
+  // ASYNC may be auto-upgraded all the way to SYNC.
+  // Both load and store may cause either MTEAERR or MTESERR.
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
   EXPECT_EXIT(
       {
         ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
         p[-1] = 42;
       },
+      Or(testing::ExitedWithCode(SEGV_MTESERR), testing::ExitedWithCode(SEGV_MTEAERR)), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      Or(testing::ExitedWithCode(SEGV_MTESERR), testing::ExitedWithCode(SEGV_MTEAERR)), "");
+
+  // ASYMM may be auto-upgraded to SYNC.
+  // Store may cause either MTEAERR or MTESERR, but load is alway synchronous.
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      Or(testing::ExitedWithCode(SEGV_MTESERR), testing::ExitedWithCode(SEGV_MTEAERR)), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      testing::ExitedWithCode(SEGV_MTESERR), "");
+
+  // ASYNC_ONLY - both load and store result in SEGV_MTEAERR.
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC_ONLY));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        p[-1] = 42;
+      },
       testing::ExitedWithCode(SEGV_MTEAERR), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      testing::ExitedWithCode(SEGV_MTEAERR), "");
+
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
+  sink = p[-1];
+#else
+  GTEST_SKIP() << "bionic/arm64 only";
+#endif
+}
+
+TEST(heap_tagging_level, asymm_only_bad_accesses_die) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  if (!mte_supported() || !running_with_mte()) {
+    GTEST_SKIP() << "requires MTE to be enabled";
+  }
+
+  if (!KernelSupportsAsymmMTE()) {
+    GTEST_SKIP() << "assymetric MTE not supported on device";
+  }
+
+  std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+  volatile int sink ATTRIBUTE_UNUSED;
+
+  // ASYMM_ONLY - store is async, load is sync.
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(SEGV_MTEAERR), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      testing::ExitedWithCode(SEGV_MTESERR), "");
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
   volatile int oob ATTRIBUTE_UNUSED = p[-1];
@@ -119,6 +225,7 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
   GTEST_SKIP() << "bionic/arm64 only";
 #endif
 }
+}  // namespace
 
 TEST(heap_tagging_level, none_pointers_untagged) {
 #if defined(__BIONIC__)
@@ -146,6 +253,9 @@ TEST(heap_tagging_level, tagging_level_transitions) {
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC_ONLY));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
   } else if (mte_supported() && running_with_mte()) {
     // ASYNC -> ...
@@ -157,11 +267,24 @@ TEST(heap_tagging_level, tagging_level_transitions) {
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
+
+    EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+    EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC_ONLY));
+    EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+
+    if (KernelSupportsAsymmMTE()) {
+      EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
+    } else {
+      EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
+    }
   } else if (!mte_supported()) {
     // TBI -> ...
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC_ONLY));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
   }
 
   // TBI -> NONE on non-MTE, ASYNC|SYNC|NONE -> NONE on MTE.
@@ -172,6 +295,9 @@ TEST(heap_tagging_level, tagging_level_transitions) {
   EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
   EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
   EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
+  EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM));
+  EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC_ONLY));
+  EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYMM_ONLY));
 #else
   GTEST_SKIP() << "bionic/arm64 only";
 #endif
@@ -205,7 +331,9 @@ TEST_P(MemtagNoteTest, SEGV) {
   const char* kNoteSuffix[] = {"disabled", "async", "sync"};
   const char* kExpectedOutputHWASAN[] = {".*tag-mismatch.*", ".*tag-mismatch.*",
                                          ".*tag-mismatch.*"};
-  const char* kExpectedOutputMTE[] = {"normal exit\n", "SEGV_MTEAERR\n", "SEGV_MTESERR\n"};
+  // Note that we do not check that exact si_code of the "async" variant, as it may be auto-upgraded
+  // to asymm or even sync.
+  const char* kExpectedOutputMTE[] = {"normal exit\n", "SEGV_MTE.ERR\n", "SEGV_MTESERR\n"};
   const char* kExpectedOutputNonMTE[] = {"normal exit\n", "normal exit\n", "normal exit\n"};
   const char** kExpectedOutput =
       withHWASAN ? kExpectedOutputHWASAN : (withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE);
