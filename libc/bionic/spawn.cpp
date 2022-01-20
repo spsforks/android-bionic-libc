@@ -33,12 +33,83 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
+#include <sys/syscall.h>
 #include <unistd.h>
 
 #include <android/fdsan.h>
 
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
+
+//--- fully stack based, thus vfork safe
+
+// returns the number of entries in the current thread's kernel file descriptor table (0 on any error)
+unsigned proc_status_fdsize() {
+  int fd = open("/proc/thread-self/status", O_RDONLY | O_CLOEXEC);
+  if (fd < 0) return 0;
+  char buf[512]; // in practice ~190 bytes are needed, for 11 short lines of ascii text
+  int rv = read(fd, buf, sizeof(buf) - 1);
+  if (rv < 0) return 0;
+  close(fd);
+  buf[rv] = 0;
+  for (int i = 0; i < rv - 7; ++i) {
+    if ((i > 0) && (buf[i - 1] != '\n')) continue;
+    if (buf[i + 0] != 'F') continue;
+    if (buf[i + 1] != 'D') continue;
+    if (buf[i + 2] != 'S') continue;
+    if (buf[i + 3] != 'i') continue;
+    if (buf[i + 4] != 'z') continue;
+    if (buf[i + 5] != 'e') continue;
+    if (buf[i + 6] != ':') continue;
+    int j = i + 7; // prefix matched
+    while ((buf[j] == ' ') || (buf[j] == '\t')) ++j; // skip whitespace
+    unsigned v = 0;
+    while ((buf[j] >= '0') && (buf[j] <= '9')) v = v * 10 + buf[j++] - '0';
+    if (buf[j] == '\n') return v; // success, hopefully it fit in u32...
+    return 0; // parse error
+  }
+  return 0; // no match
+}
+
+unsigned max_possible_fd() {
+  unsigned v = proc_status_fdsize();
+  if (v) return v - 1;
+  // getrlimit can lie:
+  // - both soft and hard limits can be lowered to 0, with fds still open, so it can underestimate
+  // - in practice it usually is some really large value (like 32K or more)
+  //   even though only a handful of small fds are actually open (ie. < 500),
+  //   this results in poor performance when trying to act on all possibly open fds
+  struct rlimit m;
+  int rv = getrlimit(RLIMIT_NOFILE, &m);
+  if (rv) return ~0U; // what can we do...
+  return m.rlim_max - 1; // should 0 stay 0, or should it intentionally become ~0U? what about 1?
+}
+
+int set_cloexec(unsigned i) {
+  int v = fcntl(i, F_GETFD);
+  if (v == -1) return -1; // almost certainly: errno == EBADF
+  return fcntl(i, F_SETFD, v | FD_CLOEXEC);
+}
+
+int cloexec_range(unsigned first, unsigned last) {
+  // TODO: update header files to define new 5.9 syscall, and 5.11 constant, update seccomp rules
+  //int v = syscall(SYS_close_range, first, last, 4U/*flags = CLOSE_RANGE_CLOEXEC*/);
+  //if (!v) return 0; // the above requires 5.11+ kernel, otherwise returns ENOSYS or EINVAL
+  
+  if (first > last) { errno = EINVAL; return -1; }; // syscall documented error return
+
+  unsigned max = max_possible_fd(); // no open fds past this
+  if (max < last) last = max;
+
+  if (first > last) return 0; // range shrunk to an empty one
+
+  for (unsigned i = last; i > first; --i) set_cloexec(i);
+  set_cloexec(first);
+  return 0;
+}
+
+//---
 
 enum Action {
   kOpen,
@@ -131,6 +202,10 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
     if (sigprocmask64(SIG_SETMASK, &(*attr)->sigmask.sigset64, nullptr)) _exit(127);
   }
+
+  if ((flags & POSIX_SPAWN_CLOEXEC_DEFAULT) != 0) {
+    if (cloexec_range(3, ~0U)) _exit(127);
+  }
 }
 
 static int posix_spawn(pid_t* pid_ptr,
@@ -189,7 +264,7 @@ int posix_spawnattr_destroy(posix_spawnattr_t* attr) {
 int posix_spawnattr_setflags(posix_spawnattr_t* attr, short flags) {
   if ((flags & ~(POSIX_SPAWN_RESETIDS | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_SETSIGDEF |
                  POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER |
-                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID)) != 0) {
+                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID | POSIX_SPAWN_CLOEXEC_DEFAULT)) != 0) {
     return EINVAL;
   }
   (*attr)->flags = flags;
