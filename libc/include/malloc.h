@@ -299,6 +299,12 @@ enum HeapTaggingLevel {
   /**
    * Enable heap tagging and asynchronous memory tag checks (if supported).
    * Disable stack trace collection.
+   * Note: the effect of this call depends on the setting in
+   * /sys/devices/system/cpu/cpu<N>/mte_tcf_preferred. One of the other modes
+   * (asymmetric or synchronous) may be used on the CPUs where the performance
+   * delta is negligible. This auto-upgrade behavior can be configured
+   * independently for each CPU core. As a result, a thread may change modes as
+   * it is scheduled on different physical cores.
    */
   M_HEAP_TAGGING_LEVEL_ASYNC = 2,
 #define M_HEAP_TAGGING_LEVEL_ASYNC M_HEAP_TAGGING_LEVEL_ASYNC
@@ -308,6 +314,40 @@ enum HeapTaggingLevel {
    */
   M_HEAP_TAGGING_LEVEL_SYNC = 3,
 #define M_HEAP_TAGGING_LEVEL_SYNC M_HEAP_TAGGING_LEVEL_SYNC
+
+  /**
+   * Enable heap tagging and asymmetric memory tag checks (if supported).
+   * Asymmetric = synchronous checks for loads and asynchronous for stores.
+   * Disable stack trace collection.
+   * Note: depending on the setting of mte_tcf_preferred, asymmetric mode may be
+   * auto-upgraded to synchronous.
+   *
+   * Available since API level 33.
+   */
+  M_HEAP_TAGGING_LEVEL_ASYMM = 4,
+#define M_HEAP_TAGGING_LEVEL_ASYMM M_HEAP_TAGGING_LEVEL_ASYMM
+
+  /**
+   * Enable heap tagging and synchronous memory tag checks (if supported).
+   * Disable stack trace collection.
+   * Disable the mte_tcf_preferred auto-upgrade logic. On MTE hardware, this call guarantees
+   * asynchronous checks on all CPU cores.
+   *
+   * Available since API level 33.
+   */
+  M_HEAP_TAGGING_LEVEL_ASYNC_ONLY = 5,
+#define M_HEAP_TAGGING_LEVEL_ASYNC_ONLY M_HEAP_TAGGING_LEVEL_ASYNC_ONLY
+
+  /**
+   * Enable heap tagging and synchronous memory tag checks (if supported).
+   * Disable stack trace collection.
+   * Disable the mte_tcf_preferred auto-upgrade logic. On MTE hardware, this call guarantees
+   * asymmetric checks on all CPU cores.
+   *
+   * Available since API level 33.
+   */
+  M_HEAP_TAGGING_LEVEL_ASYMM_ONLY = 6,
+#define M_HEAP_TAGGING_LEVEL_ASYMM_ONLY M_HEAP_TAGGING_LEVEL_ASYMM_ONLY
 };
 
 /**
