@@ -317,6 +317,18 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
 #endif
 
+#if __ANDROID_API__ >= 33
+// checked by at least external/ltp/include/lapi/close_range.h
+#define HAVE_LINUX_CLOSE_RANGE_H
+#define HAVE_CLOSE_RANGE
+/* This is the raw kernel system call, will return -1/ENOSYS on pre-5.9 kernels,
+ * may return -1/EINVAL for unsupported flags, etc...
+ * See 'man close_range' for documentation (which lists flags as unsigned int).
+ * Support was also added in glibc 2.35.
+ */
+int close_range(unsigned int __fd, unsigned int __max_fd, int __flags) __INTRODUCED_IN(33);
+#endif
+
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #define _UNISTD_H_
 #include <bits/fortify/unistd.h>
