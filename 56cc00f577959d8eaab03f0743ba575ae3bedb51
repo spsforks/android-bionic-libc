@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a2dc32d_d37e0fcb",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-01-21T17:21:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2d24ecd9_68ce6b61",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 0
+      },
+      "revId": "56cc00f577959d8eaab03f0743ba575ae3bedb51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00212500_b3512c62",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-01-21T13:17:00Z",
       "side": 1,
       "message": "add new bit-wise flag \"| POSIX_SPAWN_CLOEXEC_DEFAULT\"\n\nposix_spawnattr_setflags(.., |  POSIX_SPAWN_CLOEXEC_DEFAULT) \nL.267 return errno EINVAL. New attr can\u0027t be applied to L.205\n\nlog:\n01-21 20:16:54.078  1712  1964 I jniClatCoordinator: clat: posix_spawnattr_setflags: 0x4040\n01-21 20:16:54.078  1712  1964 E Nat464Xlat: Error starting clatd on wlan0: java.io.IOException: Error start clatd on wlan0: java.io.IOException: posix_spawnattr_setflags failed: Invalid argument",
+      "range": {
+        "startLine": 266,
+        "startChar": 58,
+        "endLine": 266,
+        "endChar": 59
+      },
+      "revId": "56cc00f577959d8eaab03f0743ba575ae3bedb51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6eb04842_a9bcf04c",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-01-21T17:21:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00212500_b3512c62",
       "range": {
         "startLine": 266,
         "startChar": 58,
