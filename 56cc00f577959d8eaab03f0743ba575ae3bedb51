@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d24ecd9_68ce6b61",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1348424
+      },
+      "writtenOn": "2022-01-21T13:17:00Z",
+      "side": 1,
+      "message": "You are right. I hit the crash with L.96, L.97. I have to remove them to make the fork work\n\n01-21 20:40:38.030  5491  5626 I jniClatCoordinator: clat: posix_spawnattr_setflags: 0x4040\n01-21 20:40:38.230  5384  5384 E Zygote  : Zygote failed to write to system_server FD: Connection refused\n01-21 20:40:38.230  5384  5384 I Zygote  : Process 5491 exited due to signal 31 (Bad system call)\n01-21 20:40:38.230  5384  5384 E Zygote  : Exit zygote because system server (pid 5491) has terminated",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 0
+      },
+      "revId": "56cc00f577959d8eaab03f0743ba575ae3bedb51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00212500_b3512c62",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1348424
+      },
+      "writtenOn": "2022-01-21T13:17:00Z",
+      "side": 1,
+      "message": "add new bit-wise flag \"| POSIX_SPAWN_CLOEXEC_DEFAULT\"\n\nposix_spawnattr_setflags(.., |  POSIX_SPAWN_CLOEXEC_DEFAULT) \nL.267 return errno EINVAL. New attr can\u0027t be applied to L.205\n\nlog:\n01-21 20:16:54.078  1712  1964 I jniClatCoordinator: clat: posix_spawnattr_setflags: 0x4040\n01-21 20:16:54.078  1712  1964 E Nat464Xlat: Error starting clatd on wlan0: java.io.IOException: Error start clatd on wlan0: java.io.IOException: posix_spawnattr_setflags failed: Invalid argument",
+      "range": {
+        "startLine": 266,
+        "startChar": 58,
+        "endLine": 266,
+        "endChar": 59
+      },
+      "revId": "56cc00f577959d8eaab03f0743ba575ae3bedb51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
