@@ -27,6 +27,7 @@
 #include <sys/capability.h>
 #include <sys/param.h>
 #include <sys/resource.h>
+#include <sys/socket.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -1647,4 +1648,25 @@ TEST(UNISTD_TEST, sleep) {
   ASSERT_EQ(0U, sleep(1));
   auto t1 = std::chrono::steady_clock::now();
   ASSERT_GE(t1-t0, 1s);
+}
+
+TEST(UNISTD_TEST, close_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#else   // __GLIBC__
+  // Create a test IPv6/UDP socket file descriptor
+  int fd = socket(AF_INET6, SOCK_DGRAM | SOCK_CLOEXEC, 0);
+  ASSERT_GE(fd, 0);
+
+  // Try to close the file descriptor (this requires a 5.9+ kernel)
+  if (!close_range(fd, fd, 0)) {
+    // we can't close it *again*
+    ASSERT_EQ(close(fd), -1);
+    ASSERT_EQ(errno, EBADF);
+  } else {
+    ASSERT_EQ(errno, ENOSYS);
+    // since close_range() failed, we can close it normally
+    ASSERT_EQ(close(fd), 0);
+  }
+#endif  // __GLIBC__
 }
