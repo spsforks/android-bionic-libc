@@ -59,6 +59,7 @@
 
 #include <vector>
 
+extern "C" const char* __progname;
 __LIBC_HIDDEN__ extern "C" void _start();
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
@@ -318,6 +319,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Sanitize the environment.
   __libc_init_AT_SECURE(args.envp);
+  // Set __progname to our best guess at this point. We can fix it later.
+  __progname = __libc_shared_globals()->init_progname = args.argv[0];
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
@@ -798,12 +801,13 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
       __libc_shared_globals()->initial_linker_arg_count = 1;
     }
   }
+  INFO("[ initial __progname=\"%s\" ]", __progname);
 
   // store argc/argv/envp to use them for calling constructors
   g_argc = args.argc - __libc_shared_globals()->initial_linker_arg_count;
   g_argv = args.argv + __libc_shared_globals()->initial_linker_arg_count;
   g_envp = args.envp;
-  __libc_shared_globals()->init_progname = g_argv[0];
+  __progname = __libc_shared_globals()->init_progname = g_argv[0];
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
@@ -815,6 +819,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   if (g_is_ldd) _exit(EXIT_SUCCESS);
 
+  INFO("[ final __progname=\"%s\" ]", __progname);
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
   // Return the address that the calling assembly stub should jump to.
