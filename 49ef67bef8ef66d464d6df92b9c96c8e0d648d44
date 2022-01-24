@@ -34,6 +34,24 @@
       "parentUuid": "aaf4a09d_cb2d9981",
       "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75d0aa58_abab4019",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-24T22:15:45Z",
+      "side": 1,
+      "message": "\u003e I thought this was only about the seccomp filter...\n\nno, this also generates the syscall stub. (see \"Adding libc wrappers for system calls\" in https://cs.android.com/android/platform/superproject/+/master:bionic/README.md for details and missing steps i\u0027ve glossed over here.)\n\n\u003e Which header file should I add it to?\n\ni\u0027d _assumed_ \u003cunistd.h\u003e, but the man page says \u003clinux/close_range.h\u003e?! although freebsd has https://www.freebsd.org/cgi/man.cgi?query\u003dclose_range\u0026sektion\u003d2\u0026format\u003dhtml\n\nugh. especially because there\u0027s already a uapi \u003clinux/close_range.h\u003e header, which is where the constants come from.\n\nso we either go with the BSDs (and logic) and add this to \u003cunistd.h\u003e or we go for source compatibility with glibc and have our own \u003clinux/close_range.h\u003e that does an #include_next...\n\n\u003e Where and what type of tests?\n\nthe docs say \"Add at least basic tests. Even a test that deliberately supplies an invalid argument helps check that we\u0027re generating the right symbol and have the right declaration in the header file, and that you correctly updated the maps in step 5. (You can use strace(1) to confirm that the correct system call is being made.)\" which is me just not being explicit about \"yeah, testing syscalls well is (a) hard and (b) not entirely our problem\". as far as i\u0027m concerned, it\u0027s LTP\u0027s problem to *really* test this stuff. we\u0027re only really responsible for \"can you call the damn thing, and do the arguments get passed through correctly?\". so personally one test that uses the CLOEXEC flag and then checks the cloexec status on the fds (there\u0027s plenty of copy \u0026 paste helpers lying around for that in the tests already) sounds like a good idea? you can have an fd too low to be affected, and fd too high, and two or three \"in range\" whose flags get flipped? sounds comprehensive to me? (at least in terms of our responsibilities.)\n\nthe bigger philosophical question is \"should the workarounds for old kernels be in close_range() or in posix_spawn()\". personally i think it\u0027s fine for them to be in posix_spawn(); we don\u0027t really support static binaries anyway, seccomp isn\u0027t your friend if you\u0027re trying to run on old devices anyway, and giving people another reason to stop writing this stuff themselves and just use posix_spawn() sounds like a feature rather than a bug to me?",
+      "parentUuid": "28c4b37b_9a9fd3d2",
+      "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
