@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaf4a09d_cb2d9981",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-24T17:05:21Z",
+      "side": 1,
+      "message": "should be in the header file too, with a unit test...",
+      "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
