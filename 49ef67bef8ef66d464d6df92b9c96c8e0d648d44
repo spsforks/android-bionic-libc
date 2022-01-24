@@ -16,6 +16,24 @@
       "message": "should be in the header file too, with a unit test...",
       "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28c4b37b_9a9fd3d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-01-24T21:57:12Z",
+      "side": 1,
+      "message": "I thought this was only about the seccomp filter...\n(ie. I was replicating what was done with the bpf() syscall seccomp change)\n\nWhich header file should I add it to?\nWhere and what type of tests?\n\nShould I try to figure out what the unreleased glibc 2.35 does?",
+      "parentUuid": "aaf4a09d_cb2d9981",
+      "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
