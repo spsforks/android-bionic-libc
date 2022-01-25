@@ -3,6 +3,98 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93093850_9a1001a4",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-25T22:31:19Z",
+      "side": 1,
+      "message": "Update this comment to include asymm, and also mention that ASYMM was added later, which is why ASYNC | SYNC makes sense to try after ASYNC | ASYMM | SYNC",
+      "range": {
+        "startLine": 154,
+        "startChar": 78,
+        "endLine": 154,
+        "endChar": 82
+      },
+      "revId": "2ed530e8bb3da05af6e8a2238e659672191361e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93b416cc_10bcf773",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-25T22:31:19Z",
+      "side": 1,
+      "message": "update comment",
+      "range": {
+        "startLine": 169,
+        "startChar": 23,
+        "endLine": 169,
+        "endChar": 28
+      },
+      "revId": "2ed530e8bb3da05af6e8a2238e659672191361e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e32ce15_305d2160",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-25T22:31:19Z",
+      "side": 1,
+      "message": "arg2 should be ASYNC | SYNC (currently ASYNC | ASYMM)",
+      "range": {
+        "startLine": 316,
+        "startChar": 4,
+        "endLine": 317,
+        "endChar": 47
+      },
+      "revId": "2ed530e8bb3da05af6e8a2238e659672191361e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eda48cf8_56a03ad9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-25T22:31:19Z",
+      "side": 1,
+      "message": "IIUC, this will enable SYNC mode on where __get_heap_tagging_level returns TBI",
+      "range": {
+        "startLine": 325,
+        "startChar": 4,
+        "endLine": 326,
+        "endChar": 89
+      },
+      "revId": "2ed530e8bb3da05af6e8a2238e659672191361e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c117b53_ae89cc56",
         "filename": "libc/kernel/uapi/linux/prctl.h",
         "patchSetId": 2
