@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1b221de_fd1a9363",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-25T21:14:40Z",
+      "side": 1,
+      "message": "is there a reason we couldn\u0027t just use a recursive mutex there? was this one of our custom not-a-pthread_mutex_t-mutex things, so that\u0027s non-trivial?",
+      "range": {
+        "startLine": 83,
+        "startChar": 58,
+        "endLine": 83,
+        "endChar": 77
+      },
+      "revId": "f5f04b19fe59f6ac3f0b94fc890d0ccff6821fa8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
