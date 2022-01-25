@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47bcfe31_45dfe335",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-25T18:14:08Z",
+      "side": 1,
+      "message": "comment can be removed",
+      "range": {
+        "startLine": 257,
+        "startChar": 42,
+        "endLine": 257,
+        "endChar": 61
+      },
+      "revId": "0abea19702c3dbd8c163a0bf663778deb8007108",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
