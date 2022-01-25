@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76ffe6a2_9ed1a87a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-25T21:08:56Z",
+      "side": 1,
+      "message": "this constant\u0027s only used once, so just inline it?",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c1b4e30_aec7a627",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-25T21:08:56Z",
+      "side": 1,
+      "message": "prefer not being explicit and let the compiler do the right thing...",
+      "range": {
+        "startLine": 254,
+        "startChar": 29,
+        "endLine": 254,
+        "endChar": 30
+      },
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
