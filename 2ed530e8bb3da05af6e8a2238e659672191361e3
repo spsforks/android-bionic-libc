@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c117b53_ae89cc56",
+        "filename": "libc/kernel/uapi/linux/prctl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-25T22:15:33Z",
+      "side": 1,
+      "message": "This change is not in upstream yet (not even under review). I\u0027ll hold off submitting this patch until the kernel API is finalized, but let\u0027s start the review in the meantime.",
+      "revId": "2ed530e8bb3da05af6e8a2238e659672191361e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
