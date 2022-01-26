@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c4bb78a4_8e26c189",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-26T00:26:08Z",
+      "side": 1,
+      "message": "I think what enh@ meant was change 254 to be const char* sys_prop_names[2] \u003d {sysprop_name, \"persist.arm64.memtag.mode\"};\n\nspeaking of, bikeshedding time, maybe \"persist.arm64.memtag.default\" or \".all\"? I think \"mode\" is maybe confusing as you think it could somehow cross-apply with \"process\" (rather than \"process.\u003c\u003e\" replaces this default value)",
+      "parentUuid": "f409afcf_5a9648ff",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
