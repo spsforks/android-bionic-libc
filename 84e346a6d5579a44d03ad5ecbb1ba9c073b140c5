@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fb914c60_70613852",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-01-26T00:34:24Z",
+      "side": 1,
+      "message": "disregard my comment about the inlining, i confused myself.\n\nout of your suggestions probably `.default` is better, because `.all` leaves it (IMO) even more open whether or not it overrides the process specific one.",
+      "parentUuid": "c4bb78a4_8e26c189",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
