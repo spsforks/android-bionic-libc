@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5175caab_260b03bb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-26T01:22:09Z",
+      "side": 1,
+      "message": "\u003e speaking of, bikeshedding time\n\nheh, *mine* was bikeshedding, yours is genuinely insightful :-)\n\n\u003e out of your suggestions probably  .default  is better, because  .all  leaves it (IMO) even more open whether or not it overrides the process specific one.\n\nmaybe, but i think \".all\" has precedent? isn\u0027t that what we\u0027ve used in other places where we have per-process system properties?\n\ngah... did we ship \"arm64.memtag.process.\" yet? if not, we should probably rename that \".app.\" to match the existing system properties like \"debug.ld\"?",
+      "parentUuid": "fb914c60_70613852",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
