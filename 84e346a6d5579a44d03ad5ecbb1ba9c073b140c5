@@ -128,6 +128,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3f2c3fd9_bf7d2153",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-01-26T18:43:56Z",
+      "side": 1,
+      "message": "Ah, I see.\n\nTo be honest, I don\u0027t really like \"app\" anyway, as this sysprop only affects native executables and not zygote-forked apps :). We went down the non-\"debug.\" prefixed route as IIUC those flags were settable by processes and apps other than the shell, and we didn\u0027t want processes to be able to poke each other\u0027s MTE settings.",
+      "parentUuid": "5b8a172d_5f2d0801",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
