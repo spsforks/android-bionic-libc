@@ -22,6 +22,30 @@
       },
       "revId": "f5f04b19fe59f6ac3f0b94fc890d0ccff6821fa8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c6967a2_2d940634",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1896186
+      },
+      "writtenOn": "2022-01-26T15:01:39Z",
+      "side": 1,
+      "message": "Multiple reasons:\n* You\u0027re right, this is one of the custom not-a-pthread_mutex_t mutex. We cannot use pthread_mutex_t directly here because pthread_mutex_t can use bionic_trace_begin() internally.\n* The mutex is only part of the problem. The real problem is that bionic_trace_begin() can call open(), which cal call bionic_trace_begin(), which can call open(), leading to big stacks (although I haven\u0027t found a way to trigger infinite recursion in my tests, I suspect it might be another race condition away).",
+      "parentUuid": "f1b221de_fd1a9363",
+      "range": {
+        "startLine": 83,
+        "startChar": 58,
+        "endLine": 83,
+        "endChar": 77
+      },
+      "revId": "f5f04b19fe59f6ac3f0b94fc890d0ccff6821fa8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
