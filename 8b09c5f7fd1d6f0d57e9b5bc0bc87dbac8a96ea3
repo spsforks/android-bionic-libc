@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9450bb35_9f0cc1cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-27T18:02:53Z",
+      "side": 1,
+      "message": "seems like a legit build failure:\n```\n/mnt/disks/build-disk/src/android/master/bionic/linker/linker_block_allocator_test.cpp:105:17: error: use of undeclared identifier \u0027round_up\u0027 [clang-diagnostic-error]\n  size_t dist \u003d round_up(sizeof(test_struct_larger), kBlockSizeAlign);\n                ^\n```",
+      "revId": "8b09c5f7fd1d6f0d57e9b5bc0bc87dbac8a96ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
