@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bcc19c7_3bf4f2fc",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-27T22:32:18Z",
+      "side": 1,
+      "message": "The reason I\u0027ve done it this way is because we request (asymm|sync) for M_HEAP_TAGGING_LEVEL_ASYMM, and that *may* auto-upgrade to sync, but it would never downgrade to async. A new kernel on an older hardware without asymm support will always pick sync. Then it makes sense that old kernel (that does not recognize PR_MTE_TCF_ASYMM on the same h/w) would also pick sync.\n\nWe can bikeshed about the user intent behind M_HEAP_TAGGING_LEVEL_ASYMM of course, but this seems like a very unlikely case, and M_HEAP_TAGGING_LEVEL_ASYMM is only available through mallopt, not any of the higher level apis, that I just would not bother.",
+      "parentUuid": "fcc1a87c_739fba60",
+      "range": {
+        "startLine": 170,
+        "startChar": 24,
+        "endLine": 170,
+        "endChar": 79
+      },
+      "revId": "aa563c642b593118480857c68f7bc0ce4751bf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c006518_ef9d865c",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-01-26T18:21:49Z",
       "side": 1,
       "message": "Add comment, \"Asymm came after the multiple TCF modes, so try that first.\"",
+      "range": {
+        "startLine": 317,
+        "startChar": 0,
+        "endLine": 317,
+        "endChar": 49
+      },
+      "revId": "aa563c642b593118480857c68f7bc0ce4751bf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfcb00de_87dfdc06",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-27T22:32:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c006518_ef9d865c",
       "range": {
         "startLine": 317,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2581b6b_57767d93",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-27T22:32:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9332f7e2_1e5d53e3",
+      "range": {
+        "startLine": 333,
+        "startChar": 55,
+        "endLine": 333,
+        "endChar": 59
+      },
+      "revId": "aa563c642b593118480857c68f7bc0ce4751bf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "656b8198_16bd3d22",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-01-26T18:21:49Z",
       "side": 1,
       "message": "On hardware with ASYMM MTE, this call guarantees...",
+      "range": {
+        "startLine": 344,
+        "startChar": 55,
+        "endLine": 344,
+        "endChar": 59
+      },
+      "revId": "aa563c642b593118480857c68f7bc0ce4751bf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cb82fce_c0672a3b",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-27T22:32:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "656b8198_16bd3d22",
       "range": {
         "startLine": 344,
         "startChar": 55,
@@ -107,6 +203,30 @@
       "side": 1,
       "message": "\u003e Common typo found: \"asymetric\" -- should it be \"asymmetric\"?\n\u003e Note: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.\n\nPlease fix.",
       "parentUuid": "c0d050af_22c2bac8",
+      "range": {
+        "startLine": 201,
+        "startChar": 21,
+        "endLine": 201,
+        "endChar": 30
+      },
+      "revId": "aa563c642b593118480857c68f7bc0ce4751bf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6cb3f72_aa3632c1",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-01-27T22:32:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cf8729f6_803bd06b",
       "range": {
         "startLine": 201,
         "startChar": 21,
