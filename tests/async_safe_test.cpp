@@ -21,6 +21,7 @@
 #endif // __BIONIC__
 
 TEST(async_safe_log, smoke) {
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
 #if defined(__BIONIC__)
   char buf[BUFSIZ];
 
@@ -64,6 +65,9 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%ldb", 70000L);
   EXPECT_STREQ("a70000b", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%mZ");
+  EXPECT_STREQ("aNo such file or directoryZ", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
   EXPECT_STREQ("a0xb0001234b", buf);
 
@@ -96,6 +100,24 @@ TEST(async_safe_log, smoke) {
 
   async_safe_format_buffer(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
   EXPECT_STREQ("a005:5:05z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#oZ", 777);
+  EXPECT_STREQ("a01411Z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#oZ", 0);
+  EXPECT_STREQ("a0Z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#xZ", 34);
+  EXPECT_STREQ("a0x22Z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#xZ", 0);
+  EXPECT_STREQ("a0Z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%5#xZ", 20);
+  EXPECT_STREQ("a 0x14Z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%6#oZ", 15);
+  EXPECT_STREQ("a   017Z", buf);
 
   void* p = nullptr;
   async_safe_format_buffer(buf, sizeof(buf), "a%d,%pz", 5, p);
