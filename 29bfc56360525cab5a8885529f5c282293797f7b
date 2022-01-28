@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f46fba9_be85c6d8",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-28T20:05:55Z",
+      "side": 1,
+      "message": "unusually you\u0027ll want strerror_r() here to avoid strerror() clobbering the TLS error string. (it\u0027s hard to write a test to prove that i\u0027m not just making this up, but because *this* code might be running in a signal handler or whatever, you might run between someone calling strerror() in normal code, errno being clobbered, this code being run, clobbering the strerror() string, then back to the signal handler which correctly restores errno, but can\u0027t restore the strerror() string, and the original [interrupted] caller now has the wrong string.)",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "545e94fa_17e12642",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-28T20:05:55Z",
+      "side": 1,
+      "message": "(maybe delete this and move L347-349 down to just before the `strlen(str)` below? pro: less duplication. con: an unnecessary null check in the non-\u0027%s\u0027/\u0027%m\u0027 cases unless the compiler\u0027s clever enough to remove that.)",
+      "range": {
+        "startLine": 362,
+        "startChar": 6,
+        "endLine": 364,
+        "endChar": 7
+      },
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38cf2560_039a7613",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-28T20:05:55Z",
+      "side": 1,
+      "message": "can we do this without duplicating the switch statement? can we set a flag up near L283, and use the flag down near the existing call to format_integer()?\n\n(if you want to be fancy, strictly speaking i also think `sprintf(\"%#o\", 777)` gives \"0777\" rather than just \"777\".)\n\nmote importantly, i think this is wrong for something like `\"%#08.8x\"` --- this implementation would need `\"%08.8#x\"` instead?\n\n(see https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap05.html#tag_05 or https://man7.org/linux/man-pages/man3/printf.3.html for the detailed description of the printf() format string syntax.)",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc037a37_6a366c9f",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-28T20:05:55Z",
+      "side": 1,
+      "message": "i don\u0027t think this is unconditional?\n\ntest case: i think `sprintf(\"%#x\", 0)` outputs \"0\" rather than \"0x0\"?",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d5e46ad_9110207a",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-01-28T20:05:55Z",
+      "side": 1,
+      "message": "(i always like to have the \"z\" (or whatever) suffix, just to check i didn\u0027t mess up and correctly copy anything that follows the % specifier :-) )",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
