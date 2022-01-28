@@ -64,6 +64,9 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%ldb", 70000L);
   EXPECT_STREQ("a70000b", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%mZ");
+  EXPECT_STREQ("aInappropriate ioctl for deviceZ", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
   EXPECT_STREQ("a0xb0001234b", buf);
 
@@ -96,6 +99,9 @@ TEST(async_safe_log, smoke) {
 
   async_safe_format_buffer(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
   EXPECT_STREQ("a005:5:05z", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#x", 34);
+  EXPECT_STREQ("a0x22", buf);
 
   void* p = nullptr;
   async_safe_format_buffer(buf, sizeof(buf), "a%d,%pz", 5, p);

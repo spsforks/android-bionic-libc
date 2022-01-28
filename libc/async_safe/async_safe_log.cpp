@@ -357,6 +357,40 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       buffer[0] = '0';
       buffer[1] = 'x';
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
+    } else if (c == 'm') {
+      str = strerror(errno);
+      if (str == nullptr) {
+        str = "(null)";
+      }
+    } else if (c == '#') {
+      c = format[nn++];
+      if (c == 'x') {
+        uint64_t value;
+        /* NOTE: int8_t and int16_t are promoted to int when passed
+         *       through the stack
+         */
+        switch (bytelen) {
+          case 1:
+            value = static_cast<uint8_t>(va_arg(args, int));
+            break;
+          case 2:
+            value = static_cast<uint16_t>(va_arg(args, int));
+            break;
+          case 4:
+            value = va_arg(args, uint32_t);
+            break;
+          case 8:
+            value = va_arg(args, uint64_t);
+            break;
+          default:
+            return; /* should not happen */
+        }
+        buffer[0] = '0';
+        buffer[1] = 'x';
+        format_integer(buffer + 2, sizeof(buffer) - 2, value, c);
+      } else {
+        __assert(__FILE__, __LINE__, "conversion specifier unsupported");
+      }
     } else if (c == 'd' || c == 'i' || c == 'o' || c == 'u' || c == 'x' || c == 'X') {
       /* integers - first read value from stack */
       uint64_t value;
