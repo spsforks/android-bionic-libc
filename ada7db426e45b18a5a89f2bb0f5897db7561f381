@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08691b5a_610eb680",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1896186
+      },
+      "writtenOn": "2022-02-01T10:02:04Z",
+      "side": 1,
+      "message": "Can you please add\n\nBug: 210588740\n\nI had to disable the test that triggered this bug in CI for other reasons, but it\u0027s great to have a fix!",
+      "revId": "ada7db426e45b18a5a89f2bb0f5897db7561f381",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0680f0fc_107e7592",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1896186
+      },
+      "writtenOn": "2022-02-01T10:02:04Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "ada7db426e45b18a5a89f2bb0f5897db7561f381",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
