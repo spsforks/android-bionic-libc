@@ -133,6 +133,16 @@ cc_defaults {
     lto: {
         never: true,
     },
+
+    arch: {
+        arm64: {
+            // Disable BTI for libc.so until drm vendors stop using libc as a
+            // source of gadgets (https://issuetracker.google.com/216395195).
+            armv8_a_branchprot: {
+                cflags: ["-mbranch-protection=pac-ret"],
+            },
+        },
+    },
 }
 
 libc_scudo_product_variables = {
