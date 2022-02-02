@@ -34,6 +34,24 @@
       "parentUuid": "7ac63905_ddbaa7d4",
       "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "506324c7_fe7b1a29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-02-02T23:20:21Z",
+      "side": 1,
+      "message": "I don\u0027t think anything is jumping straight to the middle of a function without executing the beginning. I think that what\u0027s going on is that we have a function in a BTI enabled system library that looks like this:\n```\nfunc:\npaciasp\npush x30\nbl foo@plt\npop x30 # not a BTI landing pad!\nautiasp\nret\n```\nThen the application hooks the `foo` function by replacing the library\u0027s GOT entry for `foo` with a pointer to this function:\n```\nfoo:\nmov x17, x30\n... # do hook things\nbr x17\n```\nThis causes control to be transferred to the hook\u0027s `foo` when calling the PLT entry for `foo` when the function `func` is called in the usual way.\n\nThis works fine from a return address protection perspective because the call remains balanced with the return, but from a BTI perspective the `br x17` instruction, which the hook uses to return, is considered a \"call\", not a return, so the non-landing pad instruction that follows the `bl` causes the BTI check to fail.\n\nThis wouldn\u0027t have been a problem if the hook had used the normal `ret` instruction to return because this doesn\u0027t require the target of the branch to have a landing pad, but unfortunately it used `br` instead, which was entirely valid in a pre-BTI world because the two instructions were equivalent (modulo branch prediction hints).\n\nIf you consider that the function `foo` could be, say, a commonly called libc function, there will be a significant number of system libraries that could be potentially affected. So it looks like the only realistic option for now is to disable BTI in all system libraries.",
+      "parentUuid": "d3bd3c65_485308df",
+      "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
