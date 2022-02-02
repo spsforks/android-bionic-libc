@@ -16,6 +16,24 @@
       "message": "wondering if something jumps into a middle of a function how it copes with the return address protection. I mean before ret there will be an authentication for the return address that might not signed on entry because the function did not start at the beginning. Not an issue for leaf and asm functions.\n```\nfunc: \n   paciasp; # BTI landing pad too\n   push LR\n   ...\n   \u003c\u003c\u003c-- jump to the middle\n   ...\n   pop LR\n   autiasp  # here the SP shall be the same where LR is signed and pushed.\n   ret\n```\n\nNIT: For the test `readelf -n` (--notes) can be used, it just gives back content of the notes sections.",
       "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3bd3c65_485308df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-02T22:42:41Z",
+      "side": 1,
+      "message": "i think it\u0027s \"fine\" because we\u0027ve also disabled PAC for apps for T (https://android-review.googlesource.com/c/platform/frameworks/base/+/1954983). but, yeah, that probably makes life interesting for next year if we want to enable PAC for apps :-(\n\n(that said, i\u0027m reliably informed this isn\u0027t sufficient... my next try will be to make this flag global.)",
+      "parentUuid": "7ac63905_ddbaa7d4",
+      "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
