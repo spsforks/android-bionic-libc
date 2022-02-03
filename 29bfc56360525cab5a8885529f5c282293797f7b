@@ -83,6 +83,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8d6ad55_5aa0e152",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-03T02:13:20Z",
+      "side": 1,
+      "message": "oh, yeah, it\u0027s necessary for both %m and %s ... just not for (say) %d or %x.",
+      "parentUuid": "b81d4030_b30b2e8e",
+      "range": {
+        "startLine": 362,
+        "startChar": 6,
+        "endLine": 364,
+        "endChar": 7
+      },
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38cf2560_039a7613",
@@ -114,6 +138,24 @@
       "side": 1,
       "message": "\u003e mote importantly, i think this is wrong for something like  \"%#08.8x\"  --- this implementation would need  \"%08.8#x\"  instead?\n\na question for this, I test `printf(\"%08.8#x\", 1);` and result is `%08.8#x`. \nThe result of `printf(\"%#08.8x\", 1);` is `0x00000001`. So why `\"%#08.8x\"` is wrong?",
       "parentUuid": "38cf2560_039a7613",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c663d908_371b8e68",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-03T02:13:20Z",
+      "side": 1,
+      "message": "try those exact same tests but with async_safe_format_buffer() and see what i mean :-)\n\n(this is a useful way to work, and i do it all the time: write and run the tests against the \"known good\" code, and then try them against the new code.)",
+      "parentUuid": "25f491e2_7000abbd",
       "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
