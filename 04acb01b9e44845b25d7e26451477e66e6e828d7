@@ -52,6 +52,24 @@
       "parentUuid": "d3bd3c65_485308df",
       "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "185e22c5_5dd9d93e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-03T18:57:37Z",
+      "side": 1,
+      "message": "\u003e there will be a significant number of system libraries that could be potentially affected\n\njust to be clear --- pcc isn\u0027t just pessimistically hypothesizing here; he actually tested this change and found we had trouble with libutils next. given that there are \u003e100 libraries in the zygote, https://android-review.googlesource.com/c/platform/build/soong/+/1969222 looks like the way to go for T. (the more worrying part is that, unlike PAC, i don\u0027t have a clear plan for how we can turn this back *on* yet, but that\u0027s a problem for next release...)",
+      "parentUuid": "506324c7_fe7b1a29",
+      "revId": "04acb01b9e44845b25d7e26451477e66e6e828d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
