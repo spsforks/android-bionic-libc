@@ -39,6 +39,30 @@
       },
       "revId": "134eb657b3b9487c26ef3527e2d0a5cdf71f1be3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f99b376_e1fbf546",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-02-03T20:05:05Z",
+      "side": 1,
+      "message": "Thanks for the suggestion.  This makes things more readable.",
+      "parentUuid": "32ced0c7_aec2772f",
+      "range": {
+        "startLine": 332,
+        "startChar": 8,
+        "endLine": 332,
+        "endChar": 33
+      },
+      "revId": "134eb657b3b9487c26ef3527e2d0a5cdf71f1be3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
