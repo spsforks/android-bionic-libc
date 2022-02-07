@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7202cf48_1464c21c",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-02-07T21:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "040c0a25_2beee797",
+      "revId": "8adeeb5089d7110f6ca9d4c1b04ce3d795c7b402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cb1ac1b_c9ec88e4",
@@ -67,6 +85,24 @@
       "writtenOn": "2022-02-07T20:32:26Z",
       "side": 1,
       "message": "I\u0027d rather not pretend that this is a bitfield.",
+      "revId": "8adeeb5089d7110f6ca9d4c1b04ce3d795c7b402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3543de8_119220b9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-02-07T21:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cb1ac1b_c9ec88e4",
       "revId": "8adeeb5089d7110f6ca9d4c1b04ce3d795c7b402",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
