@@ -33,6 +33,23 @@
       "message": "Are there any security implications to this? In other words, should a security person take a look at this?",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebeb6a00_462e3b55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1040443
+      },
+      "writtenOn": "2022-02-07T19:50:52Z",
+      "side": 1,
+      "message": "\u003eAre there any security implications to this? In other words, should a security person take a look at this?\n\n\nThis is more an oversight than a behavioural change. This is what heapprofd does already since S [1] and we realized too late we forgot to apply the same logic to stack sampling (go/perfetto-s-beta-retrospective has more historical background).\n\nSeems consistent from my viewpoint, but I understand you want an opinion from somebody from security. +jeffv\n\n[1] https://cs.android.com/android/platform/superproject/+/master:external/perfetto/src/profiling/memory/client.cc;l\u003d173?q\u003dprctl%20f:profil",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
