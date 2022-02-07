@@ -104,6 +104,24 @@
       "parentUuid": "6bdb9617_c83bf0bd",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d667886_d24a1408",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2022-02-07T22:10:24Z",
+      "side": 1,
+      "message": "Since S, there\u0027s a way of explicitly asking to be unprofileable (including by the system) via the manifest flag (\u003cprofileable android:enabled\u003d\"false\" /\u003e). Which will make the signal handler quit early. But the application could also impede the signal itself if it really wanted to.\n\nhttps://developer.android.com/guide/topics/manifest/profileable-element.",
+      "parentUuid": "bf3a2db0_84991891",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
