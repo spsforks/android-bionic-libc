@@ -1,0 +1,30 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000020160799",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1973905?revision\u003d1",
+      "fixSuggestions": [],
+      "key": {
+        "uuid": "58537d03_47c198d3",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2022-02-07T14:26:46Z",
+      "side": 1,
+      "message": "Prefer to use inclusive terms like \u0027they\u0027, \u0027them\u0027, or \u0027person\u0027; see https://developers.google.com/style/word-list#gender for more details. In the case of a false positive add BYPASS_INCLUSIVE_LANGUAGE_REASON\u003dmy_reason_here to your commit message to disable this check.",
+      "range": {
+        "startLine": 142,
+        "startChar": 45,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "11dc8b3f58b6ab6ab6dc4f0d1276a1a581b50382",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
