@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0b419d91_9a25d37b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-02-07T20:34:43Z",
+      "side": 1,
+      "message": "If (as below) you don\u0027t want the level to be a bitfield, we could use (NT_MEMTAG_LEVEL_ASYNC | MEMTAG_LEVEL_SYNC) to indicate this.\n\nIt already crashes on Android 12 with \"unrecognized android.memtag note: 3\"\n\nWDYT?",
+      "parentUuid": "75c78e64_1915b5fa",
+      "revId": "8adeeb5089d7110f6ca9d4c1b04ce3d795c7b402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8cb1ac1b_c9ec88e4",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 1
