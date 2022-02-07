@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "040c0a25_2beee797",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-02-07T20:59:11Z",
+      "side": 1,
+      "message": "Ok let\u0027s keep all bits permissive.",
+      "parentUuid": "0b419d91_9a25d37b",
+      "revId": "8adeeb5089d7110f6ca9d4c1b04ce3d795c7b402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8cb1ac1b_c9ec88e4",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 1
