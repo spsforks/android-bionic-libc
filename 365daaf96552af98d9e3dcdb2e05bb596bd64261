@@ -68,6 +68,24 @@
       "parentUuid": "ebeb6a00_462e3b55",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bdb9617_c83bf0bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2022-02-07T20:00:39Z",
+      "side": 1,
+      "message": "To add to what Primiano said: my understanding is that notable things dependent on dumpability are procfs ownership and some aspects of ptrace access mode checks, but nothing on Android should be reliant specifically on dumpable\u003d\u003d0 for security. There\u0027s also graphics code that overrides dumpability for vulkan(?) graphics API profiling.\n\nI *think* processes are undumpable by default as a conservative default, and perhaps an argument of attack surface reduction.",
+      "parentUuid": "ebeb6a00_462e3b55",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
