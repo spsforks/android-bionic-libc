@@ -182,6 +182,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "50a5d441_3f87b287",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-07T19:25:10Z",
+      "side": 1,
+      "message": "i certainly prefer \".all\" or \".default\" over \".mode\", but don\u0027t have much of a preference between them.",
+      "parentUuid": "785706a1_72a5fea7",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
