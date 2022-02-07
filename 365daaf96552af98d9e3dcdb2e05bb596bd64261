@@ -16,6 +16,23 @@
       "message": "Christopher, PTAL. Issuing process-wide prctls in a signal handler is iffy, but I believe this particular operation is safe (and highly unlikely to change). In the kernel, it\u0027s just setting a bit, and bionic side does not have any nontrivial wrapping around the syscall.",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94785a96_ec47156c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-02-07T19:21:24Z",
+      "side": 1,
+      "message": "Are there any security implications to this? In other words, should a security person take a look at this?",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
