@@ -146,6 +146,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "da713544_e961172e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-02-07T19:07:36Z",
+      "side": 1,
+      "message": "What is the conclusion here? I can change to `.default` if people agree that is better.\n\nI do not care much either way.",
+      "parentUuid": "3f2c3fd9_bf7d2153",
+      "revId": "84e346a6d5579a44d03ad5ecbb1ba9c073b140c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1b4e30_aec7a627",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
