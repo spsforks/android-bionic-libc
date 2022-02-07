@@ -122,6 +122,24 @@
       "parentUuid": "bf3a2db0_84991891",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "375d1276_aff8acc4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-07T22:11:49Z",
+      "side": 1,
+      "message": "as long as there\u0027s an opt-out, that seems fine to me ... but we may as well wait for jeffv\u0027s response now we\u0027ve asked for it :-)",
+      "parentUuid": "6d667886_d24a1408",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
