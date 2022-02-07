@@ -86,6 +86,24 @@
       "parentUuid": "ebeb6a00_462e3b55",
       "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf3a2db0_84991891",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-07T21:37:07Z",
+      "side": 1,
+      "message": "\u003e I *think* processes are undumpable by default as a conservative default, and perhaps an argument of attack surface reduction.\n\nyeah, part of this was for those who don\u0027t want to be dumpable (banking etc) so that they can _start_ non-dumpable. another part was that debuggerd used to ptrace(PEEK) dumpable processes and there was no way to give it _just_ read permission, so having write permission by default felt like quite a large attack surface.\n\ni\u0027m guessing a banking app that cares can opt out of this by disabling the signal handler?",
+      "parentUuid": "6bdb9617_c83bf0bd",
+      "revId": "365daaf96552af98d9e3dcdb2e05bb596bd64261",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
