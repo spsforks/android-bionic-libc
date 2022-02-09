@@ -16,6 +16,24 @@
       "message": "what\u0027s your use case? i looked at these and decided that strerrordesc_np() is worse than what\u0027s already available, and strerrorname_np() -- while potentially useful -- isn\u0027t something i can actually think of a place where i\u0027d use it. plus it\u0027s not in our version of glibc, and isn\u0027t in musl, which we\u0027re switching to for host tools. so anyone who used strerrordesc_np() would have to use a more portable existing alternative, and anyone wanting strerrorname_np() would have to reimplement it anyway.\n\n(though if you know that musl *is* adding strerrorname_np(), it might be a bit more interesting... iOS would be even more convincing, because that would likely be a real portability issue app developers would hit sooner or later.)",
       "revId": "49b4267c26c2559249d71fcee23d8d4820a095bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2841873_10e01732",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1874561
+      },
+      "writtenOn": "2022-02-09T02:16:23Z",
+      "side": 1,
+      "message": "Our team\u0027s service (android.hardware.drm@1.4-service.widevine) is experiencing occasional IO failures.  This usually happens to device partners when verifying that our service runs on their devices before release.  We decided to include logs of the error number, and I thought using the error name via strerrorname_np() would be easier to debug.\n\nTurns out bionic didn\u0027t support strerrorname_np() or strerrordesc_np().  Unfortunately, the feature test macro (ie. _GNU_SOURCE is being defined) would suggest that these functions would be available.\n\nI was inspired by https://android-review.googlesource.com/c/platform/bionic/+/1833622 to try implementing the two functions.  This was intended to be used for testing.  I uploaded this today to back it up, I wasn\u0027t going to post it for review until I could properly understand the goals of bionic.\n\nAfter some quick Googling, I cannot find any indication that musl or iOS is going to include strerrorname_np() anytime soon.",
+      "parentUuid": "9361c8a0_325c7768",
+      "revId": "49b4267c26c2559249d71fcee23d8d4820a095bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
