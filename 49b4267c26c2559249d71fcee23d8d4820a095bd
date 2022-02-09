@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9361c8a0_325c7768",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-09T01:41:01Z",
+      "side": 1,
+      "message": "what\u0027s your use case? i looked at these and decided that strerrordesc_np() is worse than what\u0027s already available, and strerrorname_np() -- while potentially useful -- isn\u0027t something i can actually think of a place where i\u0027d use it. plus it\u0027s not in our version of glibc, and isn\u0027t in musl, which we\u0027re switching to for host tools. so anyone who used strerrordesc_np() would have to use a more portable existing alternative, and anyone wanting strerrorname_np() would have to reimplement it anyway.\n\n(though if you know that musl *is* adding strerrorname_np(), it might be a bit more interesting... iOS would be even more convincing, because that would likely be a real portability issue app developers would hit sooner or later.)",
+      "revId": "49b4267c26c2559249d71fcee23d8d4820a095bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
