@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "544a58fb_9b43a7a6",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-10T18:37:54Z",
+      "side": 1,
+      "message": "i don\u0027t think that\u0027s true? from the man page (either `man 3 printf` or https://man7.org/linux/man-pages/man3/printf.3.html):\n\n```\n       The overall syntax of a conversion specification is:\n\n           %[$][flags][width][.precision][length modifier]conversion\n```\nflags come first [of the things we support anyway; second if you count the positional parameter stuff represented there by `$`].",
+      "revId": "91f86dda40f97b08f1dc259194d1bb0a80c4f6cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b61f2d9_9bff36bf",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-10T18:37:54Z",
+      "side": 1,
+      "message": "for other bases (like decimal), it\u0027s traditional to just silently ignore the \"alternate\" format. it\u0027s not _useful_, but it\u0027s not an error.",
+      "revId": "91f86dda40f97b08f1dc259194d1bb0a80c4f6cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff6cb958_ab6dae58",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-10T18:37:54Z",
+      "side": 1,
+      "message": "the need to write this is probably a sign your test is wrong because you have an incorrect format string in it :-)\n\n(the one case where this would make sense is if you were deliberately writing a *death test* for one of the `assert` cases, but that should probably be in its own `#pragma push`/`#pragma pop` section away from the \"good\" tests. but i wouldn\u0027t worry about death tests for now.)",
+      "revId": "91f86dda40f97b08f1dc259194d1bb0a80c4f6cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4efb8390_54c52677",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-10T18:37:54Z",
+      "side": 1,
+      "message": "this test and the L119 test are wrong; the correct format string should be \"a%#5xZ\".\n\n(there\u0027s a philosophical argument about how to write tests that this points out ... you might [reasonably] argue that the existing tests should have been written something like:\n```\n  char expected[BUFSIZ];\n  snprintf(expected, sizeof(expected), \"format string\", value);\n  // async_safe_format_buffer(...)\n  EXPECT_STREQ(expected, buf);\n```\nwhich would have the benefit here of making it clear that the flags and precision/length are the wrong way round here. the *downside* and the reason why tests aren\u0027t usually written like that is that if someone comes along in future and factors out the implementation so that async_safe_format_buffer() and snprintf() share more code, our tests wouldn\u0027t be very useful because they\u0027d just be comparing our one implementation against itself. this, btw, is why it\u0027s possible to run our tests against glibc (for a \"second opinion\") and why it\u0027s sometimes useful to just write and run a quick test on the host --- i do that all the time when i\u0027m trying to work things out, and in particular i did it here to see what `printf(\"\u003c%#012x\u003e\\n\", 20);` does.)",
+      "revId": "91f86dda40f97b08f1dc259194d1bb0a80c4f6cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
