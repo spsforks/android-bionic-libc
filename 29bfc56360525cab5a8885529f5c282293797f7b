@@ -160,6 +160,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32fbf3ab_3b04ad91",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-10T17:49:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c663d908_371b8e68",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc037a37_6a366c9f",
@@ -173,6 +191,24 @@
       "writtenOn": "2022-01-28T20:05:55Z",
       "side": 1,
       "message": "i don\u0027t think this is unconditional?\n\ntest case: i think `sprintf(\"%#x\", 0)` outputs \"0\" rather than \"0x0\"?",
+      "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d07675b0_6ff74d94",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-10T17:49:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc037a37_6a366c9f",
       "revId": "29bfc56360525cab5a8885529f5c282293797f7b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
