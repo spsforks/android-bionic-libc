@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0c106cfa_90388ae8",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-02-11T23:35:20Z",
+      "side": 1,
+      "message": "I think this patch currently would print (null) for an unrecognized number. Maybe it could instead strcpy \"Unknown error \", then format_integer(errno)?\n\nAlternatively, it looks like musl uses \"No error information\" for its %m of an unrecognized number.\n\nThe async-safe logging code already uses functions like strlen, memset, memcpy, strlcpy, so I think it should be OK to use these functions if we wanted to.",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e9c34ef_341ac734",
         "filename": "libc/async_safe/async_safe_log.cpp",
         "patchSetId": 6
