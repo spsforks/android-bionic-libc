@@ -136,7 +136,7 @@ TEST(time, mktime_empty_TZ) {
 TEST(time, mktime_10310929) {
   struct tm t;
   memset(&t, 0, sizeof(tm));
-  t.tm_year = 200;
+  t.tm_year = 2100;
   t.tm_mon = 2;
   t.tm_mday = 10;
 
@@ -177,6 +177,7 @@ TEST(time, mktime_EOVERFLOW) {
   ASSERT_EQ(0, errno);
 
   // This will overflow for LP32 or LP64.
+  memset(&t, 0, sizeof(tm));
   t.tm_year = INT_MAX;
 
   errno = 0;
@@ -204,6 +205,24 @@ TEST(time, strftime) {
   // Date and time as text.
   EXPECT_EQ(24U, strftime(buf, sizeof(buf), "%c", &t));
   EXPECT_STREQ("Sun Mar 10 00:00:00 2100", buf);
+}
+
+TEST(time, strftime_second_before_epoch) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 1969 - 1900;
+  t.tm_mon = 11;
+  t.tm_mday = 31;
+  t.tm_hour = 23;
+  t.tm_min = 59;
+  t.tm_sec = 59;
+
+  char buf[64];
+
+  EXPECT_EQ(2U, strftime(buf, sizeof(buf), "%s", &t));
+  EXPECT_STREQ("-1", buf);
 }
 
 TEST(time, strftime_null_tm_zone) {
