@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a09811c6_9b0710f9",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-11T23:42:53Z",
+      "side": 1,
+      "message": "https://source.corp.google.com/android/bionic/libc/bionic/strerror.cpp;l\u003d188?q\u003dfile:bionic%20strerror_r\u0026sq\u003dpackage:%5Eandroid$ should be doing all that already for free?\n\n(but maybe we should add an explicit test, since that was the whole point of strerror_r rather than strerror --- getting this functionality for free *without* clobbering the TLS for strerror :-) )",
+      "parentUuid": "0c106cfa_90388ae8",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e9c34ef_341ac734",
         "filename": "libc/async_safe/async_safe_log.cpp",
         "patchSetId": 6
