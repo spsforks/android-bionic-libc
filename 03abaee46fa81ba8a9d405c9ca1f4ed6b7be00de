@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cc22fd8_a20e9b43",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-11T19:39:24Z",
+      "side": 1,
+      "message": "use `bool` and `true`/`false` instead of `int` and `1`/`0`?\n\n(that\u0027s always possible in C++ like here, and in C you just need to `#include \u003cstdbool.h\u003e`.)\n\n(don\u0027t worry about padZero/padLeft --- that\u0027s \"not a regression\". even if you do want to clean them up, that might be better as a separate CL anyway. interestingly, though padLeft should probably be a `bool`, padZero looks like it would be better as `char padChar \u003d \u0027 \u0027` with `padChar \u003d \u00270\u0027` later, and then just used directly rather than the `?:` conditional? i\u0027m surprised the original C programmer who wrote this didn\u0027t just do that :-) anyway, like i say, that\u0027s something for another day anyway. but don\u0027t let existing bad code discourage you from writing clean new code!)",
+      "revId": "03abaee46fa81ba8a9d405c9ca1f4ed6b7be00de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
