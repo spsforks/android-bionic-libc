@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca081410_d30d05fe",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-02-11T01:26:33Z",
+      "side": 1,
+      "message": "This overwrites previous_ from the other call.",
+      "revId": "c364617d950556e2e32e61517e1bf2f87fc72ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
