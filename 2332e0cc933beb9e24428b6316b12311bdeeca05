@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fc02f9e_663237b0",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-02-11T23:46:48Z",
+      "side": 1,
+      "message": "Oh right, yes, it should already work.",
+      "parentUuid": "a09811c6_9b0710f9",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e9c34ef_341ac734",
