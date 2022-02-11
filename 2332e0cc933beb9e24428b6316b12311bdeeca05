@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e9c34ef_341ac734",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-11T21:22:08Z",
+      "side": 1,
+      "message": "(sorry i didn\u0027t notice this before --- these should probably be `\u0026\u0026` rather than the python-esque `and` :-) i\u0027m surprised we have \u003ciso646.h\u003e included here! [https://en.cppreference.com/w/c/language/operator_alternative])",
+      "range": {
+        "startLine": 395,
+        "startChar": 20,
+        "endLine": 395,
+        "endChar": 23
+      },
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
