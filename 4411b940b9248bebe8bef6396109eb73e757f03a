@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df8659a6_f7f797ba",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-11T21:19:27Z",
+      "side": 1,
+      "message": "this replaces the previous assumptions that we know which failure causes which signal.",
+      "revId": "4411b940b9248bebe8bef6396109eb73e757f03a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

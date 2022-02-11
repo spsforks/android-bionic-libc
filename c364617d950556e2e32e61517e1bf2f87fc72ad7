@@ -16,6 +16,24 @@
       "message": "This overwrites previous_ from the other call.",
       "revId": "c364617d950556e2e32e61517e1bf2f87fc72ad7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfb8d313_8dbc1c5a",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-11T21:19:27Z",
+      "side": 1,
+      "message": "heh, that\u0027s actually a bug in the \"real\" version of this too. in practice it doesn\u0027t matter because it\u0027s the same signal handler for all the signals but i\u0027ve fixed it here anyway (because i feel more confident with assumptions like that in the \"one true copy\" than in a copy \u0026 paste that\u0027s less likely to be noticed if the underlying assumption ever changes).",
+      "parentUuid": "ca081410_d30d05fe",
+      "revId": "c364617d950556e2e32e61517e1bf2f87fc72ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
