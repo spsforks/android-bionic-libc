@@ -52,6 +52,7 @@ libc_common_flags = [
     "-Wunused",
     "-Wno-char-subscripts",
     "-Wno-deprecated-declarations",
+    "-Wno-unneeded-internal-declaration",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
 
@@ -265,7 +266,8 @@ cc_library_static {
         "-DTZDIR=\"/system/usr/share/zoneinfo\"",
         // Include `tzname`, `timezone`, and `daylight` globals.
         "-DHAVE_POSIX_DECLS=0",
-        "-DUSG_COMPAT=1",
+        "-DUSG_COMPAT=2",
+        "-DHAVE_TZNAME=2",
         // Use the empty string (instead of "   ") as the timezone abbreviation
         // fallback.
         "-DWILDABBR=\"\"",
