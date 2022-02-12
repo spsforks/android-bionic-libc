@@ -75,6 +75,47 @@
       },
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e813360_00f015e2",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-12T00:39:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e9c34ef_341ac734",
+      "range": {
+        "startLine": 395,
+        "startChar": 20,
+        "endLine": 395,
+        "endChar": 23
+      },
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28d730d4_3f97dfa0",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-12T00:39:48Z",
+      "side": 1,
+      "message": "And I see the expected result differs from different environment. I will correct this, too.",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
