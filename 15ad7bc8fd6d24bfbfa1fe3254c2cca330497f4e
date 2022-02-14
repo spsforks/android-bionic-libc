@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f37b1aba_2c61fb2b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-14T14:31:24Z",
+      "side": 1,
+      "message": "w/o this flag I get `localtime.c:348 variable \u0027tzdirslash\u0027 is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]`.\n\nThis seems to be https://bugs.llvm.org/show_bug.cgi?id\u003d33068.",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f4646d0_e41bbdb0",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-14T14:31:24Z",
+      "side": 1,
+      "message": "localtime_r expects time_t, but mkt is time64_t. With localtime64_r I get `implicit declaration of function \u0027localtime64_r\u0027 is invalid in C99`.\n\nWith `if (mkt \u003d\u003d)` branch commented out all cts tests pass. Probably there is no test for that.",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
