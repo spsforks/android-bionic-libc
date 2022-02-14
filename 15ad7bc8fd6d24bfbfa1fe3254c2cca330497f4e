@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "57255259_2ef68d78",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "fwiw, strptime.c is from a different upstream source (as you\u0027ve probably noticed), and we\u0027ve made changes that we haven\u0027t upstreamed there, so if you think it\u0027ll make future updates of tzcode easier to move that stuff out, feel free...",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bd6c508_180b4daf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "thanks for including the link in the commit message!",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f37b1aba_2c61fb2b",
         "filename": "libc/Android.bp",
         "patchSetId": 2
@@ -20,6 +54,109 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "05c67827_9bfd473e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "maybe `#ifndef __BIONIC__` the unused bits instead? that way we\u0027ll have to opt-in to other instances, rather than giving the compiler carte blanche to just throw stuff away :-)\n\n(also, this should have been in the tzcode-specific section, not the global section, for that same reason!)",
+      "parentUuid": "f37b1aba_2c61fb2b",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cae4c0ef_a5c366d7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "i think this might need to be `-DTHREAD_SAFE\u003d1` now, given the changes in localtime.c?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b98cfbde_e7ad00cb",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "seems like this has been removed? looks like this is the new default, though, so we don\u0027t need to _replace_ this with anything, just remove it...",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b02e2211_062760ff",
+        "filename": "libc/tzcode/asctime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "(this all seems fine.)",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adcf9db5_15ad4129",
+        "filename": "libc/tzcode/difftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "(this all seems fine.)",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "637fa440_0ca049f4",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "might be worth adding `-DHAVE_STDBOOL_H` to get better error checking?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7f4646d0_e41bbdb0",
         "filename": "libc/tzcode/strftime.c",
         "patchSetId": 2
@@ -31,6 +168,75 @@
       "writtenOn": "2022-02-14T14:31:24Z",
       "side": 1,
       "message": "localtime_r expects time_t, but mkt is time64_t. With localtime64_r I get `implicit declaration of function \u0027localtime64_r\u0027 is invalid in C99`.\n\nWith `if (mkt \u003d\u003d)` branch commented out all cts tests pass. Probably there is no test for that.",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cb9b4aa_33b422ff",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "\u003e localtime_r expects time_t, but mkt is time64_t. With localtime64_r I get  implicit declaration of function \u0027localtime64_r\u0027 is invalid in C99 .\n\nyeah, see the hack up at the top of the file: https://source.corp.google.com/android/bionic/libc/tzcode/strftime.c;l\u003d44?q\u003dfile:bionic%20mktime64\u0026sq\u003dpackage:%5Eandroid$\n\nyou\u0027ll need to add a `#define localtime64_r localtime_r` there.\n\n\u003e With  if (mkt \u003d\u003d)  branch commented out all cts tests pass. Probably there is no test for that.\n\nyeah, that\u0027s often a problem with this code. feel free to add a test if you have one; otherwise we\u0027ve mainly added tests as we\u0027ve broken stuff and had to fix it, or where we\u0027ve rewritten stuff ourselves.",
+      "parentUuid": "7f4646d0_e41bbdb0",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5194d923_748fd2a3",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "hmm, this might be the fix to one of the issues you\u0027d seen?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79704525_f3082e53",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "is this indentation wrong upstream?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a455e788_fea4baa3",
+        "filename": "libc/tzcode/tzfile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-14T22:28:37Z",
+      "side": 1,
+      "message": "this seems like it would break setting the timezone to null? except we don\u0027t have the localtime symlink on any devices anyway, so this always failed, just slightly differently?",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
