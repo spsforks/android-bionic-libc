@@ -134,6 +134,24 @@
       "parentUuid": "28d730d4_3f97dfa0",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dff7e13_7e522ca0",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-15T19:34:37Z",
+      "side": 1,
+      "message": "I tried hard code but presubmit check will fail cuz there are different types of errno. I can try to set errno!",
+      "parentUuid": "ab5d4be0_8b14dba5",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
