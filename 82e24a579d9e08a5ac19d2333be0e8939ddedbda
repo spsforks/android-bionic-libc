@@ -16,6 +16,23 @@
       "message": "ps2 changes the code back to the one `if`, and pastes in pcc\u0027s explanation of why things are the way they are, which seems too valuable to lose (especially since this is inherently quite confusing).",
       "revId": "82e24a579d9e08a5ac19d2333be0e8939ddedbda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "123aa813_90bc3ddf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-02-15T22:09:57Z",
+      "side": 1,
+      "message": "Weirdly, this doesn\u0027t require another +2 even though the code looks to have changed enough to warrant review.\n\nBut, lgtm anyway.",
+      "revId": "82e24a579d9e08a5ac19d2333be0e8939ddedbda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
