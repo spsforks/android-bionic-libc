@@ -47,22 +47,37 @@ class cfi_test_DeathTest : public testing::Test {
  protected:
   void SetUp() override {
     struct sigaction64 action = {.sa_handler = SIG_DFL};
-    sigaction64(SIGSEGV, &action, &previous_sigsegv_);
     sigaction64(SIGILL, &action, &previous_sigill_);
+    sigaction64(SIGSEGV, &action, &previous_sigsegv_);
+    sigaction64(SIGTRAP, &action, &previous_sigtrap_);
   }
 
   void TearDown() override {
-    sigaction64(SIGILL, &previous_sigill_, nullptr);
+    sigaction64(SIGTRAP, &previous_sigtrap_, nullptr);
     sigaction64(SIGSEGV, &previous_sigsegv_, nullptr);
+    sigaction64(SIGILL, &previous_sigill_, nullptr);
   }
 
  private:
-  struct sigaction64 previous_sigsegv_;
   struct sigaction64 previous_sigill_;
+  struct sigaction64 previous_sigsegv_;
+  struct sigaction64 previous_sigtrap_;
 };
 
 static bool KilledByCfi(int status) {
-  return WIFSIGNALED(status) && (WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
+  if (WIFSIGNALED(status)) {
+    // Most of the time you'll see SIGTRAP on Arm...
+#if defined(__arm__) || defined(__arm64__)
+    if (WTERMSIG(status) == SIGTRAP) return true;
+#endif
+    // ...and SIGILL on Intel...
+#if defined(__i386__) || defined(__x86_64__)
+    if (WTERMSIG(status) == SIGILL) return true;
+#endif
+    // ...but there's a chance you'll get SIGSEGV instead.
+    if (WTERMSIG(status) == SIGSEGV) return true;
+  }
+  return false;
 }
 
 static void f() {}
