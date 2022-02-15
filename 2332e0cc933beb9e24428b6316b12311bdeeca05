@@ -152,6 +152,24 @@
       "parentUuid": "ab5d4be0_8b14dba5",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc3016f9_3e2f287f",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-15T19:38:38Z",
+      "side": 1,
+      "message": "I don\u0027t think adding `errno \u003d ENOENT;` might work? If add it in the test file, presubmit check still fail cuz the error msg is fixed. If add it in the `async_safe_log.cpp`, the errno might be expected to be other number in different situations?",
+      "parentUuid": "2dff7e13_7e522ca0",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
