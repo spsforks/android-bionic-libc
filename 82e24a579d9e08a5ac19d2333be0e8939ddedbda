@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d5cb03c_a2b52367",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-15T22:06:13Z",
+      "side": 1,
+      "message": "ps2 changes the code back to the one `if`, and pastes in pcc\u0027s explanation of why things are the way they are, which seems too valuable to lose (especially since this is inherently quite confusing).",
+      "revId": "82e24a579d9e08a5ac19d2333be0e8939ddedbda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
