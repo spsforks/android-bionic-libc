@@ -33,6 +33,24 @@
       "message": "Weirdly, this doesn\u0027t require another +2 even though the code looks to have changed enough to warrant review.\n\nBut, lgtm anyway.",
       "revId": "82e24a579d9e08a5ac19d2333be0e8939ddedbda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e60ce50e_9067f9dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-15T22:18:00Z",
+      "side": 1,
+      "message": "i think (in addition to the ui changes and removal of verified+1) we\u0027re now \"sticky +2\" in AOSP as well as internal.",
+      "parentUuid": "123aa813_90bc3ddf",
+      "revId": "82e24a579d9e08a5ac19d2333be0e8939ddedbda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
