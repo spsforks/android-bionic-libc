@@ -116,6 +116,24 @@
       "message": "And I see the expected result differs from different environment. I will correct this, too.",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab5d4be0_8b14dba5",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-15T19:30:44Z",
+      "side": 1,
+      "message": "the easier fix is just something like `errno \u003d ENOENT;` before the async_safe_format_buffer() call ... that way your original hard-coded `EXPECT_STREQ(\"aNo such file or directoryZ\", buf);` assertion would work fine :-)",
+      "parentUuid": "28d730d4_3f97dfa0",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
