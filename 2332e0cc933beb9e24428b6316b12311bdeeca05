@@ -170,6 +170,24 @@
       "parentUuid": "2dff7e13_7e522ca0",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c2be882_552ff506",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-15T21:00:16Z",
+      "side": 1,
+      "message": "\u003e If add it in the test file, presubmit check still fail cuz the error msg is fixed.\n\ncan you show an example? i\u0027m not sure what you mean.\n\nwe already use that trick in tests, including explicitly for %m --- https://source.corp.google.com/search?q\u003dfile:bionic%2Ftest%20errno%5C%20%3D%5C%20E\u0026sq\u003dpackage:%5Eandroid$\n\n(setting `errno \u003d 0` is *far* more common in tests, because that\u0027s required any time you have a test that checks that a function has set errno. but non-0 is more intention-revealing here.)",
+      "parentUuid": "dc3016f9_3e2f287f",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
