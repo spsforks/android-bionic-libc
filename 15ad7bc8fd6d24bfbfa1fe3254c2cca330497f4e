@@ -87,6 +87,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "944f1989_247059f2",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-15T14:48:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cae4c0ef_a5c366d7",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b98cfbde_e7ad00cb",
@@ -100,6 +118,24 @@
       "writtenOn": "2022-02-14T22:28:37Z",
       "side": 1,
       "message": "seems like this has been removed? looks like this is the new default, though, so we don\u0027t need to _replace_ this with anything, just remove it...",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da9405ff_92d5c4a9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-15T14:48:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b98cfbde_e7ad00cb",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -192,6 +228,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6c952e4b_b7ae4b4d",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-15T14:48:16Z",
+      "side": 1,
+      "message": "Is this branch needed at all in bionic? AFAIU time_t is always signed in bionic, so -1 should be valid timestamp. \n\nDo I miss anything here?\n\nI\u0027ve added strftime_second_before_epoch test to time_test and it fails on cf_x86 with this branch and works as expected with branch commented out.",
+      "parentUuid": "5cb9b4aa_33b422ff",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5194d923_748fd2a3",
         "filename": "libc/tzcode/strftime.c",
         "patchSetId": 2
@@ -220,6 +274,24 @@
       "writtenOn": "2022-02-14T22:28:37Z",
       "side": 1,
       "message": "is this indentation wrong upstream?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c403e35f_d35bd817",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-15T14:48:16Z",
+      "side": 1,
+      "message": "Oops, it was me. Thanks, fixed.",
+      "parentUuid": "79704525_f3082e53",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
