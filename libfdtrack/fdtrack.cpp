@@ -269,12 +269,13 @@ static void fdtrack_dump_impl(bool fatal) {
     static char buf[1024];
 
     if (!stack) {
-      async_safe_format_buffer(buf, sizeof(buf),
-                               "aborting due to fd leak: failed to find most common stack");
+      async_safe_format_buffer(
+          buf, sizeof(buf),
+          "aborting due to fds exhausted (leak?): failed to find most common stack");
     } else {
       char* p = buf;
       p += async_safe_format_buffer(buf, sizeof(buf),
-                                    "aborting due to fd leak: most common stack =\n");
+                                    "aborting due to fds exhausted (leak?): most common stack =\n");
 
       for (size_t i = 0; i < stack->stack_depth; ++i) {
         ssize_t bytes_left = buf + sizeof(buf) - p;
