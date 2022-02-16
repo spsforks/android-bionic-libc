@@ -206,6 +206,24 @@
       "parentUuid": "7c2be882_552ff506",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "988e63a1_0bf4bcc2",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-16T18:09:23Z",
+      "side": 1,
+      "message": "you need to set `errno` _before_ you call async_safe_format_buffer():\n```\n  errno \u003d ENOENT;\n  async_safe_format_buffer(buf, sizeof(buf), \"a%mZ\");\n  EXPECT_STREQ(\"aNo such file or directoryZ\", buf);\n```\nor\n```\n  errno \u003d EINVAL;\n  async_safe_format_buffer(buf, sizeof(buf), \"a%mZ\");\n  EXPECT_STREQ(\"aInvalid argumentZ\", buf);\n```\nif you set it after you\u0027ve formatted the %m, that\u0027s too late.\n\n(note also that it\u0027s a lower-case \u0027a\u0027 in \u0027argument\u0027, in case that was the trouble you were having when you tried this before?)",
+      "parentUuid": "89081b9e_c040393c",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
