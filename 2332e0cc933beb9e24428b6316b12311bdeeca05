@@ -188,6 +188,24 @@
       "parentUuid": "dc3016f9_3e2f287f",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89081b9e_c040393c",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-16T17:49:46Z",
+      "side": 1,
+      "message": "I mean if I set the errno like this\n`errno \u003d EINVAL;   // error msg is fixed, it is always Invalid Argument. \nEXPECT_STREQ(\"aInvalid ArgumentZ\", buf);`\n\nI will get this error:\n  bionic/tests/async_safe_test.cpp:(74) Failure in test async_safe_log.smoke\nExpected equality of these values:\n  aInvalid ArgumentZ\n  buf\n    Which is: aNo such file or directoryZ\nasync_safe_log.smoke exited with exitcode 1.\n\nOr should I use `snprintf`? But this doesn\u0027t test the %m in async_log_safe",
+      "parentUuid": "7c2be882_552ff506",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
