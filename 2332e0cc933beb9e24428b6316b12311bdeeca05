@@ -224,6 +224,24 @@
       "parentUuid": "89081b9e_c040393c",
       "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d64a379f_80570d1a",
+        "filename": "tests/async_safe_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-02-17T17:23:17Z",
+      "side": 1,
+      "message": "Yes, I correct this.",
+      "parentUuid": "988e63a1_0bf4bcc2",
+      "revId": "2332e0cc933beb9e24428b6316b12311bdeeca05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
