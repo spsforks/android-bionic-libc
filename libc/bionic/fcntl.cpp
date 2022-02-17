@@ -44,6 +44,10 @@ int fcntl(int fd, int cmd, ...) {
   void* arg = va_arg(args, void*);
   va_end(args);
 
+  if (cmd == F_SETFD && (arg & ~FD_CLOEXEC) != 0) {
+    __fortify_fatal("fcntl(FD_SETFD) passed non-FD_CLOEXEC flag: %#x", arg);
+  }
+
   int rc = __fcntl(fd, cmd, arg);
   if (cmd == F_DUPFD) {
     return FDTRACK_CREATE_NAME("F_DUPFD", rc);
