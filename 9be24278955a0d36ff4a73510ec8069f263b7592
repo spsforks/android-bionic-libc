@@ -34,6 +34,24 @@
       "parentUuid": "5369ad27_40e3d820",
       "revId": "9be24278955a0d36ff4a73510ec8069f263b7592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "593c9ce3_6b4c9071",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-02-17T19:43:16Z",
+      "side": 1,
+      "message": "oh, interesting. yeah, that\u0027s definitely a supported use case then. i\u0027ll add a comment to the test later to explain that, since we were all puzzled by the point of this test :-)",
+      "parentUuid": "3366bc76_dd75b42d",
+      "revId": "9be24278955a0d36ff4a73510ec8069f263b7592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
