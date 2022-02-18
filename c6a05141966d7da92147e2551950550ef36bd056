@@ -16,6 +16,24 @@
       "message": "heh, i\u0027m not sure i\u0027m brave enough to try to get this into T, but i\u0027m quite tempted to try to get this into U... it\u0027s an easy mistake to make, and the kernel will just silently no-op it :-(\n\n(a weaker version would log and fail with EINVAL, which would still have caught most of the incorrect code i\u0027ve found in the platform --- it seems to mainly be useful by people who do at least check for errors...)",
       "revId": "c6a05141966d7da92147e2551950550ef36bd056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "386331cd_b97d7194",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-02-18T00:54:47Z",
+      "side": 1,
+      "message": "I\u0027m a big fan of failing loudly.  Device crashes due to buggy code are\neasy to notice and easy to fix.\nWhile bugs like this are otherwise hard to spot.\n\nOn Thu, Feb 17, 2022 at 4:43 PM Elliott Hughes (Gerrit)\n\u003cnoreply-gerritcodereview-ei93bIOc5wwulllsLDB35A\u003d\u003d@google.com\u003e wrote:",
+      "tag": "mailMessageId\u003d\u003cCANP3RGdkxsNNhY2BKvG4PVQqUMFJprK-R3_3A+X95Tmd4Q5G3A@mail.gmail.com\u003e",
+      "revId": "c6a05141966d7da92147e2551950550ef36bd056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
