@@ -314,6 +314,22 @@ cc_test_library {
 cc_test_library {
     name: "libBionicStandardTests",
     defaults: ["bionic_tests_defaults"],
+    tidy_timeout_srcs: [
+        "fdtrack_test.cpp",
+        "grp_pwd_test.cpp",
+        "iconv_test.cpp",
+        "malloc_test.cpp",
+        "math_test.cpp",
+        "netdb_test.cpp",
+        "pthread_test.cpp",
+        "signal_test.cpp",
+        "stdio_test.cpp",
+        "stdlib_test.cpp",
+        "string_test.cpp",
+        "time_test.cpp",
+        "unistd_test.cpp",
+        "wchar_test.cpp",
+    ],
     srcs: [
         "__aeabi_read_tp_test.cpp",
         "__cxa_atexit_test.cpp",
@@ -744,6 +760,11 @@ cc_test_library {
     defaults: [
         "bionic_tests_defaults",
     ],
+    tidy_timeout_srcs: [
+        "dl_test.cpp",
+        "dlext_test.cpp",
+        "dlfcn_test.cpp",
+    ],
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
@@ -1141,6 +1162,10 @@ cc_test_host {
     name: "bionic-unit-tests-glibc",
     gtest: false,
     defaults: ["bionic_tests_defaults"],
+
+    tidy_timeout_srcs: [
+        "dlfcn_test.cpp",
+    ],
 
     srcs: [
         "atexit_test.cpp",

@@ -121,6 +121,10 @@ cc_test {
     name: "malloc_debug_unit_tests",
     test_suites: ["device-tests"],
 
+    tidy_timeout_srcs: [
+        "tests/malloc_debug_unit_tests.cpp",
+    ],
+
     srcs: [
         "tests/backtrace_fake.cpp",
         "tests/log_fake.cpp",

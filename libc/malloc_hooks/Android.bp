@@ -59,6 +59,10 @@ cc_test {
     name: "malloc_hooks_system_tests",
     isolated: true,
 
+    tidy_timeout_srcs: [
+        "tests/malloc_hooks_tests.cpp",
+    ],
+
     srcs: [
         "tests/malloc_hooks_tests.cpp",
     ],
