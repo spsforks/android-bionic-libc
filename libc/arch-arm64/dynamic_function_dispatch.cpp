@@ -34,13 +34,23 @@ extern "C" {
 
 typedef void* memchr_func(const void*, int, size_t);
 DEFINE_IFUNC_FOR(memchr) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(memchr_func, __memchr_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(memchr_func, __memchr_aarch64_mte);
     } else {
         RETURN_FUNC(memchr_func, __memchr_aarch64);
     }
 }
 
+<<<<<<< PATCH SET (888350 libc: arm64: integrate SVE routines)
+typedef void* memcmp_func(const void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcmp) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(memcmp_func, __memcmp_aarch64_sve);
+    } else {
+        RETURN_FUNC(memcmp_func, __memcmp_aarch64);
+=======
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
     if (arg->_hwcap & HWCAP_ASIMD) {
@@ -56,12 +66,15 @@ DEFINE_IFUNC_FOR(memmove) {
         RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
     } else {
         RETURN_FUNC(memmove_func, __memmove_aarch64);
+>>>>>>> BASE      (db681c Merge "Move to arm-optimized-routines memset().")
     }
 }
 
 typedef int stpcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(stpcpy) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(stpcpy_func, __stpcpy_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(stpcpy_func, __stpcpy_aarch64_mte);
     } else {
         RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
@@ -70,7 +83,9 @@ DEFINE_IFUNC_FOR(stpcpy) {
 
 typedef char* strchr_func(const char*, int);
 DEFINE_IFUNC_FOR(strchr) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strchr_func, __strchr_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strchr_func, __strchr_aarch64_mte);
     } else {
         RETURN_FUNC(strchr_func, __strchr_aarch64);
@@ -79,7 +94,9 @@ DEFINE_IFUNC_FOR(strchr) {
 
 typedef char* strchrnul_func(const char*, int);
 DEFINE_IFUNC_FOR(strchrnul) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strchrnul_func, __strchrnul_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strchrnul_func, __strchrnul_aarch64_mte);
     } else {
         RETURN_FUNC(strchrnul_func, __strchrnul_aarch64);
@@ -88,7 +105,9 @@ DEFINE_IFUNC_FOR(strchrnul) {
 
 typedef int strcmp_func(const char*, const char*);
 DEFINE_IFUNC_FOR(strcmp) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strcmp_func, __strcmp_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strcmp_func, __strcmp_aarch64_mte);
     } else {
         RETURN_FUNC(strcmp_func, __strcmp_aarch64);
@@ -97,7 +116,9 @@ DEFINE_IFUNC_FOR(strcmp) {
 
 typedef int strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strcpy_func, __strcpy_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strcpy_func, __strcpy_aarch64_mte);
     } else {
         RETURN_FUNC(strcpy_func, __strcpy_aarch64);
@@ -106,7 +127,9 @@ DEFINE_IFUNC_FOR(strcpy) {
 
 typedef size_t strlen_func(const char*);
 DEFINE_IFUNC_FOR(strlen) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strlen_func, __strlen_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strlen_func, __strlen_aarch64_mte);
     } else {
         RETURN_FUNC(strlen_func, __strlen_aarch64);
@@ -115,16 +138,29 @@ DEFINE_IFUNC_FOR(strlen) {
 
 typedef int strncmp_func(const char*, const char*, int);
 DEFINE_IFUNC_FOR(strncmp) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strncmp_func, __strncmp_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strncmp_func, __strncmp_aarch64_mte);
     } else {
         RETURN_FUNC(strncmp_func, __strncmp_aarch64);
     }
 }
 
+typedef size_t strnlen_func(const char*, size_t);
+DEFINE_IFUNC_FOR(strnlen) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strnlen_func, __strnlen_aarch64_sve);
+    } else {
+        RETURN_FUNC(strnlen_func, __strnlen_aarch64);
+    }
+}
+
 typedef char* strrchr_func(const char*, int);
 DEFINE_IFUNC_FOR(strrchr) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
+    if (arg->_hwcap2 & HWCAP_SVE) {
+        RETURN_FUNC(strrchr_func, __strrchr_aarch64_sve);
+    } else if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strrchr_func, __strrchr_aarch64_mte);
     } else {
         RETURN_FUNC(strrchr_func, __strrchr_aarch64);
