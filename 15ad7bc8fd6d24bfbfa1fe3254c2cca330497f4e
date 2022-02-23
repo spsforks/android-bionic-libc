@@ -383,6 +383,24 @@
       "message": "this seems like it would break setting the timezone to null? except we don\u0027t have the localtime symlink on any devices anyway, so this always failed, just slightly differently?",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "609e1174_571b4fd9",
+        "filename": "libc/tzcode/tzfile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-23T16:07:00Z",
+      "side": 1,
+      "message": "I guess it should not used in bionic. I will check it.",
+      "parentUuid": "a455e788_fea4baa3",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
