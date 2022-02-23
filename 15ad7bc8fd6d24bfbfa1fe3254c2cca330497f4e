@@ -70,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "90ab32a8_c32535cb",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-23T15:40:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05c67827_9bfd473e",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cae4c0ef_a5c366d7",
@@ -191,6 +209,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9e40c3c_67f6c428",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-23T15:40:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "637fa440_0ca049f4",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f4646d0_e41bbdb0",
@@ -275,6 +311,24 @@
       "writtenOn": "2022-02-14T22:28:37Z",
       "side": 1,
       "message": "hmm, this might be the fix to one of the issues you\u0027d seen?",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6b78423_939c2bb9",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-02-23T15:40:49Z",
+      "side": 1,
+      "message": "Actual fix is https://github.com/eggert/tz/commit/db9347fbbc17f7e9855490c8c4cf54982fc5871e. I will apply it separately.",
+      "parentUuid": "5194d923_748fd2a3",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
