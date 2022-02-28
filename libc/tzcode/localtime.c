@@ -409,9 +409,14 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 	sp->goback = sp->goahead = false;
 
 	if (! name) {
+	  // Android-changed: there is no TZDEFAULT in bionic
+		#if !defined(__BIONIC__)
 		name = TZDEFAULT;
 		if (! name)
 		  return EINVAL;
+		#else
+		return EINVAL;
+		#endif
 	}
 
 #if defined(__BIONIC__)
