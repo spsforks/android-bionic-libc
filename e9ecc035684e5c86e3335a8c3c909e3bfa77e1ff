@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a60d7bc_25f1d3e6",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-02T22:24:29Z",
+      "side": 1,
+      "message": "(since this note doesn\u0027t get indented separately like on s.a.c/d.a.c, maybe s/to workaround the issue/so that the wrap.APP instructions below will work/?)",
+      "revId": "e9ecc035684e5c86e3335a8c3c909e3bfa77e1ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
