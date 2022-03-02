@@ -641,6 +641,15 @@ App developers should check the NDK documentation about
 for the best way to use malloc debug in Android O or later on non-rooted
 devices.
 
+NOTE: Android 12 introduced a bug that can cause the wrap.\<APP\> property to
+no longer work. Use this to workaround the issue:
+
+    adb shell setprop dalvik.vm.force-java-zygote-fork-loop true
+    adb shell stop
+    adb shell start
+
+Now using the wrap.\<APP\> should work properly.
+
 If you do have a rooted device, you can enable malloc debug for a specific
 program/application (Android O or later):
 
