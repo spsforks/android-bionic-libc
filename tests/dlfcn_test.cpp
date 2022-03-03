@@ -947,6 +947,19 @@ TEST(dlfcn, dladdr_executable) {
   // The base address should be the address we were loaded at.
   ASSERT_EQ(info.dli_fbase, base_address);
 
+  // Also check that lookup by base address return correct Dl_info
+  info = {};
+  ASSERT_TRUE(dladdr(base_address, &info));
+
+  ASSERT_TRUE(realpath(info.dli_fname, dli_realpath) != nullptr);
+  ASSERT_STREQ(executable_path.c_str(), dli_realpath);
+
+  ASSERT_EQ(info.dli_fbase, base_address);
+
+  // We expect no symbols for the base_address
+  ASSERT_EQ(info.dli_sname, nullptr);
+  ASSERT_EQ(info.dli_saddr, nullptr);
+
   ASSERT_EQ(0, dlclose(self));
 }
 

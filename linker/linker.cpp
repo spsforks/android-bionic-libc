@@ -823,12 +823,17 @@ soinfo* find_containing_library(const void* p) {
     if (address < si->base || address - si->base >= si->size) {
       continue;
     }
-    ElfW(Addr) vaddr = address - si->load_bias;
+
+    ElfW(Addr) offset = address - si->base;
     for (size_t i = 0; i != si->phnum; ++i) {
       const ElfW(Phdr)* phdr = &si->phdr[i];
       if (phdr->p_type != PT_LOAD) {
         continue;
       }
+
+      ElfW(Addr) segment_load_bias = phdr->p_vaddr - phdr->p_offset;
+      ElfW(Addr) vaddr = offset + segment_load_bias;
+
       if (vaddr >= phdr->p_vaddr && vaddr < phdr->p_vaddr + phdr->p_memsz) {
         return si;
       }
