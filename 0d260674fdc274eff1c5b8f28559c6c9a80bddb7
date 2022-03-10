@@ -45,6 +45,30 @@
       },
       "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5639e9d8_a0770a94",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-10T19:33:41Z",
+      "side": 1,
+      "message": "I don\u0027t think this is a problem. We change the signal handler for the second fault, so the helper will print \"unexpected signal\" which is not expected.",
+      "parentUuid": "348f7685_300a0968",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 28
+      },
+      "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
