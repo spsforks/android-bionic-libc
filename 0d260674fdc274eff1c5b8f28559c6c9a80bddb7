@@ -69,6 +69,30 @@
       },
       "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b642df94_15b5dd4c",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-10T19:48:07Z",
+      "side": 1,
+      "message": "Ah missed that. Sounds good to me.",
+      "parentUuid": "5639e9d8_a0770a94",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 28
+      },
+      "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
