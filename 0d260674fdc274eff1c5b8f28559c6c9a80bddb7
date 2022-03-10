@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bc83250_a51bfa7c",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-10T19:13:04Z",
+      "side": 1,
+      "message": "prefer `[AS]`",
+      "range": {
+        "startLine": 234,
+        "startChar": 64,
+        "endLine": 234,
+        "endChar": 65
+      },
+      "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "348f7685_300a0968",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-10T19:13:04Z",
+      "side": 1,
+      "message": "IIUC this is supposed to ensure that MTE disabled -\u003e no crash, and we\u0027re defending against the heap allocator having MTE disabled but the binary still (accidentally) does.\n\nI think the problem here is that it might bugger up the opposite case, where we need to ensure MTE enabled -\u003e crash. If the binary has MTE enabled, but the heap allocator (accidentally) doesn\u0027t, then we\u0027ll not catch that.\n\nSo, for _disabled: PROT_MTE page check should be run, and should not crash.\nFor _async, _sync: PROT_MTE page check should not be run.\n\nCan we add `cflags: [\"-DALSO_CHECK_PAGE\"]` to `heap_tagging_static_disabled_helper`, then add that to the ifdef here?",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 28
+      },
+      "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
