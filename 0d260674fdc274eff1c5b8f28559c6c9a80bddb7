@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b8cb21d_da6a7238",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-11T00:38:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bc83250_a51bfa7c",
+      "range": {
+        "startLine": 234,
+        "startChar": 64,
+        "endLine": 234,
+        "endChar": 65
+      },
+      "revId": "0d260674fdc274eff1c5b8f28559c6c9a80bddb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "348f7685_300a0968",
