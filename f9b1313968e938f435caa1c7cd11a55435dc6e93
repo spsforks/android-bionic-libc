@@ -16,6 +16,23 @@
       "message": "i love it when this happens :-)",
       "revId": "f9b1313968e938f435caa1c7cd11a55435dc6e93",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c4363d2_74c284ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2022-03-16T17:19:48Z",
+      "side": 1,
+      "message": "marking resolved for autosubmit...",
+      "revId": "f9b1313968e938f435caa1c7cd11a55435dc6e93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
