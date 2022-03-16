@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "dc404956_7158fb95",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2022-03-16T17:20:14Z",
+      "side": 1,
+      "message": "marking resolved for autosubmit...",
+      "parentUuid": "b3159518_4282e1c8",
+      "revId": "f9b1313968e938f435caa1c7cd11a55435dc6e93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "3c4363d2_74c284ca",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
