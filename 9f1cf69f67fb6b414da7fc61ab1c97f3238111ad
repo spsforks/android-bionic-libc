@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a1208ff_8db278b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1086523
+      },
+      "writtenOn": "2022-03-22T17:10:40Z",
+      "side": 1,
+      "message": "aosp/1854022 would be skipped, which should probably be cherry-picked?",
+      "revId": "9f1cf69f67fb6b414da7fc61ab1c97f3238111ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
