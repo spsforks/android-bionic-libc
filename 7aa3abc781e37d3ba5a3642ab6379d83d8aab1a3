@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b3e96fb_af640f59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-22T15:36:20Z",
+      "side": 1,
+      "message": "(i defer to rprichard on linker stuff, though https://source.corp.google.com/android/bionic/linker/linker_soinfo.cpp;l\u003d252?q\u003dfile:bionic%2Flinker%20ORIGIN%20case:yes\u0026sq\u003dpackage:%5Eandroid$ suggests you\u0027re right.)",
+      "revId": "7aa3abc781e37d3ba5a3642ab6379d83d8aab1a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
