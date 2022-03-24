@@ -22,6 +22,30 @@
       },
       "revId": "1aacc88edcfc810f093b9583206e5ddfa5f10c3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d40d3975_d4239c20",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-03-24T18:15:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b2e5ad1_393bf09f",
+      "range": {
+        "startLine": 92,
+        "startChar": 33,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "1aacc88edcfc810f093b9583206e5ddfa5f10c3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
