@@ -89,7 +89,7 @@ static __inline int sigismember(const sigset_t *set, int signum) {
     errno = EINVAL;
     return -1;
   }
-  return (int)((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
+  return (int)((local_set[bit / (CHAR_BIT * sizeof(long))] >> (bit % (CHAR_BIT * sizeof(long)))) & 1);
 }
 
 static __inline int sigaddset(sigset_t *set, int signum) {
@@ -100,7 +100,7 @@ static __inline int sigaddset(sigset_t *set, int signum) {
     errno = EINVAL;
     return -1;
   }
-  local_set[bit / LONG_BIT] |= 1UL << (bit % LONG_BIT);
+  local_set[bit / (CHAR_BIT * sizeof(long))] |= 1UL << (bit % (CHAR_BIT * sizeof(long)));
   return 0;
 }
 
@@ -112,7 +112,7 @@ static __inline int sigdelset(sigset_t *set, int signum) {
     errno = EINVAL;
     return -1;
   }
-  local_set[bit / LONG_BIT] &= ~(1UL << (bit % LONG_BIT));
+  local_set[bit / (CHAR_BIT * sizeof(long))] &= ~(1UL << (bit % (CHAR_BIT * sizeof(long))));
   return 0;
 }
 
