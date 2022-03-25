@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3991b2a2_f9c6e6ca",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-25T20:51:14Z",
+      "side": 1,
+      "message": "Note: It\u0027s my understanding that this is not an ABI break.\n\nThe only place it\u0027s called should be from the zygote, in particular in frameworks/base/core/jni/com_android_internal_os_Zygote.cpp. This is built as part of libandroid_runtime.so, which is not in an apex. Hence, no break.",
+      "range": {
+        "startLine": 529,
+        "startChar": 39,
+        "endLine": 529,
+        "endChar": 80
+      },
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
