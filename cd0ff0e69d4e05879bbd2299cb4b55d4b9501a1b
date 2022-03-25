@@ -1,6 +1,40 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf4ade2b_9907f1d0",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-25T21:48:33Z",
+      "side": 1,
+      "message": "sscanf() with \"%ms:%ms:%ms\"?",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32c0406d_c662e0f2",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-25T21:48:33Z",
+      "side": 1,
+      "message": "or just sscanf() with \"%d:%d:%d\" if _this_ is where those strings are going to end up :-)",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3991b2a2_f9c6e6ca",
