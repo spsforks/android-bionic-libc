@@ -22,6 +22,30 @@
       },
       "revId": "07ac46d2bd525940e4d6239a5ce6ba2e157558ff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6693969_b50627be",
+        "filename": "tests/prebuilt-elf-files/gen-libtest_invalid-local-tls.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-03-25T22:38:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36727edf_af852e5a",
+      "range": {
+        "startLine": 4,
+        "startChar": 42,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "07ac46d2bd525940e4d6239a5ce6ba2e157558ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
