@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36727edf_af852e5a",
+        "filename": "tests/prebuilt-elf-files/gen-libtest_invalid-local-tls.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-25T16:15:39Z",
+      "side": 1,
+      "message": "explain _why_ we can\u0027t just build in the normal build system?",
+      "range": {
+        "startLine": 4,
+        "startChar": 42,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "07ac46d2bd525940e4d6239a5ce6ba2e157558ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
