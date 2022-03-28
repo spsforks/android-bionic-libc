@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60a3e51c_af86f75a",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-03-28T22:18:52Z",
+      "side": 1,
+      "message": "nit: maybe leave a short comment about the basename mess that makes this necessary?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 56
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84900d1c_89e5eb32",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-03-28T22:18:52Z",
+      "side": 1,
+      "message": "assert (X !\u003d 0)?",
+      "range": {
+        "startLine": 168,
+        "startChar": 5,
+        "endLine": 168,
+        "endChar": 17
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "179991b0_e7f4e525",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-03-28T22:18:52Z",
+      "side": 1,
+      "message": "Should this function validate more? Values aren\u0027t 0? Pass a second pointer to strtoull to validate we read the whole number? (or, we could also use that to skip the tokenization step if we wanted).",
+      "range": {
+        "startLine": 401,
+        "startChar": 5,
+        "endLine": 401,
+        "endChar": 24
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "874c049a_c0e3c089",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-03-28T22:18:52Z",
+      "side": 1,
+      "message": "pull out \"app_process\" and make this sizeof?",
+      "range": {
+        "startLine": 439,
+        "startChar": 39,
+        "endLine": 439,
+        "endChar": 41
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
