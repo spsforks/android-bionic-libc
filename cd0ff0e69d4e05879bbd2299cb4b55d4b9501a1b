@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "492e4071_41f7a371",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "806e85b9_24fc0371",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 114,
+        "endChar": 26
+      },
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "719c5850_01935655",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-03-25T22:25:34Z",
       "side": 1,
       "message": "nit: why not min?",
+      "range": {
+        "startLine": 117,
+        "startChar": 29,
+        "endLine": 117,
+        "endChar": 66
+      },
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82b9fa87_90529826",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "std::min is in libcxx, non-includable from here.",
+      "parentUuid": "719c5850_01935655",
       "range": {
         "startLine": 117,
         "startChar": 29,
@@ -64,6 +112,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d07206b8_0563edae",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "(see below)",
+      "parentUuid": "bf4ade2b_9907f1d0",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "67d867be_3569a579",
@@ -77,6 +143,30 @@
       "writtenOn": "2022-03-25T22:25:34Z",
       "side": 1,
       "message": "nit: typo",
+      "range": {
+        "startLine": 290,
+        "startChar": 39,
+        "endLine": 290,
+        "endChar": 46
+      },
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fadba7d_2b61bd4c",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67d867be_3569a579",
       "range": {
         "startLine": 290,
         "startChar": 39,
@@ -110,6 +200,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b297aad0_17267abc",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8271fbbb_84c4cfa0",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 73
+      },
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32c0406d_c662e0f2",
@@ -123,6 +237,24 @@
       "writtenOn": "2022-03-25T21:48:33Z",
       "side": 1,
       "message": "or just sscanf() with \"%d:%d:%d\" if _this_ is where those strings are going to end up :-)",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6e57e65_1ae20f97",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-03-28T21:51:24Z",
+      "side": 1,
+      "message": "We want to support \"1::3\" to imply SR \u003d 1, PSR \u003d \u003cdefault\u003e, MSA \u003d 3, and I don\u0027t see a great way to do this (defaultable fields) with sscanf :(. That is, with the exception of doing multiple sscanf\u0027s: \"%d:%d:%d\" (which can capture \"1::\" and \"1:2:\" and \"1:2:3\"), \"%d::%d\", \":%d:%d\", and \"::%d\". IMHO that\u0027s worse because sscanf is tolerant to spaces and extra colons and data at the end, whereas I\u0027d rather give a stricter interface.\n\nIt\u0027s a regex problem, and AFAIK regcomp() does a malloc.",
+      "parentUuid": "32c0406d_c662e0f2",
       "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
