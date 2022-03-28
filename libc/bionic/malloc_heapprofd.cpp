@@ -37,6 +37,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <fnmatch.h>
+#include <private/ScopedFd.h>
+
 #include <platform/bionic/malloc.h>
 #include <private/bionic_config.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -140,10 +143,7 @@ extern "C" void* MallocInitHeapprofdHook(size_t);
 
 static constexpr char kHeapprofdSharedLib[] = "heapprofd_client.so";
 static constexpr char kHeapprofdPrefix[] = "heapprofd";
-static constexpr char kHeapprofdPropertyEnable[] = "heapprofd.enable";
 
-constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
-constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
 constexpr size_t kMaxCmdlineSize = 512;
 
 // The handle returned by dlopen when previously loading the heapprofd
@@ -151,59 +151,58 @@ constexpr size_t kMaxCmdlineSize = 512;
 static _Atomic (void*) gHeapprofdHandle = nullptr;
 static _Atomic MallocHeapprofdState gHeapprofdState = kInitialState;
 
-static bool GetHeapprofdProgramProperty(char* data, size_t size) {
-  if (size < kHeapprofdProgramPropertyPrefixSize) {
-    error_log("%s: Overflow constructing heapprofd property", getprogname());
-    return false;
-  }
-  memcpy(data, kHeapprofdProgramPropertyPrefix, kHeapprofdProgramPropertyPrefixSize);
-
-  int fd = open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC);
-  if (fd == -1) {
+static ssize_t ReadProcSelfCmdline(char* buf, size_t buf_sz) {
+  ScopedFd fd(TEMP_FAILURE_RETRY(open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC)));
+  if (fd.get() == -1) {
     error_log("%s: Failed to open /proc/self/cmdline", getprogname());
-    return false;
+    return -1;
   }
-  char cmdline[kMaxCmdlineSize];
-  ssize_t rd = read(fd, cmdline, sizeof(cmdline) - 1);
-  close(fd);
+  ssize_t rd = TEMP_FAILURE_RETRY(read(fd.get(), buf, buf_sz - 1));
   if (rd == -1) {
     error_log("%s: Failed to read /proc/self/cmdline", getprogname());
-    return false;
+    return -1;
   }
-  cmdline[rd] = '\0';
-  char* first_arg = static_cast<char*>(memchr(cmdline, '\0', rd));
-  if (first_arg == nullptr) {
-    error_log("%s: Overflow reading cmdline", getprogname());
-    return false;
-  }
-  // For consistency with what we do with Java app cmdlines, trim everything
-  // after the @ sign of the first arg.
-  char* first_at = static_cast<char*>(memchr(cmdline, '@', rd));
-  if (first_at != nullptr && first_at < first_arg) {
-    *first_at = '\0';
-    first_arg = first_at;
-  }
+  buf[rd] = '\0';
+  return rd;
+}
 
-  char* start = static_cast<char*>(memrchr(cmdline, '/', first_arg - cmdline));
-  if (start == first_arg) {
-    // The first argument ended in a slash.
-    error_log("%s: cmdline ends in /", getprogname());
-    return false;
-  } else if (start == nullptr) {
-    start = cmdline;
+// Returns a pointer into |cmdline| corresponding to the argv0 without any
+// leading directories if the binary path is absolute. |cmdline_len| corresponds
+// to the length of the cmdline string as read out of procfs as a C string -
+// length doesn't include the final nul terminator, but it must be present at
+// cmdline[cmdline_len]. Note that normally the string itself will contain nul
+// bytes, as that's what the kernel uses to separate arguments.
+//
+// Function output examples:
+// * /system/bin/adb\0--flag -> adb
+// * adb -> adb
+// * com.example.app -> com.example.app
+static const char* FindBinaryName(const char* cmdline, size_t cmdline_len) {
+  // Find the first nul byte that signifies the end of argv0. We might not find
+  // one if the process rewrote its cmdline without nul separators, and/or the
+  // cmdline didn't fully fit into our read buffer. In such cases, proceed with
+  // the full string to do best-effort matching.
+  const char* argv0_end =
+      static_cast<const char*>(memchr(cmdline, '\0', cmdline_len));
+  if (argv0_end == nullptr) {
+    argv0_end = cmdline + cmdline_len;
+  }
+  // Find the last path separator of argv0, if it exists.
+  const char* name_start = static_cast<const char*>(
+      memrchr(cmdline, '/', static_cast<size_t>(argv0_end - cmdline)));
+  if (name_start == nullptr) {
+    name_start = cmdline;
   } else {
-    // Skip the /.
-    start++;
+    name_start++;  // skip the separator
   }
+  return name_start;
+}
 
-  size_t name_size = static_cast<size_t>(first_arg - start);
-  if (name_size >= size - kHeapprofdProgramPropertyPrefixSize) {
-    error_log("%s: overflow constructing heapprofd property.", getprogname());
-    return false;
+static bool MatchGlobPattern(const char* pattern, const char* cmdline, const char* binname) {
+  if (pattern[0] == '/') {
+    return fnmatch(pattern, cmdline, FNM_NOESCAPE) == 0;
   }
-  // + 1 to also copy the trailing null byte.
-  memcpy(data + kHeapprofdProgramPropertyPrefixSize, start, name_size + 1);
-  return true;
+  return fnmatch(pattern, binname, FNM_NOESCAPE) == 0;
 }
 
 // Runtime triggering entry-point. Two possible call sites:
@@ -320,26 +319,41 @@ void HandleHeapprofdSignal() {
 }
 
 bool HeapprofdShouldLoad() {
-  // First check for heapprofd.enable. If it is set to "all", enable
-  // heapprofd for all processes. Otherwise, check heapprofd.enable.${prog},
-  // if it is set and not 0, enable heap profiling for this process.
+  // heapprofd.startup sysprop tells this function whether there's any patterns
+  // with which to compare our own cmdline.
   char property_value[PROP_VALUE_MAX];
-  if (__system_property_get(kHeapprofdPropertyEnable, property_value) == 0) {
+  if (__system_property_get("heapprofd.startup", property_value) == 0) {
     return false;
-  }
-  if (strcmp(property_value, "all") == 0) {
-    return true;
   }
 
-  char program_property[kHeapprofdProgramPropertyPrefixSize + kMaxCmdlineSize];
-  if (!GetHeapprofdProgramProperty(program_property,
-                                   sizeof(program_property))) {
+  // check that the value is numeric and positive
+  char* endptr = nullptr;
+  long num_patterns = strtol(property_value, &endptr, 10);
+  if (property_value[0] == '\0' || *endptr != '\0' || num_patterns <= 0) {
     return false;
   }
-  if (__system_property_get(program_property, property_value) == 0) {
+
+  // TODO: continue using 512 bytes? atrace uses 4096, but that seems excessive
+  char cmdline[kMaxCmdlineSize];
+  ssize_t cmdline_sz = ReadProcSelfCmdline(cmdline, sizeof(cmdline));
+  if (cmdline_sz <= 0) {
     return false;
   }
-  return property_value[0] != '\0';
+  const char* binname = FindBinaryName(cmdline, static_cast<size_t>(cmdline_sz));
+
+  char pattern_propname[32];
+  for (long i = 0; i < num_patterns; i++) {
+    if (snprintf(pattern_propname, sizeof(pattern_propname), "heapprofd.startup.%ld", i) <= 0) {
+      return false; // TODO: skip err checking?
+    }
+    if (__system_property_get(pattern_propname, property_value) == 0) {
+      continue; // TODO: or return outright?
+    }
+    if (MatchGlobPattern(property_value, cmdline, binname)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void HeapprofdRememberHookConflict() {
