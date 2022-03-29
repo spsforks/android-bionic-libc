@@ -29,6 +29,7 @@
 #ifndef _ARPA_INET_H_
 #define _ARPA_INET_H_
 
+#include <bits/in_addr.h>
 #include <netinet/in.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
