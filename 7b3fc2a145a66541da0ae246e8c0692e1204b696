@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b4daa85_78f252ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2022-03-29T21:17:34Z",
+      "side": 1,
+      "message": "I\u0027m not quite sure yet, but I suspect I might find a few more of these type of fixes.\n\nIt\u0027s a bit of an interesting bootstrapping problem, since I can fix the headers in source, but in the kernel, I\u0027m trying to use an actual NDK release.\n\nSo testing this on top of the kernel changes I\u0027m working on is a workflow I haven\u0027t yet gotten into the rhythm quite yet.\n\nLet me know if you want me to hold CC\u0027ing you on a bunch of little changes until they\u0027re all ready for review, or squash them all into one patch.",
+      "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
