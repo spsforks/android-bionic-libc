@@ -219,6 +219,23 @@
       "parentUuid": "c3027341_dda9ec43",
       "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b19380d_98dd9e20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2022-03-30T23:15:51Z",
+      "side": 1,
+      "message": "It looks like samples/connector/ucon.c in kernel sources also fails to build against bionic due to this as well.",
+      "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
