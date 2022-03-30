@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "33c132b5_b751ddad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2022-03-30T19:54:40Z",
+      "side": 1,
+      "message": "Let\u0027s see if we can reproduce this outside of the kernel\u0027s build system.\n\nStrange, I would have expected this to fail:\n\n```\n$ cat arpa.c                                                                                                                                           \n#include \u003carpa/inet.h\u003e\n$ clang arpa.c -c --target\u003daarch64-linux-android31 --sysroot\u003d/path/to/prebuilts/ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot\n```\nsince that\u0027s essentially what the kernel header tests are doing.\n\nAh, looks like I\u0027m missing this patch which hasn\u0027t quite landed in mainline, yet.\nhttps://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git/commit/?h\u003dkbuild\u0026id\u003df442ec0815ed57fcc633fe763815ca3c27e4cd0e\n\nCherry-picking that is important, but doesn\u0027t solve the issue. It looks like the precise command invoked (trimmed and paths manually expanded) is something like:\n\n```\n$ clang --target\u003daarch64-linux-android31 --sysroot\u003d/android0/kernel-common/prebuilts/ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot -I /android0/kernel-common/out/android-mainline/common/usr/include -x c /dev/null -include /android0/kernel-common/out/android-mainline/common/usr/include/linux/tipc_config.h\n```\n\nFor in_addr_t\u0027s use in arpa/inet.h, the transitive include trail to the definition I would have expected is:\n\ntipc_config.h (kernel) (use of in_addr_t)\narpa/inet.h (bionic)\nnetinet/in.h (bionic)\nlinux/in.h (bionic)\nbits/in_addr.h (bionic) (definition of in_addr_t)\n\nRunning the above with `-M` to print the include trail, I see up to netinet/in.h, but linux/in.h is included from the kernel headers we\u0027re currently building, not bionic.  That linux/in.h does not include bits/in_addr.h.\n\nSo I guess I\u0027m curious why linux/in.h in the kernel [0] differs from bionic\u0027s linux/in.h [1]?\n\n[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/in.h\n[1] https://android.googlesource.com/platform/bionic/+/refs/heads/master/libc/kernel/uapi/linux/in.h#23",
+      "parentUuid": "d4595ea2_cfd68edd",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 43
+      },
+      "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4b4daa85_78f252ca",
