@@ -144,6 +144,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "021c1ad4_858b640f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-30T20:13:09Z",
+      "side": 1,
+      "message": "also see the horror that is external/kernel-headers/original/uapi/linux/libc-compat.h... long-term i wonder whether we should be replacing that at import time with a custom bionic one. certainly `__UAPI_DEF_IN_ADDR` should always be `0` for a non-kernel build. POSIX says `uint32_t` (or equivalent), not the kernel\u0027s `__be32`.\n\nfor now maybe we just `#define __UAPI_DEF_IN_ADDR 0` in \u003cbits/in_addr.h\u003e?",
+      "parentUuid": "317b0d37_c811ccb4",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 43
+      },
+      "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4b4daa85_78f252ca",
