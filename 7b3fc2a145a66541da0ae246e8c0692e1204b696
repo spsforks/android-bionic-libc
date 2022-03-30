@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4595ea2_cfd68edd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-30T00:19:05Z",
+      "side": 1,
+      "message": "i don\u0027t think that\u0027s _quite_ true... we do exactly what POSIX says, namely:\n\n\u003e The \u003carpa/inet.h\u003e header shall define the in_port_t and in_addr_t types as described in \u003cnetinet/in.h\u003e.\n\nand \n\n\u003e The \u003cnetinet/in.h\u003e header shall define the following types:\n\u003e ...\n\u003e in_addr_t\n\u003e    Equivalent to the type uint32_t as described in \u003cinttypes.h\u003e.\n\nthat\u0027s why the first line of this header is already `#include \u003cnetinet/in.h\u003e` --- we do the easy implementation of \"as described in\".\n\nso i think you might have a different problem than you think you have here?\n\ni will note that our \u003cnetinet/in.h\u003e only *transitively* includes \u003cbits/in_addr.h\u003e. maybe a side-effect of the dance we have to do with the uapi \"linux/in.h\" header (documented somewhat in bionic/libc/include/netinet/in.h)?\n\ndoes adding #include \u003cbits/in_addr.h\u003e to \u003cnetinet/in.h\u003e instead of \u003carpa/inet.h\u003e fix your problem? that seems more obviously correct, even if in theory redundant (and unclear to me why this would cause your symptom).",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 43
+      },
+      "revId": "7b3fc2a145a66541da0ae246e8c0692e1204b696",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4b4daa85_78f252ca",
