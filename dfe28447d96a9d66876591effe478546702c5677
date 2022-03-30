@@ -49,6 +49,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67ee2d3e_cffc09ae",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-30T18:45:16Z",
+      "side": 1,
+      "message": "This and above looks like an unrelated fix. Move it to a separate change?",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "84900d1c_89e5eb32",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 5
@@ -118,6 +135,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c4e61c28_1321d262",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-30T18:45:16Z",
+      "side": 1,
+      "message": "TokenizeOptionsStringInplace? It\u0027s not obvious from the signature that the input string is destroyed. Even if tokenization fails half way.",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dae96cd_e0905f10",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-30T18:45:16Z",
+      "side": 1,
+      "message": "This code is not obviously correct. How about something like this:\n\nwhile (*p !\u003d 0) {\nstart \u003d p;\np \u003d find_next_separator_or_null(p)\ntoken[next_token_idx++] \u003d start;\nif (!*p || next_token_idx \u003e 3) break;\n*p++ \u003d 0;\n}",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10e1419c_47e129ae",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-30T18:45:16Z",
+      "side": 1,
+      "message": "Isn\u0027t there a max property name length?",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "179991b0_e7f4e525",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 5
@@ -158,6 +226,23 @@
         "endLine": 439,
         "endChar": 41
       },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a72b723_8e74738d",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-03-30T18:45:16Z",
+      "side": 1,
+      "message": "Is that ok to export a test-only API here? Even if it is private, there is risk of someone linking to it.",
       "revId": "dfe28447d96a9d66876591effe478546702c5677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
