@@ -16,6 +16,24 @@
       "message": "I guess you could also check `__STDC_VERSION__` to see whether you should test this or not. https://releases.llvm.org/14.0.0/tools/clang/docs/UsersManual.html#differences-between-various-standard-modes",
       "revId": "1063039d193080ebd9c3a934ed6467543119a898",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d84c6e21_08215462",
+        "filename": "tests/headers/posix/stdio_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-03-31T16:30:34Z",
+      "side": 1,
+      "message": "yeah, the full condition is a bit of a mess[1] though:\n```\n#if (defined(__STDC_VERSION__) \u0026\u0026 __STDC_VERSION__ \u003c 201112L) || \\\n    (defined(__cplusplus) \u0026\u0026 __cplusplus \u003c\u003d 201103L)\nchar* gets(char* __buf) __attribute__((deprecated(\"gets is unsafe, use fgets instead\")));\n#endif\n```\nand since there\u0027s exactly one function that\u0027s ever been removed, it doesn\u0027t seem worth building these tests twice. (i left it in but commented out for the next person who goes through POSIX line by line to update these tests, though i hope that by the time there\u0027s another version of POSIX to warrant that work, they\u0027ve aligned with the ISO C standard and removed gets()!.)\n\nespecially because our general policy is \"you get all the things all the time, unless they actively conflict[2]\" --- i\u0027m actually wondering \"how long until i can _remove_ this from stdio.h?\" instead :-)\n\n____\n1. and interestingly https://en.cppreference.com/w/cpp/io/c/gets claims that it\u0027s not quite right; apparently it was only _deprecated_ in C++11 and not _removed_ until C++14. since no-one\u0027s noticed yet, i\u0027ll leave the stricter condition there anyway. really no-one should have been using gets() long before 2011, let alone 2014! (and apps don\u0027t use stdin anyway, thankfully.)\n2. like the two different versions of basename(3) :-(",
+      "parentUuid": "4cb705f8_f5aa58cf",
+      "revId": "1063039d193080ebd9c3a934ed6467543119a898",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
