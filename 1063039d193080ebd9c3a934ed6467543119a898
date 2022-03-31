@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4cb705f8_f5aa58cf",
+        "filename": "tests/headers/posix/stdio_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-03-31T00:32:55Z",
+      "side": 1,
+      "message": "I guess you could also check `__STDC_VERSION__` to see whether you should test this or not. https://releases.llvm.org/14.0.0/tools/clang/docs/UsersManual.html#differences-between-various-standard-modes",
+      "revId": "1063039d193080ebd9c3a934ed6467543119a898",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
