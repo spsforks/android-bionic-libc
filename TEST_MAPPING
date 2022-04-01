@@ -28,6 +28,14 @@
       "name": "gwp_asan_unittest"
     },
     {
+      "name": "vts_ltp_test_x86_64",
+      "options": [
+        {
+          "exclude-filter": "syscalls.signal06_64bit#syscalls.signal06_64bit"
+        }
+      ]
+    },
+    {
       "name": "malloc_debug_unit_tests"
     },
     {
