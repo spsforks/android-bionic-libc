@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ac15a93_0e62ba40",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-04-01T19:50:12Z",
+      "side": 1,
+      "message": "It appears, that the ` will avoid the need for the \\. It winds up showing up in the actual markdown version as off64\\_t instead of off64_t.",
+      "range": {
+        "startLine": 192,
+        "startChar": 18,
+        "endLine": 192,
+        "endChar": 26
+      },
+      "revId": "bb9ea5d03afc9d1ca0ef73cdc36af5ead6b9823c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
