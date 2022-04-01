@@ -28,6 +28,18 @@
       "name": "gwp_asan_unittest"
     },
     {
+      "name": "vts_ltp_test_arm"
+    },
+    {
+      "name": "vts_ltp_test_arm_64_hwasan"
+    },
+    {
+      "name": "vts_ltp_test_x86"
+    },
+    {
+      "name": "vts_ltp_test_x86_64"
+    },
+    {
       "name": "malloc_debug_unit_tests"
     },
     {
