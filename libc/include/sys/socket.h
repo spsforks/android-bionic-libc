@@ -37,7 +37,6 @@
 #include <linux/sockios.h>
 #include <linux/uio.h>
 #include <linux/types.h>
-#include <linux/compiler.h>
 
 #include <bits/sa_family_t.h>
 
