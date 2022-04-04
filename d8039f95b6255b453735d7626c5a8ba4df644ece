@@ -39,6 +39,23 @@
       "message": "Do we run IWYU? I though clang-tidy did...or could...though maybe I\u0027m just thinking of clang-tidy\u0027s ability to sort header files...",
       "revId": "d8039f95b6255b453735d7626c5a8ba4df644ece",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e7151b3_26fc74db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-04T16:29:37Z",
+      "side": 1,
+      "message": "ironically, looking at the diff to see why this #include moved to \u003csys/socket.h\u003e in the first place, it seems like this was only ever in our headers because of the kernel\u0027s assumption that libc \u003d\u003e `__GLIBC__`; i don\u0027t think we should ever have been here :-(\n```\n-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */\n-#if !defined(__GLIBC__) || __GLIBC__ \u003c 2\n-#include \u003casm/socket.h\u003e  \n-#include \u003clinux/sockios.h\u003e  \n-#include \u003clinux/uio.h\u003e  \n-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */\n-#include \u003clinux/types.h\u003e  \n-#include \u003clinux/compiler.h\u003e  \n-typedef unsigned short sa_family_t;\n```\n(from the removed-in-2012 \u003clinux/socket.h\u003e.)",
+      "revId": "d8039f95b6255b453735d7626c5a8ba4df644ece",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
