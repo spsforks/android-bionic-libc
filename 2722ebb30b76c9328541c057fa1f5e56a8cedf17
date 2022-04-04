@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dc7a30a_41e579af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1837716
+      },
+      "writtenOn": "2022-04-04T10:47:47Z",
+      "side": 1,
+      "message": "\u003e Patch Set 6: Presubmit-Verified+1\n\u003e \n\u003e PASS: All checks passed.\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d git_mirror-aosp-master-with-vendor/aosp_angler-userdebug \u003d\u003d\u003d\n\u003e \n\u003e PASS: Built git_mirror-aosp-master-with-vendor/aosp_angler-userdebug. See https://android-build.googleplex.com/builds/pending/P3055816/aosp_angler-userdebug/latest\n\u003e \n\u003e PASS: Tests passed for git_mirror-aosp-master-with-vendor/aosp_angler-userdebug. \u003capct/device_boot_test\u003e 1 ran, 0 failed, URI: http://sponge.corp.google.com/invocation?tab\u003dTest+Cases\u0026show\u003dFAILED\u0026id\u003d56ce54f2-a346-4c92-af06-8a0bf7884353\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d aosp-master-ndk/linux \u003d\u003d\u003d\n\u003e \n\u003e PASS: Built aosp-master-ndk/linux. See https://android-build.googleplex.com/builds/pending/P3055817/linux/latest\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d aosp-master/aosp_x86-eng \u003d\u003d\u003d\n\u003e \n\u003e PASS: Built aosp-master/aosp_x86-eng. See https://android-build.googleplex.com/builds/pending/P3055818/aosp_x86-eng/latest\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d aosp-brillo-master/brilloemulator_arm-eng \u003d\u003d\u003d\n\u003e \n\u003e PASS: Built aosp-brillo-master/brilloemulator_arm-eng. See https://android-build.googleplex.com/builds/pending/P3055819/brilloemulator_arm-eng/latest\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d aosp-master/aosp_arm64-eng \u003d\u003d\u003d\n\u003e \n\u003e PASS: Built aosp-master/aosp_arm64-eng. See https://android-build.googleplex.com/builds/pending/P3055820/aosp_arm64-eng/latest\n\u003e \n\u003e \n\u003e \u003d\u003d\u003d\n\u003e \n\u003e Bravo!\n\u003e \n\u003e Found a submit queue bug? Have a question? http://go/treehugger-submitqueue-bug\n\n",
+      "revId": "2722ebb30b76c9328541c057fa1f5e56a8cedf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
