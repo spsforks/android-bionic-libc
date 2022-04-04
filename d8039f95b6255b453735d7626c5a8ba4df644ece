@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f5ee7c0_bb6b6ab7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-04T16:25:22Z",
+      "side": 1,
+      "message": "the trouble with have with bionic whenever we reduce the amount of transitive inclusion (to the point where i\u0027ve largely said \"never again!\") is that this is in the NDK too, so even the _partner_ source we don\u0027t see is just \"part of the tip of the iceberg\" --- there\u0027s literally millions of app developers out there potentially relying on this.\n\nthat said, i\u0027m fairly sympathetic to this, but the larger \"remove \u003clinux/compiler.h\u003e\" goal looks more obviously problematic: https://source.corp.google.com/search?q\u003dinclude.*linux%2Fcompiler.h%20file:hardware%7Cvendor%20-file:kernel%20-file:include%2Flinux%20-file:include%2Fuapi%2Flinux%20-file:bionic%20-file:google_experimental\u0026sq\u003dpackage:%5Eandroid$ (especially those ones that explicitly say `#ifdef __ANDROID__` before the #include :-( )\n\naiui from the commit message, _this_ change doesn\u0027t actually get you any further in your project? in which case cost \u003e benefit, so default to \"leave the transitive includes alone\"?",
+      "range": {
+        "startLine": 13,
+        "startChar": 62,
+        "endLine": 15,
+        "endChar": 23
+      },
+      "revId": "d8039f95b6255b453735d7626c5a8ba4df644ece",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "45db2b81_582538d3",
