@@ -231,6 +231,15 @@ void VerifyAllocCalls(bool all_options) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
+// HWASan does not implement debug_mallinfo or malloc_info, so we skip these tests.
+#if __has_feature(hwaddress_sanitizer)
+#define MAYBE_debug_mallinfo DISABLED_debug_mallinfo
+#define MAYBE_malloc_info_no_pointer_tracking DISABLED_malloc_info_no_pointer_tracking
+#else
+#define MAYBE_debug_mallinfo debug_mallinfo
+#define MAYBE_malloc_info_no_pointer_tracking malloc_info_no_pointer_tracking
+#endif
+
 TEST_F(MallocDebugTest, fill_generic) {
   Init("verbose fill");
   VerifyAllocCalls(false);
@@ -2062,7 +2071,7 @@ TEST_F(MallocDebugTest, max_size) {
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
-TEST_F(MallocDebugTest, debug_mallinfo) {
+TEST_F(MallocDebugTest, MAYBE_debug_mallinfo) {
   Init("guard");
 
   void* pointer = debug_malloc(150);
@@ -2474,7 +2483,7 @@ TEST_F(MallocDebugTest, abort_on_error_header_tag_corrupted) {
   pointer[-get_tag_offset()] = tag_value;
 }
 
-TEST_F(MallocDebugTest, malloc_info_no_pointer_tracking) {
+TEST_F(MallocDebugTest, MAYBE_malloc_info_no_pointer_tracking) {
   Init("fill");
 
   TemporaryFile tf;
