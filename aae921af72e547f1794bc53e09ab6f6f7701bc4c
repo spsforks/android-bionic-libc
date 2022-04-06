@@ -34,6 +34,24 @@
       "parentUuid": "0cc31f4c_7ee566af",
       "revId": "aae921af72e547f1794bc53e09ab6f6f7701bc4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "983f7eb4_ed1ed024",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-06T17:01:20Z",
+      "side": 1,
+      "message": "in that case, put a \"For SKIP_WITH_HWASAN.\" comment here so we\u0027re more likely to find this and clean it up when that happens...",
+      "parentUuid": "33f82f8a_a03b06cf",
+      "revId": "aae921af72e547f1794bc53e09ab6f6f7701bc4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
