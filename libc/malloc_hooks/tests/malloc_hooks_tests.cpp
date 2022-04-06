@@ -177,9 +177,12 @@ void MallocHooksTest::test_free_hook(void* ptr, const void* arg) {
   return orig_free_hook_(ptr, arg);
 }
 
+// HWASan does not implement mallinfo, so we skip this test.
+#if !__has_feature(hwaddress_sanitizer)
 TEST_F(MallocHooksTest, other_malloc_functions) {
   RunTest("*.DISABLED_other_malloc_functions");
 }
+#endif
 
 // Call other intercepted functions to make sure there are no crashes.
 TEST_F(MallocHooksTest, DISABLED_other_malloc_functions) {
