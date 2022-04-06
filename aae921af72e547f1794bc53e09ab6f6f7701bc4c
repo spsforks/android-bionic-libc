@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc31f4c_7ee566af",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-06T15:17:58Z",
+      "side": 1,
+      "message": "do you/will you need a similar work around for tests outside of bionic too? if so, we should just move this macro to https://source.corp.google.com/android/system/libbase/include/android-base/test_utils.h?q\u003dfile:libbase%20file:include%20file:test instead...",
+      "revId": "aae921af72e547f1794bc53e09ab6f6f7701bc4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
