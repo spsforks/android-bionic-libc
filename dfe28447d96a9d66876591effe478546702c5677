@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "053435d1_efe17e97",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "personal preference: these are headers from the same library, rather than from a different library.",
+      "parentUuid": "a60a980f_1039cf9e",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 43
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60a3e51c_af86f75a",
@@ -60,6 +84,24 @@
       "writtenOn": "2022-03-30T18:45:16Z",
       "side": 1,
       "message": "This and above looks like an unrelated fix. Move it to a separate change?",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "234aa89e_ef70a777",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done (https://android-review.googlesource.com/c/platform/bionic/+/2061827)",
+      "parentUuid": "67ee2d3e_cffc09ae",
       "revId": "dfe28447d96a9d66876591effe478546702c5677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -110,6 +152,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "106bf236_e90cc894",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84900d1c_89e5eb32",
+      "range": {
+        "startLine": 168,
+        "startChar": 5,
+        "endLine": 168,
+        "endChar": 17
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62f88cc2_3100eeb6",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "660ee368_6e11655b",
+      "range": {
+        "startLine": 168,
+        "startChar": 27,
+        "endLine": 168,
+        "endChar": 28
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59df2859_fa125962",
@@ -133,6 +223,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f7c3970_28b96ea6",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59df2859_fa125962",
+      "range": {
+        "startLine": 172,
+        "startChar": 41,
+        "endLine": 172,
+        "endChar": 58
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4e61c28_1321d262",
@@ -146,6 +260,24 @@
       "writtenOn": "2022-03-30T18:45:16Z",
       "side": 1,
       "message": "TokenizeOptionsStringInplace? It\u0027s not obvious from the signature that the input string is destroyed. Even if tokenization fails half way.",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dac07ca8_10733275",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4e61c28_1321d262",
       "revId": "dfe28447d96a9d66876591effe478546702c5677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -248,6 +380,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a21132ff_3e18782f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "874c049a_c0e3c089",
+      "range": {
+        "startLine": 439,
+        "startChar": 39,
+        "endLine": 439,
+        "endChar": 41
+      },
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a72b723_8e74738d",
@@ -261,6 +417,24 @@
       "writtenOn": "2022-03-30T18:45:16Z",
       "side": 1,
       "message": "Is that ok to export a test-only API here? Even if it is private, there is risk of someone linking to it.",
+      "revId": "dfe28447d96a9d66876591effe478546702c5677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c768247d_269a9358",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Unfortunately I found no other way to get this tested. I\u0027m assuming it\u0027s a similar reason why `android_unsafe_frame_pointer_chase` is in this list.",
+      "parentUuid": "9a72b723_8e74738d",
       "revId": "dfe28447d96a9d66876591effe478546702c5677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

@@ -277,6 +277,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae15185f_ff835c83",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-11T20:53:19Z",
+      "side": 1,
+      "message": "Don\u0027t get me wrong, I don\u0027t love this. I just believe it\u0027s preferable to have \"hard to document, complex code, dense\":\n\n  libc.debug.gwp_asan.system_default \u003d \"1:2:3\"\n  libc.debug.gwp_asan.app_default \u003d \"1:2:3\"\n  libc.debug.gwp_asan.my_app \u003d \"1:2:3\"\n  \n  GWP_ASAN_OPTIONS\u003d\"1:2:3\"\n  \n... rather than \"extremely sparse\":\n\n  libc.debug.gwp_asan.sample_rate.system_default \u003d 1\n  libc.debug.gwp_asan.process_sampling.system_default \u003d 2\n  libc.debug.gwp_asan.max_allocs.system_default \u003d 3\n  libc.debug.gwp_asan.sample_rate.app_default \u003d 1\n  libc.debug.gwp_asan.process_sampling.app_default \u003d 2\n  libc.debug.gwp_asan.max_allocs.app_default \u003d 3\n  libc.debug.gwp_asan.sample_rate.my_app \u003d 1\n  libc.debug.gwp_asan.process_sampling.my_app \u003d 2\n  libc.debug.gwp_asan.max_allocs.my_app \u003d 3\n  \n  GWP_ASAN_SAMPLE_RATE\u003d1\n  GWP_ASAN_PROCESS_SAMPLING\u003d2\n  GWP_ASAN_MAX_ALLOCS\u003d3\n  \nI\u0027ll defer to you an cferris as the owners for an executive decision about which poison pill tastes better :).",
+      "parentUuid": "6c61dd09_984852a5",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3991b2a2_f9c6e6ca",
