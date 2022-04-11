@@ -295,6 +295,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "01cd3156_482e6fa9",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-11T21:27:10Z",
+      "side": 1,
+      "message": "the \"extremely sparse\" kind, every time. the trouble with the dense option is that it kills you over the years ... it\u0027s *way* easier to add and drop knobs in the sparse style.",
+      "parentUuid": "ae15185f_ff835c83",
+      "revId": "cd0ff0e69d4e05879bbd2299cb4b55d4b9501a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3991b2a2_f9c6e6ca",
