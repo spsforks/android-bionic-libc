@@ -69,6 +69,10 @@ static void fill_abort_message_magic(magic_abort_msg_t* new_magic_abort_message)
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void android_set_abort_message(const char* msg) {
+  if (msg == nullptr) {
+    return;
+  }
+
   ScopedPthreadMutexLocker locker(&__libc_shared_globals()->abort_msg_lock);
 
   if (__libc_shared_globals()->abort_msg != nullptr) {
