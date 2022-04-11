@@ -69,12 +69,17 @@ static void fill_abort_message_magic(magic_abort_msg_t* new_magic_abort_message)
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void android_set_abort_message(const char* msg) {
+  static const char kNullMsg[] = "(null)";
   ScopedPthreadMutexLocker locker(&__libc_shared_globals()->abort_msg_lock);
 
   if (__libc_shared_globals()->abort_msg != nullptr) {
     // We already have an abort message.
     // Assume that the first crash is the one most worth reporting.
     return;
+  }
+
+  if (msg == nullptr) {
+    msg = kNullMsg;
   }
 
   size_t size = sizeof(magic_abort_msg_t) + strlen(msg) + 1;
