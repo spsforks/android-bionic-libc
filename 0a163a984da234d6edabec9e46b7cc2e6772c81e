@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80e3d22e_025d4627",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-12T15:06:47Z",
+      "side": 1,
+      "message": "or set it to \"(null)\" like printf would do with %s and null? this difference seems worth pointing out, because it\u0027s probably a bug? (and should we fix libc++? seems weird to be calling this with a null pointer?)",
+      "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
