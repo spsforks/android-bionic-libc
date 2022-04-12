@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ae22225_6f6ccc81",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-12T20:39:33Z",
+      "side": 1,
+      "message": "why not just a literal on L82?",
+      "revId": "121c903746f8f6898f7ecc5a80f8d893bc60945f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

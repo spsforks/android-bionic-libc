@@ -34,6 +34,24 @@
       "parentUuid": "80e3d22e_025d4627",
       "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "951ccfbc_ae5df800",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-12T20:39:33Z",
+      "side": 1,
+      "message": "ah, looking at libc++ it looks like this can indeed only happen if we fail to allocate in vasprintf():\n```\n#elif defined(__BIONIC__)\n    char* buffer;\n    va_list list2;\n    va_start(list2, format);\n    vasprintf(\u0026buffer, format, list2);\n    va_end(list2);\n\n#if __ANDROID_API__ \u003e\u003d 21\n    // Show error in tombstone.\n    android_set_abort_message(buffer);\n\n    // Show error in logcat.\n    openlog(\"libc++abi\", 0, 0);\n    syslog(LOG_CRIT, \"%s\", buffer);\n    closelog();\n#else\n    // The good error reporting wasn\u0027t available in Android until L. Since we\u0027re\n    // about to abort anyway, just call __assert2, which will log _somewhere_\n    // (tombstone and/or logcat) in older releases.\n    __assert2(__FILE__, __LINE__, __func__, buffer);\n#endif // __ANDROID_API__ \u003e\u003d 21\n#endif // __BIONIC__\n```\n/me wonders whether it\u0027s worth trying to add a \"(vasprintf failed)\" constant string there or whether, like you say, \"you\u0027re probably going to struggle to mmap() your abort message space anyway\".\n\n+rprichard FYI just so he\u0027s aware, but, yeah, there\u0027s probably not much we can do in this specific case. (i was worried that this was actually a more general case like \"std::terminate called, and we _never_ bother to try to set a message\"!)",
+      "parentUuid": "c2a1cde9_693c69c0",
+      "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
