@@ -16,6 +16,23 @@
       "message": "+Elliot, could you take a look?\n\nThe kernel change is now in the upstream Linux-5.10 branch and devices on the kernel is now also affected.",
       "revId": "03fe48f2cfd240b3ec467a10b6b5d129c7e7e48e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6846ecb8_cc1a6c3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-12T16:50:16Z",
+      "side": 1,
+      "message": "why P? P isn\u0027t supported any more and doesn\u0027t get any security backports...",
+      "revId": "03fe48f2cfd240b3ec467a10b6b5d129c7e7e48e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
