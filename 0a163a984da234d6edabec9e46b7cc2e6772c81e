@@ -52,6 +52,24 @@
       "parentUuid": "c2a1cde9_693c69c0",
       "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9dc3e85_5fd59915",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-04-12T20:52:39Z",
+      "side": 1,
+      "message": "I personally don\u0027t think it\u0027s worth adding a vasprintf failed since it will likely not save anything anyway. But I wouldn\u0027t be opposed to it.",
+      "parentUuid": "951ccfbc_ae5df800",
+      "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
