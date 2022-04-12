@@ -33,6 +33,24 @@
       "message": "why P? P isn\u0027t supported any more and doesn\u0027t get any security backports...",
       "revId": "03fe48f2cfd240b3ec467a10b6b5d129c7e7e48e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deec1938_ae410dac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1089769
+      },
+      "writtenOn": "2022-04-12T21:53:58Z",
+      "side": 1,
+      "message": "ChromeOS team is continuously supporting P devices until 2024.",
+      "parentUuid": "6846ecb8_cc1a6c3f",
+      "revId": "03fe48f2cfd240b3ec467a10b6b5d129c7e7e48e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
