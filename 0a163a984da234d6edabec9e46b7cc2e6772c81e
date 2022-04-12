@@ -70,6 +70,24 @@
       "parentUuid": "951ccfbc_ae5df800",
       "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e0879b7_891989df",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-12T20:54:36Z",
+      "side": 1,
+      "message": "yeah, i think at the time when we added this abort message stuff we did wonder whether we should allocate something early on \"just in case\" ... if we only find ourselves asking that question once every 10 years or so, \"it\u0027s probably fine as-is\" :-)",
+      "parentUuid": "a9dc3e85_5fd59915",
+      "revId": "0a163a984da234d6edabec9e46b7cc2e6772c81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
