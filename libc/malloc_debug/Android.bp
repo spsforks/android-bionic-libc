@@ -171,6 +171,7 @@ cc_test {
 
     header_libs: [
         "bionic_libc_platform_headers",
+        "bionic", // For SKIP_WITH_HWASAN.
     ],
 
     srcs: [
