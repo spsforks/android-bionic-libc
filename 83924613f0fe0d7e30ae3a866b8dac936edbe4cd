@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db9de80f_9780d85e",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-14T04:45:45Z",
+      "side": 1,
+      "message": "note that his is hardcoded to avoid stdin/out/err, because AFAICT that\u0027s the behaviour everyone wants anyway... keep stdin/out/err open across exec, close everything else, what you don\u0027t want to close, manually clear the flag on via adddup2(fd,fd)",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 42
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9a341a8_41ce52c8",
+        "filename": "libc/include/spawn.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-14T04:45:45Z",
+      "side": 1,
+      "message": "what value should we use? 256?\nI think this matches apple\u0027s header ifirc, but it shouldn\u0027t matter should it?",
+      "range": {
+        "startLine": 48,
+        "startChar": 36,
+        "endLine": 48,
+        "endChar": 42
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
