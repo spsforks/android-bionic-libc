@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bac4290f_28574ddf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-14T05:23:27Z",
+      "side": 1,
+      "message": "Heh, it fails to build...\n\nIn file included from external/ltp/testcases/kernel/syscalls/close_range/close_range01.c:32:\nexternal/ltp/include/lapi/close_range.h:22:19: error: static declaration of \u0027close_range\u0027 follows non-static declaration\nstatic inline int close_range(unsigned int fd, unsigned int max_fd,\n                  ^\nbionic/libc/include/unistd.h:326:5: note: previous declaration is here\nint close_range(unsigned int __fd, unsigned int __max_fd, int __flags) __INTRODUCED_IN(33);\n    ^\n1 error generated.",
+      "revId": "14ccabadfe6cef249223fba755fd3b4467b1fca9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
