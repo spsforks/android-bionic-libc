@@ -52,6 +52,24 @@
       "parentUuid": "28c4b37b_9a9fd3d2",
       "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2d84559_6225aff2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-14T04:42:24Z",
+      "side": 1,
+      "message": "glibc went with unistd.h, so following that.\n\nI\u0027m not implementing any fallback for close_range() itself, just the raw system call, I\u0027m not sure if that follows glibc behaviour or not...\n\nTest is minimal, but - at least on 5.15 cuttlefish - it passes.",
+      "parentUuid": "75d0aa58_abab4019",
+      "revId": "49ef67bef8ef66d464d6df92b9c96c8e0d648d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
