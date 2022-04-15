@@ -1,0 +1,175 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "602549df_40bd6d22",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "i was going to say \"don\u0027t forget to remove this from the seccomp allowlist\", but it looks like it wasn\u0027t there? weird...",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "982d04d7_ea2f0590",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "you only need that if you\u0027re going to supply an inline for older API levels. (that is: you don\u0027t need this :-) )",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb2477aa_dcb001e9",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "heh, this doesn\u0027t belong _here_ --- you need to fix the config.h in LTP.",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbfe3d86_f9e8d4c1",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "copy the style from something like libc/include/sys/sysinfo.h (sadly we haven\u0027t had time to fix the existing stuff in unistd.h yet)\n\nthere\u0027s an overview of the style in  https://android.googlesource.com/platform/bionic/+/master/README.md#adding-libc-wrappers-for-system-calls but it\u0027s probably easier to copy and paste and edit.",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "657a50f6_280b4eea",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "yeah, `int` is probably fine. we\u0027ll all be retired before they get to the 32nd flag anyway...",
+      "range": {
+        "startLine": 329,
+        "startChar": 58,
+        "endLine": 329,
+        "endChar": 61
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95fd5ba5_faad52a9",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "i quite like the man7 __first_fd and __second_fd? (or __min_fd and __max_fd --- certainly feels like the names should be a _pair_.)",
+      "range": {
+        "startLine": 329,
+        "startChar": 29,
+        "endLine": 329,
+        "endChar": 33
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4821046_8f778737",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "should be in unistd_test if that\u0027s the header this is in.",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "509936da_42ca01d4",
+        "filename": "tests/sys_close_range_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "no yoda comparisons :-)",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 11
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3806d254_3d115485",
+        "filename": "tests/sys_close_range_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:34:06Z",
+      "side": 1,
+      "message": "bionic tests are run isolated anyway, so the process that was created for this single test case is about to exit. L48-59 can probably just be removed, and have just\n\n  if (close_range(fd, fd, CLOSE_RANGE_CLOEXEC) \u003d\u003d -1) {\n     ASSERT_EQ(ENOSYS, errno);\n     GTEST_SKIP() \u003c\u003c \"close_range not available\";\n  }\n  ASSERT_EQ(fcntl(fd, F_GETFD), FD_CLOEXEC);\n  \ninstead. testing the kernel implementation should probably be LTP\u0027s problem. we just want to check (a) did we export the symbol? and (b) does it marshal the arguments/demarshal the error into errno? (given that there\u0027s no fallback implementation, which i think is fine, and matches our existing practice in almost all cases.)",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
