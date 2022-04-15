@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "727d101c_7b20b07b",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T21:20:59Z",
+      "side": 1,
+      "message": "yeah, that\u0027s still an annoying bug for those of us who own arch-specific code :-)\n\n...but it\u0027s not a regression, so LTP-in-presubmit still seems like a good idea. (though i\u0027ll remove the non-x86-64 stuff to avoid confusion!)",
+      "parentUuid": "b6081dba_b1803b38",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca57495a_8cbb382e",
         "filename": "TEST_MAPPING",
         "patchSetId": 1
@@ -43,6 +67,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b3ece7b6_d0f91330",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T21:20:59Z",
+      "side": 1,
+      "message": "oh, that\u0027s unfortunate. i thought we\u0027d at least get that. is there no way to sign a project up for \"32-bit presubmit too, please\"?",
+      "parentUuid": "ca57495a_8cbb382e",
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "618f7f78_fd016890",
         "filename": "TEST_MAPPING",
         "patchSetId": 1
@@ -54,6 +96,24 @@
       "writtenOn": "2022-04-15T20:28:02Z",
       "side": 1,
       "message": "It took almost 40 min to finish this test, so presubmit will be slow.",
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "215d53c7_fa346cbc",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T21:20:59Z",
+      "side": 1,
+      "message": "i\u0027m more worried about flake, tbh :-)",
+      "parentUuid": "618f7f78_fd016890",
       "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
