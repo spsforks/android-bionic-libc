@@ -85,6 +85,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "caf3c19d_bcc53863",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2022-04-15T22:09:13Z",
+      "side": 1,
+      "message": "sadly that\u0027s a suite level option. You can\u0027t enable it only for one test in a suite. Setting up a separate ATP test (like through go/test-mapping-user-suite) is likely the only option.",
+      "parentUuid": "b3ece7b6_d0f91330",
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "618f7f78_fd016890",
         "filename": "TEST_MAPPING",
         "patchSetId": 1
@@ -114,6 +132,24 @@
       "side": 1,
       "message": "i\u0027m more worried about flake, tbh :-)",
       "parentUuid": "618f7f78_fd016890",
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f66126e_2093c38e",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2022-04-15T22:09:13Z",
+      "side": 1,
+      "message": "The suite will retry 3 times for any failed tests. Hope that\u0027s enough.",
+      "parentUuid": "215d53c7_fa346cbc",
       "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
