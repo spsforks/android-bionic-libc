@@ -3,6 +3,281 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3161c815_6f83aa9a",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "ScopedFd",
+      "range": {
+        "startLine": 51,
+        "startChar": 2,
+        "endLine": 51,
+        "endChar": 5
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bfe7533_43fe5ed2",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "`\u003d\u003d -1` here and elsewhere",
+      "range": {
+        "startLine": 52,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 12
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fda5dc05_5636bc90",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "TEMP_FAILURE_RETRY",
+      "range": {
+        "startLine": 54,
+        "startChar": 11,
+        "endLine": 54,
+        "endChar": 15
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c343c71a_7234c00d",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "size_t",
+      "range": {
+        "startLine": 58,
+        "startChar": 7,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8a705c5_cccd5df8",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "how about we just don\u0027t vfork() if you\u0027ve asked for this, so we can just just fscanf()?",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93f76ce9_e23c6933",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "int fd",
+      "range": {
+        "startLine": 91,
+        "startChar": 23,
+        "endLine": 91,
+        "endChar": 33
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3a016d8_015ac7ae",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "ints",
+      "range": {
+        "startLine": 97,
+        "startChar": 25,
+        "endLine": 97,
+        "endChar": 33
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f566c083_9eeb7372",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "`\u003d\u003d 0`",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd7e5b08_54593b2a",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "(same line or brace, here and everywhere else)",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d938585b_2abcf77a",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "this is common enough it doesn\u0027t need a comment",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 40
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4913eb80_eb5fa105",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "stray semi",
+      "range": {
+        "startLine": 105,
+        "startChar": 3,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2aa3a39_f0621a70",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "int\n\nexplain why backwards?",
+      "range": {
+        "startLine": 112,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 15
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55774be5_c47c8a2a",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "explain why not \u003e\u003d instead?",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "db9de80f_9780d85e",
         "filename": "libc/bionic/spawn.cpp",
         "patchSetId": 7
@@ -26,6 +301,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6cbe3160_068ae735",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "yeah, i haven\u0027t tested on a mac, but cs/ in google3 seems to assume that\u0027s how apple\u0027s implementation works too.\n\nprobably worth us explicitly documenting that though, especially because apple don\u0027t seem to on their man page. (and this constant\u0027s not even on man7.org because glibc doesn\u0027t have it. probably worth pinging the libc-coord thread again, just to let them know we\u0027re actually doing this.)",
+      "parentUuid": "db9de80f_9780d85e",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 42
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9a341a8_41ce52c8",
         "filename": "libc/include/spawn.h",
         "patchSetId": 7
@@ -37,6 +336,30 @@
       "writtenOn": "2022-04-14T04:45:45Z",
       "side": 1,
       "message": "what value should we use? 256?\nI think this matches apple\u0027s header ifirc, but it shouldn\u0027t matter should it?",
+      "range": {
+        "startLine": 48,
+        "startChar": 36,
+        "endLine": 48,
+        "endChar": 42
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8de4f92_19aa282f",
+        "filename": "libc/include/spawn.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T00:46:07Z",
+      "side": 1,
+      "message": "yeah, shouldn\u0027t matter. may as well just use 256?\n\nprobably wants to come out of the __USE_GNU section too...",
+      "parentUuid": "f9a341a8_41ce52c8",
       "range": {
         "startLine": 48,
         "startChar": 36,
