@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b6081dba_b1803b38",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2022-04-15T20:28:02Z",
+      "side": 1,
+      "message": "test mapping suite only runs on x86_64 cuttlefish, so these 2 tests won\u0027t run during presubmit. If you want to have coverage with these tests on a physical device, you can try go/test-mapping-user-suite",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca57495a_8cbb382e",
         "filename": "TEST_MAPPING",
         "patchSetId": 1
@@ -14,6 +37,23 @@
       "writtenOn": "2022-04-15T20:25:18Z",
       "side": 1,
       "message": "Note that test mapping suite runs primary-abi-only, so this test won\u0027t run on 64bit cf build.",
+      "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "618f7f78_fd016890",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2022-04-15T20:28:02Z",
+      "side": 1,
+      "message": "It took almost 40 min to finish this test, so presubmit will be slow.",
       "revId": "41bac0631a5e14f3adc970df6c4d6f021cc30922",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
