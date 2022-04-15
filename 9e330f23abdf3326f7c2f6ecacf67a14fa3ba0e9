@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa70845a_a9a2a00f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T02:11:10Z",
+      "side": 1,
+      "message": "seems reasonable to me. cferris?",
+      "revId": "9e330f23abdf3326f7c2f6ecacf67a14fa3ba0e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "064ea493_2c69d670",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T02:11:10Z",
+      "side": 1,
+      "message": "seems like you always strtoull() anyway?",
+      "range": {
+        "startLine": 228,
+        "startChar": 22,
+        "endLine": 228,
+        "endChar": 67
+      },
+      "revId": "9e330f23abdf3326f7c2f6ecacf67a14fa3ba0e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9221890e_315c8679",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T02:11:10Z",
+      "side": 1,
+      "message": "don\u0027t forget the boilerplate :-(",
+      "revId": "9e330f23abdf3326f7c2f6ecacf67a14fa3ba0e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b7f570d_22d23a2d",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-15T02:11:10Z",
+      "side": 1,
+      "message": "always .h\u003e rather than \u003cc unless you actually need the differences (in which case, state which and why)",
+      "revId": "9e330f23abdf3326f7c2f6ecacf67a14fa3ba0e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
