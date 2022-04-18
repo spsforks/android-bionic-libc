@@ -34,6 +34,236 @@
       "parentUuid": "a9b36620_0a941825",
       "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a78fab16_af0feee5",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "I don\u0027t see any new reference to this in the diff, why did the static go away?",
+      "range": {
+        "startLine": 139,
+        "startChar": 21,
+        "endLine": 139,
+        "endChar": 38
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffa2d176_b389bb2f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "just a note that this change will most likely make performance worse, as the compiler could optimize this modulo into a bit operation with a power-of-two const divisor, but cannot anymore.",
+      "range": {
+        "startLine": 176,
+        "startChar": 2,
+        "endLine": 176,
+        "endChar": 42
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb0e5f51_184c065b",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "why did the static go away? i also don\u0027t see any new references.",
+      "range": {
+        "startLine": 179,
+        "startChar": 5,
+        "endLine": 179,
+        "endChar": 23
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a72fcc16_f84bf987",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "IIRC this size is no longer meaningful for the callback-based API, but I am sure it is suitable for our purposes (potentially a bit large).",
+      "range": {
+        "startLine": 252,
+        "startChar": 20,
+        "endLine": 252,
+        "endChar": 34
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d99f04ff_e478fad0",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "shouldn\u0027t we check whether we consumed the whole string, or do we want 1234a5 do parse as 1234?",
+      "range": {
+        "startLine": 258,
+        "startChar": 29,
+        "endLine": 258,
+        "endChar": 37
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37d7ede9_2a0bd001",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "this doesn\u0027t align with the name of `return had_environment_settings;`",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 47
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7ee0395_9401ece2",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "maybe `\u003d 0` so we don\u0027t need non-local reasoning to verify that this is in fact initialized in the if below, given that GetGwpAsanOptions has non-trivial control flow?",
+      "range": {
+        "startLine": 317,
+        "startChar": 11,
+        "endLine": 317,
+        "endChar": 30
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "777b16dd_70a52c11",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "maybe this is relevant: https://cs.android.com/android/platform/superproject/+/master:bionic/libc/bionic/malloc_common_dynamic.cpp;l\u003d480;drc\u003d8f9713e2373b74b5109f6eddf110855ed4697bb2. not sure about sequencing etc.",
+      "range": {
+        "startLine": 378,
+        "startChar": 1,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e06dd1bc_5fb9df50",
+        "filename": "libc/bionic/sysprop_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "`assert(dest_size \u003e 0)`?",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "580b52a5_207622a4",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-18T22:41:55Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 111,
+        "startChar": 57,
+        "endLine": 111,
+        "endChar": 62
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
