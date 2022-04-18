@@ -16,6 +16,24 @@
       "message": "(WANT_LGTM: fmayer@, cferris@)",
       "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75ad5225_95396f5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-18T21:55:31Z",
+      "side": 1,
+      "message": "(i should have said on friday that i talked to cferris then and he verbally gave his lgtm then, but feel free to IM him if there\u0027s anything specific you wanted him to look at...)",
+      "parentUuid": "a9b36620_0a941825",
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
