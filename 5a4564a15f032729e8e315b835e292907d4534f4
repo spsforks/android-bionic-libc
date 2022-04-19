@@ -247,6 +247,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fca7f047_55dc9219",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-19T22:29:48Z",
+      "side": 1,
+      "message": "you don\u0027t have to invent your own parsing logic. you can do\n\n  char* endptr;\n  strtoll(settings_buf, \u0026endptr, 10);\n  if (*endptr !\u003d \u0027\\0\u0027)\n    something went wrong",
+      "parentUuid": "f2925c04_f7444677",
+      "range": {
+        "startLine": 258,
+        "startChar": 29,
+        "endLine": 258,
+        "endChar": 37
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37d7ede9_2a0bd001",
