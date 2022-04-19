@@ -61,6 +61,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "21738694_f65b4788",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "because it\u0027s already in the anonymous namespace. figured may as well include it here in the general cleanup.",
+      "parentUuid": "a78fab16_af0feee5",
+      "range": {
+        "startLine": 139,
+        "startChar": 21,
+        "endLine": 139,
+        "endChar": 38
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ffa2d176_b389bb2f",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 10
@@ -131,6 +155,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "6f286a29_8768d808",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "(as above)",
+      "parentUuid": "bb0e5f51_184c065b",
+      "range": {
+        "startLine": 179,
+        "startChar": 5,
+        "endLine": 179,
+        "endChar": 23
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a72fcc16_f84bf987",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 10
@@ -175,6 +223,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2925c04_f7444677",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s an issue to have 1234a5 parse as 1234, and it seems preferable to going back to inventing our own parsing logic just to be more pedantic.",
+      "parentUuid": "d99f04ff_e478fad0",
+      "range": {
+        "startLine": 258,
+        "startChar": 29,
+        "endLine": 258,
+        "endChar": 37
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37d7ede9_2a0bd001",
@@ -188,6 +260,30 @@
       "writtenOn": "2022-04-18T22:41:55Z",
       "side": 1,
       "message": "this doesn\u0027t align with the name of `return had_environment_settings;`",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 47
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83abb940_351ccb7b",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37d7ede9_2a0bd001",
       "range": {
         "startLine": 271,
         "startChar": 0,
@@ -221,6 +317,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "086029ac_ac212fb1",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7ee0395_9401ece2",
+      "range": {
+        "startLine": 317,
+        "startChar": 11,
+        "endLine": 317,
+        "endChar": 30
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "777b16dd_70a52c11",
@@ -234,6 +354,30 @@
       "writtenOn": "2022-04-18T22:41:55Z",
       "side": 1,
       "message": "maybe this is relevant: https://cs.android.com/android/platform/superproject/+/master:bionic/libc/bionic/malloc_common_dynamic.cpp;l\u003d480;drc\u003d8f9713e2373b74b5109f6eddf110855ed4697bb2. not sure about sequencing etc.",
+      "range": {
+        "startLine": 378,
+        "startChar": 1,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c91bbde_d4c6c3c4",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "Nah, that\u0027s for children of the zygote, we\u0027re interested in identifying the zygote itself (also, happens much too late, this is during the libc init).",
+      "parentUuid": "777b16dd_70a52c11",
       "range": {
         "startLine": 378,
         "startChar": 1,
@@ -267,6 +411,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f465a7fc_2df2d197",
+        "filename": "libc/bionic/sysprop_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e06dd1bc_5fb9df50",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "580b52a5_207622a4",
@@ -280,6 +448,30 @@
       "writtenOn": "2022-04-18T22:41:55Z",
       "side": 1,
       "message": "nit: typo",
+      "range": {
+        "startLine": 111,
+        "startChar": 57,
+        "endLine": 111,
+        "endChar": 62
+      },
+      "revId": "5a4564a15f032729e8e315b835e292907d4534f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4504ed1e_31297345",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-19T20:28:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "580b52a5_207622a4",
       "range": {
         "startLine": 111,
         "startChar": 57,
