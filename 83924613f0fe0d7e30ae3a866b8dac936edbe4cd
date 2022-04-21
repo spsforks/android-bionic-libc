@@ -318,6 +318,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "502db0f4_b8586766",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T07:16:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15d7dcf9_809663b2",
+      "range": {
+        "startLine": 97,
+        "startChar": 25,
+        "endLine": 97,
+        "endChar": 33
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f566c083_9eeb7372",
@@ -529,6 +553,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7de3898f_851f096c",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T07:16:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46af2b73_331f6f41",
+      "range": {
+        "startLine": 112,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 15
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55774be5_c47c8a2a",
@@ -560,6 +608,24 @@
       "side": 1,
       "message": "cause then it would never finish if first was 0",
       "parentUuid": "55774be5_c47c8a2a",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edfeb7bf_0c91d7f1",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T07:16:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34cff375_1d5f57a7",
       "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
