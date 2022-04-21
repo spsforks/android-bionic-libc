@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ba497df_0657445e",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:48:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3161c815_6f83aa9a",
+      "range": {
+        "startLine": 51,
+        "startChar": 2,
+        "endLine": 51,
+        "endChar": 5
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bfe7533_43fe5ed2",
@@ -94,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d08180c0_eb35c52f",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:48:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fda5dc05_5636bc90",
+      "range": {
+        "startLine": 54,
+        "startChar": 11,
+        "endLine": 54,
+        "endChar": 15
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c343c71a_7234c00d",
@@ -107,6 +155,30 @@
       "writtenOn": "2022-04-15T00:46:07Z",
       "side": 1,
       "message": "size_t",
+      "range": {
+        "startLine": 58,
+        "startChar": 7,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8974bf1c_6581a9f8",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:48:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c343c71a_7234c00d",
       "range": {
         "startLine": 58,
         "startChar": 7,
@@ -134,6 +206,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c785693_049c181d",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:48:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b8a705c5_cccd5df8",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93f76ce9_e23c6933",
@@ -147,6 +237,30 @@
       "writtenOn": "2022-04-15T00:46:07Z",
       "side": 1,
       "message": "int fd",
+      "range": {
+        "startLine": 91,
+        "startChar": 23,
+        "endLine": 91,
+        "endChar": 33
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcbc6b41_1455bcc8",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:48:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "93f76ce9_e23c6933",
       "range": {
         "startLine": 91,
         "startChar": 23,
