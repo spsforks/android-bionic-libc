@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1400c287_eb00b419",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Yes, this entire CL came about because of needing to add this one line to prevent a seccomp caused crash on attempt to call close_range from the system server.\nI wasn\u0027t actually aware there was *another* seccomp allowlist I could have modified instead.",
+      "parentUuid": "602549df_40bd6d22",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "982d04d7_ea2f0590",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-04-15T00:34:06Z",
       "side": 1,
       "message": "you only need that if you\u0027re going to supply an inline for older API levels. (that is: you don\u0027t need this :-) )",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a23ceea3_5269d3e8",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Done, while I could supply an inline (via syscall()) I don\u0027t think it would be much use due to the bpf syscall filter and older OS\u0027s almost guaranteed to have too old kernels.",
+      "parentUuid": "982d04d7_ea2f0590",
       "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f334da3_af919b0e",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb2477aa_dcb001e9",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbfe3d86_f9e8d4c1",
@@ -65,6 +119,24 @@
       "writtenOn": "2022-04-15T00:34:06Z",
       "side": 1,
       "message": "copy the style from something like libc/include/sys/sysinfo.h (sadly we haven\u0027t had time to fix the existing stuff in unistd.h yet)\n\nthere\u0027s an overview of the style in  https://android.googlesource.com/platform/bionic/+/master/README.md#adding-libc-wrappers-for-system-calls but it\u0027s probably easier to copy and paste and edit.",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8212089_954e53ad",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbfe3d86_f9e8d4c1",
       "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -115,6 +187,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f7daeea_1ec68222",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "657a50f6_280b4eea",
+      "range": {
+        "startLine": 329,
+        "startChar": 58,
+        "endLine": 329,
+        "endChar": 61
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad33faba_78f44854",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95fd5ba5_faad52a9",
+      "range": {
+        "startLine": 329,
+        "startChar": 29,
+        "endLine": 329,
+        "endChar": 33
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4821046_8f778737",
@@ -128,6 +248,24 @@
       "writtenOn": "2022-04-15T00:34:06Z",
       "side": 1,
       "message": "should be in unistd_test if that\u0027s the header this is in.",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99d218c2_5a59818b",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:18Z",
+      "side": 1,
+      "message": "Ah, I see I copied from sys_syscall_test.cpp, which I guess is a test for sys/syscall.h, even though syscall() itself is afaik in unistd.h.\n\nDone.",
+      "parentUuid": "f4821046_8f778737",
       "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
