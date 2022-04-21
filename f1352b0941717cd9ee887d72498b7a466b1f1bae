@@ -293,6 +293,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0029b1cd_dd0c418e",
+        "filename": "tests/sys_close_range_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "509936da_42ca01d4",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 11
+      },
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3806d254_3d115485",
@@ -306,6 +330,24 @@
       "writtenOn": "2022-04-15T00:34:06Z",
       "side": 1,
       "message": "bionic tests are run isolated anyway, so the process that was created for this single test case is about to exit. L48-59 can probably just be removed, and have just\n\n  if (close_range(fd, fd, CLOSE_RANGE_CLOEXEC) \u003d\u003d -1) {\n     ASSERT_EQ(ENOSYS, errno);\n     GTEST_SKIP() \u003c\u003c \"close_range not available\";\n  }\n  ASSERT_EQ(fcntl(fd, F_GETFD), FD_CLOEXEC);\n  \ninstead. testing the kernel implementation should probably be LTP\u0027s problem. we just want to check (a) did we export the symbol? and (b) does it marshal the arguments/demarshal the error into errno? (given that there\u0027s no fallback implementation, which i think is fine, and matches our existing practice in almost all cases.)",
+      "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3f15373_6c51a3ca",
+        "filename": "tests/sys_close_range_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T04:09:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3806d254_3d115485",
       "revId": "f1352b0941717cd9ee887d72498b7a466b1f1bae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
