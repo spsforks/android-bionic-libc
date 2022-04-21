@@ -158,6 +158,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "15d7dcf9_809663b2",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "it can\u0027t take int, it has to support (0, ~0U)\nthis is also why close_range takes unsigned min/max fd, and not int.\n\nin general kernel fd\u0027s are unsigned...\nit\u0027s only libc that thinks there signed... :-(",
+      "parentUuid": "e3a016d8_015ac7ae",
+      "range": {
+        "startLine": 97,
+        "startChar": 25,
+        "endLine": 97,
+        "endChar": 33
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f566c083_9eeb7372",
         "filename": "libc/bionic/spawn.cpp",
         "patchSetId": 7
@@ -169,6 +193,24 @@
       "writtenOn": "2022-04-15T00:46:07Z",
       "side": 1,
       "message": "`\u003d\u003d 0`",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "888f3c5f_e6c7421e",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f566c083_9eeb7372",
       "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -186,6 +228,24 @@
       "writtenOn": "2022-04-15T00:46:07Z",
       "side": 1,
       "message": "(same line or brace, here and everywhere else)",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d25b817_326c2b36",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd7e5b08_54593b2a",
       "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -236,6 +296,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "932105cd_fe4a4d2a",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4913eb80_eb5fa105",
+      "range": {
+        "startLine": 105,
+        "startChar": 3,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e14ecb42_9bc7f7fd",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d938585b_2abcf77a",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 40
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2aa3a39_f0621a70",
@@ -261,6 +369,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "46af2b73_331f6f41",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "basically iterating from 0 to ~0 is hard.",
+      "parentUuid": "e2aa3a39_f0621a70",
+      "range": {
+        "startLine": 112,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 15
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "55774be5_c47c8a2a",
         "filename": "libc/bionic/spawn.cpp",
         "patchSetId": 7
@@ -272,6 +404,24 @@
       "writtenOn": "2022-04-15T00:46:07Z",
       "side": 1,
       "message": "explain why not \u003e\u003d instead?",
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34cff375_1d5f57a7",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "cause then it would never finish if first was 0",
+      "parentUuid": "55774be5_c47c8a2a",
       "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -360,6 +510,30 @@
       "side": 1,
       "message": "yeah, shouldn\u0027t matter. may as well just use 256?\n\nprobably wants to come out of the __USE_GNU section too...",
       "parentUuid": "f9a341a8_41ce52c8",
+      "range": {
+        "startLine": 48,
+        "startChar": 36,
+        "endLine": 48,
+        "endChar": 42
+      },
+      "revId": "83924613f0fe0d7e30ae3a866b8dac936edbe4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a63c6e3_b5318f95",
+        "filename": "libc/include/spawn.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-21T06:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8de4f92_19aa282f",
       "range": {
         "startLine": 48,
         "startChar": 36,
