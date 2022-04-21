@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "166a84a7_98fcd2d4",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-21T17:47:21Z",
+      "side": 1,
+      "message": "do we even need these any more? +gbiv, but i\u0027d expect these could be deleted now we don\u0027t support anything else?",
+      "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
