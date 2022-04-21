@@ -22,8 +22,6 @@ TEST(mntent, mntent_smoke) {
   FILE* fp = setmntent("/proc/mounts", "r");
   ASSERT_TRUE(fp != nullptr);
 
-  ASSERT_TRUE(getmntent(fp) != nullptr);
-
   bool saw_proc = false;
 
   struct mntent entry;
