@@ -16,6 +16,24 @@
       "message": "do we even need these any more? +gbiv, but i\u0027d expect these could be deleted now we don\u0027t support anything else?",
       "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1530bca6_e56cf224",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-04-21T17:51:41Z",
+      "side": 1,
+      "message": "presuming `clang_cflags` means \"only apply these to clang,\" i\u0027m not sure why they exist in the first place; clang should always define `__clang__` on its own. +1 for \"let\u0027s remove and see what happens.\" :)",
+      "parentUuid": "166a84a7_98fcd2d4",
+      "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
