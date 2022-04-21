@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ea8b4e8_5aca0087",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069543
+      },
+      "writtenOn": "2022-04-21T17:53:13Z",
+      "side": 1,
+      "message": "The corresponding android-mainline kernel patch is aosp/2071508 which should land today.",
+      "revId": "9dfa2e55ed767076569607ddc44c0cb84906c39c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
