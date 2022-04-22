@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88c6f91f_76b0ffc4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T23:09:00Z",
+      "side": 1,
+      "message": "otherwise lgtm...\n\nbut i think we might need +danalbert to fix the\n```\nKeyError: \u0027U\u0027\n```\nbuild failure? (at least i _think_ that\u0027s danalbert rather than ccross? danalbert will know :-) )",
+      "revId": "3874f17a563ff9073c33e906794815af0879cd28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a009311_7f973675",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T23:09:00Z",
+      "side": 1,
+      "message": "unnecessary?",
+      "revId": "3874f17a563ff9073c33e906794815af0879cd28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf30457e_ab7c57f1",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T23:09:00Z",
+      "side": 1,
+      "message": "* Returns the number of bytes copied on success, and returns -1 and sets `errno`\n * on failure.\n\n(i\u0027ll improve the docs to explain that you can find what to write before the comma from the RETURN VALUE section of the man page...)",
+      "revId": "3874f17a563ff9073c33e906794815af0879cd28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1039793_ed2d6a05",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T23:09:00Z",
+      "side": 1,
+      "message": "i _think_ you need the blank line for this to come out right as a separate paragraph?",
+      "revId": "3874f17a563ff9073c33e906794815af0879cd28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
