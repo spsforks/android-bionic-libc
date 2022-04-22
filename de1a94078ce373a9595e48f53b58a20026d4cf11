@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3d18b2b_7c482d73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-22T22:06:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4740351a_dac3efe3",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "de1a94078ce373a9595e48f53b58a20026d4cf11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbf03f98_a09a6e2a",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-04-22T22:05:46Z",
       "side": 1,
       "message": "nullptr",
+      "range": {
+        "startLine": 46,
+        "startChar": 83,
+        "endLine": 46,
+        "endChar": 87
+      },
+      "revId": "de1a94078ce373a9595e48f53b58a20026d4cf11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8066c78d_f5b8e0f1",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-04-22T22:06:58Z",
+      "side": 1,
+      "message": "Thanks! Done (I was going to make the secret presubmit make sure this works).",
+      "parentUuid": "bbf03f98_a09a6e2a",
       "range": {
         "startLine": 46,
         "startChar": 83,
