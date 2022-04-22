@@ -1668,3 +1668,19 @@ TEST(UNISTD_TEST, close_range) {
   }
 #endif  // __GLIBC__
 }
+
+TEST(UNISTD_TEST, copy_file_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#else   // __GLIBC__
+  TemporaryFile tf;
+  write(tf.fd, "hello world", 12);
+  lseek(tf.fd, SEEK_SET, 0);
+  TemporaryFile tf2;
+  copy_file_range(tf.fd, NULL, tf2.fd, NULL, 12, 0);
+  lseek(tf2.fd, SEEK_SET, 0);
+  std::string content;
+  android::base::ReadFdToString(tf2.fd, &content);
+  ASSERT_STREQ("hello world", content.c_str());
+#endif  // __GLIBC__
+}
