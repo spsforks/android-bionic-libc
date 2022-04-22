@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4740351a_dac3efe3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-22T22:06:13Z",
+      "side": 1,
+      "message": "null-terminator",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "de1a94078ce373a9595e48f53b58a20026d4cf11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bbf03f98_a09a6e2a",
         "filename": "tests/gwp_asan_test.cpp",
         "patchSetId": 2
