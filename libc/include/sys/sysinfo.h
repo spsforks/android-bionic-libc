@@ -35,6 +35,7 @@
 
 #include <sys/cdefs.h>
 #include <linux/kernel.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 

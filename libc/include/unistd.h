@@ -313,6 +313,16 @@ int tcsetpgrp(int __fd, pid_t __pid);
 int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
 int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 
+/**
+ * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) copies
+ * a range of data from one file descriptor to another.
+ *
+ * On error, it returns -1 and errno is set to indicate the error.
+ * Available since API level 34.
+ */
+ssize_t copy_file_range(int __fd_in, off64_t* __off_in, int __fd_out, off64_t* __off_out, size_t __length,
+unsigned int __flags) __INTRODUCED_IN(34);
+
 #if __ANDROID_API__ >= 28
 void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
 #endif
