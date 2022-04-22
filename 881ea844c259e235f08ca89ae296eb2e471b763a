@@ -1,0 +1,158 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6950cbd1_f640bf79",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "(nit: just give the types here; the names are ignored by the script that parses this, and they just drift out of sync with the \"real\" names in the header. one day i should _remove_ all the remaining names and have the script _reject_ names, but never got round to it...)",
+      "range": {
+        "startLine": 184,
+        "startChar": 28,
+        "endLine": 184,
+        "endChar": 33
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ec934e6_2000ee45",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "oops... i should update the docs to make it clearer that \u003csys/sysinfo.h\u003e was just an example to copy _from_ --- the new syscall should be added _to_ whatever header is named on man7.org...",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3023aa1_9cbc8c34",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "\"copies a range of data from one file descriptor to another.\"",
+      "range": {
+        "startLine": 90,
+        "startChar": 86,
+        "endLine": 91,
+        "endChar": 55
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8353167e_5b296d3c",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "don\u0027t forget the \"Available since\" line...",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea031675_3a59ce5b",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "all the argument names should start with `__`. so `__fd_in` etc.\n\nalso avoid abbreviations, so it should be `__length` rather than `__len`.\n\n(nit: always `type*` not `type *`)",
+      "range": {
+        "startLine": 95,
+        "startChar": 35,
+        "endLine": 95,
+        "endChar": 44
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5dbdec4_438209bf",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "...and the `__INTRODUCED_IN()`.",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d9b16d9_d2752689",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "yeah, this is where this should go, but the docs should be here too. it\u0027s just unfortunate that i think you might be the first to add _any_ documentation to \u003cunistd.h\u003e. some files are in a much better state than others, which is why i mentioned \u003csys/sysinfo.h\u003e in the docs...",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4e75578_8e28b0bd",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-22T18:23:54Z",
+      "side": 1,
+      "message": "we might be cool, beavis, but we can\u0027t change the past :-)\n\nthis will need to be added in the \"T\" section near the end. (or more likely a new \"U\" section unless you want to make a case for adding this to T?)",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
