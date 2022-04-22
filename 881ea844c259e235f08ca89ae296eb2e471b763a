@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5730edb7_343f9967",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6950cbd1_f640bf79",
+      "range": {
+        "startLine": 184,
+        "startChar": 28,
+        "endLine": 184,
+        "endChar": 33
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ec934e6_2000ee45",
@@ -37,6 +61,24 @@
       "writtenOn": "2022-04-22T18:23:54Z",
       "side": 1,
       "message": "oops... i should update the docs to make it clearer that \u003csys/sysinfo.h\u003e was just an example to copy _from_ --- the new syscall should be added _to_ whatever header is named on man7.org...",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c93d79c8_915546db",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ec934e6_2000ee45",
       "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4feca6c6_c5c0ba54",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3023aa1_9cbc8c34",
+      "range": {
+        "startLine": 90,
+        "startChar": 86,
+        "endLine": 91,
+        "endChar": 55
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8353167e_5b296d3c",
@@ -77,6 +143,24 @@
       "writtenOn": "2022-04-22T18:23:54Z",
       "side": 1,
       "message": "don\u0027t forget the \"Available since\" line...",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8b9a11e_41616bf1",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8353167e_5b296d3c",
       "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -121,6 +205,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "168394a1_d80d085e",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5dbdec4_438209bf",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13e2cd4b_0d3d26bc",
+        "filename": "libc/include/sys/sysinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea031675_3a59ce5b",
+      "range": {
+        "startLine": 95,
+        "startChar": 35,
+        "endLine": 95,
+        "endChar": 44
+      },
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d9b16d9_d2752689",
@@ -138,6 +264,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3b624f1_e0010a4d",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d9b16d9_d2752689",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4e75578_8e28b0bd",
@@ -151,6 +295,24 @@
       "writtenOn": "2022-04-22T18:23:54Z",
       "side": 1,
       "message": "we might be cool, beavis, but we can\u0027t change the past :-)\n\nthis will need to be added in the \"T\" section near the end. (or more likely a new \"U\" section unless you want to make a case for adding this to T?)",
+      "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32cf5b4b_a7206176",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-22T22:47:01Z",
+      "side": 1,
+      "message": "I start a new \"U\" section and add it into the \"U\" section.",
+      "parentUuid": "b4e75578_8e28b0bd",
       "revId": "881ea844c259e235f08ca89ae296eb2e471b763a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
