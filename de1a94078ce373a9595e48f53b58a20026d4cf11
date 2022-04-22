@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbf03f98_a09a6e2a",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-04-22T22:05:46Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 46,
+        "startChar": 83,
+        "endLine": 46,
+        "endChar": 87
+      },
+      "revId": "de1a94078ce373a9595e48f53b58a20026d4cf11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
