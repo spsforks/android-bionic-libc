@@ -279,6 +279,7 @@ LIBC {
     closedir;
     closelog;
     connect;
+    copy_file_range;
     creat;
     creat64; # introduced=21
     ctime;

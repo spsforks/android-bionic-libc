@@ -35,6 +35,7 @@
 
 #include <sys/cdefs.h>
 #include <linux/kernel.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
@@ -84,5 +85,14 @@ long get_phys_pages(void) __INTRODUCED_IN(23);
  * See also sysconf().
  */
 long get_avphys_pages(void) __INTRODUCED_IN(23);
+
+/**
+ * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) returns
+ * will return the number of bytes copied between files.
+ *
+ * On error, it returns -1 and errno is set to indicate the error.
+ */
+ssize_t copy_file_range(int fd_in, off64_t *off_in, int fd_out, off64_t *off_out, size_t len,
+unsigned int flags);
 
 __END_DECLS
