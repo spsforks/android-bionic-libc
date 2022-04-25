@@ -70,6 +70,24 @@
       "parentUuid": "04bec66e_3d969f61",
       "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a79911d_b776ef2d",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-04-25T17:12:42Z",
+      "side": 1,
+      "message": "`mma` in bionic should probably cover it for any working `lunch` combo. If not, treehugger should catch any issues when you Presubmit-Ready+1. :)",
+      "parentUuid": "04bec66e_3d969f61",
+      "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
