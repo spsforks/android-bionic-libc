@@ -34,6 +34,24 @@
       "parentUuid": "166a84a7_98fcd2d4",
       "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04bec66e_3d969f61",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1946265
+      },
+      "writtenOn": "2022-04-25T16:46:32Z",
+      "side": 1,
+      "message": "I\u0027ll go ahead in remove them. Is there any sort of testing should I do after removing them?",
+      "parentUuid": "1530bca6_e56cf224",
+      "revId": "180343e0261467f0a910b7c0ecf99ebb45ebdcbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
