@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd04d72d_9f0ce4c0",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-04-26T22:42:46Z",
+      "side": 1,
+      "message": "add a couple of lines motivating this versus readdir()/atoi() [just what you said over chat] too?",
+      "revId": "262b873dea75422c88739a5b1645edb1de638ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
