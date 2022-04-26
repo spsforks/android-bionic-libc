@@ -33,6 +33,24 @@
       "message": "add a couple of lines motivating this versus readdir()/atoi() [just what you said over chat] too?",
       "revId": "262b873dea75422c88739a5b1645edb1de638ddf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad60731f_8c50ff33",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-26T22:47:13Z",
+      "side": 1,
+      "message": "this seemed a fair bit simpler to implement, in practice it\u0027s 32K fds to fetch flags on... so ~32K fcntl system calls, which isn\u0027t all that long for a pretty rare operation\nusing readdir requires opening an fd... that might fail itself...\nthat requires fallback, etc..\ndisabling vfork changes semantics of spawn... (we kind of rely on that)\n\nI\u0027ll follow up",
+      "parentUuid": "fd04d72d_9f0ce4c0",
+      "revId": "262b873dea75422c88739a5b1645edb1de638ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
