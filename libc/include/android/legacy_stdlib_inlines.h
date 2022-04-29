@@ -58,12 +58,14 @@ __BEGIN_DECLS
 
 static __inline float strtof(const char* nptr, char** endptr) {
   double d = strtod(nptr, endptr);
-  if (d > FLT_MAX) {
-    errno = ERANGE;
-    return __builtin_huge_valf();
-  } else if (d < -FLT_MAX) {
-    errno = ERANGE;
-    return -__builtin_huge_valf();
+  if (__builtin_isfinite(d)) {
+    if (d > FLT_MAX) {
+      errno = ERANGE;
+      return __builtin_huge_valf();
+    } else if (d < -FLT_MAX) {
+      errno = ERANGE;
+      return -__builtin_huge_valf();
+    }
   }
   return __BIONIC_CAST(static_cast, float, d);
 }
