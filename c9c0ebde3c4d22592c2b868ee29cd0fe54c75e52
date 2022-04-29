@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19405465_f3cd3046",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-04-29T07:06:59Z",
+      "side": 1,
+      "message": "patchset 2 got TH+2, this only differs in commit message",
+      "revId": "c9c0ebde3c4d22592c2b868ee29cd0fe54c75e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
