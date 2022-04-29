@@ -33,6 +33,23 @@
       "message": "Aside: The double-rounding makes the NDK\u0027s strtof slightly wrong on arm32/x86-32. e.g. strtof(\"1.01161128282547\", ...) !\u003d (float)strtod(\"1.01161128282547\", ...)\n\nhttps://stackoverflow.com/questions/57307711/strtof-strtod-followed-by-cast\n",
       "revId": "864567bf430271e14b89f452551539dc952b8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b63eb46e_ca82f052",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-04-29T06:04:34Z",
+      "side": 1,
+      "message": "How about using abs function and writing like if `if (__builtin_isfinite(d) and abs(d) \u003e FLT_MAX)` I don\u0027t think there will be any precision loss and overflow issue?",
+      "revId": "864567bf430271e14b89f452551539dc952b8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
