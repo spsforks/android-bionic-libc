@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a78707b5_f688c651",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-04-29T04:21:44Z",
+      "side": 1,
+      "message": "I suppose I should run the NDK tests after applying this patch to the sysroot prebuilt in an NDK checkout.",
+      "revId": "864567bf430271e14b89f452551539dc952b8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
