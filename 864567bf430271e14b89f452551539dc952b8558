@@ -16,6 +16,23 @@
       "message": "I suppose I should run the NDK tests after applying this patch to the sysroot prebuilt in an NDK checkout.",
       "revId": "864567bf430271e14b89f452551539dc952b8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "411ac7a5_99cf9450",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-04-29T04:51:32Z",
+      "side": 1,
+      "message": "Aside: The double-rounding makes the NDK\u0027s strtof slightly wrong on arm32/x86-32. e.g. strtof(\"1.01161128282547\", ...) !\u003d (float)strtod(\"1.01161128282547\", ...)\n\nhttps://stackoverflow.com/questions/57307711/strtof-strtod-followed-by-cast\n",
+      "revId": "864567bf430271e14b89f452551539dc952b8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
