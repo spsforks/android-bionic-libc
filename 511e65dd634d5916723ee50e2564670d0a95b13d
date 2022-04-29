@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55833b0f_937c4616",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1080076
+      },
+      "writtenOn": "2022-04-29T08:17:12Z",
+      "side": 1,
+      "message": "given it\u0027s past the API freeze of T, should this be in the U section instead? All the abi dumps are already merged and fixed for T",
+      "range": {
+        "startLine": 1568,
+        "startChar": 0,
+        "endLine": 1568,
+        "endChar": 7
+      },
+      "revId": "511e65dd634d5916723ee50e2564670d0a95b13d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
