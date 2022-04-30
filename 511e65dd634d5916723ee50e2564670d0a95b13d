@@ -40,6 +40,30 @@
       },
       "revId": "511e65dd634d5916723ee50e2564670d0a95b13d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e425c7e_27ec2bf8",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2022-04-30T08:58:39Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "55833b0f_937c4616",
+      "range": {
+        "startLine": 1568,
+        "startChar": 0,
+        "endLine": 1568,
+        "endChar": 7
+      },
+      "revId": "511e65dd634d5916723ee50e2564670d0a95b13d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
