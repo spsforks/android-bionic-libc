@@ -16,6 +16,42 @@
       "message": "is it worth actually merging this? you only need this for a short while, right? (and it\u0027ll bitrot the minute you stop using it...)",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d38879c_95be117f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-05-03T23:11:46Z",
+      "side": 1,
+      "message": "I guess I could live with this not being merged and keep carrying it locally (for how long is uncertain). But given that this is the right thing to do (we don\u0027t control every host Linux environment that folks may want to use), and reverting it is basically a search and replace, it doesn\u0027t seem too bad of an idea to merge it.",
+      "parentUuid": "a29e0b1e_0e56011b",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b16c4f5_3919654e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-05-03T23:11:46Z",
+      "side": 1,
+      "message": "Well, a short while could",
+      "parentUuid": "a29e0b1e_0e56011b",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
