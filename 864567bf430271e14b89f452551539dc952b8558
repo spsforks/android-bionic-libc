@@ -50,6 +50,24 @@
       "message": "How about using abs function and writing like if `if (__builtin_isfinite(d) and abs(d) \u003e FLT_MAX)` I don\u0027t think there will be any precision loss and overflow issue?",
       "revId": "864567bf430271e14b89f452551539dc952b8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c70cea59_50a654bf",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-05-03T22:11:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b63eb46e_ca82f052",
+      "revId": "864567bf430271e14b89f452551539dc952b8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
