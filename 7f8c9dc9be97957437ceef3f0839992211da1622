@@ -106,6 +106,24 @@
       "parentUuid": "8d9197d8_520986de",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "552e28fb_1bb78351",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-05-04T00:24:38Z",
+      "side": 1,
+      "message": "\u003e but that cuttlefish host wouldn\u0027t then be able to run Android guests with 4KiB pages, right? so it would be basically useless to us?\n\nNo, this works. The architecture allows for guests to use a different page size than the host, and Linux supports this. I actually have a Cuttlefish guest (4K pages) booting to home screen on my M1 Mac Mini running Linux (16K pages) as the host kernel.\n\n\u003e arm64 host binaries are explicitly _not_ supported atm. that work\u0027s currently not funded at all. but, yeah, if/when that happens, well, that\u0027s one of the many reasons we want to have fully replaced our ancient glibc with current musl by then :-)\n\nI guess that means that Cuttlefish on arm64 depends on an unsupported libc configuration for its host binaries.",
+      "parentUuid": "77e95e9a_45cec072",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
