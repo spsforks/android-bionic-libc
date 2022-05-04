@@ -124,6 +124,24 @@
       "parentUuid": "77e95e9a_45cec072",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1add610b_88766dda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-04T00:38:51Z",
+      "side": 1,
+      "message": "\u003e The architecture allows for guests to use a different page size than the host, and Linux supports this.\n\ninteresting... (i\u0027m still struggling to imagine how we could ever move the ecosystem\u0027s hard-coded 4096es though :-( )\n\n\u003e I guess that means that Cuttlefish on arm64 depends on an unsupported libc configuration for its host binaries.\n\nyeah, but that\u0027s probably fine as long as their host is equivalent to a guest. like i said, hopefully we\u0027ll have switched to musl before this actually matters.",
+      "parentUuid": "552e28fb_1bb78351",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
