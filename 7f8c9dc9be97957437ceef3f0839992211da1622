@@ -70,6 +70,24 @@
       "parentUuid": "7b16c4f5_3919654e",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d9197d8_520986de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-05-04T00:07:18Z",
+      "side": 1,
+      "message": "We use host Bionic for Cuttlefish host binaries on arm64. That means that this patch is needed in order for any Linux kernel with \u003e4K pages to act as a Cuttlefish host. I don\u0027t really care about running Bionic on non-Android per se, just as a dependency for Cuttlefish.\n\nOr is there a plan to move arm64 host binaries to musl? I couldn\u0027t see any code to support that, only x86. I guess if that happens we can revert this patch.",
+      "parentUuid": "4f8b234e_c62c91ec",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
