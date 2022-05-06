@@ -375,6 +375,11 @@ cc_library_static {
                 "upstream-freebsd/lib/libc/string/wmemset.c",
             ],
         },
+        x86_64: {
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wmemcmp.c",
+            ],
+        },
     },
 
     cflags: [
@@ -998,6 +1003,7 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
+                "arch-x86_64/string/sse4-wmemcmp-slm.S",
                 "arch-x86_64/string/avx2-wmemset-kbl.S",
 
                 "arch-x86_64/bionic/__bionic_clone.S",
