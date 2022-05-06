@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66f30b5d_7ac73f8e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "none of this seems relevant here; we already have the link to the man page (which will stay up to date).",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 42
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41c51771_636f4a3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "(this, on the other hand, is useful, and gets lost in the noise otherwise :-) )",
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd613d5c_e8f4085c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "just \"Test: treehugger\" is sufficient for a cl that adds new tests :-) (and actually makes you look _less_ like a good guy --- i genuinely thought you\u0027d done some manual testing that you hadn\u0027t caught in your unit test here!)",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 27
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65c6b59d_074de3ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "great signal (some of the most useful details i\u0027ve seen in a cl like this!), but currently a bit lost in all the noise :-)",
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a015bdf3_0820757e",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "nothing to do with us",
+      "range": {
+        "startLine": 325,
+        "startChar": 35,
+        "endLine": 325,
+        "endChar": 73
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7f316d0_323e8992",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "we don\u0027t say that anywhere else, so just leave the number here. (yeah, it\u0027s a mess. one day we\u0027ll write our own damn doc generation tool and not have to have humans waste their time on this :-( )",
+      "range": {
+        "startLine": 325,
+        "startChar": 31,
+        "endLine": 325,
+        "endChar": 35
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a526d6ef_e307f84a",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "probably worth spelling out \"Android Common Kernel\" here, for the intended audience.\n\n(but +1 to recording all this non-obvious detail!)",
+      "range": {
+        "startLine": 329,
+        "startChar": 71,
+        "endLine": 329,
+        "endChar": 74
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd22c5bb_c61fb66d",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1657,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "is there a reason you used a socket? comment if so, or just open /proc/version if not. (that\u0027s our usual \"don\u0027t care, just need an fd\" go-to :-) )",
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4862aceb_0d57ef79",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T00:01:48Z",
+      "side": 1,
+      "message": "`close_range() \u003d\u003d 0` for consistency (with other tests, if not with traditional kernel style!)",
+      "range": {
+        "startLine": 1662,
+        "startChar": 6,
+        "endLine": 1662,
+        "endChar": 7
+      },
+      "revId": "c8e16ac8ab6e9e4443ba0518ed9cee20450d4025",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
