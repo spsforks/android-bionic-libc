@@ -33,6 +33,24 @@
       "message": "include the benchmarks results in the commit message?\n\n(note that we\u0027ve never seen any non-benchmark improvement from the wide-char stuff; no-one seems to actually use it... )",
       "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37fe06de_1c9ad35d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069219
+      },
+      "writtenOn": "2022-05-06T11:02:18Z",
+      "side": 1,
+      "message": "Did some simple benchmark (https://paste.googleplex.com/6327622691717120), and found that the \"optimized\" version wmemset() was ~4% slower than the original version.\n\nUploaded a new patch set which just changes wmemcmp() to the optmized version.\nAlso added the benchmark result to the commit message.\n\n\u003e (note that we\u0027ve never seen any non-benchmark improvement from the wide-char stuff; no-one seems to actually use it... )\n\nHmm I thought widechar functions were important because Android uses a lot of string16, but it seems that\u0027s not the case...",
+      "parentUuid": "18ca0e81_62e52ad8",
+      "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
