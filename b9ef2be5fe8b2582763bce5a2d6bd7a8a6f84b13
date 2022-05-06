@@ -51,6 +51,24 @@
       "parentUuid": "18ca0e81_62e52ad8",
       "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09defd82_81eb9e4e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T23:16:52Z",
+      "side": 1,
+      "message": "\u003e found that the \"optimized\" version wmemset() was ~4% slower than the original version.\n\nyep. sadly, i\u0027ve seen this movie too many times before, which is why i asked :-)\n\n\u003e Also added the benchmark result to the commit message.\n\nif we _do_ merge this, we should add the benchmarks to bionic/benchmarks/. (and include the actual results in the checkin comment.)\n\n\u003e Hmm I thought widechar functions were important because Android uses a lot of string16, but it seems that\u0027s not the case...\n\nno, there\u0027s String16 but that\u0027s all using https://source.corp.google.com/android/system/core/libutils/Unicode.cpp;l\u003d192 --- which might itself be a bug, of course.\n\ndirect calls to wmemcmp() are basically non-existent: https://source.corp.google.com/search?q\u003dwmemcmp%20-file:(bionic%7Cmusl)%2F%20-file:%5E(prebuilts%7Ctoolchain)%2F%20file:%5C.c%20case:yes\u0026sq\u003dpackage:%5Eandroid$\n\ni think the convincing argument for making a change probably starts with \"i switched String16 over, and i measured an improvement\". +smoreland might have some ideas for somewhat-real-world binder String16 benchmarks...",
+      "parentUuid": "37fe06de_1c9ad35d",
+      "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
