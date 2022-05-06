@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27678a83_15bb4cd8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-06T16:23:35Z",
+      "side": 1,
+      "message": "lol, i did wonder if \"i\u0027m a network guy\" was the reason :-)\n\nthanks, lgtm!",
+      "revId": "b65e1050476ec37330129a7de480dc4fb662a05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
