@@ -165,6 +165,24 @@ As of Q, any time that a backtrace is gathered, a different algorithm is used
 that is extra thorough and can unwind through Java frames. This will run
 slower than the normal backtracing function.
 
+### check\_unreachable\_on\_signal
+As of Android U, this option will trigger a check for unreachable memory
+in a process. Specifically, if the signal SIGRTMAX - 16 (which is 48 on
+most Android devices). Also, this only triggers on the next allocation
+that happens on the process (malloc/free, etc).
+
+If a process is not doing any allocations, it can be forced to trigger when
+running:
+
+    debuggerd -b <PID>.
+
+**NOTE**: The unreachable check can fail for protected process, so it
+might be necessary to run:
+
+    setenforce 0
+
+To get the unreachable data.
+
 ### fill\_on\_alloc[=MAX\_FILLED\_BYTES]
 Any allocation routine, other than calloc, will result in the allocation being
 filled with the value 0xeb. When doing a realloc to a larger size, the bytes
