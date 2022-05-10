@@ -16,6 +16,24 @@
       "message": "Thanks!",
       "revId": "9dff7da04c50a4dee246a878d5625de8f15ef5c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adfe24ab_2ca5eb4e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1946265
+      },
+      "writtenOn": "2022-05-10T20:13:30Z",
+      "side": 1,
+      "message": "Could you also approve the parent https://android-review.googlesource.com/c/platform/bionic/+/2069669/3  so I can submit them together? I was still getting used to git so I made them different commits instead of patches.",
+      "parentUuid": "497be8de_497a6a70",
+      "revId": "9dff7da04c50a4dee246a878d5625de8f15ef5c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
