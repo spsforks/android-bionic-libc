@@ -56,6 +56,24 @@
       "message": "include the specific error message?",
       "revId": "66de029625893b3d894ca970069e0499bce2be13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd322048_040b1542",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-05-10T21:45:45Z",
+      "side": 1,
+      "message": "I just remember the error includes those keywords: \"key error\" \"api_map\"... unable to find a specific one in the chat :(",
+      "parentUuid": "9a4f34c9_9106d627",
+      "revId": "66de029625893b3d894ca970069e0499bce2be13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
