@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5533eded_fcb58975",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-10T22:42:08Z",
+      "side": 1,
+      "message": "is gerrit just showing this wrong, or did you not join these lines?",
+      "revId": "0e6896f02162278df92db7dd9603ab4352e3b892",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65d806b8_71396843",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1680,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-10T22:42:08Z",
+      "side": 1,
+      "message": "oh, i guess we don\u0027t have anything that\u0027s using an old enough kernel to not have this? (i was going to say you don\u0027t bail out if it fails with ENOSYS, but checking the man page, that would require a 4.4 kernel, which isn\u0027t supported for U anyway, so \"meh\". this lgtm!)",
+      "revId": "0e6896f02162278df92db7dd9603ab4352e3b892",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
