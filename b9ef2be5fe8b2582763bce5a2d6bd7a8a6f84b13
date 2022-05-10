@@ -69,6 +69,24 @@
       "parentUuid": "37fe06de_1c9ad35d",
       "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "631221ee_1f6e17a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069219
+      },
+      "writtenOn": "2022-05-10T09:25:38Z",
+      "side": 1,
+      "message": "I\u0027ve realized that wchar_t is 4-byte on Linux so I started to think this CL is not worth landing.\n\nInstead, I\u0027ve uploaded CL:2093010 to start optimizing Unicode.cpp for x86_64.",
+      "parentUuid": "09defd82_81eb9e4e",
+      "revId": "b9ef2be5fe8b2582763bce5a2d6bd7a8a6f84b13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
