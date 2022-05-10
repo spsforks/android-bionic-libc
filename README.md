@@ -209,7 +209,8 @@ Adding a system call usually involves:
   7. Add a basic test. Don't try to test everything; concentrate on just testing
      the code that's actually in *bionic*, not all the functionality that's
      implemented in the kernel. For simple syscalls, that's just the
-     auto-generated argument and return value marshalling.
+     auto-generated argument and return value marshalling. Add a test in the right
+     file in tests/.
 
      A trivial test that deliberately supplies an invalid argument helps check
      that we're generating the right symbol and have the right declaration in
@@ -236,6 +237,15 @@ easy cases, even if only manual testing with strace. Sadly it isn't always
 feasible to write a working test for the interesting cases -- offsets larger
 than 2GiB, say -- so you may end up just writing a "meaningless" program whose
 only purpose is to give you patterns to look for when run under strace(1).)
+Example: https://android-review.googlesource.com/c/platform/bionic/+/2073827
+
+### Debugging tips
+1. Key error for a new codename in libc/libc.map.txt
+Solution: Ask in the team and wait for the update.
+
+2. use of undeclared identifier of the new system call in the test
+Possible Solution: Check everything ready in the files mentioned above first.
+Maybe glibc matters. Follow the example and try #if defined(__GLIBC__).
 
 ## Updating kernel header files
 
