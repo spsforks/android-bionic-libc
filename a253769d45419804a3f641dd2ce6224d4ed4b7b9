@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7445378d_e73153d6",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-11T00:37:46Z",
+      "side": 1,
+      "message": "There is no real reason. The only sort of kind of reason is that there is already other signals used and numbered this way.\n\nI don\u0027t want to reserve these signals unless we run into some kind of conflict. The main reason I don\u0027t want to reserve is there a bunch of other signals used, and I don\u0027t feel like it\u0027s a good idea to reserve all of the signals for this. If we run into problems, I can always make the signal configurable.",
+      "parentUuid": "3cac897a_47fc0923",
+      "range": {
+        "startLine": 406,
+        "startChar": 41,
+        "endLine": 406,
+        "endChar": 43
+      },
+      "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1cdafd38_d2e2502b",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-10T22:37:54Z",
       "side": 1,
       "message": "\"most\" or \"all\"? i think we can just ignore mips at this point and say \"all\", unless i\u0027m missing something? (certainly \"all devices running U\" :-))\n\n(i notice you\u0027ve used this pattern elsewhere, but wonder if we should just point people at `kill -l`? hmm, maybe not given that although `toybox kill -l` output is pretty useful, `kill -l` is much less so. for this purpose at least; you might well argue the opposite depending on what exact question you\u0027re trying to answer!)",
+      "range": {
+        "startLine": 170,
+        "startChar": 57,
+        "endLine": 171,
+        "endChar": 20
+      },
+      "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd8ae9d5_031fd2c5",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-11T00:37:46Z",
+      "side": 1,
+      "message": "I removed the most from all of the places I referenced in this doc.\n\nThis documentation really could use an update along many lines, but I\u0027m not sure it\u0027s worth doing. So I\u0027d like to keep this to a minimum.",
+      "parentUuid": "1cdafd38_d2e2502b",
       "range": {
         "startLine": 170,
         "startChar": 57,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88f54c8d_e90648a2",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-11T00:37:46Z",
+      "side": 1,
+      "message": "Oops, I definitely didn\u0027t mean to leave that there. Fixed.",
+      "parentUuid": "518f7d0d_520cada1",
+      "range": {
+        "startLine": 177,
+        "startChar": 22,
+        "endLine": 177,
+        "endChar": 23
+      },
+      "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b306444_e9ea7df3",
@@ -93,6 +165,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "140483c1_acdf30e4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-11T00:37:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b306444_e9ea7df3",
+      "range": {
+        "startLine": 179,
+        "startChar": 55,
+        "endLine": 179,
+        "endChar": 62
+      },
+      "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5397675_19f4eb60",
@@ -106,6 +202,24 @@
       "writtenOn": "2022-05-10T22:37:54Z",
       "side": 1,
       "message": "oh, nice! maybe the docs should just encourage you to look at the online help then!",
+      "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef2e0528_42353264",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-11T00:37:46Z",
+      "side": 1,
+      "message": "I modified the docs slightly to say how to get this message.",
+      "parentUuid": "f5397675_19f4eb60",
       "revId": "a253769d45419804a3f641dd2ce6224d4ed4b7b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
