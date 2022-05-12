@@ -112,6 +112,7 @@ struct libc_shared_globals {
   const char* scudo_ring_buffer = nullptr;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  bool heap_tagging_was_upgraded = false;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
