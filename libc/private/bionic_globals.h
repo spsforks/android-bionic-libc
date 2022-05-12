@@ -41,6 +41,7 @@
 #include "private/bionic_vdso.h"
 #include "private/WriteProtected.h"
 
+#include <inttypes.h>
 #include <platform/bionic/malloc.h>
 
 struct libc_globals {
@@ -114,6 +115,7 @@ struct libc_shared_globals {
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
+  int64_t heap_tagging_upgrade_timer = 0;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
