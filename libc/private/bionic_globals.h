@@ -42,6 +42,7 @@
 #include "private/WriteProtected.h"
 
 #include <platform/bionic/malloc.h>
+#include <inttypes.h>
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
@@ -112,6 +113,7 @@ struct libc_shared_globals {
   const char* scudo_ring_buffer = nullptr;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  int64_t heap_tagging_upgrade_timer = 0;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
