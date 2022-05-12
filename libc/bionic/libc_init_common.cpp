@@ -44,6 +44,7 @@
 
 #include <async_safe/log.h>
 
+#include "private/ScopedPthreadMutexLocker.h"
 #include "private/WriteProtected.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
@@ -100,6 +101,44 @@ void __libc_init_scudo() {
 #elif defined(SCUDO_ZERO_CONTENTS)
   scudo_malloc_set_zero_contents(1);
 #endif
+#endif
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte_late() {
+#if defined(__aarch64__)
+  if (!__libc_shared_globals()->heap_tagging_was_upgraded) {
+    return;
+  }
+  struct sigevent event = {};
+  static timer_t timer;
+  event.sigev_notify = SIGEV_THREAD;
+  event.sigev_notify_function = [](union sigval) {
+    async_safe_format_log(ANDROID_LOG_INFO, "libc", "Downgrading MTE to async.");
+    ScopedPthreadMutexLocker l(&g_heap_tagging_lock);
+    SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC);
+    timer_delete(timer);
+  };
+
+  if (timer_create(CLOCK_REALTIME, &event, &timer) == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Failed to create MTE downgrade timer");
+    // Revert back to ASYNC. If we fail to create or arm the timer, otherwise the process would be
+    // indefinitely stuck in SYNC.
+    SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC);
+    return;
+  }
+
+  struct itimerspec timerspec = {};
+  timerspec.it_value.tv_sec = 60;
+  if (timer_settime(timer, /* flags= */ 0, &timerspec, nullptr) == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Failed to arm MTE downgrade timer");
+    // Revert back to ASYNC. If we fail to create or arm the timer, otherwise the process would be
+    // indefinitely stuck in SYNC.
+    SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC);
+    timer_delete(timer);
+    return;
+  }
+  async_safe_format_log(ANDROID_LOG_INFO, "libc", "Armed MTE downgrade timer");
 #endif
 }
 

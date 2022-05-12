@@ -29,6 +29,7 @@
 #include <android/api-level.h>
 #include <elf.h>
 #include <errno.h>
+#include <malloc.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -36,6 +37,8 @@
 #include <sys/auxv.h>
 #include <sys/mman.h>
 
+#include "async_safe/log.h"
+#include "heap_tagging.h"
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 #include "sysprop_helpers.h"
@@ -255,6 +258,19 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   return true;
 }
 
+static const char* DescribeTaggingLevel(HeapTaggingLevel level) __attribute__((unused)) {
+  switch (level) {
+    case M_HEAP_TAGGING_LEVEL_NONE:
+      return "none";
+    case M_HEAP_TAGGING_LEVEL_TBI:
+      return "tbi";
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      return "async";
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      return "sync";
+  }
+}
+
 // Returns the initial heap tagging level. Note: This function will never return
 // M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
 // M_HEAP_TAGGING_LEVEL_TBI.
@@ -297,7 +313,21 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
                                                                          size_t phdr_ct,
                                                                          uintptr_t load_bias) {
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias);
-
+  char* env = getenv("TIMED_UPGRADE_MTE_TO_SYNC");
+  if (env && strcmp(env, "1") == 0) {
+    // Make sure that this does not get passed to potential processes inheriting this environment.
+    unsetenv("TIMED_UPGRADE_MTE_TO_SYNC");
+    if (level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+      async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                            "Attempting to upgrade MTE from async to sync.");
+      __libc_shared_globals()->heap_tagging_was_upgraded = true;
+      level = M_HEAP_TAGGING_LEVEL_SYNC;
+    } else if (level != M_HEAP_TAGGING_LEVEL_SYNC) {
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "Requested to upgrade MTE from invalid %s to sync. Ignoring.",
+                            DescribeTaggingLevel(level));
+    }
+  }
   if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
     prctl_arg |= (level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
@@ -318,6 +348,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
     __libc_shared_globals()->initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
   }
 }
+
 #else   // __aarch64__
 void __libc_init_mte(const void*, size_t, uintptr_t) {}
 #endif  // __aarch64__
@@ -369,6 +400,8 @@ __noreturn static void __real_libc_init(void *raw_args,
   if (structors->fini_array != nullptr) {
     __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
+
+  __libc_init_mte_late();
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
