@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bbf9ec7_7491a3dc",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:57:56Z",
+      "side": 1,
+      "message": "do we want this to be overridable? that would make it easier to use the same image and just switch between debug and non-debug at runtime.",
+      "range": {
+        "startLine": 265,
+        "startChar": 11,
+        "endLine": 265,
+        "endChar": 37
+      },
+      "revId": "333f9394ad20db19af18a0104b96d25bc4ec5ecf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
