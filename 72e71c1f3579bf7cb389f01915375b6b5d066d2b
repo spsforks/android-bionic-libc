@@ -26,6 +26,53 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9c673467_81d78c72",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-13T16:51:57Z",
+      "side": 1,
+      "message": "should we just make vfork() \u003d\u003d fork() on mte/hwasan?",
+      "parentUuid": "f3c65a29_f6bd4c86",
+      "range": {
+        "startLine": 17,
+        "startChar": 51,
+        "endLine": 17,
+        "endChar": 57
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37595774_df16d809",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-13T16:51:57Z",
+      "side": 1,
+      "message": "that would be quite a trick on Android --- bionic doesn\u0027t have swapcontext()!\n\ni think \"don\u0027t do this, use POSIX threads\" is the POSIX stance (and one that hasn\u0027t caused us enough trouble for us to offer anything more; my assumption is that \"if you\u0027re implementing userspace threads, congratulations, you\u0027ll be writing some assembler\").",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "69819910_16de40f4",
         "filename": "libc/arch-arm64/bionic/setjmp.S",
         "patchSetId": 1
