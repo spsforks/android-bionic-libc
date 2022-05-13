@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac2766e7_36886b79",
+        "filename": "tests/mntent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-13T16:16:26Z",
+      "side": 0,
+      "message": "I don\u0027t think removing this call is the right way to handle this case. The problem is you are eliminating the only call to getmntent, so you are removing coverage.\n\nI would instead close fp and reopen to guarantee that you can find proc in the loop below.",
+      "range": {
+        "startLine": 25,
+        "startChar": 2,
+        "endLine": 25,
+        "endChar": 40
+      },
+      "revId": "9d0912a7b2767c751f5084219a57d70ccd322f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

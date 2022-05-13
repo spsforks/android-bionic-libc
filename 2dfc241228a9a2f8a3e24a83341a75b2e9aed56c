@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e29e7484_7308fc10",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-13T16:16:26Z",
+      "side": 1,
+      "message": "This description does not describe what you are actually doing. The real problem is that the getmntent call can wind up grabbing the value you look for in the loop. That should be somehow described here.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 41
+      },
+      "revId": "2dfc241228a9a2f8a3e24a83341a75b2e9aed56c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
