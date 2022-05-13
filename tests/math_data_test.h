@@ -19,6 +19,7 @@
 #include <math.h>
 #include <fenv.h>
 
+// NOLINTBEGIN(google-runtime-int) // allow long and long long types
 template <typename RT, typename T1>
 struct data_1_1_t {
   RT expected;
@@ -298,3 +299,5 @@ void DoMathDataTest(data_1_3_t<RT, T1, T2, T3> (&data)[N], RT f(T1, T2, T3)) {
                         data[i].expected, f(data[i].input1, data[i].input2, data[i].input3)) << "Failed on element " << i;
   }
 }
+
+// NOLINTEND(google-runtime-int)

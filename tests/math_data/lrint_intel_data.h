@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// NOLINTBEGIN(google-runtime-int) // allow long and long long types
+
 static data_long_1_t<double> g_lrint_intel_data[] = {
   { // Entry 0
     (long int)0.0,
@@ -980,3 +982,5 @@ static data_long_1_t<double> g_lrint_intel_data[] = {
     -0x1.7ffffp0
   }
 };
+
+// NOLINTEND(google-runtime-int)
