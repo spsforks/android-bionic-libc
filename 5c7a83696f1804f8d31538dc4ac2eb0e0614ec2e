@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a48bcae3_a3752946",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "see other CL, I think we need to handle and test different exec",
+      "range": {
+        "startLine": 50,
+        "startChar": 10,
+        "endLine": 50,
+        "endChar": 16
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96d9c933_e214460c",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "I would replace all asserts with CHECKs to prevent them being optimized out in NDEBUG.",
+      "range": {
+        "startLine": 55,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 8
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b570ab37_1799ea7b",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "log if this gets reached because something went wrong with exec",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 13
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7c0b2d2_b19c062e",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "I think this is an undefined read in case of e.g. EINTR.",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7ed52e9_4229d056",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "nit: /* exec\u003d */",
+      "range": {
+        "startLine": 109,
+        "startChar": 16,
+        "endLine": 109,
+        "endChar": 32
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79a827eb_a066e06a",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "optional nit: pull this into a ForEachGranule helper or something",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 59
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f89d984_e1e9b10d",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "check for MAP_FAILED for debuggability?",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 18
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db82997_de7c41e1",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:54:10Z",
+      "side": 1,
+      "message": "nit: using?\n\nhttps://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rt-using",
+      "range": {
+        "startLine": 191,
+        "startChar": 2,
+        "endLine": 191,
+        "endChar": 9
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
