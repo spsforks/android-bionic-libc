@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3c65a29_f6bd4c86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:05:21Z",
+      "side": 1,
+      "message": "it can be any of the exec functions\n\nhttps://pubs.opengroup.org/onlinepubs/009696799/functions/vfork.html:\n\n\u003e The vfork() function shall be equivalent to fork(), except that the behavior is undefined if the process created by vfork() either modifies any data other than a variable of type pid_t used to store the return value from vfork(), or returns from the function in which vfork() was called, or calls any other function before successfully calling _exit() or one of the exec family of functions.",
+      "range": {
+        "startLine": 17,
+        "startChar": 51,
+        "endLine": 17,
+        "endChar": 57
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69819910_16de40f4",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:05:21Z",
+      "side": 1,
+      "message": "shouldn\u0027t we have something that only does this on hwasan | armv9. i don\u0027t think we can only it when stack tagging is enabled, because we don\u0027t necessarily know, correct?",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 45
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bd04701_de677dec",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:05:21Z",
+      "side": 1,
+      "message": "should this be a elif for hwasan? i don\u0027t think we\u0027ll ever want to do both",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 18
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f16b3ac_779e6e45",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:05:21Z",
+      "side": 1,
+      "message": "Do we want to move on here when it fails? That will make debugging harder than hard crashing right here.",
+      "range": {
+        "startLine": 224,
+        "startChar": 8,
+        "endLine": 224,
+        "endChar": 16
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af672bcd_87527d6d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-13T16:05:21Z",
+      "side": 1,
+      "message": "nit: should not have trailing _ because it\u0027s public",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 33
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
