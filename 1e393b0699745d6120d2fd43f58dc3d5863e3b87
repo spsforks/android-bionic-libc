@@ -22,6 +22,30 @@
       },
       "revId": "1e393b0699745d6120d2fd43f58dc3d5863e3b87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e12b94f8_fd67cfe5",
+        "filename": "tests/mntent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-14T00:24:08Z",
+      "side": 1,
+      "message": "sadly:\n```\n~$ mount | awk \u0027{print $1}\u0027 | sort | uniq -c | sort -r | head\n      4 tmpfs\n      2 tracefs\n      2 none\n      1 udev\n      1 systemd-1\n      1 sysfs\n      1 securityfs\n      1 pstore\n      1 proc\n      1 portal\n~$ \n```\n\nset\u003cpair\u003cfsname, dir\u003e\u003e probably works but that seemed like then the test would be obscured by that code, and i assume that \"a mount came or went\" is a more likely failure than \"/proc/mounts order is non-deterministic\" anyway? (my backup plan for _that_ eventuality is basically \"go back to just checking for /proc in both cases, but with a comment explaining that we tried and failed to do any better\" :-) )",
+      "parentUuid": "83a63012_4ec36a89",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 11
+      },
+      "revId": "1e393b0699745d6120d2fd43f58dc3d5863e3b87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
