@@ -240,6 +240,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b19225fc_b2d97c9b",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T21:27:05Z",
+      "side": 1,
+      "message": "/s/tc0/tcf0, i.e. don\u0027t do these additional loads and stores when tag checks are disabled (either no ELF note provided or mallopt() turned it off).",
+      "parentUuid": "ae6f616e_bf9371aa",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 45
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7fc41503_b620bbbc",
         "filename": "libc/bionic/exit.cpp",
         "patchSetId": 1
