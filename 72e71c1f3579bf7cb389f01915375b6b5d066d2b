@@ -329,6 +329,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa70b21c_462eacc2",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-16T19:53:30Z",
+      "side": 1,
+      "message": "\u003e I mean, vfork they\u0027re really messing up as they\u0027re not allowed to call other functions.\n\nAFAIK, de facto many people call a function as the first thing after vfork, to avoid messing up the parent process\u0027 frame.",
+      "parentUuid": "076bf633_680134fe",
+      "range": {
+        "startLine": 227,
+        "startChar": 19,
+        "endLine": 227,
+        "endChar": 97
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af672bcd_87527d6d",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 1
