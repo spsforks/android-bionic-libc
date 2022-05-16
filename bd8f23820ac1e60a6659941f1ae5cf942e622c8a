@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3355d58c_8853fc05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-16T16:31:18Z",
+      "side": 1,
+      "message": "i think we need a global way to disable these kinds of \"google style guide\" warnings instead.",
+      "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
