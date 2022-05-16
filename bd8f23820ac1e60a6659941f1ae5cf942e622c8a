@@ -16,6 +16,24 @@
       "message": "i think we need a global way to disable these kinds of \"google style guide\" warnings instead.",
       "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccf2fbbd_ab47b2d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-05-16T16:47:01Z",
+      "side": 1,
+      "message": "Agreed. I think that the `google-.*` class of checks needs to be pruned down to generally useful ones and we need to be explicit about not imposing google3 style guidelines on Android projects.",
+      "parentUuid": "3355d58c_8853fc05",
+      "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
