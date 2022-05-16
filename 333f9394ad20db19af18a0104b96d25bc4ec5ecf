@@ -22,6 +22,29 @@
       },
       "revId": "333f9394ad20db19af18a0104b96d25bc4ec5ecf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eda221f3_2f169ec6",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:33:18Z",
+      "side": 1,
+      "message": "stale comment",
+      "range": {
+        "startLine": 272,
+        "startChar": 31,
+        "endLine": 272,
+        "endChar": 70
+      },
+      "revId": "333f9394ad20db19af18a0104b96d25bc4ec5ecf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
