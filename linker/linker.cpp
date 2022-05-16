@@ -1509,6 +1509,10 @@ static void shuffle(std::vector<LoadTask*>* v) {
   }
 }
 
+static android_namespace_t* get_caller_namespace(soinfo* caller) {
+  return caller != nullptr ? caller->get_primary_namespace() : g_anonymous_namespace;
+}
+
 // add_as_children - add first-level loaded libraries (i.e. library_names[], but
 // not their transitive dependencies) as children of the start_with library.
 // This is false when find_libraries is called for dlopen(), when newly loaded
@@ -1527,6 +1531,14 @@ bool find_libraries(android_namespace_t* ns,
   // Step 0: prepare.
   std::unordered_map<const soinfo*, ElfReader> readers_map;
   LoadTaskList load_tasks;
+
+#if defined(__aarch64__)
+  // Check if we're currently loading a library from an APK for app compat
+  bool is_classpath_load = false;
+  if (ns && (strcmp("classloader-namespace", ns->get_name()) == 0)) {
+    is_classpath_load = true;
+  }
+#endif
 
   for (size_t i = 0; i < library_names_count; ++i) {
     const char* name = library_names[i];
@@ -1794,6 +1806,50 @@ bool find_libraries(android_namespace_t* ns,
     }
   }
 
+#if defined(__aarch64__)
+  if (is_classpath_load) {
+    // If we have BTI-enabled system libraries, but the current app does not
+    // support BTI, we may need to reprotect system libraries to ensure that
+    // that application hardening technologies keep working. This is because
+    // application hardening technologies may return to system libraries in
+    // unusual ways
+    bool needs_bti_app_compat_mode = false;
+    for (size_t i = 0; i < load_tasks.size(); ++i) {
+        PRINT("[linker] load_task->get_elf_reader().has_enhanced_cfi=%d, path=%s, ns=%s, is_system_library=%d",
+            load_tasks[i]->get_elf_reader().has_enhanced_cfi(),
+            load_tasks[i]->get_soinfo()->get_realpath(),
+            load_tasks[i]->get_soinfo()->get_primary_namespace()->get_name(),
+            is_system_library(load_tasks[i]->get_soinfo()->get_realpath()));
+        if (load_tasks[i]->get_soinfo()->get_primary_namespace() == ns) {
+          // Library comes from the APK, check whether it supports BTI
+          if (!load_tasks[i]->get_elf_reader().has_enhanced_cfi()) {
+            // Library does not support BTI, therefore may need the app compat
+            // (For some reason, has_enhanced_cfi() always returns false if
+            // the lib's been loaded before...)
+            needs_bti_app_compat_mode = true;
+            break;
+          }
+        }
+    }
+    if (needs_bti_app_compat_mode) {
+      // Iterate through everything in the default namespace and switch off BTI
+      INFO("[linker] disabling BTI for all default libraries");
+      const auto& so_list = g_default_namespace.soinfo_list();
+      for (auto it = so_list.begin(); it != so_list.end(); ++it) {
+        if (is_system_library((*it)->get_realpath())) {
+          TRACE("[linker] disabling BTI for system library %s at base %llu",
+            (*it)->get_realpath(),
+            (*it)->base
+          );
+          // phdr_table_protect_segments does not apply PROT_BTI without the
+          // note section so set it to nullptr to disable BTI
+          phdr_table_protect_segments((*it)->phdr, (*it)->phnum, (*it)->base, nullptr);
+        }
+      }
+    }
+  }
+#endif
+
 
   return true;
 }
@@ -1998,10 +2054,6 @@ static std::string symbol_display_name(const char* sym_name, const char* sym_ver
   }
 
   return std::string(sym_name) + ", version " + sym_ver;
-}
-
-static android_namespace_t* get_caller_namespace(soinfo* caller) {
-  return caller != nullptr ? caller->get_primary_namespace() : g_anonymous_namespace;
 }
 
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
