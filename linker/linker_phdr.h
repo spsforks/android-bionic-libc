@@ -58,6 +58,13 @@ class ElfReader {
   const char* get_string(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
   ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
+  bool has_enhanced_cfi() const {
+#if defined(__aarch64__)
+    return note_gnu_property_.IsBTICompatible();
+#else
+    return false;
+#endif
+  }
 
  private:
   bool ReadElfHeader();
