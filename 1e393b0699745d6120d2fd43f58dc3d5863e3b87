@@ -46,6 +46,30 @@
       },
       "revId": "1e393b0699745d6120d2fd43f58dc3d5863e3b87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81a436d2_9069f18c",
+        "filename": "tests/mntent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-16T16:42:47Z",
+      "side": 1,
+      "message": "Seems like a good plan.",
+      "parentUuid": "e12b94f8_fd67cfe5",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 11
+      },
+      "revId": "1e393b0699745d6120d2fd43f58dc3d5863e3b87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
