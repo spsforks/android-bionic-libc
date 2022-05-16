@@ -144,6 +144,122 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4567bb21_c75dc1db",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "can\u0027t we check tc0 and do this conditionally?",
+      "parentUuid": "69819910_16de40f4",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 45
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fc41503_b620bbbc",
+        "filename": "libc/bionic/exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "do we need to do anything to prevent inlining here?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9da373e5_e063e593",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "nit: kUntagUpperLimit?",
+      "range": {
+        "startLine": 196,
+        "startChar": 24,
+        "endLine": 196,
+        "endChar": 41
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4bdac87_a52c01f3",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "same as florian\u0027s comment below - `ifdef __aarch64__ \u0026\u0026 !__has_feature(hwaddress_sanitizer)`",
+      "range": {
+        "startLine": 200,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 18
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8a32e12_471bcd30",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "i\u0027d add some comment as well explaining what went wrong; i\u0027m sure some developer is doing something completely out there.\n\nmaybe add \"Transitioning to a different stack between setjmp() and longjmp() is not supported under MTE.\"",
+      "range": {
+        "startLine": 205,
+        "startChar": 40,
+        "endLine": 205,
+        "endChar": 67
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7bd04701_de677dec",
         "filename": "libc/bionic/heap_tagging.cpp",
         "patchSetId": 1
@@ -183,6 +299,29 @@
         "startChar": 8,
         "endLine": 224,
         "endChar": 16
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "076bf633_680134fe",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-05-16T19:51:30Z",
+      "side": 1,
+      "message": "same thing: \"Transitioning to a different stack after a call to vfork() is not supported.\"\n\nI mean, vfork they\u0027re really messing up as they\u0027re not allowed to call other functions.",
+      "range": {
+        "startLine": 227,
+        "startChar": 19,
+        "endLine": 227,
+        "endChar": 97
       },
       "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
