@@ -56,6 +56,24 @@
       "message": "i\u0027ve uploaded https://android-review.googlesource.com/c/platform/bionic/+/2097446 which rewrites the test to not make this assumption (but also makes the test more thorough). let me know if that looks good?\n\n",
       "revId": "2dfc241228a9a2f8a3e24a83341a75b2e9aed56c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1702fb8d_87c01dec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1904230
+      },
+      "writtenOn": "2022-05-16T02:44:11Z",
+      "side": 1,
+      "message": "Thank you.\nI\u0027ll check that changes.\nPlease abandon this changes.",
+      "parentUuid": "e7c214c6_6fbf1fd8",
+      "revId": "2dfc241228a9a2f8a3e24a83341a75b2e9aed56c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
