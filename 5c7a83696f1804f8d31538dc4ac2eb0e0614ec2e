@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "39bf8ae8_ccf2a0cb",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-17T00:55:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1b597758_85291381",
+      "range": {
+        "startLine": 50,
+        "startChar": 10,
+        "endLine": 50,
+        "endChar": 16
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "96d9c933_e214460c",
@@ -189,6 +213,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84cd116f_118f33ae",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-17T00:55:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4c4d3cdd_8de75900",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7ed52e9_4229d056",
@@ -273,6 +321,30 @@
       "side": 1,
       "message": "I think that actually makes the code less readable, especially around the early loop exit (do I return false from the lambda? that\u0027s one extra line in each loop).",
       "parentUuid": "79a827eb_a066e06a",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 59
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56cc548f_8b5d794a",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-17T00:55:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d974de2f_3901fe84",
       "range": {
         "startLine": 128,
         "startChar": 0,
