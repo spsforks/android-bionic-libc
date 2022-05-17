@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1b597758_85291381",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Testing all of them seems a bit too much - they all go to sys_execve under the hood. I\u0027ve added execl.",
+      "parentUuid": "a48bcae3_a3752946",
+      "range": {
+        "startLine": 50,
+        "startChar": 10,
+        "endLine": 50,
+        "endChar": 16
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "96d9c933_e214460c",
         "filename": "tests/libs/stack_tagging_helper.cpp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-13T16:54:10Z",
       "side": 1,
       "message": "I would replace all asserts with CHECKs to prevent them being optimized out in NDEBUG.",
+      "range": {
+        "startLine": 55,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 8
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbccdb3b_9289479d",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96d9c933_e214460c",
       "range": {
         "startLine": 55,
         "startChar": 2,
@@ -60,6 +108,30 @@
       "writtenOn": "2022-05-13T16:54:10Z",
       "side": 1,
       "message": "log if this gets reached because something went wrong with exec",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 13
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6c10db7_94fd3a4c",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b570ab37_1799ea7b",
       "range": {
         "startLine": 61,
         "startChar": 0,
@@ -95,6 +167,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4c4d3cdd_8de75900",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "like this?",
+      "parentUuid": "a7c0b2d2_b19c062e",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b7ed52e9_4229d056",
         "filename": "tests/libs/stack_tagging_helper.cpp",
         "patchSetId": 1
@@ -106,6 +202,30 @@
       "writtenOn": "2022-05-13T16:54:10Z",
       "side": 1,
       "message": "nit: /* exec\u003d */",
+      "range": {
+        "startLine": 109,
+        "startChar": 16,
+        "endLine": 109,
+        "endChar": 32
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a748f49f_83e3ec35",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b7ed52e9_4229d056",
       "range": {
         "startLine": 109,
         "startChar": 16,
@@ -141,6 +261,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d974de2f_3901fe84",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "I think that actually makes the code less readable, especially around the early loop exit (do I return false from the lambda? that\u0027s one extra line in each loop).",
+      "parentUuid": "79a827eb_a066e06a",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 59
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0f89d984_e1e9b10d",
         "filename": "tests/libs/stack_tagging_helper.cpp",
         "patchSetId": 1
@@ -152,6 +296,30 @@
       "writtenOn": "2022-05-13T16:54:10Z",
       "side": 1,
       "message": "check for MAP_FAILED for debuggability?",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 18
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac0536ca_7da77063",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f89d984_e1e9b10d",
       "range": {
         "startLine": 170,
         "startChar": 4,
@@ -175,6 +343,30 @@
       "writtenOn": "2022-05-13T16:54:10Z",
       "side": 1,
       "message": "nit: using?\n\nhttps://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rt-using",
+      "range": {
+        "startLine": 191,
+        "startChar": 2,
+        "endLine": 191,
+        "endChar": 9
+      },
+      "revId": "5c7a83696f1804f8d31538dc4ac2eb0e0614ec2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16157b9c_75c0e2c7",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-17T00:53:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9db82997_de7c41e1",
       "range": {
         "startLine": 191,
         "startChar": 2,
