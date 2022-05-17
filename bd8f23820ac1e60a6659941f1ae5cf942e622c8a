@@ -52,6 +52,24 @@
       "parentUuid": "ccf2fbbd_ab47b2d6",
       "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1deb4e71_61f11c39",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-17T15:40:01Z",
+      "side": 1,
+      "message": "\u003e How about disabling only google-runtime-int by default for all modules under bionic/... first? I can make a different CL to set the global default check list for a specific directory.\n\nwe\u0027re going to need a global solution sooner or later, so we may as well solve the real problem now?\n\n\u003e Some other google-* checks are still useful. The google-runtime-int warning to replace long with int64 could be useful to other modules.\n\ni remain unconvinced, but designing the \"global off switch\" such that projects can opt *in* doesn\u0027t sound unreasonable?",
+      "parentUuid": "97fb13a5_3c51847a",
+      "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
