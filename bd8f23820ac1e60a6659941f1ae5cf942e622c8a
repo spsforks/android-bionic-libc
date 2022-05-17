@@ -70,6 +70,24 @@
       "parentUuid": "97fb13a5_3c51847a",
       "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcf9d009_4e62cc6a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2022-05-17T22:56:03Z",
+      "side": 1,
+      "message": "To keep it simple we can try first aosp/2099984, which disables this check globally.\nThere are about a dozen Android.bp files that explicitly enable or disable google-runtime-int locally.",
+      "parentUuid": "1deb4e71_61f11c39",
+      "revId": "bd8f23820ac1e60a6659941f1ae5cf942e622c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
