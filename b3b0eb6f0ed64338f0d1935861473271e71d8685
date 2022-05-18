@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84c6cebe_5c968f31",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-18T22:03:35Z",
+      "side": 1,
+      "message": "(timmurray confirms that this is dead. he also confirms it\u0027s _only_ dead, and not actually harmful, so master seems like the right place for this...)",
+      "revId": "b3b0eb6f0ed64338f0d1935861473271e71d8685",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
