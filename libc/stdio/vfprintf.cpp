@@ -42,6 +42,8 @@
 #define CHAR_TYPE_ORIENTATION -1
 #include "printf_common.h"
 
+/* New 2 comment */
+
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int caller_errno = errno;
   int n, n2;
