@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dabe851a_b8d05914",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-05-19T02:13:47Z",
+      "side": 1,
+      "message": "Apparently a lambda with no captures is implicitly convertible to a function pointer, then to a bool.\n\nThis functionality was added in https://android-review.googlesource.com/c/platform/bionic/+/1652592/, for b/158135888.\n",
+      "revId": "119765415a62ef9ae057f4f852811939cf1a867e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
