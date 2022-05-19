@@ -16,6 +16,23 @@
       "message": "Apparently a lambda with no captures is implicitly convertible to a function pointer, then to a bool.\n\nThis functionality was added in https://android-review.googlesource.com/c/platform/bionic/+/1652592/, for b/158135888.\n",
       "revId": "119765415a62ef9ae057f4f852811939cf1a867e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6772ebff_591c4dc3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-05-19T02:16:37Z",
+      "side": 1,
+      "message": "Do you know what the consequences of this typo are?\n\nCurrently, I think Bionic will use more alignment than necessary and will call madvise with MADV_HUGEPAGE, but Bionic ignores the result of madvise.\n",
+      "revId": "119765415a62ef9ae057f4f852811939cf1a867e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
