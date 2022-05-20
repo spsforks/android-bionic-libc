@@ -33,6 +33,24 @@
       "message": "Do you know what the consequences of this typo are?\n\nCurrently, I think Bionic will use more alignment than necessary and will call madvise with MADV_HUGEPAGE, but Bionic ignores the result of madvise.\n",
       "revId": "119765415a62ef9ae057f4f852811939cf1a867e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f45f873e_fe29fd16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1814885
+      },
+      "writtenOn": "2022-05-20T01:53:26Z",
+      "side": 1,
+      "message": "Currently get_transparent_hugepages_supported() always returns true because the lambda function is converted to a boolean type and set to true. So, madvise with MADV_HUGEPAGE is called for every executable and PMD aligned(2MB aligned) segments, even if kernel does not support transparent hugepages. Fortunately, madvise with MADV_HUGEPAGE returns 0 and does nothing on the kernel without transparent hugepages. I know that the overhead isn\u0027t that big. But, I would like to remove unnecessary system calls.",
+      "parentUuid": "6772ebff_591c4dc3",
+      "revId": "119765415a62ef9ae057f4f852811939cf1a867e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
