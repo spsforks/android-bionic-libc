@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30074867_cdc153b6",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-20T21:40:56Z",
+      "side": 1,
+      "message": "nit /*stack_top\u003d*/",
+      "range": {
+        "startLine": 364,
+        "startChar": 38,
+        "endLine": 364,
+        "endChar": 46
+      },
+      "revId": "717cfe516aced7c6498f46534ba77dc246181ceb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
