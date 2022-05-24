@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6aa5284f_ab42b5cc",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-24T00:53:58Z",
+      "side": 1,
+      "message": "i think you can avoid code changes if you `-DTZDEFAULT\u003dNULL`?",
+      "revId": "ecd8bcb93d39f05e3c05b23546728345d6e58c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
