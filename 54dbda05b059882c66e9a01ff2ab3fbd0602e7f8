@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab802803_62aa7a85",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-25T23:57:04Z",
+      "side": 1,
+      "message": "are there any extra failure cases for PROT_MTE that aren\u0027t already implied by PROT_READ|PROT_WRITE, such that we might want to clarify in the error message whether or not we had PROT_MTE enabled?",
+      "revId": "54dbda05b059882c66e9a01ff2ab3fbd0602e7f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
