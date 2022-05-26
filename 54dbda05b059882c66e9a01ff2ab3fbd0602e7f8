@@ -16,6 +16,24 @@
       "message": "are there any extra failure cases for PROT_MTE that aren\u0027t already implied by PROT_READ|PROT_WRITE, such that we might want to clarify in the error message whether or not we had PROT_MTE enabled?",
       "revId": "54dbda05b059882c66e9a01ff2ab3fbd0602e7f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bcaaa77_881c29e7",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-26T22:24:08Z",
+      "side": 1,
+      "message": "Good point. Not right now, PROT_MTE is ignored in the old kernels, and always allowed on MAP_ANONYMOUS mappings in the new ones (ignored if h/w does not support it). If we end up building some kind of fixed carveout (where it is posssible to exhaust MTE memory but still have some regular pages) I\u0027d expect there to be an error, but that\u0027s hypothetical at this point.\n\nI\u0027ll improve the error message in any case. It\u0027s good to be precise.",
+      "parentUuid": "ab802803_62aa7a85",
+      "revId": "54dbda05b059882c66e9a01ff2ab3fbd0602e7f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
