@@ -34,6 +34,24 @@
       "parentUuid": "8179857c_ab72c659",
       "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e47df093_0f4f8a67",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-26T23:09:08Z",
+      "side": 1,
+      "message": "probably just \"mte\" or \"MTE\" then, since that\u0027s the name most people will know this by? (your team are probably the only folks leet enough to know what this is called in smaps\u0027 VmFlags :-))",
+      "parentUuid": "a8249bfc_2dd5dbc6",
+      "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
