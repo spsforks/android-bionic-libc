@@ -16,6 +16,24 @@
       "message": "is `mt` meaningful elsewhere, or is this a typo?",
       "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8249bfc_2dd5dbc6",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-26T23:05:33Z",
+      "side": 1,
+      "message": "that\u0027s how MTE is shown in /proc/$pid/smaps VmFlags. Lower case. It\u0027s not in regular maps so I was not sure how else to put it.",
+      "parentUuid": "8179857c_ab72c659",
+      "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
