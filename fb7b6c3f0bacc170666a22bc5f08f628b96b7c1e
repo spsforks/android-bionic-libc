@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8179857c_ab72c659",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-05-26T23:03:25Z",
+      "side": 1,
+      "message": "is `mt` meaningful elsewhere, or is this a typo?",
+      "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
