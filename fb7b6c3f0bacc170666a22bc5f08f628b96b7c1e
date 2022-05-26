@@ -52,6 +52,24 @@
       "parentUuid": "a8249bfc_2dd5dbc6",
       "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f03e9bb8_34835c3b",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-26T23:19:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e47df093_0f4f8a67",
+      "revId": "fb7b6c3f0bacc170666a22bc5f08f628b96b7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
