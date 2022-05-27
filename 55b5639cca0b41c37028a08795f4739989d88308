@@ -16,6 +16,23 @@
       "message": "I\u0027ve locally tested this revert and confirmed it gets rid of b/234125620.",
       "revId": "55b5639cca0b41c37028a08795f4739989d88308",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16a43bd0_4abfecab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-05-27T22:20:50Z",
+      "side": 1,
+      "message": "None of the changes should have changed the size of any structures.\n\nI\u0027ll figure this out next week, but I\u0027ve started reverting one file at a time (starting with the most likely culprits) to see what could have caused this problem.",
+      "revId": "55b5639cca0b41c37028a08795f4739989d88308",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
