@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54ea26b0_95eaf2ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2022-05-27T20:42:07Z",
+      "side": 1,
+      "message": "I\u0027ve locally tested this revert and confirmed it gets rid of b/234125620.",
+      "revId": "55b5639cca0b41c37028a08795f4739989d88308",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
