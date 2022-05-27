@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49c5597c_67b3ccf1",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-27T22:48:30Z",
+      "side": 1,
+      "message": "Can you show the code where zygote does that? But it\u0027s probably best to just disable this on zygote, as it\u0027s also confusing for any apps that might get forked in that window. WDYT?",
+      "parentUuid": "73e402d9_63611767",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
@@ -31,6 +49,24 @@
       "writtenOn": "2022-05-27T21:54:59Z",
       "side": 1,
       "message": "This could be the value of the environment variable. Not sure if we want to read it from a sysprop, but even if not it\u0027s better to hardcode this policy in init instead of bionic. Plus, we can then use a smaller timeout for testing!",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d147d7c6_df54578e",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-27T22:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0ad4eba_922249b7",
       "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99185ce9_1be7318f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-27T22:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef4a22ff_7bf3e9b4",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "455b5ab5_c3bc5cfd",
@@ -69,6 +123,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "316ec899_d16db4f8",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-27T22:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "455b5ab5_c3bc5cfd",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29fbf871_341dbf11",
@@ -82,6 +154,24 @@
       "writtenOn": "2022-05-27T21:54:59Z",
       "side": 1,
       "message": "Mention \"timed\" in the log messages, and/or the exact duration.",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15b1944d_4d387d20",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-05-27T22:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29fbf871_341dbf11",
       "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
