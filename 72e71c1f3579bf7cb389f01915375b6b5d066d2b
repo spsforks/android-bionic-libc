@@ -120,6 +120,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f8aadf4_25ef6514",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bb0bac82_bf10bdcc",
+      "range": {
+        "startLine": 17,
+        "startChar": 51,
+        "endLine": 17,
+        "endChar": 57
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37595774_df16d809",
@@ -157,6 +181,30 @@
       "side": 1,
       "message": "I\u0027ll reword the comment.",
       "parentUuid": "37595774_df16d809",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "663101fd_9bac19d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0894720_2879b2bc",
       "range": {
         "startLine": 26,
         "startChar": 12,
@@ -286,6 +334,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00788c85_b1e27fb6",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1c9a6811_7e6d5b04",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 45
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fc41503_b620bbbc",
@@ -323,6 +395,30 @@
       "side": 1,
       "message": "Yeah, the attribute does that.",
       "parentUuid": "7fc41503_b620bbbc",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8f67a72_fcd67373",
+        "filename": "libc/bionic/exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6c2cd5f8_af0a58e7",
       "range": {
         "startLine": 39,
         "startChar": 0,
@@ -403,6 +499,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9f1a9dd_f800a273",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f4bdac87_a52c01f3",
+      "range": {
+        "startLine": 200,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 18
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8a32e12_471bcd30",
@@ -416,6 +536,30 @@
       "writtenOn": "2022-05-16T19:51:30Z",
       "side": 1,
       "message": "i\u0027d add some comment as well explaining what went wrong; i\u0027m sure some developer is doing something completely out there.\n\nmaybe add \"Transitioning to a different stack between setjmp() and longjmp() is not supported under MTE.\"",
+      "range": {
+        "startLine": 205,
+        "startChar": 40,
+        "endLine": 205,
+        "endChar": 67
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff3cab8c_a03eb70c",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "This assumes the program behavior. Let\u0027s update the comment later if we see evidence that this is a common case.",
+      "parentUuid": "d8a32e12_471bcd30",
       "range": {
         "startLine": 205,
         "startChar": 40,
@@ -473,6 +617,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4d9eace_45bd0710",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b1960dec_b50cc89e",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 18
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f16b3ac_779e6e45",
@@ -510,6 +678,30 @@
       "side": 1,
       "message": "Yeah, that sounds like a good idea. Crashing will produce a tombstone with memory maps and the stack trace, that will help debugging a lot.\n\nShould we do the same for longjmp? That one I feel is a little less reliable, especially around sigaltstack and people doing userspace threads (technically UB, but still). Leaning towards \"yes\" at least initially.",
       "parentUuid": "1f16b3ac_779e6e45",
+      "range": {
+        "startLine": 224,
+        "startChar": 8,
+        "endLine": 224,
+        "endChar": 16
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80c9361a_a90bcdae",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Made all of the problematic conditions fatal, both in vfork and in longjmp.",
+      "parentUuid": "2fb26853_8f7d4980",
       "range": {
         "startLine": 224,
         "startChar": 8,
@@ -581,6 +773,30 @@
       "side": 1,
       "message": "Oh wow. POSIX says UB if the process\n\u003e calls any other function before successfully calling _exit() or one of the exec family of functions.\n\nThey probably mean \"any other libc function\" because people certainly call functions a lot after vfork.",
       "parentUuid": "aa70b21c_462eacc2",
+      "range": {
+        "startLine": 227,
+        "startChar": 19,
+        "endLine": 227,
+        "endChar": 97
+      },
+      "revId": "72e71c1f3579bf7cb389f01915375b6b5d066d2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "586e7c92_bdebff27",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T20:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1944b7ab_683ad539",
       "range": {
         "startLine": 227,
         "startChar": 19,
