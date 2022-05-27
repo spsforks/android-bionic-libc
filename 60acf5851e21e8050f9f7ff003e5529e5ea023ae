@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73e402d9_63611767",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T21:54:59Z",
+      "side": 1,
+      "message": "I wonder how this thing interferes with the Zygote trying to enforce single thread-ness when it is about to fork. Will it block app spawns for a minute?\n\nSIGEV_THREAD timers spawn a thread as soon as they are created.",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ad4eba_922249b7",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T21:54:59Z",
+      "side": 1,
+      "message": "This could be the value of the environment variable. Not sure if we want to read it from a sysprop, but even if not it\u0027s better to hardcode this policy in init instead of bionic. Plus, we can then use a smaller timeout for testing!",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef4a22ff_7bf3e9b4",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T21:54:59Z",
+      "side": 1,
+      "message": "This should go to heap_tagging.cpp / h",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "455b5ab5_c3bc5cfd",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T21:54:59Z",
+      "side": 1,
+      "message": "The name should start with \"MEMTAG_\" for consistency.",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29fbf871_341dbf11",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-05-27T21:54:59Z",
+      "side": 1,
+      "message": "Mention \"timed\" in the log messages, and/or the exact duration.",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
