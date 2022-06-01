@@ -401,6 +401,24 @@
       "parentUuid": "a455e788_fea4baa3",
       "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb46ff1b_a2146036",
+        "filename": "libc/tzcode/tzfile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-06-01T08:48:07Z",
+      "side": 1,
+      "message": "Will be set to NULL.",
+      "parentUuid": "609e1174_571b4fd9",
+      "revId": "15ad7bc8fd6d24bfbfa1fe3254c2cca330497f4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

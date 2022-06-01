@@ -33,6 +33,24 @@
       "message": "why do we need to comment this out? this block isn\u0027t even about whether or not time_t is signed, is it?",
       "revId": "b228fd412ec86375f8058d596e6bfc0e708278a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "353694e8_bbfb9674",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-06-01T08:48:07Z",
+      "side": 1,
+      "message": "Sorry, it shouldn\u0027t be commented out. I\u0027ve added test to cover that branch.",
+      "parentUuid": "101c2bbe_483d73f1",
+      "revId": "b228fd412ec86375f8058d596e6bfc0e708278a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
