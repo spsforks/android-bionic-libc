@@ -28,6 +28,14 @@
 
 #include "utils.h"
 
+#include <string>
+
+#if defined(__BIONIC__)
+
+#include <sys/system_properties.h>
+
+#endif
+
 void RunGwpAsanTest(const char* test_name) {
   ExecTestHelper eh;
   eh.SetEnv({"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1", "GWP_ASAN_MAX_ALLOCS=40000",
@@ -53,3 +61,43 @@ void RunSubtestNoEnv(const char* test_name) {
          // |expected_output_regex|, ensure at least one test ran:
          R"(\[  PASSED  \] [1-9]+0? test)");
 }
+
+#if defined(__BIONIC__)
+
+static bool GetSystemPropertyBoolean(const char* property) {
+  char value[PROP_VALUE_MAX];
+  if (__system_property_get(property, value) == 0) {
+    return false;
+  }
+
+  std::string prop_value(value);
+  if (prop_value == "1" || prop_value == "y" || prop_value == "yes" || prop_value == "on" ||
+      prop_value == "true") {
+    return true;
+  }
+
+  return false;
+}
+
+bool IsLowRamDevice() {
+  if (GetSystemPropertyBoolean("ro.config.low_ram")) {
+    return true;
+  }
+
+  char value[PROP_VALUE_MAX];
+  if (__system_property_get("ro.debuggable", value) == 0) {
+    return false;
+  }
+  if (value[0] == '1' && value[0] == '\0') {
+    return false;
+  }
+  return GetSystemPropertyBoolean("debug.force_low_ram");
+}
+
+#else
+
+bool IsLowRamDevice() {
+  return false;
+}
+
+#endif
