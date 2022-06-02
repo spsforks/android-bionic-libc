@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b889240_6f3d5267",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-02T23:31:52Z",
+      "side": 1,
+      "message": "Not sure if it\u0027s a good idea. Critical !\u003d upgrade-incompatible, and it\u0027s not bad to use one of the 3 restarts to try sync mode.",
+      "parentUuid": "8bb9c3e2_367c9c71",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
