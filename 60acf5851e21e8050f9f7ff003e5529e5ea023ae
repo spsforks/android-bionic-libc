@@ -110,6 +110,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0bda7f64_31776093",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-02T23:33:59Z",
+      "side": 1,
+      "message": "The thought was critical \u003d less room for messing up even once, so let\u0027s avoid spawing a thread. But I can add some other mechanism",
+      "parentUuid": "2b889240_6f3d5267",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
