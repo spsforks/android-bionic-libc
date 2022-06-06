@@ -146,6 +146,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ff4da88d_e09492a3",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-06T19:03:13Z",
+      "side": 1,
+      "message": "Added a MEMTAG_NEVER_TIMED_UPGRADE env-var which we can set in the RC file for zygote. WDYT?",
+      "parentUuid": "a22247ca_f3bffee9",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
