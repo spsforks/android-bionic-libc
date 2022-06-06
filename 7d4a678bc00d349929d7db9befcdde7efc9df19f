@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49337e08_e422dfa1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1249117
+      },
+      "writtenOn": "2022-06-06T16:02:25Z",
+      "side": 1,
+      "message": "Hi Elliot, this is a WIP idea for what we could do to ease BTI app compat issues. Basically, this CL intercepts dlopen calls that come from ART, checks if BTI support is present on the new libraries and disables BTI on existing libraries if it\u0027s not present. It corresponds to option 3 on our BTI doc[1]. \n\nPlease see questions in-line and we\u0027ll get to work on a PS2.\n\n[1] https://docs.google.com/document/d/1nWVuuMC10HWwAMmH-b9SRIVbJ3FdhmzpdWotN9go3-0/edit#heading\u003dh.3whwml4",
+      "revId": "7d4a678bc00d349929d7db9befcdde7efc9df19f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3be85fc6_7e83ae7e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1249117
+      },
+      "writtenOn": "2022-06-06T16:02:25Z",
+      "side": 1,
+      "message": "Question for enh: is it safe to assume that \"classloader-namespace\" will never change (and therefore it\u0027s OK to hard-code?).",
+      "range": {
+        "startLine": 1538,
+        "startChar": 20,
+        "endLine": 1538,
+        "endChar": 43
+      },
+      "revId": "7d4a678bc00d349929d7db9befcdde7efc9df19f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73564717_52932305",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1837,
+      "author": {
+        "id": 1249117
+      },
+      "writtenOn": "2022-06-06T16:02:25Z",
+      "side": 1,
+      "message": "One thing we did not clarify is whether vendor libraries are also visibly affected by obfuscation technologies (we assume not). Is that accurate?",
+      "range": {
+        "startLine": 1837,
+        "startChar": 28,
+        "endLine": 1837,
+        "endChar": 47
+      },
+      "revId": "7d4a678bc00d349929d7db9befcdde7efc9df19f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
