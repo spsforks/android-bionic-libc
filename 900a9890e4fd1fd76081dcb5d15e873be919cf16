@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e54117c_a4f98cb4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-06-07T00:08:59Z",
+      "side": 1,
+      "message": "i was going to ask why no test changes, but i see they only try to match \"superfluous mode bits\", which isn\u0027t touched here.\n\nlgtm -- thanks!",
+      "revId": "900a9890e4fd1fd76081dcb5d15e873be919cf16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
