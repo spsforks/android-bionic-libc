@@ -164,6 +164,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0f76c076_e2585306",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-07T19:45:55Z",
+      "side": 1,
+      "message": "What if, instead, we set smth like MEMTAG_TIMED_UPGRADE_TO_SYNC\u003d-1 in zygote rc, and make sure that it overrides the auto-setting from init?\n\nEven better, \"unset MEMTAG_TIMED_UPGRADE_TO_SYNC\".",
+      "parentUuid": "ff4da88d_e09492a3",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
