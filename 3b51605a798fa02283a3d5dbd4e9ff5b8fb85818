@@ -16,6 +16,41 @@
       "message": "i haven\u0027t read this as carefully as i read the google doc version yesterday, but i did skim it and checked how it renders in gittiles (https://android.googlesource.com/platform/bionic/+/refs/changes/39/2117839/2/docs/clang_fortify_anatomy.md) and it looked fine to me...",
       "revId": "3b51605a798fa02283a3d5dbd4e9ff5b8fb85818",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dc5217f_e1486695",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-06-07T21:14:24Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "3b51605a798fa02283a3d5dbd4e9ff5b8fb85818",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ce9028d_37e07956",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-06-07T21:14:24Z",
+      "side": 1,
+      "message": "Yeah, I tweaked a few bits and added a tiny new section to the top. Otherwise, the text is all the same.",
+      "parentUuid": "46d4477c_46406456",
+      "revId": "3b51605a798fa02283a3d5dbd4e9ff5b8fb85818",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
