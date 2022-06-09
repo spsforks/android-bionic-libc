@@ -16,6 +16,24 @@
       "message": "i think you can avoid code changes if you `-DTZDEFAULT\u003dNULL`?",
       "revId": "ecd8bcb93d39f05e3c05b23546728345d6e58c8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5ab2fbc_f3995814",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-06-09T09:59:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aa5284f_ab42b5cc",
+      "revId": "ecd8bcb93d39f05e3c05b23546728345d6e58c8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
