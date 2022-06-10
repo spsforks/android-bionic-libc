@@ -50,7 +50,7 @@ END(__memset_chk)
 
 
 	.section .text.sse2,"ax",@progbits
-ENTRY(memset)
+ENTRY(memset_generic)
 	movq	%rdi, %rax
 	and	$0xff, %rsi
 	mov	$0x0101010101010101, %rcx
@@ -146,4 +146,4 @@ L(128bytesmore_nt):
 	sfence
 	ret
 
-END(memset)
+END(memset_generic)
