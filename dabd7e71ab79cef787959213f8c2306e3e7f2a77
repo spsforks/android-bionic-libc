@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ef256e8_ac46f827",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-10T14:57:09Z",
+      "side": 1,
+      "message": "doesn\u0027t that make this patch a bad idea then, because small sizes are more common?\n\ncan you fix this to not regress for small sizes?",
+      "range": {
+        "startLine": 16,
+        "startChar": 9,
+        "endLine": 17,
+        "endChar": 28
+      },
+      "revId": "dabd7e71ab79cef787959213f8c2306e3e7f2a77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
