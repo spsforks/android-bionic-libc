@@ -379,7 +379,9 @@ struct soinfo {
 
   // dependency graph
   soinfo_list_t children_;
+  void* unused5;  // DO NOT USE: soinfo_list_t shrank in Android T.
   soinfo_list_t parents_;
+  void* unused6;  // DO NOT USE: soinfo_list_t shrank in Android T.
 
   // version >= 1
   off64_t file_offset_;
