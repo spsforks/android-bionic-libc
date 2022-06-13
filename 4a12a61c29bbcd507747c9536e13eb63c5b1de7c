@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3481ade_f05d44da",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-13T16:46:33Z",
+      "side": 1,
+      "message": "posion them rather than comment?",
+      "revId": "4a12a61c29bbcd507747c9536e13eb63c5b1de7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7d7f915_93d1f66e",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-13T16:46:33Z",
+      "side": 1,
+      "message": "double-underscore to make it clearer this is an implementation detail (rather than rewriting in terms of another public api) at the call sites?",
+      "range": {
+        "startLine": 64,
+        "startChar": 23,
+        "endLine": 64,
+        "endChar": 35
+      },
+      "revId": "4a12a61c29bbcd507747c9536e13eb63c5b1de7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
