@@ -16,6 +16,24 @@
       "message": "(or there\u0027s `#pragma clang poison new`, but i don\u0027t know the pros and cons myself, so \"meh\" :-) )",
       "revId": "10b6e4a76b254d7829cb02903eba6a53de4a8811",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "873dd746_79ba41b4",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-06-14T00:42:15Z",
+      "side": 1,
+      "message": "Oh, I didn\u0027t know that existed. I think I prefer the pragma to the macros.",
+      "parentUuid": "8a73fd4c_397bcbb1",
+      "revId": "10b6e4a76b254d7829cb02903eba6a53de4a8811",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
