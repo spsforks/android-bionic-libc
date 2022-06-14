@@ -45,6 +45,7 @@
 #include <async_safe/log.h>
 
 #include "private/WriteProtected.h"
+#include "private/bionic_cpuinfo.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -125,6 +126,7 @@ void __libc_init_common() {
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
+  __libc_init_cpuinfo();
 }
 
 void __libc_init_fork_handler() {
