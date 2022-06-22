@@ -37,9 +37,7 @@
 #include "fvwrite.h"
 
 int
-fputws(ws, fp)
-	const wchar_t * __restrict ws;
-	FILE * __restrict fp;
+fputws(const wchar_t * __restrict ws, FILE * __restrict fp)
 {
 	FLOCKFILE(fp);
 	_SET_ORIENTATION(fp, 1);
