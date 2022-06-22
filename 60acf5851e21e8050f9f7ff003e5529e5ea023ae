@@ -182,6 +182,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06efea6d_61167b8f",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-22T22:22:19Z",
+      "side": 1,
+      "message": "Sure, that works as well. Reverted to previous state, and just need to switch the order in which the environment variables are set in core.",
+      "parentUuid": "0f76c076_e2585306",
+      "revId": "60acf5851e21e8050f9f7ff003e5529e5ea023ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0ad4eba_922249b7",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
