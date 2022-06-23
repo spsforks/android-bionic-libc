@@ -104,6 +104,24 @@
       "parentUuid": "e6324732_2ba9d520",
       "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "222be4a7_a25996f8",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-23T23:06:04Z",
+      "side": 1,
+      "message": "Well, you can always set the environment variable manually... Yes, a bit of an edge case.",
+      "parentUuid": "0f5699c9_b751fa60",
+      "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
