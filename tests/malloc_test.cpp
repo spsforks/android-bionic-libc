@@ -93,183 +93,183 @@ TEST(malloc, calloc_std) {
   }
   free(ptr);
 }
-
-TEST(malloc, calloc_mem_init_disabled) {
-#if defined(__BIONIC__)
-  // calloc should still zero memory if mem-init is disabled.
-  // With jemalloc the mallopts will fail but that shouldn't affect the
-  // execution of the test.
-  mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
-  size_t alloc_len = 100;
-  char *ptr = reinterpret_cast<char*>(calloc(1, alloc_len));
-  for (size_t i = 0; i < alloc_len; i++) {
-    ASSERT_EQ(0, ptr[i]);
-  }
-  free(ptr);
-  mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
-#else
-  GTEST_SKIP() << "bionic-only test";
-#endif
-}
-
-TEST(malloc, calloc_illegal) {
-  SKIP_WITH_HWASAN;
-  errno = 0;
-  ASSERT_EQ(nullptr, calloc(-1, 100));
-  ASSERT_EQ(ENOMEM, errno);
-}
-
-TEST(malloc, calloc_overflow) {
-  SKIP_WITH_HWASAN;
-  errno = 0;
-  ASSERT_EQ(nullptr, calloc(1, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
-  errno = 0;
-  ASSERT_EQ(nullptr, calloc(SIZE_MAX, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
-  errno = 0;
-  ASSERT_EQ(nullptr, calloc(2, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
-  errno = 0;
-  ASSERT_EQ(nullptr, calloc(SIZE_MAX, 2));
-  ASSERT_EQ(ENOMEM, errno);
-}
-
-TEST(malloc, memalign_multiple) {
-  SKIP_WITH_HWASAN << "hwasan requires power of 2 alignment";
-  // Memalign test where the alignment is any value.
-  for (size_t i = 0; i <= 12; i++) {
-    for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
-      char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));
-      ASSERT_TRUE(ptr != nullptr) << "Failed at alignment " << alignment;
-      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
-      ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))
-          << "Failed at alignment " << alignment;
-      free(ptr);
-    }
-  }
-}
-
-TEST(malloc, memalign_overflow) {
-  SKIP_WITH_HWASAN;
-  ASSERT_EQ(nullptr, memalign(4096, SIZE_MAX));
-}
-
-TEST(malloc, memalign_non_power2) {
-  SKIP_WITH_HWASAN;
-  void* ptr;
-  for (size_t align = 0; align <= 256; align++) {
-    ptr = memalign(align, 1024);
-    ASSERT_TRUE(ptr != nullptr) << "Failed at align " << align;
-    free(ptr);
-  }
-}
-
-TEST(malloc, memalign_realloc) {
-  // Memalign and then realloc the pointer a couple of times.
-  for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {
-    char *ptr = (char*)memalign(alignment, 100);
-    ASSERT_TRUE(ptr != nullptr);
-    ASSERT_LE(100U, malloc_usable_size(ptr));
-    ASSERT_EQ(0U, (intptr_t)ptr % alignment);
-    memset(ptr, 0x23, 100);
-
-    ptr = (char*)realloc(ptr, 200);
-    ASSERT_TRUE(ptr != nullptr);
-    ASSERT_LE(200U, malloc_usable_size(ptr));
-    ASSERT_TRUE(ptr != nullptr);
-    for (size_t i = 0; i < 100; i++) {
-      ASSERT_EQ(0x23, ptr[i]);
-    }
-    memset(ptr, 0x45, 200);
-
-    ptr = (char*)realloc(ptr, 300);
-    ASSERT_TRUE(ptr != nullptr);
-    ASSERT_LE(300U, malloc_usable_size(ptr));
-    for (size_t i = 0; i < 200; i++) {
-      ASSERT_EQ(0x45, ptr[i]);
-    }
-    memset(ptr, 0x67, 300);
-
-    ptr = (char*)realloc(ptr, 250);
-    ASSERT_TRUE(ptr != nullptr);
-    ASSERT_LE(250U, malloc_usable_size(ptr));
-    for (size_t i = 0; i < 250; i++) {
-      ASSERT_EQ(0x67, ptr[i]);
-    }
-    free(ptr);
-  }
-}
-
-TEST(malloc, malloc_realloc_larger) {
-  // Realloc to a larger size, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(100);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(100U, malloc_usable_size(ptr));
-  memset(ptr, 67, 100);
-
-  ptr = (char *)realloc(ptr, 200);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(200U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 100; i++) {
-    ASSERT_EQ(67, ptr[i]);
-  }
-  free(ptr);
-}
-
-TEST(malloc, malloc_realloc_smaller) {
-  // Realloc to a smaller size, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(200);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(200U, malloc_usable_size(ptr));
-  memset(ptr, 67, 200);
-
-  ptr = (char *)realloc(ptr, 100);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(100U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 100; i++) {
-    ASSERT_EQ(67, ptr[i]);
-  }
-  free(ptr);
-}
-
-TEST(malloc, malloc_multiple_realloc) {
-  // Multiple reallocs, malloc is used for the original allocation.
-  char *ptr = (char *)malloc(200);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(200U, malloc_usable_size(ptr));
-  memset(ptr, 0x23, 200);
-
-  ptr = (char *)realloc(ptr, 100);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(100U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 100; i++) {
-    ASSERT_EQ(0x23, ptr[i]);
-  }
-
-  ptr = (char*)realloc(ptr, 50);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(50U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 50; i++) {
-    ASSERT_EQ(0x23, ptr[i]);
-  }
-
-  ptr = (char*)realloc(ptr, 150);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(150U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 50; i++) {
-    ASSERT_EQ(0x23, ptr[i]);
-  }
-  memset(ptr, 0x23, 150);
-
-  ptr = (char*)realloc(ptr, 425);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(425U, malloc_usable_size(ptr));
-  for (size_t i = 0; i < 150; i++) {
-    ASSERT_EQ(0x23, ptr[i]);
-  }
-  free(ptr);
-}
+  // comment
+TEST(malloc, calloc_mem_init_disabled) {  // comment
+#if defined(__BIONIC__)  // comment
+  // calloc should still zero memory if mem-init is disabled.  // comment
+  // With jemalloc the mallopts will fail but that shouldn't affect the  // comment
+  // execution of the test.  // comment
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 1);  // comment
+  size_t alloc_len = 100;  // comment
+  char *ptr = reinterpret_cast<char*>(calloc(1, alloc_len));  // comment
+  for (size_t i = 0; i < alloc_len; i++) {  // comment
+    ASSERT_EQ(0, ptr[i]);  // comment
+  }  // comment
+  free(ptr);  // comment
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 0);  // comment
+#else  // comment
+  GTEST_SKIP() << "bionic-only test";  // comment
+#endif  // comment
+}  // comment
+  // comment
+TEST(malloc, calloc_illegal) {  // comment
+  SKIP_WITH_HWASAN;  // comment
+  errno = 0;  // comment
+  ASSERT_EQ(nullptr, calloc(-1, 100));  // comment
+  ASSERT_EQ(ENOMEM, errno);  // comment
+}  // comment
+  // comment
+TEST(malloc, calloc_overflow) {  // comment
+  SKIP_WITH_HWASAN;  // comment
+  errno = 0;  // comment
+  ASSERT_EQ(nullptr, calloc(1, SIZE_MAX));  // comment
+  ASSERT_EQ(ENOMEM, errno);  // comment
+  errno = 0;  // comment
+  ASSERT_EQ(nullptr, calloc(SIZE_MAX, SIZE_MAX));  // comment
+  ASSERT_EQ(ENOMEM, errno);  // comment
+  errno = 0;  // comment
+  ASSERT_EQ(nullptr, calloc(2, SIZE_MAX));  // comment
+  ASSERT_EQ(ENOMEM, errno);  // comment
+  errno = 0;  // comment
+  ASSERT_EQ(nullptr, calloc(SIZE_MAX, 2));  // comment
+  ASSERT_EQ(ENOMEM, errno);  // comment
+}  // comment
+  // comment
+TEST(malloc, memalign_multiple) {  // comment
+  SKIP_WITH_HWASAN << "hwasan requires power of 2 alignment";  // comment
+  // Memalign test where the alignment is any value.  // comment
+  for (size_t i = 0; i <= 12; i++) {  // comment
+    for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {  // comment
+      char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));  // comment
+      ASSERT_TRUE(ptr != nullptr) << "Failed at alignment " << alignment;  // comment
+      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;  // comment
+      ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))  // comment
+          << "Failed at alignment " << alignment;  // comment
+      free(ptr);  // comment
+    }  // comment
+  }  // comment
+}  // comment
+  // comment
+TEST(malloc, memalign_overflow) {  // comment
+  SKIP_WITH_HWASAN;  // comment
+  ASSERT_EQ(nullptr, memalign(4096, SIZE_MAX));  // comment
+}  // comment
+  // comment
+TEST(malloc, memalign_non_power2) {  // comment
+  SKIP_WITH_HWASAN;  // comment
+  void* ptr;  // comment
+  for (size_t align = 0; align <= 256; align++) {  // comment
+    ptr = memalign(align, 1024);  // comment
+    ASSERT_TRUE(ptr != nullptr) << "Failed at align " << align;  // comment
+    free(ptr);  // comment
+  }  // comment
+}  // comment
+  // comment
+TEST(malloc, memalign_realloc) {  // comment
+  // Memalign and then realloc the pointer a couple of times.  // comment
+  for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {  // comment
+    char *ptr = (char*)memalign(alignment, 100);  // comment
+    ASSERT_TRUE(ptr != nullptr);  // comment
+    ASSERT_LE(100U, malloc_usable_size(ptr));  // comment
+    ASSERT_EQ(0U, (intptr_t)ptr % alignment);  // comment
+    memset(ptr, 0x23, 100);  // comment
+  // comment
+    ptr = (char*)realloc(ptr, 200);  // comment
+    ASSERT_TRUE(ptr != nullptr);  // comment
+    ASSERT_LE(200U, malloc_usable_size(ptr));  // comment
+    ASSERT_TRUE(ptr != nullptr);  // comment
+    for (size_t i = 0; i < 100; i++) {  // comment
+      ASSERT_EQ(0x23, ptr[i]);  // comment
+    }  // comment
+    memset(ptr, 0x45, 200);  // comment
+  // comment
+    ptr = (char*)realloc(ptr, 300);  // comment
+    ASSERT_TRUE(ptr != nullptr);  // comment
+    ASSERT_LE(300U, malloc_usable_size(ptr));  // comment
+    for (size_t i = 0; i < 200; i++) {  // comment
+      ASSERT_EQ(0x45, ptr[i]);  // comment
+    }  // comment
+    memset(ptr, 0x67, 300);  // comment
+  // comment
+    ptr = (char*)realloc(ptr, 250);  // comment
+    ASSERT_TRUE(ptr != nullptr);  // comment
+    ASSERT_LE(250U, malloc_usable_size(ptr));  // comment
+    for (size_t i = 0; i < 250; i++) {  // comment
+      ASSERT_EQ(0x67, ptr[i]);  // comment
+    }  // comment
+    free(ptr);  // comment
+  }  // comment
+}  // comment
+  // comment
+TEST(malloc, malloc_realloc_larger) {  // comment
+  // Realloc to a larger size, malloc is used for the original allocation.  // comment
+  char *ptr = (char *)malloc(100);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(100U, malloc_usable_size(ptr));  // comment
+  memset(ptr, 67, 100);  // comment
+  // comment
+  ptr = (char *)realloc(ptr, 200);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(200U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 100; i++) {  // comment
+    ASSERT_EQ(67, ptr[i]);  // comment
+  }  // comment
+  free(ptr);  // comment
+}  // comment
+  // comment
+TEST(malloc, malloc_realloc_smaller) {  // comment
+  // Realloc to a smaller size, malloc is used for the original allocation.  // comment
+  char *ptr = (char *)malloc(200);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(200U, malloc_usable_size(ptr));  // comment
+  memset(ptr, 67, 200);  // comment
+  // comment
+  ptr = (char *)realloc(ptr, 100);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(100U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 100; i++) {  // comment
+    ASSERT_EQ(67, ptr[i]);  // comment
+  }  // comment
+  free(ptr);  // comment
+}  // comment
+  // comment
+TEST(malloc, malloc_multiple_realloc) {  // comment
+  // Multiple reallocs, malloc is used for the original allocation.  // comment
+  char *ptr = (char *)malloc(200);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(200U, malloc_usable_size(ptr));  // comment
+  memset(ptr, 0x23, 200);  // comment
+  // comment
+  ptr = (char *)realloc(ptr, 100);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(100U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 100; i++) {  // comment
+    ASSERT_EQ(0x23, ptr[i]);  // comment
+  }  // comment
+  // comment
+  ptr = (char*)realloc(ptr, 50);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(50U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 50; i++) {  // comment
+    ASSERT_EQ(0x23, ptr[i]);  // comment
+  }  // comment
+  // comment
+  ptr = (char*)realloc(ptr, 150);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(150U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 50; i++) {  // comment
+    ASSERT_EQ(0x23, ptr[i]);  // comment
+  }  // comment
+  memset(ptr, 0x23, 150);  // comment
+  // comment
+  ptr = (char*)realloc(ptr, 425);  // comment
+  ASSERT_TRUE(ptr != nullptr);  // comment
+  ASSERT_LE(425U, malloc_usable_size(ptr));  // comment
+  for (size_t i = 0; i < 150; i++) {  // comment
+    ASSERT_EQ(0x23, ptr[i]);  // comment
+  }  // comment
+  free(ptr);  // comment
+}  // comment
 
 TEST(malloc, calloc_realloc_larger) {
   // Realloc to a larger size, calloc is used for the original allocation.
