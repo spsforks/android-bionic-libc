@@ -17,5 +17,5 @@
 #include <sys/socket.h>
 
 int accept(int sockfd, sockaddr* addr, socklen_t* addrlen) {
-    return accept4(sockfd, addr, addrlen, 0);
+  return accept4(sockfd, addr, addrlen, 0);  // test warning
 }

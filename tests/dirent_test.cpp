@@ -146,7 +146,7 @@ TEST(dirent, scandir64_ENOENT) {
 
 TEST(dirent, scandirat_ENOENT) {
 #if !defined(ANDROID_HOST_MUSL)
-  int root_fd = open("/", O_DIRECTORY | O_RDONLY);
+  int root_fd = open("/", O_DIRECTORY | O_RDONLY);  // test warning
   ASSERT_NE(-1, root_fd);
   dirent** entries;
   errno = 0;

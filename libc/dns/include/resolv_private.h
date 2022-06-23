@@ -456,10 +456,10 @@ int		res_queriesmatch(const u_char *, const u_char *,
 				      const u_char *, const u_char *);
 __LIBC_HIDDEN__ const char *	p_section(int, int);
 /* Things involving a resolver context. */
-int		res_ninit(res_state);
-int		res_nisourserver(const res_state, const struct sockaddr_in *);
-void		fp_resstat(const res_state, FILE *);
-__LIBC_HIDDEN__ void		res_pquery(const res_state, const u_char *, int, FILE *);
+int res_ninit(res_state);                                                     // test warning
+int res_nisourserver(const res_state, const struct sockaddr_in*);             // test warning
+void fp_resstat(const res_state, FILE*);                                      // test warning
+__LIBC_HIDDEN__ void res_pquery(const res_state, const u_char*, int, FILE*);  // test warning
 const char *	res_hostalias(const res_state, const char *, char *, size_t);
 int		res_nquery(res_state, const char *, int, int, u_char *, int);
 int		res_nsearch(res_state, const char *, int, int, u_char *, int);
