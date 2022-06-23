@@ -16,6 +16,24 @@
       "message": "AFAIK \"static inline\" is always preferred in the headers.",
       "revId": "1aa82df1b97d208d1fa778ceb654c18d01aaf6b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4521009_38033565",
+        "filename": "libc/bionic/heap_tagging.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-23T22:59:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "501cfddc_2fc7c6fd",
+      "revId": "1aa82df1b97d208d1fa778ceb654c18d01aaf6b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

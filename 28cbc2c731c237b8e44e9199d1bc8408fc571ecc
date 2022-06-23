@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b02cf31_ae05c326",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-23T22:59:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2876e8fd_5a29456c",
+      "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1612ac81_bbde77a9",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c24b35a_4eb5ba1d",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-23T22:59:17Z",
+      "side": 1,
+      "message": "Huh, I meant to change this to say `timed_upgrade \u003c 0`. Then we can use 0 which is more natural.",
+      "parentUuid": "1612ac81_bbde77a9",
+      "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6324732_2ba9d520",
@@ -48,6 +84,24 @@
       "writtenOn": "2022-06-23T20:00:49Z",
       "side": 1,
       "message": "what happens on a non-MTE device when the binary has an MTE note? The prctl below would fail, but we also should not arm the timer in that case.",
+      "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f5699c9_b751fa60",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-23T22:59:17Z",
+      "side": 1,
+      "message": "How would we even get into this mode, as this is conditioned on an MTE crash?  I guess we can handle this case, but it\u0027s an edge case that should (famous last words) be impossible.",
+      "parentUuid": "e6324732_2ba9d520",
       "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
