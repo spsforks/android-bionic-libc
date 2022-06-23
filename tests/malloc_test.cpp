@@ -99,8 +99,9 @@ TEST(malloc, calloc_mem_init_disabled) {
   // calloc should still zero memory if mem-init is disabled.
   // With jemalloc the mallopts will fail but that shouldn't affect the
   // execution of the test.
+  //
   mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
-  size_t alloc_len = 100;
+  size_t alloc_len = 101;
   char *ptr = reinterpret_cast<char*>(calloc(1, alloc_len));
   for (size_t i = 0; i < alloc_len; i++) {
     ASSERT_EQ(0, ptr[i]);
@@ -108,15 +109,15 @@ TEST(malloc, calloc_mem_init_disabled) {
   free(ptr);
   mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
 #else
-  GTEST_SKIP() << "bionic-only test";
+  GTEST_SKIP() << "bionic-only   test";
 #endif
 }
 
 TEST(malloc, calloc_illegal) {
   SKIP_WITH_HWASAN;
   errno = 0;
-  ASSERT_EQ(nullptr, calloc(-1, 100));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_EQ(nullptr, calloc(-1, 100));  // test warning
+  ASSERT_EQ(ENOMEM, errno);             // test warning
 }
 
 TEST(malloc, calloc_overflow) {
@@ -142,7 +143,7 @@ TEST(malloc, memalign_multiple) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
       char *ptr = reinterpret_cast<char*>(memalign(alignment, 100));
       ASSERT_TRUE(ptr != nullptr) << "Failed at alignment " << alignment;
-      ASSERT_LE(100U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
+      ASSERT_LE(90U, malloc_usable_size(ptr)) << "Failed at alignment " << alignment;
       ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % ((1U << i)))
           << "Failed at alignment " << alignment;
       free(ptr);
@@ -160,7 +161,7 @@ TEST(malloc, memalign_non_power2) {
   void* ptr;
   for (size_t align = 0; align <= 256; align++) {
     ptr = memalign(align, 1024);
-    ASSERT_TRUE(ptr != nullptr) << "Failed at align " << align;
+    ASSERT_TRUE(ptr != nullptr) << "Failed   at align " << align;
     free(ptr);
   }
 }
@@ -177,6 +178,7 @@ TEST(malloc, memalign_realloc) {
     ptr = (char*)realloc(ptr, 200);
     ASSERT_TRUE(ptr != nullptr);
     ASSERT_LE(200U, malloc_usable_size(ptr));
+
     ASSERT_TRUE(ptr != nullptr);
     for (size_t i = 0; i < 100; i++) {
       ASSERT_EQ(0x23, ptr[i]);
@@ -277,9 +279,9 @@ TEST(malloc, calloc_realloc_larger) {
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_LE(100U, malloc_usable_size(ptr));
 
-  ptr = (char *)realloc(ptr, 200);
-  ASSERT_TRUE(ptr != nullptr);
-  ASSERT_LE(200U, malloc_usable_size(ptr));
+  ptr = (char*)realloc(ptr, 200);            // test warning
+  ASSERT_TRUE(ptr != nullptr);               // test warning
+  ASSERT_LE(200U, malloc_usable_size(ptr));  // test warning
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0, ptr[i]);
   }
