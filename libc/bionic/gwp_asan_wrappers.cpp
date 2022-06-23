@@ -41,6 +41,7 @@
 #include "gwp_asan_wrappers.h"
 #include "malloc_common.h"
 #include "platform/bionic/android_unsafe_frame_pointer_chase.h"
+#include "platform/bionic/macros.h"
 #include "platform/bionic/malloc.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_globals.h"
@@ -221,6 +222,8 @@ static const char* kMaxAllocsAppSysprop = "libc.debug.gwp_asan.max_allocs.app_de
 static const char* kMaxAllocsTargetedSyspropPrefix = "libc.debug.gwp_asan.max_allocs.";
 static const char* kMaxAllocsEnvVar = "GWP_ASAN_MAX_ALLOCS";
 
+static const char kPersistPrefix[] = "persist.";
+
 void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
                               const android_mallopt_gwp_asan_options_t& mallopt_options) {
   options->Enabled = true;
@@ -244,26 +247,41 @@ bool GetGwpAsanOption(unsigned long long* result,
   const char* basename = "";
   if (mallopt_options.program_name) basename = __gnu_basename(mallopt_options.program_name);
 
-  size_t program_specific_sysprop_size = strlen(targeted_sysprop_prefix) + strlen(basename) + 1;
-  char* program_specific_sysprop_name = static_cast<char*>(alloca(program_specific_sysprop_size));
-  async_safe_format_buffer(program_specific_sysprop_name, program_specific_sysprop_size, "%s%s",
-                           targeted_sysprop_prefix, basename);
-
-  const char* sysprop_names[2] = {nullptr, nullptr};
+  const char* sysprop_names[4] = {};
   // Tests use a blank program name to specify that system properties should not
   // be used. Tests still continue to use the environment variable though.
   if (*basename != '\0') {
-    sysprop_names[0] = program_specific_sysprop_name;
+    const char* default_sysprop = system_sysprop;
     if (mallopt_options.desire == Action::TURN_ON_FOR_APP) {
-      sysprop_names[1] = app_sysprop;
-    } else {
-      sysprop_names[1] = system_sysprop;
+      default_sysprop = app_sysprop;
     }
+    size_t program_specific_sysprop_size = strlen(targeted_sysprop_prefix) + strlen(basename) + 1;
+    char* program_specific_sysprop = static_cast<char*>(alloca(program_specific_sysprop_size));
+    async_safe_format_buffer(program_specific_sysprop, program_specific_sysprop_size, "%s%s",
+                             targeted_sysprop_prefix, basename);
+
+    size_t persist_default_sysprop_size = strlen(default_sysprop) + arraysize(kPersistPrefix);
+    char* persist_default_sysprop = static_cast<char*>(alloca(persist_default_sysprop_size));
+    async_safe_format_buffer(persist_default_sysprop, persist_default_sysprop_size, "%s%s",
+                             kPersistPrefix, default_sysprop);
+
+    size_t persist_program_specific_sysprop_size =
+        program_specific_sysprop_size + arraysize(kPersistPrefix);
+    char* persist_program_specific_sysprop =
+        static_cast<char*>(alloca(persist_program_specific_sysprop_size));
+    async_safe_format_buffer(persist_program_specific_sysprop,
+                             persist_program_specific_sysprop_size, "%s%s", kPersistPrefix,
+                             program_specific_sysprop);
+
+    sysprop_names[0] = program_specific_sysprop;
+    sysprop_names[1] = persist_program_specific_sysprop;
+    sysprop_names[2] = default_sysprop;
+    sysprop_names[3] = persist_default_sysprop;
   }
 
   char settings_buf[PROP_VALUE_MAX];
-  if (!get_config_from_env_or_sysprops(env_var, sysprop_names,
-                                       /* sys_prop_names_size */ 2, settings_buf, PROP_VALUE_MAX)) {
+  if (!get_config_from_env_or_sysprops(env_var, sysprop_names, arraysize(sysprop_names),
+                                       settings_buf, PROP_VALUE_MAX)) {
     return false;
   }
 

@@ -607,7 +607,10 @@ cc_test_library {
     include_dirs: [
         "bionic/libc",
     ],
-    static_libs: ["libbase"],
+    static_libs: [
+        "libbase",
+        "liblog",
+    ],
 }
 
 // -----------------------------------------------------------------------------
