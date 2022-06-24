@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21275f2b_18fa133c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-24T20:56:18Z",
+      "side": 1,
+      "message": "I personally dislike alloca() and would prefer a static buffer, but I would leave this call to libc maintainers. Also, the call to alloca() has been introduced in a different change, it\u0027s not new here.",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb456ebb_6c97bbaf",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-24T20:56:18Z",
+      "side": 1,
+      "message": "Please make sure that all this unusual stuff (flock on the test binary, reexec) works when run in CTS.",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73c530e2_01a5c98b",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-06-24T20:56:18Z",
+      "side": 1,
+      "message": "This regexp does not look right to me. It would not match \"101 tests\", for example.",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
