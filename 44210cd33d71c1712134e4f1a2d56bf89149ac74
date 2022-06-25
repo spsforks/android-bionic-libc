@@ -20,6 +20,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ee65dfcf_9e9ab913",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-25T00:38:56Z",
+      "side": 1,
+      "message": "(yeah, having gone through libc _removing_ alloca() calls in the past, i didn\u0027t realize we\u0027d let one creep back in. that being said, i\u0027m less troubled by alloca()s for strings than \"real\" arrays, especially when you\u0027re going to write into it on the next line.)",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb8f4c8f_13bbf663",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-25T00:38:56Z",
+      "side": 1,
+      "message": "(i would prefer `strlen() + strlen() + 1` though --- don\u0027t make the reader think.)",
+      "range": {
+        "startLine": 263,
+        "startChar": 68,
+        "endLine": 263,
+        "endChar": 77
+      },
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fb456ebb_6c97bbaf",
         "filename": "tests/gwp_asan_test.cpp",
         "patchSetId": 2
