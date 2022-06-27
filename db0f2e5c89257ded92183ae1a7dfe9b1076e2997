@@ -16,6 +16,188 @@
       "message": "Please review",
       "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63d58392_631a1025",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "how much code would you _really_ need for this?",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d634dad_5d31b65c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "(lists should be in alphabetical order when there\u0027s no specific required order.)",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e45b034f_7f49a296",
+        "filename": "libc/arch-x86/bionic/cpuinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "copyright header in every file",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c9fc0b9_a275f5c4",
+        "filename": "libc/arch-x86/bionic/cpuinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "what\u0027s needed from there? should it just be inlined in here and the file removed?",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "051bfb75_71452de6",
+        "filename": "libc/arch-x86/bionic/cpuinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "size_t",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 17
+      },
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cac37d7b_4b30d8fa",
+        "filename": "libc/arch-x86/bionic/cpuinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "this function also makes me think it\u0027s probably less code to just collect the information you want directly?",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1d18dc8_bde2282a",
+        "filename": "libc/arch-x86/cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "#pragma once",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6dd146f_0c770873",
+        "filename": "libc/arch-x86/silvermont/string/sse2-memmove-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "(if this code isn\u0027t shared with other systems, you can assume Android is always PIC.)",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffa64d23_7cd332c9",
+        "filename": "libc/arch-x86/silvermont/string/sse2-memmove-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "affect",
+      "range": {
+        "startLine": 203,
+        "startChar": 61,
+        "endLine": 203,
+        "endChar": 67
+      },
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3479854_681a596c",
+        "filename": "libc/arch-x86_64/string/sse2-memmove-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T15:47:25Z",
+      "side": 1,
+      "message": "why are you keeping this?",
+      "revId": "db0f2e5c89257ded92183ae1a7dfe9b1076e2997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
