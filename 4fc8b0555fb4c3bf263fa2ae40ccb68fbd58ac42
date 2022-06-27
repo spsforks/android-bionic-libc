@@ -34,6 +34,24 @@
       "parentUuid": "73847485_49509af1",
       "revId": "4fc8b0555fb4c3bf263fa2ae40ccb68fbd58ac42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7188b77f_5ddc4a8b",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memset-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T16:31:18Z",
+      "side": 0,
+      "message": "no, you need a separate memset_chk for each variant (otherwise it\u0027s just an ODR violation). see the existing examples: https://cs.android.com/search?q\u003dmemset_chk_%5B%5Ef%5D\n\n(funnily enough, i was wrong when i claimed it was just arm --- i see atom\u0027s already there too :-) https://cs.android.com/search?q\u003dmemset_chk_atom)",
+      "parentUuid": "37a25d88_1aebbf4b",
+      "revId": "4fc8b0555fb4c3bf263fa2ae40ccb68fbd58ac42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
