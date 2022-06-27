@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad090001_dcad83bd",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T23:58:54Z",
+      "side": 1,
+      "message": "`: %m`?",
+      "range": {
+        "startLine": 127,
+        "startChar": 63,
+        "endLine": 127,
+        "endChar": 64
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c40ff9be_4b4747e7",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T23:58:54Z",
+      "side": 1,
+      "message": "units?",
+      "range": {
+        "startLine": 136,
+        "startChar": 31,
+        "endLine": 136,
+        "endChar": 57
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "817e9535_1f35b62e",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T23:58:54Z",
+      "side": 1,
+      "message": "`: %m`?",
+      "range": {
+        "startLine": 139,
+        "startChar": 60,
+        "endLine": 139,
+        "endChar": 61
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7cd0070_e4e067f6",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T23:58:54Z",
+      "side": 1,
+      "message": "units?",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 50
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
