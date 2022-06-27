@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b198d9e_a49b3fc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-27T16:21:47Z",
+      "side": 1,
+      "message": "i don\u0027t think we\u0027d take submissions like this, where you\u0027ve run non-open-source C code through a proprietary compiler (?) and then uploaded the resulting .S file --- that\u0027s not really open source, and it\u0027s neither intelligible nor maintainable.\n\nif you want to improve libm performance i suggest either:\n\n1. working on github arm-optimized-routines (where the _real_ source is available).\n2. coming up with an equivalent intel-optimized-routines (with real source, not just checked-in compiler output).\n3. directly improving the FreeBSD C source that almost everyone uses.\n4. improving LLVM so that your source doesn\u0027t need to be run through a proprietary compiler.\n\nbut no-one\u0027s likely to accept code that no human can actually review.",
+      "revId": "d277831771c96a4d167ef00812ead6c0164dd320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
