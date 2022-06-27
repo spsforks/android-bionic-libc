@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "267554ef_22c7c714",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-06-27T19:40:41Z",
+      "side": 1,
+      "message": "moved to static buffers",
+      "parentUuid": "ee65dfcf_9e9ab913",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb8f4c8f_13bbf663",
@@ -48,6 +66,30 @@
       "writtenOn": "2022-06-25T00:38:56Z",
       "side": 1,
       "message": "(i would prefer `strlen() + strlen() + 1` though --- don\u0027t make the reader think.)",
+      "range": {
+        "startLine": 263,
+        "startChar": 68,
+        "endLine": 263,
+        "endChar": 77
+      },
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77751bae_2e6f9a55",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-06-27T19:40:41Z",
+      "side": 1,
+      "message": "(deprecated)",
+      "parentUuid": "eb8f4c8f_13bbf663",
       "range": {
         "startLine": 263,
         "startChar": 68,
@@ -75,6 +117,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e54eba28_44e6438a",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-06-27T19:40:41Z",
+      "side": 1,
+      "message": "tested 3 things, all green. only remaining concern is `-user` builds, but given there\u0027s other flock tests in bionic (and the reexec tests are not new, just moved the wrapper to a new cpp file), I think we\u0027re good.\n\n 1. m bionic-unit-tests \u0026\u0026 bionic-unit-tests-static \u0026\u0026 adb shell /data/nativetest64/...\n 2. atest bionic-unit-tests bionic-unit-tests-static\n 3. m cts \u0026\u0026 echo run cts -m CtsBionicTestCases \u003e cts-tradefed",
+      "parentUuid": "fb456ebb_6c97bbaf",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73c530e2_01a5c98b",
@@ -88,6 +148,24 @@
       "writtenOn": "2022-06-24T20:56:18Z",
       "side": 1,
       "message": "This regexp does not look right to me. It would not match \"101 tests\", for example.",
+      "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a270073_a5947024",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-06-27T19:40:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73c530e2_01a5c98b",
       "revId": "44210cd33d71c1712134e4f1a2d56bf89149ac74",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
