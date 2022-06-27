@@ -122,6 +122,24 @@
       "parentUuid": "0f5699c9_b751fa60",
       "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77935f99_f8c38ade",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-27T22:36:07Z",
+      "side": 1,
+      "message": "Handled that case below.",
+      "parentUuid": "222be4a7_a25996f8",
+      "revId": "28cbc2c731c237b8e44e9199d1bc8408fc571ecc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
