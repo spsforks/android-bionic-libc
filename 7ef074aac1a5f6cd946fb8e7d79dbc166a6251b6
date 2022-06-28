@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3a683a6_87695236",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-28T20:19:42Z",
+      "side": 1,
+      "message": "i\u0027m not sure \"_lib\" really makes sense (since this is prebuilt _data_), but i\u0027ll +2 anyway and let the tzdata maintainer argue on the other CL if they\u0027d prefer a more accurate name :-)",
+      "revId": "7ef074aac1a5f6cd946fb8e7d79dbc166a6251b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
