@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c830884c_6d3ec10c",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-28T20:36:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad090001_dcad83bd",
+      "range": {
+        "startLine": 127,
+        "startChar": 63,
+        "endLine": 127,
+        "endChar": 64
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c40ff9be_4b4747e7",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-27T23:58:54Z",
       "side": 1,
       "message": "units?",
+      "range": {
+        "startLine": 136,
+        "startChar": 31,
+        "endLine": 136,
+        "endChar": 57
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7906189f_ad9e167f",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-28T20:36:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c40ff9be_4b4747e7",
       "range": {
         "startLine": 136,
         "startChar": 31,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d2f9816_a1d555ee",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-28T20:36:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "817e9535_1f35b62e",
+      "range": {
+        "startLine": 139,
+        "startChar": 60,
+        "endLine": 139,
+        "endChar": 61
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d7cd0070_e4e067f6",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-06-27T23:58:54Z",
       "side": 1,
       "message": "units?",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 50
+      },
+      "revId": "ce7a59fae9310d0b3d3f91e55750183b712a7dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3569c12d_1b5a7db4",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-28T20:36:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7cd0070_e4e067f6",
       "range": {
         "startLine": 305,
         "startChar": 22,
