@@ -52,6 +52,24 @@
       "parentUuid": "51c87c2b_b2b67f0c",
       "revId": "8cd2ebf80e233f98cff4b1773ef755ba201641df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3917859_221c1b49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2022-06-28T21:48:13Z",
+      "side": 1,
+      "message": "Ah, I think I gave you the wrong link. https://cs.android.com/android/platform/superproject/+/master:build/make/core/version_defaults.mk;l\u003d57;drc\u003d26a43c5e24f8f13df2edda06d1e12587bfed27a9 looks like it\u0027s already defined.",
+      "parentUuid": "7f112a77_df518c6b",
+      "revId": "8cd2ebf80e233f98cff4b1773ef755ba201641df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
