@@ -16,6 +16,24 @@
       "message": "FYI you\u0027ll also need this in https://cs.android.com/android/platform/superproject/+/master:build/make/core/version_util.mk;l\u003d71;drc\u003d573fbcd1143bed9f2383292ab85dcbddb202c6fd if you want to use the codename in map files.",
       "revId": "8cd2ebf80e233f98cff4b1773ef755ba201641df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51c87c2b_b2b67f0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1006497
+      },
+      "writtenOn": "2022-06-28T10:28:27Z",
+      "side": 1,
+      "message": "Ack. Will upload a patch for that.",
+      "parentUuid": "5a34d2da_7eb05bc6",
+      "revId": "8cd2ebf80e233f98cff4b1773ef755ba201641df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
