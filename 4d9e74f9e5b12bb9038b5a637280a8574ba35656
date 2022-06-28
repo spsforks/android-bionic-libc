@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dd5f549_28248b31",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-28T00:10:46Z",
+      "side": 1,
+      "message": "it\u0027s a _constant_ though, not increased by successive runs. the bionic system properties tests are already _way_ more destructive than that... (which i\u0027d either mention in your defense here, or just leave this out.)",
+      "range": {
+        "startLine": 13,
+        "startChar": 44,
+        "endLine": 15,
+        "endChar": 47
+      },
+      "revId": "4d9e74f9e5b12bb9038b5a637280a8574ba35656",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4bccee9_58804b73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-28T00:10:46Z",
+      "side": 1,
+      "message": "cferris?",
+      "revId": "4d9e74f9e5b12bb9038b5a637280a8574ba35656",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d354e16_621c8ae3",
+        "filename": "tests/NOTICE",
+        "patchSetId": 3
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-28T00:10:46Z",
+      "side": 1,
+      "message": "use the BSD header (immediately below) for new files.",
+      "revId": "4d9e74f9e5b12bb9038b5a637280a8574ba35656",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cd7a1fe_0c4ae9a4",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-28T00:10:46Z",
+      "side": 1,
+      "message": "i\u0027d either put this comment up with the constructor (which is where people are more likely to be asking \"flock()?!\") or move the data members to the start of the class so this gets read first/is adjacent to the constructor anyway.",
+      "revId": "4d9e74f9e5b12bb9038b5a637280a8574ba35656",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
