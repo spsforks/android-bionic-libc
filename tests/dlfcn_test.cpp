@@ -967,7 +967,23 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #endif
 }
 
+<<<<<<< PATCH SET (d4636e [RFC]Add riscv64 support)
+#if defined (__aarch64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/arm64/"
+#elif defined (__arm__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
+#elif defined (__i386__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
+#elif defined (__x86_64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/riscv64/"
+#else
+#error "Unknown architecture"
+#endif
+=======
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/" ABI_STRING "/"
+>>>>>>> BASE      (f2be65 Merge "Remove explicit lists of ABIs.")
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
 #define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"

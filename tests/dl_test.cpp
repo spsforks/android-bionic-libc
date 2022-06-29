@@ -89,9 +89,26 @@ TEST(dl, lib_does_not_preempt_global_protected) {
 #else
 #define LINKER_NAME "linker"
 #endif
+<<<<<<< PATCH SET (d4636e [RFC]Add riscv64 support)
+
+#if defined (__aarch64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm64/linker64";
+#elif defined (__arm__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm/linker";
+#elif defined (__x86_64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86_64/linker64";
+#elif defined (__i386__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86/linker";
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/riscv64/linker64";
+#else
+#error "Unknown architecture"
+#endif
+=======
 static constexpr const char* kPathToLinker = "/system/bin/" LINKER_NAME;
 static constexpr const char* kAlternatePathToLinker = "/system/bin/" ABI_STRING "/" LINKER_NAME;
 #undef LINKER_NAME
+>>>>>>> BASE      (f2be65 Merge "Remove explicit lists of ABIs.")
 
 const char* PathToLinker() {
   // On the systems with emulated architecture linker would be of different
