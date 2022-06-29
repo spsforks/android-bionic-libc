@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "70f6f371_49115cfd",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-29T01:00:34Z",
+      "side": 1,
+      "message": "I don\u0027t think it does much harm to leave it like this; if MTE is disabled, `heap_tagging_upgrade_timer_sec` will never be non-zero. Even if someone sets the env var, we will set it to 0 if the prctl fails.",
+      "parentUuid": "2cae84ab_93946d83",
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1f41d1b_479f6ff9",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 9
@@ -31,6 +49,30 @@
       "writtenOn": "2022-06-29T00:54:11Z",
       "side": 1,
       "message": "do we intend to keep this long-term, or is this just temporary? if we\u0027re keeping it, we should probably try for a more readable name... `BIONIC_MTE_SYNC_UPGRADE_TIME_SECONDS` probably saves most people a trip to the docs?",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 54
+      },
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ce01e2e_43f13eef",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-06-29T01:00:34Z",
+      "side": 1,
+      "message": "I think we will want to keep it longer term.  We won\u0027t be shipping SYNC mode, and this should make it easier to debug the crashes.\n\nAFAICT memtag is the canonical name we have adopted, `MEMTAG_OPTIONS` env var, `memtag_heap` / `memtag_stack` for SANITIZE_TARGET, which is why I used it here over MTE.\n\nThat being said, I don\u0027t think anyone should ever set this manually, but I am open to renaming the env variable.",
+      "parentUuid": "e1f41d1b_479f6ff9",
       "range": {
         "startLine": 305,
         "startChar": 22,
