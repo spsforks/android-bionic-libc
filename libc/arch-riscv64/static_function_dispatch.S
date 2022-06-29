@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,44 +28,13 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(syscall)
-<<<<<<< PATCH SET (b06b04 [RFC]Add riscv64 support)
-	mv      a7, a0
-	mv      a0, a1
-	mv      a1, a2
-	mv      a2, a3
-	mv      a3, a4
-	mv      a4, a5
-	mv      a5, a6
-	scall
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    call t0,impl; \
+END(name)
 
-        bltz    a0, .error
-        ret
-.error:
-	neg	a0, a0
-        j       __set_errno_internal
-
-=======
-  // Move the syscall number up.
-  mv a7, a0
-
-  // Shuffle the arguments down.
-  mv a0, a1
-  mv a1, a2
-  mv a2, a3
-  mv a3, a4
-  mv a4, a5
-  mv a5, a6
-
-  ecall
-
-  // Did it fail?
-  li a7, -MAX_ERRNO
-  bgtu a0, a7, 1f
-
-  ret
-1:
-  neg a0, a0
-  j __set_errno_internal
->>>>>>> BASE      (81f0bd Merge "riscv64: fenv implementation.")
-END(syscall)
+FUNCTION_DELEGATE(memmove, memmove_generic)
+FUNCTION_DELEGATE(memcpy, memcpy_generic)
+FUNCTION_DELEGATE(memset, memset_generic)
+FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
+FUNCTION_DELEGATE(memcmp, memcmp_generic)

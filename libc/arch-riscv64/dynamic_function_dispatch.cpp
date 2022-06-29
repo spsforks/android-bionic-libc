@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <stddef.h>
 
-ENTRY(syscall)
-<<<<<<< PATCH SET (b06b04 [RFC]Add riscv64 support)
-	mv      a7, a0
-	mv      a0, a1
-	mv      a1, a2
-	mv      a2, a3
-	mv      a3, a4
-	mv      a4, a5
-	mv      a5, a6
-	scall
+#include <private/bionic_ifuncs.h>
 
-        bltz    a0, .error
-        ret
-.error:
-	neg	a0, a0
-        j       __set_errno_internal
+extern "C" {
 
-=======
-  // Move the syscall number up.
-  mv a7, a0
+typedef int memcmp_func(const void* __lhs, const void* __rhs, size_t __n);
+DEFINE_IFUNC_FOR(memcmp) {
+    RETURN_FUNC(memcmp_func, memcmp_generic);
+}
 
-  // Shuffle the arguments down.
-  mv a0, a1
-  mv a1, a2
-  mv a2, a3
-  mv a3, a4
-  mv a4, a5
-  mv a5, a6
+typedef void* memset_func(void* __dst, int __ch, size_t __n);
+DEFINE_IFUNC_FOR(memset) {
+    RETURN_FUNC(memset_func, memset_generic);
+}
 
-  ecall
+typedef void* __memset_chk_func(void *s, int c, size_t n, size_t n2);
+DEFINE_IFUNC_FOR(__memset_chk) {
+    RETURN_FUNC(__memset_chk_func, __memset_chk_generic);
+}
 
-  // Did it fail?
-  li a7, -MAX_ERRNO
-  bgtu a0, a7, 1f
+typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
+DEFINE_IFUNC_FOR(memmove) {
+    RETURN_FUNC(memmove_func, memmove_generic);
+}
 
-  ret
-1:
-  neg a0, a0
-  j __set_errno_internal
->>>>>>> BASE      (81f0bd Merge "riscv64: fenv implementation.")
-END(syscall)
+typedef void* memcpy_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcpy) {
+    RETURN_FUNC(memcpy_func, memcpy_generic);
+}
+
+}  // extern "C"
