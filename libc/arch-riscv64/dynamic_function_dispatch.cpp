@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <stddef.h>
 
-#if defined(__arm__)
+#include <private/bionic_ifuncs.h>
 
-#define GOT_RELOC(sym) .long sym(GOT_PREL)
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: mov r0, #0; bx lr
+extern "C" {
 
-#elif defined(__aarch64__)
+typedef int memcmp_func(const void* __lhs, const void* __rhs, size_t __n);
+DEFINE_IFUNC_FOR(memcmp) {
+    RETURN_FUNC(memcmp_func, memcmp_generic);
+}
 
-#define GOT_RELOC(sym) adrp x1, :got:sym
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: mov w0, wzr; ret
+typedef void* memset_func(void* __dst, int __ch, size_t __n);
+DEFINE_IFUNC_FOR(memset) {
+    RETURN_FUNC(memset_func, memset_generic);
+}
 
-#elif (defined(__riscv) && (__riscv_xlen == 64))
+typedef void* __memset_chk_func(void *s, int c, size_t n, size_t n2);
+DEFINE_IFUNC_FOR(__memset_chk) {
+    RETURN_FUNC(__memset_chk_func, __memset_chk_generic);
+}
 
-// clang driver for android default enables "-mrelocation-model pic", so 'la' should
-// be able to access GOT. A better choise is to use 'lga' but clang has not supported
-// this pseudo-inst yet.
-#define GOT_RELOC(sym) la a0, sym
-#define CALL(sym) call sym@plt
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: nop; ret
+typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
+DEFINE_IFUNC_FOR(memmove) {
+    RETURN_FUNC(memmove_func, memmove_generic);
+}
 
-#elif defined(__i386__)
+typedef void* memcpy_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcpy) {
+    RETURN_FUNC(memcpy_func, memcpy_generic);
+}
 
-#define GOT_RELOC(sym) .long sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: xorl %eax, %eax; retl
-
-#elif defined(__x86_64__)
-
-#define GOT_RELOC(sym) .quad sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: xorl %eax, %eax; retq
-
-#else
-#error "Unrecognized architecture"
-#endif
+}  // extern "C"
