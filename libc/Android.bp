@@ -1534,6 +1534,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"],
+        },
     },
 }
 
@@ -1561,6 +1564,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
 }
@@ -1846,8 +1852,14 @@ genrule {
     name: "libc.riscv64.map",
     out: ["libc.riscv64.map"],
     srcs: ["libc.map.txt"],
+<<<<<<< PATCH SET (226ca7 [RFC]Add riscv64 support)
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) riscv64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
+=======
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
+>>>>>>> BASE      (5acd89 Merge changes I712a9a93,Idd7b3610)
 }
 
 genrule {
@@ -2083,8 +2095,13 @@ genrule {
     name: "libstdc++.riscv64.map",
     out: ["libstdc++.riscv64.map"],
     srcs: ["libstdc++.map.txt"],
+<<<<<<< PATCH SET (226ca7 [RFC]Add riscv64 support)
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) riscv64 $(in) $(out)",
+=======
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
+>>>>>>> BASE      (5acd89 Merge changes I712a9a93,Idd7b3610)
 }
 
 genrule {
@@ -2329,6 +2346,14 @@ ndk_headers {
     from: "kernel/uapi/asm-arm64",
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
+    name: "libc_asm_riscv64",
+    from: "kernel/uapi/asm-riscv",
+    to: "riscv64-linux-android",
+    srcs: ["kernel/uapi/asm-riscv/**/*.h"],
     license: "NOTICE",
 }
 
