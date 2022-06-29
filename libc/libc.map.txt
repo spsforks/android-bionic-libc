@@ -1449,7 +1449,11 @@ LIBC_Q { # introduced=Q
     ___tls_get_addr; # x86
     __aeabi_read_tp; # arm
     __res_randomid;
+<<<<<<< PATCH SET (b187fa [RFC]Add riscv64 support)
+    __tls_get_addr; # arm x86_64 riscv64
+=======
     __tls_get_addr; # arm riscv64 x86_64
+>>>>>>> BASE      (4091af Merge "Add __tls_get_addr for riscv64.")
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
