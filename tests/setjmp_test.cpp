@@ -232,7 +232,13 @@ TEST(setjmp, setjmp_fp_registers) {
 #elif defined(__riscv)
 #define JB_SIGFLAG_OFFSET 0
 #elif defined(__x86_64)
+<<<<<<< PATCH SET (84c292 [RFC]Add riscv64 support)
+#define __JB_SIGFLAG 8
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+#define __JB_SIGFLAG 0
+=======
 #define JB_SIGFLAG_OFFSET 8
+>>>>>>> BASE      (833353 Merge "Revert "Refactor the bp file to avoid arch variant in)
 #endif
 
 TEST_F(setjmp_DeathTest, setjmp_cookie) {
