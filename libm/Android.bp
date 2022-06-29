@@ -583,8 +583,13 @@ genrule {
     name: "libm.riscv64.map",
     out: ["libm.riscv64.map"],
     srcs: ["libm.map.txt"],
+<<<<<<< PATCH SET (b06b04 [RFC]Add riscv64 support)
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) riscv64 $(in) $(out)",
+=======
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
+>>>>>>> BASE      (81f0bd Merge "riscv64: fenv implementation.")
 }
 
 genrule {
