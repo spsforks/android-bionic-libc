@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,44 +28,13 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(syscall)
-<<<<<<< PATCH SET (b06b04 [RFC]Add riscv64 support)
-	mv      a7, a0
-	mv      a0, a1
-	mv      a1, a2
-	mv      a2, a3
-	mv      a3, a4
-	mv      a4, a5
-	mv      a5, a6
-	scall
+ENTRY(_start)
+  // Force unwinds to end in this function.
+  .cfi_undefined ra
 
-        bltz    a0, .error
-        ret
-.error:
-	neg	a0, a0
-        j       __set_errno_internal
+  mv a0, sp
+  jal __linker_init
 
-=======
-  // Move the syscall number up.
-  mv a7, a0
-
-  // Shuffle the arguments down.
-  mv a0, a1
-  mv a1, a2
-  mv a2, a3
-  mv a3, a4
-  mv a4, a5
-  mv a5, a6
-
-  ecall
-
-  // Did it fail?
-  li a7, -MAX_ERRNO
-  bgtu a0, a7, 1f
-
-  ret
-1:
-  neg a0, a0
-  j __set_errno_internal
->>>>>>> BASE      (81f0bd Merge "riscv64: fenv implementation.")
-END(syscall)
+  /* linker init returns the _entry address in the main image */
+  jalr a0
+END(_start)

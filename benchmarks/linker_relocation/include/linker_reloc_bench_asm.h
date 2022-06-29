@@ -42,6 +42,16 @@
 #define DATA_WORD(val) .quad val
 #define MAIN .globl main; main: mov w0, wzr; ret
 
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+
+// clang driver for android default enables "-mrelocation-model pic", so 'la' should
+// be able to access GOT. A better choise is to use 'lga' but clang has not supported
+// this pseudo-inst yet.
+#define GOT_RELOC(sym) la a0, sym
+#define CALL(sym) call sym@plt
+#define DATA_WORD(val) .quad val
+#define MAIN .globl main; main: nop; ret
+
 #elif defined(__i386__)
 
 #define GOT_RELOC(sym) .long sym@got
