@@ -54,6 +54,8 @@
 #define _JBLEN 10
 #elif defined(__x86_64__)
 #define _JBLEN 11
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+#define _JBLEN 29
 #endif
 
 /** The type of the buffer used by sigsetjmp()/siglongjmp(). */
