@@ -33,6 +33,24 @@
       "message": "use the existing 2022 Android BSD header for bionic (search in this file :-) )",
       "revId": "8b9841741b2581e9c24011e95d6352747cd16d68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07a84ef1_df10cf53",
+        "filename": "libc/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 4750,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2022-06-29T19:54:02Z",
+      "side": 1,
+      "message": "Oops thanks for pointing this out. I have updated the Bazel BUILD files to use the 2022 BSD license",
+      "parentUuid": "435887c5_46261bc6",
+      "revId": "8b9841741b2581e9c24011e95d6352747cd16d68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
