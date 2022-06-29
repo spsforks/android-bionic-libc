@@ -60,6 +60,7 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
+    "riscv": {},
     "x86": {},
     }
 
