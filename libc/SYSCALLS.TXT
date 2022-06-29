@@ -352,8 +352,13 @@ int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
+<<<<<<< PATCH SET (68dd7c [RFC]Add riscv64 support)
+# RISC-V64-specific
+int	_flush_icache:riscv_flush_icache(void *start, void *end, unsigned long int flags) riscv64
+=======
 # riscv64-specific
 int _flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
+>>>>>>> BASE      (4c2de1 Merge "riscv64 syscall stub and seccomp filter generation.")
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86
