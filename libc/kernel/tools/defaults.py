@@ -60,6 +60,10 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
+<<<<<<< PATCH SET (6319dd [RFC]Add riscv64 support)
+    "riscv": {},
+=======
+>>>>>>> BASE      (5f1676 Merge "Add riscv64 to the map files.")
     "x86": {},
     }
 
