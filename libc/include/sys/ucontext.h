@@ -312,6 +312,69 @@ typedef struct ucontext {
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
 
+<<<<<<< PATCH SET (626fcc [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+
+#define REG_PC 0
+#define REG_RA 1
+#define REG_SP 2
+#define REG_TP 4
+#define REG_S0 8
+#define REG_S1 9
+#define REG_A0 10
+#define REG_S2 18
+
+#define NGREG 32
+
+typedef unsigned long long greg_t;
+typedef greg_t gregset_t[NGREG];
+
+typedef unsigned long int __riscv_mc_gp_state[32];
+
+struct __riscv_mc_f_ext_state {
+  unsigned int __f[32];
+  unsigned int __fcsr;
+};
+
+struct __riscv_mc_d_ext_state {
+  unsigned long long int __f[32];
+  unsigned int __fcsr;
+};
+
+struct __riscv_mc_q_ext_state {
+  unsigned long long int __f[64] __attribute__ ((__aligned__ (16)));
+  unsigned int __fcsr;
+  /* Reserved for expansion of sigcontext structure.  Currently zeroed
+     upon signal, and must be zero upon sigreturn.  */
+  unsigned int __glibc_reserved[3];
+};
+
+union __riscv_mc_fp_state {
+  struct __riscv_mc_f_ext_state __f;
+  struct __riscv_mc_d_ext_state __d;
+  struct __riscv_mc_q_ext_state __q;
+};
+
+typedef union __riscv_mc_fp_state* fpregset_t;
+
+typedef struct mcontext_t {
+  __riscv_mc_gp_state __gregs;
+  union  __riscv_mc_fp_state __fpregs;
+} mcontext_t;
+
+/* Userlevel context.  */
+typedef struct ucontext_t {
+  unsigned long int  __uc_flags;
+  struct ucontext_t  *uc_link;
+  stack_t            uc_stack;
+  union {
+    sigset_t uc_sigmask;
+    sigset64_t uc_sigmask64;
+  };
+  unsigned char      __reserved[1024 / 8 - sizeof (sigset_t)];
+  mcontext_t         uc_mcontext;
+} ucontext_t;
+=======
 #elif defined(__riscv)
 
 #define NGREG 32
@@ -359,6 +422,11 @@ typedef struct mcontext_t {
   union __riscv_mc_fp_state __fpregs;
 } mcontext_t;
 
+<<<<<<< PATCH SET (b76240 [RFC]Add riscv64 support)
+#include <asm/ucontext.h>
+typedef struct ucontext ucontext_t;
+>>>>>>> BASE      (ea988f Merge "Add riscv64 <ucontext.h>.")
+=======
 /* This matches the kernel <asm/ucontext.h> but using mcontext_t. */
 
 typedef struct ucontext_t {
@@ -370,6 +438,7 @@ typedef struct ucontext_t {
   char __padding[128 - sizeof(sigset_t)];
   mcontext_t uc_mcontext;
 } ucontext_t;
+>>>>>>> BASE      (698712 Merge "riscv64: add "private/bionic_asm.h".")
 
 #endif
 

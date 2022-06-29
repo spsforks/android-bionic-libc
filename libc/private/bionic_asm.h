@@ -45,7 +45,11 @@
 #include <private/bionic_asm_arm.h>
 #elif defined(__i386__)
 #include <private/bionic_asm_x86.h>
+<<<<<<< PATCH SET (b76240 [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #elif defined(__riscv)
+>>>>>>> BASE      (698712 Merge "riscv64: add "private/bionic_asm.h".")
 #include <private/bionic_asm_riscv64.h>
 #elif defined(__x86_64__)
 #include <private/bionic_asm_x86_64.h>
