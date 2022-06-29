@@ -37,7 +37,15 @@
 
 #pragma once
 
+<<<<<<< PATCH SET (b76240 [RFC]Add riscv64 support)
+#ifdef __PIC__
+    #define PIC_PLT(x)    x@plt
+#else
+    #define PIC_PLT(x)    x
+#endif
+=======
 #define PIC_PLT(x) x@plt
+>>>>>>> BASE      (698712 Merge "riscv64: add "private/bionic_asm.h".")
 
 #define __bionic_asm_align 16
 
