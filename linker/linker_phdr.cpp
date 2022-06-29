@@ -51,7 +51,11 @@ static int GetTargetElfMachine() {
   return EM_AARCH64;
 #elif defined(__i386__)
   return EM_386;
+<<<<<<< PATCH SET (7fc92a [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #elif defined(__riscv)
+>>>>>>> BASE      (8f5481 Merge "Build libdl for risc-v.")
   return EM_RISCV;
 #elif defined(__x86_64__)
   return EM_X86_64;
