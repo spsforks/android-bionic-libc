@@ -32,6 +32,41 @@
 #include <linux/sched.h>
 
 ENTRY(vfork)
+<<<<<<< PATCH SET (b06b04 [RFC]Add riscv64 support)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+    // t0 = __get_tls()[TLS_SLOT_THREAD_ID]
+    mv      t0, tp
+    ld      t0, TLS_SLOT_THREAD_ID * 8(t0)
+
+    // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
+    li      t1, 0x80000000
+    lw      t2, 20(t0)
+    sw      t1, 20(t0)
+
+    li      a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+    mv      a1, zero //uses a duplicate of the parent's stack
+    mv      a2, zero
+    mv      a3, zero
+    mv      a4, zero
+
+    li      a7, __NR_clone
+    scall
+
+    // if (rc == 0) goto .L_exit
+    beqz    a0, .L_exit
+
+    // else if (rc != 0): reset cached_pid_ and vforked_.
+    sw      t2, 20(t0)
+
+    bltz    a0, .error
+
+.L_exit:
+    ret
+
+.error:
+    neg     a0, a0
+    j       __set_errno_internal
+=======
   // t0 = __get_tls()[TLS_SLOT_THREAD_ID]
   mv      t0, tp
   ld      t0, TLS_SLOT_THREAD_ID * 8(t0)
@@ -63,4 +98,5 @@ ENTRY(vfork)
 .L_failure:
   neg     a0, a0
   j       __set_errno_internal
+>>>>>>> BASE      (81f0bd Merge "riscv64: fenv implementation.")
 END(vfork)
