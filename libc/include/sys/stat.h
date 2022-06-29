@@ -40,7 +40,11 @@
 
 __BEGIN_DECLS
 
+<<<<<<< PATCH SET (a49d49 [RFC]Add riscv64 support)
+#if defined(__aarch64__) || (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #if defined(__aarch64__) || defined(__riscv)
+>>>>>>> BASE      (5394de Merge "riscv64's struct stat is the same as arm64's.")
 #define __STAT64_BODY \
   dev_t st_dev; \
   ino_t st_ino; \
