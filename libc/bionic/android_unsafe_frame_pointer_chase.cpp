@@ -72,9 +72,13 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
 
   size_t num_frames = 0;
   while (1) {
+<<<<<<< PATCH SET (afa536 [RFC]Add riscv64 support)
+#if (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #if defined(__riscv)
     // Frame addresses seem to have been implemented incorrectly for RISC-V.
     // See https://reviews.llvm.org/D87579.
+>>>>>>> BASE      (c27233 Merge "Add a hack for a RISC-V bug.")
     auto* frame = reinterpret_cast<frame_record*>(begin - 16);
 #else
     auto* frame = reinterpret_cast<frame_record*>(begin);
