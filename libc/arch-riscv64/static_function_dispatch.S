@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm.h>
 
-#if defined(__arm__)
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    call t0,impl; \
+END(name)
 
-#define GOT_RELOC(sym) .long sym(GOT_PREL)
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: mov r0, #0; bx lr
-
-#elif defined(__aarch64__)
-
-#define GOT_RELOC(sym) adrp x1, :got:sym
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: mov w0, wzr; ret
-
-#elif (defined(__riscv) && (__riscv_xlen == 64))
-
-// clang driver for android default enables "-mrelocation-model pic", so 'la' should
-// be able to access GOT. A better choise is to use 'lga' but clang has not supported
-// this pseudo-inst yet.
-#define GOT_RELOC(sym) la a0, sym
-#define CALL(sym) call sym@plt
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: nop; ret
-
-#elif defined(__i386__)
-
-#define GOT_RELOC(sym) .long sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: xorl %eax, %eax; retl
-
-#elif defined(__x86_64__)
-
-#define GOT_RELOC(sym) .quad sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: xorl %eax, %eax; retq
-
-#else
-#error "Unrecognized architecture"
-#endif
+FUNCTION_DELEGATE(memmove, memmove_generic)
+FUNCTION_DELEGATE(memcpy, memcpy_generic)
+FUNCTION_DELEGATE(memset, memset_generic)
+FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
+FUNCTION_DELEGATE(memcmp, memcmp_generic)
