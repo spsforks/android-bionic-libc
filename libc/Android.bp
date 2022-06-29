@@ -197,6 +197,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/bionic/__set_tls.c"],
+        },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
@@ -661,6 +664,12 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
+        riscv64: {
+            srcs: [
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strlen.c",
+            ],
+        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -903,6 +912,21 @@ cc_library_static {
                 "bionic/strchrnul.cpp",
                 "bionic/strnlen.c",
                 "bionic/strrchr.cpp",
+            ],
+        },
+
+        riscv64: {
+            srcs: [
+                "arch-riscv64/generic/bionic/memcmp.S",
+                "arch-riscv64/generic/bionic/memset_chk.c",
+                "arch-riscv64/generic/bionic/memset.S",
+                "arch-riscv64/generic/bionic/memcpy.S",
+                "arch-riscv64/bionic/__bionic_clone.S",
+                "arch-riscv64/bionic/_exit_with_stack_teardown.S",
+                "arch-riscv64/bionic/setjmp.S",
+                "arch-riscv64/bionic/syscall.S",
+                "arch-riscv64/bionic/vfork.S",
+                "arch-riscv64/bionic/renameat.cpp",
             ],
         },
 
@@ -1511,6 +1535,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"],
+        },
     },
 }
 
@@ -1538,6 +1565,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
 }
@@ -1736,6 +1766,15 @@ cc_library {
                 keep_symbols: true,
             },
         },
+        riscv64: {
+            version_script: ":libc.riscv64.map",
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
+        },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
             pack_relocations: false,
@@ -1808,6 +1847,15 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libc.riscv64.map",
+    out: ["libc.riscv64.map"],
+    srcs: ["libc.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) riscv64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -2009,6 +2057,9 @@ cc_library {
         arm64: {
             version_script: ":libstdc++.arm64.map",
         },
+        riscv64: {
+            version_script: ":libstdc++.riscv64.map",
+        },
         x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
@@ -2034,6 +2085,14 @@ genrule {
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libstdc++.riscv64.map",
+    out: ["libstdc++.riscv64.map"],
+    srcs: ["libstdc++.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) riscv64 $(in) $(out)",
 }
 
 genrule {
@@ -2278,6 +2337,14 @@ ndk_headers {
     from: "kernel/uapi/asm-arm64",
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
+    name: "libc_asm_riscv64",
+    from: "kernel/uapi/asm-riscv",
+    to: "riscv64-linux-android",
+    srcs: ["kernel/uapi/asm-riscv/**/*.h"],
     license: "NOTICE",
 }
 
