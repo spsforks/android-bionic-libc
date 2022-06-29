@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b66d514a_21ecf785",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-06-29T01:24:19Z",
+      "side": 1,
+      "message": "Can you add a comment about why these are in this order? Maybe something like from the most specific app specific property to something generic.\n\nAlso, maybe some kind of example using real names would help to see the names of all of the properties being checked. I had to look through this a number of times to figure out what the actual names of the system properties might be.",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 47
+      },
+      "revId": "c6a29368e40b0de0e9e32f37c8530b8dc28f8d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
