@@ -1530,6 +1530,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"],
+        },
     },
 }
 
@@ -1557,6 +1560,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
 }
