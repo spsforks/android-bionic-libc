@@ -202,7 +202,11 @@ struct bionic_tcb;
 void __free_dynamic_tls(bionic_tcb* tcb);
 void __notify_thread_exit_callbacks();
 
+<<<<<<< PATCH SET (7fc92a [RFC]Add riscv64 support)
+#if (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #if defined(__riscv)
+>>>>>>> BASE      (8f5481 Merge "Build libdl for risc-v.")
 // TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
 // The front of the TCB contains a pointer to the DTV, and each pointer in DTV
 // points to 0x800 past the start of a TLS block to make full use of the range
