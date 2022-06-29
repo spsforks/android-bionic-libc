@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <sys/cdefs.h>
 
-#if defined(__arm__)
-
-#define GOT_RELOC(sym) .long sym(GOT_PREL)
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: mov r0, #0; bx lr
-
-#elif defined(__aarch64__)
-
-#define GOT_RELOC(sym) adrp x1, :got:sym
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: mov w0, wzr; ret
-
-#elif (defined(__riscv) && (__riscv_xlen == 64))
-
-// clang driver for android default enables "-mrelocation-model pic", so 'la' should
-// be able to access GOT. A better choise is to use 'lga' but clang has not supported
-// this pseudo-inst yet.
-#define GOT_RELOC(sym) la a0, sym
-#define CALL(sym) call sym@plt
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: nop; ret
-
-#elif defined(__i386__)
-
-#define GOT_RELOC(sym) .long sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: xorl %eax, %eax; retl
-
-#elif defined(__x86_64__)
-
-#define GOT_RELOC(sym) .quad sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: xorl %eax, %eax; retq
-
-#else
-#error "Unrecognized architecture"
-#endif
+__LIBC_HIDDEN__ void __set_tls(void* tls) {
+  asm("mv tp, %0" : : "r" (tls));
+}
