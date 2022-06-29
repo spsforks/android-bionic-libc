@@ -16,6 +16,23 @@
       "message": "+joeo, I made an attempt to bootstrap the BUILD files for libc\u0027s contributions by looking at the existing information in Android.bp files. Can you PTAL before I send it out for review?",
       "revId": "8b9841741b2581e9c24011e95d6352747cd16d68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "435887c5_46261bc6",
+        "filename": "libc/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 4750,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T16:03:22Z",
+      "side": 1,
+      "message": "use the existing 2022 Android BSD header for bionic (search in this file :-) )",
+      "revId": "8b9841741b2581e9c24011e95d6352747cd16d68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
