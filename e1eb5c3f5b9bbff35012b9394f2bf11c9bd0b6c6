@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cae84ab_93946d83",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T00:54:11Z",
+      "side": 1,
+      "message": "should there be some kind of mte feature test around these functions too?",
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1f41d1b_479f6ff9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T00:54:11Z",
+      "side": 1,
+      "message": "do we intend to keep this long-term, or is this just temporary? if we\u0027re keeping it, we should probably try for a more readable name... `BIONIC_MTE_SYNC_UPGRADE_TIME_SECONDS` probably saves most people a trip to the docs?",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 54
+      },
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
