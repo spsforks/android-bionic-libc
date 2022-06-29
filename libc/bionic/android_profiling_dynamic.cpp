@@ -208,6 +208,8 @@ static void HandleSigsysSeccompOverride(int /*signal_number*/, siginfo_t* info,
   ctx->uc_mcontext.arm_r0 = ret;
 #elif defined(__aarch64__)
   ctx->uc_mcontext.regs[0] = ret;  // x0
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+  ctx->uc_mcontext.__gregs[REG_A0] = ret;
 #elif defined(__i386__)
   ctx->uc_mcontext.gregs[REG_EAX] = ret;
 #elif defined(__x86_64__)
