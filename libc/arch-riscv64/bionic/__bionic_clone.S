@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm.h>
 
-#if defined(__arm__)
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 
-#define GOT_RELOC(sym) .long sym(GOT_PREL)
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: mov r0, #0; bx lr
+ENTRY_PRIVATE(__bionic_clone)
 
-#elif defined(__aarch64__)
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+	     void *parent_tidptr, void *tls, void *child_tidptr) */
 
-#define GOT_RELOC(sym) adrp x1, :got:sym
-#define CALL(sym) bl sym
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: mov w0, wzr; ret
+	addi		a1, a1, -16	/* Reserve argument save space.  */
+	sd		a5, 0(a1)	/* Save function pointer.  */
+	sd		a6, 8(a1)	/* Save argument pointer.  */
 
-#elif (defined(__riscv) && (__riscv_xlen == 64))
+	/* Do the system call.  */
+	li		a7, __NR_clone
+	scall
 
-// clang driver for android default enables "-mrelocation-model pic", so 'la' should
-// be able to access GOT. A better choise is to use 'lga' but clang has not supported
-// this pseudo-inst yet.
-#define GOT_RELOC(sym) la a0, sym
-#define CALL(sym) call sym@plt
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: nop; ret
+	bltz		a0, .error
+	beqz		a0, .thread_start
 
-#elif defined(__i386__)
+	/* Successful return from the parent.  */
+	ret
+.error:
+	neg		a0, a0
+	j		__set_errno_internal
+.thread_start:
+	li		fp, 0
+	li		ra, 0
 
-#define GOT_RELOC(sym) .long sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .long val
-#define MAIN .globl main; main: xorl %eax, %eax; retl
+	/* Restore the arg for user's function.  */
+	ld		a0, 0(a1)	/* Function pointer.  */
+	ld		a1, 8(a1)	/* Argument pointer.  */
 
-#elif defined(__x86_64__)
-
-#define GOT_RELOC(sym) .quad sym@got
-#define CALL(sym) call sym@PLT
-#define DATA_WORD(val) .quad val
-#define MAIN .globl main; main: xorl %eax, %eax; retq
-
-#else
-#error "Unrecognized architecture"
-#endif
+	/* Call the user's function.  */
+	j               __start_thread
+END(__bionic_clone)

@@ -137,8 +137,12 @@ size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* exe_segmen
   offset_bionic_tcb_ = reserve(sizeof(bionic_tcb), max_align);
   return offset_bionic_tcb_ - exe_size;
 
+<<<<<<< PATCH SET (7fc92a [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+=======
 #elif defined(__riscv)
 
+>>>>>>> BASE      (8f5481 Merge "Build libdl for risc-v.")
   // First reserve enough space for the TCB before the executable segment.
   offset_bionic_tcb_ = reserve(sizeof(bionic_tcb), 1);
 

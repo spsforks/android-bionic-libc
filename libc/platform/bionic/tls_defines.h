@@ -114,6 +114,27 @@
 #define TLS_SLOT_BIONIC_TLS       9
 #define MAX_TLS_SLOT              9 // update this value when reserving a slot
 
+<<<<<<< PATCH SET (7fc92a [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+
+// RISC-V ELF Specification[1] specifies that: RISC-V uses Variant I as described
+// by the ELF TLS specification, with tp containing the address one past the end
+// of the TCB.
+//
+// [1]: RISC-V ELF Specification. Section: Thread Local Storage
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#thread-local-storage
+
+#define MIN_TLS_SLOT             (-9) // update this value when reserving a slot
+
+#define TLS_SLOT_BIONIC_TLS      (-9)
+#define TLS_SLOT_DTV             (-8)
+#define TLS_SLOT_THREAD_ID       (-7)
+#define TLS_SLOT_APP             (-6) // was historically used for errno
+#define TLS_SLOT_OPENGL          (-5)
+#define TLS_SLOT_OPENGL_API      (-4)
+#define TLS_SLOT_STACK_GUARD     (-3)
+#define TLS_SLOT_SANITIZER       (-2) // was historically used for dlerror
+=======
 #elif defined(__riscv)
 
 // RISC-V ELF Specification[1] specifies that RISC-V uses Variant I as described
@@ -133,6 +154,7 @@
 #define TLS_SLOT_OPENGL_API      (-4)
 #define TLS_SLOT_STACK_GUARD     (-3)
 #define TLS_SLOT_SANITIZER       (-2)
+>>>>>>> BASE      (8f5481 Merge "Build libdl for risc-v.")
 #define TLS_SLOT_ART_THREAD_SELF (-1)
 #define MAX_TLS_SLOT             (-1)
 
