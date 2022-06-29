@@ -83,6 +83,42 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
 
   uintptr_t ip = _Unwind_GetIP(context);
 
+<<<<<<< PATCH SET (ab108d [RFC]Add riscv64 support)
+  // The instruction pointer is pointing at the instruction after the return
+  // call on all architectures.
+  // Modify the pc to point at the real function.
+  if (ip != 0) {
+#if defined(__arm__)
+    // If the ip is suspiciously low, do nothing to avoid a segfault trying
+    // to access this memory.
+    if (ip >= 4096) {
+      // Check bits [15:11] of the first halfword assuming the instruction
+      // is 32 bits long. If the bits are any of these values, then our
+      // assumption was correct:
+      //  b11101
+      //  b11110
+      //  b11111
+      // Otherwise, this is a 16 bit instruction.
+      uint16_t value = (*reinterpret_cast<uint16_t*>(ip - 2)) >> 11;
+      if (value == 0x1f || value == 0x1e || value == 0x1d) {
+        ip -= 4;
+      } else {
+        ip -= 2;
+      }
+    }
+#elif defined(__aarch64__)
+    // All instructions are 4 bytes long, skip back one instruction.
+    ip -= 4;
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+    if (ip >= 4096) {
+      uint16_t value = (*reinterpret_cast<uint16_t*>(ip - 2)) & 3;
+      if (value == 0x3) {
+        ip -= 4;
+      } else {
+        ip -= 2;
+      }
+    }
+=======
   // `ip` is the address of the instruction *after* the call site in
   // `context`, so we want to back up by one instruction. This is hard for
   // every architecture except arm64, so we just make sure we're *inside*
@@ -93,6 +129,7 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     ip -= 4;  // Exactly.
 #elif defined(__arm__) || defined(__riscv)
     ip -= 2;  // At least.
+>>>>>>> BASE      (cf74c0 Merge "Simplify the malloc_debug unwind.")
 #elif defined(__i386__) || defined(__x86_64__)
     ip -= 1;  // At least.
 #endif
