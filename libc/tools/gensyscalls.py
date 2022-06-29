@@ -249,7 +249,10 @@ def arm64_genstub(syscall):
 def riscv64_genstub(syscall):
     return riscv64_call % syscall
 
+<<<<<<< PATCH SET (68dd7c [RFC]Add riscv64 support)
+=======
 
+>>>>>>> BASE      (4c2de1 Merge "riscv64 syscall stub and seccomp filter generation.")
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
 
