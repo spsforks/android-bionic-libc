@@ -76,6 +76,185 @@
 #define _JB_FS11     27 * 8
 #define _JB_CHECKSUM 28 * 8
 
+<<<<<<< PATCH SET (84c292 [RFC]Add riscv64 support)
+.macro m_calculate_checksum dst, src, scratch
+  li \dst, 0
+  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+    ld \scratch, (\i * 8)(\src)
+    xor \dst, \dst, \scratch
+  .endr
+.endm
+
+ENTRY(setjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
+  li a1, 1
+  tail PIC_PLT(sigsetjmp)
+END(setjmp)
+
+ENTRY(_setjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
+  li a1, 0
+  tail PIC_PLT(sigsetjmp)
+END(_setjmp)
+
+// int sigsetjmp(sigjmp_buf env, int save_signal_mask);
+ENTRY(sigsetjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
+  addi sp, sp, -24
+  sd a0, 8(sp)
+  sd ra, 16(sp)
+
+  mv a0, a1
+  call PIC_PLT(__bionic_setjmp_cookie_get)
+
+  // Record setjmp cookie whether or not we're saving the signal mask.
+  // note the save_signal_mask will be saved in env and be retrieved later
+  // in siglongjmp to judge if retore is needed
+  mv a1, a0
+  ld a0, 8(sp)
+  sd a1, _JB_SIGFLAG(a0)
+  andi a1, a1, 1
+
+  // Do we need to save the signal mask?
+  beqz a1, 1f
+
+  // Save current signal mask.
+  // int sigprocmask(int how, const sigset_t *set, sigset_t *oldset)
+  // The 'how'/a0 argument is ignored if set is NULL.
+  li a1, 0 // set = NULL
+  addi a2, a0, _JB_SIGMASK // oldset
+  call PIC_PLT(sigprocmask)
+  ld a1, 0(sp)
+1:
+  // Restore original a0 and ra.
+  ld a0, 8(sp)
+  ld ra, 16(sp)
+  addi sp, sp, 24
+
+  // Save core registers.
+  sd ra,  _JB_RA(a0)
+  sd s0,  _JB_S0(a0)
+  sd s1,  _JB_S1(a0)
+  sd s2,  _JB_S2(a0)
+  sd s3,  _JB_S3(a0)
+  sd s4,  _JB_S4(a0)
+  sd s5,  _JB_S5(a0)
+  sd s6,  _JB_S6(a0)
+  sd s7,  _JB_S7(a0)
+  sd s8,  _JB_S8(a0)
+  sd s9,  _JB_S9(a0)
+  sd s10, _JB_S10(a0)
+  sd s11, _JB_S11(a0)
+  sd sp,  _JB_SP(a0)
+
+  // Save floating point registers.
+  fsd fs0,  _JB_FS0(a0)
+  fsd fs1,  _JB_FS1(a0)
+  fsd fs2,  _JB_FS2(a0)
+  fsd fs3,  _JB_FS3(a0)
+  fsd fs4,  _JB_FS4(a0)
+  fsd fs5,  _JB_FS5(a0)
+  fsd fs6,  _JB_FS6(a0)
+  fsd fs7,  _JB_FS7(a0)
+  fsd fs8,  _JB_FS8(a0)
+  fsd fs9,  _JB_FS9(a0)
+  fsd fs10, _JB_FS10(a0)
+  fsd fs11, _JB_FS11(a0)
+
+  // Calculate the checksum and save it.
+  m_calculate_checksum t0, a0, t1
+  sd t0, _JB_CHECKSUM(a0)
+
+  li a0, 0
+  ret
+END(sigsetjmp)
+
+// void siglongjmp(sigjmp_buf env, int value);
+ENTRY(siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
+  // Check the checksum before doing anything.
+  m_calculate_checksum t0, a0, t1
+  ld t1, _JB_CHECKSUM(a0)
+  bne t0, t1, 3f
+
+  // Do we need to restore the signal mask?
+  ld a2, _JB_SIGFLAG(a0)
+  andi a2, a2, 1
+  beqz a2, 1f
+
+  addi sp, sp, -16
+  sd a0, 0(sp)
+  sd ra, 8(sp)
+
+  // Restore the signal mask.
+  mv t0, a1 // Save 'value'.
+
+  // int sigprocmask(int how, const sigset_t *set, sigset_t *oldset)
+  mv a2, a0
+  li a0, 2 // SIG_SETMASK
+  addi a1, a2, _JB_SIGMASK // set
+  li a2, 0 // oldset
+  call PIC_PLT(sigprocmask)
+  mv a1, t0 // Restore 'value'.
+
+  // Restore original a0 and ra.
+  ld a0, 0(sp)
+  ld ra, 8(sp)
+  addi sp, sp, 16
+
+1:
+  // Restore core registers.
+  ld ra,  _JB_RA(a0)
+  ld s0,  _JB_S0(a0)
+  ld s1,  _JB_S1(a0)
+  ld s2,  _JB_S2(a0)
+  ld s3,  _JB_S3(a0)
+  ld s4,  _JB_S4(a0)
+  ld s5,  _JB_S5(a0)
+  ld s6,  _JB_S6(a0)
+  ld s7,  _JB_S7(a0)
+  ld s8,  _JB_S8(a0)
+  ld s9,  _JB_S9(a0)
+  ld s10, _JB_S10(a0)
+  ld s11, _JB_S11(a0)
+  ld sp,  _JB_SP(a0)
+
+  addi sp, sp, -24
+  sd   ra, 0(sp)
+  sd   a0, 8(sp)
+  sd   a1, 16(sp)
+  ld   a0, _JB_SIGFLAG(a0)
+  call PIC_PLT(__bionic_setjmp_cookie_check)
+  ld   ra, 0(sp)
+  ld   a0, 8(sp)
+  ld   a1, 16(sp)
+  addi sp, sp, 24
+
+  // Restore floating point registers.
+  fld fs0,  _JB_FS0(a0)
+  fld fs1,  _JB_FS1(a0)
+  fld fs2,  _JB_FS2(a0)
+  fld fs3,  _JB_FS3(a0)
+  fld fs4,  _JB_FS4(a0)
+  fld fs5,  _JB_FS5(a0)
+  fld fs6,  _JB_FS6(a0)
+  fld fs7,  _JB_FS7(a0)
+  fld fs8,  _JB_FS8(a0)
+  fld fs9,  _JB_FS9(a0)
+  fld fs10, _JB_FS10(a0)
+  fld fs11, _JB_FS11(a0)
+
+  // Set return value.
+  beqz a1, 2f
+  li a0, 1
+2:
+  mv a0, a1
+  ret
+
+3:
+  call PIC_PLT(__bionic_setjmp_checksum_mismatch)
+
+=======
 .macro m_mangle_registers reg, sp_reg
   xor s0, s0, \reg
   xor s1, s1, \reg
@@ -281,6 +460,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
 
 3:
   call PIC_PLT(__bionic_setjmp_checksum_mismatch)
+>>>>>>> BASE      (833353 Merge "Revert "Refactor the bp file to avoid arch variant in)
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
