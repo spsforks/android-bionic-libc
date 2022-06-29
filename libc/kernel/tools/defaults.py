@@ -60,6 +60,12 @@ kernel_remove_config_macros = True
 # big-endian junk from the 32-bit arm headers.
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
+<<<<<<< PATCH SET (4ca65e [RFC]Add riscv64 support)
+    "arm64": {},
+    "riscv": {},
+    "x86": {},
+=======
+>>>>>>> BASE      (771eac Merge changes from topic "riscv64-elf")
     }
 
 # Replace tokens in the output according to this mapping.
