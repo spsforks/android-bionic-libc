@@ -42,6 +42,17 @@
 #define DATA_WORD(val) .quad val
 #define MAIN .globl main; main: mov w0, wzr; ret
 
+<<<<<<< PATCH SET (e88407 [RFC]Add riscv64 support)
+#elif (defined(__riscv) && (__riscv_xlen == 64))
+
+// clang driver for android default enables "-mrelocation-model pic", so 'la' should
+// be able to access GOT. A better choise is to use 'lga' but clang has not supported
+// this pseudo-inst yet.
+#define GOT_RELOC(sym) la a0, sym
+#define CALL(sym) call sym@plt
+#define DATA_WORD(val) .quad val
+#define MAIN .globl main; main: nop; ret
+=======
 #elif defined(__riscv)
 
 // No `lga` in clang unless https://reviews.llvm.org/D107278 lands.
@@ -50,6 +61,7 @@
 #define CALL(sym) call sym@plt
 #define DATA_WORD(val) .quad val
 #define MAIN .globl main; main: li a0, 0; ret
+>>>>>>> BASE      (56c4db Merge "Add riscv64 support to the linker relocation benchmar)
 
 #elif defined(__i386__)
 
