@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c11fb4d_58fb6614",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T19:50:46Z",
+      "side": 1,
+      "message": "this is fine, but tbh i wasn\u0027t expecting anything more than \"Calling code requires errno to be set if we return failure, and ENOENT is our best option.\" :-)",
+      "range": {
+        "startLine": 193,
+        "startChar": 7,
+        "endLine": 203,
+        "endChar": 27
+      },
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fb0bbfe_96e65149",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T19:50:46Z",
+      "side": 1,
+      "message": "as a _reader_ i might actually have been more interested to see a comment here saying something like \"// lseek() already set errno.\" --- not _necessary_ but good for symmetry, and makes it explicit that we don\u0027t actually care what errno value. (or do we? should we make this ENOENT? does the errno value ever end up leaked to callers/humans? i think we probably _do_ want to just use whatever lseek() sets, because this \"shouldn\u0027t happen\" --- if we seek past the end of the file [the only plausible failure i can imagine] this call succeeds and our later read() will return EOF.)\n\nmaybe we should just leave this uncommented since we don\u0027t have a strong argument for either behavior, and it hasn\u0027t caused any trouble yet (and doesn\u0027t seem ever likely to).\n\nsorry for the thinking out loud!",
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71dc6846_764c0bd3",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T19:50:46Z",
+      "side": 1,
+      "message": "prefer `\u003d {}` in new code.",
+      "range": {
+        "startLine": 88,
+        "startChar": 13,
+        "endLine": 89,
+        "endChar": 28
+      },
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3597ec2c_5f87f06a",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-29T19:50:46Z",
+      "side": 1,
+      "message": "not needed.\n\n(neither is `tm_mon \u003d 0`, but i\u0027d argue that setting year/mon/mday has some readability value, especially because tm months count from 0!)\n\nnote also that you can just say `tm t \u003d { .tm_year \u003d 70, .tm_mon \u003d 0, .tm_mday \u003d 1 };` in modern C or C++ to get the same effect --- everything _not_ mentioned will be zero. that\u0027s probably the most readable way to write a date? (strictly you\u0027d still need to say `struct` in C, but you don\u0027t in C++ unless there\u0027a name collision with something _not_ a struct. if you prefer to keep the `struct`, you may as well use the more idiomatic name `tm` instead of `t`, which is usually a `time_t`.)",
+      "range": {
+        "startLine": 92,
+        "startChar": 16,
+        "endLine": 95,
+        "endChar": 15
+      },
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
