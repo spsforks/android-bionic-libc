@@ -76,7 +76,32 @@ static void call_array(init_func_t** list, int argc, char* argv[], char* envp[])
   }
 }
 
+<<<<<<< PATCH SET (f265d6 [RFC]Add riscv64 support)
+#if defined(__LP64__)
+extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+
+static void call_ifunc_resolvers() {
+  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
+    // These symbols are not emitted by gold. Gold has code to do so, but for
+    // whatever reason it is not being run. In these cases ifuncs cannot be
+    // resolved, so we do not support using ifuncs in static executables linked
+    // with gold.
+    //
+    // Since they are weak, they will be non-null when linked with bfd/lld and
+    // null when linked with gold.
+    return;
+  }
+
+  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
+    ElfW(Addr) resolver = r->r_addend;
+    *offset = __bionic_call_ifunc_resolver(resolver);
+  }
+}
+#else
+=======
 #if defined(__arm__) || defined(__i386__)  // Legacy architectures used REL...
+>>>>>>> BASE      (82770d Merge "Call out the REL architectures and make RELA the defa)
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
 
 static void call_ifunc_resolvers() {
