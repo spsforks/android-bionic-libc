@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca91a7ea_13a0d404",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-30T15:58:55Z",
+      "side": 1,
+      "message": "lol, if that\u0027s your idea of succinct, i\u0027d hate to see your prolix :-)",
+      "parentUuid": "0748bac3_39793b9e",
+      "range": {
+        "startLine": 193,
+        "startChar": 7,
+        "endLine": 203,
+        "endChar": 27
+      },
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fb0bbfe_96e65149",
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "The only place where it is used other than indication of an error is this [1].\nI don\u0027t see that function being used, so probably no need to rewrite errno value.\n\nI agree that there is no strong argument for either behaviour. BionicTzdbConsistencyTest touches all the available time zones, so if we reached this line someone has messed up with tzdata file and not much we can do in such case anyway.\n\n[1] https://github.com/eggert/tz/blob/0e8f0b06ac2f65d0c54a91121da09c8662cd88e6/localtime.c#L1496",
       "parentUuid": "7fb0bbfe_96e65149",
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29439d05_1e7e3f1a",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-30T15:58:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b1b44b96_cf0b29aa",
       "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -167,6 +209,30 @@
       "side": 1,
       "message": "Thanks, fixed.\n\ntm_mon \u003d 0 is the reason why is check \"man mktime\" whenever I encounter with tm.",
       "parentUuid": "3597ec2c_5f87f06a",
+      "range": {
+        "startLine": 92,
+        "startChar": 16,
+        "endLine": 95,
+        "endChar": 15
+      },
+      "revId": "aa6264b54e01801d78c640a83d764b6f80deeacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c7ce8bd_84aa5c48",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-06-30T15:58:55Z",
+      "side": 1,
+      "message": "yeah, i\u0027ve been using \u003ctime.h\u003e since the late 1980s/early 1980s, and i still have to use the man page. (see also: strftime, where basically every letter of the alphabet means _something_, but not necessarily what you\u0027d imagine!)",
+      "parentUuid": "869b9838_7dbb206c",
       "range": {
         "startLine": 92,
         "startChar": 16,
