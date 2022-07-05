@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c498bb28_cdca8d1e",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2022-07-05T12:54:08Z",
+      "side": 1,
+      "message": "I had trouble understanding this first sentence.\n\nIt is saying the Unix epoch time below is for a local time in America/Los_Angeles that is \"in DST\"?",
+      "range": {
+        "startLine": 162,
+        "startChar": 5,
+        "endLine": 162,
+        "endChar": 12
+      },
+      "revId": "46e4b317c5716890c24c7529d5b49462082d9431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0b043ff_b81ee7bb",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2022-07-05T12:54:08Z",
+      "side": 1,
+      "message": "t -\u003e tm",
+      "range": {
+        "startLine": 170,
+        "startChar": 43,
+        "endLine": 170,
+        "endChar": 44
+      },
+      "revId": "46e4b317c5716890c24c7529d5b49462082d9431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
