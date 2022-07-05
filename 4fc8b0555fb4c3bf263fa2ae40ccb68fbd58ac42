@@ -70,6 +70,24 @@
       "parentUuid": "7188b77f_5ddc4a8b",
       "revId": "4fc8b0555fb4c3bf263fa2ae40ccb68fbd58ac42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2589e7c2_69e0fd4e",
+        "filename": "libc/arch-x86_64/kabylake/string/avx2-memset-kbl.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1310609
+      },
+      "writtenOn": "2022-07-05T09:10:29Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "61e11e43_ef9e3489",
+      "revId": "4fc8b0555fb4c3bf263fa2ae40ccb68fbd58ac42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
