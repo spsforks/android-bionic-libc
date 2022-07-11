@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c483b410_18d9af53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2022-07-11T18:09:02Z",
+      "side": 1,
+      "message": "I see nothing on my local _hwasan testing that indicates that this is anything other than a timeout-flake.\n\nThese tests are run synchronously (using an flock) because they mutate sysprops, and so they block each other for a while. On my HWASan device, I find it only takes around ~15 sec for the full set of tests, but clearly on infrastructure it can take \u003e 90 seconds in around ~1.1% of cases.",
+      "revId": "1f3c8d688c8225dd725794562962d7726b590282",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
