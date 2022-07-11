@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69c2acbe_ea7e19ec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-11T15:42:46Z",
+      "side": 1,
+      "message": "(should be https://issuetracker.google.com/238569739 since \u0027984 was a dupe)",
+      "revId": "ea96e872c3e466bfb4a8edc46e7adb8fe1650e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
