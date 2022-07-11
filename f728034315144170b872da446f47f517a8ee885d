@@ -16,6 +16,24 @@
       "message": "these are all upstream source files that need to be fixed upstream first (similar to external/*) or your changes will be clobbered next time we update.\n\nyou want the freebsd-numerics list for the \"msun\" stuff. tech@openbsd for the openbsd files. looks like res_send.c was fixed upstream 10 years ago (!), so that one\u0027s fine to just submit (http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libc/resolv/res_send.c). (the reason that\u0027s not in an upstream-* directory is that we\u0027ve not yet had the chance to repair the fork damage :-( )",
       "revId": "f728034315144170b872da446f47f517a8ee885d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3ed98c5_02647c66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2022-07-11T10:41:40Z",
+      "side": 1,
+      "message": "Upstream libc already has the fixes.\n\nlibm is pending upstream review https://reviews.freebsd.org/D35771",
+      "parentUuid": "c9a81d14_654e5dd0",
+      "revId": "f728034315144170b872da446f47f517a8ee885d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
