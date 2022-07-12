@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b174a5ca_3155d337",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-12T00:20:36Z",
+      "side": 1,
+      "message": "in",
+      "range": {
+        "startLine": 169,
+        "startChar": 12,
+        "endLine": 169,
+        "endChar": 14
+      },
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a074a30_6ffd5ed7",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-12T00:20:36Z",
+      "side": 1,
+      "message": "is it clearer to just `tm.tm_isdst \u003d 0;` instead?",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88eb1d0e_7b579415",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-12T00:20:36Z",
+      "side": 1,
+      "message": "tbh, i\u0027ve kind of lost the point of this test. the test was originally added for the EOVERFLOW for LP32, right? \"check that we return overflow rather than crap for times out of range\". i\u0027m starting to suspect that all this other stuff isn\u0027t really very useful?\n\nis there value to L168-L178, or is the original \"does it work\" sufficient?",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03f6c018_5e842a50",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-12T00:20:36Z",
+      "side": 1,
+      "message": "explain in a comment why 2100 is interesting. people know 2038, but 2100 is for tz mailing list readers only :-)",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e97ba625_47682e64",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-12T00:20:36Z",
+      "side": 1,
+      "message": "ah, thanks for predicting my question and writing the comment that explains why you have this part of the test :-)",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
