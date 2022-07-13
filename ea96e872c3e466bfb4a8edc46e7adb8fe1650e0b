@@ -34,6 +34,24 @@
       "parentUuid": "69c2acbe_ea7e19ec",
       "revId": "ea96e872c3e466bfb4a8edc46e7adb8fe1650e0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ff28486_bc193308",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-13T15:32:02Z",
+      "side": 1,
+      "message": "yeah, looks like some \"public\" versus \"partners\" thing in the settings for the two bugs. mayu6@ is the owner for the bug that\u0027s still open, and might be able to get you added...",
+      "parentUuid": "c63852a5_05fea16d",
+      "revId": "ea96e872c3e466bfb4a8edc46e7adb8fe1650e0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
