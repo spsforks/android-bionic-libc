@@ -50,7 +50,8 @@
 // address to the linker. To accommodate a possible __tls_get_addr call before
 // libc.so's constructor, this local copy is initialized to SIZE_MAX, forcing
 // __tls_get_addr to initially use the slow path.
-__LIBC_HIDDEN__ _Atomic(size_t) __libc_tls_generation_copy = SIZE_MAX;
+BIONIC_USED_BEFORE_LINKER_RELOCATES __LIBC_HIDDEN__ _Atomic(size_t) __libc_tls_generation_copy =
+    SIZE_MAX;
 
 // Search for a TLS segment in the given phdr table. Returns true if it has a
 // TLS segment and false otherwise.

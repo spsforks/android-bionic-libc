@@ -95,3 +95,16 @@ template <typename T>
 static inline T* untag_address(T* p) {
   return reinterpret_cast<T*>(untag_address(reinterpret_cast<uintptr_t>(p)));
 }
+
+// MTE globals does things that can't be done for globals that are either used
+// or address-taken before the linker relocates itself. It makes all internal
+// globals go through a GOT entry, which obviously aren't populated
+// pre-relocation. Additionally, it tags memory pre-relocation and synthesises
+// address tags during relocation, so any address-taken global prior to
+// relocations won't have the address tag. Disable MTE globals for globals that
+// are accessed prior to linker relocations.
+#if __has_feature(memtag_globals)
+#define BIONIC_USED_BEFORE_LINKER_RELOCATES __attribute__((no_sanitize("memtag")))
+#else  // __has_feature(memtag_globals)
+#define BIONIC_USED_BEFORE_LINKER_RELOCATES
+#endif  // __has_feature(memtag_globals)

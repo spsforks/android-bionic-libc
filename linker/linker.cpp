@@ -48,6 +48,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -68,11 +69,12 @@
 #include "linker_translate_path.h"
 #include "linker_utils.h"
 
+#include "android-base/macros.h"
+#include "android-base/stringprintf.h"
+#include "android-base/strings.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
-#include "android-base/macros.h"
-#include "android-base/strings.h"
-#include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
@@ -136,6 +138,10 @@ static const char* const kAsanDefaultLdPaths[] = {
 static bool g_is_asan = false;
 
 static CFIShadowWriter g_cfi_shadow;
+
+bool __libc_use_mte_globals();
+bool __get_memtag_globals_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                               const ElfW(Addr) load_bias, const void** out_desc);
 
 CFIShadowWriter* get_cfi_shadow() {
   return &g_cfi_shadow;
@@ -1670,6 +1676,9 @@ bool find_libraries(android_namespace_t* ns,
       return false;
     }
     register_soinfo_tls(si);
+    if (__libc_use_mte_globals()) {
+      si->tag_globals();
+    }
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
@@ -2287,9 +2296,9 @@ bool do_dlsym(void* handle,
           return false;
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
-        *symbol = static_cast<char*>(tls_block) + sym->st_value;
+        *symbol = get_tagged_address(static_cast<char*>(tls_block) + sym->st_value);
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2720,7 +2729,11 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
 
 void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
   ElfW(Addr) address = offset + load_bias;
-  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+  ElfW(Addr)* tagged_address =
+      reinterpret_cast<ElfW(Addr)*>(get_tagged_address(reinterpret_cast<void*>(address)));
+  ElfW(Addr) tagged_result = reinterpret_cast<ElfW(Addr)>(
+      get_tagged_address(reinterpret_cast<void*>(*tagged_address + load_bias)));
+  *tagged_address = tagged_result;
 }
 
 // Process relocations in SHT_RELR section (experimental).
@@ -3273,7 +3286,6 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     }
   }
 #endif
-
   if (!relocate(lookup_list)) {
     return false;
   }
@@ -3327,6 +3339,107 @@ bool soinfo::protect_relro() {
     return false;
   }
   return true;
+}
+
+// Reserve the lower three bits of the first byte of the step distance when
+// encoding the memtag descriptors. Found to be the best overall size tradeoff
+// when compiling Android T with full MTE globals enabled.
+constexpr uint64_t kMemtagStepVarintReservedBits = 3;
+
+// Extracts the next var-int encoded number from `input_buffer`, which has
+// `input_length` bytes. We do explicit bounds checking that we don't overflow.
+// Places the decoded value into `*value`, and returns the number of bytes
+// consumed in the decoding process.
+static size_t memtagVarIntDecode(const uint8_t* input_buffer, size_t input_length,
+                                 uint64_t first_byte_reserved_low_bits, uint64_t* out,
+                                 uint64_t* out_reserved_bits) {
+  assert(input_length > 0);
+  // Zero values are impossible, so we subtract one before encoding. Add the one
+  // back in here.
+  *out = 1 + ((input_buffer[0] & 0x7f) >> first_byte_reserved_low_bits);
+  size_t shift = 7 - first_byte_reserved_low_bits;
+
+  *out_reserved_bits = input_buffer[0] & ((1 << first_byte_reserved_low_bits) - 1);
+
+  if ((input_buffer[0] & 0x80) == 0) return 1;
+
+  for (size_t i = 1;; ++i) {
+    if (i >= input_length) {
+      DL_ERR(
+          "malformed tagged symbol descriptor stream, last byte didn't "
+          "terminate the stream");
+    }
+    uint64_t byte = input_buffer[i];
+
+    *out += (byte & 0x7f) << shift;
+    shift += 7;
+
+    if (byte < 0x80) {
+      return i + 1;
+    }
+
+    if (shift >= sizeof(uint64_t) * 8) {
+      DL_ERR(
+          "malformed tagged symbol descriptor had a variable-length integer "
+          "that exceeded uint64_t "
+          "in size");
+    }
+  }
+  __builtin_unreachable();
+}
+
+void soinfo::tag_globals() {
+  if (is_linked()) return;
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  struct DescriptorNote {
+    uint64_t descriptors_offset;
+    uint64_t descriptors_bytes;
+  };
+
+  const DescriptorNote* descriptor_note;
+  if (!__get_memtag_globals_note(phdr, phnum, load_bias,
+                                 reinterpret_cast<const void**>(&descriptor_note))) {
+    return;
+  }
+
+  const uint8_t* descriptor_stream =
+      reinterpret_cast<const uint8_t*>(descriptor_note->descriptors_offset + load_bias);
+  uint64_t descriptor_bytes = descriptor_note->descriptors_bytes;
+
+  if (descriptor_bytes == 0) {
+    DL_ERR("Invalid MTE descriptor pool size: %" PRIu64, descriptor_bytes);
+  }
+
+  uint64_t addr = 0;
+
+  for (size_t i = 0; i < descriptor_bytes;) {
+    uint64_t step, num_granules;
+    uint64_t reserved_bits = 0;
+    i += memtagVarIntDecode(descriptor_stream + i, descriptor_bytes - i,
+                            kMemtagStepVarintReservedBits, &step, &reserved_bits);
+    if (reserved_bits == 0) {
+      i += memtagVarIntDecode(descriptor_stream + i, descriptor_bytes - i,
+                              /* No reserved bits for size */ 0, &num_granules, &reserved_bits);
+    } else {
+      num_granules = reserved_bits;
+    }
+
+    step *= kTagGranuleSize;
+    addr += step;
+    void* tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr + load_bias));
+
+    // async_safe_format_fd(2, "tagging symbol %s+0x%lx: 0x%lx (0x%lx) - 0x%lx (0x%lx): %p\n",
+    //                      get_realpath(), addr, num_granules * 16, addr + load_bias,
+    //                      addr + num_granules * 16, addr + num_granules * 16 + load_bias,
+    //                      tagged_addr);
+
+    for (size_t k = 0; k < num_granules; k++) {
+      auto* granule = static_cast<uint8_t*>(tagged_addr) + k * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+  }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {

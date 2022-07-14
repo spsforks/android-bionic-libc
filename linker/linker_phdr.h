@@ -67,6 +67,8 @@ class ElfReader {
   bool ReadDynamicSection();
   bool ReserveAddressSpace(address_space_params* address_space);
   bool LoadSegments();
+  void* MapSegment(size_t seg_index, void* seg_page_start, size_t file_length, int prot,
+                   off_t offset);
   bool FindPhdr();
   bool FindGnuPropertySection();
   bool CheckPhdr(ElfW(Addr));
@@ -127,6 +129,9 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias);
+
+int phdr_table_remap_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                              ElfW(Addr) load_bias, const char* path);
 
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                  ElfW(Addr) load_bias);

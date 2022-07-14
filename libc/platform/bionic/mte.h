@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <elf.h>
+#include <stddef.h>
 #include <sys/auxv.h>
 #include <sys/prctl.h>
 
@@ -37,6 +39,8 @@
 // overflow/underflow.
 #define PR_MTE_TAG_SET_NONZERO (0xfffeUL << PR_MTE_TAG_SHIFT)
 
+constexpr size_t kTagGranuleSize = 16;
+
 inline bool mte_supported() {
 #if defined(__aarch64__)
   static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
@@ -44,6 +48,30 @@ inline bool mte_supported() {
   static bool supported = false;
 #endif
   return supported;
+}
+
+inline void* get_tagged_address(const void* ptr) {
+#if defined(__aarch64__)
+  __asm__ __volatile__(".arch_extension mte; ldg %0, [%0]" : "+r"(ptr));
+#endif  // aarch64
+  return const_cast<void*>(ptr);
+}
+
+// Inserts a random tag tag to `ptr`. Doesn't tag memory.
+inline void* insert_random_tag(const void* ptr) {
+#if defined(__aarch64__)
+  if (ptr) {
+    __asm__ __volatile__(".arch_extension mte; irg %0, %0" : "+r"(ptr));
+  }
+#endif  // aarch64
+  return const_cast<void*>(ptr);
+}
+
+// Stores the address tag in `ptr` to memory, at `ptr`.
+inline void set_memory_tag(__attribute__((unused)) void* ptr) {
+#if defined(__aarch64__)
+  __asm__ __volatile__(".arch_extension mte; stg %0, [%0]" : "+r"(ptr));
+#endif  // aarch64
 }
 
 #ifdef __aarch64__

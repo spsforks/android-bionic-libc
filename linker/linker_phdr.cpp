@@ -36,13 +36,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "android-base/unique_fd.h"
 #include "linker.h"
+#include "linker_debug.h"
 #include "linker_dlwarning.h"
 #include "linker_globals.h"
-#include "linker_debug.h"
 #include "linker_utils.h"
 
 #include "private/CFIShadow.h" // For kLibraryAlignment
+
+bool __libc_use_mte_globals();  // from libc_init_static.cpp
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -683,6 +686,66 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
+static void* MapSegmentGeneric(size_t seg_index, const char* name, void* seg_page_start,
+                               size_t file_length, int prot, int fd, off_t offset) {
+  void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start), file_length, prot,
+                          MAP_FIXED | MAP_PRIVATE, fd, offset);
+  if (seg_addr == MAP_FAILED) {
+    DL_ERR("couldn't map \"%s\" segment %zd: %s", name, seg_index, strerror(errno));
+    return nullptr;
+  }
+  return seg_addr;
+}
+
+#if !defined(__aarch64__)
+void* ElfReader::MapSegment(size_t seg_index, void* seg_page_start, size_t file_length, int prot,
+                            off_t offset) {
+  return MapSegmentGeneric(seg_index, name_.c_str(), seg_page_start, file_length, prot, fd_,
+                           offset);
+}
+#else   // defined(__aarch64__)
+// To protect global data under MTE, need to apply memory tags to the global segments.
+// Unfortunately, there is no guarantee that file-based mappings are backed by tag-capable memory.
+// Instead, we map the segments anonymously, and copy the data from the file mapping.
+void* ElfReader::MapSegment(size_t seg_index, void* seg_page_start, size_t file_length, int prot,
+                            off_t offset) {
+  // Executable sections aren't tagged, as we don't use MTE for code at this point in time. By
+  // keeping executable mappings as file-based, we also ensure that symbolization has access to the
+  // file offsets for unwinding purposes, and keep the ability for samepage merging to reuse
+  // mappings between different processes.
+  if (!__libc_use_mte_globals() || (prot & PROT_EXEC) != 0) {
+    return MapSegmentGeneric(seg_index, name_.c_str(), seg_page_start, file_length, prot, fd_,
+                             offset);
+  }
+
+  void* seg_addr = mmap64(seg_page_start, file_length, PROT_READ | PROT_WRITE | PROT_MTE,
+                          MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, seg_addr, file_length, "mte_data");
+  if (seg_addr == MAP_FAILED) {
+    DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), seg_index, strerror(errno));
+    return nullptr;
+  }
+  if (pread(fd_, seg_addr, file_length, offset) == -1) {
+    DL_ERR("couldn't read fd-map into \"%s\" segment %zd: %s", name_.c_str(), seg_index,
+           strerror(errno));
+    return nullptr;
+  }
+
+  // Read only segments under MTE globals are basically relro. We patch them
+  // back to PROT_READ | PROT_MTE after relocation.
+  if (!(prot & PROT_WRITE)) {
+    return seg_addr;
+  }
+
+  if (mprotect(seg_addr, file_length, prot | PROT_MTE) == -1) {
+    DL_ERR("couldn't protect \"%s\" segment %zd: %s", name_.c_str(), seg_index, strerror(errno));
+    return nullptr;
+  }
+
+  return seg_addr;
+}
+#endif  // defined(__aarch64__)
+
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -736,16 +799,9 @@ bool ElfReader::LoadSegments() {
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 
-      void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
-                            file_length,
-                            prot,
-                            MAP_FIXED|MAP_PRIVATE,
-                            fd_,
-                            file_offset_ + file_page_start);
-      if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
-        return false;
-      }
+      void* seg_addr = MapSegment(i, reinterpret_cast<void*>(seg_page_start), file_length, prot,
+                                  file_offset_ + file_page_start);
+      if (seg_addr == nullptr) return false;
 
       // Mark segments as huge page eligible if they meet the requirements
       // (executable and PMD aligned).
@@ -851,6 +907,146 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot);
 }
 
+/* When MTE globals are requested by the binary, and when the hardware supports
+ * it, remap the executable's PT_LOAD data pages to have PROT_MTE.
+ *
+ * Input: phdr_table  -> program header table phdr_count  -> number of entries
+ *   in tables load_bias   -> load bias prop        -> GnuPropertySection or
+ *   nullptr Return: 0 on error, -1 on failure (error code in errno).
+ */
+#if defined(__aarch64__)
+int phdr_table_remap_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                              ElfW(Addr) load_bias, const char* path) {
+  if (!__libc_use_mte_globals()) {  // WORKAROUND linker not having access yet.
+    return 0;
+  }
+
+  const ElfW(Phdr)* phdr = phdr_table;
+  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  android::base::unique_fd fd(open(path, O_RDONLY));
+  if (fd.get() == -1) {
+    DL_ERR("couldn't open \"%s\" for remapping: %s", path, strerror(errno));
+    return -1;
+  }
+
+  for (size_t seg_index = 0; phdr < phdr_limit; phdr++, seg_index++) {
+    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_X)) {
+      continue;
+    }
+
+    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+
+    ElfW(Addr) seg_start = phdr->p_vaddr + load_bias;
+    ElfW(Addr) seg_file_end = phdr->p_vaddr + phdr->p_filesz + load_bias;
+    ElfW(Addr) seg_page_aligned_size = seg_page_end - seg_page_start;
+    ElfW(Addr) seg_file_size = seg_file_end - seg_start;
+
+    // DO NOT SUBMIT: can probably be removed
+    munmap(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size);
+
+    void* seg_addr =
+        mmap64(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+               PROT_READ | PROT_WRITE | PROT_MTE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+
+    if (seg_addr == MAP_FAILED) {
+      DL_ERR("couldn't remap \"%s\" segment %zd: %s", path, seg_index, strerror(errno));
+      return -1;
+    }
+    if (pread(fd.get(), reinterpret_cast<void*>(seg_start), seg_file_size, phdr->p_offset) == -1) {
+      DL_ERR("couldn't re-read fd-map into \"%s\" segment %zd: %s", path, seg_index,
+             strerror(errno));
+      return -1;
+    }
+
+    // async_safe_format_fd(2, "remap_segments remapping \"%s\" (%p) - (%p). ", path, seg_addr,
+    //                      reinterpret_cast<char*>(seg_addr) + seg_page_aligned_size);
+
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    // Read only segments under MTE globals are basically relro. We patch them
+    // back to PROT_READ | PROT_MTE after relocation.
+    if (!(prot & PROT_WRITE)) {
+      // async_safe_format_fd(2, "Leaving for RELRO.\n");
+      continue;
+    }
+
+    // async_safe_format_fd(2, "Patching back up.\n");
+
+    if (mprotect(seg_addr, seg_page_aligned_size, prot | PROT_MTE) == -1) {
+      DL_ERR("couldn't re-protect \"%s\" segment %zd: %s", path, seg_index, strerror(errno));
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+int phdr_table_remap_segments_inplace(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                      ElfW(Addr) load_bias) {
+  const ElfW(Phdr)* phdr = phdr_table;
+  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  for (size_t seg_index = 0; phdr < phdr_limit; phdr++, seg_index++) {
+    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_X)) {
+      continue;
+    }
+
+    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+
+    ElfW(Addr) seg_page_aligned_size = seg_page_end - seg_page_start;
+
+    void* mapping_copy = mmap64(nullptr, seg_page_aligned_size, PROT_READ | PROT_WRITE,
+                                MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    memcpy(mapping_copy, reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size);
+
+    // DO NOT SUBMIT: can probably be removed
+    munmap(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size);
+
+    void* seg_addr =
+        mmap64(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+               PROT_READ | PROT_WRITE | PROT_MTE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+
+    if (seg_addr == MAP_FAILED) {
+      DL_ERR("couldn't remap segment %zd: %s", seg_index, strerror(errno));
+      return -1;
+    }
+
+    memcpy(seg_addr, mapping_copy, seg_page_aligned_size);
+    munmap(mapping_copy, seg_page_aligned_size);
+
+    // async_safe_format_fd(2, "remap_segments remapping (%p) - (%p). ", seg_addr,
+    //                      reinterpret_cast<char*>(seg_addr) + seg_page_aligned_size);
+
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    // Read only segments under MTE globals are basically relro. We patch them
+    // back to PROT_READ | PROT_MTE after relocation.
+    if (!(prot & PROT_WRITE)) {
+      // async_safe_format_fd(2, "Leaving for RELRO.\n");
+      continue;
+    }
+
+    // async_safe_format_fd(2, "Patching back up.\n");
+
+    if (mprotect(seg_addr, seg_page_aligned_size, prot | PROT_MTE) == -1) {
+      DL_ERR("couldn't re-protect segment %zd: %s", seg_index, strerror(errno));
+      return -1;
+    }
+  }
+
+  return 0;
+}
+#else   // defined(__aarch64)
+int phdr_table_remap_segments(const ElfW(Phdr) *, size_t, ElfW(Addr), const char*) {
+  return 0;
+}
+
+int phdr_table_remap_segments_inplace(const ElfW(Phdr) *, size_t, ElfW(Addr)) {
+  return 0;
+}
+#endif  // defined(__aarch64__)
+
 /* Change the protection of all loaded segments in memory to writable.
  * This is useful before performing relocations. Once completed, you
  * will have to call phdr_table_protect_segments to restore the original
@@ -881,7 +1077,8 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
 
   for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type != PT_GNU_RELRO) {
+    if (phdr->p_type != PT_GNU_RELRO &&
+        (!__libc_use_mte_globals() || phdr->p_type != PT_LOAD || phdr->p_flags != PF_R)) {
       continue;
     }
 
@@ -932,7 +1129,13 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  */
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
                                  size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
+  int flags = PROT_READ;
+#if defined(__aarch64__)
+  if (__libc_use_mte_globals()) {
+    flags |= PROT_MTE;
+  }
+#endif  // defined(__aarch64__)
+  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, flags);
 }
 
 /* Serialize the GNU relro segments to the given file descriptor. This can be
