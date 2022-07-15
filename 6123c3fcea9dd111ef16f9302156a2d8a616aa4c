@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2a7b42e_ed0afc27",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T15:37:22Z",
+      "side": 1,
+      "message": "braces or same line, like google3.",
+      "revId": "6123c3fcea9dd111ef16f9302156a2d8a616aa4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "558a24ca_7e5c8784",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T15:37:22Z",
+      "side": 1,
+      "message": "just inline in the next line?",
+      "revId": "6123c3fcea9dd111ef16f9302156a2d8a616aa4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "369f0aec_7c36563a",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T15:37:22Z",
+      "side": 1,
+      "message": "don\u0027t assume you know what timezone you\u0027re in when this test starts...\n\n(also, did you want to use a timezone that\u0027s _not_ 0 offset? [that\u0027s one reason i tend to use America/Los_Angeles --- it does use DST but it\u0027s never 0. though UTC is definitely an interesting special case too.])",
+      "revId": "6123c3fcea9dd111ef16f9302156a2d8a616aa4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
