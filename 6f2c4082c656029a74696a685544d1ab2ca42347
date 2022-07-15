@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "628c1b84_e33b9f72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T16:26:52Z",
+      "side": 1,
+      "message": "otherwise lgtm :-)",
+      "revId": "6f2c4082c656029a74696a685544d1ab2ca42347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52820aeb_27197c55",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T16:26:52Z",
+      "side": 1,
+      "message": "these should all fail now, no?",
+      "revId": "6f2c4082c656029a74696a685544d1ab2ca42347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
