@@ -252,7 +252,7 @@ TEST(time, strftime_second_before_epoch) {
   EXPECT_STREQ("-1", buf);
 }
 
-TEST(time, strftime_null_tm_zone) {
+TEST(time, strftime_Z_null_tm_zone) {
   // Netflix on Nexus Player wouldn't start (http://b/25170306).
   struct tm t;
   memset(&t, 0, sizeof(tm));
@@ -288,6 +288,26 @@ TEST(time, strftime_null_tm_zone) {
   EXPECT_EQ(2U, strftime(buf, sizeof(buf), "<%Z>", &t));
   EXPECT_STREQ("<>", buf);
 #endif
+}
+
+TEST(time, strftime_z_null_tm_zone) {
+  char str[200];
+  struct tm tm = {.tm_year = 109, .tm_mon = 4, .tm_mday = 2, .tm_isdst = 0};
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  size_t result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
+
+  tm = {.tm_year = 109, .tm_mon = 4, .tm_mday = 2, .tm_isdst = 1};
+
+  result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
 }
 
 TEST(time, strftime_l) {
