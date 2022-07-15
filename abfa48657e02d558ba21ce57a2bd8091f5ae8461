@@ -83,6 +83,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e54bdacd_4b0ce714",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T15:23:45Z",
+      "side": 1,
+      "message": "i think my advice there would be:\n\n* if it makes sense, break the test in two at that part, and basically have this \"second half\" be a test in its own right. (otherwise it\u0027s really not clear whether resetting `tm` to its original values was deliberate or a copy \u0026 pasteo?)\n\n* if the specific values are somehow interesting, _assert_ what they are.\n\n* otherwise just \"go with the flow\" and only modify the field(s) you\u0027re interested in.\n\naiui you wanted a \"round trip\" kind of test, so only the third applies --- you need to reset is_dst for the mktime() to work, so you do. so i think what you have now accurately captures the _intent_ behind your test, right?",
+      "parentUuid": "5ff437a6_d94f8de9",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88eb1d0e_7b579415",
