@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a18744c3_16263f7f",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-15T13:37:31Z",
+      "side": 1,
+      "message": "Removed this part.",
+      "parentUuid": "b174a5ca_3155d337",
+      "range": {
+        "startLine": 169,
+        "startChar": 12,
+        "endLine": 169,
+        "endChar": 14
+      },
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a074a30_6ffd5ed7",
@@ -37,6 +61,24 @@
       "writtenOn": "2022-07-12T00:20:36Z",
       "side": 1,
       "message": "is it clearer to just `tm.tm_isdst \u003d 0;` instead?",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ff437a6_d94f8de9",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-15T13:37:31Z",
+      "side": 1,
+      "message": "As fields are modified I thought it would be easier to follow.",
+      "parentUuid": "5a074a30_6ffd5ed7",
       "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -58,6 +100,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58a7e4a1_23c17b9a",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-15T13:37:31Z",
+      "side": 1,
+      "message": "Yeah, I\u0027ve removed this part.",
+      "parentUuid": "88eb1d0e_7b579415",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03f6c018_5e842a50",
@@ -71,6 +131,24 @@
       "writtenOn": "2022-07-12T00:20:36Z",
       "side": 1,
       "message": "explain in a comment why 2100 is interesting. people know 2038, but 2100 is for tz mailing list readers only :-)",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6acb6a16_e33ef8f7",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-15T13:37:31Z",
+      "side": 1,
+      "message": "Makes sense, done.",
+      "parentUuid": "03f6c018_5e842a50",
       "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
