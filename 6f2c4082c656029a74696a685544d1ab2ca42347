@@ -51,6 +51,24 @@
       "parentUuid": "52820aeb_27197c55",
       "revId": "6f2c4082c656029a74696a685544d1ab2ca42347",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09256490_1d73ab51",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-15T23:45:21Z",
+      "side": 1,
+      "message": "\u003e Code [2] prints  str\u003d+0000 PST  with TZ\u003dAmerica/Los_Angeles both on workstation and my PC.\n\nit does what i\u0027d expect on my mac (which is \"organically\" in America/Los_Angeles):\n```\nstr\u003d-0800 PST\n```\n\nand it\u0027s not some weird special case about the \"home\" zone... if i ask it for Asia/Seoul i get the correct result there too:\n```\nstr\u003d+0900 KST\n```\n\n...but you\u0027re right that this code does seem to do [what i think is] the wrong thing on glibc?\n\nanother question to bring up on the tzcode mailing list? i\u0027m _very_ skeptical that behavior other than the \"obvious\" behavior we see from macos here is right... i\u0027m pretty sure you\u0027ve found another bug!",
+      "parentUuid": "05858520_7cfabd26",
+      "revId": "6f2c4082c656029a74696a685544d1ab2ca42347",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
