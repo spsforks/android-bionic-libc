@@ -39,6 +39,30 @@
       },
       "revId": "40fc6a5e28445a481730e91e6212c11b45c69450",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "253177f2_e98b72be",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-16T00:05:59Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/bionic/+/2154497 addresses that...",
+      "parentUuid": "99b690ac_8adea007",
+      "range": {
+        "startLine": 154,
+        "startChar": 14,
+        "endLine": 154,
+        "endChar": 19
+      },
+      "revId": "40fc6a5e28445a481730e91e6212c11b45c69450",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
