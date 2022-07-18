@@ -101,6 +101,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00867a6d_143f6f7d",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-18T11:14:42Z",
+      "side": 1,
+      "message": "Yep, you\u0027re right. Thanks!",
+      "parentUuid": "e54bdacd_4b0ce714",
+      "revId": "abfa48657e02d558ba21ce57a2bd8091f5ae8461",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88eb1d0e_7b579415",
