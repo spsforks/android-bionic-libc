@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0652fe1c_c55071e5",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-25T15:41:26Z",
+      "side": 1,
+      "message": "Makes sense, done.",
+      "parentUuid": "cf2111f1_e3c4307f",
+      "range": {
+        "startLine": 319,
+        "startChar": 11,
+        "endLine": 319,
+        "endChar": 14
+      },
+      "revId": "1b724254605ddcd43db1ebf4baf08383251a29e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ae3ad33_ba876f6a",
@@ -37,6 +61,24 @@
       "writtenOn": "2022-07-25T15:19:07Z",
       "side": 1,
       "message": "comment here too about why we need to call mktime()?\n\n(i wonder whether it\u0027s worth sending a patch to https://man7.org/linux/man-pages/man3/strftime.3.html since this doesn\u0027t seem to have been obvious to anyone?)",
+      "revId": "1b724254605ddcd43db1ebf4baf08383251a29e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c66743f4_432ac23d",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2022-07-25T15:41:26Z",
+      "side": 1,
+      "message": "Done.\n\nFortunately there is a email for bug reports on man7.org. Will email them!",
+      "parentUuid": "2ae3ad33_ba876f6a",
       "revId": "1b724254605ddcd43db1ebf4baf08383251a29e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
