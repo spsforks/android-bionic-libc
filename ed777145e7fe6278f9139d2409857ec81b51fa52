@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb1b34e_9abdbe26",
+        "filename": "libc/arch-x86/string/cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-25T16:29:28Z",
+      "side": 1,
+      "message": "this was the only difference between the two cache.h files, which was the only reason all this couldn\u0027t just share a directory...\n\ncache-atom.h and cache-slm.h would have been an alternative, but since the files were mostly duplicated anyway (and intel\u0027s been talking about replacing this with a run-time query of cache sizes)...",
+      "revId": "ed777145e7fe6278f9139d2409857ec81b51fa52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
