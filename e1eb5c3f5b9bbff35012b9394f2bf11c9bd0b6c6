@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d554c5a_e9a4118a",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-26T16:59:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "70f6f371_49115cfd",
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1f41d1b_479f6ff9",
@@ -162,6 +180,30 @@
       "side": 1,
       "message": "Looks fine to me.",
       "parentUuid": "8f51bb6b_91bb51f8",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 305,
+        "endChar": 54
+      },
+      "revId": "e1eb5c3f5b9bbff35012b9394f2bf11c9bd0b6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd4aa534_f34ef943",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-07-26T16:59:12Z",
+      "side": 1,
+      "message": "yeah, `BIONIC_MEMTAG_UPGRADE_SECS` sgtm.",
+      "parentUuid": "6dab146c_c416de4a",
       "range": {
         "startLine": 305,
         "startChar": 22,
