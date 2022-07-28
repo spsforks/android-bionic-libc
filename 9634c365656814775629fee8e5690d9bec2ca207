@@ -16,6 +16,23 @@
       "message": "Thanks for adding the comment.",
       "revId": "9634c365656814775629fee8e5690d9bec2ca207",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d411742_e06b9aa9",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-07-28T19:31:21Z",
+      "side": 1,
+      "message": "I noticed that if one of these tests is terminated prematurely (e.g. due to timeout or Ctrl-C), the persistent sysprops are left in place, which will not only cause other tests to run more slowly but also causes some of the MTE tests to fail. Is there something more robust that we can do here?",
+      "revId": "9634c365656814775629fee8e5690d9bec2ca207",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
