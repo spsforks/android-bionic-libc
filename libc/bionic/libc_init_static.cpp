@@ -292,6 +292,31 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
   }
 }
 
+static bool __should_upgrade_mte() {
+  const char* progname = __libc_shared_globals()->init_progname;
+  if (progname == nullptr) return false;
+
+  const char* basename = __gnu_basename(progname);
+  if (basename == nullptr) return false;
+
+  const char kMemtagUpgradePrefix[] = "persist.device_config.memory_safety_native.mode_override.";
+  size_t sysprop_size = strlen(basename) + strlen(kMemtagUpgradePrefix) + 1;
+  char* sysprop_name = static_cast<char*>(alloca(sysprop_size));
+  async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagUpgradePrefix, basename);
+  char override_prop[5];
+  if (get_property_value(sysprop_name, override_prop, sizeof(override_prop)) &&
+      strcmp("sync", override_prop)) {
+    return true;
+  }
+
+  if (get_property_value("persist.device_config.memory_safety_native.mode_override", override_prop,
+                         sizeof(override_prop)) &&
+      strcmp("sync", override_prop)) {
+    return true;
+  }
+  return false;
+}
+
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
@@ -300,6 +325,9 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
                                                                          void* stack_top) {
   bool memtag_stack;
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
+  if (level == M_HEAP_TAGGING_LEVEL_ASYNC && __should_upgrade_mte()) {
+    level = M_HEAP_TAGGING_LEVEL_SYNC;
+  }
 
   if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
