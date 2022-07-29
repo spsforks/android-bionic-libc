@@ -61,7 +61,7 @@ static bool get_property_value(const char* property_name, char* dest, size_t des
 bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const* sys_prop_names,
                                      size_t sys_prop_names_size, char* options,
                                      size_t options_size) {
-  const char* env = getenv(env_var_name);
+  const char* env = env_var_name ? getenv(env_var_name) : nullptr;
   if (env && *env != '\0') {
     strncpy(options, env, options_size);
     options[options_size - 1] = '\0';  // Ensure null-termination.

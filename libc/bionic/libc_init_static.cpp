@@ -212,6 +212,19 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
   return 0;
 }
 
+static bool __get_mte_mode(const char* env_name, const char* global_property,
+                           const char* prefix_property, char* options_str, size_t options_size) {
+  const char* progname = __libc_shared_globals()->init_progname;
+  if (progname == nullptr) return false;
+  const char* basename = __gnu_basename(progname);
+  if (basename == nullptr) return false;
+  char prop_buf[512];
+  async_safe_format_buffer(prop_buf, sizeof(prop_buf), "%s%s", prefix_property, basename);
+  const char* sys_prop_names[] = {prop_buf, global_property};
+  return get_config_from_env_or_sysprops(env_name, sys_prop_names, arraysize(sys_prop_names),
+                                         options_str, options_size);
+}
+
 // Returns true if there's an environment setting (either sysprop or env var)
 // that should overwrite the ELF note, and places the equivalent heap tagging
 // level into *level.
@@ -219,22 +232,9 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
   static const char kMemtagGlobalSysprop[] = "persist.arm64.memtag.default";
 
-  const char* progname = __libc_shared_globals()->init_progname;
-  if (progname == nullptr) return false;
-
-  const char* basename = __gnu_basename(progname);
-
-  static constexpr size_t kOptionsSize = PROP_VALUE_MAX;
-  char options_str[kOptionsSize];
-  size_t sysprop_size = strlen(basename) + strlen(kMemtagPrognameSyspropPrefix) + 1;
-  char* sysprop_name = static_cast<char*>(alloca(sysprop_size));
-
-  async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagPrognameSyspropPrefix,
-                           basename);
-  const char* sys_prop_names[] = {sysprop_name, kMemtagGlobalSysprop};
-
-  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
-                                       options_str, kOptionsSize)) {
+  char options_str[PROP_VALUE_MAX];
+  if (!__get_mte_mode("MEMTAG_OPTIONS", kMemtagGlobalSysprop, kMemtagPrognameSyspropPrefix,
+                      options_str, sizeof(options_str))) {
     return false;
   }
 
@@ -292,6 +292,20 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
   }
 }
 
+static void __maybe_override_mte_mode(HeapTaggingLevel* level) {
+  if (*level != M_HEAP_TAGGING_LEVEL_ASYNC) return;
+
+  const char kMemtagOverrideSyspropPrefix[] =
+      "persist.device_config.memory_safety_native.mode_override.process.";
+  const char kMemtagOverrideGlobalSysprop[] =
+      "persist.device_config.memory_safety_native.mode_override.default";
+  char override_prop[5];
+  if (__get_mte_mode(nullptr, kMemtagOverrideGlobalSysprop, kMemtagOverrideSyspropPrefix,
+                     override_prop, sizeof(override_prop))) {
+    if (strcmp("sync", override_prop) == 0) *level = M_HEAP_TAGGING_LEVEL_SYNC;
+  }
+}
+
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
@@ -300,6 +314,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
                                                                          void* stack_top) {
   bool memtag_stack;
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
+  __maybe_override_mte_mode(&level);
 
   if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
