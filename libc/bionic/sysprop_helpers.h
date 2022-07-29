@@ -31,6 +31,8 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+__LIBC_HIDDEN__ bool get_property_value(const char* property_name, char* dest, size_t dest_size);
+
 // Get the presiding config string, in the following order of priority:
 //   1. Environment variables.
 //   2. System properties, in the order they're specified in sys_prop_names.
