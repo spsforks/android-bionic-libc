@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "650c1ca7_e62878f7",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-07-30T00:14:38Z",
+      "side": 1,
+      "message": "and about code duplication: do you mean the duplication of the concat logic?",
+      "parentUuid": "231eae59_11b01647",
+      "revId": "fc5f5ec64a7854dd75c8426f35e99b2ec3c2b272",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c7815c70_496872cb",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
