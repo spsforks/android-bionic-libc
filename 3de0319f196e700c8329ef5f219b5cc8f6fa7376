@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9e83ea34_5f7a7741",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-08-01T20:31:23Z",
+      "side": 1,
+      "message": "this function should not have \"mte\" in the name - it\u0027s a generic sysprop helper. Maybe `__get_environment_setting` or something like that?",
+      "revId": "3de0319f196e700c8329ef5f219b5cc8f6fa7376",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "eba9f987_fcadc671",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 6
@@ -20,6 +37,40 @@
         "endLine": 220,
         "endChar": 40
       },
+      "revId": "3de0319f196e700c8329ef5f219b5cc8f6fa7376",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76da15db_c02d0002",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-08-01T20:31:23Z",
+      "side": 1,
+      "message": "Warn if not a recognized value. Only apply the override on top of ASYNC.",
+      "revId": "3de0319f196e700c8329ef5f219b5cc8f6fa7376",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc72f842_ba7b2be9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-08-01T20:31:23Z",
+      "side": 1,
+      "message": "consider moving this call inside __get_heap_tagging_level, maybe",
       "revId": "3de0319f196e700c8329ef5f219b5cc8f6fa7376",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
