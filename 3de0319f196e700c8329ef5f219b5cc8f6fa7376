@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eba9f987_fcadc671",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-01T19:05:22Z",
+      "side": 1,
+      "message": "this check (or a corresponding assert) was missing. `strlen(nullptr)` was invalid on the LHS of this diff.",
+      "range": {
+        "startLine": 220,
+        "startChar": 2,
+        "endLine": 220,
+        "endChar": 40
+      },
+      "revId": "3de0319f196e700c8329ef5f219b5cc8f6fa7376",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
