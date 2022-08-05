@@ -260,6 +260,70 @@ void test_android_mallopt() {
   CHECK(memtag_stack);
 }
 
+static volatile char* throw_frame;
+
+void throws()  __attribute__((noinline)) {
+  // Prevent optimization.
+  if (getpid() == 0)
+    return;
+  throw_frame = reinterpret_cast<char*>(__builtin_frame_address(0));
+  throw "error";
+}
+
+void maybe_throws()  __attribute__((noinline)) {
+  volatile int y = 1;
+  throws();
+  y = 2;
+}
+
+void test_exception_cleanup() {
+  try {
+    maybe_throws();
+  } catch (const char* e) {
+  }
+  const char* cur_frame = reinterpret_cast<char*>(__builtin_frame_address(0));
+  if (throw_frame >= cur_frame) {
+    fprintf(stderr, "invalid throw frame");
+    exit(1);
+  }
+  for (char* b = const_cast<char*>(throw_frame); b < cur_frame; ++b) {
+    if (mte_get_tag(b) != b) {
+      fprintf(stderr, "invalid tag at %p", b);
+      exit(1);
+    }
+  }
+}
+
+void skip_frame() __attribute__((noinline, no_sanitize("memtag"))) {
+  volatile int x = 1;
+  throws();
+  x = 2;
+}
+
+void skip_frame2()  __attribute__((noinline)) {
+  volatile int y = 1;
+  skip_frame();
+  y = 2;
+}
+
+void test_exception_skip_frame() {
+  try {
+    skip_frame2();
+  } catch (const char* e) {
+  }
+  const char* cur_frame = reinterpret_cast<char*>(__builtin_frame_address(0));
+  if (throw_frame >= cur_frame) {
+    fprintf(stderr, "invalid throw frame");
+    exit(1);
+  }
+  for (char* b = const_cast<char*>(throw_frame); b < cur_frame; ++b) {
+    if (mte_get_tag(b) != b) {
+      fprintf(stderr, "invalid tag at %p", b);
+      exit(1);
+    }
+  }
+}
+
 int main(int argc, char** argv) {
   if (argc < 2) {
     printf("nothing to do\n");
@@ -293,6 +357,16 @@ int main(int argc, char** argv) {
 
   if (strcmp(argv[1], "android_mallopt") == 0) {
     test_android_mallopt();
+    return 0;
+  }
+
+  if (strcmp(argv[1], "exception_cleanup") == 0) {
+    test_exception_cleanup();
+    return 0;
+  }
+
+  if (strcmp(argv[1], "exception_skip_frame") == 0) {
+    test_exception_skip_frame();
     return 0;
   }
 
