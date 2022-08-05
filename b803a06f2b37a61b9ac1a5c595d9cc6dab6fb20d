@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb96c38d_2e17a981",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-05T17:00:01Z",
+      "side": 1,
+      "message": "nit: license header",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 18
+      },
+      "revId": "b803a06f2b37a61b9ac1a5c595d9cc6dab6fb20d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea2ebd14_b16097ea",
+        "filename": "tests/memtag_stack_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-05T17:00:01Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "b803a06f2b37a61b9ac1a5c595d9cc6dab6fb20d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
