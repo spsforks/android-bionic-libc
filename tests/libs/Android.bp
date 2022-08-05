@@ -1663,6 +1663,7 @@ cc_test {
        memtag_heap: true,
      },
    },
+   cflags: ["-fexceptions"],
 }
 
 cc_test {
@@ -1677,6 +1678,7 @@ cc_test {
        memtag_heap: true,
      },
    },
+   cflags: ["-fexceptions"],
 }
 
 cc_genrule {
