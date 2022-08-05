@@ -113,6 +113,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
         blocks.replaceTokens(kernel_arch_token_replacements[arch])
 
     blocks.removeStructs(kernel_structs_to_remove)
+    blocks.removeStructs(kernel_struct_replacements, True)
     blocks.optimizeMacros(macros)
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs(kernel_known_generic_statics)
