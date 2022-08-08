@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a24d050_4463b1a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-08T20:52:28Z",
+      "side": 1,
+      "message": "see https://android-review.googlesource.com/c/platform/bionic/+/2083840 for most of change for page-size independence.\n\nthis would need to be replaced with something that calls getpagesize() instead, since there would no longer be a constant.",
+      "revId": "2f3562f7877de86947e6f89ea3a3651571b843e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
