@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87e19d6a_bd7ec355",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-08T20:44:20Z",
+      "side": 1,
+      "message": "crosses\n\nand link to the example? future cferris will thank you :-)",
+      "range": {
+        "startLine": 10,
+        "startChar": 15,
+        "endLine": 10,
+        "endChar": 21
+      },
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5869572d_0f1a7fc5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-08T20:44:20Z",
+      "side": 1,
+      "message": "include",
+      "range": {
+        "startLine": 15,
+        "startChar": 47,
+        "endLine": 15,
+        "endChar": 54
+      },
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f3b9f5a_a01ba263",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-08T20:44:20Z",
+      "side": 1,
+      "message": "why two passes?",
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b66e477c_f74a561a",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-08T20:44:20Z",
+      "side": 1,
+      "message": "i thought we had something to include a line number or something? if not, maybe just include the name here?",
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
