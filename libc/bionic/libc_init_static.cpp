@@ -305,6 +305,14 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   bool memtag_stack;
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
+  static const char kAppProcessNamePrefix[] = "app_process";
+  const char* progname = __libc_shared_globals()->init_progname;
+  if (progname &&
+      strncmp(progname, kAppProcessNamePrefix, sizeof(kAppProcessNamePrefix) - 1) == 0) {
+    // disable timed upgrade for zygote, as the thread spawned will violate the requirement
+    // that it be single-threaded.
+    env = nullptr;
+  }
   int64_t timed_upgrade = 0;
   if (env) {
     char* endptr;
