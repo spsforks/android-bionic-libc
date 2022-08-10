@@ -16,6 +16,23 @@
       "message": "(ps2 updates the docs.)",
       "revId": "da0aba188d355953d609823222f1db6355cc60a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42ae6b41_3f929b8f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3087,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2022-08-10T19:04:27Z",
+      "side": 1,
+      "message": "Check some of the invalid cases? `\u003c1012\u003e` with `\u003c%b\u003e`? (similar for the `scanf_i_binary` test?)",
+      "revId": "da0aba188d355953d609823222f1db6355cc60a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
