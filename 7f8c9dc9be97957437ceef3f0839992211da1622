@@ -160,6 +160,24 @@
       "parentUuid": "1add610b_88766dda",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69aacd0d_552b43f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-10T21:09:01Z",
+      "side": 1,
+      "message": "(i\u0027ve commented on that bug, expressing skepticism that this is a good idea until/unless we have a plan for how we\u0027d ever ship this. without such a plan, we\u0027re just increasing everyone\u0027s maintenance load by having a non-shipping configuration in CI.)",
+      "parentUuid": "6d3f6b28_f52655f3",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
