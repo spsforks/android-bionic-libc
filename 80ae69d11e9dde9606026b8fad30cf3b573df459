@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87cad0dd_0a9a4168",
+        "filename": "libc/kernel/uapi/linux/android/binder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T23:17:08Z",
+      "side": 1,
+      "message": "frameworks/native/libs/binder/binder_module.h includes a copy of this structure, but they are the same. Also, that file protects the definition with an:\n\n#ifndef BINDER_GET_EXTENDED_ERROR\n\nI\u0027ll do a follow-up to delete it from there, although, that definition actually has a description of the fields. Probably not worth keeping just for that though.",
+      "range": {
+        "startLine": 130,
+        "startChar": 7,
+        "endLine": 130,
+        "endChar": 28
+      },
+      "revId": "80ae69d11e9dde9606026b8fad30cf3b573df459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8376d98_e9256947",
+        "filename": "libc/kernel/uapi/linux/icmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T23:17:08Z",
+      "side": 1,
+      "message": "This looks odd, but in the real headers, it\u0027s just __unused. Our parser converts this to __linux_unused.",
+      "range": {
+        "startLine": 90,
+        "startChar": 13,
+        "endLine": 90,
+        "endChar": 27
+      },
+      "revId": "80ae69d11e9dde9606026b8fad30cf3b573df459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
