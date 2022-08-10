@@ -16,6 +16,24 @@
       "message": "see https://android-review.googlesource.com/c/platform/bionic/+/2083840 for most of change for page-size independence.\n\nthis would need to be replaced with something that calls getpagesize() instead, since there would no longer be a constant.",
       "revId": "2f3562f7877de86947e6f89ea3a3651571b843e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d1af885_ceca76fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1293738
+      },
+      "writtenOn": "2022-08-10T20:20:21Z",
+      "side": 1,
+      "message": "Hmm, I can see this can be pulled in for downstream users of bionic via:\n\n\u003csignal.h\u003e -\u003e \u003csys/ucontext.h\u003e -\u003e \u003csys/user.h\u003e\n\n..which is unfortunate. Looking at glibc there is a similar pattern:\n\n\u003cproc_service.h\u003e -\u003e \u003csys/procfs.h\u003e -\u003e \u003csys/user.h\u003e\n$ cat test.c\n#include \u003cproc_service.h\u003e\nstatic int a \u003d PAGE_SIZE;\ngcc -o test.o -c test.c\n\nDon\u0027t we need this at least temporarily until all of the code in AOSP is weaned off of PAGE_SIZE?",
+      "parentUuid": "5a24d050_4463b1a7",
+      "revId": "2f3562f7877de86947e6f89ea3a3651571b843e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
