@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "beb1d547_121a26fa",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-10T00:40:08Z",
+      "side": 1,
+      "message": "i like your new version much better, but i\u0027d either flip the sense of the booleans or rename this? it\u0027s a bit odd that the structs to remove in structs_to_remove are the ones with _false_, while the _true_ ones get rewritten instead :-)",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "914dc867bf68d5bbc12c4970af90466030d1ee26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
