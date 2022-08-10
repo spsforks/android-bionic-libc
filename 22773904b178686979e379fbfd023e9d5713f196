@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3190dc15_c0f615c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T00:28:41Z",
+      "side": 1,
+      "message": "Fixed.\n\nI already added an example in the comment right above the code, and I added tests that looks like the failing structure from before.",
+      "parentUuid": "87e19d6a_bd7ec355",
+      "range": {
+        "startLine": 10,
+        "startChar": 15,
+        "endLine": 10,
+        "endChar": 21
+      },
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5869572d_0f1a7fc5",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-08-08T20:44:20Z",
       "side": 1,
       "message": "include",
+      "range": {
+        "startLine": 15,
+        "startChar": 47,
+        "endLine": 15,
+        "endChar": 54
+      },
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84299068_1040524a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T00:28:41Z",
+      "side": 1,
+      "message": "Fixed. Don\u0027t know what happened to my ability to spell in this description.",
+      "parentUuid": "5869572d_0f1a7fc5",
       "range": {
         "startLine": 15,
         "startChar": 47,
@@ -64,6 +112,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f3e10d0_7f951294",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T00:28:41Z",
+      "side": 1,
+      "message": "Each pass is using a different set of structures. The first pass is only remove the structures. The second adds the #include \u003cbits/STRUCT_NAME.h\u003e if that structure is removed.\n\nI decided to combine kernel_structs_to_remove and kernel_struct_replacements into one structure so this only has to be done in one call.",
+      "parentUuid": "4f3b9f5a_a01ba263",
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b66e477c_f74a561a",
@@ -77,6 +143,24 @@
       "writtenOn": "2022-08-08T20:44:20Z",
       "side": 1,
       "message": "i thought we had something to include a line number or something? if not, maybe just include the name here?",
+      "revId": "22773904b178686979e379fbfd023e9d5713f196",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "363c92db_ec77b55d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T00:28:41Z",
+      "side": 1,
+      "message": "Admittedly, this was just a kludge. I got kind of lazy here, so I replaced it with an exception being raise that will print the location and the structure name.",
+      "parentUuid": "b66e477c_f74a561a",
       "revId": "22773904b178686979e379fbfd023e9d5713f196",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
