@@ -22,6 +22,30 @@
       },
       "revId": "914dc867bf68d5bbc12c4970af90466030d1ee26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5de1e6f_040bae50",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-10T00:51:04Z",
+      "side": 1,
+      "message": "Okay, I can\u0027t think a better name for this, so I flipped the sense.",
+      "parentUuid": "beb1d547_121a26fa",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "914dc867bf68d5bbc12c4970af90466030d1ee26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
