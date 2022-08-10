@@ -142,6 +142,24 @@
       "parentUuid": "552e28fb_1bb78351",
       "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d3f6b28_f52655f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1293738
+      },
+      "writtenOn": "2022-08-10T20:20:48Z",
+      "side": 1,
+      "message": "I\u0027m working with engprod in b/241823164 to provide a limited trial of a distro that uses a 64KB page size to provide at least the possibility of continuous integration testing of non-4KB page size, but 16KB page size is indeed a harder sell because only M1+Asahi would run in this configuration as many pre-8.2 Cortex CPUs did not have 16KB page size support. Hopefully this trial is successful and will support the merging of this patch.",
+      "parentUuid": "1add610b_88766dda",
+      "revId": "7f8c9dc9be97957437ceef3f0839992211da1622",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
