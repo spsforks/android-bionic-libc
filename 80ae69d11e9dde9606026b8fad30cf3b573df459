@@ -45,6 +45,30 @@
       },
       "revId": "80ae69d11e9dde9606026b8fad30cf3b573df459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd2fce2e_6aa6fa39",
+        "filename": "libc/kernel/uapi/linux/icmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-10T23:41:41Z",
+      "side": 1,
+      "message": "yeah, because we have a (BSD-inherited) `__unused` macro that would conflict :-(",
+      "parentUuid": "f8376d98_e9256947",
+      "range": {
+        "startLine": 90,
+        "startChar": 13,
+        "endLine": 90,
+        "endChar": 27
+      },
+      "revId": "80ae69d11e9dde9606026b8fad30cf3b573df459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
