@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdce0200_3660601a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-11T19:33:26Z",
+      "side": 1,
+      "message": "has https://source.corp.google.com/android/bionic/libc/bionic/libc_init_common.cpp;l\u003d163 already happened by this point, so we can just reuse that?",
+      "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
