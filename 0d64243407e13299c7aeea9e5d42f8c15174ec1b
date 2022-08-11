@@ -34,6 +34,24 @@
       "parentUuid": "e317681a_07ee8d00",
       "revId": "0d64243407e13299c7aeea9e5d42f8c15174ec1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62d42a9a_bd600487",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-11T22:01:15Z",
+      "side": 1,
+      "message": "yeah, i\u0027m never quite sure about keymaster and gatekeeper --- how they\u0027re built/where they run. +swilden for whether they use bionic.\n\ni see vold though, and that\u0027s definitely plain old code, so i\u0027ll send a patch to them...",
+      "parentUuid": "da98b4ca_aec1ffd0",
+      "revId": "0d64243407e13299c7aeea9e5d42f8c15174ec1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
