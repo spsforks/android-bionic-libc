@@ -33,6 +33,24 @@
       "message": "Check some of the invalid cases? `\u003c1012\u003e` with `\u003c%b\u003e`? (similar for the `scanf_i_binary` test?)",
       "revId": "da0aba188d355953d609823222f1db6355cc60a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b83327d_f87fa9e9",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3087,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-11T00:26:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42ae6b41_3f929b8f",
+      "revId": "da0aba188d355953d609823222f1db6355cc60a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
