@@ -2646,6 +2646,10 @@ cc_genrule {
 
         ":libc_musl_sysroot_bionic_arch_headers",
     ],
+    exclude_srcs: [
+        "kernel/uapi/BUILD",
+        "kernel/android/BUILD",
+    ],
     out: ["libc_musl_sysroot_bionic_headers.zip"],
     tools: [
         "soong_zip",
