@@ -16,6 +16,24 @@
       "message": "has https://source.corp.google.com/android/bionic/libc/bionic/libc_init_common.cpp;l\u003d163 already happened by this point, so we can just reuse that?",
       "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bf681cc_c2d8bbd2",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-11T19:55:39Z",
+      "side": 1,
+      "message": "No, this happens later when run by the linker.",
+      "parentUuid": "cdce0200_3660601a",
+      "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
