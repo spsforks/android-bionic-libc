@@ -16,6 +16,24 @@
       "message": "i heard you like memset_explicit()?",
       "revId": "0d64243407e13299c7aeea9e5d42f8c15174ec1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da98b4ca_aec1ffd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-08-11T21:29:57Z",
+      "side": 1,
+      "message": ":) My ears just perk up when I hear that function.\n\nWould it be useful to replace some of the custom memset_s functions with memset_explicit?  system/keymaster/include/keymaster/mem.h is the only actionable case I could find.",
+      "parentUuid": "e317681a_07ee8d00",
+      "revId": "0d64243407e13299c7aeea9e5d42f8c15174ec1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
