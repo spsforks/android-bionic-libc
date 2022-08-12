@@ -34,6 +34,29 @@
       "parentUuid": "cdce0200_3660601a",
       "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28eb75fc_42b85b01",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-12T00:10:40Z",
+      "side": 1,
+      "message": "is this actually necessary? it\u0027s not always app_process64?",
+      "range": {
+        "startLine": 312,
+        "startChar": 6,
+        "endLine": 312,
+        "endChar": 13
+      },
+      "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
