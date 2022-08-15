@@ -57,6 +57,30 @@
       },
       "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91787cda_ff30abba",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-15T21:35:11Z",
+      "side": 1,
+      "message": "I suppose not, because app_process32 won\u0027t be able to run MTE in the first place. Except if maybe someone decides to rename it to app_process when 32bit is dead (but that might also cause all sorts of other problems).",
+      "parentUuid": "28eb75fc_42b85b01",
+      "range": {
+        "startLine": 312,
+        "startChar": 6,
+        "endLine": 312,
+        "endChar": 13
+      },
+      "revId": "572aeaccfa6406d4712a11ef839cdf81ff683e4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
