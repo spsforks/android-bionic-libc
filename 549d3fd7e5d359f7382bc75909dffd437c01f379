@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58c41e73_5d14e0f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2022-08-17T23:00:01Z",
+      "side": 1,
+      "message": "I\u0027m not sure what this means. Based on the contents, \"Stop preprocessing libc headers.\" would be accurate.",
+      "revId": "549d3fd7e5d359f7382bc75909dffd437c01f379",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
