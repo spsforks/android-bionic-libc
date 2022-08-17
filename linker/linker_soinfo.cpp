@@ -171,10 +171,18 @@ soinfo_do_lookup_impl(const char* name, const version_info* vi,
     bool calculated_verneed = false;
 
     uint32_t chain_value = 0;
-    const ElfW(Sym)* sym = nullptr;
 
     do {
-      sym = lib->symtab_ + sym_idx;
+      uintptr_t sym_value;
+      if (__builtin_mul_overflow(sym_idx, sizeof(ElfW(Sym)), &sym_value) ||
+          __builtin_add_overflow(reinterpret_cast<uintptr_t>(lib->symtab_), sym_value,
+                                 &sym_value)) {
+        DL_SYM_ERR("Overflow looking up %s in %s@%p", name, lib->si_->get_realpath(),
+                   reinterpret_cast<void*>(lib->si_->base));
+
+        break;
+      }
+      const ElfW(Sym)* sym = reinterpret_cast<ElfW(Sym)*>(sym_value);
       chain_value = lib->gnu_chain_[sym_idx];
       if ((chain_value >> 1) == (hash >> 1)) {
         if (vi != nullptr && !calculated_verneed) {
