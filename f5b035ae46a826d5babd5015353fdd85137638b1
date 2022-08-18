@@ -16,6 +16,24 @@
       "message": "this looks like a revert? is gerrit showing the wrong diff?\n\nthe \"-\" code is the code we actually want here...",
       "revId": "f5b035ae46a826d5babd5015353fdd85137638b1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbe1967e_e7c780d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1086523
+      },
+      "writtenOn": "2022-08-18T22:50:02Z",
+      "side": 1,
+      "message": "Re-merged instead of skipped.  Will use a different topic.",
+      "parentUuid": "d1f739ee_3c412226",
+      "revId": "f5b035ae46a826d5babd5015353fdd85137638b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
