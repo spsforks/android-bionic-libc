@@ -16,6 +16,23 @@
       "message": "I\u0027m not sure what this means. Based on the contents, \"Stop preprocessing libc headers.\" would be accurate.",
       "revId": "549d3fd7e5d359f7382bc75909dffd437c01f379",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a09943b8_788aa450",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2022-08-22T20:33:19Z",
+      "side": 1,
+      "message": "Looks like I\u0027m not quite done removing libandroid_support. Will investigate when I have a moment.",
+      "revId": "549d3fd7e5d359f7382bc75909dffd437c01f379",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
