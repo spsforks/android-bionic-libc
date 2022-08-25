@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbbb67f7_212654f3",
+        "filename": "libc/include/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-25T20:18:47Z",
+      "side": 1,
+      "message": "this is the interesting bit :-)",
+      "range": {
+        "startLine": 98,
+        "startChar": 56,
+        "endLine": 98,
+        "endChar": 71
+      },
+      "revId": "963e24b93ea09c890520adff78fc8ab06dcb9bc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
