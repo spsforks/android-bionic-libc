@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b54db3e_8d434c31",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-08-25T21:50:52Z",
+      "side": 1,
+      "message": "thanks!",
+      "revId": "963e24b93ea09c890520adff78fc8ab06dcb9bc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbbb67f7_212654f3",
@@ -14,6 +31,30 @@
       "writtenOn": "2022-08-25T20:18:47Z",
       "side": 1,
       "message": "this is the interesting bit :-)",
+      "range": {
+        "startLine": 98,
+        "startChar": 56,
+        "endLine": 98,
+        "endChar": 71
+      },
+      "revId": "963e24b93ea09c890520adff78fc8ab06dcb9bc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f9f0be0_8c3b725f",
+        "filename": "libc/include/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2022-08-25T21:50:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bbbb67f7_212654f3",
       "range": {
         "startLine": 98,
         "startChar": 56,
