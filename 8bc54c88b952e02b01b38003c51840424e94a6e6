@@ -16,6 +16,24 @@
       "message": "\"missed a bit\" :-)",
       "revId": "8bc54c88b952e02b01b38003c51840424e94a6e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "125f170c_e25b37cf",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-29T23:56:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6855f4d9_a797b57e",
+      "revId": "8bc54c88b952e02b01b38003c51840424e94a6e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
