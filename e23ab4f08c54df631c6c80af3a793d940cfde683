@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8e98daa_b8604963",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-29T21:14:20Z",
+      "side": 1,
+      "message": "format like the first one? (or at least \"format all three of these consistently?\")",
+      "revId": "e23ab4f08c54df631c6c80af3a793d940cfde683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47f58850_3a7fb0b5",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-29T21:14:20Z",
+      "side": 1,
+      "message": "no `: \"memory\"` here?",
+      "range": {
+        "startLine": 59,
+        "startChar": 20,
+        "endLine": 59,
+        "endChar": 21
+      },
+      "revId": "e23ab4f08c54df631c6c80af3a793d940cfde683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d6a8d4f_dc4d29c4",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-08-29T21:14:20Z",
+      "side": 1,
+      "message": "`perror(\"exeve failed\");` or at least `fprintf(stderr, \"execve failed: %m\\n\");`? there\u0027s no reason you actually want the errno _number_, right?",
+      "range": {
+        "startLine": 81,
+        "startChar": 36,
+        "endLine": 81,
+        "endChar": 46
+      },
+      "revId": "e23ab4f08c54df631c6c80af3a793d940cfde683",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
