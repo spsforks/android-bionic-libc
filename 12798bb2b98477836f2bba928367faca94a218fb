@@ -34,6 +34,24 @@
       "parentUuid": "cb40b42a_e46eb9f5",
       "revId": "12798bb2b98477836f2bba928367faca94a218fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71e615bc_71e16597",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-30T18:00:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b559a983_30b3eb53",
+      "revId": "12798bb2b98477836f2bba928367faca94a218fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
