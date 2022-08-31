@@ -39,6 +39,30 @@
       },
       "revId": "b20b484d959af32e94a82e4c09bd57b136512cb5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b931896_601e4e36",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-08-31T20:41:22Z",
+      "side": 1,
+      "message": "But mallopt does not take a pointer, but an int. And an int cannot necessarily represent a pointer, depending on platform, right?",
+      "parentUuid": "a431606b_8431af56",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 114,
+        "endChar": 40
+      },
+      "revId": "b20b484d959af32e94a82e4c09bd57b136512cb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
