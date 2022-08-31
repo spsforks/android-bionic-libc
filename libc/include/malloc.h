@@ -280,6 +280,12 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 #define M_BIONIC_SET_HEAP_TAGGING_LEVEL (-204)
 
 /**
+ * mallopt() option to query stack tagging state of process. Returns 1 if
+ * stack tagging is on.
+ */
+#define M_BIONIC_MEMTAG_STACK_IS_ON (-205)
+
+/**
  * Constants for use with the M_BIONIC_SET_HEAP_TAGGING_LEVEL mallopt() option.
  */
 enum HeapTaggingLevel {

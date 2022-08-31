@@ -110,6 +110,9 @@ extern "C" int mallopt(int param, int value) {
   if (param == M_BIONIC_ZERO_INIT) {
     return SetHeapZeroInitialize(value);
   }
+  if (param == M_BIONIC_MEMTAG_STACK_IS_ON) {
+    return __libc_globals->memtag_stack;
+  }
   // The rest we pass on...
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
