@@ -63,6 +63,30 @@
       },
       "revId": "b20b484d959af32e94a82e4c09bd57b136512cb5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18013a45_06c27d90",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-08-31T20:58:54Z",
+      "side": 1,
+      "message": "I forgot about that. If you are planning on only using this in the platform, maybe it would be better to use android_mallopt since that can return data.\n\nIs this function to be called from some non-platform path?",
+      "parentUuid": "6b931896_601e4e36",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 114,
+        "endChar": 40
+      },
+      "revId": "b20b484d959af32e94a82e4c09bd57b136512cb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
