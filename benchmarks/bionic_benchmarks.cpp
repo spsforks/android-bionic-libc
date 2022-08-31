@@ -336,16 +336,20 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
     return to_populate;
   }
 
-  to_populate->push_back(std::vector<int64_t>());
   std::stringstream sstream(args);
   std::string argstr;
+  size_t prev_size = to_populate->size();
   while (sstream >> argstr) {
     char* check_null;
     int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
     if (*check_null) {
       errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
     }
-    (*to_populate)[0].push_back(converted);
+    to_populate->push_back(std::vector<int64_t>{converted});
+  }
+  if (prev_size == to_populate->size()) {
+    // Nothing added, so force add an empty vector.
+    to_populate->push_back(std::vector<int64_t>{});
   }
   return to_populate;
 }

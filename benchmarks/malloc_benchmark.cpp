@@ -36,7 +36,7 @@
 
 #if defined(__BIONIC__)
 
-static void BM_mallopt_purge(benchmark::State& state) {
+static void BM_mallopt_purge_multi_sizes(benchmark::State& state) {
   static size_t sizes[] = {8, 16, 32, 64, 128, 1024, 4096, 16384, 65536, 131072, 1048576};
   static int pagesize = getpagesize();
   mallopt(M_DECAY_TIME, 1);
@@ -67,6 +67,58 @@ static void BM_mallopt_purge(benchmark::State& state) {
   }
   mallopt(M_DECAY_TIME, 0);
 }
-BIONIC_BENCHMARK(BM_mallopt_purge);
+BIONIC_BENCHMARK(BM_mallopt_purge_multi_sizes);
+
+template <size_t FreePercent>
+static void MalloptBenchmark(benchmark::State& state) {
+  size_t size = state.range(0);
+  mallopt(M_DECAY_TIME, 1);
+  mallopt(M_PURGE, 0);
+  for (auto _ : state) {
+    state.PauseTiming();
+    // Allocate at least 32MB.
+    size_t num_ptrs = (32 * 1024 * 1024) / size;
+    std::vector<void*> ptrs(num_ptrs);
+    for (size_t i = 0; i < num_ptrs; i++) {
+      ptrs[i] = malloc(size);
+      if (ptrs[i] == nullptr) {
+        state.SkipWithError("Failed to allocate memory");
+      }
+    }
+    // Free percentage of memory allocations.
+    for (size_t i = 0; i < (num_ptrs * FreePercent) / 100; i++) {
+      free(ptrs[i]);
+      ptrs[i] = nullptr;
+    }
+    state.ResumeTiming();
+
+    mallopt(M_PURGE, 0);
+
+    if (FreePercent != 100) {
+      state.PauseTiming();
+      for (size_t i = 0; i < num_ptrs; i++) {
+        free(ptrs[i]);
+      }
+      mallopt(M_PURGE, 0);
+      state.ResumeTiming();
+    }
+  }
+  mallopt(M_DECAY_TIME, 0);
+}
+
+static void BM_mallopt_purge_free_all(benchmark::State& state) {
+  MalloptBenchmark<100>(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_mallopt_purge_free_all, "16 32 48 64 128 256");
+
+static void BM_mallopt_purge_free_50percent(benchmark::State& state) {
+  MalloptBenchmark<50>(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_mallopt_purge_free_50percent, "16 32 48 64 128 256");
+
+static void BM_mallopt_purge_free_90percent(benchmark::State& state) {
+  MalloptBenchmark<90>(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_mallopt_purge_free_90percent, "16 32 48 64 128 256");
 
 #endif
