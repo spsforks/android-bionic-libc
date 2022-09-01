@@ -52,6 +52,9 @@ cc_object {
         arm64: {
             srcs: ["arch/arm64/linker_wrapper_begin.S"],
         },
+        x86: {
+            srcs: ["arch/x86/linker_wrapper_begin.S"],
+        },
         x86_64: {
             srcs: ["arch/x86_64/linker_wrapper_begin.S"],
         },
