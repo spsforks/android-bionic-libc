@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "066c9da5_684a7420",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-01T23:45:53Z",
+      "side": 1,
+      "message": "sgtm from the \"benefit\" perspective, unless +cferris has a concern i haven\u0027t thought of...",
+      "revId": "c261c5f4de3efbf754d90dc05daab9587f6d2b48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
