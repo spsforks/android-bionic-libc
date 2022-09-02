@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7009d4d_5ee96989",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-09-02T21:33:51Z",
+      "side": 1,
+      "message": "I\u0027m thinking two things,\n1. If we want to measure entire release period, given that during each free, we may still call release-to-os. Different releasing strategy may affect the time spent in explicit calling M_PURGE, as a result, I\u0027m not sure if the number can tell it\u0027s good or bad when we see a number decreased.\n2. We may want to do more iterations of malloc/free then collect the numbers. The first round of consecutive malloc followed by consecutive free may fall into certain optimal cases. (We can discuss more details in the meeting)",
+      "revId": "e38e1ddeb2c47ceb51ac357bed96e28f362a0861",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
