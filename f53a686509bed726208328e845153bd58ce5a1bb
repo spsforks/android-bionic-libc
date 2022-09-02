@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4f0c639_030b781a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-09-02T00:08:43Z",
+      "side": 1,
+      "message": "Added static variant and a test for MTE compatible devices in memtag_stack_test",
+      "revId": "f53a686509bed726208328e845153bd58ce5a1bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
