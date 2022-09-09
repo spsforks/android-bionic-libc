@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7dceff92_58208235",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-09-09T19:20:25Z",
+      "side": 1,
+      "message": "I also added a message when nothing gets written because there is nothing to write. I added a test for this.\n\nI did this so if this does happen, I know rather than trying to guess.",
+      "revId": "06993a64301f4be6f0ddb9e4239c1efe5ccb68c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
