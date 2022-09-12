@@ -34,6 +34,23 @@
       "parentUuid": "7dceff92_58208235",
       "revId": "06993a64301f4be6f0ddb9e4239c1efe5ccb68c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "426c4399_3733a35e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-09-12T22:16:03Z",
+      "side": 1,
+      "message": "Chia-hung, any comments on this cl?",
+      "revId": "06993a64301f4be6f0ddb9e4239c1efe5ccb68c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
