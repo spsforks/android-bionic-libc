@@ -687,6 +687,37 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 }
 
 bool ElfReader::LoadSegments() {
+  bool misaligned = false;
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
+
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    if (phdr->p_align < page_size())
+      misaligned = true;
+  }
+  if (misaligned) {
+    ElfW(Addr) start = 0;
+    size_t size = phdr_table_get_load_size(phdr_table_, phdr_num_, &start);
+    if (!size) {
+      DL_ERR("Can't find misaligned size for \"%s\"", name_.c_str());
+      return false;
+    }
+    void* map_addr = mmap(reinterpret_cast<void*>(start + load_bias_),
+                          size,
+                          PROT_READ|PROT_WRITE|PROT_EXEC,
+                          MAP_FIXED|MAP_PRIVATE|MAP_ANONYMOUS,
+                          -1,
+                          0);
+    if (map_addr == MAP_FAILED) {
+      DL_ERR("couldn't map misaligned segments for \"%s\": %s",
+             name_.c_str(), strerror(errno));
+      return false;
+    }
+  }
+
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
@@ -739,15 +770,35 @@ bool ElfReader::LoadSegments() {
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 
-      void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
-                            file_length,
-                            prot,
-                            MAP_FIXED|MAP_PRIVATE,
-                            fd_,
-                            file_offset_ + file_page_start);
-      if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
-        return false;
+      void* seg_addr;
+      if (!misaligned) {
+        seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
+                          file_length,
+                          prot,
+                          MAP_FIXED|MAP_PRIVATE,
+                          fd_,
+                          file_offset_ + file_page_start);
+        if (seg_addr == MAP_FAILED) {
+          DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
+          return false;
+        }
+      } else {
+        seg_addr = mmap64(nullptr,
+                          file_length,
+                          prot,
+                          MAP_PRIVATE,
+                          fd_,
+                          file_offset_ + file_page_start);
+        if (seg_addr == MAP_FAILED) {
+          DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
+          return false;
+        }
+        char* seg_ptr = reinterpret_cast<char*>(seg_addr) + (file_start - file_page_start);
+        memcpy(reinterpret_cast<void*>(seg_start),
+               reinterpret_cast<void*>(seg_ptr),
+               phdr->p_filesz);
+        munmap(seg_addr, file_length);
+        seg_addr = reinterpret_cast<void*>(seg_page_start);
       }
 
       // Mark segments as huge page eligible if they meet the requirements
@@ -760,7 +811,7 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
+    if (!misaligned && ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0)) {
       memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
     }
 
@@ -770,7 +821,7 @@ bool ElfReader::LoadSegments() {
     // content. If seg_end is larger, we need to zero anything
     // between them. This is done by using a private anonymous
     // map for all extra pages.
-    if (seg_page_end > seg_file_end) {
+    if (!misaligned && seg_page_end > seg_file_end) {
       size_t zeromap_size = seg_page_end - seg_file_end;
       void* zeromap = mmap(reinterpret_cast<void*>(seg_file_end),
                            zeromap_size,
@@ -797,8 +848,13 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
                                      ElfW(Addr) load_bias, int extra_prot_flags) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+  bool misaligned = false;
 
   for (; phdr < phdr_limit; phdr++) {
+    if (phdr->p_type == PT_LOAD && phdr->p_align < page_size()) {
+      misaligned = true;
+    }
+
     if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
       continue;
     }
@@ -820,7 +876,8 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
 #endif
 
     int ret =
-        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, prot);
+        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start,
+                 misaligned ? PROT_READ | PROT_WRITE | PROT_EXEC : prot);
     if (ret < 0) {
       return -1;
     }
@@ -882,8 +939,13 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
                                           ElfW(Addr) load_bias, int prot_flags) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+  bool misaligned = false;
 
   for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
+    if (phdr->p_type == PT_LOAD && phdr->p_align < page_size()) {
+      misaligned = true;
+    }
+
     if (phdr->p_type != PT_GNU_RELRO) {
       continue;
     }
@@ -909,7 +971,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
 
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
-                       prot_flags);
+                       misaligned ? PROT_READ | PROT_WRITE | PROT_EXEC : prot_flags);
     if (ret < 0) {
       return -1;
     }
