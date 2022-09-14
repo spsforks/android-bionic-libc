@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3462d7d0_2198a7af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-14T20:21:36Z",
+      "side": 1,
+      "message": "start in AOSP master first, and i\u0027ll drag in the networking folks for their opinion? (we can worry about backporting to older cts branches later, but if you have a specific need for android11 in 2022 when android13 is the current cts branch, it might be worth filing a bug that explains why so i can follow up with the cts folks :-) )",
+      "revId": "213fd352142847d2c6cd4083dab0384e7bfbf288",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
