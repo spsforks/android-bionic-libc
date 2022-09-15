@@ -16,6 +16,24 @@
       "message": "start in AOSP master first, and i\u0027ll drag in the networking folks for their opinion? (we can worry about backporting to older cts branches later, but if you have a specific need for android11 in 2022 when android13 is the current cts branch, it might be worth filing a bug that explains why so i can follow up with the cts folks :-) )",
       "revId": "213fd352142847d2c6cd4083dab0384e7bfbf288",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5851b9e5_76697841",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1967146
+      },
+      "writtenOn": "2022-09-15T16:02:49Z",
+      "side": 1,
+      "message": "We have recently upgraded our devices to Android 11 and we need this issue to be resolved immediately in Android 11 to complete the certification process.\nI have also filed a waiver request https://partnerissuetracker.corp.google.com/u/2/issues/246839971\n\nI submitted the patch directly to Android 11 as I am not sure how much time it would take to backport from master.",
+      "parentUuid": "3462d7d0_2198a7af",
+      "revId": "213fd352142847d2c6cd4083dab0384e7bfbf288",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
