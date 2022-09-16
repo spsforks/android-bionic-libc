@@ -34,6 +34,24 @@
       "parentUuid": "6fb5b345_353151e5",
       "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05c89021_fc314933",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-16T19:24:55Z",
+      "side": 1,
+      "message": "yeah, i\u0027m often confused by what the exact rules are. i didn\u0027t think you or i would count.\n\nstill need cferris for OWNERS anyway though. (which shows i\u0027m not counting as an owner by default at least... i\u0027ll try a +2 though, now you\u0027ve made me curious!)",
+      "parentUuid": "3deac075_d95988cb",
+      "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
