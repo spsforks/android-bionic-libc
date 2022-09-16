@@ -52,6 +52,24 @@
       "parentUuid": "3deac075_d95988cb",
       "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "446ce5a7_51916ec8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-16T19:25:14Z",
+      "side": 1,
+      "message": "huh, yeah, no need for cferris after all...",
+      "parentUuid": "05c89021_fc314933",
+      "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
