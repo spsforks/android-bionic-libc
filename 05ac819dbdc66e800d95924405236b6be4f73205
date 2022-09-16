@@ -70,6 +70,23 @@
       "parentUuid": "05c89021_fc314933",
       "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac417ac3_32264d53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-09-16T19:39:33Z",
+      "side": 1,
+      "message": "Doesn\u0027t this require a change to tests/Android.bp to change the gtest_globals.cpp to gtest_globals_cts.cpp?\n\nI don\u0027t see that file referenced anywhere.",
+      "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
