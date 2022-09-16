@@ -16,6 +16,24 @@
       "message": "I don\u0027t think my or enh\u0027s CR+2 vote counts, but let me try.",
       "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3deac075_d95988cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1014491
+      },
+      "writtenOn": "2022-09-16T19:21:25Z",
+      "side": 1,
+      "message": "I\u0027m surprised that it met the code review vote requirement.",
+      "parentUuid": "6fb5b345_353151e5",
+      "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
