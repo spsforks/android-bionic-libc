@@ -87,6 +87,24 @@
       "message": "Doesn\u0027t this require a change to tests/Android.bp to change the gtest_globals.cpp to gtest_globals_cts.cpp?\n\nI don\u0027t see that file referenced anywhere.",
       "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1b7af94_f8d501e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-16T20:07:18Z",
+      "side": 1,
+      "message": "heh, good job someone\u0027s paying attention!\n\nthat was obsoleted by this change last year:\n```\ncommit badcb38d3c039b7f60e16917e7e5a368c82ed210\nAuthor: Colin Cross \u003cccross@android.com\u003e\nDate:   Fri Sep 24 17:49:58 2021 -0700\n\n    Convert bionic dlext test zips to Android.bp\n    \n    Use cc_genrules to create the dlext test zips needed by the bionic\n    tests.  The genrules aren\u0027t visible to Make, and so don\u0027t work with\n    the `required` property.  Move all of the dependencies to `data_bins`,\n    `data_libs` or `data` for helper binaries, shared libraries or\n    genrule zip files respectively.  The `data*` properties copy the\n    files into the same directory as a test, respecting the\n    `bionic-loader-test-libs` relative path specified by each, but\n    does not put each helper binary in its own subdirectory, so update\n    the paths in each of the tests.\n    \n    Bug: 200872604\n    Test: atest CtsBionicTestCases\n    Test: atest bionic-unit-tests\n    Test: cts-tradefed run commandAndExit cts -m CtsBionicTestCases\n    Test: adb push $OUT/data/nativetest/bionic-unit-tests /data/nativetest/ \u0026\u0026 adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests\n    Change-Id: Ic4257cb4104ff558326df2363730acd20464b051\n\n```\n\nremoved!",
+      "parentUuid": "ac417ac3_32264d53",
+      "revId": "05ac819dbdc66e800d95924405236b6be4f73205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
