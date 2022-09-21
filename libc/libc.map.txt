@@ -1581,6 +1581,7 @@ LIBC_U { # introduced=UpsideDownCake
     close_range;
     copy_file_range;
     memset_explicit;
+    process_mrelease;
 } LIBC_T;
 
 LIBC_PRIVATE {

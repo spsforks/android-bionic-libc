@@ -171,6 +171,14 @@ int madvise(void* __addr, size_t __size, int __advice);
  */
 ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags);
 
+/**
+ * [process_mrelease(2)](http://man7.org/linux/man-pages/man2/process_mrelease.2.html)
+ * frees memory from the process specified by the given PID file descriptor.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int process_mrelease(int __pid_fd, unsigned __flags);
+
 #if defined(__USE_GNU)
 
 /**
