@@ -33,6 +33,24 @@
       "message": "Seems OK. I wonder if the `int _r` + `int _ur` can overflow. Ordinarily, I\u0027d expect the buffers to be a lot smaller than 2GiB.\n\nAside: the size check in setvbuf looks wrong:\n\n    (int)size \u003c 0\n\nshould be:\n\n    size \u003e static_cast\u003csize_t\u003e(INT_MAX)\n\nCurrently it\u0027s verifying that bit 31 is clear, and ignoring bits 32-63.",
       "revId": "82be76b5a2c069c6d5039f28c63831a639163dfb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd4dd7bc_fdb46aec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-27T18:47:23Z",
+      "side": 1,
+      "message": "\u003e I wonder if the int _r + int _ur can overflow.\n\ni\u0027d assume we\u0027d hit a bunch of other overflows before we ever got this far :-)\n\n\u003e Aside: the size check in setvbuf looks wrong\n\nyeah, i\u0027ll report that upstream. (luckily i can\u0027t imagine any reason why you\u0027d want a buffer large enough to hit that!)",
+      "parentUuid": "c66803f5_a3c116f4",
+      "revId": "82be76b5a2c069c6d5039f28c63831a639163dfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
