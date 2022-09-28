@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1ec8811_34cf92da",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-09-28T23:17:14Z",
+      "side": 1,
+      "message": "if you loop from frame base to frame base, aren\u0027t you going to hit the \"cur_frame\" variable that is still live and has a different tag? I guess it works because it is promoted to register? This seems brittle.",
+      "revId": "7a8c9d47cadf93960a0ccf9683fda1eef15ade12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94de061f_923dc2cd",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-09-28T23:17:14Z",
+      "side": 1,
+      "message": "Could these two tests be joined? Unwind both tagged and skipped frames at once.",
+      "revId": "7a8c9d47cadf93960a0ccf9683fda1eef15ade12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
