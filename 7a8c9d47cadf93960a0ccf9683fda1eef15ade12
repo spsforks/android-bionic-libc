@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02e1f8d1_5add0df4",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-09-29T00:33:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1ec8811_34cf92da",
+      "revId": "7a8c9d47cadf93960a0ccf9683fda1eef15ade12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94de061f_923dc2cd",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-09-28T23:17:14Z",
       "side": 1,
       "message": "Could these two tests be joined? Unwind both tagged and skipped frames at once.",
+      "revId": "7a8c9d47cadf93960a0ccf9683fda1eef15ade12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7dfc0b0_0475ddfb",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-09-29T00:33:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94de061f_923dc2cd",
       "revId": "7a8c9d47cadf93960a0ccf9683fda1eef15ade12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
