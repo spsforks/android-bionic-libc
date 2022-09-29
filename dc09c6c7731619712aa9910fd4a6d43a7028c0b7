@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98403f47_d1adca49",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-09-29T19:00:57Z",
+      "side": 1,
+      "message": "That\u0027s weird, you have no_sanitize(\"memtag\") on this function, why would y be tagged?",
+      "revId": "dc09c6c7731619712aa9910fd4a6d43a7028c0b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
