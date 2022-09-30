@@ -16,6 +16,23 @@
       "message": "Developed on: e1c42ccac8c56db870a352e234250445bdf7c6c5\nCherry-picked to: fd0a1ea466989975d424caf0814a33a7fe0a0d0f\nTested with CtsBionicTestCases\n15 failed tests:\nmath_h#lrint\tfail\tbionic/tests/math_test.cpp:(1017) Failure in test math_h.lrint\nmath_h#rint\tfail\tbionic/tests/math_test.cpp:(1052) Failure in test math_h.rint\nmath_h#nearbyint\tfail\tbionic/tests/math_test.cpp:(1079) Failure in test math_h.nearbyint\nmath_h_force_long_double#lrint\tfail\tbionic/tests/math_test.cpp:(1017) Failure in test \t\nmath_h_force_long_double#nearbyint\tfail\tbionic/tests/math_test.cpp:(1079) Failure in test \nmath_h_force_long_double#rint\tfail\tbionic/tests/math_test.cpp:(1052) Failure in test \nstack_unwinding#unwind_through_signal_frame\tfail\tbionic/tests/stack_unwinding_test.cpp:(111) Failure in test stack_unwinding.unwind_through_signal_frame\nstack_unwinding#unwind_through_signal_frame_SA_SIGINFO\tfail\tbionic/tests/stack_unwinding_test.cpp:(111) Failure in test stack_unwinding.unwind_through_signal_frame_SA_SIGINFO\nstdio_nofortify#snprintf_sscanf_inf_nan\tfail\tbionic/tests/stdio_test.cpp:(494) Failure in test stdio_nofortify.snprintf_sscanf_inf_nan\nstdio_nofortify#swprintf_swscanf_inf_nan\tfail\tbionic/tests/stdio_test.cpp:(494) Failure in test stdio_nofortify.swprintf_swscanf_inf_nan\nstdio#snprintf_sscanf_inf_nan\tfail\tbionic/tests/stdio_test.cpp:(494) Failure in test stdio.snprintf_sscanf_inf_nan\nstdio#swprintf_swscanf_inf_nan\tfail\tbionic/tests/stdio_test.cpp:(494) Failure in test stdio.swprintf_swscanf_inf_nan\nsys_ptrace#watchpoint_imprecise\tfail\tbionic/tests/sys_ptrace_test.cpp:(193) Failure in test sys_ptrace.watchpoint_imprecise\nsys_ptrace#hardware_breakpoint\tfail\tbionic/tests/sys_ptrace_test.cpp:(367) Failure in test sys_ptrace.hardware_breakpoint\nsys_ptrace#watchpoint_stress\tfail\tbionic/tests/sys_ptrace_test.cpp:(193) Failure in test sys_ptrace.watchpoint_stress",
       "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "415ed657_592db865",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-09-30T21:59:29Z",
+      "side": 1,
+      "message": "you\u0027ll see me starting to break this up into smaller changes to get the pieces in. in particular, we can\u0027t approve any binary blobs [like the .so files] from non-google employees, so i\u0027ll definitely regenerate those myself. also .bp file changes are blocked on the build system support going in, but i see no reason to hold some of the obvious pieces up waiting for that. i\u0027ve started with the uapi headers, since those are all machine-generated commits anyway (given the tool fixes included in this big patch; thanks for those!).\n\nfor everything else, i\u0027ll break it into \"the smallest independently meaningful pieces\".\n\ni\u0027ll keep your Signed-off-by: lines on all the \"new\" changes that are created, but if you\u0027d rather stay as the change author in git, let me know and i can tell you what pieces i\u0027ll be breaking it up into so you can make the pieces yourself :-) i\u0027m assuming though -- since there are multiple authors -- the Signed-off-by lines are \"fairer\" anyway? (i\u0027ll cc: you on the changes, too, so you can follow the progress.)",
+      "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
