@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c473224_a06f5018",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1667,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-03T20:45:55Z",
+      "side": 1,
+      "message": "should this be in the bionic_testlib_defaults? seems like a good idea?",
+      "revId": "aab9eb770eda0f8d8dfce3b4f099f3e88f068930",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
