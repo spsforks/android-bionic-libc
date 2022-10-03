@@ -16,6 +16,24 @@
       "message": "whitespace. (next line too.)",
       "revId": "2679a27e8f27d20e77e36900f22253d1a9830de9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e9d65fd_d3fb955c",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-10-03T23:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "233ce68d_ccd74356",
+      "revId": "2679a27e8f27d20e77e36900f22253d1a9830de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
