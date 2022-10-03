@@ -1664,6 +1664,11 @@ cc_test {
      },
    },
    header_libs: ["bionic_libc_platform_headers"],
+   // The build system does not keep symbols for this otherwise,
+   // making it hard to debug.
+   strip {
+       none: true,
+   },
 }
 
 cc_test {
@@ -1679,6 +1684,11 @@ cc_test {
      },
    },
    header_libs: ["bionic_libc_platform_headers"],
+   // The build system does not keep symbols for this otherwise,
+   // making it hard to debug.
+   strip {
+       none: true,
+   },
 }
 
 cc_genrule {
