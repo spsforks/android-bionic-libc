@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f956e9c_652292a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-04T23:59:45Z",
+      "side": 1,
+      "message": "+robinjacob for CTS dr no.\n\ni also have a question --- will this auto-merge into android13-tests-dev, or do i need to cherrypick it there too? thanks!",
+      "revId": "b24c89b4df8824ed1b2afc1f6493bff0cc0ea2e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
