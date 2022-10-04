@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de4dc7b3_711cc627",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-04T20:18:51Z",
+      "side": 1,
+      "message": "i\u0027ve rewritten renameat() differently, to match the existing style from arm64. see https://android-review.googlesource.com/c/platform/bionic/+/2240019.",
+      "revId": "1b6528450e6240e106835db321a1efb624fdab8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
