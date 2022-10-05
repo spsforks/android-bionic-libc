@@ -16,6 +16,23 @@
       "message": "My coral doesn\u0027t seem to boot properly, still looking at what\u0027s going on.",
       "revId": "b567144210b9b322bcc0282a386af9cb0cf4c8e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0972cab3_5860be92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-05T18:14:53Z",
+      "side": 1,
+      "message": "I can boot and run on internal master, so not sure what\u0027s going on with my build.",
+      "revId": "b567144210b9b322bcc0282a386af9cb0cf4c8e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
