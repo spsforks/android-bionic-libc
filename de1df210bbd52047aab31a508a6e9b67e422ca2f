@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdca0d2a_c76e3618",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-05T00:39:06Z",
+      "side": 1,
+      "message": "Weird, I\u0027m guessing we had something for mips at some point. But now this code truly does nothing except waste time going through all of the blocks for no reason.",
+      "revId": "de1df210bbd52047aab31a508a6e9b67e422ca2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
