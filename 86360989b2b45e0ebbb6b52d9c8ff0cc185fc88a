@@ -34,6 +34,24 @@
       "parentUuid": "b549087d_342be311",
       "revId": "86360989b2b45e0ebbb6b52d9c8ff0cc185fc88a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc1e187c_ea41082f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-05T15:36:24Z",
+      "side": 1,
+      "message": "\u003e e.g. It looks like lld defaults to RELA for both 32-bit and 64-bit RISC-V.\n\noh, interesting.\n\n\u003e Maybe it\u0027d be better to list the individual 32-bit ABIs that use REL, then otherwise default to RELA?\n\nsgtm then (since my whole purpose here was to have the most intention-revealing formulation!)",
+      "parentUuid": "93a1c7df_d99e7a0f",
+      "revId": "86360989b2b45e0ebbb6b52d9c8ff0cc185fc88a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
