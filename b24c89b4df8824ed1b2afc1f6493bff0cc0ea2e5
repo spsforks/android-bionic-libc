@@ -16,6 +16,23 @@
       "message": "+robinjacob for CTS dr no.\n\ni also have a question --- will this auto-merge into android13-tests-dev, or do i need to cherrypick it there too? thanks!",
       "revId": "b24c89b4df8824ed1b2afc1f6493bff0cc0ea2e5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2498cfaf_3d2ab73c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1222074
+      },
+      "writtenOn": "2022-10-05T23:19:55Z",
+      "side": 1,
+      "message": "This will automerge to android13-tests-dev. Thanks",
+      "revId": "b24c89b4df8824ed1b2afc1f6493bff0cc0ea2e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
