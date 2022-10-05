@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3c5d115_1d22a173",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-05T00:07:30Z",
+      "side": 1,
+      "message": "(https://android-review.googlesource.com/c/platform/bionic/+/2240296 removes kernel_arch_token_replacements completely, so we don\u0027t have to add risc-v to it.)",
+      "revId": "9f74a82b4255881df92996186c2086ce4a9db14c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
