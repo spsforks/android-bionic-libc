@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c35b2706_fa7ab638",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-05T00:18:18Z",
+      "side": 1,
+      "message": "(https://android-review.googlesource.com/c/platform/bionic/+/2240297 uses __LP64__ in libc_init_static.cpp rather than listing all the 64-bit architectures.)",
+      "revId": "6319dd5e40a96a0cfcba8cc0efb4d2bf11bcdb04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
