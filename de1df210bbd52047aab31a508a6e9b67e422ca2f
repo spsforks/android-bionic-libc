@@ -16,6 +16,24 @@
       "message": "Weird, I\u0027m guessing we had something for mips at some point. But now this code truly does nothing except waste time going through all of the blocks for no reason.",
       "revId": "de1df210bbd52047aab31a508a6e9b67e422ca2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a59037d_1544d585",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-05T14:45:03Z",
+      "side": 1,
+      "message": "yeah, there was a hack for off_t (https://android.git.corp.google.com/platform/bionic/+/a864c2c23486e4ab7235829d8c9574426794298a%5E%21/) --- it looks like the mips kernel headers (unlike the other architectures) said `off_t` directly rather than `__kernel_off_t`, and rather than fix that as we should have done, we added this hack. so not only is this unused, it\u0027s something we shouldn\u0027t have done in the first place!",
+      "parentUuid": "fdca0d2a_c76e3618",
+      "revId": "de1df210bbd52047aab31a508a6e9b67e422ca2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
