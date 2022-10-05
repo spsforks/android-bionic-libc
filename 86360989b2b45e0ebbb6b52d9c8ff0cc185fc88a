@@ -16,6 +16,24 @@
       "message": "The choice between REL and RELA is only accidentally related to the pointer size, because the 64-bit ABIs came later, and IIUC people thought RELA was a better choice. Maybe it\u0027d be better to list the individual 32-bit ABIs that use REL, then otherwise default to RELA?\n\ne.g. It looks like lld defaults to RELA for both 32-bit and 64-bit RISC-V.",
       "revId": "86360989b2b45e0ebbb6b52d9c8ff0cc185fc88a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93a1c7df_d99e7a0f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-10-05T00:29:34Z",
+      "side": 1,
+      "message": "(not sure why this is marked resolved)",
+      "parentUuid": "b549087d_342be311",
+      "revId": "86360989b2b45e0ebbb6b52d9c8ff0cc185fc88a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
