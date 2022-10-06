@@ -16,6 +16,24 @@
       "message": "Is there a 32 bit version of riscv stat structures that needs to be handled?",
       "revId": "5cc8a4641912c93e91bd1d37acde9a824cdd405f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28cc1477_90fe0726",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-06T00:42:03Z",
+      "side": 1,
+      "message": "no, it\u0027s 2022 ... too late for new 32-bit abis! :-)\n\nthat\u0027s also why i\u0027m just using `__riscv`, which they annoyingly define for 32-bit and 64-bit, rather than checking `__LP64__` too --- in the absence of riscv32, `__riscv` \u003d\u003e riscv64. experience with things like big-endian \"support\", despite never having had a big-endian abi for target or host, makes me think we\u0027d just end up with a bunch of broken dead code where people try to be clever and support the possibilities they can\u0027t test \"just in case\" that we end up deleting years later...",
+      "parentUuid": "4544298c_25776e6e",
+      "revId": "5cc8a4641912c93e91bd1d37acde9a824cdd405f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
