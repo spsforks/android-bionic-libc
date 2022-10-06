@@ -30,13 +30,12 @@
 
 #include <sys/cdefs.h>
 
-#include <bits/auxvec.h>
-#include <bits/elf_arm.h>
-#include <bits/elf_arm64.h>
-#include <bits/elf_x86.h>
-#include <bits/elf_x86_64.h>
 #include <linux/elf.h>
 #include <linux/elf-em.h>
+#undef EI_PAD
+
+#include <bits/auxvec.h>
+#include <bits/elf_common.h>
 
 /* http://www.sco.com/developers/gabi/latest/ch4.intro.html */
 typedef __u64 Elf32_Xword;
@@ -118,14 +117,6 @@ typedef struct {
   Elf64_Half si_boundto;
   Elf64_Half si_flags;
 } Elf64_Syminfo;
-/* ElfW(Syminfo)::si_boundto values. */
-#define SYMINFO_BT_SELF 0xffff
-#define SYMINFO_BT_PARENT 0xfffe
-/* ElfW(Syminfo)::si_flags values. */
-#define SYMINFO_FLG_DIRECT 0x1
-#define SYMINFO_FLG_PASSTHRU 0x2
-#define SYMINFO_FLG_COPY 0x4
-#define SYMINFO_FLG_LAZYLOAD 0x8
 
 typedef Elf32_Half Elf32_Versym;
 typedef Elf64_Half Elf64_Versym;
@@ -197,11 +188,6 @@ typedef Elf32_Word Elf32_Relr;
 typedef Elf64_Xword Elf64_Relr;
 
 /* http://www.sco.com/developers/gabi/latest/ch5.dynamic.html */
-#define DF_ORIGIN     0x00000001
-#define DF_SYMBOLIC   0x00000002
-#define DF_TEXTREL    0x00000004
-#define DF_BIND_NOW   0x00000008
-#define DF_STATIC_TLS 0x00000010
 
 #define DF_1_NOW        0x00000001 /* Perform complete relocation processing. */
 #define DF_1_GLOBAL     0x00000002 /* implies RTLD_GLOBAL */
@@ -478,11 +464,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define SHF_MASKPROC 0xf0000000
 
 /* http://www.sco.com/developers/gabi/latest/ch4.sheader.html */
-#define SHN_LOOS 0xff20
-#define SHN_HIOS 0xff3f
-#define SHN_XINDEX 0xffff
-
-/* http://www.sco.com/developers/gabi/latest/ch4.sheader.html */
 #define SHT_INIT_ARRAY 14
 #define SHT_FINI_ARRAY 15
 #define SHT_PREINIT_ARRAY 16
@@ -493,35 +474,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define SHT_NUM 20
 #define SHT_LOOS 0x60000000
 #define SHT_HIOS 0x6fffffff
-
-/* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
-#define STN_UNDEF 0
-
-/* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
-#define STT_GNU_IFUNC 10
-#define STT_LOOS 10
-#define STT_HIOS 12
-#define STT_LOPROC 13
-#define STT_HIPROC 15
-
-/* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
-#define STV_DEFAULT 0
-#define STV_INTERNAL 1
-#define STV_HIDDEN 2
-#define STV_PROTECTED 3
-
-/* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
-#define NT_FPREGSET NT_PRFPREG
-
-#define ELF_NOTE_GNU "GNU"
-
-#define NT_GNU_BUILD_ID 3
-
-#define VER_FLG_BASE 0x1
-#define VER_FLG_WEAK 0x2
-
-#define VER_NDX_LOCAL 0
-#define VER_NDX_GLOBAL 1
 
 /*
  * Experimental support for SHT_RELR sections. For details, see proposal
@@ -551,3 +503,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define DT_ANDROID_RELSZ 0x60000010 // DT_LOOS + 3
 #define DT_ANDROID_RELA 0x60000011 // DT_LOOS + 4
 #define DT_ANDROID_RELASZ 0x60000012 // DT_LOOS + 5
+
+#define R_ARM_IRELATIVE 160
+#define R_X86_64_JUMP_SLOT 7
