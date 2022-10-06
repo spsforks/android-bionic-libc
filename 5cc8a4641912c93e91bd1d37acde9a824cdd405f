@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4544298c_25776e6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-06T00:32:46Z",
+      "side": 1,
+      "message": "Is there a 32 bit version of riscv stat structures that needs to be handled?",
+      "revId": "5cc8a4641912c93e91bd1d37acde9a824cdd405f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
