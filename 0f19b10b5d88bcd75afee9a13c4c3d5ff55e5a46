@@ -52,6 +52,24 @@
       "parentUuid": "c285d85a_445c40bb",
       "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "818916e9_b6f09e82",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-07T18:00:23Z",
+      "side": 1,
+      "message": "yeah, we can never be sure :-(\n\ni\u0027ll forward this to the NDK folks, since they\u0027re the most likely to hear complaints...",
+      "parentUuid": "421a68ab_e9bb71b0",
+      "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
