@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3dfabdf_bdbd33ef",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-07T20:47:21Z",
+      "side": 1,
+      "message": "As long as you are in this file, are you going to add all of the riscv missing pieces:\n\n- ndk_headers libc_asm_riscv64\n- libseccomp_gen_syscall_nrs_riscv64\n- libc_musl_sysroot_bionic_arch_headers adding riscv include\n\nOr is the plan to do them one at a time?",
+      "revId": "48e5333dd0c62f7af32d9d79736bbbe1720cfb29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
