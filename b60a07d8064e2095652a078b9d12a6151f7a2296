@@ -22,6 +22,30 @@
       },
       "revId": "b60a07d8064e2095652a078b9d12a6151f7a2296",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e00ec779_91ce719b",
+        "filename": "libc/include/bits/fenv_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-07T21:15:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f0ddc66_24a36772",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "b60a07d8064e2095652a078b9d12a6151f7a2296",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
