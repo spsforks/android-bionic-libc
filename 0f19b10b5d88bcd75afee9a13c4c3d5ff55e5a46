@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee0e37a2_57403032",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-07T16:06:17Z",
+      "side": 1,
+      "message": "A bunch of the R_ARM and R_AARCH64 values didn\u0027t get transferred into this. Is that expected? Or did I miss them.\n\nFor example, the R_ARM_JUMP24 and R_AARCH64_MOVW_PREL_G0.\n\nAre there other changes that were intentionally left out?",
+      "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
