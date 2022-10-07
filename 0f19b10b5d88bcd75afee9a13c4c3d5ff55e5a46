@@ -34,6 +34,24 @@
       "parentUuid": "ee0e37a2_57403032",
       "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "421a68ab_e9bb71b0",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-07T16:26:01Z",
+      "side": 1,
+      "message": "Fair enough.\n\nI always worry about who might already be relying on this. But it seems unnecessary.",
+      "parentUuid": "c285d85a_445c40bb",
+      "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
