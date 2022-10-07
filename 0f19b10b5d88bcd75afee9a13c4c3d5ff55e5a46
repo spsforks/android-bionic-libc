@@ -16,6 +16,24 @@
       "message": "A bunch of the R_ARM and R_AARCH64 values didn\u0027t get transferred into this. Is that expected? Or did I miss them.\n\nFor example, the R_ARM_JUMP24 and R_AARCH64_MOVW_PREL_G0.\n\nAre there other changes that were intentionally left out?",
       "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c285d85a_445c40bb",
+        "filename": "libc/include/bits/elf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-07T16:16:23Z",
+      "side": 1,
+      "message": "\u003e Is that expected?\n\nsort of --- you can see i\u0027ve added a handful of things we need but don\u0027t have to elf.h, with a TODO about upstreaming to freebsd.\n\nthis is demonstrably enough to build the platform (plus freebsd, obviously!), and finding what (if anything) needs any of the other stuff gives us a motivating comment to use when upstreaming (or just adding to elf.h). of course, advanced ELF users like elfutils or llvm or whatever tend to ignore the system headers and just define all their own stuff anyway!\n\nanother trade off is also that this patch _adds_ a lot of constants we didn\u0027t have before. i don\u0027t think the world needs multiple bsd-licensed lists of ELF constants, so trying to \"merge\" with freebsd as much as possible seems like a good direction?\n\n(fwiw, netbsd/openbsd seemed like they weren\u0027t in a good state for the architectures i looked at.)",
+      "parentUuid": "ee0e37a2_57403032",
+      "revId": "0f19b10b5d88bcd75afee9a13c4c3d5ff55e5a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
