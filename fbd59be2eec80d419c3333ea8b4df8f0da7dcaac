@@ -51,6 +51,24 @@
       "parentUuid": "415ed657_592db865",
       "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d555dcab_4fee2435",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-08T15:16:00Z",
+      "side": 1,
+      "message": "\u003e But we do hope to see more RISC-V changes is merged with SoB chains or original author info, to show the involvement of Alibaba \u0026 the RISC-V community.\n\nyeah, i expect _most_ changes should be a lot easier to submit than this one... this change is unusual because it contains so many [theoretically] unrelated pieces in one big patch, with different people being the correct reviewer for each piece. plus there are binary blobs (the test .so files) that we\u0027re never allowed to accept (though that should be really rare anyway!). plus there are a lot of changes i want to make as i go through trying to understand this, both small (like using ra instead of x1 in BIONIC_STOP_UNWIND, say) and large (like switching to FreeBSD for our ELF constants) ... so although i _could_ describe what pieces to break it up into, and what to change, then wait for you to change it, iterate, and submit all the pieces, just breaking it up and editing it myself seemed a lot quicker. especially given the large timezone difference between us! (and it seems important to get the bionic changes in as quick as we can because everyone else needs us to finish build \u0026 bionic stuff before they can start their work :-( )\n\ni did just make a tiny edit on the strace change (to remove the config.h edit which you confirmed shouldn\u0027t be necessary). i _think_ that edit should keep the alibaba origin (with you remaining the _author_ of the change even if i\u0027m now the _uploader_), but i\u0027ll pay attention to whether that works --- if it doesn\u0027t work how i think it should, i\u0027ll stop doing that and just ask you to do it instead. (but don\u0027t worry --- there\u0027s so much work ahead of us that there will be plenty of opportunity for attribution :-) )",
+      "parentUuid": "97a7065f_911db494",
+      "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
