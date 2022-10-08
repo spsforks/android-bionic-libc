@@ -69,6 +69,24 @@
       "parentUuid": "97a7065f_911db494",
       "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "605d732f_17db2f47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-08T15:35:14Z",
+      "side": 1,
+      "message": "if you _do_ want to break this change up into pieces yourself, though, here are the high-level ones i\u0027d suggest for what\u0027s left:\n\n* libc/arch-riscv64/* in its own change. (though maybe keep setjmp separate, because that looks like it needs more thought than the others?)\n* linker/* in its own change.\n* benchmarks/* in its own change.\n* tests/* in its own change.\n* tests/prebuilt-elf-files/* in its own change (that we won\u0027t submit -- i\u0027ll have to regenerate those myself anyway to follow Google\u0027s \"binary provenance\" rules -- but they\u0027re still useful as a reminder).\n* SYSCALLS.TXT and gensyscalls.py (and those pieces of the .bp files) in their own change.\n* the seccomp stuff in its own change.\n\n(but you don\u0027t have to ... i can keep chopping the big change up myself :-) but this kind of thing is probably a good pattern to follow for future changes --- \"break your change into the smallest meaningful pieces\" is one of the slogans i\u0027ve heard.)",
+      "parentUuid": "d555dcab_4fee2435",
+      "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
