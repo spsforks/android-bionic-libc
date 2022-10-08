@@ -33,6 +33,24 @@
       "message": "you\u0027ll see me starting to break this up into smaller changes to get the pieces in. in particular, we can\u0027t approve any binary blobs [like the .so files] from non-google employees, so i\u0027ll definitely regenerate those myself. also .bp file changes are blocked on the build system support going in, but i see no reason to hold some of the obvious pieces up waiting for that. i\u0027ve started with the uapi headers, since those are all machine-generated commits anyway (given the tool fixes included in this big patch; thanks for those!).\n\nfor everything else, i\u0027ll break it into \"the smallest independently meaningful pieces\".\n\ni\u0027ll keep your Signed-off-by: lines on all the \"new\" changes that are created, but if you\u0027d rather stay as the change author in git, let me know and i can tell you what pieces i\u0027ll be breaking it up into so you can make the pieces yourself :-) i\u0027m assuming though -- since there are multiple authors -- the Signed-off-by lines are \"fairer\" anyway? (i\u0027ll cc: you on the changes, too, so you can follow the progress.)",
       "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97a7065f_911db494",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1950590
+      },
+      "writtenOn": "2022-10-08T07:21:56Z",
+      "side": 1,
+      "message": "The first line in the Signed-off-by lines are normally the original author in the patch I submitted, and the following lines are contributor listed in time sequence that they helped to improve the risc-v support.\nThe signed-off-by lines is fine, it is not necessary to be the change author in git for me. But we do hope to see more RISC-V changes is merged with SoB chains or original author info, to show the involvement of Alibaba \u0026 the RISC-V community.",
+      "parentUuid": "415ed657_592db865",
+      "revId": "fbd59be2eec80d419c3333ea8b4df8f0da7dcaac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
