@@ -31,7 +31,6 @@
 
 #if defined __arm__ || defined __aarch64__
 
-#define DUAL_ARCH
 #define PRIMARY_ARCH AUDIT_ARCH_AARCH64
 static const struct sock_filter* primary_app_filter = arm64_app_filter;
 static const size_t primary_app_filter_size = arm64_app_filter_size;
@@ -52,9 +51,9 @@ static const size_t secondary_system_filter_size = arm_system_filter_size;
 
 static const long secondary_setresgid = __arm_setresgid;
 static const long secondary_setresuid = __arm_setresuid;
+
 #elif defined __i386__ || defined __x86_64__
 
-#define DUAL_ARCH
 #define PRIMARY_ARCH AUDIT_ARCH_X86_64
 static const struct sock_filter* primary_app_filter = x86_64_app_filter;
 static const size_t primary_app_filter_size = x86_64_app_filter_size;
@@ -75,6 +74,20 @@ static const size_t secondary_system_filter_size = x86_system_filter_size;
 
 static const long secondary_setresgid = __x86_setresgid;
 static const long secondary_setresuid = __x86_setresuid;
+
+#elif defined(__riscv)
+
+#define PRIMARY_ARCH AUDIT_ARCH_RISCV64
+static const struct sock_filter* primary_app_filter = riscv64_app_filter;
+static const size_t primary_app_filter_size = riscv64_app_filter_size;
+static const struct sock_filter* primary_app_zygote_filter = riscv64_app_zygote_filter;
+static const size_t primary_app_zygote_filter_size = riscv64_app_zygote_filter_size;
+static const struct sock_filter* primary_system_filter = riscv64_system_filter;
+static const size_t primary_system_filter_size = riscv64_system_filter_size;
+
+static const long primary_setresgid = __riscv64_setresgid;
+static const long primary_setresuid = __riscv64_setresuid;
+
 #else
 #error No architecture was defined!
 #endif
@@ -98,7 +111,7 @@ static void ExamineSyscall(filter& f) {
     f.push_back(BPF_STMT(BPF_LD|BPF_W|BPF_ABS, syscall_nr));
 }
 
-#ifdef DUAL_ARCH
+#if defined(SECONDARY_ARCH)
 static bool SetValidateArchitectureJumpTarget(size_t offset, filter& f) {
     size_t jump_length = f.size() - offset - 1;
     auto u8_jump_length = (__u8) jump_length;
@@ -184,7 +197,7 @@ static bool install_filter(filter const& f) {
 
 bool _install_setuidgid_filter(uint32_t uid_gid_min, uint32_t uid_gid_max) {
     filter f;
-#ifdef DUAL_ARCH
+#if defined(SECONDARY_ARCH)
     // Note that for mixed 64/32 bit architectures, ValidateArchitecture inserts a
     // jump that must be changed to point to the start of the 32-bit policy
     // 32 bit syscalls will not hit the policy between here and the call to SetJump
@@ -195,7 +208,7 @@ bool _install_setuidgid_filter(uint32_t uid_gid_min, uint32_t uid_gid_max) {
 
     ValidateSetUidGid(f, uid_gid_min, uid_gid_max, true /* primary */);
 
-#ifdef DUAL_ARCH
+#if defined(SECONDARY_ARCH)
     if (!SetValidateArchitectureJumpTarget(offset_to_secondary_filter, f)) {
         return false;
     }
@@ -238,7 +251,7 @@ bool _set_seccomp_filter(FilterType type) {
         break;
     }
 
-#ifdef DUAL_ARCH
+#if defined(SECONDARY_ARCH)
     // Note that for mixed 64/32 bit architectures, ValidateArchitecture inserts a
     // jump that must be changed to point to the start of the 32-bit policy
     // 32 bit syscalls will not hit the policy between here and the call to SetJump
@@ -254,7 +267,7 @@ bool _set_seccomp_filter(FilterType type) {
     }
     Disallow(f);
 
-#ifdef DUAL_ARCH
+#if defined(SECONDARY_ARCH)
     if (!SetValidateArchitectureJumpTarget(offset_to_secondary_filter, f)) {
         return false;
     }
