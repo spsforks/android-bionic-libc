@@ -1305,6 +1305,14 @@ genrule {
 }
 
 genrule {
+    name: "syscalls-riscv64.S",
+    out: ["syscalls-riscv64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) riscv64 $(in) > $(out)",
+}
+
+genrule {
     name: "syscalls-x86.S",
     out: ["syscalls-x86.S"],
     srcs: ["SYSCALLS.TXT"],
@@ -1329,6 +1337,9 @@ cc_library_static {
         },
         arm64: {
             srcs: [":syscalls-arm64.S"],
+        },
+        riscv64: {
+            srcs: [":syscalls-riscv64.S"],
         },
         x86: {
             srcs: [":syscalls-x86.S"],
