@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9dbfba4_f55f24de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-10T20:58:03Z",
+      "side": 1,
+      "message": "There is one thing missing for the syscalss for riscv, but that still doesn\u0027t fix the build problem.\n\nIt appears the generators cannot find any syscalls for riscv, but I can\u0027t tell why that is.",
+      "revId": "52b70c2b90f0941fb868fe7127977c5be04f66fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "985e1a61_ace6225d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-10T20:58:03Z",
+      "side": 1,
+      "message": "Don\u0027t you need something for riscv like this?",
+      "range": {
+        "startLine": 2399,
+        "startChar": 11,
+        "endLine": 2399,
+        "endChar": 43
+      },
+      "revId": "52b70c2b90f0941fb868fe7127977c5be04f66fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
