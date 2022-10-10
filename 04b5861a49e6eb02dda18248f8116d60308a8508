@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49decd47_69bf440a",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-10T20:02:30Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this just be __riscv?",
+      "range": {
+        "startLine": 315,
+        "startChar": 14,
+        "endLine": 315,
+        "endChar": 23
+      },
+      "revId": "04b5861a49e6eb02dda18248f8116d60308a8508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8822d0eb_1dad10cd",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-10T20:02:30Z",
+      "side": 1,
+      "message": "I\u0027m not sure why this is here.",
+      "range": {
+        "startLine": 364,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 6
+      },
+      "revId": "04b5861a49e6eb02dda18248f8116d60308a8508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
