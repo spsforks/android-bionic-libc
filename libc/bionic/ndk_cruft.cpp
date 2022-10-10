@@ -59,7 +59,7 @@ int __isthreaded = 1;
 // getpagesize() and __getpageshift(). Needed for backwards compatibility
 // with old NDK apps.
 unsigned int __page_size = PAGE_SIZE;
-unsigned int __page_shift = 12;
+unsigned int __page_shift = 14;
 
 // TODO: remove this backward compatibility hack (for jb-mr1 strace binaries).
 pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
