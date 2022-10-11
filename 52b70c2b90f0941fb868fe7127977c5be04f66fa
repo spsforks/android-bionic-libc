@@ -39,6 +39,30 @@
       },
       "revId": "52b70c2b90f0941fb868fe7127977c5be04f66fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d169e581_e47fbbab",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-11T20:16:33Z",
+      "side": 1,
+      "message": "yeah, i didn\u0027t realize that we have (two!) scripts that pull the list of architectures from their command lines via regular expression...\n\nhttps://source.corp.google.com/search?q\u003dlibseccomp_gen_syscall_nrs_\u0026sq\u003dpackage:%5Eandroid$\n\ni\u0027m trying to decide whether i care enough to work out how that\u0027s working (and change it so it doesn\u0027t work like that) or i just hold my nose and combine the seccomp stuff with the syscall stuff...\n\nactually, the more i look at how the seccomp stuff works, the more tempted i am to just combine the two :-(",
+      "parentUuid": "985e1a61_ace6225d",
+      "range": {
+        "startLine": 2399,
+        "startChar": 11,
+        "endLine": 2399,
+        "endChar": 43
+      },
+      "revId": "52b70c2b90f0941fb868fe7127977c5be04f66fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
