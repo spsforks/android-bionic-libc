@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a7b27c9_fb16cfb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-11T19:04:32Z",
+      "side": 1,
+      "message": "(needs ccross\u0027 prebuilts hack and his currently-treehugging \"don\u0027t try to strip\" change, but with those this is the first green build target i\u0027ve seen :-) )",
+      "revId": "ed70c17deb81ab1ec0a178923435004f330af706",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
