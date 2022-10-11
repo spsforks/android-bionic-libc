@@ -45,6 +45,9 @@
 #include <android-base/thread_annotations.h>
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
+#include <unwindstack/Arch.h>
+#include <unwindstack/DexFiles.h>
+#include <unwindstack/JitDebug.h>
 #include <unwindstack/Maps.h>
 #include <unwindstack/Regs.h>
 #include <unwindstack/RegsGetLocal.h>
@@ -72,7 +75,6 @@ static constexpr size_t kStackDepth = 32;
 
 // Skip any initial frames from libfdtrack.so.
 static std::vector<std::string> kSkipFdtrackLib [[clang::no_destroy]] = {"libfdtrack.so"};
-
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
 static unwindstack::LocalUpdatableMaps& Maps() {
@@ -83,6 +85,13 @@ static std::shared_ptr<unwindstack::Memory>& ProcessMemory() {
   static android::base::NoDestructor<std::shared_ptr<unwindstack::Memory>> process_memory;
   return *process_memory.get();
 }
+
+// #ifdef __ANDROID__
+static std::vector<std::string> search_libs
+    [[clang::no_destroy]] = {"libart.so", "libartd.so"};
+static std::unique_ptr<unwindstack::JitDebug> jit_debug_;
+static std::unique_ptr<unwindstack::DexFiles> dex_files_;
+// #endif __ANDROID__
 
 __attribute__((constructor)) static void ctor() {
   for (auto& entry : stack_traces) {
@@ -102,6 +111,11 @@ __attribute__((constructor)) static void ctor() {
 
   if (Maps().Parse()) {
     ProcessMemory() = unwindstack::Memory::CreateProcessMemoryThreadCached(getpid());
+#ifdef __ANDROID__
+    auto arch = unwindstack::Regs::CurrentArch();
+    jit_debug_ = unwindstack::CreateJitDebug(arch, ProcessMemory(), search_libs);
+    dex_files_ = unwindstack::CreateDexFiles(arch, ProcessMemory(), search_libs);
+#endif // __ANDROID__
     android_fdtrack_hook_t expected = nullptr;
     installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
   }
@@ -132,6 +146,10 @@ static void fd_hook(android_fdtrack_event* event) {
       std::unique_ptr<unwindstack::Regs> regs(unwindstack::Regs::CreateFromLocal());
       unwindstack::RegsGetLocal(regs.get());
       unwindstack::Unwinder unwinder(kStackDepth, &Maps(), regs.get(), ProcessMemory());
+#ifdef __ANDROID__
+      unwinder.SetJitDebug(jit_debug_.get());
+      unwinder.SetDexFiles(dex_files_.get());
+#endif // __ANDROID__
       unwinder.Unwind(&kSkipFdtrackLib);
       entry->backtrace = unwinder.ConsumeFrames();
     }
