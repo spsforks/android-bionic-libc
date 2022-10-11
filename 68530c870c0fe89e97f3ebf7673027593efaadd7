@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85545fb0_9d387ef7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-11T21:00:22Z",
+      "side": 1,
+      "message": "This isn\u0027t for java stack traces, this is to get java frames from the interpreter, and only from the interpreter.\n\nLooking at the bug, that does appear to be the problem. Did you verify that it fixes the problem in the bug?",
+      "revId": "68530c870c0fe89e97f3ebf7673027593efaadd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
