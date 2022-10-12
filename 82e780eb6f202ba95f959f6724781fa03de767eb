@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8be520d_563962fb",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-10-12T23:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09850dd3_9ed0d7ae",
+      "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50c1c793_fee43f7a",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0f825a9_a59dbca5",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-10-12T23:25:48Z",
+      "side": 1,
+      "message": "Added comment.",
+      "parentUuid": "50c1c793_fee43f7a",
+      "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc07ac26_52703338",
@@ -48,6 +84,24 @@
       "writtenOn": "2022-10-12T22:56:48Z",
       "side": 1,
       "message": "not sure why placeholder is needed, and why memset memory at the end of each function",
+      "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d27a97c9_01296518",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-10-12T23:25:48Z",
+      "side": 1,
+      "message": "Added comment. memset was to make sure it does not get optimized, but the assignment to a global seems to be enough.",
+      "parentUuid": "fc07ac26_52703338",
       "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
