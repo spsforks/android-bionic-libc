@@ -16,6 +16,29 @@
       "message": "(ps4 fixes stray tabs in ps3.)",
       "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50d407d5_71b51334",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T01:09:17Z",
+      "side": 1,
+      "message": "I can\u0027t tell if this is a bug or intentional. This means that the arm ones still have __ARM_NR in the syscall name. But since nothing appears to use those syscalls, this might be a bug that doesn\u0027t matter.",
+      "range": {
+        "startLine": 126,
+        "startChar": 6,
+        "endLine": 126,
+        "endChar": 33
+      },
+      "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
