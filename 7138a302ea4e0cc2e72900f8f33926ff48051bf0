@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62327e67_4decb715",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-13T23:42:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b77616c_e4252eda",
+      "range": {
+        "startLine": 164,
+        "startChar": 90,
+        "endLine": 164,
+        "endChar": 97
+      },
+      "revId": "7138a302ea4e0cc2e72900f8f33926ff48051bf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "76c2acc5_e3e752b3",
@@ -54,6 +78,30 @@
       "writtenOn": "2022-10-13T19:56:01Z",
       "side": 1,
       "message": "Unused variables s and s_size.",
+      "range": {
+        "startLine": 235,
+        "startChar": 0,
+        "endLine": 236,
+        "endChar": 26
+      },
+      "revId": "7138a302ea4e0cc2e72900f8f33926ff48051bf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fde76e63_8c1161c6",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-13T23:42:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76c2acc5_e3e752b3",
       "range": {
         "startLine": 235,
         "startChar": 0,
