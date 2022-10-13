@@ -1,0 +1,464 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81944193_211a1922",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "a",
+      "range": {
+        "startLine": 49,
+        "startChar": 77,
+        "endLine": 49,
+        "endChar": 80
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19fab3ad_c22f3e4c",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "that can",
+      "range": {
+        "startLine": 49,
+        "startChar": 27,
+        "endLine": 49,
+        "endChar": 30
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d395e4b_4eed24cf",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "the primary",
+      "range": {
+        "startLine": 50,
+        "startChar": 39,
+        "endLine": 50,
+        "endChar": 46
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a550ca4_c5eeae10",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Slightly awkward/confusing, maybe something like:\n\nThe amount of memory allocated should not exceed this limit.",
+      "range": {
+        "startLine": 50,
+        "startChar": 58,
+        "endLine": 51,
+        "endChar": 46
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13ce7b0f_53f64f98",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Technically, if we ever switch off scudo this might not be true. If this benchmark only works for scudo, there should be some comments, or maybe a warning if run on something else.\n\nOtherwise, you might want to make the comment a little more generic.\n\nThis also applies to the scudo references above. If this is really a scudo specific becnhmark then it might also be good to have a top-level comment saying that.",
+      "range": {
+        "startLine": 53,
+        "startChar": 3,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc464629_463c7cce",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Would it be better to make this void*? It seems like you are doing a lot of reintperet_casts from uintptr_t to void*, and don\u0027t use the value that many times.\n\nBut I could be wrong about this, so take this as a suggestion, and it could be wrong.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 9
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fa23c7e_52c6de0e",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "I\u0027ve used a slightly different model for this, but I\u0027m not sure what\u0027s better. See:\n\nhttps://source.corp.google.com/android/system/extras/memory_replay/Utils.h;l\u003d28?q\u003dMakeAllocationResident\u0026sq\u003dpackage:%5Eandroid$\n\nThis only touches a single byte per page and is, generally faster than doing the memcpy. But this might not be a big deal.",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 50
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fde41e6_65caf3ea",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "kMaxBytes of memory",
+      "range": {
+        "startLine": 63,
+        "startChar": 58,
+        "endLine": 64,
+        "endChar": 11
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0794f792_4e4a1991",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "allocations",
+      "range": {
+        "startLine": 65,
+        "startChar": 22,
+        "endLine": 65,
+        "endChar": 32
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98f86331_ad46538a",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "This comment isn\u0027t really necessary since it\u0027s a what is happening kind of comment and the code is self-explanatory. If you have a why comment (why the code is doing this), that could be useful. Or drop the comment completely.",
+      "range": {
+        "startLine": 72,
+        "startChar": 2,
+        "endLine": 72,
+        "endChar": 54
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be0af6a6_2de05b46",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "reducing",
+      "range": {
+        "startLine": 77,
+        "startChar": 36,
+        "endLine": 77,
+        "endChar": 42
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10e4fc81_d9937c69",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "This should probably crash the process if this occurs.",
+      "range": {
+        "startLine": 79,
+        "startChar": 6,
+        "endLine": 79,
+        "endChar": 12
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb11bffa_5fe3a8fb",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Better to add a reason why you are doing this in the comment instead of this.",
+      "range": {
+        "startLine": 84,
+        "startChar": 5,
+        "endLine": 84,
+        "endChar": 44
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "249bb779_84765d1c",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Same as with most other comments, it is better to have something that describes why since the current comment doesn\u0027t add much real information.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 51
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de76b8d6_8986f59a",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "use",
+      "range": {
+        "startLine": 110,
+        "startChar": 8,
+        "endLine": 110,
+        "endChar": 12
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "261d2124_048c6835",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "This is going to do some allocations. I think I created a similar version to this that does no allocations that\u0027s in system/extras/memory_replay.\n\nIt might be worth trying that to see if the numbers differ with and without this.",
+      "range": {
+        "startLine": 114,
+        "startChar": 60,
+        "endLine": 114,
+        "endChar": 81
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f15fb058_03104c64",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Is it worth using something like strtol to verify that the arguments are verified integers?",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 35
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0175b205_10f83860",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "return 1;",
+      "range": {
+        "startLine": 146,
+        "startChar": 4,
+        "endLine": 146,
+        "endChar": 12
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f651d46_a5b24f7f",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "If you want to minimize any extra allocations in the benchmark, it might be better to use printf. But add a comment about why you are doing it.",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 41
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "395e7aa9_fdbcac63",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-13T21:43:12Z",
+      "side": 1,
+      "message": "Need a return 0; at the end here.",
+      "range": {
+        "startLine": 153,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 1
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
