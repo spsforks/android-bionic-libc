@@ -52,6 +52,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a760f8fa_eebd145d",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2022-10-13T05:06:05Z",
+      "side": 1,
+      "message": "These are undefined too.",
+      "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "50d407d5_71b51334",
