@@ -2997,7 +2997,7 @@ TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_
 extern "C" bool android_run_on_all_threads(bool (*func)(void*), void* arg);
 
 TEST(pthread, run_on_all_threads) {
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__arm__)
   pthread_t t;
   ASSERT_EQ(
       0, pthread_create(
