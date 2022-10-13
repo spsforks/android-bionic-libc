@@ -104,6 +104,24 @@
       "parentUuid": "fc07ac26_52703338",
       "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6246783b_9f2c08a2",
+        "filename": "tests/libs/stack_tagging_helper.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-10-13T00:10:00Z",
+      "side": 1,
+      "message": "actually removed the memset now. sorry, forgot to amend.",
+      "parentUuid": "d27a97c9_01296518",
+      "revId": "82e780eb6f202ba95f959f6724781fa03de767eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
