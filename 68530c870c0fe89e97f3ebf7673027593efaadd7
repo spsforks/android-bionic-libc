@@ -16,6 +16,23 @@
       "message": "This isn\u0027t for java stack traces, this is to get java frames from the interpreter, and only from the interpreter.\n\nLooking at the bug, that does appear to be the problem. Did you verify that it fixes the problem in the bug?",
       "revId": "68530c870c0fe89e97f3ebf7673027593efaadd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "777b31e9_050aac69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2022-10-13T13:33:20Z",
+      "side": 1,
+      "message": "+1 for libdexfile_support access.",
+      "revId": "68530c870c0fe89e97f3ebf7673027593efaadd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
