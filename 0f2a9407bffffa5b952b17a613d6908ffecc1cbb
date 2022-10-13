@@ -18,6 +18,40 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaa12963_efd17ca4",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2022-10-13T04:57:57Z",
+      "side": 1,
+      "message": "This doesn\u0027t compile for me on aosp_riscv64, secondary_setresuid is undefined.",
+      "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65b6c3c9_8ef0cb91",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2022-10-13T04:57:57Z",
+      "side": 1,
+      "message": "Here too",
+      "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "50d407d5_71b51334",
