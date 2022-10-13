@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a019560_f5f9e4fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-13T00:44:21Z",
+      "side": 1,
+      "message": "(ps4 fixes stray tabs in ps3.)",
+      "revId": "0f2a9407bffffa5b952b17a613d6908ffecc1cbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
