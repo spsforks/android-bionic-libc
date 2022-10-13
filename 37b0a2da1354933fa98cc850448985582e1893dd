@@ -394,6 +394,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "26675c98_f35c2865",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-13T22:18:15Z",
+      "side": 1,
+      "message": "or just `(numThreads \u003d\u003d 0 || ...)` below, since 0 isn\u0027t valid anyway, and atoi() converts all errors to 0?\n\n(is it meant to be allowed that you run with allocSize 0?)\n\nif you don\u0027t just use that trick, android::base::ParseUInt is more friendly than the strto* family...",
+      "parentUuid": "f15fb058_03104c64",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 35
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0175b205_10f83860",
         "filename": "benchmarks/malloc_rss_benchmark.cpp",
         "patchSetId": 1
