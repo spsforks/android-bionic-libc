@@ -46,6 +46,30 @@
       },
       "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b0b75cc_24bbd228",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-14T23:59:29Z",
+      "side": 0,
+      "message": "So spending time on this, I do think the new code ends at the same point. It does make me a bit nervous since fspr takes on an intermediate value (envp-\u003estatus). I don\u0027t know if that matters though.",
+      "parentUuid": "3f31c8ed_7df6cc9b",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 23
+      },
+      "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
