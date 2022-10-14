@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c74e4ee_d9d4bf10",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-14T22:54:13Z",
+      "side": 0,
+      "message": "This appears to be the only thing not carried over into the new code. Is that okay?",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 23
+      },
+      "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
