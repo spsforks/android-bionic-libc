@@ -22,6 +22,30 @@
       },
       "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f31c8ed_7df6cc9b",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-14T23:15:14Z",
+      "side": 0,
+      "message": "i think it is ... it\u0027s just hard to read. (i kind of want to come back and clean this up even further, but i\u0027m struggling to come up with a convincing case that it\u0027s a good use of anyone\u0027s time!)\n\nanyway... i think feraiseexcept() calls fesetexceptflag(), which has:\n```\n  excepts \u0026\u003d FE_ALL_EXCEPT;\n  __get_fpsr(fpsr);\n  fpsr \u0026\u003d ~excepts;\n  fpsr |\u003d *flagp \u0026 excepts;\n  __set_fpsr(fpsr);\n```\ni think the `|\u003d *flagp` is the equivalent of this? (with the `\u0026\u003d` being where the `\u0026` from the rhs here went.)",
+      "parentUuid": "7c74e4ee_d9d4bf10",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 23
+      },
+      "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
