@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78c07020_0cf4d3b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1124746
+      },
+      "writtenOn": "2022-10-17T17:22:26Z",
+      "side": 1,
+      "message": "Hi Elliott,\n\nThis changes your new commit: https://android-review.googlesource.com/c/platform/bionic/+/2245796, the reason is that we are planning to disable the arch variant of out property in cc_genrule as part of the work to migrate to bazel from soong, can you please review and let us know any concerns, thanks.",
+      "revId": "20ddfd389e19c71b89bcd89de5acc317e6e5f585",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
