@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "db4f16f4_74a43f68",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-18T23:54:46Z",
+      "side": 1,
+      "message": "otherwise lgtm. (and i did test locally that this _doesn\u0027t_ break my riscv64 build!)",
+      "revId": "87c895635cab362e8a7b9ef4390bf507d13aea43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a65d10e_031ab187",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -38,6 +55,30 @@
       "side": 1,
       "message": "checkbuild won\u0027t be able to verify them if we do, they should build fine except of the riscv64 one which is not yet ready in ci.",
       "parentUuid": "2a65d10e_031ab187",
+      "range": {
+        "startLine": 2639,
+        "startChar": 0,
+        "endLine": 2643,
+        "endChar": 1
+      },
+      "revId": "87c895635cab362e8a7b9ef4390bf507d13aea43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f603fbb_7b36b4fa",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2643,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-18T23:54:46Z",
+      "side": 1,
+      "message": "i agree with jingwen ... if we\u0027re going to do this, we should do it for all architectures. it\u0027s a weird historical accident that these used to all be generated all the time, and the results aren\u0027t correct anyway.",
+      "parentUuid": "d79a204c_8c1db3cc",
       "range": {
         "startLine": 2639,
         "startChar": 0,
