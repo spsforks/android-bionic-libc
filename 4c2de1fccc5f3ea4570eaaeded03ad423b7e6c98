@@ -70,6 +70,30 @@
       },
       "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "622e4388_7ce26f33",
+        "filename": "libm/arm64/fenv.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-18T22:29:33Z",
+      "side": 0,
+      "message": "\u003e It does make me a bit nervous since fspr takes on an intermediate value (envp-\u003estatus). I don\u0027t know if that matters though.\n\nall the fenv stuff is just inherently unsafe... these aren\u0027t per-thread statuses so the actual _hardware_ setting is the more worrying part than this (which you can always protect with your own lock, if so inclined).",
+      "parentUuid": "3b0b75cc_24bbd228",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 23
+      },
+      "revId": "4c2de1fccc5f3ea4570eaaeded03ad423b7e6c98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
