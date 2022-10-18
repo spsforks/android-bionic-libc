@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a65d10e_031ab187",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2643,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2022-10-18T23:27:16Z",
+      "side": 1,
+      "message": "Why not do this for all of the cc_genrules?",
+      "range": {
+        "startLine": 2639,
+        "startChar": 0,
+        "endLine": 2643,
+        "endChar": 1
+      },
+      "revId": "87c895635cab362e8a7b9ef4390bf507d13aea43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
