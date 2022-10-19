@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000030906325",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/2261495?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "10c63ae4_3555e24c",
+          "description": "Buildifier Suggestion",
+          "replacements": [
+            {
+              "path": "libc/BUILD",
+              "range": {
+                "startLine": 30,
+                "startChar": 0,
+                "endLine": 42,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_contributions\",\n    hdrs \u003d [\n        \"//bionic/libc/kernel/android:libc_kernel_android_scsi_headers\",\n        \"//bionic/libc/kernel/android:libc_kernel_android_uapi_headers\",\n        \"//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm64_headers\",  #arm64\n        \"//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm_headers\",  #arm\n        \"//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_64_headers\",  #x86_64\n        \"//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_headers\",  #x86\n        \"//bionic/libc/kernel/uapi:libc_kernel_uapi_headers\",\n    ],\n    api \u003d \":libc.map.txt\",\n    library_name \u003d \"libc\",\n"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "d62ad988_79295bb6",
+        "filename": "libc/BUILD",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2022-10-19T16:12:06Z",
+      "side": 1,
+      "message": "File is not formatted. Run `buildifier libc/BUILD` to format the file, or apply the suggested fix.",
+      "revId": "78dbc92ba28dde7cdaaeac778d157979e9e4742c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000030906325",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/2261495?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "011d25b8_e635f90a",
+          "description": "Buildifier Suggestion",
+          "replacements": [
+            {
+              "path": "libc/kernel/uapi/BUILD",
+              "range": {
+                "startLine": 32,
+                "startChar": 0,
+                "endLine": 35,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_kernel_uapi_headers\",\n    hdrs \u003d glob([\"**/*.h\"]),\n    system \u003d True,\n"
+            },
+            {
+              "path": "libc/kernel/uapi/BUILD",
+              "range": {
+                "startLine": 38,
+                "startChar": 0,
+                "endLine": 43,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_kernel_uapi_asm_arm_headers\",\n    hdrs \u003d glob([\"asm-arm/**/*.h\"]),\n    arch \u003d \"arm\",\n    include_dir \u003d \"asm-arm\",\n    system \u003d True,\n"
+            },
+            {
+              "path": "libc/kernel/uapi/BUILD",
+              "range": {
+                "startLine": 46,
+                "startChar": 0,
+                "endLine": 51,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_kernel_uapi_asm_arm64_headers\",\n    hdrs \u003d glob([\"asm-arm64/**/*.h\"]),\n    arch \u003d \"arm64\",\n    include_dir \u003d \"asm-arm64\",\n    system \u003d True,\n"
+            },
+            {
+              "path": "libc/kernel/uapi/BUILD",
+              "range": {
+                "startLine": 54,
+                "startChar": 0,
+                "endLine": 59,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_kernel_uapi_asm_x86_headers\",\n    hdrs \u003d glob([\"asm-x86/**/*.h\"]),\n    arch \u003d \"x86\",\n    include_dir \u003d \"asm-x86\",\n    system \u003d True,\n"
+            },
+            {
+              "path": "libc/kernel/uapi/BUILD",
+              "range": {
+                "startLine": 62,
+                "startChar": 0,
+                "endLine": 67,
+                "endChar": 0
+              },
+              "replacement": "    name \u003d \"libc_kernel_uapi_asm_x86_64_headers\",\n    hdrs \u003d glob([\"asm-x86_64/**/*.h\"]),\n    arch \u003d \"x86_64\",\n    include_dir \u003d \"asm-x86_64\",\n    system \u003d True,\n"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "9ff81cfa_f2ffb52c",
+        "filename": "libc/kernel/uapi/BUILD",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1757831
+      },
+      "writtenOn": "2022-10-19T16:12:06Z",
+      "side": 1,
+      "message": "File is not formatted. Run `buildifier libc/kernel/uapi/BUILD` to format the file, or apply the suggested fix.",
+      "revId": "78dbc92ba28dde7cdaaeac778d157979e9e4742c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
