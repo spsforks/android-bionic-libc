@@ -35,7 +35,7 @@ cc_api_headers(
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_arm_headers",
+  name="libc_kernel_uapi_asm_arm_headers",
   include_dir="asm-arm",
   hdrs=glob(["asm-arm/**/*.h"]),
   system=True,
@@ -43,7 +43,7 @@ cc_api_headers(
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_arm64_headers",
+  name="libc_kernel_uapi_asm_arm64_headers",
   include_dir="asm-arm64",
   hdrs=glob(["asm-arm64/**/*.h"]),
   system=True,
@@ -51,7 +51,7 @@ cc_api_headers(
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_x86_headers",
+  name="libc_kernel_uapi_asm_x86_headers",
   include_dir="asm-x86",
   hdrs=glob(["asm-x86/**/*.h"]),
   system=True,
@@ -59,7 +59,7 @@ cc_api_headers(
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_x86_64_headers",
+  name="libc_kernel_uapi_asm_x86_64_headers",
   include_dir="asm-x86_64",
   hdrs=glob(["asm-x86_64/**/*.h"]),
   system=True,

@@ -34,9 +34,9 @@ cc_api_contribution(
     "//bionic/libc/kernel/android:libc_kernel_android_uapi_headers",
     "//bionic/libc/kernel/android:libc_kernel_android_scsi_headers",
     "//bionic/libc/kernel/uapi:libc_kernel_uapi_headers",
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_arm_headers", #arm
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_arm64_headers", #arm64
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_x86_headers", #x86
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_x86_64_headers", #x86_64
+    "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm_headers", #arm
+    "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm64_headers", #arm64
+    "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_headers", #x86
+    "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_64_headers", #x86_64
   ],
 )
