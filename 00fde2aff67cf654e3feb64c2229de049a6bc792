@@ -22,6 +22,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26a0110e_5de4a796",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2022-10-21T19:13:32Z",
+      "side": 1,
+      "message": "I think it should be ok to pick a numbered one but will they continue to be available indefinitely or will there be an issue with it being rotated out?\n\nFor the most part it seems that the clang version isn\u0027t so critical for this script but that the python3-clang module is present (even if it is unsupported).",
+      "parentUuid": "65546289_62602b56",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
