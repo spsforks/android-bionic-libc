@@ -166,6 +166,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c950fcc8_6a28e6c8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-21T19:46:46Z",
+      "side": 1,
+      "message": "seems like there aren\u0027t many files we\u0027d need to fix (from https://source.corp.google.com/search?q\u003dclang%2Fhost%2Flinux-x86%2Fclang-stable%20-file:clang%2Fhost%2Flinux-x86%2Fclang-stable\u0026sq\u003dpackage:%5Eandroid$ ) ... worth giving that job to someone and removing clang-stable before new users crop up? (and maybe add a README.md referring to build/soong/scripts/get_clang_version.py, for anyone poking around in prebuilts/clang/host/linux-x86/ looking for a way to get the current clang?)",
+      "parentUuid": "8491aea6_50496fd4",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
