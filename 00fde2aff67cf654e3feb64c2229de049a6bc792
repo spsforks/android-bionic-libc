@@ -190,6 +190,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84f5d4b4_63912e0d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2022-10-21T19:50:37Z",
+      "side": 1,
+      "message": "would it be terrible for a symlink `clang-platform` in `prebuilts/clang/host/linux-x86/`?  or maybe the symlink can be placed in `build` somewhere?\n\n`get_clang_version.py` works well but it requires a shell out to execute it and at the end, it is just a regex parse on the global.go file (though I see there is a TODO to get it from json)",
+      "parentUuid": "c950fcc8_6a28e6c8",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
