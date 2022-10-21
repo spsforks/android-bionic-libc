@@ -238,6 +238,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d648e56_7e8cc8d2",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2022-10-21T20:10:36Z",
+      "side": 1,
+      "message": "For python scripts, yes, import is ok but it requires that `build/...` be synced.  However for the other languages it requires some extra work (but maybe that\u0027s ok).\n\nFor our specific use case, we run it in a parital tree (we only sync the necessary parts of the tree required to run `clean_header.py`), but I can sync `build/...`, it\u0027s not a big deal.",
+      "parentUuid": "e8ebbd3b_fd71aa8f",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
