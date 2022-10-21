@@ -94,6 +94,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25fae172_5d575ae8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-21T19:33:20Z",
+      "side": 1,
+      "message": "\u003e Maybe it needs to be simply defined (i.e. a text file with clang-version in it) in build/ somwehere for inclusion to all of these places?\n\nyeah. i think +pirama\u0027s been working on something like that?\n\nbut like srhines says, this is fine for now.",
+      "parentUuid": "6821d82d_a94079e2",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
