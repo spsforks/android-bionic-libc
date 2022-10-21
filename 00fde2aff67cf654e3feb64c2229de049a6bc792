@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65546289_62602b56",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-10-21T19:09:24Z",
+      "side": 1,
+      "message": "This remains incorrect. If it fixes a breakage, the CL is fine, but we also need to migrate away from using `clang-stable`, which is very much not \"stable\". This needs to be a named/numbered release of Clang to actually have stability (even though that\u0027s more work to update later on).",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
