@@ -46,6 +46,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c16c178e_ff49357d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-10-21T19:17:49Z",
+      "side": 1,
+      "message": "They do get rotated out, but they have stability. This `clang-stable` is one that changes arbitrarily (and without proper testing, as we\u0027re seeing). `clang-stable` was only ever intended because there were demands for `clang-format` availability to gerrit tooling. We should have pushed back harder on that in the past, but it\u0027s too late now. https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ shows just how many places use the numbered builds, and this should be another of them (or preferably it could get the number from what `build/soong` is using).",
+      "parentUuid": "26a0110e_5de4a796",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
