@@ -70,6 +70,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6821d82d_a94079e2",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2022-10-21T19:32:05Z",
+      "side": 1,
+      "message": "I see in `build/soong/cc/config/global` it\u0027s defined as `ClangDefaultVersion` but getting that into this script without adding another dependency is tricky, I think.\n\nIt is also hardcoded in `build/soong/rust/bindgen.go`\n\nIs it reasonable to hardcode `clang-r468909b` in this script as well?  I\u0027m afraid it\u0027ll get left behind after the next branch.\n\nMaybe it needs to be simply defined (i.e. a text file with clang-version in it) in build/ somwehere for inclusion to all of these places?",
+      "parentUuid": "c16c178e_ff49357d",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
