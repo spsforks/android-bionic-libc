@@ -262,6 +262,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "491bba38_9bdce97a",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2022-10-25T07:56:06Z",
+      "side": 1,
+      "message": "Unfortunately, even if we fix all the other users of `clang-stable`, it can\u0027t go away, because we allow repo hooks to run `clang-format` from that location. 😞 The only folks broken by `clang-stable` are people who are relying on the shared library there to work, which might be something we can remove if we statically link a `clang-format`. Another alternative is that we finally remove repo hooks support for `clang-format`, which then would require people to run `clang-format` only in a shell that has sourced `envsetup.sh` (to pick up minimal LLVM tooling from a supported directory).",
+      "parentUuid": "5d648e56_7e8cc8d2",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
