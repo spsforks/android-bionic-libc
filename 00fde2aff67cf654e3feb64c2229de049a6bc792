@@ -286,6 +286,30 @@
       },
       "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0af38a61_6e86952a",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-25T16:24:03Z",
+      "side": 1,
+      "message": "\u003e Another alternative is that we finally remove repo hooks support for clang-format, which then would require people to run clang-format only in a shell that has sourced envsetup.sh (to pick up minimal LLVM tooling from a supported directory).\n\nthat really sucks (we use it ourselves in projects where we actually own all the code), but it does seem like we\u0027re going to get ever _less_ support from the repo side for this :-(\n\ni\u0027m not sure i understand what you\u0027re saying though ... why can\u0027t we make it so the _repo hook_ requires that you\u0027ve sourced envsetup.sh? (which seems fine to me, since if you haven\u0027t done that, i don\u0027t believe you\u0027ve even _built_ your change, so i don\u0027t care!)",
+      "parentUuid": "491bba38_9bdce97a",
+      "range": {
+        "startLine": 17,
+        "startChar": 66,
+        "endLine": 17,
+        "endChar": 78
+      },
+      "revId": "00fde2aff67cf654e3feb64c2229de049a6bc792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
