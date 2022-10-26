@@ -16,6 +16,24 @@
       "message": "There is nothing inherently wrong with this test that I can see. If you are experiencing timeouts, it\u0027s possible there is some kind of bug on your system. It\u0027s possible that a 32 bit arm device runs really slowly when running this, so it\u0027s worth increasing the timeouts to see if it\u0027s just a time issue. If that\u0027s the case, it might be better to decrease the total number of threads on arm rather than disable the test completely.",
       "revId": "8566176545c6c5c1afab90d94cc50fa4a32cc509",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "073e3448_c8f98479",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1660916
+      },
+      "writtenOn": "2022-10-26T05:50:33Z",
+      "side": 1,
+      "message": "This can not still pass after affinity this process to performance CPU(arm A710 + 12GRAM), but the armv8 case can pass, I don\u0027t think this is a performance issue.",
+      "parentUuid": "179108b1_050e79c0",
+      "revId": "8566176545c6c5c1afab90d94cc50fa4a32cc509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
