@@ -34,6 +34,24 @@
       "parentUuid": "179108b1_050e79c0",
       "revId": "8566176545c6c5c1afab90d94cc50fa4a32cc509",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4dd9477_ee3c418a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-26T14:56:32Z",
+      "side": 1,
+      "message": "no, but it\u0027s not a test issue either, right? you have a broken kernel that\u0027s causing you to fail a test? the fix needs to be in the kernel...",
+      "parentUuid": "073e3448_c8f98479",
+      "revId": "8566176545c6c5c1afab90d94cc50fa4a32cc509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
