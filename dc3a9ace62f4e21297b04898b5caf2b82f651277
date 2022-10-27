@@ -52,6 +52,24 @@
       "parentUuid": "61ecb82d_dd241172",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bcda601_f86aa8e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1965080
+      },
+      "writtenOn": "2022-10-27T23:54:59Z",
+      "side": 1,
+      "message": "Hi Elliott, thanks for explaining - here\u0027s the patch against common-android13-5.10:\n\nhttps://android-review.googlesource.com/c/kernel/common/+/2275311",
+      "parentUuid": "06e26e72_ef868472",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
