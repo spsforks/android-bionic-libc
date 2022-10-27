@@ -34,6 +34,24 @@
       "parentUuid": "50359b18_03ee0bbe",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06e26e72_ef868472",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-27T22:25:01Z",
+      "side": 1,
+      "message": "it needs to be in the Android Common Kernel tree to get into bionic. (but once it\u0027s there, it\u0027s basically a scripted process.)",
+      "parentUuid": "61ecb82d_dd241172",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
