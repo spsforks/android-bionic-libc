@@ -16,6 +16,24 @@
       "message": "what upstream kernel is this in? these headers are overwritten on every kernel update; 6.0 is coming soon... (note that here \"upstream\" \u003d\u003d ACK, not linus!)",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61ecb82d_dd241172",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1965080
+      },
+      "writtenOn": "2022-10-27T21:57:02Z",
+      "side": 1,
+      "message": "Hi Elliott, here\u0027s the kernel patch:\n\nhttps://partner-android-review.googlesource.com/c/kernel/private/gs-google/+/2317822\n\nThat is against android13-gs-pixel-5.10-tm-qpr2, however I\u0027m happy to move it to a more appropriate branch (though I\u0027m not clear what branch is best).",
+      "parentUuid": "50359b18_03ee0bbe",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
