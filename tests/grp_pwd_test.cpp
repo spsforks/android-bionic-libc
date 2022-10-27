@@ -441,6 +441,17 @@ static void expect_ids(T ids, bool is_group) {
     }
     return result;
   };
+
+  // AID_PRNG_SEEDER (1092) was added in Android 13 QPR2, but CTS is
+  // shared across Android 13 versions.
+#ifndef AID_PRNG_SEEDER
+#define AID_PRNG_SEEDER 1092
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_T__) {
+    ids.erase(AID_PRNG_SEEDER);
+    expected_ids.erase(AID_PRNG_SEEDER);
+  }
+#endif
+
   EXPECT_EQ(expected_ids, ids) << return_differences();
 }
 #endif
