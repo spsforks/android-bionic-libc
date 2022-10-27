@@ -16,6 +16,23 @@
       "message": "Thanks!",
       "revId": "f5fd5adf04aa35983a383085c786e69fd2257eba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7dababa_0d705986",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-27T15:31:39Z",
+      "side": 1,
+      "message": "OWNERS +1 on the assumption this is what the CTS folks recommended for dealing with a situation like this. (i\u0027ve never had this problem before!)",
+      "revId": "f5fd5adf04aa35983a383085c786e69fd2257eba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
