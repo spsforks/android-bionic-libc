@@ -70,6 +70,24 @@
       "parentUuid": "06e26e72_ef868472",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eee72bc_ebc774b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-10-27T23:58:11Z",
+      "side": 1,
+      "message": "yeah, get that merged and then we can re-run the kernel header import scripts (https://android.googlesource.com/platform/bionic/+/master/README.md#updating-kernel-header-files if you want to do it yourself, or just let us know and we can do it).",
+      "parentUuid": "3bcda601_f86aa8e9",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
