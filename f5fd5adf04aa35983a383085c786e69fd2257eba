@@ -50,6 +50,24 @@
       "message": "+Ross,Fang: we currently have a discrepancy if Android 13 CTS runs on an Android 13 QPR2 device. This CL fixes that by tolerating either Android 13 or Android 13 QPR2 platform behaviour. If there\u0027s there a better way to approach this or prior art, please point us in the right direction. Thanks.",
       "revId": "f5fd5adf04aa35983a383085c786e69fd2257eba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "752a8bda_c065bb3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1244622
+      },
+      "writtenOn": "2022-10-28T18:55:51Z",
+      "side": 1,
+      "message": "Making the test to tolerate either either Android 13 or Android 13 QPR2 platform behaviour is an acceptable approach.",
+      "parentUuid": "600f36ca_f0796be9",
+      "revId": "f5fd5adf04aa35983a383085c786e69fd2257eba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
