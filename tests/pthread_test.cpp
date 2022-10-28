@@ -3009,7 +3009,7 @@ TEST(pthread, run_on_all_threads) {
                  return reinterpret_cast<void*>(errno);
                }
 
-               for (int i = 0; i != 1000; ++i) {
+               for (int i = 0; i != 10; ++i) {
                  pthread_t t1, t2;
                  if (pthread_create(
                          &t1, &detached, [](void*) -> void* { return nullptr; }, nullptr) != 0 ||
@@ -3027,7 +3027,7 @@ TEST(pthread, run_on_all_threads) {
              },
              nullptr));
 
-  for (int i = 0; i != 1000; ++i) {
+  for (int i = 0; i != 10; ++i) {
     ASSERT_TRUE(android_run_on_all_threads([](void* arg) { return arg == nullptr; }, nullptr));
   }
 
