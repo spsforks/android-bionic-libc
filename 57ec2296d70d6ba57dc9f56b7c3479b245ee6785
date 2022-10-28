@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e73b5acf_73e23b24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1071150
+      },
+      "writtenOn": "2022-10-28T14:34:36Z",
+      "side": 1,
+      "message": "These changes suffice to libcore, but we seem to have ICU in existing notices and it doesn\u0027t suffice there...",
+      "revId": "57ec2296d70d6ba57dc9f56b7c3479b245ee6785",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
