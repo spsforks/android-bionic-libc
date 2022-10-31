@@ -330,6 +330,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba1f3eb8_bb09027b",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-31T22:59:31Z",
+      "side": 1,
+      "message": "LGTM, like I said, I defer to your judgement on this.",
+      "parentUuid": "abdedf60_2af25bf8",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 50
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4fde41e6_65caf3ea",
@@ -743,6 +767,30 @@
       "side": 1,
       "message": "Same as above, will try few runs to see if there\u0027s significant differences.",
       "parentUuid": "261d2124_048c6835",
+      "range": {
+        "startLine": 114,
+        "startChar": 60,
+        "endLine": 114,
+        "endChar": 81
+      },
+      "revId": "37b0a2da1354933fa98cc850448985582e1893dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f05099c_c468b643",
+        "filename": "benchmarks/malloc_rss_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-10-31T22:59:31Z",
+      "side": 1,
+      "message": "Again, up to your judgement for this one.",
+      "parentUuid": "f865a0e9_f47fe9d2",
       "range": {
         "startLine": 114,
         "startChar": 60,
