@@ -25,7 +25,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-extern "C" FTS* __fts_open(char* const*, int, int (*)(const FTSENT**, const FTSENT**));
+extern "C" FTS* __fts_open(char* const* __attribute__((nonnull)), int,
+                           int (*)(const FTSENT**, const FTSENT**));
 
 static int do_nftw(const char* path,
                    int (*ftw_fn)(const char*, const struct stat*, int),
