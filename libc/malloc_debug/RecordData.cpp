@@ -28,6 +28,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdint.h>
@@ -52,40 +53,46 @@ bool ThreadCompleteEntry::Write(int fd) const {
   return dprintf(fd, "%d: thread_done 0x0\n", tid_) > 0;
 }
 
-AllocEntry::AllocEntry(void* pointer) : pointer_(pointer) {}
+AllocEntry::AllocEntry(void* pointer, uint64_t st, uint64_t et)
+    : pointer_(pointer), st_(st), et_(et) {}
 
-MallocEntry::MallocEntry(void* pointer, size_t size) : AllocEntry(pointer), size_(size) {}
+MallocEntry::MallocEntry(void* pointer, size_t size, uint64_t st, uint64_t et)
+    : AllocEntry(pointer, st, et), size_(size) {}
 
 bool MallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: malloc %p %zu\n", tid_, pointer_, size_) > 0;
+  return dprintf(fd, "%d: malloc %p %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, size_, st_,
+                 et_) > 0;
 }
 
-FreeEntry::FreeEntry(void* pointer) : AllocEntry(pointer) {}
+FreeEntry::FreeEntry(void* pointer, uint64_t st, uint64_t et) : AllocEntry(pointer, st, et) {}
 
 bool FreeEntry::Write(int fd) const {
-  return dprintf(fd, "%d: free %p\n", tid_, pointer_) > 0;
+  return dprintf(fd, "%d: free %p %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, st_, et_) > 0;
 }
 
-CallocEntry::CallocEntry(void* pointer, size_t nmemb, size_t size)
-    : MallocEntry(pointer, size), nmemb_(nmemb) {}
+CallocEntry::CallocEntry(void* pointer, size_t nmemb, size_t size, uint64_t st, uint64_t et)
+    : MallocEntry(pointer, size, st, et), nmemb_(nmemb) {}
 
 bool CallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: calloc %p %zu %zu\n", tid_, pointer_, nmemb_, size_) > 0;
+  return dprintf(fd, "%d: calloc %p %zu %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, nmemb_,
+                 size_, st_, et_) > 0;
 }
 
-ReallocEntry::ReallocEntry(void* pointer, size_t size, void* old_pointer)
-    : MallocEntry(pointer, size), old_pointer_(old_pointer) {}
+ReallocEntry::ReallocEntry(void* pointer, size_t size, void* old_pointer, uint64_t st, uint64_t et)
+    : MallocEntry(pointer, size, st, et), old_pointer_(old_pointer) {}
 
 bool ReallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: realloc %p %p %zu\n", tid_, pointer_, old_pointer_, size_) > 0;
+  return dprintf(fd, "%d: realloc %p %p %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_,
+                 old_pointer_, size_, st_, et_) > 0;
 }
 
 // aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
-MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment)
-    : MallocEntry(pointer, size), alignment_(alignment) {}
+MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment, uint64_t st, uint64_t et)
+    : MallocEntry(pointer, size, st, et), alignment_(alignment) {}
 
 bool MemalignEntry::Write(int fd) const {
-  return dprintf(fd, "%d: memalign %p %zu %zu\n", tid_, pointer_, alignment_, size_) > 0;
+  return dprintf(fd, "%d: memalign %p %zu %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_,
+                 alignment_, size_, st_, et_) > 0;
 }
 
 struct ThreadData {
