@@ -67,6 +67,23 @@
       "message": "My original question wasn\u0027t answered whether this really fixes the problem.\n\nHowever, I do think this is necessary step, but I\u0027m still not positive this will fix the issue completely.",
       "revId": "68530c870c0fe89e97f3ebf7673027593efaadd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "045b2cc2_4b219996",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2022-11-01T23:13:15Z",
+      "side": 1,
+      "message": "The TreeHugger failures unofrtunately look real and it seems that there is more work required here:\n\nerror: bionic/libfdtrack/Android.bp:16:1: dependency \"libdexfile\" of \"libfdtrack\" missing variant:\n  os:android,image:recovery,arch:x86,sdk:,link:shared",
+      "revId": "68530c870c0fe89e97f3ebf7673027593efaadd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
