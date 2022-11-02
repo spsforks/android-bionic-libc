@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab73f321_ef83e1b8",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-02T17:04:34Z",
+      "side": 1,
+      "message": "`__attribute__((nonnull))` is bad, and we should never use it. that\u0027s basically a hint to the optimizer saying \"feel free to do stupid things here, because you can _assume_ you\u0027ll never be passed a null pointer\". that typically means that error-checking code gets \"optimized\" away (so it\u0027s no longer present), with predictably bad results at runtime.\n\n`_Nullable` and `_Nonnull` by contrast are hints to the compile-time *error reporting* part of the compiler. that lets the compiler say \"hey, this function should never be passed a null, but i can tell statically that you\u0027re passing a null, so i can stop you here at _build time_ and tell you your code is wrong\".\n\n_that\u0027s_ what we want :-)",
+      "range": {
+        "startLine": 71,
+        "startChar": 30,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "db7b2d174f4ace80c84515748403b30d8449fd99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
