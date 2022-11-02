@@ -46,6 +46,30 @@
       },
       "revId": "db7b2d174f4ace80c84515748403b30d8449fd99",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ac6c322_cfb0ba0a",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-02T21:40:17Z",
+      "side": 1,
+      "message": "and -- sorry for not noticing this before -- this has to be in the _header file_ instead, not the implementation. because you\u0027re trying to tell _users_ of the code \"you can\u0027t give me a null pointer\" (and calling code will #include the header, but will [typically] be compiled separately from the implementation itself).",
+      "parentUuid": "ab73f321_ef83e1b8",
+      "range": {
+        "startLine": 71,
+        "startChar": 30,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "db7b2d174f4ace80c84515748403b30d8449fd99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
