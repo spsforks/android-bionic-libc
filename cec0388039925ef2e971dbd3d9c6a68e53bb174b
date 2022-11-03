@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "618793ad_fdb731f3",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-11-03T20:01:31Z",
+      "side": 1,
+      "message": "I think at least one of MeasureFree and MeasurePurge will be true. So maybe we can make it easier like\n\nif (!MeasureFree) {\n  state.ResumeTiming();\n} else if (!MeasurePurge) {\n  state.PauseTiming();\n}\n\nAnd maybe we can static_assert(MeasureFree || MeasurePurge). No strong preference here.",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 5
+      },
+      "revId": "cec0388039925ef2e971dbd3d9c6a68e53bb174b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
