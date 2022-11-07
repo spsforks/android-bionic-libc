@@ -240,6 +240,9 @@ TEST_P(MemtagNoteTest, SEGV) {
 
   MemtagNote note = std::get<0>(GetParam());
   bool isStatic = std::get<1>(GetParam());
+  if (isStatic) {
+    SKIP_WITH_NATIVE_BRIDGE;  // http://b/242170715
+  }
   std::string helper_base = std::string("heap_tagging_") + (isStatic ? "static_" : "") +
                             kNoteSuffix[static_cast<int>(note)] + "_helper";
   std::string helper = GetTestlibRoot() + "/" + helper_base;
