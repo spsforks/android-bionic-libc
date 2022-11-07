@@ -16,6 +16,29 @@
       "message": "I guess we can\u0027t expect native bridge to emulate mte on x86.",
       "revId": "36d2a55a8b7322d7eaea96791369d48ba1d2f3ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd5c8da8_cc10e8a8",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-07T16:23:52Z",
+      "side": 1,
+      "message": "if i\u0027ve understood the bug right, this won\u0027t work for dynamic either; you\u0027re just not running the dynamic tests?",
+      "range": {
+        "startLine": 243,
+        "startChar": 6,
+        "endLine": 243,
+        "endChar": 14
+      },
+      "revId": "36d2a55a8b7322d7eaea96791369d48ba1d2f3ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
