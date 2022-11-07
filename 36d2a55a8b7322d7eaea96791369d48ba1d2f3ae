@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91231d25_d0738a85",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2022-11-07T16:14:31Z",
+      "side": 1,
+      "message": "I guess we can\u0027t expect native bridge to emulate mte on x86.",
+      "revId": "36d2a55a8b7322d7eaea96791369d48ba1d2f3ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
