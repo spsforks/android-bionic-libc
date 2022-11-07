@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4c43915_f943b3d3",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-07T20:28:49Z",
+      "side": 1,
+      "message": "is this true? surely if you\u0027re not using REG_PEND, this is null?",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c227103_9576fed9",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-07T20:28:49Z",
+      "side": 1,
+      "message": "i\u0027m not sure this is true either? it\u0027ll be null if you haven\u0027t yet called regcomp(), for example. (is this one a legit use case for the \"undefined\" option?)",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ceb76c6d_4b8e89c8",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-07T20:28:49Z",
+      "side": 1,
+      "message": "is that true? surely that\u0027s an error?\n\nhere at least the DIAGASSERTs seem right:\n```\n\t_DIAGASSERT(preg !\u003d NULL);\n\t_DIAGASSERT(pattern !\u003d NULL);\n```",
+      "range": {
+        "startLine": 100,
+        "startChar": 48,
+        "endLine": 100,
+        "endChar": 57
+      },
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
