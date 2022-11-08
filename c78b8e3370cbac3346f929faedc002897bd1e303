@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50736ee8_eb7ede5d",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-08T03:05:56Z",
+      "side": 1,
+      "message": "It seems like you only really care if there are any errors, so maybe this should be a boolean. But I don\u0027t know if it matters that much, so leaving it like this also seems fine to me.",
+      "range": {
+        "startLine": 337,
+        "startChar": 13,
+        "endLine": 337,
+        "endChar": 19
+      },
+      "revId": "c78b8e3370cbac3346f929faedc002897bd1e303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
