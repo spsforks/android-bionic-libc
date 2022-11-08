@@ -22,6 +22,30 @@
       },
       "revId": "c78b8e3370cbac3346f929faedc002897bd1e303",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c3c1a04_f16dc82f",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-08T17:14:10Z",
+      "side": 1,
+      "message": "yeah, i think i had some kind of compiler-influenced \"you keep a count of errors\" in the back of my mind, but since i had no intention of _printing_ that count like a compiler does, yeah, this should have been a bool. will fix.\n\n(i did wonder whether i should just exit() from E() directly, but it seemed like it might be useful to see _all_ the errors if there\u0027s more than one?)",
+      "parentUuid": "50736ee8_eb7ede5d",
+      "range": {
+        "startLine": 337,
+        "startChar": 13,
+        "endLine": 337,
+        "endChar": 19
+      },
+      "revId": "c78b8e3370cbac3346f929faedc002897bd1e303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
