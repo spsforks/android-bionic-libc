@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b850388d_66649e55",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-09T22:43:41Z",
+      "side": 1,
+      "message": "\u003e i\u0027m assuming we can\u0027t just leave the pointers in structs unannotated? \n\nunfortunately no 😞 Build error here\n```\n/usr/local/google/home/zijunzhao/real-aosp/aosp-master-with-phones/bionic/libc/include/regex.h:52:13: note: insert \u0027_Nullable\u0027 if the pointer may be null\n        const char * re_endp;   /* end pointer for REG_PEND */\n                   ^\n                     _Nullable\n/usr/local/google/home/zijunzhao/real-aosp/aosp-master-with-phones/bionic/libc/include/regex.h:52:13: note: insert \u0027_Nonnull\u0027 if the pointer should never be null\n        const char * re_endp;   /* end pointer for REG_PEND */\n                   ^\n                     _Nonnull\n```\nI see. So developers help guarantee the safety?",
+      "parentUuid": "81ab4a57_86bec9b7",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c227103_9576fed9",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
@@ -103,6 +121,24 @@
       "side": 1,
       "message": "and same argument here ... you can\u0027t call `regexec()` before you call `regcomp()`, and by definition the values in this struct are undefined until you call `regcomp()`.\n\ni guess i don\u0027t know what compiler warnings we get from annotating struct fields...\n\ndoes saying `_Nonnull` here cause a warning for code like this (which would be wrong):\n```\n  regex_t re \u003d {};\n  regcomp(\u0026re, \"abc\", 0);\n```\n(and if not, what _does_ the annotation do?)",
       "parentUuid": "a737412c_3ea2eb6e",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a175be5_5ff8e63c",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-09T22:43:41Z",
+      "side": 1,
+      "message": "\u003e  you can\u0027t call regexec() before you call regcomp()\n\nI haven\u0027t found this in the code search 😮 I guess I miss something!\n\n\u003e (and if not, what does the annotation do?)\nyes, there is no warning 😕",
+      "parentUuid": "63520413_eca4ac99",
       "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
