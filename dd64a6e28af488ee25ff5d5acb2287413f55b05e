@@ -16,6 +16,23 @@
       "message": "+rossyeh@ for dr. no. review.",
       "revId": "dd64a6e28af488ee25ff5d5acb2287413f55b05e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29ddd84a_63b8e4cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1222074
+      },
+      "writtenOn": "2022-11-09T01:28:05Z",
+      "side": 1,
+      "message": "Please set Autosubmit vote",
+      "revId": "dd64a6e28af488ee25ff5d5acb2287413f55b05e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
