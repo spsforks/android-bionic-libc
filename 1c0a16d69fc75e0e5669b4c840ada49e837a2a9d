@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81ab4a57_86bec9b7",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-09T16:26:57Z",
+      "side": 1,
+      "message": "yes, but look at the line before the dereference:\n```\n\tif (cflags\u0026REG_PEND) {\n\t\tif (preg-\u003ere_endp \u003c pattern)\n```\nlike i said, this field is only used *if* you\u0027re using `REG_PEND`, which isn\u0027t the default.\n\n(i\u0027m assuming we can\u0027t just leave the pointers in *structs* unannotated? i assume we get an error if we annotate the functions but not the structs? otherwise i\u0027d be tempted to not annotate _any_ structs because it\u0027s inherently a bit complicated to know what the annotations mean. i mean, even if it\u0027s not legit to pass/return a struct with a null field, `static struct foo_t foo;` is still going to give you a struct that has a null field. i _think_ the most reasonable interpretation of annotations on struct fields is that one i mentioned --- \"this is the \u0027lower bound\u0027 of what _callers_ guarantee on entry and what _callees_ guarantee on exit\". in which case, i think this is `_Nullable` because it\u0027s actually _meaningless_ unless you\u0027re using `REG_PEND`.)",
+      "parentUuid": "d055db3c_2632367c",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c227103_9576fed9",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "Same concern here. http://cs/android/bionic/libc/upstream-netbsd/lib/libc/regex/regexec.c;l\u003d210;rcl\u003d6e903559015ea22c810c2495e6bc845aa2272ac9 If making `re_g` nullable, visiting `g-\u003emagic` will access invalid memory? I am not sure whether it should be `__null_unspecified`. All cases in the code search are related to apple code 😞. And according to swift tutorial, `__null_unspecified` bridges to a Swift implicitly-unwrapped optional and it is default. In other words, without specifying, this pointer is nullable by default in my view. Same, the example above is nothing to do with specification. So I still think it is safer to be `__Nonnull`?",
       "parentUuid": "7c227103_9576fed9",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63520413_eca4ac99",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-09T16:26:57Z",
+      "side": 1,
+      "message": "and same argument here ... you can\u0027t call `regexec()` before you call `regcomp()`, and by definition the values in this struct are undefined until you call `regcomp()`.\n\ni guess i don\u0027t know what compiler warnings we get from annotating struct fields...\n\ndoes saying `_Nonnull` here cause a warning for code like this (which would be wrong):\n```\n  regex_t re \u003d {};\n  regcomp(\u0026re, \"abc\", 0);\n```\n(and if not, what _does_ the annotation do?)",
+      "parentUuid": "a737412c_3ea2eb6e",
       "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
