@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c1476056_a51d114f",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-09T23:24:37Z",
+      "side": 1,
+      "message": "it\u0027s C --- nothing is safe :-(\n\nwith a lot of these APIs you just have to know when something is/isn\u0027t valid. like i said the other day --- these annotations are probably best as a guide for writing _new_ api that isn\u0027t terrible (where you wouldn\u0027t expose struct members at all; you\u0027d have an opaque struct and getter/setter functions to act on it instead).\n\nretrofitting the annotations to ancient api is going to be interesting. (and why i wish we could just skip structs.)",
+      "parentUuid": "b850388d_66649e55",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c227103_9576fed9",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
@@ -139,6 +157,24 @@
       "side": 1,
       "message": "\u003e  you can\u0027t call regexec() before you call regcomp()\n\nI haven\u0027t found this in the code search 😮 I guess I miss something!\n\n\u003e (and if not, what does the annotation do?)\nyes, there is no warning 😕",
       "parentUuid": "63520413_eca4ac99",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c27a339b_00f921c9",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-09T23:24:37Z",
+      "side": 1,
+      "message": "see https://man7.org/linux/man-pages/man3/regcomp.3.html:\n```\n       regcomp() is used to compile a regular expression into a form\n       that is suitable for subsequent regexec() searches.\n\n       regcomp() is supplied with preg, a pointer to a pattern buffer\n       storage area; regex, a pointer to the null-terminated string and\n       cflags, flags used to determine the type of compilation.\n\n       All regular expression searching must be done via a compiled\n       pattern buffer, thus regexec() must always be supplied with the\n       address of a regcomp()-initialized pattern buffer.\n```\n\nor, like you said, literally the first thing regexec() does is dereference the regex_t:\n```\nint\t\t\t\t/* 0 success, REG_NOMATCH failure */\nregexec(const regex_t * __restrict preg,\n\tconst char * __restrict string,\n\tsize_t nmatch,\n\tregmatch_t pmatch[__restrict],\n\tint eflags)\n{\n\tstruct re_guts *g \u003d preg-\u003ere_g;\n```\nbecause this is C, if you just had code like\n```\n  regex_t re;\n  regexec(\u0026re, \"hello\", NULL, 0);\n```\nthe `preg-\u003ere_g` there would be undefined! or, if it was static, would be defined to be NULL. either way, that wouldn\u0027t end well...",
+      "parentUuid": "0a175be5_5ff8e63c",
       "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
