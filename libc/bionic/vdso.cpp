@@ -19,7 +19,6 @@
 
 #include <limits.h>
 #include <link.h>
-#include <string.h>
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
@@ -71,6 +70,13 @@ time_t time(time_t* t) {
   if (gettimeofday(&tv, nullptr) == -1) return -1;
   if (t) *t = tv.tv_sec;
   return tv.tv_sec;
+}
+
+static bool streq(const char* s1, const char* s2) {
+  for (size_t i = 0; s1[i] == s2[i]; i++) {
+    if ((s1[i] | s2[i]) == 0) return true;
+  }
+  return false;
 }
 
 void __libc_init_vdso(libc_globals* globals) {
@@ -131,7 +137,7 @@ void __libc_init_vdso(libc_globals* globals) {
   // Are there any symbols we want?
   for (size_t i = 0; i < symbol_count; ++i) {
     for (size_t j = 0; j < VDSO_END; ++j) {
-      if (strcmp(vdso[j].name, strtab + symtab[i].st_name) == 0) {
+      if (streq(vdso[j].name, strtab + symtab[i].st_name)) {
         vdso[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
       }
     }
