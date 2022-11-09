@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d055db3c_2632367c",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-09T01:15:36Z",
+      "side": 1,
+      "message": "I search where `re_endp` is used and find it in http://cs/android/bionic/libc/upstream-netbsd/lib/libc/regex/regcomp.c;l\u003d258;rcl\u003d6e903559015ea22c810c2495e6bc845aa2272ac9. If it is null, I think there will be a segment fault.",
+      "parentUuid": "c4c43915_f943b3d3",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c227103_9576fed9",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
@@ -37,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a737412c_3ea2eb6e",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-09T01:15:36Z",
+      "side": 1,
+      "message": "Same concern here. http://cs/android/bionic/libc/upstream-netbsd/lib/libc/regex/regexec.c;l\u003d210;rcl\u003d6e903559015ea22c810c2495e6bc845aa2272ac9 If making `re_g` nullable, visiting `g-\u003emagic` will access invalid memory? I am not sure whether it should be `__null_unspecified`. All cases in the code search are related to apple code 😞. And according to swift tutorial, `__null_unspecified` bridges to a Swift implicitly-unwrapped optional and it is default. In other words, without specifying, this pointer is nullable by default in my view. Same, the example above is nothing to do with specification. So I still think it is safer to be `__Nonnull`?",
+      "parentUuid": "7c227103_9576fed9",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ceb76c6d_4b8e89c8",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
@@ -48,6 +84,30 @@
       "writtenOn": "2022-11-07T20:28:49Z",
       "side": 1,
       "message": "is that true? surely that\u0027s an error?\n\nhere at least the DIAGASSERTs seem right:\n```\n\t_DIAGASSERT(preg !\u003d NULL);\n\t_DIAGASSERT(pattern !\u003d NULL);\n```",
+      "range": {
+        "startLine": 100,
+        "startChar": 48,
+        "endLine": 100,
+        "endChar": 57
+      },
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25aecec5_14b197da",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-09T01:15:36Z",
+      "side": 1,
+      "message": "Sorry my bad. __regex should be _Nonnull",
+      "parentUuid": "ceb76c6d_4b8e89c8",
       "range": {
         "startLine": 100,
         "startChar": 48,
