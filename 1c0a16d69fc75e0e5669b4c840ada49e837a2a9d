@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "239f2808_fc4b113a",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-10T19:55:44Z",
+      "side": 1,
+      "message": "fwiw (unless danalbert disagrees), reading the clang docs i actually think `_Null_unspecified` makes sense for these struct fields... \"The _Null_unspecified nullability qualifier indicates that neither the _Nonnull nor _Nullable qualifiers make sense for a particular pointer type. It is used primarily to indicate that the role of null with specific pointers in a nullability-annotated header is unclear, e.g., due to overly-complex implementations or historical factors with a long-lived API.\"\n\nhttps://clang.llvm.org/docs/AttributeReference.html#null-unspecified\n\ni mean, that sums up the case here pretty well, i think? \"one of these is too complicated to express, because it depends on the flags passed to other functions\" and \"one of these is -- as the comment says -- none of your business [and just an implementation detail]\" :-)",
+      "parentUuid": "c1476056_a51d114f",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c227103_9576fed9",
         "filename": "libc/include/regex.h",
         "patchSetId": 2
