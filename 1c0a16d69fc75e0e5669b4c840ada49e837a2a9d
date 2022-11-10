@@ -108,6 +108,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f8722f9_e160c824",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-10T23:22:20Z",
+      "side": 1,
+      "message": "agree 🤓",
+      "parentUuid": "239f2808_fc4b113a",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c227103_9576fed9",
@@ -197,6 +215,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a3388fb_e0fe1337",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-10T23:22:20Z",
+      "side": 1,
+      "message": "I see! Thank you!",
+      "parentUuid": "c27a339b_00f921c9",
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ceb76c6d_4b8e89c8",
@@ -234,6 +270,30 @@
       "side": 1,
       "message": "Sorry my bad. __regex should be _Nonnull",
       "parentUuid": "ceb76c6d_4b8e89c8",
+      "range": {
+        "startLine": 100,
+        "startChar": 48,
+        "endLine": 100,
+        "endChar": 57
+      },
+      "revId": "1c0a16d69fc75e0e5669b4c840ada49e837a2a9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad84c595_8739c5e5",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-11-10T23:22:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25aecec5_14b197da",
       "range": {
         "startLine": 100,
         "startChar": 48,
