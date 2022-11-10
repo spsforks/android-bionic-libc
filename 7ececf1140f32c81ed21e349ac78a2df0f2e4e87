@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86d0a9a7_cf8662d3",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-10T20:56:13Z",
+      "side": 1,
+      "message": "this is a horrible hack (thanks to the weird REG_ATOI flag), but, yeah, it\u0027s strictly correct for our implementation.",
+      "range": {
+        "startLine": 103,
+        "startChar": 49,
+        "endLine": 103,
+        "endChar": 58
+      },
+      "revId": "7ececf1140f32c81ed21e349ac78a2df0f2e4e87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
