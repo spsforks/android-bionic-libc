@@ -16,6 +16,24 @@
       "message": "This part makes me a bit nervous. Was it actually zero apps? It costs us very little to keep this ABI compat if we\u0027re not sure. The other part of this change alone will fix the NDK issue.",
       "revId": "ebd2f76c9b8ebdbaaf3b5929d5d09aec5921183c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05d2e057_1e832593",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-10T19:44:50Z",
+      "side": 0,
+      "message": "(sorry, didn\u0027t see this until now.)\n\nyeah, the only matches were in _copies_ of libc.\n\ncodesearch had similar results too, fwiw --- several _implementations_ but no obvious callers.",
+      "parentUuid": "b03c9c06_f2bababc",
+      "revId": "ebd2f76c9b8ebdbaaf3b5929d5d09aec5921183c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
