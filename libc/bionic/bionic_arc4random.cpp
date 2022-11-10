@@ -36,6 +36,13 @@
 #include <async_safe/log.h>
 
 void __libc_safe_arc4random_buf(void* buf, size_t n) {
+  static size_t at_random_bytes_consumed = 0;
+  if (at_random_bytes_consumed + n < 16) {
+    memcpy(buf, reinterpret_cast<char*>(getauxval(AT_RANDOM)) + at_random_bytes_consumed, n);
+    at_random_bytes_consumed += n;
+    return;
+  }
+
   // Only call arc4random_buf once we have `/dev/urandom` because getentropy(3)
   // will fall back to using `/dev/urandom` if getrandom(2) fails, and abort if
   // if can't use `/dev/urandom`.
@@ -45,13 +52,6 @@ void __libc_safe_arc4random_buf(void* buf, size_t n) {
     return;
   }
 
-  static size_t at_random_bytes_consumed = 0;
-  if (at_random_bytes_consumed + n > 16) {
-    async_safe_fatal("ran out of AT_RANDOM bytes, have %zu, requested %zu",
-                     16 - at_random_bytes_consumed, n);
-  }
-
-  memcpy(buf, reinterpret_cast<char*>(getauxval(AT_RANDOM)) + at_random_bytes_consumed, n);
-  at_random_bytes_consumed += n;
-  return;
+  async_safe_fatal("No /dev/urandom and not enough AT_RANDOM bytes (have %zu, need %zu)",
+                   16 - at_random_bytes_consumed, n);
 }
