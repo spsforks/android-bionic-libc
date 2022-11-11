@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "924434f8_59e45e44",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2022-11-11T23:04:20Z",
+      "side": 1,
+      "message": "Does GTEST_SKIP() work in a child process?",
+      "revId": "617442b1a1aa783a92d61ae8617da493d5928358",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
