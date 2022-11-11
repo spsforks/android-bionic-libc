@@ -83,5 +83,16 @@
     {
       "name": "toybox-tests"
     }
+  ],
+  "kernel-presubmit": [
+    {
+      "name": "CtsBionicTestCases",
+      "options": [
+        {
+          // TODO(b/202948861)
+          "exclude-filter": "stack_protector_DeathTest#modify_stack_protector"
+        }
+      ]
+    }
   ]
 }
