@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98675b40_079a29d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1971751
+      },
+      "writtenOn": "2022-11-11T05:51:50Z",
+      "side": 1,
+      "message": "There is reference: https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/18\nI think it is expected in RISC-V. I find the gcc 7.2 already does it(https://github.com/riscv-collab/riscv-gcc/blob/riscv-gcc-7.2.0/gcc/config/riscv/riscv.c, line 3597).",
+      "revId": "8aa9a2420d509b37f76ae8e3dc49eefa4bc4badb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
