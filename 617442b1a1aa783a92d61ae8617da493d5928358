@@ -16,6 +16,24 @@
       "message": "Does GTEST_SKIP() work in a child process?",
       "revId": "617442b1a1aa783a92d61ae8617da493d5928358",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66d6dafe_bfa28486",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-12T00:05:02Z",
+      "side": 1,
+      "message": "yes and no. it outputs the message but, yeah, it\u0027s not actually skipping the tests. \n\ni\u0027ll change this to `GTEST_LOG_(INFO)` to be more honest. (failure is probably the better choice anyway, since this is something we should revisit as soon as we have the relevant extensions to test on.)",
+      "parentUuid": "924434f8_59e45e44",
+      "revId": "617442b1a1aa783a92d61ae8617da493d5928358",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
