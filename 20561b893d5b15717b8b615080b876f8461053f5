@@ -34,6 +34,24 @@
       "parentUuid": "6dba554b_0fe9ed84",
       "revId": "20561b893d5b15717b8b615080b876f8461053f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ff4d5f2_c9741d9d",
+        "filename": "benchmarks/linker_relocation/include/linker_reloc_bench_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-15T16:12:28Z",
+      "side": 1,
+      "message": "no, there will not be another 32-bit ABI. you may have noticed we\u0027ve finally started making some progress towards removing the legacy 32-bit ABIs :-) (things like https://android-developers.googleblog.com/2022/10/64-bit-only-devices.html for arm32 or https://github.com/android/ndk/issues/1772 for x86.)\n\ni\u0027ve actually been deliberately using just `__riscv` to make that more clear --- there\u0027s only one \"risc-v\" as far as android is concerned, and that\u0027s riscv64.",
+      "parentUuid": "c67feeef_7bec5985",
+      "revId": "20561b893d5b15717b8b615080b876f8461053f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
