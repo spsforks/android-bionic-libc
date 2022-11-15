@@ -16,6 +16,24 @@
       "message": "I prefer to \"!defined(\\_\\_riscv) \u0026\u0026 (\\_\\_riscv_xlen \u003d\u003d 64)\".\nrv32 may be supported in the feature?",
       "revId": "20561b893d5b15717b8b615080b876f8461053f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c67feeef_7bec5985",
+        "filename": "benchmarks/linker_relocation/include/linker_reloc_bench_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1971751
+      },
+      "writtenOn": "2022-11-15T06:43:21Z",
+      "side": 1,
+      "message": "\u003e I prefer to \"!defined(\\_\\_riscv) \u0026\u0026 (\\_\\_riscv_xlen \u003d\u003d 64)\".\n\u003e rv32 may be supported in the feature?\n\n\"defined(__riscv) \u0026\u0026 (__riscv_xlen \u003d\u003d 64)\".",
+      "parentUuid": "6dba554b_0fe9ed84",
+      "revId": "20561b893d5b15717b8b615080b876f8461053f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
