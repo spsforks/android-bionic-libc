@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57d52762_8c000264",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-15T14:59:38Z",
+      "side": 1,
+      "message": "otherwise lgtm.",
+      "revId": "ec5195bd6ee0ee3e7703c7d7742f846d6abe702c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e16509f3_2ba7c753",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-15T14:59:38Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "ec5195bd6ee0ee3e7703c7d7742f846d6abe702c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
