@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26e44ec4_e5b12cad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-16T00:54:32Z",
+      "side": 1,
+      "message": "(ps2 updates the .bp file too so these files get packaged in cts. obviously i was just running the tests directly, so i didn\u0027t need that.)",
+      "revId": "ec9f023f411f9502ddb70524c266b83b64b29e81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
