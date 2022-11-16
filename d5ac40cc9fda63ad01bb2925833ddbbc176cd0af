@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2969cafb_6ebc48d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-16T21:00:38Z",
+      "side": 1,
+      "message": "Yeah, this was used for some of the other strcpy assembler routines on arm. Since we don\u0027t do that here, not necessary to use this weird structure.",
+      "revId": "d5ac40cc9fda63ad01bb2925833ddbbc176cd0af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
