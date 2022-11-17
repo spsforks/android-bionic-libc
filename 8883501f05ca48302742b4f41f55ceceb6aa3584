@@ -88,6 +88,24 @@
       "parentUuid": "6d867055_08336223",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc1b3320_181a11ed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T23:57:48Z",
+      "side": 1,
+      "message": "yes, they confirmed i misunderstood.\n\nanyway, please test my updated versions of your patches if you can, and i\u0027ll be back in a week to hopefully get these in :-)",
+      "parentUuid": "26ed7581_f52c327f",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
