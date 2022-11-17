@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c9a4903_29592c3f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T17:42:11Z",
+      "side": 1,
+      "message": "no, the point of the `_mte` routines isn\u0027t that they _require_ mte hardware --- it\u0027s that they\u0027re _safe_ for mte-capable hardware (such as: they don\u0027t over-read). so we always need to use the mte version where it\u0027s available.\n\nthis is true of the dynamic side too --- MTE needs to trump SVE in the chained if statements.\n\nyou may have seen that i\u0027ve been removing the assembler from bionic this week and enabling the ASIMD routines too. hopefully those changes will all be in before the end of this week. i\u0027m out next week, but i\u0027ll look at SVE then. feel free to rebase and fix this cl yourself (that way you\u0027ll be able to keep the credit in the git history!) but if you don\u0027t care about the \"fame\" and just want it done, feel free to leave it to me :-)",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
