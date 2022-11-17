@@ -34,6 +34,24 @@
       "parentUuid": "3c9a4903_29592c3f",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f98f5668_acf044b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T17:59:25Z",
+      "side": 1,
+      "message": "oh, yeah, i\u0027d forgotten about the build system stuff. yeah, that doesn\u0027t seem particularly useful to me? we\u0027d certainly prefer that people use ifuncs or whatever rather than `target: { arch: {` clauses. (and if you really want to have an impact, reverting the \"pessimization\" done a few years back for the generic system image stuff that means that we don\u0027t take the specific arch variant into account when building all the platform code would be much higher on the list. i\u0027m hoping to get someone to look at that at some point, but there\u0027s no-one doing it right now [nor a clear picture of what exactly needs to be undone, so working that out would be a useful contribution too].)",
+      "parentUuid": "e648ce7c_36b12267",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
