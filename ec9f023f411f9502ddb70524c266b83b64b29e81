@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e26749a_8eb68a62",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-11-17T00:33:10Z",
+      "side": 1,
+      "message": "I think ignoring the test is fine.",
+      "parentUuid": "c3126f83_c7628f0b",
+      "revId": "ec9f023f411f9502ddb70524c266b83b64b29e81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26e44ec4_e5b12cad",
