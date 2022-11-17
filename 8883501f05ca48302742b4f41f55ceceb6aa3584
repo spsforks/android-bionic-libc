@@ -70,6 +70,24 @@
       "parentUuid": "f98f5668_acf044b6",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26ed7581_f52c327f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T22:43:13Z",
+      "side": 1,
+      "message": "\u003e I know some Pixels use generic ARMv8 flags, but 6 and 7 both optimize for a55 and 8.2a\n\nhmm... yes, i talked to the person who\u0027d told me this and it sounds like you\u0027re right that we didn\u0027t remove the build system support, just changed the configurations. (they do a lot of build system work, so i just assumed that was what they were talking about!)\n\ni\u0027ve asked them to confirm, and i\u0027ll get back to you.",
+      "parentUuid": "6d867055_08336223",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
