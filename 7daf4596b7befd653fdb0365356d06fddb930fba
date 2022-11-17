@@ -16,6 +16,24 @@
       "message": "Seems okay, but there is no performance data. Is there any worry that this will regress performance?",
       "revId": "7daf4596b7befd653fdb0365356d06fddb930fba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c8c57b8_e8b5bf99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T19:23:15Z",
+      "side": 1,
+      "message": "it was mtk\u0027s benchmark results[1] that set me off on this cleanup :-)\n\nbut to the larger question ... \"i would want to go this way anyway\". mtk just wants the faster routines. i obviously don\u0027t _not_ want that, but i\u0027m actually more interested in getting out of the business of bionic having its own (unmaintained) forks of \"whatever arm said\".\n\n___\n1. TL;DR: the asimd code is quite a bit faster, but the sve code is only slightly faster than that. i\u0027ll enable sve anyway (after thanksgiving!) even though it\u0027s not a big improvement.",
+      "parentUuid": "b3b40796_0fbaf179",
+      "revId": "7daf4596b7befd653fdb0365356d06fddb930fba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
