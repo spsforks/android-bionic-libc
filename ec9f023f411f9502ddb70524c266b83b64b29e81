@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3126f83_c7628f0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T00:31:21Z",
+      "side": 1,
+      "message": "yeah, seems like bfd won\u0027t either. these are the relocations i have:\n```\nRelocation section \u0027.rela.dyn\u0027 at offset 0x3d0 contains 9 entries:\n    Offset             Info             Type               Symbol\u0027s Value  Symbol\u0027s Name + Addend\n0000000000001e50  0000000000000003 R_RISCV_RELATIVE                          578\n0000000000001e58  0000000000000003 R_RISCV_RELATIVE                          53e\n0000000000002000  0000000000000003 R_RISCV_RELATIVE                          2000\n0000000000000000  0000000000000000 R_RISCV_NONE                              0\n0000000000002028  0000000000000007 R_RISCV_TLS_DTPMOD64                      0\n0000000000002040  0000000000000007 R_RISCV_TLS_DTPMOD64                      0\n0000000000002038  0000000200000002 R_RISCV_64             0000000000000000 __cxa_finalize + 0\n0000000000002050  0000000400000002 R_RISCV_64             0000000000000000 _ITM_registerTMCloneTable + 0\n0000000000002058  0000000500000002 R_RISCV_64             0000000000000000 _ITM_deregisterTMCloneTable + 0\n```\n\nis it worth me trying to hack one of those R_RISCV_TLS_DTPMOD64 relocations? or should we just ignore this test (as i\u0027ve done) since gold is dead and didn\u0027t support rv64 anyway?",
+      "parentUuid": "dc62faa0_7ebbe6f6",
+      "revId": "ec9f023f411f9502ddb70524c266b83b64b29e81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26e44ec4_e5b12cad",
