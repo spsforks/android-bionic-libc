@@ -52,6 +52,24 @@
       "parentUuid": "e648ce7c_36b12267",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d867055_08336223",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-11-17T20:05:55Z",
+      "side": 1,
+      "message": "I know some Pixels use generic ARMv8 flags, but 6 and 7 both optimize for a55 and 8.2a https://android.googlesource.com/device/google/gs201/+/2db72b9aeec02c9f4126cf5d25775763af891703 https://android.googlesource.com/device/google/gs101/+/0111d397d2988fd763ed91a674e59d193460624b\n\nGiven SVE\u0027s improved vectorization capabilities over NEON, I would imagine compiling binaries optimized for it would improve performance enough to justify building images for it.\n\nI\u0027ll see if I can find the pessimization commits you\u0027re talking about and go from there.  I am not familiar with that.",
+      "parentUuid": "f98f5668_acf044b6",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
