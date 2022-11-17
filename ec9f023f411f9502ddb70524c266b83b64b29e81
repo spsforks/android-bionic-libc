@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "dd70dd86_bc84b612",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-17T00:42:25Z",
+      "side": 1,
+      "message": "thanks! i thought so, but wanted to check with the expert first :-)",
+      "parentUuid": "7e26749a_8eb68a62",
+      "revId": "ec9f023f411f9502ddb70524c266b83b64b29e81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "26e44ec4_e5b12cad",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
