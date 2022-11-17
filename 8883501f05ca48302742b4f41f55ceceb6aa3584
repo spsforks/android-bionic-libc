@@ -106,6 +106,24 @@
       "parentUuid": "26ed7581_f52c327f",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0df9af8d_6ba7007e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-11-17T23:58:58Z",
+      "side": 1,
+      "message": "will do, enjoy your well-deserved time off",
+      "parentUuid": "fc1b3320_181a11ed",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
