@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc62faa0_7ebbe6f6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-11-17T00:28:24Z",
+      "side": 1,
+      "message": "The issue is with a dynamic TLS relocation to an STB_LOCAL symbol. The symbol itself isn\u0027t an issue. Gold can create a reloc like this, but LLD doesn\u0027t.",
+      "revId": "ec9f023f411f9502ddb70524c266b83b64b29e81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26e44ec4_e5b12cad",
