@@ -16,6 +16,24 @@
       "message": "no, the point of the `_mte` routines isn\u0027t that they _require_ mte hardware --- it\u0027s that they\u0027re _safe_ for mte-capable hardware (such as: they don\u0027t over-read). so we always need to use the mte version where it\u0027s available.\n\nthis is true of the dynamic side too --- MTE needs to trump SVE in the chained if statements.\n\nyou may have seen that i\u0027ve been removing the assembler from bionic this week and enabling the ASIMD routines too. hopefully those changes will all be in before the end of this week. i\u0027m out next week, but i\u0027ll look at SVE then. feel free to rebase and fix this cl yourself (that way you\u0027ll be able to keep the credit in the git history!) but if you don\u0027t care about the \"fame\" and just want it done, feel free to leave it to me :-)",
       "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e648ce7c_36b12267",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-11-17T17:49:35Z",
+      "side": 1,
+      "message": "Definitely don\u0027t care about getting credit, just would like to see ARMv9 devices use their hardware most effectively.\n\nAre you going to handle bionic and AOR only or build system changes too?",
+      "parentUuid": "3c9a4903_29592c3f",
+      "revId": "8883501f05ca48302742b4f41f55ceceb6aa3584",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
