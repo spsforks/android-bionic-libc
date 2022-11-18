@@ -16,6 +16,23 @@
       "message": "one other thing to note: for what it\u0027s worth, Qualcomm uses the old memcpy_neon from 2014 on their ARMv9 devices, which was reverted at\n Ib75c33caafd76750ec1aca3a74dec5e4b881e965\n \n https://git.codelinaro.org/clo/la/platform/bionic/-/commit/7a24da08feedebfc4d6b2097cef945aa714d68c5\n \n I\u0027d be surprised if this outperforms either SVE, integer, or ASIMD memcpy.",
       "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84c6db6c_9d80c7e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-11-18T21:27:36Z",
+      "side": 1,
+      "message": "Per the discussion at https://github.com/ARM-software/optimized-routines/issues/46, ARM only recommends using their memcpy (and memmove) SVE routines.  The others are old and not optimized.  From what Szabolcz is saying there, once there are optimized SVE routines, those should be MTE-compatible but still faster, so they would take priority over the MTE routines.\n\nFor that reason, I guess I will make these two commits only build and use SVE memcpy and skip the others until those are optimized.",
+      "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
