@@ -33,6 +33,24 @@
       "message": "Per the discussion at https://github.com/ARM-software/optimized-routines/issues/46, ARM only recommends using their memcpy (and memmove) SVE routines.  The others are old and not optimized.  From what Szabolcz is saying there, once there are optimized SVE routines, those should be MTE-compatible but still faster, so they would take priority over the MTE routines.\n\nFor that reason, I guess I will make these two commits only build and use SVE memcpy and skip the others until those are optimized.",
       "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17229e7e_bf3d3671",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-11-18T21:32:43Z",
+      "side": 1,
+      "message": "Actually just realized you guys do not have SVE memcpy in your codebase yet because that was implemented after the last tagged release, so currently there is nothing to do here until a more recent release is integrated.  I\u0027ll ask when their next tag will be or if they have changed their release structure.",
+      "parentUuid": "84c6db6c_9d80c7e1",
+      "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
