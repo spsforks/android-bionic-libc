@@ -16,6 +16,161 @@
       "message": "Will upload the tool to show the data soon",
       "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99c6030a_670594a0",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "Make the name a bit more descriptive. Such as start_ns_.",
+      "range": {
+        "startLine": 78,
+        "startChar": 11,
+        "endLine": 78,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8644e64d_744c3092",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "Same as above, end_ns_.",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 79,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc402c14_ddefa305",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "This name would probably be better as start_ns, or something that indicates the units of this.",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 13
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4adc3932_2b9fef96",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "Same as above, maybe end_ns.",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1347023_89dedecb",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "As above, it really helps to add the units on these names. So maybe getStartTimeNS and do the same for all of the functions after this one too.",
+      "range": {
+        "startLine": 90,
+        "startChar": 11,
+        "endLine": 90,
+        "endChar": 23
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "042927f7_aa3f00f5",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "I think this snuck in here.",
+      "range": {
+        "startLine": 109,
+        "startChar": 1,
+        "endLine": 109,
+        "endChar": 7
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c199853c_ce2c66f3",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-11-18T00:45:39Z",
+      "side": 1,
+      "message": "Would it be better to break actual up into a vector using android::base::Split()? That way you don\u0027t need to track the offset around as much.",
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
