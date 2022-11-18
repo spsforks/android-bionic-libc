@@ -34,6 +34,23 @@
       "tag": "mailMessageId\u003d\u003cCANP3RGdkxsNNhY2BKvG4PVQqUMFJprK-R3_3A+X95Tmd4Q5G3A@mail.gmail.com\u003e",
       "revId": "c6a05141966d7da92147e2551950550ef36bd056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5299cb0_1461bca7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2022-11-18T23:40:17Z",
+      "side": 1,
+      "message": "still has my +2 ;-)",
+      "revId": "c6a05141966d7da92147e2551950550ef36bd056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
