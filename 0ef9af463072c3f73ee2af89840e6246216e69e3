@@ -16,6 +16,24 @@
       "message": "okay, so i think this is finished for now? we don\u0027t need the ifunc stuff until we have some optimized assembler (probably for the V extension).\n\ncan you let me know if the remaining user.h diff is actually needed for something? (and, specifically, _what_ it\u0027s needed for, so we can look at whether a user.h change is the right way to fix that or not?)",
       "revId": "0ef9af463072c3f73ee2af89840e6246216e69e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83a24f20_a34904c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 85
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1950590
+      },
+      "writtenOn": "2022-11-21T02:44:31Z",
+      "side": 1,
+      "message": "Yes, I think it is finished by now.\nIt seems the user.h change is not required anymore as I can launch the shell environment and do unit test without change anything in bionic.",
+      "parentUuid": "8dabe7bb_a5525bff",
+      "revId": "0ef9af463072c3f73ee2af89840e6246216e69e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
