@@ -106,6 +106,24 @@
       "parentUuid": "6eee72bc_ebc774b9",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77f1fc75_f19fb74e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1965080
+      },
+      "writtenOn": "2022-11-22T21:21:37Z",
+      "side": 1,
+      "message": "Hey all, some updates:\n\n- the kernel patches are in now (including android common kernel)\n\n- I went ahead and ran the scripts in https://android.googlesource.com/platform/bionic/+/master/README.md#updating-kernel-header-files and have updated ashmem.h in this change.\n\nAre we ok to move forward at this point? Only thing at the moment is a RiscV build failure that I\u0027m not clear on (doesn\u0027t seem related to my patch)\n\nThanks for all the review!",
+      "parentUuid": "9fcda8c3_e513c461",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
