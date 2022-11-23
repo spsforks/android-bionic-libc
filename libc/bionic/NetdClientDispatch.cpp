@@ -43,15 +43,16 @@ static int fallBackDnsOpenProxy() {
 
 // This structure is modified only at startup (when libc.so is loaded) and never
 // afterwards, so it's okay that it's read later at runtime without a lock.
-__LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
-    __accept4,
-    __connect,
-    __sendmmsg,
-    __sendmsg,
-    __sendto,
-    __socket,
-    fallBackNetIdForResolv,
-    fallBackDnsOpenProxy,
+__LIBC_HIDDEN__ BIONIC_USED_BEFORE_LINKER_RELOCATES NetdClientDispatch __netdClientDispatch
+    __attribute__((aligned(32))) = {
+        __accept4,
+        __connect,
+        __sendmmsg,
+        __sendmsg,
+        __sendto,
+        __socket,
+        fallBackNetIdForResolv,
+        fallBackDnsOpenProxy,
 };
 
 int accept4(int fd, sockaddr* addr, socklen_t* addr_length, int flags) {

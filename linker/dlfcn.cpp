@@ -302,7 +302,8 @@ libc_shared_globals* __loader_shared_globals() {
   return __libc_shared_globals();
 }
 
-static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
+BIONIC_USED_BEFORE_LINKER_RELOCATES static uint8_t __libdl_info_buf[sizeof(soinfo)]
+    __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
