@@ -418,8 +418,42 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
 }
+
+// Environment variables and system properties require relocations to have been
+// run. In order to choose whether to tag the linker, we need to be able to read
+// the phdrs of the binary early. If the binary requests it, we'll go through
+// the hassle of remapping segments and doing tagging, which can still be
+// disabled at runtime with the prctl. But, we need an early signal as to
+// whether to do the setup for the linker.
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte_linker(
+    const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start, size_t phdr_ct,
+    uintptr_t load_bias) {
+  bool stack;
+  unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
+  HeapTaggingLevel level =
+      __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &stack);
+  switch (level) {
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      prctl_arg |= PR_MTE_TCF_SYNC;
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      prctl_arg |= PR_MTE_TCF_ASYNC;
+      break;
+    default:
+      return;
+  }
+
+  // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
+  // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
+  // specifying a single mode.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) != 0) {
+    prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0);
+  }
+}
+
 #else   // __aarch64__
 void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
+void __libc_init_mte_linker(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t) {}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -512,6 +546,6 @@ extern "C" void android_set_application_target_sdk_version(int target) {
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  static libc_shared_globals globals;
+  BIONIC_USED_BEFORE_LINKER_RELOCATES static libc_shared_globals globals;
   return &globals;
 }
