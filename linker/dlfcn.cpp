@@ -309,7 +309,8 @@ bool __loader_android_handle_signal(int signal_number, siginfo_t* info, void* co
   return debuggerd_handle_signal(signal_number, info, context);
 }
 
-static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
+BIONIC_USED_BEFORE_LINKER_RELOCATES static uint8_t __libdl_info_buf[sizeof(soinfo)]
+    __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
@@ -331,6 +332,7 @@ soinfo* get_libdl_info(const soinfo& linker_si) {
     __libdl_info->gnu_bloom_filter_ = linker_si.gnu_bloom_filter_;
     __libdl_info->gnu_bucket_ = linker_si.gnu_bucket_;
     __libdl_info->gnu_chain_ = linker_si.gnu_chain_;
+    __libdl_info->memtag_dynamic_entries_ = linker_si.memtag_dynamic_entries_;
 
     __libdl_info->ref_count_ = 1;
     __libdl_info->strtab_size_ = linker_si.strtab_size_;

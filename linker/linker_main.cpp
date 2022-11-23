@@ -44,7 +44,9 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "platform/bionic/macros.h"
 #include "private/KernelArgumentBlock.h"
+#include "private/bionic_auxv.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -70,6 +72,8 @@ static void set_bss_vma_name(soinfo* si);
 
 void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
                      size_t phdr_count, uintptr_t load_bias, void* stack_top);
+bool __libc_init_mte_linker(const memtag_dynamic_entries_t* memtag_dynamic_entries,
+                            const void* phdr_start, size_t phdr_count, uintptr_t load_bias);
 
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
@@ -78,7 +82,8 @@ void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, con
 // TODO (dimtiry): remove somain, rename solist to solist_head
 static soinfo* solist;
 static soinfo* sonext;
-static soinfo* somain; // main process, always the one after libdl_info
+// main process, always the one after libdl_info
+BIONIC_USED_BEFORE_LINKER_RELOCATES static soinfo* somain;
 static soinfo* solinker;
 static soinfo* vdso; // vdso if present
 
@@ -125,8 +130,8 @@ soinfo* solist_get_vdso() {
   return vdso;
 }
 
-bool g_is_ldd;
-int g_ld_debug_verbosity;
+BIONIC_USED_BEFORE_LINKER_RELOCATES bool g_is_ldd;
+BIONIC_USED_BEFORE_LINKER_RELOCATES int g_ld_debug_verbosity;
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -390,9 +395,16 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     interp = kFallbackLinkerPath;
   }
   solinker->set_realpath(interp);
+  if (solinker->memtag_globals() && solinker->memtag_globalssz()) {
+    name_memtag_globals_segments(solinker->phdr, solinker->phnum, solinker->load_bias,
+                                 solinker->get_realpath());
+  }
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
+                  args.argv);
+
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
@@ -404,9 +416,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                      strerror(errno));
     }
   }
-
-  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
-                  args.argv);
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -499,6 +508,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   linker_finalize_static_tls();
   __libc_init_main_thread_final();
+
+  // Initialize the linker's static libc's globals. Must be done after MTE
+  // global tags are applied, as we need to set up the memory tags for the
+  // __libc_globals region, but this sets it as PROT_READ.
+  __libc_init_globals();
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
@@ -605,7 +619,7 @@ const unsigned kRelTag = DT_REL;
 const unsigned kRelSzTag = DT_RELSZ;
 #endif
 
-extern __LIBC_HIDDEN__ ElfW(Ehdr) __ehdr_start;
+BIONIC_USED_BEFORE_LINKER_RELOCATES extern __LIBC_HIDDEN__ ElfW(Ehdr) __ehdr_start;
 
 static void call_ifunc_resolvers_for_section(RelType* begin, RelType* end) {
   auto ehdr = reinterpret_cast<ElfW(Addr)>(&__ehdr_start);
@@ -737,6 +751,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // Prelink the linker so we can access linker globals.
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
+  // TODO(mitchp): Enable MTE globals in the linker:
+  // |  __libc_init_mte_linker(tmp_linker_so.phdr, tmp_linker_so.phnum, tmp_linker_so.base);
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
   return __linker_init_post_relocation(args, tmp_linker_so);
@@ -759,9 +775,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   // And we can set VMA name for the bss section now
   set_bss_vma_name(&tmp_linker_so);
-
-  // Initialize the linker's static libc's globals
-  __libc_init_globals();
 
   // A constructor could spawn a thread that calls into the loader, so as soon
   // as we've called a constructor, we need to hold the lock until transferring
