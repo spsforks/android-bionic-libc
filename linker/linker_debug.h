@@ -58,12 +58,14 @@
 #include <async_safe/log.h>
 #include <async_safe/CHECK.h>
 
+#include "platform/bionic/macros.h"
+
 #define LINKER_VERBOSITY_PRINT (-1)
 #define LINKER_VERBOSITY_INFO   0
 #define LINKER_VERBOSITY_TRACE  1
 #define LINKER_VERBOSITY_DEBUG  2
 
-__LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
+BIONIC_USED_BEFORE_LINKER_RELOCATES __LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
 
 __LIBC_HIDDEN__ void linker_log_va_list(int prio, const char* fmt, va_list ap);
 __LIBC_HIDDEN__ void linker_log(int prio, const char* fmt, ...) __printflike(2, 3);

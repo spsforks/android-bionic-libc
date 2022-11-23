@@ -168,26 +168,10 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
-                               unsigned* result) {
-  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
-    return false;
-  }
-  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
-    return false;
-  }
-  // Previously (in Android 12), if the note was != 4 bytes, we check-failed
-  // here. Let's be more permissive to allow future expansion.
-  if (note->n_descsz < 4) {
-    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
-                     note->n_descsz);
-  }
-  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
-  return true;
-}
-
-static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
-                                  const ElfW(Addr) load_bias) {
+static bool __get_elf_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                           const ElfW(Addr) load_bias, unsigned desired_type,
+                           const char* desired_name, const ElfW(Nhdr) * *note_out,
+                           const char** desc_out) {
   for (size_t i = 0; i < phdr_ct; ++i) {
     const ElfW(Phdr)* phdr = &phdr_start[i];
     if (phdr->p_type != PT_NOTE) {
@@ -205,13 +189,41 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
       if (p > note_end) {
         break;
       }
-      unsigned ret;
-      if (__read_memtag_note(note, name, desc, &ret)) {
-        return ret;
+      if (note->n_type != desired_type) {
+        continue;
       }
+      size_t desired_name_len = strlen(desired_name);
+      if (note->n_namesz != desired_name_len + 1 ||
+          strncmp(desired_name, name, desired_name_len) != 0) {
+        break;
+      }
+      *note_out = note;
+      *desc_out = desc;
+      return true;
     }
   }
-  return 0;
+  return false;
+}
+
+BIONIC_USED_BEFORE_LINKER_RELOCATES static const char* kNoteName = "Android";
+static bool __get_memtag_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                              const ElfW(Addr) load_bias, ElfW(Word) * out_desc) {
+  const ElfW(Nhdr) * note;
+  const char* desc;
+  if (!__get_elf_note(phdr_start, phdr_ct, load_bias, NT_ANDROID_TYPE_MEMTAG, kNoteName, &note,
+                      &desc)) {
+    return false;
+  }
+
+  // Previously (in Android 12), if the note was != 4 bytes, we check-failed
+  // here. Let's be more permissive to allow future expansion.
+  if (note->n_descsz < 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
+                     note->n_descsz);
+  }
+
+  *out_desc = *reinterpret_cast<const ElfW(Word)*>(desc);
+  return true;
 }
 
 // Returns true if there's an environment setting (either sysprop or env var)
@@ -262,14 +274,18 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 // Returns the initial heap tagging level. Note: This function will never return
 // M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
 // M_HEAP_TAGGING_LEVEL_TBI.
-static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
-                                                 uintptr_t load_bias, bool* stack) {
-  unsigned note_val =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-  *stack = note_val & NT_MEMTAG_STACK;
+static HeapTaggingLevel __get_tagging_level(const void* phdr_start, size_t phdr_ct,
+                                            uintptr_t load_bias, bool* stack) {
+  unsigned note_val = 0;
+  bool had_note = __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct,
+                                    load_bias, &note_val);
+  if (had_note) {
+    *stack = note_val & NT_MEMTAG_STACK;
+  }
 
   HeapTaggingLevel level;
   if (get_environment_memtag_setting(&level)) return level;
+  if (!had_note) return M_HEAP_TAGGING_LEVEL_TBI;
 
   // Note, previously (in Android 12), any value outside of bits [0..3] resulted
   // in a check-fail. In order to be permissive of further extensions, we
@@ -296,14 +312,24 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
   }
 }
 
-// Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
-// This function is called from the linker before the main executable is relocated.
+// Figure out the desired memory tagging mode for heap, globals, and stack, as
+// well as whether we should be running in SYNC or ASYNC mode. This function is
+// called from the linker before the main executable is relocated.
+//
+// MTE heap may be turned on/off entirely at start time.
+//
+// MTE globals and stack require recompilation of the binary, and thus turning
+// on these features is only possible by building the code with
+// -fsanitize=memtag-globals and/or -fsanitize=memtag-stack.
+//
+// The environment variable takes precedence over the system property, which
+// takes precedence over what the binary requests.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
                                                                          size_t phdr_ct,
                                                                          uintptr_t load_bias,
                                                                          void* stack_top) {
   bool memtag_stack;
-  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
+  HeapTaggingLevel level = __get_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   static const char kAppProcessName[] = "app_process64";
   const char* progname = __libc_shared_globals()->init_progname;
@@ -374,8 +400,40 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
 }
+
+// Environment variables and system properties require relocations to have been
+// run. In order to choose whether to tag the linker, we need to be able to read
+// the phdrs of the binary early. If the binary requests it, we'll go through
+// the hassle of remapping segments and doing tagging, which can still be
+// disabled at runtime with the prctl. But, we need an early signal as to
+// whether to do the setup for the linker.
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte_linker(
+    const void* phdr_start, size_t phdr_ct, uintptr_t load_bias) {
+  bool stack;
+  unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
+  HeapTaggingLevel level = __get_tagging_level(phdr_start, phdr_ct, load_bias, &stack);
+  switch (level) {
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      prctl_arg |= PR_MTE_TCF_SYNC;
+      break;
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      prctl_arg |= PR_MTE_TCF_ASYNC;
+      break;
+    default:
+      return;
+  }
+
+  // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
+  // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
+  // specifying a single mode.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) != 0) {
+    prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0);
+  }
+}
+
 #else   // __aarch64__
 void __libc_init_mte(const void*, size_t, uintptr_t, void*) {}
+void __libc_init_mte_linker(const void*, size_t, uintptr_t) {}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -466,6 +524,6 @@ extern "C" void android_set_application_target_sdk_version(int target) {
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  static libc_shared_globals globals;
+  BIONIC_USED_BEFORE_LINKER_RELOCATES static libc_shared_globals globals;
   return &globals;
 }

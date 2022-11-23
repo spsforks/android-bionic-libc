@@ -49,6 +49,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -69,11 +70,12 @@
 #include "linker_translate_path.h"
 #include "linker_utils.h"
 
+#include "android-base/macros.h"
+#include "android-base/stringprintf.h"
+#include "android-base/strings.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
-#include "android-base/macros.h"
-#include "android-base/strings.h"
-#include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
@@ -132,6 +134,8 @@ static const char* const kAsanDefaultLdPaths[] = {
   kVendorLibDir,
   nullptr
 };
+
+int phdr_table_remap_segments_inplace(const ElfW(Phdr) *, size_t, ElfW(Addr));
 
 // Is ASAN enabled?
 static bool g_is_asan = false;
@@ -2284,9 +2288,9 @@ bool do_dlsym(void* handle,
           return false;
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
-        *symbol = static_cast<char*>(tls_block) + sym->st_value;
+        *symbol = get_tagged_address(static_cast<char*>(tls_block) + sym->st_value);
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2718,7 +2722,11 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
 
 void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
   ElfW(Addr) address = offset + load_bias;
-  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+  ElfW(Addr)* tagged_address =
+      reinterpret_cast<ElfW(Addr)*>(get_tagged_address(reinterpret_cast<void*>(address)));
+  ElfW(Addr) tagged_result = reinterpret_cast<ElfW(Addr)>(
+      get_tagged_address(reinterpret_cast<void*>(*tagged_address + load_bias)));
+  *tagged_address = tagged_result;
 }
 
 // Process relocations in SHT_RELR section (experimental).
@@ -3142,6 +3150,22 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
+      case DT_AARCH64_MEMTAG_MODE:
+        has_memtag_mode_ = true;
+        memtag_mode_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_HEAP:
+        memtag_heap_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_STACK:
+        memtag_stack_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_GLOBALS:
+        memtag_globals_ = reinterpret_cast<void*>(load_bias + d->d_un.d_ptr);
+        break;
+      case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        memtag_globalssz_ = d->d_un.d_val;
+        break;
 #endif
 
       default:
@@ -3224,6 +3248,13 @@ bool soinfo::prelink_image() {
   // it each time we look up a symbol with a version.
   if (!validate_verdef_section(this)) return false;
 
+  if (memtag_globals() && memtag_globalssz()) {
+    if (phdr_table_remap_segments_inplace(phdr, phnum, base)) {
+      DL_ERR("error: can't remap segments for \"%s\": %s", get_realpath(), strerror(errno));
+    }
+    tag_globals();
+  }
+
   flags_ |= FLAG_PRELINKED;
   return true;
 }
@@ -3271,7 +3302,6 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     }
   }
 #endif
-
   if (!relocate(lookup_list)) {
     return false;
   }
@@ -3325,6 +3355,52 @@ bool soinfo::protect_relro() {
     return false;
   }
   return true;
+}
+
+// Reserve the lower three bits of the first byte of the step distance when
+// encoding the memtag descriptors. Found to be the best overall size tradeoff
+// when compiling Android T with full MTE globals enabled.
+constexpr uint64_t kMemtagStepVarintReservedBits = 3;
+
+void soinfo::tag_globals() {
+  if (is_linked()) return;
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  const uint8_t* descriptor_stream = reinterpret_cast<const uint8_t*>(memtag_globals_);
+
+  if (memtag_globalssz() == 0) {
+    DL_ERR("Invalid MTE descriptor pool size: %zu", memtag_globalssz());
+  }
+
+  uint64_t addr = 0;
+  uleb128_decoder decoder(descriptor_stream, memtag_globalssz());
+
+  while (decoder.has_bytes()) {
+    uint64_t value = decoder.pop_front();
+    uint64_t step = value >> kMemtagStepVarintReservedBits;
+    uint64_t granules_to_tag = value & ((1 << kMemtagStepVarintReservedBits) - 1);
+    if (granules_to_tag == 0) {
+      granules_to_tag = decoder.pop_front() + 1;
+    }
+
+    addr += step * kTagGranuleSize;
+    void* tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr + load_bias));
+
+    // async_safe_format_fd(2, "tagging symbol %s+0x%lx: 0x%lx (0x%lx) - 0x%lx (0x%lx): %p\n",
+    //                      get_realpath(), addr, num_granules * 16, addr + load_bias,
+    //                      addr + num_granules * 16, addr + num_granules * 16 + load_bias,
+    //                      tagged_addr);
+
+    // async_safe_format_fd(2, "    TAG 0x%lx [%p]: 0x%lx\n", addr, addr + load_bias,
+    // granules_to_tag * 16);
+
+    for (size_t k = 0; k < granules_to_tag; k++) {
+      auto* granule = static_cast<uint8_t*>(tagged_addr) + k * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+    addr += granules_to_tag * kTagGranuleSize;
+  }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {

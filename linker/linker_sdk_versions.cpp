@@ -35,7 +35,7 @@
 
 #include "linker.h"
 
-static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
+BIONIC_USED_BEFORE_LINKER_RELOCATES static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
 
 void set_application_target_sdk_version(int target) {
   // translate current sdk_version to platform sdk_version
