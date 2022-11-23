@@ -36,6 +36,8 @@
 
 #include <async_safe/log.h>
 
+#include "platform/bionic/macros.h"
+
 #define DL_ERR(fmt, x...) \
     do { \
       async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
@@ -103,5 +105,5 @@ class DlErrorRestorer {
   std::string saved_error_msg_;
 };
 
-__LIBC_HIDDEN__ extern bool g_is_ldd;
-__LIBC_HIDDEN__ extern pthread_mutex_t g_dl_mutex;
+BIONIC_USED_BEFORE_LINKER_RELOCATES __LIBC_HIDDEN__ extern bool g_is_ldd;
+BIONIC_USED_BEFORE_LINKER_RELOCATES __LIBC_HIDDEN__ extern pthread_mutex_t g_dl_mutex;
