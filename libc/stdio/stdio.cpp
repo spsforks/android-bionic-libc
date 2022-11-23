@@ -100,9 +100,9 @@ FILE __sF[3] = {
     MAKE_STD_STREAM(__SWR|__SNBF, STDERR_FILENO),
 };
 
-FILE* stdin = &__sF[0];
-FILE* stdout = &__sF[1];
-FILE* stderr = &__sF[2];
+BIONIC_USED_BEFORE_LINKER_RELOCATES FILE* stdin = &__sF[0];
+BIONIC_USED_BEFORE_LINKER_RELOCATES FILE* stdout = &__sF[1];
+BIONIC_USED_BEFORE_LINKER_RELOCATES FILE* stderr = &__sF[2];
 
 static pthread_mutex_t __stdio_mutex = PTHREAD_MUTEX_INITIALIZER;
 
