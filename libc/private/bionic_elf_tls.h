@@ -34,6 +34,9 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+#include "platform/bionic/macros.h"
+
+BIONIC_USED_BEFORE_LINKER_RELOCATES
 __LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
 
 struct TlsSegment {
