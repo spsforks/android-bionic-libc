@@ -47,7 +47,7 @@ apex {
     multilib: {
         both: {
             binaries: [
-                "crash_dump",
+//                "crash_dump",
                 "linker",
             ],
         },
