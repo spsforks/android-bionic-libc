@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64096c69_409230b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-29T18:43:09Z",
+      "side": 1,
+      "message": "usual \"no, we don\u0027t accept compiler output\"...",
+      "revId": "a399f9401561d5d696f80537ba50788de2b2d8ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
