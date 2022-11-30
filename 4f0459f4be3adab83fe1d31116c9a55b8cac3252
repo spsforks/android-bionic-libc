@@ -1,0 +1,382 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5a2b08b_a2da442a",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think that\u0027s true?\n\ni think it\u0027ll fail if you pass null. (though that might be a good missing test to add!)",
+      "range": {
+        "startLine": 52,
+        "startChar": 19,
+        "endLine": 52,
+        "endChar": 28
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f3fa7d0_96ea8c28",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "(same as atexit()...)",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14c25f97_f90c13ec",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think so? i think getenv() will crash if you pass nullptr?\n\n(the result can be null, though, so that half looks right!)",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 44
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c3d68c4_a8e9a062",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think any of the _strings_ can be null?\n\n(end_ptr can though. and although it took me a while to convince myself, i think `char* _Nullable * _Nullable` is actually right. horribly unreadable though that is :-( )",
+      "range": {
+        "startLine": 75,
+        "startChar": 24,
+        "endLine": 75,
+        "endChar": 33
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3096d2b_fb253942",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think any of the strings for these functions can be null either?",
+      "range": {
+        "startLine": 84,
+        "startChar": 26,
+        "endLine": 84,
+        "endChar": 35
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "868c13a2_9e663542",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "or this...",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10299df2_91b55912",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "...or these.",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e355c544_6a2bdda6",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "yeah, that\u0027s a weird one. tbh, i think i\u0027d just call that _Nonnull and add the #pragmas in the test.\n\nlet\u0027s put it this way --- while what you\u0027ve written is _technically_ correct (the best kind of correct!), there\u0027s no _useful_ call to this function that involves null :-)",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eac298ec_091ed986",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think so?\n\n(i mean, technically you\u0027ll get away with it if n \u003d\u003d 0, but that\u0027s also silly, and worth pointing out as a bug anyway :-) )",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6ed929e_feb27b69",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think so?",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 118,
+        "endChar": 15
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21ef43fc_0a079ff6",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "likewiese?",
+      "range": {
+        "startLine": 119,
+        "startChar": 16,
+        "endLine": 119,
+        "endChar": 24
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c04b71da_f591bf92",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think so? tokens will always be dereferenced, no?",
+      "range": {
+        "startLine": 127,
+        "startChar": 51,
+        "endLine": 127,
+        "endChar": 83
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec6a038a_5d73a40f",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "(extra whitespace here)",
+      "range": {
+        "startLine": 127,
+        "startChar": 39,
+        "endLine": 127,
+        "endChar": 41
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "170c1b85_0e8917e9",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "(likewise)",
+      "range": {
+        "startLine": 127,
+        "startChar": 94,
+        "endLine": 127,
+        "endChar": 121
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a261aeb_e5da2ef5",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think so? we\u0027ll always write into here?",
+      "range": {
+        "startLine": 157,
+        "startChar": 33,
+        "endLine": 157,
+        "endChar": 42
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45dceb38_ea666b3e",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "heh, you got these strto* functions and all the ones after them right :-)",
+      "range": {
+        "startLine": 195,
+        "startChar": 25,
+        "endLine": 195,
+        "endChar": 33
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c84edfd2_f236e839",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "i don\u0027t think locale is ever really nullable... it looks like it is in bionic, because we don\u0027t have any locale-sensitive functionality so we ignore the locale argument, but that doesn\u0027t mean it\u0027s valid to pass null. (but it\u0027s a weird corner case, where it\u0027s harmless on Android but broken if you ever try to run your code anywhere else.) unless we find a ton of code that\u0027s explicitly calling these functions with nullptr, probably best to mark them _Nonnull?",
+      "range": {
+        "startLine": 203,
+        "startChar": 106,
+        "endLine": 203,
+        "endChar": 115
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "047e4466_57a173a1",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:22:26Z",
+      "side": 1,
+      "message": "(i\u0027d reduce the scope to just be around the two tests that actually use nullptr.)",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
