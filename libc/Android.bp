@@ -2297,6 +2297,7 @@ cc_library_static {
     defaults: ["libc_baremetal_rust_deps_defaults"],
     srcs: [
         "bionic/fortify.cpp",
+        "bionic/strtol.cpp",
     ],
     arch: {
         arm64: {
