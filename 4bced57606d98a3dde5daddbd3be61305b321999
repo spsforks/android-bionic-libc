@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a56763d6_be767932",
+        "filename": "apex/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T01:54:10Z",
+      "side": 1,
+      "message": "do you still need this? (crash_dump isn\u0027t rust, so i\u0027m a bit confused about what needs to be fixed here...)",
+      "revId": "4bced57606d98a3dde5daddbd3be61305b321999",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
