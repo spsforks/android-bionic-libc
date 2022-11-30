@@ -124,6 +124,24 @@
       "parentUuid": "9fcda8c3_e513c461",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c0b2736_995d23e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T00:35:00Z",
+      "side": 1,
+      "message": "+cferris\n\nmfasheh: do you actually need this before the regular 6.1 update (since i think that\u0027s about to happen in the next couple of weeks, and so you\u0027ll get the other parts like updating external/kernel-headers \"for free\" if you just wait)?\n\n(note though that the build failures definitely _are_ you, just not this specific change in the topic!)",
+      "parentUuid": "77f1fc75_f19fb74e",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
