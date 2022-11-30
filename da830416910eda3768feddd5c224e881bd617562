@@ -16,6 +16,24 @@
       "message": "oh, -1 as a reminder to self to add a death test!",
       "revId": "da830416910eda3768feddd5c224e881bd617562",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c12a4f1b_8adf2202",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T20:20:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39177d90_5f4cd141",
+      "revId": "da830416910eda3768feddd5c224e881bd617562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

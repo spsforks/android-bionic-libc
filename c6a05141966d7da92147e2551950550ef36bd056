@@ -51,6 +51,24 @@
       "message": "still has my +2 ;-)",
       "revId": "c6a05141966d7da92147e2551950550ef36bd056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd9d76fb_ffa56983",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-11-30T20:20:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c34e6381_d2fd1577",
+      "revId": "c6a05141966d7da92147e2551950550ef36bd056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
