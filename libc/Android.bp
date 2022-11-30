@@ -1232,6 +1232,11 @@ cc_library_static {
     generated_headers: ["generated_android_ids"],
 }
 
+filegroup {
+    name: "libc_bionic_strtol.cpp",
+    srcs: ["bionic/strtol.cpp"],
+}
+
 // ========================================================
 // libc_bionic_systrace.a
 // ========================================================
