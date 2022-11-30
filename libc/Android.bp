@@ -2262,6 +2262,18 @@ cc_library_static {
 }
 
 // ========================================================
+// Subsets of libc for baremetal projects.
+// ========================================================
+
+filegroup {
+    name: "liblibfdt_libc_deps",
+    srcs: [
+        "bionic/strtol.cpp",
+    ],
+    visibility: ["//packages/modules/Virtualization/libs/libfdt"],
+}
+
+// ========================================================
 // NDK headers.
 // ========================================================
 
