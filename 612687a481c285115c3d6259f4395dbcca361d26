@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "580128f4_04722545",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-11-30T18:02:08Z",
+      "side": 1,
+      "message": "What I meant was to use one `filegroup` per file, allowing client code to cherry pick whichever file they want; WDYT?\n\n\u003e And a comment would be helpful.\n\nDone!",
+      "parentUuid": "e5e76270_a3db74c6",
+      "range": {
+        "startLine": 1236,
+        "startChar": 4,
+        "endLine": 1236,
+        "endChar": 35
+      },
+      "revId": "612687a481c285115c3d6259f4395dbcca361d26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb715e6a_e0987191",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -61,6 +85,30 @@
       "side": 1,
       "message": "The idea was to use it as an allowlist - which initially should just be us. Unconstrained usage might cause problems.",
       "parentUuid": "cb715e6a_e0987191",
+      "range": {
+        "startLine": 1238,
+        "startChar": 0,
+        "endLine": 1238,
+        "endChar": 1
+      },
+      "revId": "612687a481c285115c3d6259f4395dbcca361d26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02fc3868_7338f133",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-11-30T18:02:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35e17ea4_d5ab554b",
       "range": {
         "startLine": 1238,
         "startChar": 0,
