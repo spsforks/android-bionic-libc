@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "95235f79_6715dc3c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1060831
+      },
+      "writtenOn": "2022-12-01T09:53:28Z",
+      "side": 1,
+      "message": "I think that\u0027s probably a bad idea; better to have one filegroup for everything we need.",
+      "parentUuid": "580128f4_04722545",
+      "range": {
+        "startLine": 1236,
+        "startChar": 4,
+        "endLine": 1236,
+        "endChar": 35
+      },
+      "revId": "612687a481c285115c3d6259f4395dbcca361d26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb715e6a_e0987191",
         "filename": "libc/Android.bp",
         "patchSetId": 1
