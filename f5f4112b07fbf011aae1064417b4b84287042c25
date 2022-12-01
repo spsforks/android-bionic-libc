@@ -16,6 +16,23 @@
       "message": "PTAL at some point, it\u0027s not urgent because we are still blocked on the LLVM roll, but would like to get this ready to submit as soon as that is in",
       "revId": "f5f4112b07fbf011aae1064417b4b84287042c25",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28c06e79_25913b35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2022-12-01T04:11:54Z",
+      "side": 1,
+      "message": "PTAL. Now https://r.android.com/2322236 is in we can merge this",
+      "revId": "f5f4112b07fbf011aae1064417b4b84287042c25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
