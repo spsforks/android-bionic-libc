@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8a541a2_453abc7c",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Yes, it will return -1. Ohh I thought only mark variables which will cause crashes. I see. Lemme recheck the rest.",
+      "parentUuid": "e5a2b08b_a2da442a",
+      "range": {
+        "startLine": 52,
+        "startChar": 19,
+        "endLine": 52,
+        "endChar": 28
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f3fa7d0_96ea8c28",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c6606f4_842b5de3",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "I see. This is to avoid the null function being called and segment fault.",
+      "parentUuid": "0f3fa7d0_96ea8c28",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14c25f97_f90c13ec",
@@ -54,6 +96,30 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "i don\u0027t think so? i think getenv() will crash if you pass nullptr?\n\n(the result can be null, though, so that half looks right!)",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 44
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1ce649a_f6f99dcc",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Ohhh I see. \n```Subtracting two NULL pointers is not allowed. ```\nI didn\u0027t notice the int(null-null), just notice the `__findenv` part.",
+      "parentUuid": "14c25f97_f90c13ec",
       "range": {
         "startLine": 57,
         "startChar": 35,
@@ -87,6 +153,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6484c3dc_832b247a",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "oops, true. Segment fault 😞\n\u003e horribly unreadable though that is :-( )\n\na bit. But the man page shows `end_ptr` can be null.",
+      "parentUuid": "5c3d68c4_a8e9a062",
+      "range": {
+        "startLine": 75,
+        "startChar": 24,
+        "endLine": 75,
+        "endChar": 33
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3096d2b_fb253942",
@@ -100,6 +190,30 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "i don\u0027t think any of the strings for these functions can be null either?",
+      "range": {
+        "startLine": 84,
+        "startChar": 26,
+        "endLine": 84,
+        "endChar": 35
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69a5dd29_a2876d9a",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3096d2b_fb253942",
       "range": {
         "startLine": 84,
         "startChar": 26,
@@ -127,6 +241,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b927290e_58db6915",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "868c13a2_9e663542",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10299df2_91b55912",
@@ -140,6 +272,24 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "...or these.",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efab5b73_f59958d8",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10299df2_91b55912",
       "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -180,6 +330,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dda396b5_1e66ce2c",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Oops, it can\u0027t be null. Otherwise, a nullptr will be passed in the memcpy, which is undefined. https://stackoverflow.com/questions/33386957/memcpy-hangs-when-dest-is-null",
+      "parentUuid": "eac298ec_091ed986",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c6ed929e_feb27b69",
         "filename": "libc/include/stdlib.h",
         "patchSetId": 1
@@ -203,6 +371,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4bc8a62d_a0431b1b",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Here returns null: http://cs/android/bionic/libc/upstream-netbsd/common/lib/libc/stdlib/random.c;l\u003d356;rcl\u003dc0008de520cc41186e5be82a950854438a0e577c",
+      "parentUuid": "c6ed929e_feb27b69",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 118,
+        "endChar": 15
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "21ef43fc_0a079ff6",
         "filename": "libc/include/stdlib.h",
         "patchSetId": 1
@@ -214,6 +406,30 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "likewiese?",
+      "range": {
+        "startLine": 119,
+        "startChar": 16,
+        "endLine": 119,
+        "endChar": 24
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75e81467_2c29548f",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "same here: http://cs/android/bionic/libc/upstream-netbsd/common/lib/libc/stdlib/random.c;l\u003d439;rcl\u003dc0008de520cc41186e5be82a950854438a0e577c",
+      "parentUuid": "21ef43fc_0a079ff6",
       "range": {
         "startLine": 119,
         "startChar": 16,
@@ -293,6 +509,78 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0526185c_626aac75",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c04b71da_f591bf92",
+      "range": {
+        "startLine": 127,
+        "startChar": 51,
+        "endLine": 127,
+        "endChar": 83
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "788c6dac_30735f21",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec6a038a_5d73a40f",
+      "range": {
+        "startLine": 127,
+        "startChar": 39,
+        "endLine": 127,
+        "endChar": 41
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b5840cc_7d44befe",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Ohh I think it is nullable cuz http://cs/android/bionic/libc/upstream-openbsd/lib/libc/stdlib/getsubopt.c;l\u003d50;rcl\u003d0deb84418f292d8f8d7550a0573932ac49b3239a",
+      "parentUuid": "170c1b85_0e8917e9",
+      "range": {
+        "startLine": 127,
+        "startChar": 94,
+        "endLine": 127,
+        "endChar": 121
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8a261aeb_e5da2ef5",
@@ -306,6 +594,30 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "i don\u0027t think so? we\u0027ll always write into here?",
+      "range": {
+        "startLine": 157,
+        "startChar": 33,
+        "endLine": 157,
+        "endChar": 42
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a9d132e_480926f0",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a261aeb_e5da2ef5",
       "range": {
         "startLine": 157,
         "startChar": 33,
@@ -364,6 +676,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a280828_35735fd4",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Actually, I have no idea why we need these functions 😂 Those functions just call previous apis like http://cs/android/bionic/libc/bionic/stdlib_l.cpp;l\u003d49;rcl\u003dc0008de520cc41186e5be82a950854438a0e577c\n\nAnd these locale args are not used.",
+      "parentUuid": "c84edfd2_f236e839",
+      "range": {
+        "startLine": 203,
+        "startChar": 106,
+        "endLine": 203,
+        "endChar": 115
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "047e4466_57a173a1",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
@@ -375,6 +711,24 @@
       "writtenOn": "2022-11-30T01:22:26Z",
       "side": 1,
       "message": "(i\u0027d reduce the scope to just be around the two tests that actually use nullptr.)",
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23614f25_a70fab00",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-01T02:23:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "047e4466_57a173a1",
       "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
