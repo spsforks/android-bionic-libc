@@ -34,6 +34,24 @@
       "parentUuid": "31009acb_43d8e9a9",
       "revId": "6f61ba7c02b220a97aec54895994e46ff153106c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78af7901_b93733c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-12-01T01:04:18Z",
+      "side": 1,
+      "message": "There are a few tests that do this:\n\n  bool allocator_scudo;\n  GetAllocatorVersion(\u0026allocator_scudo);\n  if (!allocator_scudo) {\n    GTEST_SKIP() \u003c\u003c \"scudo allocator only test\";\n  }\n\nIf you add this to the test, then it will only run if it detects that the allocator is using scudo.\n\nI have a version of this test that verifies zero memory allocations that might be a little overkill. It can be found as:\n\nhttps://android-review.git.corp.google.com/c/platform/bionic/+/2116713\n\nI did verify it fails on jemalloc for just about everything.\n\nIf we only did this for scudo, I think it would probably be okay though.",
+      "parentUuid": "0961ba38_6b8d95ef",
+      "revId": "6f61ba7c02b220a97aec54895994e46ff153106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
