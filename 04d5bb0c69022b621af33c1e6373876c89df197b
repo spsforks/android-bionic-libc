@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08e4adeb_11d68a27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2022-12-01T00:23:05Z",
+      "side": 1,
+      "message": "LGTM, but you need Bionic owners approval anyway.",
+      "revId": "04d5bb0c69022b621af33c1e6373876c89df197b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
