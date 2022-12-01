@@ -142,6 +142,24 @@
       "parentUuid": "77f1fc75_f19fb74e",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cad8870b_a24ec1cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-12-01T00:48:30Z",
+      "side": 1,
+      "message": "I did check and this change is in the android kernel headers, so when 6.1 is released, it should get into the tree.\n\nIt is very likely 6.1 will come out by the middle of December, so it would likely get in then, or early January.\n\nIf you can wait, then it will come in naturally relatively soon.",
+      "parentUuid": "3c0b2736_995d23e3",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
