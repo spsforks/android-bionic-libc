@@ -178,6 +178,24 @@
       "parentUuid": "cad8870b_a24ec1cd",
       "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12f38c0c_3e7354d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-12-01T01:23:41Z",
+      "side": 1,
+      "message": "It depends on the changes in the headers. Usually, it\u0027s pretty simple, no changes needed, or only minor changes needed. The jump to 6.0 required a lot of changes all over the tree which made it more painful, but I don\u0027t expect that 6.1 will be as large.\n\nSo once 6.1 releases, I expect that, within that week, the new headers will be submitted.",
+      "parentUuid": "b04918fa_2a71e91c",
+      "revId": "dc3a9ace62f4e21297b04898b5caf2b82f651277",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
