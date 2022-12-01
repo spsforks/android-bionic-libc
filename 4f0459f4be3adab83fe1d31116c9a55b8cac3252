@@ -393,6 +393,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5006a5d_b4f6e2b8",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-01T18:58:39Z",
+      "side": 1,
+      "message": "oh, yeah, you\u0027re right. (POSIX explicitly mentions that case too. if this were a popular function, we might want to try to check for that `__n \u003c 8` case at compile time, but since i\u0027ve never seen this function used outside of our _tests_ for it, i\u0027m happy to continue to ignore it!)",
+      "parentUuid": "4bc8a62d_a0431b1b",
+      "range": {
+        "startLine": 118,
+        "startChar": 6,
+        "endLine": 118,
+        "endChar": 15
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "21ef43fc_0a079ff6",
@@ -430,6 +454,30 @@
       "side": 1,
       "message": "same here: http://cs/android/bionic/libc/upstream-netbsd/common/lib/libc/stdlib/random.c;l\u003d439;rcl\u003dc0008de520cc41186e5be82a950854438a0e577c",
       "parentUuid": "21ef43fc_0a079ff6",
+      "range": {
+        "startLine": 119,
+        "startChar": 16,
+        "endLine": 119,
+        "endChar": 24
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "390472a3_6e0245d2",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-01T18:58:39Z",
+      "side": 1,
+      "message": "ah, yeah, that one\u0027s a bit less obvious but i guess if a previous initstate() failed, then since setstate() returns the previous state, it can now return null too. fair enough!",
+      "parentUuid": "75e81467_2c29548f",
       "range": {
         "startLine": 119,
         "startChar": 16,
@@ -583,6 +631,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e3d22d87_ec8dcfc8",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-01T18:58:39Z",
+      "side": 1,
+      "message": "no, that\u0027s the opposite --- that line is telling you \"no matter what, the first thing this function does is it dereferences that pointer\". so it definitely can\u0027t be null. (note that it\u0027s `*valuep \u003d NULL`, not `valuep \u003d NULL`!)",
+      "parentUuid": "0b5840cc_7d44befe",
+      "range": {
+        "startLine": 127,
+        "startChar": 94,
+        "endLine": 127,
+        "endChar": 121
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8a261aeb_e5da2ef5",
         "filename": "libc/include/stdlib.h",
         "patchSetId": 1
@@ -688,6 +760,30 @@
       "side": 1,
       "message": "Actually, I have no idea why we need these functions 😂 Those functions just call previous apis like http://cs/android/bionic/libc/bionic/stdlib_l.cpp;l\u003d49;rcl\u003dc0008de520cc41186e5be82a950854438a0e577c\n\nAnd these locale args are not used.",
       "parentUuid": "c84edfd2_f236e839",
+      "range": {
+        "startLine": 203,
+        "startChar": 106,
+        "endLine": 203,
+        "endChar": 115
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8195c256_b5941a06",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-01T18:58:39Z",
+      "side": 1,
+      "message": "we just have them for \"source compatibility\". bionic has never supported locales, and there\u0027s no plan to do so either. the POSIX locale functionality is broken as designed, and you really need to use something like icu if you want to do i18n properly (especially for the range of languages Android covers; you can get away with the POSIX stuff if you only want to support English and Italian, say).\n\n_but_ we found that a lot of (well-intentioned but misguided) code uses this POSIX stuff anyway, in particular libc++, so we added these no-op functions that let you use \"any locale you like, as long as it\u0027s C.UTF-8\" [http://oplaunch.com/blog/2015/04/30/the-truth-about-any-color-so-long-as-it-is-black/].",
+      "parentUuid": "1a280828_35735fd4",
       "range": {
         "startLine": 203,
         "startChar": 106,

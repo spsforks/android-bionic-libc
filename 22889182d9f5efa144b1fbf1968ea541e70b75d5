@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51df7496_895b5747",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-01T18:58:39Z",
+      "side": 1,
+      "message": "(yeah, remove the trailing whitespace here.)",
+      "revId": "22889182d9f5efa144b1fbf1968ea541e70b75d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
