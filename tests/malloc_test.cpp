@@ -112,6 +112,42 @@ TEST(malloc, calloc_mem_init_disabled) {
 #endif
 }
 
+TEST(malloc, malloc_is_calloc) {
+#if defined(__BIONIC__)
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+
+  std::vector<uint8_t> hole;
+
+  // in Android, malloc is actually calloc (in _most_ processes)
+  for (size_t times = 0; times < 10; times++) {
+    for (size_t i = 0; i < 100; i++) {
+      size_t size = i * 500 + 4;  // just make sure we try different sizes
+      uint8_t* a = new uint8_t[size];
+      for (size_t j = 0; j < size; j++) {
+        EXPECT_EQ(a[j], 0) << time << " size: " << size << " " << j << " " << i;
+
+        // fill out memory before deallocating to increase chance test
+        // is successful
+        a[j] |= 27;
+
+        // this should never get hit, added to discourage compiler
+        // from optimizing this stuff out
+        if (a[j] == 28) hole.push_back(a[j]);
+      }
+      delete[] a;
+    }
+  }
+
+  EXPECT_EQ(hole.size(), 0u) << "Bad state";
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 TEST(malloc, calloc_illegal) {
   SKIP_WITH_HWASAN;
   errno = 0;
