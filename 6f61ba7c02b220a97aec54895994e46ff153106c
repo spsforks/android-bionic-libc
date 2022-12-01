@@ -16,6 +16,24 @@
       "message": "Won\u0027t this fail on Android GO devices? Those still use jemalloc.\n\nIn addition, we don\u0027t require that an oem enable this, so would it be better to manually call the enable zeroing feature, then test that it works if it claims to have been set properly?",
       "revId": "6f61ba7c02b220a97aec54895994e46ff153106c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0961ba38_6b8d95ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2022-12-01T00:55:18Z",
+      "side": 1,
+      "message": "I was hoping you would tell me how to make it conditional for jemalloc (this bug got triaged to back to me automatically when you closed the jemalloc bug).\n\nAs far as oems being required to set this, they should be required to set this. Any problem with turning on the test for now, if there\u0027s an issue, following that up?",
+      "parentUuid": "31009acb_43d8e9a9",
+      "revId": "6f61ba7c02b220a97aec54895994e46ff153106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
