@@ -689,6 +689,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "661a6898_18de970e",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-02T21:02:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3d22d87_ec8dcfc8",
+      "range": {
+        "startLine": 127,
+        "startChar": 94,
+        "endLine": 127,
+        "endChar": 121
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8a261aeb_e5da2ef5",
@@ -820,6 +844,30 @@
       "side": 1,
       "message": "we just have them for \"source compatibility\". bionic has never supported locales, and there\u0027s no plan to do so either. the POSIX locale functionality is broken as designed, and you really need to use something like icu if you want to do i18n properly (especially for the range of languages Android covers; you can get away with the POSIX stuff if you only want to support English and Italian, say).\n\n_but_ we found that a lot of (well-intentioned but misguided) code uses this POSIX stuff anyway, in particular libc++, so we added these no-op functions that let you use \"any locale you like, as long as it\u0027s C.UTF-8\" [http://oplaunch.com/blog/2015/04/30/the-truth-about-any-color-so-long-as-it-is-black/].",
       "parentUuid": "1a280828_35735fd4",
+      "range": {
+        "startLine": 203,
+        "startChar": 106,
+        "endLine": 203,
+        "endChar": 115
+      },
+      "revId": "4f0459f4be3adab83fe1d31116c9a55b8cac3252",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18fa34de_d8228380",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2022-12-02T21:02:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8195c256_b5941a06",
       "range": {
         "startLine": 203,
         "startChar": 106,
