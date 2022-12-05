@@ -16,6 +16,41 @@
       "message": "This looks like an unrelated ToT failure on kokoro.",
       "revId": "c41d3f5a146451aa8906e54a1da846216114f904",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b002d605_8cb4779e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-12-05T21:36:33Z",
+      "side": 1,
+      "message": "kokoro rerun",
+      "revId": "c41d3f5a146451aa8906e54a1da846216114f904",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1211931a_62fa2f60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2022-12-05T21:36:33Z",
+      "side": 1,
+      "message": "The kokoro failure is unrelated.  It\u0027s a KI but we merged a workaround: b/260790488.",
+      "parentUuid": "79750646_ed3e8bde",
+      "revId": "c41d3f5a146451aa8906e54a1da846216114f904",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
