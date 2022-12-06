@@ -255,6 +255,7 @@ cc_library_static {
     ],
 
     cflags: [
+        "-Wno-pointer-sign", // TODO: strptime.c only
         "-Wno-unused-parameter",
         // Don't use ridiculous amounts of stack.
         "-DALL_STATE",
