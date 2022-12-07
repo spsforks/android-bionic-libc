@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2327e1b_7162d1cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-07T17:06:39Z",
+      "side": 1,
+      "message": "might make more sense to open up memfd to those processes? i\u0027ll add the relevant security person to the bug first, to see if there\u0027s a reason for this, or it\u0027s just historical accident...",
+      "revId": "9f003f0f060ce640404df31792c12b5749a66792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
