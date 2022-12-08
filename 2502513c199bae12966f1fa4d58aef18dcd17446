@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6fa0d290_863e88b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-08T19:30:50Z",
+      "side": 1,
+      "message": "well, the latter part isn\u0027t true. (demonstrably, from the fact we don\u0027t have it :-) )\n\nthe kernel headers don\u0027t actually use rlim_t/rlim64_t, they just have the explicit types, and bionic just uses the kernel headers directly rather than declaring rlimit/rlimit64 manually.\n\nadding this for portability seems reasonable to me though.\n\nadd the missing lines to the test at https://source.corp.google.com/android/bionic/tests/sys_resource_test.cpp;l\u003d21?q\u003drlim_t%20file:bionic\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F ?",
+      "revId": "2502513c199bae12966f1fa4d58aef18dcd17446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a4b9c96e_001182c1",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
