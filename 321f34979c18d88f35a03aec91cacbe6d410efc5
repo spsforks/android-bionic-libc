@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fd8d9ac_20869c69",
+        "filename": "tests/__cxa_demangle_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-09T15:13:58Z",
+      "side": 0,
+      "message": "shouldn\u0027t _something_ be exposing this symbol? i thought this was the public ABI?",
+      "revId": "321f34979c18d88f35a03aec91cacbe6d410efc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
