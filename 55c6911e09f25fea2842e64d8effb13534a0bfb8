@@ -34,6 +34,24 @@
       "parentUuid": "ac78a00a_a843024c",
       "revId": "55c6911e09f25fea2842e64d8effb13534a0bfb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7a5a156_b4e3e17a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-12-09T19:38:07Z",
+      "side": 1,
+      "message": "Done; I\u0027ve reworked the way we get our libc dependencies for Rust baremetal projects and am now exporting static libraries from Bionic (instead of a filegroup).",
+      "parentUuid": "c901df12_6941db71",
+      "revId": "55c6911e09f25fea2842e64d8effb13534a0bfb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
