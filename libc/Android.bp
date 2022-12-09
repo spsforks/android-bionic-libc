@@ -2292,6 +2292,22 @@ cc_library_static {
     ],
 }
 
+cc_library_static {
+    name: "libc_libpvmfw",
+    defaults: ["librust_baremetal_defaults"],
+    srcs: [
+        "bionic/fortify.cpp",
+    ],
+    arch: {
+        arm64: {
+            srcs: [
+                "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+    },
+    visibility: ["//packages/modules/Virtualization/pvmfw"],
+}
+
 // ========================================================
 // NDK headers.
 // ========================================================
