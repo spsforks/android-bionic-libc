@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf05226f_c1bc6ced",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-09T16:13:40Z",
+      "side": 1,
+      "message": "clarify explicitly that you\u0027re not actually changing the past (because that\u0027s impossible)...",
+      "revId": "b7916e4a0896838661b31718a77eee2fde2565d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5db3b094_6325ecf4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-09T16:13:40Z",
+      "side": 1,
+      "message": "...which i think is what you were trying to say here? \"this only changes \u003e\u003d U, but we need to pretend it happened in the past for weird internal reasons\"? (maybe even worth a _code_ comment because the map file will be \"lying\" at that point?)",
+      "revId": "b7916e4a0896838661b31718a77eee2fde2565d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
