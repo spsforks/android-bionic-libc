@@ -16,6 +16,24 @@
       "message": "shouldn\u0027t _something_ be exposing this symbol? i thought this was the public ABI?",
       "revId": "321f34979c18d88f35a03aec91cacbe6d410efc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbfa0978_bc7c9788",
+        "filename": "tests/__cxa_demangle_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-12-10T00:15:40Z",
+      "side": 0,
+      "message": "Yeah, __cxa_demangle is exposed from cxxabi.h. The symbols are extern \"C\" so unmangled, but the functions are declared in the __cxxabiv1 namespace, which is aliased to just \"abi\".",
+      "parentUuid": "8fd8d9ac_20869c69",
+      "revId": "321f34979c18d88f35a03aec91cacbe6d410efc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
