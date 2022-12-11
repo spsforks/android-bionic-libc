@@ -16,6 +16,24 @@
       "message": "do we actually need two different libraries? can\u0027t we just have one and let the linker gc the unused stuff?",
       "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05edabc4_f4e33aa5",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2022-12-11T11:26:07Z",
+      "side": 1,
+      "message": "I guess that\u0027s probably because we have our own version of some libc symbols like malloc, free, errno, etc.",
+      "parentUuid": "62a1306b_5a742533",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
