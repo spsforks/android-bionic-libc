@@ -87,6 +87,24 @@
       "parentUuid": "7b760bc2_46523949",
       "revId": "fe504afea7bf1eb88f30191b1a6978ed60306b87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "882bb5b6_af925055",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2022-12-12T22:45:38Z",
+      "side": 1,
+      "message": "We don\u0027t link libunwind.a for platform binaries in Soong, so maybe anything that calls `_Unwind_*` will fail to link/load? Even libc++.so in the toolchain build might not link, depending on whether the implicit `-unwindlib\u003dlibunwind` is disabled.\n\nAt some point, someone needs to scan all the arch-specific entries in the map file. Or alternatively, maybe expand the syntax to say \"!arm\" if that\u0027s really what we want.",
+      "parentUuid": "69cab7d3_802029b7",
+      "revId": "fe504afea7bf1eb88f30191b1a6978ed60306b87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
