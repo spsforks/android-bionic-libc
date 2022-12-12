@@ -70,6 +70,23 @@
       "parentUuid": "be94635c_8352fd34",
       "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b4b6810_92ea1fa2",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-12T16:27:24Z",
+      "side": 1,
+      "message": "(this isn\u0027t needed any more.)",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
