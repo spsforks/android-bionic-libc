@@ -52,6 +52,24 @@
       "parentUuid": "05edabc4_f4e33aa5",
       "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e79da73_cfa1324a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-12T16:27:05Z",
+      "side": 1,
+      "message": "\u003e I guess that\u0027s probably because we have our own version of some libc symbols like malloc, free, errno, etc.\n\nno, i don\u0027t mean _all_ of libc ... i mean \"why libc_baremetal_rust_deps and libc_libpvmfw_deps?\"\n\n\u003e Note the difference in visibility: vmbase acts as a common base library for baremetal Rust projects (and tests) intended to run in Android virtual machines while pvmfw is one particular project (uses vmbase under the hood) that has extra C dependencies due to it being linked with baremetal C libraries.\n\nbut why is that a distinction worth making? it\u0027s extra complexity on this side --- what justifies that on the caller side? i\u0027d rather juat have one baremetal rust library.\n\n(as a nit, \"_deps\" is a weird thing to say in the build system, where \"dependencies\" means something else entirely. just use the more traditional \"librust_baremetal\" instead?)",
+      "parentUuid": "be94635c_8352fd34",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
