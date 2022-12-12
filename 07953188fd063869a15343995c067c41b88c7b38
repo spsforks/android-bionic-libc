@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8da02dc_36398ee7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-12-12T15:28:41Z",
+      "side": 1,
+      "message": "Starting a PS run that is expected to fail the tests (see [this comment](https://android-review.git.corp.google.com/c/platform/packages/modules/Virtualization/+/2314779/comments/7527eafe_61a05ebc) on aosp/2314779) but should pass all builds.",
+      "revId": "07953188fd063869a15343995c067c41b88c7b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
