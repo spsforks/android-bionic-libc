@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "becdfb72_3fc44469",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-12T16:43:28Z",
+      "side": 1,
+      "message": "(i fixed the sense of the commit message. should be clearer now why the TODOs are there, though i\u0027m regretting not adding a _code_ comment in case i go under a bus... i\u0027ll send another cl...)",
+      "revId": "edf386b1f9839b36cd08148bb61936b94f7e300c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
