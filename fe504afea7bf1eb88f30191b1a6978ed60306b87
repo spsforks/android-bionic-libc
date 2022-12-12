@@ -33,6 +33,24 @@
       "message": "enh: fyi for all the stuff that\u0027s \"!arm\" but is spelled \"arm64 x86_64 x86\"",
       "revId": "fe504afea7bf1eb88f30191b1a6978ed60306b87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e71d3fc3_699550e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-12T20:43:26Z",
+      "side": 1,
+      "message": "you mean we should have riscv64 here too?",
+      "parentUuid": "fa6f6fc3_1b51e65c",
+      "revId": "fe504afea7bf1eb88f30191b1a6978ed60306b87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
