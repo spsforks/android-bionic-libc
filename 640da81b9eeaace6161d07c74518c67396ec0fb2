@@ -110,6 +110,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5630a23d_be5192ff",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-13T16:34:46Z",
+      "side": 1,
+      "message": "okay, so the distinction is \"needed by the rust runtime\" vs \"needed by libraries that we happen to be using\". that\u0027s less bad than \"libc_libpvmfw\" which looks to me like the start of the long slippery slope to \"three hundred different libc subsets\".\n\nwhat\u0027s the typical rust solution to this? surely a C library that happens to get linked to rust can have _arbitrary_ libc dependencies? why isn\u0027t pvmfw linking against libc proper, since it\u0027s using C libraries that use libc?\n\n\u003e That\u0027s understandable but would mean that any libc function added for one Rust project would be used by all Rust projects\n\n(which is fine, libc is meant for everyone.)\n\n\u003e with the risk of symbols clashing; see qwandor\u0027s concern on a related CL.\n\ni\u0027m not yet convinced that\u0027s a legitimate concern... \"you\u0027re pulling in C libraries, you\u0027re going to get some libc on you\" :-) (a corollary of which is probably \"you might want to avoid using C names yourself\". rust mangles names anyway, right, so you\u0027d have to be _trying_ to collide?)",
+      "parentUuid": "72479501_4f18849b",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
