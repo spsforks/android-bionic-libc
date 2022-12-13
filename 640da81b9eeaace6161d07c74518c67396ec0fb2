@@ -146,6 +146,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "511ae096_da8b9e7f",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-13T19:30:08Z",
+      "side": 1,
+      "message": "\u003e I\u0027d say that the typical case is a userspace program, where we can simply link against the system library. But in the case of pvmfw, we\u0027re combining linking Rust against C (against libc) with the baremetal (\"no_std\") constraint.\n\ni\u0027m still not sure i\u0027ve really understood what\u0027s going on here ... if you\u0027re going to link against libc in the end (for the C libraries), why do you need another subset?\n\n\u003e I suppose that, in our case, the right approach would be to link against a baremetal implementation of (a subset of) libc but, AFAIK, we don\u0027t have that in AOSP (right?).\n\ncorrect[1], that\u0027s what we\u0027re adding here. for me the two questions are:\n\n1. do we _really_ need anything other than \"real baremetal\" (basically just the mem* functions) and \"full libc\" (for stuff that\u0027s actually pulling in C libraries)?\n\n2. if we do need the third \"libc subset\", what exactly is in it, and why? (and, more informatively, what _isn\u0027t_ in it, and why _not_, since that\u0027s probably the best motivating answer to \"why do we even need this\"?)\n\n\u003e So, instead, libpvmfw also needs to make sure that it doesn\u0027t bring with it some userspace code (e.g. __errno)\n\nsee, i don\u0027t really believe this. not least because the one file you\u0027ve added to this library uses errno:\n\nhttps://source.corp.google.com/android/bionic/libc/bionic/strtol.cpp;l\u003d42?q\u003dfile:strtol.cpp\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\nbut even if you\u0027re trying to say \"we don\u0027t want the _definition_ of errno, only the uses\" --- really? who\u0027s providing errno then? and why is that right? (and if they think they\u0027re the C library, providing errno, why aren\u0027t they also providing strtol?)\n\n\u003e and we can\u0027t simply link against Bionic. Hence the careful carve out I currently have and implementing functions that, in turn, are expected by Bionic (e.g. aosp/2338644).\n\nas you can see, i still have my doubts about whether this is really true or not, but if we assume for the sake of argument that it is, i still think we should have exactly one of these \"rust libc subset\" libraries, not one per user (as you appear to be proposing at the moment).\n\n____\n1. funnily enough, we _kind of_ have something like this already. if you look at the .a files in the libc Android.bp that have `_ndk` in the name, you\u0027ll see comments like `// libc_openbsd_ndk.a - upstream OpenBSD C library code that\ncan be safely included in the libc_ndk.a (doesn\u0027t contain any\ntroublesome global data or constructors)`.\nthat didn\u0027t actually go anywhere in the end, but that was a similar principle of \"bits of libc that you could graft into a program to use in preference to the libc.so that you\u0027re inheriting from the system _without_ the two conflicting\". but, as you can see above, i still haven\u0027t understood what (if any) real conflict you actually have in your rust-based world. but once we know what is/isn\u0027t actually safe, then we can collect the safe stuff in one bucket^Wlibrary, and anyone who needs this can use it, without having to reinvent the wheel.",
+      "parentUuid": "e0551f40_119f4476",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
