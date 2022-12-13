@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "72479501_4f18849b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-12-13T14:18:48Z",
+      "side": 1,
+      "message": "\u003e why is that a distinction worth making?\n\nBecause `baremetal_rust` is the bare minimum required by any baremetal Rust project (as the compiler assumes that `memcpy`, `memset`, and `memcmp` are valid symbols the linker will resolve) while `libpvmfw` provides the symbols that are expected by the (mostly baremetal) C libraries `pvmfw` links against (`libfdt`, `libavb`, `open-dice`) e.g. `__memcpy_chk` or `strtoul`, which aren\u0027t necessarily needed by Rust projects.\n\n\u003e it\u0027s extra complexity on this side --- what justifies that on the caller side? i\u0027d rather juat have one baremetal rust library.\n\nThat\u0027s understandable but would mean that any libc function added for one Rust project would be used by all Rust projects, with the risk of symbols clashing; see [qwandor\u0027s concern on a related CL](https://android-review.git.corp.google.com/c/platform/packages/modules/Virtualization/+/2338645/comments/b6ea6786_f99619cb).\n\n\u003e just use the more traditional \"librust_baremetal\" instead?\n\nDone (here and in aosp/2337444 and aosp/2338645).",
+      "parentUuid": "5e79da73_cfa1324a",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -103,6 +121,24 @@
       "writtenOn": "2022-12-12T16:27:24Z",
       "side": 1,
       "message": "(this isn\u0027t needed any more.)",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53956d3f_3eec562d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2303,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-12-13T14:18:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b4b6810_92ea1fa2",
       "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
