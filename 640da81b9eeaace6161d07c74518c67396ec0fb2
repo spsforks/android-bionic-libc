@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f36ff21d_a5160ef5",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2022-12-13T02:53:37Z",
+      "side": 1,
+      "message": "I am not Pierre, but I felt that he tried to not add \"random stuffs that happen to be needed by pvmfw\" to libc_baremetal_rust_deps which could be used by other baremetal Rust projects.\n\nAnd I agree with you Eliott. _deps is not a good name for these.",
+      "parentUuid": "5e79da73_cfa1324a",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
