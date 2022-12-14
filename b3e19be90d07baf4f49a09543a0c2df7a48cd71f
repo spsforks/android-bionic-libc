@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31710ca7_528f8a11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-12-14T19:35:38Z",
+      "side": 1,
+      "message": "I\u0027ve submitted the 6.1 kernel update which includes this change. So I think you can abandon this and then submit the other changes.",
+      "revId": "b3e19be90d07baf4f49a09543a0c2df7a48cd71f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
