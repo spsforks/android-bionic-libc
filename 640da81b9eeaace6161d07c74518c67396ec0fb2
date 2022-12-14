@@ -164,6 +164,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8409d857_d21cfa85",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2022-12-14T12:03:21Z",
+      "side": 1,
+      "message": "\u003e as you can see above, i still haven\u0027t understood what (if any) real conflict you actually have in your rust-based world.\n\nSorry I wasn\u0027t clear about this; overall, conflicts don\u0027t really come from using Rust but from running baremetal code that needs some libc functions and trying to  get those from Bionic. The Rust aspect is that, unlike typical baremetal C projects (e.g. Linux, Little Kernel, U-Boot, ...) that use the same C libraries, we aren\u0027t shipping our own implementation of those libc functions and don\u0027t really want to.\n\n\u003e we can collect the safe stuff in one library, and anyone who needs this can use it, without having to reinvent the wheel.\n\nAFAIU, I think that we agree that we would want 2 versions of Bionic:\n\n- the one that currently exists and which relies on the assumption that it is running in the userspace of a standard Linux (POSIX?) environment, and that implements the whole C Standard Library (and more)\n- and a \"baremetal\" one that would only implement the parts of libc (and more) that do not need to make extra assumptions about the environment beyond the CPU architecture and features that can be directly detected through CPU instructions (SIMD, FPU, timer, ...). For example, `FILE*` and the `f`-functions, `abort`, `puts`, or any other function that relies on OS abstractions and syscalls can\u0027t be implemented in an environment-agnostic way and therefore wouldn\u0027t be provided by that library. However, this environment-agnostic subset of libc could be much larger than the `mem*` functions: `string.h` and other `str*` functions, `ato*` and other `stdlib.h` functions (`qsort`, `bsearch`, `abs`, ...), the `w*` multi-byte functions, `printf` (relying on an undefined `puts`) and even more exotic things like `time.h` (at least, on arm64) could all be provided by that library.\n\nAny baremetal AOSP project (Rust or not) needing libc functions would then link against the latter combined (if necessary) with an environment-specific implementation of the remaining symbols (`abort`, `puts`, ...). Actually, this approach could even be used to build the userspace variant!\n\nIMO, extracting the baremetal subset of Bionic into its own library (which, as you said, I\u0027m in a way starting to do here) would be by far the cleanest approach but that sounds (to me) like a daunting task... Is this something you could help with? Until then, could this CL be merged as a temporary way to resolve those dependencies, knowing that the single \"baremetal Bionic\" library is coming?",
+      "parentUuid": "511ae096_da8b9e7f",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
