@@ -182,6 +182,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5b7f246b_c76c57c3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-14T22:53:11Z",
+      "side": 1,
+      "message": "\u003e AFAIU, I think that we agree that we would want 2 versions of Bionic:\n\nwell, that\u0027s actually _my_ preference, but i thought you were proposing 3 versions:\n\n1. the default \"all the stuff\" libc.so\n2. the \"real baremetal\" that\u0027s just the memory routines.\n3. the \"baremetal, but we\u0027re sneakily running a bit of C code\" that\u0027s ... ?\n\n#3 is the one that\u0027s confused me so far, and is the one that corresponds to \"libc_libpvmfw\".\n\nbut from your _two_ examples, it actually sounds like we might be in \"violent agreement\" here? because, yes (in case i haven\u0027t been clear so far), \"merge libc_libpvmfw into librust_baremetal (rather than having two separate libraries, as in this change) and i\u0027ll +2 without a second thought\". that seems like _obviously_ a good idea.\n\n\u003e IMO, extracting the baremetal subset of Bionic into its own library (which, as you said, I\u0027m in a way starting to do here) would be by far the cleanest approach but that sounds (to me) like a daunting task... Is this something you could help with? Until then, could this CL be merged as a temporary way to resolve those dependencies, knowing that the single \"baremetal Bionic\" library is coming?\n\noh maybe this is the source of the confusion? to be clear, i wasn\u0027t saying \"we need to work out what that _entire_ subset is and get it right first time\". that would indeed be a huge PITA for no immediate benefit. no, my goal is more \"we should have \u0027one true\u0027 library of rust baremetal libc bits that can asymptotically _approach_ that point\". (versus every single rust baremetal project having its own custom subset, as if we don\u0027t trust the linker to discard any functions that are unused :-) )\n\n(sorry if i made this more confusing by talking about the `libndk` stuff yesterday --- my point there was simply analogy, not a recommendation.)",
+      "parentUuid": "8409d857_d21cfa85",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b4b6810_92ea1fa2",
         "filename": "libc/Android.bp",
         "patchSetId": 1
