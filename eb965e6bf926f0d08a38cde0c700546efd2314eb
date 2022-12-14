@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "edc0ffa1_ed503574",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99c6030a_670594a0",
+      "range": {
+        "startLine": 78,
+        "startChar": 11,
+        "endLine": 78,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8644e64d_744c3092",
@@ -54,6 +78,30 @@
       "writtenOn": "2022-11-18T00:45:39Z",
       "side": 1,
       "message": "Same as above, end_ns_.",
+      "range": {
+        "startLine": 79,
+        "startChar": 11,
+        "endLine": 79,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1a49dd2_177d1ce6",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8644e64d_744c3092",
       "range": {
         "startLine": 79,
         "startChar": 11,
@@ -87,6 +135,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20d8b286_3288f83c",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc402c14_ddefa305",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 13
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4adc3932_2b9fef96",
@@ -100,6 +172,30 @@
       "writtenOn": "2022-11-18T00:45:39Z",
       "side": 1,
       "message": "Same as above, maybe end_ns.",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 14
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7026c92_5f30c57c",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4adc3932_2b9fef96",
       "range": {
         "startLine": 83,
         "startChar": 13,
@@ -133,6 +229,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa1a44b7_709aafb4",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1347023_89dedecb",
+      "range": {
+        "startLine": 90,
+        "startChar": 11,
+        "endLine": 90,
+        "endChar": 23
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042927f7_aa3f00f5",
@@ -156,6 +276,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cac2b37_68dc8fa6",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "042927f7_aa3f00f5",
+      "range": {
+        "startLine": 109,
+        "startChar": 1,
+        "endLine": 109,
+        "endChar": 7
+      },
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c199853c_ce2c66f3",
@@ -169,6 +313,24 @@
       "writtenOn": "2022-11-18T00:45:39Z",
       "side": 1,
       "message": "Would it be better to break actual up into a vector using android::base::Split()? That way you don\u0027t need to track the offset around as much.",
+      "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d97bbf91_bd458044",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2022-12-14T02:13:05Z",
+      "side": 1,
+      "message": "Given that we still need to skip the timestamps, I think we still need an index to locate the split vector. It seems to be simpler but I\u0027m not sure. Will review this tomorrow.",
+      "parentUuid": "c199853c_ce2c66f3",
       "revId": "eb965e6bf926f0d08a38cde0c700546efd2314eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
