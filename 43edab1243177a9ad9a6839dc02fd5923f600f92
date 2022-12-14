@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaf58eab_ab2d17e4",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-14T17:14:40Z",
+      "side": 1,
+      "message": "although it wasn\u0027t true in the 1980s, C does now define that `free(NULL)` is a no-op.",
+      "range": {
+        "startLine": 79,
+        "startChar": 16,
+        "endLine": 79,
+        "endChar": 24
+      },
+      "revId": "43edab1243177a9ad9a6839dc02fd5923f600f92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "713bbda5_d41fe1ef",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-14T17:14:40Z",
+      "side": 1,
+      "message": "cferris: i\u0027m assuming this should be _Nonnull?",
+      "range": {
+        "startLine": 332,
+        "startChar": 33,
+        "endLine": 332,
+        "endChar": 42
+      },
+      "revId": "43edab1243177a9ad9a6839dc02fd5923f600f92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
