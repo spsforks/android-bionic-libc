@@ -15,4 +15,8 @@
 #define __user
 #define __force
 
+#ifndef __packed
+#define __packed __attribute__((__packed__))
+#endif
+
 #endif /* _UAPI_LINUX_COMPILER_H */
