@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a52f0a7e_3a238849",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2022-12-16T20:17:14Z",
+      "side": 1,
+      "message": "interesting. that\u0027s exactly why we have those rewrites...\n\n...which makes me wonder why we\u0027re not using it for the _other_ stuff in \u003clinux/compiler.h\u003e? cferris: any idea?",
+      "revId": "4ac332279d291bdccaa07d9053dea6488970f2ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
