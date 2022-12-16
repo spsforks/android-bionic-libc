@@ -22,6 +22,30 @@
       },
       "revId": "c816f811d08adc61f01daf3cc11e213f2122f352",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3a05a2c_232c385c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2022-12-16T17:34:15Z",
+      "side": 1,
+      "message": "Some of the non-uapi arpa and netinet headers use __packed, and at least arpa/tftp.h doesn\u0027t include any linux/ headers that would pick up the definition in linux/compiler.h.  I could modify those headers to each include linux/compiler.h.",
+      "parentUuid": "6fbcf8c0_3fbf4f29",
+      "range": {
+        "startLine": 12,
+        "startChar": 22,
+        "endLine": 12,
+        "endChar": 54
+      },
+      "revId": "c816f811d08adc61f01daf3cc11e213f2122f352",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
