@@ -16,6 +16,24 @@
       "message": "interesting. that\u0027s exactly why we have those rewrites...\n\n...which makes me wonder why we\u0027re not using it for the _other_ stuff in \u003clinux/compiler.h\u003e? cferris: any idea?",
       "revId": "4ac332279d291bdccaa07d9053dea6488970f2ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8054af5_a26f3e76",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2022-12-16T21:31:07Z",
+      "side": 1,
+      "message": "I don\u0027t have the exact answer, but it\u0027s possible the parser wasn\u0027t as advanced as it is today so these translation weren\u0027t as easy to do.\n\nHowever, it looks like we could remove that file and compiler_types.h and just add the __user and __force translation in defaults.py.\n\nThis maybe should wait until the new year unless someone is around to handle any fall out.",
+      "parentUuid": "a52f0a7e_3a238849",
+      "revId": "4ac332279d291bdccaa07d9053dea6488970f2ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
