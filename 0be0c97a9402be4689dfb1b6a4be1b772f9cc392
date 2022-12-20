@@ -51,6 +51,23 @@
       "parentUuid": "84c6db6c_9d80c7e1",
       "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "668eac54_d71a4a03",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2022-12-20T05:22:26Z",
+      "side": 1,
+      "message": "Looking at /proc/cpuinfo of SM8475 (Snapdragon 8 Gen 1+), SVE is not reported.\nhttps://termbin.com/0de3\n\nThis is likely why Qualcomm uses BTI to trigger their kryo785 bionic (aka memcpy_neon from AOSP in 2015) at https://git.codelinaro.org/clo/la/platform/bionic/-/commit/7a24da08feedebfc4d6b2097cef945aa714d68c5.\n\nI know we are a bit out from Arm tagging AOR, but we will need to make sure cpuinfo/HWCAP are correct so the ifuncs take effect.  I am looking into why this is the case on this device.  The Linux kernel has commits such as https://android.googlesource.com/kernel/common.git/+/43994d824e8443263dc98b151e6326bf677be52e from quite some time ago that should be reporting SVE correctly.  I am looking into why this is not working on SM8475.  May or may not affect other vendors and chipsets.",
+      "revId": "0be0c97a9402be4689dfb1b6a4be1b772f9cc392",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
