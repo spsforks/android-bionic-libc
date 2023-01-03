@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d44bae6f_36b3c15d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-01-03T20:03:39Z",
+      "side": 1,
+      "message": "I define the macro in aosp/2337445 then remove it here as I\u0027ve noticed unexpected crashes in `__memcpy_chk` without it(?)",
+      "revId": "eeb53ac80ae5d5eeedf8ed4bdf2adcad494d63e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
