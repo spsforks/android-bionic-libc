@@ -198,6 +198,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9daba4fd_2c402cd7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-01-03T20:02:23Z",
+      "side": 1,
+      "message": "As discussed offline, I\u0027ve grouped these into a single `librust_baremetal` library, to be used by (Rust) baremetal AOSP projects.",
+      "parentUuid": "5b7f246b_c76c57c3",
+      "revId": "640da81b9eeaace6161d07c74518c67396ec0fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b4b6810_92ea1fa2",
