@@ -16,6 +16,29 @@
       "message": "cferris/chiahungudan: look good to you?",
       "revId": "1a49058e664e32a77f353eeef60c8eb86a17e274",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa0cd385_a9773870",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-04T19:29:08Z",
+      "side": 1,
+      "message": "Technically, there are cases where this could be nullptr. But I think this should be fine. As long as everything builds with this change, then I think it should be fine.",
+      "range": {
+        "startLine": 332,
+        "startChar": 90,
+        "endLine": 332,
+        "endChar": 98
+      },
+      "revId": "1a49058e664e32a77f353eeef60c8eb86a17e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
