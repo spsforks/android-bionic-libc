@@ -22,6 +22,30 @@
       },
       "revId": "199a62e39bcdf315493cd99311b73842d43100f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "389e470f_65ddab6c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2286,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-01-05T18:15:05Z",
+      "side": 1,
+      "message": "See [this comment](https://android-review.git.corp.google.com/c/platform/bionic/+/2373932/comments/d44bae6f_36b3c15d); when I removed the macro definition, BoringSSL started `abort`-ing because a check in `__memcpy_chk` was failing ([`__check_buffer_access`](http://cs/android/bionic/libc/private/bionic_fortify.h?l\u003d80), IIRC) so separated the working code from the breaking clean-up. Once I get PS+2 here, I\u0027ll try to reproduce the failure and squash aosp/2373932 if I can\u0027t.",
+      "parentUuid": "86904fc4_9fdfd2f5",
+      "range": {
+        "startLine": 2286,
+        "startChar": 11,
+        "endLine": 2286,
+        "endChar": 54
+      },
+      "revId": "199a62e39bcdf315493cd99311b73842d43100f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
