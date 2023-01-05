@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d960b76_87707e86",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-05T23:19:24Z",
+      "side": 1,
+      "message": "interestingly, POSIX _implies_ this is not nullable (because they say \"string\", and NULL isn\u0027t a string), but glibc\u0027s documentation explicitly allows NULL (and, afaict, everyone\u0027s _implementation_ allows NULL). so, yeah, i think it\u0027s fine to keep this as _Nullable. maybe change the doc comment to:\n```\n * [openlog(3)](http://man7.org/linux/man-pages/man3/openlog.3.html) sets\n * the log tag to `__prefix`, which can be NULL to return to the default of\n * getprogname(). On Android, the other two arguments are ignored.\n```",
+      "range": {
+        "startLine": 138,
+        "startChar": 25,
+        "endLine": 138,
+        "endChar": 34
+      },
+      "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70643398_b47a1011",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-05T23:19:24Z",
+      "side": 1,
+      "message": "format strings always need to be non-null, no?",
+      "range": {
+        "startLine": 152,
+        "startChar": 40,
+        "endLine": 152,
+        "endChar": 49
+      },
+      "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
