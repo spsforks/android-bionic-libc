@@ -69,6 +69,30 @@
       },
       "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5ef97bb_fa1792b4",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-06T01:15:27Z",
+      "side": 1,
+      "message": "i\u0027m not sure i understand --- \"nothing to format\" would be represented by \"\" rather than nullptr.\n\ni\u0027m not sure what you mean by \"online editor\", but pretty much the first thing that __vfprintf() -- which is where all these printf-like functions end up -- will do is dereference `fmt` to see what it should do, and that will SEGV if you\u0027ve passed nullptr.",
+      "parentUuid": "36b2ccab_1b0fe8e1",
+      "range": {
+        "startLine": 152,
+        "startChar": 40,
+        "endLine": 152,
+        "endChar": 49
+      },
+      "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
