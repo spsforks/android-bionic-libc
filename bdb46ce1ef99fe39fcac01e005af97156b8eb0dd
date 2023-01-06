@@ -45,6 +45,30 @@
       },
       "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36b2ccab_1b0fe8e1",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-06T01:02:33Z",
+      "side": 1,
+      "message": "Yes, strings shouldn\u0027t be null. I am thinking of `no format` case(It is a really weird corner case indeed). I tried `nullptr` in online editor and it works fine.",
+      "parentUuid": "70643398_b47a1011",
+      "range": {
+        "startLine": 152,
+        "startChar": 40,
+        "endLine": 152,
+        "endChar": 49
+      },
+      "revId": "bdb46ce1ef99fe39fcac01e005af97156b8eb0dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
