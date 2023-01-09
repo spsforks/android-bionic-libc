@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e537b40_91fd17e0",
+        "filename": "libc/malloc_debug/RecordData.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2023-01-09T17:56:17Z",
+      "side": 1,
+      "message": "...but here `nmemb` is the 2nd argument, and `size` is 3rd.\n\nThe C convention for `calloc` is to put `nmemb` before `size`, so the cpp file implementation seems to be the ordering we want.\n\nI realize this change was made many years ago, but a recent change to this line (https://android-review.git.corp.google.com/c/platform/bionic/+/2292945) triggered this issue my static analysis which looks for recently changed lines.\n\nI\u0027ve put up a follow-up CL to have the header file change to match the cpp file here: https://android-review.git.corp.google.com/c/platform/bionic/+/2380128",
+      "revId": "7bd01783a830f72c1245c262a7fd9a199e90aed1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2396f17_6320dbcb",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2023-01-09T17:56:17Z",
+      "side": 1,
+      "message": "Here, `size` is the 2nd argument, and `nmemb` is the 3rd argument...",
+      "revId": "7bd01783a830f72c1245c262a7fd9a199e90aed1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
