@@ -176,6 +176,9 @@ cc_test {
         "bionic_libc_platform_headers",
     ],
 
+    // Do not care about clang-analyzer-unix.Malloc and other tidy warnings.
+    tidy: false,
+
     srcs: [
         "tests/malloc_debug_system_tests.cpp",
     ],
