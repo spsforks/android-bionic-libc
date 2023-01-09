@@ -68,15 +68,11 @@ class ThreadCompleteEntry : public RecordEntry {
 
 class AllocEntry : public RecordEntry {
  public:
-  explicit AllocEntry(void* pointer, uint64_t st, uint64_t et);
+  explicit AllocEntry(void* pointer);
   virtual ~AllocEntry() = default;
 
  protected:
   void* pointer_;
-
-  // The start/end time of this operation.
-  uint64_t start_ns_;
-  uint64_t end_ns_;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(AllocEntry);
@@ -84,7 +80,7 @@ class AllocEntry : public RecordEntry {
 
 class MallocEntry : public AllocEntry {
  public:
-  MallocEntry(void* pointer, size_t size, uint64_t st, uint64_t et);
+  MallocEntry(void* pointer, size_t size);
   virtual ~MallocEntry() = default;
 
   bool Write(int fd) const override;
@@ -98,7 +94,7 @@ class MallocEntry : public AllocEntry {
 
 class FreeEntry : public AllocEntry {
  public:
-  explicit FreeEntry(void* pointer, uint64_t st, uint64_t et);
+  explicit FreeEntry(void* pointer);
   virtual ~FreeEntry() = default;
 
   bool Write(int fd) const override;
@@ -109,7 +105,7 @@ class FreeEntry : public AllocEntry {
 
 class CallocEntry : public MallocEntry {
  public:
-  CallocEntry(void* pointer, size_t size, size_t nmemb, uint64_t st, uint64_t et);
+  CallocEntry(void* pointer, size_t size, size_t nmemb);
   virtual ~CallocEntry() = default;
 
   bool Write(int fd) const override;
@@ -123,7 +119,7 @@ class CallocEntry : public MallocEntry {
 
 class ReallocEntry : public MallocEntry {
  public:
-  ReallocEntry(void* pointer, size_t size, void* old_pointer, uint64_t st, uint64_t et);
+  ReallocEntry(void* pointer, size_t size, void* old_pointer);
   virtual ~ReallocEntry() = default;
 
   bool Write(int fd) const override;
@@ -138,7 +134,7 @@ class ReallocEntry : public MallocEntry {
 // aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 class MemalignEntry : public MallocEntry {
  public:
-  MemalignEntry(void* pointer, size_t size, size_t alignment, uint64_t st, uint64_t et);
+  MemalignEntry(void* pointer, size_t size, size_t alignment);
   virtual ~MemalignEntry() = default;
 
   bool Write(int fd) const override;
