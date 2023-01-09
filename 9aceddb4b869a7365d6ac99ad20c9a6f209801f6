@@ -16,6 +16,23 @@
       "message": "Fix-up for https://android-review.git.corp.google.com/c/platform/bionic/+/209768",
       "revId": "9aceddb4b869a7365d6ac99ad20c9a6f209801f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2cafe9e_17af8dfc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2023-01-09T18:27:40Z",
+      "side": 1,
+      "message": "in bionic/libc/malloc_debug/malloc_debug.cpp\n```\n  if (g_debug-\u003econfig().options() \u0026 RECORD_ALLOCS) {\n    g_debug-\u003erecord-\u003eAddEntry(\n        new CallocEntry(pointer, bytes, nmemb, result.GetStartTimeNS(), result.GetEndTimeNS()));\n  }\n```\nIt seems that the argument order is wrong too. Can you include the fix here?",
+      "revId": "9aceddb4b869a7365d6ac99ad20c9a6f209801f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
