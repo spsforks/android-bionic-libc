@@ -59,6 +59,9 @@ cc_test {
     name: "malloc_hooks_system_tests",
     isolated: true,
 
+    // Do not care about clang-analyzer-unix.Malloc and other tidy warnings.
+    tidy: false,
+
     srcs: [
         "tests/malloc_hooks_tests.cpp",
     ],
