@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b107fb5_43cb9b38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-10T23:40:49Z",
+      "side": 1,
+      "message": "otherwise lgtm.",
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b12e933a_b5271278",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-10T23:40:49Z",
+      "side": 1,
+      "message": "you can\u0027t pass a null buffer to read() or write().",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8b326a4_1e079532",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-10T23:40:49Z",
+      "side": 1,
+      "message": "(or equivalents.)",
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
