@@ -87,16 +87,32 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
     },
     {
+        "bt_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
+    },
+    {
         "backtrace_min_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
+    },
+    {
+        "bt_min_sz",
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
     },
     {
         "backtrace_max_size",
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
     },
+    {
+        "bt_max_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
+    },
 
     {
         "backtrace",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
+    },
+    {
+        "bt",
         {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
     },
     {
@@ -114,6 +130,10 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     },
     {
         "backtrace_full",
+        {BACKTRACE_FULL, &Config::VerifyValueEmpty},
+    },
+    {
+        "bt_full",
         {BACKTRACE_FULL, &Config::VerifyValueEmpty},
     },
 

@@ -200,6 +200,15 @@ As of Q, any time that a backtrace is gathered, a different algorithm is used
 that is extra thorough and can unwind through Java frames. This will run
 slower than the normal backtracing function.
 
+### bt, bt\_full, bt\_max\_sz, bt\_min\_sz, bt\_sz
+As of U, add abbreviations for backtrace related options,avoid property length restriction.
+bt            - backtrace
+bt\_full      - backtrace\_full
+bt\_max\_sz   - backtrace\_max\_size
+bt\_min\_sz   - backtrace\_min\_size
+bt\_sz        - backtrace\_size
+original options have no change.
+
 ### check\_unreachable\_on\_signal
 As of Android U, this option will trigger a check for unreachable memory
 in a process. Specifically, if the signal SIGRTMAX - 16 (which is 48 on
