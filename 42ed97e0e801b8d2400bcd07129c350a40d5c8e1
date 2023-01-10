@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63af7049_7dc6a2f9",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-10T01:46:41Z",
+      "side": 1,
+      "message": "This is a bit confusing. I think it would be good to say why this is. For example, that this is a test target that can trigger false positive warnings.\n\nAlso, I think there needs to be a space between unix and Malloc.",
+      "range": {
+        "startLine": 179,
+        "startChar": 25,
+        "endLine": 179,
+        "endChar": 51
+      },
+      "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
