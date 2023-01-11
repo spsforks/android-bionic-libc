@@ -46,6 +46,30 @@
       },
       "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac998688_77771b7f",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-11T00:42:28Z",
+      "side": 1,
+      "message": "Can you update the comment too? That way if someone tries to change this in the future, they know why it\u0027s off and it can persuade them to leave it alone. That\u0027s easier than having to use git log to figure that out.",
+      "parentUuid": "0ccbc069_d79dba4c",
+      "range": {
+        "startLine": 179,
+        "startChar": 25,
+        "endLine": 179,
+        "endChar": 51
+      },
+      "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
