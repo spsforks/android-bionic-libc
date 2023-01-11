@@ -70,6 +70,30 @@
       },
       "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88a5115b_3e5adf17",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2023-01-11T00:59:15Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ac998688_77771b7f",
+      "range": {
+        "startLine": 179,
+        "startChar": 25,
+        "endLine": 179,
+        "endChar": 51
+      },
+      "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
