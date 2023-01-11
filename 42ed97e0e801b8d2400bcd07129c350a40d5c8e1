@@ -22,6 +22,30 @@
       },
       "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ccbc069_d79dba4c",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2023-01-11T00:11:40Z",
+      "side": 1,
+      "message": "Updated commit message, but we should keep \"clang-analyzer-unix.Malloc\" as it is the real clang-tidy check name used in messages.",
+      "parentUuid": "63af7049_7dc6a2f9",
+      "range": {
+        "startLine": 179,
+        "startChar": 25,
+        "endLine": 179,
+        "endChar": 51
+      },
+      "revId": "42ed97e0e801b8d2400bcd07129c350a40d5c8e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
