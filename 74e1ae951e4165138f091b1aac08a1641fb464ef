@@ -16,6 +16,24 @@
       "message": "If we are going to support this, I may prefer to have it for all the options. Or we may consider numbering the options, this ensures that you can set all the options at once :)",
       "revId": "74e1ae951e4165138f091b1aac08a1641fb464ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31626585_805a6d2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-11T18:53:10Z",
+      "side": 1,
+      "message": "yeah, +1 to abbreviating them all --- even if you haven\u0027t needed them yet, someone will need them eventually...\n\n(-1 to numbers, though. believe it or not, a bitmask is what we inherited. definitely don\u0027t want to go back there. \"bt\" and \"sz\" wouldn\u0027t be my first choice, but they seem obvious enough in context. \"03f7\" was definitely not!)",
+      "parentUuid": "9f0c07d4_bee25a8d",
+      "revId": "74e1ae951e4165138f091b1aac08a1641fb464ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
