@@ -52,6 +52,24 @@
       "parentUuid": "31626585_805a6d2f",
       "revId": "74e1ae951e4165138f091b1aac08a1641fb464ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "070c2a31_e699ce5b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-12T19:59:59Z",
+      "side": 1,
+      "message": "Oops, forgot to resolve this. I abbreviated all of the other backtrace commands, verify that the aliases make sense.",
+      "parentUuid": "f2755fa6_849d12df",
+      "revId": "74e1ae951e4165138f091b1aac08a1641fb464ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
