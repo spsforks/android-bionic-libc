@@ -34,7 +34,7 @@ cc_library_static {
             enabled: false,
         },
         musl: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
