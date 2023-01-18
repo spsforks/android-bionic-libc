@@ -16,6 +16,24 @@
       "message": "ccross: do we still have musl failures here? (looks like it might be time to stop running this against glibc [because they changed llvm in a way that our modern llvm will require a newer glibc to pass], so it would be good to see where musl disagrees, since this is just supposed to be \"what posix promises\" and i wouldn\u0027t expect divergence between us and musl there?)\n\npirama: what was the bug again?",
       "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9b93272_a254e20f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-01-18T23:34:16Z",
+      "side": 1,
+      "message": "There are lots of errors building this with musl (and probably more, it hit the -ferror-limit):\n```\nbionic/tests/headers/posix/limits_h.c:36:9: error: use of undeclared identifier \u0027AIO_LISTIO_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:37:9: error: use of undeclared identifier \u0027AIO_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:40:9: error: use of undeclared identifier \u0027AIO_PRIO_DELTA_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:44:9: error: use of undeclared identifier \u0027ATEXIT_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:45:9: error: use of undeclared identifier \u0027CHILD_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:54:9: error: use of undeclared identifier \u0027MQ_OPEN_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:60:9: error: use of undeclared identifier \u0027OPEN_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:70:9: error: use of undeclared identifier \u0027PTHREAD_THREADS_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:72:9: error: use of undeclared identifier \u0027RTSIG_MAX\u0027\nbionic/tests/headers/posix/limits_h.c:78:9: error: use of undeclared identifier \u0027SIGQUEUE_MAX\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:29:9: error: use of undeclared identifier \u0027S_IFMT\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:30:9: error: use of undeclared identifier \u0027S_IFBLK\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:31:9: error: use of undeclared identifier \u0027S_IFCHR\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:32:9: error: use of undeclared identifier \u0027S_IFIFO\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:33:9: error: use of undeclared identifier \u0027S_IFREG\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:34:9: error: use of undeclared identifier \u0027S_IFDIR\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:35:9: error: use of undeclared identifier \u0027S_IFLNK\u0027\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:36:9: error: use of undeclared identifier \u0027S_IFSOCK\u0027\nbionic/tests/headers/posix/unistd_h.c:54:9: error: use of undeclared identifier \u0027_POSIX_PRIORITIZED_IO\u0027\nbionic/tests/headers/posix/unistd_h.c:55:9: error: use of undeclared identifier \u0027_POSIX_PRIORITY_SCHEDULING\u0027\nbionic/tests/headers/posix/unistd_h.c:66:9: error: use of undeclared identifier \u0027_POSIX_SPORADIC_SERVER\u0027\nbionic/tests/headers/posix/unistd_h.c:67:9: error: use of undeclared identifier \u0027_POSIX_SYNCHRONIZED_IO\u0027\nbionic/tests/headers/posix/unistd_h.c:71:9: error: use of undeclared identifier \u0027_POSIX_THREAD_PRIO_INHERIT\u0027\nbionic/tests/headers/posix/unistd_h.c:72:9: error: use of undeclared identifier \u0027_POSIX_THREAD_PRIO_PROTECT\u0027\nbionic/tests/headers/posix/unistd_h.c:75:9: error: use of undeclared identifier \u0027_POSIX_THREAD_ROBUST_PRIO_INHERIT\u0027\nbionic/tests/headers/posix/unistd_h.c:76:9: error: use of undeclared identifier \u0027_POSIX_THREAD_ROBUST_PRIO_PROTECT\u0027\nbionic/tests/headers/posix/unistd_h.c:78:9: error: use of undeclared identifier \u0027_POSIX_THREAD_SPORADIC_SERVER\u0027\nbionic/tests/headers/posix/unistd_h.c:82:9: error: use of undeclared identifier \u0027_POSIX_TYPED_MEMORY_OBJECTS\u0027\n```",
+      "parentUuid": "8df2c589_9be9b8f9",
+      "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
