@@ -29,5 +29,7 @@ TEST(utmp, smoke) {
   setutent();
   ASSERT_EQ(NULL, getutent());
   endutent();
-  ASSERT_EQ(NULL, pututline(NULL));
+  struct utmp* failure = (struct utmp*)malloc(sizeof(struct utmp));
+  failure->ut_type = EMPTY;
+  ASSERT_EQ(NULL, pututline(failure));
 }
