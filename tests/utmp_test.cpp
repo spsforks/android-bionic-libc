@@ -29,5 +29,7 @@ TEST(utmp, smoke) {
   setutent();
   ASSERT_EQ(NULL, getutent());
   endutent();
-  ASSERT_EQ(NULL, pututline(NULL));
+  std::unique_ptr<utmp> failure(new utmp);
+  failure->ut_type = EMPTY;
+  ASSERT_EQ(NULL, pututline(failure.get()));
 }
