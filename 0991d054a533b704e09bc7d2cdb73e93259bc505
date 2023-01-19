@@ -52,6 +52,24 @@
       "parentUuid": "e9b93272_a254e20f",
       "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e6a9e34_ce922c6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T00:01:13Z",
+      "side": 1,
+      "message": "some of these seem like they must be bogus though?\n```\nbionic/tests/headers/posix/sys_stat_h_mode_constants.h:29:9: error: use of undeclared identifier \u0027S_IFMT\u0027\n```\ncs/ thinks musl\u0027s \u003csys/stat.h\u003e defines that, and it would be pretty weird if it didn\u0027t...\n\n(the `_MAX` stuff looks like musl is right though --- POSIX does indeed say you don\u0027t _have_ to define them: \"A definition of one of the symbolic constants in the following list shall be omitted from \u003climits.h\u003e on specific implementations where the corresponding value is equal to or greater than the stated minimum, but is unspecified.\")",
+      "parentUuid": "8df2c589_9be9b8f9",
+      "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
