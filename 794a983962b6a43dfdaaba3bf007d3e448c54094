@@ -163,6 +163,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1466ae1c_221d662c",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-01-19T21:10:26Z",
+      "side": 1,
+      "message": "https://cs.android.com/android/platform/superproject/+/master:frameworks/av/media/mtp/MtpFfsHandle.cpp;l\u003d363;drc\u003d39a21d0d118d8f36e8d6b6f02ebb1ca2cd7bf7da cares for read as well.\n\nWe don\u0027t know how many of these there will be, since this is in the NDK. Probably not a common for apps to be dealing with those devices, but who knows what code they depend on? IMO we should make this `_Null_unspecified`, and follow up with fortify later.",
+      "parentUuid": "de10c477_a577deb4",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
