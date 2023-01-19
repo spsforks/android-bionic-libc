@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a03782d_1d5673e3",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T23:24:00Z",
+      "side": 1,
+      "message": "no need to `malloc()` one --- and in C++ you\u0027d use `new` anyway, ideally with `std::unique_ptr` to avoid the missing `free()`.\n\nbut, yeah, this can just be on the stack...",
+      "revId": "9dff2b57c576b891a5d0d92dc93e47b2cc97e5ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
