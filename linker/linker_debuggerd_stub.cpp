@@ -28,5 +28,11 @@
 
 #include "linker_debuggerd.h"
 
+#include <signal.h>
+
 void linker_debuggerd_init() {
+}
+extern "C" bool android_handle_signal_impl(int /* signal_number */, siginfo_t* /* info */,
+                                           void* /* context */) {
+  return false;
 }

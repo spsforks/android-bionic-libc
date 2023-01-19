@@ -28,4 +28,8 @@
 
 #pragma once
 
+#include <signal.h>
+
 void linker_debuggerd_init();
+extern "C" bool debuggerd_first_chance_signal_handler_impl(int signal_number, siginfo_t* info,
+                                                           void* context);
