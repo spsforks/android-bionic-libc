@@ -22,6 +22,30 @@
       },
       "revId": "68a2967f6c897d2e516c25222ae4dc72683cc063",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10dce11c_9ee89d0a",
+        "filename": "libc/include/utmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-19T23:05:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71224e6d_8c265f89",
+      "range": {
+        "startLine": 114,
+        "startChar": 52,
+        "endLine": 114,
+        "endChar": 61
+      },
+      "revId": "68a2967f6c897d2e516c25222ae4dc72683cc063",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
