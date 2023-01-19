@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "177f79a8_db406c46",
+        "filename": "tests/headers/posix/fcntl_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T00:09:49Z",
+      "side": 1,
+      "message": "ah... i think musl is interpreting the quoted part of POSIX differently.\n\nhttps://source.corp.google.com/android/external/musl/include/fcntl.h;l\u003d82?q\u003dfile:external%2Fmusl%20file:fcntl.h\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F implies that musl thinks this should literally just be the _mode_ constants, not the _type_ constants.\n\nglibc and macos agree with us. add a comment here for now, and one of us can ask on the musl mailing list/ask the austin group to clarify which they meant?",
+      "range": {
+        "startLine": 86,
+        "startChar": 10,
+        "endLine": 86,
+        "endChar": 15
+      },
+      "revId": "5ea693e91a6d27709c9a25b006f3dcf042ae4777",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
