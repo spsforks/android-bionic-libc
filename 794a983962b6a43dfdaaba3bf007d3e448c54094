@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c0cf3015_ffaad1d3",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-01-19T20:07:54Z",
+      "side": 1,
+      "message": "Is that true? https://man7.org/linux/man-pages/man2/read.2.html and https://man7.org/linux/man-pages/man2/write.2.html both say something like:\n\n```\nIf count is zero, read() may detect the errors described below.\nIn the absence of any errors, or if read() does not check for\nerrors, a read() with a count of 0 returns zero and has no other\neffects.\n```\n\nWhich would imply that this is `_Null_unspecified`?\n\nAre bionic or our kernel configs altering that behavior in some way I\u0027m not finding? We don\u0027t have any tests that cover that behavior so I can\u0027t tell from code search.",
+      "parentUuid": "ed001398_dc7d7d88",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
