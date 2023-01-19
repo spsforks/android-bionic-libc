@@ -187,6 +187,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "889d8372_29c9c2b2",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2023-01-19T21:16:12Z",
+      "side": 1,
+      "message": "\u003e talk to gbiv@ about whether it\u0027s possible to express a fancy _FORTIFY_SOURCE style check of \"well, it\u0027s okay for __buf to be nullptr iff __count is 0\"\n\nAt _compile-time_, that should be straightforward. It\u0027ll miss cases, but I\u0027d naively imagine that most `read(fd, nullptr, 0);` are spelled with constants, rather than non-const variables?",
+      "parentUuid": "1466ae1c_221d662c",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
