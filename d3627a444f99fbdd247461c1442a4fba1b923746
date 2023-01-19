@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f84fa434_66bd8283",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T21:39:23Z",
+      "side": 1,
+      "message": "specifically, here\u0027s the diff:\n```\n--- bionic\t2023-01-19 21:35:16.924599793 +0000\n+++ openbsd\t2022-09-27 18:54:22.034362651 +0000\n@@ -38,12 +38,6 @@\n #include \"private.h\"\n #include \"tzfile.h\"\n \n-// Android: ignore OpenBSD\u0027s DEF_WEAK() stuff.\n-#define DEF_WEAK(sym) /* */\n-// Android: this code is not pointer-sign clean.\n-#pragma clang diagnostic ignored \"-Wpointer-sign\"\n-#pragma clang diagnostic ignored \"-Wunused-function\"\n-\n #define\t_ctloc(x)\t\t(_CurrentTimeLocale-\u003ex)\n \n /*\n@@ -188,12 +182,6 @@\n \t\t\t\treturn (NULL);\n \t\t\tbreak;\n \n-\t\tcase \u0027v\u0027:\t/* Android: the date as \"%e-%b-%Y\" for strftime() compat; glibc does this too. */\n-\t\t\t_LEGAL_ALT(0);\n-\t\t\tif (!(bp \u003d _strptime(bp, \"%e-%b-%Y\", tm, 0)))\n-\t\t\t\treturn (NULL);\n-\t\t\tbreak;\n-\n \t\tcase \u0027X\u0027:\t/* The time, using the locale\u0027s format. */\n \t\t\t_LEGAL_ALT(_ALT_E);\n \t\t\tif (!(bp \u003d _strptime(bp, _ctloc(t_fmt), tm, 0)))\n@@ -317,7 +305,6 @@\n \t\t\tfields |\u003d FIELD_TM_MON;\n \t\t\tbreak;\n \n-\t\tcase \u0027P\u0027:\t/* Android addition for strftime() compat; glibc does this too. */\n \t\tcase \u0027p\u0027:\t/* The locale\u0027s equivalent of AM/PM. */\n \t\t\t_LEGAL_ALT(0);\n \t\t\t/* AM? */\n@@ -353,23 +340,11 @@\n \t\t\tbreak;\n \t\tcase \u0027s\u0027:\t/* Seconds since epoch */\n \t\t\t{\n-\t\t\t\t// Android change based on FreeBSD\u0027s implementation.\n-\t\t\t\tint saved_errno \u003d errno;\n-\t\t\t\terrno \u003d 0;\n-\t\t\t\tconst unsigned char* old_bp \u003d bp;\n-\t\t\t\tlong n \u003d strtol((const char*) bp, (char**) \u0026bp, 10);\n-\t\t\t\terrno \u003d saved_errno;\n-\t\t\t\ttime_t t \u003d n;\n-\t\t\t\tif (bp \u003d\u003d old_bp || errno \u003d\u003d ERANGE ||\n-\t\t\t\t    ((long) t) !\u003d n) return NULL;\n-\n-\t\t\t\tif (localtime_r(\u0026t, tm) \u003d\u003d NULL) return NULL;\n-\n-\t\t\t\t//int64_t i64;\n-\t\t\t\t//if (!(_conv_num64(\u0026bp, \u0026i64, 0, INT64_MAX)))\n-\t\t\t\t//\treturn (NULL);\n-\t\t\t\t//if (!gmtime_r(\u0026i64, tm))\n-\t\t\t\t//\treturn (NULL);\n+\t\t\t\tint64_t i64;\n+\t\t\t\tif (!(_conv_num64(\u0026bp, \u0026i64, 0, INT64_MAX)))\n+\t\t\t\t\treturn (NULL);\n+\t\t\t\tif (!gmtime_r(\u0026i64, tm))\n+\t\t\t\t\treturn (NULL);\n \t\t\t\tfields \u003d 0xffff;\t /* everything */\n \t\t\t}\n \t\t\tbreak;\n```",
+      "revId": "d3627a444f99fbdd247461c1442a4fba1b923746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
