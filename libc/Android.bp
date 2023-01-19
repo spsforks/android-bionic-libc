@@ -1412,6 +1412,7 @@ cc_library_static {
     vendor_ramdisk_available: false,
     srcs: libc_common_src_files + [
         "bionic/gwp_asan_wrappers.cpp",
+        "bionic/debuggerd_first_chance_signal_handler.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1440,6 +1441,7 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "gwp_asan_crash_handler",
         "libarm-optimized-routines-string",
         "libasync_safe",
         "libc_bionic_ndk",
@@ -1630,6 +1632,7 @@ filegroup {
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
         "bionic/gwp_asan_wrappers.cpp",
+        "bionic/debuggerd_first_chance_signal_handler.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
@@ -1648,6 +1651,7 @@ filegroup {
     name: "libc_sources_static",
     srcs: [
         "bionic/gwp_asan_wrappers.cpp",
+        "bionic/debuggerd_first_chance_signal_handler.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1682,6 +1686,7 @@ cc_library {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1691,6 +1696,7 @@ cc_library {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
