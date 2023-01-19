@@ -235,6 +235,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "692c5740_fb88a9d5",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2023-01-19T21:26:08Z",
+      "side": 1,
+      "message": "\u003e it\u0027s not like the clang attribute is much more sophisticated than that anyway, right\n\nCorrect. We could make a checker for `!__buf \u0026\u0026 __count !\u003d 0`. I don\u0027t know of any Clang intrinsics for getting the `_Nullabilty` of a variable, so `!__buf` will be limited to catching literal uses of nullptr (and const pointers to null), but it\u0027s probably better than nothing 🤷‍♂️",
+      "parentUuid": "f54af1d6_09453b1b",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
