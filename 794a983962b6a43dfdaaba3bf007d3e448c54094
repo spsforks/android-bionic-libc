@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c473e7ff_e6d23024",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-01-19T20:12:01Z",
+      "side": 1,
+      "message": "Sorry, only `read` says that. `write` doesn\u0027t seem to say anything about how it behaves for a zero size null buffer.",
+      "parentUuid": "c0cf3015_ffaad1d3",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
