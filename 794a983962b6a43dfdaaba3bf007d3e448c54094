@@ -211,6 +211,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f54af1d6_09453b1b",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T21:18:21Z",
+      "side": 1,
+      "message": "\u003e IMO we should make this _Null_unspecified, and follow up with fortify later.\n\nsgtm given that you\u0027re working on an NDK release :-)\n\n\u003e At compile-time, that should be straightforward. It\u0027ll miss cases, but I\u0027d naively imagine that most read(fd, nullptr, 0); are spelled with constants, rather than non-const variables?\n\nyeah, and it\u0027s not like the clang attribute is much more sophisticated than that anyway, right? (and it\u0027s certainly not inserting _run-time_ checks!)",
+      "parentUuid": "889d8372_29c9c2b2",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
