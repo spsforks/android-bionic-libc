@@ -16,6 +16,24 @@
       "message": "do you still need this? (crash_dump isn\u0027t rust, so i\u0027m a bit confused about what needs to be fixed here...)",
       "revId": "4bced57606d98a3dde5daddbd3be61305b321999",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "250d0c9b_044f5a03",
+        "filename": "apex/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-01-19T15:59:50Z",
+      "side": 1,
+      "message": "Not sure, I needed it to progress with the build a long time a go. I\u0027ll reevaluate this.",
+      "parentUuid": "a56763d6_be767932",
+      "revId": "4bced57606d98a3dde5daddbd3be61305b321999",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
