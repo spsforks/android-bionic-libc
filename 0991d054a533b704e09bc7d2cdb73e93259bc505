@@ -70,6 +70,24 @@
       "parentUuid": "8df2c589_9be9b8f9",
       "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd23d4d7_b83284ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-01-19T00:03:48Z",
+      "side": 1,
+      "message": "See aosp/2394538 for what it takes to make the build pass with musl.\n\nFor sys/stat.h, those only fail in fcntl_h.c.  Musl\u0027s fcntl.h does not include sys/stat.h or otherwise define S_IFMT, etc.",
+      "parentUuid": "6e6a9e34_ce922c6c",
+      "revId": "0991d054a533b704e09bc7d2cdb73e93259bc505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
