@@ -139,6 +139,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de10c477_a577deb4",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T21:00:39Z",
+      "side": 1,
+      "message": "yeah, i\u0027m not aware of any use for zero-length _reads_ but zero-length _writes_ are visible to device drivers, which may choose to act on them.\n\nif we have more than a couple of these (where we can just explicitly silence the warning with a comment explaining why we need a zero-length write), we can either just back this out completely, or talk to gbiv@ about whether it\u0027s possible to express a fancy `_FORTIFY_SOURCE` style check of \"well, it\u0027s okay for __buf to be nullptr iff __count is 0\"...",
+      "parentUuid": "cf8b7a30_e3c42020",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
