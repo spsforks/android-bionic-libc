@@ -1579,6 +1579,7 @@ LIBC_U { # introduced=UpsideDownCake
     __freadahead;
     close_range;
     copy_file_range;
+    debuggerd_first_chance_signal_handler;
     memset_explicit;
 } LIBC_T;
 
