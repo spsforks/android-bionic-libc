@@ -23,6 +23,7 @@
     __loader_remove_thread_local_dtor;
     __loader_shared_globals;
     rtld_db_dlactivity;
+    __loader_debuggerd_first_chance_signal_handler;
   local:
     *;
 };
