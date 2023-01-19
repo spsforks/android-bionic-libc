@@ -16,6 +16,24 @@
       "message": "Nit: `enabled: true` is the default, you could drop this whole clause.",
       "revId": "395f440ebd2a10b7fec339eeaee106f62b4cd378",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3689a720_cefd4cd7",
+        "filename": "tests/headers/posix/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-19T21:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c22d077_1cffa251",
+      "revId": "395f440ebd2a10b7fec339eeaee106f62b4cd378",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
