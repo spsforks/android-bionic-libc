@@ -36,6 +36,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "gwp_asan/crash_handler.h"
 #include "gwp_asan/guarded_pool_allocator.h"
 #include "gwp_asan/options.h"
 #include "gwp_asan_wrappers.h"
@@ -189,6 +190,7 @@ bool ShouldGwpAsanSampleProcess(unsigned sample_rate) {
 }
 
 bool GwpAsanInitialized = false;
+bool GwpAsanRecoverable = false;
 
 // The probability (1 / SampleRate) that an allocation gets chosen to be put
 // into the special GWP-ASan pool.
@@ -223,6 +225,22 @@ static const char* kMaxAllocsTargetedSyspropPrefix = "libc.debug.gwp_asan.max_al
 static const char* kMaxAllocsEnvVar = "GWP_ASAN_MAX_ALLOCS";
 
 static const char kPersistPrefix[] = "persist.";
+
+bool NeedsGwpAsanRecovery(void* fault_ptr) {
+  return GwpAsanInitialized && GwpAsanRecoverable &&
+         __gwp_asan_error_is_mine(GuardedAlloc.getAllocatorState(),
+                                  reinterpret_cast<uintptr_t>(fault_ptr));
+}
+
+void GwpAsanPreCrashHandler(void* fault_ptr) {
+  if (!NeedsGwpAsanRecovery(fault_ptr)) return;
+  GuardedAlloc.preCrashReport(fault_ptr);
+}
+
+void GwpAsanPostCrashHandler(void* fault_ptr) {
+  if (!NeedsGwpAsanRecovery(fault_ptr)) return;
+  GuardedAlloc.postCrashReportRecoverableOnly(fault_ptr);
+}
 
 void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
                               const android_mallopt_gwp_asan_options_t& mallopt_options) {
@@ -396,6 +414,9 @@ bool MaybeInitGwpAsan(libc_globals* globals,
 
   __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
   __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
+  __libc_shared_globals()->debuggerd_needs_gwp_asan_recovery = NeedsGwpAsanRecovery;
+  __libc_shared_globals()->debuggerd_gwp_asan_pre_crash_report = GwpAsanPreCrashHandler;
+  __libc_shared_globals()->debuggerd_gwp_asan_post_crash_report = GwpAsanPostCrashHandler;
 
   return true;
 }

@@ -92,6 +92,8 @@ libc_shared_globals* __loader_shared_globals() __LINKER_PUBLIC__;
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_PUBLIC__;
 #endif
+bool __loader_debuggerd_first_chance_signal_handler(int signal_number, siginfo_t* info,
+                                                    void* context) __LINKER_PUBLIC__;
 }
 
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
@@ -300,6 +302,13 @@ void __loader_remove_thread_local_dtor(void* dso_handle) {
 
 libc_shared_globals* __loader_shared_globals() {
   return __libc_shared_globals();
+}
+
+extern "C" bool debuggerd_first_chance_signal_handler_impl(int signal_number, siginfo_t* info,
+                                                           void* context);
+bool __loader_debuggerd_first_chance_signal_handler(int signal_number, siginfo_t* info,
+                                                    void* context) {
+  return debuggerd_first_chance_signal_handler_impl(signal_number, info, context);
 }
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));

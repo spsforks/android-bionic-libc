@@ -53,9 +53,14 @@ void linker_debuggerd_init() {
   // so don't pass in any process info from the bootstrap linker.
   debuggerd_callbacks_t callbacks = {
 #if defined(__ANDROID_APEX__)
-      .get_process_info = get_process_info,
+    .get_process_info = get_process_info,
+    .debuggerd_needs_gwp_asan_recovery = __libc_shared_globals()->debuggerd_needs_gwp_asan_recovery,
+    .debuggerd_gwp_asan_pre_crash_report =
+        __libc_shared_globals()->debuggerd_gwp_asan_pre_crash_report,
+    .debuggerd_gwp_asan_post_crash_report =
+        __libc_shared_globals()->debuggerd_gwp_asan_post_crash_report,
 #endif
-      .post_dump = notify_gdb_of_libraries,
+    .post_dump = notify_gdb_of_libraries,
   };
   debuggerd_init(&callbacks);
 }
