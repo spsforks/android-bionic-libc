@@ -115,6 +115,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cf8b7a30_e3c42020",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-01-19T20:16:04Z",
+      "side": 1,
+      "message": "POSIX has an opinion for write though:\n\n\u003e Before any action described below is taken, and if nbyte is zero and the file is a regular file, the write() function may detect and return errors as described below. In the absence of errors, or if error detection is not performed, the write() function shall return zero and have no other results. If nbyte is zero and the file is not a regular file, the results are unspecified.\n\nhttps://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html",
+      "parentUuid": "c473e7ff_e6d23024",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
