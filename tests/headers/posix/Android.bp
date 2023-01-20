@@ -33,5 +33,9 @@ cc_library_static {
         darwin: {
             enabled: false,
         },
+        // Our glibc is woefully out of date; musl is more useful to us here (http://b/265874089).
+        linux_glibc: {
+            enabled: false,
+        },
     },
 }
