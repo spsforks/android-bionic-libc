@@ -43,14 +43,14 @@ __BEGIN_DECLS
  * size of 4096 (see PAGE_SHIFT in arch/arm/include/asm/page.h and
  * arch/x86/include/asm/page_types.h).
  */
-#if defined(__aarch64__)
-#if defined(__ANDROID__)
+#if defined(__aarch64__) && !defined(__ANDROID__)
+#define PAGE_SIZE 65536
+#else
+#if defined(PAGE_SIZE_16K)
 #define PAGE_SIZE 16384
 #else
-#define PAGE_SIZE 65536
-#endif
-#else
 #define PAGE_SIZE 4096
+#endif
 #endif
 
 #define PAGE_MASK (~(PAGE_SIZE - 1))
