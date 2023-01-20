@@ -128,6 +128,9 @@ cc_defaults {
         malloc_not_svelte: {
             cflags: ["-DUSE_SCUDO"],
         },
+        TargetPageSizeOverride: {
+            cflags: ["-DPAGE_SIZE_16K"],
+        },
     },
 
     lto: {
