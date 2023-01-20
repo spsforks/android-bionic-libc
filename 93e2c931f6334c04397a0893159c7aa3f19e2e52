@@ -22,6 +22,30 @@
       },
       "revId": "93e2c931f6334c04397a0893159c7aa3f19e2e52",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42570d97_ece84c72",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1965080
+      },
+      "writtenOn": "2023-01-20T20:21:49Z",
+      "side": 1,
+      "message": "Ahh I was wondering about that. Once I figure out my repo woes I will give that change a shot, thanks Elliott.",
+      "parentUuid": "4165e8d6_85bb24f7",
+      "range": {
+        "startLine": 131,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 30
+      },
+      "revId": "93e2c931f6334c04397a0893159c7aa3f19e2e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
