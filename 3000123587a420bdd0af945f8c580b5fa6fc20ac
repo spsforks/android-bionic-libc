@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e470a46c_22e769d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2023-01-23T17:04:23Z",
+      "side": 1,
+      "message": "FYI it is being tracked on glibc by https://sourceware.org/bugzilla/show_bug.cgi?id\u003d30035 and potentially fixed by https://patchwork.sourceware.org/project/glibc/patch/20230123170106.3632306-1-adhemerval.zanella@linaro.org/",
+      "revId": "3000123587a420bdd0af945f8c580b5fa6fc20ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
