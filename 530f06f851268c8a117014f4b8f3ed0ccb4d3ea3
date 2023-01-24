@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c8d6591_31ed0a71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-24T20:24:10Z",
+      "side": 1,
+      "message": "Did you verify this works on a process with extra security? Usually one of the media.swcodec or other processes? It goes down a different path in debuggerd.",
+      "revId": "530f06f851268c8a117014f4b8f3ed0ccb4d3ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1a1e548_69e85c7e",
