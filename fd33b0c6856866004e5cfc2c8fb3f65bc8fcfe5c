@@ -16,6 +16,24 @@
       "message": "is this _only_ for modprobe, or do you have other stuff you need to run? (i suspect that toybox, for example, doesn\u0027t cope with no /proc, so you\u0027d probably end up having to mount /proc anyway if you want to run more stuff.)",
       "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "918c1a59_26a17a61",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1951687
+      },
+      "writtenOn": "2023-01-24T22:31:28Z",
+      "side": 1,
+      "message": "toolbox\u0027s modprobe is the only known user and I suppose this is very much unlikely there will be any other.\n\nToybox\u0027s modprobe should work as well, I\u0027ve recently pushed a patch to remove the need for /proc.",
+      "parentUuid": "b179e6a8_ba9934bf",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
