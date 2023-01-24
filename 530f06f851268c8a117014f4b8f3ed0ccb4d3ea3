@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1a1e548_69e85c7e",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-01-24T18:50:21Z",
+      "side": 1,
+      "message": "can we use android::base::ParseBool?",
+      "range": {
+        "startLine": 339,
+        "startChar": 0,
+        "endLine": 343,
+        "endChar": 20
+      },
+      "revId": "530f06f851268c8a117014f4b8f3ed0ccb4d3ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
