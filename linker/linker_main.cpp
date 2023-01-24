@@ -203,7 +203,7 @@ struct ExecutableInfo {
   ElfW(Addr) entry_point;
 };
 
-static ExecutableInfo get_executable_info() {
+static ExecutableInfo get_executable_info(char *arg_path) {
   ExecutableInfo result = {};
 
   if (is_first_stage_init()) {
@@ -220,18 +220,33 @@ static ExecutableInfo get_executable_info() {
       result.path = std::string(path, path_len);
     }
   } else {
+    char *result_path;
+    int result_path_len;
+
     // Stat "/proc/self/exe" instead of executable_path because
     // the executable could be unlinked by this point and it should
     // not cause a crash (see http://b/31084669)
     if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &result.file_stat)) != 0) {
-      async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+
+      // /proc/self/exe not accessible ... try with argv[0]
+      if (TEMP_FAILURE_RETRY(stat(arg_path, &result.file_stat)) != 0) {
+        async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %s",
+            arg_path, strerror(errno));
+      }
+
+      result_path = arg_path;
+      result_path_len = strlen(arg_path);
+    } else {
+      char path[PATH_MAX];
+      ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+      if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+        async_safe_fatal("readlink(/proc/self/exe) failed: %s", strerror(errno));
+      }
+
+      result_path = path;
+      result_path_len = path_len;
     }
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
-    }
-    result.path = std::string(path, path_len);
+    result.path = std::string(result_path, result_path_len);
   }
 
   result.phdr = reinterpret_cast<const ElfW(Phdr)*>(getauxval(AT_PHDR));
@@ -359,7 +374,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   }
 
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
-                                                get_executable_info();
+                                                get_executable_info(args.argv[0]);
 
   INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
 
