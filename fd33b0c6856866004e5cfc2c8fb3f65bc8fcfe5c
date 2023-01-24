@@ -34,6 +34,24 @@
       "parentUuid": "b179e6a8_ba9934bf",
       "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f25f6fe_e7a2bac4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-24T22:40:51Z",
+      "side": 1,
+      "message": "yeah, but _other_ stuff in toybox (and bionic) relies on /proc. (there\u0027s a lot of stuff that\u0027s implemented via /proc/self/fd, for example.)\n\nmy question is --- \"is toolbox modprobe the only binary you ever need to be able to run before /proc is mounted?\". if so (and you\u0027ve already tested toolbox modprobe and it\u0027s fine with just this), i think this change probably makes sense. if not, i don\u0027t think we should try to go down the route of working around _every_ use of /proc in bionic and/or toybox, and should just make sure you mount /proc nice and early instead...",
+      "parentUuid": "918c1a59_26a17a61",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
