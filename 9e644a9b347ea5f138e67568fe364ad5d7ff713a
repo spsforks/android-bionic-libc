@@ -34,6 +34,24 @@
       "parentUuid": "301cf03d_4c8925f6",
       "revId": "9e644a9b347ea5f138e67568fe364ad5d7ff713a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f27490ba_0eb03a49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1073883
+      },
+      "writtenOn": "2023-01-24T22:58:18Z",
+      "side": 1,
+      "message": "We should see the perf regression go away in the recent patch set then.",
+      "parentUuid": "e1b4251f_3d3f2bc6",
+      "revId": "9e644a9b347ea5f138e67568fe364ad5d7ff713a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
