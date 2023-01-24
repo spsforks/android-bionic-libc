@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b73cfc8_52b9d9c9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-24T16:46:08Z",
+      "side": 1,
+      "message": "oops :-)",
+      "revId": "5c32571dfc21dc0784fe290e3a8dca346da5612d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
