@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd530775_38c6ff1e",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-24T01:22:07Z",
+      "side": 1,
+      "message": "(use libbase and let it deal with the host for you?)",
+      "revId": "8df8a215325921be6133267653e84b68939ad95f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fcc0d96_3fba5cc7",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-24T01:22:07Z",
+      "side": 1,
+      "message": "(and all this stuff...)",
+      "revId": "8df8a215325921be6133267653e84b68939ad95f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
