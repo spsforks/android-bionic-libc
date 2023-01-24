@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffb31eb1_07ba2591",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-24T02:28:53Z",
+      "side": 1,
+      "message": "GetBoolProperty will do what you want here, so you can write this as `(\"ro.config.low_ram\" || (\"ro.debuggable\" \u0026\u0026 \"debug.force_low_ram\"))`, which is probably a bit easier to read? (or assign to three local bools if you think that\u0027s too long?)",
+      "revId": "5918646282cd901168135ada53324c370bd72280",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
