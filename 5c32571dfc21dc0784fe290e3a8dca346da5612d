@@ -16,6 +16,24 @@
       "message": "oops :-)",
       "revId": "5c32571dfc21dc0784fe290e3a8dca346da5612d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4635c127_761ccecf",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-24T20:32:56Z",
+      "side": 1,
+      "message": "I did this for the first patchset, then for this patchset. I seem to have some mental block for not removing this before uploading.\n\nFixed again.",
+      "parentUuid": "1b73cfc8_52b9d9c9",
+      "revId": "5c32571dfc21dc0784fe290e3a8dca346da5612d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
