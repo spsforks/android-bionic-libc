@@ -52,6 +52,24 @@
       "parentUuid": "918c1a59_26a17a61",
       "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04d9b44e_9be77cc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1951687
+      },
+      "writtenOn": "2023-01-24T22:51:07Z",
+      "side": 1,
+      "message": "I don\u0027t think we\u0027ll ever need to run anything else than modprobe so early.\n\nAlso, following a conversation with my colleagues, we decided to not enable the generic function that allows the kernel to run any binary and instead to force it to modprobe only (and also only during the kernel init)\n\nSo no other binary will be able to run before /init.",
+      "parentUuid": "1f25f6fe_e7a2bac4",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
