@@ -34,6 +34,24 @@
       "parentUuid": "ffb31eb1_07ba2591",
       "revId": "5918646282cd901168135ada53324c370bd72280",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff67a226_2932b168",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-24T03:18:50Z",
+      "side": 1,
+      "message": "Given how that value is set, I think it\u0027s safe to treat it like a bool. So I\u0027ve changed the expression to treat all of the properties as bools.",
+      "parentUuid": "7092599b_8a87eb76",
+      "revId": "5918646282cd901168135ada53324c370bd72280",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
