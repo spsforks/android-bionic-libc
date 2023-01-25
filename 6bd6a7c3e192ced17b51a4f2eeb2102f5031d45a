@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7c7b776_39cbb778",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:46:27Z",
+      "side": 1,
+      "message": "this is still allocating a new utmp. (since EMPTY is 0, you can\u0027t actually tell the difference between the one you initialized on L33 and the new one you created here on L34, but if you print out their addresses with `printf(\"%p %p\\n\", \u0026tmp, failure.get())` you should see they have different values.)\n\ni think you just want `\u0026tmp` on L35. (https://en.cppreference.com/w/c/language/operator_member_access)\n\nbtw, although it doesn\u0027t matter in Android -- where we automatically zero every stack allocation anyway -- you might want to get into the habit of writing L32-L33 like this instead:\n```\n  utmp tmp \u003d { .ut_type \u003d EMPTY };\n```\ni personally like anyway that because it\u0027s slightly less typing, but it actually has a slightly different meaning. it\u0027s equivalent to this:\n```\n  utmp tmp \u003d {}\n  tmp.ut_type \u003d EMPTY;\n```\nwhere the first line says \"zero everything\" and the second line says \"now overwrite this one field\". what you _currently_ have:\n```\n  utmp tmp;\n  tmp.ut_type \u003d EMPTY;\n```\nactually means \"give me an _uninitialized_ struct utmp, containing whatever crap happens to be on the stack right now, and _only_ initialize one field in it\". (though, like i said, this is such a common C programming mistake that Android just says \"no, we\u0027ll always zero everything anyway\".)\n\ndon\u0027t worry about performance --- the compiler is clever enough that an explicit `\u003d {}` or `\u003d { .foo \u003d bar }` doesn\u0027t cost you _in addition_ to the implicit zeroing. any given piece of memory will only be initialized once.\n\nand, yes, if you\u0027re wondering, you can initialize multiple fields at once inside the `{ ... }`. just separate the initializations with commas. (https://en.cppreference.com/w/c/language/struct_initialization)",
+      "revId": "6bd6a7c3e192ced17b51a4f2eeb2102f5031d45a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
