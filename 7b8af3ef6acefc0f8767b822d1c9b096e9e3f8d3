@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddbeb69f_1e68753b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1951687
+      },
+      "writtenOn": "2023-01-25T16:35:02Z",
+      "side": 1,
+      "message": "It\u0027s the right time to change that.",
+      "parentUuid": "36bc9d59_5840072f",
+      "range": {
+        "startLine": 213,
+        "startChar": 59,
+        "endLine": 213,
+        "endChar": 63
+      },
+      "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e21237a9_3049a586",
@@ -54,6 +78,24 @@
       "writtenOn": "2023-01-25T16:11:12Z",
       "side": 1,
       "message": "is having the success case first clearer? (it usually is, when there\u0027s an `else`.)\n\nthat wasn\u0027t meant as a rhetorical question, but thinking about it a bit more made me realize that it leads to clearer handling for the [can\u0027t happen] \"what if it returns 0?\" case...\n```\nif (sym_path_len \u003e 0 \u0026\u0026 sym_path_len \u003c sizeof(sym_path)) {\n  // use it\n} else {\n  // default\n}\n```",
+      "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "278301a7_967daf0e",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1951687
+      },
+      "writtenOn": "2023-01-25T16:35:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e21237a9_3049a586",
       "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
