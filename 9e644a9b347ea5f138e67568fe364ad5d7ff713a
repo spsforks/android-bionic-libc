@@ -69,6 +69,24 @@
       "message": "looks like all these improvements got accidentally reverted now you\u0027ve undone the .bp change?\n\n(seems like it\u0027s one of those days where everyone\u0027s having git troubles! :-) )",
       "revId": "9e644a9b347ea5f138e67568fe364ad5d7ff713a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88a13092_81327d88",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-25T01:26:08Z",
+      "side": 1,
+      "message": "One of those weeks, and it\u0027s only Tuesday.\n\nI have this change in two places, and modified the wrong one.",
+      "parentUuid": "0f5e6786_e51e3c48",
+      "revId": "9e644a9b347ea5f138e67568fe364ad5d7ff713a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
