@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1f45fdd_9001325e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T16:11:12Z",
+      "side": 1,
+      "message": "oh, nice ... that worked out even better than i\u0027d hoped :-)",
+      "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36bc9d59_5840072f",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T16:11:12Z",
+      "side": 1,
+      "message": "i know this was already like this, but switch these to `\u003d\u003d -1` for clarity? maybe it\u0027s just too early in the morning here, but it took me a while to read these correctly!",
+      "range": {
+        "startLine": 213,
+        "startChar": 59,
+        "endLine": 213,
+        "endChar": 63
+      },
+      "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e21237a9_3049a586",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T16:11:12Z",
+      "side": 1,
+      "message": "is having the success case first clearer? (it usually is, when there\u0027s an `else`.)\n\nthat wasn\u0027t meant as a rhetorical question, but thinking about it a bit more made me realize that it leads to clearer handling for the [can\u0027t happen] \"what if it returns 0?\" case...\n```\nif (sym_path_len \u003e 0 \u0026\u0026 sym_path_len \u003c sizeof(sym_path)) {\n  // use it\n} else {\n  // default\n}\n```",
+      "revId": "7b8af3ef6acefc0f8767b822d1c9b096e9e3f8d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
