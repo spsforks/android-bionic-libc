@@ -52,6 +52,24 @@
       "parentUuid": "82468ee8_4798c647",
       "revId": "6bd6a7c3e192ced17b51a4f2eeb2102f5031d45a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5e4541c_a1afeef1",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-25T21:48:48Z",
+      "side": 1,
+      "message": "I see! Thank you :D",
+      "parentUuid": "49e55e4f_211d4fdb",
+      "revId": "6bd6a7c3e192ced17b51a4f2eeb2102f5031d45a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
