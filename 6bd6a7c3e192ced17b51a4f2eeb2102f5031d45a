@@ -34,6 +34,24 @@
       "parentUuid": "b7c7b776_39cbb778",
       "revId": "6bd6a7c3e192ced17b51a4f2eeb2102f5031d45a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49e55e4f_211d4fdb",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T20:15:32Z",
+      "side": 1,
+      "message": "unique_ptr is useful if you _have_ to allocate on the heap for some reason. two really common reasons for that:\n\n1. you\u0027re interacting with a legacy C API. you\u0027ll see a lot of unique_ptr usage with stdio FILE*s or similar API like opendir()/closedir(). random example: https://source.corp.google.com/android/packages/modules/adb/adb.cpp;l\u003d669?q\u003dfile:cpp%20unique_ptr%20release%20case:yes\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\n2. when there\u0027s one path through the function that calls .release(), and the unique_ptr is really just about cleaning up after any errors. random example: https://source.corp.google.com/android/frameworks/base/core/jni/android_content_res_ApkAssets.cpp;l\u003d442?q\u003dfile:cpp%20unique_ptr%20return.*release%5C(%5C)%20case:yes\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F (especially because that has multiple error `return`s)\n\n\u003e The use of unique pointer is to help avoid forgetting dereference\n\n\"deallocation\" (aka \"free\"), yes.\n\n\u003e But in this case, there is no need for unique pointer, just pass the address of the variable.\n\nexactly: you don\u0027t have either of the problems mentioned above that usually motivate unique_ptr (and you don\u0027t have any other problem either :-) ) so you can just use the stack directly.",
+      "parentUuid": "82468ee8_4798c647",
+      "revId": "6bd6a7c3e192ced17b51a4f2eeb2102f5031d45a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
