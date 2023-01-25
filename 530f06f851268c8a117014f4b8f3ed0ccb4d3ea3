@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "473d8c5e_71fdf89a",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-01-25T00:08:49Z",
+      "side": 1,
+      "message": "nit: returns",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 18
+      },
+      "revId": "530f06f851268c8a117014f4b8f3ed0ccb4d3ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1a1e548_69e85c7e",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 5
