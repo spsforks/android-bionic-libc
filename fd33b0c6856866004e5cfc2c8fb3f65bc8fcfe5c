@@ -70,6 +70,126 @@
       "parentUuid": "1f25f6fe_e7a2bac4",
       "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e783aa2_a06e1bbd",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "type*\n\nshouldn\u0027t this be const?",
+      "range": {
+        "startLine": 206,
+        "startChar": 42,
+        "endLine": 206,
+        "endChar": 48
+      },
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffede8ae_8d150e77",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "do we still need this if we have your more general workaround?",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05ca902d_646a089b",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "size_t",
+      "range": {
+        "startLine": 224,
+        "startChar": 4,
+        "endLine": 224,
+        "endChar": 7
+      },
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cf2af8e_7deef8ec",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "probably clearer the other way round? (especially because /proc/self/exe being accessible is the _expected_ case.)",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f219b0f8_955f438c",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "(if you\u0027re going to fix my ugly orthography, probably better to switch from `\u0027` to `\\\"` than to just delete it :-) )",
+      "range": {
+        "startLine": 243,
+        "startChar": 35,
+        "endLine": 243,
+        "endChar": 36
+      },
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d28a0f8_195b53b1",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-25T00:34:55Z",
+      "side": 1,
+      "message": "ah, given where result_path_len ends up, probably just have an assignment to `result.path` in both branches? std::string will do the strlen() for you if you just pass a const char* [in the arg_path case], and you can leave this as-is in the readlink() case?",
+      "revId": "fd33b0c6856866004e5cfc2c8fb3f65bc8fcfe5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
