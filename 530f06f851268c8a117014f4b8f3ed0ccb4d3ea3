@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa8d2a88_a59bf97f",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-25T19:22:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "473d8c5e_71fdf89a",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 18
+      },
+      "revId": "530f06f851268c8a117014f4b8f3ed0ccb4d3ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1a1e548_69e85c7e",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-01-24T18:50:21Z",
       "side": 1,
       "message": "can we use android::base::ParseBool?",
+      "range": {
+        "startLine": 339,
+        "startChar": 0,
+        "endLine": 343,
+        "endChar": 20
+      },
+      "revId": "530f06f851268c8a117014f4b8f3ed0ccb4d3ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01c0aa70_837554f0",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-25T19:22:53Z",
+      "side": 1,
+      "message": "i don\u0027t think we want to pull a libbase dependency into libc (and IIRC i looked at this at some point from a prompt by you, and even if we wanted to, there\u0027s circular dependency shenanigans that make it not worth even trying).",
+      "parentUuid": "e1a1e548_69e85c7e",
       "range": {
         "startLine": 339,
         "startChar": 0,
