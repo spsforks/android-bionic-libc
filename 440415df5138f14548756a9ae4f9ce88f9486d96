@@ -16,6 +16,24 @@
       "message": "this would be good c++ if you actually needed a heap-allocated struct, but you don\u0027t... just use the stack directly?",
       "revId": "440415df5138f14548756a9ae4f9ce88f9486d96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0b00435_e8e841d9",
+        "filename": "tests/utmp_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-25T00:27:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "896e6658_7c880a8f",
+      "revId": "440415df5138f14548756a9ae4f9ce88f9486d96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
