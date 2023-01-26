@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "04649e1c_2baa8def",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-26T21:52:40Z",
+      "side": 1,
+      "message": "What restricts it? ld.config.txt says:\n\n```\nnamespace.com_android_art.search.paths \u003d /apex/com.android.art/${LIB}\nnamespace.com_android_art.permitted.paths \u003d /apex/com.android.art/${LIB}\nnamespace.com_android_art.permitted.paths +\u003d /system/${LIB}\nnamespace.com_android_art.permitted.paths +\u003d /data\nnamespace.com_android_art.permitted.paths +\u003d /apex/com.android.art/javalib\n```\n\nThere\u0027s no entry permitting the access of symbols from `/system/bin/linker(64)?`.\n\n*Why*? I assumed this was intentional, some part of \"don\u0027t let apexes touch linker symbols\" for ${TREBLE_REASON}. If that doesn\u0027t exist, and we should allow libart to just call into the linker directly, then I can probably remove the libc proxy. Please LMK.",
+      "parentUuid": "0e202a95_26df8e96",
+      "range": {
+        "startLine": 35,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 48
+      },
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "42b3410b_581f1173",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 6
@@ -71,6 +95,24 @@
       "writtenOn": "2023-01-26T20:25:22Z",
       "side": 1,
       "message": "we could just be strict here, rather than allow all these options. (ironically it\u0027s the fact that we historically supported too many damn options that\u0027s why ParseBool isn\u0027t header-only in libbase :-( )",
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "485400c3_7ec5768d",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-26T21:52:40Z",
+      "side": 1,
+      "message": "(answered below)",
+      "parentUuid": "42b3410b_581f1173",
       "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -88,6 +130,24 @@
       "writtenOn": "2023-01-26T20:25:22Z",
       "side": 1,
       "message": "at a higher level, doesn\u0027t this seem backwards? shouldn\u0027t we be checking for the valid \"yes\"es, and treating everything else (including errors) as \"no\", rather than treating errors as \"yes\"? (if nothing else, this is a difference from all the code that calls libbase or libcutils.)",
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49573a6d_28cd03f6",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-26T21:52:40Z",
+      "side": 1,
+      "message": "Original idea was that `adb shell GWP_ASAN_RECOVERABLE /data/.../exec` would work as \"read\". Turns out that\u0027s actually not the case anyway, and yeah; we can just be more strict about this and warn on unknown values, like we do for bad integers.",
+      "parentUuid": "d1d8b739_7170db9f",
       "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
