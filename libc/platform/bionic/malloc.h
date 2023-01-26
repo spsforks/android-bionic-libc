@@ -121,18 +121,32 @@ typedef struct {
   // apply to system apps. They use the "libc.debug.gwp_asan.*.system_default"
   // sysprops.
   enum Action {
-    // The app has opted-in to GWP-ASan, and should always have it enabled. This
-    // should only be used by apps.
-    TURN_ON_FOR_APP,
-    // System processes apps have GWP-ASan enabled by default, but use the
-    // process sampling method.
-    TURN_ON_WITH_SAMPLING,
-    // Non-system apps don't have GWP-ASan by default.
-    DONT_TURN_ON_UNLESS_OVERRIDDEN,
+    // Enable GWP-ASan. This is used by apps that have `gwpAsanMode=always` in
+    // the manifest.
+    APP_ENABLE,
+    // Enable GWP-ASan, but only a small percentage of the time. This is used by
+    // system processes and system apps, and we use a lottery to determine which
+    // processes have GWP-ASan enabled. This allows us to mitigate system-wide
+    // memory overhead concerns, as each GWP-ASan enabled process uses ~70KiB of
+    // extra memory.
+    SYSTEM_ENABLE_SOMETIMES,
+    // Don't enable GWP-ASan, unless overwritten by a system property or
+    // environment variable. This is used by apps that have `gwpAsanMode=never`
+    // in the manifest. Prior to Android 14 (API level 34), this also was used
+    // by non-system apps that didn't specify a `gwpAsanMode` in their manifest.
+    DONT_ENABLE,
+    // Enable GWP-ASan, but only a small percentage of the time, and enable it
+    // in the non-crashing ("recoverable") mode. In Android 14, this is used by
+    // apps that don't specify `gwpAsanMode` (or use `gwpAsanMode=default`) in
+    // their manifest. GWP-ASan will detect heap memory safety bugs in this
+    // mode, and bug reports will be created by debuggerd, however the process
+    // will recover and continue to function as if the memory safety bug wasn't
+    // detected.
+    APP_ENABLE_SOMETIMES_NON_CRASHING,
     // Note: GWP-ASan cannot be disabled once it's been enabled.
   };
 
-  Action desire = DONT_TURN_ON_UNLESS_OVERRIDDEN;
+  Action desire = DONT_ENABLE;
 } android_mallopt_gwp_asan_options_t;
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

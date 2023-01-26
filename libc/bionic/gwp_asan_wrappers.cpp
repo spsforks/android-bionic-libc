@@ -260,8 +260,12 @@ void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   options->MaxSimultaneousAllocations = kDefaultMaxAllocs;
 
   *process_sample_rate = 1;
-  if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING) {
+  if (mallopt_options.desire == Action::SYSTEM_ENABLE_SOMETIMES) {
     *process_sample_rate = kDefaultProcessSampling;
+  } else if (mallopt_options.desire == Action::APP_ENABLE_SOMETIMES_NON_CRASHING) {
+    *process_sample_rate = kDefaultProcessSampling;
+    options->Recoverable = true;
+    GwpAsanRecoverable = true;
   }
 }
 
@@ -281,7 +285,7 @@ bool GetGwpAsanOptionImpl(char* value_out,
   // be used. Tests still continue to use the environment variable though.
   if (*basename != '\0') {
     const char* default_sysprop = system_sysprop;
-    if (mallopt_options.desire == Action::TURN_ON_FOR_APP) {
+    if (mallopt_options.desire == Action::APP_ENABLE) {
       default_sysprop = app_sysprop;
     }
     async_safe_format_buffer(&program_specific_sysprop[0], kSyspropMaxLen, "%s%s",
@@ -421,7 +425,7 @@ bool MaybeInitGwpAsan(libc_globals* globals,
   Options options;
   unsigned process_sample_rate = kDefaultProcessSampling;
   if (!GetGwpAsanOptions(&options, &process_sample_rate, mallopt_options) &&
-      mallopt_options.desire == Action::DONT_TURN_ON_UNLESS_OVERRIDDEN) {
+      mallopt_options.desire == Action::DONT_ENABLE) {
     return false;
   }
 
@@ -488,7 +492,7 @@ bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
 
   android_mallopt_gwp_asan_options_t mallopt_options;
   mallopt_options.program_name = progname;
-  mallopt_options.desire = Action::TURN_ON_WITH_SAMPLING;
+  mallopt_options.desire = Action::SYSTEM_ENABLE_SOMETIMES;
 
   return MaybeInitGwpAsan(globals, mallopt_options);
 }
