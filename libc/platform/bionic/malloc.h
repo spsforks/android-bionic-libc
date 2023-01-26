@@ -121,14 +121,23 @@ typedef struct {
   // apply to system apps. They use the "libc.debug.gwp_asan.*.system_default"
   // sysprops.
   enum Action {
-    // The app has opted-in to GWP-ASan, and should always have it enabled. This
-    // should only be used by apps.
+    // A (non-system) app used gwpAsan=true in its AndroidManifest.xml. This
+    // enables GWP-ASan 100% of the time, in enforcing (i.e. crashing) mode.
     TURN_ON_FOR_APP,
-    // System processes apps have GWP-ASan enabled by default, but use the
-    // process sampling method.
+    // System processes and system apps have GWP-ASan enabled by default (in
+    // enforcing mode), but with process sampling, in enforcing (i.e. crashing)
+    // mode.
     TURN_ON_WITH_SAMPLING,
-    // Non-system apps don't have GWP-ASan by default.
+    // Prior to Android U, a non-system app that didn't specify `gwpAsanMode` in
+    // its AndroidManifest.xml didn't get GWP-ASan (i.e.
+    // DONT_TURN_ON_UNLESS_OVERRIDDEN). Now, an unspecified `gwpAsanMode` in a
+    // non-system app means to turn GWP-ASan on, with processing sampling, in
+    // the non-crashing "recoverable" mode (i.e.
+    // TURN_ON_FOR_APP_SAMPLED_NON_CRASHING). A non-system app can still fully
+    // opt-out of GWP-ASan by specifying `gwpAsanMode="never"` in the manifest
+    // (i.e. DONT_TURN_ON_UNLESS_OVERRIDDEN).
     DONT_TURN_ON_UNLESS_OVERRIDDEN,
+    TURN_ON_FOR_APP_SAMPLED_NON_CRASHING,
     // Note: GWP-ASan cannot be disabled once it's been enabled.
   };
 
