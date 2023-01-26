@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8c3bbe12_18e4a493",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-26T21:57:06Z",
+      "side": 1,
+      "message": "oh, _that_ part makes sense, but libdl is the usual way you\u0027d export something like that, not libc. (you\u0027ve even had to touch the other relevant files in this CL :-) )",
+      "parentUuid": "04649e1c_2baa8def",
+      "range": {
+        "startLine": 35,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 48
+      },
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "42b3410b_581f1173",
         "filename": "libc/bionic/gwp_asan_wrappers.cpp",
         "patchSetId": 6
