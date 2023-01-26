@@ -16,6 +16,80 @@
       "message": "Adding enh for another opinion on this change.",
       "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a483c231_8389cf60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-26T20:25:22Z",
+      "side": 1,
+      "message": "(not sure if there was a specific question for me, but i\u0027m guessing it was the \"should this really be in libc?\" bit?)",
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e202a95_26df8e96",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-26T20:25:22Z",
+      "side": 1,
+      "message": "does that make sense? _why_ can\u0027t ART call stuff in libdl?",
+      "range": {
+        "startLine": 35,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 48
+      },
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42b3410b_581f1173",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-26T20:25:22Z",
+      "side": 1,
+      "message": "we could just be strict here, rather than allow all these options. (ironically it\u0027s the fact that we historically supported too many damn options that\u0027s why ParseBool isn\u0027t header-only in libbase :-( )",
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1d8b739_7170db9f",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-26T20:25:22Z",
+      "side": 1,
+      "message": "at a higher level, doesn\u0027t this seem backwards? shouldn\u0027t we be checking for the valid \"yes\"es, and treating everything else (including errors) as \"no\", rather than treating errors as \"yes\"? (if nothing else, this is a difference from all the code that calls libbase or libcutils.)",
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
