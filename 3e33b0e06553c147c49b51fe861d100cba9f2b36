@@ -106,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c38f122e_46f2ddbd",
+        "filename": "libc/bionic/debuggerd_first_chance_signal_handler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-01-27T19:21:37Z",
+      "side": 1,
+      "message": "roger. moved it into libdl, thanks for the tip.",
+      "parentUuid": "8c3bbe12_18e4a493",
+      "range": {
+        "startLine": 35,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 48
+      },
+      "revId": "3e33b0e06553c147c49b51fe861d100cba9f2b36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "42b3410b_581f1173",
