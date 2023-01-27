@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19808262_4eb89108",
+        "filename": "libdl/libdl.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-27T23:41:30Z",
+      "side": 1,
+      "message": "maybe word the other way round? \"Returns true if this function handled the signal, false if the caller should handle the signal itself.\" seems a bit less unclear?",
+      "range": {
+        "startLine": 145,
+        "startChar": 31,
+        "endLine": 145,
+        "endChar": 70
+      },
+      "revId": "5eb7964cf25d3d7f81f358794c9cd11415994707",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
