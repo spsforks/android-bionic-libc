@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d70b4b_07d60885",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-27T20:32:19Z",
+      "side": 1,
+      "message": "otherwise seems fine, unless i missed cferris\u0027 real question?",
+      "revId": "9c7cfc033503ce9c43dcc135b5e4c2063c358d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca2d4a2f_459a36bd",
+        "filename": "libdl/libdl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-27T20:32:19Z",
+      "side": 1,
+      "message": "we\u0027ve tried to call all non-standard functions `android_*`. just s/debuggerd/android/?",
+      "range": {
+        "startLine": 150,
+        "startChar": 31,
+        "endLine": 150,
+        "endChar": 68
+      },
+      "revId": "9c7cfc033503ce9c43dcc135b5e4c2063c358d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
