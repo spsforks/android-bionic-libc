@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "429e1ebe_9025dc36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T20:10:47Z",
+      "side": 1,
+      "message": "+gbiv as the one person i can think of who might have a different option/good reason for us not to interpret it this way...",
+      "revId": "4aa1ea04d7255589081e7c3dcc81a84e463f6e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "299779f5_1ad15d73",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T20:10:47Z",
+      "side": 1,
+      "message": "(i think this is fine, but i\u0027m leaving a comment for the record, in case someone from the future is wondering why we chose this --- i\u0027m guessing you chose `_Null_unspecified` over `_Nullable` because of the case where this sometimes _must_ be null? so we\u0027re interpreting `_Null_unspecified` as a clue that \"you really need to read the man page\", which seems reasonable?)",
+      "range": {
+        "startLine": 152,
+        "startChar": 37,
+        "endLine": 152,
+        "endChar": 54
+      },
+      "revId": "4aa1ea04d7255589081e7c3dcc81a84e463f6e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
