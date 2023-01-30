@@ -33,6 +33,98 @@
       "message": "over to enh@, this is dependent on aosp/2394588 but wanted to frontload the review",
       "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b43843d_ec022110",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T18:22:05Z",
+      "side": 1,
+      "message": "prefer API levels in developer documentation",
+      "range": {
+        "startLine": 131,
+        "startChar": 16,
+        "endLine": 131,
+        "endChar": 25
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52a3924b_475f9068",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T18:22:05Z",
+      "side": 1,
+      "message": "should we remove `TURN_` from all of these days, and then just have \"^ON_\" and \"^OFF_\" names? that seems like they\u0027d be a bit easier to grok?",
+      "range": {
+        "startLine": 133,
+        "startChar": 7,
+        "endLine": 133,
+        "endChar": 17
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a56e76f_a78d4842",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T18:22:05Z",
+      "side": 1,
+      "message": "document what \"overridden\" means here? an explicit call to android_mallopt() by the app in question, to undo what it asked for in its manifest?",
+      "range": {
+        "startLine": 138,
+        "startChar": 33,
+        "endLine": 138,
+        "endChar": 43
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b0b6663_b9adee1b",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-30T18:22:05Z",
+      "side": 1,
+      "message": "so `ON_WITH_` is really `ON_FOR_ALL_`? if so, should we rename it? (and if not, what name would make it clearer?)\n\n(i\u0027m assuming we\u0027re only going to have more options over time, and this bag of variants is already making me think \"should this have been a bitmask instead?\", so at least making the names less irregular seems useful?)",
+      "range": {
+        "startLine": 140,
+        "startChar": 12,
+        "endLine": 140,
+        "endChar": 16
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
