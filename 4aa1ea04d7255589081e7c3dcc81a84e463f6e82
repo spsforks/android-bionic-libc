@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "1ed9b549_6c8f6088",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-30T21:40:46Z",
+      "side": 1,
+      "message": "I see. I will define a new macro like `cdefs.h` there in a new CL.",
+      "parentUuid": "38d1a8dd_bfb2e74a",
+      "revId": "4aa1ea04d7255589081e7c3dcc81a84e463f6e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "299779f5_1ad15d73",
         "filename": "libc/include/fcntl.h",
         "patchSetId": 1
