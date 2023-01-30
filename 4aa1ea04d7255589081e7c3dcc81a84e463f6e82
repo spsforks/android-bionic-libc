@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f0abbfee_4bae6891",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2023-01-30T20:38:04Z",
+      "side": 1,
+      "message": "Using `_Null_unspecified` seems fine to me here, though I wonder if there\u0027s a better way to surface the intent here? e.g.,\n\ncdefs.h:\n```\n/*\n * The nullness constraints of this parameter or return value are\n * quite complex. This is used to highlight spots where devs are encouraged\n * to read relevant manuals to understand the full picture of nullness for\n * this pointer.\n */\n#define BIONIC_COMPLICATED_NULLNESS _Null_unspecified\n```\n\n?",
+      "parentUuid": "429e1ebe_9025dc36",
+      "revId": "4aa1ea04d7255589081e7c3dcc81a84e463f6e82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "299779f5_1ad15d73",
         "filename": "libc/include/fcntl.h",
         "patchSetId": 1
