@@ -22,6 +22,30 @@
       },
       "revId": "50c5d5704f34495905984f6b837305a4ddf43310",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2b3f0a9_758a8ea2",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-01-31T20:09:55Z",
+      "side": 1,
+      "message": "\u003e every attribute starts with double underscores will be recognized as a struct member\n\nby what?",
+      "parentUuid": "eb98807a_badfa4d7",
+      "range": {
+        "startLine": 52,
+        "startChar": 14,
+        "endLine": 52,
+        "endChar": 31
+      },
+      "revId": "50c5d5704f34495905984f6b837305a4ddf43310",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
