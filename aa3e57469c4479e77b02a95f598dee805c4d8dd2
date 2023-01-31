@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b630c8e6_c2f8a25d",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1954524
+      },
+      "writtenOn": "2023-01-31T22:04:54Z",
+      "side": 1,
+      "message": "I think this comes after the call to debug_write_malloc_leak_info() which has done purging in write_dump. So the reason we need this is that leak_info may also use a lot of memory. Then I may consider doing the purging in debug_dump_heap() and here, so we always purging at the place we know that we have finished releasing a bunch of memory.\n\nNo strong opinion here. Feel free to merge this approach :)",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 499,
+        "endChar": 34
+      },
+      "revId": "aa3e57469c4479e77b02a95f598dee805c4d8dd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
