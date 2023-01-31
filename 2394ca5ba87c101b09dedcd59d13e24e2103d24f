@@ -62,6 +62,53 @@
       },
       "revId": "2394ca5ba87c101b09dedcd59d13e24e2103d24f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81ed99e2_fb306059",
+        "filename": "libc/include/common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-31T00:58:42Z",
+      "side": 1,
+      "message": "oops, good point 😂",
+      "parentUuid": "54d58520_50b41c00",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "2394ca5ba87c101b09dedcd59d13e24e2103d24f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ebdf1a_bcfc6fa5",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-01-31T00:58:42Z",
+      "side": 1,
+      "message": "A far reply to where the directory of `common.h` should be. Yes, I am also thinking of this too. I am also thinking of whether we need to add another macro to differentiate struct(this also needs to read code according to aosp/2290254) and function.",
+      "range": {
+        "startLine": 54,
+        "startChar": 14,
+        "endLine": 54,
+        "endChar": 41
+      },
+      "revId": "2394ca5ba87c101b09dedcd59d13e24e2103d24f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
