@@ -22,6 +22,30 @@
       },
       "revId": "aa3e57469c4479e77b02a95f598dee805c4d8dd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21660f7d_3f66b756",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-01-31T22:18:50Z",
+      "side": 1,
+      "message": "The path that calls debug_free_malloc_leak_info is something like:\n\n    android_mallopt(M_GET_MALLOC_LEAK_INFO, \u0026leak_info, sizeof(leak_info));\n    // Do something with leak_info\n    android_mallopt(M_FREE_MALLOC_LEAK_INFO, \u0026leak_info, sizeof(leak_info));\n    \nThe calls to debug_write_malloc_leak_info are separate and don\u0027t involve making that call. In fact, I would like to deprecate the separate GET and FREE leak info calls but there are still a couple of place in frameworks that do this.\n\nThat\u0027s why I put the purge in the two places since they don\u0027t really intersect with each other.",
+      "parentUuid": "b630c8e6_c2f8a25d",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 499,
+        "endChar": 34
+      },
+      "revId": "aa3e57469c4479e77b02a95f598dee805c4d8dd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
