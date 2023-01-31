@@ -42,6 +42,8 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+#include <common.h>
+
 /* POSIX says regoff_t is at least as large as the larger of ptrdiff_t and
  * ssize_t. BSD uses off_t, but that interacts badly with _FILE_OFFSET_BITS. */
 typedef ssize_t regoff_t;
@@ -49,8 +51,8 @@ typedef ssize_t regoff_t;
 typedef struct {
 	int re_magic;
 	size_t re_nsub;		/* number of parenthesized subexpressions */
-	const char * _Null_unspecified re_endp;	/* end pointer for REG_PEND */
-	struct re_guts * _Null_unspecified re_g;	/* none of your business :-) */
+	const char * BIONIC_COMPLICATED_NULLNESS re_endp;	/* end pointer for REG_PEND */
+	struct re_guts * BIONIC_COMPLICATED_NULLNESS re_g;	/* none of your business :-) */
 } regex_t;
 
 typedef struct {
