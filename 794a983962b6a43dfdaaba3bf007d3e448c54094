@@ -259,6 +259,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f6d0c4fc_c8fda9a6",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-01T18:52:57Z",
+      "side": 1,
+      "message": "I will add `__BIONIC_COMPLICATED_NULLNESS` to mark them. But I have a question: do we need to create a new `_Null_unspecified` macro like `__CONDITIONAL_NULLNESS`(or other better names)?",
+      "parentUuid": "692c5740_fb88a9d5",
+      "range": {
+        "startLine": 238,
+        "startChar": 29,
+        "endLine": 238,
+        "endChar": 38
+      },
+      "revId": "794a983962b6a43dfdaaba3bf007d3e448c54094",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8b326a4_1e079532",
         "filename": "libc/include/unistd.h",
         "patchSetId": 3
