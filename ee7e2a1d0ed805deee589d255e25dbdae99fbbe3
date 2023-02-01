@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bedd3d3_ef86ff90",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-02-01T00:46:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b43843d_ec022110",
+      "range": {
+        "startLine": 131,
+        "startChar": 16,
+        "endLine": 131,
+        "endChar": 25
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52a3924b_475f9068",
@@ -71,6 +95,30 @@
       "writtenOn": "2023-01-30T18:22:05Z",
       "side": 1,
       "message": "should we remove `TURN_` from all of these days, and then just have \"^ON_\" and \"^OFF_\" names? that seems like they\u0027d be a bit easier to grok?",
+      "range": {
+        "startLine": 133,
+        "startChar": 7,
+        "endLine": 133,
+        "endChar": 17
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0afce573_fd8c66cb",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-02-01T00:46:10Z",
+      "side": 1,
+      "message": "I agree. I\u0027ll send a follow-up to rename them after this is submitted, as it\u0027s not quite as simple as a rename. They currently also imply where the mallopt() is coming from, and this is used to determine which sysprop override is used (*.system_default vs *.app_default).",
+      "parentUuid": "52a3924b_475f9068",
       "range": {
         "startLine": 133,
         "startChar": 7,
@@ -104,6 +152,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9a8488d_d2b49d65",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-02-01T00:46:10Z",
+      "side": 1,
+      "message": "I\u0027ve rewritten the text, which should clarify that the sysprops/env vars are the override.\n\nAs to the name, that\u0027ll be a follow up patch.",
+      "parentUuid": "9a56e76f_a78d4842",
+      "range": {
+        "startLine": 138,
+        "startChar": 33,
+        "endLine": 138,
+        "endChar": 43
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b0b6663_b9adee1b",
@@ -117,6 +189,30 @@
       "writtenOn": "2023-01-30T18:22:05Z",
       "side": 1,
       "message": "so `ON_WITH_` is really `ON_FOR_ALL_`? if so, should we rename it? (and if not, what name would make it clearer?)\n\n(i\u0027m assuming we\u0027re only going to have more options over time, and this bag of variants is already making me think \"should this have been a bitmask instead?\", so at least making the names less irregular seems useful?)",
+      "range": {
+        "startLine": 140,
+        "startChar": 12,
+        "endLine": 140,
+        "endChar": 16
+      },
+      "revId": "ee7e2a1d0ed805deee589d255e25dbdae99fbbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d600e0a7_bc20344c",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-02-01T00:46:10Z",
+      "side": 1,
+      "message": "Kind of, this is \"on for apps by default\" rather than the \"on for apps that opted-in\" (TURN_ON_FOR_APP). Technically, that\u0027s not \"for all\" as it doesn\u0027t apply to `gwpAsanMode\u003dalways` or `gwpAsanMode\u003dnever`.\n\nHmm, I think the best name is probably `LOTTERY_NON_CRASHING` or something like that. But that\u0027s really only achievable with the rewrite, better to keep consistency with the others right this instant.",
+      "parentUuid": "4b0b6663_b9adee1b",
       "range": {
         "startLine": 140,
         "startChar": 12,
