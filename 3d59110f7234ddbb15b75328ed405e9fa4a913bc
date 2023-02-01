@@ -16,6 +16,23 @@
       "message": "(you\u0027ll need danalbert to at least +1 now for my +2 to count, because i\u0027ve addressed my style nits in the doc comment directly, and done the same thing for write() as read(), especially because zero-length writes are [in my experience] \"less uncommon\". i\u0027d never seen a zero-length read() before the one you found!)",
       "revId": "3d59110f7234ddbb15b75328ed405e9fa4a913bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd49cb3d_74f09796",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2023-02-01T20:46:46Z",
+      "side": 1,
+      "message": "(checking to see if i\u0027m sufficiently danalbert-like...)",
+      "revId": "3d59110f7234ddbb15b75328ed405e9fa4a913bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
