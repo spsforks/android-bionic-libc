@@ -33,6 +33,24 @@
       "message": "(checking to see if i\u0027m sufficiently danalbert-like...)",
       "revId": "3d59110f7234ddbb15b75328ed405e9fa4a913bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3b0ca36_0e98053f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-01T21:13:48Z",
+      "side": 1,
+      "message": "(yes, you are --- there\u0027s a [relatively new] protection against \"self-approval\" in AOSP that actually looks at both owner and author. so if you try to be helpful and make a trivial edit to someone else\u0027s patch -- like i just did -- you no longer count as an \"independent\" reviewer [their term is \"second-party\", but that sounds like \"non-google\" to me, which _doesn\u0027t_ count for other reasons!].)",
+      "parentUuid": "fd49cb3d_74f09796",
+      "revId": "3d59110f7234ddbb15b75328ed405e9fa4a913bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
