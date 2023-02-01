@@ -118,6 +118,30 @@
       },
       "revId": "50c5d5704f34495905984f6b837305a4ddf43310",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0c5fe3d_5798f45e",
+        "filename": "libc/include/regex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-01T01:24:06Z",
+      "side": 1,
+      "message": "oh, that\u0027s good, because i had no explanation for the error you were seeing! :-)",
+      "parentUuid": "b398806a_ae5e8769",
+      "range": {
+        "startLine": 52,
+        "startChar": 14,
+        "endLine": 52,
+        "endChar": 31
+      },
+      "revId": "50c5d5704f34495905984f6b837305a4ddf43310",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
