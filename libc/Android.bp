@@ -2308,6 +2308,7 @@ cc_library_static {
     },
     whole_static_libs: [
         "libarm-optimized-routines-mem",
+        "librust_baremetal_bsd",
     ],
     system_shared_libs: [],
     nocrt: true,
@@ -2315,6 +2316,25 @@ cc_library_static {
     visibility: [
         "//packages/modules/Virtualization/vmbase",
     ],
+}
+
+cc_library_static {
+    name: "librust_baremetal_bsd",
+    header_libs: ["libc_headers"],
+    local_include_dirs: [
+        "upstream-netbsd/android/include",
+    ],
+    cflags: [
+        "-include netbsd-compat.h",
+        "-Wall",
+        "-Werror",
+    ],
+    srcs: [
+        "upstream-netbsd/lib/libc/stdlib/bsearch.c",
+    ],
+    system_shared_libs: [],
+    nocrt: true,
+    stl: "none",
 }
 
 // ========================================================
