@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "550df477_cefe8ffb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-01T01:28:07Z",
+      "side": 1,
+      "message": "(your \"let\u0027s come back to the names\" argument sgtm, and feel free to add the API levels when you come back too.)",
+      "revId": "b7ac248f232dfca5fa979262a21355faab029b9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8963deee_e9417f3d",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-01T01:28:07Z",
+      "side": 1,
+      "message": "(i actually meant 34, which is what you\u0027d say in your AndroidManifest.xml or to the NDK build system or what you\u0027d see in an __INTRODUCED_IN() in our headers or a clang error message, and -- judging by bug reports -- seems to be what developers are most familiar/least unfamiliar with... i think the docs folks actually prefer a mixed style of \"Android 14 (API level 34)\" which doubles your chances that people know what you\u0027re talking about but i\u0027m always too lazy!)",
+      "range": {
+        "startLine": 135,
+        "startChar": 33,
+        "endLine": 135,
+        "endChar": 43
+      },
+      "revId": "b7ac248f232dfca5fa979262a21355faab029b9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
