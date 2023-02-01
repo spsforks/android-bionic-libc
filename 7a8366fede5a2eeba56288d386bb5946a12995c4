@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bb4f887_573dcc98",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-01T16:05:36Z",
+      "side": 1,
+      "message": "+1 for OWNERS; you\u0027ll need someone from CTS for dr-no...",
+      "revId": "7a8366fede5a2eeba56288d386bb5946a12995c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
