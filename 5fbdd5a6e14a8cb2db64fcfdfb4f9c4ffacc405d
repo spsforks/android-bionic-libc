@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0467d43_c5acdd20",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-02-02T03:41:36Z",
+      "side": 1,
+      "message": "This is the reason the tests fail on Pixel 7 devices. They put in a 0xb4 tag so the fault pointer is not recognized as being owned by gwp_asan. Something somewhere needs to call untag_address() on the address before the call. Or gwp asan need to remove the tag.",
+      "range": {
+        "startLine": 237,
+        "startChar": 62,
+        "endLine": 237,
+        "endChar": 71
+      },
+      "revId": "5fbdd5a6e14a8cb2db64fcfdfb4f9c4ffacc405d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
