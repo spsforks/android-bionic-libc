@@ -136,20 +136,20 @@ struct stat64 { __STAT64_BODY };
 #define S_TYPEISSHM(__sb) 0
 #define S_TYPEISTMO(__sb) 0
 
-int chmod(const char* __path, mode_t __mode);
+int chmod(const char* _Nonnull __path, mode_t __mode);
 int fchmod(int __fd, mode_t __mode);
-int mkdir(const char* __path, mode_t __mode);
+int mkdir(const char* _Nonnull __path, mode_t __mode);
 
-int fstat(int __fd, struct stat* __buf);
-int fstat64(int __fd, struct stat64* __buf) __RENAME_STAT64(fstat, 3, 21);
-int fstatat(int __dir_fd, const char* __path, struct stat* __buf, int __flags);
-int fstatat64(int __dir_fd, const char* __path, struct stat64* __buf, int __flags) __RENAME_STAT64(fstatat, 3, 21);
-int lstat(const char* __path, struct stat* __buf);
-int lstat64(const char* __path, struct stat64* __buf) __RENAME_STAT64(lstat, 3, 21);
-int stat(const char* __path, struct stat* __buf);
-int stat64(const char* __path, struct stat64* __buf) __RENAME_STAT64(stat, 3, 21);
+int fstat(int __fd, struct stat* _Nonnull __buf);
+int fstat64(int __fd, struct stat64* _Nonnull __buf) __RENAME_STAT64(fstat, 3, 21);
+int fstatat(int __dir_fd, const char* _Nonnull __path, struct stat* _Nonnull __buf, int __flags);
+int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags) __RENAME_STAT64(fstatat, 3, 21);
+int lstat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
+int lstat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(lstat, 3, 21);
+int stat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
+int stat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(stat, 3, 21);
 
-int mknod(const char* __path, mode_t __mode, dev_t __dev);
+int mknod(const char* _Nonnull __path, mode_t __mode, dev_t __dev);
 mode_t umask(mode_t __mask);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
@@ -157,21 +157,22 @@ mode_t umask(mode_t __mask);
 #endif
 
 #if __ANDROID_API__ >= 21
-int mkfifo(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
+int mkfifo(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
 #else
 // Implemented as a static inline before 21.
 #endif
 
-int mkfifoat(int __dir_fd, const char* __path, mode_t __mode) __INTRODUCED_IN(23);
+int mkfifoat(int __dir_fd, const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(23);
 
-int fchmodat(int __dir_fd, const char* __path, mode_t __mode, int __flags);
-int mkdirat(int __dir_fd, const char* __path, mode_t __mode);
-int mknodat(int __dir_fd, const char* __path, mode_t __mode, dev_t __dev) __INTRODUCED_IN(21);
+int fchmodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, int __flags);
+int mkdirat(int __dir_fd, const char* _Nonnull __path, mode_t __mode);
+int mknodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, dev_t __dev) __INTRODUCED_IN(21);
 
 #define UTIME_NOW  ((1L << 30) - 1L)
 #define UTIME_OMIT ((1L << 30) - 2L)
-int utimensat(int __dir_fd, const char* __path, const struct timespec __times[2], int __flags);
-int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19);
+/* The glibc wrapper for utimensat() disallows passing NULL as the value for pathname, but Linux supports*/
+int utimensat(int __dir_fd, const char* __BIONIC_COMPLICATED_NULLNESS __path, const struct timespec __times[_Nullable 2], int __flags);
+int futimens(int __dir_fd, const struct timespec __times[_Nullable 2]) __INTRODUCED_IN(19);
 
 #if defined(__USE_GNU)
 /**
@@ -180,7 +181,7 @@ int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19)
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int statx(int __dir_fd, const char* __path, int __flags, unsigned __mask, struct statx* __buf) __INTRODUCED_IN(30);
+int statx(int __dir_fd, const char* _Nonnull __path, int __flags, unsigned __mask, struct statx* _Nonnull __buf) __INTRODUCED_IN(30);
 #endif
 
 __END_DECLS
