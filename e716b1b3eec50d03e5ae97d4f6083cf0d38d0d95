@@ -22,6 +22,30 @@
       },
       "revId": "e716b1b3eec50d03e5ae97d4f6083cf0d38d0d95",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "946b5dde_8e1bf2ea",
+        "filename": "libc/include/sys/klog.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-03T22:58:53Z",
+      "side": 1,
+      "message": "no, that\u0027s a proof of concept of an old security bug. it\u0027s deliberately passing bad arguments. you should change the test instead, not the header.",
+      "parentUuid": "d19ca913_f6bb32b4",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "e716b1b3eec50d03e5ae97d4f6083cf0d38d0d95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
