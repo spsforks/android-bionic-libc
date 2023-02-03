@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d19ca913_f6bb32b4",
+        "filename": "libc/include/sys/klog.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-03T21:59:04Z",
+      "side": 1,
+      "message": "Make it `__BIONIC_COMPLICATED_NULLNESS` because we got some errors like \n`test/sts/tests/hostside/securityPatch/Bug-35644510/poc.c:238:27: error: null passed to a callee that requires a non-null argument [-Werror,-Wnonnull]\n    if (klogctl(9, NULL, 0))`\n    in previous checks",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "e716b1b3eec50d03e5ae97d4f6083cf0d38d0d95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
