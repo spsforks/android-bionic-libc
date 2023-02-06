@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6c05c20_2f743f51",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-02-06T22:04:05Z",
+      "side": 1,
+      "message": "Is there a reason you added this (and the one below it)? These are all the same as the previous #if.",
+      "range": {
+        "startLine": 54,
+        "startChar": 1,
+        "endLine": 54,
+        "endChar": 44
+      },
+      "revId": "7f85774c1d1dd2a44c82403b20b9e37945b555e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
