@@ -22,6 +22,30 @@
       },
       "revId": "7f85774c1d1dd2a44c82403b20b9e37945b555e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af8901f2_d6810425",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-06T22:09:46Z",
+      "side": 1,
+      "message": "the true reason is \"because i assumed these would be implemented for x86-64 too\", but given that that turned out _not_ to be true, at this point it\u0027s just \"because i\u0027m coming back later for arm32\".\n\n(and _hopefully_ if we can find someone at intel to add their missing stuff, for intel too!)\n\nnote that i _haven\u0027t_ yet tried to use builtins for the stuff that x86/x86-64 _didn\u0027t_ have custom assembler for. i do plan to look at that later (i\u0027d like to eventually have zero `#if`s in here!) but thought it would make sense to keep that separate? i don\u0027t have a strong opinion, though, so let me know if you\u0027d rather i looked at stuff like the lround family in this change rather than a later one...",
+      "parentUuid": "b6c05c20_2f743f51",
+      "range": {
+        "startLine": 54,
+        "startChar": 1,
+        "endLine": 54,
+        "endChar": 44
+      },
+      "revId": "7f85774c1d1dd2a44c82403b20b9e37945b555e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
