@@ -57,6 +57,30 @@
       },
       "revId": "0607f0d13c014fe7bc3a7c60f3506fb6c94a308f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f259d5b_b6bb3b0a",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-02-07T21:12:23Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "645b1b5d_a01f7904",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 30
+      },
+      "revId": "0607f0d13c014fe7bc3a7c60f3506fb6c94a308f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
