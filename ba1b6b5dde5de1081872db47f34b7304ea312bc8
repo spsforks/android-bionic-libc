@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41ddfdaa_f2989f70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-07T01:37:09Z",
+      "side": 1,
+      "message": "lgtm. (i\u0027ve added the missing docs, since these two functions are pretty strange, even by regular Unix standards.)",
+      "revId": "ba1b6b5dde5de1081872db47f34b7304ea312bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
