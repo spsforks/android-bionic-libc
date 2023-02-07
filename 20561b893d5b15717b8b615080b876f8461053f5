@@ -52,6 +52,24 @@
       "parentUuid": "c67feeef_7bec5985",
       "revId": "20561b893d5b15717b8b615080b876f8461053f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42eda7a3_b8a79974",
+        "filename": "benchmarks/linker_relocation/include/linker_reloc_bench_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1971751
+      },
+      "writtenOn": "2023-02-07T12:22:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ff4d5f2_c9741d9d",
+      "revId": "20561b893d5b15717b8b615080b876f8461053f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
