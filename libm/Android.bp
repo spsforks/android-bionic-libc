@@ -282,10 +282,16 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
+                "arm/floor.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_floor.c",
-                "upstream-freebsd/lib/msun/src/s_floorf.c",
+                // We'd like to have the single-instruction floorf() for arm32,
+                // but armv7 doesn't have it, and the build system doesn't
+                // distinguish between the two arm32s, so we just use the
+                // portable C implementation (unlike floor() where we already
+                // had optimized integer assembler for armv7 arm32).
+                // "upstream-freebsd/lib/msun/src/s_floorf.c",
             ],
             instruction_set: "arm",
             pack_relocations: false,
