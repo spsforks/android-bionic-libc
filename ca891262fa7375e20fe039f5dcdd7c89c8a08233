@@ -16,6 +16,24 @@
       "message": "Does this mean that the compiler has a builtin that doesn\u0027t work on armv7 32bit? Should llvm handle this case correctly without intervention?\n\nIs there any chance that v9 will have some kind of similar issue in the future?",
       "revId": "ca891262fa7375e20fe039f5dcdd7c89c8a08233",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "205abeb4_59789447",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-08T21:49:30Z",
+      "side": 1,
+      "message": "\u003e Does this mean that the compiler has a builtin that doesn\u0027t work on armv7 32bit?\n\nyes...\n\n\u003e Should llvm handle this case correctly without intervention?\n\n...because armv7 doesn\u0027t have an instruction for this, and you\u0027re looking at ~50 instructions instead. in such cases llvm says \"too hard, i\u0027ll call the libc/libm function\" but that doesn\u0027t work in this special case of \"i _am_ libc/libm, and i\u0027m trying to outsource my implementation because i know you know the best instruction sequence for this anyway\".\n\n\u003e Is there any chance that v9 will have some kind of similar issue in the future?\n\nnot unless they start _removing_ instructions, but we\u0027re fucked in so many ways if that happens :-)\n\n(and, like i said, this is only an issue for libc/libm itself --- anyone else is fine falling back to libc/libm.)",
+      "parentUuid": "58b944f6_5496c397",
+      "revId": "ca891262fa7375e20fe039f5dcdd7c89c8a08233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
