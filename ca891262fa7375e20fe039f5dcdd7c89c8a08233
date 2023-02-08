@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58b944f6_5496c397",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-02-08T21:40:27Z",
+      "side": 1,
+      "message": "Does this mean that the compiler has a builtin that doesn\u0027t work on armv7 32bit? Should llvm handle this case correctly without intervention?\n\nIs there any chance that v9 will have some kind of similar issue in the future?",
+      "revId": "ca891262fa7375e20fe039f5dcdd7c89c8a08233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
