@@ -70,6 +70,30 @@
       },
       "revId": "3df9ea8eead0fad6f3448f99132d4ef53aa96b43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dff95cf_dca63d80",
+        "filename": "libc/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-08T19:30:56Z",
+      "side": 1,
+      "message": "I see. So we should care more what our system actually does, or in other words, we should take the intersection of what ISO C/POSIX guarantees and what our system to make sure everything works fine/nothing crashes.",
+      "parentUuid": "44630d03_c55b8aa0",
+      "range": {
+        "startLine": 277,
+        "startChar": 23,
+        "endLine": 277,
+        "endChar": 52
+      },
+      "revId": "3df9ea8eead0fad6f3448f99132d4ef53aa96b43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
