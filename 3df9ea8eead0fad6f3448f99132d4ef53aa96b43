@@ -46,6 +46,30 @@
       },
       "revId": "3df9ea8eead0fad6f3448f99132d4ef53aa96b43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44630d03_c55b8aa0",
+        "filename": "libc/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-08T18:14:40Z",
+      "side": 1,
+      "message": "\u003e On IEEE 754 systems, there are many representations of NaN, and tagp selects one.\n\nwe\u0027re IEEE 754. (as is basically everything these days. but standards often try to support \"all possible hardware\" rather than what\u0027s actually real. the C standard only just admitted that all machines are two\u0027s-complement this decade!)\n\n\u003e I also check the source code of nan().\n\nthat\u0027s not our nan(). that\u0027s some random embedded systems crap. those things rarely follow the rules anyway!\n\n(in general, if you\u0027re looking for bionic, you probably want `file:^bionic/` in any code search you do. or just grep in bionic/ if you\u0027re on the command line.)\n\nhere\u0027s the real source: https://cs.android.com/android/platform/superproject/+/master:bionic/libm/upstream-freebsd/lib/msun/src/s_nan.c\n\n-*-\n\nthere is of course a philosophical question here: \"are we annotating what ISO C/POSIX guarantees, or what our system actually does?\". but personally -- unless we find cases where we\u0027re _wrong_ [in which case, we should fix the bug and try again] -- i think the most useful thing for our users is to document _bionic_. the kind of people who care more about the standards (and they exist; the more sensible of them because they\u0027re trying to write code that works everywhere) are going to be helped by us doing this anyway. in this case, for example, even though their `nan(NULL)` call might work on some tiny embedded system using newlib (the libc you linked to), it would crash at run-time on Android, so our annotation will have saved them by pointing out at build time that they\u0027ve made an incorrect assumption.\n\n(because remember --- POSIX implies that the argument _may_ be unused, but it doesn\u0027t say that NULL is valid on systems that _do_ use the argument, like Android/iOS/glibc.)",
+      "parentUuid": "7fa74b29_d044f3bf",
+      "range": {
+        "startLine": 277,
+        "startChar": 23,
+        "endLine": 277,
+        "endChar": 52
+      },
+      "revId": "3df9ea8eead0fad6f3448f99132d4ef53aa96b43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
