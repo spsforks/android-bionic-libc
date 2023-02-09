@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40b9549e_e2205188",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-09T21:07:47Z",
+      "side": 1,
+      "message": "what\u0027s complicated with these (and pthread_sigmask)?",
+      "range": {
+        "startLine": 85,
+        "startChar": 43,
+        "endLine": 85,
+        "endChar": 72
+      },
+      "revId": "8ebc93a20d0645a2533e03c19938fa7b3bd95621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c88a245d_09fae73d",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-09T21:07:47Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 110,
+        "startChar": 31,
+        "endLine": 110,
+        "endChar": 60
+      },
+      "revId": "8ebc93a20d0645a2533e03c19938fa7b3bd95621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
