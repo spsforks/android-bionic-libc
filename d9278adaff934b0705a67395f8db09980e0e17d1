@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a8f1109_eb82b002",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-09T15:55:07Z",
+      "side": 1,
+      "message": "again, do you _require_ absolute control over what\u0027s made available so you can sign off on each function, or should you just include the existing bsd .a and let the linker throw away the unused bits? (and never have to look at this list again!)",
+      "revId": "d9278adaff934b0705a67395f8db09980e0e17d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
