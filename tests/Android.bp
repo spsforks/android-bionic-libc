@@ -66,20 +66,12 @@ cc_defaults {
         "libcutils_headers",
         "gwp_asan_headers"
     ],
-    // Ensure that the tests exercise shadow call stack support and
-    // the hint space PAC/BTI instructions.
-    arch: {
-        arm64: {
-            cflags: [
-                "-fsanitize=shadow-call-stack",
-                // Disable this option for now: see b/151372823
-                //"-mbranch-protection=standard",
-            ],
-        },
-    },
     stl: "libc++",
     sanitize: {
         address: false,
+
+        // Ensure that the tests exercise shadow call stack support.
+        scs: true,
     },
 
     // Use the bootstrap version of bionic because some tests call private APIs
