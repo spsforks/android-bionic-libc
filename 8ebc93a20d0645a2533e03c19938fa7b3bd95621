@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3946d5c2_252008cc",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-10T02:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51e76a33_1f39eea2",
+      "range": {
+        "startLine": 85,
+        "startChar": 43,
+        "endLine": 85,
+        "endChar": 72
+      },
+      "revId": "8ebc93a20d0645a2533e03c19938fa7b3bd95621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c88a245d_09fae73d",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Same here:\n`If we are interested in performing just one of these tasks, then the other argument can be specified as NULL.` \nhttps://man7.org/linux/man-pages/man2/sigaltstack.2.html\nIf they are both `NULL`, it seems meanless 😂",
       "parentUuid": "c88a245d_09fae73d",
+      "range": {
+        "startLine": 110,
+        "startChar": 31,
+        "endLine": 110,
+        "endChar": 60
+      },
+      "revId": "8ebc93a20d0645a2533e03c19938fa7b3bd95621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d35590_411bbdad",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-10T02:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f757d5dd_b2e37cff",
       "range": {
         "startLine": 110,
         "startChar": 31,
