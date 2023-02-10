@@ -35,5 +35,8 @@ __attribute__((weak, noinline)) int recurse2(int count) {
 TEST(scs_test, stack_overflow) {
   ASSERT_EXIT(recurse1(SCS_SIZE), testing::KilledBySignal(SIGSEGV), "");
 }
-
+#else
+#ifdef __riscv
+#error wut
+#endif
 #endif

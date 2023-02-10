@@ -116,7 +116,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 }
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__riscv)
   // Allocate the stack and the guard region.
   char* scs_guard_region = reinterpret_cast<char*>(
       mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
@@ -137,7 +137,11 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // deliberately the only place where the address is stored.
   char *scs = scs_aligned_guard_region + scs_offset;
   mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
+#if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
+#elif defined(__riscv)
+  __asm__ __volatile__("mv x18, %0" ::"r"(scs));
+#endif
 #endif
 }
 
