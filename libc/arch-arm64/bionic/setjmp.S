@@ -68,8 +68,6 @@
 #define _JB_D8_D9       (_JB_D10_D11 + 2)
 #define _JB_CHECKSUM    (_JB_D8_D9 + 2)
 
-#define SCS_MASK (SCS_SIZE - 1)
-
 .macro m_mangle_registers reg, sp_reg
   eor x3, x3, \reg
   eor x19, x19, \reg

@@ -21,6 +21,7 @@
 
 // Size of the shadow call stack. This must be a power of 2.
 #define SCS_SIZE (8 * 1024)
+#define SCS_MASK (SCS_SIZE - 1)
 
 // The shadow call stack is allocated at an aligned address within a guard region of this size. The
 // guard region must be large enough that we can allocate an SCS_SIZE-aligned SCS while ensuring
