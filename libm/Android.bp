@@ -369,8 +369,18 @@ cc_library {
         x86: {
             srcs: [
                 "i387/fenv.c",
+                "x86/ceil.S",
+                "x86/ceilf.S",
+                "x86/floor.S",
+                "x86/floorf.S",
                 "x86/lrint.S",
                 "x86/lrintf.S",
+                "x86/rint.S",
+                "x86/rintf.S",
+                "x86/sqrt.S",
+                "x86/sqrtf.S",
+                "x86/trunc.S",
+                "x86/truncf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
