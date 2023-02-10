@@ -105,7 +105,7 @@ class pthread_internal_t {
 
   void* alternate_signal_stack;
 
-  // The start address of the shadow call stack's guard region (arm64 only).
+  // The start address of the shadow call stack's guard region (arm64/riscv64).
   // This address is only used to deallocate the shadow call stack on thread
   // exit; the address of the stack itself is stored only in the x18 register.
   // Because the protection offered by SCS relies on the secrecy of the stack
