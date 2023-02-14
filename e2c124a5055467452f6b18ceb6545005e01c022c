@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "100d2d38_2654f6f2",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T19:52:17Z",
+      "side": 1,
+      "message": "I see. Because the size of buffer is 255 and it will never be full. Yes, it should be `_Nonnull`.",
+      "parentUuid": "99c7a247_2f478e70",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fc284a42_14134944",
         "filename": "libc/include/string.h",
         "patchSetId": 2
