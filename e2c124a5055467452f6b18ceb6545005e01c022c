@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "16810554_0570b0b4",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T17:02:34Z",
+      "side": 1,
+      "message": "`The strsignal() function returns the appropriate description\n       string, or an unknown signal message if the signal number is\n       invalid.  On some systems (but not on Linux), NULL may instead be\n       returned for an invalid signal number.` Android is based on Linux, so Android still return a valid string?",
+      "parentUuid": "4672af25_ba152499",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fc284a42_14134944",
         "filename": "libc/include/string.h",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-13T23:21:46Z",
       "side": 1,
       "message": "i don\u0027t think so?",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 50
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48cc463e_5d210066",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T17:02:34Z",
+      "side": 1,
+      "message": "Why? I think it is nullable if `__n` is 0? `If count is ​0​, then dest is allowed to be a null pointer.` in https://en.cppreference.com/w/c/string/byte/strxfrm",
+      "parentUuid": "fc284a42_14134944",
       "range": {
         "startLine": 137,
         "startChar": 21,
@@ -83,6 +131,30 @@
       "writtenOn": "2023-02-13T23:21:46Z",
       "side": 1,
       "message": "what would that mean?",
+      "range": {
+        "startLine": 153,
+        "startChar": 55,
+        "endLine": 153,
+        "endChar": 64
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "277721df_deb23bf2",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T17:02:34Z",
+      "side": 1,
+      "message": "`If path is a null pointer or points to an empty string,\n       then both dirname() and basename() return the string \".\"` in https://man7.org/linux/man-pages/man3/basename.3.html That\u0027s why I make it `_Nullable`.",
+      "parentUuid": "4d6670cd_9025967d",
       "range": {
         "startLine": 153,
         "startChar": 55,
