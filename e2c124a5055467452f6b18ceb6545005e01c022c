@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "323040ff_ac3fccc5",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-14T17:41:19Z",
+      "side": 1,
+      "message": "well, \"Linux\" is a red herring here. the \"Linux\" that Android is \"based on\" is the kernel. this writer actually means \"glibc\", i think. (strsignal() isn\u0027t a system call, so it\u0027s nothing to do with the kernel. it\u0027s just a library decision.)\n\nso you\u0027ll want to look at the bionic implementation of strsignal() to decide.",
+      "parentUuid": "16810554_0570b0b4",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fc284a42_14134944",
         "filename": "libc/include/string.h",
         "patchSetId": 2
@@ -95,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5d770ff_33be873b",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-14T17:41:19Z",
+      "side": 1,
+      "message": "yeah, posix agrees: https://pubs.opengroup.org/onlinepubs/9699919799/functions/strxfrm.html\n\nsgtm. (i\u0027ll let you off without a comment since there\u0027s really no reason to ever call this function -- especially on Android -- and i suspect you and i are the only two people ever to have looked at it.)",
+      "parentUuid": "48cc463e_5d210066",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 50
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98c6e617_b56c6b7d",
@@ -108,6 +156,30 @@
       "writtenOn": "2023-02-13T23:21:46Z",
       "side": 1,
       "message": "likewise",
+      "range": {
+        "startLine": 141,
+        "startChar": 23,
+        "endLine": 141,
+        "endChar": 52
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a1e4121_2f815c79",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-14T17:41:19Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "98c6e617_b56c6b7d",
       "range": {
         "startLine": 141,
         "startChar": 23,
@@ -155,6 +227,30 @@
       "side": 1,
       "message": "`If path is a null pointer or points to an empty string,\n       then both dirname() and basename() return the string \".\"` in https://man7.org/linux/man-pages/man3/basename.3.html That\u0027s why I make it `_Nullable`.",
       "parentUuid": "4d6670cd_9025967d",
+      "range": {
+        "startLine": 153,
+        "startChar": 55,
+        "endLine": 153,
+        "endChar": 64
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "675db4e0_853012a7",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-14T17:41:19Z",
+      "side": 1,
+      "message": "ugh, yes, you\u0027re [sort of] right. that\u0027s appalling. but it\u0027s even in POSIX!\n\nbut remember that there are _two_ versions of basename(), and this _isn\u0027t_ true of the \"GNU basename()\"... so this is actually _incorrect_ for this file where we\u0027re actually talking about __gnu_basename (but would be correct for the libgen.h basename()).",
+      "parentUuid": "277721df_deb23bf2",
       "range": {
         "startLine": 153,
         "startChar": 55,
