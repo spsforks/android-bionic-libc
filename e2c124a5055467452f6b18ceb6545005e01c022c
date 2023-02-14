@@ -144,6 +144,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "093c3644_bc5ed41d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T20:47:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "100d2d38_2654f6f2",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc284a42_14134944",
@@ -333,6 +357,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6a7c52c_7d7bff65",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T20:47:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "675db4e0_853012a7",
+      "range": {
+        "startLine": 153,
+        "startChar": 55,
+        "endLine": 153,
+        "endChar": 64
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e436449a_b20d4e80",
@@ -346,6 +394,30 @@
       "writtenOn": "2023-02-13T23:21:46Z",
       "side": 1,
       "message": "likewise",
+      "range": {
+        "startLine": 155,
+        "startChar": 36,
+        "endLine": 155,
+        "endChar": 45
+      },
+      "revId": "e2c124a5055467452f6b18ceb6545005e01c022c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e650e3b_44ca9324",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-14T20:47:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e436449a_b20d4e80",
       "range": {
         "startLine": 155,
         "startChar": 36,
