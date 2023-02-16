@@ -70,6 +70,30 @@
       },
       "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9e1341f_54f7447e",
+        "filename": "libc/include/glob.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T19:05:30Z",
+      "side": 1,
+      "message": "(btw, if you don\u0027t know, you can say things like `file:^bionic/` or `file:^system/core/` to restrict codesearch to only looking in the place you care about. or just use `grep -r` if you\u0027re more into the command line!)",
+      "parentUuid": "00eed2f3_fc4d291f",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 72
+      },
+      "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
