@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb79e3fe_ba59b71f",
+        "filename": "libc/include/glob.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T16:09:34Z",
+      "side": 1,
+      "message": "are these functions always called?",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 72
+      },
+      "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
