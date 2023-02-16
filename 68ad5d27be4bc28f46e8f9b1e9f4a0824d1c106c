@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14e93b40_41fc21e4",
+        "filename": "libc/include/err.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T23:37:42Z",
+      "side": 1,
+      "message": "bizarre but true. TIL...",
+      "range": {
+        "startLine": 53,
+        "startChar": 46,
+        "endLine": 53,
+        "endChar": 55
+      },
+      "revId": "68ad5d27be4bc28f46e8f9b1e9f4a0824d1c106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "062cbabd_03e78cef",
+        "filename": "libc/include/error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T23:37:42Z",
+      "side": 1,
+      "message": ":-)",
+      "range": {
+        "startLine": 42,
+        "startChar": 28,
+        "endLine": 42,
+        "endChar": 39
+      },
+      "revId": "68ad5d27be4bc28f46e8f9b1e9f4a0824d1c106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2c9e1a5_0b084964",
+        "filename": "libc/include/error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T23:37:42Z",
+      "side": 1,
+      "message": "no, these functions are sensible :-)",
+      "range": {
+        "startLine": 83,
+        "startChar": 58,
+        "endLine": 83,
+        "endChar": 66
+      },
+      "revId": "68ad5d27be4bc28f46e8f9b1e9f4a0824d1c106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
