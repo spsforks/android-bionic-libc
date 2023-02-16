@@ -46,6 +46,30 @@
       },
       "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00eed2f3_fc4d291f",
+        "filename": "libc/include/glob.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T19:04:00Z",
+      "side": 1,
+      "message": "that link isn\u0027t relevant --- that\u0027s someone else\u0027s _implementation_ of these functions.\n\nwhat i meant was \"go and look at the _bionic_ implementation of glob(), and explain to me on the basis of that whether these 5 function pointers should be _Nonnull or not\" :-)",
+      "parentUuid": "e47a5108_71801315",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 72
+      },
+      "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
