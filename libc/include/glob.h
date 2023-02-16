@@ -47,21 +47,21 @@ typedef struct {
   size_t gl_matchc;	/* Count of paths matching pattern. */
   size_t gl_offs;		/* Reserved at beginning of gl_pathv. */
   int gl_flags;		/* Copy of flags parameter to glob. */
-  char** gl_pathv;	/* List of paths matching pattern. */
+  char* _Nullable * _Nullable gl_pathv;	/* List of paths matching pattern. */
 
   /* Copy of `__error_callback` parameter to glob. */
-  int (*gl_errfunc)(const char* __failure_path, int __failure_errno);
+  int (* _Nullable gl_errfunc)(const char* _Nonnull __failure_path, int __failure_errno);
 
   /*
    * Alternate filesystem access methods for glob; replacement
    * versions of closedir(3), readdir(3), opendir(3), stat(2)
    * and lstat(2).
    */
-  void (*gl_closedir)(void*);
-  struct dirent* (*gl_readdir)(void*);
-  void* (*gl_opendir)(const char*);
-  int (*gl_lstat)(const char*, struct stat*);
-  int (*gl_stat)(const char*, struct stat*);
+  void (* _Nullable gl_closedir)(void* _Nonnull);
+  struct dirent* _Nullable (* _Nonnull gl_readdir)(void* _Nonnull);
+  void* _Nullable (* _Nonnull gl_opendir)(const char* _Nonnull);
+  int (* _Nullable gl_lstat)(const char* _Nonnull, struct stat* _Nonnull);
+  int (* _Nullable gl_stat)(const char* _Nonnull, struct stat* _Nonnull);
 } glob_t;
 
 /* Believed to have been introduced in 1003.2-1992 */
@@ -90,8 +90,8 @@ typedef struct {
 
 __BEGIN_DECLS
 
-int glob(const char* __pattern, int __flags, int (*__error_callback)(const char* __failure_path, int __failure_errno), glob_t* __result_ptr) __INTRODUCED_IN(28);
-void globfree(glob_t* __result_ptr) __INTRODUCED_IN(28);
+int glob(const char* _Nonnull __pattern, int __flags, int (* _Nullable __error_callback)(const char* _Nonnull __failure_path, int __failure_errno), glob_t* _Nonnull __result_ptr) __INTRODUCED_IN(28);
+void globfree(glob_t* _Nonnull __result_ptr) __INTRODUCED_IN(28);
 
 __END_DECLS
 
