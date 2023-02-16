@@ -16,6 +16,24 @@
       "message": "(maybe not in this form, but we might actually want to have a \"if we\u0027re compiling for arm64/rv64, assume SCS\" #error in here...)",
       "revId": "6101a04c4cb685f2f054c8e35800329f675b55ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcb41e74_46e9c988",
+        "filename": "tests/scs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-16T21:42:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "652970d2_b2e0e7c8",
+      "revId": "6101a04c4cb685f2f054c8e35800329f675b55ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
