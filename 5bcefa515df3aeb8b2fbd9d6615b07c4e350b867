@@ -22,6 +22,30 @@
       },
       "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e47a5108_71801315",
+        "filename": "libc/include/glob.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-16T18:16:47Z",
+      "side": 1,
+      "message": "According to code search, the answer is no. But there are a few cases like https://source.corp.google.com/android/toolchain/make/lib/glob.c;l\u003d1411?q\u003d%22gl_closedir%22\u0026ss\u003dpiper%2FGoogle%2Fandroid",
+      "parentUuid": "bb79e3fe_ba59b71f",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 72
+      },
+      "revId": "5bcefa515df3aeb8b2fbd9d6615b07c4e350b867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
