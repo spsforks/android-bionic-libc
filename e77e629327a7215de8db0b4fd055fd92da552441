@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d6608db_be94ac23",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-02-17T21:01:04Z",
+      "side": 1,
+      "message": "The sched priority can only be 0 for not realtime threads, as in https://man7.org/linux/man-pages/man2/sched_setparam.2.html. So for normal threads, suggest people to adjust nice value via setpriority() and nice() instead?",
+      "range": {
+        "startLine": 310,
+        "startChar": 12,
+        "endLine": 310,
+        "endChar": 30
+      },
+      "revId": "e77e629327a7215de8db0b4fd055fd92da552441",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
