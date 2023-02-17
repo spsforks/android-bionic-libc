@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0e97890_2185554a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-17T00:30:24Z",
+      "side": 1,
+      "message": "(since the existing documentation wasn\u0027t helpful to you, it probably isn\u0027t helpful to others, so i\u0027ve rewritten it to hopefully be a bit clearer...)",
+      "revId": "fce2870bdfed32a77d7f44d2ae76e858df69c544",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
