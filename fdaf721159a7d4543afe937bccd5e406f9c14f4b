@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f527e38c_13c8b495",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-02-21T11:20:18Z",
+      "side": 1,
+      "message": "For my understanding, why do we keep low and high bits separately? What happened with the low bits so that they need restoring? Why isn\u0027t x18 just used for shadow stack always, and an extra register a4 is neeed for the low bits?",
+      "range": {
+        "startLine": 252,
+        "startChar": 17,
+        "endLine": 252,
+        "endChar": 20
+      },
+      "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
