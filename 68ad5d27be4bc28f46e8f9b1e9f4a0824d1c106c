@@ -47,6 +47,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d49181a8_9e40b99f",
+        "filename": "libc/include/error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-21T19:48:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "062cbabd_03e78cef",
+      "range": {
+        "startLine": 42,
+        "startChar": 28,
+        "endLine": 42,
+        "endChar": 39
+      },
+      "revId": "68ad5d27be4bc28f46e8f9b1e9f4a0824d1c106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2c9e1a5_0b084964",
@@ -60,6 +84,30 @@
       "writtenOn": "2023-02-16T23:37:42Z",
       "side": 1,
       "message": "no, these functions are sensible :-)",
+      "range": {
+        "startLine": 83,
+        "startChar": 58,
+        "endLine": 83,
+        "endChar": 66
+      },
+      "revId": "68ad5d27be4bc28f46e8f9b1e9f4a0824d1c106c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5416e94d_300a94d9",
+        "filename": "libc/include/error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-21T19:48:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2c9e1a5_0b084964",
       "range": {
         "startLine": 83,
         "startChar": 58,
