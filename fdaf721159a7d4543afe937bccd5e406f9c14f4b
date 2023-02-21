@@ -22,6 +22,30 @@
       },
       "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "532bc2fd_f44d9ad4",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-21T18:48:50Z",
+      "side": 1,
+      "message": "it\u0027s just so we don\u0027t have such a convenient gadget for malware to get the SCS stack pointer... we only store the \"surprising\" bits.\n\ni think the key non-obvious things to realize are:\n\n1. since it only contains return addresses, the _shadow_ stack size is a very small fixed size for all threads: 8KiB.\n\n2. setjmp()/longjmp() _between_ threads is undefined behavior (and not supported on Android).\n\nso the _high_ bits of x18 _must_ be the same; the only question is \"where in the _same_ 8KiB block is the pointer currently?\". so that\u0027s all we store in the jmp_buf.\n\n(it does seem worth me elaborating on this a bit, probably in one of the existing SCS-related comment blocks, but i\u0027m not sure _which_... maybe the long one in pthread_internal.h?)",
+      "parentUuid": "f527e38c_13c8b495",
+      "range": {
+        "startLine": 252,
+        "startChar": 17,
+        "endLine": 252,
+        "endChar": 20
+      },
+      "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
