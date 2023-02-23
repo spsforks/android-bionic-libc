@@ -1222,3 +1222,11 @@ TEST(wchar, wmemset) {
   ASSERT_EQ(dst, wmemset(dst, L'y', 0));
   ASSERT_EQ(dst[0], wchar_t(0x12345678));
 }
+
+#ifdef __ANDROID__
+extern "C" int rust_libc_add(int, int);
+
+TEST(rust_impl, add) {
+  ASSERT_EQ(5, rust_libc_add(2, 3));
+}
+#endif

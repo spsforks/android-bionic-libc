@@ -53,10 +53,6 @@
 // function pointers.
 //
 
-int mbsinit(const mbstate_t* ps) {
-  return ps == nullptr || mbstate_is_initial(ps);
-}
-
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
   static mbstate_t __private_state;
   mbstate_t* state = (ps == nullptr) ? &__private_state : ps;

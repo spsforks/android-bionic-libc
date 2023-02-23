@@ -1580,6 +1580,7 @@ LIBC_U { # introduced=UpsideDownCake
     close_range;
     copy_file_range;
     memset_explicit;
+    rust_libc_add;
 } LIBC_T;
 
 LIBC_PRIVATE {

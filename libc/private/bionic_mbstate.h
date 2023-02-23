@@ -30,6 +30,7 @@
 #define _BIONIC_MBSTATE_H
 
 #include <errno.h>
+#include <stdint.h>
 #include <wchar.h>
 
 __BEGIN_DECLS
