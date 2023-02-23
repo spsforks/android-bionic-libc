@@ -70,6 +70,30 @@
       },
       "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03ef9235_cc835ac3",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-23T01:22:35Z",
+      "side": 1,
+      "message": "heh, if neither of us are feeling brave enough to pick _one_ place, i\u0027ve expanded the already-longest comment, and made the others all refer to that. (i\u0027ve done a little SEO too so that all of the macros are mentioned in the big comment now, increasing the chances a prospective reader will find it even if they\u0027re just grepping for a macro.)",
+      "parentUuid": "2adef260_ca3fe3ac",
+      "range": {
+        "startLine": 252,
+        "startChar": 17,
+        "endLine": 252,
+        "endChar": 20
+      },
+      "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
