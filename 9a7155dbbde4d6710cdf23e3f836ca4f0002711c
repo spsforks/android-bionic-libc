@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4de77612_35ac8849",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-23T01:24:44Z",
+      "side": 1,
+      "message": "pcc: i reckon i\u0027ll fix this anyway for rv64, but are you _sure_ we can\u0027t just do this for arm64 too? is it even possible to get that far through pthread_exit() with a clobbered x18?",
+      "revId": "9a7155dbbde4d6710cdf23e3f836ca4f0002711c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
