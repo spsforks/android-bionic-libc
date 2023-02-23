@@ -34,6 +34,24 @@
       "parentUuid": "4de77612_35ac8849",
       "revId": "9a7155dbbde4d6710cdf23e3f836ca4f0002711c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71083345_2b22c8ad",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-23T16:05:14Z",
+      "side": 1,
+      "message": "ah, yes, because we _don\u0027t_ compile libc with scs on. (for this very reason.)",
+      "parentUuid": "64c4297f_fb4e706d",
+      "revId": "9a7155dbbde4d6710cdf23e3f836ca4f0002711c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
