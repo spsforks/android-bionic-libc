@@ -94,6 +94,30 @@
       },
       "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4d0cd73_e65a51bc",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-02-23T11:08:03Z",
+      "side": 1,
+      "message": "Thanks! I did have a look at that long comment before I asked this question, so it seems like a good place.",
+      "parentUuid": "03ef9235_cc835ac3",
+      "range": {
+        "startLine": 252,
+        "startChar": 17,
+        "endLine": 252,
+        "endChar": 20
+      },
+      "revId": "fdaf721159a7d4543afe937bccd5e406f9c14f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
