@@ -33,6 +33,24 @@
       "message": "I moved `execve` here without the change from aosp/2097258",
       "revId": "4f26e509fa24428eef18bee0cf0d824ecaa34042",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25918f41_3ee8b10a",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-23T19:38:24Z",
+      "side": 1,
+      "message": "(yes, that makes sense to me.)",
+      "parentUuid": "bc1f072c_93da4cd2",
+      "revId": "4f26e509fa24428eef18bee0cf0d824ecaa34042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
