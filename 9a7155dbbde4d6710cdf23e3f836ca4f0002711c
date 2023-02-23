@@ -16,6 +16,24 @@
       "message": "pcc: i reckon i\u0027ll fix this anyway for rv64, but are you _sure_ we can\u0027t just do this for arm64 too? is it even possible to get that far through pthread_exit() with a clobbered x18?",
       "revId": "9a7155dbbde4d6710cdf23e3f836ca4f0002711c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64c4297f_fb4e706d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-02-23T02:06:13Z",
+      "side": 1,
+      "message": "\u003e is it even possible to get that far through pthread_exit() with a clobbered x18?\n\nYes, it was the intent of the design that pthread_exit() would not depend on x18 being unclobbered. Otherwise, every multi-threaded NDK application that was built before clang started reserving x18 would probably crash or misbehave at thread exit. So I\u0027m quite sure that we can\u0027t do this on arm64.",
+      "parentUuid": "4de77612_35ac8849",
+      "revId": "9a7155dbbde4d6710cdf23e3f836ca4f0002711c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
