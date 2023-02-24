@@ -93,6 +93,30 @@
       },
       "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29efd75b_50628432",
+        "filename": "libc/include/iconv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-24T23:14:04Z",
+      "side": 1,
+      "message": "Yes, so developers should check the code or manual before deciding whether `__src_bytes_left` or  `__dst_bytes_left` is null.",
+      "parentUuid": "2a2750ae_46d626c0",
+      "range": {
+        "startLine": 71,
+        "startChar": 90,
+        "endLine": 71,
+        "endChar": 119
+      },
+      "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
