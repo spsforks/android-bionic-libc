@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "213ff85a_2cd24803",
+        "filename": "libc/include/iconv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T16:34:48Z",
+      "side": 1,
+      "message": "is that true?",
+      "range": {
+        "startLine": 71,
+        "startChar": 90,
+        "endLine": 71,
+        "endChar": 119
+      },
+      "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "704e1cd0_9478b342",
+        "filename": "libc/include/iconv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T16:34:48Z",
+      "side": 1,
+      "message": "likewise",
+      "range": {
+        "startLine": 71,
+        "startChar": 185,
+        "endLine": 71,
+        "endChar": 214
+      },
+      "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
