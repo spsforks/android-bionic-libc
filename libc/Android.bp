@@ -1046,6 +1046,10 @@ rust_defaults {
     apex_available: [
         "com.android.runtime",
     ],
+    stdlibs: [
+        "libcore.rust_sysroot",
+        "libcompiler_builtins.rust_sysroot",
+    ],
 }
 
 rust_bindgen {
@@ -1057,14 +1061,11 @@ rust_bindgen {
         "--use-core",
         "--ctypes-prefix=core::ffi",
         "--raw-line=#![no_std]",
+        "--with-derive-default",
     ],
     prefer_rlib: true,
     source_stem: "libc",
     header_libs: ["libc_headers"],
-    stdlibs: [
-        "libcore.rust_sysroot",
-        "libcompiler_builtins.rust_sysroot",
-    ],
 }
 
 rust_ffi_static {
@@ -1165,7 +1166,6 @@ cc_library_static {
         "bionic/lstat.cpp",
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
-        "bionic/mbrtoc32.cpp",
         "bionic/mempcpy.cpp",
         "bionic/memset_explicit.cpp",
         "bionic/mkdir.cpp",
