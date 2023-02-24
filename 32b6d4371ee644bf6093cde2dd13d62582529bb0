@@ -45,6 +45,30 @@
       },
       "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3ad26ff_254573a3",
+        "filename": "libc/include/iconv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-24T18:06:53Z",
+      "side": 1,
+      "message": "`__src_bytes_left indicates the number of bytes in __src_buf.` So I think it can be null only when `__src_buf` is a nullptr?",
+      "parentUuid": "213ff85a_2cd24803",
+      "range": {
+        "startLine": 71,
+        "startChar": 90,
+        "endLine": 71,
+        "endChar": 119
+      },
+      "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
