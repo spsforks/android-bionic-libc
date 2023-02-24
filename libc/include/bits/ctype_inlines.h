@@ -1,3 +1,5 @@
+<<<<<<< PATCH SET (6c3794 Remove <ctype.h> cruft.)
+=======
 /*
  * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
@@ -207,3 +209,4 @@ int toupper_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 #endif
 
 __END_DECLS
+>>>>>>> BASE      (ebd654 Merge "Implement C23 printf 'wf' length modifiers")
