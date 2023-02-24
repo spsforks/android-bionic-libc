@@ -46,6 +46,30 @@
       },
       "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a7da20c_6cba7280",
+        "filename": "libc/include/err.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-02-24T20:01:52Z",
+      "side": 1,
+      "message": "Done. Agree! I google the differences between GNU and BSD. Seems BDS gets better performance, security and reliability. But in this case, ban format from being null makes more sense 😂",
+      "parentUuid": "766211aa_7ce9fc61",
+      "range": {
+        "startLine": 53,
+        "startChar": 46,
+        "endLine": 53,
+        "endChar": 54
+      },
+      "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
