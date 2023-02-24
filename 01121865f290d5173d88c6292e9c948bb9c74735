@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8c04f96_0e1e7d2d",
+        "filename": "libc/include/err.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T16:36:09Z",
+      "side": 1,
+      "message": "no, you were right about everything in _this_ file...",
+      "range": {
+        "startLine": 53,
+        "startChar": 46,
+        "endLine": 53,
+        "endChar": 54
+      },
+      "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
