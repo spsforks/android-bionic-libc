@@ -22,6 +22,30 @@
       },
       "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "766211aa_7ce9fc61",
+        "filename": "libc/include/err.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T16:36:55Z",
+      "side": 1,
+      "message": "(these are two unrelated APIs. \u003cerr.h\u003e is the BSD API, and \u003cerror.h\u003e is the GNU API. for once, the GNU API is the more sensible one!)",
+      "parentUuid": "b8c04f96_0e1e7d2d",
+      "range": {
+        "startLine": 53,
+        "startChar": 46,
+        "endLine": 53,
+        "endChar": 54
+      },
+      "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
