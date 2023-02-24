@@ -70,6 +70,30 @@
       },
       "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae222047_5676ff55",
+        "filename": "libc/include/err.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T20:19:05Z",
+      "side": 1,
+      "message": "\u003e  I google the differences between GNU and BSD. Seems BDS gets better performance, security and reliability.\n\ni think the most useful distinction is probably \"macOS/iOS are BSD-based, desktop/server linux is GNU, and Android is stuck trying to make both app developers [who expect BSD interfaces/behaviors because of iOS] and os developers [who expect GNU interfaces/behaviors because of Linux/glibc] happy at the same time\".\n\n(the security thing you saw was probably referring specifically to https://en.wikipedia.org/wiki/OpenBSD... note that there are many BSDs, and they don\u0027t share nearly as much code as you\u0027d imagine if you\u0027re thinking in \"Linux distro\" terms.)",
+      "parentUuid": "8a7da20c_6cba7280",
+      "range": {
+        "startLine": 53,
+        "startChar": 46,
+        "endLine": 53,
+        "endChar": 54
+      },
+      "revId": "01121865f290d5173d88c6292e9c948bb9c74735",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
