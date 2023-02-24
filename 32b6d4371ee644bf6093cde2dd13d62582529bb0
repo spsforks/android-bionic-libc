@@ -69,6 +69,30 @@
       },
       "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a2750ae_46d626c0",
+        "filename": "libc/include/iconv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-02-24T18:16:11Z",
+      "side": 1,
+      "message": "ah, right https://source.corp.google.com/android/bionic/libc/bionic/iconv.cpp;l\u003d361?q\u003dfile:bionic%20file:iconv\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F means we don\u0027t do anything else if __src_buf is null.\n\nit seems like this is somewhere where our behavior has _changed_ too: https://source.corp.google.com/android/bionic/tests/iconv_test.cpp;l\u003d454?q\u003dfile:bionic%20file:iconv\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\nand i guess there\u0027s this weird special case (which doesn\u0027t apply to us, but portable code might still call us this way anyway) for __dst_bytes_left:\n```\n       A third case is when inbuf is NULL or *inbuf is NULL, and outbuf\n       is NULL or *outbuf is NULL.  In this case, the iconv() function\n       sets cd\u0027s conversion state to the initial state.\n```",
+      "parentUuid": "d3ad26ff_254573a3",
+      "range": {
+        "startLine": 71,
+        "startChar": 90,
+        "endLine": 71,
+        "endChar": 119
+      },
+      "revId": "32b6d4371ee644bf6093cde2dd13d62582529bb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
