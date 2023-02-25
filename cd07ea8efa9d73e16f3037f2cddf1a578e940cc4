@@ -16,6 +16,23 @@
       "message": "this will have to wait until after rprichard\u0027s libc++ update.\n\n(i could do this in two parts instead, but there\u0027s no hurry and i think we\u0027re close enough that we may as well wait...)",
       "revId": "cd07ea8efa9d73e16f3037f2cddf1a578e940cc4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1aa7eb02_e15a6250",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-02-25T00:03:22Z",
+      "side": 1,
+      "message": "Why\u0027s all this still in the headers? Performance optimization for trivial inlines, or are these backports still needed in some way that\u0027s not obvious from the CL?\n\nEither way, worthy of a comment 😊",
+      "revId": "cd07ea8efa9d73e16f3037f2cddf1a578e940cc4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
