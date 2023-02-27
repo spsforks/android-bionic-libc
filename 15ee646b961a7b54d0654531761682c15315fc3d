@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e74d40a0_24c6ef33",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-02-27T19:58:24Z",
+      "side": 1,
+      "message": "Should the comment be moved (or one added) to the implementation so we know why we\u0027re keeping them? (that context isn\u0027t in this CL, so maybe that\u0027s already explained there)",
+      "revId": "15ee646b961a7b54d0654531761682c15315fc3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
