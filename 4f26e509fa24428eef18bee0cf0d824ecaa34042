@@ -109,6 +109,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "b0522d0c_bfc36982",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1293738
+      },
+      "writtenOn": "2023-02-28T19:21:26Z",
+      "side": 1,
+      "message": "Hung-ying can approve GSI branch changes.",
+      "revId": "4f26e509fa24428eef18bee0cf0d824ecaa34042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "bc1f072c_93da4cd2",
         "filename": "libc/SYSCALLS.TXT",
         "patchSetId": 2
