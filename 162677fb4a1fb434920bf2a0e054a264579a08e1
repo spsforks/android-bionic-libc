@@ -16,6 +16,24 @@
       "message": "we don\u0027t usually change bionic (outside of its tests/ subdirectory) on -tests-dev branches...",
       "revId": "162677fb4a1fb434920bf2a0e054a264579a08e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c495380a_330ba039",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1942356
+      },
+      "writtenOn": "2023-02-28T00:48:32Z",
+      "side": 1,
+      "message": "I see, @adelva@google.com OK if I abandon this then?",
+      "parentUuid": "cf453ca2_90c15e22",
+      "revId": "162677fb4a1fb434920bf2a0e054a264579a08e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
