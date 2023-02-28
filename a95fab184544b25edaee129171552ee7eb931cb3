@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f919c74_f4b95a50",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1892347
+      },
+      "writtenOn": "2023-02-28T14:25:35Z",
+      "side": 1,
+      "message": "I don\u0027t think you would normally put a panic handler in a library like this one, since the panic handler must be unique for the entire application, so if something else also uses Rust, now you have two (libc\u0027s and the one from the Rust standard library).\n\nYou say you didn\u0027t run into issues with a panic handler in the previous commit — my guess is that this is because that commit can never panic, so the handler might have been dead-code-eliminated.\n\nIn general, since the final executable needs a panic handler, I suspect you need some way to have one linked in when nobody uses the Rust standard library (it should just abort the program), and to not link it in when the standard library is available, since std provides its own panic handler.",
+      "revId": "a95fab184544b25edaee129171552ee7eb931cb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
