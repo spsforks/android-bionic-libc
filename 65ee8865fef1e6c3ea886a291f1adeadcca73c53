@@ -16,6 +16,24 @@
       "message": "munmap() a malloc() allocation?",
       "revId": "65ee8865fef1e6c3ea886a291f1adeadcca73c53",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "809fbe7e_7d69e4c5",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-02-28T23:59:04Z",
+      "side": 1,
+      "message": "oops.",
+      "parentUuid": "ae7aa8a7_fa72af3c",
+      "revId": "65ee8865fef1e6c3ea886a291f1adeadcca73c53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
