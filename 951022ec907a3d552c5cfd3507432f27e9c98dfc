@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "918bdff4_54876769",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-01T18:37:06Z",
+      "side": 1,
+      "message": "I don\u0027t think so? But I think yes in the future(in a not 32 bit world)😂: http://cs/android/bionic/linker/linker.cpp;l\u003d2219-2222;rcl\u003d5062ec2c1f08b7c7ba97714ad850bd3c080ef7e5",
+      "parentUuid": "4d140180_09b737c3",
+      "range": {
+        "startLine": 51,
+        "startChar": 28,
+        "endLine": 51,
+        "endChar": 57
+      },
+      "revId": "951022ec907a3d552c5cfd3507432f27e9c98dfc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "51912064_8c92361b",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
