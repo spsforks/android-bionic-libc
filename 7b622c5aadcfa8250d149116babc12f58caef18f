@@ -52,6 +52,24 @@
       "parentUuid": "a1dfa1b6_01896251",
       "revId": "7b622c5aadcfa8250d149116babc12f58caef18f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c3d4abb_8d888a90",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-01T02:08:03Z",
+      "side": 1,
+      "message": "ack. thanks both. (and, yeah, getting rid of free() always sgtm.)",
+      "parentUuid": "174d107c_2aae3193",
+      "revId": "7b622c5aadcfa8250d149116babc12f58caef18f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
