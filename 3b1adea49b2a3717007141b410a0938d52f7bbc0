@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2af0c40_b75bd2b7",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-01T23:32:15Z",
+      "side": 1,
+      "message": "Isn\u0027t it possible for n to be greater than sizeof(log_line)? I don\u0027t know if our version always guarantees that it is at max sizeof(log_line) though.",
+      "range": {
+        "startLine": 87,
+        "startChar": 76,
+        "endLine": 87,
+        "endChar": 77
+      },
+      "revId": "3b1adea49b2a3717007141b410a0938d52f7bbc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29b29ca0_66ec34c7",
+        "filename": "tests/syslog_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-01T23:32:15Z",
+      "side": 1,
+      "message": "Should there be a test that tries to log something really long?",
+      "revId": "3b1adea49b2a3717007141b410a0938d52f7bbc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
