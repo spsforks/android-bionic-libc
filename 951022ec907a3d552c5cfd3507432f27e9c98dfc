@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0d4a9135_a15660d9",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-01T20:06:33Z",
+      "side": 1,
+      "message": "ugh, yeah, it\u0027s more than 10 years since we fixed this bug and it\u0027s still with us thanks to 32-bit :-(\n\nadd a comment something like\n```\n/* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */\n```\nto both of these so i remember to document this when i add the full doc comment later?",
+      "parentUuid": "918bdff4_54876769",
+      "range": {
+        "startLine": 51,
+        "startChar": 28,
+        "endLine": 51,
+        "endChar": 57
+      },
+      "revId": "951022ec907a3d552c5cfd3507432f27e9c98dfc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "51912064_8c92361b",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
