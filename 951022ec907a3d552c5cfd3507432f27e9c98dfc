@@ -111,6 +111,24 @@
       "message": "...because RTLD_DEFAULT is usually null :-)",
       "revId": "951022ec907a3d552c5cfd3507432f27e9c98dfc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d468ce9_6033fa2b",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-01T22:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51912064_8c92361b",
+      "revId": "951022ec907a3d552c5cfd3507432f27e9c98dfc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
