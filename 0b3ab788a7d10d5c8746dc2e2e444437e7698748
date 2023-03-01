@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d3b36c62_6c8e7ac0",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-01T21:53:04Z",
+      "side": 1,
+      "message": "Oh true, my bad.",
+      "parentUuid": "d81e328f_8e23287f",
+      "range": {
+        "startLine": 144,
+        "startChar": 27,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "edbbb04f_9818e1b9",
         "filename": "libc/include/stdio.h",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2023-03-01T02:07:00Z",
       "side": 1,
       "message": "isn\u0027t this just _Nullable?",
+      "range": {
+        "startLine": 214,
+        "startChar": 21,
+        "endLine": 214,
+        "endChar": 50
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f178d6e8_17070ad3",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-01T21:53:04Z",
+      "side": 1,
+      "message": "Nope. If `read_fn` and `write_fn` are both nullptr, it will cause `EINVAL` http://cs/android/bionic/libc/stdio/stdio.cpp;l\u003d687-688;rcl\u003d51ec33dd01705ee6503af64c1e6ce2bdb230a946",
+      "parentUuid": "edbbb04f_9818e1b9",
       "range": {
         "startLine": 214,
         "startChar": 21,
@@ -140,6 +188,30 @@
       "writtenOn": "2023-03-01T02:07:00Z",
       "side": 1,
       "message": "weird... is that a bionic bug? i can\u0027t see anything in the spec that says a null pointer is valid here, and it\u0027s not obvious why you\u0027d allow it...",
+      "range": {
+        "startLine": 266,
+        "startChar": 23,
+        "endLine": 266,
+        "endChar": 32
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9315191_40fa45a3",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-01T21:53:04Z",
+      "side": 1,
+      "message": "According to http://cs/android/bionic/libc/bionic/flockfile.cpp;l\u003d54;rcl\u003d51ec33dd01705ee6503af64c1e6ce2bdb230a946, it is fine if `fp` is a `nullptr`. But I admit it shouldn\u0027t be null. Otherwise it is pointless.",
+      "parentUuid": "0128132c_602f336a",
       "range": {
         "startLine": 266,
         "startChar": 23,
