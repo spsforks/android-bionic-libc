@@ -65,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4af42b2c_a50b4319",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3b36c62_6c8e7ac0",
+      "range": {
+        "startLine": 144,
+        "startChar": 27,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "edbbb04f_9818e1b9",
@@ -136,6 +160,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7b7ca01_20a0bfcd",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37e00b4a_6e941381",
+      "range": {
+        "startLine": 214,
+        "startChar": 21,
+        "endLine": 214,
+        "endChar": 50
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "661801f8_7ae7fd55",
@@ -149,6 +197,30 @@
       "writtenOn": "2023-03-01T02:07:00Z",
       "side": 1,
       "message": "(same)",
+      "range": {
+        "startLine": 226,
+        "startChar": 21,
+        "endLine": 226,
+        "endChar": 50
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60a43240_d95a79e7",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "661801f8_7ae7fd55",
       "range": {
         "startLine": 226,
         "startChar": 21,
@@ -182,6 +254,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0afb25ba_0883d496",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32abada3_3150dc30",
+      "range": {
+        "startLine": 238,
+        "startChar": 23,
+        "endLine": 238,
+        "endChar": 52
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f382b03d_40cd29b4",
@@ -195,6 +291,24 @@
       "writtenOn": "2023-03-01T02:07:00Z",
       "side": 1,
       "message": "sadly not:\n```\n       Concerning the return value of snprintf(), SUSv2 and C99\n       contradict each other: when snprintf() is called with size\u003d0 then\n       SUSv2 stipulates an unspecified return value less than 1, while\n       C99 allows str to be NULL in this case, and gives the return\n       value (as always) as the number of characters that would have\n       been written in case the output string has been large enough.\n       POSIX.1-2001 and later align their specification of snprintf()\n       with C99.\n```\n(so that you can say \"please tell me how big a buffer i\u0027ll need for this string\". which isn\u0027t the _best_ idea... you probably want a \"reasonable\" buffer to start with, and fall back to a bigger one, so most of the time you\u0027ll only have to call snprintf() once. see https://source.corp.google.com/android/system/libbase/stringprintf.cpp;l\u003d26?q\u003dfile:libbase%20file:stringprintf\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F for that trick in libbase.)",
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27d1f910_779b84a3",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f382b03d_40cd29b4",
       "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -270,6 +384,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cd3d358_23ce99c1",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf440bc8_738bbe60",
+      "range": {
+        "startLine": 266,
+        "startChar": 23,
+        "endLine": 266,
+        "endChar": 32
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "105aacea_cb5dce29",
@@ -293,6 +431,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcf46614_257a8950",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "oh true!",
+      "parentUuid": "105aacea_cb5dce29",
+      "range": {
+        "startLine": 276,
+        "startChar": 14,
+        "endLine": 276,
+        "endChar": 47
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e785d776_bfb54317",
@@ -306,6 +468,24 @@
       "writtenOn": "2023-03-01T02:07:00Z",
       "side": 1,
       "message": "(same)",
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b41c7fe_15a96b3b",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-02T19:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e785d776_bfb54317",
       "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
