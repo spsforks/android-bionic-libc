@@ -70,6 +70,24 @@
       "parentUuid": "174d107c_2aae3193",
       "revId": "7b622c5aadcfa8250d149116babc12f58caef18f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7fe42af_b22c5905",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-02T23:35:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c3d4abb_8d888a90",
+      "revId": "7b622c5aadcfa8250d149116babc12f58caef18f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
