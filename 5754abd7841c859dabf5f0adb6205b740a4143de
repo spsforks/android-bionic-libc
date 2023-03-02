@@ -70,6 +70,24 @@
       "parentUuid": "4d895f83_aa3e0606",
       "revId": "5754abd7841c859dabf5f0adb6205b740a4143de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43c01704_11ae9b9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-03-02T18:48:35Z",
+      "side": 1,
+      "message": "yeah, all can be skipped.",
+      "parentUuid": "74f2e705_437bfdcd",
+      "revId": "5754abd7841c859dabf5f0adb6205b740a4143de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
