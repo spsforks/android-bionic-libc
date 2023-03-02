@@ -29,13 +29,27 @@
 #include "utils.h"
 
 #include <string>
+#include <vector>
 
 #include <android-base/properties.h>
+#include <android-base/test_utils.h>
 
 void RunGwpAsanTest(const char* test_name) {
+  std::vector<const char*> env{"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1",
+                               "GWP_ASAN_MAX_ALLOCS=40000"};
+  // Needs to be here so that env variable if set is still valid through this function.
+  std::string hwasan_options;
+  if (running_with_hwasan()) {
+    char* env_hwasan_options = getenv("HWASAN_OPTIONS");
+    if (env_hwasan_options != nullptr) {
+      hwasan_options = std::string("HWASAN_OPTIONS=") + env_hwasan_options;
+      env.push_back(hwasan_options.c_str());
+    }
+  }
+  env.push_back(nullptr);
+
   ExecTestHelper eh;
-  eh.SetEnv({"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1", "GWP_ASAN_MAX_ALLOCS=40000",
-             nullptr});
+  eh.SetEnv(env);
   std::string filter_arg = "--gtest_filter=";
   filter_arg += test_name;
   std::string exec(testing::internal::GetArgvs()[0]);

@@ -58,13 +58,7 @@ extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
 // the torture mode is is generally 40,000, so that svelte devices don't
 // explode, as this uses ~163MiB RAM (4KiB per live allocation).
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
-  if (running_with_hwasan()) {
-    // Skip the malloc.zeroed tests since they fail in this particular config.
-    // TODO(b/267386540): Need to fix this problem.
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*:malloc.zeroed*");
-  } else {
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
-  }
+  RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
 }
 
 class SyspropRestorer {
