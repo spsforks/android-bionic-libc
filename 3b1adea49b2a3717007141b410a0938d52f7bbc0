@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "588a0bfb_0b00471c",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-02T01:22:07Z",
+      "side": 1,
+      "message": "yeah, snprintf won\u0027t write too many bytes (and will ensure you have a \u0027\\0\u0027) ... but it will tell you how many bytes you _should_ have had. (so that if you want to resize, you can do so without needing a separate dry run --- you can assume it\u0027ll work first time, and be guaranteed it\u0027ll work _second_ time even if not. this is basically what StringPrintf() does. in this _specific_ case, we know logs get truncated at 1024 bytes anyway, so there\u0027s no point resizing.)",
+      "parentUuid": "c2af0c40_b75bd2b7",
+      "range": {
+        "startLine": 87,
+        "startChar": 76,
+        "endLine": 87,
+        "endChar": 77
+      },
+      "revId": "3b1adea49b2a3717007141b410a0938d52f7bbc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29b29ca0_66ec34c7",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-03-01T23:32:15Z",
       "side": 1,
       "message": "Should there be a test that tries to log something really long?",
+      "revId": "3b1adea49b2a3717007141b410a0938d52f7bbc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5606ee65_97698cc2",
+        "filename": "tests/syslog_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-02T01:22:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29b29ca0_66ec34c7",
       "revId": "3b1adea49b2a3717007141b410a0938d52f7bbc0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
