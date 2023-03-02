@@ -114,6 +114,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "37e00b4a_6e941381",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-02T01:53:04Z",
+      "side": 1,
+      "message": "oh, add a comment then please. (since this isn\u0027t in glibc, we won\u0027t be able to link to man7.org for this one and will have to write the whole thing ourselves :-( )",
+      "parentUuid": "f178d6e8_17070ad3",
+      "range": {
+        "startLine": 214,
+        "startChar": 21,
+        "endLine": 214,
+        "endChar": 50
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "661801f8_7ae7fd55",
         "filename": "libc/include/stdio.h",
         "patchSetId": 1
@@ -212,6 +236,30 @@
       "side": 1,
       "message": "According to http://cs/android/bionic/libc/bionic/flockfile.cpp;l\u003d54;rcl\u003d51ec33dd01705ee6503af64c1e6ce2bdb230a946, it is fine if `fp` is a `nullptr`. But I admit it shouldn\u0027t be null. Otherwise it is pointless.",
       "parentUuid": "0128132c_602f336a",
+      "range": {
+        "startLine": 266,
+        "startChar": 23,
+        "endLine": 266,
+        "endChar": 32
+      },
+      "revId": "0b3ab788a7d10d5c8746dc2e2e444437e7698748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf440bc8_738bbe60",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-02T01:53:04Z",
+      "side": 1,
+      "message": "yeah, so call this _Nonnull in the API because we want anyone who passes null to be told they\u0027ve made a mistake at compile time.\n\n(separately i\u0027ve cleaned up the implementation of these functions and -- until/unless proven otherwise by app compat testing -- changed these to be a FORTIFY check like all the other \u003cstdio.h\u003e functions[1] https://android-review.git.corp.google.com/c/platform/bionic/+/2465331)\n\n____\n1. except fflush(), the one _standard_ special case :-)",
+      "parentUuid": "e9315191_40fa45a3",
       "range": {
         "startLine": 266,
         "startChar": 23,
