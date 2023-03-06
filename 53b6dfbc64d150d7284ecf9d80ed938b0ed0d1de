@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0648cade_0f153b7f",
+        "filename": "libc/tzcode/strptime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-06T23:47:19Z",
+      "side": 1,
+      "message": "(i could move these into the .bp file instead, but given that we still have other Android differences, it didn\u0027t seem like an improvement.)",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 59
+      },
+      "revId": "53b6dfbc64d150d7284ecf9d80ed938b0ed0d1de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
