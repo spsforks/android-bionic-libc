@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f634334c_e599fc02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-06T23:06:11Z",
+      "side": 1,
+      "message": "Does clang understand %b/%B yet?",
+      "revId": "ac34ad2ae62eb913f268212054d602aa0c44c9ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
