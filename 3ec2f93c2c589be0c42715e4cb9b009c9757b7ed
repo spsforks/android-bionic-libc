@@ -16,6 +16,23 @@
       "message": "FYI, the mesa3d definition of REG_A0 is in external/mesa3d/src/freedreno/ir3/instr-a3xx.h:352",
       "revId": "3ec2f93c2c589be0c42715e4cb9b009c9757b7ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81069be1_1f7e5202",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-07T16:29:14Z",
+      "side": 1,
+      "message": "does guarding these #defines with `#if defined(__USE_GNU)` work?\n\nwe can\u0027t change the name (because this is the name other libcs use too), but i notice that musl and glibc only define these macros in that case, rather than unconditionally like us.\n\nif that doesn\u0027t work, though you\u0027ll need to change mesa3d.",
+      "revId": "3ec2f93c2c589be0c42715e4cb9b009c9757b7ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
