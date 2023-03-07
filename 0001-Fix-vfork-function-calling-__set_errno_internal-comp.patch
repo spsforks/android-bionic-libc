@@ -1,0 +1,66 @@
+From 68da31e463dfbd58e855ac771bae19d242df430e Mon Sep 17 00:00:00 2001
+From: caowencheng <caowencheng@eswincomputing.com>
+Date: Tue, 7 Mar 2023 14:05:34 +0800
+Subject: [PATCH] Fix vfork function calling __set_errno_internal compilation
+ error
+
+If the distance between the vfork function and the
+__set_errno_internal function exceeds 1M, the j command
+will compile and report an error. Here, the tail command
+ will be compiled into a j command by the compiler when
+the distance is less than 1M. If it exceeds 1M, it will
+be compiled. device becomes two instructions
+
+Test: make libc
+Change-Id: I80d099d25c7cc2439a297d8afc65abeb5a7a360c
+Signed-off-by: caowencheng <caowencheng@eswincomputing.com>
+---
+ libc/Android.bp                         |  1 +
+ libc/arch-riscv64/bionic/vfork.S        |  2 +-
+ libc/arch-riscv64/string/__memcpy_chk.S | 11 +++++++++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+ create mode 100644 libc/arch-riscv64/string/__memcpy_chk.S
+
+diff --git a/libc/Android.bp b/libc/Android.bp
+index 23b381d3c..01ef405a3 100644
+--- a/libc/Android.bp
++++ b/libc/Android.bp
+@@ -827,6 +827,7 @@ cc_library_static {
+         riscv64: {
+             srcs: [
+                "arch-riscv64/string/__memset_chk.S",
++               "arch-riscv64/string/__memcpy_chk.S",
+             ],
+         },
+     },
+diff --git a/libc/arch-riscv64/bionic/vfork.S b/libc/arch-riscv64/bionic/vfork.S
+index 0eff9e997..96eaf11c5 100644
+--- a/libc/arch-riscv64/bionic/vfork.S
++++ b/libc/arch-riscv64/bionic/vfork.S
+@@ -62,5 +62,5 @@ ENTRY(vfork)
+ 
+ .L_failure:
+   neg     a0, a0
+-  j       __set_errno_internal
++  tail       __set_errno_internal
+ END(vfork)
+diff --git a/libc/arch-riscv64/string/__memcpy_chk.S b/libc/arch-riscv64/string/__memcpy_chk.S
+new file mode 100644
+index 000000000..56582f0b6
+--- /dev/null
++++ b/libc/arch-riscv64/string/__memcpy_chk.S
+@@ -0,0 +1,11 @@
++#include <private/bionic_asm.h>
++	
++	
++ENTRY(__memcpy_chk)
++    bleu    a2, a3, 1f
++    call    __memcpy_chk_fail
++
++1:
++    tail   memcpy
++END(__memcpy_chk)
++	
+-- 
+2.25.1
+
