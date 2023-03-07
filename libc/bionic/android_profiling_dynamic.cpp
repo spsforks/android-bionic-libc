@@ -211,7 +211,7 @@ static void HandleSigsysSeccompOverride(int /*signal_number*/, siginfo_t* info,
 #elif defined(__i386__)
   ctx->uc_mcontext.gregs[REG_EAX] = ret;
 #elif defined(__riscv)
-  ctx->uc_mcontext.__gregs[REG_A0] = ret;
+  ctx->uc_mcontext.__gregs[REG_ARG_0] = ret;
 #elif defined(__x86_64__)
   ctx->uc_mcontext.gregs[REG_RAX] = ret;
 #else

@@ -321,7 +321,8 @@ typedef struct ucontext {
 #define REG_SP 2
 #define REG_TP 4
 #define REG_S0 8
-#define REG_A0 10
+// REG_A0 creates a conflict with mesa3d. Use REG_ARG_0 instead.
+#define REG_ARG_0 10
 
 typedef unsigned long __riscv_mc_gp_state[NGREG];
 
