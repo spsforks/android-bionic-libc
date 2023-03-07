@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4384a5f8_89b786b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1994580
+      },
+      "writtenOn": "2023-03-07T14:43:15Z",
+      "side": 1,
+      "message": "FYI, the mesa3d definition of REG_A0 is in external/mesa3d/src/freedreno/ir3/instr-a3xx.h:352",
+      "revId": "3ec2f93c2c589be0c42715e4cb9b009c9757b7ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
