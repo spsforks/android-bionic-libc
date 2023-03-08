@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcce4854_4b33e061",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-08T22:15:21Z",
+      "side": 1,
+      "message": "i don\u0027t think so? doesn\u0027t this immediately fail with an error if you pass null?",
+      "range": {
+        "startLine": 58,
+        "startChar": 205,
+        "endLine": 58,
+        "endChar": 214
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5598c48_ae657656",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-08T22:15:21Z",
+      "side": 1,
+      "message": "isn\u0027t this just unused?",
+      "range": {
+        "startLine": 58,
+        "startChar": 154,
+        "endLine": 58,
+        "endChar": 183
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3490503d_c85d4d86",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-08T22:15:21Z",
+      "side": 1,
+      "message": "doesn\u0027t this immediately get passed to dn_comp()?",
+      "range": {
+        "startLine": 58,
+        "startChar": 42,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
