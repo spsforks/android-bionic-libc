@@ -16,6 +16,23 @@
       "message": "thanks!",
       "revId": "d27c83fbd443df4ace8853653fb82e1c20623d92",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a77feed_b368cdba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-08T18:24:18Z",
+      "side": 1,
+      "message": "i\u0027ve also uploaded https://android-review.git.corp.google.com/c/platform/bionic/+/2477975 for the other similar cases.",
+      "revId": "d27c83fbd443df4ace8853653fb82e1c20623d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
