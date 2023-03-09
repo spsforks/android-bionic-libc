@@ -140,6 +140,54 @@
       },
       "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c13e5a2_c4898d01",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-09T22:07:35Z",
+      "side": 1,
+      "message": "someone called zijunzhao marked that argument to dn_comp() as _Nonnull, so i think so :-)",
+      "parentUuid": "d4fc41b4_145c07da",
+      "range": {
+        "startLine": 58,
+        "startChar": 42,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fc28b9d_f1f5b34e",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-09T22:07:35Z",
+      "side": 1,
+      "message": "yeah, but L141 is what i meant by \"immediately fail with an error\" ... there\u0027s no _useful_ call to this function where this parameter is null, right? it\u0027s just an expensive way to get `-1`? and our theory so far in other headers (which i think we\u0027ll keep using until/unless users explain why we\u0027re wrong, or we work it out ourselves) is that we\u0027re annotating these based on \"does it make _sense_?\" not just \"will it _crash_?\".",
+      "parentUuid": "1dee897b_5cc2af54",
+      "range": {
+        "startLine": 58,
+        "startChar": 205,
+        "endLine": 58,
+        "endChar": 214
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
