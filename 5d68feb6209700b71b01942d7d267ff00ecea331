@@ -68,6 +68,30 @@
       },
       "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4fc41b4_145c07da",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-09T00:51:41Z",
+      "side": 1,
+      "message": "Yes,\nhttp://cs/android/bionic/libc/dns/nameser/ns_name.c;l\u003d231;rcl\u003db36bf2f94365a474b36b3201f2ec190f3e63f9e5\nOr it will be printed out:http://cs/android/bionic/libc/dns/resolv/res_mkquery.c;l\u003d135-136;rcl\u003db36bf2f94365a474b36b3201f2ec190f3e63f9e5\nSo it can\u0027t be null?",
+      "parentUuid": "3490503d_c85d4d86",
+      "range": {
+        "startLine": 58,
+        "startChar": 42,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
