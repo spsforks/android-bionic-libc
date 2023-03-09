@@ -188,6 +188,30 @@
       },
       "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2da0b286_feb92b69",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-09T22:17:23Z",
+      "side": 1,
+      "message": "Oh I see! Yes, it should be nonnull!",
+      "parentUuid": "8fc28b9d_f1f5b34e",
+      "range": {
+        "startLine": 58,
+        "startChar": 205,
+        "endLine": 58,
+        "endChar": 214
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
