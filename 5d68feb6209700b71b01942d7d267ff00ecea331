@@ -92,6 +92,54 @@
       },
       "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50fc814e_1b1ccd1f",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-09T00:54:37Z",
+      "side": 1,
+      "message": "ohh yes, it should be `nullable`.",
+      "parentUuid": "a5598c48_ae657656",
+      "range": {
+        "startLine": 58,
+        "startChar": 154,
+        "endLine": 58,
+        "endChar": 183
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dee897b_5cc2af54",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-09T00:54:37Z",
+      "side": 1,
+      "message": "If `DEBUG`, it can be null.\nOtherwise, line 141 helps prevent failure.\nhttp://cs/android/bionic/libc/dns/resolv/res_mkquery.c;l\u003d133-142;rcl\u003db36bf2f94365a474b36b3201f2ec190f3e63f9e5",
+      "parentUuid": "dcce4854_4b33e061",
+      "range": {
+        "startLine": 58,
+        "startChar": 205,
+        "endLine": 58,
+        "endChar": 214
+      },
+      "revId": "5d68feb6209700b71b01942d7d267ff00ecea331",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
