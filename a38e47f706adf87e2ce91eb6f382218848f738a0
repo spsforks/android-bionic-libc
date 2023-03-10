@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b175fb13_b615a99b",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-10T20:24:08Z",
+      "side": 1,
+      "message": "oh yes I see http://cs/android/bionic/tests/headers/posix/threads_h.c;l\u003d79;rcl\u003d975a8fa02d9d1a30c53452ea4f5ba63ed185c837 \nThe args can be null.",
+      "parentUuid": "4887ec9c_fa203831",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 41
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9f3b1e58_897aacf6",
         "filename": "libc/include/threads.h",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "writtenOn": "2023-03-10T18:51:34Z",
       "side": 1,
       "message": "this can be null, no?",
+      "range": {
+        "startLine": 158,
+        "startChar": 81,
+        "endLine": 158,
+        "endChar": 89
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb5bff9a_957a5074",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-10T20:24:08Z",
+      "side": 1,
+      "message": "oh yes it can be null",
+      "parentUuid": "05ac0ec8_f65d682e",
       "range": {
         "startLine": 158,
         "startChar": 81,
