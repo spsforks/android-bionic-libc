@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b04285a_f472c5d0",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-10T20:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b175fb13_b615a99b",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 41
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f3b1e58_897aacf6",
@@ -61,6 +85,30 @@
       "writtenOn": "2023-03-10T18:51:34Z",
       "side": 1,
       "message": "(see thrd_create() below...)",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 42
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96420ac1_37c07dab",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-10T20:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f3b1e58_897aacf6",
       "range": {
         "startLine": 56,
         "startChar": 34,
@@ -108,6 +156,30 @@
       "side": 1,
       "message": "oh yes it can be null",
       "parentUuid": "05ac0ec8_f65d682e",
+      "range": {
+        "startLine": 158,
+        "startChar": 81,
+        "endLine": 158,
+        "endChar": 89
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "383b7a8c_5eaa8945",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-10T20:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb5bff9a_957a5074",
       "range": {
         "startLine": 158,
         "startChar": 81,
