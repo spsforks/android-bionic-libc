@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4887ec9c_fa203831",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-10T18:51:34Z",
+      "side": 1,
+      "message": "i think this is nullable, because this is called for each key _value_, not for each _key_, and the value may be null? (arguably we could optimize the implementation to not do that [unless the spec says otherwise; i haven\u0027t checked] but we don\u0027t currently.)",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 41
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f3b1e58_897aacf6",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-10T18:51:34Z",
+      "side": 1,
+      "message": "(see thrd_create() below...)",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 42
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05ac0ec8_f65d682e",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-10T18:51:34Z",
+      "side": 1,
+      "message": "this can be null, no?",
+      "range": {
+        "startLine": 158,
+        "startChar": 81,
+        "endLine": 158,
+        "endChar": 89
+      },
+      "revId": "a38e47f706adf87e2ce91eb6f382218848f738a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
