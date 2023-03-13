@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e83a9cda_c7eb72ae",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-13T19:57:30Z",
+      "side": 1,
+      "message": "ohh it can be null",
+      "parentUuid": "6c83c9bc_a20dde6d",
+      "range": {
+        "startLine": 101,
+        "startChar": 9,
+        "endLine": 101,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "681e5d1e_cc22e712",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
@@ -72,6 +96,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ae585594_4b784595",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-13T19:57:30Z",
+      "side": 1,
+      "message": "ohh it can be null",
+      "parentUuid": "681e5d1e_cc22e712",
+      "range": {
+        "startLine": 103,
+        "startChar": 9,
+        "endLine": 103,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "675e938f_d1e1c03c",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
@@ -83,6 +131,30 @@
       "writtenOn": "2023-03-13T17:01:24Z",
       "side": 1,
       "message": "how does this function report failure?",
+      "range": {
+        "startLine": 105,
+        "startChar": 9,
+        "endLine": 105,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7574cc18_feeb16c1",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-13T19:57:30Z",
+      "side": 1,
+      "message": "From http://cs/android/bionic/libc/bionic/locale.cpp;l\u003d190;rcl\u003d7f9c6c4b716874a461c1a35ad91951d3ca3182f5, it will return a nonnull pointer?",
+      "parentUuid": "675e938f_d1e1c03c",
       "range": {
         "startLine": 105,
         "startChar": 9,
