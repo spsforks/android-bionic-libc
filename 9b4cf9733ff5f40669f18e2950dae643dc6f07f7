@@ -34,6 +34,24 @@
       "parentUuid": "be3bd9de_550b53e8",
       "revId": "9b4cf9733ff5f40669f18e2950dae643dc6f07f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f05b356e_b9b8880c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-13T16:16:57Z",
+      "side": 1,
+      "message": "it\u0027s worth checking the generated code for modify_stack_protector_test() then ... that test has been historically problematic with clang getting too clever for its own good and us having to change the test to ensure we\u0027re actually writing over the stack protector :-(",
+      "parentUuid": "5d16978a_44b82550",
+      "revId": "9b4cf9733ff5f40669f18e2950dae643dc6f07f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
