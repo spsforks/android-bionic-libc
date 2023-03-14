@@ -163,6 +163,30 @@
       },
       "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e1303c1_03a7fa4e",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-14T00:24:32Z",
+      "side": 1,
+      "message": "_our_ implementation can\u0027t fail, but _an_ implementation is allowed to fail: https://pubs.opengroup.org/onlinepubs/9699919799/functions/uselocale.html\n\n(see the \"RETURN VALUE\" section. and, yes, on the face of it that does just look like a bad spec --- i don\u0027t see how you\u0027d actually recognize that situation.)",
+      "parentUuid": "7574cc18_feeb16c1",
+      "range": {
+        "startLine": 105,
+        "startChar": 9,
+        "endLine": 105,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
