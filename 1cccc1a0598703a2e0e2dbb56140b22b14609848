@@ -16,6 +16,24 @@
       "message": "seems weird to remove this comment without also removing the `volatile`?",
       "revId": "1cccc1a0598703a2e0e2dbb56140b22b14609848",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3408cc7f_cc200147",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2023-03-14T16:04:19Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "1a582f25_895403be",
+      "revId": "1cccc1a0598703a2e0e2dbb56140b22b14609848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
