@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "753945e9_1bca735a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-15T23:22:50Z",
+      "side": 1,
+      "message": "The bug doesn\u0027t seem related to this cl. But I would guess you found this when enabling that build.",
+      "revId": "84979776d026edc944c32ece6cf2798c442fe5b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
