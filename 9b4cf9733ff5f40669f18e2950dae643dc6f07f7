@@ -88,6 +88,24 @@
       "parentUuid": "57091605_aaeb72a2",
       "revId": "9b4cf9733ff5f40669f18e2950dae643dc6f07f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8618e2da_e363733f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2023-03-15T17:26:15Z",
+      "side": 1,
+      "message": "Yes, we still need this. I originally assumed the two stack protector related breakages stems from a single issue, but it turns out they are unrelated. The device still does not boot unless we turn off \"enhanced stack protector\" for crt_defaults.\n\nSince we have a workaround for this issue, I intend to continue with the compiler update with this workaround, and then revisit this once everything else stabilises.",
+      "parentUuid": "cf1dc527_5c02824e",
+      "revId": "9b4cf9733ff5f40669f18e2950dae643dc6f07f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
