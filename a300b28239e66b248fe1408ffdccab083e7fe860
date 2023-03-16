@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bae817c7_92cc73d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-16T18:13:12Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02e53168_b58bb5c2",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-16T18:13:12Z",
+      "side": 1,
+      "message": "seems unlikely? i think you\u0027ve made assumptions here based on _our implementation_ rather than the specification?",
+      "range": {
+        "startLine": 129,
+        "startChar": 17,
+        "endLine": 129,
+        "endChar": 26
+      },
+      "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
