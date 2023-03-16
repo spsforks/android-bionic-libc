@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e852ff95_4740ee13",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T02:03:58Z",
+      "side": 1,
+      "message": "From https://man7.org/linux/man-pages/man3/localeconv.3p.html\nThe members of the structure with type char * are pointers to strings, any of which (`except decimal_point`) can point to \"\", to indicate that the value is not available in the current locale or is of zero length.\n\nI think this can be null and others should be nonnull?",
+      "parentUuid": "18260242_921bfcd0",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c83c9bc_a20dde6d",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
