@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09124f1a_c69e0d65",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T19:14:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb45803b_51168c96",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6c83c9bc_a20dde6d",
@@ -143,6 +167,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "421f4581_615dca2a",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T19:14:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e83a9cda_c7eb72ae",
+      "range": {
+        "startLine": 101,
+        "startChar": 9,
+        "endLine": 101,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "681e5d1e_cc22e712",
@@ -180,6 +228,30 @@
       "side": 1,
       "message": "ohh it can be null",
       "parentUuid": "681e5d1e_cc22e712",
+      "range": {
+        "startLine": 103,
+        "startChar": 9,
+        "endLine": 103,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff7d83a3_888d78e6",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T19:14:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae585594_4b784595",
       "range": {
         "startLine": 103,
         "startChar": 9,
@@ -251,6 +323,30 @@
       "side": 1,
       "message": "_our_ implementation can\u0027t fail, but _an_ implementation is allowed to fail: https://pubs.opengroup.org/onlinepubs/9699919799/functions/uselocale.html\n\n(see the \"RETURN VALUE\" section. and, yes, on the face of it that does just look like a bad spec --- i don\u0027t see how you\u0027d actually recognize that situation.)",
       "parentUuid": "7574cc18_feeb16c1",
+      "range": {
+        "startLine": 105,
+        "startChar": 9,
+        "endLine": 105,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8029918c_5db14a48",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T19:14:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e1303c1_03a7fa4e",
       "range": {
         "startLine": 105,
         "startChar": 9,
