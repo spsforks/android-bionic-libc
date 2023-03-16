@@ -63,6 +63,30 @@
       },
       "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "789989a4_5ceb6e52",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-16T18:24:59Z",
+      "side": 1,
+      "message": "yeah, and like we\u0027ve said in similar cases, we shouldn\u0027t document the _implementation_ (because that might [need to!] change), we should document what\u0027s guaranteed for all implementations. (the source can be useful to tell you something _will_ be accessed, but if the source _doesn\u0027t_ access something right now, that doesn\u0027t imply it _can\u0027t_ in future. that is: the source can only give you a guarantee in one direction.)",
+      "parentUuid": "2e282757_66e4036f",
+      "range": {
+        "startLine": 129,
+        "startChar": 17,
+        "endLine": 129,
+        "endChar": 26
+      },
+      "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
