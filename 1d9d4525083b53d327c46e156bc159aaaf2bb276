@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb45803b_51168c96",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T18:22:19Z",
+      "side": 1,
+      "message": "I see. I will mark them all nonnull.",
+      "parentUuid": "8c4cd9aa_0d44fc86",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c83c9bc_a20dde6d",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
