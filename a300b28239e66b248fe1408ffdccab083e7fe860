@@ -39,6 +39,30 @@
       },
       "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e282757_66e4036f",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-16T18:22:52Z",
+      "side": 1,
+      "message": "I made assumptions according to http://cs/android/bionic/libc/bionic/fts.c;l\u003d450;rcl\u003dd8d725273a403450b0e796d295c16687fcc7d032",
+      "parentUuid": "02e53168_b58bb5c2",
+      "range": {
+        "startLine": 129,
+        "startChar": 17,
+        "endLine": 129,
+        "endChar": 26
+      },
+      "revId": "a300b28239e66b248fe1408ffdccab083e7fe860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
