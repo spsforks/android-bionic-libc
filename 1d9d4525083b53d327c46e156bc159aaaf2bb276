@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8c4cd9aa_0d44fc86",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-16T17:59:19Z",
+      "side": 1,
+      "message": "yeah, the POSIX language is \"The members of the structure with type char * are pointers to strings, any of which (except decimal_point) can point to \"\", to indicate that the value is not available in the current locale or is of zero length. The members with type char are non-negative numbers, any of which can be {CHAR_MAX} to indicate that the value is not available in the current locale.\"\n\nsince nullptr _isn\u0027t_ a string, and they explicitly call out \"\" as the way to represent missing elements (and the word \"null\" does not appear in the POSIX documentation, except when referring to \u0027\\0\u0027), i don\u0027t think null is allowed here.",
+      "parentUuid": "e852ff95_4740ee13",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 17
+      },
+      "revId": "1d9d4525083b53d327c46e156bc159aaaf2bb276",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6c83c9bc_a20dde6d",
         "filename": "libc/include/locale.h",
         "patchSetId": 1
