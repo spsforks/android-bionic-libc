@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d8aaf57_e5771ffc",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-17T18:42:19Z",
+      "side": 1,
+      "message": "really?",
+      "range": {
+        "startLine": 127,
+        "startChar": 109,
+        "endLine": 127,
+        "endChar": 193
+      },
+      "revId": "d78c6ec1ddc047f7420a77e3490fc95db2ddeb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
