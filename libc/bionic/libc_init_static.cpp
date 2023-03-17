@@ -237,21 +237,35 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
                            kMemtagOverrideSyspropPrefix, basename);
   const char* sys_prop_names[] = {sysprop_name, remote_sysprop_name, kMemtagGlobalSysprop};
 
+  const char* source = nullptr;
   if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
-                                       options_str, sizeof(options_str))) {
+                                       options_str, sizeof(options_str), &source)) {
     return false;
   }
 
   if (strcmp("sync", options_str) == 0) {
+    async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"%s\" from %s.",
+        options_str, source);
     *level = M_HEAP_TAGGING_LEVEL_SYNC;
   } else if (strcmp("async", options_str) == 0) {
+    async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"%s\" from %s.",
+        options_str, source);
     *level = M_HEAP_TAGGING_LEVEL_ASYNC;
   } else if (strcmp("off", options_str) == 0) {
+    async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"%s\" from %s.",
+        options_str, source);
     *level = M_HEAP_TAGGING_LEVEL_TBI;
   } else {
     async_safe_format_log(
         ANDROID_LOG_ERROR, "libc",
-        "unrecognized memtag level: \"%s\" (options are \"sync\", \"async\", or \"off\").",
+        "unrecognized memtag level in %s: \"%s\" (options are \"sync\", \"async\", or \"off\").",
+        source,
         options_str);
     return false;
   }
@@ -284,14 +298,23 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
       // by anyone, but we note it (heh) here for posterity, in case the zero
       // level becomes meaningful, and binaries with this note can be executed
       // on Android 12 devices.
+      async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"off\" from ELF note");
       return M_HEAP_TAGGING_LEVEL_TBI;
     case NT_MEMTAG_LEVEL_ASYNC:
+      async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"async\" from ELF note");
       return M_HEAP_TAGGING_LEVEL_ASYNC;
     case NT_MEMTAG_LEVEL_SYNC:
     default:
       // We allow future extensions to specify mode 3 (currently unused), with
       // the idea that it might be used for ASYMM mode or something else. On
       // this version of Android, it falls back to SYNC mode.
+      async_safe_format_log(
+        ANDROID_LOG_DEBUG, "libc",
+        "chose memtag level \"sync\" from ELF note");
       return M_HEAP_TAGGING_LEVEL_SYNC;
   }
 }
