@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7df3208_cbfc7a51",
+        "filename": "libc/bionic/gwp_asan_wrappers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-17T20:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77c8a230_964f175e",
+      "revId": "4457a66a56297431ea5714474b755b5ba061c71c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2f39a90_cbf05f05",
@@ -41,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0773e33b_e0b6b232",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-17T20:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2f39a90_cbf05f05",
+      "range": {
+        "startLine": 261,
+        "startChar": 9,
+        "endLine": 261,
+        "endChar": 27
+      },
+      "revId": "4457a66a56297431ea5714474b755b5ba061c71c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9b14c7c_307d0719",
@@ -54,6 +96,30 @@
       "writtenOn": "2023-03-17T19:18:03Z",
       "side": 1,
       "message": "given the \"unrecognised\" returns false, these can be removed from the individual branches and just put once before the `return true`",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 29
+      },
+      "revId": "4457a66a56297431ea5714474b755b5ba061c71c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24ee647a_b8f1a260",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-17T20:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9b14c7c_307d0719",
       "range": {
         "startLine": 259,
         "startChar": 4,
