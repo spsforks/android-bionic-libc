@@ -42,4 +42,4 @@
 __LIBC_HIDDEN__ bool get_config_from_env_or_sysprops(const char* env_var_name,
                                                      const char* const* sys_prop_names,
                                                      size_t sys_prop_names_size, char* options,
-                                                     size_t options_size);
+                                                     size_t options_size, const char** source);
