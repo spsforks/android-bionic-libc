@@ -3142,6 +3142,22 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
+      case DT_AARCH64_MEMTAG_MODE:
+        has_memtag_mode_ = true;
+        memtag_mode_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_HEAP:
+        memtag_heap_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_STACK:
+        memtag_stack_ = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_GLOBALS:
+        memtag_globals_ = reinterpret_cast<void*>(load_bias + d->d_un.d_ptr);
+        break;
+      case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        memtag_globalssz_ = d->d_un.d_val;
+        break;
 #endif
 
       default:

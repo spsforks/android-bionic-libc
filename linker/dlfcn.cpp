@@ -331,6 +331,12 @@ soinfo* get_libdl_info(const soinfo& linker_si) {
     __libdl_info->gnu_bloom_filter_ = linker_si.gnu_bloom_filter_;
     __libdl_info->gnu_bucket_ = linker_si.gnu_bucket_;
     __libdl_info->gnu_chain_ = linker_si.gnu_chain_;
+    __libdl_info->memtag_globals_ = linker_si.memtag_globals_;
+    __libdl_info->memtag_globalssz_ = linker_si.memtag_globalssz_;
+    __libdl_info->has_memtag_mode_ = linker_si.has_memtag_mode_;
+    __libdl_info->memtag_mode_ = linker_si.memtag_mode_;
+    __libdl_info->memtag_heap_ = linker_si.memtag_heap_;
+    __libdl_info->memtag_stack_ = linker_si.memtag_stack_;
 
     __libdl_info->ref_count_ = 1;
     __libdl_info->strtab_size_ = linker_si.strtab_size_;

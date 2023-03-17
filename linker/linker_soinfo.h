@@ -351,6 +351,9 @@ struct soinfo {
   void set_gap_size(size_t gap_size);
   size_t get_gap_size() const;
 
+  void* memtag_globals() const { return memtag_globals_; }
+  size_t memtag_globalssz() const { return memtag_globalssz_; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -433,6 +436,16 @@ struct soinfo {
   // version >= 6
   ElfW(Addr) gap_start_;
   size_t gap_size_;
+
+  // version >= 7
+  void* memtag_globals_;
+  size_t memtag_globalssz_;
+  // TODO(mitchp): Add support to libc_init_mte to use these dynamic entries instead of the
+  // Android-specific ELF note.
+  bool has_memtag_mode_;
+  unsigned memtag_mode_;
+  bool memtag_heap_;
+  bool memtag_stack_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
