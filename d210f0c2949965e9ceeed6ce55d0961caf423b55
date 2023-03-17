@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f89c44a1_7920fdcb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-17T20:52:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eadbabf3_a541469c",
+      "range": {
+        "startLine": 226,
+        "startChar": 27,
+        "endLine": 228,
+        "endChar": 3
+      },
+      "revId": "d210f0c2949965e9ceeed6ce55d0961caf423b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fcabe824_b52de52e",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-03-17T20:26:00Z",
       "side": 1,
       "message": "maybe just\n\n```\nasync_safe_format_log(ANDROID_LOG_DEBUG, \"libc\", \"%s: chose memtag level \\\"%s\\\" from ELF note\", basename ?: \"\u003cunknown\u003e\", level);\n```\n\n(yes, this `?:` extension is used elsewhere in bionic already)",
+      "range": {
+        "startLine": 264,
+        "startChar": 2,
+        "endLine": 270,
+        "endChar": 3
+      },
+      "revId": "d210f0c2949965e9ceeed6ce55d0961caf423b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f224b3d_4d143f46",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-17T20:52:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcabe824_b52de52e",
       "range": {
         "startLine": 264,
         "startChar": 2,
