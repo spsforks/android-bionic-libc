@@ -28,6 +28,7 @@
 
 #include "sysprop_helpers.h"
 
+#include "async_safe/log.h"
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -58,17 +59,21 @@ static bool get_property_value(const char* property_name, char* dest, size_t des
 
 bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const* sys_prop_names,
                                      size_t sys_prop_names_size, char* options,
-                                     size_t options_size) {
+                                     size_t options_size, const char** source) {
   const char* env = getenv(env_var_name);
   if (env && *env != '\0') {
     strncpy(options, env, options_size);
     options[options_size - 1] = '\0';  // Ensure null-termination.
+    *source = env_var_name;
     return true;
   }
 
   for (size_t i = 0; i < sys_prop_names_size; ++i) {
     if (sys_prop_names[i] == nullptr) continue;
-    if (get_property_value(sys_prop_names[i], options, options_size)) return true;
+    if (get_property_value(sys_prop_names[i], options, options_size)){
+      *source = sys_prop_names[i];
+      return true;
+    }
   }
   return false;
 }
