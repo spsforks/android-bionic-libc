@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db5620b6_bc9f9aac",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-18T00:57:22Z",
+      "side": 1,
+      "message": "I don\u0027t find the source code and how to use `__set` https://source.corp.google.com/android/bionic/libc/bionic/sched_getaffinity.cpp;l\u003d35?q\u003dsched_getaffinity\u0026ss\u003dpiper%2FGoogle%2Fandroid\n\nBut all tests return -1/failure when the size is 0 and set is nullptr, and that\u0027s what we want to avoid IMO.",
+      "range": {
+        "startLine": 239,
+        "startChar": 4,
+        "endLine": 239,
+        "endChar": 21
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
