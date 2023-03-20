@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83542429_8888df08",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:18:26Z",
+      "side": 1,
+      "message": "really?",
+      "range": {
+        "startLine": 196,
+        "startChar": 127,
+        "endLine": 196,
+        "endChar": 157
+      },
+      "revId": "656b6d9487392d52fce4ea745ebbc585e0c12510",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad173b6c_58d653bf",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:18:26Z",
+      "side": 1,
+      "message": "really?",
+      "range": {
+        "startLine": 196,
+        "startChar": 191,
+        "endLine": 196,
+        "endChar": 277
+      },
+      "revId": "656b6d9487392d52fce4ea745ebbc585e0c12510",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d0090c5_77811880",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:18:26Z",
+      "side": 1,
+      "message": "(same here)",
+      "revId": "656b6d9487392d52fce4ea745ebbc585e0c12510",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03fe6de6_25e9ce87",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:18:26Z",
+      "side": 1,
+      "message": "(same here)",
+      "revId": "656b6d9487392d52fce4ea745ebbc585e0c12510",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4e12156_cf3e4191",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:18:26Z",
+      "side": 1,
+      "message": "(same here)",
+      "revId": "656b6d9487392d52fce4ea745ebbc585e0c12510",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
