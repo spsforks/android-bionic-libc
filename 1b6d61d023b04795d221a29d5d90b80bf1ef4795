@@ -22,6 +22,53 @@
       },
       "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b39fa6e6_15c51310",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:35:40Z",
+      "side": 1,
+      "message": "as you can see from your link, `sched_getaffinity()` immediately calls `__sched_getaffinity()`:\n```\n  int rc \u003d __sched_getaffinity(pid, set_size, set);\n```\nthe only reference to that is in SYSCALLS.TXT, so it\u0027s one of the many assembler stubs that just calls directly into the kernel.\n\nyou can find the kernel code with the usual grep for SYSCALL_DEFINE and the name of the syscall (https://elixir.bootlin.com/linux/latest/source/kernel/sched/core.c#L8393) and see that it\u0027s going to unconditionally copy (on success, anyway).\n\nso, yes, for any successful call this needs to be _Nonnull.\n\nthe build errors are from this trick in strace:\n```\n\t\t/*\n\t\t * If the cpuset size passed to sched_getaffinity is less\n\t\t * than necessary to store the bitmask, the kernel does not\n\t\t * look at the mask pointer and fails with EINVAL.\n\t\t *\n\t\t * If the cpuset size is large enough, the kernel fails with\n\t\t * EFAULT on inaccessible mask pointers.\n\t\t *\n\t\t * This undocumented kernel feature can be used to probe\n\t\t * the kernel and find out the minimal valid cpuset size\n\t\t * without allocating any memory for the CPU affinity mask.\n\t\t */\n```\nso you\u0027ll need to disable the error in that .bp file.",
+      "parentUuid": "db5620b6_bc9f9aac",
+      "range": {
+        "startLine": 239,
+        "startChar": 4,
+        "endLine": 239,
+        "endChar": 21
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e5f1d1d_afbdb8e6",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-20T21:35:40Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 311,
+        "startChar": 57,
+        "endLine": 311,
+        "endChar": 86
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
