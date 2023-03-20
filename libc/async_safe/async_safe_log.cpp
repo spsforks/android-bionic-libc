@@ -345,7 +345,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
 
     /* conversion specifier */
     const char* str = buffer;
-    char strerror_buf[256];
+    char strerror_buf[64];
     if (c == 's') {
       /* string */
       str = va_arg(args, const char*);
