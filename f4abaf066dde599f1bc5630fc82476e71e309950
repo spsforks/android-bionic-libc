@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c58e9116_366cb60b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-21T18:11:52Z",
+      "side": 1,
+      "message": "I added the bug to the list. It\u0027s a rather obscure build.",
+      "parentUuid": "9a8015c4_db975864",
+      "revId": "f4abaf066dde599f1bc5630fc82476e71e309950",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "881c3aef_1b4eb340",
