@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39c67a28_2d209aa2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-21T00:03:51Z",
+      "side": 1,
+      "message": "What build breakage?",
+      "revId": "f4abaf066dde599f1bc5630fc82476e71e309950",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
