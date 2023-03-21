@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0938cc82_c07370d4",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-21T18:28:10Z",
+      "side": 0,
+      "message": "It\u0027s not clear, was this fixed by clang?",
+      "range": {
+        "startLine": 76,
+        "startChar": 18,
+        "endLine": 76,
+        "endChar": 49
+      },
+      "revId": "44e8fa7b1befe7f6fe9ba7d9ca107039ee57aae8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
