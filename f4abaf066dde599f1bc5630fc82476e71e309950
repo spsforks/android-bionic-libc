@@ -16,6 +16,23 @@
       "message": "What build breakage?",
       "revId": "f4abaf066dde599f1bc5630fc82476e71e309950",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "881c3aef_1b4eb340",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-21T00:07:51Z",
+      "side": 1,
+      "message": "fwiw, the regular printf implementation reuses this buffer [but has it sized to 100 rather than 32]. we should probably do similar here to reduce stack usage?",
+      "revId": "f4abaf066dde599f1bc5630fc82476e71e309950",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
