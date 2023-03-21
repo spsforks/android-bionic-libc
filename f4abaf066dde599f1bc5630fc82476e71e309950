@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13fbf198_283daa5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-03-21T18:59:46Z",
+      "side": 1,
+      "message": "I put the bug in the description. That has information about the breakage.\n\nPlus every time I change the description now it seems it wants me to rerun treehugger.",
+      "parentUuid": "dee3dc9b_7e1cc609",
+      "revId": "f4abaf066dde599f1bc5630fc82476e71e309950",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "881c3aef_1b4eb340",
