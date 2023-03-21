@@ -22,6 +22,30 @@
       },
       "revId": "e9321934492d2dc9123f487935dcfb7308657b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c97da93d_87854974",
+        "filename": "libc/bionic/sysprop_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-21T18:11:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12d5e3e4_1aea36fb",
+      "range": {
+        "startLine": 45,
+        "startChar": 87,
+        "endLine": 45,
+        "endChar": 93
+      },
+      "revId": "e9321934492d2dc9123f487935dcfb7308657b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
