@@ -16,6 +16,24 @@
       "message": "Did you actually check this doesn\u0027t work with MTE? https://r.android.com/2461793 passes with MTE",
       "revId": "955f04425ebf4908b3031afaef2f844ee6edd8ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56983e49_10457e01",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-22T21:26:24Z",
+      "side": 1,
+      "message": "Yes, it fails at the first instruction of __bionic_clone, as I wrote in the commit message. Your test is passing because it isn\u0027t untagging the address before using it as a stack and there presumably isn\u0027t any uninstrumented code running on the thread that would cause a problem.",
+      "parentUuid": "158f742d_04659816",
+      "revId": "955f04425ebf4908b3031afaef2f844ee6edd8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
