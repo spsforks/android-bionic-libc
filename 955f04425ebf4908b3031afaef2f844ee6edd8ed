@@ -34,6 +34,24 @@
       "parentUuid": "158f742d_04659816",
       "revId": "955f04425ebf4908b3031afaef2f844ee6edd8ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5370481_b304a3b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-03-22T21:41:07Z",
+      "side": 1,
+      "message": "As discussed offline: I think this should work with MTE, as MTE restores the tag to the tag in `sp` on return, not to zero (unlike HWASan).",
+      "parentUuid": "56983e49_10457e01",
+      "revId": "955f04425ebf4908b3031afaef2f844ee6edd8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
