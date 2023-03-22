@@ -1111,6 +1111,29 @@ cc_test {
 }
 
 cc_test {
+    name: "hwasan_test",
+    enabled: false,
+    defaults: ["bionic_tests_defaults"],
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    sanitize: {
+        hwaddress: true,
+    },
+    srcs: [
+        "hwasan_test.cpp",
+        "gtest_globals.cpp"
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+    data_libs: ["libtest_simple_hwasan", "libtest_simple_hwasan_nohwasan"],
+    test_suites: ["device-tests"],
+}
+
+cc_test {
     name: "bionic-stress-tests",
     defaults: [
         "bionic_tests_defaults",
