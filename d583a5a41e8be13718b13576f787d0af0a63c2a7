@@ -46,6 +46,30 @@
       },
       "revId": "d583a5a41e8be13718b13576f787d0af0a63c2a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26d2c2e5_b2440439",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-22T20:26:50Z",
+      "side": 1,
+      "message": "Ah, right. I\u0027ve replaced the tid load with a load of a different local that was pre-initialized.",
+      "parentUuid": "81167deb_a67396d9",
+      "range": {
+        "startLine": 301,
+        "startChar": 10,
+        "endLine": 301,
+        "endChar": 40
+      },
+      "revId": "d583a5a41e8be13718b13576f787d0af0a63c2a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
