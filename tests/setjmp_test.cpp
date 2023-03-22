@@ -278,7 +278,6 @@ TEST(setjmp, setjmp_stack) {
 }
 
 TEST(setjmp, bug_152210274) {
-  SKIP_WITH_HWASAN; // b/227390656
   // Ensure that we never have a mangled value in the stack pointer.
 #if defined(__BIONIC__)
   struct sigaction sa = {.sa_flags = SA_SIGINFO, .sa_sigaction = [](int, siginfo_t*, void*) {}};
@@ -299,15 +298,15 @@ TEST(setjmp, bug_152210274) {
         perror("setjmp");
         abort();
       }
-      if (*static_cast<pid_t*>(arg) == 100) longjmp(buf, 1);
+      if (*static_cast<pid_t*>(arg) == 0) longjmp(buf, 1);
     }
     return nullptr;
   };
+  pthread_t threads[kNumThreads];
   pid_t tids[kNumThreads] = {};
   for (size_t i = 0; i < kNumThreads; ++i) {
-    pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, nullptr, jumper, &tids[i]));
-    tids[i] = pthread_gettid_np(t);
+    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, jumper, &tids[i]));
+    tids[i] = pthread_gettid_np(threads[i]);
   }
 
   // Start the interrupter thread.
@@ -327,6 +326,9 @@ TEST(setjmp, bug_152210274) {
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, nullptr, interrupter, tids));
   pthread_join(t, nullptr);
+  for (size_t i = 0; i < kNumThreads; i++) {
+    pthread_join(threads[i], nullptr);
+  }
 #else
   GTEST_SKIP() << "tests uses functions not in glibc";
 #endif
