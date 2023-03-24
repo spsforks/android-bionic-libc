@@ -1617,8 +1617,14 @@ bool find_libraries(android_namespace_t* ns,
 
   // Step 2: Load libraries in random order (see b/24047022)
   LoadTaskList load_list;
+  // TODO(b/154347133): This is a workaround for a link-order dependent problem
+  // with ASAN. Remove when we actually fix it or have everyone use HWASan.
+  bool links_asan = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
+    if (strstr(si->get_soname(), "libclang_rt.asan")) {
+      links_asan = true;
+    }
     auto pred = [&](const LoadTask* t) {
       return t->get_soinfo() == si;
     };
@@ -1632,7 +1638,7 @@ bool find_libraries(android_namespace_t* ns,
   if (extinfo) {
     reserved_address_recursive = extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
   }
-  if (!reserved_address_recursive) {
+  if (!reserved_address_recursive && !links_asan) {
     // Shuffle the load order in the normal case, but not if we are loading all
     // the libraries to a reserved address range.
     shuffle(&load_list);
