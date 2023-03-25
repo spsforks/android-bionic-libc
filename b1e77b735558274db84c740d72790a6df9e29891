@@ -16,6 +16,24 @@
       "message": "This fixes the `spawn.signal_stress` test with stack MTE, but we should evaluate the performance impact on `posix_spawn` first.",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "129fdbb8_b7a38d2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-25T04:11:57Z",
+      "side": 1,
+      "message": "I measured the performance impact of this change using `bionic-spawn-benchmarks` on the target `aosp_cf_arm64_only_phone_hwasan-userdebug` running on an Apple M1. Here are sample baseline results:\n```\n----------------------------------------------------------------------------------------\nBenchmark                                              Time             CPU   Iterations\n----------------------------------------------------------------------------------------\nBM_spawn_test/noop/real_time                       17827 us          804 us           51\nBM_spawn_test/noop_nostl/real_time                 18466 us         1268 us           40\nBM_spawn_test/noop_static/real_time                 8781 us          901 us           70\nBM_spawn_test/bench_cxa_atexit/real_time          301725 us         1393 us            2\nBM_spawn_test/bench_cxa_atexit_full/real_time     529955 us         1407 us            1\nBM_spawn_test/system_bin_true/real_time            24192 us          982 us           57\nBM_spawn_test/vendor_bin_true/real_time            28152 us          900 us           27\nBM_spawn_test/system_sh_true/real_time             20042 us          824 us           36\nBM_spawn_test/vendor_sh_true/real_time             21441 us          942 us           35\n```\nI took the average real time of 10 runs with/without the change. All benchmarks showed no statistically significant difference except for `BM_spawn_test/noop_static/real_time` for which the difference was as follows (units are μs):\n```\n+-------------------------------------------------------------------------------------------------------------------------------------------+\n|x     x            x  x               x          x  x              x      x   x   ++ +      ++        +        +   +            +         +|\n|            |___________________________A________M__________________|              |__________________MA__________________|                |\n+-------------------------------------------------------------------------------------------------------------------------------------------+\n    N           Min           Max        Median           Avg        Stddev\nx  10       8293.14       8865.04       8656.44      8591.384     206.58861\n+  10       8898.46       9310.23       9045.76      9051.949     143.65351\nDifference at 95.0% confidence\n        460.565 +/- 167.178\n        5.36078% +/- 1.94588%\n        (Student\u0027s t, pooled s \u003d 177.926)\n```\nThis is showing a 0.5ms slowdown. So what these results tell us is that except for the most trivial programs, the performance overhead of not using vfork is unmeasurable compared to the overhead of launching the program in the first place.\n\nThis seems fine to me, especially given that this is a debugging feature. If it weren\u0027t for the potential compatibility risks, I would probably be in favor of making this change unconditionally.\n\nOnce I\u0027ve removed the code that is made dead by this change, I\u0027ll remove my CR-1.",
+      "parentUuid": "3acc65cf_6b855b5e",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
