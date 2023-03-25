@@ -45,7 +45,16 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     // Clear vfork_child_stack_bottom_.
     str     xzr, [x9, #776]
 
-    mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
+    mov     x0, #SIGCHLD
+#if !__has_feature(hwaddress_sanitizer)
+    // if (!__libc_globals->memtag_stack) x0 |= CLONE_VM | CLONE_VFORK;
+    adrp    x1, __libc_globals + 80
+    ldrb    w1, [x1, :lo12:__libc_globals + 80]
+    cbnz    w1, 1f
+    orr     x0, x0, #CLONE_VM
+    orr     x0, x0, #CLONE_VFORK
+1:
+#endif
     mov     x1, xzr
     mov     x2, xzr
     mov     x3, xzr
@@ -61,25 +70,6 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     cmn     x0, #(MAX_ERRNO + 1)
     cneg    x0, x0, hi
     b.hi    __set_errno_internal
-
-    // Clean up stack shadow in the parent process.
-    // https://github.com/google/sanitizers/issues/925
-    paciasp
-    .cfi_negate_ra_state
-    stp x0, x30, [sp, #-16]!
-    .cfi_adjust_cfa_offset 16
-    .cfi_rel_offset x0, 0
-    .cfi_rel_offset x30, 8
-
-    add x0, sp, #16
-    bl memtag_handle_vfork
-
-    ldp x0, x30, [sp], #16
-    .cfi_adjust_cfa_offset -16
-    .cfi_restore x0
-    .cfi_restore x30
-    autiasp
-    .cfi_negate_ra_state
 
 .L_exit:
     ret
