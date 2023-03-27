@@ -52,6 +52,24 @@
       "parentUuid": "129fdbb8_b7a38d2f",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9bc0a6f_690b1d83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-27T19:27:15Z",
+      "side": 1,
+      "message": "When I say \"trivial programs\" I was talking about the child process (the point being that if even trivial programs take 10ms to run with `posix_spawn`, adding 0.5ms to that doesn\u0027t really matter, and anything that people might actually want to run will increase the denominator further into unmeasurable territory).\n\nAs you mention, the complexity of the parent process is certainly a factor as well -- in this case it would be `bionic-spawn-benchmarks`.\n\nI had perhaps over-optimistically assumed that `bionic-spawn-benchmarks` would try to set up something more realistic for its own VMAs (e.g. replaying an allocator trace from the zygote first), but I couldn\u0027t see any evidence of that. Let me see if I can make `bionic-spawn-benchmarks` do that, and then rerun the benchmarks.",
+      "parentUuid": "73d7b918_81987861",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
