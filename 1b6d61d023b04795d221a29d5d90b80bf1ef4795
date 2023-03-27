@@ -93,6 +93,30 @@
       },
       "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed69709b_63b93c61",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-27T23:23:07Z",
+      "side": 1,
+      "message": "yeah, that sounds like another \"Nonnull\" to me --- especially because these specific functions aren\u0027t meant to be called directly; you\u0027re expected to use the macros (like the one on L310 for example), and the macros silently pass the correct (non zero!) size.",
+      "parentUuid": "b7eeaad0_24725ee3",
+      "range": {
+        "startLine": 311,
+        "startChar": 57,
+        "endLine": 311,
+        "endChar": 86
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
