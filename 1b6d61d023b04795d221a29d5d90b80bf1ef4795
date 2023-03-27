@@ -69,6 +69,30 @@
       },
       "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7eeaad0_24725ee3",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-27T22:50:47Z",
+      "side": 1,
+      "message": "If `__set_size` is zero, although it is pointless, the `__set` can be nullptr?https://source.corp.google.com/android/bionic/libc/bionic/sched_cpucount.c;l\u003d31;rcl\u003d1e40e88afe4e5b262cd2a625d0b0da2bb7b9a5ab?q\u003d__sched_cpucount\u0026sq\u003dandroid",
+      "parentUuid": "2e5f1d1d_afbdb8e6",
+      "range": {
+        "startLine": 311,
+        "startChar": 57,
+        "endLine": 311,
+        "endChar": 86
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
