@@ -34,6 +34,24 @@
       "parentUuid": "3acc65cf_6b855b5e",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73d7b918_81987861",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-27T18:51:21Z",
+      "side": 1,
+      "message": "\u003e So what these results tell us is that except for the most trivial programs, the performance overhead of not using vfork is unmeasurable compared to the overhead of launching the program in the first place.\n\nisn\u0027t the opposite likely to be true? vfork()\u0027s meant to not be particularly useful for trivial programs, but become more beneficial the more VMAs you have?",
+      "parentUuid": "129fdbb8_b7a38d2f",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
