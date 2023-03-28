@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a04bc4b5_83a1c505",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T22:08:04Z",
+      "side": 1,
+      "message": "/me checks the source...\n\nhttps://source.corp.google.com/android/bionic/libc/bionic/scandir.cpp;l\u003d73?q\u003dfile:scandir%20file:%5Ebionic%2F\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\nyeah, the source agrees. (though if i were writing that again, i\u0027d probably move the `comparator !\u003d nullptr` check out into the caller!)\n\nadd the missing line to the end of the doc comments?\n```\n * [scandir(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)\n * scans all the directory `__path`, filtering entries with `__filter` and\n * sorting them with qsort() using the given `__comparator`, and storing them\n * into `__name_list`. Passing NULL as the filter accepts all entries.\n * Passing NULL as the comparator skips sorting.\n```",
+      "parentUuid": "2e8bcf08_97e545d4",
+      "range": {
+        "startLine": 196,
+        "startChar": 166,
+        "endLine": 196,
+        "endChar": 175
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5a6f7a3d_4d18dd69",
         "filename": "libc/include/dirent.h",
         "patchSetId": 2
