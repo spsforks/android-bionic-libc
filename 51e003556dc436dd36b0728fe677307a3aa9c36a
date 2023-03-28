@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2e8bcf08_97e545d4",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-28T22:02:54Z",
+      "side": 1,
+      "message": "I don\u0027t think so. http://cs/android/bionic/tests/dirent_test.cpp;l\u003d128;rcl\u003d212d87aa7696bef816753755fdce85b90e225024 Here still returns 1, which means success.",
+      "parentUuid": "171637f3_049f062d",
+      "range": {
+        "startLine": 196,
+        "startChar": 166,
+        "endLine": 196,
+        "endChar": 175
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5a6f7a3d_4d18dd69",
         "filename": "libc/include/dirent.h",
         "patchSetId": 2
