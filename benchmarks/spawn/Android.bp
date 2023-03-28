@@ -64,7 +64,10 @@ cc_library_static {
 
 cc_benchmark {
     name: "bionic-spawn-benchmarks",
-    defaults: ["bionic_spawn_benchmark_targets"],
+    defaults: [
+        "bionic_spawn_benchmark_targets",
+        "memory_replay_defaults",
+    ],
 
     srcs: ["spawn_benchmarks.cpp"],
     static_libs: [
