@@ -28,6 +28,9 @@
 
 #include "spawn_benchmark.h"
 
+#include "File.h"
+#include "NativeInfo.h"
+
 SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
 SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
 SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
@@ -50,4 +53,21 @@ SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
 
 #endif
 
-BENCHMARK_MAIN();
+int main(int argc, char** argv) {
+  benchmark::Initialize(&argc, argv);
+
+  for (int i = 1; i != argc; ++i) {
+    const char* memory_replay_prefix = "--memory_replay=";
+    if (strncmp(argv[i], memory_replay_prefix, strlen(memory_replay_prefix)) == 0) {
+      AllocEntry* entries;
+      size_t num_entries;
+      GetUnwindInfo(argv[i] + strlen(memory_replay_prefix), &entries, &num_entries);
+      ProcessDump(entries, num_entries, 512, /*free_all=*/false);
+    } else {
+      fprintf(stderr, "%s: error: unrecognized command-line flag: %s\n", argv[0],
+              argv[i]);
+    }
+  }
+
+  benchmark::RunSpecifiedBenchmarks();
+}
