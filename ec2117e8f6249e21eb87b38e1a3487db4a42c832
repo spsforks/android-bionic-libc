@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1ca6f28_ab989d9d",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T14:38:18Z",
+      "side": 1,
+      "message": "i don\u0027t think you can pass a null function pointer, right? (what would that even mean?) but -- since the contents of the array are arbitrary -- null *values* can be passed to that function pointer.",
+      "range": {
+        "startLine": 94,
+        "startChar": 73,
+        "endLine": 94,
+        "endChar": 82
+      },
+      "revId": "ec2117e8f6249e21eb87b38e1a3487db4a42c832",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
