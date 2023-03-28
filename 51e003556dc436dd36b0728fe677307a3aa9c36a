@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "171637f3_049f062d",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T20:51:41Z",
+      "side": 1,
+      "message": "i thought you worked out that the _filter_ can be null, but the _comparator_ can\u0027t? (that also seems to match the doc comment?)",
+      "range": {
+        "startLine": 196,
+        "startChar": 166,
+        "endLine": 196,
+        "endChar": 175
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a6f7a3d_4d18dd69",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T20:51:41Z",
+      "side": 1,
+      "message": "same.",
+      "range": {
+        "startLine": 209,
+        "startChar": 172,
+        "endLine": 209,
+        "endChar": 181
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a2e40c7_cf613766",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T20:51:41Z",
+      "side": 1,
+      "message": "same.",
+      "range": {
+        "startLine": 225,
+        "startChar": 188,
+        "endLine": 225,
+        "endChar": 197
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99a9ecfa_214bb32f",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-28T20:51:41Z",
+      "side": 1,
+      "message": "same.",
+      "range": {
+        "startLine": 239,
+        "startChar": 182,
+        "endLine": 239,
+        "endChar": 191
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
