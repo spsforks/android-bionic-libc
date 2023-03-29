@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c95677a8_0d8d7172",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-29T19:00:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b39fa6e6_15c51310",
+      "range": {
+        "startLine": 239,
+        "startChar": 4,
+        "endLine": 239,
+        "endChar": 21
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2e5f1d1d_afbdb8e6",
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "yeah, that sounds like another \"Nonnull\" to me --- especially because these specific functions aren\u0027t meant to be called directly; you\u0027re expected to use the macros (like the one on L310 for example), and the macros silently pass the correct (non zero!) size.",
       "parentUuid": "b7eeaad0_24725ee3",
+      "range": {
+        "startLine": 311,
+        "startChar": 57,
+        "endLine": 311,
+        "endChar": 86
+      },
+      "revId": "1b6d61d023b04795d221a29d5d90b80bf1ef4795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94fc7838_5e281cc4",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-29T19:00:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed69709b_63b93c61",
       "range": {
         "startLine": 311,
         "startChar": 57,
