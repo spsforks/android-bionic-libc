@@ -22,6 +22,30 @@
       },
       "revId": "d78c6ec1ddc047f7420a77e3490fc95db2ddeb42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "009dcd4a_72298472",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-29T00:29:49Z",
+      "side": 1,
+      "message": "http://cs/android/bionic/libc/bionic/fts.c;l\u003d129;rcl\u003d6aa159a28ad38f890513269b76bc183c3e17e64a Here shows why I think it can be null? Or is it a bug to fix? Like aosp/2512139?",
+      "parentUuid": "6d8aaf57_e5771ffc",
+      "range": {
+        "startLine": 127,
+        "startChar": 109,
+        "endLine": 127,
+        "endChar": 193
+      },
+      "revId": "d78c6ec1ddc047f7420a77e3490fc95db2ddeb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
