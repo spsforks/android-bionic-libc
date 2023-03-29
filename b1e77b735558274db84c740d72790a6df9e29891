@@ -70,6 +70,24 @@
       "parentUuid": "73d7b918_81987861",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43c8c7f7_a31130d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-29T00:36:13Z",
+      "side": 1,
+      "message": "I sent out https://android-review.googlesource.com/q/Ib0f3885717fa1fcfdb85f3dffbb3827e370ebdf3 which teaches `bionic-spawn-benchmarks` to replay an allocation trace before running the benchmarks. With that I reran with `--memory_replay\u003d/data/local/tmp/traces/systemui.zip` and it showed a regression of around 4-5ms on many of the benchmarks. For example, `BM_spawn_test/noop_static/real_time`:\n```\n+-------------------------------------------------------------------------------------------------------------------------------------------+\n|x   x x  xx x                                                                                             +          +   + ++  +++   +    +|\n|   |__MA__|                                                                                                         |________A_M_____|     |\n+-------------------------------------------------------------------------------------------------------------------------------------------+\n    N           Min           Max        Median           Avg        Stddev\nx  10       6376.87       6890.79       6642.82      6669.376     150.97675\n+  10       10891.2       12227.5       11769.4      11657.78     370.72966\nDifference at 95.0% confidence\n        4988.4 +/- 265.952\n        74.7957% +/- 3.98767%\n        (Student\u0027s t, pooled s \u003d 283.05)\n```\nSo the case for making this change for these debugging features is a bit weaker but still seems fairly strong IMHO.",
+      "parentUuid": "c9bc0a6f_690b1d83",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
