@@ -46,6 +46,30 @@
       },
       "revId": "d78c6ec1ddc047f7420a77e3490fc95db2ddeb42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "128a8265_4f1f26c7",
+        "filename": "libc/include/fts.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:57:41Z",
+      "side": 1,
+      "message": "well, i think that shows that the *comparator* is nullable [which i didn\u0027t comment on, because i think you got that part right], but not that the *arguments to the comparator* can be null, which is what these annotations are saying?",
+      "parentUuid": "009dcd4a_72298472",
+      "range": {
+        "startLine": 127,
+        "startChar": 109,
+        "endLine": 127,
+        "endChar": 193
+      },
+      "revId": "d78c6ec1ddc047f7420a77e3490fc95db2ddeb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
