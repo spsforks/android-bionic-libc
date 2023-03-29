@@ -124,6 +124,24 @@
       "parentUuid": "77c3f73e_63736f25",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0774bbe2_50080946",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T21:01:11Z",
+      "side": 1,
+      "message": "ah, i see. and that shows up as `hwaddress_sanitizer` too?",
+      "parentUuid": "9891639b_a6458ed6",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
