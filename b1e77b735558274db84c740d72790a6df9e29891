@@ -106,6 +106,24 @@
       "parentUuid": "43c8c7f7_a31130d2",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9891639b_a6458ed6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-29T20:38:58Z",
+      "side": 1,
+      "message": "This change only applies to *stack* MTE, which is a debugging feature. Heap MTE is still intended as a production feature and is unaffected by this change.",
+      "parentUuid": "77c3f73e_63736f25",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
