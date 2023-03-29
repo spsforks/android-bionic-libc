@@ -16,6 +16,24 @@
       "message": "What apks are needed fro ART benchmarks?",
       "revId": "517682bae1744f2ebb22a084faebc54e0677fee0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63d63f9c_ffc92d5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1965080
+      },
+      "writtenOn": "2023-03-29T23:08:20Z",
+      "side": 1,
+      "message": "I don\u0027t think there are apks but it\u0027s not clear as to whether the ART microbenchmarks are built from source so I asked Juan if we could get a more recent build with this patch enabled. I can also re-test gfxbench with this build for us.",
+      "parentUuid": "e76de003_502b5d2c",
+      "revId": "517682bae1744f2ebb22a084faebc54e0677fee0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
