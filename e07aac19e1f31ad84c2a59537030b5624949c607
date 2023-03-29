@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6861ce96_01574b20",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:52:55Z",
+      "side": 1,
+      "message": "is it?",
+      "range": {
+        "startLine": 48,
+        "startChar": 83,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d81b81d_bca0cc1d",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:52:55Z",
+      "side": 1,
+      "message": "the \"Only a semaphore that was created using sem_init() may be destroyed using sem_destroy()\" language on https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html disallows null here. you can\u0027t have initialized null (as you yourself say on L51 :-) ), so you can\u0027t pass null here...",
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c7c26f3_c0952b50",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:52:55Z",
+      "side": 1,
+      "message": "is it?",
+      "range": {
+        "startLine": 50,
+        "startChar": 45,
+        "endLine": 50,
+        "endChar": 54
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d1a5f80_4f57f96a",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:52:55Z",
+      "side": 1,
+      "message": "is it?",
+      "range": {
+        "startLine": 53,
+        "startChar": 64,
+        "endLine": 53,
+        "endChar": 73
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1e0931e_de1f1570",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T19:52:55Z",
+      "side": 1,
+      "message": "is it?",
+      "range": {
+        "startLine": 62,
+        "startChar": 77,
+        "endLine": 62,
+        "endChar": 86
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
