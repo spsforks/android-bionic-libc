@@ -88,6 +88,24 @@
       "parentUuid": "c9bc0a6f_690b1d83",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77c3f73e_63736f25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-29T20:15:46Z",
+      "side": 1,
+      "message": "\u003e So the case for making this change for these debugging features is a bit weaker but still seems fairly strong IMHO.\n\n(see my comment on the bug about whether this was the right comparison, but...)\n\ni guess the real arguing at cross-purposes here was that -- although i agree that hwasan is a debugging feature -- isn\u0027t the goal still for mte to be a non-debug feature?",
+      "parentUuid": "43c8c7f7_a31130d2",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
