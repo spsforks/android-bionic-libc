@@ -142,6 +142,24 @@
       "parentUuid": "9891639b_a6458ed6",
       "revId": "b1e77b735558274db84c740d72790a6df9e29891",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "698f1202_cbbf32d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-03-29T21:10:47Z",
+      "side": 1,
+      "message": "No, that\u0027s `__libc_globals-\u003ememtag_stack`, which I\u0027m reading with`__libc_globals + 80`. When I upload the real version of this CL I\u0027ll figure out some way to keep that offset in sync with the actual struct.",
+      "parentUuid": "0774bbe2_50080946",
+      "revId": "b1e77b735558274db84c740d72790a6df9e29891",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
