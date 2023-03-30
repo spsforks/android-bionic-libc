@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c796c68e_dd5beb0f",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-30T19:39:43Z",
+      "side": 1,
+      "message": "oh, sorry, forgot to reply to this...\n\nit\u0027s the usual \"we\u0027re not describing _our_ implementation [which might change], we\u0027re describing the actual _requirements_\". our sem_destroy() is boring because our sem_init() is boring, because our sem_t is boring --- specifically, our sem_t does not own any resources. if we had a pointer in there, say, we\u0027d want to allocate in sem_init() and deallocate in sem_destroy(). we don\u0027t [currently], but we _could_ do. (the BSDs, for example, do.)",
+      "parentUuid": "e9a2ea6c_700bfe1d",
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9c7c26f3_c0952b50",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 1
