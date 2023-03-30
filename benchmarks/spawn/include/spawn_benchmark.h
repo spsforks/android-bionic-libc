@@ -35,9 +35,9 @@ void BM_spawn_test(benchmark::State& state, const char* const* argv);
 
 static inline std::string test_program(const char* name) {
 #if defined(__LP64__)
-  return android::base::GetExecutableDirectory() + "/" + name + "64";
+  return std::string("/data/benchmarktest64/bionic-spawn-benchmarks/") + name + "64";
 #else
-  return android::base::GetExecutableDirectory() + "/" + name + "32";
+  return std::string("/data/benchmarktest/bionic-spawn-benchmarks/") + name + "32";
 #endif
 }
 

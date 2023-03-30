@@ -72,9 +72,10 @@ cc_benchmark {
     srcs: ["spawn_benchmarks.cpp"],
     static_libs: [
         "libbase",
-        "libbionic_spawn_benchmark",
         "liblog",
     ],
+
+    whole_static_libs: ["libbionic_spawn_benchmark"],
 
     // Install these binaries in the same directory as the main benchmark binary.
     data: [
