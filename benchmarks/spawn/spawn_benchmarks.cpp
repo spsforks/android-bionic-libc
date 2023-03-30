@@ -31,28 +31,6 @@
 #include "File.h"
 #include "NativeInfo.h"
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
-SPAWN_BENCHMARK(bench_cxa_atexit, test_program("bench_cxa_atexit").c_str(), "100000", "_Exit");
-SPAWN_BENCHMARK(bench_cxa_atexit_full, test_program("bench_cxa_atexit").c_str(), "100000", "exit");
-
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
-
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
-
-#elif defined(__ANDROID__)
-
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
-
-#endif
-
 int main(int argc, char** argv) {
   benchmark::Initialize(&argc, argv);
 
