@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "928e907e_631ed757",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T00:56:39Z",
+      "side": 1,
+      "message": "oh yes, it should be nonnull",
+      "parentUuid": "6861ce96_01574b20",
+      "range": {
+        "startLine": 48,
+        "startChar": 83,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8d81b81d_bca0cc1d",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 1
@@ -37,6 +61,24 @@
       "writtenOn": "2023-03-29T19:52:55Z",
       "side": 1,
       "message": "the \"Only a semaphore that was created using sem_init() may be destroyed using sem_destroy()\" language on https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_destroy.html disallows null here. you can\u0027t have initialized null (as you yourself say on L51 :-) ), so you can\u0027t pass null here...",
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9a2ea6c_700bfe1d",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T00:56:39Z",
+      "side": 1,
+      "message": "I see. Yes, it should be nonnull. But why I search all implementation of `sem_destroy` http://cs/android/bionic/libc/bionic/semaphore.cpp;l\u003d120;rcl\u003d8b244fce1db65ac83bc9ad44e6c2c0b5647528bb , including musl version. They just return 0?",
+      "parentUuid": "8d81b81d_bca0cc1d",
       "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -113,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ac992ecd_97f7c9e3",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T00:56:39Z",
+      "side": 1,
+      "message": "oh yes, it should be nonnull",
+      "parentUuid": "6d1a5f80_4f57f96a",
+      "range": {
+        "startLine": 53,
+        "startChar": 64,
+        "endLine": 53,
+        "endChar": 73
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1e0931e_de1f1570",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 1
@@ -124,6 +190,30 @@
       "writtenOn": "2023-03-29T19:52:55Z",
       "side": 1,
       "message": "is it?",
+      "range": {
+        "startLine": 62,
+        "startChar": 77,
+        "endLine": 62,
+        "endChar": 86
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5655ca8b_53913be8",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T00:56:39Z",
+      "side": 1,
+      "message": "oh yes, it should be nonnull",
+      "parentUuid": "a1e0931e_de1f1570",
       "range": {
         "startLine": 62,
         "startChar": 77,
