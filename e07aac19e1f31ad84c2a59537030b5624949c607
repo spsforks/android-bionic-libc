@@ -66,6 +66,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d13d4612_766ddb3d",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T00:51:51Z",
+      "side": 1,
+      "message": "http://cs/android/bionic/libc/bionic/semaphore.cpp;l\u003d327;rcl\u003d8b244fce1db65ac83bc9ad44e6c2c0b5647528bb That\u0027s why I think it can be a nullptr? This is the place when it is assigned a value?",
+      "parentUuid": "9c7c26f3_c0952b50",
+      "range": {
+        "startLine": 50,
+        "startChar": 45,
+        "endLine": 50,
+        "endChar": 54
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d1a5f80_4f57f96a",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 1
