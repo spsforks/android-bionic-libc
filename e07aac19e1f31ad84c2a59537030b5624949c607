@@ -125,6 +125,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dc8fba9_2e18a2c3",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T21:03:33Z",
+      "side": 1,
+      "message": "I see! Similar case like before!",
+      "parentUuid": "c796c68e_dd5beb0f",
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9c7c26f3_c0952b50",
