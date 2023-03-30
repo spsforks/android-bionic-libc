@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c0304dc_fdf4e1ce",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T18:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "928e907e_631ed757",
+      "range": {
+        "startLine": 48,
+        "startChar": 83,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d81b81d_bca0cc1d",
@@ -154,6 +178,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f21135b_55b87033",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T18:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8af41aaa_794ace62",
+      "range": {
+        "startLine": 50,
+        "startChar": 45,
+        "endLine": 50,
+        "endChar": 54
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d1a5f80_4f57f96a",
@@ -201,6 +249,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3486b84_e5b61143",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T18:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac992ecd_97f7c9e3",
+      "range": {
+        "startLine": 53,
+        "startChar": 64,
+        "endLine": 53,
+        "endChar": 73
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1e0931e_de1f1570",
@@ -238,6 +310,30 @@
       "side": 1,
       "message": "oh yes, it should be nonnull",
       "parentUuid": "a1e0931e_de1f1570",
+      "range": {
+        "startLine": 62,
+        "startChar": 77,
+        "endLine": 62,
+        "endChar": 86
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d26e948_9b800a70",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-30T18:09:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5655ca8b_53913be8",
       "range": {
         "startLine": 62,
         "startChar": 77,
