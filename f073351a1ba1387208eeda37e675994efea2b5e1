@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "793c3f7c_2f5562bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-30T17:11:51Z",
+      "side": 1,
+      "message": "the spirit of danalbert says \"i told you this would happen\"...\n```\n/mnt/disks/build-disk/src/googleplex-android/master/test/sts/tests/hostside/securityPatch/CVE-2019-10567/poc.c:52:12: note: previous declaration is here\n  uint64_t __user cmdlist;\n           ^\n```\ni\u0027ll back out the bit where we stop defining the macros, but removing the references from our scrubbed headers still seems like a good clarity-improving cleanup?",
+      "revId": "f073351a1ba1387208eeda37e675994efea2b5e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
