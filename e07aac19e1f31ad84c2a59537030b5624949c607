@@ -132,6 +132,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8af41aaa_794ace62",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-30T14:49:59Z",
+      "side": 1,
+      "message": "that line says `*sval \u003d val;`, not `sval \u003d val;`, so although that is the critical line, it\u0027s actually the proof that sval _can\u0027t_ be null...",
+      "parentUuid": "d13d4612_766ddb3d",
+      "range": {
+        "startLine": 50,
+        "startChar": 45,
+        "endLine": 50,
+        "endChar": 54
+      },
+      "revId": "e07aac19e1f31ad84c2a59537030b5624949c607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d1a5f80_4f57f96a",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 1
