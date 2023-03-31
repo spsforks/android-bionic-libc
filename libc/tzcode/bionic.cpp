@@ -206,8 +206,8 @@ static int __bionic_open_tzdata_path(const char* path,
   }
 
   if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
-    fprintf(stderr, "%s: could not seek to %ld in \"%s\": %s\n",
-            __FUNCTION__, specific_zone_offset, path, strerror(errno));
+    fprintf(stderr, "%s: could not seek to %jd in \"%s\": %s\n", __FUNCTION__, specific_zone_offset,
+            path, strerror(errno));
     close(fd);
     return -2;
   }

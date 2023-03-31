@@ -79,7 +79,7 @@ struct __sFILE {
   void* _cookie; /* cookie passed to io functions */
   int (*_close)(void*);
   int (*_read)(void*, char*, int);
-  fpos_t (*_seek)(void*, fpos_t, int);
+  __bionic_legacy_compat_fpos_t (*_seek)(void*, __bionic_legacy_compat_fpos_t, int);
   int (*_write)(void*, const char*, int);
 
   /* extension data, to avoid further ABI breakage */
@@ -98,7 +98,7 @@ struct __sFILE {
   /* Unix stdio files get aligned to block boundaries on fseek() */
   int _blksize; /* stat.st_blksize (may be != _bf._size) */
 
-  fpos_t _unused_0;  // This was the `_offset` field (see below).
+  __bionic_legacy_compat_off_t _unused_0;  // This was the `_offset` field (see below).
 
   // Do not add new fields here. (Or remove or change the size of any above.)
   // Although bionic currently exports `stdin`, `stdout`, and `stderr` symbols,
@@ -198,7 +198,8 @@ __LIBC32_LEGACY_PUBLIC__ void __smakebuf(FILE*);
 __LIBC32_LEGACY_PUBLIC__ int __sflush(FILE*);
 __LIBC32_LEGACY_PUBLIC__ int __sread(void*, char*, int);
 __LIBC32_LEGACY_PUBLIC__ int __swrite(void*, const char*, int);
-__LIBC32_LEGACY_PUBLIC__ fpos_t __sseek(void*, fpos_t, int);
+__LIBC32_LEGACY_PUBLIC__ __bionic_legacy_compat_fpos_t __sseek(void*, __bionic_legacy_compat_fpos_t,
+                                                               int);
 __LIBC32_LEGACY_PUBLIC__ int __sclose(void*);
 __LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE*));
 

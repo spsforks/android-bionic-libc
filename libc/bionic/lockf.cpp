@@ -26,11 +26,23 @@
  * SUCH DAMAGE.
  */
 
+// This function is in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementation.
+#define lockf public_lockf
+
 #include <unistd.h>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+
+#undef lockf
+
+// The NDK declarations for this function was skipped above, redeclare
+// it with extern "C" here.
+extern "C" int lockf(int fd, int cmd, __bionic_legacy_compat_off_t length);
 
 int lockf64(int fd, int cmd, off64_t length) {
   // Translate POSIX lockf into fcntl.
@@ -68,6 +80,6 @@ int lockf64(int fd, int cmd, off64_t length) {
   return -1;
 }
 
-int lockf(int fd, int cmd, off_t length) {
+int lockf(int fd, int cmd, __bionic_legacy_compat_off_t length) {
   return lockf64(fd, cmd, length);
 }

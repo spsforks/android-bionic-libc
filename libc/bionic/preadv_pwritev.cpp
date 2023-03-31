@@ -26,7 +26,32 @@
  * SUCH DAMAGE.
  */
 
+// These functions are in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementations.
+#define preadv public_preadv
+#define pwritev public_pwritev
+#define preadv2 public_preadv2
+#define pwritev2 public_pwritev2
+
 #include <sys/uio.h>
+
+#undef preadv
+#undef pwritev
+#undef preadv2
+#undef pwritev2
+
+// The declarations for these functions were skipped above, redeclare
+// them with extern "C" here.
+extern "C" ssize_t preadv(int fd, const struct iovec* ios, int count,
+                          __bionic_legacy_compat_off_t offset);
+extern "C" ssize_t preadv2(int fd, const struct iovec* ios, int count,
+                           __bionic_legacy_compat_off_t offset, int flags);
+extern "C" ssize_t pwritev(int fd, const struct iovec* ios, int count,
+                           __bionic_legacy_compat_off_t offset);
+extern "C" ssize_t pwritev2(int fd, const struct iovec* ios, int count,
+                            __bionic_legacy_compat_off_t offset, int flags);
 
 // System calls we need.
 extern "C" int __preadv64(int, const struct iovec*, int, long, long);
@@ -42,7 +67,7 @@ extern "C" int __pwritev64v2(int, const struct iovec*, int, long, long, int);
 // (The first long was int64_t, which is the same as off64_t.)
 // The pair is split lo-hi (not hi-lo, as llseek is).
 
-ssize_t preadv(int fd, const struct iovec* ios, int count, off_t offset) {
+ssize_t preadv(int fd, const struct iovec* ios, int count, __bionic_legacy_compat_off_t offset) {
   return preadv64(fd, ios, count, offset);
 }
 
@@ -54,7 +79,7 @@ ssize_t preadv64(int fd, const struct iovec* ios, int count, off64_t offset) {
 #endif
 }
 
-ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset) {
+ssize_t pwritev(int fd, const struct iovec* ios, int count, __bionic_legacy_compat_off_t offset) {
   return pwritev64(fd, ios, count, offset);
 }
 
@@ -66,7 +91,8 @@ ssize_t pwritev64(int fd, const struct iovec* ios, int count, off64_t offset) {
 #endif
 }
 
-ssize_t preadv2(int fd, const struct iovec* ios, int count, off_t offset, int flags) {
+ssize_t preadv2(int fd, const struct iovec* ios, int count, __bionic_legacy_compat_off_t offset,
+                int flags) {
   return preadv64v2(fd, ios, count, offset, flags);
 }
 
@@ -78,7 +104,8 @@ ssize_t preadv64v2(int fd, const struct iovec* ios, int count, off64_t offset, i
 #endif
 }
 
-ssize_t pwritev2(int fd, const struct iovec* ios, int count, off_t offset, int flags) {
+ssize_t pwritev2(int fd, const struct iovec* ios, int count, __bionic_legacy_compat_off_t offset,
+                 int flags) {
   return pwritev64v2(fd, ios, count, offset, flags);
 }
 

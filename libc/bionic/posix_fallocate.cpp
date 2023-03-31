@@ -26,11 +26,23 @@
  * SUCH DAMAGE.
  */
 
+// This function is in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementation.
+#define posix_fallocate public_posix_fallocate
+
 #include <fcntl.h>
 
 #include "private/ErrnoRestorer.h"
 
-int posix_fallocate(int fd, off_t offset, off_t length) {
+#undef posix_fallocate
+
+// The NDK declarations for this function was skipped above, redeclare
+// it with extern "C" here.
+extern "C" int posix_fallocate(int fd, off_t offset, __bionic_legacy_compat_off_t length);
+
+int posix_fallocate(int fd, off_t offset, __bionic_legacy_compat_off_t length) {
   ErrnoRestorer errno_restorer;
   return (fallocate(fd, 0, offset, length) == 0) ? 0 : errno;
 }
