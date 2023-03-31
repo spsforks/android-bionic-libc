@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
+// This function is in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementation.
+#define ftruncate public_ftruncate
+
 #include <errno.h>
 #include <sys/cdefs.h>
 #include <unistd.h>
 
-#if !defined(__LP64__)
-static_assert(sizeof(off_t) == 4,
-              "libc can't be built with _FILE_OFFSET_BITS=64.");
+#undef ftruncate
 
+// The declaration for this function was skipped above, redeclare
+// it with extern "C" here.
+extern "C" int ftruncate(int filedes, __bionic_legacy_compat_off_t length);
+
+#if !defined(__LP64__)
 // The kernel's implementation of ftruncate uses an unsigned long for the length
 // parameter, so it will not catch negative values. On the other hand
 // ftruncate64 does check for this, so just forward the call.
-int ftruncate(int filedes, off_t length) {
+int ftruncate(int filedes, __bionic_legacy_compat_off_t length) {
   return ftruncate64(filedes, length);
 }
 #endif  // !defined(__LP64__)

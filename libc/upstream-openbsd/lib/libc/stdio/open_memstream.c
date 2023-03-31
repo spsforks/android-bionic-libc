@@ -150,7 +150,7 @@ open_memstream(char **pbuf, size_t *psize)
 	fp->_cookie = st;
 	fp->_read = NULL;
 	fp->_write = memstream_write;
-	fp->_seek = memstream_seek;
+	fp->_seek64 = memstream_seek;
 	fp->_close = memstream_close;
 	_SET_ORIENTATION(fp, -1);
 

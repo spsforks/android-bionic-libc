@@ -31,6 +31,17 @@
  * SUCH DAMAGE.
  */
 
+// These functions are in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementations.
+#define fgetpos public_fgetpos
+#define fseeko public_fseeko
+#define fsetpos public_fsetpos
+#define ftell public_ftell
+#define ftello public_ftello
+#define funopen public_funopen
+
 #define __BIONIC_NO_STDIO_FORTIFY
 #include <stdio.h>
 
@@ -59,6 +70,26 @@
 #include "private/thread_private.h"
 
 #include "private/bsd_sys_param.h" // For ALIGN/ALIGNBYTES.
+
+#undef fgetpos
+#undef fseeko
+#undef fsetpos
+#undef ftell
+#undef ftello
+#undef funopen
+
+// The declarations for these functions were skipped above, redeclare
+// them with extern "C" here.
+extern "C" __bionic_legacy_compat_fpos_t __sseek(void* cookie, __bionic_legacy_compat_fpos_t offset,
+                                                 int whence);
+extern "C" int fseeko(FILE* fp, __bionic_legacy_compat_off_t offset, int whence);
+extern "C" int fsetpos(FILE* fp, const __bionic_legacy_compat_fpos_t* pos);
+extern "C" __bionic_legacy_compat_off_t ftello(FILE* fp);
+extern "C" int fgetpos(FILE* fp, __bionic_legacy_compat_fpos_t* pos);
+extern "C" FILE* funopen(
+    const void* cookie, int (*read_fn)(void*, char*, int), int (*write_fn)(void*, const char*, int),
+    __bionic_legacy_compat_fpos_t (*seek_fn)(void*, __bionic_legacy_compat_fpos_t, int),
+    int (*close_fn)(void*));
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
@@ -533,7 +564,8 @@ int __swrite(void* cookie, const char* buf, int n) {
   return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
-fpos_t __sseek(void* cookie, fpos_t offset, int whence) {
+__bionic_legacy_compat_fpos_t __sseek(void* cookie, __bionic_legacy_compat_fpos_t offset,
+                                      int whence) {
   FILE* fp = reinterpret_cast<FILE*>(cookie);
   return TEMP_FAILURE_RETRY(lseek(fp->_file, offset, whence));
 }
@@ -555,6 +587,7 @@ static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
   } else if (fp->_seek != nullptr) {
     off64_t result = (*fp->_seek)(fp->_cookie, offset, whence);
 #if !defined(__LP64__)
+    // TODO: is this wrong for LP32 + _FILE_OFFSET_BITS=64?
     // Avoid sign extension if off64_t is larger than off_t.
     if (result != -1) result &= 0xffffffff;
 #endif
@@ -628,10 +661,11 @@ int __fseeko64(FILE* fp, off64_t offset, int whence, int off_t_bits) {
   return 0;
 }
 
-int fseeko(FILE* fp, off_t offset, int whence) {
+int fseeko(FILE* fp, __bionic_legacy_compat_off_t offset, int whence) {
   CHECK_FP(fp);
-  static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
-  return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
+  static_assert(sizeof(__bionic_legacy_compat_off_t) == sizeof(long),
+                "sizeof(__bionic_legacy_compat_off_t) != sizeof(long)");
+  return __fseeko64(fp, offset, whence, 8 * sizeof(__bionic_legacy_compat_off_t));
 }
 __strong_alias(fseek, fseeko);
 
@@ -640,7 +674,7 @@ int fseeko64(FILE* fp, off64_t offset, int whence) {
   return __fseeko64(fp, offset, whence, 8*sizeof(off64_t));
 }
 
-int fsetpos(FILE* fp, const fpos_t* pos) {
+int fsetpos(FILE* fp, const __bionic_legacy_compat_fpos_t* pos) {
   CHECK_FP(fp);
   return fseeko(fp, *pos, SEEK_SET);
 }
@@ -650,9 +684,10 @@ int fsetpos64(FILE* fp, const fpos64_t* pos) {
   return fseeko64(fp, *pos, SEEK_SET);
 }
 
-off_t ftello(FILE* fp) {
+__bionic_legacy_compat_off_t ftello(FILE* fp) {
   CHECK_FP(fp);
-  static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
+  static_assert(sizeof(__bionic_legacy_compat_off_t) == sizeof(long),
+                "sizeof(__bionic_legacy_compat_off_t) != sizeof(long)");
   off64_t result = ftello64(fp);
   if (result > LONG_MAX) {
     errno = EOVERFLOW;
@@ -668,7 +703,7 @@ off64_t ftello64(FILE* fp) {
   return __ftello64_unlocked(fp);
 }
 
-int fgetpos(FILE* fp, fpos_t* pos) {
+int fgetpos(FILE* fp, __bionic_legacy_compat_fpos_t* pos) {
   CHECK_FP(fp);
   *pos = ftello(fp);
   return (*pos == -1) ? -1 : 0;
@@ -709,10 +744,9 @@ static FILE* __funopen(const void* cookie,
   return fp;
 }
 
-FILE* funopen(const void* cookie,
-              int (*read_fn)(void*, char*, int),
+FILE* funopen(const void* cookie, int (*read_fn)(void*, char*, int),
               int (*write_fn)(void*, const char*, int),
-              fpos_t (*seek_fn)(void*, fpos_t, int),
+              __bionic_legacy_compat_fpos_t (*seek_fn)(void*, __bionic_legacy_compat_fpos_t, int),
               int (*close_fn)(void*)) {
   FILE* fp = __funopen(cookie, read_fn, write_fn, close_fn);
   if (fp != nullptr) {

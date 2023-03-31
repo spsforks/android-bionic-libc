@@ -28,6 +28,14 @@
 
 #undef _FORTIFY_SOURCE
 
+// These functions are in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementations.
+#define fallocate public_fallocate
+#define pread public_pread
+#define pwrite public_pwrite
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
@@ -38,6 +46,18 @@
 #include <unistd.h>
 
 #include "private/bionic_fdtrack.h"
+
+#undef fallocate
+#undef pread
+#undef pwrite
+
+// The declarations for these functions were skipped above, redeclare
+// them with extern "C" here.
+extern "C" int fallocate(int fd, int mode, __bionic_legacy_compat_off_t offset,
+                         __bionic_legacy_compat_off_t length);
+extern "C" ssize_t pread(int fd, void* buf, size_t byte_count, __bionic_legacy_compat_off_t offset);
+extern "C" ssize_t pwrite(int fd, const void* buf, size_t byte_count,
+                          __bionic_legacy_compat_off_t offset);
 
 #if defined(__LP64__)
 #error This code is only needed on 32-bit systems!
@@ -59,17 +79,18 @@ off64_t lseek64(int fd, off64_t off, int whence) {
 }
 
 // There is no pread for 32-bit off_t, so we need to widen and call pread64.
-ssize_t pread(int fd, void* buf, size_t byte_count, off_t offset) {
+ssize_t pread(int fd, void* buf, size_t byte_count, __bionic_legacy_compat_off_t offset) {
   return pread64(fd, buf, byte_count, static_cast<off64_t>(offset));
 }
 
 // There is no pwrite for 32-bit off_t, so we need to widen and call pwrite64.
-ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
+ssize_t pwrite(int fd, const void* buf, size_t byte_count, __bionic_legacy_compat_off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
 }
 
 // There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
-int fallocate(int fd, int mode, off_t offset, off_t length) {
+int fallocate(int fd, int mode, __bionic_legacy_compat_off_t offset,
+              __bionic_legacy_compat_off_t length) {
   return fallocate64(fd, mode, static_cast<off64_t>(offset), static_cast<off64_t>(length));
 }
 

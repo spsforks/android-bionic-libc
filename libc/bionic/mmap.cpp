@@ -26,6 +26,12 @@
  * SUCH DAMAGE.
  */
 
+// This function is in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementation.
+#define mmap public_mmap
+
 #include <errno.h>
 #include <stdint.h>
 #include <sys/mman.h>
@@ -33,6 +39,13 @@
 
 #include "platform/bionic/macros.h"
 #include "private/ErrnoRestorer.h"
+
+#undef mmap
+
+// The NDK declarations for this function was skipped above, redeclare
+// it with extern "C" here.
+extern "C" void* mmap(void* addr, size_t size, int prot, int flags, int fd,
+                      __bionic_legacy_compat_off_t offset);
 
 // mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
 extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
@@ -55,6 +68,7 @@ void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offse
   return __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
 }
 
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
+void* mmap(void* addr, size_t size, int prot, int flags, int fd,
+           __bionic_legacy_compat_off_t offset) {
   return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
 }

@@ -107,6 +107,10 @@ typedef __kernel_loff_t loff_t;
 typedef loff_t off64_t;
 #endif
 
+/* Some platform code that implements NDK ABIs needs access to the
+ * non-_FILE_OFFSET_BITS=64 version of off_t when _FILE_OFFSET_BITS=64 is set. */
+typedef __kernel_off_t __bionic_legacy_compat_off_t;
+
 #if !defined(__LP64__)
 /* This historical accident means that we had a signed socklen_t on 32-bit architectures. */
 typedef int32_t __socklen_t;
