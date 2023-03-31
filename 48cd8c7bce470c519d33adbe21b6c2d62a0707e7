@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ded1603e_f6601879",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-31T20:21:59Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "48cd8c7bce470c519d33adbe21b6c2d62a0707e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "939649e6_3f99ba5b",
+        "filename": "libc/include/spawn.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-03-31T20:21:59Z",
+      "side": 1,
+      "message": "no, this will lead to a crash _eventually_, though looking at the code i can see why you thought this. it\u0027s not necessarily a _bug_ that we don\u0027t crash as early as possible, but it\u0027s certainly annoying from a \"quality of implementation\" perspective! fixed by https://android-review.googlesource.com/c/platform/bionic/+/2515747.",
+      "range": {
+        "startLine": 86,
+        "startChar": 117,
+        "endLine": 86,
+        "endChar": 126
+      },
+      "revId": "48cd8c7bce470c519d33adbe21b6c2d62a0707e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
