@@ -54,6 +54,7 @@ __BEGIN_DECLS
 
 typedef off_t fpos_t;
 typedef off64_t fpos64_t;
+typedef __bionic_legacy_compat_off_t __bionic_legacy_compat_fpos_t;
 
 struct __sFILE;
 typedef struct __sFILE FILE;

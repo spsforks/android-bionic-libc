@@ -161,7 +161,7 @@ open_wmemstream(wchar_t **pbuf, size_t *psize)
 	fp->_cookie = st;
 	fp->_read = NULL;
 	fp->_write = wmemstream_write;
-	fp->_seek = wmemstream_seek;
+	_EXT(fp)->_seek64 = wmemstream_seek;
 	fp->_close = wmemstream_close;
 	_SET_ORIENTATION(fp, 1);
 

@@ -26,15 +26,27 @@
  * SUCH DAMAGE.
  */
 
+// This function is in the LP32 NDK ABI with a 32-bit off_t, but the
+// platform is compiled with _FILE_OFFSET_BITS=64.  Rename the NDK
+// declarations out of the way so __RENAME_IF_FILE_OFFSET64 doesn't rename
+// the 32-bit off_t implementation.
+#define posix_fadvise public_posix_fadvise
+
 #include <fcntl.h>
 
 #include "private/ErrnoRestorer.h"
+
+#undef posix_fadvise
+
+// The NDK declarations for this function was skipped above, redeclare
+// it with extern "C" here.
+extern "C" int posix_fadvise(int fd, off_t offset, __bionic_legacy_compat_off_t length, int advice);
 
 extern "C" int __arm_fadvise64_64(int, int, off64_t, off64_t);
 extern "C" int __fadvise64(int, off64_t, off64_t, int);
 
 // No architecture actually has the 32-bit off_t system call.
-int posix_fadvise(int fd, off_t offset, off_t length, int advice) {
+int posix_fadvise(int fd, off_t offset, __bionic_legacy_compat_off_t length, int advice) {
   return posix_fadvise64(fd, offset, length, advice);
 }
 
