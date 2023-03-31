@@ -16,6 +16,24 @@
       "message": "wouldn\u0027t it be easier to just build bionic without _FILE_OFFSET_BITS\u003d64?",
       "revId": "ba9d3ec91b73a91d6e6b2c18f5c8ebbd6182cf32",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46fd849c_72ef4546",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-03-31T15:37:59Z",
+      "side": 1,
+      "message": "Probably, although I\u0027ve found at least one place in bionic where it can\u0027t support large files because it was compiled without _FILE_OFFSET_BITS\u003d64 (open_memstream/open_wmemstream has a 32-bit fpos_t in",
+      "parentUuid": "89d4ba3b_64f758be",
+      "revId": "ba9d3ec91b73a91d6e6b2c18f5c8ebbd6182cf32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
