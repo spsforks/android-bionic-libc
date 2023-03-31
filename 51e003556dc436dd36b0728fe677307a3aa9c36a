@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d38e492b_2ec2957b",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-31T18:55:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a04bc4b5_83a1c505",
+      "range": {
+        "startLine": 196,
+        "startChar": 166,
+        "endLine": 196,
+        "endChar": 175
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a6f7a3d_4d18dd69",
@@ -85,6 +109,30 @@
       "writtenOn": "2023-03-28T20:51:41Z",
       "side": 1,
       "message": "same.",
+      "range": {
+        "startLine": 209,
+        "startChar": 172,
+        "endLine": 209,
+        "endChar": 181
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "615ad5c4_5a7907bb",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-31T18:55:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a6f7a3d_4d18dd69",
       "range": {
         "startLine": 209,
         "startChar": 172,
@@ -118,6 +166,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4221483_a03ee3b9",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-31T18:55:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a2e40c7_cf613766",
+      "range": {
+        "startLine": 225,
+        "startChar": 188,
+        "endLine": 225,
+        "endChar": 197
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99a9ecfa_214bb32f",
@@ -131,6 +203,30 @@
       "writtenOn": "2023-03-28T20:51:41Z",
       "side": 1,
       "message": "same.",
+      "range": {
+        "startLine": 239,
+        "startChar": 182,
+        "endLine": 239,
+        "endChar": 191
+      },
+      "revId": "51e003556dc436dd36b0728fe677307a3aa9c36a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f67380b9_1d046e7a",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-03-31T18:55:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99a9ecfa_214bb32f",
       "range": {
         "startLine": 239,
         "startChar": 182,
