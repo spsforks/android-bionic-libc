@@ -16,6 +16,24 @@
       "message": "did you test this? i think this will undo the good work the previous lines did...\n\n(also the indentation looks wrong for all the instructions; you\u0027ve added an extra space? perhaps because the `tail` was already wrong?)",
       "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cab118e2_78c609b1",
+        "filename": "libc/arch-riscv64/string/__memcpy_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1994451
+      },
+      "writtenOn": "2023-04-03T00:56:19Z",
+      "side": 1,
+      "message": "Run bionic unit test and memcpy_chk error stack backtrace use case",
+      "parentUuid": "0105ebf1_527694c4",
+      "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
