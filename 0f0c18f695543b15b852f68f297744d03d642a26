@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ee9c5c9_73852c93",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-04-03T03:45:53Z",
+      "side": 1,
+      "message": "Looks good to me, but I\u0027m not sure if you are looking for a +2 yet. Let me know, and I can +2 right away.",
+      "revId": "0f0c18f695543b15b852f68f297744d03d642a26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
