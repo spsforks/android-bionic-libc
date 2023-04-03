@@ -34,6 +34,24 @@
       "parentUuid": "0105ebf1_527694c4",
       "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d735dc05_03b6a7ff",
+        "filename": "libc/arch-riscv64/string/__memcpy_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-04-03T20:32:11Z",
+      "side": 1,
+      "message": "Looking at the code, there are quite a number of instructions in the assembler that will have incorrect unwinding information. It\u0027s probably fine for crashes, but I\u0027m not sure it is working as intended.\n\nFor example, if you crash in the memcpy routine does that unwind correctly? If so, then why do you need to add all of the extra information for one path and not the other? The __memcpy_chk_fail and memcpy tail calls are exactly the same at that point. All of the unwinding information from before should be the same, unless tail is operating more like call.\n\nAlso, you modify the stack, put some data on it, set the unwind information, then modify the stack so it will be overwritten. Again, it\u0027s not clear how this is going to work.",
+      "parentUuid": "cab118e2_78c609b1",
+      "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
