@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "951201f2_59a1f3ca",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-03T23:23:20Z",
+      "side": 1,
+      "message": "I think it should be nonnull because the source code is \nhttp://cs/android/bionic/libc/bionic/wchar_l.cpp;l\u003d48-50;rcl\u003da48a28d7c3cf7defb6d5a93699a0818ac448d9fe\nhttp://cs/android/bionic/libc/upstream-freebsd/lib/libc/string/wcslen.c;l\u003d47;rcl\u003da48a28d7c3cf7defb6d5a93699a0818ac448d9fe\nor\nhttp://cs/android/bionic/libc/upstream-openbsd/lib/libc/string/wcslcpy.c;l\u003d45-49;rcl\u003da48a28d7c3cf7defb6d5a93699a0818ac448d9fe\n\nBut http://cs/android/external/libcxx/src/locale.cpp;l\u003d765;rcl\u003d28ff1424b0319a54c960df56e5bfbcbb993e0e6a fails and blocks the build.",
+      "range": {
+        "startLine": 130,
+        "startChar": 26,
+        "endLine": 130,
+        "endChar": 34
+      },
+      "revId": "d0fe5ca5b075129a5f056da9bbdc087b01861951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
