@@ -52,6 +52,24 @@
       "parentUuid": "cab118e2_78c609b1",
       "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "879bb550_493800ac",
+        "filename": "libc/arch-riscv64/string/__memcpy_chk.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-03T20:44:59Z",
+      "side": 1,
+      "message": "yeah, i think to test this properly you\u0027d need to add extra cases to `crasher`... then you can look at a backtrace from a fortify failure, and also from a memcpy failure. (if none of that makes sense, don\u0027t worry --- i\u0027ll get round to doing it myself at some point!)",
+      "parentUuid": "d735dc05_03b6a7ff",
+      "revId": "85abedf70ad52aee9de232aef5a7b3165fc8836e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
