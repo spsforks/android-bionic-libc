@@ -16,6 +16,24 @@
       "message": "This (and `ACCOUNTING`) do not appear in POSIX: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html\n\nhttps://man7.org/linux/man-pages/man5/utmp.5.html doesn\u0027t say much about this header aside from that the utmp and utmpx structs are identicaly.\n\nI assume the extra names here match other platforms? If so, LGTM.",
       "revId": "dbf5b2eb55452b5b9cfa916ff121997c06c75df7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8a3b77c_b6eb0eb2",
+        "filename": "libc/include/utmpx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-04T21:37:34Z",
+      "side": 1,
+      "message": "yeah, i couldn\u0027t decide what to do about these. i thought having the same set of constants as \u003cutmp.h\u003e made sense...\n\n...though then you\u0027re wondering why i didn\u0027t factor this and `struct utmpx` out into a bits/ header (or just include \u003cutmp.h\u003e in \u003cutmpx.h\u003e or vice versa)? the trouble being that since POSIX says `struct utmpx` (and a `typedef` would lose the `struct` part) i can only share the implementation by having a #define (either define the body in the bits/ header and then use-and-undef it in both headers, or define a _name_ for the struct in the \"caller\" header that\u0027s used in the bits/ \"callee\" header). but those choices seemed to _increase_ unclarity for an \"unused\" struct that\u0027s only here for source compatibility.\n\nmusl goes with yet another option --- actually just define `struct utmpx` and `#include \u003cutmpx.h\u003e` and `#define utmp utmpx` in \u003cutmp.h\u003e. but we\u0027d need to do that the other way round to preserve name mangling backwards compatibility, and -- although i don\u0027t have an example where it would actually cause problems -- i didn\u0027t feel comfortable with the `#define`. (i\u0027d rather go for the #define i can #undef before leaving the header in that case!)\n\nso, yeah, in a twisty maze of unpleasant alternatives, all mostly alike, my \"solution\" was to just duplicate the constants and struct instead. i don\u0027t love it, but i do believe i\u0027ll never see the inside of this file ever again, so...\n\n(+cferris too, in case you or he find any of the alternatives more convincing [or, ideally, have one i didn\u0027t think of that doesn\u0027t have such a bitter aftertaste as any of these].)",
+      "parentUuid": "b32d584a_5b005a83",
+      "revId": "dbf5b2eb55452b5b9cfa916ff121997c06c75df7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
