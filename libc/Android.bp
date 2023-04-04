@@ -1211,6 +1211,7 @@ cc_library_static {
         "bionic/unlink.cpp",
         "bionic/usleep.cpp",
         "bionic/utmp.cpp",
+        "bionic/vforkrun.cpp",
         "bionic/wait.cpp",
         "bionic/wchar.cpp",
         "bionic/wchar_l.cpp",

@@ -39,6 +39,7 @@
 #include <unistd.h>
 
 #include <android/fdsan.h>
+#include <android/vforkrun.h>
 
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
@@ -172,6 +173,27 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   }
 }
 
+struct posix_spawn_child {
+  const char* path;
+  const posix_spawn_file_actions_t* actions;
+  const posix_spawnattr_t* attr;
+  char* const *argv;
+  char* const *env;
+  int (*exec_fn)(const char* path, char* const argv[], char* const env[]);
+  ScopedSignalBlocker *ssb;
+
+  int run();
+};
+
+int posix_spawn_child::run() {
+  short flags = attr ? (*attr)->flags : 0;
+  ApplyAttrs(flags, attr);
+  if (actions) (*actions)->Do();
+  if ((flags & POSIX_SPAWN_SETSIGMASK) == 0) ssb->reset();
+  exec_fn(path, argv, env ? env : environ);
+  return 127;
+}
+
 static int posix_spawn(pid_t* pid_ptr,
                        const char* path,
                        const posix_spawn_file_actions_t* actions,
@@ -187,19 +209,22 @@ static int posix_spawn(pid_t* pid_ptr,
   short flags = attr ? (*attr)->flags : 0;
   bool use_vfork = ((flags & POSIX_SPAWN_USEVFORK) != 0) || (actions == nullptr && flags == 0);
 
-  pid_t pid = use_vfork ? vfork() : fork();
+  posix_spawn_child child = {
+      path, actions, attr, argv, env, exec_fn, &ssb,
+  };
+
+  pid_t pid;
+  if (use_vfork) {
+    pid = vforkrun([](void* arg) { return static_cast<posix_spawn_child*>(arg)->run(); }, &child,
+                   2 << 20);
+  } else {
+    pid = fork();
+    if (pid == 0) {
+      _exit(child.run());
+    }
+  }
   if (pid == -1) return errno;
 
-  if (pid == 0) {
-    // Child.
-    ApplyAttrs(flags, attr);
-    if (actions) (*actions)->Do();
-    if ((flags & POSIX_SPAWN_SETSIGMASK) == 0) ssb.reset();
-    exec_fn(path, argv, env ? env : environ);
-    _exit(127);
-  }
-
-  // Parent.
   if (pid_ptr) *pid_ptr = pid;
   return 0;
 }
