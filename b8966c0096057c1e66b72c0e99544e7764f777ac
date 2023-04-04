@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c970abd_ab197eb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-04T20:15:32Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a7b89e4_82a451a8",
@@ -19,6 +36,53 @@
         "startChar": 35,
         "endLine": 200,
         "endChar": 44
+      },
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8b7b858_2416e1d1",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-04T20:15:32Z",
+      "side": 1,
+      "message": "no, this is actually quite useful. (useful enough that they even changed the C standard to _mandate_ that `free(NULL)` is a no-op rather than implementation-defined.)\n\nbasically the use case is \"you don\u0027t need to worry about whether your call to _allocate_ succeeded or failed; it\u0027s _always_ correct to _deallocate_ on exit, whether it\u0027s an error path or a success path\". so, yeah, for the single specific case the compiler can [currently] catch (`freeaddrinfo(NULL)`), that code is probably pointless. but `freeaddrinfo(ai)` where ai may or may not be null --- that\u0027s more useful.\n\ni agree that this is a bit of a philosophical question at the moment --- \"who\u0027s the audience?\". if we assume only the compiler is looking at these _and_ that the compiler isn\u0027t going to get any cleverer at detecting cases where you can end up passing a null value to a _Nonnull parameter, then _Nonnull would make sense. but i think it\u0027s more useful for us to be optimistic (and assume the compiler will get better some day), and that we also have _human_ readers of these annotations who want to know what their guarantees are.",
+      "parentUuid": "6a7b89e4_82a451a8",
+      "range": {
+        "startLine": 200,
+        "startChar": 35,
+        "endLine": 200,
+        "endChar": 44
+      },
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37017474_d099393b",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-04T20:15:32Z",
+      "side": 1,
+      "message": "i don\u0027t think so?",
+      "range": {
+        "startLine": 208,
+        "startChar": 5,
+        "endLine": 208,
+        "endChar": 14
       },
       "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
