@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5ce739b_7141806b",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-04T20:52:11Z",
+      "side": 1,
+      "message": "I see. So the use of nullptr depends on the case. Like we discuss before, if the data is controlled by users and we don\u0027t know whether it is null, we might allow it be null. Also, for the audience question, double check (from compilers and human) are the promising future.",
+      "parentUuid": "e8b7b858_2416e1d1",
+      "range": {
+        "startLine": 200,
+        "startChar": 35,
+        "endLine": 200,
+        "endChar": 44
+      },
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "37017474_d099393b",
         "filename": "libc/include/netdb.h",
         "patchSetId": 1
@@ -78,6 +102,30 @@
       "writtenOn": "2023-04-04T20:15:32Z",
       "side": 1,
       "message": "i don\u0027t think so?",
+      "range": {
+        "startLine": 208,
+        "startChar": 5,
+        "endLine": 208,
+        "endChar": 14
+      },
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e8e51b3_f9e242bd",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-04T20:52:11Z",
+      "side": 1,
+      "message": "ohhh yes, it won\u0027t be null.",
+      "parentUuid": "37017474_d099393b",
       "range": {
         "startLine": 208,
         "startChar": 5,
