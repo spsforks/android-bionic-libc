@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b32d584a_5b005a83",
+        "filename": "libc/include/utmpx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-04-04T21:26:39Z",
+      "side": 1,
+      "message": "This (and `ACCOUNTING`) do not appear in POSIX: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/utmpx.h.html\n\nhttps://man7.org/linux/man-pages/man5/utmp.5.html doesn\u0027t say much about this header aside from that the utmp and utmpx structs are identicaly.\n\nI assume the extra names here match other platforms? If so, LGTM.",
+      "revId": "dbf5b2eb55452b5b9cfa916ff121997c06c75df7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
