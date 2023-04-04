@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e845257d_6296fcea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1994451
+      },
+      "writtenOn": "2023-04-04T01:04:35Z",
+      "side": 1,
+      "message": "Why do these contents in __memcpy_chk of arm64?",
+      "revId": "20dd3fed7afec405d48c23c8d30462bbfa8d3178",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
