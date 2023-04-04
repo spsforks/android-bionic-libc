@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a7b89e4_82a451a8",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-04T18:26:03Z",
+      "side": 1,
+      "message": "I think it should be nonnull. I know the fix aosp/122450 is for b/36923865. Still think free a nullptr is pointless 😂",
+      "range": {
+        "startLine": 200,
+        "startChar": 35,
+        "endLine": 200,
+        "endChar": 44
+      },
+      "revId": "b8966c0096057c1e66b72c0e99544e7764f777ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
