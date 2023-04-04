@@ -52,6 +52,24 @@
       "parentUuid": "d8a3b77c_b6eb0eb2",
       "revId": "dbf5b2eb55452b5b9cfa916ff121997c06c75df7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f421d5d1_70bf0de4",
+        "filename": "libc/include/utmpx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-04T22:26:06Z",
+      "side": 1,
+      "message": "yeah, i did consider whittling them down to just the POSIX ones, but other libcs use the same set for both headers (and even though musl doesn\u0027t have ACCOUNTING, glibc does, and they both have RUN_LVL, as do we in \u003cutmp.h\u003e).\n\nand since the only reason i\u0027m wasting everyone\u0027s time on this header in the first place is source compatibility...\n\n(i\u0027ll hold off submitting until cferris has a chance to comment too though.)",
+      "parentUuid": "2899179b_b2b3c648",
+      "revId": "dbf5b2eb55452b5b9cfa916ff121997c06c75df7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
