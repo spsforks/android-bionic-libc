@@ -69,6 +69,30 @@
       },
       "revId": "a53c893eaa31bf9526e84c16c6b6ae61b5b47a4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a97f2bfa_b57dd2ab",
+        "filename": "libc/bionic/vforkrun.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-05T19:52:08Z",
+      "side": 1,
+      "message": "Yes, it\u0027s for tag cleanup after running the thread, and it\u0027s analogous to the missing `__hwasan_tag_memory` call in `pthread_exit`.",
+      "parentUuid": "7558cadd_e463fcb8",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "a53c893eaa31bf9526e84c16c6b6ae61b5b47a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
