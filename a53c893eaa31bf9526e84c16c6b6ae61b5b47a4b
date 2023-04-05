@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7558cadd_e463fcb8",
+        "filename": "libc/bionic/vforkrun.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-05T19:43:11Z",
+      "side": 1,
+      "message": "i think we should use runtime detection instead, with a weak def of `__hwasan_tag_memory`.\n\nconfirming that this is for the case where we did not clean up the tags for a pthread_exit that you talked about recently?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "a53c893eaa31bf9526e84c16c6b6ae61b5b47a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
