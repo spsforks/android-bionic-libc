@@ -93,6 +93,30 @@
       },
       "revId": "a53c893eaa31bf9526e84c16c6b6ae61b5b47a4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "128c6b0b_80f98100",
+        "filename": "libc/bionic/vforkrun.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-05T19:56:02Z",
+      "side": 1,
+      "message": "right, i mean that this is for the case where the thread exists abnormally and fails to clean up the tags. if it returns normally it should already clean up after itself. maybe put that into a comment just for posterity.",
+      "parentUuid": "a97f2bfa_b57dd2ab",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "a53c893eaa31bf9526e84c16c6b6ae61b5b47a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
