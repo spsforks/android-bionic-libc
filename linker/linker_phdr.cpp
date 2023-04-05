@@ -686,8 +686,13 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
-static bool is_misaligned(const ElfW(Phdr)* phdr, size_t phdr_count) {
+static bool is_misaligned(const ElfW(Phdr)* phdr, size_t phdr_count, off64_t file_offset) {
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  if (file_offset % page_size() != 0) {
+    return true;
+  }
+
   for (; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type == PT_LOAD && phdr->p_align < page_size()) {
       return true;
@@ -697,7 +702,7 @@ static bool is_misaligned(const ElfW(Phdr)* phdr, size_t phdr_count) {
 }
 
 bool ElfReader::LoadSegments() {
-  bool misaligned = is_misaligned(phdr_table_, phdr_num_);
+  bool misaligned = is_misaligned(phdr_table_, phdr_num_, file_offset_);
 
   if (misaligned) {
     ElfW(Addr) start = 0;
@@ -785,21 +790,23 @@ bool ElfReader::LoadSegments() {
           return false;
         }
       } else {
+        off64_t file_offset = page_start(file_offset_);
+        ElfW(Addr) file_correction = file_offset_ - file_offset;
         seg_addr = mmap64(nullptr,
-                          file_length,
+                          file_length + file_correction,
                           prot,
                           MAP_PRIVATE,
                           fd_,
-                          file_offset_ + file_page_start);
+                          file_offset + file_page_start);
         if (seg_addr == MAP_FAILED) {
           DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
           return false;
         }
         char* seg_ptr = reinterpret_cast<char*>(seg_addr) + (file_start - file_page_start);
         memcpy(reinterpret_cast<void*>(seg_start),
-               reinterpret_cast<void*>(seg_ptr),
+               reinterpret_cast<void*>(seg_ptr + file_correction),
                phdr->p_filesz);
-        munmap(seg_addr, file_length);
+        munmap(seg_addr, file_length + file_correction);
         seg_addr = reinterpret_cast<void*>(seg_page_start);
       }
 
@@ -850,7 +857,7 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
                                      ElfW(Addr) load_bias, int extra_prot_flags) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
-  bool misaligned = is_misaligned(phdr_table, phdr_count);
+  bool misaligned = is_misaligned(phdr_table, phdr_count, 0);
 
   for (; phdr < phdr_limit; phdr++) {
     if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
