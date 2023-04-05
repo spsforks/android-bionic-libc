@@ -46,6 +46,30 @@
       },
       "revId": "d0fe5ca5b075129a5f056da9bbdc087b01861951",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32d0d126_f5c41074",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-05T19:48:17Z",
+      "side": 1,
+      "message": "0 gets passed to wcslen(). `A 0 in any pointer context refers to the null pointer constant.` 😞",
+      "parentUuid": "4c86c167_6231d43e",
+      "range": {
+        "startLine": 130,
+        "startChar": 26,
+        "endLine": 130,
+        "endChar": 34
+      },
+      "revId": "d0fe5ca5b075129a5f056da9bbdc087b01861951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
