@@ -65,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b0a7549_b47dd684",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-06T21:42:21Z",
+      "side": 1,
+      "message": "oh, yuck. yes. misleading but true.",
+      "parentUuid": "5a0360ae_ee356e90",
+      "range": {
+        "startLine": 106,
+        "startChar": 71,
+        "endLine": 106,
+        "endChar": 80
+      },
+      "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "90070b84_c8ebdc25",
@@ -102,6 +126,30 @@
       "side": 1,
       "message": "From http://cs/android/bionic/libc/bionic/pthread_join.cpp;l\u003d68-70;rcl\u003d627c79a7dbaa77b8ac18c92edf8b5a88cbd16582\n\nOnce __return_value_ptr is not null, *__return_value_ptr can\u0027t be null?",
       "parentUuid": "90070b84_c8ebdc25",
+      "range": {
+        "startLine": 174,
+        "startChar": 44,
+        "endLine": 174,
+        "endChar": 73
+      },
+      "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fbc92ef_7bc244a0",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-06T21:42:21Z",
+      "side": 1,
+      "message": "\u003e Once return_value_ptr is not null, *return_value_ptr can\u0027t be null?\n\nwhy not? i think it can --- it\u0027s just whatever was passed to the corresponding pthread_exit().",
+      "parentUuid": "f0751163_a7e6663d",
       "range": {
         "startLine": 174,
         "startChar": 44,
