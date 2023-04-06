@@ -16,6 +16,23 @@
       "message": "(worst change ever...)",
       "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef76e8c1_f61a4116",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-06T21:54:13Z",
+      "side": 1,
+      "message": "(+others who\u0027ll want to know about this ABI break.)",
+      "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
