@@ -158,6 +158,30 @@
       },
       "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b05e9d38_41999ce2",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-06T22:40:55Z",
+      "side": 1,
+      "message": "I see!",
+      "parentUuid": "8fbc92ef_7bc244a0",
+      "range": {
+        "startLine": 174,
+        "startChar": 44,
+        "endLine": 174,
+        "endChar": 73
+      },
+      "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
