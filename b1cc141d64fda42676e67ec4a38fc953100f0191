@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a0360ae_ee356e90",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-06T20:35:53Z",
+      "side": 1,
+      "message": "http://cs/android/bionic/libc/bionic/pthread_attr.cpp;l\u003d226;rcl\u003d627c79a7dbaa77b8ac18c92edf8b5a88cbd16582\n\nhttp://cs/android/bionic/libc/bionic/pthread_attr.cpp;l\u003d46;rcl\u003d627c79a7dbaa77b8ac18c92edf8b5a88cbd16582\n\nI think it can be null? If it is assigned by a pthread_attr_t just gets initialized?",
+      "parentUuid": "8b95ba77_66314b7e",
+      "range": {
+        "startLine": 106,
+        "startChar": 71,
+        "endLine": 106,
+        "endChar": 80
+      },
+      "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "90070b84_c8ebdc25",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2023-04-06T17:50:53Z",
       "side": 1,
       "message": "why?",
+      "range": {
+        "startLine": 174,
+        "startChar": 44,
+        "endLine": 174,
+        "endChar": 73
+      },
+      "revId": "b1cc141d64fda42676e67ec4a38fc953100f0191",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0751163_a7e6663d",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-06T20:35:53Z",
+      "side": 1,
+      "message": "From http://cs/android/bionic/libc/bionic/pthread_join.cpp;l\u003d68-70;rcl\u003d627c79a7dbaa77b8ac18c92edf8b5a88cbd16582\n\nOnce __return_value_ptr is not null, *__return_value_ptr can\u0027t be null?",
+      "parentUuid": "90070b84_c8ebdc25",
       "range": {
         "startLine": 174,
         "startChar": 44,
