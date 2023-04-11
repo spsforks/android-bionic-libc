@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca64c344_23a8427d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2023-04-11T22:58:48Z",
+      "side": 1,
+      "message": "I don\u0027t see any update to anything consuming the outputs of changed rules. Are these purely human-consumed?",
+      "revId": "f5968d82f562e4f43b05ffa54ac7df16396351bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
