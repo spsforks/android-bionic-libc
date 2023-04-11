@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d578bdd_d6f9aeff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-04-11T22:08:14Z",
+      "side": 1,
+      "message": "LGTM though I do wonder about the AT_SECURE environment sanitization.",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64d28156_47ff3322",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3518,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-04-11T22:08:14Z",
+      "side": 1,
+      "message": "Instead of checking getauxval here, I wonder if we should add LD_HWASAN to the list of sanitized variables in __is_unsafe_environment_variable?\n\nSupposing an AT_SECURE process were to spawn a non-AT_SECURE process... Maybe we\u0027d want to sanitize the environment for the child\u0027s sake?",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b24a5f2_4f0643bd",
+        "filename": "tests/libs/dlopen_testlib_simple_hwasan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-04-11T22:08:14Z",
+      "side": 1,
+      "message": "stdlib.h looks unused here.",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "492aee08_e148ee4b",
+        "filename": "tests/libs/dlopen_testlib_simple_hwasan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-04-11T22:08:14Z",
+      "side": 1,
+      "message": "Where is this variable used? I\u0027m wondering if it was copied from dlopen_testlib_simple.cpp...",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
