@@ -16,6 +16,24 @@
       "message": "I don\u0027t see any update to anything consuming the outputs of changed rules. Are these purely human-consumed?",
       "revId": "f5968d82f562e4f43b05ffa54ac7df16396351bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c84d95a5_292704f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-04-11T23:00:19Z",
+      "side": 1,
+      "message": "For the syscalls ones, I did update their usages.\n\nFor the map.txt files, they\u0027re referenced by their module name (using the soong leading colon syntax), and their file name doesn\u0027t really matter.",
+      "parentUuid": "ca64c344_23a8427d",
+      "revId": "f5968d82f562e4f43b05ffa54ac7df16396351bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
