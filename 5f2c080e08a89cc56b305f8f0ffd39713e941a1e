@@ -71,6 +71,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f5f74be_47ca138b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3518,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-11T22:42:04Z",
+      "side": 1,
+      "message": "Ah, yeah, the libc _from the linker_ should have sanitized this. But still, keeping this for consistency with linker_main, where they also check just in case.",
+      "parentUuid": "21abc77d_df244e79",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b24a5f2_4f0643bd",
