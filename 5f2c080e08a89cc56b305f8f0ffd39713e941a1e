@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21abc77d_df244e79",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3518,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-11T22:31:11Z",
+      "side": 1,
+      "message": "Don\u0027t we need to do both? `__sanitize_environment_variables` is in libc, and this chooses which LIBC to use. the other DL flags in the linker_main (preload and linker path) also explicitly check. I added it to `__is_unsafe_environment_variable` but also left it here.",
+      "parentUuid": "1a0c4dd2_30155b8d",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b24a5f2_4f0643bd",
@@ -70,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c67d64fb_7aa4efb2",
+        "filename": "tests/libs/dlopen_testlib_simple_hwasan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-11T22:31:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b24a5f2_4f0643bd",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "492aee08_e148ee4b",
@@ -83,6 +119,24 @@
       "writtenOn": "2023-04-11T22:08:14Z",
       "side": 1,
       "message": "Where is this variable used? I\u0027m wondering if it was copied from dlopen_testlib_simple.cpp...",
+      "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ac1486c_0a8331bf",
+        "filename": "tests/libs/dlopen_testlib_simple_hwasan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-04-11T22:31:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "492aee08_e148ee4b",
       "revId": "5f2c080e08a89cc56b305f8f0ffd39713e941a1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
