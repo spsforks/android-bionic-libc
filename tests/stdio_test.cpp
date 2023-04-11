@@ -3181,3 +3181,31 @@ TEST(STDIO_TEST, swscanf_b) {
   EXPECT_EQ('b', ch);
 #pragma clang diagnostic pop
 }
+
+TEST(STDIO_TEST, snprintf_w) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  int8_t a = 5;
+  snprintf(buf, sizeof(buf), "%w8b", a);
+  EXPECT_STREQ("101", buf);
+  int16_t b = -1;
+  snprintf(buf, sizeof(buf), "%w16d", b);
+  EXPECT_STREQ("-1", buf);
+  int32_t c = 012;
+  snprintf(buf, sizeof(buf), "%w32i", c);
+  EXPECT_STREQ("10", buf);
+  int64_t d = 17;
+  snprintf(buf, sizeof(buf), "%w64o", d);
+  EXPECT_STREQ("21", buf);
+  uint32_t e = 3;
+  snprintf(buf, sizeof(buf), "%w32u", e);
+  EXPECT_STREQ("3", buf);
+  int64_t f = 59;
+  snprintf(buf, sizeof(buf), "%w64x", f);
+  EXPECT_STREQ("3b", buf);
+  snprintf(buf, sizeof(buf), "%w64X", f);
+  EXPECT_STREQ("3B", buf);
+  EXPECT_DEATH(snprintf(buf, sizeof(buf), "%w20d", &f), "The value 20 is unsupported.");
+#pragma clang diagnostic pop
+}

@@ -82,6 +82,12 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 
   uintmax_t _umax;             /* integer arguments %[diouxX] */
   enum { BIN, OCT, DEC, HEX } base; /* base for %[bBdiouxX] conversion */
+  enum SpecificWidth {
+    BYTE = 8,
+    HALFWORD = 16,
+    WORD = 32,
+    DOUBLEWORD = 64,
+  };
   int dprec;                   /* a copy of prec if %[bBdiouxX], 0 otherwise */
   int realsz;                  /* field size expanded by dprec */
   int size;                    /* size of converted field or string */
@@ -290,6 +296,35 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 't':
         flags |= PTRINT;
         goto rflag;
+      case 'w':
+        n = 0;
+        ch = *fmt++;
+        while (is_digit(ch)) {
+          APPEND_DIGIT(n, ch);
+          ch = *fmt++;
+        }
+        switch (n) {
+          case BYTE: {
+            flags |= CHARINT;
+            goto reswitch;
+          }
+          case HALFWORD: {
+            flags |= SHORTINT;
+            goto reswitch;
+          }
+          case WORD: {
+            flags |= LONGINT;
+            goto reswitch;
+          }
+          case DOUBLEWORD: {
+            flags |= LLONGINT;
+            goto reswitch;
+          }
+          default: {
+            __fortify_fatal("The value %d is unsupported.", n);
+            break;
+          }
+        }
       case 'z':
         flags |= SIZEINT;
         goto rflag;
