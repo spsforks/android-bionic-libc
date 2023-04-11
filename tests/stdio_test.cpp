@@ -3181,3 +3181,129 @@ TEST(STDIO_TEST, swscanf_b) {
   EXPECT_EQ('b', ch);
 #pragma clang diagnostic pop
 }
+
+TEST(STDIO_TEST, snprintf_w_base) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+  char buf[BUFSIZ];
+  int8_t a = 0b101;
+  snprintf(buf, sizeof(buf), "<%w8b>", a);
+  EXPECT_STREQ("<101>", buf);
+  int8_t b1 = 0xFF;
+  snprintf(buf, sizeof(buf), "<%w8d>", b1);
+  EXPECT_STREQ("<-1>", buf);
+  int8_t b2 = 0x1FF;
+  snprintf(buf, sizeof(buf), "<%w8d>", b2);
+  EXPECT_STREQ("<-1>", buf);
+  int16_t c = 0xFFFF;
+  snprintf(buf, sizeof(buf), "<%w16i>", c);
+  EXPECT_STREQ("<-1>", buf);
+  int32_t d = 021;
+  snprintf(buf, sizeof(buf), "<%w32o>", d);
+  EXPECT_STREQ("<21>", buf);
+  uint32_t e = -1;
+  snprintf(buf, sizeof(buf), "<%w32u>", e);
+  EXPECT_STREQ("<4294967295>", buf);
+  int64_t f = 0x3b;
+  snprintf(buf, sizeof(buf), "<%w64x>", f);
+  EXPECT_STREQ("<3b>", buf);
+  snprintf(buf, sizeof(buf), "<%w64X>", f);
+  EXPECT_STREQ("<3B>", buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, snprintf_w_arguments_reordering) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  char buf[BUFSIZ];
+  uint8_t a = 32;
+  int16_t b = 077;
+  int32_t c = 10;
+  int32_t d = 0b111;
+  int64_t e = 0x1111111122222222;
+  int64_t f = 0x3333333344444444;
+  int64_t g = 0x5555555566666666;
+  snprintf(buf, sizeof(buf), "<%w8u --- %w16o>", a, b);
+  EXPECT_STREQ("<32 --- 77>", buf);
+  snprintf(buf, sizeof(buf), "<%1$w32b --- %2$w8i --- %2$w8d>", d, a);
+  EXPECT_STREQ("<111 --- 32 --- 32>", buf);
+  snprintf(buf, sizeof(buf), "<%2$w32i --- %2$w32d --- %1$w64x>", g, c);
+  EXPECT_STREQ("<10 --- 10 --- 5555555566666666>", buf);
+  snprintf(buf, sizeof(buf), "<%3$w64x --- %1$w64x --- %2$w64x>", e, f, g);
+  EXPECT_STREQ("<5555555566666666 --- 1111111122222222 --- 3333333344444444>", buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, snprintf_invalid_w_width) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  int32_t a = 100;
+  EXPECT_DEATH(snprintf(buf, sizeof(buf), "%w20d", &a), "%w20 is unsupported");
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swprintf_w_base) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+  wchar_t buf[BUFSIZ];
+  int8_t a = 0b101;
+  swprintf(buf, sizeof(buf), L"<%w8b>", a);
+  EXPECT_EQ(std::wstring(L"<101>"), buf);
+  int8_t b1 = 0xFF;
+  swprintf(buf, sizeof(buf), L"<%w8d>", b1);
+  EXPECT_EQ(std::wstring(L"<-1>"), buf);
+  int8_t b2 = 0x1FF;
+  swprintf(buf, sizeof(buf), L"<%w8d>", b2);
+  EXPECT_EQ(std::wstring(L"<-1>"), buf);
+  int16_t c = 0xFFFF;
+  swprintf(buf, sizeof(buf), L"<%w16i>", c);
+  EXPECT_EQ(std::wstring(L"<-1>"), buf);
+  int32_t d = 021;
+  swprintf(buf, sizeof(buf), L"<%w32o>", d);
+  EXPECT_EQ(std::wstring(L"<21>"), buf);
+  uint32_t e = -1;
+  swprintf(buf, sizeof(buf), L"<%w32u>", e);
+  EXPECT_EQ(std::wstring(L"<4294967295>"), buf);
+  int64_t f = 0x3b;
+  swprintf(buf, sizeof(buf), L"<%w64x>", f);
+  EXPECT_EQ(std::wstring(L"<3b>"), buf);
+  swprintf(buf, sizeof(buf), L"<%w64X>", f);
+  EXPECT_EQ(std::wstring(L"<3B>"), buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swprintf_w_arguments_reordering) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  wchar_t buf[BUFSIZ];
+  uint8_t a = 32;
+  int16_t b = 077;
+  int32_t c = 10;
+  int32_t d = 0b111;
+  int64_t e = 0x1111111122222222;
+  int64_t f = 0x3333333344444444;
+  int64_t g = 0x5555555566666666;
+  swprintf(buf, sizeof(buf), L"<%w8u --- %w16o>", a, b);
+  EXPECT_EQ(std::wstring(L"<32 --- 77>"), buf);
+  swprintf(buf, sizeof(buf), L"<%1$w32b --- %2$w8i --- %2$w8d>", d, a);
+  EXPECT_EQ(std::wstring(L"<111 --- 32 --- 32>"), buf);
+  swprintf(buf, sizeof(buf), L"<%2$w32i --- %2$w32d --- %1$w64x>", g, c);
+  EXPECT_EQ(std::wstring(L"<10 --- 10 --- 5555555566666666>"), buf);
+  swprintf(buf, sizeof(buf), L"<%3$w64x --- %1$w64x --- %2$w64x>", e, f, g);
+  EXPECT_EQ(std::wstring(L"<5555555566666666 --- 1111111122222222 --- 3333333344444444>"), buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swprintf_invalid_w_width) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  wchar_t buf[BUFSIZ];
+  int32_t a = 100;
+  EXPECT_DEATH(swprintf(buf, sizeof(buf), L"%w20d", &a), "%w20 is unsupported");
+#pragma clang diagnostic pop
+}
