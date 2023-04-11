@@ -3181,3 +3181,72 @@ TEST(STDIO_TEST, swscanf_b) {
   EXPECT_EQ('b', ch);
 #pragma clang diagnostic pop
 }
+
+TEST(STDIO_TEST, snprintf_w) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  char buf[BUFSIZ];
+  int8_t a = 5;
+  snprintf(buf, sizeof(buf), "%w8b", a);
+  EXPECT_STREQ("101", buf);
+  int8_t b1 = 0xFF;
+  snprintf(buf, sizeof(buf), "%w8d", b1);
+  EXPECT_STREQ("-1", buf);
+  int8_t b2 = 0x1FF;
+  snprintf(buf, sizeof(buf), "%w8d", b2);
+  EXPECT_STREQ("-1", buf);
+  int16_t c = -1;
+  snprintf(buf, sizeof(buf), "%w16d", c);
+  EXPECT_STREQ("-1", buf);
+  int32_t d = 012;
+  snprintf(buf, sizeof(buf), "%w32i", d);
+  EXPECT_STREQ("10", buf);
+  int64_t e = 17;
+  snprintf(buf, sizeof(buf), "%w64o", e);
+  EXPECT_STREQ("21", buf);
+  uint16_t f = 3;
+  snprintf(buf, sizeof(buf), "%w16u", f);
+  EXPECT_STREQ("3", buf);
+  int64_t g = 59;
+  snprintf(buf, sizeof(buf), "%w64x", g);
+  EXPECT_STREQ("3b", buf);
+  snprintf(buf, sizeof(buf), "%w64X", g);
+  EXPECT_STREQ("3B", buf);
+  EXPECT_DEATH(snprintf(buf, sizeof(buf), "%w20d", &g), "%w20 is unsupported.");
+  snprintf(buf, sizeof(buf), "%w8d and %w64o", b2, e);
+  EXPECT_STREQ("-1 and 21", buf);
+  snprintf(buf, sizeof(buf), "%2$w64o %1$w8d", b2, e);
+  EXPECT_STREQ("21 -1", buf);
+  snprintf(buf, sizeof(buf), "%1$w64x %1$w64X %2$w8d", g, b2);
+  EXPECT_STREQ("3b 3B -1", buf);
+  snprintf(buf, sizeof(buf), "%2$w64X %1$w16u", f, g);
+  EXPECT_STREQ("3B 3", buf);
+  snprintf(buf, sizeof(buf), "%2$w32i %1$w8d", b2, d);
+  EXPECT_STREQ("10 -1", buf);
+  snprintf(buf, sizeof(buf), "%1$w8d %2$w16u", b1, f);
+  EXPECT_STREQ("-1 3", buf);
+  int64_t h = 0x1122334455667788;
+  int64_t i = 0x99aabbccddeef0f0;
+  int64_t j = 0x1022334455667789;
+  snprintf(buf, sizeof(buf), "%1$w64x and %2$w64x or %3$w64x", h, i, j);
+  EXPECT_STREQ("1122334455667788 and 99aabbccddeef0f0 or 1022334455667789", buf);
+  snprintf(buf, sizeof(buf), "%3$w64x and %1$w64x or %2$w64x %3$w64x", h, i, j);
+  EXPECT_STREQ("1022334455667789 and 1122334455667788 or 99aabbccddeef0f0 1022334455667789", buf);
+  snprintf(buf, sizeof(buf), "%2$w64x and %1$w64x", h, i);
+  EXPECT_STREQ("99aabbccddeef0f0 and 1122334455667788", buf);
+  snprintf(buf, sizeof(buf), "%1$w64x and %2$w64x", h, i);
+  EXPECT_STREQ("1122334455667788 and 99aabbccddeef0f0", buf);
+  snprintf(buf, sizeof(buf), "%w64x and %w8d or %w64x", h, a, i);
+  EXPECT_STREQ("1122334455667788 and 5 or 99aabbccddeef0f0", buf);
+  snprintf(buf, sizeof(buf), "%2$w64x and %1$w64x", i, h);
+  EXPECT_STREQ("1122334455667788 and 99aabbccddeef0f0", buf);
+  snprintf(buf, sizeof(buf), "%1$w64x and %2$w64x", i, h);
+  EXPECT_STREQ("99aabbccddeef0f0 and 1122334455667788", buf);
+  snprintf(buf, sizeof(buf), "%1$w64x %2$w32i", h, d);
+  EXPECT_STREQ("1122334455667788 10", buf);
+  snprintf(buf, sizeof(buf), "%2$w32i %1$w64x", h, d);
+  EXPECT_STREQ("10 1122334455667788", buf);
+#pragma clang diagnostic pop
+}
