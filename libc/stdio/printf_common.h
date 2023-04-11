@@ -528,6 +528,12 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
       case 'b':
         ADDUARG();
         break;
+      case 'w':
+        ch = *fmt++;
+        while (is_digit(ch)) {
+          ch = *fmt++;
+        }
+        goto reswitch;
       default: /* "%?" prints ?, unless ? is NUL */
         if (ch == '\0') goto done;
         break;

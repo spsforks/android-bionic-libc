@@ -290,6 +290,45 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 't':
         flags |= PTRINT;
         goto rflag;
+      case 'w':
+        n = 0;
+        ch = *fmt++;
+        while (is_digit(ch)) {
+          APPEND_DIGIT(n, ch);
+          ch = *fmt++;
+        }
+        if (ch == '$') {
+          nextarg = n;
+          if (argtable == nullptr) {
+            argtable = statargtable;
+            if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) {
+              ret = -1;
+              goto error;
+            }
+          }
+          goto rflag;
+        }
+        switch (n) {
+          case 8: {
+            flags |= CHARINT;
+            goto reswitch;
+          }
+          case 16: {
+            flags |= SHORTINT;
+            goto reswitch;
+          }
+          case 32: {
+            goto reswitch;
+          }
+          case 64: {
+            flags |= LLONGINT;
+            goto reswitch;
+          }
+          default: {
+            __fortify_fatal("The value %%w%d is unsupported.", n);
+            break;
+          }
+        }
       case 'z':
         flags |= SIZEINT;
         goto rflag;
