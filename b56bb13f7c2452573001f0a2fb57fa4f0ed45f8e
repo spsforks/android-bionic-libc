@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "759d08f8_697f1711",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "\u003e Please also explain in the commit message that you changed shadow stack register to shadow stack register pointer, and what role A4 plays (or played) in all that.\n\ni\u0027m not sure i understand... we haven\u0027t switched to the actual hardware shadow stack register (though hopefully we can eventually!). we\u0027ve literally just changed x18 to gp.\n\n(a4 is just a temporary register like before. but made more confusing by the mistake i made and you found, plus the other mistake i made :-) )",
+      "parentUuid": "1225f8ac_0ddf55b2",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f7f4ba4_24c57aee",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-04-12T11:40:52Z",
       "side": 1,
       "message": "add a public link https://r.android.com/2526530 ?",
+      "range": {
+        "startLine": 13,
+        "startChar": 12,
+        "endLine": 13,
+        "endChar": 52
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebb43ff5_8ed80a3e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "links decay, but i\u0027ve added the SHA now the other change is actually merged and can\u0027t change.",
+      "parentUuid": "0f7f4ba4_24c57aee",
       "range": {
         "startLine": 13,
         "startChar": 12,
@@ -64,6 +112,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fabafc6a_20e37bc4",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "(this was wrong too.)",
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1be62b3c_fb1fd5fa",
@@ -77,6 +142,30 @@
       "writtenOn": "2023-04-12T11:40:52Z",
       "side": 1,
       "message": "Are we using *low bits of the address* (A4) of the shadow stack? How does it work, masking part of the address and then dereferencing it?\n\nShould it rather be `sd a4,  _JB_GP(a0)` ?",
+      "range": {
+        "startLine": 168,
+        "startChar": 2,
+        "endLine": 168,
+        "endChar": 20
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce8b3c6_51247631",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "yeah, this is nonsense :-)\n\nfixed.",
+      "parentUuid": "1be62b3c_fb1fd5fa",
       "range": {
         "startLine": 168,
         "startChar": 2,
@@ -110,6 +199,53 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1422b35d_b7b7296f",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "732718d6_4b0c53a5",
+      "range": {
+        "startLine": 243,
+        "startChar": 2,
+        "endLine": 243,
+        "endChar": 20
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22b86af3_e135f7f9",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "ah, is this comment change the reason for the question i didn\u0027t understand in the checkin comment?\n\nyeah, there\u0027s no actual change here. i just thought \"shadow stack pointer register\" was clearer. but maybe \"in the register we\u0027re using as the shadow stack pointer\" is best? i think that would have avoided the confusion?",
+      "range": {
+        "startLine": 136,
+        "startChar": 61,
+        "endLine": 136,
+        "endChar": 90
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2258946f_811c521a",
@@ -123,6 +259,30 @@
       "writtenOn": "2023-04-12T11:40:52Z",
       "side": 1,
       "message": "So there must have been a change for ARM64 that moved from SS register to SS pointer register, right?",
+      "range": {
+        "startLine": 113,
+        "startChar": 65,
+        "endLine": 114,
+        "endChar": 21
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "106be14f_92b622d9",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T21:12:06Z",
+      "side": 1,
+      "message": "no, there is no actual hardware register specifically for the shadow stack pointer on arm64. everyone\u0027s just agreed to abuse general purpose register x18 for that.\n\nriscv64 should eventually have a hardware \"ssp\" register (if we get Zsslpcfi, and it looks roughly like it does atm), but that\u0027s a problem for a future rewrite of this code :-)\n\ni\u0027ll rewrite this too to make it clear that this is just \"the register we happen to be using\" rather than an _actual_ ssp register. (new enough versions of x86-64 have an ssp, but we don\u0027t have space in the x86-64 jmp_buf to retcon that in anyway :-( )",
+      "parentUuid": "2258946f_811c521a",
       "range": {
         "startLine": 113,
         "startChar": 65,
