@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1225f8ac_0ddf55b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:40:52Z",
+      "side": 1,
+      "message": "Please also explain in the commit message that you changed shadow stack register to shadow stack register *pointer*, and what role A4 plays (or played) in all that.\n\nThis seems to be an unrelated change, different from the move X18 -\u003e GP. Was it necessary to collapse them in one?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f7f4ba4_24c57aee",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:40:52Z",
+      "side": 1,
+      "message": "add a public link https://r.android.com/2526530 ?",
+      "range": {
+        "startLine": 13,
+        "startChar": 12,
+        "endLine": 13,
+        "endChar": 52
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743e1f68_e6ced4ea",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -14,6 +60,75 @@
       "writtenOn": "2023-04-06T21:55:20Z",
       "side": 1,
       "message": "untested, obviously, for lack of a suitable compiler. but uploaded in case this is useful to anyone for their testing.",
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1be62b3c_fb1fd5fa",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:40:52Z",
+      "side": 1,
+      "message": "Are we using *low bits of the address* (A4) of the shadow stack? How does it work, masking part of the address and then dereferencing it?\n\nShould it rather be `sd a4,  _JB_GP(a0)` ?",
+      "range": {
+        "startLine": 168,
+        "startChar": 2,
+        "endLine": 168,
+        "endChar": 20
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "732718d6_4b0c53a5",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:40:52Z",
+      "side": 1,
+      "message": "...especially since you restore it this way.",
+      "range": {
+        "startLine": 243,
+        "startChar": 2,
+        "endLine": 243,
+        "endChar": 20
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2258946f_811c521a",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:40:52Z",
+      "side": 1,
+      "message": "So there must have been a change for ARM64 that moved from SS register to SS pointer register, right?",
+      "range": {
+        "startLine": 113,
+        "startChar": 65,
+        "endLine": 114,
+        "endChar": 21
+      },
       "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
