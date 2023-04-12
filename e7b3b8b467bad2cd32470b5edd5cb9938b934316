@@ -56,6 +56,30 @@
       },
       "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "656e2c40_a4123ca5",
+        "filename": "libc/include/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-12T19:44:02Z",
+      "side": 1,
+      "message": "i was going to argue \"but they\u0027re all basically historical accident, so there\u0027s nothing to say\" ... but that\u0027s probably worth explicitly saying. https://android-review.googlesource.com/c/platform/bionic/+/2533806",
+      "parentUuid": "2692fccb_9fae5c14",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
