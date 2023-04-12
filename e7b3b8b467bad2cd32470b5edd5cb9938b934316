@@ -33,6 +33,29 @@
       "message": "(+others who\u0027ll want to know about this ABI break.)",
       "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2692fccb_9fae5c14",
+        "filename": "libc/include/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-12T11:05:16Z",
+      "side": 1,
+      "message": "It would be great to document how these constants (for all arches) came to be.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "e7b3b8b467bad2cd32470b5edd5cb9938b934316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
