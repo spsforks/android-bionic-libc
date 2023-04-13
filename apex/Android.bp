@@ -52,6 +52,11 @@ apex {
             ],
         },
     },
+    arch: {
+       arm64: {
+           native_shared_libs: ["libclang_rt.hwasan"],
+       },
+    },
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
     prebuilts: [
