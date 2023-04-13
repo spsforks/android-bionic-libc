@@ -46,6 +46,30 @@
       },
       "revId": "7638126a4c7accf7460961dfaa5e9dbceebc22bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cdc864f_35316ae2",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T20:36:23Z",
+      "side": 1,
+      "message": "I mark it as `__BIONIC_COMPLICATED_NULLNESS` because here: http://cs/android/bionic/libc/upstream-openbsd/lib/libc/locale/wcsxfrm.c;l\u003d38;rcl\u003d14281a7fa039f367f427f6454905c8b6cd93e955\n\nIf `__n` is not 0, it can\u0027t be null.",
+      "parentUuid": "80919e80_43e957d6",
+      "range": {
+        "startLine": 110,
+        "startChar": 24,
+        "endLine": 110,
+        "endChar": 32
+      },
+      "revId": "7638126a4c7accf7460961dfaa5e9dbceebc22bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
