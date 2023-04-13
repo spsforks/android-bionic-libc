@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42db4b87_f648310d",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T04:57:17Z",
+      "side": 1,
+      "message": "This should be nullable, too.",
+      "range": {
+        "startLine": 110,
+        "startChar": 24,
+        "endLine": 110,
+        "endChar": 32
+      },
+      "revId": "7638126a4c7accf7460961dfaa5e9dbceebc22bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
