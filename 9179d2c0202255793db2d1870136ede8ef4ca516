@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01c3e395_d743a699",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T01:46:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9f28acf_07ee754b",
+      "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6fbf791c_e44247eb",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-04-11T22:52:08Z",
       "side": 1,
       "message": "the `32` case should just be `int`, not `long` (this would be wrong for LP64.)",
+      "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d36ebb39_b9149500",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T01:46:47Z",
+      "side": 1,
+      "message": "Same method like case \u0027d\u0027 and case \u0027i\u0027. Done.",
+      "parentUuid": "6fbf791c_e44247eb",
       "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -58,6 +94,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e8bea89_3c65f5bc",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T01:46:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "165fa64b_befc2fb0",
+      "range": {
+        "startLine": 555,
+        "startChar": 28,
+        "endLine": 555,
+        "endChar": 58
+      },
+      "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e97bc9c_81eb0ba7",
@@ -71,6 +131,24 @@
       "writtenOn": "2023-04-11T22:52:08Z",
       "side": 1,
       "message": "it\u0027s probably more interesting to test with large values?\n\nfor example, the `printf(\"%w8d %w8d\", 0xFF, 0x1FF);` example from the WG14 N2680 proposal is an interesting test.",
+      "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1faa0873_cce7dcc9",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3189,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-13T01:46:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e97bc9c_81eb0ba7",
       "revId": "9179d2c0202255793db2d1870136ede8ef4ca516",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
