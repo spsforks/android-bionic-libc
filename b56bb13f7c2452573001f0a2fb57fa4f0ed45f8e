@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3c89045_671a6a61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-13T10:34:32Z",
+      "side": 1,
+      "message": "Right, at first I thought you added one more layer of dereference.",
+      "parentUuid": "759d08f8_697f1711",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f7f4ba4_24c57aee",
@@ -125,6 +149,24 @@
       "writtenOn": "2023-04-12T21:12:06Z",
       "side": 1,
       "message": "(this was wrong too.)",
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffa33501_aa2406e7",
+        "filename": "libc/arch-riscv64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-13T10:34:32Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "fabafc6a_20e37bc4",
       "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -283,6 +325,30 @@
       "side": 1,
       "message": "no, there is no actual hardware register specifically for the shadow stack pointer on arm64. everyone\u0027s just agreed to abuse general purpose register x18 for that.\n\nriscv64 should eventually have a hardware \"ssp\" register (if we get Zsslpcfi, and it looks roughly like it does atm), but that\u0027s a problem for a future rewrite of this code :-)\n\ni\u0027ll rewrite this too to make it clear that this is just \"the register we happen to be using\" rather than an _actual_ ssp register. (new enough versions of x86-64 have an ssp, but we don\u0027t have space in the x86-64 jmp_buf to retcon that in anyway :-( )",
       "parentUuid": "2258946f_811c521a",
+      "range": {
+        "startLine": 113,
+        "startChar": 65,
+        "endLine": 114,
+        "endChar": 21
+      },
+      "revId": "b56bb13f7c2452573001f0a2fb57fa4f0ed45f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43b7860b_cc8ccd9a",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2023-04-13T10:34:32Z",
+      "side": 1,
+      "message": "Thanks, now I understand, I thought you had two different algorithms, one storing shadow stack address, and the other one storing the address of address (termed \"shadow stack pointer register\").",
+      "parentUuid": "106be14f_92b622d9",
       "range": {
         "startLine": 113,
         "startChar": 65,
