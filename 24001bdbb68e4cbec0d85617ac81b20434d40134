@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f651b5c0_79eba2ec",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-14T18:10:56Z",
+      "side": 1,
+      "message": "ohhh I see. `wNd/i/...` is like a type `int` with fixed size, so yes, `$` is no need BUT the `$` test should be included!",
+      "parentUuid": "6dbbdcec_2fecd2a5",
+      "range": {
+        "startLine": 300,
+        "startChar": 8,
+        "endLine": 310,
+        "endChar": 9
+      },
+      "revId": "24001bdbb68e4cbec0d85617ac81b20434d40134",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88a64604_12114688",
