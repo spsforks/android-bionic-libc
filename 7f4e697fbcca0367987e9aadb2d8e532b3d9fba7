@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8686b676_9df5c7fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-14T21:01:34Z",
+      "side": 1,
+      "message": "otherwise lgtm, if this passes the tests on 32-bit too now.\n\n(if not, i\u0027d suggest adding a test that use $ and w together for every size in ascending order, and another in descending order. that way it should be pretty easy to spot where the argument handling is getting mixed up.)",
+      "revId": "7f4e697fbcca0367987e9aadb2d8e532b3d9fba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00cb6994_2968023c",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-14T21:01:34Z",
+      "side": 1,
+      "message": "just `\"%%w%d is unsupported\"` for both of these; \"value\" isn\u0027t really right (i think \"conversion specification\" would be technically correct, though that\u0027s not _really_ right either, because this is actually just a \"length modifier\"? easier to just not say anything!).\n\n(and we don\u0027t have punctuation at the end of our fortify fatal errors. there\u0027s no real reason why not, but we should try to be consistent.)",
+      "range": {
+        "startLine": 548,
+        "startChar": 28,
+        "endLine": 548,
+        "endChar": 61
+      },
+      "revId": "7f4e697fbcca0367987e9aadb2d8e532b3d9fba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
