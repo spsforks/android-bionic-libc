@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6dbbdcec_2fecd2a5",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-14T15:49:20Z",
+      "side": 1,
+      "message": "this seems unlikely? why would you need a special case for `$` here? any `$` should already have been handled long before we get to the `w`...",
+      "range": {
+        "startLine": 300,
+        "startChar": 8,
+        "endLine": 310,
+        "endChar": 9
+      },
+      "revId": "24001bdbb68e4cbec0d85617ac81b20434d40134",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "88a64604_12114688",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 3
