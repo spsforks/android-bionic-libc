@@ -1852,8 +1852,8 @@ cc_library {
         hwaddress: true,
     },
     enabled: false,
-    arch: {
-        arm64: {
+    target: {
+        bionic_arm64: {
             enabled: true,
         },
     },
