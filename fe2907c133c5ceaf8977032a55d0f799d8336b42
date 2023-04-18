@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d20fccc5_77a97cae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2023-04-18T19:38:51Z",
+      "side": 1,
+      "message": "Spoke to enh and usta offline. There is a failing unit test even after this change. Bypassing presubmit since it unblocks builds.",
+      "revId": "fe2907c133c5ceaf8977032a55d0f799d8336b42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
