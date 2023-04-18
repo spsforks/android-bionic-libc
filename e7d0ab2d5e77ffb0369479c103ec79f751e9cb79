@@ -1,0 +1,291 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d5f21d3_1fcbe42d",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "remove the punctuation, and fix the other copy of this string in the other file to match this one.",
+      "range": {
+        "startLine": 548,
+        "startChar": 49,
+        "endLine": 548,
+        "endChar": 50
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "283843eb_632b4fcb",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "(here)",
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "239cc297_239baa91",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "(remember you\u0027ll want a test for the wchar_t function too)",
+      "range": {
+        "startLine": 3185,
+        "startChar": 17,
+        "endLine": 3185,
+        "endChar": 27
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e364782d_215bf403",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "this style is a bit weird. i think it makes more sense to write 0b101 for the literal too, if you\u0027re testing binary output.",
+      "range": {
+        "startLine": 3191,
+        "startChar": 13,
+        "endLine": 3193,
+        "endChar": 19
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adb79559_6c3877cf",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3199,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "(which makes it clearer that these are testing a special case. i\u0027d still probably break these out into their own test.)",
+      "range": {
+        "startLine": 3194,
+        "startChar": 2,
+        "endLine": 3199,
+        "endChar": 26
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "049269c3_22232e57",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "yeah, this sequence is especially weird, with the literals being the opposite of the output!",
+      "range": {
+        "startLine": 3203,
+        "startChar": 14,
+        "endLine": 3208,
+        "endChar": 18
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "899167c5_0fbb2243",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "this might be a more useful test with `f \u003d -1`? otherwise i\u0027m not quite sure why it\u0027s included? (comments about _what_ specifically you\u0027re testing can be helpful, and often will make you realize \"actually, i don\u0027t want a comment for this block of tests --- i want to break them out into their own test function, and give that a name that makes it clear what i\u0027m testing here\".)",
+      "range": {
+        "startLine": 3209,
+        "startChar": 2,
+        "endLine": 3211,
+        "endChar": 25
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7452b81_915bec0f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "0x3b.",
+      "range": {
+        "startLine": 3212,
+        "startChar": 14,
+        "endLine": 3212,
+        "endChar": 16
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c3d3936_e911edbd",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "break this into a separate `_invalid_w_width` test?",
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f2977f7_19e71ddd",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "is there a reason for this test? what does it test that isn\u0027t already tested?",
+      "range": {
+        "startLine": 3218,
+        "startChar": 1,
+        "endLine": 3219,
+        "endChar": 33
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc5ee898_4469c111",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "are these useful given the later set of tests? if they _do_ test something that the later tests don\u0027t, explicitly say what that is?",
+      "range": {
+        "startLine": 3220,
+        "startChar": 2,
+        "endLine": 3229,
+        "endChar": 28
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c71c8267_382e56fe",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "(nit: i\u0027d probably leave the english words out here, because they don\u0027t really mean anything but they _seem_ like they might. just put `---` or something if you want some \"punctuation\" between the numbers in the output to make them easier to read. that\u0027s probably clearer than the words anyway.)",
+      "range": {
+        "startLine": 3233,
+        "startChar": 38,
+        "endLine": 3233,
+        "endChar": 41
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e67a14fa_dc7aabeb",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-18T22:30:11Z",
+      "side": 1,
+      "message": "looking at all these (and given that we _only_ had trouble with 32 vs 64, and not (say) 16 vs 32, i think just using 0x11111111\u002722222222, 0x33333333\u002744444444, and 0x55555555\u002766666666 is sufficient but clearer?).",
+      "range": {
+        "startLine": 3250,
+        "startChar": 19,
+        "endLine": 3250,
+        "endChar": 35
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
