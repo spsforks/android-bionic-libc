@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41065d63_840c7382",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1878380
+      },
+      "writtenOn": "2023-04-19T19:48:37Z",
+      "side": 1,
+      "message": "For future reference, we might need to install the bootstrap variant of libc_hwasan if we decide to create stubs for this library (aosp/2546590)\n\nabtd run with passing bionic-unit-tests: https://android-build.googleplex.com/builds/abtd/run/L15000000960026466",
+      "revId": "a43de5cbfef091f700b4f0d1176fde91f36a45fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
