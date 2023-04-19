@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bebb86c9_0b0c1b48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f281bd5_b6a26414",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "(i don\u0027t have a strong opinion on where this should go, but it should be in the same place in both copies :-) either move this next to \u0027u\u0027 and \u0027X\u0027 like in the other file, or move the other file to be between \u0027t\u0027 and \u0027z\u0027 like this file...)",
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4cb4bca5_dbcd7e9c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3199,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "use constants that actually fill more of the bits?\n\nthese tests would all pass even if you had a bug that meant we were only looking at the bottom 8 bits...",
+      "range": {
+        "startLine": 3199,
+        "startChar": 14,
+        "endLine": 3199,
+        "endChar": 17
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c248555_db586874",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3216,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "\"argument_reordering\" is probably better than \"combination\"",
+      "range": {
+        "startLine": 3216,
+        "startChar": 28,
+        "endLine": 3216,
+        "endChar": 39
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a8d7e27_1582c091",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "use a 16-bit constant for b and 32-bit constants for c and d?",
+      "range": {
+        "startLine": 3221,
+        "startChar": 14,
+        "endLine": 3224,
+        "endChar": 20
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5284318b_406f943f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-19T22:34:55Z",
+      "side": 1,
+      "message": "did you miss `$`s in this format string?",
+      "range": {
+        "startLine": 3228,
+        "startChar": 31,
+        "endLine": 3228,
+        "endChar": 35
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
