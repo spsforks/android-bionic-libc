@@ -125,6 +125,30 @@
       },
       "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f796973_66348d0a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T22:43:38Z",
+      "side": 1,
+      "message": "Nope, I did this on purpose and try to see the result when there are more than 1 argument.",
+      "parentUuid": "5284318b_406f943f",
+      "range": {
+        "startLine": 3228,
+        "startChar": 31,
+        "endLine": 3228,
+        "endChar": 35
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
