@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43adc632_f1a1708d",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T22:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f281bd5_b6a26414",
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4cb4bca5_dbcd7e9c",
@@ -58,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ab20156_d5102461",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3199,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T22:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cb4bca5_dbcd7e9c",
+      "range": {
+        "startLine": 3199,
+        "startChar": 14,
+        "endLine": 3199,
+        "endChar": 17
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c248555_db586874",
@@ -71,6 +113,30 @@
       "writtenOn": "2023-04-19T22:34:55Z",
       "side": 1,
       "message": "\"argument_reordering\" is probably better than \"combination\"",
+      "range": {
+        "startLine": 3216,
+        "startChar": 28,
+        "endLine": 3216,
+        "endChar": 39
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38de4cca_7942358f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3216,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T22:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c248555_db586874",
       "range": {
         "startLine": 3216,
         "startChar": 28,
@@ -165,6 +231,30 @@
       "side": 1,
       "message": "why? what does that test? (assuming that your earlier tests have been changed to actually use 16-, 32-, and 64-bit constants, that is.)",
       "parentUuid": "5f796973_66348d0a",
+      "range": {
+        "startLine": 3228,
+        "startChar": 31,
+        "endLine": 3228,
+        "endChar": 35
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30895435_fa0ba51d",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T22:59:43Z",
+      "side": 1,
+      "message": "I think it is similar to ```%1$w8u %2$w16o``` without `$` case. Maybe we can test there is no overflow and underflow when there is no `$`? That\u0027s why I want to test it😂.",
+      "parentUuid": "b378a52e_21725b97",
       "range": {
         "startLine": 3228,
         "startChar": 31,
