@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24c02905_756b71c6",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d5f21d3_1fcbe42d",
+      "range": {
+        "startLine": 548,
+        "startChar": 49,
+        "endLine": 548,
+        "endChar": 50
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "283843eb_632b4fcb",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-04-18T22:30:11Z",
       "side": 1,
       "message": "(here)",
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d3bba58_5bb73045",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "283843eb_632b4fcb",
       "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a69a6ce_78559f44",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3185,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239cc297_239baa91",
+      "range": {
+        "startLine": 3185,
+        "startChar": 17,
+        "endLine": 3185,
+        "endChar": 27
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e364782d_215bf403",
@@ -77,6 +143,30 @@
       "writtenOn": "2023-04-18T22:30:11Z",
       "side": 1,
       "message": "this style is a bit weird. i think it makes more sense to write 0b101 for the literal too, if you\u0027re testing binary output.",
+      "range": {
+        "startLine": 3191,
+        "startChar": 13,
+        "endLine": 3193,
+        "endChar": 19
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5b05ba3_d3d84b85",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3193,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e364782d_215bf403",
       "range": {
         "startLine": 3191,
         "startChar": 13,
@@ -133,6 +223,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7901c6e7_101a06e7",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3208,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "049269c3_22232e57",
+      "range": {
+        "startLine": 3203,
+        "startChar": 14,
+        "endLine": 3208,
+        "endChar": 18
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "899167c5_0fbb2243",
@@ -146,6 +260,30 @@
       "writtenOn": "2023-04-18T22:30:11Z",
       "side": 1,
       "message": "this might be a more useful test with `f \u003d -1`? otherwise i\u0027m not quite sure why it\u0027s included? (comments about _what_ specifically you\u0027re testing can be helpful, and often will make you realize \"actually, i don\u0027t want a comment for this block of tests --- i want to break them out into their own test function, and give that a name that makes it clear what i\u0027m testing here\".)",
+      "range": {
+        "startLine": 3209,
+        "startChar": 2,
+        "endLine": 3211,
+        "endChar": 25
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bb62d01_1d8f2392",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3211,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "I want to test unsigned int. And yes, `f \u003d -1` is a good test.",
+      "parentUuid": "899167c5_0fbb2243",
       "range": {
         "startLine": 3209,
         "startChar": 2,
@@ -179,6 +317,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a214c704_fed61d48",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3212,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7452b81_915bec0f",
+      "range": {
+        "startLine": 3212,
+        "startChar": 14,
+        "endLine": 3212,
+        "endChar": 16
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c3d3936_e911edbd",
@@ -196,6 +358,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a214d34e_b3e9542b",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3217,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c3d3936_e911edbd",
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f2977f7_19e71ddd",
@@ -209,6 +389,30 @@
       "writtenOn": "2023-04-18T22:30:11Z",
       "side": 1,
       "message": "is there a reason for this test? what does it test that isn\u0027t already tested?",
+      "range": {
+        "startLine": 3218,
+        "startChar": 1,
+        "endLine": 3219,
+        "endChar": 33
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d340c96e_c4cf5af9",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3219,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f2977f7_19e71ddd",
       "range": {
         "startLine": 3218,
         "startChar": 1,
@@ -242,6 +446,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cc07ddf_e58febbd",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3229,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc5ee898_4469c111",
+      "range": {
+        "startLine": 3220,
+        "startChar": 2,
+        "endLine": 3229,
+        "endChar": 28
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c71c8267_382e56fe",
@@ -265,6 +493,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0915ca4_3618dbeb",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3233,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c71c8267_382e56fe",
+      "range": {
+        "startLine": 3233,
+        "startChar": 38,
+        "endLine": 3233,
+        "endChar": 41
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e67a14fa_dc7aabeb",
@@ -278,6 +530,30 @@
       "writtenOn": "2023-04-18T22:30:11Z",
       "side": 1,
       "message": "looking at all these (and given that we _only_ had trouble with 32 vs 64, and not (say) 16 vs 32, i think just using 0x11111111\u002722222222, 0x33333333\u002744444444, and 0x55555555\u002766666666 is sufficient but clearer?).",
+      "range": {
+        "startLine": 3250,
+        "startChar": 19,
+        "endLine": 3250,
+        "endChar": 35
+      },
+      "revId": "e7d0ab2d5e77ffb0369479c103ec79f751e9cb79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d54db964_d5c9887f",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3250,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-19T21:47:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e67a14fa_dc7aabeb",
       "range": {
         "startLine": 3250,
         "startChar": 19,
