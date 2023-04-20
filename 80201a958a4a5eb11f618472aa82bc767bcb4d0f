@@ -22,6 +22,30 @@
       },
       "revId": "80201a958a4a5eb11f618472aa82bc767bcb4d0f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76e45c5b_b99559b8",
+        "filename": "libc/include/sys/sem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-20T21:26:33Z",
+      "side": 1,
+      "message": "Oh wait, yes, it should be noonull. Otherwise, `EFAULT` error arises.",
+      "parentUuid": "ab9442ce_19ae4477",
+      "range": {
+        "startLine": 56,
+        "startChar": 39,
+        "endLine": 56,
+        "endChar": 48
+      },
+      "revId": "80201a958a4a5eb11f618472aa82bc767bcb4d0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
