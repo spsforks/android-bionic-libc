@@ -194,6 +194,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eabd4735_e49b144c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3224,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-20T19:14:01Z",
+      "side": 1,
+      "message": "Remove these constants and only test 32 vs 64 with \u0027$\u0027.",
+      "parentUuid": "f31d9162_368c1833",
+      "range": {
+        "startLine": 3221,
+        "startChar": 14,
+        "endLine": 3224,
+        "endChar": 20
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5284318b_406f943f",
@@ -303,6 +327,30 @@
       "side": 1,
       "message": "well, it wasn\u0027t overflow, remember --- it was confusion on ILP32 about whether we were pulling two items off the stack or just one. so this specific test doesn\u0027t test that at all: int8 and int16 are both promoted to int32 on the stack for an ILP32 varargs function call. 32 vs 64 is the only actual difference.\n\n(i hadn\u0027t actually noticed until now that the test on L3230 is 32 vs 8 vs 8!)\n\nthis is why i\u0027m recommending setting more bits in each value: that way you\u0027ll recognize truncation without actually needing a second argument. i only suggested you print out multiple arguments while debugging because (a) i didn\u0027t want to SPOILER!!! you and (b) i thought it was helpful for trying to work out what the problem was, by comparing which sizes worked and which didn\u0027t. for _testing_ you don\u0027t need that, and i think it makes the test a bit harder to follow [because the reader is asking \"why are we doing this?\"]. i think just a single argument with `$` should actually reproduce the bug, if you reintroduce it, no?",
       "parentUuid": "30895435_fa0ba51d",
+      "range": {
+        "startLine": 3228,
+        "startChar": 31,
+        "endLine": 3228,
+        "endChar": 35
+      },
+      "revId": "050a46af9b089578acf4f19fe4c7f371b65514fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f03be6da_8c275446",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-20T19:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a84d9e5_e8941400",
       "range": {
         "startLine": 3228,
         "startChar": 31,
