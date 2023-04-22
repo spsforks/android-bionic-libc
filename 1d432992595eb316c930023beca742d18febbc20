@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd2b4ba6_2025614d",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-22T01:19:07Z",
+      "side": 1,
+      "message": "Same issue as smoreland mentioned in the email.",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 25
+      },
+      "revId": "1d432992595eb316c930023beca742d18febbc20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
