@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "175a891f_2fb750cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1102879
+      },
+      "writtenOn": "2023-04-23T06:00:28Z",
+      "side": 1,
+      "message": "Hi, all\nI\u0027ve excluded libdexfile and libdexfilesupport when building for recovery variant, the build check should pass now",
+      "revId": "9273203f2f44bbfb966639469f59dcad649ea163",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
