@@ -16,6 +16,23 @@
       "message": "Hi, all\nI\u0027ve excluded libdexfile and libdexfilesupport when building for recovery variant, the build check should pass now",
       "revId": "9273203f2f44bbfb966639469f59dcad649ea163",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "798fc0be_704e44c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1102879
+      },
+      "writtenOn": "2023-04-23T07:17:52Z",
+      "side": 1,
+      "message": "Pardon me, I\u0027ll re-test this CL to make sure it is indeed needed now, if not I\u0027ll abandon this.",
+      "revId": "9273203f2f44bbfb966639469f59dcad649ea163",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
