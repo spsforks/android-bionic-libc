@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9276253_c059ee01",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-24T20:09:33Z",
+      "side": 1,
+      "message": "i don\u0027t think so? i think it\u0027s snprintf (and family) that should say this rather than _Nullable, no?",
+      "range": {
+        "startLine": 55,
+        "startChar": 76,
+        "endLine": 55,
+        "endChar": 105
+      },
+      "revId": "8c1b427aa828191a51a022b82f868414a7d15292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9638a3c6_f0cb4f85",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-24T20:09:33Z",
+      "side": 1,
+      "message": "i don\u0027t think these are _Nullable either?",
+      "range": {
+        "startLine": 63,
+        "startChar": 19,
+        "endLine": 63,
+        "endChar": 28
+      },
+      "revId": "8c1b427aa828191a51a022b82f868414a7d15292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
