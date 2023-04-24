@@ -87,6 +87,30 @@
       },
       "revId": "e97abe34beeb426f66f4b0f253c08fdeab14b95b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79a6bb05_43807cfa",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-24T18:26:06Z",
+      "side": 1,
+      "message": "Got it!",
+      "parentUuid": "0e3b53e1_0e8e827a",
+      "range": {
+        "startLine": 55,
+        "startChar": 77,
+        "endLine": 55,
+        "endChar": 86
+      },
+      "revId": "e97abe34beeb426f66f4b0f253c08fdeab14b95b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
