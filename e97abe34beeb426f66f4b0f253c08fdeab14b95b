@@ -39,6 +39,30 @@
       },
       "revId": "e97abe34beeb426f66f4b0f253c08fdeab14b95b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be0e3b9f_1a7be486",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-24T17:27:09Z",
+      "side": 1,
+      "message": "I think it is possible.\nFrom http://cs/android/bionic/libc/bionic/ether_ntoa.c;l\u003d38;rcl\u003da9b223b12d050258038cdf6c6acb9370e9842b7a and \nhttps://source.corp.google.com/android/bionic/libc/include/stdio.h;l\u003d254?q\u003dsnprintf\u0026sq\u003d\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n`buf` will be returned and `buf` can be null. \nSo I think it can be null.",
+      "parentUuid": "00ae98b3_d5009a35",
+      "range": {
+        "startLine": 55,
+        "startChar": 77,
+        "endLine": 55,
+        "endChar": 86
+      },
+      "revId": "e97abe34beeb426f66f4b0f253c08fdeab14b95b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
