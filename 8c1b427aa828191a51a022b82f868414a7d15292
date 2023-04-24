@@ -45,6 +45,30 @@
       },
       "revId": "8c1b427aa828191a51a022b82f868414a7d15292",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c9a23e5_fadd38b3",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-24T21:29:29Z",
+      "side": 1,
+      "message": "I think it can be null. http://cs/android/bionic/libc/bionic/ether_aton.c;l\u003d76;rcl\u003db5e0d18d142fb4089cb838d5f45982b84d072e72\nAnd the comment.\nAnd http://man7.org/linux/man-pages/man3/ether_aton_r.3.html\n\n```ether_aton() returns NULL if the address is invalid.```",
+      "parentUuid": "9638a3c6_f0cb4f85",
+      "range": {
+        "startLine": 63,
+        "startChar": 19,
+        "endLine": 63,
+        "endChar": 28
+      },
+      "revId": "8c1b427aa828191a51a022b82f868414a7d15292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
