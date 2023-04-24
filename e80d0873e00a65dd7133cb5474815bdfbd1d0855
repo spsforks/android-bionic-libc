@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8418021_7f0c3b81",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-24T18:40:19Z",
+      "side": 1,
+      "message": "all of these should be _Nonnull, no?",
+      "range": {
+        "startLine": 47,
+        "startChar": 6,
+        "endLine": 47,
+        "endChar": 15
+      },
+      "revId": "e80d0873e00a65dd7133cb5474815bdfbd1d0855",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
