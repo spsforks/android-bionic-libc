@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec559923_c740b5cc",
+        "filename": "libc/include/netinet/ether.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-25T18:18:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9276253_c059ee01",
+      "range": {
+        "startLine": 55,
+        "startChar": 76,
+        "endLine": 55,
+        "endChar": 105
+      },
+      "revId": "8c1b427aa828191a51a022b82f868414a7d15292",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9638a3c6_f0cb4f85",
