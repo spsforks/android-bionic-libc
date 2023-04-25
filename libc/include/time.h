@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _TIME_H_
-#define _TIME_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
@@ -105,9 +104,28 @@ int timer_getoverrun(timer_t _Nonnull __timer);
 time_t timelocal(struct tm* _Nonnull __tm);
 time_t timegm(struct tm* _Nonnull __tm);
 
+/**
+ * The only valid timebase for timespec_get() and timespec_getres().
+ * Corresponds to CLOCK_REALTIME.
+ */
 #define TIME_UTC 1
+
+/**
+ * timespec_get(3) is equivalent to clock_gettime().
+ *
+ * Returns the base on success and returns 0 on failure.
+ *
+ * Available since API level 29.
+ */
 int timespec_get(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(29);
 
-__END_DECLS
+/**
+ * timespec_getres(3) is equivalent to clock_getres().
+ *
+ * Returns the base on success and returns 0 on failure.
+ *
+ * Available since API level 35.
+ */
+int timespec_getres(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(35);
 
-#endif
+__END_DECLS

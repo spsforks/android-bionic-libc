@@ -1254,8 +1254,36 @@ TEST(time, strptime_s_nothing) {
 TEST(time, timespec_get) {
 #if __BIONIC__
   timespec ts = {};
-  ASSERT_EQ(0, timespec_get(&ts, 123));
   ASSERT_EQ(TIME_UTC, timespec_get(&ts, TIME_UTC));
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_get_invalid) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(0, timespec_get(&ts, 123));
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_getres) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(TIME_UTC, timespec_getres(&ts, TIME_UTC));
+  ASSERT_EQ(1, ts.tv_nsec);
+  ASSERT_EQ(0, ts.tv_sec);
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_getres_invalid) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(0, timespec_getres(&ts, 123));
 #else
   GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
