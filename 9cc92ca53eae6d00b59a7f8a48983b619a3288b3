@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "327c1ce8_5385f27e",
+        "filename": "docs/status.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-04-25T19:50:04Z",
+      "side": 1,
+      "message": "Do you want to put some of what you wrote in the comment here? People are more likely to see this than the commit message.",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "643c68d5_eca2d6a0",
+        "filename": "libc/bionic/timespec_getres.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-04-25T19:50:04Z",
+      "side": 1,
+      "message": "Docs say \"timespec_getres(3) is equivalent to clock_getres().\". What\u0027s the `base \u003d\u003d TIME_UTC` bit here? We only support one base? Should be in the docs if so.",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
