@@ -314,6 +314,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
                             size_t* argtablesiz) {
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
+  bool fast = false;        /*integer argument with fastest minimum-width mode*/
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -530,13 +531,24 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         break;
       case 'w':
         n = 0;
+        fast = false;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
         }
         if (n == 64) {
           flags |= LLONGINT;
+        } else {
+          if (n != 8 && fast) {
+#if defined(__LP64__)
+            flags |= LLONGINT;
+#endif
+          }
         }
         goto reswitch;
       default: /* "%?" prints ?, unless ? is NUL */
@@ -824,4 +836,29 @@ struct helpers {
     return convbuf;
   }
 
+  // Trasnlate an fixed size integer argument for the %w/%wf format to a
+  // flag representation. Supported sizes are 8, 16, 32, and 64 so far.
+  // Read the bit in bionic/libc/include/stdint.h
+  static int w_to_flag(int size, bool fast) {
+    if (!valid_w_size(size)) {
+      __fortify_fatal("%%w%s%d is unsupported", fast ? "f" : "", size);
+      return -1;
+    }
+    if (size == 8) return CHARINT;
+    if (size == 64) return LLONGINT;
+    if (fast)
+      return (sizeof(void*) == 8) ? LLONGINT : 0;
+    else
+      return size == 16 ? SHORTINT : 0;
+  }
+
+  // Verify whether the size is supported in %w/%wfN.
+  // Supported sizes are 8, 16, 32, and 64 so far.
+  static bool valid_w_size(int size) {
+    int supported_values[4] = {8, 16, 32, 64};
+    for (int v : supported_values) {
+      if (size == v) return true;
+    }
+    return false;
+  }
 };

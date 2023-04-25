@@ -45,6 +45,7 @@
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int caller_errno = errno;
   int n, n2;
+  bool fast = false;        /*integer argument with fastest minimum-width mode*/
   CHAR_TYPE* cp;            /* handy char pointer (short term usage) */
   CHAR_TYPE sign;           /* sign prefix (' ', '+', '-', or \0) */
   int flags;           /* flags as above */
@@ -523,32 +524,18 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         goto nosign;
       case 'w':
         n = 0;
+        fast = false;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
         }
-        switch (n) {
-          case 8: {
-            flags |= CHARINT;
-            goto reswitch;
-          }
-          case 16: {
-            flags |= SHORTINT;
-            goto reswitch;
-          }
-          case 32: {
-            goto reswitch;
-          }
-          case 64: {
-            flags |= LLONGINT;
-            goto reswitch;
-          }
-          default: {
-            __fortify_fatal("%%w%d is unsupported", n);
-            break;
-          }
-        }
+        flags |= helpers::w_to_flag(n, fast);
+        goto reswitch;
       case 'X':
         xdigs = xdigs_upper;
         goto hex;
