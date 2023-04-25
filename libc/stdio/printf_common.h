@@ -314,6 +314,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
                             size_t* argtablesiz) {
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
+  bool fast = false;        /*integer argument with fastest minimum-width mode*/
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -531,12 +532,22 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
       case 'w':
         n = 0;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
         }
         if (n == 64) {
           flags |= LLONGINT;
+        } else {
+          if (n != 8 && fast) {
+#if defined(__LP64__)
+            flags |= LLONGINT;
+#endif
+          }
         }
         goto reswitch;
       default: /* "%?" prints ?, unless ? is NUL */
