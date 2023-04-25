@@ -45,6 +45,7 @@
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int caller_errno = errno;
   int n, n2;
+  bool fast = false;        /*integer argument with fastest minimum-width mode*/
   CHAR_TYPE* cp;            /* handy char pointer (short term usage) */
   CHAR_TYPE sign;           /* sign prefix (' ', '+', '-', or \0) */
   int flags;           /* flags as above */
@@ -523,7 +524,12 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         goto nosign;
       case 'w':
         n = 0;
+        fast = false;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
@@ -534,10 +540,21 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
             goto reswitch;
           }
           case 16: {
-            flags |= SHORTINT;
+            if (fast) {
+#if defined(__LP64__)
+              flags |= LLONGINT;
+#endif
+            } else {
+              flags |= SHORTINT;
+            }
             goto reswitch;
           }
           case 32: {
+            if (fast) {
+#if defined(__LP64__)
+              flags |= LLONGINT;
+#endif
+            }
             goto reswitch;
           }
           case 64: {
@@ -545,7 +562,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
             goto reswitch;
           }
           default: {
-            __fortify_fatal("%%w%d is unsupported", n);
+            __fortify_fatal("%%w%s%d is unsupported", fast ? "f" : "", n);
             break;
           }
         }
