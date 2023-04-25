@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9272df3b_fa147350",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-25T21:38:21Z",
+      "side": 1,
+      "message": "With this patch the users who likely actually matter will use it, i.e. posix_spawn and (with a separate patch) Java. I don\u0027t think we need to do more than that (e.g. persuade apps to use it).\n\nThe idea behind making it a public API is that apps have the option of using it if they need to (e.g. they use stack tagging in their internal testing builds and have a custom process launcher). But if you think this is too far-fetched we can make it a platform-private API for now.\n\nIt may be worth considering bringing this up on libc-coord, but I guess it wouldn\u0027t be necessary if we add it as a platform-private API. Maybe we can start with a private API and in parallel I will see if I can find some time to start a thread on libc-coord.",
+      "parentUuid": "6e764d09_0b5bf340",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-04-25T21:00:48Z",
       "side": 1,
       "message": "(or did you not mean to put this here, and intended this to be in \u003cplatform/\u003e instead? at the moment the declaration is public but the definition is private.)",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0982656_1683c951",
+        "filename": "libc/include/android/vforkrun.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-25T21:38:21Z",
+      "side": 1,
+      "message": "For the definition I was waiting for it to become possible to add this to LIBC_V.",
+      "parentUuid": "428e8f0e_91d926e5",
       "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
