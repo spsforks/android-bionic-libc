@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "757b8fb4_5d712e60",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-25T18:03:22Z",
+      "side": 1,
+      "message": "you\u0027ll want a `fast \u003d false` here, or `%wf16d %w16d` will be wrong.\n\nbut i think this is a sign that you don\u0027t want another function-scope variable, and should add it here in this case instead.",
+      "revId": "4dd168a62951689b65486ec85c360fc097404326",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

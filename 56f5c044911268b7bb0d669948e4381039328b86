@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a947125_ef64ace8",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-25T18:03:22Z",
+      "side": 0,
+      "message": "no need for the if...\n\n`__fortify_fatal(\"%%w%s%d is unsupported\", fast ? \"f\" : \"\", n);`\n\n(and then you wouldn\u0027t have the copy \u0026 paste mistake that\u0027s here :-) )",
+      "revId": "56f5c044911268b7bb0d669948e4381039328b86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
