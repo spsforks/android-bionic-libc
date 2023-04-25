@@ -314,6 +314,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
                             size_t* argtablesiz) {
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
+  bool fast = false;        /*integer argument with fastest minimum-width mode*/
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -530,13 +531,24 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         break;
       case 'w':
         n = 0;
+        fast = false;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
         }
         if (n == 64) {
           flags |= LLONGINT;
+        } else {
+          if (n != 8 && fast) {
+#if defined(__LP64__)
+            flags |= LLONGINT;
+#endif
+          }
         }
         goto reswitch;
       default: /* "%?" prints ?, unless ? is NUL */
@@ -824,4 +836,37 @@ struct helpers {
     return convbuf;
   }
 
+  // Trasnlate an fixed size integer argument for the %w/%wf format to a
+  // flag representation. ``n'' specifies the size. ``flag'' specifies the
+  // fast mode. Supported values of N are 8, 16, 32, and 64 so far.
+  // Read the bit in bionic/libc/include/stdint.h
+
+  // Returns CHARINT when n is 8.
+  // Returns LLONGINT when n is 64.
+  // In fast mode, if the system is 32-bit,
+  // returns 0 when n is 16 or 32.
+  // If the system is 64-bit,
+  // returns LLONGINT when n is 16 or 32.
+  // If not in fast mode,
+  // returns SHORTINT when n is 16,
+  // returns 0 when n is 32.
+
+  static int w_to_flag(int n, bool fast) {
+    if (n == 8) return CHARINT;
+    if (n == 64) return LLONGINT;
+    if (fast) return (sizeof(void*) == 8) ? LLONGINT : 0;
+    if (n == 16) return SHORTINT;
+    return 0;
+  }
+
+  // Verify whether N is supported in %w/%wfN.
+  // Return true when n is 8, 16, 32, 64.
+  // Return false otherwise.
+  static bool valid_w_n(int n) {
+    int supported_values[4] = {8, 16, 32, 64};
+    for (int v : supported_values) {
+      if (n == v) return true;
+    }
+    return false;
+  }
 };
