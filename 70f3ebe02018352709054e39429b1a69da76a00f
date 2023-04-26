@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "215e9c44_d7777a19",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T22:51:35Z",
+      "side": 1,
+      "message": "yes, but testing the \"undefined behavior\" side of things is unusual. a test is really asserting that we care about something. and while we definitely care that nullptr and 0 works, do we care _at all_ about what nullptr and non-0 does? and even if we do, do we specifically care that it dies with SIGSEGV? (rather than, say, SIGABRT?)",
+      "parentUuid": "d738bb8b_646e60fe",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ea9b777_3e09e33d",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
