@@ -16,6 +16,24 @@
       "message": "you\u0027ll want a `fast \u003d false` here, or `%wf16d %w16d` will be wrong.\n\nbut i think this is a sign that you don\u0027t want another function-scope variable, and should add it here in this case instead.",
       "revId": "4dd168a62951689b65486ec85c360fc097404326",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ee177f5_3d662713",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T00:54:50Z",
+      "side": 1,
+      "message": "I add it here before and there is `jump bypasses variable initialization` error. Yea, I agree that I should reinitialize `fast \u003d false` like `n \u003d 0` here to avoid potential errors.",
+      "parentUuid": "757b8fb4_5d712e60",
+      "revId": "4dd168a62951689b65486ec85c360fc097404326",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

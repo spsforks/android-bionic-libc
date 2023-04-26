@@ -16,6 +16,24 @@
       "message": "no need for the if...\n\n`__fortify_fatal(\"%%w%s%d is unsupported\", fast ? \"f\" : \"\", n);`\n\n(and then you wouldn\u0027t have the copy \u0026 paste mistake that\u0027s here :-) )",
       "revId": "56f5c044911268b7bb0d669948e4381039328b86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c091423_2b0df1e4",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T00:54:50Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "4a947125_ef64ace8",
+      "revId": "56f5c044911268b7bb0d669948e4381039328b86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
