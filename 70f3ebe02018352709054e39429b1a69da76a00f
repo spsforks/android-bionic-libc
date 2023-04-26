@@ -22,6 +22,30 @@
       },
       "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af79dc43_a3a1b87f",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T22:08:25Z",
+      "side": 1,
+      "message": "`sprintf`, `vsprintf`, `snprintf` all call `vsnprintf` finally. So I think test `vsnprintf` is testing the original one. If the tests pass, they can also apply to the whole `vsnprintf` family",
+      "parentUuid": "2fdf44b5_25b3ca32",
+      "range": {
+        "startLine": 463,
+        "startChar": 11,
+        "endLine": 463,
+        "endChar": 28
+      },
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
