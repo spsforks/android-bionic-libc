@@ -46,6 +46,64 @@
       },
       "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1837a44_c076d616",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T22:13:21Z",
+      "side": 1,
+      "message": "true, but if you\u0027re going to make that argument, then i\u0027d argue back that testing snprintf tests slightly _more_ than testing vsnprintf :-)\n\nbut my point was just \"having this helper function makes the test harder to read\". all you really want to test is \"nullptr and 0 works\". all this other stuff makes that a lot harder to see.",
+      "parentUuid": "af79dc43_a3a1b87f",
+      "range": {
+        "startLine": 463,
+        "startChar": 11,
+        "endLine": 463,
+        "endChar": 28
+      },
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e27f55b_742af6b3",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T22:13:21Z",
+      "side": 1,
+      "message": "...to the extent that i didn\u0027t even really notice this test, which feels a bit like it over-specifies the behavior. do we actually care about this? do we want to preclude the possibility of adding a FORTIFY check in future? or a compiler warning?",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ea9b777_3e09e33d",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T22:13:21Z",
+      "side": 1,
+      "message": "and here it\u0027s not obvious (without going away to read the helper that we\u0027re really testing the \"nullptr and 0\" case). whereas it would be really obvious if this was just `ASSERT_EQ(10, snprintf(nullptr, 0, \"0123456789\"));` instead --- that even makes it clear _why_ this is useful (because it tells you the length you would need).",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
