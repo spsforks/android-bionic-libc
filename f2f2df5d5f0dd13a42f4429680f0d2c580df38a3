@@ -90,6 +90,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f435a0f3_c5565791",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-26T22:50:10Z",
+      "side": 1,
+      "message": "\u003e that seems like a barrier to MTE use amongst developers though? vfork() is probably magic left behind by the ancients to most people (as it is at google).\n\nThis would only apply to stack MTE. However, I remembered that at least as currently implemented, stack MTE in apps would generally require a custom system image because the zygote doesn\u0027t enable stack MTE and it can\u0027t be turned on at runtime (you can build an executable with stack MTE, but most app developers don\u0027t ship executables). So I don\u0027t think it would affect normal app developers. Which I guess is an argument for not introducing a new public API at this point, because it solves a problem that no app developers will currently face.\n\n\u003e i\u0027ve no idea what (if anything) apps use vfork() for but every time i look, most of the platform uses do have a reason.\n\nI guess the reason for Java is:\n- fork() is too slow\n- posix_spawn() is not flexible enough (don\u0027t know if this is actually true)\n\nI\u0027m not aware of other users.\n\n\u003e i note that ndk_translation implements vfork() as fork() for app code (because it needs to do translation), so there\u0027s some precedent for \"this is fine\"...\n\nThe calls to vfork() from Java and posix_spawn() are from platform code so they would be calling the real vfork(), right? It would mean making fork() \u003d\u003d vfork() with stack MTE would affect more things than in the ndk_translation case.\n\nSo the position would be \"we don\u0027t care about the performance difference of stack MTE images, and the behavioral differences of vfork() probably don\u0027t matter\". I\u0027m not super comfortable with that (I don\u0027t like to rely on \"probably\") but I guess I could live with it.\n\nIt would mean going back to something like aosp/2507976 then, which I now realize is incorrect because it isn\u0027t calling the pre/post-fork handlers. That CL would need to be changed to call the handlers (i.e. move the new asm code to the top of the function and have it tail call `fork`), and get rid of the hardcoded constants.\n\nIf/when we propose to allow app developers to use stack MTE in the future, I would be less comfortable with not introducing a new API for accessing the real vfork(), because we don\u0027t know whether app developers will need it.",
+      "parentUuid": "99955fb3_c1e568ef",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
