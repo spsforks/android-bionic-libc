@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43ee5746_c90f650d",
+        "filename": "docs/status.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T00:28:54Z",
+      "side": 1,
+      "message": "we haven\u0027t done that in the past; the function\u0027s doc comment is the \"true\" home for that kind of commentary. (if we ever have anyone generate real docs, we should have this auto-link to that...)",
+      "parentUuid": "327c1ce8_5385f27e",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "643c68d5_eca2d6a0",
         "filename": "libc/bionic/timespec_getres.cpp",
         "patchSetId": 1
@@ -31,6 +49,58 @@
       "writtenOn": "2023-04-25T19:50:04Z",
       "side": 1,
       "message": "Docs say \"timespec_getres(3) is equivalent to clock_getres().\". What\u0027s the `base \u003d\u003d TIME_UTC` bit here? We only support one base? Should be in the docs if so.",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d15eb49_35f8b5b6",
+        "filename": "libc/bionic/timespec_getres.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T00:28:54Z",
+      "side": 1,
+      "message": "adding more clocks (but still not the full POSIX set) is actually the other C23 change here. i was going to do that in a separate change, but since you\u0027re already complaining, i guess i can just do it in one :-)\n\n(what CLOCK_ the TIME_ constant corresponds to is in the docs, but i\u0027ll be more explicit.)",
+      "parentUuid": "643c68d5_eca2d6a0",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ac6d246_b7ed5c7a",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T00:28:54Z",
+      "side": 1,
+      "message": "note to self: expand this with \"with the POSIX `CLOCK_` constant corresponding to the given `TIME_` constant\".",
+      "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86902850_d1d02bfb",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T00:28:54Z",
+      "side": 1,
+      "message": "(and here)",
       "revId": "9cc92ca53eae6d00b59a7f8a48983b619a3288b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
