@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d738bb8b_646e60fe",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T22:49:32Z",
+      "side": 1,
+      "message": "The reason I add this test is to explain why `__BIONIC_COMPLICATED_NULLNESS`: it depends. Nullptr is fine if the size is 0 ONLY 😂 Nullptr is NOT allowed when the size is a positive integer.",
+      "parentUuid": "0e27f55b_742af6b3",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ea9b777_3e09e33d",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
