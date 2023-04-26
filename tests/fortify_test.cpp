@@ -460,12 +460,30 @@ static int vsnprintf_helper(const char *fmt, ...) {
   return result;
 }
 
+static int vsnprintf_helper3(int size, const char* fmt, ...) {
+  va_list va;
+  int result;
+
+  va_start(va, fmt);
+  result = vsnprintf(nullptr, size, fmt, va);
+  va_end(va);
+  return result;
+}
+
 TEST_F(DEATHTEST, vsnprintf_fortified) {
   ASSERT_FORTIFY(vsnprintf_helper("%s", "0123456789"));
 }
 
 TEST_F(DEATHTEST, vsnprintf2_fortified) {
   ASSERT_FORTIFY(vsnprintf_helper("0123456789"));
+}
+
+TEST_F(DEATHTEST, vsnprintf_nullptr_invalid) {
+  ASSERT_EXIT(vsnprintf_helper3(1, "0123456789"), testing::KilledBySignal(SIGSEGV), "");
+}
+
+TEST(TEST_NAME, vsnprintf_nullptr_valid) {
+  ASSERT_EQ(10, vsnprintf_helper3(0, "0123456789"));
 }
 
 TEST_F(DEATHTEST, strncat_fortified) {
