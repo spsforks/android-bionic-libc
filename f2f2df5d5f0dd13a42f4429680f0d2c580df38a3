@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "99955fb3_c1e568ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T21:20:22Z",
+      "side": 1,
+      "message": "\u003e Not necessarily. The plan would be to leave vfork() in place with its caveats, and recommend that developers move to another API if they need stack MTE to work correctly.\n\nthat seems like a barrier to MTE use amongst developers though? vfork() is probably magic left behind by the ancients to most people (as it is at google).\n\n\u003e If we don\u0027t expose vforkrun() as a public API, we can recommend moving to posix_spawn().\n\ni\u0027ve no idea what (if anything) apps use vfork() for but every time i look, most of the platform uses do have a reason.\n\ni note that ndk_translation implements vfork() as fork() for app code (because it needs to do translation), so there\u0027s some precedent for \"this is fine\"...",
+      "parentUuid": "d64a7a22_01b5b221",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
