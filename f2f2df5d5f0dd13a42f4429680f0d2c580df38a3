@@ -162,6 +162,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "dad4adc3_f4b28d8e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-26T23:20:22Z",
+      "side": 1,
+      "message": "Yuck. Worse, https://google.com/search?q\u003dgsl_library_close seems to imply that this is a device thing. That basically puts us between a rock and a hard place with vfork(): if we don\u0027t call handlers, we risk deadlocks. If we do, we risk bad behavior from badly written atfork handlers. Although ndk_translation may seem to be an existence proof against deadlocks in apps, it isn\u0027t really, because the most likely vfork() callers i.e. Java and posix_spawn() aren\u0027t affected.\n\nSo I don\u0027t know, maybe this CL (while leaving the API private) is actually the least worst option?",
+      "parentUuid": "66ab49f6_e9c795ac",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
