@@ -127,6 +127,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a77310b_3fe05e07",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T22:57:33Z",
+      "side": 1,
+      "message": "ohhh I see. We test what we care. Developers will be not sure if it is allowed to pass a nullptr with size 0 but no one will pass a nullptr with non-0 maliciously(or stupidly or meaninglessly) 😂",
+      "parentUuid": "215e9c44_d7777a19",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ea9b777_3e09e33d",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
