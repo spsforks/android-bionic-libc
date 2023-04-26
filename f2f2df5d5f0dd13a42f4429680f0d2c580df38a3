@@ -108,6 +108,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "36df9b4e_92be5890",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T22:57:24Z",
+      "side": 1,
+      "message": "\u003e * fork() is too slow\n\u003e * posix_spawn() is not flexible enough (don\u0027t know if this is actually true)\n\nyeah, these are the two most common reasons i see for non-libcore use cases too. (the former being more common than the latter, because most people don\u0027t even know about posix_spawn(). but a quick code search turns up at least one user doing something you can\u0027t do with posix_spawn().)\n\n\u003e So the position would be \"we don\u0027t care about the performance difference of stack MTE images, and the behavioral differences of vfork() probably don\u0027t matter\". I\u0027m not super comfortable with that (I don\u0027t like to rely on \"probably\") but I guess I could live with it.\n\nyeah, i\u0027m fairly comfortable with the performance half, but the behavioral side is a lot more dodgy.\n\n\u003e It would mean going back to something like aosp/2507976 then, which I now realize is incorrect because it isn\u0027t calling the pre/post-fork handlers. \n\n(which is one of the _other_ reasons we see for vfork() --- deliberately avoiding calling the atfork handlers. simpleperf does this, for example, though that may only be on the host?)\n\n\u003e If/when we propose to allow app developers to use stack MTE in the future, I would be less comfortable with not introducing a new API for accessing the real vfork(), because we don\u0027t know whether app developers will need it.\n\nyeah, but that\u0027s a completely different conversation then. (we might even want to change the header so that you don\u0027t _get_ vfork() if you\u0027re building with MTE.)",
+      "parentUuid": "f435a0f3_c5565791",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
