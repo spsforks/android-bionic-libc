@@ -34,6 +34,24 @@
       "parentUuid": "757b8fb4_5d712e60",
       "revId": "4dd168a62951689b65486ec85c360fc097404326",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cc4e82a_4e3c6785",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T16:44:21Z",
+      "side": 1,
+      "message": "oh, i forgot this gets included into C++. oh well.\n\nin that case, maybe rename the rather vague `fast` to `wf` or something more specific? alternatively, i think you can just use LLONGINT as the state? `flags |\u003d LLONGINT` if you see `f` and then `\u0026\u003d ~LLONGINT` for the `n \u003d\u003d 8` case (which is never LLONGINT, regardless of whether we saw `f` or not).",
+      "parentUuid": "8ee177f5_3d662713",
+      "revId": "4dd168a62951689b65486ec85c360fc097404326",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
