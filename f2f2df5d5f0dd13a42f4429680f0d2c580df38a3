@@ -126,6 +126,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "52fa6fdb_4bfee96c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-26T23:03:27Z",
+      "side": 1,
+      "message": "\u003e (which is one of the other reasons we see for vfork() --- deliberately avoiding calling the atfork handlers. simpleperf does this, for example, though that may only be on the host?)\n\nAren\u0027t the atfork handlers needed with fork() so that we aren\u0027t left with potential deadlocks in the child? This problem doesn\u0027t exist with vfork() because the child runs concurrently with the other threads in the same address space, so there\u0027s no potential for deadlock.",
+      "parentUuid": "36df9b4e_92be5890",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
