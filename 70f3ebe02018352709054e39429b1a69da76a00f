@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a9fc6fdb_6e2f4322",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-26T23:01:27Z",
+      "side": 1,
+      "message": "yes, exactly: \"i did something stupid, and i got what i deserved\" :-)\n\n(for a concrete example, passing a null FILE* to any of the stdio routines used to just crash with a SIGSEGV, but it turned out a lot of app developers couldn\u0027t understand the crash, so we changed all the routines to check for a null FILE* and explicitly abort with a fortify message saying \"you passed a null FILE* to this function\". a positive change which would have failed any test we\u0027d written that said \"this crashes with SIGSEGV\". which would have meant that a partner that wanted better error messages couldn\u0027t pass CTS. which would be a bit silly.)",
+      "parentUuid": "5a77310b_3fe05e07",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ea9b777_3e09e33d",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
