@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8a146b4_b6995f0e",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T23:15:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1837a44_c076d616",
+      "range": {
+        "startLine": 463,
+        "startChar": 11,
+        "endLine": 463,
+        "endChar": 28
+      },
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e27f55b_742af6b3",
@@ -161,6 +185,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f7a76da_cf3d2e24",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T23:15:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9fc6fdb_6e2f4322",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ea9b777_3e09e33d",
@@ -174,6 +216,24 @@
       "writtenOn": "2023-04-26T22:13:21Z",
       "side": 1,
       "message": "and here it\u0027s not obvious (without going away to read the helper that we\u0027re really testing the \"nullptr and 0\" case). whereas it would be really obvious if this was just `ASSERT_EQ(10, snprintf(nullptr, 0, \"0123456789\"));` instead --- that even makes it clear _why_ this is useful (because it tells you the length you would need).",
+      "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d018364_71223e45",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-26T23:15:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ea9b777_3e09e33d",
       "revId": "70f3ebe02018352709054e39429b1a69da76a00f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
