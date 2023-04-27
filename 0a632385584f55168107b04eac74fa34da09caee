@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da7f20ce_ce42728b",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-27T16:28:58Z",
+      "side": 1,
+      "message": "(clang has all these builtins, so you wouldn\u0027t be able to opt out even in the short term :-) )",
+      "revId": "0a632385584f55168107b04eac74fa34da09caee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
