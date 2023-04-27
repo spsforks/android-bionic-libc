@@ -70,6 +70,30 @@
       },
       "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f73eedc2_25274db5",
+        "filename": "libc/include/bits/ctype_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-27T23:47:33Z",
+      "side": 1,
+      "message": "Everything is going well 😂 but why? I think it should be `_Nullable` because it is not allowed to be used and it can be left as null.",
+      "parentUuid": "3dd1b641_2d947179",
+      "range": {
+        "startLine": 64,
+        "startChar": 19,
+        "endLine": 64,
+        "endChar": 28
+      },
+      "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
