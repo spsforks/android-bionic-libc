@@ -180,6 +180,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "91de7cec_97eba3c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-27T00:03:23Z",
+      "side": 1,
+      "message": "\u003e Although ndk_translation may seem to be an existence proof against deadlocks in apps, it isn\u0027t really, because the most likely vfork() callers i.e. Java and posix_spawn() aren\u0027t affected.\n\nOn the other hand, I don\u0027t think Java or posix_spawn() call any APIs that may deadlock before calling exec(), so maybe not calling the handlers is okay.",
+      "parentUuid": "dad4adc3_f4b28d8e",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
