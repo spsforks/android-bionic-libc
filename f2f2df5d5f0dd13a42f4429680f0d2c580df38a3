@@ -198,6 +198,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e3bcb67_6011871b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-27T21:11:15Z",
+      "side": 1,
+      "message": "\u003e On the other hand, I don\u0027t think Java or posix_spawn() call any APIs that may deadlock before calling exec(), so maybe not calling the handlers is okay.\n\nit\u0027s certainly the easiest option. (but you\u0027re not wrong that this is a behavior difference. but presumably any issues would be easy to spot and diagnose? and seem unlikely anyway?)",
+      "parentUuid": "91de7cec_97eba3c0",
+      "revId": "f2f2df5d5f0dd13a42f4429680f0d2c580df38a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "670ff766_54285747",
