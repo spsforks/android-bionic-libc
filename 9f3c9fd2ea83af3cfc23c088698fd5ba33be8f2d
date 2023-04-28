@@ -69,6 +69,24 @@
       "parentUuid": "fdf46e0b_179ab580",
       "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6111e4f_ad2c2bcf",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-28T18:38:31Z",
+      "side": 1,
+      "message": "`w_to_flags` yes that\u0027s exactly what I think! I misunderstood and I thought this function was used in both case \u0027w\u0027 in vf(w)printf cpp files and printf_common.h file. That\u0027s why I add a boolean var `p`. Now I know what I should do! Thank you!",
+      "parentUuid": "c0218cd7_4ab98243",
+      "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
