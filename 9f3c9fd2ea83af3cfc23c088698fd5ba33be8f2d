@@ -33,6 +33,24 @@
       "message": "actually, we can clean this whole thing up (and declare the bool in a much smaller scope because we\u0027ll get rid of the gotos) by moving the \"translate `n` and `fast` into a flags change\" out into a function (which can go in printf_common.h so we don\u0027t need to duplicate so much code for wide and non-wide).",
       "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdf46e0b_179ab580",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-28T00:51:51Z",
+      "side": 1,
+      "message": "I am thinking of a function \n```\nint func (int *n, char *fmt, bool p) {\n   // declare bool\n   // switch for n \n   // return LLONGINT/SHORTINT/... according to p[printf_common or vsprintf]\n}\n```",
+      "parentUuid": "695a23db_e41b709d",
+      "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
