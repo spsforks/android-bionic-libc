@@ -22,6 +22,30 @@
       },
       "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7addc53_a2828498",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2023-04-28T13:53:39Z",
+      "side": 1,
+      "message": "I\u0027ve updated time_test only, and it\u0027s Android\u0027s. I\u0027d be very caseous to make changes there :) \n\n`int_fast32_t` on 64-bit devices is `int64_t` [1], so operations around the year INT_MAX do not always overflow. I\u0027ve tried to run `mktime_EOVERFLOW` on my workstation with pure tzcode, and its behaviour is the same.\n\n[1] https://source.corp.google.com/h/android/platform/superproject/+/master:bionic/libc/include/stdint.h;l\u003d94;drc\u003db36efa4343d79e3fb548d12d039193850246b892",
+      "parentUuid": "0f6ccd28_4064879c",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
