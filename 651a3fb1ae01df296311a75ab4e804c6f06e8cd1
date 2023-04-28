@@ -118,6 +118,30 @@
       },
       "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cc479ab_5a2f12d2",
+        "filename": "libc/include/bits/ctype_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-04-28T18:29:27Z",
+      "side": 1,
+      "message": "I see. Thank you!",
+      "parentUuid": "e15d7b4b_698b1011",
+      "range": {
+        "startLine": 64,
+        "startChar": 19,
+        "endLine": 64,
+        "endChar": 28
+      },
+      "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
