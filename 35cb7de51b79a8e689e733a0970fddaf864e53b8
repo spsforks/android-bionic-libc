@@ -70,6 +70,47 @@
       },
       "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "116145d8_c3ebfcf4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-28T15:50:40Z",
+      "side": 1,
+      "message": "yeah, this code is literally the only code (that isn\u0027t a test _of_ or libc/libc++ support _for_ the int_fast* types) that i\u0027ve ever seen. it\u0027s also just about the last code on the planet to give up on `register` too. and support C89. and... you get the idea :-)\n\n(and at the same time, it\u0027s the first code i\u0027ve seen try to use C23\u0027s \u003cstdckdint.h\u003e, which isn\u0027t in llvm yet. there may be a competition to simultaneously support both the oldest and newest systems possible that i just haven\u0027t heard about...)",
+      "parentUuid": "14c28b7e_89d47b1e",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cc33f4e_74ad9b6d",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-28T15:50:40Z",
+      "side": 1,
+      "message": "maybe just explicitly copy \u0026 paste the \"// This will overflow for LP32 or LP64.\" here too, for anyone who doesn\u0027t care about the _why_ and just wants to understand the _what_?",
+      "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
