@@ -16,6 +16,24 @@
       "message": "Let me know if this better reflects what happens, and doesn\u0027t restrict us in any way in the future about what this option might do.",
       "revId": "e28867ca6e65b2dfdfbf5a91f2ac7d89ceed5a6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d820f9_dd4fa6b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-04-28T00:11:50Z",
+      "side": 1,
+      "message": "Thanks, this is much clearer and reflects the intent.",
+      "parentUuid": "ac99efc9_2a918729",
+      "revId": "e28867ca6e65b2dfdfbf5a91f2ac7d89ceed5a6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
