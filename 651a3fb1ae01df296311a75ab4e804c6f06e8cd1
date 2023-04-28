@@ -94,6 +94,30 @@
       },
       "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e15d7b4b_698b1011",
+        "filename": "libc/include/bits/ctype_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-28T15:35:44Z",
+      "side": 1,
+      "message": "it _is_ used --- it\u0027s how old versions of libc++ implement the equivalent C++ functions. i think they use their own table in newer versions, but we need this to keep old binaries working. and if we ever can really get rid of it (which i doubt --- such \"cleanup\" is almost never worth the disruption), we\u0027ll remove the symbol, not just make it a nullptr :-)",
+      "parentUuid": "f73eedc2_25274db5",
+      "range": {
+        "startLine": 64,
+        "startChar": 19,
+        "endLine": 64,
+        "endChar": 28
+      },
+      "revId": "651a3fb1ae01df296311a75ab4e804c6f06e8cd1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
