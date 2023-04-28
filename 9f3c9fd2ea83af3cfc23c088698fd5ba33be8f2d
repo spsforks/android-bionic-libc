@@ -51,6 +51,24 @@
       "parentUuid": "695a23db_e41b709d",
       "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0218cd7_4ab98243",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-04-28T16:07:43Z",
+      "side": 1,
+      "message": "well, you\u0027d need `char** fmt` in that case. i was actually just thinking that you can replace this part:\n```\n      case \u0027w\u0027:\n        n \u003d 0;\n        fast \u003d false;\n        ch \u003d *fmt++;\n        if (ch \u003d\u003d \u0027f\u0027) {\n          fast \u003d true;\n          ch \u003d *fmt++;\n        }\n        while (is_digit(ch)) {\n          APPEND_DIGIT(n, ch);\n          ch \u003d *fmt++;\n        }\n        switch (n) {\n          case 8: {\n            flags |\u003d CHARINT;\n            goto reswitch;\n          }\n          case 16: {\n            if (fast) {\n#if defined(__LP64__)\n              flags |\u003d LLONGINT;\n#endif\n            } else {\n              flags |\u003d SHORTINT;\n            }\n            goto reswitch;\n          }\n          case 32: {\n            if (fast) {\n#if defined(__LP64__)\n              flags |\u003d LLONGINT;\n#endif\n            }\n            goto reswitch;\n          }\n          case 64: {\n            flags |\u003d LLONGINT;\n            goto reswitch;\n          }\n          default: {\n            __fortify_fatal(\"%%w%s%d is unsupported\", fast ? \"f\" : \"\", n);\n            break;\n          }\n        }\n```\nwith something like this in the two files\n```\n      case \u0027w\u0027:\n        ch \u003d *fmt++;\n        bool f \u003d false;\n        if (ch \u003d\u003d \u0027f\u0027) {\n          fast \u003d true;\n          ch \u003d *fmt++;\n        }\n        int n \u003d 0;\n        while (is_digit(ch)) {\n          APPEND_DIGIT(n, ch);\n          ch \u003d *fmt++;\n        }\n        flags |\u003d w_to_flags(n, f);\n        goto reswitch;\n```\nand something like this in printf_common.h\n```\nstatic int w_to_flags(int n, bool f) {\n  if (n \u003d\u003d 8) return CHARINT;\n  if (f) return (sizeof(void*) \u003d\u003d 8) LLONGINT : 0;\n  if (n \u003d\u003d 16) return SHORTINT;\n  if (n \u003d\u003d 64) return LLONGINT;\n  __fortify_fatal(\"%%w%s%d is unsupported\", f ? \"f\" : \"\", n);\n}\n```\n\ni do like the idea of *also* factoring out the outer switch (the one with `case \u0027w\u0027:` etc) to reduce the duplication between the char and wchar_t variants, but that seems like a separate change, and given all the `goto`s in that switch, probably another place where we\u0027ll end up using #define :-(",
+      "parentUuid": "fdf46e0b_179ab580",
+      "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
