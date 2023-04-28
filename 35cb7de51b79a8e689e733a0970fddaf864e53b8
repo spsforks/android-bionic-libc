@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f6ccd28_4064879c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-04-28T13:47:10Z",
+      "side": 1,
+      "message": "My opinion:\n\nI think you\u0027re saying above that you had to make changes and so this isn\u0027t just a change containing upstream patches. I can\u0027t tell at a glance what is an upstream change and what you\u0027ve done locally. What did you have to change?\n\nIf you have had to make changes, increasing our patches over upstream, can they be marked with an Android change marker with a comment explaining why they\u0027re needed (perhaps a bug reference)?\n\nCurious of the history for int_fast32_t too, but I assume it\u0027s something like the time_t issue, and it seems like we\u0027ve been exposed to int_fast32_t in upstream code for some time without issues.",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "35cb7de51b79a8e689e733a0970fddaf864e53b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
