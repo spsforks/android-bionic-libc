@@ -87,6 +87,24 @@
       "parentUuid": "c0218cd7_4ab98243",
       "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94dd264c_ef3535d1",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-01T18:30:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6111e4f_ad2c2bcf",
+      "revId": "9f3c9fd2ea83af3cfc23c088698fd5ba33be8f2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
