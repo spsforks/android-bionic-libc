@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09867496_eb91b0fc",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-01T23:13:32Z",
+      "side": 1,
+      "message": "now you\u0027re paying to check twice (which i didn\u0027t explicitly mention before, but was the other thing i didn\u0027t like in the previous patchset)...\n\ni was thinking of something more like this:\n```\nstatic int w_to_flag(int size, bool fast) {\n  static constexpr fast_flag \u003d fast ? LLONGINT : 0;\n  if (size \u003d\u003d 8) return CHARINT;\n  if (size \u003d\u003d 16) return fast ? fast_flag : SHORTINT;\n  if (size \u003d\u003d 32) return fast ? fast_flag : 0;\n  if (size \u003d\u003d 64) return LLONGINT;\n  __fortify_fatal(\"%%w%s%d is unsupported\", fast ? \"f\" : \"\", size);\n}\n```",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d333f972_7cc07c5c",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-01T23:13:32Z",
+      "side": 1,
+      "message": "we still can\u0027t put the `bool` here?",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
