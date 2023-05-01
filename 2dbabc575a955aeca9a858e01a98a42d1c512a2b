@@ -47,6 +47,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "330dee5a_a4796605",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-01T22:58:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "255cdf57_bfb6d0c5",
+      "range": {
+        "startLine": 840,
+        "startChar": 54,
+        "endLine": 840,
+        "endChar": 58
+      },
+      "revId": "2dbabc575a955aeca9a858e01a98a42d1c512a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63c24faa_ab91d7d5",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-01T22:58:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79219582_0ac3dbe5",
+      "range": {
+        "startLine": 840,
+        "startChar": 26,
+        "endLine": 840,
+        "endChar": 50
+      },
+      "revId": "2dbabc575a955aeca9a858e01a98a42d1c512a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1ba7201_0612f198",
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c41e29d8_b6d8cf17",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-01T22:58:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1ba7201_0612f198",
+      "range": {
+        "startLine": 844,
+        "startChar": 2,
+        "endLine": 852,
+        "endChar": 28
+      },
+      "revId": "2dbabc575a955aeca9a858e01a98a42d1c512a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46e87236_a2d1b1ea",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-05-01T20:43:13Z",
       "side": 1,
       "message": "probably worth having w_to_flag() just make the __fortify_fatal() call itself for unsupported values, rather than duplicate it in both callers?",
+      "range": {
+        "startLine": 537,
+        "startChar": 8,
+        "endLine": 540,
+        "endChar": 45
+      },
+      "revId": "2dbabc575a955aeca9a858e01a98a42d1c512a2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf73cba6_39838d7d",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-01T22:58:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46e87236_a2d1b1ea",
       "range": {
         "startLine": 537,
         "startChar": 8,
