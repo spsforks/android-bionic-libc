@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2554cecd_25723205",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-02T18:51:14Z",
+      "side": 1,
+      "message": "\u003e I think fast_flag is more like a data_model.\n\nwell, my intention was for it to be both --- \"for the current data model, what\u0027s the \u0027fast\u0027 size?\".\n\nbut if -- as i think you\u0027re saying -- we really only need \"how big is a long?\", we should just be able to remove the constexpr *and* the ?: and just say \"LONGINT\", no? that\u0027ll be 32-bit for ILP32 and 64-bit for LP64?\n\n\u003e 128, 256 will be added in the future (maybe after several decades)\n\nyeah, in general i\u0027d say \"never worry about anything that\u0027s more than 12 months out, because you won\u0027t be able to predict what that\u0027ll look like anyway\". if/when we have to worry about those, we might need to rewrite this whole function anyway (because who knows what the fast types look like in that world?).",
+      "parentUuid": "932b1ac6_a6f24761",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d333f972_7cc07c5c",
         "filename": "libc/stdio/vfprintf.cpp",
         "patchSetId": 8
