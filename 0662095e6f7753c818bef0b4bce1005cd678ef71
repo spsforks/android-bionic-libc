@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "61291355_e8bccf13",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-02T00:13:30Z",
+      "side": 1,
+      "message": "Ohh I see. I will keep using switch here.",
+      "parentUuid": "09867496_eb91b0fc",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d333f972_7cc07c5c",
         "filename": "libc/stdio/vfprintf.cpp",
         "patchSetId": 8
@@ -31,6 +49,24 @@
       "writtenOn": "2023-05-01T23:13:32Z",
       "side": 1,
       "message": "we still can\u0027t put the `bool` here?",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "419d2828_f6dd2527",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-02T00:13:30Z",
+      "side": 1,
+      "message": "We can, but we need to add brackets here.",
+      "parentUuid": "d333f972_7cc07c5c",
       "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
