@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa93988c_032bf7d6",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-02T19:09:16Z",
+      "side": 1,
+      "message": "\u003e but if -- as i think you\u0027re saying -- we really only need \"how big is a long?\", we should just be able to remove the the constexpr and the ?: \n\nohh sorry for the confusing words. yes, it should be named as `fast_size`.\n\n\u003e never worry about anything that\u0027s more than 12 months out\nagree",
+      "parentUuid": "2554cecd_25723205",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d333f972_7cc07c5c",
         "filename": "libc/stdio/vfprintf.cpp",
         "patchSetId": 8
