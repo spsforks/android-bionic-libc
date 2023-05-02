@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "932b1ac6_a6f24761",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-02T18:32:36Z",
+      "side": 1,
+      "message": "I think `fast_flag` is more like a `data_model`. [I will name it like `data_model` in my code, but in the example, the name is still `fast_flag` for showing easier]\n\n```\nstatic int w_to_flag(int size, bool fast) {\n  static constexpr fast_flag \u003d sizeof(void*) \u003d\u003d 8 ? LLONGINT : 0;\n  if (size \u003d\u003d 8) return CHARINT;\n  if (size \u003d\u003d 16) return fast ? fast_flag : SHORTINT;\n  if (size \u003d\u003d 32) return fast ? fast_flag : 0;\n  if (size \u003d\u003d 64) return LLONGINT;\n  __fortify_fatal(\"%%w%s%d is unsupported\", fast ? \"f\" : \"\", size);\n}\n```\nNo need to use `fast` in `static constexpr fast_flag \u003d` in my view.\nAnd why I use switch is because I am thinking about extendability. 128, 256 will be added in the future (maybe after several decades), and `switch` is suitable for many cases. 😂 But yes, now `if` is a better choice, I will replace `switch` with `if`.",
+      "parentUuid": "b9dfa369_a3bd49ed",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d333f972_7cc07c5c",
         "filename": "libc/stdio/vfprintf.cpp",
         "patchSetId": 8
@@ -103,6 +121,24 @@
       "side": 1,
       "message": "that\u0027s a good improvement! (the general rule being something like \"don\u0027t declare until you actually _need_ the thing; minimize its scope\". not for performance, just for readability --- everything needed to understand a piece of code should be right there, not three or four screens before.)",
       "parentUuid": "419d2828_f6dd2527",
+      "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9141e56e_fd38a582",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-02T18:32:36Z",
+      "side": 1,
+      "message": "yes, I hesitate to add brackets is also because readbility. 😂case \u0027w\u0027 is the only case who needs brackets. But true, adding brackets is a trivial sacrifice.",
+      "parentUuid": "4c3fa0fd_046b48a7",
       "revId": "0662095e6f7753c818bef0b4bce1005cd678ef71",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
