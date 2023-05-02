@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f67b2052_a7cb5bc6",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-02T21:03:47Z",
+      "side": 1,
+      "message": "\"Translate a\"",
+      "range": {
+        "startLine": 839,
+        "startChar": 5,
+        "endLine": 839,
+        "endChar": 17
+      },
+      "revId": "126fe6b0d406a06520bb2e4565b7c21dc630920a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deb845f1_d714e70a",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-02T21:03:47Z",
+      "side": 1,
+      "message": "which bit?",
+      "range": {
+        "startLine": 841,
+        "startChar": 5,
+        "endLine": 841,
+        "endChar": 49
+      },
+      "revId": "126fe6b0d406a06520bb2e4565b7c21dc630920a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
