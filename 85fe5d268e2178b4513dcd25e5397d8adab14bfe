@@ -117,6 +117,30 @@
       },
       "revId": "85fe5d268e2178b4513dcd25e5397d8adab14bfe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4845160a_3a33530e",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-03T23:44:11Z",
+      "side": 1,
+      "message": "sure, but that\u0027s \"complicated\" at best, no?\n\n(fwiw, i\u0027d actually support _deleting_ those tests. if you look at the history, i added them as trivial \"does this function exist, and does the kernel believe there\u0027s actually a system call behind it?\" tests. labath@ later added _proper_ tests but was too polite/conservative to just delete my junk tests :-) the only reason anyone could possibly have for making such a call is to check whether the syscall is there.)",
+      "parentUuid": "d87b5e73_f349bacb",
+      "range": {
+        "startLine": 147,
+        "startChar": 58,
+        "endLine": 147,
+        "endChar": 67
+      },
+      "revId": "85fe5d268e2178b4513dcd25e5397d8adab14bfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
