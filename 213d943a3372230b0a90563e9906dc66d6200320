@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e740c145_a4c9c5af",
+        "filename": "tests/syslog_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-03T21:22:47Z",
+      "side": 1,
+      "message": "believe it or not, the hwasan failures were because libc++ needs two stack frames per literal, so 1024 `x`s causes problems...\n\nnote that the `\\n`s aren\u0027t functional either. i\u0027ll look at changing the api so we default to literals and you have to opt in to std::regex, but i\u0027ll do that in a separate change...",
+      "range": {
+        "startLine": 73,
+        "startChar": 15,
+        "endLine": 73,
+        "endChar": 22
+      },
+      "revId": "213d943a3372230b0a90563e9906dc66d6200320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
