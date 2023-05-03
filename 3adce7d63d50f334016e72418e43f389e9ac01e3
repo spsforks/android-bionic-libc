@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0e4744f_099a780a",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-03T21:20:12Z",
+      "side": 1,
+      "message": "L83 says \"no\" :-)\n\ni\u0027ll add an explicit test for this case though, in case anyone changes that line later.\n\nalthough thinking about it more, i never really liked this behavior anyway in our regular logging, and i feel like it\u0027s even worse here? hmm... let me see what the desktop does... yeah, the desktop disagrees. good test! :-)",
+      "parentUuid": "a1252754_5c47087e",
+      "range": {
+        "startLine": 87,
+        "startChar": 76,
+        "endLine": 87,
+        "endChar": 77
+      },
+      "revId": "3adce7d63d50f334016e72418e43f389e9ac01e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f280a91_cb4f493b",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-03T00:28:05Z",
       "side": 1,
       "message": "Would it be better to use STDERR_FILENO?",
+      "range": {
+        "startLine": 88,
+        "startChar": 12,
+        "endLine": 88,
+        "endChar": 13
+      },
+      "revId": "3adce7d63d50f334016e72418e43f389e9ac01e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca9e00d6_eb2b25d1",
+        "filename": "libc/bionic/syslog.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-03T21:20:12Z",
+      "side": 1,
+      "message": "i used to prefer STDERR_FILENO until i realized (via CVEs) that \u0027file descriptor 2 (which may or may not go where you think stderr should go)\u0027 is more honest. but \"done\" anyway...",
+      "parentUuid": "9f280a91_cb4f493b",
       "range": {
         "startLine": 88,
         "startChar": 12,
