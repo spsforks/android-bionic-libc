@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9bc02046_6a9dbaab",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-03T23:33:34Z",
+      "side": 1,
+      "message": "oh yes, this should be nonnull.",
+      "parentUuid": "2b2049bd_ef7af841",
+      "range": {
+        "startLine": 136,
+        "startChar": 50,
+        "endLine": 136,
+        "endChar": 59
+      },
+      "revId": "85fe5d268e2178b4513dcd25e5397d8adab14bfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "762dd811_9fb835b4",
         "filename": "libc/include/sys/uio.h",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-03T23:12:12Z",
       "side": 1,
       "message": "really?",
+      "range": {
+        "startLine": 147,
+        "startChar": 58,
+        "endLine": 147,
+        "endChar": 67
+      },
+      "revId": "85fe5d268e2178b4513dcd25e5397d8adab14bfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d87b5e73_f349bacb",
+        "filename": "libc/include/sys/uio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-03T23:33:34Z",
+      "side": 1,
+      "message": "http://cs/android/bionic/tests/sys_uio_test.cpp;l\u003d112;rcl\u003d40424c135df60036e7dc5f1e910cd13f334890ce returns 0, which means it is successful (otherwise -1 will be returned)\n\nAnd `process_vm_writev` is the same 😂",
+      "parentUuid": "762dd811_9fb835b4",
       "range": {
         "startLine": 147,
         "startChar": 58,
