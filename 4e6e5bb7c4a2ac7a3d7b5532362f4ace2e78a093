@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8da2197d_cf4a0046",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-04T23:32:13Z",
+      "side": 1,
+      "message": "seems unlikely?",
+      "range": {
+        "startLine": 73,
+        "startChar": 17,
+        "endLine": 73,
+        "endChar": 26
+      },
+      "revId": "4e6e5bb7c4a2ac7a3d7b5532362f4ace2e78a093",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
