@@ -46,6 +46,30 @@
       },
       "revId": "4e6e5bb7c4a2ac7a3d7b5532362f4ace2e78a093",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab8f1e84_f769dec3",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-04T23:42:03Z",
+      "side": 1,
+      "message": "strictly, 0 _would_ be a multiple of the page size --- 0 * PAGE_SIZE :-)\n\nbut note that size can\u0027t be zero, which rules out the usual \"complicated\" case, and this function is the opposite of mmap(), so it\u0027s not obvious what munmap() of null would mean.\n\n(the _weird_ part here is that mmap() can, at least in theory, return null. but it can\u0027t on Android --- we tell the kernel not to do that [or rather, we leave the kernel at its default setting, where it won\u0027t do that] because the alternative is that you might have memory at those low addresses, and then your nice clear \"null pointers lead to SIGSEGV\" stops working. as, indeed, does ART\u0027s use of SIGSEGV to avoid explicit null checks in compiled java. so all kinds of things would be very broken if we allowed that!)",
+      "parentUuid": "084861da_d2c7d5bc",
+      "range": {
+        "startLine": 73,
+        "startChar": 17,
+        "endLine": 73,
+        "endChar": 26
+      },
+      "revId": "4e6e5bb7c4a2ac7a3d7b5532362f4ace2e78a093",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
