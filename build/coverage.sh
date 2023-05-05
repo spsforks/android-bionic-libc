@@ -14,7 +14,7 @@
 # Flash image and set $ANDROID_SERIAL.
 #
 # Usage: $ bionic/build/coverage.sh
-# Output: HTML report is generated to /tmp/bionic-coverage/html/index.html
+# Output: HTML report is in file:///tmp/bionic-coverage/html/index.html
 #
 
 eval "$(cd ${ANDROID_BUILD_TOP}; build/soong/soong_ui.bash --dumpvars-mode --vars="TARGET_ARCH TARGET_ARCH_VARIANT")"
