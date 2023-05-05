@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd319bc1_9e6ec736",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-05-05T03:53:04Z",
+      "side": 1,
+      "message": "LGTM but I\u0027m not sure how the clickable link in the comment improves usability.  Maybe have the script print this clickable location as well?",
+      "revId": "75373679c735c5ec3caf115d0b0cd5f0291db4d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
