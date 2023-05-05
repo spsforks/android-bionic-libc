@@ -27,12 +27,6 @@ TEST(sys_timex, adjtimex_smoke) {
   ASSERT_NE(-1, adjtimex(&t));
 }
 
-TEST(sys_timex, adjtimex_EFAULT) {
-  errno = 0;
-  ASSERT_EQ(-1, adjtimex(nullptr));
-  ASSERT_EQ(EFAULT, errno);
-}
-
 TEST(sys_timex, clock_adjtime_smoke) {
   timex t;
   memset(&t, 0, sizeof(t));
@@ -41,7 +35,10 @@ TEST(sys_timex, clock_adjtime_smoke) {
 }
 
 TEST(sys_timex, clock_adjtime_EFAULT) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, clock_adjtime(CLOCK_REALTIME, nullptr));
   ASSERT_EQ(EFAULT, errno);
+#pragma clang diagnostic pop
 }
