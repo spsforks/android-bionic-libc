@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9257beeb_8060144f",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T20:11:49Z",
+      "side": 1,
+      "message": "really? what does that mean?\n\n(similar for most of these nullables.)",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecdb65d2_30310ed4",
+        "filename": "libc/include/sys/timerfd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T20:11:49Z",
+      "side": 1,
+      "message": "(this file lgtm though)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b924c265_6ce4f632",
+        "filename": "libc/include/sys/times.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T20:11:49Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 55
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9af608f2_2a89d238",
+        "filename": "libc/include/sys/timex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T20:11:49Z",
+      "side": 1,
+      "message": "(this file lgtm.)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2ac44aa_2b5b25f2",
+        "filename": "tests/sys_timex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T20:11:49Z",
+      "side": 1,
+      "message": "(again, both of these EFAULT tests can/should probably just be deleted now we have a real test for each. i don\u0027t think they\u0027re adding any value?)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
