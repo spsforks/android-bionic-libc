@@ -16,6 +16,24 @@
       "message": "LGTM but I\u0027m not sure how the clickable link in the comment improves usability.  Maybe have the script print this clickable location as well?",
       "revId": "75373679c735c5ec3caf115d0b0cd5f0291db4d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d9f62b9_6978cb4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-08T21:41:34Z",
+      "side": 1,
+      "message": "what i was trying to do was find a way to call `google-chrome` in such a way that it doesn\u0027t just open a new tab each time. because what i really want is \"open a new tab if there isn\u0027t one; reload and bring to front if there is\". but i don\u0027t think i can say that?\n\ni\u0027ll try to live with the \"open it every time\" behavior, and if that\u0027s too annoying i\u0027ll go with `echo` instead...",
+      "parentUuid": "cd319bc1_9e6ec736",
+      "revId": "75373679c735c5ec3caf115d0b0cd5f0291db4d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
