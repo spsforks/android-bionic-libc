@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "faee8722_3330bd97",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-08T22:51:42Z",
+      "side": 1,
+      "message": "```\nIf either tv or tz is NULL, the corresponding structure \nis not set or returned.  (However, compilation warnings \nwill result if tv is NULL.)\n```\nin https://man7.org/linux/man-pages/man2/gettimeofday.2.html",
+      "parentUuid": "9257beeb_8060144f",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ecdb65d2_30310ed4",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac84c65d_5ca0af9b",
+        "filename": "libc/include/sys/times.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-08T22:51:42Z",
+      "side": 1,
+      "message": "```\nOn Linux, the buf argument can be specified as NULL, \nwith the result that times() just returns a function result.  \nHowever, POSIX does not specify this behavior, \nand most other UNIX implementations require a non-NULL value for buf.\n```\nin https://man7.org/linux/man-pages/man2/times.2.html",
+      "parentUuid": "b924c265_6ce4f632",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 55
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9af608f2_2a89d238",
@@ -94,6 +142,24 @@
       "writtenOn": "2023-05-08T20:11:49Z",
       "side": 1,
       "message": "(again, both of these EFAULT tests can/should probably just be deleted now we have a real test for each. i don\u0027t think they\u0027re adding any value?)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f47eb93e_31ecbb4a",
+        "filename": "tests/sys_timex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-08T22:51:42Z",
+      "side": 1,
+      "message": "ohhh so just delete those tests right?",
+      "parentUuid": "a2ac44aa_2b5b25f2",
       "revId": "021f7bea0b062526c648170cac92961ee5528af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
