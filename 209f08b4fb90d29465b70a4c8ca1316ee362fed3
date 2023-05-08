@@ -65,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f6bdeb8_7f99f4f9",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-05-08T22:29:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b27dafa_40e73dce",
+      "range": {
+        "startLine": 50,
+        "startChar": 48,
+        "endLine": 51,
+        "endChar": 49
+      },
+      "revId": "209f08b4fb90d29465b70a4c8ca1316ee362fed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d42948c7_2b8e54d1",
@@ -101,6 +125,30 @@
       "writtenOn": "2023-05-08T22:29:29Z",
       "side": 1,
       "message": "Done",
+      "parentUuid": "d42948c7_2b8e54d1",
+      "range": {
+        "startLine": 51,
+        "startChar": 51,
+        "endLine": 52,
+        "endChar": 31
+      },
+      "revId": "209f08b4fb90d29465b70a4c8ca1316ee362fed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d67c55e1_2d7238a2",
+        "filename": "libc/arch-arm64/bionic/vfork.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-05-08T22:29:35Z",
+      "side": 1,
+      "message": "This was ndk_translation; updated comment.",
       "parentUuid": "d42948c7_2b8e54d1",
       "range": {
         "startLine": 51,
