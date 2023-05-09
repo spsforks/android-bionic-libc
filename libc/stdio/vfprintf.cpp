@@ -39,7 +39,7 @@
 #define CHAR_TYPE_inf "inf"
 #define CHAR_TYPE_NAN "NAN"
 #define CHAR_TYPE_nan "nan"
-#define CHAR_TYPE_ORIENTATION -1
+#define CHAR_TYPE_ORIENTATION ORIENT_BYTES
 
 #define PRINT(ptr, len)                          \
   do {                                           \
@@ -361,14 +361,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (dtoaresult) __freedtoa(dtoaresult);
         if (flags & LONGDBL) {
           fparg.ldbl = GETARG(long double);
-          dtoaresult = cp = __hldtoa(fparg.ldbl, xdigs, prec, &expt, &signflag, &dtoaend);
+          dtoaresult = __hldtoa(fparg.ldbl, xdigs, prec, &expt, &signflag, &dtoaend);
           if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
         } else {
           fparg.dbl = GETARG(double);
-          dtoaresult = cp = __hdtoa(fparg.dbl, xdigs, prec, &expt, &signflag, &dtoaend);
+          dtoaresult = __hdtoa(fparg.dbl, xdigs, prec, &expt, &signflag, &dtoaend);
           if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
@@ -398,14 +398,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (dtoaresult) __freedtoa(dtoaresult);
         if (flags & LONGDBL) {
           fparg.ldbl = GETARG(long double);
-          dtoaresult = cp = __ldtoa(&fparg.ldbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
+          dtoaresult = __ldtoa(&fparg.ldbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
           if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
         } else {
           fparg.dbl = GETARG(double);
-          dtoaresult = cp = __dtoa(fparg.dbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
+          dtoaresult = __dtoa(fparg.dbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
           if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
@@ -413,6 +413,13 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           if (expt == 9999) expt = INT_MAX;
         }
       fp_common:
+#if CHAR_TYPE_ORIENTATION == ORIENT_BYTES
+        cp = dtoaresult;
+#else
+        free(convbuf);
+        cp = convbuf = helpers::mbsconv(dtoaresult, -1);
+        if (cp == nullptr) goto error;
+#endif
         if (signflag) sign = '-';
         if (expt == INT_MAX) { /* inf or nan */
           if (*cp == 'N') {
@@ -425,7 +432,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           break;
         }
         flags |= FPT;
-        ndig = dtoaend - cp;
+        ndig = dtoaend - dtoaresult;
         if (ch == 'g' || ch == 'G') {
           if (expt > -4 && expt <= prec) {
             /* Make %[gG] smell like %[fF] */
@@ -669,11 +676,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           /* already handled initial 0's */
           prec += expt;
         } else {
-          PRINTANDPAD(cp, dtoaend, lead, zeroes);
+          PRINTANDPAD(cp, cp + ndig, lead, zeroes);
           cp += lead;
           if (prec || flags & ALT) PRINT(decimal_point, 1);
         }
-        PRINTANDPAD(cp, dtoaend, prec, zeroes);
+        PRINTANDPAD(cp, cp + ndig, prec, zeroes);
       } else { /* %[eE] or sufficiently long %[gG] */
         if (prec > 1 || flags & ALT) {
           buf[0] = *cp++;
