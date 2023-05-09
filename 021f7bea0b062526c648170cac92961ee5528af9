@@ -48,6 +48,47 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "58831537_991e691d",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T00:20:37Z",
+      "side": 1,
+      "message": "that\u0027s ... useless. (especially given the \"compilation warnings will result\" --- if that\u0027s actually true, just leave that `_Nonnull` for us too?)",
+      "parentUuid": "faee8722_3330bd97",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25cdc5e2_2434e47e",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T00:20:37Z",
+      "side": 1,
+      "message": "(but note that my question applied to this too...)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ecdb65d2_30310ed4",
@@ -112,6 +153,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdebfb76_9fb1277d",
+        "filename": "libc/include/sys/times.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T00:20:37Z",
+      "side": 1,
+      "message": "i think that actually makes this `_Nullable` by the rules we\u0027ve been using so far though? (even if it\u0027s not obvious why you\u0027d want that.)",
+      "parentUuid": "ac84c65d_5ca0af9b",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 55
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9af608f2_2a89d238",
@@ -160,6 +225,24 @@
       "side": 1,
       "message": "ohhh so just delete those tests right?",
       "parentUuid": "a2ac44aa_2b5b25f2",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6a8a018_42c928fb",
+        "filename": "tests/sys_timex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T00:20:37Z",
+      "side": 1,
+      "message": "yeah, sgtm.",
+      "parentUuid": "f47eb93e_31ecbb4a",
       "revId": "021f7bea0b062526c648170cac92961ee5528af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
