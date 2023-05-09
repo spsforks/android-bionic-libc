@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2dfd065_2ffcac13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T18:56:01Z",
+      "side": 1,
+      "message": "(i don\u0027t actually _need_ to move the #defines up above the #include, but since the final plan is to move the whole implementation into printf_common.h, i\u0027ll need to do that _eventually_ and may as well do it now --- it doesn\u0027t strictly _reduce_ the diff, but it means more of the diff is in \"the bit before the #include\", which is fine.)",
+      "revId": "26a0ebd24bd8b7a4722a016f45973f7628aa37bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
