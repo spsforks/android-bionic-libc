@@ -245,6 +245,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "46ee282e_9d8b40b5",
+        "filename": "libc/include/sys/times.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-09T22:56:37Z",
+      "side": 1,
+      "message": "yeah, our header files are only used on Android, which only uses Linux as its kernel. no need to worry about macOS or whatever.",
+      "parentUuid": "7b3a0577_7ed17422",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 55
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9af608f2_2a89d238",
         "filename": "libc/include/sys/timex.h",
         "patchSetId": 1
