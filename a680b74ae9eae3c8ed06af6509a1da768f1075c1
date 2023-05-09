@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d16dcfa9_c530aed0",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T01:37:38Z",
+      "side": 1,
+      "message": "Do we need to clean up this case?",
+      "range": {
+        "startLine": 428,
+        "startChar": 12,
+        "endLine": 428,
+        "endChar": 16
+      },
+      "revId": "a680b74ae9eae3c8ed06af6509a1da768f1075c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "783e94b1_f947d10d",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T01:37:38Z",
+      "side": 1,
+      "message": "Plan to move this condition too. But the type of `p` and `buf` are different from those in `vfscanf.cpp`",
+      "range": {
+        "startLine": 444,
+        "startChar": 14,
+        "endLine": 444,
+        "endChar": 16
+      },
+      "revId": "a680b74ae9eae3c8ed06af6509a1da768f1075c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
