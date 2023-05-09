@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbc687d9_2a440af2",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T19:05:19Z",
+      "side": 1,
+      "message": "move the whole case \u00270\u0027 into a function in `scanf_common.h`?",
+      "parentUuid": "308ab06b_3e9f314d",
+      "range": {
+        "startLine": 428,
+        "startChar": 12,
+        "endLine": 428,
+        "endChar": 16
+      },
+      "revId": "a680b74ae9eae3c8ed06af6509a1da768f1075c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "783e94b1_f947d10d",
         "filename": "libc/stdio/vfwscanf.cpp",
         "patchSetId": 1
@@ -84,6 +108,24 @@
       "writtenOn": "2023-05-09T14:52:37Z",
       "side": 1,
       "message": "you\u0027ll have the same issue here, trying to distinguish \"0x123\" versus \"00x123\" for %i. the former is a single hex number, the latter \"0\", \"x\", \"123\" (i think).",
+      "revId": "a680b74ae9eae3c8ed06af6509a1da768f1075c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01950601_938f72af",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T19:05:19Z",
+      "side": 1,
+      "message": "So stay the same right?",
+      "parentUuid": "e496f1f6_11085d67",
       "revId": "a680b74ae9eae3c8ed06af6509a1da768f1075c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
