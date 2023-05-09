@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e965b48b_c289285c",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T22:45:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58831537_991e691d",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25cdc5e2_2434e47e",
@@ -85,6 +109,24 @@
       "writtenOn": "2023-05-09T00:20:37Z",
       "side": 1,
       "message": "(but note that my question applied to this too...)",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b3c94f9_edd042c7",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T22:45:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25cdc5e2_2434e47e",
       "revId": "021f7bea0b062526c648170cac92961ee5528af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -179,6 +221,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7b3a0577_7ed17422",
+        "filename": "libc/include/sys/times.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T22:45:08Z",
+      "side": 1,
+      "message": "I think the reason is that I am a bit unclear the os environment? I see. It is provided to Android, which is based on Linux. So it can be specified as `NULL`. No need to care the remain?",
+      "parentUuid": "cdebfb76_9fb1277d",
+      "range": {
+        "startLine": 49,
+        "startChar": 26,
+        "endLine": 49,
+        "endChar": 55
+      },
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9af608f2_2a89d238",
         "filename": "libc/include/sys/timex.h",
         "patchSetId": 1
@@ -243,6 +309,24 @@
       "side": 1,
       "message": "yeah, sgtm.",
       "parentUuid": "f47eb93e_31ecbb4a",
+      "revId": "021f7bea0b062526c648170cac92961ee5528af9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95b9c293_c86c7d87",
+        "filename": "tests/sys_timex_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-09T22:45:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6a8a018_42c928fb",
       "revId": "021f7bea0b062526c648170cac92961ee5528af9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
