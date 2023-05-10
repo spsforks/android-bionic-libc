@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "971b89e0_1f53c21b",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-10T21:11:50Z",
+      "side": 1,
+      "message": "/me checks kernel source again...\n\nhttps://elixir.bootlin.com/linux/latest/source/kernel/time/itimer.c#L332\n\nah, yeah, i shouldn\u0027t have been so lazy --- the _actual_ syscall does a little bit of work before it calls do_setitimer (which is what i linked to before). but you can see from the kernel source that the _kernel_ has the same \"do not use this\" that\u0027s mentioned in the man page.\n\nso, yeah, you _can_ pass nullptr here, but your kernel will complain if you do, so we should probably discourage people from doing this.",
+      "parentUuid": "95766c20_02f2359b",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e92ef04e_ce313f0f",
         "filename": "libc/include/sys/time.h",
         "patchSetId": 4
