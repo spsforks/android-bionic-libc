@@ -186,6 +186,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8568ec0b_72c1d5ff",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-10T21:21:25Z",
+      "side": 1,
+      "message": "it\u0027s consistent _when talking about glibc_, but that doesn\u0027t tell you what _bionic_ does, which is the only thing we care about. (i mentioned the linux kernel earlier because -- unless we do something special in bionic -- we\u0027ll have the linux kernel behavior.)",
+      "parentUuid": "432f2087_8f3dff9e",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb2f4445_4786cd88",
         "filename": "tests/sys_timex_test.cpp",
         "patchSetId": 4
