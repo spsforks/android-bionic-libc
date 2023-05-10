@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d71a7dab_2acffaaa",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-10T15:03:59Z",
+      "side": 1,
+      "message": "does _bionic_ do that? (do we have a test for this? there seems to be confusion between the man page which says _glibc_ does this, and the utimensat() doc comment which says the _Linux kernel_ does this. if the man page is wrong, we should send a man page fix upstream, call this COMPLICATED [and document why, similar to utimensat()]. if not, we should fix utimensat()\u0027s annotation and documentation.)",
+      "parentUuid": "309fa3d6_d213689a",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb2f4445_4786cd88",
         "filename": "tests/sys_timex_test.cpp",
         "patchSetId": 4
