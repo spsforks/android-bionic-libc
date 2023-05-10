@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "309fa3d6_d213689a",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-10T00:05:39Z",
+      "side": 1,
+      "message": "I think it should be `__BIONIC_COMPLICATED_NULLNESS` at least. \n\n```   Glibc notes\n       If pathname is NULL, then the glibc futimesat() wrapper function\n       updates the times for the file referred to by dirfd.```  \nfrom https://man7.org/linux/man-pages/man2/futimesat.2.html \n\nand `__path` is called https://source.corp.google.com/android/bionic/libc/bionic/sys_time.cpp;l\u003d43?q\u003dfutimesat\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\nwhere https://source.corp.google.com/android/bionic/libc/include/sys/stat.h;l\u003d192?q\u003dutimensat\u0026sq\u003d\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F is `__BIONIC_COMPLICATED_NULLNESS`",
+      "parentUuid": "e92ef04e_ce313f0f",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb2f4445_4786cd88",
         "filename": "tests/sys_timex_test.cpp",
         "patchSetId": 4
