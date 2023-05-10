@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "95766c20_02f2359b",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-10T20:47:26Z",
+      "side": 1,
+      "message": "But here\n\n```\nThe standards are silent on the meaning of the call:\n\nsetitimer(which, NULL, \u0026old_value);\n\nMany systems (Solaris, the BSDs, and perhaps others) treat this\nas equivalent to:\n\ngetitimer(which, \u0026old_value);\n\nIn Linux, this is treated as being equivalent to a call in which\nthe new_value fields are zero\n```\n       \nhttps://man7.org/linux/man-pages/man2/setitimer.2.html",
+      "parentUuid": "7a7fcb92_302bbef7",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e92ef04e_ce313f0f",
         "filename": "libc/include/sys/time.h",
         "patchSetId": 4
