@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "be729a48_5108649a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-10T15:04:54Z",
+      "side": 1,
+      "message": "this also seems like a place where either the documentation or the code [in init] is wrong, and we\u0027ll need to check the source to decide who\u0027s right:\n```\nsystem/core/init/builtins.cpp:850:22: error: null passed to a callee that requires a non-null argument [-Werror,-Wnonnull]\nif (settimeofday(nullptr, \u0026tz) \u003d\u003d -1) {\n```",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7a7fcb92_302bbef7",
         "filename": "libc/include/sys/time.h",
         "patchSetId": 4
