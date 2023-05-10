@@ -16,6 +16,24 @@
       "message": "i think there are a few different high-level choices available...\n\nif you look at bionic/libc/bionic/strtol.cpp you can see the \"cleanest\" option --- write a generic function (using a template) that you then instantiate for the char and wchar_t variants. that was a clear choice in that case because the function is pretty simple, and it actually has a *lot* of variants --- 15 in total! so there\u0027s a massive saving in code and clarity, and getting there isn\u0027t too hard.\n\nif you look at bionic/libc/stdio/*printf.cpp you can see the opposite end of the spectrum --- pull out any \"easy\" shared pieces, but mostly just try to reduce the diff between the files (mostly by using macro replacement). then when the diff is zero/nearly zero (and we\u0027re not there yet!), we can hopefully move the body of the function into printf_common.h. (that\u0027s why the function is `int FUNCTION_NAME(` in both files... not because that\u0027s useful yet, but because that\u0027s where we want to get to.) if/when *that\u0027s* done, we can then take another look and decide if/how we can move from macros to a template.\n\nscanf is somewhere in between. it\u0027s more complicated than the strto*/wcsto* family (but only has two variants, like printf), but not nearly as complicated as printf.\n\nif _i_ was trying to clean up scanf[1], i\u0027d start with the \"noise\". i see in the diff that there\u0027s a lot of noise where one copy has {} on if statements and the other doesn\u0027t, for example. or `return EOF` vs `return (EOF)`. and then just iterate from there, like we\u0027ve done with printf. (and because a lot of the problems are similar, at that point it\u0027ll be worth looking at printf to see how they were solved there.)\n\ntbh, i think the biggest possible[2] cleanup would be to _actually_ use strtoumax()/strtoimax() in the CT_INT case, similar to how CT_FLOAT just uses strtold() etc. (although there\u0027s still a ton of duplication there, it\u0027s just mostly hidden in parsefloat.c! so if you went that way too literally, you\u0027d be making things worse with a parseint()/wparseint() :-) )\n\nbut before you put too much effort into this, note that scanf() should[3] be easier than printf() --- there\u0027s none of the \u0027$\u0027 nonsense from printf() to deal with. i suspect the only cleanup you\u0027ll really want will be to move `w_to_flag()` into its own .h file so that printf() and scanf() can share it :-)\n\n____\n1.  and, to be clear --- i don\u0027t have much of an opinion on whether or not to do this; if you `diff -wub *scanf.cpp` you can see one of the existing differences is that i added `m` support to the non-wide-char variant but didn\u0027t even bother with the wide char variant. codesearch (https://source.corp.google.com/search?q\u003dwscanf%20-file:wscanf%20-file:wchar.h%20-file:cwchar%20-file:%5Ebionic%2F%20-file:prebuilts%2F(clang%7Cgcc%7Cndk)%2F%20-file:%2Flibcxx%2F%20-file:%5C.(abi%7Clsdump%7Cxml)%20-file:abilist.txt%20case:yes\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F) suggests there\u0027s exactly _one_ wscanf call in all our code, and that\u0027s some Windows-only code that i\u0027m not sure we even build. (Windows uses wchar_t a lot more than Unix does; Unix went the utf8 route instead.)\n2. i\u0027m _assuming_ it\u0027s possible, anyway.\n3. again, i haven\u0027t tried it; i\u0027m just assuming.",
       "revId": "d4e46f3cdaf3701bc76cd906d28f9dc141249ad6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51d551e0_77bd9214",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-10T20:34:36Z",
+      "side": 1,
+      "message": "\u003e i suspect the only cleanup you\u0027ll really want will be to move w_to_flag() into its own .h file so that printf() and scanf() can share it :-)\n\nI had this idea before but I give up because the values are different although they get the same meaning. If both can share it. The cleanup might be a huge job😂",
+      "parentUuid": "28981eef_935146a3",
+      "revId": "d4e46f3cdaf3701bc76cd906d28f9dc141249ad6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
