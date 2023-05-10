@@ -162,6 +162,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "432f2087_8f3dff9e",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-10T21:16:07Z",
+      "side": 1,
+      "message": "```\nC library/kernel ABI differences\n       On Linux, futimens() is a library function implemented on top of\n       the utimensat() system call.  To support this, the Linux\n       utimensat() system call implements a nonstandard feature: if\n       pathname is NULL, then the call modifies the timestamps of the\n       file referred to by the file descriptor dirfd (which may refer to\n       any type of file).  Using this feature, the call\n       futimens(fd, times) is implemented as:\n\n           utimensat(fd, NULL, times, 0);\n\n       Note, however, that the glibc wrapper for utimensat() disallows\n       passing NULL as the value for pathname: the wrapper function\n       returns the error EINVAL in this case.\n``` \nin https://man7.org/linux/man-pages/man2/utimensat.2.html\nI think it is consistent?",
+      "parentUuid": "d71a7dab_2acffaaa",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb2f4445_4786cd88",
         "filename": "tests/sys_timex_test.cpp",
         "patchSetId": 4
@@ -173,6 +197,24 @@
       "writtenOn": "2023-05-09T22:56:37Z",
       "side": 1,
       "message": "delete this one too? clock_adjtime_smoke seems like a strictly better test?",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "828e2379_f53bf442",
+        "filename": "tests/sys_timex_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-10T21:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb2f4445_4786cd88",
       "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
