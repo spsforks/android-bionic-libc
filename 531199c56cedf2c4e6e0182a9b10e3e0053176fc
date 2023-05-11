@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fa4de6e_2faeb5bd",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-11T23:52:45Z",
+      "side": 1,
+      "message": "this seems like the simplest and most obviously correct fix for ...",
+      "revId": "531199c56cedf2c4e6e0182a9b10e3e0053176fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ebb4433_6818b52a",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-11T23:52:45Z",
+      "side": 1,
+      "message": "...the fact that this line modifies cp...",
+      "revId": "531199c56cedf2c4e6e0182a9b10e3e0053176fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7ca3e7f_333f13a5",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-11T23:52:45Z",
+      "side": 1,
+      "message": "...so we can\u0027t recompute the end from `cp + ndig` here.",
+      "revId": "531199c56cedf2c4e6e0182a9b10e3e0053176fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
