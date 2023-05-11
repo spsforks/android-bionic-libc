@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9d291f41_bb7bd8c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-11T22:32:46Z",
+      "side": 1,
+      "message": "I think it should be `_Nullable`? See https://elixir.bootlin.com/linux/latest/source/kernel/time/time.c#L199",
+      "parentUuid": "7149b52e_f15f77be",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7a7fcb92_302bbef7",
         "filename": "libc/include/sys/time.h",
         "patchSetId": 4
@@ -85,6 +103,24 @@
       "side": 1,
       "message": "/me checks kernel source again...\n\nhttps://elixir.bootlin.com/linux/latest/source/kernel/time/itimer.c#L332\n\nah, yeah, i shouldn\u0027t have been so lazy --- the _actual_ syscall does a little bit of work before it calls do_setitimer (which is what i linked to before). but you can see from the kernel source that the _kernel_ has the same \"do not use this\" that\u0027s mentioned in the man page.\n\nso, yeah, you _can_ pass nullptr here, but your kernel will complain if you do, so we should probably discourage people from doing this.",
       "parentUuid": "95766c20_02f2359b",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b96a84f2_094f6b5c",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-11T22:32:46Z",
+      "side": 1,
+      "message": "I see. I will make it `_Nonnull` here.",
+      "parentUuid": "971b89e0_1f53c21b",
       "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -198,6 +234,30 @@
       "side": 1,
       "message": "it\u0027s consistent _when talking about glibc_, but that doesn\u0027t tell you what _bionic_ does, which is the only thing we care about. (i mentioned the linux kernel earlier because -- unless we do something special in bionic -- we\u0027ll have the linux kernel behavior.)",
       "parentUuid": "432f2087_8f3dff9e",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee796fcb_34686dec",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-11T22:32:46Z",
+      "side": 1,
+      "message": "I think nullptr path can be passed to`utimensat` for https://source.corp.google.com/android/bionic/libc/bionic/futimens.cpp;l\u003d33?q\u003dutimensat\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F \nSo I still think it can be `null`, at least not `_Nonnull`?",
+      "parentUuid": "8568ec0b_72c1d5ff",
       "range": {
         "startLine": 55,
         "startChar": 40,
