@@ -1463,7 +1463,7 @@ LIBC_Q { # introduced=Q
     timespec_get;
 
     # Used by libselinux
-    __system_properties_init; # apex
+    __system_properties_init; # apex llndk
 
     # Used by libmemunreachable
     malloc_backtrace; # apex llndk
