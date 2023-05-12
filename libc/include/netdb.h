@@ -78,6 +78,8 @@
  * supplied in host order, and returned in network order (suitable for
  * use in system calls).
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullable-to-nonnull-conversion"
 struct hostent {
 	char	* _Nullable h_name;	/* official name of host */
 	char	* _Nullable * _Nullable h_aliases;	/* alias list */
@@ -86,6 +88,7 @@ struct hostent {
 	char	* _Nullable * _Nullable h_addr_list;	/* list of addresses from name server */
 #define	h_addr	h_addr_list[0]	/* address, for backward compatibility */
 };
+#pragma clang diagnostic pop
 
 struct netent {
 	char		* _Nullable n_name;	/* official name of net */
