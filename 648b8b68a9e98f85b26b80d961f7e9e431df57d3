@@ -143,6 +143,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6a08208_cd4cb7d4",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-12T00:59:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b96a84f2_094f6b5c",
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e92ef04e_ce313f0f",
@@ -300,6 +318,30 @@
       "side": 1,
       "message": "yeah, i think we want _Nullable and a comment like:\n```\n/**\n * [futimesat(2)](https://man7.org/linux/man-pages/man2/futimesat.2.html) sets\n * file timestamps.\n *\n * Note: Linux supports `__path` being NULL (in which case `__dir_fd` need not\n * be a directory), allowing futimensat() to be implemented with utimensat().\n * Most callers should just use utimensat() directly, especially on Android\n * where utimensat() has been available for longer than futimesat().\n *\n * Returns 0 on success and -1 and sets `errno` on failure.\n *\n * Available since API level 26.\n */\n```",
       "parentUuid": "ee796fcb_34686dec",
+      "range": {
+        "startLine": 55,
+        "startChar": 40,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "648b8b68a9e98f85b26b80d961f7e9e431df57d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76bbbbea_e39b2a3e",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-12T00:59:51Z",
+      "side": 1,
+      "message": "okay I made it `__BIONIC_COMPLICATED_NULLNESS` for consistency.",
+      "parentUuid": "d6f1afa6_7615552b",
       "range": {
         "startLine": 55,
         "startChar": 40,
