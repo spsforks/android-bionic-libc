@@ -79,11 +79,11 @@
  * use in system calls).
  */
 struct hostent {
-	char	* _Nullable h_name;	/* official name of host */
+	char	* __BIONIC_COMPLICATED_NULLNESS h_name;	/* official name of host */
 	char	* _Nullable * _Nullable h_aliases;	/* alias list */
 	int	h_addrtype;	/* host address type */
 	int	h_length;	/* length of address */
-	char	* _Nullable * _Nullable h_addr_list;	/* list of addresses from name server */
+	char	* __BIONIC_COMPLICATED_NULLNESS * __BIONIC_COMPLICATED_NULLNESS h_addr_list;	/* list of addresses from name server */
 #define	h_addr	h_addr_list[0]	/* address, for backward compatibility */
 };
 
