@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d291adf_748b1347",
+        "filename": "libc/include/arpa/inet.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-13T00:01:25Z",
+      "side": 1,
+      "message": "Same as aosp/2586047. But add some fix in Package module.",
+      "revId": "0613c542cb365dd1d609d8cec6dcc56d3e9775c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
