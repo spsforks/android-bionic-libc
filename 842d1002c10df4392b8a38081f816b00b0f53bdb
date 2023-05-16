@@ -22,6 +22,30 @@
       },
       "revId": "842d1002c10df4392b8a38081f816b00b0f53bdb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4438739f_2e4c0f9f",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-16T18:02:22Z",
+      "side": 1,
+      "message": "(yeah, confirmed.)",
+      "parentUuid": "b356f433_4c6a3947",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 41
+      },
+      "revId": "842d1002c10df4392b8a38081f816b00b0f53bdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
