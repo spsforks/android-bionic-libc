@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b356f433_4c6a3947",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-16T00:17:32Z",
+      "side": 1,
+      "message": "Same as `settimeofday`",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 41
+      },
+      "revId": "842d1002c10df4392b8a38081f816b00b0f53bdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
