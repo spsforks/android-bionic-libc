@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "17558448_5ba12575",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-17T15:51:49Z",
+      "side": 1,
+      "message": "ah, yeah, we should probably just remove this. (it\u0027s a _little_ bit tricky because native bridge/ndk_translation knows about it, so it\u0027ll probably require a couple of CLs.)\n\nin the meantime, does `const char* __unused __filename` still get you a warning asking for a nullability annotation? even if it does, `const char* __unused _Nullable __filename` probably makes sense.",
+      "parentUuid": "97831b72_6eb17cd8",
+      "range": {
+        "startLine": 64,
+        "startChar": 47,
+        "endLine": 64,
+        "endChar": 56
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81ef9786_cf7dd14e",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 2
