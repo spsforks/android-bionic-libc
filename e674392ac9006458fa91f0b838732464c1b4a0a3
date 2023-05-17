@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "97831b72_6eb17cd8",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T00:43:27Z",
+      "side": 1,
+      "message": "yes, from the comment in line 62 and here: (I am surprise too 😂)\nhttp://cs/android/bionic/libc/bionic/system_property_api.cpp;l\u003d53;rcl\u003dbe181199bc520ff9f7f1daad84c5bb9772317009",
+      "parentUuid": "4ba13e00_7e05310e",
+      "range": {
+        "startLine": 64,
+        "startChar": 47,
+        "endLine": 64,
+        "endChar": 56
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81ef9786_cf7dd14e",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 2
