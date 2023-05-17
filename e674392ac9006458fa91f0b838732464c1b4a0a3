@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa76132f_d1206bd8",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T19:01:29Z",
+      "side": 1,
+      "message": "wooo that\u0027s a good trick and `const char* __unused __filename` is good.",
+      "parentUuid": "17558448_5ba12575",
+      "range": {
+        "startLine": 64,
+        "startChar": 47,
+        "endLine": 64,
+        "endChar": 56
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81ef9786_cf7dd14e",
@@ -85,6 +109,30 @@
       "writtenOn": "2023-05-17T00:32:29Z",
       "side": 1,
       "message": "really? why would we call the callback if we didn\u0027t have data to give it? (i agree about cookie though; if the caller passes null to this function, this function will pass null to the callback.)",
+      "range": {
+        "startLine": 60,
+        "startChar": 33,
+        "endLine": 60,
+        "endChar": 137
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a172ae70_ae29b57d",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T19:01:29Z",
+      "side": 1,
+      "message": "I think `__name` and `__value` should be `_Nonnull`.",
+      "parentUuid": "81ef9786_cf7dd14e",
       "range": {
         "startLine": 60,
         "startChar": 33,
@@ -120,6 +168,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66ae91f8_cbca42fb",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T19:01:29Z",
+      "side": 1,
+      "message": "yes, but this is the root: http://cs/android/bionic/libc/system_properties/prop_area.cpp;l\u003d333;rcl\u003d9497f6abba0d72c8b20085281174c0014b5f04fd\n\n1. `ContextsSerialized -\u003e ForEach`  https://source.corp.google.com/android/bionic/libc/system_properties/system_properties.cpp;l\u003d372?q\u003dForeach\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n2. `context_nodes_[i].pa()-\u003eforeach` and `context_nodes_` is `ContextNode` and `context_nodes_-\u003epa()` is `prop_area*`\nhttps://source.corp.google.com/android/bionic/libc/system_properties/include/system_properties/context_node.h;l\u003d55?q\u003d%22pa()%22\u0026sq\u003d\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n\n3. https://source.corp.google.com/android/bionic/libc/system_properties/contexts_serialized.cpp;l\u003d150?q\u003dContextsSerialized\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n\n4. the root: http://cs/android/bionic/libc/system_properties/prop_area.cpp;l\u003d333;rcl\u003d9497f6abba0d72c8b20085281174c0014b5f04fd\nand `pi` is not used 😞",
+      "parentUuid": "a03c70da_06981f6d",
+      "range": {
+        "startLine": 69,
+        "startChar": 76,
+        "endLine": 69,
+        "endChar": 85
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8d94f943_266008f9",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 2
@@ -131,6 +203,30 @@
       "writtenOn": "2023-05-17T00:32:29Z",
       "side": 1,
       "message": "(may as well fix the typo here in passing :-) )",
+      "range": {
+        "startLine": 75,
+        "startChar": 10,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2a4898b_ef526325",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T19:01:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d94f943_266008f9",
       "range": {
         "startLine": 75,
         "startChar": 10,
@@ -154,6 +250,30 @@
       "writtenOn": "2023-05-17T00:32:29Z",
       "side": 1,
       "message": "why would we call the callback in this case?",
+      "range": {
+        "startLine": 85,
+        "startChar": 45,
+        "endLine": 85,
+        "endChar": 54
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb8a82b6_4a52f634",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-17T19:01:29Z",
+      "side": 1,
+      "message": "I think it is nullable because \nhttp://cs/android/bionic/libc/bionic/system_property_api.cpp;l\u003d120;rcl\u003d46c87a08fb19918410a5e9b0c18ec12091a1c279\nand\nhttp://cs/android/bionic/libc/system_properties/system_properties.cpp;l\u003d322;rcl\u003d46c87a08fb19918410a5e9b0c18ec12091a1c279",
+      "parentUuid": "2ad6fc37_7873572f",
       "range": {
         "startLine": 85,
         "startChar": 45,
