@@ -143,6 +143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5aec303_b7de843e",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-17T19:52:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a172ae70_ae29b57d",
+      "range": {
+        "startLine": 60,
+        "startChar": 33,
+        "endLine": 60,
+        "endChar": 137
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a03c70da_06981f6d",
@@ -180,6 +204,30 @@
       "side": 1,
       "message": "yes, but this is the root: http://cs/android/bionic/libc/system_properties/prop_area.cpp;l\u003d333;rcl\u003d9497f6abba0d72c8b20085281174c0014b5f04fd\n\n1. `ContextsSerialized -\u003e ForEach`  https://source.corp.google.com/android/bionic/libc/system_properties/system_properties.cpp;l\u003d372?q\u003dForeach\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n2. `context_nodes_[i].pa()-\u003eforeach` and `context_nodes_` is `ContextNode` and `context_nodes_-\u003epa()` is `prop_area*`\nhttps://source.corp.google.com/android/bionic/libc/system_properties/include/system_properties/context_node.h;l\u003d55?q\u003d%22pa()%22\u0026sq\u003d\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n\n3. https://source.corp.google.com/android/bionic/libc/system_properties/contexts_serialized.cpp;l\u003d150?q\u003dContextsSerialized\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n\n4. the root: http://cs/android/bionic/libc/system_properties/prop_area.cpp;l\u003d333;rcl\u003d9497f6abba0d72c8b20085281174c0014b5f04fd\nand `pi` is not used 😞",
       "parentUuid": "a03c70da_06981f6d",
+      "range": {
+        "startLine": 69,
+        "startChar": 76,
+        "endLine": 69,
+        "endChar": 85
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "923c173f_0506c1d5",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-17T19:52:47Z",
+      "side": 1,
+      "message": "but look at prop_area::foreach_property(), which is the only thing that actually calls the callback (the rest is all just the recursion through the structure). in particular, look at the block of code that actually calls the callback ... can that pass nullptr as the first argument?",
+      "parentUuid": "66ae91f8_cbca42fb",
       "range": {
         "startLine": 69,
         "startChar": 76,
@@ -274,6 +322,30 @@
       "side": 1,
       "message": "I think it is nullable because \nhttp://cs/android/bionic/libc/bionic/system_property_api.cpp;l\u003d120;rcl\u003d46c87a08fb19918410a5e9b0c18ec12091a1c279\nand\nhttp://cs/android/bionic/libc/system_properties/system_properties.cpp;l\u003d322;rcl\u003d46c87a08fb19918410a5e9b0c18ec12091a1c279",
       "parentUuid": "2ad6fc37_7873572f",
+      "range": {
+        "startLine": 85,
+        "startChar": 45,
+        "endLine": 85,
+        "endChar": 54
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b03a8ed9_64004c1d",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-17T19:52:47Z",
+      "side": 1,
+      "message": "oh, yeah, also the comment on L77 explaining what `nullptr` means here. i think i\u0027m so used to the headers not having comments i didn\u0027t read the comments in this header well enough!",
+      "parentUuid": "bb8a82b6_4a52f634",
       "range": {
         "startLine": 85,
         "startChar": 45,
