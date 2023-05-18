@@ -262,6 +262,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46b4a566_d681014b",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-18T18:38:11Z",
+      "side": 1,
+      "message": "(yes, exactly that line :-) )",
+      "parentUuid": "778beed6_cc84fda5",
+      "range": {
+        "startLine": 69,
+        "startChar": 76,
+        "endLine": 69,
+        "endChar": 85
+      },
+      "revId": "e674392ac9006458fa91f0b838732464c1b4a0a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d94f943_266008f9",
