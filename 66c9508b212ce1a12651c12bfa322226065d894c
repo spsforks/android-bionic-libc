@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "166f59a7_9f33e10e",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-18T22:36:49Z",
+      "side": 1,
+      "message": "(you should include this copyright header in the new file, like in printf_common.h. otherwise lgtm.)",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 3
+      },
+      "revId": "66c9508b212ce1a12651c12bfa322226065d894c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
