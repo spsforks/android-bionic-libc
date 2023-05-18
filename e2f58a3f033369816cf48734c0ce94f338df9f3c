@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dee147b_727726ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-05-18T01:49:57Z",
+      "side": 1,
+      "message": "The use of the libdexfile_support library could be fixed by using whole_static_libs in libunwindstack. However, that requires modifications to the build system to support adding a new exclude_whole_static_libs directive. Therefore I\u0027m not doing that at this time.\n\nIn addition, there is no need to add libdexfile.so to the runtime libs since this code is only really used in java processes (okay, really only system_server). Java already can load libdexfile (and has already loaded it). I did verify that libdexfile is being loaded properly.",
+      "revId": "e2f58a3f033369816cf48734c0ce94f338df9f3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
