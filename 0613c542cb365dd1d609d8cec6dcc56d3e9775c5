@@ -16,6 +16,24 @@
       "message": "Same as aosp/2586047. But add some fix in Package module.",
       "revId": "0613c542cb365dd1d609d8cec6dcc56d3e9775c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4335872a_926e7085",
+        "filename": "libc/include/arpa/inet.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-18T17:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d291adf_748b1347",
+      "revId": "0613c542cb365dd1d609d8cec6dcc56d3e9775c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
