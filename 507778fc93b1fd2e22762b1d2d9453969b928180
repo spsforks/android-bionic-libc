@@ -118,6 +118,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74535eff_bc31658c",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-19T19:00:53Z",
+      "side": 1,
+      "message": "no, the bug was about iterating the alias list with a `while (struct-\u003emember !\u003d nullptr)` loop not causing clang to recognize that struct-\u003emember isn\u0027t going to be null in the body... zijunzhao will be along shortly with the specifics.",
+      "parentUuid": "8634d82f_0ceb087c",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
