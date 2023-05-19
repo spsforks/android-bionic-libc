@@ -70,6 +70,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cf7c3e1_cbd6c0b4",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-05-19T18:48:49Z",
+      "side": 1,
+      "message": "unspecified seems fine to me. If you want to name it, maybe just `__BIONIC_NULLNESS_NOT_EXPRESSIBLE_TO_CLANG`? It\u0027s wordy but correct.",
+      "parentUuid": "7f547179_19606f22",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
