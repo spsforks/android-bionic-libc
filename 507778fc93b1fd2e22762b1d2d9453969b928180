@@ -22,6 +22,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e89e5a8b_e4d7f72b",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-19T18:18:08Z",
+      "side": 1,
+      "message": "I see! So this is still `_Nullable_unspecific` BUT with a different macro name, which can help explain why it is unspecific clearly right?",
+      "parentUuid": "0937391c_65918e5b",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
