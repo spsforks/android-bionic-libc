@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0937391c_65918e5b",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-19T17:26:19Z",
+      "side": 1,
+      "message": "i don\u0027t think this is \"complicated\" (which we\u0027ve been using to mean \"read the docs; there\u0027s a special case here\") ... i think just \"unspecified\" makes sense? (although arguably it\u0027s a completely new thing which is \"we do know what this is [and in this case, that\u0027s `_Nullable`] but clang doesn\u0027t understand common patterns for making use of this safe, so it would be a bad idea for us to actually specify this\" :-( )\n\n+danalbert for thoughts, including whether we should have a new __BIONIC_ macro to explain this (though i\u0027m struggling to think of a name). currently we don\u0027t have any direct use of unspecified, just the \"complicated\" macro.\n\n(like i said, this does kind of worry me about annotating struct fields in general. and most of our existing struct field annotations -- though they didn\u0027t cause build problems -- were a bit questionable to start with. so i guess one option is `__BIONIC_POINTER_IN_STRUCT` which doesn\u0027t look like it\u0027s making any claim about anything, but can have a comment in \u003csys/cdefs.h\u003e explaining why we\u0027re opting out of annotating these for now.)",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
