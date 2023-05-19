@@ -46,6 +46,30 @@
       },
       "revId": "4690f0756d7f51e1ae68bef2d59174b46560c32f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72b95a70_0337e08f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-19T22:31:55Z",
+      "side": 1,
+      "message": "i didn\u0027t mean that --- i meant \"the reason we made this mistake historically was that we\u0027d fuck up\" :-) specifically, we\u0027d add something for 64-bit (but not 32) or for some architectures (but not all), and no-one would notice until it was too late. but given .map.txt that\u0027s now a _build_ failure, which is a huge leap forward (and why you haven\u0027t seen any of these mistakes recently).",
+      "parentUuid": "8d3ca4e2_d2bd92d3",
+      "range": {
+        "startLine": 30,
+        "startChar": 50,
+        "endLine": 30,
+        "endChar": 64
+      },
+      "revId": "4690f0756d7f51e1ae68bef2d59174b46560c32f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
