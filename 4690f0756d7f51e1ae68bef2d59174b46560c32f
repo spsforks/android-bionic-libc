@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f81f0e32_98eb1d32",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-19T14:12:33Z",
+      "side": 1,
+      "message": "(at the same time, now we have the .map.txt it should be impossible to make that mistake again. once we\u0027re past API level 24 as a minimum, we could just remove the three in \u003ccomplex.h\u003e and the one in \u003csys/resource.h\u003e and forget about this...)",
+      "range": {
+        "startLine": 30,
+        "startChar": 50,
+        "endLine": 30,
+        "endChar": 64
+      },
+      "revId": "4690f0756d7f51e1ae68bef2d59174b46560c32f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
