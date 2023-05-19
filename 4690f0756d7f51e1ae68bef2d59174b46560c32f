@@ -22,6 +22,30 @@
       },
       "revId": "4690f0756d7f51e1ae68bef2d59174b46560c32f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d3ca4e2_d2bd92d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-05-19T22:25:36Z",
+      "side": 1,
+      "message": "I noticed that the versioner has the ability to parse libc.map.txt, but I think it\u0027s currently broken, because it can\u0027t handle long codenames. (e.g. It can handle `T` but not `Tiramisu`.)",
+      "parentUuid": "f81f0e32_98eb1d32",
+      "range": {
+        "startLine": 30,
+        "startChar": 50,
+        "endLine": 30,
+        "endChar": 64
+      },
+      "revId": "4690f0756d7f51e1ae68bef2d59174b46560c32f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

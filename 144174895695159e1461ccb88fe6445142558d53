@@ -16,6 +16,24 @@
       "message": "add an sh_test for this so we catch any future issues?",
       "revId": "144174895695159e1461ccb88fe6445142558d53",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "768597d8_69b100ec",
+        "filename": "tools/versioner/tests/preprocessor/run.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-05-19T22:25:36Z",
+      "side": 0,
+      "message": "Currently we build the versioner as part of ab/aosp-clang-tools . There\u0027s a script, development/vndk/tools/header-checker/android/build-prebuilts.sh, that invokes Soong, then renames the prebuilt shared libraries that Soong installs to accommodate soname versioning. My recent fix (aosp/2590665) should simplify this script. We\u0027ll need to update the Clang prebuilt and probably allow building `versioner` without setting the LLVM_BUILD_HOST_TOOLS env variable. My libc++ patches to prebuilts/clang/host/linux-x86/soong/clangprebuilts.go already do this.\n\nMaybe use `python_test_host` to run `run_tests.py`.",
+      "parentUuid": "f048779e_79a3f25f",
+      "revId": "144174895695159e1461ccb88fe6445142558d53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
