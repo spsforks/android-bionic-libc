@@ -94,6 +94,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8634d82f_0ceb087c",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-05-19T18:57:12Z",
+      "side": 1,
+      "message": "Irrespective of the naming, please file a bug with why this could be a clang bug.  The error in PS1 h_addr_list was not annotated as _Nonnull and consequently clang complained about this line in DNSProxyListener.cpp:\n\n\u003e inet_ntop(hp-\u003eh_addrtype, hp-\u003eh_addr_list[i], ip_addr, sizeof(ip_addr))\n\nIs it that we need different annotations when implementing the library vs. using it?",
+      "parentUuid": "9cf7c3e1_cbd6c0b4",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
