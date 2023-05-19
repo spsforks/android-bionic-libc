@@ -46,6 +46,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f547179_19606f22",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-19T18:36:38Z",
+      "side": 1,
+      "message": "yeah, exactly.\n\n(the biggest question is probably \"am i over-reacting to one clang bug?\", and my answer is \"i have no idea\". i don\u0027t know whether that\u0027s representative at all.)\n\ni was interested to learn from your linux-man@ discussion that they\u0027re adding these annotations to the man pages (but not, afaik, to glibc or musl). but they look like they\u0027re just doing the functions, not the structs. (possibly for our earlier \"what does this even mean?\" reason rather than our newer \"because clang doesn\u0027t understand common idioms for using these safely\".)",
+      "parentUuid": "e89e5a8b_e4d7f72b",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
