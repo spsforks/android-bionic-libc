@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c385ba67_6f1744b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-20T01:43:32Z",
+      "side": 1,
+      "message": "Why `value` can be `nullptr`? From https://man7.org/linux/man-pages/man2/setxattr.2.html, \n```a zero-length value is permitted.``` But it is hard to believe that `key:nullptr` is allowed.",
+      "revId": "023bc9005546a22f91e719ec22f033cca3434527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
