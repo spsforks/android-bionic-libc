@@ -142,6 +142,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f9b58e5_de468950",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-22T20:34:21Z",
+      "side": 1,
+      "message": "@pirama I already file one here: https://github.com/llvm/llvm-project/issues/62724 \nI think the next step is to name it as `__BIONIC_NULLNESS_NOT_EXPRESSIBLE_TO_CLANG`?",
+      "parentUuid": "74535eff_bc31658c",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
