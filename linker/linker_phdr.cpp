@@ -58,6 +58,635 @@ static int GetTargetElfMachine() {
 #endif
 }
 
+/* Code fixup hack!!! */
+#include <map>
+
+struct FixUpAction {
+  uint8_t reg;
+  uint64_t value;
+  uint8_t cond;
+  bool islink;
+  bool bitclear;
+  uint64_t bitmask;
+  uint8_t bitreg;
+};
+
+// TODO make these thread-safe.
+std::map<uint64_t, struct FixUpAction> fixupMap;
+std::map<uint64_t, uint64_t> pageMoves;
+
+#define PSTATE_V 0x10000000
+#define PSTATE_C 0x20000000
+#define PSTATE_Z 0x40000000
+#define PSTATE_N 0x80000000
+
+bool pstate_cond_holds(uint64_t pstate, uint8_t cond) {
+  bool result;
+
+  switch (cond >> 1) {
+  case 0b000:
+    result = ((pstate & PSTATE_Z) != 0); // EQ or NE
+    break;
+  case 0b001:
+    result = ((pstate & PSTATE_C) != 0); // CS or CC
+    break;
+  case 0b010:
+    result = ((pstate & PSTATE_N) != 0); // MI or PL
+    break;
+  case 0b011:
+    result = ((pstate & PSTATE_V) != 0); // VS or VC
+    break;
+  case 0b100:
+    result = ((pstate & PSTATE_C) != 0 && ((pstate & PSTATE_Z) == 0)); // HI or LS
+    break;
+  case 0b101:
+    result = ((pstate & PSTATE_N) == PSTATE_V); // GE or LT
+    break;
+  case 0b110:
+    result = ((pstate & PSTATE_N) == PSTATE_V && (PSTATE_Z == 0)); // GT or LE
+    break;
+  case 0b111:
+    return true; // AL
+  }
+
+  if (cond & 0x1)
+    result = !result;
+
+  return result;
+}
+
+bool regcompare_holds(bool clear, uint64_t mask, uint64_t value) {
+  if (clear)
+    return (value & mask) == 0;
+  else
+    return (value & mask) != 0;
+}
+
+// clang-format off
+// adrp :
+// 31 | 30 29 | 28 | 27 | 26 | 25 | 24 | 23 - 5 |   4 - 0 |
+//  1 | immlo |  1 |  0 |  0 |  0 |  0 |  immhi |      Rd |
+// adr
+// 31 | 30 29 | 28 | 27 | 26 | 25 | 24 | 23 - 5 |   4 - 0 |
+//  0 | immlo |  1 |  0 |  0 |  0 |  0 |  immhi |      Rd |
+// brk
+// 31 | 30 | 29 | 28 | 27 | 26 | 25 | 24 | 23 | 22 | 21 | 20 - 5 | 4 | 3 | 2 | 1 | 0 |
+//  1 |  1 |  0 |  1 |  0 |  1 |  0 |  0 |  0 |  0 |  1 |  imm16 | 0 | 0 | 0 | 0 | 0 |
+
+// b/bl <label>
+// 31 | 30 | 29 | 28 | 27 | 26 | 25 -  0 |
+// op |  0 |  0 |  1 |  0 |  1 |  imm26  |
+
+// b.cond / bc.cond
+// 31 | 30 | 29 | 28 | 27 | 26 | 25 | 24 | 23 - 5 |  4 | 3 - 0 |
+//  0 |  1 |  0 |  1 |  0 |  1 |  0 |  0 |  imm19 |  c |  cond |
+
+// clang-format on
+
+const uint32_t adr_mask = 0x1f << 24;
+const uint32_t adr_value = 0x10 << 24;
+const uint32_t brk_value = 0xd4 << 24 | 1 << 21;
+const uint32_t branch_mask = 0x1F << 26;
+const uint32_t branch_value = 0x5 << 26;
+const uint32_t branchcond_mask = 0xFF << 24;
+const uint32_t branchcond_value = 0x54 << 24;
+const uint32_t comparebranch_mask = 0x3f << 25;
+const uint32_t comparebranch_value = 0x1a << 25;
+const uint32_t testbranch_mask = 0x3f << 25;
+const uint32_t testbranch_value = 0x1b << 25;
+
+
+template <unsigned B> constexpr inline int64_t SignExtend64(uint64_t x) {
+  static_assert(B > 0, "Bit width can't be 0.");
+  static_assert(B <= 64, "Bit width out of range.");
+  return int64_t(x << (64 - B)) >> (64 - B);
+}
+
+/// Checks if an integer fits into the given bit width.
+template <unsigned N> constexpr inline bool isInt(int64_t x) {
+  if constexpr (N == 8)
+    return static_cast<int8_t>(x) == x;
+  if constexpr (N == 16)
+    return static_cast<int16_t>(x) == x;
+  if constexpr (N == 32)
+    return static_cast<int32_t>(x) == x;
+  if constexpr (N < 64)
+    return -(INT64_C(1) << (N - 1)) <= x && x < (INT64_C(1) << (N - 1));
+  (void)x;
+  return true;
+}
+
+struct Adrp {
+  uint8_t destRegister;
+  int64_t addend;
+  uint32_t shift;
+  uint64_t base_address;
+  uint64_t getAddress() { return base_address + addend; }
+  bool inRange(int64_t fixup) {
+    return shift ? isInt<33>(addend + fixup) : isInt<19>(addend + fixup);
+  }
+};
+
+static bool parseAdrp(uint32_t *inst, Adrp &adrp) {
+  if ((*inst & adr_mask) != adr_value)
+    return false;
+  adrp.destRegister = *inst & 0x1f;
+  uint64_t immHi = (*inst >> 5) & 0x7ffff;
+  uint64_t immLo = (*inst >> 29) & 0x3;
+  if (*inst & (1 << 31)) {
+    adrp.addend = SignExtend64<33>((immLo | (immHi << 2)) << 12);
+    adrp.shift = 12;
+    adrp.base_address = (reinterpret_cast<uint64_t>(inst)) & ~0xFFF;
+  } else {
+    adrp.addend = SignExtend64<21>(immLo | (immHi << 2));
+    adrp.shift = 0;
+    adrp.base_address = reinterpret_cast<uint64_t>(inst);
+  }
+  return true;
+}
+
+static uint32_t encodeAdrp(Adrp &adrp) {
+  uint32_t inst = adr_value;
+  inst |= adrp.destRegister;
+  uint64_t immLo = (adrp.addend >> adrp.shift) & 0x3;
+  uint64_t immHi = (adrp.addend >> adrp.shift) >> 2 & 0x7ffff;
+  inst |= immLo << 29;
+  inst |= immHi << 5;
+  if (adrp.shift)
+    inst |= 1 << 31;
+  return inst;
+}
+
+struct Branch {
+  int64_t addend;
+  uint64_t base_address;
+  bool islink;
+  uint64_t getAddress() { return base_address + addend; }
+  bool inRange(int64_t fixup) { return isInt<28>(addend + fixup); }
+};
+
+static bool parseBranch(uint32_t *inst, Branch &b) {
+  if ((*inst & branch_mask) != branch_value)
+    return false;
+  b.addend = SignExtend64<28>((*inst & 0x3ffffff) << 2);
+  b.islink = *inst & (1 << 31);
+  b.base_address = reinterpret_cast<uint64_t>(inst);
+  return true;
+}
+
+static uint32_t encodeBranch(Branch &b) {
+  uint32_t inst = branch_value;
+  inst |= (b.addend >> 2) & 0x3ffffff;
+  if (b.islink)
+    inst |= 1 << 31;
+  return inst;
+}
+
+struct BranchCond {
+  int64_t addend;
+  uint64_t base_address;
+  uint8_t cond;
+  bool consitent;
+  uint64_t getAddress() { return base_address + addend; }
+  bool inRange(int64_t fixup) { return isInt<21>(addend + fixup); }
+};
+
+static bool parseBranchCond(uint32_t *inst, BranchCond &b) {
+  if ((*inst & branchcond_mask) != branchcond_value)
+    return false;
+  b.addend = SignExtend64<21>(((*inst >> 5) & 0x7ffff) << 2);
+  b.cond = *inst & (0xf);
+  b.base_address = reinterpret_cast<uint64_t>(inst);
+  b.consitent = *inst & 0x1 << 4;
+  return true;
+}
+
+static uint32_t encodeBranchCond(BranchCond &b) {
+  uint32_t inst = branchcond_value;
+  inst |= ((b.addend >> 2) & 0x7ffff) << 5;
+  inst |= b.cond;
+  inst |= b.consitent << 4;
+  return inst;
+}
+
+struct CompareAndBranch {
+  int64_t addend;
+  uint64_t base_address;
+  bool negate;
+  uint8_t regsize;
+  uint8_t reg;
+  uint64_t getAddress() { return base_address + addend; }
+  bool inRange(int64_t fixup) { return isInt<19>(addend + fixup); }
+};
+
+static bool parseCompareAndBranch(uint32_t *inst, CompareAndBranch &cb) {
+  if ((*inst & comparebranch_mask) != comparebranch_value) {
+    return false;
+  }
+
+  cb.base_address = reinterpret_cast<uint64_t>(inst);
+  cb.addend = SignExtend64<21>(((*inst >> 5) & 0x7ffff) << 2);
+  cb.negate = *inst & (1 << 24);
+  cb.regsize = (*inst >> 31) ? 64 : 32;
+  cb.reg = *inst & 0x1f;
+
+  return true;
+}
+
+static uint32_t encodeCompareAndBranch(const CompareAndBranch &cb) {
+  uint32_t inst = comparebranch_value;
+  inst |= (((cb.regsize == 64) ? 0x1 : 0x0) << 31);
+  inst |= (cb.negate & 0x1) << 24;
+  inst |= ((cb.addend >> 2) & 0x7ffff) << 5;
+  inst |= cb.reg & 0x1f;
+  return inst;
+}
+
+struct TestAndBranch {
+  int64_t addend;
+  uint64_t base_address;
+  bool negate;
+  uint8_t regsize;
+  uint8_t reg;
+  uint8_t bit;
+  uint64_t getAddress() { return base_address + addend; }
+  bool inRange(int64_t fixup) { return isInt<16>(addend + fixup); }
+};
+
+static bool parseTestAndBranch(uint32_t *inst, TestAndBranch &tb) {
+  if ((*inst & testbranch_mask) != testbranch_value) {
+    return false;
+  }
+
+  tb.base_address = reinterpret_cast<uint64_t>(inst);
+  tb.addend = SignExtend64<16>(((*inst >> 5) & 0x3fff) << 2);
+  tb.negate = *inst & (1 << 24);
+  tb.regsize = (*inst >> 31) ? 64 : 32;
+  tb.reg = *inst & 0x1f;
+  tb.bit = ((*inst >> 19) & 0x1f) | ((*inst >> 26) & (1 << 6)) ;
+
+  return true;
+}
+
+static uint32_t encodeTestAndBranch(const TestAndBranch &tb) {
+  uint32_t inst = testbranch_value;
+  inst |= ((tb.regsize == 64) ? 0x1 : 0x0) << 31;
+  inst |= (tb.negate & 0x1) << 24;
+  inst |= (tb.bit & 0x1f) << 19;
+  inst |= ((tb.addend >> 2) & 0x3fff) << 5;
+  inst |= (tb.reg) & 0x1f;
+  return inst;
+}
+
+
+int scan(uint32_t *inst_p, uint32_t cnt, int64_t fixup) {
+#ifdef CODE_COPY_HACK_TRACE
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdate-time"
+  DL_WARN("\t[CODE COPY HACK] date: %s, time:%s", __DATE__, __TIME__);
+#pragma clang diagnostic pop
+#endif
+
+  int adr_t = 0;
+  int adr_p = 0;
+  int b_t = 0;
+  int b_p = 0;
+  int bcond_t = 0;
+  int bcond_p = 0;
+  int cb_t = 0;
+  int cb_p = 0;
+  int tb_t = 0;
+  int tb_p = 0;
+
+  for (uint32_t i = 0; i < cnt; i++) {
+    struct Adrp adrp;
+    struct Branch b;
+    struct BranchCond bc;
+    struct CompareAndBranch cb;
+    struct TestAndBranch tb;
+
+    if (parseAdrp(&inst_p[i], adrp)) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK] found at (0x%lX) 0x%X (%s)  - base 0%lX, targets 0x%lX - imm 0x%lX\n",
+             reinterpret_cast<unsigned long>(&inst_p[i]),
+             inst_p[i],
+             adrp.shift ? "adrp" : "adr", adrp.base_address,
+             adrp.getAddress() + fixup, adrp.addend);
+#endif
+      // ADR/P always have to be patched, so that they point to the
+      // original page.
+      adr_t += 1;
+      if (!adrp.inRange(fixup)) {
+        fixupMap.insert({reinterpret_cast<uint64_t>(&inst_p[i]),
+                         FixUpAction{adrp.destRegister,
+                                     adrp.getAddress() + fixup, 0b111, false,
+                                     true, 0x0, 0}});
+        inst_p[i] = brk_value;
+      } else {
+        adr_p += 1;
+        adrp.addend += fixup;
+        inst_p[i] = encodeAdrp(adrp);
+      }
+    } else if (parseBranch(&inst_p[i], b)) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK] branch found 0x%lX (targets 0x%lX), inrange %i (0x%lX)\n",
+             reinterpret_cast<unsigned long>(&inst_p[i]),
+             b.getAddress() + fixup, b.inRange(fixup), b.addend + fixup);
+#endif
+
+      if (page_start(reinterpret_cast<uintptr_t>(inst_p)) == page_start(reinterpret_cast<uintptr_t>(b.getAddress()))) {
+#ifdef CODE_COPY_HACK_TRACE
+        DL_WARN("\t\t[CODE COPY HACK] skipped -- in same page! ");
+#endif
+        continue;
+      }
+
+      b_t += 1;
+      if (b.inRange(fixup)) {
+        b_p += 1;
+        b.addend += fixup;
+        inst_p[i] = encodeBranch(b);
+      } else {
+        fixupMap.insert({reinterpret_cast<uint64_t>(&inst_p[i]),
+                         FixUpAction{33, b.getAddress() + fixup, 0b111, b.islink,
+                                     true, 0x0, 0}});
+        inst_p[i] = brk_value;
+      }
+    } else if (parseBranchCond(&inst_p[i], bc)) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK]  branchcond found 0x%X at 0x%lX (targets 0x%lX), inrange %i (0x%lX)\n",
+      reinterpret_cast<unsigned>(inst_p[i]),
+      reinterpret_cast<unsigned long>(&inst_p[i]),
+      bc.getAddress() + fixup, bc.inRange(fixup),
+      bc.addend + fixup);
+#endif
+
+      if (page_start(reinterpret_cast<uintptr_t>(inst_p)) == page_start(reinterpret_cast<uintptr_t>(bc.getAddress()))) {
+#ifdef CODE_COPY_HACK_TRACE
+        DL_WARN("\t\t[CODE COPY HACK] skipped -- in same page! ");
+#endif
+        continue;
+      }
+
+      bcond_t += 1;
+      if (bc.inRange(fixup)) {
+        bcond_p += 1;
+        bc.addend += fixup;
+        inst_p[i] = encodeBranchCond(bc);
+      } else {
+        fixupMap.insert({reinterpret_cast<uint64_t>(&inst_p[i]),
+                         FixUpAction{33, bc.getAddress() + fixup, bc.cond, false,
+                                     true, 0x0, 0}});
+        inst_p[i] = brk_value;
+      }
+    } else if (parseCompareAndBranch(&inst_p[i], cb)) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK]  CB(N)Z found 0x%X at 0x%lX (targets 0x%lX), inrange %i (0x%lX)\n",
+      reinterpret_cast<unsigned>(inst_p[i]),
+      reinterpret_cast<unsigned long>(&inst_p[i]),
+      cb.getAddress() + fixup, cb.inRange(fixup),
+      cb.addend + fixup);
+#endif
+
+      if (page_start(reinterpret_cast<uintptr_t>(inst_p)) == page_start(reinterpret_cast<uintptr_t>(cb.getAddress()))) {
+#ifdef CODE_COPY_HACK_TRACE
+        DL_WARN("\t\t[CODE COPY HACK] skipped -- in same page! ");
+#endif
+        continue;
+      }
+
+      cb_t += 1;
+      if (cb.inRange(fixup)) {
+        cb_p += 1;
+        cb.addend += fixup;
+        inst_p[i] = encodeCompareAndBranch(cb);
+      } else {
+        fixupMap.insert({reinterpret_cast<uint64_t>(&inst_p[i]),
+                         FixUpAction{33, cb.getAddress() + fixup, 0b111, false,
+                                     !cb.negate,
+                                     cb.regsize == 64 ? 0xffffffffffffffffUL : 0xffffffffUL,
+                                     cb.reg}});
+      }
+    } else if (parseTestAndBranch(&inst_p[i], tb)) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK] TB(N)Z found 0x%X at 0x%lX (targets 0x%lX), inrange %i (0x%lX)\n",
+      reinterpret_cast<unsigned>(inst_p[i]),
+      reinterpret_cast<unsigned long>(&inst_p[i]),
+      tb.getAddress() + fixup, tb.inRange(fixup),
+      tb.addend + fixup);
+#endif
+
+      if (page_start(reinterpret_cast<uintptr_t>(inst_p)) == page_start(reinterpret_cast<uintptr_t>(tb.getAddress()))) {
+#ifdef CODE_COPY_HACK_TRACE
+        DL_WARN("\t\t[CODE COPY HACK] skipped -- in same page! ");
+#endif
+        continue;
+      }
+
+      tb_t += 1;
+      if (tb.inRange(fixup)) {
+        tb_p += 1;
+        tb.addend += fixup;
+        inst_p[i] = encodeTestAndBranch(tb);
+      } else {
+        fixupMap.insert({reinterpret_cast<uint64_t>(&inst_p[i]),
+                         FixUpAction{33, tb.getAddress() + fixup, 0b111, false,
+                                     !tb.negate, 1UL << tb.bit, tb.reg}});
+      }
+    }
+  }
+#ifdef CODE_COPY_HACK_TRACE
+  DL_WARN("[CODE COPY STATS] fixup is: %ld", fixup);
+  DL_WARN("[CODE COPY STATS] adr total: %d, patched: %d, b total: %d, patched: %d, b.cond total: %d, patched: %d, cb(n)z total: %d, patched: %d, tb(n)z total: %d, patched: %d",
+          adr_t, adr_p,
+          b_t, b_p,
+          bcond_t, bcond_p,
+          cb_t, cb_p,
+          tb_t, tb_p);
+#endif
+  return 0;
+}
+
+void unblock_signal(int signum) {
+  sigset_t sigs;
+  sigemptyset(&sigs);
+  sigaddset(&sigs, signum);
+  sigprocmask(SIG_UNBLOCK, &sigs, NULL);
+}
+
+/* Chainging sighandlers */
+struct sigaction old_sigsegv;
+struct sigaction old_sigtrap;
+
+void sighandler(int sig, siginfo_t *info, void *ucontext) {
+  ucontext_t *realcontext = reinterpret_cast<ucontext_t *>(ucontext);
+  (void)info;
+
+  if (sig == -SIGSEGV) {
+    if (info != nullptr) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("[CODE COPY SIGNAL] returning old sigsegv");
+#endif
+      struct sigaction * old = reinterpret_cast<struct sigaction *>(info);
+      *old = old_sigsegv;
+    }
+    if (ucontext != nullptr) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("[CODE COPY SIGNAL] updating old sigsegv");
+#endif
+      struct sigaction * new_sigaction = reinterpret_cast<struct sigaction *>(ucontext);
+      old_sigsegv = *new_sigaction;
+    }
+    return;
+  } else if (sig == -SIGTRAP) {
+    if (info != nullptr) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("[CODE COPY SIGNAL] returning old sigtrap");
+#endif
+      struct sigaction * old = reinterpret_cast<struct sigaction *>(info);
+      *old = old_sigtrap;
+    }
+    if (ucontext != nullptr) {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("[CODE COPY SIGNAL] updating old sigtrap");
+#endif
+      struct sigaction * new_sigaction = reinterpret_cast<struct sigaction *>(ucontext);
+      old_sigtrap = *new_sigaction;
+    }
+    return;
+  }
+
+#ifdef CODE_COPY_HACK_TRACE
+  DL_WARN("\t[CODE COPY HACK] - sighandler start - sig:%d, PC:0x%llX, SP:0x%llX, LR:0x%llX PID:%d",
+          sig,
+          realcontext->uc_mcontext.pc, realcontext->uc_mcontext.sp,
+          realcontext->uc_mcontext.regs[30],
+          getpid());
+#endif
+
+  if (SIGSEGV == sig) {
+    const auto &page_movesmap = pageMoves;
+    if (auto mMove =
+            page_movesmap.find(realcontext->uc_mcontext.pc & ~(page_size() - 1));
+        mMove != page_movesmap.end()) {
+      uint64_t diff = mMove->first - mMove->second;
+      unblock_signal(SIGSEGV);
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK]  sighandler(SIGSEGV) move PC from 0x%llX to 0x%llX\n",
+             realcontext->uc_mcontext.pc, realcontext->uc_mcontext.pc - diff);
+      fflush(stdout);
+#endif
+      realcontext->uc_mcontext.pc += -diff;
+      return;
+    } else {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK] - unexpected segfault - pageMoves not found, PC:0x%llX, SP:0x%llX, LR:0x%llX, fault_address:0x%llX, PID:%d",
+              realcontext->uc_mcontext.pc, realcontext->uc_mcontext.sp,
+              realcontext->uc_mcontext.regs[30],
+              realcontext->uc_mcontext.fault_address, getpid());
+#endif
+
+      if (old_sigsegv.sa_handler != SIG_IGN) {
+        // TODO Handle these properly.
+        if (old_sigsegv.sa_handler == SIG_DFL) {
+          exit(-1);
+        }
+
+        unblock_signal(SIGTRAP);
+        unblock_signal(SIGSEGV);
+        if (old_sigsegv.sa_flags & SA_SIGINFO) {
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] passed to old_sigsegv_sigaction");
+#endif
+          old_sigsegv.sa_sigaction(sig, info, ucontext);
+        } else {
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] passed to old_sigsegv_handler");
+#endif
+          old_sigsegv.sa_handler(sig);
+        }
+      }
+#ifdef CODE_COPY_HACK_TRACE
+      fflush(stdout);
+#endif
+      return;
+    }
+  } else if (SIGTRAP == sig) {
+    auto const& fmap = fixupMap;
+    if (auto fixup = fmap.find(realcontext->uc_mcontext.pc);
+        fixup != fmap.end()) {
+      unblock_signal(SIGTRAP);
+      uint8_t reg = fixup->second.reg;
+      // Skip the BRK instruction.
+      realcontext->uc_mcontext.pc += 4;
+      if (fixup->second.islink) {
+#ifdef CODE_COPY_HACK_TRACE
+        DL_WARN("[CODE COPY HACK] BL instruction detected, fixup LR");
+#endif
+        //Fix LR if it's BL
+        realcontext->uc_mcontext.regs[30] = realcontext->uc_mcontext.pc;
+      }
+      if (pstate_cond_holds(realcontext->uc_mcontext.pstate,
+                            fixup->second.cond) &&
+          regcompare_holds(fixup->second.bitclear, fixup->second.bitmask,
+                            realcontext->uc_mcontext.regs[fixup->second.bitreg])) {
+        if (reg == 33)
+          realcontext->uc_mcontext.pc = fixup->second.value;
+        else {
+          realcontext->uc_mcontext.regs[reg] = fixup->second.value;
+        }
+      }
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN(
+          "\t[CODE COPY HACK]  sighandler(SIGTRAP) fixup reg %i to 0x%lX (cond is %s for %d)\n",
+          fixup->second.reg, fixup->second.value,
+          pstate_cond_holds(realcontext->uc_mcontext.pstate, fixup->second.cond) ? "true" : "false",
+          fixup->second.cond
+      );
+      fflush(stdout);
+#endif
+      return;
+    } else {
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("\t[CODE COPY HACK] - unexpected sigtrap - fixup not found, PC:0x%llX, SP:0x%llX, LR:0x%llX, fault_address:0x%llX, PID:%d",
+              realcontext->uc_mcontext.pc, realcontext->uc_mcontext.sp,
+              realcontext->uc_mcontext.regs[30],
+              realcontext->uc_mcontext.fault_address, getpid());
+#endif
+      if (old_sigtrap.sa_handler != SIG_IGN) {
+        // TODO How to handle this properly?
+        if (old_sigtrap.sa_handler == SIG_DFL) {
+          exit(-1);
+        }
+
+        unblock_signal(SIGTRAP);
+        unblock_signal(SIGSEGV);
+        if (old_sigtrap.sa_flags & SA_SIGINFO) {
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] passed to old_sigtrap_sigaction");
+#endif
+          old_sigtrap.sa_sigaction(sig, info, ucontext);
+        } else {
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] passed to old_sigtrap_handler");
+#endif
+          old_sigtrap.sa_handler(sig);
+        }
+      }
+#ifdef CODE_COPY_HACK_TRACE
+      fflush(stdout);
+#endif
+      return;
+    }
+  }
+#ifdef CODE_COPY_HACK_TRACE
+  DL_WARN("[CODE COPY HACK] !!!! unexpected signal %i, from: 0x%llX \n", sig,
+         realcontext->uc_mcontext.pc);
+  fflush(stdout);
+#endif
+}
+
+
 /**
   TECHNICAL NOTE ON ELF LOADING.
 
@@ -703,16 +1332,16 @@ static bool is_misaligned(const ElfW(Phdr)* phdr, size_t phdr_count, off64_t fil
 
 bool ElfReader::LoadSegments() {
   bool misaligned = is_misaligned(phdr_table_, phdr_num_, file_offset_);
+  ElfW(Addr) start = 0;
+  size_t full_size = phdr_table_get_load_size(phdr_table_, phdr_num_, &start);
 
   if (misaligned) {
-    ElfW(Addr) start = 0;
-    size_t size = phdr_table_get_load_size(phdr_table_, phdr_num_, &start);
-    if (!size) {
+    if (!full_size) {
       DL_ERR("Can't find misaligned size for \"%s\"", name_.c_str());
       return false;
     }
     void* map_addr = mmap(reinterpret_cast<void*>(start + load_bias_),
-                          size,
+                          full_size,
                           PROT_READ|PROT_WRITE|PROT_EXEC,
                           MAP_FIXED|MAP_PRIVATE|MAP_ANONYMOUS,
                           -1,
@@ -722,7 +1351,6 @@ bool ElfReader::LoadSegments() {
              name_.c_str(), strerror(errno));
       return false;
     }
-    DL_WARN("mapping misaligned \"%s\" at %p", name_.c_str(), map_addr);
   }
 
   for (size_t i = 0; i < phdr_num_; ++i) {
@@ -735,10 +1363,8 @@ bool ElfReader::LoadSegments() {
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
-
     ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
-
     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
 
     // File offsets.
@@ -846,6 +1472,173 @@ bool ElfReader::LoadSegments() {
       prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, zeromap, zeromap_size, ".bss");
     }
   }
+
+  // Set protection for copied misaligned segments.
+  if (misaligned) {
+    ElfW(Addr) prev_seg_page_start = 0;
+    ElfW(Addr) prev_seg_page_end = 0;
+    int prev_prot = 0;
+
+    for (size_t i = 0; i < phdr_num_; ++i) {
+      const ElfW(Phdr)* phdr = &phdr_table_[i];
+
+      if (phdr->p_type != PT_LOAD) {
+        continue;
+      }
+
+      ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+      ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
+      ElfW(Addr) seg_page_start = page_start(seg_start);
+      ElfW(Addr) seg_page_end = page_end(seg_end);
+
+      ElfW(Addr) orig_code_seg_page_start = 0;
+      ElfW(Addr) orig_code_seg_page_end = 0;
+
+      int orig_prot = PFLAGS_TO_PROT(phdr->p_flags);
+      int approved_prot = orig_prot;
+
+#ifdef CODE_COPY_HACK_TRACE
+      DL_WARN("[CODE COPY HACK]:%zu. misaligned load:\"%s\" ", i, name_.c_str());
+      DL_WARN("[CODE COPY HACK] %zu.seg_start: 0x%llX", i, (seg_start));
+      DL_WARN("[CODE COPY HACK] %zu.seg_end: 0x%llX", i, (seg_end));
+      DL_WARN("[CODE COPY HACK] %zu.prot: %d", i, orig_prot);
+      DL_WARN("[CODE COPY HACK] %zu.seg_page_start: 0x%llX", i, (seg_page_start));
+      DL_WARN("[CODE COPY HACK] %zu.seg_page_end: 0x%llX", i, (seg_page_end));
+#endif
+
+      //Misaligned segments should agree on most secure protections.
+      if ((seg_page_start < prev_seg_page_end) &&
+         (seg_page_start >= prev_seg_page_start) &&
+         (prev_prot != orig_prot)) {
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] overlapping segment found with conflicting prot!");
+          DL_WARN("[CODE COPY HACK] prev segment 0x%llX - 0x%llX, prot:%d",
+                  prev_seg_page_start, prev_seg_page_end, prev_prot);
+          DL_WARN("[CODE COPY HACK] current segment 0x%llX - 0x%llX, prot:%d",
+                  seg_page_start, seg_page_end, orig_prot);
+
+#endif
+        if ((prev_prot & PROT_WRITE) || (orig_prot & PROT_WRITE)) {
+          approved_prot = PROT_READ | PROT_WRITE;
+        } else if ((prev_prot & PROT_EXEC) || (orig_prot & PROT_EXEC)) {
+          approved_prot = PROT_READ | PROT_EXEC;
+        }
+
+        if ((orig_prot & PROT_EXEC) && !(approved_prot & PROT_EXEC)) {
+          orig_code_seg_page_end = seg_page_end;
+        }
+        if ((prev_prot & PROT_EXEC) && !(approved_prot & PROT_EXEC)) {
+          orig_code_seg_page_end = prev_seg_page_end;
+        }
+        if (orig_code_seg_page_end) {
+          orig_code_seg_page_start = page_start(orig_code_seg_page_end-1);
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] segment 0x%llX - 0x%llX lost PROT_EXEC permission",
+                         orig_code_seg_page_start, orig_code_seg_page_end);
+#endif
+          //1.mmap that region into anon
+          void* copied_code_seg_page_start = mmap64(reinterpret_cast<void*>(start + full_size + load_bias_),
+                      3 * page_size(),
+                      PROT_NONE,
+                      MAP_PRIVATE|MAP_ANONYMOUS,
+                      -1,
+                      0);
+          if (copied_code_seg_page_start == MAP_FAILED) {
+            DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
+            return false;
+          }
+          copied_code_seg_page_start = reinterpret_cast<void*>(reinterpret_cast<char*>(copied_code_seg_page_start) + page_size());
+
+          int ret = mprotect(copied_code_seg_page_start, page_size(), PROT_READ | PROT_WRITE);
+          if (ret) {
+            DL_ERR("mprotect failed: %d", ret);
+            return false;
+          }
+
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] code segment copied from 0x%llX to 0x%llX",
+                         orig_code_seg_page_start, reinterpret_cast<unsigned long long>(copied_code_seg_page_start));
+#endif
+          // TODO copy only the actual code part(s)
+          memcpy(copied_code_seg_page_start, reinterpret_cast<void*>(orig_code_seg_page_start),
+                 page_size());
+
+          //2.fixup code
+          int64_t diff =
+            reinterpret_cast<unsigned long long>(orig_code_seg_page_start) -
+            reinterpret_cast<unsigned long long>(copied_code_seg_page_start);
+          pageMoves.insert({
+            reinterpret_cast<unsigned long long>(copied_code_seg_page_start) - page_size(),
+            reinterpret_cast<unsigned long long>(orig_code_seg_page_start) - page_size()});
+          pageMoves.insert({
+            reinterpret_cast<unsigned long long>(orig_code_seg_page_start),
+            reinterpret_cast<unsigned long long>(copied_code_seg_page_start)});
+          pageMoves.insert({
+            reinterpret_cast<unsigned long long>(copied_code_seg_page_start) + page_size(),
+            reinterpret_cast<unsigned long long>(orig_code_seg_page_start) + page_size()});
+
+#ifdef CODE_COPY_HACK_TRACE
+          DL_WARN("[CODE COPY HACK] distance %llx, %llx, %lld",
+                  reinterpret_cast<unsigned long long>(orig_code_seg_page_start),
+                  reinterpret_cast<unsigned long long>(copied_code_seg_page_start),
+                  reinterpret_cast<unsigned long long>(orig_code_seg_page_start) -
+                  reinterpret_cast<unsigned long long>(copied_code_seg_page_start));
+#endif
+
+          scan(reinterpret_cast<uint32_t *>(copied_code_seg_page_start),
+                page_size() / sizeof(uint32_t), diff);
+
+          //3.set PROT_READ | PROT_EXEC permission on the copied code
+          ret = mprotect(reinterpret_cast<void*>(copied_code_seg_page_start),
+                            page_size(),
+                            PROT_READ | PROT_EXEC);
+
+          prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+                reinterpret_cast<void*>(reinterpret_cast<char*>(copied_code_seg_page_start) - page_size()),
+                page_size(), "HACK guard before");
+          prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+                reinterpret_cast<void*>(copied_code_seg_page_start),
+                page_size(), "HACK copied code segment");
+          prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+                reinterpret_cast<void*>(reinterpret_cast<char*>(copied_code_seg_page_start) + page_size()),
+                page_size(), "HACK guard after");
+
+
+          if (ret < 0) {
+            DL_ERR("mprotect failed: %d", ret);
+            return false;
+          }
+
+          //4.setup fault handler
+          static bool is_sighandler_inited = false;
+          if (is_sighandler_inited == false) {
+            struct sigaction act;
+            act.sa_sigaction = sighandler;
+            sigemptyset(&act.sa_mask);
+            sigaddset(&act.sa_mask, 41);
+            act.sa_flags = SA_SIGINFO;
+
+            sigaction(SIGSEGV, &act, &old_sigsegv);
+            sigaction(SIGTRAP, &act, &old_sigtrap);
+
+            is_sighandler_inited = true;
+          }
+        }
+      }
+      prev_seg_page_start = seg_page_start;
+      prev_seg_page_end = seg_page_end;
+      prev_prot = approved_prot;
+
+      int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
+                        seg_page_end - seg_page_start,
+                        approved_prot);
+      if (ret < 0) {
+        DL_ERR("mprotect failed: %d", ret);
+        return false;
+      }
+    }
+  }
+
   return true;
 }
 
@@ -857,7 +1650,6 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
                                      ElfW(Addr) load_bias, int extra_prot_flags) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
-  bool misaligned = is_misaligned(phdr_table, phdr_count, 0);
 
   for (; phdr < phdr_limit; phdr++) {
     if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
@@ -881,8 +1673,7 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
 #endif
 
     int ret =
-        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start,
-                 misaligned ? PROT_READ | PROT_WRITE | PROT_EXEC : prot);
+        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, prot);
     if (ret < 0) {
       return -1;
     }

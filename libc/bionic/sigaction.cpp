@@ -39,6 +39,35 @@ extern "C" void __restore(void);
 extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*, struct __kernel_sigaction*, size_t);
 
 int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+
+  __kernel_sigaction kernel_old_action_dummy;
+  if (((signal == SIGSEGV) || (signal == SIGTRAP)) &&
+      __rt_sigaction(signal, nullptr, &kernel_old_action_dummy, sizeof(sigset_t)) == 0) {
+    // This is for the hack in the dynamic linker that enables loading
+    // 4K aligned ELF on 16K systems. There needs to be a way to
+    // detect if the currently installed signal handler is the 4K hack
+    // from the dynamic linker and to aviod replacing it. Currently it
+    // just checks for a very simple pattern in sa_mask.
+    if (sigismember(&kernel_old_action_dummy.sa_mask, 41) == 1) {
+      bool empty = true;
+      for (int i = 1; i <= 64; ++i) {
+        if (i == 41) continue;
+        if (sigismember(&kernel_old_action_dummy.sa_mask, i) == 1) {
+          empty = false;
+          break;
+        }
+      }
+      if (empty) {
+        struct sigaction dummy;
+        dummy.sa_handler = kernel_old_action_dummy.sa_handler;
+        dummy.sa_sigaction(-signal,
+                           reinterpret_cast<siginfo_t *>(bionic_old_action),
+                           reinterpret_cast<void*>(const_cast<struct sigaction*>(bionic_new_action)));
+        return 0;
+      }
+    }
+  }
+
   __kernel_sigaction kernel_new_action;
   if (bionic_new_action != nullptr) {
     kernel_new_action.sa_flags = bionic_new_action->sa_flags;
