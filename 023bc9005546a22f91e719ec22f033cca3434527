@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a452d9d7_4fb12bc9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-22T18:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c385ba67_6f1744b9",
+      "revId": "023bc9005546a22f91e719ec22f033cca3434527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6c03141_6c377ffc",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-05-22T16:12:06Z",
       "side": 1,
       "message": "add the missing\n```\n *\n * A `size` of 0 can be used to set an empty value, in which case `value` is\n * ignored and may be null. Setting an xattr to an empty value is not the same\n * as removing an xattr; see removexattr() for the latter operation.\n *\n```\nto all the get functions.\n\n(and fix the annotation correspondingly.)",
+      "revId": "023bc9005546a22f91e719ec22f033cca3434527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1371e452_ba87da16",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-22T18:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6c03141_6c377ffc",
       "revId": "023bc9005546a22f91e719ec22f033cca3434527",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0521d444_42912318",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-22T18:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52c6df5c_97c379fe",
+      "revId": "023bc9005546a22f91e719ec22f033cca3434527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29ac319a_d6d30aac",
@@ -65,6 +119,24 @@
       "writtenOn": "2023-05-22T16:12:06Z",
       "side": 1,
       "message": "add the missing\n```\n *\n * A `size` of 0 can be used to query the current length, in which case `list` is ignored and may be null.\n *\n```\nto all the list functions.",
+      "revId": "023bc9005546a22f91e719ec22f033cca3434527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ee74e73_9a2543ea",
+        "filename": "libc/include/sys/xattr.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-22T18:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29ac319a_d6d30aac",
       "revId": "023bc9005546a22f91e719ec22f033cca3434527",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
