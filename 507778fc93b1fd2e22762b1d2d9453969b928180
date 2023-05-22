@@ -166,6 +166,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6402cdcd_dd612240",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-22T23:10:29Z",
+      "side": 1,
+      "message": "or, pirama: is there a #pragma we can wrap structs with, to just skip these annotations for structs, rather than adding a bunch of noise _within_ the structs?",
+      "parentUuid": "3f9b58e5_de468950",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
