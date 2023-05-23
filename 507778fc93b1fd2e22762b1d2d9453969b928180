@@ -214,6 +214,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12ed4825_edbd8f0a",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-05-23T23:24:18Z",
+      "side": 1,
+      "message": "\u003e or, pirama: is there a #pragma we can wrap structs with, to just skip these annotations for structs, rather than adding a bunch of noise within the structs?\n\nIs this the `-Wwarn-nullability-missing` warning-that-gets-turned-to-error?  If so, something like the following should work:\n \n```\n#pragma clang diagnostic push\n#pragma clang diagnostic ignored \"-Wmismatched-tags\"\nstruct...\n#pragma clang diagnostic pop\n```",
+      "parentUuid": "3d03e162_b76305f4",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
