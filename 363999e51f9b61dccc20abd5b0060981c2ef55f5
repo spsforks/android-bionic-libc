@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "11219e51_031e3f57",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-23T20:44:00Z",
+      "side": 1,
+      "message": "i don\u0027t think so?\n\nhttps://source.corp.google.com/android/bionic/libc/dns/nameser/ns_parse.c;l\u003d247?q\u003dfile:bionic%2F%20%5Cbrdata%5Cb%20case:yes\u0026sq\u003dpackage:%5Eandroid$%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F",
+      "parentUuid": "d8856f75_d3b9e9f1",
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1dd27b95_17381eee",
         "filename": "libc/include/arpa/nameser.h",
         "patchSetId": 3
