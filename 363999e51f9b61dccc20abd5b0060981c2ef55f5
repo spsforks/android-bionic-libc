@@ -3,32 +3,26 @@
     {
       "unresolved": true,
       "key": {
-        "uuid": "fd2b4ba6_2025614d",
+        "uuid": "d8856f75_d3b9e9f1",
         "filename": "libc/include/arpa/nameser.h",
-        "patchSetId": 1
+        "patchSetId": 3
       },
-      "lineNbr": 174,
+      "lineNbr": 161,
       "author": {
         "id": 1890456
       },
-      "writtenOn": "2023-04-22T01:19:07Z",
+      "writtenOn": "2023-05-23T18:17:37Z",
       "side": 1,
-      "message": "Same issue as smoreland mentioned in the email.",
-      "range": {
-        "startLine": 174,
-        "startChar": 16,
-        "endLine": 174,
-        "endChar": 25
-      },
-      "revId": "1d432992595eb316c930023beca742d18febbc20",
+      "message": "make it `_Nonnull` because of `ns_rr_rdata` in line 184",
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
-      "unresolved": false,
+      "unresolved": true,
       "key": {
-        "uuid": "13c69fd0_8ca9d012",
+        "uuid": "1dd27b95_17381eee",
         "filename": "libc/include/arpa/nameser.h",
-        "patchSetId": 1
+        "patchSetId": 3
       },
       "lineNbr": 174,
       "author": {
@@ -36,15 +30,14 @@
       },
       "writtenOn": "2023-05-23T18:17:37Z",
       "side": 1,
-      "message": "Done",
-      "parentUuid": "fd2b4ba6_2025614d",
+      "message": "Same",
       "range": {
         "startLine": 174,
         "startChar": 16,
         "endLine": 174,
-        "endChar": 25
+        "endChar": 24
       },
-      "revId": "1d432992595eb316c930023beca742d18febbc20",
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
