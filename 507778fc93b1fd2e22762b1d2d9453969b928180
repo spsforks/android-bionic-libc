@@ -190,6 +190,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d03e162_b76305f4",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-23T20:41:32Z",
+      "side": 1,
+      "message": "actually, the \u003csys/shm.h\u003e patch suggests an alternative resolution ... it looks like clang doesn\u0027t insist on nullability annotations on structs in headers #included into a header with nullability annotations. so we could move problematic structs from \u003cfoo.h\u003e into \u003cbits/foo_structs.h\u003e or whatever, and just not use nullability annotations for the structs.",
+      "parentUuid": "6402cdcd_dd612240",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
