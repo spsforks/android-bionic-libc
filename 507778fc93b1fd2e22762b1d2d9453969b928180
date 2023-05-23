@@ -238,6 +238,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e03841dc_2ce71efb",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-05-23T23:25:17Z",
+      "side": 1,
+      "message": "\u003e #pragma clang diagnostic ignored \"-Wmismatched-tags\"\n\nUgg, bad copy-paste.  The warning at the end should match the one we\u0027re trying to silence 😊",
+      "parentUuid": "12ed4825_edbd8f0a",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
