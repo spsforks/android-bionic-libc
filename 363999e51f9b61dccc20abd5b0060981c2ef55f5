@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d90e875c_02a70f1c",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-24T17:39:59Z",
+      "side": 1,
+      "message": "Ohh yes, it can be null. I think we should check before any further actions in `ns_rr_rdata`.",
+      "parentUuid": "11219e51_031e3f57",
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1dd27b95_17381eee",
         "filename": "libc/include/arpa/nameser.h",
         "patchSetId": 3
