@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32fe70a8_fb0979d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-24T21:02:35Z",
+      "side": 1,
+      "message": "i think we\u0027ve removed all of the relevant arm64 assembler from bionic at this point, and i notice that external/arm-optimized-routines only uses `.p2align 4` (which is equivalent to our existing 16 here), so you should probably try to persuade arm to change arm-optimized-routines instead :-)\n\n(i have no idea why arm32 is 0 rather than 16 though. i\u0027d probably +2 a change to move arm32 to 16 without even thinking about it, even if 64 isn\u0027t obviously worthwhile :-) )",
+      "revId": "5630c0e2d7d4540099f8a129413b1059d5f63fd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
