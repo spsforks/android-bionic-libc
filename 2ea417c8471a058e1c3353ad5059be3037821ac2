@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ead0be8_6b27b148",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-05-24T18:49:27Z",
+      "side": 1,
+      "message": "Does this help though?  We may need to disable the warning about the missing annotations (-Wwarn-nullability-missing?).",
+      "range": {
+        "startLine": 82,
+        "startChar": 35,
+        "endLine": 82,
+        "endChar": 66
+      },
+      "revId": "2ea417c8471a058e1c3353ad5059be3037821ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
