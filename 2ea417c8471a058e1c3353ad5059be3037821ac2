@@ -22,6 +22,30 @@
       },
       "revId": "2ea417c8471a058e1c3353ad5059be3037821ac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f47fada_2248b5b5",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-24T22:03:57Z",
+      "side": 1,
+      "message": "I think I misunderstood before. Yes, I add `-Wnullability-completeness` to ensure build successfully. And I disable it the whole struct to prevent further risks or bugs.",
+      "parentUuid": "4ead0be8_6b27b148",
+      "range": {
+        "startLine": 82,
+        "startChar": 35,
+        "endLine": 82,
+        "endChar": 66
+      },
+      "revId": "2ea417c8471a058e1c3353ad5059be3037821ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
