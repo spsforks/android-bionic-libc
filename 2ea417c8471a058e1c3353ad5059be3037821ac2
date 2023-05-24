@@ -46,6 +46,30 @@
       },
       "revId": "2ea417c8471a058e1c3353ad5059be3037821ac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74664bc6_9e429481",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-24T22:04:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f47fada_2248b5b5",
+      "range": {
+        "startLine": 82,
+        "startChar": 35,
+        "endLine": 82,
+        "endChar": 66
+      },
+      "revId": "2ea417c8471a058e1c3353ad5059be3037821ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
