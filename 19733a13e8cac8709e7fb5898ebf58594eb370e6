@@ -68,6 +68,30 @@
       },
       "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b1889d4_cb33e9b8",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-25T21:56:44Z",
+      "side": 1,
+      "message": "I think I should change the test name to something like `sscanf_w_combination`?",
+      "parentUuid": "dd406756_a6337f7b",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
