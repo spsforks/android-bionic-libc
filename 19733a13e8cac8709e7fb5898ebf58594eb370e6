@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abb63b96_6f62122d",
+        "filename": "libc/stdio/scanf_common.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T18:29:56Z",
+      "side": 1,
+      "message": "delete these (and the pragmas) and just use the template directly at the call sites.",
+      "range": {
+        "startLine": 116,
+        "startChar": 11,
+        "endLine": 116,
+        "endChar": 20
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a5bc037_d12e6e3d",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T18:29:56Z",
+      "side": 1,
+      "message": "why isn\u0027t this just `int`?\n\n(and then you don\u0027t need a template at all.)",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd406756_a6337f7b",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T18:29:56Z",
+      "side": 1,
+      "message": "you can\u0027t reorder arguments for scanf.",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
