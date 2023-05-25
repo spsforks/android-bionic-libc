@@ -92,6 +92,30 @@
       },
       "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "983c8f30_f34cdcaf",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T22:24:43Z",
+      "side": 1,
+      "message": "is testing more than one format specifier in the same format string a useful test?\n\n(how do you know whether a test is useful or not? basically you ask yourself \"what extra coverage do i get from this test, that i don\u0027t get from existing tests?\". that helps you (a) slim a test down to the bit that actually matters [which makes it easier to read] and (b) name the test well, because now you have a clear and specific idea of exactly _what_ you\u0027re trying to test.)\n\n((i actually think there is some value to this test, though i think we could just improve the previous test instead... but the exercise of thinking \"why and how is this test useful, if at all?\" is a great exercise every time you\u0027re writing tests. though my personal experience is always that someone will point out a test i forgot to write :-) ))",
+      "parentUuid": "4b1889d4_cb33e9b8",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
