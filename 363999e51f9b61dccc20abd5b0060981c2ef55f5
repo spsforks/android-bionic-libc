@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef32dd6_964610b2",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-25T21:45:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f01d866b_eda1939a",
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1dd27b95_17381eee",
@@ -85,6 +103,30 @@
       "writtenOn": "2023-05-23T18:17:37Z",
       "side": 1,
       "message": "Same",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 24
+      },
+      "revId": "363999e51f9b61dccc20abd5b0060981c2ef55f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "358f4b06_5f1a924a",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-25T21:45:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd27b95_17381eee",
       "range": {
         "startLine": 174,
         "startChar": 16,
