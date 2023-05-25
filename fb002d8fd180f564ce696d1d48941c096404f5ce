@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "438fdc4d_65df911d",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T18:55:24Z",
+      "side": 1,
+      "message": "since no-one should be using this (the name starts with `__` i think this can just be _Nullability_unspecified)",
+      "revId": "fb002d8fd180f564ce696d1d48941c096404f5ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edc73868_df60daa9",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T18:55:24Z",
+      "side": 1,
+      "message": "and just put the pragmas around the one struct that really has pointers?",
+      "revId": "fb002d8fd180f564ce696d1d48941c096404f5ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
