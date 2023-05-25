@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8ad5a82e_65a820ef",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-25T23:51:49Z",
+      "side": 1,
+      "message": "interesting... i see wikipedia says \"daylight saving time\", but the Settings app says \"daylight savings time\", as does the libcore documentation and the icu4c documentation. amusingly, bionic currently has exactly 4 references to \"daylight saving\" and exactly 4 to \"daylight savings\", so that doesn\u0027t help either. man7 is inconsistent too --- the ctime(3) man page manage to use _both_ variants in the same page!\n\nbut given that most of our existing documentation says \"daylight savings time\", i think i\u0027ll keep that. (though i am wondering whether i should just globally switch to \"DST\" instead!)",
+      "parentUuid": "8c5c271a_1bc53ba4",
+      "range": {
+        "startLine": 46,
+        "startChar": 53,
+        "endLine": 46,
+        "endChar": 60
+      },
+      "revId": "23bfca2ebbc379ba293bdf1d694bb2507cf064e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "421ae802_3c6e00bd",
         "filename": "libc/include/time.h",
         "patchSetId": 1
