@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34b51fe2_5ee6ac27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-05-26T23:01:34Z",
+      "side": 1,
+      "message": "Maybe we want to update the map file too, but otherwise LGTM.",
+      "revId": "db36e0829b0ce84b908a4506faba8bb44cbdfe27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
