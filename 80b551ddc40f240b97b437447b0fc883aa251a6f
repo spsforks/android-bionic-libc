@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abf4b66e_88ee05f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-05-26T15:26:24Z",
+      "side": 1,
+      "message": "yeah, having it in TEST_MAPPING should help prevent future bitrot...",
+      "revId": "80b551ddc40f240b97b437447b0fc883aa251a6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
