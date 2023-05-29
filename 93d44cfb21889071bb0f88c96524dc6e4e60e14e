@@ -34,6 +34,23 @@
       "parentUuid": "211e7cdf_c571cc66",
       "revId": "93d44cfb21889071bb0f88c96524dc6e4e60e14e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eae4243d_32224170",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2010400
+      },
+      "writtenOn": "2023-05-29T07:29:36Z",
+      "side": 1,
+      "message": "By the way, I want to add a re-license information. Should I add \"These code are re-license from https://github.com/sifive/sifive-libc\" in commit message or in the code header?",
+      "revId": "93d44cfb21889071bb0f88c96524dc6e4e60e14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
