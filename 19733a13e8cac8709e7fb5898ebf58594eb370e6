@@ -73,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2f4a5cc7_b712b596",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-05-31T00:06:47Z",
+      "side": 1,
+      "message": "Already delete the template. And calling `wctob` to convert. If use `int`, the conversion[wint_t to int] will scan `\u003cw\u003e` into this switch, and causes `%w0 is unsupported`. The reason why `printf` works well because it makes sure that `%` must be the prefix. But in the scanf case, this is not ensured because of line 115.",
+      "parentUuid": "1a5bc037_d12e6e3d",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd406756_a6337f7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 5
