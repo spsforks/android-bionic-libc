@@ -164,6 +164,30 @@
       },
       "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "667c3850_1a001b79",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-01T18:48:08Z",
+      "side": 1,
+      "message": "Agree. I also think this test is useful. But I have a question about improvement: I think the goal is to see whether these numbers can be recognized and scanned properly. Do I need to mix with other types, like char?[I think these tests can prove everything works well, but it is fine to add more tests with mixing other types]",
+      "parentUuid": "983c8f30_f34cdcaf",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
