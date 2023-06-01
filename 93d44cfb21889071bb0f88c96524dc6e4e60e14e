@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "12c7cb9f_e88d76dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2010400
+      },
+      "writtenOn": "2023-06-01T02:01:39Z",
+      "side": 1,
+      "message": "Thank you for the information. I\u0027ll fix it.",
+      "parentUuid": "77da8077_bc747cac",
+      "revId": "93d44cfb21889071bb0f88c96524dc6e4e60e14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6acb6af7_9818e74f",
         "filename": "libc/arch-riscv64/string/strnlen_vext.S",
         "patchSetId": 1
@@ -84,6 +102,30 @@
       "writtenOn": "2023-05-30T17:29:37Z",
       "side": 1,
       "message": "Please fix this ERROR reported by Common Typos: Common typo found: \"occurence\" -- should it be \"occurrence\"?\n\nAnalyzer Description: Linter for catching common typos motivated by go/todo-fail and go/lol-codesearch. Shared with google3 common typos library go/common-typos.\nOwner: ayeaye-team@google.com\n\nCommon typo found: \"occurence\" -- should it be \"occurrence\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 80,
+        "startChar": 43,
+        "endLine": 80,
+        "endChar": 52
+      },
+      "revId": "93d44cfb21889071bb0f88c96524dc6e4e60e14e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad40f202_bb1bb0b0",
+        "filename": "libc/arch-riscv64/string/strnlen_vext.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 2010400
+      },
+      "writtenOn": "2023-06-01T02:01:39Z",
+      "side": 1,
+      "message": "This problem is fixed, thanks.",
+      "parentUuid": "6acb6af7_9818e74f",
       "range": {
         "startLine": 80,
         "startChar": 43,
