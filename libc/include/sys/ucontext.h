@@ -331,6 +331,18 @@ enum {
 #define REG_S0 REG_S0
   REG_A0 = 10,
 #define REG_A0 REG_A0
+  REG_A1 = 11,
+#define REG_A0 REG_A1
+  REG_A2 = 12,
+#define REG_A0 REG_A2
+  REG_A3 = 13,
+#define REG_A0 REG_A3
+  REG_A4 = 14,
+#define REG_A0 REG_A4
+  REG_A5 = 15,
+#define REG_A0 REG_A5
+  REG_A7 = 17,
+#define REG_A0 REG_A7
 };
 
 #endif // defined(__USE_GNU)
