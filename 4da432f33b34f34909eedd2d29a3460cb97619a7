@@ -22,6 +22,30 @@
       },
       "revId": "4da432f33b34f34909eedd2d29a3460cb97619a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eb6359a_23d492f9",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-05T20:48:19Z",
+      "side": 1,
+      "message": "ohhh I made it `null` because of https://source.corp.google.com/android/bionic/libc/bionic/sys_thread_properties.cpp;l\u003d61-62?q\u003d__libc_register_thread_exit_callback\u0026ss\u003dpiper%2FGoogle%2Fandroid:bionic%2F\n\nBut yeah, it is nonsense if pass a nullptr even it can be null?",
+      "parentUuid": "17af02f8_0ed05a50",
+      "range": {
+        "startLine": 69,
+        "startChar": 50,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "4da432f33b34f34909eedd2d29a3460cb97619a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
