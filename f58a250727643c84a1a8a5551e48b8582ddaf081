@@ -51,6 +51,24 @@
       "parentUuid": "13fd2059_1361d817",
       "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7968bb9_0b6bddf6",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-05T22:04:10Z",
+      "side": 1,
+      "message": "should they be unified, so this works by calling malloc_info()? although that\u0027s xml, right, whereas this is human-readable? (which is probably another point to call out in the doc comment.)\n\ni\u0027m not sure \"internal\" helps ... all stats are internal bookkeeping info :-)\n\nprobably worth calling out the dumpsys connection in the doc comment (especially because that\u0027s probably how 99% of callers will actually want to use this), but i actually think the vague M_LOG_STATS is fine^Wbetter than trying to be overly specific?\n\nmaybe an explicit note about not relying on the output format; that it varies between allocators and API levels?",
+      "parentUuid": "ef188daf_c58aab26",
+      "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
