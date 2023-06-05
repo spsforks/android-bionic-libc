@@ -33,6 +33,24 @@
       "message": "explain when you\u0027d want this rather than mallinfo() or malloc_info() instead? (in particular --- why would i use this rather than malloc_info(), which i can send to any FILE*? is that just because there\u0027s no convenient FILE* for \"the log\"?)",
       "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef188daf_c58aab26",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-05T21:58:13Z",
+      "side": 1,
+      "message": "This is to dump detailed stats that are not as easily retrieved through mallinfo or malloc_info. Specifically, this is so that we can ask partners who are having problems to get extra information that cannot be gained through those other calls.\n\nAlso, the idea is that you can run:\n\n  dumpsys meminfo --logstats \u003cPID\u003e\n  \nAnd then capture the log for us and we can tell what\u0027s going on in scudo/jemalloc. On jemalloc, it\u0027s not logging very much, more to make sure that if a partner is doing a comparison we can make sure it\u0027s apples to apples. On scudo, it\u0027s logging a ton of information about size classes and other data (including the thread cache information).\n\nThat\u0027s why the name might not be good. Maybe it should be something like M_LOG_INTERNAL_STATS",
+      "parentUuid": "13fd2059_1361d817",
+      "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
