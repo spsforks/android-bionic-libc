@@ -121,6 +121,24 @@
       "parentUuid": "692644b9_a425d7d4",
       "revId": "36c70db3eb84bd2aa8f21c77ea0ba0c14127e132",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27a3c39a_0f0de44a",
+        "filename": "libc/include/sys/ucontext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-05T23:20:14Z",
+      "side": 1,
+      "message": "i wouldn\u0027t add any of these --- i don\u0027t think the other libcs plan to add them, so this wouldn\u0027t be portable anyway?\n\nthough if we do add any, yes, we should add everything. especially because the s and t registers aren\u0027t consecutive like the a registers are. which makes REG_S0 quite questionable, except for the fact that it\u0027s really the frame pointer, but llvm uses REG_S0 rather than REG_FP :-(\n\nglibc seems to have a pretty random set of \"ones we happen to use in the implementation\", musl has this subset, and freebsd actually reorders the registers into _logical_ rather than physical order (so all the ts are together, all the ses are together, and all the as are together; each as an array).\n\ndo you have a pointer to the caller? (in case that makes a more persuasive argument for why we should have these.)",
+      "parentUuid": "e57223e6_a2d6673f",
+      "revId": "36c70db3eb84bd2aa8f21c77ea0ba0c14127e132",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
