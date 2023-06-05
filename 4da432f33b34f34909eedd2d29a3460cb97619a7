@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17af02f8_0ed05a50",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-05T20:39:12Z",
+      "side": 1,
+      "message": "what would a null callback mean?",
+      "range": {
+        "startLine": 69,
+        "startChar": 50,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "4da432f33b34f34909eedd2d29a3460cb97619a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
