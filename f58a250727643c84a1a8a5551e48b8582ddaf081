@@ -16,6 +16,23 @@
       "message": "I\u0027m ready to start submitting this. Does the mallopt name seem reasonable? I always have the worst issues with names.",
       "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13fd2059_1361d817",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-05T21:34:33Z",
+      "side": 1,
+      "message": "explain when you\u0027d want this rather than mallinfo() or malloc_info() instead? (in particular --- why would i use this rather than malloc_info(), which i can send to any FILE*? is that just because there\u0027s no convenient FILE* for \"the log\"?)",
+      "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
