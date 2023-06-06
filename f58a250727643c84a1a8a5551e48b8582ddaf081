@@ -69,6 +69,24 @@
       "parentUuid": "ef188daf_c58aab26",
       "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8e2c849_91602dcb",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-06T01:41:17Z",
+      "side": 1,
+      "message": "Since the main reason for this is a way to get scudo data from a running app, it doesn\u0027t make as much sense to add it into the xml call. Right now, these stats are dumped in scudo code, and I don\u0027t think we want to have that code have to return xml formatted data.\n\nI updated the description in the comments, but I didn\u0027t mention the dumpsys command directly. I added that to the description of the check-in comment.",
+      "parentUuid": "e7968bb9_0b6bddf6",
+      "revId": "f58a250727643c84a1a8a5551e48b8582ddaf081",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
