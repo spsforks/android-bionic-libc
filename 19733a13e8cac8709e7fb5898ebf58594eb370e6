@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7db3af28_d1505f69",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-06T21:16:12Z",
+      "side": 1,
+      "message": "`wint_t c;               /* character from format, or conversion */` in line 80\nc is `wint_t` while `c` in `vfwprintf` is an integer https://source.corp.google.com/android/bionic/libc/stdio/vfwprintf.cpp;l\u003d155\n\nIf I use an `int` variable to replace `c`, the conversion will make `\u003cw\u003e` scanned and error report `%w0 is unsupported`.",
+      "parentUuid": "2ec6800f_15631be0",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd406756_a6337f7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 5
@@ -228,6 +252,30 @@
       "side": 1,
       "message": "\u003e Do I need to mix with other types, like char?\n\ni suspect that might be a more useful test. i think the most likely bugs in this area are around pulling arguments of different sizes off the stack. so i\u0027d probably get rid of this, and just test these one at a time (like you already did in the previous test) but have some kind of \"test all the specifiers with a %c in between each one, because that\u0027s probably the most awkward case\" test? but at that point i remember that -- unlike printf(), where we literally did have this kind of problem -- all the scanf() arguments are _pointers_ and so they\u0027re all the same size.\n\nso this is probably useless after all. (and the existing sscanf_swscanf test already does the \"smoke test\" of \"can we just do a bunch of stuff at once\".)",
       "parentUuid": "667c3850_1a001b79",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8ca8df3_0464d145",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-06T21:16:12Z",
+      "side": 1,
+      "message": "okay I modify the test!",
+      "parentUuid": "d3d3f503_49bae365",
       "range": {
         "startLine": 3526,
         "startChar": 26,
