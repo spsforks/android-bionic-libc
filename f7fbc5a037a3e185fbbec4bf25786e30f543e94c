@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fb447b3_569822b5",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T22:39:21Z",
+      "side": 1,
+      "message": "in particular, this makes no sense. wctob() converts a wide *character* to a byte (which, as the man page says, is usually a bug anyway). but it\u0027s doubly wrong here because `size` is nothing to do with characters. it\u0027s the decimal number 32 (in my `L\"%w32d\"` example).\n\nthere\u0027s no wide character conversion necessary (because the ascii subset of unicode has the same 0-0x7f values as ascii) and so `APPEND_DIGIT()` is already doing all the \"conversion\" needed.",
+      "range": {
+        "startLine": 234,
+        "startChar": 27,
+        "endLine": 234,
+        "endChar": 32
+      },
+      "revId": "f7fbc5a037a3e185fbbec4bf25786e30f543e94c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -145,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "55a00042_0fd149cd",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T22:39:21Z",
+      "side": 1,
+      "message": "no, why is `size` a `wint_t`? that doesn\u0027t make any sense. `size` is the 32 (as a *number*) from `L\"%w32d\"`. that\u0027s made up from `L\u00273\u0027` and `L\u00272\u0027` (which are indeed `wint_t`), but that isn\u0027t relevant.\n\n\u003e If I use an int variable to replace c, the conversion will make \u003cw\u003e scanned\n\nno, not to replace `c` --- to replace `size`, so that this code matches the code in printf().",
+      "parentUuid": "7db3af28_d1505f69",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd406756_a6337f7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 5
