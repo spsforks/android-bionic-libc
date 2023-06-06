@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e77113a3_c9ce303e",
+        "filename": "libc/include/fenv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T20:32:26Z",
+      "side": 1,
+      "message": "yeah, the bigger question here is what to do about the fact that mkerrisk seems to have retired, and man7.org is no longer being updated. https://mirrors.edge.kernel.org/pub/linux/docs/man-pages/book/man-pages-6.03.pdf#acos_3 would be an alternative, but (a) that\u0027s a pdf, which isn\u0027t ideal and (b) it includes kernel version numbers, so we\u0027d need _even more_ manual work to keep that up to date.\n\ni don\u0027t really see any long-term solution that doesn\u0027t involve us generating and publishing the html somewhere ourselves. +danalbert fyi.",
+      "parentUuid": "ede291fe_7f9d2564",
+      "range": {
+        "startLine": 52,
+        "startChar": 22,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "b0936bfce4258f5326ca3bf872ea090ea6c0c501",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "454e0b1b_7e0939c6",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-05-26T22:46:17Z",
       "side": 1,
       "message": "``` `exceptions` ``` (use backticks like the other APIs) ?",
+      "range": {
+        "startLine": 70,
+        "startChar": 20,
+        "endLine": 70,
+        "endChar": 30
+      },
+      "revId": "b0936bfce4258f5326ca3bf872ea090ea6c0c501",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5e72b79_9dbb5b68",
+        "filename": "libc/include/fenv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T20:32:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "454e0b1b_7e0939c6",
       "range": {
         "startLine": 70,
         "startChar": 20,
@@ -81,6 +129,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32e61309_de3686f8",
+        "filename": "libc/include/fenv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T20:32:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2529765a_a56347d1",
+      "revId": "b0936bfce4258f5326ca3bf872ea090ea6c0c501",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11e92c35_930f1809",
@@ -94,6 +160,24 @@
       "writtenOn": "2023-05-26T22:46:17Z",
       "side": 1,
       "message": "The man page says this API returns the previous set of enabled exceptions, and -1 on failure.\n\nFor Bionic:\n - On x86[-64], it always returns the previous set of enabled exceptions.\n - For arm/arm64/riscv64, it always succeeds and returns 0.\n\n(i.e. On Bionic, this API never fails.)",
+      "revId": "b0936bfce4258f5326ca3bf872ea090ea6c0c501",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e5e8042_11e58010",
+        "filename": "libc/include/fenv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T20:32:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11e92c35_930f1809",
       "revId": "b0936bfce4258f5326ca3bf872ea090ea6c0c501",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
