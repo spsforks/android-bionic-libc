@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2ec6800f_15631be0",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T00:53:47Z",
+      "side": 1,
+      "message": "why are you calling wctob()? size is an integer that you\u0027re multiplying and adding digits[1] to, not a wide character.\n\n____\n1. those _digits_ are wide characters, but that\u0027s fine because unicode code points \u003c\u003d 0x7f are just ascii anyway, so `L\u00270\u0027 \u003d\u003d \u00270\u0027` and the `- \u00270\u0027` conversion works fine for ascii/utf8 char*s _and_ for unicode wchar_t strings.",
+      "parentUuid": "2f4a5cc7_b712b596",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd406756_a6337f7b",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 5
@@ -180,6 +204,30 @@
       "side": 1,
       "message": "Agree. I also think this test is useful. But I have a question about improvement: I think the goal is to see whether these numbers can be recognized and scanned properly. Do I need to mix with other types, like char?[I think these tests can prove everything works well, but it is fine to add more tests with mixing other types]",
       "parentUuid": "983c8f30_f34cdcaf",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3d3f503_49bae365",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T00:53:47Z",
+      "side": 1,
+      "message": "\u003e Do I need to mix with other types, like char?\n\ni suspect that might be a more useful test. i think the most likely bugs in this area are around pulling arguments of different sizes off the stack. so i\u0027d probably get rid of this, and just test these one at a time (like you already did in the previous test) but have some kind of \"test all the specifiers with a %c in between each one, because that\u0027s probably the most awkward case\" test? but at that point i remember that -- unlike printf(), where we literally did have this kind of problem -- all the scanf() arguments are _pointers_ and so they\u0027re all the same size.\n\nso this is probably useless after all. (and the existing sscanf_swscanf test already does the \"smoke test\" of \"can we just do a bunch of stuff at once\".)",
+      "parentUuid": "667c3850_1a001b79",
       "range": {
         "startLine": 3526,
         "startChar": 26,
