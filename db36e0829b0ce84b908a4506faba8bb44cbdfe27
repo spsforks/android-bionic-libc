@@ -16,6 +16,24 @@
       "message": "Maybe we want to update the map file too, but otherwise LGTM.",
       "revId": "db36e0829b0ce84b908a4506faba8bb44cbdfe27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89c43bb5_8e5bf502",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-06T20:18:59Z",
+      "side": 1,
+      "message": "so far we\u0027ve not removed any of this information from the map (since it hasn\u0027t caused any harm/confusion there yet) --- there\u0027s still much older stuff in there. but let me know if you can think of a reason why we should start cleaning that up (you convinced me to go further with the __RENAME_LDBL cleanup than i was planning, for example!).",
+      "parentUuid": "34b51fe2_5ee6ac27",
+      "revId": "db36e0829b0ce84b908a4506faba8bb44cbdfe27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
