@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79b19777_d3f15f33",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-07T00:30:24Z",
+      "side": 1,
+      "message": "i can\u0027t actually build versioner to run the tests atm:\n```\nerror: prebuilts/clang/host/linux-x86/Android.bp:343:1: module \"libclang-cpp_host\" variant \"linux_musl_arm64_static\": module \"libc++_host\" is not a shared library\n```",
+      "revId": "2fb6d0868c2189e6a0158f64695579285369161f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
