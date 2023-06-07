@@ -286,6 +286,30 @@
       },
       "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80d131c3_b043ffcd",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-06-07T06:21:49Z",
+      "side": 1,
+      "message": "TIL about https://clang.llvm.org/docs/LanguageExtensions.html#specifying-an-attribute-for-multiple-declarations-pragma-clang-attribute to add attributes across a code section.  The matching rules in `Clang supports the following match rules:` are quite extensive - but I don\u0027t think it\u0027d help in this use case of adding attributes to pointer types.",
+      "parentUuid": "0a4bf71d_13107b6d",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 37
+      },
+      "revId": "507778fc93b1fd2e22762b1d2d9453969b928180",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
