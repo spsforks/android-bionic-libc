@@ -167,6 +167,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b92b142_9835aa0a",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-07T21:18:29Z",
+      "side": 1,
+      "message": "I see! Thank you!",
+      "parentUuid": "55a00042_0fd149cd",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd406756_a6337f7b",
@@ -300,6 +324,30 @@
       "side": 1,
       "message": "okay I modify the test!",
       "parentUuid": "d3d3f503_49bae365",
+      "range": {
+        "startLine": 3526,
+        "startChar": 26,
+        "endLine": 3526,
+        "endChar": 46
+      },
+      "revId": "19733a13e8cac8709e7fb5898ebf58594eb370e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ba3b52a_632c61d4",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-07T21:18:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8ca8df3_0464d145",
       "range": {
         "startLine": 3526,
         "startChar": 26,

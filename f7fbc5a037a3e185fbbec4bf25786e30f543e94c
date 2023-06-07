@@ -22,6 +22,30 @@
       },
       "revId": "f7fbc5a037a3e185fbbec4bf25786e30f543e94c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ea5e77e_9ddb6549",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-07T21:18:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fb447b3_569822b5",
+      "range": {
+        "startLine": 234,
+        "startChar": 27,
+        "endLine": 234,
+        "endChar": 32
+      },
+      "revId": "f7fbc5a037a3e185fbbec4bf25786e30f543e94c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
