@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1b9c42a_8db8ccae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-07T17:22:42Z",
+      "side": 1,
+      "message": "(doing this cleanup made me realize that __RENAME_STAT64 is obsolete now too. i\u0027ll remove that separately.)",
+      "revId": "ab2d3e104976c287b3f88bd1c4b9df767fe153bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
