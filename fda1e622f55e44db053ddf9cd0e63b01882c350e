@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce7fa71a_bd571b8c",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-08T19:37:24Z",
+      "side": 1,
+      "message": "i think you know what i\u0027m going to say about this one, and why i\u0027m going to say it...\n\nif not, the clue is that the name for this parameter should be \"callback\" :-)\n\n(i\u0027d guess the void* can\u0027t be null either, because i assume that\u0027s the block? +cferris, though we might also just ignore this header --- headers outside of libc/include/ don\u0027t really matter?)",
+      "range": {
+        "startLine": 32,
+        "startChar": 48,
+        "endLine": 32,
+        "endChar": 57
+      },
+      "revId": "fda1e622f55e44db053ddf9cd0e63b01882c350e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
