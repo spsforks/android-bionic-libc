@@ -46,6 +46,30 @@
       },
       "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53de147e_02ebff10",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-08T20:31:53Z",
+      "side": 1,
+      "message": "yeah, you always want to add the code and tests at the same time. so if you don\u0027t want the tests in this patch, leave the code out too. (alternatively, add the %wf tests to this patch. either way is fine.)",
+      "parentUuid": "0a397607_550bf50e",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
