@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa4c6848_dd53ef8e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-08T20:16:47Z",
+      "side": 1,
+      "message": "(opensource-licensing said the wording in the checkin comment was unnecessary but fine, so overriding...)",
+      "revId": "40a82d005c0b37199d4b8d0c20e9d62647f926b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
