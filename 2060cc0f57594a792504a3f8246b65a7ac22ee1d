@@ -22,6 +22,30 @@
       },
       "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a397607_550bf50e",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-08T20:30:24Z",
+      "side": 1,
+      "message": "ohhh I will upload `scanf %wf` tests as a separate CL. This patch is only for `scanf %w\u0027(so line 226 never executes in the tests)\nOr maybe I should move them to the next patch.",
+      "parentUuid": "4ae10ef1_118c3c04",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
