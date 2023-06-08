@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ae10ef1_118c3c04",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-08T20:27:17Z",
+      "side": 1,
+      "message": "this bit is missing from the wide version of the code (which suggests a missing test?).",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
