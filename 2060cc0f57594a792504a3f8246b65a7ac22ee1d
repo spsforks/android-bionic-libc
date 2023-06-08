@@ -70,6 +70,30 @@
       },
       "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "406830d8_470d2b03",
+        "filename": "libc/stdio/vfwscanf.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-08T21:43:21Z",
+      "side": 1,
+      "message": "ohh I found I removed `if` in `vfscanf.cpp` but forgot to delete this one 😂 My bad. Done",
+      "parentUuid": "53de147e_02ebff10",
+      "range": {
+        "startLine": 226,
+        "startChar": 8,
+        "endLine": 229,
+        "endChar": 9
+      },
+      "revId": "2060cc0f57594a792504a3f8246b65a7ac22ee1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
