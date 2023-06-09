@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7173092e_9d64c9fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-09T23:01:02Z",
+      "side": 1,
+      "message": "(i\u0027m punting on the \"should we remove __INTRODUCED_IN(x) for x \u003c\u003d 21\" question for now... that\u0027s an orthogonal question, so i\u0027m just maintaining the status quo for now.)",
+      "revId": "f242ef6f98be2a1803f22d7942b14af19edb0f1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
