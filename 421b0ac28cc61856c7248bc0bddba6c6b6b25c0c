@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48de349c_8cdb8a3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-09T23:35:00Z",
+      "side": 1,
+      "message": "(ps3 addresses offline comments.)",
+      "revId": "421b0ac28cc61856c7248bc0bddba6c6b6b25c0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
