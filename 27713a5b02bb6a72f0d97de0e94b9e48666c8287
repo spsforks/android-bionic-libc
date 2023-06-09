@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fa2ed52_dfb0f0b3",
+        "filename": "tools/versioner/tests/preprocessor/headers/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-09T01:20:55Z",
+      "side": 0,
+      "message": "I suspect we want to keep these two tests? But change:\n\n    __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_X86(13)\n\nto just:\n\n    __INTRODUCED_IN_32(13)\n\nGiven the implementation of the versioner, the two versions do the same thing very early on (i.e. __INTRODUCED_IN_32 gets expanded to arm+x86 (\"introduced_in_32\" in DeclarationDatabase.cpp), and then the versioner later attempts to use a !LP64 guard by checking whether arm+x86 are equal.)\n\nThe interesting part of the tests is that __INTRODUCED_IN_64(21) doesn\u0027t result in a version guard, but __INTRODUCED_IN_64(22) does. The versioner knows that __INTRODUCED_IN_64(21) doesn\u0027t restrict the symbol\u0027s availability.\n\nI\u0027m wondering how much we can simplify if we start assuming that APIs less than 21 don\u0027t matter anymore. I\u0027m not sure how much adding RISC-V will affect things.\n\nAt this point, 21 is the min API that the NDK supports for both 32-bit and 64-bit, but the versioner still thinks the min-API for arm/x86 is 9 (arch_min_api in src/Arch.h), and it parses this header file with __ANDROID_API__\u003d9 because `-a 9` is specified in tests/preprocessor/run.sh.\n\nWhen we run the versioner on the Bionic headers, though, I think we don\u0027t pass any `-a` arguments, so the versioner uses the API levels in default_levels in src/Arch.h. The lowest default API there is 14, so (IIRC) the versioner will regard __INTRODUCED_IN_32(14) as a no-op, but it won\u0027t do that for 15-21.\n\nIf we bumped everything up to to 21, I think we could still preserve the interesting part of these tests by doing this:\n\n    // __INTRODUCED_IN_32(21) should be ignored.\n    int multiple_introduced_1() __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(24);\n\n    int multiple_introduced_2() __INTRODUCED_IN_32(23) __INTRODUCED_IN_64(24);",
+      "revId": "27713a5b02bb6a72f0d97de0e94b9e48666c8287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd702e56_f38ce2bc",
+        "filename": "tools/versioner/tests/preprocessor/headers/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-09T01:20:55Z",
+      "side": 0,
+      "message": "I think this test covers the same parts of the versioner but is more up-to-date:\n\n    int added_to_lp64_late() __INTRODUCED_IN_64(28);\n\nThis means that the API is always available for 32-bit but API 28+ for 64-bit (e.g. pthread_cond_timedwait_monotonic_np).",
+      "revId": "27713a5b02bb6a72f0d97de0e94b9e48666c8287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
