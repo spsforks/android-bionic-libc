@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bf2585b_53c883c0",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-09T22:39:28Z",
+      "side": 1,
+      "message": "this doesn\u0027t match memchr?\n\n(all of these are just the \"fortify\" [bounds checking] versions of the same-named functions. so \"__memchr_chk\" is a checked version of \"memchr\", and the annotations should match.)",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 14
+      },
+      "revId": "12fd02c8714859f9aab5f4ead5268824e6a1daf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
