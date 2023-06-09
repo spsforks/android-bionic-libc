@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8536e163_481113b1",
+        "filename": "tools/versioner/tests/preprocessor/headers/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-09T23:16:00Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "9fa2ed52_dfb0f0b3",
+      "revId": "27713a5b02bb6a72f0d97de0e94b9e48666c8287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd702e56_f38ce2bc",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-06-09T01:20:55Z",
       "side": 0,
       "message": "I think this test covers the same parts of the versioner but is more up-to-date:\n\n    int added_to_lp64_late() __INTRODUCED_IN_64(28);\n\nThis means that the API is always available for 32-bit but API 28+ for 64-bit (e.g. pthread_cond_timedwait_monotonic_np).",
+      "revId": "27713a5b02bb6a72f0d97de0e94b9e48666c8287",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecd9908c_3300a47f",
+        "filename": "tools/versioner/tests/preprocessor/headers/foo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-09T23:16:00Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "cd702e56_f38ce2bc",
       "revId": "27713a5b02bb6a72f0d97de0e94b9e48666c8287",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
