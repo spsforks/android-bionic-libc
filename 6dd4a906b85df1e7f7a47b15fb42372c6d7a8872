@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cdbba5c_90af2762",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-12T15:14:05Z",
+      "side": 1,
+      "message": "maybe it\u0027s too early on monday morning, but i don\u0027t understand this comment... having two declarations of every function sounds _more_ error-prone, not less? unless you can think of a strong counterargument, i\u0027ll upload another change that undoes this, so we have the #defines in a #if, but just one set of declarations.\n\n(which will also implicitly apply the \"it\u0027s no use being introduced in 32 first, because the Play Store requires 64-bit code for any 32-bit code\" cleanup we\u0027ve been making recently.)",
+      "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
