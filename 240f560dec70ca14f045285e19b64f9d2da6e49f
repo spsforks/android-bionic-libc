@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1eb1fbc3_5921ec2c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3628,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-13T23:33:24Z",
+      "side": 1,
+      "message": "I think I should keep them as two separate tests? \n```\nint8_t a;\nEXPECT_EQ(1, sscanf(\"\u003c0b101\u003e\", \"\u003c%w8b\u003e\", \u0026a));\nEXPECT_EQ(0b101, a);\nint_fast8_t a1;\nEXPECT_EQ(1, sscanf(\"\u003c0b101\u003e\", \"\u003c%wf8b\u003e\", \u0026a1));\nEXPECT_EQ(0b101, a1);\n```\nI don\u0027t think merging into one test will simplify the code.",
+      "parentUuid": "154748cb_0586173d",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b17a1b2a_a33c56e5",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 3
@@ -75,6 +93,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0666b5c3_e65e0dc1",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3666,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-13T23:33:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fedc184_2e55a7a4",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66b956ff_87d6da85",
@@ -88,6 +124,24 @@
       "writtenOn": "2023-06-13T20:34:10Z",
       "side": 1,
       "message": "to test this, you\u0027ll need to change the implementation so that it can actually report %wf vs %w. (but since we know that code is shared, i\u0027d be fine just _assuming_ this works.)",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5ad57c4_b459aa6a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3695,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-13T23:33:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66b956ff_87d6da85",
       "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
