@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cf86300_8697f07b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T20:34:10Z",
+      "side": 1,
+      "message": "(same comments for the wide tests as for the narrow tests. otherwise lgtm.)",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "154748cb_0586173d",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3628,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T20:34:10Z",
+      "side": 1,
+      "message": "just add the %wf cases into the existing %w tests?",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b17a1b2a_a33c56e5",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3649,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T20:34:10Z",
+      "side": 1,
+      "message": "heh, there\u0027s another llvm bug ... the compiler needs to be updated to know about %wf so it doesn\u0027t interpret it as %f....\n\n```\nWARNING reported by Build Warnings: \u0027sscanf\u0027 used to convert a string to a floating-point value, but function will not report conversion errors; consider using \u0027strtof\u0027 instead [cert-err34-c]\n\nAnalyzer Description: Reports warnings that originate from build.log in the build artifacts.\nOwner: farivar@google.com\n\n    \u0027sscanf\u0027 used to convert a string to a floating-point value, but function will not report conversion errors; consider using \u0027strtof\u0027 instead [cert-err34-c]\n      EXPECT_EQ(1, sscanf(\"\u003c0x3333333344444444\u003e\", \"\u003c%wf32x\u003e\", \u0026d));\n                   ^\n\nThis finding was found on https://android-build.googleplex.com/builds/build-details/P58294809/targets/aosp_arm64-userdebug_tidy, but may also be present on other builds.\n```",
+      "range": {
+        "startLine": 3649,
+        "startChar": 16,
+        "endLine": 3649,
+        "endChar": 63
+      },
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fedc184_2e55a7a4",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3666,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T20:34:10Z",
+      "side": 1,
+      "message": "i don\u0027t think there\u0027s any value to repeating this test?",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66b956ff_87d6da85",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3695,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T20:34:10Z",
+      "side": 1,
+      "message": "to test this, you\u0027ll need to change the implementation so that it can actually report %wf vs %w. (but since we know that code is shared, i\u0027d be fine just _assuming_ this works.)",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
