@@ -120,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "91e2b579_5cfab61a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3649,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T23:43:27Z",
+      "side": 1,
+      "message": "no, llvm isn\u0027t using your sscanf implementation and seeing what it does :-)",
+      "parentUuid": "a8d50ef7_0d2806ec",
+      "range": {
+        "startLine": 3649,
+        "startChar": 16,
+        "endLine": 3649,
+        "endChar": 63
+      },
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8fedc184_2e55a7a4",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 3
