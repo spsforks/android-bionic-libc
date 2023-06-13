@@ -3624,3 +3624,162 @@ TEST(STDIO_TEST, swscanf_invalid_w_width) {
   GTEST_SKIP() << "no %w in glibc";
 #endif
 }
+
+TEST(STDIO_TEST, sscanf_wf_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast8_t a;
+  EXPECT_EQ(1, sscanf("<0b101>", "<%wf8b>", &a));
+  EXPECT_EQ(0b101, a);
+  int_fast8_t b;
+  EXPECT_EQ(1, sscanf("<0x1234123412341234>", "<%wf8x>", &b));
+  EXPECT_EQ(0x34, b);
+  int_fast16_t c;
+#if defined(__LP64__)
+  EXPECT_EQ(1, sscanf("<0x1111111122222222>", "<%wf16x>", &c));
+  EXPECT_EQ(0x1111111122222222, c);
+#else
+  EXPECT_EQ(1, sscanf("<0x1111111122222222>", "<%wf16x>", &c));
+  EXPECT_EQ(0x22222222, c);
+#endif
+  int_fast32_t d;
+#if defined(__LP64__)
+  EXPECT_EQ(1, sscanf("<0x3333333344444444>", "<%wf32x>", &d));
+  EXPECT_EQ(0x3333333344444444, d);
+#else
+  EXPECT_EQ(1, sscanf("<0x3333333344444444>", "<%wf32x>", &d));
+  EXPECT_EQ(0x44444444, d);
+#endif
+  uint_fast64_t e;
+  EXPECT_EQ(1, sscanf("<0xaaaaaaaa>", "<%wf64x>", &e));
+  EXPECT_EQ(0xaaaaaaaa, e);
+  EXPECT_EQ(1, sscanf("<0xaaaaaaaa>", "<%wf64X>", &e));
+  EXPECT_EQ(0xAAAAAAAA, e);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, sscanf_wf_combination) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  int_fast16_t a;
+  int_fast32_t b;
+  char c;
+
+#if defined(__LP64__)
+  EXPECT_EQ(3,
+            sscanf("<0x1111111122222222 0x3333333344444444 1>", "<%wf16x %wf32x %c>", &a, &b, &c));
+  EXPECT_EQ(0x1111111122222222, a);
+  EXPECT_EQ(0x3333333344444444, b);
+  EXPECT_EQ('1', c);
+#else
+  EXPECT_EQ(3,
+            sscanf("<0x1111111122222222 0x3333333344444444 1>", "<%wf16x %wf32x %c>", &a, &b, &c));
+  EXPECT_EQ(0x22222222, a);
+  EXPECT_EQ(0x44444444, b);
+  EXPECT_EQ('1', c);
+#endif
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, sscanf_invalid_wf_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast32_t a;
+  EXPECT_DEATH(sscanf("<100>", "<%wf20d>", &a), "%wf20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_wf_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast8_t a;
+  EXPECT_EQ(1, swscanf(L"<0b101>", L"<%wf8b>", &a));
+  EXPECT_EQ(0b101, a);
+  int_fast8_t b;
+  EXPECT_EQ(1, swscanf(L"<0x1234123412341234>", L"<%wf8i>", &b));
+  EXPECT_EQ(0x34, b);
+  int_fast16_t c;
+#if defined(__LP64__)
+  EXPECT_EQ(1, swscanf(L"<0x1111111122222222>", L"<%wf16x>", &c));
+  EXPECT_EQ(0x1111111122222222, c);
+#else
+  EXPECT_EQ(1, swscanf(L"<0x1111111122222222>", L"<%wf16x>", &c));
+  EXPECT_EQ(0x22222222, c);
+#endif
+  int_fast32_t d;
+#if defined(__LP64__)
+  EXPECT_EQ(1, swscanf(L"<0x3333333344444444>", L"<%wf32x>", &d));
+  EXPECT_EQ(0x3333333344444444, d);
+#else
+  EXPECT_EQ(1, swscanf(L"<0x3333333344444444>", L"<%wf32x>", &d));
+  EXPECT_EQ(0x44444444, d);
+#endif
+  uint_fast64_t e;
+  EXPECT_EQ(1, swscanf(L"<0xaaaaaaaa>", L"<%wf64x>", &e));
+  EXPECT_EQ(0xaaaaaaaa, e);
+  EXPECT_EQ(1, swscanf(L"<0xaaaaaaaa>", L"<%wf64X>", &e));
+  EXPECT_EQ(0xAAAAAAAA, e);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_wf_combination) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  int_fast16_t a;
+  int_fast32_t b;
+  char c;
+
+#if defined(__LP64__)
+  EXPECT_EQ(
+      3, swscanf(L"<0x1111111122222222 0x3333333344444444 1>", L"<%wf16x %wf32x %c>", &a, &b, &c));
+  EXPECT_EQ(0x1111111122222222, a);
+  EXPECT_EQ(0x3333333344444444, b);
+  EXPECT_EQ('1', c);
+#else
+  EXPECT_EQ(
+      3, swscanf(L"<0x1111111122222222 0x3333333344444444 1>", L"<%wf16x %wf32x %c>", &a, &b, &c));
+  EXPECT_EQ(0x22222222, a);
+  EXPECT_EQ(0x44444444, b);
+  EXPECT_EQ('1', c);
+#endif
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_invalid_wf_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast32_t a;
+  EXPECT_DEATH(swscanf(L"<100>", L"<%wf20d>", &a), "%wf20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
