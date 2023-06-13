@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbe3f611_c5d023ac",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3628,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-13T23:38:34Z",
+      "side": 1,
+      "message": "well, you could call it `fa` or `fast_a` instead :-)\n\nmy thinking (when i did some merging in this file a month or two ago) was \"what helps me avoid copy \u0026 paste errors?\". i felt that having all the types together helped like that.\n\nso if/when, for example, we add the 128 types we were asking about, do we add \"%w128d\" and \"%wf128d\" next to each other, copy \u0026 pasting the 64-bit stuff, or do we have to remember that there are two different tests we need to update? my guess is that multiple tests make it more likely that we\u0027ll miss one.\n\n(whereas i think you\u0027re thinking \"%w and %wf are different features, so they should have different tests\". but i think that the \"feature\" is actually just \"%w\", and -- if you see what i mean -- \"the f belongs to the 8 rather than the w\". so it\u0027s \"%w with 8 or f8\" rather than \"%w with 8 and %wf with 8\", if that makes sense?)",
+      "parentUuid": "1eb1fbc3_5921ec2c",
+      "revId": "240f560dec70ca14f045285e19b64f9d2da6e49f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b17a1b2a_a33c56e5",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 3
