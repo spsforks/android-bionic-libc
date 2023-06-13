@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b88deef_5e24286b",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-13T23:50:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "438fdc4d_65df911d",
+      "revId": "fb002d8fd180f564ce696d1d48941c096404f5ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "edc73868_df60daa9",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-05-25T18:55:24Z",
       "side": 1,
       "message": "and just put the pragmas around the one struct that really has pointers?",
+      "revId": "fb002d8fd180f564ce696d1d48941c096404f5ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cec6e7c8_dacf36f3",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-13T23:50:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edc73868_df60daa9",
       "revId": "fb002d8fd180f564ce696d1d48941c096404f5ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
