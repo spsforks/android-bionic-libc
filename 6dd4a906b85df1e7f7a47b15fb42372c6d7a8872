@@ -34,6 +34,24 @@
       "parentUuid": "9cdbba5c_90af2762",
       "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "268b8138_9102d796",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-14T22:39:50Z",
+      "side": 1,
+      "message": "interesting. i\u0027ll let you know when i try it! (and at least send out an update that explicitly mentions versioner in the comment if that\u0027s a blocker.)",
+      "parentUuid": "3b54f3fb_bdaf5887",
+      "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
