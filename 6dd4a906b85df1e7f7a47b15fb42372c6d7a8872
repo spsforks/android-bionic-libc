@@ -16,6 +16,24 @@
       "message": "maybe it\u0027s too early on monday morning, but i don\u0027t understand this comment... having two declarations of every function sounds _more_ error-prone, not less? unless you can think of a strong counterargument, i\u0027ll upload another change that undoes this, so we have the #defines in a #if, but just one set of declarations.\n\n(which will also implicitly apply the \"it\u0027s no use being introduced in 32 first, because the Play Store requires 64-bit code for any 32-bit code\" cleanup we\u0027ve been making recently.)",
       "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b54f3fb_bdaf5887",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-14T22:31:24Z",
+      "side": 1,
+      "message": "I think the duplication was added to accommodate the versioner (Id7fc648113336dcccdfa0a6b108f3d452aaf1ed2). The versioner parses each header for all supported (API * arch) combos, and it combines that with the `__INTRODUCED_IN` annotations.\n\nIf we de-duplicate this, then this code in preprocessHeaders will (in theory) calculate a required guard for both ns_foo and __ns_foo and use one of them arbitrarily here:\n\n    DeclarationAvailability macro_guard \u003d calculateRequiredGuard(decl);\n    if (!macro_guard.empty()) {\n      guards[location.filename][location] \u003d macro_guard;\n    }\n\nI\u0027m not sure what actually breaks, though.",
+      "parentUuid": "9cdbba5c_90af2762",
+      "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
