@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "806dcc68_43ca3d37",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-14T19:34:37Z",
+      "side": 1,
+      "message": "Mark it `complicated` because it should be `_Nonnull` (will check with linux man page team again later) but in the external code, python runs on other operating systems. they might have socket options that don\u0027t take a value.",
+      "range": {
+        "startLine": 307,
+        "startChar": 77,
+        "endLine": 307,
+        "endChar": 106
+      },
+      "revId": "42b91abf8ec87a8505011f69957afb433f42b3ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
