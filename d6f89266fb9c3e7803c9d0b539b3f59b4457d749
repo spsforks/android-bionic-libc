@@ -70,6 +70,30 @@
       },
       "revId": "d6f89266fb9c3e7803c9d0b539b3f59b4457d749",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abc87fa1_bd4e552d",
+        "filename": "libc/platform/bionic/fdtrack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1890456
+      },
+      "writtenOn": "2023-06-14T20:52:57Z",
+      "side": 1,
+      "message": "\u003e does this annotation have to be here?\n\nyes, \n```\nbionic/libc/platform/bionic/fdtrack.h:65:68: error: pointer is missing a nullability type specifier (_Nonnull, _Nullable, or _Null_unspecified) [-Werror,-Wnullability-completeness]\ntypedef void (*android_fdtrack_hook_t)(struct android_fdtrack_event*);\n                                                                   ^\n```\nI think I can disable the flag here like disabling it in other structs.",
+      "parentUuid": "3a414e40_4da653cd",
+      "range": {
+        "startLine": 65,
+        "startChar": 15,
+        "endLine": 65,
+        "endChar": 24
+      },
+      "revId": "d6f89266fb9c3e7803c9d0b539b3f59b4457d749",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
