@@ -46,6 +46,30 @@
       },
       "revId": "d6f89266fb9c3e7803c9d0b539b3f59b4457d749",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a414e40_4da653cd",
+        "filename": "libc/platform/bionic/fdtrack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-14T19:56:02Z",
+      "side": 1,
+      "message": "ah, yeah, it\u0027s not actually used directly --- it\u0027s _optional_. (maybe add \"// Set to null to disable tracking.\" to the doc comment?)\n\ndoes this annotation have to be here? seems like it would be more readable on android_fdtrack_compare_exchange_hook()\u0027s argument than on the function pointer type? (and more strictly correct too --- a type isn\u0027t really inherently nullable or nonnull; it\u0027s about how you use it. which is why you had to point me to the calling code here :-) )",
+      "parentUuid": "7fe15f72_e7666410",
+      "range": {
+        "startLine": 65,
+        "startChar": 15,
+        "endLine": 65,
+        "endChar": 24
+      },
+      "revId": "d6f89266fb9c3e7803c9d0b539b3f59b4457d749",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
