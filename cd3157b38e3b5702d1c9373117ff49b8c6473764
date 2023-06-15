@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e3983bb_d2b23ed3",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-15T14:37:11Z",
+      "side": 1,
+      "message": "i can see how `line` should be `unsigned` or `size_t` rather than `int`, but `uintptr_t` seems like a weird choice for a _line number_...\n\nor did you need to change _this_ type for some reason, and don\u0027t actually care about the argument type?",
+      "range": {
+        "startLine": 194,
+        "startChar": 20,
+        "endLine": 194,
+        "endChar": 23
+      },
+      "revId": "cd3157b38e3b5702d1c9373117ff49b8c6473764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
