@@ -52,6 +52,24 @@
       "parentUuid": "3b54f3fb_bdaf5887",
       "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2be5a11f_fdfe93b3",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-15T00:13:39Z",
+      "side": 1,
+      "message": "I think it\u0027ll work in practice because `ns_foo` and `__ns_foo` have the same guard (`__ANDROID_API__ \u003e\u003d 22`).",
+      "parentUuid": "268b8138_9102d796",
+      "revId": "6dd4a906b85df1e7f7a47b15fb42372c6d7a8872",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
