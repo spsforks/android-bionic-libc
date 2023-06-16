@@ -87,6 +87,24 @@
       "parentUuid": "3c1dc9d6_1b919881",
       "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c44a244d_af1b06e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-16T23:17:37Z",
+      "side": 1,
+      "message": "Yeah that makes sense. This PS matches what I was saying.",
+      "parentUuid": "d306f29b_2da0c18c",
+      "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
