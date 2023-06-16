@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a1d0548_a754349d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-16T15:14:18Z",
+      "side": 1,
+      "message": "ps3 fixes the incorrect claim about the NDK\u0027s icu4c subset in the commit message, pointed out by nfuller on an email thread.",
+      "revId": "2bd4316bd6827497ee1bf3467b70ad85ef684ceb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
