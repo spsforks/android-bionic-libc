@@ -34,6 +34,23 @@
       "parentUuid": "7b99abcd_e522b477",
       "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fafc4508_9312b4cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-16T20:47:28Z",
+      "side": 1,
+      "message": "It looks like these APIs (`*ns_*` in libc.so) actually *aren\u0027t* present in API 21 at all (tested on 32-bit Nexus 7, 32/64-bit Nexus 9 flounder, 32/64-bit emulator). They do appear in the API 22 emulator.\n\nIt seems the map file is wrong for the 32-bit architectures, and the declarations were also wrong to use a different API for 32-vs-64-bit.",
+      "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
