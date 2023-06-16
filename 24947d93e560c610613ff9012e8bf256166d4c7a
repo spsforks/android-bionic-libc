@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b99abcd_e522b477",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-16T20:30:18Z",
+      "side": 1,
+      "message": "I verified that the two branches had the same declarations.\n\nI noticed that the list of #defines doesn\u0027t match the list of declarations. Some of the defines are renaming ns_* functions that aren\u0027t in the map file (ns_samedomain), and some of them rename functions that aren\u0027t defined at all (ns_verify). Maybe we updated the code and didn\u0027t update our declarations to match.\n\nMaybe we rename functions we aren\u0027t declaring/exporting, for consistency?",
+      "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
