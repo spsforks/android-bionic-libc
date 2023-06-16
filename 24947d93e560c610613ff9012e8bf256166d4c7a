@@ -51,6 +51,24 @@
       "message": "It looks like these APIs (`*ns_*` in libc.so) actually *aren\u0027t* present in API 21 at all (tested on 32-bit Nexus 7, 32/64-bit Nexus 9 flounder, 32/64-bit emulator). They do appear in the API 22 emulator.\n\nIt seems the map file is wrong for the 32-bit architectures, and the declarations were also wrong to use a different API for 32-vs-64-bit.",
       "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c1dc9d6_1b919881",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-06-16T21:13:48Z",
+      "side": 1,
+      "message": "I verified that the symbols in the map file (`__ns_*` and `ns_*`) match each other, and match the declarations in nameser.h, and match what\u0027s exported from libc.so in L-MR1 and a more recent device (API 32).\n\nI think we can add introduced\u003d22 to the map file for the `__ns_*` symbols. Maybe fix the #defines or maybe that could be cleaned up later? Or both of these things could be cleaned up later, and this commit is good as-is. The commit message as-is might be inaccurate since we don\u0027t need to invoke the policy of requiring 64-bit binaries.",
+      "parentUuid": "fafc4508_9312b4cd",
+      "revId": "24947d93e560c610613ff9012e8bf256166d4c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
