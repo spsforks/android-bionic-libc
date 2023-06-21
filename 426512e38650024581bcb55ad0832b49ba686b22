@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa1c57cc_50d07b7f",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-21T09:58:47Z",
+      "side": 1,
+      "message": "Nit: I don\u0027t know if this is coming from upstream, but if not: FWIW, I stick with \"time zone\" for the reasons given on http://go/android-time-zones#trivia, plus it\u0027s the form favored by https://www.iana.org/time-zones (though perhaps not consistently)\n\nEither works and I certainly don\u0027t want to debate which is \"correct\" (they\u0027re both fine by me), so just an FYI if you want to keep the patch size down.",
+      "range": {
+        "startLine": 45,
+        "startChar": 44,
+        "endLine": 45,
+        "endChar": 52
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "feb2bbce_937cce9b",
@@ -26,6 +49,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4479e784_2954c4f2",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-21T09:58:47Z",
+      "side": 1,
+      "message": "Suggestion:\n\nMaybe a different tack on the reasoning as this feels quite specific.\n\n\"If the system property is not set, perhaps if this is called before the Android system has had a chance to set it to a default value, fall back to GMT.\"\n\n... we set the value to GMT on first boot from frameworks/base/services/core/java/com/android/server/SystemTimeZone.java so this _should_ be quite rare but it\u0027s great to have.",
+      "range": {
+        "startLine": 48,
+        "startChar": 44,
+        "endLine": 49,
+        "endChar": 17
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cceee1c_e6f3855b",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-21T09:58:47Z",
+      "side": 1,
+      "message": "While this looks safe enough, might this not wander outside of buf when n \u003c\u003d 3 (or 4?)",
+      "range": {
+        "startLine": 54,
+        "startChar": 7,
+        "endLine": 54,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3ddf7404_0ebd25db",
         "filename": "libc/tzcode/bionic.cpp",
         "patchSetId": 1
@@ -37,6 +106,29 @@
       "writtenOn": "2023-06-21T09:00:23Z",
       "side": 1,
       "message": "It\u0027s unlikely to be a problem in practice, but it seems like this should check that `n \u003e 3` first in case someone somehow calls it with a tiny buffer.",
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19d69b1f_20b1b43f",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-21T09:58:47Z",
+      "side": 1,
+      "message": "This may be incorrect / legacy (but perhaps for a follow up):\n\nThe POSIX note may refer to the content of the TZ env variable (I think), which could theoretically hold things like \"GMT+5\", even though we generally use the newer \"Etc/GMT+5\" ID form in the platform (which this wouldn\u0027t catch). I don\u0027t understand why we\u0027d want to mess with an ID at all if we\u0027re trying to get an opaque ID (which is all the Java code interprets this as, AFAIK).\n\nSo, I don\u0027t see the need for this at all any more, especially for code that is _only_ looking at the system property: if the expectation is that we store an Olson ID in this property.",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
       "revId": "426512e38650024581bcb55ad0832b49ba686b22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
