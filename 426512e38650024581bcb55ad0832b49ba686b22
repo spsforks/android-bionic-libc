@@ -271,6 +271,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "678b8b0c_30a9b4f7",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:52:44Z",
+      "side": 1,
+      "message": "(note to self: even if nfuller _does_ have that guarantee, or _adds_ one in V, remember that static binaries are expected to work on older releases, and the NDK still supports back to API level 21, so it\u0027ll be years before we can actually kill this [though it would be nice to know the death date, and we should record it here if there is one].)",
+      "parentUuid": "5c48e08a_fb4d1061",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8718f4b9_0e26b2f6",
