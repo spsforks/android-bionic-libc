@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "844a86b1_b9f16448",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "yeah, `timezone_t` is upstream. i\u0027d historically stayed out of the debate about which is correct (though preferring \"time zone\" myself!), but now we have _API_ that spells it \"timezone\" (the opposite way to Java :-/) i feel like the docs should be consistent, if only for grep/ctrl-f purposes.",
+      "parentUuid": "fa1c57cc_50d07b7f",
+      "range": {
+        "startLine": 45,
+        "startChar": 44,
+        "endLine": 45,
+        "endChar": 52
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "feb2bbce_937cce9b",
         "filename": "libc/include/time.h",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2023-06-21T08:42:31Z",
       "side": 1,
       "message": "nit-nit: it is ID, right? \n\nhttps://www.britannica.com/dictionary/id",
+      "range": {
+        "startLine": 294,
+        "startChar": 68,
+        "endLine": 294,
+        "endChar": 70
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5400f23_7c86b980",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "done. (that\u0027s what the internet and man7.org seem to prefer.)",
+      "parentUuid": "feb2bbce_937cce9b",
       "range": {
         "startLine": 294,
         "startChar": 68,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecd545b9_502eda42",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "done. (i\u0027ve explicitly mentioned the recovery image as a place where the code you\u0027re thinking of will _never_ run, because that\u0027s one place where we\u0027ve had crashes in the past.)",
+      "parentUuid": "4479e784_2954c4f2",
+      "range": {
+        "startLine": 48,
+        "startChar": 44,
+        "endLine": 49,
+        "endChar": 17
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3cceee1c_e6f3855b",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-06-21T09:58:47Z",
       "side": 1,
       "message": "While this looks safe enough, might this not wander outside of buf when n \u003c\u003d 3 (or 4?)",
+      "range": {
+        "startLine": 54,
+        "startChar": 7,
+        "endLine": 54,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "693c540d_778e10a7",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "no. that would be _memcmp()_ rather than strcmp() --- the whole point of strcmp() is that it works on strings :-)",
+      "parentUuid": "3cceee1c_e6f3855b",
       "range": {
         "startLine": 54,
         "startChar": 7,
@@ -135,6 +231,48 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "50b8900e_c4159e3c",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "C strings always have a terminating NUL, so we can\u0027t get here without buf[3] being valid.",
+      "parentUuid": "3ddf7404_0ebd25db",
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c48e08a_fb4d1061",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "\u003e The POSIX note may refer to the content of the TZ env variable (I think)\n\ncorrect.\n\n\u003e which could theoretically hold things like \"GMT+5\"\n\nyes, that\u0027s the specific case i was thinking of.\n\n\u003e even though we generally use the newer \"Etc/GMT+5\" ID form in the platform (which this wouldn\u0027t catch)\n\nwell, that\u0027s deliberate --- if you\u0027ve said \"Etc/GMT+5\" that\u0027s unambiguous.\n\n(and note that you say \"generally\" here, not \"always\"...)\n\n\u003e I don\u0027t see the need for this at all any more, especially for code that is only looking at the system property\n\nit took me a while to follow the history, but luckily we still have the motivating bug available: https://issuetracker.google.com/25463955 (and hilariously, after all that work i realize i included the bug in the code comment, probably because i thought this was non-obvious at the time!)\n\nso that partner really was setting the _system property_ to one of these GMT+x strings, and they wanted native code to interpret that the same way as java code.\n\nunless things have changed since i last used java, java.util.TimeZone() does support this style of id so unless you\u0027re saying \"other parts of the system now _guarantee_ that we won\u0027t see this format in the system property\", i think we still need this.\n\n(even if so, if we do change/remove this, we should do it in a separate change for bisection purposes, since it seems more likely to be a breaking change.)\n\ni\u0027ve added some verbiage to the code comment to try to make this a bit clearer though...",
+      "parentUuid": "19d69b1f_20b1b43f",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8718f4b9_0e26b2f6",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 1
@@ -146,6 +284,30 @@
       "writtenOn": "2023-06-21T08:42:31Z",
       "side": 1,
       "message": "nit: timezone",
+      "range": {
+        "startLine": 378,
+        "startChar": 52,
+        "endLine": 378,
+        "endChar": 53
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1beeb19d_07d29809",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T16:50:39Z",
+      "side": 1,
+      "message": "done.",
+      "parentUuid": "8718f4b9_0e26b2f6",
       "range": {
         "startLine": 378,
         "startChar": 52,
