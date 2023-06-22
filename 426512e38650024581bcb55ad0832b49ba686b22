@@ -319,6 +319,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e315749a_93e61240",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-22T20:35:32Z",
+      "side": 1,
+      "message": "\u003e No, I cannot guarantee it isn\u0027t being used by somebody. Nobody in stock Android is using it that I\u0027m aware of. I\u0027m skeptical the original reporter still exists given the date, but you never know what\u0027s happening in odd corners of the ecosystem.\n\nyeah, i\u0027d quite like to ban it (especially now our story is better) but it doesn\u0027t seem worth the bother...\n\n\u003e No idea OTTOMH how ICU4J / ICU4C, not to mention applications like Calendar, reacts to this, and presumably the Rust platform folks we\u0027re talking to about chrono would want to deal with this form too if it\u0027s considered \"supported\" on Android and they could encounter it.\n\n...except if icu4c/icu4j are inconsistent with Java/libc here, that\u0027s a strong argument that this hack isn\u0027t actually a good idea. but given that Java\u0027s i18n stuff was all derived from an old version of icu4c, that would be surprising. and icu4c certainly claims to have this: https://unicode-org.github.io/icu-docs/apidoc/dev/icu4c/classicu_1_1TimeZone.html#details\n\n(and Calendar presumably doesn\u0027t care as long as everything under it [Java/libc/icu] is consistent?)\n\n\u003e TZDB don\u0027t want to add Etc/ IDs for all offsets used somewhere in the world\n\nyou could always generate them yourself... (but given the above, i don\u0027t think we have a realistic path to cleaning this up uniformly anyway.)",
+      "parentUuid": "6c3b5868_c84bf285",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8718f4b9_0e26b2f6",
