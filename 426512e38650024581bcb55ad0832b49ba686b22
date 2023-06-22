@@ -295,6 +295,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c3b5868_c84bf285",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-22T17:59:44Z",
+      "side": 1,
+      "message": "Thanks for the nice comments - much clearer for future travellers.\n\nYes - there was no expectation we had to do something for _this_ commit here.\n\n\u003e unless things have changed since i last used java, java.util.TimeZone() does support this style of id \n\nRight, so this relies on this logic from libcore/ojluni/src/main/java/java/util/TimeZone.java called if there\u0027s no Olson ID match.\n\n```\n        // Custom time zone?\n        if (zone \u003d\u003d null \u0026\u0026 id.length() \u003e 3 \u0026\u0026 id.startsWith(\"GMT\")) {\n            zone \u003d getCustomTimeZone(id);\n        }\n```\n\nNo, I cannot guarantee it isn\u0027t being used by somebody. Nobody in stock Android is using it that I\u0027m aware of. I\u0027m skeptical the original reporter still exists given the date, but you never know what\u0027s happening in odd corners of the ecosystem.\n\nNo idea OTTOMH how ICU4J / ICU4C, not to mention applications like Calendar, reacts to this, and presumably the Rust platform folks we\u0027re talking to about chrono would want to deal with this form too if it\u0027s considered \"supported\" on Android and they could encounter it.\n\n\u003e so that partner really was setting the system property to one of these GMT+x \n\u003e strings, and they wanted native code to interpret that the same way as java code.\n\nI wondered why they didn\u0027t just use Etc/ ones and achieved agreement that way. to answer my own wondering: Unfortunately, TZDB don\u0027t want to add Etc/ IDs for all offsets used somewhere in the world (I asked a while ago, they declined, and I don\u0027t want to introduce Android-only IDs), so I suppose GMT+XX:XX is at least capable of representing India, etc.",
+      "parentUuid": "678b8b0c_30a9b4f7",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8718f4b9_0e26b2f6",
