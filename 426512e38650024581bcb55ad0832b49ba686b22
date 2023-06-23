@@ -369,6 +369,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "65505e6b_2adccb36",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-06-23T23:06:55Z",
+      "side": 1,
+      "message": "\u003e I think there is a good chance WearOS are using the GMT+- form in the edge cases where they find the TZDB version on the watch Vs the companion device yield different offsets for the same ID\n\nif you have a reference for that, i\u0027ll definitely add a comment to that effect. a trivial cs/ for file:wear and `\\\"GMT` didn\u0027t turn up anything relevant :-(\n\n\u003e I was thinking because Google Calendar (and things like it) are distributed apps\n\nyeah, i\u0027m just assuming that _both_ sides are using java or icu :-)\n\n\u003e I don\u0027t want to do this for similar reasons to the above\n\nmakes sense.",
+      "parentUuid": "c4152165_4a010cb7",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8718f4b9_0e26b2f6",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 1
