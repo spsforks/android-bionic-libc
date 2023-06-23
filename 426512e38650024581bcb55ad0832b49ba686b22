@@ -345,6 +345,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c4152165_4a010cb7",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-23T08:54:01Z",
+      "side": 1,
+      "message": "FTR - I pondered over night and I think there is a good chance WearOS are using the GMT+- form in the edge cases where they find the TZDB version on the watch Vs the companion device yield different offsets for the same ID. I vaguely remember in this rare case they fall back to use the GMT+- form to force the Wear device offset to match, and monitor for offset changes in the companion device to keep the offset the same.\n\nSo, it\u0027s all good.\n\nAll this is another good reason for Rust/platform chrono folks just to call through to libc rather than dealing with this themselves. The upstream chrono impl would presumably fail if it doesn\u0027t cope with GMT+- form. This only becomes an issue for them if they start observing the system property directly, or want to pull an ID back out of a TimeZone and assume it\u0027s guaranteed to be an Olson ID.\n\n\u003e (and Calendar presumably doesn\u0027t care as long as everything under it [Java/libc/icu] is consistent?)\n\nI was thinking because Google Calendar (and things like it) are distributed apps. The reason I expected they could care about the ID is when somebody creates an event and they want to default the time zone for it to whatever the mobile device says is the user\u0027s current time zone. If they\u0027re expecting TimeZone.getID() to yield an Olson ID they\u0027d be disappointed. I don\u0027t actually know how they work - for all I know they could have a \"default time zone\" setting associated with the server-side user profile they just use, and ignore the client\u0027s time zone setting entirely.\n\n\u003e you could always generate them yourself... \n\nI don\u0027t want to do this for similar reasons to the above: because it will cause potential issues for distributed apps that also have TZDB in the server and want to pass Olson IDs around. If we invent our own IDs and pretend they\u0027re \"official\", we get the behavior we want on the device but we lose the \"lingua franca\" of the official TZDB IDs.\n\nDistributed systems already face similar issues with new TZDB IDs being introduced occasionally: version skew between Android and servers obviously happens (ID and rules mismatches), but it would make the ID mismatch permanent.",
+      "parentUuid": "e315749a_93e61240",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8718f4b9_0e26b2f6",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 1
