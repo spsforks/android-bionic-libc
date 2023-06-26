@@ -393,6 +393,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c62beae1_6e1f56a9",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2023-06-26T09:19:13Z",
+      "side": 1,
+      "message": "\u003e if you have a reference for that, ...\n\nI had a quick look and couldn\u0027t find any evidence of it. It would all be off in \"clockwork\" code, but I did have a good scout so maybe they don\u0027t handle it that way at all. I remember being sent a design doc to look at back around 2016 but I don\u0027t remember the details (and they have changed quite a lot since then!)",
+      "parentUuid": "65505e6b_2adccb36",
+      "range": {
+        "startLine": 59,
+        "startChar": 9,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "426512e38650024581bcb55ad0832b49ba686b22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8718f4b9_0e26b2f6",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 1
