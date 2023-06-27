@@ -35,6 +35,7 @@
 
 #include <bits/timespec.h>
 #include <linux/sched.h>
+#include <linux/sched/types.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
@@ -89,14 +90,6 @@ __BEGIN_DECLS
  * (POSIX's name for Linux's SCHED_NORMAL.)
  */
 #define SCHED_OTHER SCHED_NORMAL
-
-/**
- * See sched_getparam()/sched_setparam() and
- * sched_getscheduler()/sched_setscheduler().
- */
-struct sched_param {
-  int sched_priority;
-};
 
 /**
  * [sched_setscheduler(2)](http://man7.org/linux/man-pages/man2/sched_getcpu.2.html)
