@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1d48a0b_44a994d4",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-29T22:42:52Z",
+      "side": 1,
+      "message": "according",
+      "range": {
+        "startLine": 96,
+        "startChar": 66,
+        "endLine": 96,
+        "endChar": 75
+      },
+      "revId": "bbfa198a7e9cebe39b9d4cefed2c72d7417e42fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a8673e6_1f3a97e8",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-29T22:42:52Z",
+      "side": 1,
+      "message": "Do you think there is any utility in randomizing the frees? Like shuffle the array and free in the shuffled order?\n\nI\u0027m not sure if that would make this less useful, or if you should use a constant seed to get the same shuffle for all runs to avoid completely random benchmarks.",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 64
+      },
+      "revId": "bbfa198a7e9cebe39b9d4cefed2c72d7417e42fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6110dda_25e486df",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-29T22:42:52Z",
+      "side": 1,
+      "message": "Is there any value in not benchmarking some of this? For example, should you do the deletes while paused? Or creating all of the threads while paused, but using something like atomic variables to start running all of the threads at the same time after all of the threads have been created.\n\nIt would be something like:\n\npause\nCreate threads\nwait until all threads have started\nresume\nstart_running \u003d true\njoin\npause\ndelete\nresume\n\nEvery thread\nrunning++\nwhile (!start_running);\nRest of thread code\n\nAlthough, maybe putting everything together might add some extra overhead but might get more consistent scores. My main worry is that some of the threads can be running while still creating all of the other threads.\n\nMostly food for thought.",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 5
+      },
+      "revId": "bbfa198a7e9cebe39b9d4cefed2c72d7417e42fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15efdc61_ec8a668f",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-29T22:42:52Z",
+      "side": 1,
+      "message": "a single",
+      "range": {
+        "startLine": 138,
+        "startChar": 33,
+        "endLine": 138,
+        "endChar": 39
+      },
+      "revId": "bbfa198a7e9cebe39b9d4cefed2c72d7417e42fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
