@@ -83,6 +83,39 @@ static const uint32_t kLargeObject = 111;
 // page_info to multiple of 16.
 static constexpr size_t kPageInfoSize = __BIONIC_ALIGN(sizeof(page_info), 16);
 
+// Probably doesn't matter, but use this struct and alignas to ensure that the
+// atomic var is in its own cache line.
+struct {
+  alignas(128) _Atomic long val;
+} concurrency_count_;
+
+// Caution: This detector will abort if the same thread constructs two
+// concurrent (nested) RaceDetector objects.
+struct RaceDetector {
+  RaceDetector();
+  ~RaceDetector();
+};
+
+__attribute__((noinline)) RaceDetector::RaceDetector() {
+  if (concurrency_count_.val++ != 0) {
+    // Two threads in the allocator simultaneously. This shouldn't happen, so
+    // call abort to dump all the thread call stacks. Leave concurrency_count_
+    // at 2 (or greater) so other threads aren't able to run past the
+    // destructor.
+    abort();
+  }
+}
+
+__attribute__((noinline)) RaceDetector::~RaceDetector() {
+  if (concurrency_count_.val-- != 1) {
+    // If this branch is reached, then another thread is calling abort, which
+    // will also dump this thread's call stack, but we want to be sure that this
+    // thread can't exit from the loader before that happens, so call abort here
+    // too.
+    abort();
+  }
+}
+
 static inline uint16_t log2(size_t number) {
   uint16_t result = 0;
   number--;
@@ -103,6 +136,8 @@ BionicSmallObjectAllocator::BionicSmallObjectAllocator(uint32_t type, size_t blo
       page_list_(nullptr) {}
 
 void* BionicSmallObjectAllocator::alloc() {
+  RaceDetector detector;
+
   CHECK(block_size_ != 0);
 
   if (page_list_ == nullptr) {
@@ -160,6 +195,8 @@ void BionicSmallObjectAllocator::free_page(small_object_page_info* page) {
 }
 
 void BionicSmallObjectAllocator::free(void* ptr) {
+  RaceDetector detector;
+
   small_object_page_info* const page =
       reinterpret_cast<small_object_page_info*>(page_start(reinterpret_cast<uintptr_t>(ptr)));
 
