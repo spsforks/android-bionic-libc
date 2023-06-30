@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6be40a08_d962de14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-06-30T22:10:59Z",
+      "side": 1,
+      "message": "Let me know if you\u0027d prefer I do the notice file change in a different cl.",
+      "revId": "852f9b067348d015345ef945fdf7e4935e8865d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
