@@ -43,6 +43,9 @@
 #include "platform/bionic/page.h"
 #include "platform/bionic/macros.h"
 
+#include <bionic/pthread_internal.h>
+#include "private/ScopedPthreadMutexLocker.h"
+
 //
 // BionicAllocator is a general purpose allocator designed to provide the same
 // functionality as the malloc/free/realloc/memalign libc functions.
@@ -83,6 +86,8 @@ static const uint32_t kLargeObject = 111;
 // page_info to multiple of 16.
 static constexpr size_t kPageInfoSize = __BIONIC_ALIGN(sizeof(page_info), 16);
 
+static pthread_mutex_t g_page_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+
 static inline uint16_t log2(size_t number) {
   uint16_t result = 0;
   number--;
@@ -106,43 +111,46 @@ BionicSmallObjectAllocator::BionicSmallObjectAllocator(uint32_t type,
 
 void* BionicSmallObjectAllocator::alloc() {
   CHECK(block_size_ != 0);
+  small_object_block_record* block_record = nullptr;
+  {
+    ScopedPthreadMutexLocker locker(&g_page_list_mutex);
+    if (page_list_ == nullptr) {
+      alloc_page();
+    }
 
-  if (page_list_ == nullptr) {
-    alloc_page();
-  }
+    // Fully allocated pages are de-managed and removed from the page list, so
+    // every page from the page list must be useable.  Let's just take the first
+    // one.
+    small_object_page_info* page = page_list_;
+    CHECK(page->free_block_list != nullptr);
 
-  // Fully allocated pages are de-managed and removed from the page list, so
-  // every page from the page list must be useable.  Let's just take the first
-  // one.
-  small_object_page_info* page = page_list_;
-  CHECK(page->free_block_list != nullptr);
+    block_record = page->free_block_list;
+    if (block_record->free_blocks_cnt > 1) {
+      small_object_block_record* next_free =
+          reinterpret_cast<small_object_block_record*>(
+              reinterpret_cast<uint8_t*>(block_record) + block_size_);
+      next_free->next = block_record->next;
+      next_free->free_blocks_cnt = block_record->free_blocks_cnt - 1;
+      page->free_block_list = next_free;
+    } else {
+      page->free_block_list = block_record->next;
+    }
 
-  small_object_block_record* const block_record = page->free_block_list;
-  if (block_record->free_blocks_cnt > 1) {
-    small_object_block_record* next_free =
-        reinterpret_cast<small_object_block_record*>(
-            reinterpret_cast<uint8_t*>(block_record) + block_size_);
-    next_free->next = block_record->next;
-    next_free->free_blocks_cnt = block_record->free_blocks_cnt - 1;
-    page->free_block_list = next_free;
-  } else {
-    page->free_block_list = block_record->next;
-  }
+    if (page->free_blocks_cnt == blocks_per_page_) {
+      free_pages_cnt_--;
+    }
 
-  if (page->free_blocks_cnt == blocks_per_page_) {
-    free_pages_cnt_--;
-  }
+    page->free_blocks_cnt--;
 
-  page->free_blocks_cnt--;
+
+    if (page->free_blocks_cnt == 0) {
+      // De-manage fully allocated pages.  These pages will be managed again if
+      // a block is freed.
+      remove_from_page_list(page);
+    }
+  } // end of ScopedPthreadMutexLocker to avoid race page_list_ race condition
 
   memset(block_record, 0, block_size_);
-
-  if (page->free_blocks_cnt == 0) {
-    // De-manage fully allocated pages.  These pages will be managed again if
-    // a block is freed.
-    remove_from_page_list(page);
-  }
-
   return block_record;
 }
 
@@ -174,21 +182,24 @@ void BionicSmallObjectAllocator::free(void* ptr) {
   small_object_block_record* const block_record =
       reinterpret_cast<small_object_block_record*>(ptr);
 
-  block_record->next = page->free_block_list;
-  block_record->free_blocks_cnt = 1;
+  {
+    ScopedPthreadMutexLocker locker(&g_page_list_mutex);
+    block_record->next = page->free_block_list;
+    block_record->free_blocks_cnt = 1;
 
-  page->free_block_list = block_record;
-  page->free_blocks_cnt++;
+    page->free_block_list = block_record;
+    page->free_blocks_cnt++;
 
-  if (page->free_blocks_cnt == blocks_per_page_) {
-    if (++free_pages_cnt_ > 1) {
-      // if we already have a free page - unmap this one.
-      free_page(page);
+    if (page->free_blocks_cnt == blocks_per_page_) {
+      if (++free_pages_cnt_ > 1) {
+        // if we already have a free page - unmap this one.
+        free_page(page);
+      }
+    } else if (page->free_blocks_cnt == 1) {
+      // We just freed from a full page.  Add this page back to the list.
+      add_to_page_list(page);
     }
-  } else if (page->free_blocks_cnt == 1) {
-    // We just freed from a full page.  Add this page back to the list.
-    add_to_page_list(page);
-  }
+  } // end of ScopedPthreadMutexLocker to avoid race page_list_ race condition
 }
 
 void BionicSmallObjectAllocator::alloc_page() {
