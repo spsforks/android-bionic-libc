@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2826bcc8_6a0b3236",
+        "filename": "libc/private/bionic_constants.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-10T22:59:07Z",
+      "side": 1,
+      "message": "sgtm, but add an extra line of comment here recording the history:\n```\n// We used 8KiB until V but switched to 16KiB in V to experiment with 16KiB pages.\n```\n(i was thinking that this would have a system health cost, but it\u0027s only the regular stack where ART faults in a bunch of pages, not the shadow call stack, so i think you\u0027re right that this should be fine.)",
+      "revId": "063c9c7630e3d4550739a24d0b082247a4fb91f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbb78e4f_af46dfb6",
+        "filename": "libc/private/bionic_constants.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-10T22:59:07Z",
+      "side": 1,
+      "message": "SCS_SIZE",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 10
+      },
+      "revId": "063c9c7630e3d4550739a24d0b082247a4fb91f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e726340_1d8e9b84",
+        "filename": "libc/private/bionic_constants.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-10T22:59:07Z",
+      "side": 1,
+      "message": "size.",
+      "range": {
+        "startLine": 24,
+        "startChar": 38,
+        "endLine": 24,
+        "endChar": 42
+      },
+      "revId": "063c9c7630e3d4550739a24d0b082247a4fb91f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
