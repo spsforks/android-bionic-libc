@@ -119,7 +119,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
 #if defined(__aarch64__) || defined(__riscv)
   // Allocate the stack and the guard region.
-  char* scs_guard_region = reinterpret_cast<char*>(
+  char* const scs_guard_region = reinterpret_cast<char*>(
       mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
   thread->shadow_call_stack_guard_region = scs_guard_region;
 
