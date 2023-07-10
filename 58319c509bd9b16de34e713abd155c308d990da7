@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07bb5acf_8220fb3f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-10T22:42:45Z",
+      "side": 1,
+      "message": "(we don\u0027t really use *const, so i\u0027d just drop this.)",
+      "revId": "58319c509bd9b16de34e713abd155c308d990da7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a64ae818_3728ea6f",
+        "filename": "libc/private/bionic_constants.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-10T22:42:45Z",
+      "side": 1,
+      "message": "lol. now you see why it\u0027s useful for PAGE_SIZE to be a constant :-)\n\nwhat would the plan be for fixing this later? (for now it might make more sense to just add include this in your local hack that changes PAGE_SIZE. i\u0027m not sure there\u0027s any point checking this in? i\u0027m also not sure what a real fix looks like, given the assembler side of this that\u0027s what requires it to be constant...)",
+      "revId": "58319c509bd9b16de34e713abd155c308d990da7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
