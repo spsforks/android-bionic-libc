@@ -46,6 +46,30 @@
       },
       "revId": "63ab712a814c79aea6beb07911a6c2a5bb49802d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be40bf43_948e0ab6",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1710792
+      },
+      "writtenOn": "2023-07-11T22:43:35Z",
+      "side": 1,
+      "message": "reverted, will upload a separate CL",
+      "parentUuid": "b17c34ab_e04a8e57",
+      "range": {
+        "startLine": 139,
+        "startChar": 14,
+        "endLine": 139,
+        "endChar": 22
+      },
+      "revId": "63ab712a814c79aea6beb07911a6c2a5bb49802d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
