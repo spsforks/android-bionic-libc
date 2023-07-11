@@ -22,6 +22,30 @@
       },
       "revId": "63ab712a814c79aea6beb07911a6c2a5bb49802d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b17c34ab_e04a8e57",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2023-07-11T21:52:16Z",
+      "side": 1,
+      "message": "This change shouldn\u0027t be necessary, as `scs_offset` will be a multiple of `SCS_SIZE` which needs to be a multiple of the page size. Did you by any chance see this in a tree without aosp/2651111 applied?",
+      "parentUuid": "d0534fc1_4534f491",
+      "range": {
+        "startLine": 139,
+        "startChar": 14,
+        "endLine": 139,
+        "endChar": 22
+      },
+      "revId": "63ab712a814c79aea6beb07911a6c2a5bb49802d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
