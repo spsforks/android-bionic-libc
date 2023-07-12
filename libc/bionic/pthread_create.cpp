@@ -117,7 +117,7 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 }
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
-#if defined(__aarch64__) || defined(__riscv)
+#if defined(__aarch64__) || defined(__riscv) || true
   // Allocate the stack and the guard region.
   char* scs_guard_region = reinterpret_cast<char*>(
       mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
@@ -136,7 +136,11 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
 
   // Make the stack read-write, and store its address in the register we're using as the shadow
   // stack pointer. This is deliberately the only place where the address is stored.
-  char* scs = scs_aligned_guard_region + scs_offset;
+  // |scs| must be page aligned for mprotect() to work. Sincce |SCS_SIZE|
+  // is set to 16K, |scs| is guaranteed to be page aligned for any
+  // system with page size <= 16K. To avoid having to bump |SCS_SIZE| again
+  // when we move to >16K page sizes, align |scs| to runtime queried page size.
+  char* scs = align_up(scs_aligned_guard_region + scs_offset, getpagesize());
   if (mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE) == -1) {
     async_safe_fatal("failed to mprotect() on shadow stack %p %d error %s", scs, SCS_SIZE,
                      strerror(errno));
