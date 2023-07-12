@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d84e73a_baaae1e6",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-12T21:12:24Z",
+      "side": 1,
+      "message": "that\u0027s very unlikely to happen, and we can worry about it if/when it does. (and, realistically, that would probably require changing SCS_SIZE again anyway.)",
+      "range": {
+        "startLine": 141,
+        "startChar": 35,
+        "endLine": 142,
+        "endChar": 79
+      },
+      "revId": "e38d2a2679a219d223f0773cd80c7a672391bd6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
