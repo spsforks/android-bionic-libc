@@ -34,6 +34,7 @@
 
 extern "C" int __epoll_create1(int flags);
 extern "C" int __epoll_pwait(int, epoll_event*, int, int, const sigset64_t*, size_t);
+extern "C" int __epoll_pwait2(int, epoll_event*, int, const timespec*, const sigset64_t*, size_t);
 
 int epoll_create(int size) {
   if (size <= 0) {
@@ -48,12 +49,46 @@ int epoll_create1(int flags) {
 }
 
 int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
+<<<<<<< PATCH SET (cfb60a Add epoll_pwait2().)
+#if defined(__LP64__)
+  return epoll_pwait64(fd, events, max_events, timeout, ss);
+#else
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {.sigset = *ss};
+    ss_ptr = &set.sigset64;
+  }
+  return epoll_pwait64(fd, events, max_events, timeout, ss_ptr);
+#endif
+=======
   SigSetConverter set{ss};
   return epoll_pwait64(fd, events, max_events, timeout, set.ptr);
+>>>>>>> BASE      (6e73f9 Merge changes from topic "bionic no page size macro" into ma)
 }
 
 int epoll_pwait64(int fd, epoll_event* events, int max_events, int timeout, const sigset64_t* ss) {
   return __epoll_pwait(fd, events, max_events, timeout, ss, sizeof(*ss));
+}
+
+int epoll_pwait2(int fd, epoll_event* events, int max_events, const timespec* timeout,
+                 const sigset_t* ss) {
+#if defined(__LP64__)
+  return __epoll_pwait2(fd, events, max_events, timeout, ss, sizeof(*ss));
+#else
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {.sigset = *ss};
+    ss_ptr = &set.sigset64;
+  }
+  return epoll_pwait2_64(fd, events, max_events, timeout, ss_ptr);
+#endif
+}
+
+int epoll_pwait2_64(int fd, epoll_event* events, int max_events, const timespec* timeout,
+                    const sigset64_t* ss) {
+  return __epoll_pwait2(fd, events, max_events, timeout, ss, sizeof(*ss));
 }
 
 int epoll_wait(int fd, struct epoll_event* events, int max_events, int timeout) {

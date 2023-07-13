@@ -63,7 +63,11 @@ New libc functions in V (API level 35):
     multi-threaded C).
   * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
   * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
+<<<<<<< PATCH SET (cfb60a Add epoll_pwait2().)
+    `epoll_pwait2`/`epoll_pwait2_64` (`<sys/epoll.h>`).
+=======
     `__riscv_hwprobe` (`<sys/hwprobe.h>`).
+>>>>>>> BASE      (6e73f9 Merge changes from topic "bionic no page size macro" into ma)
 
 New libc functions in U (API level 34):
   * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
