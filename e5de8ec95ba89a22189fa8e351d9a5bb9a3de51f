@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "912a3125_6ea5208f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-13T23:19:52Z",
+      "side": 1,
+      "message": "(fixed typos too.)",
+      "revId": "e5de8ec95ba89a22189fa8e351d9a5bb9a3de51f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "957a43d9_2feb8b7a",
@@ -31,6 +48,30 @@
       "writtenOn": "2023-07-13T23:04:45Z",
       "side": 1,
       "message": "Would it be better to change this to GTEST_SKIP? I don\u0027t know if one is better than the other though since it\u0027s still a kind of test.",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 20
+      },
+      "revId": "e5de8ec95ba89a22189fa8e351d9a5bb9a3de51f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3be74da_aafdd363",
+        "filename": "tests/sys_epoll_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-13T23:19:52Z",
+      "side": 1,
+      "message": "oh, yeah, that was my _other_ motivation for breaking up the big \"smoke\" test --- so i could do that. forgot :-(",
+      "parentUuid": "957a43d9_2feb8b7a",
       "range": {
         "startLine": 68,
         "startChar": 4,
