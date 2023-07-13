@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25851df4_d959e4f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-07-13T23:05:18Z",
+      "side": 1,
+      "message": "Forgot to mention, ayeaye found a couple of typos that are valid.",
+      "revId": "e5de8ec95ba89a22189fa8e351d9a5bb9a3de51f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "957a43d9_2feb8b7a",
