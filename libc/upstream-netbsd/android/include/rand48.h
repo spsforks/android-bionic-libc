@@ -19,9 +19,9 @@
 #include <stdlib.h>
 
 __LIBC_HIDDEN__ void		__dorand48(unsigned short[3]);
-__LIBC_HIDDEN__ unsigned short	__rand48_seed[3];
-__LIBC_HIDDEN__ unsigned short	__rand48_mult[3];
-__LIBC_HIDDEN__ unsigned short	__rand48_add;
+__LIBC_HIDDEN__ extern unsigned short	__rand48_seed[3];
+__LIBC_HIDDEN__ extern unsigned short	__rand48_mult[3];
+__LIBC_HIDDEN__ extern unsigned short	__rand48_add;
 
 #define	RAND48_SEED_0	(0x330e)
 #define	RAND48_SEED_1	(0xabcd)
