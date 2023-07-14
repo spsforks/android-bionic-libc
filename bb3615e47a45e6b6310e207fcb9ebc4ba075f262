@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23363fe3_a6c4f47c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-14T15:04:49Z",
+      "side": 1,
+      "message": "see how it says \"upstream-netbsd\"? this is similar to external/* --- patches need to be sent upstream first.",
+      "revId": "bb3615e47a45e6b6310e207fcb9ebc4ba075f262",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
