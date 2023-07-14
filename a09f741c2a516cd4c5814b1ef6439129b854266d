@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07a0382e_df745de2",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2023-07-14T00:01:46Z",
+      "side": 0,
+      "message": "Did this comment get dropped during the refactor?",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 74
+      },
+      "revId": "a09f741c2a516cd4c5814b1ef6439129b854266d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
