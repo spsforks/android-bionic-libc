@@ -33,6 +33,24 @@
       "message": "Although, it looks like there are some real build errors.",
       "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22390b99_2c312f0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-14T18:58:57Z",
+      "side": 1,
+      "message": "grrr... ltp, man... they seem very confused about whether they\u0027re testing _a_ kernel version, _all_ kernel versions, or the c library :-(\n\nat least this one is already fixed upstream because glibc went first!",
+      "parentUuid": "e5d0c8ca_56a15213",
+      "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
