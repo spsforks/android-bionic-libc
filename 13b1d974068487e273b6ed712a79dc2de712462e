@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9eafe1a6_ebd7b0cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-14T14:09:50Z",
+      "side": 1,
+      "message": "(i\u0027ve updated the commit message to make it clearer what \"where it belongs\" meant.)",
+      "revId": "13b1d974068487e273b6ed712a79dc2de712462e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
