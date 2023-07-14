@@ -22,6 +22,30 @@
       },
       "revId": "a09f741c2a516cd4c5814b1ef6439129b854266d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd4fd05e_16fece4d",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-14T14:09:13Z",
+      "side": 0,
+      "message": "no, it\u0027s wrong. the comment above membarrier() is correct for userfaultfd() too. source: https://man7.org/linux/man-pages/man2/userfaultfd.2.html",
+      "parentUuid": "07a0382e_df745de2",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 74
+      },
+      "revId": "a09f741c2a516cd4c5814b1ef6439129b854266d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
