@@ -146,10 +146,27 @@ TEST(uchar, mbrtoc16) {
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-  // Illegal 5-byte UTF-8.
+
+  // 5-byte UTF-8.
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr));
+  out = u'\0';
+  auto five_byte_result = mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr);
+#if defined(__ANDROID__)
+  // Android's unicode implementation is newer than
+  // https://datatracker.ietf.org/doc/html/rfc3629, so it doesn't support 5 or
+  // 6 byte UTF-8 sequences.
+  ASSERT_EQ(static_cast<size_t>(-1), five_byte_result);
   ASSERT_EQ(EILSEQ, errno);
+  ASSERT_EQ(u'\0', out);
+#elif defined(__GLIBC__)
+  // But https://datatracker.ietf.org/doc/html/rfc2279 did support them, so
+  // glibc still does.
+  ASSERT_EQ(5U, five_byte_result);
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(u'\uf94a', out);
+#else
+#warning mbrtoc16 with 5-byte UTF-8 not tested for unknown platform
+#endif
 }
 
 TEST(uchar, mbrtoc16_reserved_range) {
