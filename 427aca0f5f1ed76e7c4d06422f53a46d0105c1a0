@@ -16,6 +16,23 @@
       "message": "(tested on both a 5.10 kernel and a 6.3 kernel, with the expected results on each.)",
       "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5d0c8ca_56a15213",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-07-14T18:50:53Z",
+      "side": 1,
+      "message": "Although, it looks like there are some real build errors.",
+      "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
