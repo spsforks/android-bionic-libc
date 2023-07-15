@@ -35,6 +35,7 @@
 
 #include <bits/fcntl.h>
 #include <bits/getopt.h>
+#include <bits/getentropy.h>
 #include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
