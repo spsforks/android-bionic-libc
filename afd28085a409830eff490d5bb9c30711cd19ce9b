@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bbf33c35_0230b08c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T14:58:37Z",
+      "side": 1,
+      "message": "`getentropy` is originally OpenBSD-ism, where it\u0027s been in `\u003cunistd.h\u003e` since they added it.\nhttps://man.openbsd.org/OpenBSD-5.6/getentropy\n\nThat\u0027s fun though. I had not realized glibc changed where it goes. I bet they put it in `\u003csys/random.h\u003e` to be next to `getrandom` and didn\u0027t pay attention. That is probably the source of Apple putting it in the wrong place too.\n\nI\u0027ll rephrase it a bit.\n\n\u003e  most app developers want source compatibility with iOS, not glibc!\n\n`getentropy` isn\u0027t available in iOS in the first place, so it\u0027s moot. And while iOS is a more popular platform than glibc, Android\u0027s `#define`s look more like glibc than iOS. So one should expect glibc vs iOS quirks to be resolved in the glibc direction by default than iOS.\n\nGiven all that, I think the comment about macOS and Fuchsia being outliers here is correct. This API starting to appear outside the BSD sphere is mostly a recent phenomenon. BoringSSL is picking it up because it\u0027s a much more convenient default for embedded-type platforms (notably this libcrypto_baremetal mess) than /dev/urandom.",
+      "parentUuid": "95d7d825_87053c06",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2b3a25e7_2d4435c1",
         "filename": "libc/include/sys/random.h",
         "patchSetId": 3
