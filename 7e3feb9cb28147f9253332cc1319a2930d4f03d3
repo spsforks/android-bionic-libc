@@ -16,6 +16,24 @@
       "message": "i think this will break +ccross\u0027 musl builds...",
       "revId": "7e3feb9cb28147f9253332cc1319a2930d4f03d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8af60a78_47449f2b",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-07-17T22:15:31Z",
+      "side": 1,
+      "message": "Yep:\n```\nbionic/tests/uchar_test.cpp:168:2: error: mbrtoc16 with 5-byte UTF-8 not tested for unknown platform\n [-Werror,-W#warnings]\n#warning mbrtoc16 with 5-byte UTF-8 not tested for unknown platform\n ^\nbionic/tests/uchar_test.cpp:153:8: error: unused variable \u0027five_byte_result\u0027 [-Werror,-Wunused-varia\nble]\n  auto five_byte_result \u003d mbrtoc16(\u0026out, \"\\xf8\\xa1\\xa2\\xa3\\xa4\", 5, nullptr);\n       ^\n```\n\nRunning the test on musl it seems to have the same behavior as bionic, although it also fails farther up, it gets 4 on line 145 and -3 or line 147.",
+      "parentUuid": "863182b0_edc76151",
+      "revId": "7e3feb9cb28147f9253332cc1319a2930d4f03d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
