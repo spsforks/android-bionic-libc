@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2b5bad7_ac126d17",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T21:42:46Z",
+      "side": 1,
+      "message": "the other thing that\u0027s weird about glibc is that you need `_DEFAULT_SOURCE` to get it in \u003cunistd.h\u003e but nothing for \u003csys/random.h\u003e...",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 65
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7cb0f67_53dae852",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T21:42:46Z",
+      "side": 1,
+      "message": "i don\u0027t think this is strictly true --- the links seem to claim that you can use it just fine, but you get flagged in the app store. which matches its existence and annotation in the header files on my mac. (though i don\u0027t know why they don\u0027t fix the header file if they don\u0027t want people using it!)",
+      "range": {
+        "startLine": 38,
+        "startChar": 40,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a883702_95d50dda",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T21:42:46Z",
+      "side": 1,
+      "message": "no, we\u0027re still exporting both from this header. something like \"Random bytes.\" would be fine though.",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

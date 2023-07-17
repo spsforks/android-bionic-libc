@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85a3148f_f572471b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T21:42:46Z",
+      "side": 1,
+      "message": "\u003e That is probably the source of Apple putting it in the wrong place too.\n\ncould be --- i think they, we, and glibc all added it (in \u003csys/random.h\u003e) in the same year.\n\nand, yeah, you\u0027re right about the three main BSDs. (i was going to file an austin group bug otherwise, but since Android/macOS [and maybe iOS] are the odd ones out...)",
+      "parentUuid": "6ef3ae71_fcaa0874",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b3a25e7_2d4435c1",
