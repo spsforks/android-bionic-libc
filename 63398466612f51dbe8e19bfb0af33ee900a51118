@@ -95,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75d0ed43_f8df7c2a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T21:53:54Z",
+      "side": 1,
+      "message": "(The links are folks declaring the function prototype themselves, in which case what header it\u0027s in is immaterial. That links because the symbol indeed exists. But it\u0027s not a public API because it\u0027s not in their SDK.)",
+      "parentUuid": "57351e05_e24b838f",
+      "range": {
+        "startLine": 38,
+        "startChar": 40,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a883702_95d50dda",
