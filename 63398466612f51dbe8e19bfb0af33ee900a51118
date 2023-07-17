@@ -119,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c78d2e5f_67b28eb8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T21:55:27Z",
+      "side": 1,
+      "message": "\u003e Yes, the macOS headers claim it is available on iOS and then the iOS headers don\u0027t have it. \n\n/facepalm",
+      "parentUuid": "75d0ed43_f8df7c2a",
+      "range": {
+        "startLine": 38,
+        "startChar": 40,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a883702_95d50dda",
