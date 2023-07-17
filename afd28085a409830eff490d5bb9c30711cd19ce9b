@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ef3ae71_fcaa0874",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T15:14:12Z",
+      "side": 1,
+      "message": "Rephrased the comment to capture the history a bit better.",
+      "parentUuid": "bbf33c35_0230b08c",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b3a25e7_2d4435c1",
@@ -49,6 +67,24 @@
       "writtenOn": "2023-07-17T14:40:47Z",
       "side": 1,
       "message": "(remove this comment)",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46e2e560_009acb50",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T15:14:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b3a25e7_2d4435c1",
       "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
