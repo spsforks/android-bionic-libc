@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e43e128_e6777008",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T21:52:35Z",
+      "side": 1,
+      "message": "This is true, but I don\u0027t think it needs to be mentioned here? `_DEFAULT_SOURCE` is anything they intend to expose by \"default\", as long as you don\u0027t build in one of the pedantic modes that disable all non-POSIX symbols. It\u0027s probably not guarded in `\u003csys/random.h\u003e` because that\u0027s a non-POSIX header to begin with.\n\nMeh. glibc likes feature macros.",
+      "parentUuid": "b2b5bad7_ac126d17",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 65
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7cb0f67_53dae852",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57351e05_e24b838f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T21:52:35Z",
+      "side": 1,
+      "message": "No, it is actually missing from the headers. I\u0027ve tried to use it in BoringSSL and it does not work. I wish it were there, but alas.\n\nIt is present in the macOS SDK and not the iOS SDK:\n```\n$ grep -r getentropy /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include\n/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/syscall.h:#define\tSYS_getentropy     500\n/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/random.h:int getentropy(void* buffer, size_t size) __OSX_AVAILABLE(10.12) __IOS_AVAILABLE(10.0) __TVOS_AVAILABLE(10.0) __WATCHOS_AVAILABLE(3.0);\n\n$ grep -r getentropy /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include\n/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/sys/syscall.h:#define\tSYS_getentropy     500\n```\n\nYes, the macOS headers claim it is available on iOS and then the iOS headers don\u0027t have it. Go figure. One way or another, someone targeting iOS is not going to use it, only someone targeting macOS.",
+      "parentUuid": "c7cb0f67_53dae852",
+      "range": {
+        "startLine": 38,
+        "startChar": 40,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a883702_95d50dda",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-07-17T21:42:46Z",
       "side": 1,
       "message": "no, we\u0027re still exporting both from this header. something like \"Random bytes.\" would be fine though.",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "63398466612f51dbe8e19bfb0af33ee900a51118",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2c94945_2bfce2d4",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1031048
+      },
+      "writtenOn": "2023-07-17T21:52:35Z",
+      "side": 1,
+      "message": "Restored the old comment.",
+      "parentUuid": "1a883702_95d50dda",
       "range": {
         "startLine": 33,
         "startChar": 10,
