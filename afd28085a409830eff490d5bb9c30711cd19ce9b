@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95d7d825_87053c06",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T14:40:47Z",
+      "side": 1,
+      "message": "the change is fine, but the commit message is misleading. i think something like \"getentropy() was originally in \u003csys/random.h\u003e and remains there on macOS/iOS, but glibc later duplicated it in \u003cunistd.h\u003e too (musl _only_ has it in \u003cunistd.h\u003e, presumably because POSIX [link] adds it there)\" is closer. (also, although no-one cares about fuchsia, \"macOS is an outlier\" is pretty misleading in this context --- most _app_ developers want source compatibility with iOS, not glibc! _platform_ developers, of course, tend to hold the opposite preference. \"be source compatible with both where possible, for that reason\" is our default policy.)\n\nnote that man7 _used_ to say \u003csys/random.h\u003e but that was changed with a similarly misleading commit message with no rationale :-( at least they fixed\n```\n+In earlier versions of glibc this function was avaible under the\n+.BR \u003csys/random.h\u003e\n+header.\n```\nin the original commit to\n```\n.BR getentropy ()\nis also declared in\n.BR \u003csys/random.h\u003e .\n(No feature test macro need be defined to obtain the declaration from\nthat header file.)\n```\nnow!",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b3a25e7_2d4435c1",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T14:40:47Z",
+      "side": 1,
+      "message": "(remove this comment)",
+      "revId": "afd28085a409830eff490d5bb9c30711cd19ce9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
