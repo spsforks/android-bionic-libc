@@ -51,6 +51,23 @@
       "parentUuid": "e5d0c8ca_56a15213",
       "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01d6a06d_58123467",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-17T20:25:33Z",
+      "side": 1,
+      "message": "new error now:\n```\n...pwait_var.h:25:54: error: incompatible pointer types passing \u0027const sigset_t *\u0027 (aka \u0027const unsigned long *\u0027) to parameter of type \u0027const sigset64_t * _Nullable\u0027 [-Werror,-Wincompatible-pointer-types]\n```\nso my \"cunning plan\" for 32-bit doesn\u0027t work.\n\nmaybe having `epoll_pwait2()` _and_ `epoll_pwait2_64()` isn\u0027t the worst option? seems like that or just \"don\u0027t have epoll_pwait2() for ILP32\"?",
+      "revId": "427aca0f5f1ed76e7c4d06422f53a46d0105c1a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
