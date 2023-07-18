@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ca115cf_ccc2a918",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1888377
+      },
+      "writtenOn": "2023-07-18T06:06:58Z",
+      "side": 1,
+      "message": "Hi Elliott,\n\nWhen will these patches be merged? Thanks!",
+      "revId": "26a4d1e9cfe7f7feb209a86a861d4b0037a69640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
