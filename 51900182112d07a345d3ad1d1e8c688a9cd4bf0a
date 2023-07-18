@@ -39,6 +39,24 @@
       "message": "I do like call the 64 bit version better than the __strong_alias version. It\u0027s much easier to understand what is going on.",
       "revId": "51900182112d07a345d3ad1d1e8c688a9cd4bf0a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99739d0f_a767bd2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-18T15:27:51Z",
+      "side": 1,
+      "message": "it occurred to me overnight that we can probably achieve the same effect but with the #ifdef stuff only in SigSetConverter.h instead --- i\u0027ll give that a go today.",
+      "parentUuid": "d185acad_5706d355",
+      "revId": "51900182112d07a345d3ad1d1e8c688a9cd4bf0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
