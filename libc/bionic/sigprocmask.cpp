@@ -44,6 +44,10 @@ extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 int sigprocmask(int how,
                 const sigset_t* bionic_new_set,
                 sigset_t* bionic_old_set) __attribute__((__noinline__)) {
+#if defined(__LP64__)
+  // sigset_t == sigset64_t on LP64.
+  return sigprocmask64(how, bionic_new_set, bionic_old_set);
+#else
   SigSetConverter new_set;
   sigset64_t* new_set_ptr = nullptr;
   if (bionic_new_set != nullptr) {
@@ -62,6 +66,7 @@ int sigprocmask(int how,
   }
 
   return 0;
+#endif
 }
 
 int sigprocmask64(int how,

@@ -198,11 +198,15 @@ int sigpause(int sig) {
 }
 
 int sigpending(sigset_t* bionic_set) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
+#if defined(__LP64__)
+  // sigset_t == sigset64_t on LP64.
+  return sigpending64(bionic_set);
+#else
+  SigSetConverter set = {.sigset = *bionic_set};
   if (__rt_sigpending(&set.sigset64, sizeof(set.sigset64)) == -1) return -1;
   *bionic_set = set.sigset;
   return 0;
+#endif
 }
 
 int sigpending64(sigset64_t* set) {
@@ -255,9 +259,13 @@ extern "C" int sigsetmask(int mask) {
 }
 
 int sigsuspend(const sigset_t* bionic_set) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
+#if defined(__LP64__)
+  // sigset_t == sigset64_t on LP64.
+  return sigsuspend64(bionic_set);
+#else
+  SigSetConverter set = {.sigset = *bionic_set};
   return sigsuspend64(&set.sigset64);
+#endif
 }
 
 int sigsuspend64(const sigset64_t* set) {
@@ -271,9 +279,13 @@ int sigsuspend64(const sigset64_t* set) {
 }
 
 int sigtimedwait(const sigset_t* bionic_set, siginfo_t* info, const timespec* timeout) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
+#if defined(__LP64__)
+  // sigset_t == sigset64_t on LP64.
+  return sigtimedwait64(bionic_set, info, timeout);
+#else
+  SigSetConverter set = {.sigset = *bionic_set};
   return sigtimedwait64(&set.sigset64, info, timeout);
+#endif
 }
 
 int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeout) {
@@ -287,9 +299,13 @@ int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeo
 }
 
 int sigwait(const sigset_t* bionic_set, int* sig) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
+#if defined(__LP64__)
+  // sigset_t == sigset64_t on LP64.
+  return sigwait64(bionic_set, sig);
+#else
+  SigSetConverter set = {.sigset = *bionic_set};
   return sigwait64(&set.sigset64, sig);
+#endif
 }
 
 int sigwait64(const sigset64_t* set, int* sig) {
