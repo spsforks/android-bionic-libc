@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a092282_a5335013",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-18T22:31:22Z",
+      "side": 1,
+      "message": "(probably worth adding something like \"...but this was already fixed upstream, so sync with upstream\u0027s version.\")",
+      "revId": "b0208436036fb77b4a59dd28f9f07db015af88dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
