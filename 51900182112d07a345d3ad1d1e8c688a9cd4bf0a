@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb98796f_2bfb3532",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-18T00:21:27Z",
+      "side": 1,
+      "message": "this is probably the strongest argument to go the other way.",
+      "range": {
+        "startLine": 46,
+        "startChar": 17,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "51900182112d07a345d3ad1d1e8c688a9cd4bf0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
