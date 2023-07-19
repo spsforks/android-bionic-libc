@@ -374,6 +374,19 @@ the host's glibc.
 
     $ ./tests/run-on-host.sh glibc
 
+### Against musl
+
+As a way to check that our tests do in fact test the correct behavior (and not
+just the behavior we think is correct), it is possible to run the tests against
+the host's glibc.
+
+    $ OUT_DIR=$(ANDROID_BUILD_TOP)/musl-out ./tests/run-on-host.sh musl
+
+Note: the alternate OUT_DIR is used to avoid causing excessive rebuilding when
+switching between glibc and musl. The first musl test run will be expensive
+because it will not reuse any already built artifacts, but subsequent runs will
+be cheaper than if you hadn't used it.
+
 ## Gathering test coverage
 
 To get test coverage for bionic, use `//bionic/build/coverage.sh`. Before
