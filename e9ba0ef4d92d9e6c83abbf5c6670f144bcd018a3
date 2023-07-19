@@ -22,6 +22,30 @@
       },
       "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8c7a734_95e7e6dc",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-19T17:53:31Z",
+      "side": 1,
+      "message": "glibc isn\u0027t exactly wrong either. The C spec doesn\u0027t say which version of UTF-8 uchar.h implements.\n\nI can rename it as `kLibcRejectsOverLongUtf8Sequences` if you prefer that. (do you want that in this CL?)",
+      "parentUuid": "fb6c495c_216316af",
+      "range": {
+        "startLine": 301,
+        "startChar": 6,
+        "endLine": 301,
+        "endChar": 36
+      },
+      "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
