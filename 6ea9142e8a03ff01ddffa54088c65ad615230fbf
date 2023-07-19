@@ -52,6 +52,24 @@
       "parentUuid": "928f121e_5b8d8aee",
       "revId": "6ea9142e8a03ff01ddffa54088c65ad615230fbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3eb17b7e_3bb1cfc2",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-19T19:00:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "928f121e_5b8d8aee",
+      "revId": "6ea9142e8a03ff01ddffa54088c65ad615230fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
