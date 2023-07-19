@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04e437e7_c9fd7d49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T22:46:08Z",
+      "side": 1,
+      "message": "this seems quite verbose, but i\u0027m assuming this is the way i\u0027m supposed to do it, rather than mess around with `../`?",
+      "revId": "cd764d0ad533c91cdf80e7fa32023cbb37cf8469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
