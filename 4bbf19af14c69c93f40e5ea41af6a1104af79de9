@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8df735a0_305492ac",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T18:56:12Z",
+      "side": 1,
+      "message": "musl on the host",
+      "range": {
+        "startLine": 381,
+        "startChar": 0,
+        "endLine": 381,
+        "endChar": 16
+      },
+      "revId": "4bbf19af14c69c93f40e5ea41af6a1104af79de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
