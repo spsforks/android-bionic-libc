@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82fff1aa_fd81a619",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T19:59:23Z",
+      "side": 1,
+      "message": "(there are also complex changes to qsort() and ldexp(), but i need to look at those more carefully, so i\u0027ll come back with them later.)",
+      "revId": "523b03a2dc2d983f12242e4f35fc6f53fb0c9611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
