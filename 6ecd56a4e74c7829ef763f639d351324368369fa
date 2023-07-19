@@ -16,6 +16,24 @@
       "message": "we don\u0027t _need_ this, but clang can\u0027t actually optimize _everything_ away for this one without this helping hand. without this, we end up with:\n```\n000000000006c2f0 \u003csigprocmask\u003e:\n   6c2f0: a9bf7bfd      stp     x29, x30, [sp, #-0x10]!\n   6c2f4: 910003fd      mov     x29, sp\n   6c2f8: 9401941a      bl      0xd1360 \u003csigprocmask64@plt\u003e\n   6c2fc: 3100041f      cmn     w0, #0x1\n   6c300: 5a9f13e0      csetm   w0, eq\n   6c304: a8c17bfd      ldp     x29, x30, [sp], #0x10\n   6c308: d65f03c0      ret\n   6c30c: 00000000      udf     #0x0\n```\nbecause it doesn\u0027t realize that -1 is what sigprocmask64 would have returned anyway. hmmm... actually, i can fix this with\n```\n  int rc \u003d sigprocmask64(how, new_set.ptr, old_set.ptr);\n  if (rc \u003d\u003d 0 \u0026\u0026 bionic_old_set !\u003d nullptr) {\n    old_set.copy_out();\n  }\n  return rc;\n```\nso i\u0027ll be back in a second with a third patchset!",
       "revId": "6ecd56a4e74c7829ef763f639d351324368369fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ade072c7_b2cf9d53",
+        "filename": "libc/bionic/sigprocmask.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T19:27:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89aa8f07_ba20d7c5",
+      "revId": "6ecd56a4e74c7829ef763f639d351324368369fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

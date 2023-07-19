@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ae3109f_6614efbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T19:27:06Z",
+      "side": 1,
+      "message": "of course, we\u0027re _still_ paying for a useless branch even after all this. but i think the better fix there is to add a `__RENAME64()` to the headers because [for anyone who recompiles with newer headers] that automatically retcons the [micro]optimization to older api levels too... (but the \"you\u0027ve spent way too much time on this already\" voice in my head is getting ever louder!)",
+      "revId": "215baed16f00d7954a7500f338f96cca4f63824f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
