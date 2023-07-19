@@ -70,6 +70,30 @@
       },
       "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "713fd5b4_0bd1a459",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-19T18:02:12Z",
+      "side": 1,
+      "message": "I expect the reason is that they didn\u0027t want to break any users that relied on that support? (though since there are no valid code points in that range, there shouldn\u0027t be anyone relying on it? https://xkcd.com/1172/)",
+      "parentUuid": "4c7d4bc4_fc619767",
+      "range": {
+        "startLine": 301,
+        "startChar": 6,
+        "endLine": 301,
+        "endChar": 36
+      },
+      "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
