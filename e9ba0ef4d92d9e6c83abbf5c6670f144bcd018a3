@@ -46,6 +46,30 @@
       },
       "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c7d4bc4_fc619767",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T17:56:28Z",
+      "side": 1,
+      "message": "\"if you don\u0027t specify a version explicitly, congratulations, you get the latest one\" :-) (and it\u0027s not like this is a _recent_ change.)\n\ni think the counterargument would be java and/or icu still accept the overlong sequences. then it\u0027s more of a hung jury!\n\n(oh, yeah, duh --- s/supports/rejects/ is a good solution!)\n\n(doesn\u0027t have to be in this cl, no.)",
+      "parentUuid": "d8c7a734_95e7e6dc",
+      "range": {
+        "startLine": 301,
+        "startChar": 6,
+        "endLine": 301,
+        "endChar": 36
+      },
+      "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
