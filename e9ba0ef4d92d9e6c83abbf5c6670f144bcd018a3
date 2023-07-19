@@ -94,6 +94,30 @@
       },
       "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29bf5cb3_871f4fed",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T18:07:14Z",
+      "side": 1,
+      "message": "yeah, you could argue it from a postel\u0027s law perspective. (but i\u0027d argue https://unicode.org/reports/tr36/#UTF-8_Exploit back.)",
+      "parentUuid": "713fd5b4_0bd1a459",
+      "range": {
+        "startLine": 301,
+        "startChar": 6,
+        "endLine": 301,
+        "endChar": 36
+      },
+      "revId": "e9ba0ef4d92d9e6c83abbf5c6670f144bcd018a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
