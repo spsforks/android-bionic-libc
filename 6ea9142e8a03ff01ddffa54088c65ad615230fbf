@@ -34,6 +34,24 @@
       "parentUuid": "e388c416_d1a81a4b",
       "revId": "6ea9142e8a03ff01ddffa54088c65ad615230fbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01ad05f2_2ef0abfb",
+        "filename": "tests/uchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-19T18:00:13Z",
+      "side": 1,
+      "message": "yeah, i assumed as much. just wanted to check you hadn\u0027t missed a `git add` :-)",
+      "parentUuid": "928f121e_5b8d8aee",
+      "revId": "6ea9142e8a03ff01ddffa54088c65ad615230fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
