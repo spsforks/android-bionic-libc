@@ -16,6 +16,24 @@
       "message": "this seems quite verbose, but i\u0027m assuming this is the way i\u0027m supposed to do it, rather than mess around with `../`?",
       "revId": "cd764d0ad533c91cdf80e7fa32023cbb37cf8469",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fcc45b9_b4f82d06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-07-19T23:25:39Z",
+      "side": 1,
+      "message": "You could use a filegroup to reference the source file from libc, but if you want the `-Dscalbn\u003dldexp` you might need to compile it separately anyways.",
+      "parentUuid": "04e437e7_c9fd7d49",
+      "revId": "cd764d0ad533c91cdf80e7fa32023cbb37cf8469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
