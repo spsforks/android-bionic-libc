@@ -336,8 +336,8 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
+    whole_static_libs: ["ldexp"],
     srcs: [
-        "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
