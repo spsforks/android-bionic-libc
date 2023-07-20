@@ -70,6 +70,24 @@
       "parentUuid": "b9e39074_43bd2a08",
       "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03995c5f_6ecf9b14",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-07-20T21:08:25Z",
+      "side": 1,
+      "message": "Yep, setting apex_available makes it unavailable to the platform unless explicitly listed.",
+      "parentUuid": "3b3a405e_a5b9b2ce",
+      "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
