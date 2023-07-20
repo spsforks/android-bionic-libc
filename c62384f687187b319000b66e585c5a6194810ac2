@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6c73254_aff126dd",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-20T23:42:58Z",
+      "side": 1,
+      "message": "@enh: I figured I\u0027d ask before putting in the work. This should probably be put behind an targetSdkVersion check for bug compatibility? Anyone using this correctly depends on this behavior.\n\nAlternatives would be doing similarly with a versioned symbol, or just ignoring the problem since anyone that actually needs this is presumably just using ICU anyway (or more likely doing it on the Java side).\n\n(same question for the next patch)",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
