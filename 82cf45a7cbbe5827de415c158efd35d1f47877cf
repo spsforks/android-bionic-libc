@@ -52,6 +52,24 @@
       "parentUuid": "080a69d8_5b0366a6",
       "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b3a405e_a5b9b2ce",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-20T21:06:33Z",
+      "side": 1,
+      "message": "(yeah, looks like it. still, manually adding that back to libstdc++ still seems like the least worst way forward. done.)",
+      "parentUuid": "b9e39074_43bd2a08",
+      "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
