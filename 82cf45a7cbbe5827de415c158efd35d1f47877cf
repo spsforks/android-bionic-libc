@@ -16,6 +16,24 @@
       "message": "i don\u0027t understand why this library needs this but \"libc_freebsd\" and others don\u0027t?\n\n(but this is still much cleaner than what i had in ps1 even so!)",
       "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "080a69d8_5b0366a6",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2023-07-20T20:50:29Z",
+      "side": 1,
+      "message": "There was an allowlist added when apexes were first created that has never been cleaned up 😞\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:build/soong/apex/apex.go;l\u003d3289;drc\u003deec1b3fe267af06e41c140590cc8bbb9b823fe52",
+      "parentUuid": "8b42b6de_bd9e4d89",
+      "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
