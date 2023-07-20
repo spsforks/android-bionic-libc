@@ -334,10 +334,17 @@ cc_library_static {
 // automatically included.
 
 cc_library_static {
+    name: "libc_freebsd_ldexp",
+    defaults: ["libc_defaults"],
+    cflags: ["-Dscalbn=ldexp"],
+    srcs: [":libc_ldexp_srcs"],
+    apex_available: ["com.android.runtime"],
+}
+
+cc_library_static {
     defaults: ["libc_defaults"],
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
-        "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
@@ -1475,6 +1482,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd_large_stack",
@@ -1509,6 +1517,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd",
