@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b42b6de_bd9e4d89",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-20T20:26:12Z",
+      "side": 1,
+      "message": "i don\u0027t understand why this library needs this but \"libc_freebsd\" and others don\u0027t?\n\n(but this is still much cleaner than what i had in ps1 even so!)",
+      "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
