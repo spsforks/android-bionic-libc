@@ -63,14 +63,18 @@ static inline __wur uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
   return ps->__seq[n];
 }
 
+static inline void mbstate_reset(mbstate_t* ps) {
+  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
+}
+
 static inline __wur size_t mbstate_reset_and_return_illegal(int _errno, mbstate_t* ps) {
   errno = _errno;
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
+  mbstate_reset(ps);
   return __MB_ERR_ILLEGAL_SEQUENCE;
 }
 
 static inline __wur size_t mbstate_reset_and_return(int _return, mbstate_t* ps) {
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
+  mbstate_reset(ps);
   return _return;
 }
 
