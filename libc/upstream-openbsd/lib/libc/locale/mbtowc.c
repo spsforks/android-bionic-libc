@@ -43,6 +43,22 @@ mbtowc(wchar_t * __restrict pwc, const char * __restrict s, size_t n)
 		memset(&mbs, 0, sizeof(mbs));
 		return (0);
 	}
+
+	// Android edit: mbtowc and all the mbrto* APIs behave slightly differently
+	// when n is 0:
+	//
+	// mbrtowc returns 0 "if the next n or fewer bytes complete the multibyte
+	// character that corresponds to the null wide character"
+	//
+	// mbrtoc says: "If s is not a null pointer, the mbtowc function either
+	// returns 0 (if s points to the null character)..."
+	//
+	// So mbrtowc will not provide the correct mbtowc return value for "" and
+	// n = 0.
+	if (*s == '\0') {
+		return 0;
+	}
+
 	rval = mbrtowc(pwc, s, n, &mbs);
 
 	switch (rval) {
