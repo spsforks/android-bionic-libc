@@ -34,6 +34,24 @@
       "parentUuid": "8b42b6de_bd9e4d89",
       "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9e39074_43bd2a08",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-20T21:01:04Z",
+      "side": 1,
+      "message": "/facepalm\n\nit\u0027s a bit weird to me that a _static_ library would need anything, but i guess that\u0027s because of our default-global visibility ... i always forget that _anyone_ can reach in and grab my library!\n\ni\u0027ll move this into the cc_defaults so we can remove most of the crap from that allowlist in one go!\n\nexcept that seems to break the build?\n```\nlibstdc++: error: Module is requested to be installed but is not available for platform because it does not have \"//apex_available:platform\" or it depends on other modules that are not available for platform. \n```\nis \"//apex_available:platform\" the \"default default\" so saying com.android.runtime _removes_ platform?",
+      "parentUuid": "080a69d8_5b0366a6",
+      "revId": "82cf45a7cbbe5827de415c158efd35d1f47877cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
