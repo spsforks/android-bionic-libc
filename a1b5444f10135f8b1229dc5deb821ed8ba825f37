@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b8d8084_8d078bdc",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T23:38:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85875b88_c59d1654",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77656925_6ece3db4",
@@ -77,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df6ec4ef_40252048",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T23:38:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77656925_6ece3db4",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 3
+      },
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "74080086_6dd9b2f1",
@@ -90,6 +132,42 @@
       "writtenOn": "2023-07-21T22:47:54Z",
       "side": 1,
       "message": "i\u0027d prefer to avoid typedefs, and it seems like you don\u0027t actually use either type? so no reason not to just do the usual\n```\nenum {\n  A \u003d \u003cexpr\u003e,\n#define A A\n};\n```\nstyle?",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0f571b8_09bcb8f8",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T23:38:54Z",
+      "side": 1,
+      "message": "Works for me.",
+      "parentUuid": "74080086_6dd9b2f1",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23faa5f7_3a2a5dd8",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T23:38:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74080086_6dd9b2f1",
       "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
