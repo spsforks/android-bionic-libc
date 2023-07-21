@@ -43,6 +43,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1c37c6d8_3698a086",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T17:54:56Z",
+      "side": 1,
+      "message": "(yeah, i assume this is basically unused, and that the reporter is the first person to try. might be worth asking them whether _they\u0027ve_ added android-specific assumptions that this would break? that would be an argument to go off target api level. but in general i avoid that because i think it\u0027s _even more confusing_ to developers than \"it\u0027s different based on what OS i\u0027m running on\"! i\u0027ve mainly only used it for new restrictions that we know people aren\u0027t already abiding by [passing invalid values to functions, for example].)",
+      "parentUuid": "b6c73254_aff126dd",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "44860899_66defb5d",
         "filename": "libc/bionic/mbrtoc16.cpp",
         "patchSetId": 1
