@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <bits/bionic_multibyte_result.h>
 #include <errno.h>
 #include <sys/param.h>
 #include <uchar.h>
@@ -109,7 +110,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     mbstate_set_byte(state, bytes_so_far + i, *s++);
   }
   if (i < bytes_wanted) {
-    return __MB_ERR_INCOMPLETE_SEQUENCE;
+    return BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE;
   }
 
   // Decode the octet sequence representing the character in chunks
