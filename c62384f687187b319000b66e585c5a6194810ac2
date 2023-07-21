@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dadb7772_92183aff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T22:49:45Z",
+      "side": 1,
+      "message": "I\u0027ll do that. These magic numbers bug me.\n\n(we actually have some macros, but only internally, and are missing the -3 one)\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/2670165\n\n(I haven\u0027t cleaned up the magic numbers that are still there yet)",
+      "parentUuid": "7765a667_dc75513e",
+      "range": {
+        "startLine": 13,
+        "startChar": 30,
+        "endLine": 14,
+        "endChar": 51
+      },
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6c73254_aff126dd",
         "filename": "libc/bionic/mbrtoc16.cpp",
         "patchSetId": 1
@@ -114,6 +138,24 @@
       "writtenOn": "2023-07-21T17:52:19Z",
       "side": 1,
       "message": "or just s/state/-3/ on the original line?",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18c2f692_b49d939b",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T22:49:45Z",
+      "side": 1,
+      "message": "I\u0027d actually tried that first and misunderstood the error message I saw. That function\u0027s signature was just wrong 😊 https://android-review.googlesource.com/c/platform/bionic/+/2670166",
+      "parentUuid": "44860899_66defb5d",
       "revId": "c62384f687187b319000b66e585c5a6194810ac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
