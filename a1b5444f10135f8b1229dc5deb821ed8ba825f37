@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57eed636_d9737fd7",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T22:47:54Z",
+      "side": 1,
+      "message": "seems weird to not include this in the headers that can return these values? (especially because it\u0027s in `bits/` which is basically \"stuff that\u0027s logically in multiple standard headers\", not \"stuff that\u0027s not in any standard header\"!)",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77656925_6ece3db4",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T22:47:54Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by Check Contents: Please remove the trailing whitespace.\n\nAnalyzer Description: Validates that changes do not have prohibited expressions in them.\nOwner: ayeaye-team@google.com\n\nPlease remove the trailing whitespace.",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 3
+      },
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74080086_6dd9b2f1",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T22:47:54Z",
+      "side": 1,
+      "message": "i\u0027d prefer to avoid typedefs, and it seems like you don\u0027t actually use either type? so no reason not to just do the usual\n```\nenum {\n  A \u003d \u003cexpr\u003e,\n#define A A\n};\n```\nstyle?",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
