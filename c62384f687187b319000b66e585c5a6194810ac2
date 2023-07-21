@@ -59,6 +59,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "51e7f0c4_ad5515f8",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-21T18:31:09Z",
+      "side": 1,
+      "message": "Yeah, I guess since the targetSdkVersion flag can\u0027t prevent different behavior across OS versions anyway it\u0027s probably not worth it.",
+      "parentUuid": "1c37c6d8_3698a086",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44860899_66defb5d",
