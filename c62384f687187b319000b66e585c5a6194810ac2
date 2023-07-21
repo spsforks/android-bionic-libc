@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7765a667_dc75513e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T17:52:19Z",
+      "side": 1,
+      "message": "i actually almost suggested on an earlier cl that we should at least have our own names internally, even if we don\u0027t add them to the public header file. (though i\u0027d +2 them in the public header too, if they contain `BIONIC`...)",
+      "range": {
+        "startLine": 13,
+        "startChar": 30,
+        "endLine": 14,
+        "endChar": 51
+      },
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6c73254_aff126dd",
         "filename": "libc/bionic/mbrtoc16.cpp",
         "patchSetId": 1
@@ -14,6 +37,40 @@
       "writtenOn": "2023-07-20T23:42:58Z",
       "side": 1,
       "message": "@enh: I figured I\u0027d ask before putting in the work. This should probably be put behind an targetSdkVersion check for bug compatibility? Anyone using this correctly depends on this behavior.\n\nAlternatives would be doing similarly with a versioned symbol, or just ignoring the problem since anyone that actually needs this is presumably just using ICU anyway (or more likely doing it on the Java side).\n\n(same question for the next patch)",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44860899_66defb5d",
+        "filename": "libc/bionic/mbrtoc16.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T17:52:19Z",
+      "side": 1,
+      "message": "or just s/state/-3/ on the original line?",
+      "revId": "c62384f687187b319000b66e585c5a6194810ac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eec950f4_8d787fb4",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-21T17:52:19Z",
+      "side": 1,
+      "message": "(then you don\u0027t need this, right?)",
       "revId": "c62384f687187b319000b66e585c5a6194810ac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
