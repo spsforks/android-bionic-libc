@@ -498,6 +498,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
+  extern pthread_mutex_t g_dl_mutex;
+  pthread_mutex_lock(&g_dl_mutex);
+
   si->call_pre_init_constructors();
   si->call_constructors();
 
@@ -519,6 +522,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   // We are about to hand control over to the executable loaded.  We don't want
   // to leave dirty pages behind unnecessarily.
   purge_unused_memory();
+
+  pthread_mutex_unlock(&g_dl_mutex);
 
   ElfW(Addr) entry = exe_info.entry_point;
   TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
