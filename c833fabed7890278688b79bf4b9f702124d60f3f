@@ -20,6 +20,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a4756438_7d59c9e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-07-24T23:35:12Z",
+      "side": 1,
+      "message": "I did figure out how to get rid of the tombstones, so I\u0027ll send out a follow-up cl with that change after this passes.\n\nAfter that change, there are no tombstones generated at all any more.",
+      "revId": "c833fabed7890278688b79bf4b9f702124d60f3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "806c835e_476031f2",
         "filename": "tests/fcntl_test.cpp",
         "patchSetId": 1
