@@ -33,6 +33,24 @@
       "message": "ouch! unfortunate that\u0027s not a compile-time error :-(\n\n+danalbert because we were talking about this error (in theory) just last week!",
       "revId": "c833fabed7890278688b79bf4b9f702124d60f3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0639647_9e6cf402",
+        "filename": "tests/fcntl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-24T21:59:36Z",
+      "side": 1,
+      "message": "gtest does actually have some protections against this, they just don\u0027t work in this particular case. It *will* have an obvious error if the same test suite (or whatever the first argument is here) has mixed TEST_F and TEST use. If you had `TEST_F(foo, bar)` and `TEST(foo, baz)`, it\u0027ll diagnose that.\n\nIt didn\u0027t diagnose this case because it\u0027s the only test using the name fcntl_DeathTest 😞",
+      "parentUuid": "806c835e_476031f2",
+      "revId": "c833fabed7890278688b79bf4b9f702124d60f3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
