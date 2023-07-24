@@ -142,6 +142,30 @@
       },
       "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "181476df_88680ca8",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-24T22:19:18Z",
+      "side": 1,
+      "message": "als gregor samsa eines morgens aus unruhigen traeumen erwachte, fand er sich in seinem bett zu einem ungeheueren C-Entwickler verwandelt... :-)",
+      "parentUuid": "79fe327a_661240f1",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
