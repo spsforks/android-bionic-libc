@@ -70,6 +70,30 @@
       },
       "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63eb3249_166791d7",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-24T20:36:59Z",
+      "side": 1,
+      "message": "The cast is still needed, annoyingly:\n\n```\n/usr/local/google/home/danalbert/src/aosp/bionic/libc/include/bits/bionic_multibyte_result.h:51:46: error: enumerator value evaluates to -1, which cannot be narrowed to type \u0027size_t\u0027 (aka \u0027unsigned int\u0027)\n  BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE \u003d -1,\n                                             ^\n/usr/local/google/home/danalbert/src/aosp/bionic/libc/include/bits/bionic_multibyte_result.h:56:49: error: enumerator value evaluates to -2, which cannot be narrowed to type \u0027size_t\u0027 (aka \u0027unsigned int\u0027)\n  BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE \u003d -2,\n                                                ^\n/usr/local/google/home/danalbert/src/aosp/bionic/libc/include/bits/bionic_multibyte_result.h:64:47: error: enumerator value evaluates to -3, which cannot be narrowed to type \u0027size_t\u0027 (aka \u0027unsigned int\u0027)\n  BIONIC_MULTIBYTE_RESULT_NO_BYTES_CONSUMED \u003d -3,\n                                              ^\n```\n\n\u003e (but, yeah, i suspect lots of stuff in our headers doesn\u0027t work with -ansi or -pedantic or whatever anyway.)\n\nI don\u0027t think it needs to either since `-isysroot` or whatever should suppress warnings from bionic.",
+      "parentUuid": "c1c9d9fa_a1db73d9",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
