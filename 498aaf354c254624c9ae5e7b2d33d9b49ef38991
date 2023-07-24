@@ -22,6 +22,30 @@
       },
       "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9855d8b_2b81ca94",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-24T18:15:28Z",
+      "side": 1,
+      "message": "Clang accepts this for C89: https://godbolt.org/z/zanbEvPs5 (GCC seems to accept it too). This style is already in the NDK headers.\n\nI can still change it if you want, but this seems to work everywhere we care about.",
+      "parentUuid": "eeea54f6_6f668040",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

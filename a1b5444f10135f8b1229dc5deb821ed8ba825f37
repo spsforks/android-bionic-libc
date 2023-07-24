@@ -170,6 +170,24 @@
       "parentUuid": "74080086_6dd9b2f1",
       "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d9caa35_2d0b93e1",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-07-24T18:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0f571b8_09bcb8f8",
+      "revId": "a1b5444f10135f8b1229dc5deb821ed8ba825f37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
