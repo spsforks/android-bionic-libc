@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eeea54f6_6f668040",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-24T14:13:39Z",
+      "side": 1,
+      "message": "this still requires a very new C standard... i literally meant just `enum`.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
