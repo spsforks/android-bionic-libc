@@ -16,6 +16,23 @@
       "message": "There are still some tombstones generated, but I haven\u0027t figured out an easy way to skip them.\n\nSpecifically, the popen_return_value_signal test. Also, the subtest DISABLED_assert_gwp_asan_enabled needs to generate a crash. Both of these we want to fail, but not generate a tombstone. I don\u0027t think we have a mechanism for that.",
       "revId": "c833fabed7890278688b79bf4b9f702124d60f3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "806c835e_476031f2",
+        "filename": "tests/fcntl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-24T21:46:24Z",
+      "side": 1,
+      "message": "ouch! unfortunate that\u0027s not a compile-time error :-(\n\n+danalbert because we were talking about this error (in theory) just last week!",
+      "revId": "c833fabed7890278688b79bf4b9f702124d60f3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
