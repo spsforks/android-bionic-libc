@@ -146,6 +146,12 @@ cc_library_static {
 
     // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
     cflags: ["-ffreestanding"],
+
+    product_variables: {
+        device_page_size_agnostic: {
+            cflags: ["-DTARGET_PAGE_SIZE_AGNOSTIC"],
+        },
+    },
 }
 
 cc_library_static {
