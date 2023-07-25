@@ -24,16 +24,14 @@
 #include <sys/user.h>
 
 inline size_t page_size() {
-  /*
-   * PAGE_SIZE defines the maximum supported page size. Since 4096 is the
-   * minimum supported page size we can just let it be constant folded if it's
-   * also the maximum.
-   */
-#if PAGE_SIZE == 4096
-  return PAGE_SIZE;
-#else
+#if defined(__BIONIC_NO_PAGE_SIZE_MACRO)
+#if !defined(__aarch64__)
+#error building libc with __BIONIC_NO_PAGE_SIZE_MACRO only makes sense for arm64
+#endif
   static size_t size = getauxval(AT_PAGESZ);
   return size;
+#else
+  return PAGE_SIZE;
 #endif
 }
 

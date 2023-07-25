@@ -128,6 +128,9 @@ cc_defaults {
         malloc_not_svelte: {
             cflags: ["-DUSE_SCUDO"],
         },
+        device_page_size_agnostic: {
+            cflags: ["-D__BIONIC_NO_PAGE_SIZE_MACRO"],
+        },
     },
 
     lto: {
