@@ -16,6 +16,24 @@
       "message": "no, that warning\u0027s just silly for POD types.",
       "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "777cef8f_6b19f56b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2023-07-25T20:39:26Z",
+      "side": 1,
+      "message": "Maybe it is, but then without doing this for PODs, how am I supposed to fix b/145210666 (and merge aosp/2644915)?",
+      "parentUuid": "d679bb72_7ebc4987",
+      "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
