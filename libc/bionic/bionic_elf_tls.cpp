@@ -82,7 +82,7 @@ bool __bionic_check_tls_alignment(size_t* alignment) {
     return false;
   }
   // Bionic only respects TLS alignment up to one page.
-  *alignment = MIN(*alignment, page_size());
+  *alignment = MIN(*alignment, static_cast<size_t>(getpagesize()));
   return true;
 }
 
