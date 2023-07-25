@@ -47,7 +47,7 @@ void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offse
   }
 
   // Prevent allocations large enough for `end - start` to overflow.
-  size_t rounded = __BIONIC_ALIGN(size, page_size());
+  size_t rounded = __BIONIC_ALIGN(size, getpagesize());
   if (rounded < size || rounded > PTRDIFF_MAX) {
     errno = ENOMEM;
     return MAP_FAILED;

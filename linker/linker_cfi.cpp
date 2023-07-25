@@ -204,7 +204,7 @@ bool CFIShadowWriter::NotifyLibDl(soinfo* solist, uintptr_t p) {
   shadow_start = reinterpret_cast<uintptr_t* (*)(uintptr_t)>(cfi_init)(p);
   CHECK(shadow_start != nullptr);
   CHECK(*shadow_start == p);
-  mprotect(shadow_start, page_size(), PROT_READ);
+  mprotect(shadow_start, getpagesize(), PROT_READ);
   return true;
 }
 
