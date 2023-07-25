@@ -29,11 +29,17 @@ inline size_t page_size() {
    * minimum supported page size we can just let it be constant folded if it's
    * also the maximum.
    */
+
+// WIP: TEST new FLAG
+#if defined(TARGET_PAGE_SIZE_AGNOSTIC)
+
 #if PAGE_SIZE == 4096
   return PAGE_SIZE;
 #else
   static size_t size = getauxval(AT_PAGESZ);
   return size;
+#endif
+
 #endif
 }
 
