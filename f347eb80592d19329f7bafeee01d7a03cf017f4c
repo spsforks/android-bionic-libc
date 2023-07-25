@@ -70,6 +70,24 @@
       "parentUuid": "312510fd_82664cde",
       "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "559748b3_3a9e68be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-25T21:33:26Z",
+      "side": 1,
+      "message": "well, _that_ case could warn, sure (though i\u0027d _delete_ any code that stupid rather than reorder it!), but \"don\u0027t waste my time on code that\u0027s fine\" is a pretty important rule if you don\u0027t want people to just ignore your warning spam.\n\n\"there are no side-effects here, why are you bothering me?\"\n\nwhat\u0027s the total number of these in the entire tree? is it remotely plausible that this can be turned on?",
+      "parentUuid": "3e625d3c_014b0773",
+      "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
