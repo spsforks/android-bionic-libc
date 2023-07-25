@@ -90,59 +90,54 @@ L(16bytesormore):
 	movdqu	%xmm0, (%rdi)
 	movdqu	%xmm0, -16(%rdi, %rdx)
 	cmpq	$32, %rdx
-	jbe	L(32bytesless)
+	jbe	L(done)
 	movdqu	%xmm0, 16(%rdi)
 	movdqu	%xmm0, -32(%rdi, %rdx)
 	cmpq	$64, %rdx
-	jbe	L(64bytesless)
+	jbe	L(done)
 	movdqu	%xmm0, 32(%rdi)
 	movdqu	%xmm0, 48(%rdi)
 	movdqu	%xmm0, -64(%rdi, %rdx)
 	movdqu	%xmm0, -48(%rdi, %rdx)
 	cmpq	$128, %rdx
-	jbe	L(128bytesless)
+	jbe	L(done)
         vpbroadcastb %xmm0, %ymm0
 	vmovdqu	%ymm0, 64(%rdi)
 	vmovdqu	%ymm0, 96(%rdi)
 	vmovdqu	%ymm0, -128(%rdi, %rdx)
 	vmovdqu	%ymm0, -96(%rdi, %rdx)
 	cmpq	$256, %rdx
-        ja      L(256bytesmore)
-L(32bytesless):
-L(64bytesless):
-L(128bytesless):
-	ret
+        jbe     L(done)
 
 	ALIGN (4)
-L(256bytesmore):
 	leaq	128(%rdi), %rcx
 	andq	$-128, %rcx
 	movq	%rdx, %r8
 	addq	%rdi, %rdx
 	andq	$-128, %rdx
 	cmpq	%rcx, %rdx
-	je	L(return)
+	je	L(done)
 
 #ifdef SHARED_CACHE_SIZE
 	cmp	$SHARED_CACHE_SIZE, %r8
 #else
 	cmp	__x86_64_shared_cache_size(%rip), %r8
 #endif
-	ja	L(256bytesmore_nt)
+	ja	L(non_temporal_loop)
 
 	ALIGN (4)
-L(256bytesmore_normal):
+L(normal_loop):
 	vmovdqa	%ymm0, (%rcx)
 	vmovdqa	%ymm0, 32(%rcx)
 	vmovdqa	%ymm0, 64(%rcx)
 	vmovdqa	%ymm0, 96(%rcx)
 	addq	$128, %rcx
 	cmpq	%rcx, %rdx
-	jne	L(256bytesmore_normal)
-	ret
+	jne	L(normal_loop)
+	jmp	L(done)
 
 	ALIGN (4)
-L(256bytesmore_nt):
+L(non_temporal_loop):
 	movntdq	 %xmm0, (%rcx)
 	movntdq	 %xmm0, 16(%rcx)
 	movntdq	 %xmm0, 32(%rcx)
@@ -153,8 +148,12 @@ L(256bytesmore_nt):
 	movntdq	 %xmm0, 112(%rcx)
 	leaq	128(%rcx), %rcx
 	cmpq	%rcx, %rdx
-	jne	L(256bytesmore_nt)
+	jne	L(non_temporal_loop)
+	# We used non-temporal stores, so we need a fence here.
 	sfence
+
+L(done):
+	vzeroupper
 	ret
 
 END(memset_avx2)
