@@ -47,6 +47,12 @@ cc_library_static {
     sanitize: {
         never: true,
     },
+
+    product_variables: {
+        device_page_size_agnostic: {
+            cflags: ["-DTARGET_PAGE_SIZE_AGNOSTIC"],
+        },
+    },
 }
 
 cc_library {
