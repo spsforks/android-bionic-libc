@@ -128,6 +128,9 @@ cc_defaults {
         malloc_not_svelte: {
             cflags: ["-DUSE_SCUDO"],
         },
+        device_page_size_agnostic: {
+            cflags: ["-DTARGET_PAGE_SIZE_AGNOSTIC"],
+        },
     },
 
     lto: {
@@ -1262,6 +1265,9 @@ cc_library_static {
         treble_linker_namespaces: {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
+        device_page_size_agnostic: {
+            cflags: ["-DTARGET_PAGE_SIZE_AGNOSTIC"],
+        },
     },
     whole_static_libs: [
         "libc_bionic_systrace",
@@ -1335,6 +1341,12 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     header_libs: ["bionic_libc_platform_headers"],
     name: "libc_pthread",
+
+    product_variables: {
+        device_page_size_agnostic: {
+            cflags: ["-DTARGET_PAGE_SIZE_AGNOSTIC"],
+        },
+    },
 }
 
 // ========================================================
