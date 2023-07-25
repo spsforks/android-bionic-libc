@@ -18,6 +18,7 @@
 #define CFI_SHADOW_H
 
 #include <stdint.h>
+#include <sys/user.h>
 
 #include "platform/bionic/page.h"
 #include "platform/bionic/macros.h"

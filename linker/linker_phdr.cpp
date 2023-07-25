@@ -545,7 +545,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 // program header table. Used to determine whether the file should be loaded at
 // a specific virtual address alignment for use with huge pages.
 size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t maximum_alignment = page_size();
+  size_t maximum_alignment = getpagesize();
 
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table[i];
@@ -563,7 +563,7 @@ size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phd
 #if defined(__LP64__)
   return maximum_alignment;
 #else
-  return page_size();
+  return getpagesize();
 #endif
 }
 
@@ -574,7 +574,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   // Reserve enough space to properly align the library's start address.
   mapping_align = std::max(mapping_align, start_align);
-  if (mapping_align == page_size()) {
+  if (mapping_align == static_cast<size_t>(getpagesize())) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -593,7 +593,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
+  size_t mmap_size = align_up(size, mapping_align) + mapping_align - getpagesize();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
@@ -610,7 +610,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
+    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - getpagesize();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -665,12 +665,12 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    size_t start_alignment = page_size();
+    size_t start_alignment = getpagesize();
     if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
       size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
+      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : getpagesize();
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
@@ -769,7 +769,7 @@ bool ElfReader::LoadSegments() {
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
     if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
+      memset(reinterpret_cast<void*>(seg_file_end), 0, getpagesize() - page_offset(seg_file_end));
     }
 
     seg_file_end = page_end(seg_file_end);
@@ -1053,15 +1053,15 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
     while (match_offset < size) {
       // Skip over dissimilar pages.
       while (match_offset < size &&
-             memcmp(mem_base + match_offset, file_base + match_offset, page_size()) != 0) {
-        match_offset += page_size();
+             memcmp(mem_base + match_offset, file_base + match_offset, getpagesize()) != 0) {
+        match_offset += getpagesize();
       }
 
       // Count similar pages.
       size_t mismatch_offset = match_offset;
       while (mismatch_offset < size &&
-             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, page_size()) == 0) {
-        mismatch_offset += page_size();
+             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, getpagesize()) == 0) {
+        mismatch_offset += getpagesize();
       }
 
       // Map over similar pages.

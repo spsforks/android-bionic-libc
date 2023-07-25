@@ -29,8 +29,22 @@
 #include <unistd.h>
 #include "platform/bionic/page.h"
 
+// For PAGE_SIZE.
+#include <sys/user.h>
+
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
   // We dont use sysconf(3) here because that drags in stdio, which makes static binaries fat.
-  return page_size();
+#if defined(TARGET_PAGE_SIZE_AGNOSTIC) && defined(__ANDROID__) && \
+    (defined(__aarch64__) || defined(__arm__))
+  static size_t size = getauxval(AT_PAGESZ);
+  return static_cast<int>(size);
+#else
+  /*
+   * PAGE_SIZE defines the maximum supported page size. Since 4096 is the
+   * minimum supported page size we can just let it be constant folded if it's
+   * also the maximum.
+   */
+  return PAGE_SIZE;
+#endif
 }

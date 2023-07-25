@@ -146,6 +146,7 @@ cc_library_static {
 
     // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
     cflags: ["-ffreestanding"],
+
 }
 
 cc_library_static {
