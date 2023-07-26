@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1def055d_0d307e0d",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-07-26T15:36:41Z",
+      "side": 1,
+      "message": "This is mostly, though not entorely, about pre-existing code ...\n\nI presume this is on the order of small number of MB? So the timing tests don\u0027t cover non_temporal_loop at all?\n\nIIUC, the non_temporal_loop may run for a long time, and only uses the xmm registers. Does it make sense to move the vzeroupper above it?\n\nIf the constant really is what it claims, then this threshold seems way too large. We\u0027re potentially letting a single memset blow out the entire machine\u0027s caches. That may help memset performance (or not), but it\u0027s unlikely to help application performance.",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 31
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
