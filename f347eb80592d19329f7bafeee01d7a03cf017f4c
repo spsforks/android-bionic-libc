@@ -106,6 +106,24 @@
       "parentUuid": "559748b3_3a9e68be",
       "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c771cb07_1cc4b2eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-26T14:24:10Z",
+      "side": 1,
+      "message": "\u003e Then, I looked closely at sigaction struct and now I think this warning is not fixable globally at all - depending on the architecture, linux defines this struct differently, swapping sa_flags and sa_mask order.\n\nexactly :-)\n\nmy tip with any of these warnings is to do a `-k` build to get some idea of the magnitude of the problem. in particular in external/, where it\u0027s so much less likely you\u0027ll be able to upstream a fix unless you find a _real_ bug. (which brings me to my pro tip: as you go through the warnings in the build, keep a tally of actual bugs found vs noise. because that\u0027s where your real \"we should actually [not] do this\" argument comes from.)\n\nbut, yeah, you were lucky to get a gnarly kernel struct to start with[1].\n\n____\n1. strictly, if you were starting from a clean slate, you could have the _userspace_ ABI differ from the kernel ABI, and have libc translate from the consistent one to the \"per-arch historical accident\" ones ... but even in the clean slate case, who\u0027d sign off on that? the pros (\"silence a badly-implemented warning\") don\u0027t really justify the cons (\"extra cost on all calls\", \"you\u0027ll never fix everyone else\u0027s code anyway\").",
+      "parentUuid": "dfd87909_8898506c",
+      "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
