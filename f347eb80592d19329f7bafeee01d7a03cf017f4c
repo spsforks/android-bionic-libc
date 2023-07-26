@@ -88,6 +88,24 @@
       "parentUuid": "3e625d3c_014b0773",
       "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfd87909_8898506c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2023-07-26T14:18:55Z",
+      "side": 1,
+      "message": "Somehow I was under an impression it\u0027s just a few places, but then when I tried again yesterday I hit a bunch more and then one I don\u0027t know how to fix: https://paste.googleplex.com/4776749878476800?raw (I would be glad to know what it is about though, just for covering my own ignorance).\n\nThen, I looked closely at sigaction struct and now I think this warning is not fixable globally at all - depending on the architecture, linux defines this struct differently, swapping sa_flags and sa_mask order.",
+      "parentUuid": "559748b3_3a9e68be",
+      "revId": "f347eb80592d19329f7bafeee01d7a03cf017f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
