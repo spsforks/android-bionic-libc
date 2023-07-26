@@ -94,6 +94,30 @@
       },
       "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7daf4442_7e72a633",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2023-07-26T22:35:25Z",
+      "side": 1,
+      "message": "Agreed, though the non-temporal issue may be relevant in different ways to other architectures as well.",
+      "parentUuid": "78b3d6e6_e1caac3f",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 31
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
