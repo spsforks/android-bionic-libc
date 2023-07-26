@@ -22,6 +22,30 @@
       },
       "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed091c59_1c72bbe1",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-26T16:11:35Z",
+      "side": 1,
+      "message": "yeah, 1MiB. (hard-coded from silvermont days; this symbol is a glibc-ism that intel included [presumably because all their libc submissions come from the One True Internal Source], and we always take the hard-coded SHARED_CACHE_SIZE.)\n\ni was very tempted to just delete all of the nt stuff (in the SSE2 copy of this code too)... thoughts?",
+      "parentUuid": "1def055d_0d307e0d",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 31
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
