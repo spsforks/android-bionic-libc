@@ -70,6 +70,30 @@
       },
       "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78b3d6e6_e1caac3f",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-26T18:46:32Z",
+      "side": 1,
+      "message": "\u003e or maybe half L1-size?\n\ncopy/move and compare all use the \"half\" size, but memset uses the full size for some reason.\n\n(ignoring, of course, that these have always just been hard-coded numbers, not the _actual_ run-time cache sizes.)\n\n\u003e And I think guessing wrong here is going to have a very large impact.\n\nmeh, it\u0027s x86, so 9 times out of 10 it\u0027s a cuttlefish Xeon/EYPC or a developer\u0027s laptop in the _worst_ case... i doubt anyone notices anything. (this missing vzeroupper was only noticed by folks doing their own SSE2 work and wondering why _their_ code got slower in U.)\n\nbut, yeah, that\u0027s why i just left it as-is here --- no-one\u0027s complained (yet) about the current setup, so there\u0027s little motivation to change it.",
+      "parentUuid": "b10fbc39_97ec03d4",
+      "range": {
+        "startLine": 124,
+        "startChar": 5,
+        "endLine": 124,
+        "endChar": 31
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
