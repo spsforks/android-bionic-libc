@@ -171,6 +171,52 @@
       },
       "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae274fd0_b4552b60",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-07-27T20:57:22Z",
+      "side": 1,
+      "message": "Would it make sense to create a macro called something like:\n\n#define CLEANUP_AND_RETURN \\\n  vzeroupper \\\n  ret\n  \nThen add this here and in the done part. I know this is a minor nit, and if you\u0027d prefer the single return point, then consider this a suggestion.",
+      "range": {
+        "startLine": 137,
+        "startChar": 1,
+        "endLine": 137,
+        "endChar": 12
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d36ba1a0_f6bb2cf5",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-07-27T20:57:22Z",
+      "side": 1,
+      "message": "Is it worth adding a comment here so that future people know why this is being done?",
+      "range": {
+        "startLine": 156,
+        "startChar": 1,
+        "endLine": 156,
+        "endChar": 11
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
