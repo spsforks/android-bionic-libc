@@ -198,6 +198,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dcfd5efc_ca377948",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-27T21:23:36Z",
+      "side": 1,
+      "message": "i did want a single return, but i don\u0027t _have_ that even with this version of the patch.\n\n(not for the first time, i find myself preferring the z80 to the 8086... why couldn\u0027t all the early code just use `ret cc`? :-( )\n\ni\u0027ve replaced the first named local label with a numbered label, to make it less tempting to reuse that by accident.\n\nat your suggestion, i played about a bit with macros (both one that includes the instructions like yours, or one that just names the label to use) but they both seemed a bit harder to read overall.\n\n(on the other hand, if you think we should vzeroupper -before- the non-temporal loop like hboehm suggested, then, yes, we should just have two copies.)",
+      "parentUuid": "ae274fd0_b4552b60",
+      "range": {
+        "startLine": 137,
+        "startChar": 1,
+        "endLine": 137,
+        "endChar": 12
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d36ba1a0_f6bb2cf5",
         "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
         "patchSetId": 1
@@ -209,6 +233,30 @@
       "writtenOn": "2023-07-27T20:57:22Z",
       "side": 1,
       "message": "Is it worth adding a comment here so that future people know why this is being done?",
+      "range": {
+        "startLine": 156,
+        "startChar": 1,
+        "endLine": 156,
+        "endChar": 11
+      },
+      "revId": "95b234ca8d4899253ad21e47a5edadcc2b47aab2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7342392_9f87b1ef",
+        "filename": "libc/arch-x86_64/string/avx2-memset-kbl.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-27T21:23:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d36ba1a0_f6bb2cf5",
       "range": {
         "startLine": 156,
         "startChar": 1,
