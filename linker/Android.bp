@@ -307,6 +307,7 @@ cc_defaults {
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
         "-Wl,-soname,ld-android.so",
+        "-fuse-ld=lld",
     ],
 
     // we are going to link libc++_static manually because
