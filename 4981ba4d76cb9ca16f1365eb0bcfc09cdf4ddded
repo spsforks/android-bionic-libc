@@ -34,6 +34,24 @@
       "parentUuid": "da015019_125c2bdb",
       "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01258e35_a333fcb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T16:57:53Z",
+      "side": 1,
+      "message": "there are _lots_ more gettid() references in the bionic tests: https://source.corp.google.com/search?q\u003dfile:bionic%20file:tests%20gettid%5C(%20%20case:yes\u0026sq\u003drepo:android%2Fplatform%2Fsuperproject%2Fmain%20b:main%20-file:prebuilts%2Fvndk%2F%20-file:prebuilts%2Fruntime%2F\n\ni think the comment in stack_protector_test.cpp is kind-of-right-ish:\n```\nextern \"C\" pid_t gettid(); // glibc defines this but doesn\u0027t declare it anywhere.\n```\n\nour glibc _headers_ don\u0027t include it, but any glibc we\u0027ll realistically run against in 2023 has it. that that\u0027s probably the fix. looks like we already have that in tests/utils.h?",
+      "parentUuid": "884528d0_7e4fe31d",
+      "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
