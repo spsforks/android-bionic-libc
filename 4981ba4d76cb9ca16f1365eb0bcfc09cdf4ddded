@@ -88,6 +88,24 @@
       "parentUuid": "d4915be0_777e13bf",
       "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "687922d4_688be0ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T22:21:56Z",
+      "side": 1,
+      "message": "\u003e define gettid in tests/utils.h for glibc \u003c 2.30\n\nyeah, sgtm. (ANDROID_HOST_MUSL will have gettid() for free [so that\u0027s an extra thing for your #if] but i\u0027m assuming you don\u0027t want to wait for us to finish moving from glibc to musl!)",
+      "parentUuid": "5cddf319_a22e04b6",
+      "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
