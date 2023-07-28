@@ -57,6 +57,24 @@
       "parentUuid": "c8a305d2_8993e656",
       "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36bf50f7_f7f76ec5",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-07-28T21:35:53Z",
+      "side": 1,
+      "message": "Out of curiosity, are you saying that the function call overhead is too slow? That seems surprising. And do you know who \"people\" are? They can\u0027t be 3rd-party app developers because if they were using inlined apis they would not get the correct values on differently-configured devices.",
+      "parentUuid": "7d029778_86edf8c0",
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
