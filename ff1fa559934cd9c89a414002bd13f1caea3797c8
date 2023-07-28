@@ -22,6 +22,23 @@
       },
       "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8a305d2_8993e656",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-07-28T21:01:55Z",
+      "side": 1,
+      "message": "if you made page_size non-inline and defined in a cpp file, you wouldn\u0027t need to add the define flag to all the clients of page_size.",
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
