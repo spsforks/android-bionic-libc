@@ -30,6 +30,7 @@
 #include <locale.h>
 
 #include <android-base/file.h>
+#include <android-base/threads.h>
 
 #include "utils.h"
 
@@ -236,7 +237,7 @@ TEST(stdio_ext, __fsetlocking) {
 }
 
 static void LockingByCallerHelper(std::atomic<pid_t>* pid) {
-  *pid = gettid();
+  *pid = android::base::GetThreadId();
   flockfile(stdout);
   funlockfile(stdout);
 }
