@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b976b236_fcc16ada",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T16:29:35Z",
+      "side": 1,
+      "message": "(i\u0027ll add the missing line in docs/status.md too...)",
+      "revId": "f984756d3135fcd693a42a959b46943aff718a6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "921c40ce_ceebc03b",
@@ -14,6 +31,24 @@
       "writtenOn": "2023-07-28T00:17:50Z",
       "side": 1,
       "message": "Do we have some form of `__INTRODUCED_IN` annotation here?",
+      "revId": "f984756d3135fcd693a42a959b46943aff718a6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49788b15_be3c7ceb",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T16:29:35Z",
+      "side": 1,
+      "message": "no. that\u0027s in header file. (though you make me realize i\u0027ve been inconsistent here --- for `__riscv_flush_icache()` i argued that since it\u0027s introduced in 35 and riscv64 is also introduced in 35, saying `__INTRODUCED_IN()` is mildly misleading and makes people have to think when they look at the header. but in this cl i was on autopilot and added it anyway. i\u0027ll update that...)",
+      "parentUuid": "921c40ce_ceebc03b",
       "revId": "f984756d3135fcd693a42a959b46943aff718a6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
