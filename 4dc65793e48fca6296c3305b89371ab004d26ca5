@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f377538_7a929cd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T22:17:46Z",
+      "side": 1,
+      "message": "/me wonders whether +cferris has good code from libunwindstack lying around for this?",
+      "revId": "4dc65793e48fca6296c3305b89371ab004d26ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4331b2e_26e466ee",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T22:17:46Z",
+      "side": 1,
+      "message": "(usual google3 \"same line or braces\" rule here and elsewhere.)",
+      "revId": "4dc65793e48fca6296c3305b89371ab004d26ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "725161fc_3f9bff01",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T22:17:46Z",
+      "side": 1,
+      "message": "are you _trying_ to make my brain hurt with a `do` loop with a `break` in it? :-)\n\nisn\u0027t this a while loop with a \u0026\u0026 in the condition?",
+      "revId": "4dc65793e48fca6296c3305b89371ab004d26ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4786435b_81cef6b7",
+        "filename": "tests/execinfo_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T22:17:46Z",
+      "side": 1,
+      "message": "2, given thumb and riscv64 C?",
+      "revId": "4dc65793e48fca6296c3305b89371ab004d26ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
