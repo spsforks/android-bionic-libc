@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da015019_125c2bdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-28T16:42:41Z",
+      "side": 1,
+      "message": "what needs this change? a libc test should be using libc. (in any case where GetThreadId() is not just gettid() anyway, that probably breaks this test. luckily, it will never run on Windows or Mac. so i don\u0027t think we need this change?)",
+      "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
