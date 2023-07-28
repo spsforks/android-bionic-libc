@@ -52,6 +52,24 @@
       "parentUuid": "884528d0_7e4fe31d",
       "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4915be0_777e13bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2023-07-28T17:04:15Z",
+      "side": 1,
+      "message": "But this is a linker error, not a missing declaration.\n\nI\u0027m totally not getting it and couldn\u0027t reproduce the error locally. And yet buildserver clearly fails to build it.",
+      "parentUuid": "01258e35_a333fcb9",
+      "revId": "4981ba4d76cb9ca16f1365eb0bcfc09cdf4ddded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
