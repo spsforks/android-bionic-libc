@@ -16,6 +16,24 @@
       "message": "oh, yeah, no need to mention musl if you write it that way round :-)",
       "revId": "7d9f804bf9591cfe5ed44649d5054ec7cb5f471e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69eceb3b_43c4a1ae",
+        "filename": "tests/utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2023-07-28T22:47:11Z",
+      "side": 1,
+      "message": "You mentioned it doesn\u0027t need to run on Win nor Mac, so I kept this simple :).",
+      "parentUuid": "584290c2_e9ed7fdd",
+      "revId": "7d9f804bf9591cfe5ed44649d5054ec7cb5f471e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
