@@ -79,9 +79,19 @@ static std::string DumpFrames(std::vector<void*>& frames) {
 }
 
 static size_t FindFunction(std::vector<void*>& frames, uintptr_t func_addr) {
+  Dl_info func_info;
+  if (!dladdr(reinterpret_cast<void*>(func_addr), &func_info))
+    return 0;
+  size_t symbol_size = 0;
+  Dl_info other_info;
+  do {
+    symbol_size += 0x100;
+    if (!dladdr(reinterpret_cast<void*>(func_addr + symbol_size), &other_info))
+      break;
+  } while (func_info.dli_saddr == other_info.dli_saddr);
   for (size_t i = 0; i < frames.size(); i++) {
     uintptr_t frame_addr = reinterpret_cast<uintptr_t>(frames[i]);
-    if (frame_addr >= func_addr && frame_addr <= func_addr + 0x100) {
+    if (frame_addr >= func_addr && frame_addr <= func_addr + symbol_size) {
       return i + 1;
     }
   }
