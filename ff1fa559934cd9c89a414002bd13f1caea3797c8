@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f4757458_b875778b",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-07-31T14:50:08Z",
+      "side": 1,
+      "message": "We plan to replace PAGE_SIZE by getpagesize() in AOSP b/282025481. We are doing that in parallel to this cl. In this way, we don\u0027t need to use the product variable in many projects device_page_size_agnostic.",
+      "parentUuid": "b8e725a6_93dd592a",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
@@ -109,6 +133,24 @@
       "side": 1,
       "message": "ah makes sense, thanks.",
       "parentUuid": "d74097b4_ee894d93",
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e45b1fcb_6ca9af77",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-07-31T14:50:08Z",
+      "side": 1,
+      "message": "As Cole\u0027s suggested, the flag was moved to a cpp file, in this case, getpagesize.cpp and we have now only one flag definition.\n\nIn regards to PAGE_SIZE macro defined in bionic/libc/include/sys/user.h, the occurrence of the macro will be replaced by getpagesize() b/282025481. In this way, we don\u0027t have to use the product variable on those projects. There are cases where the replacement is straightforward:\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l\u003d392\n\nHowever, there are other cases where we need to use the product variable to decide how we will handle the alignment of structs and class definitions in header files:\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:system/incremental_delivery/incfs/include/incfs_inline.h;l\u003d275\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/private/WriteProtected.h;l\u003d32;bpv\u003d0",
+      "parentUuid": "8666385e_c0bc3bc4",
       "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
