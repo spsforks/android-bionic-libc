@@ -194,6 +194,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "57bacd04_a5f560a1",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-07-31T19:17:35Z",
+      "side": 1,
+      "message": "So, imagine we have some code somewhere in the platform that does page align with PAGE_SIZE or std::array\u003c*, PAGE_SIZE\u003e etc.. We have to go through and re-write this code to work. I think it would make more sense to switch everything over conditionally, so we can do whollistic performance analysis about the change. That will be more efficient, and give us greater assurance that we\u0027re able to maintain the performance gain while we move patches from the side branch.",
+      "parentUuid": "69e64dcf_c9aa7c47",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
