@@ -146,6 +146,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d18ff6dc_b2127e1c",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-07-31T18:58:10Z",
+      "side": 1,
+      "message": "Would you be okay with merging \u0027#define PAGE_SIZE getpagesize()\u0027 globally in sys/user.h now then? Otherwise, I don\u0027t really see a way to avoid it (maybe you have an idea?), because we need to make something conditional which is included globally.\n\nProgrammatically discovering who can set PAGE_SIZE (due to re-use of this variable) is a difficult problem in itself, so we should avoid it, but more importantly, part of the motivation is also to discover the impact in other downstream or Android-adjacent users. So, we can\u0027t assume we know every module that needs this.",
+      "parentUuid": "6d59537d_ca986abc",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
