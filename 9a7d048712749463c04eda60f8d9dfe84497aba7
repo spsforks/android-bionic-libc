@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "106964bb_2f8281ac",
+        "filename": "libc/private/bionic_asm_offsets.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-31T19:25:41Z",
+      "side": 1,
+      "message": "(this needed a change too, since i\u0027ve removed the unused slot in the vdso array for time(2), which affects arm64.)",
+      "revId": "9a7d048712749463c04eda60f8d9dfe84497aba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
