@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b75fe116_307f1904",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-07-31T18:50:43Z",
+      "side": 1,
+      "message": "Right, it can\u0027t be used as constexpr in C++ or used in compile-time decisions, even if it is marked as const. So even if we replace it, it will cause some code breakage.\n\nHere is where I\u0027m confused. If you are going to every part of the codebase and switching \"PAGE_SIZE\" with \"getpagesize()\" this will work, since those changes would no longer be part of the page-size agnostic build. However if we want to make these changes as part of the page-size agnostic build, I was thinking that you would use this in *sys/user.h*:\n\n```\n#ifdef DEVICE_PAGE_SIZE_AGNOSTIC\n#define PAGE_SIZE 4096\n#else\n#define PAGE_SIZE getpagesize()\n#endif\n```\n\nIf you did this, then it may not compile (we\u0027d have to fix places locally before merging), but once we did it, it would guarantee everything is updated to use the right page size. This approach would require a global include flag.",
+      "parentUuid": "c4cc5937_40e60967",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
