@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ffc20bf8_32261feb",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-07-31T16:46:35Z",
+      "side": 1,
+      "message": "We\u0027ll need to make device_page_size_agnostic back into a global include flag. We can\u0027t replace PAGE_SIZE by getpagesize by default. We\u0027ll need this change as part of the page agnostic flag bringup, and so it\u0027ll need to be guarded globally by the flag, right? We likely won\u0027t be able to replace PAGE_SIZE globally with getpagesize until that is done. Or do we have agreement to do the global replace now?",
+      "parentUuid": "f4757458_b875778b",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
