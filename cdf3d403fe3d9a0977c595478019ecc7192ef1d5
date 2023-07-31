@@ -16,6 +16,24 @@
       "message": "nit: other instances have `#if defined` libc/private/bionic_vdso.h:40 in particular.",
       "revId": "cdf3d403fe3d9a0977c595478019ecc7192ef1d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd467324_d51efeb4",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-07-31T19:24:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b6b866d_cd0319a6",
+      "revId": "cdf3d403fe3d9a0977c595478019ecc7192ef1d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
