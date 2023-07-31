@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d59537d_ca986abc",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-07-31T18:52:57Z",
+      "side": 1,
+      "message": "We really shouldn\u0027t add a global flag, please add the `-D` flag in the module definitions of all modules that need it.",
+      "parentUuid": "b75fe116_307f1904",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
