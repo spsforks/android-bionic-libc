@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c4cc5937_40e60967",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-07-31T18:11:27Z",
+      "side": 1,
+      "message": "In regards to replace PAGE_SIZE for getpagesize(), enh@ mark getpagesize() as constant in aosp/2636854 so we could use it instead of PAGE_SIZE.\n\nAs mentioned in another comment in this cl, there are many replacements that are straightforward and for those, we don\u0027t need to use the TARGET_PAGE_SIZE_AGNOSTIC flag. On the other hand, there are other changes that require more work because the structs are aligned during build time to a page size boundary.\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:system/incremental_delivery/incfs/include/incfs_inline.h;l\u003d275\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/private/WriteProtected.h;l\u003d32;bpv\u003d0",
+      "parentUuid": "ffc20bf8_32261feb",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
