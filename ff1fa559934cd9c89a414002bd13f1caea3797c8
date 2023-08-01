@@ -242,6 +242,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e20fdb89_a0d4dcfc",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-08-01T00:21:54Z",
+      "side": 1,
+      "message": "So we need a global cflag.",
+      "parentUuid": "eac702f4_6d749b52",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
