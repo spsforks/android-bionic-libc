@@ -557,7 +557,9 @@ void TestWcsToInt(WcsToIntFn<T> fn) {
   TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
   TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
   TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
+#if !defined(__GLIBC__) || __GLIB_PREREQ(2, 38)
   TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+#endif
 }
 
 template <typename T>
