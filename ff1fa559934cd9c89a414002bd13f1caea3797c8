@@ -410,6 +410,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbfb1960_f5c1fc82",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-03T19:52:33Z",
+      "side": 1,
+      "message": "| yes, but it regresses the actual shipping configuration in the way i\u0027ve explained before --- page_size() is inline (and so compiles away to nothing), which is not true of getpagesize().\n\nSo the ask is to use the patch #6, which it uses the page_size() inline function, right?\n\nhttps://android-review.git.corp.google.com/c/platform/bionic/+/2675944/6\n\nOnce that it is confirmed, it\u0027ll do the change.",
+      "parentUuid": "723c52b5_9a7bd320",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
