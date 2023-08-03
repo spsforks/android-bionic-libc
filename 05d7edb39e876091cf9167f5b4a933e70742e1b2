@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fe842356_ace5672f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-08-03T19:38:38Z",
+      "side": 1,
+      "message": "can you include more details \u0027why\u0027? (Elliott requested this offline). E.g. \"This is required to use a single image with a 4K or 16K kernel, which prevent us from having to ever build or release more variants of an image, while also allowing us to test Android in a 16K environment.\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "05d7edb39e876091cf9167f5b4a933e70742e1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "300310e0_c0dd1b0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2023-08-03T19:38:38Z",
+      "side": 1,
+      "message": "note - just \u0027m\u0027 will be multithreaded now. No need to specify this option",
+      "range": {
+        "startLine": 22,
+        "startChar": 8,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "05d7edb39e876091cf9167f5b4a933e70742e1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0b4d5e8_216e6777",
         "filename": "libc/bionic/getpagesize.cpp",
         "patchSetId": 9
