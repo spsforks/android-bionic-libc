@@ -482,6 +482,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28c51fe1_d6723ec6",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-03T23:03:51Z",
+      "side": 1,
+      "message": "To be clear, there are at least three flags/variables that could be renamed:\n\n1) Build variable \"TARGET_PAGE_SIZE_AGNOSTIC\" used in the BUILD configuration targets aosp/2657937 \n\n2) The product variable \"device_page_size_agnostic\" used in the Android.bp files aosp/2657042\n\n3) The C flag \"-DTARGET_PAGE_SIZE_AGNOSTIC\" that is passed to the compiler\n\n\nWe can update the C flag -DTARGET_PAGE_SIZE_AGNOSTIC to \n-D__BIONIC_NO_PAGE_SIZE_MACRO for bionic and leave the Build variable and product variable unchanged. Are we OK with this? or do we prefer to change the 3 (product/variable/flag)?",
+      "parentUuid": "7af521e2_61083cd0",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
