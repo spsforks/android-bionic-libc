@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb6ec9f3_ee9604f8",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-03T22:24:15Z",
+      "side": 1,
+      "message": "they actually shipped their first release that _does_ last week: https://sourceware.org/pipermail/libc-alpha/2023-July/150524.html\n\n(so you can use the `__GLIBC_PREREQ()` macro here.)",
+      "revId": "2cabe9de3081d30711ba3ae0f3efd402d7890251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
