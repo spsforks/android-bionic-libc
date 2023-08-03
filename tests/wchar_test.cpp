@@ -557,7 +557,10 @@ void TestWcsToInt(WcsToIntFn<T> fn) {
   TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
   TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
   TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
+  // glibc 2.36 does not support parsing 0b formatted numbers.
+#ifndef __GLIBC__
   TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+#endif
 }
 
 template <typename T>
