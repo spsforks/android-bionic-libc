@@ -458,6 +458,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7af521e2_61083cd0",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-03T22:31:02Z",
+      "side": 1,
+      "message": "\u003e FWIW, I would prefer -D__BIONIC_NO_PAGE_SIZE_MACRO instead of a genrule if possible. \n\nto be clear: me too. i have no idea why the systems team have been resistant to this for so long, given that it seems like the least worst option all round.\n\n\u003e I assume `TARGET_PAGE_SIZE_AGNOSTIC` is okay for the bionic internal change, or are you requesting that it is renamed to `__BIONIC_NO_PAGE_SIZE_MACRO`?\n\nwhy would we want two macros for the same thing? (if they\u0027re _not_ the same, please explain how not, because that might be why we\u0027ve been failing to communicate here for so long!)\n\nto perhaps clarify my preference for this macro (since that might seem arbitrary without background) --- \"a `__BIONIC_` macro is how you configure bionic\". i understand (i think) that you want some `TARGET_`something for AOSP, but that\u0027s not suitable for (say) apps, so bionic will need to have a `__BIONIC_`something anyway, and having _two_ things in bionic that mean the same thing is a bad idea.\n\n(the __BIONIC_ thing also gets you in the NDK as soon as possible [which is still \"next year\", but ykwim,] so anyone who wanted to opt-in to this could start doing so without needing to hack their ndk locally.)",
+      "parentUuid": "6beaefc5_3d43c7df",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8a305d2_8993e656",
         "filename": "libdl/Android.bp",
         "patchSetId": 6
