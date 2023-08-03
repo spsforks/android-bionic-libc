@@ -441,6 +441,24 @@
       "parentUuid": "8666385e_c0bc3bc4",
       "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d40a9e87_eee6c42a",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-03T17:12:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e45b1fcb_6ca9af77",
+      "revId": "ff1fa559934cd9c89a414002bd13f1caea3797c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
