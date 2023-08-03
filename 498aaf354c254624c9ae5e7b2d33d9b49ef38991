@@ -166,6 +166,30 @@
       },
       "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51fdcd0d_8de2eba9",
+        "filename": "libc/include/bits/bionic_multibyte_result.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-08-03T21:28:34Z",
+      "side": 1,
+      "message": "Okay I actually need -1UL otherwise this ends up being 2^32 - 1 rather than 2^64 - 1. I\u0027m pretty sure that\u0027s also fine for LP32 because it\u0027ll just truncate, but it\u0027s a pain to verify that locally so I\u0027ll let presubmit check it.",
+      "parentUuid": "181476df_88680ca8",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "498aaf354c254624c9ae5e7b2d33d9b49ef38991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
