@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41bb79b5_28b83f04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T14:22:36Z",
+      "side": 1,
+      "message": "otherwise lgtm...",
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c8ee6fd_da8e0e9a",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T14:22:36Z",
+      "side": 1,
+      "message": "just drop these?\n\nif you\u0027re trying to put in an early warning system for \"someone messed up and accidentally built libc with __BIONIC_NO_PAGE_SIZE_MACRO for arm32/riscv64/x86/x86-64\", that\u0027s a lot clearer if you write it like this instead:\n```\n#if defined(__BIONIC_NO_PAGE_SIZE_MACRO)\n#if !defined(__aarch64__)\n#error building libc with __BIONIC_NO_PAGE_SIZE_MACRO only makes sense for arm64\n#endif\n  static size_t size \u003d getauxval(AT_PAGESZ);\n  return size;\n#else\n  return PAGE_SIZE;\n#endif\n```",
+      "range": {
+        "startLine": 27,
+        "startChar": 40,
+        "endLine": 27,
+        "endChar": 90
+      },
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0af1666_744c3be5",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T14:22:36Z",
+      "side": 1,
+      "message": "don\u0027t you want this in linux_bionic_supported instead? (that\u0027ll be more robust against .bp file refactoring if nothing else.)",
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f2bedd3_4932614c",
+        "filename": "linker/Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T14:22:36Z",
+      "side": 1,
+      "message": "don\u0027t you want this in `linker_defaults` instead? (that\u0027ll be more robust against .bp file refactoring if nothing else.)",
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
