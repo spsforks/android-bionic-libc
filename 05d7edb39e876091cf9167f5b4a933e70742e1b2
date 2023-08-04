@@ -47,6 +47,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99f20e03_e914d820",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T14:01:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "300310e0_c0dd1b0b",
+      "range": {
+        "startLine": 22,
+        "startChar": 8,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "05d7edb39e876091cf9167f5b4a933e70742e1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d0b4d5e8_216e6777",
@@ -60,6 +84,30 @@
       "writtenOn": "2023-08-03T19:12:43Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 39,
+        "startChar": 26,
+        "endLine": 39,
+        "endChar": 45
+      },
+      "revId": "05d7edb39e876091cf9167f5b4a933e70742e1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5562b849_3172e5eb",
+        "filename": "libc/bionic/getpagesize.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T14:01:45Z",
+      "side": 1,
+      "message": "Thanks for the pointer. It doesn\u0027t make sense to add __arm__ due we are not supporting 32-bit arch for page size agnostic.",
+      "parentUuid": "d0b4d5e8_216e6777",
       "range": {
         "startLine": 39,
         "startChar": 26,
