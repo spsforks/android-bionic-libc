@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2679fae_7ac8b209",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T14:05:47Z",
+      "side": 1,
+      "message": "The comment was updated with the latest changes. The page_size() inline function will be modified when -D__BIONIC_NO_PAGE_SIZE_MACRO is set and getauxval(AT_PAGESZ) will be called to get the page size.\n\nWhen -D__BIONIC_NO_PAGE_SIZE_MACRO is not set, the macro PAGE_SIZE won\u0027t be used, in this way, we won\u0027t affect the 4k targets.",
+      "parentUuid": "fe842356_ace5672f",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "05d7edb39e876091cf9167f5b4a933e70742e1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "300310e0_c0dd1b0b",
