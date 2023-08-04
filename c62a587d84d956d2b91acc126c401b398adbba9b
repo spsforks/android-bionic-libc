@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec8a633e_86360d90",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T14:40:16Z",
+      "side": 1,
+      "message": "glib*c* :-)",
+      "range": {
+        "startLine": 560,
+        "startChar": 27,
+        "endLine": 560,
+        "endChar": 40
+      },
+      "revId": "c62a587d84d956d2b91acc126c401b398adbba9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
