@@ -22,6 +22,30 @@
       },
       "revId": "c62a587d84d956d2b91acc126c401b398adbba9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb93f236_7c63ba83",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2023-08-04T19:55:56Z",
+      "side": 1,
+      "message": "Yeah... I stared at that error longer than I probably should have. That\u0027s actually not sufficient though: https://godbolt.org/z/4W6rY1G8q. Function-like macros need to be defined even if the expression won\u0027t evaluate them 😞",
+      "parentUuid": "ec8a633e_86360d90",
+      "range": {
+        "startLine": 560,
+        "startChar": 27,
+        "endLine": 560,
+        "endChar": 40
+      },
+      "revId": "c62a587d84d956d2b91acc126c401b398adbba9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
