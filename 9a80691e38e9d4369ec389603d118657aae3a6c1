@@ -16,6 +16,24 @@
       "message": "this is the only difference: currently we align all riscv64 assembler routines to 16 bytes (similar to other architectures) rather than to the minimum requirement of 2 bytes (as seen here). consistency seems like a good thing, even if we eventually want to move all our riscv64 assembler over to 2 bytes rather than 16, we shouldn\u0027t have _two_ places to make that decision...",
       "revId": "9a80691e38e9d4369ec389603d118657aae3a6c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11dfcf11_b9f03e5b",
+        "filename": "libc/arch-riscv64/string/sys/asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-04T22:27:56Z",
+      "side": 0,
+      "message": "Acknowledged",
+      "parentUuid": "26945f57_6c97c6ce",
+      "revId": "9a80691e38e9d4369ec389603d118657aae3a6c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
