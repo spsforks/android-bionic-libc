@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "216cb5c2_b3f8740b",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T18:00:52Z",
+      "side": 1,
+      "message": "That is a good point. Done.\n\nBtw, we also have a similar check at the build system level aosp/2676499.",
+      "parentUuid": "2c8ee6fd_da8e0e9a",
+      "range": {
+        "startLine": 27,
+        "startChar": 40,
+        "endLine": 27,
+        "endChar": 90
+      },
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c0af1666_744c3be5",
@@ -58,6 +82,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0902dacd_5662ef85",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T18:00:52Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c0af1666_744c3be5",
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f2bedd3_4932614c",
@@ -71,6 +113,24 @@
       "writtenOn": "2023-08-04T14:22:36Z",
       "side": 1,
       "message": "don\u0027t you want this in `linker_defaults` instead? (that\u0027ll be more robust against .bp file refactoring if nothing else.)",
+      "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c349f2ca_f75b7a99",
+        "filename": "linker/Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1889140
+      },
+      "writtenOn": "2023-08-04T18:00:52Z",
+      "side": 1,
+      "message": "I agree. done.",
+      "parentUuid": "2f2bedd3_4932614c",
       "revId": "36fd1368ffb6c02b628abbf0325f2b55364aa320",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
