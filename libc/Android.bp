@@ -1067,6 +1067,18 @@ genrule {
     cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
 }
 
+genrule {
+    name: "generated_pageagnostic_header",
+    out: ["generated_pageagnostic_header.h"],
+    srcs: ["pageagnostic_header_template.txt"],
+    cmd: "sed 's/$${BIONIC_NO_PAGE_SIZE_MACRO}//' $(in) > $(out)",
+    product_variables: {
+        device_page_size_agnostic: {
+            cmd: "sed 's/$${BIONIC_NO_PAGE_SIZE_MACRO}/#define __BIONIC_NO_PAGE_SIZE_MACRO/' $(in) > $(out)",
+        },
+    },
+}
+
 // ========================================================
 // libc_bionic_ndk.a- The portions of libc_bionic that can
 // be safely used in libc_ndk.a (no troublesome global data
@@ -1271,7 +1283,7 @@ cc_library_static {
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
-    generated_headers: ["generated_android_ids"],
+    generated_headers: ["generated_android_ids", "generated_pageagnostic_header"],
 }
 
 // ========================================================
