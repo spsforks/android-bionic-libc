@@ -53,6 +53,9 @@ cc_defaults {
         "-Werror",
         "-fno-builtin",
 
+        // Too many instances of the unused return warnings.
+        "-Wno-unused-result",
+
         // We want to test deprecated API too.
         "-Wno-deprecated-declarations",
 
