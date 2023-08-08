@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0a5fe1f_60dcdda6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-08T03:33:27Z",
+      "side": 1,
+      "message": "I think the ifunc_test.cpp code is compiled into a test executable, so I\u0027m guessing this test is calling __riscv_hwprobe before it\u0027s been relocated and before libc_globals has been initialized? Maybe it successfully makes a riscv_hwprobe syscall though?\n\nI don\u0027t think we currently have a plan to ensure that ifuncs can call __riscv_hwprobe? The general problem is that the __riscv_hwprobe call will (probably) use a jumptable reloc, which is processed after the non-jumptable relocs, so if some code uses a non-jumptable reloc to an ifunc, the resolver will be called too early. (e.g. If \"strcmp\" is an ifunc, then the \u0026strcmp relocation processing calls strcmp_resolver before the resolver\u0027s call to __riscv_hwprobe is relocated.)\n\nIn general, I suppose the loader could defer ifunc relocations by collecting them, or by running a second relocation pass. That\u0027s kinda just a workaround for a bad design in the file format or static linker, though, I think?",
+      "revId": "84baa73496fc75d34bf48dc90881857fb345f2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
