@@ -135,6 +135,8 @@ cc_defaults {
     },
 
     apex_available: ["com.android.runtime"],
+
+    generated_headers: ["generated_pageagnostic_header"],
 }
 
 libc_scudo_product_variables = {
@@ -1067,6 +1069,18 @@ genrule {
     cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
 }
 
+genrule {
+    name: "generated_pageagnostic_header",
+    out: ["generated_pageagnostic_header.h"],
+    srcs: ["pageagnostic_header_template.txt"],
+    cmd: "sed 's/$${BIONIC_NO_PAGE_SIZE_MACRO}//' $(in) > $(out)",
+    product_variables: {
+        device_page_size_agnostic: {
+            cmd: "sed 's/$${BIONIC_NO_PAGE_SIZE_MACRO}/#define __BIONIC_NO_PAGE_SIZE_MACRO/' $(in) > $(out)",
+        },
+    },
+}
+
 // ========================================================
 // libc_bionic_ndk.a- The portions of libc_bionic that can
 // be safely used in libc_ndk.a (no troublesome global data
@@ -1872,6 +1886,8 @@ cc_library {
         export_preprocessed_headers: ["include"],
         export_llndk_headers: ["libc_llndk_headers"],
     },
+
+    export_generated_headers: ["generated_pageagnostic_header"],
 }
 
 cc_library {
