@@ -2072,8 +2072,15 @@ cc_library_headers {
     no_libcrt: true,
     system_shared_libs: [],
 
+
+
     target: {
         android: {
+            product_variables: {
+                device_page_size_agnostic: {
+                    export_system_include_dirs: ["include_extra"],
+                },
+            },
             export_system_include_dirs: ["include"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
