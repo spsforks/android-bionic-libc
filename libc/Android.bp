@@ -2072,9 +2072,15 @@ cc_library_headers {
     no_libcrt: true,
     system_shared_libs: [],
 
+    product_variables: {
+        device_page_size_agnostic: {
+            cflags: ["-DPAGE_SIZE_AGNOSTIC"],
+        },
+    },
+
     target: {
         android: {
-            export_system_include_dirs: ["include"],
+            export_system_include_dirs: ["include", "include_extra"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
         },

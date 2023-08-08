@@ -34,7 +34,12 @@
 
 __BEGIN_DECLS
 
+#ifdef __BIONIC_NO_PAGE_SIZE_MACRO
 #define PAGE_SIZE 4096
+#else
+#error WIP, This case should not happen in user.h
+#endif
+
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 
 #if defined(__i386__)
