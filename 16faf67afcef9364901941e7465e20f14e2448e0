@@ -16,6 +16,24 @@
       "message": "from what construct? if it\u0027s GTEST_SKIP() or somesuch, is this something we should be doing in the definition of cc_test? (and if not, what\u0027s bionic doing in particular to cause this?)\n\nand what is -Wunused-return anyway? a web search for \"-Wunused-return\" finds nothing!",
       "revId": "16faf67afcef9364901941e7465e20f14e2448e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1ee9ad7_5c45384e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2023-08-08T16:30:35Z",
+      "side": 1,
+      "message": "oops, I got this wrong. Somehow I mistook `-Wunused-result` for `-Wunused-return`....\n\nThis is for not checking the return value of function declared with \u0027warn_unused_result\u0027 attribute.",
+      "parentUuid": "d30a1de6_23eab493",
+      "revId": "16faf67afcef9364901941e7465e20f14e2448e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
