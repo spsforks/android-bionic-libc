@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d30a1de6_23eab493",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-08T14:14:52Z",
+      "side": 1,
+      "message": "from what construct? if it\u0027s GTEST_SKIP() or somesuch, is this something we should be doing in the definition of cc_test? (and if not, what\u0027s bionic doing in particular to cause this?)\n\nand what is -Wunused-return anyway? a web search for \"-Wunused-return\" finds nothing!",
+      "revId": "16faf67afcef9364901941e7465e20f14e2448e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
