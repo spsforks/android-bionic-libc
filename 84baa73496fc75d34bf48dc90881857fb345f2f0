@@ -16,6 +16,24 @@
       "message": "I think the ifunc_test.cpp code is compiled into a test executable, so I\u0027m guessing this test is calling __riscv_hwprobe before it\u0027s been relocated and before libc_globals has been initialized? Maybe it successfully makes a riscv_hwprobe syscall though?\n\nI don\u0027t think we currently have a plan to ensure that ifuncs can call __riscv_hwprobe? The general problem is that the __riscv_hwprobe call will (probably) use a jumptable reloc, which is processed after the non-jumptable relocs, so if some code uses a non-jumptable reloc to an ifunc, the resolver will be called too early. (e.g. If \"strcmp\" is an ifunc, then the \u0026strcmp relocation processing calls strcmp_resolver before the resolver\u0027s call to __riscv_hwprobe is relocated.)\n\nIn general, I suppose the loader could defer ifunc relocations by collecting them, or by running a second relocation pass. That\u0027s kinda just a workaround for a bad design in the file format or static linker, though, I think?",
       "revId": "84baa73496fc75d34bf48dc90881857fb345f2f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6edc866_77816c64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-09T17:52:19Z",
+      "side": 1,
+      "message": "\u003e I think the ifunc_test.cpp code is compiled into a test executable, so I\u0027m guessing this test is calling __riscv_hwprobe before it\u0027s been relocated and before libc_globals has been initialized? Maybe it successfully makes a riscv_hwprobe syscall though?\n\nthat\u0027s actually a good point that i\u0027d missed --- tbh, i don\u0027t really care about _executables_; i care about `dlopen(\"libfoo.so\")` from apps. so i should probably explicitly have a test that builds a separate shared object?\n\ngiven what we\u0027ve seen in compiler-rt\u0027s ifunc stuff, i\u0027m actually quite tempted to just \"publish and be damned\" our own abi for ifunc resolvers here (my best idea so far being \"pass AT_HWCAP as the first arg, a count of key/value pairs as the second arg, and a pointer to an array of riscv_hwprobe structs that the dynamic linker already filled out as the third arg\"). pros: supports all current use cases, extends to future ones, and no [Android] callers need to worry about any of this crap. cons: the glibc folks seem to think the vdso is fine (despite the fact they\u0027re already finding it a pain internally) and will probably do something different.\n\nhaving looked at a [probably unrepresentative] sample of projects in external/ a surprising [to me] number aren\u0027t using ifuncs anyway. they\u0027re using function pointers and a `pthread_once()` or equivalent. which given that darwin doesn\u0027t afaik support anything like ifuncs in mach-o is probably necessary for any project that actually cares about portability anyway? (and let\u0027s face it --- for our users, source compatibility with iOS is way more interesting than anything going on in Linux distros.)\n\nso, yeah, maybe i shouldn\u0027t care so much about this? maybe i\u0027m just sensitive because of the trouble we\u0027ve having with FMV in arm64 land atm with the equivalent issue.\n\n\u003e In general, I suppose the loader could defer ifunc relocations by collecting them, or by running a second relocation pass. That\u0027s kinda just a workaround for a bad design in the file format or static linker, though, I think?\n\nindeed, if i were benevolent dictator of unix i\u0027d go that way myself. though i think we\u0027re unlikely to get that changed. (i did mention it to maskray -- i think you were on the thread -- but he didn\u0027t seem interested.)",
+      "parentUuid": "e0a5fe1f_60dcdda6",
+      "revId": "84baa73496fc75d34bf48dc90881857fb345f2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
