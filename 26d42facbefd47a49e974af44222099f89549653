@@ -16,6 +16,24 @@
       "message": "It looks fine to me, but it looks like there are some compile failures with this.",
       "revId": "26d42facbefd47a49e974af44222099f89549653",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b435412_4ed5b863",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-09T22:08:59Z",
+      "side": 1,
+      "message": "huh. weird that i didn\u0027t see that locally. (i\u0027ve been forced to switch from master to main today, so it\u0027s possible i was building in the wrong tree :-()\n\nbut, yeah, that\u0027s the _opposite_ complaint, and it\u0027s an error rather than a warning.\n\ni think that means plan B then, where the only way to shut this up is to change ENTRY().",
+      "parentUuid": "78d5cce7_bad6a866",
+      "revId": "26d42facbefd47a49e974af44222099f89549653",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
