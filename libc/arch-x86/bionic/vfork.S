@@ -31,8 +31,8 @@
 
 // This custom code preserves the return address across the system call.
 
-ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+ENTRY(vfork)
   popl    %ecx  // Grab the return address.
   .cfi_adjust_cfa_offset 4
   .cfi_rel_offset ecx, 0

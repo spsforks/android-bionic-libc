@@ -64,22 +64,22 @@
   .endr
 .endm
 
-ENTRY(setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
+ENTRY(setjmp)
   movl 4(%esp),%ecx
   mov $1,%eax
   jmp .L_sigsetjmp
 END(setjmp)
 
-ENTRY(_setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
+ENTRY(_setjmp)
   movl 4(%esp),%ecx
   movl $0,%eax
   jmp .L_sigsetjmp
 END(_setjmp)
 
-ENTRY(sigsetjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
+ENTRY(sigsetjmp)
   movl 4(%esp),%ecx
   movl 8(%esp),%eax
 
@@ -135,8 +135,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   ret
 END(sigsetjmp)
 
-ENTRY(siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
+ENTRY(siglongjmp)
   movl 4(%esp),%edx
 
   // Check the checksum before doing anything.
@@ -210,7 +210,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   call PIC_PLT(__bionic_setjmp_checksum_mismatch)
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
+ALIAS_SYMBOL(longjmp, siglongjmp)
+
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)
+ALIAS_SYMBOL(_longjmp, siglongjmp)

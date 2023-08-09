@@ -95,21 +95,21 @@
   m_mangle_registers \reg, sp_reg=\sp_reg
 .endm
 
-ENTRY(setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
+ENTRY(setjmp)
   mov w1, #1
   b sigsetjmp
 END(setjmp)
 
-ENTRY(_setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
+ENTRY(_setjmp)
   mov w1, #0
   b sigsetjmp
 END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
-ENTRY(sigsetjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
+ENTRY(sigsetjmp)
   paciasp
   .cfi_negate_ra_state
   stp x0, x30, [sp, #-16]!
@@ -185,8 +185,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
-ENTRY(siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
+ENTRY(siglongjmp)
   // Check the checksum before doing anything.
   m_calculate_checksum x12, x0, x2
   ldr x2, [x0, #(_JB_CHECKSUM * 8)]
@@ -290,9 +290,10 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   ret
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
+ALIAS_SYMBOL(longjmp, siglongjmp)
+
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)
+ALIAS_SYMBOL(_longjmp, siglongjmp)
 
 NOTE_GNU_PROPERTY()
