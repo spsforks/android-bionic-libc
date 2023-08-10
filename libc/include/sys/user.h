@@ -32,9 +32,15 @@
 #include <stddef.h> /* For size_t. */
 #include <stdint.h>
 
+#include "generated_pageagnostic_header.h"
+
 __BEGIN_DECLS
 
+#ifndef __BIONIC_NO_PAGE_SIZE_MACRO
 #define PAGE_SIZE 4096
+#else
+#error WIP, test that the build target
+#endif
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 
 #if defined(__i386__)

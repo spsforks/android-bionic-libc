@@ -2039,6 +2039,17 @@ cc_library_headers {
     },
 }
 
+genrule {
+    name: "bionic_no_page_size_macro_header",
+    out: ["generated_pageagnostic_header.h"],
+    cmd: "echo '#pragma once' > $(out)",
+    product_variables: {
+        device_page_size_agnostic: {
+            cmd: "(echo '#pragma once' && echo '#define __BIONIC_NO_PAGE_SIZE_MACRO') > $(out)",
+        }
+    }
+}
+
 cc_library_headers {
     name: "libc_headers",
     host_supported: true,
@@ -2077,11 +2088,15 @@ cc_library_headers {
             export_system_include_dirs: ["include"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
+            generated_headers: ["bionic_no_page_size_macro_header"],
+            export_generated_headers: ["bionic_no_page_size_macro_header"],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
+            generated_headers: ["bionic_no_page_size_macro_header"],
+            export_generated_headers: ["bionic_no_page_size_macro_header"],
         },
     },
 }
