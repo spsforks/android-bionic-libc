@@ -2039,6 +2039,20 @@ cc_library_headers {
     },
 }
 
+// Add $(soong_config_set,bionic,page_size_agnostic,true) to your product config to remove the
+// PAGE_SIZE macro.
+genrule {
+    name: "bionic_generated_sys_user_header",
+    out: ["sys/user.h"],
+    srcs: ["include/sys/user.h.in"],
+    cmd: "sed 's/{{PAGE_SIZE_DEFINITION}}/#define PAGE_SIZE 4096/' $(in) > $(out)",
+    product_variables: {
+        devicePageSizeAgnostic: {
+            cmd: "sed 's/{{PAGE_SIZE_DEFINITION}}//' $(in) > $(out)",
+        }
+    }
+}
+
 cc_library_headers {
     name: "libc_headers",
     host_supported: true,
@@ -2077,11 +2091,15 @@ cc_library_headers {
             export_system_include_dirs: ["include"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
+            generated_headers: ["bionic_generated_sys_user_header"],
+            export_generated_headers: ["bionic_generated_sys_user_header"],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
             header_libs: ["libc_llndk_headers"],
             export_header_lib_headers: ["libc_llndk_headers"],
+            generated_headers: ["bionic_generated_sys_user_header"],
+            export_generated_headers: ["bionic_generated_sys_user_header"],
         },
     },
 }
@@ -2402,9 +2420,20 @@ cc_library_static {
 // ========================================================
 
 filegroup {
-    name: "common_libc_filegroup",
+    name: "common_libc_filegroup_include",
     srcs: ["include/**/*.h"],
     path: "include",
+    visibility: [
+        "//bionic/libc",
+    ],
+}
+
+filegroup {
+    name: "common_libc_filegroup",
+    srcs: [
+        ":common_libc_filegroup_include",
+        ":bionic_generated_sys_user_header",
+    ],
     visibility: [
         "//bionic/libc",
     ],
