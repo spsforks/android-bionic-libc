@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33dd5404_4861f9d1",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-10T21:36:36Z",
+      "side": 1,
+      "message": "isn\u0027t this much clearer as just\n```\n#if defined(PAGE_SIZE)\n  return PAGE_SIZE;\n#else\n  static const size_t page_size \u003d getauxval(PAGE_SIZE);\n  return page_size;\n#endif\n```\n?\n\nall that preprocessor is making my eyes hurt...",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "24defd3e1eac5d90bac1d000be014ed82908d2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
