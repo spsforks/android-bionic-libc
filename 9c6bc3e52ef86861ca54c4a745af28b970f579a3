@@ -22,6 +22,30 @@
       },
       "revId": "9c6bc3e52ef86861ca54c4a745af28b970f579a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff8e2dcf_6b4853a5",
+        "filename": "libc/include/sys/user.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-10T21:37:43Z",
+      "side": 1,
+      "message": "+1\n\n(and please use `#if !defined()` rather than #ifndef, like the rest of the file.)",
+      "parentUuid": "9357f6c0_ad15e160",
+      "range": {
+        "startLine": 41,
+        "startChar": 21,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "9c6bc3e52ef86861ca54c4a745af28b970f579a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
