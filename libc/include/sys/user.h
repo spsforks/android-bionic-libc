@@ -37,6 +37,9 @@ __BEGIN_DECLS
 #if !defined(__BIONIC_NO_PAGE_SIZE_MACRO)
 #define PAGE_SIZE 4096
 #define PAGE_MASK (~(PAGE_SIZE - 1))
+#define MAX_PAGE_SIZE PAGE_SIZE
+#else
+#define MAX_PAGE_SIZE 65536
 #endif
 
 #if defined(__i386__)
