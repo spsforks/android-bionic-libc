@@ -32,6 +32,14 @@ inline size_t page_size() {
 #endif
 }
 
+constexpr size_t max_page_size() {
+#if defined(PAGE_SIZE)
+  return 4096;
+#else
+  return 65536;
+#endif
+}
+
 // Returns the address of the page containing address 'x'.
 inline uintptr_t page_start(uintptr_t x) {
   return x & ~(page_size() - 1);
