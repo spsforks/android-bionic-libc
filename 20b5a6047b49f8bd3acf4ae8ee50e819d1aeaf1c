@@ -22,6 +22,30 @@
       },
       "revId": "20b5a6047b49f8bd3acf4ae8ee50e819d1aeaf1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88339784_9a9e57ff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2023-08-15T20:41:21Z",
+      "side": 1,
+      "message": "Because clients could treat `__BIONIC_NO_PAGE_SIZE_MACRO` as API.\n\nAnd I would argue this solution is simpler, with just one genrule localized to bionic, rather than having to track the -D flag through multiple build systems. (though the topic is quite big because it required fixing up other hacks first)\n\nWe should also get in the habit of not making global build system changes for every feature.",
+      "parentUuid": "a5157451_2768e56e",
+      "range": {
+        "startLine": 10,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 5
+      },
+      "revId": "20b5a6047b49f8bd3acf4ae8ee50e819d1aeaf1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
