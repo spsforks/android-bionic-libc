@@ -424,6 +424,7 @@ cc_test_library {
         "math_test.cpp",
         "membarrier_test.cpp",
         "memtag_stack_test.cpp",
+        "memtag_globals_test.cpp",
         "mntent_test.cpp",
         "mte_test.cpp",
         "netdb_test.cpp",
@@ -966,6 +967,8 @@ cc_defaults {
         "preinit_syscall_test_helper",
         "thread_exit_cb_helper",
         "tls_properties_helper",
+        "memtag_globals_binary",
+        "memtag_globals_dso",
     ],
 
     data_libs: [
