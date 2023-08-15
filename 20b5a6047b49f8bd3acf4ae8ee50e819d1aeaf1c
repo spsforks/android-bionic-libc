@@ -46,6 +46,30 @@
       },
       "revId": "20b5a6047b49f8bd3acf4ae8ee50e819d1aeaf1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dad68e2_66511385",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-15T20:47:10Z",
+      "side": 1,
+      "message": "\u003e Because clients could treat __BIONIC_NO_PAGE_SIZE_MACRO as API.\n\nthat\u0027s very much WAI, and part of the point. (don\u0027t be fooled by the double underscore. most if not all libc configuration options start with underscores; _FILE_OFFSET_BITS being the most famous.)\n\n\u003e And I would argue this solution is simpler, with just one genrule localized to bionic, rather than having to track the -D flag through multiple build systems.\n\nagain, that\u0027s very much WAI. these headers are used in the NDK, and that\u0027s used in more different build systems than you\u0027ve ever dreamed of.\n\n\u003e We should also get in the habit of not making global build system changes for every feature.\n\nat a rate of roughly one such option per decade since the 1990s, i think we\u0027ll live :-)",
+      "parentUuid": "88339784_9a9e57ff",
+      "range": {
+        "startLine": 10,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 5
+      },
+      "revId": "20b5a6047b49f8bd3acf4ae8ee50e819d1aeaf1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
