@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5157451_2768e56e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-15T20:36:43Z",
+      "side": 1,
+      "message": "why? this seems strictly worse than what we currently have?\n\nthe current implementation is simple, opt-in even in the ndk, and doesn\u0027t leave us guessing [or having to check] _which_ version of the header someone might have compiled with.",
+      "range": {
+        "startLine": 10,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 5
+      },
+      "revId": "20b5a6047b49f8bd3acf4ae8ee50e819d1aeaf1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
