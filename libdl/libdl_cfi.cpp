@@ -16,6 +16,7 @@
 
 #include <sys/mman.h>
 
+#include "private/bionic_globals.h"
 #include "private/CFIShadow.h"
 
 __attribute__((__weak__, visibility("default"))) extern "C" void __loader_cfi_fail(
@@ -26,15 +27,15 @@ __attribute__((__weak__, visibility("default"))) extern "C" void __loader_cfi_fa
 // dlopen/dlclose.
 static struct {
   uintptr_t v;
-  char padding[PAGE_SIZE - sizeof(v)];
-} shadow_base_storage alignas(PAGE_SIZE);
+  char padding[max_page_size() - sizeof(v)];
+} shadow_base_storage alignas(max_page_size());
 
 // __cfi_init is called by the loader as soon as the shadow is mapped. This may happen very early
 // during startup, before libdl.so global constructors, and, on i386, even before __libc_sysinfo is
 // initialized. This function should not do any system calls.
 extern "C" uintptr_t* __cfi_init(uintptr_t shadow_base) {
   shadow_base_storage.v = shadow_base;
-  static_assert(sizeof(shadow_base_storage) == PAGE_SIZE, "");
+  static_assert(sizeof(shadow_base_storage) == max_page_size(), "");
   return &shadow_base_storage.v;
 }
 
@@ -85,4 +86,9 @@ extern "C" void __cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr) {
 
 extern "C" void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData) {
   cfi_slowpath_common(CallSiteTypeId, Ptr, DiagData);
+}
+
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
+  static libc_shared_globals globals;
+  return &globals;
 }

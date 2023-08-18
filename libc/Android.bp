@@ -237,6 +237,15 @@ cc_library_static {
 }
 
 cc_library_static {
+    name: "libc_auxval_static",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/getauxval.cpp",
+        "bionic/__errno.cpp",
+    ],
+}
+
+cc_library_static {
     name: "libc_init_dynamic",
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_dynamic.cpp"],

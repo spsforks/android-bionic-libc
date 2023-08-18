@@ -36,8 +36,12 @@ cc_library_static {
         "-Werror",
     ],
 
-    // For private/CFIShadow.h.
-    include_dirs: ["bionic/libc"],
+    whole_static_libs: ["libc_auxval_static"],
+
+    include_dirs: [
+        "bionic/libc",                      // For private/CFIShadow.h
+        "bionic/libc/async_safe/include",   // For async_safe/log.h
+    ],
 
     stl: "none",
     system_shared_libs: [],
