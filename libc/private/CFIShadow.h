@@ -53,13 +53,16 @@ constexpr size_t kLibraryAlignment = 1UL << kLibraryAlignmentBits;
 namespace CFIShadow {
 
 static constexpr uintptr_t kShadowGranularity = kLibraryAlignmentBits;
-static constexpr uintptr_t kCfiCheckGranularity = 12;
+static const size_t kPageSize = page_size();
+// log2(kPageSize)
+static const uintptr_t kCfiCheckGranularity =
+    (8 * sizeof(unsigned int)) - __builtin_clz(static_cast<unsigned int>(kPageSize)) - 1;
 
 // Each uint16_t element of the shadow corresponds to this much application memory.
 static constexpr uintptr_t kShadowAlign = 1UL << kShadowGranularity;
 
 // Alignment of __cfi_check.
-static constexpr uintptr_t kCfiCheckAlign = 1UL << kCfiCheckGranularity;  // 4K
+static const uintptr_t kCfiCheckAlign = 1UL << kCfiCheckGranularity; // kPageSize
 
 #if defined (__LP64__)
 static constexpr uintptr_t kMaxTargetAddr = 0xffffffffffff;
