@@ -36,6 +36,8 @@ cc_library_static {
         "-Werror",
     ],
 
+    whole_static_libs: ["libc_init_static"],
+
     // For private/CFIShadow.h.
     include_dirs: ["bionic/libc"],
 
