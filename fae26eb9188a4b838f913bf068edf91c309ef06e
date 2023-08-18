@@ -16,6 +16,24 @@
       "message": "personally i\u0027d rename this _mmap_ benchmark rather than \"syscall\", but otherwise lgtm. (i\u0027ll defer to cferris as \"mr benchmark\" for +2 though :-) )",
       "revId": "fae26eb9188a4b838f913bf068edf91c309ef06e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9058545_eedb6a64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-18T14:55:08Z",
+      "side": 1,
+      "message": "to be clear: i mean the .cpp file. i understand from https://docs.google.com/document/d/1Rae28eyw817YaQRYjRS789nX0mttnwq2X2_QfsgAR2o/edit#heading\u003dh.xzptrog8pyxf that your goal is to have a \"syscall suite\", and so i think the .xml file naming makes sense (as i understand what cferris was trying to do there). but historically we\u0027ve grouped the _implementations_ either by header file (so sys_mman_benchmark.cpp would be fine) or what they\u0027re doing (so mmap_benchmark.cpp would be fine too).",
+      "parentUuid": "de19e4fb_e5f88302",
+      "revId": "fae26eb9188a4b838f913bf068edf91c309ef06e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
