@@ -35,6 +35,8 @@
 
 #include "private/CFIShadow.h"
 
+using namespace CFIShadow;
+
 // This class keeps the contents of CFI shadow up-to-date with the current set of loaded libraries.
 // See the comment in CFIShadow.h for more context.
 // See documentation in http://clang.llvm.org/docs/ControlFlowIntegrityDesign.html#shared-library-support.
@@ -42,7 +44,7 @@
 // Shadow is mapped and initialized lazily as soon as the first CFI-enabled DSO is loaded.
 // It is updated after any library is loaded (but before any constructors are ran), and
 // before any library is unloaded.
-class CFIShadowWriter : private CFIShadow {
+class CFIShadowWriter {
   // Returns pointer to the shadow element for an address.
   uint16_t* MemToShadow(uintptr_t x) {
     return reinterpret_cast<uint16_t*>(*shadow_start + MemToShadowOffset(x));
