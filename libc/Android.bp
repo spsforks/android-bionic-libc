@@ -219,6 +219,17 @@ cc_library_static {
     name: "libc_bootstrap",
 }
 
+// libc_auxval_static needed for libdl_cfi
+cc_library_static {
+    name: "libc_auxval_static",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/getauxval.cpp",
+        "bionic/__errno.cpp",
+        "bionic/libc_init_static.cpp",
+    ],
+}
+
 // libc_init_static.cpp and libc_init_dynamic.cpp need to be built without stack protector.
 // libc_init_static.cpp sets up TLS for static executables, and libc_init_dynamic.cpp initializes
 // the stack protector global variable.
