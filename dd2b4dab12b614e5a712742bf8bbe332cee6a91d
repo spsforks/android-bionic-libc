@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d2de2c8_8ed16953",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-18T23:44:31Z",
+      "side": 1,
+      "message": "(otherwise lgtm.)",
+      "revId": "dd2b4dab12b614e5a712742bf8bbe332cee6a91d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ce086d9_c94fa880",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-18T23:44:31Z",
+      "side": 1,
+      "message": "prefer inline functions to macros. (see page_size().)",
+      "revId": "dd2b4dab12b614e5a712742bf8bbe332cee6a91d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
