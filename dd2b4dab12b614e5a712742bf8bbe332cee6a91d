@@ -33,6 +33,24 @@
       "message": "prefer inline functions to macros. (see page_size().)",
       "revId": "dd2b4dab12b614e5a712742bf8bbe332cee6a91d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "caeb409a_dc8641e2",
+        "filename": "libc/platform/bionic/page.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-19T03:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ce086d9_c94fa880",
+      "revId": "dd2b4dab12b614e5a712742bf8bbe332cee6a91d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
