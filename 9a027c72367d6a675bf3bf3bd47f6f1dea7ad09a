@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec907645_9804ad29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-21T21:12:22Z",
+      "side": 1,
+      "message": "This change released the lock too early because there are local variables in __linker_init and linker_main with destructors that modify global state (e.g. tmp_linker_so, needed_library_name_list).\n\nI544ad65db07e5fe83315ad4489d77536d463a0a4 is the more comprehensive fix that holds the lock until just before __linker_init returns.",
+      "revId": "9a027c72367d6a675bf3bf3bd47f6f1dea7ad09a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
