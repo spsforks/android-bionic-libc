@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e9a1c1f_7b63c028",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-21T23:25:22Z",
+      "side": 1,
+      "message": "(quite a different change from last time... thanks for making me look into this more deeply!)",
+      "revId": "620a72252efc493244d92a011d9dfd5fb7a11713",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
