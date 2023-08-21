@@ -38,6 +38,7 @@
 #include <sched.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <sys/user.h>
 #include <time.h>
 
 __BEGIN_DECLS
@@ -73,10 +74,16 @@ enum {
 #define PTHREAD_BARRIER_SERIAL_THREAD (-1)
 #endif
 
+#if defined(PAGE_SIZE)
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
 #else
 #define PTHREAD_STACK_MIN (2 * PAGE_SIZE)
+#endif
+#else
+// Page agnostic targets will only support 64-bit cpus so there is no
+// need to support another stack size for 32-bit cpus.
+#define PTHREAD_STACK_MIN 65536
 #endif
 
 #define PTHREAD_CREATE_DETACHED 1
