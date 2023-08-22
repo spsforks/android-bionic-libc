@@ -22,6 +22,30 @@
       },
       "revId": "9998a2f697b6b68ec4f3e6fc70f4aa0dfd22f0ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a21527cc_43dbd8c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-22T16:14:01Z",
+      "side": 1,
+      "message": "Absolutely :) but I\u0027m not exactly sure how. What do you have in mind?\n\nI believe using libc++ here causes a circular dependency.\n\nAnd -fno-threadsafe-statics for libdl doesn\u0027t sound like a good idea.",
+      "parentUuid": "3d7f7cd0_97cc5d83",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "9998a2f697b6b68ec4f3e6fc70f4aa0dfd22f0ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
