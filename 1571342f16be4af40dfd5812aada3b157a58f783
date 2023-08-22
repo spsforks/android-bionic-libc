@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69942846_3dae9dbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-22T05:02:21Z",
+      "side": 1,
+      "message": "Hi enh/bionic folks,\n\nI\u0027m not sure that this is the proper way to make the pagesize (getauxval) available to libdl. Would greatly appreciate your expertise and feedback on this.\n\nThanks,\nKalesh",
+      "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
