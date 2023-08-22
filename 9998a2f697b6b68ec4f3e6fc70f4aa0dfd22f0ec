@@ -70,6 +70,30 @@
       },
       "revId": "9998a2f697b6b68ec4f3e6fc70f4aa0dfd22f0ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dcfb2d6_a2fe0595",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-22T18:12:18Z",
+      "side": 1,
+      "message": "Thanks for the pointer. Unfortunately I tried linking to that but there is a similar cycle:\n\n`lbistdc++ --\u003e libc --\u003e libdl --\u003e libstdc++`\n\nIf we include statically we have some unresolved symbols from libc:\n\n`errno, syscall, getauxval, strncmp, ...`\n\nIt might be more messy to make an indirection for those, if possible. WDYT?",
+      "parentUuid": "40c1178a_9bb10b10",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "9998a2f697b6b68ec4f3e6fc70f4aa0dfd22f0ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
