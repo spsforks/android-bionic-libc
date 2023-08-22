@@ -51,6 +51,23 @@
       "parentUuid": "3d5247e1_d0573ff7",
       "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a013635f_c8b1d89a",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-08-22T23:21:29Z",
+      "side": 1,
+      "message": "You increase kCfiCheckGranularity. This would break the requirement above: \"__cfi_check is aligned at kCfiCheckGranularity\" unless you change the compiler to match.",
+      "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
