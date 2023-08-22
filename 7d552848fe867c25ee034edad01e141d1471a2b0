@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "105a0985_2a576343",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-22T15:14:49Z",
+      "side": 1,
+      "message": "you wouldn\u0027t need to say this if you moved the `#if defined(PAGE_SIZE)` inside the `#if defined(__LP64__)`...",
+      "revId": "7d552848fe867c25ee034edad01e141d1471a2b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
