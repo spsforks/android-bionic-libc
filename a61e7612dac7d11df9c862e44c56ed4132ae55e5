@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2c1b267_0acb8e52",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to name this MmapBenchmark? It\u0027s not really a test.",
+      "range": {
+        "startLine": 29,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 20
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76aaf7d1_e69d3889",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "The normal way to do this now is:\n\nfor (auto _ : state) {\n\nUnless there is a particular reason that you are doing it this way.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1295432e_11abf24a",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "It looks like addr is not used outside of this main loop, so:\n\nvoid* addr \u003d XXX;\n\nSee why this should work from comment down below.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 8
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "893cce17_3a8c10bf",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "I think you can replace this with a call to MakeAllocationResident(addr, alloc_sz, page_sz) from util.h.\n\nThis also allows you to change addr to void*.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 7
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5d2bc3c_4e2442d2",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "You can just:\n\nvoid* area \u003d XXX;\n\nSince there doesn\u0027t appear to be a reason to use this as a char*.",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 6
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c43c515_a812d937",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-22T00:08:58Z",
+      "side": 1,
+      "message": "Does this work to have three different benchmarks in the same benchmark? I wouldn\u0027t expect it to work properly like this.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 56
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
