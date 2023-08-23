@@ -70,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97a332b2_6a762da2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-23T21:10:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07a56903_ff1c2071",
+      "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a013635f_c8b1d89a",
@@ -119,6 +137,24 @@
       "side": 1,
       "message": "I don\u0027t think it is required to match page size - we could have picked a different power of 2. Higher alignment would waste more space in the binary, but would support larger libraries.",
       "parentUuid": "e3c146be_ae2483ee",
+      "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ebdcedc_9980b9bc",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-23T21:10:00Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "8cd29a93_58903249",
       "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
