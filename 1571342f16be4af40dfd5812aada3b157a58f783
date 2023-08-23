@@ -85,6 +85,24 @@
       "message": "You increase kCfiCheckGranularity. This would break the requirement above: \"__cfi_check is aligned at kCfiCheckGranularity\" unless you change the compiler to match.",
       "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c146be_ae2483ee",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1499410
+      },
+      "writtenOn": "2023-08-23T00:16:16Z",
+      "side": 1,
+      "message": "Hi Evgenii we are trying to make the bionic code page agnostic.\n\nYou are right, looks like it\u0027s unconditionally set to 4096 in the compiler:\nhttps://github.com/llvm/llvm-project/blob/main/clang/lib/CodeGen/CGExpr.cpp#L3433\n\nBut the documentation seems to suggest this decision is based on the page size:\n\nhttps://clang.llvm.org/docs/ControlFlowIntegrityDesign.html#cfi-shadow\n\n\n\nPeter, please CMIW.\n\nDo we only need a constant 4096 here or is the real page size required?",
+      "parentUuid": "a013635f_c8b1d89a",
+      "revId": "1571342f16be4af40dfd5812aada3b157a58f783",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
