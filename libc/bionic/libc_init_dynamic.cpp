@@ -130,6 +130,37 @@ __attribute__((constructor(1))) static void __libc_preinit() {
   __libc_preinit_impl();
 }
 
+/* This function will be called during normal program termination
+ * to run the destructors that are listed in the .fini_array section
+ * of the executable, if any.
+ *
+ * 'fini_array' points to a list of function addresses. It may contain
+ * sentinels.
+ */
+static void __libc_fini_dynamic(void* arg) {
+  structors_array_t* structors = reinterpret_cast<structors_array_t*>(arg);
+  fini_func_t** array = structors->fini_array;
+  size_t count = 0;
+  if (structors->version == 1) {
+    count = structors->fini_array_count;
+  } else {
+    // In version before 1, fini_array_count isn't available, and fini_array ends with 0.
+    // So count the number of destructors.
+    count = 0;
+    while (array[count] != nullptr) {
+      ++count;
+    }
+  }
+  // Now call each destructor in reverse order, ignoring any 0s and -1s.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    if (function == nullptr || reinterpret_cast<intptr_t>(function) == -1) {
+      continue;
+    }
+    (*function)();
+  }
+}
+
 // This function is called from the executable's _start entry point
 // (see arch-$ARCH/bionic/crtbegin.c), which is itself called by the dynamic
 // linker after it has loaded all shared libraries the executable depends on.
@@ -150,8 +181,10 @@ __noreturn void __libc_init(void* raw_args,
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
   // normally.
-  if (structors->fini_array) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
+  bool has_fini = (structors->version == 1) ? (structors->fini_array_count > 0)
+                                            : (structors->fini_array != nullptr);
+  if (has_fini) {
+    __cxa_atexit(__libc_fini_dynamic, const_cast<structors_array_t*>(structors), nullptr);
   }
 
   __libc_init_mte_late();

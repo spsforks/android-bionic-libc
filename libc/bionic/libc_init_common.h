@@ -35,20 +35,32 @@ typedef void init_func_t(int, char*[], char*[]);
 typedef void fini_func_t(void);
 
 typedef struct {
-  init_func_t** preinit_array;
+  union {
+    // This field is initialized in crtbegin.c. In static executables, it is preinit_array.
+    // In dynamic executables, it is version. New dynamic executables (on Android >= V) set
+    // version to 1. Old dynamic executables set version to a pointer value (pointing to
+    // preinit_array), which can't be a small value. So we can distinguish them.
+    init_func_t** preinit_array;
+    size_t version;
+  };
   init_func_t** init_array;
   fini_func_t** fini_array;
+  // preinit_array_count/init_array_count/fini_array_count are added in crtbegin.c in Android V.
+  // When parsing the struct in libc.so, these fields are only available when version == 1.
+  size_t preinit_array_count;
+  size_t init_array_count;
+  size_t fini_array_count;
+  // To make new executables work with old libc.so, and old executables work with new libc.so,
+  // only append new items, and update version as needed.
 } structors_array_t;
 
 __BEGIN_DECLS
 
 extern int main(int argc, char** argv, char** env);
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
+__noreturn void __libc_init(void* raw_args, void (*onexit)(void),
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
 
 __END_DECLS
 
