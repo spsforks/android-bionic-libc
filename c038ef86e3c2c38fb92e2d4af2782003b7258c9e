@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "af525466_f9790795",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-24T22:02:29Z",
+      "side": 1,
+      "message": "a 65535-way associate cache would probably break a lot of other assumptions first :-)\n\n(but given that the underlying variable in the kernel is unsigned, \"done\".)",
+      "parentUuid": "ab1ce016_1ac3b298",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 8
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93cabb96_0d948b6f",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-08-24T20:53:24Z",
       "side": 1,
       "message": "This is probably something I don\u0027t quite understand, but it appears that this exists on the stack, and you are returning this value and using it in multiple calls. Shouldn\u0027t this be static to avoid that? I\u0027m probably missing something though.",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 29
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cf1db2a_89b68c55",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-24T22:02:29Z",
+      "side": 1,
+      "message": "it\u0027s being returned on L86, and i\u0027m expecting RVO to mean that it\u0027s effectively written straight into `cached` rather than `info`.\n\nbut since you\u0027ve made me check... yeah, looks right to me:\n```\n0000000000000000 \u003c_ZL16__sysconf_cachesv\u003e:\n       0: 90000008      adrp    x8, 0x0 \u003c_ZL16__sysconf_cachesv\u003e\n                0000000000000000:  R_AARCH64_ADR_PREL_PG_HI21   .bss._ZGVZL16__sysconf_cachesvE6cached\n       4: 91000108      add     x8, x8, #0x0\n                0000000000000004:  R_AARCH64_ADD_ABS_LO12_NC    .bss._ZGVZL16__sysconf_cachesvE6cached\n       8: 38bfc108      ldaprb  w8, [x8]\n       c: 36000048      tbz     w8, #0x0, 0x14 \u003c_ZL16__sysconf_cachesv+0x14\u003e\n      10: d65f03c0      ret\n      14: a9bf7bfd      stp     x29, x30, [sp, #-0x10]!\n      18: 910003fd      mov     x29, sp\n      1c: 90000000      adrp    x0, 0x0 \u003c_ZL16__sysconf_cachesv\u003e\n                000000000000001c:  R_AARCH64_ADR_PREL_PG_HI21   .bss._ZGVZL16__sysconf_cachesvE6cached\n      20: 91000000      add     x0, x0, #0x0\n                0000000000000020:  R_AARCH64_ADD_ABS_LO12_NC    .bss._ZGVZL16__sysconf_cachesvE6cached\n      24: 94000000      bl      0x24 \u003c_ZL16__sysconf_cachesv+0x24\u003e\n                0000000000000024:  R_AARCH64_CALL26     __cxa_guard_acquire\n      28: a8c17bfd      ldp     x29, x30, [sp], #0x10\n      2c: 34ffff20      cbz     w0, 0x10 \u003c_ZL16__sysconf_cachesv+0x10\u003e\n      30: 6f00e400      movi    v0.2d, #0000000000000000\n      34: 90000008      adrp    x8, 0x0 \u003c_ZL16__sysconf_cachesv\u003e\n                0000000000000034:  R_AARCH64_ADR_PREL_PG_HI21   .bss._ZZL16__sysconf_cachesvE6cached\n      38: 91000108      add     x8, x8, #0x0\n                0000000000000038:  R_AARCH64_ADD_ABS_LO12_NC    .bss._ZZL16__sysconf_cachesvE6cached\n      3c: 5280008b      mov     w11, #0x4               // \u003d4\n      40: 90000000      adrp    x0, 0x0 \u003c_ZL16__sysconf_cachesv\u003e\n                0000000000000040:  R_AARCH64_ADR_PREL_PG_HI21   .bss._ZGVZL16__sysconf_cachesvE6cached\n      44: 91000000      add     x0, x0, #0x0\n                0000000000000044:  R_AARCH64_ADD_ABS_LO12_NC    .bss._ZGVZL16__sysconf_cachesvE6cached\n      48: f900391f      str     xzr, [x8, #0x70]\n      4c: ad008100      stp     q0, q0, [x8, #0x10]\n      50: ad018100      stp     q0, q0, [x8, #0x30]\n      54: ad028100      stp     q0, q0, [x8, #0x50]\n      58: 3d800100      str     q0, [x8]\n      5c: d53b0029      mrs     x9, CTR_EL0\n      60: 12000d2a      and     w10, w9, #0xf\n      64: 53104d29      ubfx    w9, w9, #16, #4\n      68: 1aca216a      lsl     w10, w11, w10\n      6c: 1ac92169      lsl     w9, w11, w9\n      70: f900090a      str     x10, [x8, #0x10]\n      74: f9001509      str     x9, [x8, #0x28]\n      78: 14000000      b       0x78 \u003c_ZL16__sysconf_cachesv+0x78\u003e\n                0000000000000078:  R_AARCH64_JUMP26     __cxa_guard_release\n```",
+      "parentUuid": "93cabb96_0d948b6f",
       "range": {
         "startLine": 80,
         "startChar": 0,
@@ -66,6 +114,47 @@
         "endLine": 109,
         "endChar": 83
       },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a21fde75_d0442378",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-24T22:02:29Z",
+      "side": 1,
+      "message": "it\u0027s x86-only that was the \"disappointment\" in the commit message...",
+      "parentUuid": "42282790_d664a21a",
+      "range": {
+        "startLine": 109,
+        "startChar": 36,
+        "endLine": 109,
+        "endChar": 83
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8f702b0_e7644db3",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-24T22:02:29Z",
+      "side": 1,
+      "message": "...but this should probably be a `break` instead of `continue`, so that arm32 only pays for one failed open() (which is about the same as wasting time on one access() --- especially because this is called at most once).",
       "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
