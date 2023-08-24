@@ -388,29 +388,19 @@ void __libc_init_AT_SECURE(char** env) {
  * to run the destructors that are listed in the .fini_array section
  * of the executable, if any.
  *
- * 'fini_array' points to a list of function addresses. The first
- * entry in the list has value -1, the last one has value 0.
+ * 'fini_array' points to a list of function addresses. It may contain
+ * sentinels.
  */
-void __libc_fini(void* array) {
-  typedef void (*Dtor)();
-  Dtor* fini_array = reinterpret_cast<Dtor*>(array);
-  const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
-
-  // Validity check: the first entry must be -1.
-  if (array == nullptr || fini_array[0] != minus1) return;
-
-  // Skip over it.
-  fini_array += 1;
-
-  // Count the number of destructors.
-  int count = 0;
-  while (fini_array[count] != nullptr) {
-    ++count;
-  }
-
-  // Now call each destructor in reverse order, ignoring any -1s.
-  while (count > 0) {
-    Dtor dtor = fini_array[--count];
-    if (dtor != minus1) dtor();
+void __libc_fini(void* arg) {
+  structors_array_t* structors = reinterpret_cast<structors_array_t*>(arg);
+  fini_func_t** array = structors->fini_array;
+  size_t count = structors->fini_array_count;
+  // Now call each destructor in reverse order, ignoring any 0s and -1s.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    if (function == nullptr || reinterpret_cast<intptr_t>(function) == -1) {
+      continue;
+    }
+    (*function)();
   }
 }

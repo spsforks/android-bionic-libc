@@ -150,8 +150,8 @@ __noreturn void __libc_init(void* raw_args,
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
   // normally.
-  if (structors->fini_array) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
+  if (structors->fini_array_count > 0) {
+    __cxa_atexit(__libc_fini, const_cast<structors_array_t*>(structors), nullptr);
   }
 
   __libc_init_mte_late();
