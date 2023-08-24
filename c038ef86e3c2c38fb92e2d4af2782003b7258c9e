@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab1ce016_1ac3b298",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-24T20:53:24Z",
+      "side": 1,
+      "message": "Any worries about the mismatch in type, long versus unsigned long? I think it should be fine since I don\u0027t expect that value to ever get too big, but I don\u0027t know if you need an explicit cast.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 8
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93cabb96_0d948b6f",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-24T20:53:24Z",
+      "side": 1,
+      "message": "This is probably something I don\u0027t quite understand, but it appears that this exists on the stack, and you are returning this value and using it in multiple calls. Shouldn\u0027t this be static to avoid that? I\u0027m probably missing something though.",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 29
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42282790_d664a21a",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-08-24T20:53:24Z",
+      "side": 1,
+      "message": "I don\u0027t see this on any current devices. Would it be worth adding a quick check to see if the cache directory even exists before trying all of this?",
+      "range": {
+        "startLine": 109,
+        "startChar": 36,
+        "endLine": 109,
+        "endChar": 83
+      },
+      "revId": "c038ef86e3c2c38fb92e2d4af2782003b7258c9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
