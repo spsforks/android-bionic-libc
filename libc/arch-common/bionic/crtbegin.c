@@ -36,11 +36,40 @@ SECTION(".init_array.0") init_func_t* __INIT_ARRAY__ = (init_func_t*)-1;
 SECTION(".fini_array.0") fini_func_t* __FINI_ARRAY__ = (fini_func_t*)-1;
 #undef SECTION
 
+extern void (*__preinit_array_start[])(int, char**, char**);
+extern void (*__preinit_array_end[])(int, char**, char**);
+extern void (*__init_array_start[])(int, char**, char**);
+extern void (*__init_array_end[])(int, char**, char**);
+extern void (*__fini_array_start[])(void);
+extern void (*__fini_array_end[])(void);
+
+extern int __cxa_atexit(void (*)(void*), void*, void*);
+
+static void call_fini_array(void* __attribute__((__unused__)) arg) {
+  fini_func_t** array = __fini_array_start;
+  size_t count = __fini_array_end - __fini_array_start;
+  // Call fini functions in reverse order.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    if (function == NULL || (intptr_t)function == -1) {
+      continue;
+    }
+    (*function)();
+  }
+}
+
 __used static void _start_main(void* raw_args) {
   structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
+  array.preinit_array = __preinit_array_start;
+  array.preinit_array_count = __preinit_array_end - __preinit_array_start;
+  array.init_array = __init_array_start;
+  array.init_array_count = __init_array_end - __init_array_start;
+  array.fini_array = NULL;
+
+  // The executable may have its own destructors listed in its .fini_array
+  // so we need to ensure that these are called when the program exits
+  // normally.
+  __cxa_atexit(call_fini_array, NULL, NULL);
 
   __libc_init(raw_args, NULL, &main, &array);
 }

@@ -69,10 +69,14 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 extern "C" const char* __gnu_basename(const char* path);
 
-static void call_array(init_func_t** list, int argc, char* argv[], char* envp[]) {
-  // First element is -1, list is null-terminated
-  while (*++list) {
-    (*list)(argc, argv, envp);
+static void call_array(init_func_t** list, size_t count, int argc, char* argv[], char* envp[]) {
+  while (count-- > 0) {
+    init_func_t* function = *list++;
+    if (function == nullptr ||
+        reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
+      continue;
+    }
+    (*function)(argc, argv, envp);
   }
 }
 
@@ -413,15 +417,9 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
 
-  call_array(structors->preinit_array, args.argc, args.argv, args.envp);
-  call_array(structors->init_array, args.argc, args.argv, args.envp);
-
-  // The executable may have its own destructors listed in its .fini_array
-  // so we need to ensure that these are called when the program exits
-  // normally.
-  if (structors->fini_array != nullptr) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
-  }
+  call_array(structors->preinit_array, structors->preinit_array_count, args.argc, args.argv,
+             args.envp);
+  call_array(structors->init_array, structors->init_array_count, args.argc, args.argv, args.envp);
 
   __libc_init_mte_late();
 
