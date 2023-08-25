@@ -76,9 +76,6 @@ cc_defaults {
         arm64: {
             cflags: ["-fsanitize=shadow-call-stack"],
         },
-        riscv64: {
-            cflags: ["-fsanitize=shadow-call-stack"],
-        },
     },
     sanitize: {
         address: false,
