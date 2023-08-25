@@ -40,18 +40,15 @@ typedef struct {
   fini_func_t** fini_array;
   size_t preinit_array_count;
   size_t init_array_count;
-  // To avoid breaking interface, only append items.
 } structors_array_t;
 
 __BEGIN_DECLS
 
 extern int main(int argc, char** argv, char** env);
 
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
+__noreturn void __libc_init(void* raw_args, void (*onexit)(void),
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
 
 __END_DECLS
 

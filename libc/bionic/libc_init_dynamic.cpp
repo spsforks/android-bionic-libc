@@ -136,23 +136,14 @@ __attribute__((constructor(1))) static void __libc_preinit() {
 //
 // Note that the dynamic linker has also run all constructors in the
 // executable at this point.
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+__noreturn void __libc_init(void* raw_args, void (*onexit)(void) __unused,
+                            int (*slingshot)(int, char**, char**), structors_array_t const* const) {
   BIONIC_STOP_UNWIND;
 
   KernelArgumentBlock args(raw_args);
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
-
-  // The executable may have its own destructors listed in its .fini_array
-  // so we need to ensure that these are called when the program exits
-  // normally.
-  if (structors->fini_array) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
-  }
 
   __libc_init_mte_late();
 
