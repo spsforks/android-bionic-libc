@@ -30,12 +30,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define SECTION(name) __attribute__((__section__(name)))
-SECTION(".preinit_array") init_func_t* __PREINIT_ARRAY__ = (init_func_t*)-1;
-SECTION(".init_array.0") init_func_t* __INIT_ARRAY__ = (init_func_t*)-1;
-SECTION(".fini_array.0") fini_func_t* __FINI_ARRAY__ = (fini_func_t*)-1;
-#undef SECTION
-
 extern void (*__preinit_array_start[])(int, char**, char**);
 extern void (*__preinit_array_end[])(int, char**, char**);
 extern void (*__init_array_start[])(int, char**, char**);
@@ -57,9 +51,6 @@ static void call_fini_array(void* __attribute__((__unused__)) arg) {
   // Call fini functions in reverse order.
   while (count-- > 0) {
     fini_func_t* function = array[count];
-    if (function == NULL || (intptr_t)function == -1) {
-      continue;
-    }
     (*function)();
   }
 }

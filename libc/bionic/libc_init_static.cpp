@@ -72,10 +72,6 @@ extern "C" const char* __gnu_basename(const char* path);
 static void call_array(init_func_t** list, size_t count, int argc, char* argv[], char* envp[]) {
   while (count-- > 0) {
     init_func_t* function = *list++;
-    if (function == nullptr ||
-        reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
-      continue;
-    }
     (*function)(argc, argv, envp);
   }
 }
