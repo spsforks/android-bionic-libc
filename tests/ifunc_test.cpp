@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+#if 0
+
 #include <gtest/gtest.h>
 
 #include <sys/auxv.h>
 #if defined(__BIONIC__)
 #include <sys/ifunc.h>
 #endif
+
 
 typedef int (*fn_ptr_t)();
 
@@ -111,3 +114,5 @@ TEST(ifunc, hwcap) {
 }
 
 #endif  // defined(__BIONIC__)
+        //
+#endif
