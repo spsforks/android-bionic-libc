@@ -36,7 +36,11 @@ class Contexts {
   virtual ~Contexts() {
   }
 
-  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) = 0;
+  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed,
+                          bool load_default_path) = 0;
+  bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) {
+    return Initialize(writable, filename, fsetxattr_failed, false);
+  }
   virtual prop_area* GetPropAreaForName(const char* name) = 0;
   virtual prop_area* GetSerialPropArea() = 0;
   virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) = 0;
