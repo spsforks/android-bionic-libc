@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "262793a5_71a3b01f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-28T18:37:53Z",
+      "side": 0,
+      "message": "i\u0027m assuming we saw nullptr in practice, so even if you can get rid of the -1 case, you can\u0027t get rid of this?",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1ed4cb6_95873609",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-28T18:37:53Z",
+      "side": 0,
+      "message": "do we know that -1 never occurs in ELF files? it\u0027s _only_ ever \"our\" -1 from the code you\u0027re deleting here?",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
