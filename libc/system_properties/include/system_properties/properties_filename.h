@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,39 +28,24 @@
 
 #pragma once
 
-#include <property_info_parser/property_info_parser.h>
+#include <stdint.h>
 
-#include "context_node.h"
-#include "contexts.h"
-#include "properties_filename.h"
-
-class ContextsSerialized : public Contexts {
+class PropertiesFilename {
  public:
-  virtual ~ContextsSerialized() override {
+  PropertiesFilename() = default;
+  PropertiesFilename(const char* dir, const char* file) {
+    if (snprintf(filename_, sizeof(filename_), "%s/%s", dir, file) >=
+        static_cast<int>(sizeof(filename_))) {
+      abort();
+    }
   }
-
-  virtual bool Initialize(bool writable, const char* foldername, bool* fsetxattr_failed) override;
-  virtual bool Initialize(bool writable, const char* foldername, bool* fsetxattr_failed,
-                          bool load_default_path);
-  virtual prop_area* GetPropAreaForName(const char* name) override;
-  virtual prop_area* GetSerialPropArea() override {
-    return serial_prop_area_;
+  void operator=(const char* value) {
+    if (strlen(value) >= sizeof(filename_)) abort();
+    strcpy(filename_, value);
   }
-  virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override;
-  virtual void ResetAccess() override;
-  virtual void FreeAndUnmap() override;
+  const char* c_str() { return filename_; }
 
  private:
-  bool InitializeContextNodes();
-  bool InitializeProperties(bool load_default_path);
-  bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
-
-  const char* foldername_;
-  PropertiesFilename tree_filename_;
-  PropertiesFilename serial_filename_;
-  android::properties::PropertyInfoAreaFile property_info_area_file_;
-  ContextNode* context_nodes_ = nullptr;
-  size_t num_context_nodes_ = 0;
-  size_t context_nodes_mmap_size_ = 0;
-  prop_area* serial_prop_area_ = nullptr;
+  // Typically something like "/dev/__properties__/properties_serial".
+  char filename_[128];
 };
