@@ -16,6 +16,24 @@
       "message": "presubmit failure seems plausibly related to this change?",
       "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bf57d43_d15cfdd9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T00:31:24Z",
+      "side": 1,
+      "message": "The init process may crash when calling __cxa_atexit() before __libc_init().\nShould be fixed in patch3.",
+      "parentUuid": "bba14016_622a45df",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
