@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6039b9f5_06a46529",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T21:01:29Z",
+      "side": 1,
+      "message": "Relied in another comment. And fixed in ps4.",
+      "parentUuid": "eee3e821_03882385",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "64435998_47352394",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-08-29T01:22:42Z",
       "side": 1,
       "message": "I think we need a comment here indicating that the below fields are only present in new binaries. e.g. Only binaries built with NDK r27 or up, or only binaries in V and up, etc. (Not sure how to specify a \"new enough\" executable.)\n\nAFAIK we expect binaries with an older crtbegin to still run with a new libc.so (and vice versa: new crtbegin and old libc.so).",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4de458fa_f9bebebf",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T21:01:29Z",
+      "side": 1,
+      "message": "Added comment.\n\nI didn\u0027t consider the old executable on new libc.so situation. Because no one mentioned it in the bug. I feel it may be the reason of the new presumbit test failure.\nTo let old dynamic executables work with new libc.so, I feel there are two ways:\nOne is to add a version number to distinguish new dynamic executables and old dynamic executables. And use array_count for new executables, use 0 sentinel for old executables. And maybe several years later, we can fully remove the sentinel support.\n\nAnother is to always use 0 sentinel. It\u0027s easier to implement. But as a result, we probably need to always use sentinels for fini_array.\n\nI used the first way here. But I\u0027m also fine to the second way.",
+      "parentUuid": "64435998_47352394",
       "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

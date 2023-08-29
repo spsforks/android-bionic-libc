@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03115b8f_94754c91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T21:01:29Z",
+      "side": 1,
+      "message": "ps4: support old dynamic executables with new libc.so. And remove sentinels in preinit_array/init_array/fini_array.",
+      "revId": "05240875834e9d63b321791781b23dedb10666ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
