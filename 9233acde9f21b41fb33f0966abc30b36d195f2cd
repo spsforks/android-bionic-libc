@@ -69,6 +69,24 @@
       "parentUuid": "64435998_47352394",
       "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e49f6bc_a4690ef3",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-29T23:15:12Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer a local fix in crtbegin that leaves the libc.so ABI alone for now.\n\nTransitioning to a new ABI would take a really long time, because we wouldn\u0027t want to break old stuff, and I think we should try to fix more of the Bionic init/fini bugs if we do alter the ABI.",
+      "parentUuid": "4de458fa_f9bebebf",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

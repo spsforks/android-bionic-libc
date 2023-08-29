@@ -16,6 +16,23 @@
       "message": "ps4: support old dynamic executables with new libc.so. And remove sentinels in preinit_array/init_array/fini_array.",
       "revId": "05240875834e9d63b321791781b23dedb10666ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2bf5ae0_57690055",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-29T23:15:12Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer just fixing this in crtbegin and leaving the libc.so ABI alone for now.\n\nWe know there are other bugs in Bionic\u0027s handling of init/fini functions -- e.g.",
+      "revId": "05240875834e9d63b321791781b23dedb10666ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
