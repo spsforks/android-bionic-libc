@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a135a75a_4f08081d",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T00:37:01Z",
+      "side": 0,
+      "message": "This is for static executables. After we stop inserting -1 in crtbegin and 0 in crtend, who else wants to insert 0 and -1 in the init_array/preinit_array section?",
+      "parentUuid": "262793a5_71a3b01f",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1ed4cb6_95873609",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2023-08-28T18:37:53Z",
       "side": 0,
       "message": "do we know that -1 never occurs in ELF files? it\u0027s _only_ ever \"our\" -1 from the code you\u0027re deleting here?",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c2b41d5_0a0432bb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T00:37:01Z",
+      "side": 0,
+      "message": "If -1 happens in the middle of init_array. The code before this change can\u0027t handle it, as in https://cs.android.com/android/platform/superproject/+/master:bionic/libc/bionic/libc_init_static.cpp;l\u003d74?q\u003dlibc_init_static.cpp\u0026ss\u003dandroid",
+      "parentUuid": "a1ed4cb6_95873609",
       "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
