@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7b5951f5_05b38caa",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-29T01:17:23Z",
+      "side": 0,
+      "message": "The previous situation was that a static executable used NULL-terminated lists and did not check for -1 function pointers. If the list previously contained -1, the program would have crashed. If it previously contained a NULL entry, then remaining functions wouldn\u0027t have been called.",
+      "parentUuid": "a135a75a_4f08081d",
+      "revId": "5f67ebfb66bcb5d80f028598f972b02404bea355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1ed4cb6_95873609",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 1
