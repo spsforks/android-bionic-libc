@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eee3e821_03882385",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-29T01:22:42Z",
+      "side": 1,
+      "message": "I think this field won\u0027t be present if an old crtbegin executable runs with a new libc.so?",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64435998_47352394",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-29T01:22:42Z",
+      "side": 1,
+      "message": "I think we need a comment here indicating that the below fields are only present in new binaries. e.g. Only binaries built with NDK r27 or up, or only binaries in V and up, etc. (Not sure how to specify a \"new enough\" executable.)\n\nAFAIK we expect binaries with an older crtbegin to still run with a new libc.so (and vice versa: new crtbegin and old libc.so).",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
