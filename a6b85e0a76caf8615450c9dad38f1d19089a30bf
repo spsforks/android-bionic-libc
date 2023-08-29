@@ -16,6 +16,24 @@
       "message": "I feel like this CL would be easier to review if it were squashed with the parent CL?",
       "revId": "a6b85e0a76caf8615450c9dad38f1d19089a30bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b54827d_953c8286",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-29T20:48:32Z",
+      "side": 1,
+      "message": "I kind of have the similar feeling. Merged into the parent CL.",
+      "parentUuid": "5a6ba0a8_f5f6de45",
+      "revId": "a6b85e0a76caf8615450c9dad38f1d19089a30bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
