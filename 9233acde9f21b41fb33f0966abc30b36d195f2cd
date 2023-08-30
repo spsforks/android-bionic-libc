@@ -87,6 +87,24 @@
       "parentUuid": "4de458fa_f9bebebf",
       "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5003af3_506e56df",
+        "filename": "libc/bionic/libc_init_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-30T23:52:57Z",
+      "side": 1,
+      "message": "Got it, done.",
+      "parentUuid": "4e49f6bc_a4690ef3",
+      "revId": "9233acde9f21b41fb33f0966abc30b36d195f2cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
