@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdc5f16a_3547d72b",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-31T17:15:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff40bf1a_15ba6a86",
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39f2c1b9_5f13e611",
@@ -48,6 +66,30 @@
       "writtenOn": "2023-08-31T01:18:38Z",
       "side": 1,
       "message": "I think this should just say \"libc.so\" rather than \"Old libc.so\".",
+      "range": {
+        "startLine": 57,
+        "startChar": 3,
+        "endLine": 57,
+        "endChar": 14
+      },
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff234ea1_fc9a4a28",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-31T17:15:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39f2c1b9_5f13e611",
       "range": {
         "startLine": 57,
         "startChar": 3,
@@ -93,6 +135,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "359f19e2_39a4195b",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-31T17:15:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa634642_a5f32181",
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92939f69_89ad178c",
@@ -106,6 +166,30 @@
       "writtenOn": "2023-08-31T01:18:38Z",
       "side": 1,
       "message": "Can this parameter have type `const structors_array_t*` instead, to remove the casts?",
+      "range": {
+        "startLine": 79,
+        "startChar": 28,
+        "endLine": 79,
+        "endChar": 37
+      },
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ce83f92_a19bf881",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-08-31T17:15:07Z",
+      "side": 1,
+      "message": "call_fini_array needs to be passed to __cxa_atexit. __cxa_atexit() requires callbacks to use void* parameter. Otherwise, we get below build error:\nbionic/libc/bionic/libc_init_static.cpp:435:5: error: no matching function for call to \u0027__cxa_atexit\u0027\n    __cxa_atexit(call_fini_array, const_cast\u003cstructors_array_t*\u003e(structors), nullptr);\n    ^~~~~~~~~~~~\nbionic/libc/bionic/libc_init_static.cpp:69:16: note: candidate function not viable: no known conversion from \u0027void (structors_array_t *)\u0027 \nto \u0027void (*)(void *)\u0027 for 1st argument\nextern \"C\" int __cxa_atexit(void (*)(void *), void *, void *);\n               ^",
+      "parentUuid": "92939f69_89ad178c",
       "range": {
         "startLine": 79,
         "startChar": 28,
