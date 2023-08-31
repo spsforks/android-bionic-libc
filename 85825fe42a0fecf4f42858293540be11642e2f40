@@ -16,6 +16,86 @@
       "message": "ps4,5: remove the ABI change to libc.so.",
       "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff40bf1a_15ba6a86",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-31T01:18:38Z",
+      "side": 1,
+      "message": "Should these variables be declared using init_func_t and fini_func_t?",
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f2c1b9_5f13e611",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-31T01:18:38Z",
+      "side": 1,
+      "message": "I think this should just say \"libc.so\" rather than \"Old libc.so\".",
+      "range": {
+        "startLine": 57,
+        "startChar": 3,
+        "endLine": 57,
+        "endChar": 14
+      },
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d50f9f6b_8dbcba8c",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-31T01:18:38Z",
+      "side": 1,
+      "message": "I think we should explicitly zero-init this variable. e.g.:\n```\nstructors_array_t array \u003d {};\n```\n(maybe have single 0 or NULL value in the brackets, not sure)",
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92939f69_89ad178c",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-08-31T01:18:38Z",
+      "side": 1,
+      "message": "Can this parameter have type `const structors_array_t*` instead, to remove the casts?",
+      "range": {
+        "startLine": 79,
+        "startChar": 28,
+        "endLine": 79,
+        "endChar": 37
+      },
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
