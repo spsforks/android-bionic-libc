@@ -77,6 +77,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa634642_a5f32181",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-08-31T14:34:56Z",
+      "side": 1,
+      "message": "\u003e (maybe have single 0 or NULL value in the brackets, not sure)\n\nyou only need that if you\u0027re worried about building with old compilers/-std\u003d versions. for our code, `\u003d {}` is fine [and, imho, clearest].\n\nstrictly, you can assume we have zero-initialization for all locals in Android, but i still sometimes write `\u003d {}` if i feel like it\u0027s important to clarify that something really _needs_ it.",
+      "parentUuid": "d50f9f6b_8dbcba8c",
+      "revId": "85825fe42a0fecf4f42858293540be11642e2f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "92939f69_89ad178c",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 6
