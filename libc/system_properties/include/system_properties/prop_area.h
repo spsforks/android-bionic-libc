@@ -96,12 +96,14 @@ class prop_area {
   static prop_area* map_prop_area(const char* filename);
   static void unmap_prop_area(prop_area** pa) {
     if (*pa) {
-      munmap(*pa, pa_size_);
+      munmap(*pa, (*pa)->size());
       *pa = nullptr;
     }
   }
 
-  prop_area(const uint32_t magic, const uint32_t version) : magic_(magic), version_(version) {
+  prop_area(const uint32_t magic, const uint32_t version, uint32_t size)
+      : magic_(magic), version_(version), pa_size_(size),
+        pa_data_size_(size-sizeof(prop_area)) {
     atomic_init(&serial_, 0u);
     memset(reserved_, 0, sizeof(reserved_));
     // Allocate enough space for the root node.
@@ -138,9 +140,10 @@ class prop_area {
   }
   char* dirty_backup_area() { return data_ + sizeof(prop_trie_node); }
 
+  uint32_t size() const;
+
  private:
   static prop_area* map_fd_ro(const int fd);
-
   void* allocate_obj(const size_t size, uint_least32_t* const off);
   prop_trie_node* new_prop_trie_node(const char* name, uint32_t namelen, uint_least32_t* const off);
   prop_info* new_prop_info(const char* name, uint32_t namelen, const char* value, uint32_t valuelen,
@@ -160,18 +163,13 @@ class prop_area {
   bool foreach_property(prop_trie_node* const trie,
                         void (*propfn)(const prop_info* pi, void* cookie), void* cookie);
 
-  // The original design doesn't include pa_size or pa_data_size in the prop_area struct itself.
-  // Since we'll need to be backwards compatible with that design, we don't gain much by adding it
-  // now, especially since we don't have any plans to make different property areas different sizes,
-  // and thus we share these two variables among all instances.
-  static size_t pa_size_;
-  static size_t pa_data_size_;
-
   uint32_t bytes_used_;
   atomic_uint_least32_t serial_;
   uint32_t magic_;
   uint32_t version_;
-  uint32_t reserved_[28];
+  uint32_t pa_size_;
+  uint32_t pa_data_size_;
+  uint32_t reserved_[26];
   char data_[0];
 
   BIONIC_DISALLOW_COPY_AND_ASSIGN(prop_area);
