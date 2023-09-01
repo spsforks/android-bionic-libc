@@ -16,6 +16,23 @@
       "message": "Thanks for fixing this!",
       "revId": "1cc3e5b9289b57a59d1f16c1928cc70909974ca2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1485499a_1e2ce382",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-09-01T02:09:17Z",
+      "side": 1,
+      "message": "This CL also fixes https://github.com/android/ndk/issues/1461. We could add it to the commit message.",
+      "revId": "1cc3e5b9289b57a59d1f16c1928cc70909974ca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
