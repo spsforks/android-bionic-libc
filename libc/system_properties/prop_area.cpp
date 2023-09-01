@@ -45,11 +45,27 @@ constexpr size_t PA_SIZE = 128 * 1024;
 constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;
 constexpr uint32_t PROP_AREA_VERSION = 0xfc6ed0ab;
 
-size_t prop_area::pa_size_ = 0;
-size_t prop_area::pa_data_size_ = 0;
+struct pa_size_spec{
+  char const* pa_name;
+  size_t pa_len;
+};
 
-prop_area* prop_area::map_prop_area_rw(const char* filename, const char* context,
-                                       bool* fsetxattr_failed) {
+pa_size_spec customized_pa_sizes[] = {
+  {"/dev/__properties__/u:object_r:device_config_aconfig_flags_prop:s0", 1280 * 1024}
+};
+
+
+void prop_area::pa_size(uint32_t pa_size) {
+  pa_size_ = pa_size;
+  pa_data_size_ = pa_size_-sizeof(prop_area);
+}
+
+uint32_t prop_area::pa_size() const {
+  return pa_size_;
+}
+
+prop_area* prop_area::map_prop_area_rw(
+    const char* filename, const char* context, bool* fsetxattr_failed) {
   /* dev is a tmpfs that we can use to carve a shared workspace
    * out of, so let's do that...
    */
@@ -84,21 +100,26 @@ prop_area* prop_area::map_prop_area_rw(const char* filename, const char* context
     }
   }
 
-  if (ftruncate(fd, PA_SIZE) < 0) {
+  size_t pa_size = PA_SIZE;
+  for (size_t i=0; i<arraysize(customized_pa_sizes); ++i) {
+    if (strcmp(customized_pa_sizes[i].pa_name, filename) == 0) {
+      pa_size = customized_pa_sizes[i].pa_len;
+      break;
+    }
+  }
+
+  if (ftruncate(fd, pa_size) < 0) {
     close(fd);
     return nullptr;
   }
 
-  pa_size_ = PA_SIZE;
-  pa_data_size_ = pa_size_ - sizeof(prop_area);
-
-  void* const memory_area = mmap(nullptr, pa_size_, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  void* const memory_area = mmap(nullptr, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (memory_area == MAP_FAILED) {
     close(fd);
     return nullptr;
   }
 
-  prop_area* pa = new (memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
+  prop_area* pa = new (memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION, pa_size);
 
   close(fd);
   return pa;
@@ -116,19 +137,20 @@ prop_area* prop_area::map_fd_ro(const int fd) {
     return nullptr;
   }
 
-  pa_size_ = fd_stat.st_size;
-  pa_data_size_ = pa_size_ - sizeof(prop_area);
+  size_t pa_size = fd_stat.st_size;
 
-  void* const map_result = mmap(nullptr, pa_size_, PROT_READ, MAP_SHARED, fd, 0);
+  void* const map_result = mmap(nullptr, pa_size, PROT_READ, MAP_SHARED, fd, 0);
   if (map_result == MAP_FAILED) {
     return nullptr;
   }
 
   prop_area* pa = reinterpret_cast<prop_area*>(map_result);
   if ((pa->magic() != PROP_AREA_MAGIC) || (pa->version() != PROP_AREA_VERSION)) {
-    munmap(pa, pa_size_);
+    munmap(pa, pa_size);
     return nullptr;
   }
+
+  pa->pa_size(pa_size);
 
   return pa;
 }
