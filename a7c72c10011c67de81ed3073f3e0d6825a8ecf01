@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f955b4e_aad226f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-05T21:07:19Z",
+      "side": 1,
+      "message": "isn\u0027t \"Global static C++ class instances\u0027 constructors are not called in static executables\" the most interesting change?\n\n(but keep the LTO part anyway --- that\u0027s _mildly_ interesting :-) )",
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2902496_34c4ee07",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-05T21:07:19Z",
+      "side": 1,
+      "message": "(add the api level here)",
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10baec32_2e5a459b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-05T21:07:19Z",
+      "side": 1,
+      "message": "when?",
+      "range": {
+        "startLine": 485,
+        "startChar": 8,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3e82891_fd42b688",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-05T21:07:19Z",
+      "side": 1,
+      "message": "when?",
+      "range": {
+        "startLine": 488,
+        "startChar": 22,
+        "endLine": 488,
+        "endChar": 30
+      },
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
