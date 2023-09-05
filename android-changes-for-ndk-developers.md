@@ -479,3 +479,15 @@ relocations.
 You can read more about relative relocations
 and their long and complicated history at
 https://maskray.me/blog/2021-10-31-relative-relocations-and-relr.
+
+## No more sentinels in .preinit_array/.init_array/.fini_array sections of executables
+
+Android used to have sentinels in these sections of executables to locate the
+start and end of arrays. However, when building with LTO, the function pointers
+in the arrays can be reordered, making sentinels no longer work. Therefore, we
+removed sentinels and switched to using symbols inserted by LLD (
+like __init_array_start, __init_array_end) to locate the arrays.
+
+For dynamic executables, we kept sentinel support in crtbegin.o and libc.so.
+This ensures that executables built with the new crtbegin.o work with the old
+libc.so, and vice versa.
