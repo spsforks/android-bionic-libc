@@ -22,6 +22,30 @@
       },
       "revId": "c3f71c1ece010709f0dea450775a9316b8029ef8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "405235cc_51c04776",
+        "filename": "libc/system_properties/include/system_properties/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-05T18:29:14Z",
+      "side": 1,
+      "message": "yeah, this was a deliberate change but you\u0027re right that it should be in a separate cl.",
+      "parentUuid": "4aeb2282_1f15bdd3",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "c3f71c1ece010709f0dea450775a9316b8029ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
