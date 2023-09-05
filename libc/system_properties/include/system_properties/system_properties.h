@@ -53,7 +53,7 @@ class PropertiesFilename {
   const char* c_str() { return filename_; }
 
  private:
-  char filename_[1024];
+  char filename_[128];
 };
 
 class SystemProperties {
