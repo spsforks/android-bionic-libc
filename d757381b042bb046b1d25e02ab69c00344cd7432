@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9876054_00cb9a9c",
+        "filename": "libc/system_properties/include/system_properties/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-06T00:15:18Z",
+      "side": 1,
+      "message": "Is it worth adding a comment here about how the size was chosen?",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "d757381b042bb046b1d25e02ab69c00344cd7432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
