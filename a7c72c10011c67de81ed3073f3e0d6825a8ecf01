@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4c09c61f_d06c983c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-09-06T21:41:24Z",
+      "side": 1,
+      "message": "I think the issue is \"global C++ variables\u0027 constructors are not called in static executables when using LTO\". The bug only happens with LTO. I retitled the GitHub issue.\n\nBut yeah, it makes sense to mention C++ constructors, because it\u0027s the user-facing problem, whereas .init_array is an ELF implementation detail.",
+      "parentUuid": "9f955b4e_aad226f9",
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b2902496_34c4ee07",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
