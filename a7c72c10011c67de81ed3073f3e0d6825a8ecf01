@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "591cdcac_bcf0dccf",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-09-06T21:12:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2902496_34c4ee07",
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10baec32_2e5a459b",
@@ -58,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7763d0dd_42465cd1",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-09-06T21:12:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10baec32_2e5a459b",
+      "range": {
+        "startLine": 485,
+        "startChar": 8,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3e82891_fd42b688",
@@ -71,6 +113,30 @@
       "writtenOn": "2023-09-05T21:07:19Z",
       "side": 1,
       "message": "when?",
+      "range": {
+        "startLine": 488,
+        "startChar": 22,
+        "endLine": 488,
+        "endChar": 30
+      },
+      "revId": "a7c72c10011c67de81ed3073f3e0d6825a8ecf01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7a6761d_8d191491",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-09-06T21:12:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3e82891_fd42b688",
       "range": {
         "startLine": 488,
         "startChar": 22,
