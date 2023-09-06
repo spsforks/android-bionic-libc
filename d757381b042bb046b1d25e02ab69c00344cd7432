@@ -46,6 +46,30 @@
       },
       "revId": "d757381b042bb046b1d25e02ab69c00344cd7432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2274c139_76633af3",
+        "filename": "libc/system_properties/include/system_properties/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-06T18:13:12Z",
+      "side": 1,
+      "message": "i\u0027ve added a comment, but not said much because my assumption is that if someone\u0027s ever looking at this line questioning this decision, it\u0027s because they have a specific counter-example anyway :-)\n\n(but now they can just update the example string to give their [much!] longer example.)",
+      "parentUuid": "6d2b2165_a3141fc0",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "d757381b042bb046b1d25e02ab69c00344cd7432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
