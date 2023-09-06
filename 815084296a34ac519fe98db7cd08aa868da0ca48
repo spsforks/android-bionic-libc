@@ -16,6 +16,24 @@
       "message": "I suspect we want backticks around __init_array_start and __init_array_end to ensure that the underscores (`__`) aren\u0027t interpreted as formatting.",
       "revId": "815084296a34ac519fe98db7cd08aa868da0ca48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4999f062_1ac17bb9",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2023-09-06T22:17:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22ca58ed_91fb0b86",
+      "revId": "815084296a34ac519fe98db7cd08aa868da0ca48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
