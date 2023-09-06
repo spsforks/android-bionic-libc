@@ -22,6 +22,30 @@
       },
       "revId": "d757381b042bb046b1d25e02ab69c00344cd7432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d2b2165_a3141fc0",
+        "filename": "libc/system_properties/include/system_properties/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-06T18:10:08Z",
+      "side": 1,
+      "message": "did you have a suggestion beyond what\u0027s in the commit message? given that it\u0027s just a \"should be big enough\" (similar to the old one), i don\u0027t really have a _code_ comment.\n\nthis is one reason why i changed this code to make sure that we `abort()` on overflow, so we don\u0027t accidentally just do weird stuff if one of these gets truncated by snprintf() or whatever. the old code was kind of weird to my mind: it did check and return errors, but you know how much confidence i have that anyone ever checks return values, _especially_ for \"should never happen because in practice this is a short constant string\". actually, maybe that\u0027s the comment: \"// Usually `\"/dev/__properties__\"` except in unit tests.\"?",
+      "parentUuid": "a9876054_00cb9a9c",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "d757381b042bb046b1d25e02ab69c00344cd7432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
