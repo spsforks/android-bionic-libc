@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63d71166_30c18132",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-06T20:51:54Z",
+      "side": 1,
+      "message": "I think the comment is probably fine. I was more worried about someone increasing this to an arbitrary long length, since too small will be caught (or should be caught) by aborts.",
+      "revId": "740956c856a23fbb1f783b38a4600d2af7561822",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
