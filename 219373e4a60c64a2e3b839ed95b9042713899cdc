@@ -34,6 +34,24 @@
       "parentUuid": "0dd0990c_6589a5b9",
       "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d366fc95_d6ec74ae",
+        "filename": "libc/system_properties/prop_area.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-11T20:35:21Z",
+      "side": 1,
+      "message": "and you know that\u0027s zero because there were reserved fields, and the data structure is mmap()ed rather than malloc()ed, so you know it\u0027s zero? that\u0027s worth a comment.\n\n(have you actually run a static binary with your changes on API 21 to see that this actually works in practice?)",
+      "parentUuid": "31b6eff4_4dcebaa6",
+      "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
