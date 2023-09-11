@@ -16,6 +16,24 @@
       "message": "why don\u0027t you set pa_size_ to PA_SIZE?",
       "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31b6eff4_4dcebaa6",
+        "filename": "libc/system_properties/prop_area.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1882770
+      },
+      "writtenOn": "2023-09-11T20:30:08Z",
+      "side": 1,
+      "message": "after this change, pa_size may not be the default value PA_SIZE. However, for backward compatibility reason, it still needs to work with old prop_area which does not have pa_size_ field, in this case, the pa_size_ is 0, meaning it should be the default size PA_SIZE",
+      "parentUuid": "0dd0990c_6589a5b9",
+      "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
