@@ -52,6 +52,24 @@
       "parentUuid": "31b6eff4_4dcebaa6",
       "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1bffc87_ca7e1fb5",
+        "filename": "libc/system_properties/prop_area.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1882770
+      },
+      "writtenOn": "2023-09-11T20:36:59Z",
+      "side": 1,
+      "message": "yes, because the reserved filed is memset to 0, so when read in the field, it should be 0. \n\nNo I have not run that.",
+      "parentUuid": "d366fc95_d6ec74ae",
+      "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
