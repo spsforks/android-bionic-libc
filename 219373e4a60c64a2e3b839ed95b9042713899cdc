@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0dd0990c_6589a5b9",
+        "filename": "libc/system_properties/prop_area.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-11T20:28:22Z",
+      "side": 1,
+      "message": "why don\u0027t you set pa_size_ to PA_SIZE?",
+      "revId": "219373e4a60c64a2e3b839ed95b9042713899cdc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
