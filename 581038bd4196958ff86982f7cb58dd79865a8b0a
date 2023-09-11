@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d32cdb46_9f46e18e",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-11T21:15:05Z",
+      "side": 1,
+      "message": "We prefer the format of:\n\nint fd \u003d open();\n\nInstead of the separate declaration. Same for everywhere in the file.",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 77,
+        "endChar": 4
+      },
+      "revId": "581038bd4196958ff86982f7cb58dd79865a8b0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86249fa8_35360168",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-11T21:15:05Z",
+      "side": 1,
+      "message": "TemporaryFile already creates a fd for the temp file and since it looks like PrepFile is only called from this one function, it\u0027s probably better to roll it all into here.\n\nSo you would only have to do:\n\nif (tf.fd \u003d\u003d -1) {\n  // Error handling code.\n}\n\nif (size \u003e 0 \u0026\u0026 ftruncate(tf.fd, size)) {\n  // Error handling code.\n}\n\nThen the params checking.",
+      "range": {
+        "startLine": 96,
+        "startChar": 2,
+        "endLine": 96,
+        "endChar": 15
+      },
+      "revId": "581038bd4196958ff86982f7cb58dd79865a8b0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8820b963_9836bc06",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-11T21:15:05Z",
+      "side": 1,
+      "message": "Not necessary, the TemporaryFile object already cleans up after itself by closing the fd and deleting the file.",
+      "range": {
+        "startLine": 111,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 16
+      },
+      "revId": "581038bd4196958ff86982f7cb58dd79865a8b0a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2624bc3b_2385f7e1",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-11T21:15:05Z",
+      "side": 1,
+      "message": "That\u0027s because we didn\u0027t go back and fix all of the old code. We change the code as we go, although we should probably move everything to the new style since this can confuse people adding new benchmarks.\n\nHere\u0027s an example of us using the new style:\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:bionic/benchmarks/unistd_benchmark.cpp;l\u003d42",
+      "parentUuid": "ca7699aa_b59349cf",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "revId": "a61e7612dac7d11df9c862e44c56ed4132ae55e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1295432e_11abf24a",
         "filename": "benchmarks/syscall_mmap_benchmark.cpp",
         "patchSetId": 4
