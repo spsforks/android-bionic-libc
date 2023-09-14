@@ -714,12 +714,11 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 }
 
 bool ElfReader::LoadSegments() {
-  for (size_t i = 0; i < phdr_num_; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table_[i];
+  std::vector<const ElfW(Phdr)*> loads = _load_segments(phdr_table_, phdr_num_);
 
-    if (phdr->p_type != PT_LOAD) {
-      continue;
-    }
+  for (size_t i = 0; i < loads.size(); ++i) {
+    const ElfW(Phdr)* phdr = loads[i];
+    const ElfW(Phdr)* phdr_next = ((i + 1) < loads.size()) ? loads[i + 1] : nullptr;
 
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
@@ -727,6 +726,11 @@ bool ElfReader::LoadSegments() {
 
     ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
+
+    if (phdr_next) {
+      munmap(reinterpret_cast<void*>(seg_page_end ),
+             page_start(phdr_next->p_vaddr + load_bias_) - seg_page_end);
+    }
 
     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
 
