@@ -328,6 +328,25 @@ bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment)
          ((offset % alignment) == 0);
 }
 
+static std::vector<const ElfW(Phdr)*> _load_segments(const ElfW(Phdr)* phdr_table, size_t phdr_num) {
+  std::vector<const ElfW(Phdr)*> loads;
+  for (size_t i = 0; i < phdr_num; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    loads.push_back(phdr);
+  }
+
+  // Sort the LOAD segments by their vaddr addresses
+  std::sort(loads.begin(), loads.end(),
+            [](const ElfW(Phdr)* a, const ElfW(Phdr)* b) { return a->p_vaddr < b->p_vaddr; });
+
+  return loads;
+}
+
 // Loads the program header table from an ELF file into a read-only private
 // anonymous mmap-ed block.
 bool ElfReader::ReadProgramHeaders() {
