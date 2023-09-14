@@ -714,12 +714,11 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 }
 
 bool ElfReader::LoadSegments() {
-  for (size_t i = 0; i < phdr_num_; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table_[i];
+  std::vector<const ElfW(Phdr)*> loads = _load_segments(phdr_table_, phdr_num_);
 
-    if (phdr->p_type != PT_LOAD) {
-      continue;
-    }
+  for (size_t i = 0; i < loads.size(); ++i) {
+    const ElfW(Phdr)* phdr = loads[i];
+    const ElfW(Phdr)* phdr_next = ((i + 1) < loads.size()) ? loads[i + 1] : nullptr;
 
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
@@ -727,6 +726,10 @@ bool ElfReader::LoadSegments() {
 
     ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
+
+    if (phdr_next && !(phdr->p_flags & PF_X)) {
+      seg_page_end = page_start(phdr_next->p_vaddr + load_bias_);
+    }
 
     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
 
@@ -767,7 +770,7 @@ bool ElfReader::LoadSegments() {
       }
 
       void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
-                            file_length,
+                            seg_page_end - seg_page_start,
                             prot,
                             MAP_FIXED|MAP_PRIVATE,
                             fd_,
@@ -797,7 +800,7 @@ bool ElfReader::LoadSegments() {
     // content. If seg_end is larger, we need to zero anything
     // between them. This is done by using a private anonymous
     // map for all extra pages.
-    if (seg_page_end > seg_file_end) {
+    if (!phdr_next && seg_page_end > seg_file_end) {
       size_t zeromap_size = seg_page_end - seg_file_end;
       void* zeromap = mmap(reinterpret_cast<void*>(seg_file_end),
                            zeromap_size,
@@ -822,16 +825,21 @@ bool ElfReader::LoadSegments() {
  */
 static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                      ElfW(Addr) load_bias, int extra_prot_flags) {
-  const ElfW(Phdr)* phdr = phdr_table;
-  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+  std::vector<const ElfW(Phdr)*> loads = _load_segments(phdr_table, phdr_count);
 
-  for (; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
+  for (size_t i = 0; i < loads.size(); ++i) {
+    const ElfW(Phdr)* phdr = loads[i];
+    const ElfW(Phdr)* phdr_next = ((i + 1) < loads.size()) ? loads[i + 1] : nullptr;
+    if ((phdr->p_flags & PF_W) != 0) {
       continue;
     }
 
     ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+
+    if (phdr_next && !(phdr->p_flags & PF_X)) {
+      seg_page_end = page_start(phdr_next->p_vaddr) + load_bias;
+    }
 
     int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
     if ((prot & PROT_WRITE) != 0) {
