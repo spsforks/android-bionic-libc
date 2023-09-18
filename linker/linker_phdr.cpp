@@ -670,7 +670,7 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
       size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
+      start_alignment = maximum_alignment;
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
