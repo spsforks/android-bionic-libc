@@ -77,3 +77,6 @@ int recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
 int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
 int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
 int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
+# Since Linux 6.5, not in glibc. Likely to be probed for and used
+# conditionally by ART, since they currently use mincore(2).
+int cachestat(int, cachestat_range*, cachestat*, unsigned) all
