@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0156cf5_d374e673",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-20T16:48:58Z",
+      "side": 1,
+      "message": "(removing autosubmit while we discuss this further...)",
+      "revId": "6b5a9a5668ffa7dfac0c58c477532fbd2fce06bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
