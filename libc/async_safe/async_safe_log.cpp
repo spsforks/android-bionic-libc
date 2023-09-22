@@ -497,7 +497,7 @@ static int write_stderr(const char* tag, const char* msg) {
   return result;
 }
 
-static int open_log_socket() {
+[[maybe_unused]] static int open_log_socket() {
   // ToDo: Ideally we want this to fail if the gid of the current
   // process is AID_LOGD, but will have to wait until we have
   // registered this in private/android_filesystem_config.h. We have
@@ -531,7 +531,8 @@ struct log_time {  // Wire format
 };
 
 int async_safe_write_log(int priority, const char* tag, const char* msg) {
-  int main_log_fd = open_log_socket();
+  // int main_log_fd = open_log_socket();
+  int main_log_fd = -1;
   if (main_log_fd == -1) {
     // Try stderr instead.
     return write_stderr(tag, msg);
