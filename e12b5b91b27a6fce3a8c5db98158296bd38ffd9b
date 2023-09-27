@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7b31078_9cb2811e",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2023-09-27T22:07:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b5afaca_422f1abc",
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5423fd7_a1eee501",
@@ -48,6 +66,30 @@
       "writtenOn": "2023-09-27T01:10:26Z",
       "side": 1,
       "message": "Would it be easier to use a default parameter of nullptr (void* area \u003d nullptr)? That way you only need to pass in a value where it\u0027s actually used.",
+      "range": {
+        "startLine": 36,
+        "startChar": 26,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9413ca4_1442d7cb",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2023-09-27T22:07:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5423fd7_a1eee501",
       "range": {
         "startLine": 36,
         "startChar": 26,
@@ -81,6 +123,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1c9244c_01f61b27",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2023-09-27T22:07:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ba3c696_99dd4a32",
+      "range": {
+        "startLine": 58,
+        "startChar": 18,
+        "endLine": 58,
+        "endChar": 28
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd722d23_9509d4e8",
@@ -104,6 +170,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a0e5655_610dab23",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2023-09-27T22:07:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd722d23_9509d4e8",
+      "range": {
+        "startLine": 92,
+        "startChar": 40,
+        "endLine": 92,
+        "endChar": 44
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d376644_148dd8d1",
@@ -117,6 +207,30 @@
       "writtenOn": "2023-09-27T01:10:26Z",
       "side": 1,
       "message": "These values don\u0027t seem great choices for this.\n\nDo you want to do something like have this parameter be a multiple of the page size?\n\nThe problem is that when you run this you can see that most of the sizes that are \u003c page size have the same performance. It might be better to use different values and then in the benchmark always multiple by page size.",
+      "range": {
+        "startLine": 106,
+        "startChar": 52,
+        "endLine": 106,
+        "endChar": 67
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83a20d82_d65d8fbc",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1157738
+      },
+      "writtenOn": "2023-09-27T22:07:38Z",
+      "side": 1,
+      "message": "Yes, makes sense but I think a couple of sub-page sized cases would be beneficial. I\u0027ll add separate categories like AT_SUB_PAGE_SIZES, AT_MULTI_PAGE_SIZES and AT_ALL_PAGE_SIZES and will use them.",
+      "parentUuid": "2d376644_148dd8d1",
       "range": {
         "startLine": 106,
         "startChar": 52,
