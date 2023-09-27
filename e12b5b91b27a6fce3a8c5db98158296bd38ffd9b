@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4723bff0_8bfcabe0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "ve abo",
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b5afaca_422f1abc",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "Add #include \u003cstring.h\u003e for strerror.",
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5423fd7_a1eee501",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "Would it be easier to use a default parameter of nullptr (void* area \u003d nullptr)? That way you only need to pass in a value where it\u0027s actually used.",
+      "range": {
+        "startLine": 36,
+        "startChar": 26,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ba3c696_99dd4a32",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "We prefer using reinterpret_cast instead of this c-style cast.",
+      "range": {
+        "startLine": 58,
+        "startChar": 18,
+        "endLine": 58,
+        "endChar": 28
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd722d23_9509d4e8",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "Use nullptr for all NULLs.",
+      "range": {
+        "startLine": 92,
+        "startChar": 40,
+        "endLine": 92,
+        "endChar": 44
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d376644_148dd8d1",
+        "filename": "benchmarks/syscall_mmap_benchmark.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-27T01:10:26Z",
+      "side": 1,
+      "message": "These values don\u0027t seem great choices for this.\n\nDo you want to do something like have this parameter be a multiple of the page size?\n\nThe problem is that when you run this you can see that most of the sizes that are \u003c page size have the same performance. It might be better to use different values and then in the benchmark always multiple by page size.",
+      "range": {
+        "startLine": 106,
+        "startChar": 52,
+        "endLine": 106,
+        "endChar": 67
+      },
+      "revId": "e12b5b91b27a6fce3a8c5db98158296bd38ffd9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
