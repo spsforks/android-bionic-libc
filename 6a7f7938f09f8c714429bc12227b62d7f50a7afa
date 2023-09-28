@@ -16,6 +16,24 @@
       "message": "Looks scary (with number of files), most of them are just adding an `__attribute__((no_sanitize(\"memtag-globals\")))` to a global, I promise.",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1f464f1_a7c241b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-09-28T21:16:28Z",
+      "side": 1,
+      "message": "Indeed this looks scary and a bit of maintenance issue. Will a missing annotation be detected in a non-MTE build? Likely not.\n\nYou probably put a lot of thought into it already, but just to make sure... What if we disabled mte-globals for linker? Alternatively, is it possible to move linker got setup earlier to limit the number of special globals?\n\nNote that these annotation disable global tagging both in linker and libc.so. Ex. both copies of stdin/stdout vars are unprotected.",
+      "parentUuid": "cff47549_bfed2648",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
