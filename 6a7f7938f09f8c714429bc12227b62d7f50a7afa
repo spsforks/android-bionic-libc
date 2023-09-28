@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cff47549_bfed2648",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-09-28T13:41:12Z",
+      "side": 1,
+      "message": "Looks scary (with number of files), most of them are just adding an `__attribute__((no_sanitize(\"memtag-globals\")))` to a global, I promise.",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
