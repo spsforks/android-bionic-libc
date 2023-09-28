@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c67aabe2_f0c24834",
+        "filename": "tests/libs/memtag_globals_dso.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-09-28T13:38:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "865c36b6_e90b289c",
+      "revId": "a2b5d4ddb2b1c9838605f26303d67f56cf0efdc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63d730b5_b65e1e17",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-08-21T23:10:59Z",
       "side": 1,
       "message": "You also want to pass \"1\" as the argument to the subprocess if mte_supported.",
+      "revId": "a2b5d4ddb2b1c9838605f26303d67f56cf0efdc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8362526f_afbabc28",
+        "filename": "tests/memtag_globals_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-09-28T13:38:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63d730b5_b65e1e17",
       "revId": "a2b5d4ddb2b1c9838605f26303d67f56cf0efdc2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
