@@ -71,11 +71,12 @@
 #include "linker_translate_path.h"
 #include "linker_utils.h"
 
+#include "android-base/macros.h"
+#include "android-base/stringprintf.h"
+#include "android-base/strings.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
-#include "android-base/macros.h"
-#include "android-base/strings.h"
-#include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
@@ -3194,13 +3195,21 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
-      // TODO(mitchp): Add support to libc_init_mte to use these dynamic array entries instead of
-      // the Android-specific ELF note.
       case DT_AARCH64_MEMTAG_MODE:
+        memtag_dynamic_entries_.has_memtag_mode = true;
+        memtag_dynamic_entries_.memtag_mode = d->d_un.d_val;
+        break;
       case DT_AARCH64_MEMTAG_HEAP:
+        memtag_dynamic_entries_.memtag_heap = d->d_un.d_val;
+        break;
       case DT_AARCH64_MEMTAG_STACK:
+        memtag_dynamic_entries_.memtag_stack = d->d_un.d_val;
+        break;
       case DT_AARCH64_MEMTAG_GLOBALS:
+        memtag_dynamic_entries_.memtag_globals = reinterpret_cast<void*>(load_bias + d->d_un.d_ptr);
+        break;
       case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        memtag_dynamic_entries_.memtag_globalssz = d->d_un.d_val;
         break;
 #endif
 
