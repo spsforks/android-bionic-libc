@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fda0508a_307de742",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-28T20:33:17Z",
+      "side": 1,
+      "message": "The auto-formatter wanted to change a bunch of this code, but I thought it better to bypass. If we do the better fix later, that can reformat.",
+      "revId": "3df5b76a4eee34cdbdd930a907de38a35b9f391b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
