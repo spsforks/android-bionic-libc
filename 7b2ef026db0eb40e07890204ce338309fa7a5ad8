@@ -22,6 +22,30 @@
       },
       "revId": "7b2ef026db0eb40e07890204ce338309fa7a5ad8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d8ef416_300d91c0",
+        "filename": "tests/android_get_device_api_level.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-09-28T17:48:04Z",
+      "side": 1,
+      "message": "d\u0027oh! (it compiles anyway, because you basically can\u0027t #include any bionic header without getting this transitively.)",
+      "parentUuid": "c8672737_78ed371d",
+      "range": {
+        "startLine": 31,
+        "startChar": 27,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "7b2ef026db0eb40e07890204ce338309fa7a5ad8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
