@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8672737_78ed371d",
+        "filename": "tests/android_get_device_api_level.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-28T17:41:37Z",
+      "side": 1,
+      "message": "Missing h at the end.",
+      "range": {
+        "startLine": 31,
+        "startChar": 27,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "7b2ef026db0eb40e07890204ce338309fa7a5ad8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
