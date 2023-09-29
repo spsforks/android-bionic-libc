@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c75c839_78f6bbb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-29T18:03:57Z",
+      "side": 1,
+      "message": "Sorry, one last small change, and then I think this should be ready to submit.",
+      "revId": "61f15c049bab3b02207745b4abc6c479eb37567e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7327485f_d9c8cac4",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-09-29T18:03:57Z",
+      "side": 1,
+      "message": "There is no reason to make this a global since it\u0027s only used once in the one function. Just put it there, and I wouldn\u0027t even make it static since the call itself is fast and this is in the setup path so very unlikely to make anything faster by caching it.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 35
+      },
+      "revId": "61f15c049bab3b02207745b4abc6c479eb37567e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
