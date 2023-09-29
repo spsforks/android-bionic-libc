@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4f54702_50c322c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2023-09-29T20:27:50Z",
+      "side": 1,
+      "message": "We\u0027re also dependent on the Clang flag that zeroes local stack variables, too, I think? There\u0027s an soinfo local variable, `tmp_linker_so`, in `__linker_init`.\n\nWe probably should add field initializers in `linker_soinfo.h`.",
+      "revId": "b003e10f976c424fe0f2731bdd3a6f7f956a0fe5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
