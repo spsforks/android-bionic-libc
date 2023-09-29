@@ -34,6 +34,24 @@
       "parentUuid": "cff47549_bfed2648",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac92ae93_75e3e0a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-09-29T11:22:26Z",
+      "side": 1,
+      "message": "I actually meant \"scary\" in relation to the number of files in the diff, but yeah, it\u0027s hard to stay on top of the maintenance.\n\nIt *would* be detected in an MTE build that runs on a non-MTE device though! It\u0027s probably going to require a whole bunch of build system glue to run a simple main() binary with an MTE-globals instrumented libc/libdl/etc. Probably a bit more difficult to use the linker (rpath and such).\n\n\u003e What if we disabled mte-globals for linker\n\nThat\u0027s the current patch, but most of the attribute spam is for the linker itself. There\u0027s a few in libc for sure, but I reckon 85%+ are preemptive for the linker.\n\nDo you think I should remove all the non-linker-required ones (gonna take a bit to run through and filter them out)? Then maybe can work on the MTE-globals-on-non-MTE as a follow up (but don\u0027t want to block this patch on it).",
+      "parentUuid": "f1f464f1_a7c241b5",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
