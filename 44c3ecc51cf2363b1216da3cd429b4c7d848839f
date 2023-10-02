@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9ceb1e6_9110e878",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-02T18:16:28Z",
+      "side": 1,
+      "message": "i\u0027d still like to get to the bottom of this rather than just work around it ... that seems like a bug.",
+      "revId": "44c3ecc51cf2363b1216da3cd429b4c7d848839f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
