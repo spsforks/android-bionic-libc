@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d270245_085d92ce",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-10-02T17:37:16Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this is even needed, but if so pull this into the function? This is only used once there.",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 41
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a72b01b_131fe104",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-10-02T17:37:16Z",
+      "side": 1,
+      "message": "add comment that this needs to be aligned because of ELF requirements.",
+      "range": {
+        "startLine": 236,
+        "startChar": 0,
+        "endLine": 236,
+        "endChar": 67
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5c20552_272edc99",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2023-10-02T17:37:16Z",
+      "side": 1,
+      "message": "driveby: do we want a warning here?",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 240,
+        "endChar": 88
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
