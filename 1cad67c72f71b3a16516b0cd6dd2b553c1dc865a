@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "461bbe2c_d31ba9cf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3454,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-02T16:13:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "834151c2_3dc430b0",
+      "range": {
+        "startLine": 3454,
+        "startChar": 37,
+        "endLine": 3454,
+        "endChar": 46
+      },
+      "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5584673f_594f1344",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-10-02T15:58:20Z",
       "side": 1,
       "message": "(this seems a bit weird. should these functions be in a linker_mte.cpp instead?)",
+      "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a686a6f_3c655c36",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-02T16:13:41Z",
+      "side": 1,
+      "message": "I popped it here because it\u0027s similar to `phdr_table_protect_segments` for PAC/BTI (\"apply protection flags to segments after the linker has done some work\").\n\nI did just try and move them, before realising they also use some glue from this cppfile, namely PFLAGS_TO_PROT().\n\nI think it might be a bit better for them to stay here, but I can also refactor them out if you\u0027d prefer - it\u0027s just going to be a bit more than a trivial cut-paste.",
+      "parentUuid": "5584673f_594f1344",
       "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
