@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "918a9956_5430bd7e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-02T18:15:43Z",
+      "side": 1,
+      "message": "add a code comment to this effect in the appropriate place(s), for future archaeologists?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 41
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d270245_085d92ce",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
