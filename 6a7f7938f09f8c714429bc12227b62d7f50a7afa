@@ -52,6 +52,24 @@
       "parentUuid": "f1f464f1_a7c241b5",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cebebdc_071e411f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-02T13:52:48Z",
+      "side": 1,
+      "message": "Minimised the amount of annotations to what\u0027s just necessary for an instrumented libc, which is 6 globals with annotations (mostly for stuff shared between linker\u003c-\u003elibc).\n\nI think this is reasonable and maintainable for now, but I\u0027m still looking into that run-mte-globals-on-non-mte-aarch64-device for extra stability.",
+      "parentUuid": "ac92ae93_75e3e0a6",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
