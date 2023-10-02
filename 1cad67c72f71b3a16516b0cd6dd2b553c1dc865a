@@ -81,6 +81,24 @@
       "parentUuid": "5584673f_594f1344",
       "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4059b44b_ce4f63cc",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-02T16:37:20Z",
+      "side": 1,
+      "message": "yeah, probably not worth it then unless rprichard thinks otherwise. (`#define PROT_MTE 0` being the other option.)",
+      "parentUuid": "8a686a6f_3c655c36",
+      "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
