@@ -70,6 +70,24 @@
       "parentUuid": "ac92ae93_75e3e0a6",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4137e275_78ce96e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-02T21:34:56Z",
+      "side": 1,
+      "message": "MTE globals are ABI-compatible. I thought the plan was to always do the instrumentation, or do you see a non-trivial performance change?",
+      "parentUuid": "5cebebdc_071e411f",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
