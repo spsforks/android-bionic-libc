@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "834151c2_3dc430b0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3454,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-02T15:58:20Z",
+      "side": 1,
+      "message": "just saying `uint64_t` here might be less awkward than an #ifdef?",
+      "range": {
+        "startLine": 3454,
+        "startChar": 37,
+        "endLine": 3454,
+        "endChar": 46
+      },
+      "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5584673f_594f1344",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-02T15:58:20Z",
+      "side": 1,
+      "message": "(this seems a bit weird. should these functions be in a linker_mte.cpp instead?)",
+      "revId": "1cad67c72f71b3a16516b0cd6dd2b553c1dc865a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
