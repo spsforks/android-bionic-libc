@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17c7fc33_60e20dbf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T08:19:52Z",
+      "side": 1,
+      "message": "Done, expanded the comment in __get_tagging_level().",
+      "parentUuid": "918a9956_5430bd7e",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 41
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d270245_085d92ce",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-02T17:37:16Z",
       "side": 1,
       "message": "I\u0027m not sure if this is even needed, but if so pull this into the function? This is only used once there.",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 41
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca82f5af_1f9f5278",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T08:19:52Z",
+      "side": 1,
+      "message": "Done. Still using as a parameter for __get_elf_note(), as that\u0027s now generic and can pull other notes as well.",
+      "parentUuid": "5d270245_085d92ce",
       "range": {
         "startLine": 219,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e598eb4_f4264da6",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T08:19:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a72b01b_131fe104",
+      "range": {
+        "startLine": 236,
+        "startChar": 0,
+        "endLine": 236,
+        "endChar": 67
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5c20552_272edc99",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-10-02T17:37:16Z",
       "side": 1,
       "message": "driveby: do we want a warning here?",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 240,
+        "endChar": 88
+      },
+      "revId": "af13d0fa20f9be23b5a08dc29c0ba72e259521a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed3075dd_f74e26ba",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T08:19:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5c20552_272edc99",
       "range": {
         "startLine": 240,
         "startChar": 0,
