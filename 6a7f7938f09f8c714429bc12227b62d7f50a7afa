@@ -142,6 +142,24 @@
       "parentUuid": "53c34588_177796f4",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c8c3abb_7c952de8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-03T17:15:57Z",
+      "side": 1,
+      "message": "nope, still not on the same page. The idea behind the design goal of ABI compatibility was that we can enable MTE globals at build time unconditionally. Then, if h/w supports MTE, we get protection. Single binary.\n\nNow, why do you want a separate configuration with, likely, an incredible amount of build magic? Why not always build with MTE globals? Performance? Is there evidence of issues?",
+      "parentUuid": "dd8342ed_5db5bbd8",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
