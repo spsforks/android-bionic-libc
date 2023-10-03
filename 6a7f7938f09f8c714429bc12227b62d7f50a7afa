@@ -106,6 +106,24 @@
       "parentUuid": "4137e275_78ce96e7",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53c34588_177796f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-03T16:57:03Z",
+      "side": 1,
+      "message": "I meant to challenge the run-mte-globals-on-non-mte-aarch64-device part. Why is not any run an mte-globals run?",
+      "parentUuid": "f8263d9f_1c36a3bc",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
