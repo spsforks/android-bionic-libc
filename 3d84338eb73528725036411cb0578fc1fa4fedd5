@@ -16,6 +16,24 @@
       "message": "(part of me wants to remove _all_ the stpcpy)",
       "revId": "3d84338eb73528725036411cb0578fc1fa4fedd5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50b9d628_40e4dd20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-03T17:48:56Z",
+      "side": 1,
+      "message": "(gah, i thought i\u0027d discarded that. what i was going to say was \"stpcpy/strcpy duplication by just having stpcpy assembler and making strcpy just a trivial C function that calls stpcpy and returns the original dst pointer\". but then i\u0027d only start fussing about that extra bl anyway, so... :-) )",
+      "parentUuid": "01e96d22_4bdd4ec1",
+      "revId": "3d84338eb73528725036411cb0578fc1fa4fedd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
