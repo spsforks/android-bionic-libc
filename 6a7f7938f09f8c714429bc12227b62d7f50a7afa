@@ -124,6 +124,24 @@
       "parentUuid": "f8263d9f_1c36a3bc",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd8342ed_5db5bbd8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T17:10:28Z",
+      "side": 1,
+      "message": "Oh, yeah, then we\u0027re on the same page. The test would be \"a simple main() but with mte-globals-ified libc,libm,linker,libdl,etc\".\n\nI need to check how much build system glue would be needed to accomplish this though. I believe a cc_test that sets `sanitize: memtag_globals: true` has the `memtag_globals` get propagated down to the explicit (libfoo.so) shared libraries, but I don\u0027t know about the implicit (libc.so) ones (or whether /data/nativetest/... contains a copy of all the transitive DSO dependencies, or that kind of stuff).\n\nBut yes, that\u0027s the plan.",
+      "parentUuid": "53c34588_177796f4",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
