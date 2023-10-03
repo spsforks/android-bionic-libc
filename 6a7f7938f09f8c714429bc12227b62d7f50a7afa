@@ -88,6 +88,24 @@
       "parentUuid": "5cebebdc_071e411f",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8263d9f_1c36a3bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-03T09:50:57Z",
+      "side": 1,
+      "message": "ABI-compatible, yes. Nothing to do with performance.\n\nThese annotations are needed because we punt all globals to be referenced through the GOT. If a GV is address-taken or loaded/stored before relocations have run, the GOT entry is null, and a crash occurs.\n\nSo, we need to annotate (e.g. disable memtag instrumentation) all GVs that are used before relocations have run. We don\u0027t build the linker right now with MTE globals, so there\u0027s nothing to annotate there. But, libc is built with MTE globals, so all GVs that are used before relocations run (basically stuff that\u0027s shared with the linker) need to have MTE globals disabled.",
+      "parentUuid": "4137e275_78ce96e7",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
