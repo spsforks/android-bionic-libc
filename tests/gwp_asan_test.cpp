@@ -27,6 +27,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <signal.h>
 #include <stdio.h>
 #include <sys/file.h>
 #include <string>
@@ -56,10 +57,9 @@ extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
   return true;
 }
 
-// This file implements "torture testing" under GWP-ASan, where we sample every
-// single allocation. The upper limit for the number of GWP-ASan allocations in
-// the torture mode is is generally 40,000, so that svelte devices don't
-// explode, as this uses ~163MiB RAM (4KiB per live allocation).
+// This file implements "torture testing" of the entire bionic-unit-tests under
+// GWP-ASan, where we sample every single allocation. This is a good check that
+// everything still works properly under GWP-ASan.
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
   // Do not override HWASan with GWP ASan.
   SKIP_WITH_HWASAN;
@@ -67,58 +67,125 @@ TEST(gwp_asan_integration, malloc_tests_under_torture) {
   RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
 }
 
-class SyspropRestorer {
+// System properties are global for a device, so the tests that mutate the
+// GWP-ASan system properties must be run mutually exclusive. Because
+// bionic-unit-tests is run in an isolated gtest fashion (each test is run in
+// its own process), we have to use flocks to synchronise between tests.
+class GwpAsanExclusiveTestLock {
  private:
-  std::vector<std::pair<std::string, std::string>> props_to_restore_;
-  // System properties are global for a device, so the tests that mutate the
-  // GWP-ASan system properties must be run mutually exclusive. Because
-  // bionic-unit-tests is run in an isolated gtest fashion (each test is run in
-  // its own process), we have to use flocks to synchronise between tests.
   int flock_fd_;
 
  public:
-  SyspropRestorer() {
+  GwpAsanExclusiveTestLock() {
     std::string path = testing::internal::GetArgvs()[0];
     flock_fd_ = open(path.c_str(), O_RDONLY);
     EXPECT_NE(flock_fd_, -1) << "failed to open self for a flock";
     EXPECT_NE(flock(flock_fd_, LOCK_EX), -1) << "failed to flock myself";
+  }
 
+  ~GwpAsanExclusiveTestLock() { close(flock_fd_); }
+};
+
+class SyspropRestorer {
+ private:
+  GwpAsanExclusiveTestLock exclusive_test_lock_;
+  std::vector<std::string> all_sysprops_;
+
+  static SyspropRestorer* exclusive_sysprop_restorer;
+  static const char* kRunningGwpAsanTestsPropName;
+
+  static void HandleSignalTermination(int sig, siginfo_t* /* info */, void* /* ucontext*/) {
+    exclusive_sysprop_restorer->~SyspropRestorer();
+    signal(sig, SIG_DFL);
+    raise(sig);
+  }
+
+  static const std::vector<std::string>& AllGwpAsanSysprops() {
+    static std::vector<std::string> all_sysprops;
+    static bool is_initialized = false;
+    if (is_initialized) return all_sysprops;
+
+    std::string path = testing::internal::GetArgvs()[0];
     const char* basename = __gnu_basename(path.c_str());
-    std::vector<std::string> props = {
-        std::string("libc.debug.gwp_asan.sample_rate.") + basename,
-        std::string("libc.debug.gwp_asan.process_sampling.") + basename,
-        std::string("libc.debug.gwp_asan.max_allocs.") + basename,
-        "libc.debug.gwp_asan.sample_rate.system_default",
-        "libc.debug.gwp_asan.sample_rate.app_default",
-        "libc.debug.gwp_asan.process_sampling.system_default",
-        "libc.debug.gwp_asan.process_sampling.app_default",
-        "libc.debug.gwp_asan.max_allocs.system_default",
-        "libc.debug.gwp_asan.max_allocs.app_default",
-    };
+    all_sysprops.push_back(std::string("libc.debug.gwp_asan.sample_rate.") + basename);
+    all_sysprops.push_back(std::string("libc.debug.gwp_asan.process_sampling.") + basename);
+    all_sysprops.push_back(std::string("libc.debug.gwp_asan.max_allocs.") + basename);
+    all_sysprops.push_back("libc.debug.gwp_asan.sample_rate.system_default");
+    all_sysprops.push_back("libc.debug.gwp_asan.sample_rate.app_default");
+    all_sysprops.push_back("libc.debug.gwp_asan.process_sampling.system_default");
+    all_sysprops.push_back("libc.debug.gwp_asan.process_sampling.app_default");
+    all_sysprops.push_back("libc.debug.gwp_asan.max_allocs.system_default");
+    all_sysprops.push_back("libc.debug.gwp_asan.max_allocs.app_default");
 
-    size_t base_props_size = props.size();
+    // Be careful about iterator invalidation for `all_sysprops`!
+    size_t base_props_size = all_sysprops.size();
     for (size_t i = 0; i < base_props_size; ++i) {
-      props.push_back("persist." + props[i]);
+      all_sysprops.push_back("persist." + all_sysprops[i]);
     }
+    is_initialized = true;
+    return all_sysprops;
+  }
 
-    std::string reset_log;
+  static void RestoreBackupSysprops() {
+    for (const std::string& prop_name : AllGwpAsanSysprops()) {
+      std::string backup_prop = prop_name + ".bkup";
+      std::string live_value = SyspropRestorer::GetSysprop(prop_name);
+      std::string backup_value = SyspropRestorer::GetSysprop(backup_prop);
+      // Avoid creating empty-string properties if it's unnecessary, e.g. if
+      // the backup and live values are both non-existent.
+      if (live_value == backup_value) continue;
+      __system_property_set(prop_name.c_str(), backup_value.c_str());
+      __system_property_set(backup_prop.c_str(), "");
+    }
+  }
 
-    for (const std::string& prop : props) {
+  // If you are halfway through a GWP-ASan test, and the test gets SIGKILLED,
+  // the system properties used to enable GWP-ASan can be left laying around
+  // on your system, which can affect every binary. Hopefully, the person
+  // who's running bionic-unit-tests will re-run it, and so the test below
+  // ensures that the device is brought back to a normal state.
+  static void CheckAndRestoreDeviceIfPoisoned() {
+    if (SyspropRestorer::GetSysprop(kRunningGwpAsanTestsPropName).empty()) return;
+    fprintf(stderr,
+            "Detected that GWP-ASan tests were previously improperly shut down. Performing "
+            "cleanup and then resuming the tests as normal.\n");
+    RestoreBackupSysprops();
+    __system_property_set(kRunningGwpAsanTestsPropName, "");
+  }
+
+ public:
+  SyspropRestorer() {
+    CheckAndRestoreDeviceIfPoisoned();
+
+    EXPECT_EQ(nullptr, exclusive_sysprop_restorer);
+    exclusive_sysprop_restorer = this;
+
+    struct sigaction act {};
+    act.sa_sigaction = HandleSignalTermination;
+    act.sa_flags = SA_SIGINFO;
+    EXPECT_EQ(0, sigaction(SIGTERM, &act, nullptr)) << "failed to install signal handler";
+    EXPECT_EQ(0, sigaction(SIGINT, &act, nullptr)) << "failed to install signal handler";
+
+    __system_property_set(kRunningGwpAsanTestsPropName, "true");
+
+    for (const std::string& prop : AllGwpAsanSysprops()) {
       std::string value = GetSysprop(prop);
-      props_to_restore_.emplace_back(prop, value);
-      if (!value.empty()) {
-        __system_property_set(prop.c_str(), "");
-      }
+      if (value.empty()) continue;
+
+      __system_property_set(prop.c_str(), "");
+      // In order to handle the case when ~SyspropRestorer() doesn't get run
+      // (e.g. in case of SIGKILL), back up the sysprops to other sysprops,
+      // rather than a process-local map.
+      std::string backup_prop = prop + ".bkup";
+      __system_property_set(backup_prop.c_str(), value.c_str());
     }
   }
 
   ~SyspropRestorer() {
-    for (const auto& kv : props_to_restore_) {
-      if (kv.second != GetSysprop(kv.first)) {
-        __system_property_set(kv.first.c_str(), kv.second.c_str());
-      }
-    }
-    close(flock_fd_);
+    RestoreBackupSysprops();
+    signal(SIGINT, SIG_DFL);
+    exclusive_sysprop_restorer = nullptr;
+    __system_property_set(kRunningGwpAsanTestsPropName, "");
   }
 
   static std::string GetSysprop(const std::string& name) {
@@ -135,6 +202,16 @@ class SyspropRestorer {
     return value;
   }
 };
+
+SyspropRestorer* SyspropRestorer::exclusive_sysprop_restorer = nullptr;
+const char* SyspropRestorer::kRunningGwpAsanTestsPropName = "libc.debug.running_gwp_asan_tests";
+
+// During torture testing, we set the sample rate to '1' and allow a huge amount
+// of allocation slots for GWP-ASan. During testing, it was ascertained that
+// ~40,000 allocations is about the right amount to ensure that all possible
+// mallocs() are sampled, without exploding svelte devices, as this uses ~163MiB
+// RAM (4KiB per live allocation).
+static const char* kMaxAllocsForTesting = "40000";
 
 TEST_F(gwp_asan_integration_DeathTest, DISABLED_assert_gwp_asan_enabled) {
   std::string maps;
@@ -174,7 +251,7 @@ TEST(gwp_asan_integration, sysprops_program_specific) {
   __system_property_set((std::string("libc.debug.gwp_asan.process_sampling.") + basename).c_str(),
                         "1");
   __system_property_set((std::string("libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
@@ -192,7 +269,7 @@ TEST(gwp_asan_integration, sysprops_persist_program_specific) {
   __system_property_set(
       (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
   __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
@@ -232,7 +309,7 @@ TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
   __system_property_set(
       (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
   __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
   __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
