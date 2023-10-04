@@ -160,6 +160,24 @@
       "parentUuid": "dd8342ed_5db5bbd8",
       "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d22edea_e4e2b7a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-04T08:39:00Z",
+      "side": 1,
+      "message": "Eventually to the main aarch64 image? Sure, but given it\u0027s completely fresh off the presses it seems a bit aggressive to immediately push it as part of the main image.\n\nNo evidence of problems (_fullmte w/ globals is fine), but I can\u0027t say I\u0027ve run a full benchmarking suite with MTE globals.",
+      "parentUuid": "5c8c3abb_7c952de8",
+      "revId": "6a7f7938f09f8c714429bc12227b62d7f50a7afa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
