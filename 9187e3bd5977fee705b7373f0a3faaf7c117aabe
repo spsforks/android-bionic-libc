@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eca3860e_183f1ea6",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-04T19:42:36Z",
+      "side": 1,
+      "message": "basically \"old software did naughty things with our private data structures\". in particular, it would insert bogus `struct soinfo` entries into our list. which means we\u0027ve had to be a bit careful about just assuming that newer fields are present. for a while we were very careful about this, only adding fields at the end, and never touching them without an explicit version check. i think we\u0027ve missed a few lately, and nothing\u0027s blown up yet (afaik), so the bad software might finally have aged out?\n\n(looking right now, though, maybe we don\u0027t have anything that\u0027s not \"checked enough\"? it looks like gap_start_/gap_size_ are probably only touched on _new_ ELF files anyway [if you\u0027re hitting huge page boundaries, you probably wouldn\u0027t run on devices a decade ago].)\n\nso, yeah, i think we\u0027re still in the world of \"avoid app compat issues by doing this dance\". +rprichard",
+      "parentUuid": "7d5163d8_9b045353",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 355,
+        "endChar": 66
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e128b3aa_a5c07f62",
         "filename": "linker/linker_soinfo.h",
         "patchSetId": 4
