@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8811a4d8_93b1a65e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-04T18:01:56Z",
+      "side": 1,
+      "message": "yep, it sounds like a pretty safe thing to do, especially in tests",
+      "parentUuid": "b165b92a_d3506f50",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 20,
+        "endChar": 16
+      },
+      "revId": "005fc88ede8dcfd544dc4ea16d1455efeebb466d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f3b2296a_1940427b",
         "filename": "tests/gwp_asan_test.cpp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-04T15:05:00Z",
       "side": 1,
       "message": "what\u0027s special about that value? you mean just because it\u0027s unlikely a human would pick this on purpose? you could just have a \"i\u0027m testing gwp-asan\" property that you set before and clear after this property instead...",
+      "range": {
+        "startLine": 145,
+        "startChar": 17,
+        "endLine": 145,
+        "endChar": 43
+      },
+      "revId": "005fc88ede8dcfd544dc4ea16d1455efeebb466d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09451608_60d40337",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2023-10-04T18:01:56Z",
+      "side": 1,
+      "message": "Right, or even copy the current values to some \"gwp_asan_testing_backup.*\" properties so you can then restore them properly later.",
+      "parentUuid": "f3b2296a_1940427b",
       "range": {
         "startLine": 145,
         "startChar": 17,
