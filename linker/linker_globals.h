@@ -103,5 +103,29 @@ class DlErrorRestorer {
   std::string saved_error_msg_;
 };
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static inline void LinkerPrintMaps() {
+    FILE *file;
+    char line[256]; // Buffer to store each line read from /proc/self/maps
+
+    // Open the /proc/self/maps file for reading
+    file = fopen("/proc/self/maps", "r");
+    if (file == NULL) {
+        return;
+    }
+
+    // Read and print each line from /proc/self/maps to stderr
+    while (fgets(line, sizeof(line), file) != NULL) {
+      // DL_ERR_AND_LOG("DEBUG: maps:    %s", line);
+      fprintf(stderr, "DEBUG: maps: %s", line);
+    }
+
+    // Close the file
+    fclose(file);
+}
+
 __LIBC_HIDDEN__ extern bool g_is_ldd;
 __LIBC_HIDDEN__ extern pthread_mutex_t g_dl_mutex;
