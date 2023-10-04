@@ -16,6 +16,24 @@
       "message": "Should we add a linter that runs our notice checker",
       "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b63e390c_26ea7607",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-04T22:36:36Z",
+      "side": 1,
+      "message": "you mean an ayeaye check? is that possible? i thought ayeaye checks only see the files you\u0027ve changed?\n\n(we already have the preupload hook --- we just find that systems team folks and non-googlers tend to just use direct git commits instead.)",
+      "parentUuid": "b2e2b574_c150177f",
+      "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
