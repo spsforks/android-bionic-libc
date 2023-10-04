@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25c32409_2342e4a1",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-04T09:12:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0ea32a0_7f0b347e",
+      "range": {
+        "startLine": 334,
+        "startChar": 1,
+        "endLine": 335,
+        "endChar": 14
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "032eb3ee_559f4da8",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-04T01:19:16Z",
       "side": 1,
       "message": "`CHECK(has_min_version(7))`?",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 355,
+        "endChar": 66
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8bd6244_2cd23c6a",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-04T09:12:08Z",
+      "side": 1,
+      "message": "Sure. Do you know what\u0027s up with this versioned linker? I looked at b/24465209 and still don\u0027t understand what\u0027s going on.",
+      "parentUuid": "032eb3ee_559f4da8",
       "range": {
         "startLine": 355,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7af06260_74cc4650",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-04T09:12:08Z",
+      "side": 1,
+      "message": "Yep, see the stack: aosp/1845896",
+      "parentUuid": "e128b3aa_a5c07f62",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 364,
+        "endChar": 0
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9daee867_b8706a96",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-10-04T01:19:16Z",
       "side": 1,
       "message": "how does this get zero initialized? i",
+      "range": {
+        "startLine": 449,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 51
+      },
+      "revId": "9187e3bd5977fee705b7373f0a3faaf7c117aabe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78a42e50_bb5d4cd9",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-04T09:12:08Z",
+      "side": 1,
+      "message": "From a quick peek, soinfos get allocated eventually here: https://cs.android.com/android/platform/superproject/main/+/main:bionic/linker/linker_block_allocator.cpp;l\u003d79?q\u003dbionic%2Flinker%2Flinker_block_allocator.cpp:79\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain\n\nIt\u0027s a little esoteric but maybe it\u0027s more confusing to just have our member with a default constructor and leaving the rest (\"hey, that thing is clearly zero-initialised because they explicitly did it, the rest must not be!\").",
+      "parentUuid": "9daee867_b8706a96",
       "range": {
         "startLine": 449,
         "startChar": 0,
