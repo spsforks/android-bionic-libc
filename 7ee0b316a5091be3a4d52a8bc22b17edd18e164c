@@ -52,6 +52,24 @@
       "parentUuid": "b63e390c_26ea7607",
       "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb77f9cc_b501c9bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-04T22:58:46Z",
+      "side": 1,
+      "message": "we could sneak a check into the build. (not that we\u0027ve never had people submit things they clearly hadn\u0027t built, but...) if the script had a mode that didn\u0027t actually touch the file, that should work? (but, yeah, probably not worth the trouble for how often this happens?)",
+      "parentUuid": "5b226d92_463d89b4",
+      "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
