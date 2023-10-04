@@ -34,6 +34,24 @@
       "parentUuid": "b2e2b574_c150177f",
       "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b226d92_463d89b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-10-04T22:42:47Z",
+      "side": 1,
+      "message": "Yes, I was wondering if we can add an ayeaye check for this. If they can only look at the files you\u0027ve changed, then it\u0027s unlikely it could work.\n\nThis problem doesn\u0027t seem to happen that frequently, but it gets annoying when trying to upload a change and the NOTICE file needs to be modified. So maybe not worth doing.",
+      "parentUuid": "b63e390c_26ea7607",
+      "revId": "7ee0b316a5091be3a4d52a8bc22b17edd18e164c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
