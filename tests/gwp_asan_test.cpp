@@ -56,10 +56,9 @@ extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
   return true;
 }
 
-// This file implements "torture testing" under GWP-ASan, where we sample every
-// single allocation. The upper limit for the number of GWP-ASan allocations in
-// the torture mode is is generally 40,000, so that svelte devices don't
-// explode, as this uses ~163MiB RAM (4KiB per live allocation).
+// This file implements "torture testing" of the entire bionic-unit-tests under
+// GWP-ASan, where we sample every single allocation. This is a good check that
+// everything still works properly under GWP-ASan.
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
   // Do not override HWASan with GWP ASan.
   SKIP_WITH_HWASAN;
@@ -112,6 +111,8 @@ class SyspropRestorer {
     }
   }
 
+  std::vector<std::pair<std::string, std::string>>& PropsToRestore() { return props_to_restore_; }
+
   ~SyspropRestorer() {
     for (const auto& kv : props_to_restore_) {
       if (kv.second != GetSysprop(kv.first)) {
@@ -135,6 +136,40 @@ class SyspropRestorer {
     return value;
   }
 };
+
+// During torture testing, we set the sample rate to '1' and allow a huge amount
+// of allocation slots for GWP-ASan. During testing, it was ascertained that
+// ~40,000 allocations is about the right amount to ensure that all possible
+// mallocs() are sampled, without exploding svelte devices, as this uses ~163MiB
+// RAM (4KiB per live allocation). We set this magic value to something slightly
+// less than 40k so that we can identify it. One of the problem is, if you are
+// halfway through a GWP-ASan test, and you ctrl+C and cancel, the system
+// properties used to enable GWP-ASan can be left laying around on your system,
+// which can affect every binary. Hopefully, the person who's running
+// bionic-unit-tests will re-run it, and so the test below ensures that the
+// device is brought back to a normal state.
+static const char* kMaxAllocsForTesting = "39987";
+
+TEST(gwp_asan_integration, unpoison_device) {
+  SyspropRestorer restorer;
+
+  bool device_was_poisoned = false;
+  for (const auto& [prop_name, prop_value] : restorer.PropsToRestore()) {
+    if (prop_name.find("max_allocs") != std::string::npos && prop_value == kMaxAllocsForTesting) {
+      device_was_poisoned = true;
+      break;
+    }
+  }
+
+  if (!device_was_poisoned) GTEST_SKIP() << "Device wasn't poisoned";
+
+  // Sorry, we don't have the values from before the device was poisoned, but
+  // reset all the GWP-ASan sysprops so we don't leave the device in a poisoned
+  // state.
+  for (auto& [_, prop_value] : restorer.PropsToRestore()) {
+    prop_value = "";
+  }
+}
 
 TEST_F(gwp_asan_integration_DeathTest, DISABLED_assert_gwp_asan_enabled) {
   std::string maps;
@@ -174,7 +209,7 @@ TEST(gwp_asan_integration, sysprops_program_specific) {
   __system_property_set((std::string("libc.debug.gwp_asan.process_sampling.") + basename).c_str(),
                         "1");
   __system_property_set((std::string("libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
@@ -192,7 +227,7 @@ TEST(gwp_asan_integration, sysprops_persist_program_specific) {
   __system_property_set(
       (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
   __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
@@ -232,7 +267,7 @@ TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
   __system_property_set(
       (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
   __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
-                        "40000");
+                        kMaxAllocsForTesting);
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
   __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
