@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f227f5be_6e4906f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2023-10-05T18:53:11Z",
+      "side": 1,
+      "message": "I\u0027ve verified that the cfi_test_DeathTest#basic test no longer flakes (passes 100 of 100 local attempts) on a 32-bit device using jemalloc.\n\nBut I defer the +2 to someone who more deeply understands the implications here.",
+      "revId": "ffacda45fb0dcb13dacb1fa3880d62e2e850abbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
