@@ -33,6 +33,24 @@
       "message": "I\u0027m still suspicious that we shouldn\u0027t allow a SIGSEGV. I did run a test and never saw that signal, but I didn\u0027t test it thoroughly.",
       "revId": "ffacda45fb0dcb13dacb1fa3880d62e2e850abbe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59ab89fe_6bc8a026",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-05T19:35:56Z",
+      "side": 1,
+      "message": "yeah, i think we want to come back and:\n\n* switch everything to trap rather than abort().\n* switch the test to allocate more like eugenis said.\n* add eugenis\u0027 bug comment about the different ways a CFI failure can manifest.\n* change this to assume that we only see SIGILL/SIGTRAP (after i\u0027ve worked out which platforms -- if any -- give us SIGTRAP!).\n\nwe can go straight to the second option, but since we _do_ have CFI failure paths that call abort(), this change seemed strictly correct in its own right.\n\n(i\u0027ll upload another change for the second option since i think we want to do that too anyway, and gkaiser is able to easily repro right now...)",
+      "parentUuid": "c8f56ec3_2df59897",
+      "revId": "ffacda45fb0dcb13dacb1fa3880d62e2e850abbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
