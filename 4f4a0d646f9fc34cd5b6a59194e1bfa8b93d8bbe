@@ -33,6 +33,23 @@
       "message": "I think upstream libc++ is OK already. libcxx/include/__support/android/locale_bionic.h has these lines:\n```\n#if __ANDROID_API__ \u003c 21\n#include \u003c__support/xlocale/__posix_l_fallback.h\u003e\n#endif\n```\n\nIn external/libcxx, OTOH, __posix_l_fallback.h is included without this `__ANDROID_API__` guard.",
       "revId": "4f4a0d646f9fc34cd5b6a59194e1bfa8b93d8bbe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8842dab1_ed46f9ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-05T21:17:17Z",
+      "side": 1,
+      "message": "i\u0027ve uploaded https://android-review.git.corp.google.com/c/platform/external/libcxx/+/2776366 to unblock this while rprichard continues to work on a proper upgrade...",
+      "revId": "4f4a0d646f9fc34cd5b6a59194e1bfa8b93d8bbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
