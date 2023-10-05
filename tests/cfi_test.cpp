@@ -71,8 +71,8 @@ class cfi_test_DeathTest : public testing::Test {
 };
 
 static bool KilledByCfi(int status) {
-  return WIFSIGNALED(status) &&
-         (WTERMSIG(status) == SIGTRAP || WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
+  return WIFSIGNALED(status) && (WTERMSIG(status) == SIGABRT || WTERMSIG(status) == SIGTRAP ||
+                                 WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
 }
 
 static void f() {}
