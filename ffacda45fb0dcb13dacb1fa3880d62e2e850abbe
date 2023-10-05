@@ -16,6 +16,23 @@
       "message": "I\u0027ve verified that the cfi_test_DeathTest#basic test no longer flakes (passes 100 of 100 local attempts) on a 32-bit device using jemalloc.\n\nBut I defer the +2 to someone who more deeply understands the implications here.",
       "revId": "ffacda45fb0dcb13dacb1fa3880d62e2e850abbe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8f56ec3_2df59897",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2023-10-05T19:23:38Z",
+      "side": 1,
+      "message": "I\u0027m still suspicious that we shouldn\u0027t allow a SIGSEGV. I did run a test and never saw that signal, but I didn\u0027t test it thoroughly.",
+      "revId": "ffacda45fb0dcb13dacb1fa3880d62e2e850abbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
