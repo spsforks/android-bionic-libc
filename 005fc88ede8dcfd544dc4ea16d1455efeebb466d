@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4bbe2e1_a79d5183",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-06T14:25:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8811a4d8_93b1a65e",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 20,
+        "endChar": 16
+      },
+      "revId": "005fc88ede8dcfd544dc4ea16d1455efeebb466d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3b2296a_1940427b",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Right, or even copy the current values to some \"gwp_asan_testing_backup.*\" properties so you can then restore them properly later.",
       "parentUuid": "f3b2296a_1940427b",
+      "range": {
+        "startLine": 145,
+        "startChar": 17,
+        "endLine": 145,
+        "endChar": 43
+      },
+      "revId": "005fc88ede8dcfd544dc4ea16d1455efeebb466d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71b92c40_130784ab",
+        "filename": "tests/gwp_asan_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2023-10-06T14:25:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09451608_60d40337",
       "range": {
         "startLine": 145,
         "startChar": 17,
