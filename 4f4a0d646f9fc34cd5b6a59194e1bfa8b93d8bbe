@@ -50,6 +50,29 @@
       "message": "i\u0027ve uploaded https://android-review.git.corp.google.com/c/platform/external/libcxx/+/2776366 to unblock this while rprichard continues to work on a proper upgrade...",
       "revId": "4f4a0d646f9fc34cd5b6a59194e1bfa8b93d8bbe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2f50a95_de72bc18",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2023-10-06T15:06:36Z",
+      "side": 1,
+      "message": "PTAL. this is the key part of the change, which i should mention in the commit message. (i\u0027ll fix that right now.)",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 42,
+        "endChar": 62
+      },
+      "revId": "4f4a0d646f9fc34cd5b6a59194e1bfa8b93d8bbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
